@@ -86,11 +86,12 @@ The text recognition module is the core component of an OCR (Optical Character R
 ## III. Quick Integration
 Before quick integration, you need to install the PaddleX wheel package. For the installation method, please refer to the [PaddleX Local Installation Tutorial](../../../installation/installation_en.md). After installing the wheel package, a few lines of code can complete the inference of the text recognition module. You can switch models under this module freely, and you can also integrate the model inference of the text recognition module into your project.
 
+Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png) to your local machine.
 
 ```python
 from paddlex import create_model
 model = create_model("PP-OCRv4_mobile_rec")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png", batch_size=1)
+output = model.predict("general_ocr_rec_001.png", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -280,11 +281,14 @@ After completing model training and evaluation, you can use the trained model we
 #### 4.4.1 Model Inference
 To perform inference prediction via the command line, simply use the following command:
 
+Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png) to your local machine.
+
+
 ```bash
 python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_accuracy/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png"
+    -o Predict.input="general_ocr_rec_001.png"
 ```
 Similar to model training and evaluation, the following steps are required:
 

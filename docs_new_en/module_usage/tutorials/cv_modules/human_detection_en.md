@@ -44,7 +44,8 @@ Human detection is a subtask of object detection, which utilizes computer vision
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
-After installing the wheel package, you can perform human detection with just a few lines of code. You can easily switch between models in this module and integrate the human detection model inference into your project.
+After installing the wheel package, you can perform human detection with just a few lines of code. You can easily switch between models in this module and integrate the human detection model inference into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/human_detection.jpg) to your local machine.
+
 
 ```python
 from paddlex.inference import create_model 
@@ -52,7 +53,7 @@ from paddlex.inference import create_model
 model_name = "PP-YOLOE-S_human"
 
 model = create_model(model_name)
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/human_detection.jpg", batch_size=1)
+output = model.predict("human_detection.jpg", batch_size=1)
 
 for res in output:
     res.print(json_format=False)
@@ -248,12 +249,12 @@ After completing the model evaluation, an `evaluate_result.json` file will be ge
 After completing model training and evaluation, you can use the trained model weights for inference prediction. In PaddleX, model inference prediction can be achieved through two methods: command line and wheel package.
 
 #### 4.4.1 Model Inference
-* To perform inference prediction through the command line, simply use the following command:
+* To perform inference prediction through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/human_detection.jpg) to your local machine.
 ```bash
 python main.py -c paddlex/configs/human_detection/PP-YOLOE-S_human.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/human_detection.jpg"
+    -o Predict.input="human_detection.jpg"
 ```
 Similar to model training and evaluation, the following steps are required:
 

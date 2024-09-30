@@ -23,7 +23,7 @@ Table structure recognition is a crucial component in table recognition systems,
     <td>522.536</td>
     <td>1845.37</td>
     <td>6.9 M</td>
-    <td rowspan="2">SLANet is a table structure recognition model developed by Baidu PaddlePaddle Vision Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
+    <td rowspan="1">SLANet is a table structure recognition model developed by Baidu PaddlePaddle Vision Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
   </tr>
    </tr>
    <tr>
@@ -32,6 +32,9 @@ Table structure recognition is a crucial component in table recognition systems,
     <td>522.536</td>
     <td>1845.37</td>
     <td>6.9 M</td>
+        <td rowspan="1">
+SLANet_plus is an enhanced version of SLANet, a table structure recognition model developed by Baidu PaddlePaddle's Vision Team. Compared to SLANet, SLANet_plus significantly improves its recognition capabilities for wireless and complex tables, while reducing the model's sensitivity to the accuracy of table localization. Even when there are offsets in table localization, it can still perform relatively accurate recognition.
+</td>
   </tr>
 </table>
 
@@ -42,12 +45,12 @@ Table structure recognition is a crucial component in table recognition systems,
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
-After installing the wheel package, a few lines of code can complete the inference of the table structure recognition module. You can easily switch models within this module and integrate the model inference into your project.
+After installing the wheel package, a few lines of code can complete the inference of the table structure recognition module. You can easily switch models within this module and integrate the model inference into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg) to your local machine.
 
 ```bash
 from paddlex import create_model
 model = create_model("SLANet")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg", batch_size=1)
+output = model.predict("table_recognition.jpg", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -242,12 +245,12 @@ After completing the model evaluation, an `evaluate_result.json` file will be pr
 After completing model training and evaluation, you can use the trained model weights for inference predictions or Python integration.
 
 #### 4.4.1 Model Inference
-* Inference predictions can be performed through the command line with just one command:
+* Inference predictions can be performed through the command line with just one command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg) to your local machine.
 ```bash
 python main.py -c paddlex/configs/table_recognition/SLANet.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_accuracy/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg"
+    -o Predict.input="table_recognition.jpg"
 ```
 Similar to model training and evaluation, the following steps are required:
 

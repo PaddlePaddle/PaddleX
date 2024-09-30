@@ -35,7 +35,7 @@ The image multi-label classification module is a crucial component in computer v
   <tr>
     <td>PP-HGNetV2-B6_ML</td>
     <td>91.25</td>
-    <td>286.0 M</td>
+    <td>286.5 M</td>
   </tr>
   <tr>
     <td>PP-LCNet_x1_0_ML</td>
@@ -57,11 +57,11 @@ The image multi-label classification module is a crucial component in computer v
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
-After installing the wheel package, you can complete multi-label classification module inference with just a few lines of code. You can switch between models in this module freely, and you can also integrate the model inference of the multi-label classification module into your project.
+After installing the wheel package, you can complete multi-label classification module inference with just a few lines of code. You can switch between models in this module freely, and you can also integrate the model inference of the multi-label classification module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png) to your local machine.
 ```bash
 from paddlex import create_model
 model = create_model("PP-LCNet_x1_0_ML")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png", batch_size=1)
+output = model.predict("multilabel_classification_005.png", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -304,13 +304,13 @@ After completing the model evaluation, an `evaluate_result.json` file will be pr
 After completing model training and evaluation, you can use the trained model weights for inference predictions or Python integration.
 
 #### 4.4.1 Model Inference
-* Inference predictions can be performed through the command line with just one command:
+* Inference predictions can be performed through the command line with just one command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png) to your local machine.
 
 ```bash
 python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png"
+    -o Predict.input="multilabel_classification_005.png"
 ```
 Similar to model training and evaluation, the following steps are required:
 

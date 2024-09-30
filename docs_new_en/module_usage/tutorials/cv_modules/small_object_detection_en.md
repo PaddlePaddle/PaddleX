@@ -52,7 +52,7 @@ Small object detection typically refers to accurately detecting and locating sma
 ## III. Quick Integration  <a id="quick"> </a> 
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md) 
 
-After installing the wheel package, you can complete the inference of the small object detection module with just a few lines of code. You can switch models under this module freely, and you can also integrate the model inference of the small object detection module into your project.
+After installing the wheel package, you can complete the inference of the small object detection module with just a few lines of code. You can switch models under this module freely, and you can also integrate the model inference of the small object detection module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg) to your local machine.
 
 ```python
 from paddlex.inference import create_model 
@@ -253,12 +253,12 @@ After completing the model evaluation, an `evaluate_result.json` file will be ge
 After completing model training and evaluation, you can use the trained model weights for inference predictions. In PaddleX, model inference predictions can be achieved through two methods: command line and wheel package.
 
 #### 4.4.1 Model Inference
-* To perform inference predictions through the command line, simply use the following command:
+* To perform inference predictions through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg) to your local machine.
 ```bash
 python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg"
+    -o Predict.input="small_object_detection.jpg"
 ```
 Similar to model training and evaluation, the following steps are required:
 

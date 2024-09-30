@@ -42,10 +42,10 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 在本地使用通用时序异常检测产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
 #### 2.2.1 命令行方式体验
-一行命令即可快速体验时序异常检测产线效果
+一行命令即可快速体验时序异常检测产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.cs)，并将 `--input` 替换为本地路径，进行预测
 
 ```
-paddlex --pipeline ts_ad --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.cs --device gpu:0
+paddlex --pipeline ts_ad --input ts_ad.cs --device gpu:0
 ```
 参数说明：
 
@@ -72,7 +72,7 @@ paddlex --get_pipeline_config ts_ad --config_save_path ./my_path
 获取产线配置文件后，可将` --pipeline` 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 `./ts_ad.yaml`，只需执行：
 
 ```
-paddlex --pipeline ./ts_ad.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.cs
+paddlex --pipeline ./ts_ad.yaml --input ts_ad.cs
 ```
 其中，`--model`、`--device` 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。
 
@@ -106,11 +106,10 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="ts_ad")
 
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.cs")
+output = pipeline.predict("ts_ad.cs")
 for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_csv("./output/") ## 保存csv格式结果
-    res.save_to_xlsx("./output/") ## 保存表格格式结果
 ```
 得到的结果与命令行方式相同。
 
@@ -152,11 +151,10 @@ for res in output:
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/ts_ad.yaml")
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.cs")
+output = pipeline.predict("ts_ad.cs")
 for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_csv("./output/") ## 保存csv格式结果
-    res.save_to_xlsx("./output/") ## 保存表格格式结果
 ```
 
 ## 3. 开发集成/部署
@@ -169,6 +167,434 @@ for res in output:
 🚀 **高性能部署**：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能部署流程请参考[PaddleX高性能部署指南](../../../pipeline_deploy/high_performance_deploy.md)。
 
 ☁️ **服务化部署**：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/service_deploy.md)。
+
+下面是API参考和多语言服务调用示例：
+
+<details>  
+<summary>API参考</summary>  
+  
+对于服务提供的所有操作：
+
+- 响应体以及POST请求的请求体均为JSON数据（JSON对象）。
+- 当请求处理成功时，响应状态码为`200`，响应体的属性如下：
+
+    |名称|类型|含义|
+    |-|-|-|
+    |`errorCode`|`integer`|错误码。固定为`0`。|
+    |`errorMsg`|`string`|错误说明。固定为`"Success"`。|
+
+    响应体还可能有`result`属性，类型为`object`，其中存储操作结果信息。
+
+- 当请求处理未成功时，响应体的属性如下：
+
+    |名称|类型|含义|
+    |-|-|-|
+    |`errorCode`|`integer`|错误码。与响应状态码相同。|
+    |`errorMsg`|`string`|错误说明。|
+
+服务提供的操作如下：
+
+- **`infer`**
+
+    进行时序异常检测。
+
+    `POST /time-series-anomaly-detection`
+
+    - 请求体的属性如下：
+
+        |名称|类型|含义|是否必填|
+        |-|-|-|-|
+        |`csv`|`string`|服务可访问的CSV文件的URL或CSV文件内容的Base64编码结果。CSV文件需要使用UTF-8编码。|是|
+
+    - 请求处理成功时，响应体的`result`具有如下属性：
+
+        |名称|类型|含义|
+        |-|-|-|
+        |`csv`|`string`|CSV格式的时序异常检测结果。使用UTF-8+Base64编码。|
+
+        `result`示例如下：
+
+        ```json
+        {
+          "csv": "xxxxxx"
+        }
+        ```
+
+</details>
+
+<details>
+<summary>多语言调用服务示例</summary>  
+
+<details>  
+<summary>Python</summary>  
+  
+```python
+import base64
+import requests
+
+API_URL = "http://localhost:8080/time-series-anomaly-detection" # 服务URL
+csv_path = "./test.csv"
+output_csv_path = "./out.csv"
+
+# 对本地图像进行Base64编码
+with open(csv_path, "rb") as file:
+    csv_bytes = file.read()
+    csv_data = base64.b64encode(csv_bytes).decode("ascii")
+
+payload = {"csv": csv_data}
+
+# 调用API
+response = requests.post(API_URL, json=payload)
+
+# 处理接口返回数据
+assert response.status_code == 200
+result = response.json()["result"]
+with open(output_csv_path, "wb") as f:
+    f.write(base64.b64decode(result["csv"]))
+print(f"Output time-series data saved at  {output_csv_path}")
+```
+  
+</details>
+
+<details>  
+<summary>C++</summary>  
+  
+```cpp
+#include <iostream>
+#include "cpp-httplib/httplib.h" // https://github.com/Huiyicc/cpp-httplib
+#include "nlohmann/json.hpp" // https://github.com/nlohmann/json
+#include "base64.hpp" // https://github.com/tobiaslocker/base64
+
+int main() {
+    httplib::Client client("localhost:8080");
+    const std::string csvPath = "./test.csv";
+    const std::string outputCsvPath = "./out.csv";
+
+    httplib::Headers headers = {
+        {"Content-Type", "application/json"}
+    };
+
+    // 进行Base64编码
+    std::ifstream file(csvPath, std::ios::binary | std::ios::ate);
+    std::streamsize size = file.tellg();
+    file.seekg(0, std::ios::beg);
+
+    std::vector<char> buffer(size);
+    if (!file.read(buffer.data(), size)) {
+        std::cerr << "Error reading file." << std::endl;
+        return 1;
+    }
+    std::string bufferStr(reinterpret_cast<const char*>(buffer.data()), buffer.size());
+    std::string encodedCsv = base64::to_base64(bufferStr);
+
+    nlohmann::json jsonObj;
+    jsonObj["csv"] = encodedCsv;
+    std::string body = jsonObj.dump();
+
+    // 调用API
+    auto response = client.Post("/time-series-anomaly-detection", headers, body, "application/json");
+    // 处理接口返回数据
+    if (response && response->status == 200) {
+        nlohmann::json jsonResponse = nlohmann::json::parse(response->body);
+        auto result = jsonResponse["result"];
+
+        // 保存数据
+        encodedCsv = result["csv"];
+        decodedString = base64::from_base64(encodedCsv);
+        std::vector<unsigned char> decodedCsv(decodedString.begin(), decodedString.end());
+        std::ofstream outputCsv(outputCsvPath, std::ios::binary | std::ios::out);
+        if (outputCsv.is_open()) {
+            outputCsv.write(reinterpret_cast<char*>(decodedCsv.data()), decodedCsv.size());
+            outputCsv.close();
+            std::cout << "Output time-series data saved at " << outputCsvPath << std::endl;
+        } else {
+            std::cerr << "Unable to open file for writing: " << outputCsvPath << std::endl;
+        }
+    } else {
+        std::cout << "Failed to send HTTP request." << std::endl;
+        std::cout << response->body << std::endl;
+        return 1;
+    }
+
+    return 0;
+}
+```
+  
+</details>
+
+<details>  
+<summary>Java</summary>  
+  
+```java
+import okhttp3.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Base64;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        String API_URL = "http://localhost:8080/time-series-anomaly-detection";
+        String csvPath = "./test.csv";
+        String outputCsvPath = "./out.csv";
+
+        // 对本地csv进行Base64编码
+        File file = new File(csvPath);
+        byte[] fileContent = java.nio.file.Files.readAllBytes(file.toPath());
+        String csvData = Base64.getEncoder().encodeToString(fileContent);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode params = objectMapper.createObjectNode();
+        params.put("csv", csvData);
+
+        // 创建 OkHttpClient 实例
+        OkHttpClient client = new OkHttpClient();
+        MediaType JSON = MediaType.Companion.get("application/json; charset=utf-8");
+        RequestBody body = RequestBody.Companion.create(params.toString(), JSON);
+        Request request = new Request.Builder()
+                .url(API_URL)
+                .post(body)
+                .build();
+
+        // 调用API并处理接口返回数据
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                String responseBody = response.body().string();
+                JsonNode resultNode = objectMapper.readTree(responseBody);
+                JsonNode result = resultNode.get("result");
+
+                // 保存返回的数据
+                String base64Csv = result.get("csv").asText();
+                byte[] csvBytes = Base64.getDecoder().decode(base64Csv);
+                try (FileOutputStream fos = new FileOutputStream(outputCsvPath)) {
+                    fos.write(csvBytes);
+                }
+                System.out.println("Output time-series data saved at " + outputCsvPath);
+            } else {
+                System.err.println("Request failed with code: " + response.code());
+            }
+        }
+    }
+}
+```
+  
+</details>
+
+<details>  
+<summary>Go</summary>  
+  
+```go
+package main
+
+import (
+	"bytes"
+	"encoding/base64"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+)
+
+func main() {
+	API_URL := "http://localhost:8080/time-series-anomaly-detection"
+	csvPath := "./test.csv";
+	outputCsvPath := "./out.csv";
+
+	// 读取csv文件并进行Base64编码
+	csvBytes, err := ioutil.ReadFile(csvPath)
+	if err != nil {
+		fmt.Println("Error reading csv file:", err)
+		return
+	}
+	csvData := base64.StdEncoding.EncodeToString(csvBytes)
+
+	payload := map[string]string{"csv": csvData} // Base64编码的文件内容
+	payloadBytes, err := json.Marshal(payload)
+	if err != nil {
+		fmt.Println("Error marshaling payload:", err)
+		return
+	}
+
+	// 调用API
+	client := &http.Client{}
+	req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		fmt.Println("Error creating request:", err)
+		return
+	}
+
+	res, err := client.Do(req)
+	if err != nil {
+		fmt.Println("Error sending request:", err)
+		return
+	}
+	defer res.Body.Close()
+
+	// 处理返回数据
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		fmt.Println("Error reading response body:", err)
+		return
+	}
+	type Response struct {
+		Result struct {
+			Csv string `json:"csv"`
+		} `json:"result"`
+	}
+	var respData Response
+	err = json.Unmarshal([]byte(string(body)), &respData)
+	if err != nil {
+		fmt.Println("Error unmarshaling response body:", err)
+		return
+	}
+
+	// 将Base64编码的csv数据解码并保存为文件
+	outputCsvData, err := base64.StdEncoding.DecodeString(respData.Result.Csv)
+	if err != nil {
+		fmt.Println("Error decoding base64 csv data:", err)
+		return
+	}
+	err = ioutil.WriteFile(outputCsvPath, outputCsvData, 0644)
+	if err != nil {
+		fmt.Println("Error writing csv to file:", err)
+		return
+	}
+	fmt.Printf("Output time-series data saved at %s.csv", outputCsvPath)
+}
+```
+  
+</details>
+
+<details>  
+<summary>C#</summary>  
+  
+```csharp
+using System;
+using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+
+class Program
+{
+    static readonly string API_URL = "http://localhost:8080/time-series-anomaly-detection";
+    static readonly string csvPath = "./test.csv";
+    static readonly string outputCsvPath = "./out.csv";
+
+    static async Task Main(string[] args)
+    {
+        var httpClient = new HttpClient();
+
+        // 对本地csv文件进行Base64编码
+        byte[] csvBytes = File.ReadAllBytes(csvPath);
+        string csvData = Convert.ToBase64String(csvBytes);
+
+        var payload = new JObject{ { "csv", csvData } }; // Base64编码的文件内容
+        var content = new StringContent(payload.ToString(), Encoding.UTF8, "application/json");
+
+        // 调用API
+        HttpResponseMessage response = await httpClient.PostAsync(API_URL, content);
+        response.EnsureSuccessStatusCode();
+
+        // 处理接口返回数据
+        string responseBody = await response.Content.ReadAsStringAsync();
+        JObject jsonResponse = JObject.Parse(responseBody);
+
+        // 保存csv文件
+        string base64Csv = jsonResponse["result"]["csv"].ToString();
+        byte[] outputCsvBytes = Convert.FromBase64String(base64Csv);
+        File.WriteAllBytes(outputCsvPath, outputCsvBytes);
+        Console.WriteLine($"Output time-series data saved at {outputCsvPath}");
+    }
+}
+```
+  
+</details>
+
+<details>  
+<summary>Node.js</summary>  
+  
+```js
+const axios = require('axios');
+const fs = require('fs');
+
+const API_URL = 'http://localhost:8080/time-series-anomaly-detection'
+const csvPath = "./test.csv";
+const outputCsvPath = "./out.csv";
+
+let config = {
+   method: 'POST',
+   maxBodyLength: Infinity,
+   url: API_URL,
+   data: JSON.stringify({
+    'csv': encodeFileToBase64(csvPath)  // Base64编码的文件内容
+  })
+};
+
+// 读取csv文件并转换为Base64
+function encodeFileToBase64(filePath) {
+  const bitmap = fs.readFileSync(filePath);
+  return Buffer.from(bitmap).toString('base64');
+}
+
+axios.request(config)
+.then((response) => {
+    const result = response.data["result"];
+
+    // 保存csv文件
+    const csvBuffer = Buffer.from(result["csv"], 'base64');
+    fs.writeFile(outputCsvPath, csvBuffer, (err) => {
+      if (err) throw err;
+      console.log(`Output time-series data saved at ${outputCsvPath}`);
+    });
+})
+.catch((error) => {
+  console.log(error);
+});
+```
+  
+</details>
+
+<details>  
+<summary>PHP</summary>  
+  
+```php
+<?php
+
+$API_URL = "http://localhost:8080/time-series-anomaly-detection"; // 服务URL
+$csv_path = "./test.csv";
+$output_csv_path = "./out.csv";
+
+// 对本地csv文件进行Base64编码
+$csv_data = base64_encode(file_get_contents($csv_path));
+$payload = array("csv" => $csv_data); // Base64编码的文件内容
+
+// 调用API
+$ch = curl_init($API_URL);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$response = curl_exec($ch);
+curl_close($ch);
+
+// 处理接口返回数据
+$result = json_decode($response, true)["result"];
+
+file_put_contents($output_csv_path, base64_decode($result["csv"]));
+echo "Output time-series data saved at " . $output_csv_path . "\n";
+
+?>
+```
+  
+</details>
+</details>
+<br/>
 
 📱 **端侧部署**：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/lite_deploy.md)。
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
@@ -201,11 +627,11 @@ PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多�
 例如，您使用英伟达 GPU 进行时序异常检测产线的推理，使用的 Python 命令为：
 
 ```
-paddlex --pipeline ts_ad --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.cs --device gpu:0
+paddlex --pipeline ts_ad --input ts_ad.cs --device gpu:0
 ```
 此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的` --device` 修改为 npu 即可：
 
 ```
-paddlex --pipeline ts_ad --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.cs --device npu:0
+paddlex --pipeline ts_ad --input ts_ad.cs --device npu:0
 ```
-若您想在更多种类的硬件上使用通用时序异常检测产线，请参考[PaddleX多硬件使用指南](../../../installation/installation_other_devices.md)。
+若您想在更多种类的硬件上使用通用时序异常检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。

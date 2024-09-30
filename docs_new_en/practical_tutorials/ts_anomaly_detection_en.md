@@ -131,7 +131,8 @@ Each model in PaddleX provides a configuration file for model development to set
   * `learning_rate`: Training learning rate.
   * `batch_size`: Training batch size for a single GPU.
   * `time_col`: Time column, set the column name of the time series dataset's time column based on your data.
-  * `feature_cols`: Feature variables indicating variables related to whether the device is abnormal. For example,```markdown
+  * `feature_cols`: Feature variables indicating variables related to whether the device is abnormal. 
+
 ### 5.2 Model Evaluation
 After completing model training, you can evaluate the specified model weights file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation requires just one command:
 
