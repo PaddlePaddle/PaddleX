@@ -368,7 +368,7 @@ python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.
 * **安装PaddleX**
 
 ```bash
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0.beta1-py3-none-any.whl
+pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0b1-py3-none-any.whl
 ```
   
 > ❗ 更多安装方式参考 [PaddleX 安装教程](./docs/installation/installation.md)
@@ -503,7 +503,7 @@ for res in output:
    * [🗣️ 通用语义分割产线使用教程](./docs/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md)
    * [🏷️ 图像多标签分类产线使用教程](./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md)
    * [🔍 小目标检测产线使用教程](./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection.md)
-   * [🖼️ 图像异常检测产线使用教程](./docs/module_usage/tutorials/cv_modules/anomaly_detection.md)
+   * [🖼️ 图像异常检测产线使用教程](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md)
   
 
 * <details>
