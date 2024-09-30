@@ -47,12 +47,12 @@ The image feature module is one of the important tasks in computer vision, prima
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
-After installing the wheel package, a few lines of code can complete the inference of the image feature module. You can switch between models under this module freely, and you can also integrate the model inference of the image feature module into your project.
+After installing the wheel package, a few lines of code can complete the inference of the image feature module. You can switch between models under this module freely, and you can also integrate the model inference of the image feature module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_recognition_001.jpg) to your local machine.
 
 ```python
 from paddlex import create_model
 model = create_model("PP-ShiTuV2_rec")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_recognition_001.jpg", batch_size=1)
+output = model.predict("general_image_recognition_001.jpg", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_json("./output/res.json")
@@ -311,13 +311,13 @@ After completing model training and evaluation, you can use the trained model we
 
 
 #### 4.4.1 Model Inference
-To perform inference prediction through the command line, simply use the following command:
+To perform inference prediction through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_recognition_001.jpg) to your local machine. 
 
 ```bash
 python main.py -c paddlex/configs/general_recognition/PP-ShiTuV2_rec.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_recognition_001.jpg"
+    -o Predict.input="general_image_recognition_001.jpg"
 ```
 Similar to model training and evaluation, the following steps are required:
 
