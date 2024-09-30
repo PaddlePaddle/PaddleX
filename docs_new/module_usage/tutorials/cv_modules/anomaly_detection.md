@@ -165,7 +165,7 @@ python main.py -c paddlex/configs/anomaly_detection/STFPM.yaml \
 python main.py -c paddlex/configs/anomaly_detection/STFPM.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png"
+    -o Predict.input="uad_grid.png"
 ```
 与模型训练和评估类似，需要如下几步：
 
