@@ -204,4 +204,76 @@ PaddleX 为每个模型提供默认的高性能推理配置，并将其存储在
     <td>文本识别</td>
     <td>PP-OCRv4_server_rec<br/>PP-OCRv4_mobile_rec</td>
   </tr>
+
+  <tr>
+    <td rowspan="15">文档场景信息抽取v3产线</td>
+    <td>表格结构识别</td>
+    <td>SLANet</td>
+  </tr>
+
+  <tr>
+    <td rowspan="4">版面区域定位</td>
+    <td>PicoDet-L_layout_3cls</td>
+    
+  </tr>
+
+  <tr>
+    <td>PicoDet-L_layout_3cls</td>
+    
+  </tr>
+
+  <tr>
+    <td>PicoDet-L_layout_3cls</td>
+
+    
+  </tr>
+
+  <tr>
+    <td>PicoDet-L_layout_3cls</td>
+  </tr>
+
+  <tr>
+    <td rowspan="2">文本检测</td>
+    <td>PP-OCRv4_server_det</td>
+  </tr>
+
+  <tr>
+    <td>PP-OCRv4_mobile_det</td>
+  </tr>
+
+  <tr>
+    <td rowspan="4">文本识别</td>
+    <td>PP-OCRv4_server_rec</td>
+  </tr>
+
+  <tr>
+    <td>PP-OCRv4_mobile_rec</td>
+  </tr>
+
+  <tr>
+    <td>ch_RepSVTR_rec</td>
+  </tr>
+
+  <tr>
+    <td>ch_SVTRv2_rec</td>
+  </tr>
+
+  <tr>
+    <td rowspan="2">印章文本检测</td>
+    <td>PP-OCRv4_server_seal_det</td>
+  </tr>
+
+  <tr>
+    <td>PP-OCRv4_mobile_seal_det</td>
+  </tr>
+
+  <tr>
+    <td>图像矫正模块</td>
+    <td>UVDoc</td>
+  </tr>
+
+  <tr>
+    <td>文档图像方向分类</td>
+    <td>PP-LCNet_x1_0_doc_ori</td>
+  </tr>
 </table>
