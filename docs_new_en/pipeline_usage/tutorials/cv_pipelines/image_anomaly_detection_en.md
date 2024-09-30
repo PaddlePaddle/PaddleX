@@ -19,10 +19,10 @@ PaddleX provides pre-trained models for the anomaly detection pipeline, allowing
 Before using the image anomaly detection pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation_en.md).
 
 ### 2.1 Command Line Experience
-Experience the image anomaly detection pipeline with a single command:
+Experience the image anomaly detection pipeline with a single command，Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png), and replace `--input` with the local path to perform prediction.
 
 ```bash
-paddlex --pipeline anomaly_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png --device gpu:0
+paddlex --pipeline anomaly_detection --input uad_grid.png --device gpu:0
 ```
 Parameter Explanation:
 
@@ -50,7 +50,7 @@ paddlex --get_pipeline_config anomaly_detection --config_save_path ./my_path
 After obtaining the pipeline configuration file, replace `--pipeline` with the configuration file save path to make the configuration file take effect. For example, if the configuration file save path is `./anomaly_detection.yaml`, simply execute:
 
 ```bash
-paddlex --pipeline ./anomaly_detection.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png
+paddlex --pipeline ./anomaly_detection.yaml --input uad_grid.png
 ```
 
 Here, parameters such as `--model` and `--device` do not need to be specified, as they will use the parameters in the configuration file. If parameters are still specified, the specified parameters will take precedence.
@@ -74,7 +74,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="anomaly_detection")
 
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png")
+output = pipeline.predict("uad_grid.png")
 for res in output:
     res.print() 
     res.save_to_img("./output/") 
@@ -121,7 +121,7 @@ For example, if your configuration file is saved at `./my_path/anomaly_detection
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/anomaly_detection.yaml")
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png")
+output = pipeline.predict("uad_grid.png")
 for res in output:
     res.print()  # Print the structured output of prediction
     res.save_to_img("./output/")  # Save the visualized image of the result
@@ -169,11 +169,11 @@ PaddleX supports various mainstream hardware devices such as NVIDIA GPUs, Kunlun
 For example, if you use an NVIDIA GPU for inference with the image anomaly detection pipeline, the Python command is:
 
 ```bash
-paddlex --pipeline anomaly_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png --device gpu:0
+paddlex --pipeline anomaly_detection --input uad_grid.png --device gpu:0
 ``````
 At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu`:
 
 ```bash
-paddlex --pipeline anomaly_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png --device npu:0
+paddlex --pipeline anomaly_detection --input uad_grid.png --device npu:0
 ```
 If you want to use the image anomaly detection pipeline on more types of hardware, please refer to the [PaddleX Multi-device Usage Guide](../../../other_devices_support/installation_other_devices_en.md).
