@@ -16,7 +16,7 @@ Face detection is a fundamental task in object detection, aiming to automaticall
 </details>
 
 ## III. Quick Integration  <a id="quick"> </a> 
-Before quick integration, you need to install the PaddleX wheel package. For the installation method of the wheel package, please refer to the [PaddleX Local Installation Tutorial](../../../installation/installation_en.md). After installing the wheel package, a few lines of code can complete the inference of the face detection module. You can switch models under this module freely, and you can also integrate the model inference of the face detection module into your project.
+Before quick integration, you need to install the PaddleX wheel package. For the installation method of the wheel package, please refer to the [PaddleX Local Installation Tutorial](../../../installation/installation_en.md). After installing the wheel package, a few lines of code can complete the inference of the face detection module. You can switch models under this module freely, and you can also integrate the model inference of the face detection module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/face_detection.png) to your local machine.
 
 ```python
 from paddlex.inference import create_model 
@@ -24,7 +24,7 @@ from paddlex.inference import create_model
 model_name = "PicoDet_LCNet_x2_5_face"
 
 model = create_model(model_name)
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/face_detection.png", batch_size=1)
+output = model.predict("face_detection.png", batch_size=1)
 
 for res in output:
     res.print(json_format=False)
@@ -221,12 +221,12 @@ After completing the model evaluation, an `evaluate_result.json` file will be ge
 After completing model training and evaluation, you can use the trained model weights for inference prediction. In PaddleX, model inference prediction can be achieved through two methods: command line and wheel package.
 
 #### 4.4.1 Model Inference
-* To perform inference prediction through the command line, simply use the following command:
+* To perform inference prediction through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/face_detection.png) to your local machine.
 ```bash
 python main.py -c paddlex/configs/face_detection/PicoDet_LCNet_x2_5_face.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/face_detection.png"
+    -o Predict.input="face_detection.png"
 ```
 Similar to model training and evaluation, the following steps are required:
 

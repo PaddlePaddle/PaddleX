@@ -145,7 +145,7 @@ for res in output:
 
 ☁️ **服务化部署**：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/service_deploy.md)。
 
-对于服务提供的所有操作：
+下面是API参考和多语言服务调用示例：
 
 <details>  
 <summary>API参考</summary>  
@@ -658,4 +658,4 @@ paddlex --pipeline multilabel_classification --input small_object_detection.jpg 
 ```
 paddlex --pipeline multilabel_classification --input small_object_detection.jpg --device npu:0
 ```
-若您想在更多种类的硬件上使用通用小目标检测产线，请参考[PaddleX多硬件使用指南](../../../installation/installation_other_devices.md)。
+若您想在更多种类的硬件上使用通用小目标检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。

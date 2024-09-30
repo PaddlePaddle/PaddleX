@@ -184,4 +184,4 @@ At this point, if you wish to switch the hardware to Ascend NPU, simply modify t
 paddlex --pipeline multilabel_classification --input small_object_detection.jpg --device npu:0
 ```
 
-If you want to use the General Small Object Detection Pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/installation_other_devices_en.md).
+If you want to use the General Small Object Detection Pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/installation_other_devices_en.md).

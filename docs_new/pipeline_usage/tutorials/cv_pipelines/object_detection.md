@@ -700,4 +700,4 @@ paddlex --pipeline object_detection --input general_object_detection_002.png --d
 ```
 paddlex --pipeline object_detection --input general_object_detection_002.png --device npu:0
 ```
-若您想在更多种类的硬件上使用通用目标检测产线，请参考[PaddleX多硬件使用指南](../../../installation/installation_other_devices.md)。
+若您想在更多种类的硬件上使用通用目标检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。

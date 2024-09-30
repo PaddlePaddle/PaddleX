@@ -207,4 +207,4 @@ At this point, if you wish to switch the hardware to Ascend NPU, simply modify t
 paddlex --pipeline instance_segmentation --input general_instance_segmentation_004.png --device npu:0
 ```
 
-If you want to use the General Instance Segmentation Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/installation_other_devices_en.md).
+If you want to use the General Instance Segmentation Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/installation_other_devices_en.md).

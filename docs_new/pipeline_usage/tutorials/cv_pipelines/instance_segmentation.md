@@ -679,4 +679,4 @@ paddlex --pipeline instance_segmentation --input general_instance_segmentation_0
 ```
 paddlex --pipeline instance_segmentation --input general_instance_segmentation_004.png --device npu:0
 ```
-若您想在更多种类的硬件上使用通用实例分割产线，请参考[PaddleX多硬件使用指南](../../../installation/installation_other_devices.md)。
+若您想在更多种类的硬件上使用通用实例分割产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。

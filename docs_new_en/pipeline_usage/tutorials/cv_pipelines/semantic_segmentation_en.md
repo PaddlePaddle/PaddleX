@@ -211,4 +211,4 @@ At this point, if you wish to switch the hardware to Ascend NPU, simply modify t
 ```bash
 paddlex --pipeline semantic_segmentation --input makassaridn-road_demo.png --device npu:0
 ```
-If you want to use the General Semantic Segmentation Pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/installation_other_devices.md).
+If you want to use the General Semantic Segmentation Pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/installation_other_devices_en.md).
