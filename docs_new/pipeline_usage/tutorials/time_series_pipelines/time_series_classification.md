@@ -189,4 +189,4 @@ paddlex --pipeline ts_classification --input https://paddle-model-ecology.bj.bce
 ```
 paddlex --pipeline ts_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv --device npu:0
 ```
-若您想在更多种类的硬件上使用通用时序分类产线，请参考[PaddleX多硬件使用指南](https://ku.baidu-int.com/knowledge/HFVrC7hq1Q/pKzJfZczuc/GvMbk70MZz/JDJHAqG0UcH4oR?t=mention&mt=doc&dt=doc)。
+若您想在更多种类的硬件上使用通用时序分类产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。

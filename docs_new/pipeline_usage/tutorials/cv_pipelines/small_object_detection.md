@@ -183,4 +183,4 @@ paddlex --pipeline multilabel_classification --input small_object_detection.jpg 
 ```
 paddlex --pipeline multilabel_classification --input small_object_detection.jpg --device npu:0
 ```
-若您想在更多种类的硬件上使用通用小目标检测产线，请参考[PaddleX多硬件使用指南](../../../installation/installation_other_devices.md)。
+若您想在更多种类的硬件上使用通用小目标检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。
