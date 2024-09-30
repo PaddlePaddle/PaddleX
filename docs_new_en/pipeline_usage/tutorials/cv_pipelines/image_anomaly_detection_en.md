@@ -146,7 +146,7 @@ You can choose the appropriate deployment method for your model pipeline based o
 If the default model weights provided by the image anomaly detection pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing model using **your own domain-specific or application-specific data** to improve the recognition performance of the image anomaly detection pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
-Since the image anomaly detection pipeline includes an unsupervised image anomaly detection module, if the performance of the pipeline does not meet expectations, you need to refer to the [Customization](../../../module_usage/tutorials/cv_modules/unsupervised_anomaly_detection_en.md#customization) section in the [Unsupervised Anomaly Detection Module Tutorial](../../../module_usage/tutorials/cv_modules/unsupervised_anomaly_detection_en.md) and use your private dataset to fine-tune the image anomaly detection model.
+Since the image anomaly detection pipeline includes an unsupervised image anomaly detection module, if the performance of the pipeline does not meet expectations, you need to refer to the [Customization](../../../module_usage/tutorials/cv_modules/anomaly_detection_en.md) section in the [Unsupervised Anomaly Detection Module Tutorial](../../../module_usage/tutorials/cv_modules/anomaly_detection_en.md) and use your private dataset to fine-tune the image anomaly detection model.
 
 ### 4.2 Model Application
 After fine-tuning with your private dataset, you will obtain local model weights files.
@@ -176,4 +176,4 @@ At this point, if you wish to switch the hardware to Ascend NPU, simply modify t
 ```bash
 paddlex --pipeline anomaly_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png --device npu:0
 ```
-If you want to use the image anomaly detection pipeline on more types of hardware, please refer to the [PaddleX Multi-device Usage Guide](../../../installation/installation_other_devices_en_en.md).
+If you want to use the image anomaly detection pipeline on more types of hardware, please refer to the [PaddleX Multi-device Usage Guide](../../../installation/installation_other_devices_en.md).
