@@ -59,9 +59,7 @@ class ReadTS(_BaseRead):
 
     def apply(self, ts):
         if isinstance(ts, pd.DataFrame):
-            with temp_file_manager.temp_file_context(
-                delete=True, suffix=".csv"
-            ) as temp_file:
+            with temp_file_manager.temp_file_context(suffix=".csv") as temp_file:
                 input_path = Path(temp_file.name)
                 ts_path = input_path.as_posix()
                 self._writer.write(ts_path, ts)

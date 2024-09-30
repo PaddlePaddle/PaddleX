@@ -91,9 +91,7 @@ class ReadImage(_BaseRead):
     def apply(self, img):
         """apply"""
         if isinstance(img, np.ndarray):
-            with temp_file_manager.temp_file_context(
-                delete=False, suffix=".png"
-            ) as temp_file:
+            with temp_file_manager.temp_file_context(suffix=".png") as temp_file:
                 img_path = Path(temp_file.name)
                 self._writer.write(img_path, img)
                 yield [
