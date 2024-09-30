@@ -766,12 +766,12 @@ Pipeline:
 ##  5. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，**仅需修改 `--device` 参数**即可完成不同硬件之间的无缝切换。
 
-例如，您使用英伟达 GPU 进行图像分类产线的推理，使用的 Python 命令为：
+例如，您使用英伟达 GPU 进行图像分类产线的推理，使用的命令为：
 
 ```
 paddlex --pipeline image_classification --input general_image_classification_001.jpg --device gpu:0
 ```
-此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的 `--device` 修改为 npu 即可：
+此时，若您想将硬件切换为昇腾 NPU，仅需将 `--device` 修改为 npu 即可：
 
 ```
 paddlex --pipeline image_classification --input general_image_classification_001.jpg --device npu:0
