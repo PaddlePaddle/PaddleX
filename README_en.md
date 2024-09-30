@@ -21,13 +21,14 @@
 ## 🔍 Introduction
 
 PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePaddle framework. It integrates numerous **ready-to-use pre-trained models**, enabling **full-process development** from model training to inference, supporting **a variety of mainstream hardware** both domestic and international, and aiding AI developers in industrial practice.
+ 
 
-|                                                            **Image Classification**                                                            |                                                            **Object Detection**                                                            |                                                            **Semantic Segmentation**                                                            |                                                            **Instance Segmentation**                                                            |
+|                                                            **Image Classification**                                                            |                                                            **Multi-label Image Classification**                                                            |                                                            **Object Detection**                                                            |                                                            **Instance Segmentation**                                                            |
 |:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|
 | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/b302cd7e-e027-4ea6-86d0-8a4dd6d61f39" height="126px" width="180px"> | <img src="/tmp/images/multilabel_cls.png" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/099e2b00-0bbe-4b20-9c5a-96b69e473bd2" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/09f683b4-27df-4c24-b8a7-84da20fdd182" height="126px" width="180px"> |
-|                                                              **Multi-label Image Classification**                                                               |                                                            **OCR**                                                            |                                                          **Table Recognition**                                                          |                                                          **PP-ChatOCR v3**                                                          |
-| <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/02637f8c-f248-415b-89ab-1276505f198c" height="126px" width="180px"> | <img src="https://rte.weiyun.baidu.com/wiki/attach/image/api/imageDownloadAddress?attachId=31aabc8473cb49d982126b48a864eaa2&docGuid=1NT96A2Q0Ln0o-" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1ef48536-48d4-484b-a6fb-0d6631ba2386" height="126px" width="180px"> |  <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1e798e05-dee7-4b41-9cc4-6708b6014efa" height="126px" width="180px"> |
-|                                                              **Time Series Forecasting**                                                              |                                                            **Time Series Anomaly Detection**                                                            |                                                              **Time Series Classification**                                                              |                                                         **Image Anomaly Detection**                                                         |
+|                                                              **Semantic Segmentation**                                                               |                                                            **Image Anomaly Detection**                                                            |                                                          **OCR**                                                          |                                                          **Table Recognition**                                                          |
+| <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/02637f8c-f248-415b-89ab-1276505f198c" height="126px" width="180px"> | <img src="/tmp/images/image_anomaly_detection.png" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1ef48536-48d4-484b-a6fb-0d6631ba2386" height="126px" width="180px"> |  <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1e798e05-dee7-4b41-9cc4-6708b6014efa" height="126px" width="180px"> |
+|                                                              **PP-ChatOCRv3**                                                              |                                                            **Time Series Forecasting**                                                            |                                                              **Time Series Anomaly Detection**                                                              |                                                         **Time Series Classification**                                                         |
 | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/e3d97f4e-ab46-411c-8155-494c61492b0a" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/6e897bf6-35fe-45e6-a040-e9a1a20cfdf2" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/c54c66cc-da4f-4631-877b-43b0fbb192a6" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/0ce925b2-3776-4dde-8ce0-5156d5a2476e" height="126px" width="180px"> |
 
 ## 🌟 Why PaddleX ?
@@ -343,7 +344,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
 
 ### 🛠️ Installation
 
-> ❗Please ensure you have a basic Python runtime environment before installing PaddleX.
+> ❗Please ensure you have a basic **Python runtime environment** before installing PaddleX.
 
 * **Installing PaddlePaddle**
 ```bash
@@ -351,21 +352,20 @@ In addition, PaddleX provides developers with a full-process efficient model tra
 python -m pip install paddlepaddle
 
 # gpu, this command is only applicable to machines with CUDA version 11.8
-python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
+python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/ 
 
 # gpu, this command is only applicable to machines with CUDA version 12.3
-python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
+python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/ 
 ```
+> ❗For more PaddlePaddle Wheel versions, please refer to the [PaddlePaddle official website](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/pip/linux-pip.html). 
 
 * **Installing PaddleX**
 
 ```bash
-git clone https://github.com/PaddlePaddle/PaddleX.git 
-cd PaddleX
-pip install -e .
+pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0.beta1-py3-none-any.whl 
 ```
 
-For more installation methods, please refer to the [PaddleX Installation Guide](/docs_new_en/installation/installation_en.md)
+> ❗For more installation methods, refer to the [PaddleX Installation Guide](/docs_new_en/installation/installation_en.md).
 
 
 ### 💻 CLI Usage
