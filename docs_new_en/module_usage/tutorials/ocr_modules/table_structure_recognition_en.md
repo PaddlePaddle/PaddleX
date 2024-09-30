@@ -45,12 +45,12 @@ SLANet_plus is an enhanced version of SLANet, a table structure recognition mode
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
-After installing the wheel package, a few lines of code can complete the inference of the table structure recognition module. You can easily switch models within this module and integrate the model inference into your project.
+After installing the wheel package, a few lines of code can complete the inference of the table structure recognition module. You can easily switch models within this module and integrate the model inference into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg) to your local machine.
 
 ```bash
 from paddlex import create_model
 model = create_model("SLANet")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg", batch_size=1)
+output = model.predict("table_recognition.jpg", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -245,12 +245,12 @@ After completing the model evaluation, an `evaluate_result.json` file will be pr
 After completing model training and evaluation, you can use the trained model weights for inference predictions or Python integration.
 
 #### 4.4.1 Model Inference
-* Inference predictions can be performed through the command line with just one command:
+* Inference predictions can be performed through the command line with just one command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg) to your local machine.
 ```bash
 python main.py -c paddlex/configs/table_recognition/SLANet.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_accuracy/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg"
+    -o Predict.input="table_recognition.jpg"
 ```
 Similar to model training and evaluation, the following steps are required:
 
