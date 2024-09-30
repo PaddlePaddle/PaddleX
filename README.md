@@ -355,7 +355,8 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
 * **安装PaddlePaddle**
 ```bash
 # cpu
-python -m pip install paddlepaddle
+python -m pip install paddlepaddle==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
+
 
 # gpu，该命令仅适用于 CUDA 版本为 11.8 的机器环境
  python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/

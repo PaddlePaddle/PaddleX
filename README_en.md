@@ -350,7 +350,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
 * **Installing PaddlePaddle**
 ```bash
 # cpu
-python -m pip install paddlepaddle
+python -m pip install paddlepaddle==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
 
 # gpu, this command is only applicable to machines with CUDA version 11.8
 python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/ 
