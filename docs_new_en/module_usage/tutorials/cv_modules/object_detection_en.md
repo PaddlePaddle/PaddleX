@@ -12,7 +12,7 @@ The object detection module is a crucial component in computer vision systems, r
     <th>Model</th>
     <th>mAP(%)</th>
     <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time</th>
+    <th>CPU Inference Time (ms)</th>
     <th>Model Size (M)</th>
     <th>Description</th>
   </tr>

@@ -8,7 +8,7 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 <details>
    <summary> 👉Model List Details</summary>
 
-| Model | mA (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) | Description |
+| Model | mA (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
 |-|-|-|-|-|-|
 | PP-LCNet_x1_0_vehicle_attribute | 91.7 | 3.84845 | 9.23735 | 6.7 M | PP-LCNet_x1_0_vehicle_attribute is a lightweight vehicle attribute recognition model based on PP-LCNet. |
 

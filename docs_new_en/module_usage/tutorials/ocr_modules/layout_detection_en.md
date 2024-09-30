@@ -8,7 +8,7 @@ The core task of structure analysis is to parse and segment the content of input
 <details>
    <summary> 👉Model List Details</summary>
 
-| Model | mAP(0.5) (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) | Description |
+| Model | mAP(0.5) (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
 |-|-|-|-|-|-|
 | PicoDet-L_layout_3cls | 89.3 | 15.7 | 159.8 | 22.6 | High-efficiency structure analysis model based on PicoDet-L, including 3 classes: table, image, and seal |
 | PicoDet_layout_1x | 86.8 | 13.0 | 91.3 | 7.4 | High-efficiency structure analysis model based on PicoDet-1x, including text, title, table, image, and list |

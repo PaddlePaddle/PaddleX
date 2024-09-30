@@ -3,7 +3,7 @@
 PaddleX incorporates multiple pipelines, each containing several modules, and each module includes various models. You can choose which models to use based on the benchmark data below. If you prioritize model accuracy, select models with higher accuracy. If you prioritize inference speed, choose models with faster inference. If you prioritize model storage size, select models with smaller storage sizes.
 
 ## Image Classification Module
-| Model Name | Top-1 Acc (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
+| Model Name | Top-1 Acc (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size |
 |-|-|-|-|-|
 |CLIP_vit_base_patch16_224|85.36|13.1957|285.493|306.5 M|
 |CLIP_vit_large_patch14_224|88.1|51.1284|1131.28|1.04 G|
@@ -89,33 +89,33 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 **Note: The above accuracy metrics are Top-1 Acc on the [ImageNet-1k](https://www.image-net.org/index.php) validation set.**
 
 ## Image Multi-Label Classification Module
-| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
+| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size |
 |-|-|-|-|-|
-|CLIP_vit_base_patch16_448_ML|89.15|-|-|325.6|
-|PP-HGNetV2-B0_ML|80.98|-|-|39.6|
-|PP-HGNetV2-B4_ML|87.96|-|-|88.5|
-|PP-HGNetV2-B6_ML|91.25|-|-|286.5|
-|PP-LCNet_x1_0_ML|77.96|-|-|29.4|
-|ResNet50_ML|83.50|-|-|108.9|
+|CLIP_vit_base_patch16_448_ML|89.15|-|-|325.6 M|
+|PP-HGNetV2-B0_ML|80.98|-|-|39.6 M|
+|PP-HGNetV2-B4_ML|87.96|-|-|88.5 M|
+|PP-HGNetV2-B6_ML|91.25|-|-|286.5 M|
+|PP-LCNet_x1_0_ML|77.96|-|-|29.4 M|
+|ResNet50_ML|83.50|-|-|108.9 M|
 
 **Note: The above accuracy metrics are mAP for the multi-label classification task on [COCO2017](https://cocodataset.org/#home).**
 
 ## Pedestrian Attribute Module
-| Model Name | mA (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
+| Model Name | mA (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size  |
 |-|-|-|-|-|
-|PP-LCNet_x1_0_pedestrian_attribute|92.2|3.84845|9.23735|6.7M  |
+|PP-LCNet_x1_0_pedestrian_attribute|92.2|3.84845|9.23735|6.7 M  |
 
 **Note: The above accuracy metrics are mA on PaddleX's internal self-built dataset.**
 
 ## Vehicle Attribute Module
-| Model Name | mA (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
+| Model Name | mA (%) | GPU Inference Time (ms) | CPU Inference Time (ms)  | Model Size |
 |-|-|-|-|-|
 |PP-LCNet_x1_0_vehicle_attribute|91.7|3.84845|9.23735|6.7 M|
 
 **Note: The above accuracy metrics are mA on the VeRi dataset.**
 
 ## Image Feature Module
-| Model Name | recall@1 (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
+| Model Name | recall@1 (%) | GPU Inference Time (ms) | CPU Inference Time (ms)  | Model Size |
 |-|-|-|-|-|
 |PP-ShiTuV2_rec|84.2|5.23428|19.6005|16.3 M|
 |PP-ShiTuV2_rec_CLIP_vit_base|88.69|13.1957|285.493|306.6 M|
@@ -125,21 +125,21 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 
 
 ## Document Orientation Classification Module
-| Model Name | Top-1 Acc (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
+| Model Name | Top-1 Acc (%) | GPU Inference Time (ms) | CPU Inference Time (ms)  | Model Size |
 |-|-|-|-|-|
-|PP-LCNet_x1_0_doc_ori|99.26|3.84845|9.23735|7.1M|
+|PP-LCNet_x1_0_doc_ori|99.26|3.84845|9.23735|7.1 M|
 
 **Note: The above accuracy metrics are Top-1 Acc on PaddleX's internal self-built dataset.**
 
 ## Main Body Detection Module
-| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
+| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size|
 |-|-|-|-|-|
 |PP-ShiTuV2_det|41.5|33.7426|537.003|27.6 M|
 
 **Note: The above accuracy metrics are mAP(0.5:0.95) on the [PaddleClas main body detection dataset](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/docs/en/training/PP-ShiTu/mainbody_detection.md).**
 
 ## Object Detection Module
-| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
+| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time (ms)  | Model Size |
 |-|-|-|-|-|
 |Cascade-FasterRCNN-ResNet50-FPN|41.1|-|-|245.4 M|
 |Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN|45.0|-|-|246.2 M|
@@ -174,7 +174,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 |YOLOv3-ResNet50_vd_DCN|40.6|31.6276|856.047|163.0 M|
 |YOLOX-L|50.1|185.691|1250.58|192.5 M|
 |YOLOX-M|46.9|123.324|688.071|90.0 M|
-|YOLOX-N|26.1|79.1665|155.59|3.4M|
+|YOLOX-N|26.1|79.1665|155.59|3.4 M|
 |YOLOX-S|40.4|184.828|474.446|32.0 M|
 |YOLOX-T|32.9|102.748|212.52|18.1 M|
 |YOLOX-X|51.8|227.361|2067.84|351.5 M|
@@ -182,7 +182,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 **Note: The above accuracy metrics are mAP(0.5:0.95) on the [COCO2017](https://cocodataset.org/#home) validation set.**
 
 ## Small Object Detection Module
-| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
+| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size  |
 |-|-|-|-|-|
 |PP-YOLOE_plus_SOD-S|25.1|65.4608|324.37|77.3 M|
 |PP-YOLOE_plus_SOD-L|31.9|57.1448|1006.98|325.0 M|
@@ -191,7 +191,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 **Note: The above accuracy metrics are mAP(0.5:0.95) on the [VisDrone-DET](https://github.com/VisDrone/VisDrone-Dataset) validation set.**
 
 ## Pedestrian Detection Module
-| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
+| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size |
 |-|-|-|-|-|
 |PP-YOLOE-L_human|48.0|32.7754|777.691|196.1 M|
 |PP-YOLOE-S_human|42.5|15.0118|179.317|28.8 M|
@@ -200,7 +200,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 
 
 ## Vehicle Detection Module
-| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
+| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size |
 |-|-|-|-|-|
 |PP-YOLOE-L_vehicle|63.9|32.5619|775.633|196.1 M|
 |PP-YOLOE-S_vehicle|61.3|15.3787|178.441|28.8 M|
@@ -208,7 +208,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 **Note: The above accuracy metrics are mAP(0.5:0.95) on the [PPVehicle](https://github.com/PaddlePaddle/PaddleDetection/tree/develop/configs/ppvehicle) validation set.**
 
 ## Face Detection Module
-| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
+| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time (ms)  | Model Size  |
 |-|-|-|-|-|
 |PicoDet_LCNet_x2_5_face|35.8|33.7426|537.003|27.7 M|
 
@@ -216,14 +216,14 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 
 
 ## Abnormality Detection Module
-|Model Name|Avg (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|Model Name|Avg (%)|GPU Inference Time (ms)|CPU Inference Time (ms) |Model Size |
 |-|-|-|-|-|
 |STFPM|96.2|-|-|21.5 M|
 
 **Note: The above accuracy metrics are evaluated on the **[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)** dataset using the average anomaly score.**
 
 ## Semantic Segmentation Module
-|Model Name|mIoU (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|Model Name|mIoU (%)|GPU Inference Time (ms)|CPU Inference Time (ms) |Model Size|
 |-|-|-|-|-|
 |Deeplabv3_Plus-R50 |80.36|61.0531|1513.58|94.9 M|
 |Deeplabv3_Plus-R101|81.10|100.026|2460.71|162.5 M|
@@ -242,25 +242,25 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 
 **Note: The above accuracy metrics are evaluated on the **[Cityscapes](https://www.cityscapes-dataset.com/)** dataset using mIoU.**
 
-|Model Name|mIoU (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|Model Name|mIoU (%)|GPU Inference Time (ms)|CPU Inference Time (ms) |Model Size|
 |-|-|-|-|-|
 |SeaFormer_base(slice)|40.92|24.4073|397.574|30.8 M|
 |SeaFormer_large (slice)|43.66|27.8123|550.464|49.8 M|
 |SeaFormer_small (slice)|38.73|19.2295|358.343|14.3 M|
-|SeaFormer_tiny (slice)|34.58|13.9496|330.132|6.1M |
+|SeaFormer_tiny (slice)|34.58|13.9496|330.132|6.1 M |
 
 **Note: The above accuracy metrics are evaluated on the **[ADE20k](https://groups.csail.mit.edu/vision/datasets/ADE20K/)** dataset. "slice" indicates that the input image has been cropped.**
 
 ## Instance Segmentation Module
-|Model Name|Mask AP|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|Model Name|Mask AP|GPU Inference Time (ms)|CPU Inference Time (ms) |Model Size |
 |-|-|-|-|-|
-|Mask-RT-DETR-H|50.6|132.693|4896.17|449.9|
-|Mask-RT-DETR-L|45.7|46.5059|2575.92|113.6|
+|Mask-RT-DETR-H|50.6|132.693|4896.17|449.9 M|
+|Mask-RT-DETR-L|45.7|46.5059|2575.92|113.6 M|
 |Mask-RT-DETR-M|42.7|36.8329|-|66.6 M|
 |Mask-RT-DETR-S|41.0|33.5007|-|51.8 M|
 |Mask-RT-DETR-X|47.5|75.755|3358.04|237.5 M|
-|Cascade-MaskRCNN-ResNet50-FPN|36.3|-|-|254.8|
-|Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN|39.1|-|-|254.7|
+|Cascade-MaskRCNN-ResNet50-FPN|36.3|-|-|254.8 M|
+|Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN|39.1|-|-|254.7 M|
 |MaskRCNN-ResNet50-FPN|35.6|-|-|157.5 M|
 |MaskRCNN-ResNet50-vd-FPN|36.4|-|-|157.5 M|
 |MaskRCNN-ResNet50-vd-SSLDv2-FPN|38.2|-|-|157.2 M|
@@ -273,7 +273,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 **Note: The above accuracy metrics are evaluated on the **[COCO2017](https://cocodataset.org/#home)** validation set using Mask AP(0.5:0.95).**
 
 ## Text Detection Module
-|Model Name|Detection Hmean (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|Model Name|Detection Hmean (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size|
 |-|-|-|-|-|
 |PP-OCRv4_mobile_det |77.79|10.6923|120.177|4.2 M|
 |PP-OCRv4_server_det |82.69|83.3501|2434.01|100.1M|
@@ -281,42 +281,42 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 **Note: The above accuracy metrics are evaluated on a self-built Chinese dataset by PaddleOCR, covering street scenes, web images, documents, and handwritten texts, with 500 images for detection.**
 
 ## Seal Text Detection Module
-|Model Name|Detection Hmean (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|Model Name|Detection Hmean (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size |
 |-|-|-|-|-|
-|PP-OCRv4_mobile_seal_det|96.47|10.5878|131.813|4.7M |
+|PP-OCRv4_mobile_seal_det|96.47|10.5878|131.813|4.7 M |
 |PP-OCRv4_server_seal_det|98.21|84.341|2425.06|108.3 M|
 
 **Note: The above accuracy metrics are evaluated on a self-built seal dataset by PaddleX, containing 500 seal images.**
 
 ## Text Recognition Module
-|Model Name|Recognition Avg Accuracy (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|Model Name|Recognition Avg Accuracy (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size |
 |-|-|-|-|-|
 |PP-OCRv4_mobile_rec |78.20|7.95018|46.7868|10.6 M|
 |PP-OCRv4_server_rec |79.20|7.19439|140.179|71.2 M|
 
 **Note: The above accuracy metrics are evaluated on a self-built Chinese dataset by PaddleOCR, covering street scenes, web images, documents, and handwritten texts, with 11,000 images for text recognition.**
 
-|Model Name|Recognition Avg Accuracy (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|Model Name|Recognition Avg Accuracy (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size |
 |-|-|-|-|-|
 |ch_SVTRv2_rec|68.81|8.36801|165.706|73.9 M|
 
 **Note: The above accuracy metrics are evaluated on [PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition](https://aistudio.baidu.com/competition/detail/1131/0/introduction) A-Rank.**
 
-|Model Name|Recognition Avg Accuracy (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|Model Name|Recognition Avg Accuracy (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size|
 |-|-|-|-|-|
 |ch_RepSVTR_rec|65.07|10.5047|51.5647|22.1 M|
 
 **Note: The above accuracy metrics are evaluated on [PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition](https://aistudio.baidu.com/competition/detail/1131/0/introduction) B-Rank.**
 
 ## Formula Recognition Module
-|Model Name|BLEU Score|Normed Edit Distance|ExpRate (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|Model Name|BLEU Score|Normed Edit Distance|ExpRate (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size|
 |-|-|-|-|-|-|-|
 |LaTeX_OCR_rec|0.8821|0.0823|40.01|-|-|89.7 M|
 
 **Note: The above accuracy metrics are measured on the [LaTeX-OCR formula recognition test set](https://drive.google.com/drive/folders/13CA4vAmOmD_I_dSbvLp-Lf0s6KiaNfuO).**
 
 ## Table Structure Recognition Module
-|Model Name|Accuracy (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|Model Name|Accuracy (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size |
 |-|-|-|-|-|
 |SLANet|59.52|522.536|1845.37|6.9 M |
 |SLANet_plus|63.69|522.536|1845.37|6.9 M |
@@ -324,7 +324,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 **Note: The above accuracy metrics are evaluated on a self-built English table recognition dataset by PaddleX.**
 
 ## Image Rectification Module
-|Model Name|MS-SSIM (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|Model Name|MS-SSIM (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size|
 |-|-|-|-|-|
 |UVDoc|54.40|-|-|30.3 M|
 
@@ -332,43 +332,43 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 **Note: The above accuracy metrics are measured on a self-built image rectification dataset by PaddleX.**
 
 ## Layout Analysis Module
-|Model Name|mAP (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|Model Name|mAP (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size|
 |-|-|-|-|-|
-|PicoDet_layout_1x|86.8|13.036|91.2634|7.4M |
+|PicoDet_layout_1x|86.8|13.036|91.2634|7.4 M |
 |PicoDet-L_layout_3cls|89.3|15.7425|159.771|22.6 M|
-|RT-DETR-H_layout_3cls|95.9|114.644|3832.62|470.1M|
-|RT-DETR-H_layout_17cls|92.6|115.126|3827.25|470.2M|
+|RT-DETR-H_layout_3cls|95.9|114.644|3832.62|470.1 M|
+|RT-DETR-H_layout_17cls|92.6|115.126|3827.25|470.2 M|
 
 **Note: The evaluation set for the above accuracy metrics is the ****PaddleX self-built Layout Analysis Dataset****, containing 10,000 images.**
 
 ## Time Series Forecasting Module
-|Model Name|mse|mae|Model Size (M)|
+|Model Name|mse|mae|Model Size|
 |-|-|-|-|
-|DLinear|0.382|0.394|72K|
-|NLinear|0.386|0.392|40K |
+|DLinear|0.382|0.394|72 K|
+|NLinear|0.386|0.392|40 K |
 |Nonstationary|0.600|0.515|55.5 M|
-|PatchTST|0.385|0.397|2.0M |
-|RLinear|0.384|0.392|40K|
-|TiDE|0.405|0.412|31.7M|
-|TimesNet|0.417|0.431|4.9M|
+|PatchTST|0.385|0.397|2.0 M |
+|RLinear|0.384|0.392|40 K|
+|TiDE|0.405|0.412|31.7 M|
+|TimesNet|0.417|0.431|4.9 M|
 
 **Note: The above accuracy metrics are measured on the **[ETTH1](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/Etth1.tar)** dataset ****(evaluation results on the test set test.csv)****.**
 
 ## Time Series Anomaly Detection Module
-|Model Name|Precision|Recall|f1_score|Model Size (M)|
+|Model Name|Precision|Recall|f1_score|Model Size|
 |-|-|-|-|-|
-|AutoEncoder_ad|99.36|84.36|91.25|52K |
-|DLinear_ad|98.98|93.96|96.41|112K|
-|Nonstationary_ad|98.55|88.95|93.51|1.8M |
-|PatchTST_ad|98.78|90.70|94.57|320K |
-|TimesNet_ad|98.37|94.80|96.56|1.3M |
+|AutoEncoder_ad|99.36|84.36|91.25|52 K |
+|DLinear_ad|98.98|93.96|96.41|112 K|
+|Nonstationary_ad|98.55|88.95|93.51|1.8 M |
+|PatchTST_ad|98.78|90.70|94.57|320 K |
+|TimesNet_ad|98.37|94.80|96.56|1.3 M |
 
 **Note: The above accuracy metrics are measured on the **[PSM](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_anomaly_examples.tar)** dataset.**
 
 ## Time Series Classification Module
-|Model Name|acc (%)|Model Size (M)|
+|Model Name|acc (%)|Model Size|
 |-|-|-|
-|TimesNet_cls|87.5|792K|
+|TimesNet_cls|87.5|792 K|
 
 **Note: The above accuracy metrics are measured on the [UWaveGestureLibrary](https://paddlets.bj.bcebos.com/classification/UWaveGestureLibrary_TEST.csv) dataset.**
 

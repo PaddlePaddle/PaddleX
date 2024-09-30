@@ -13,7 +13,7 @@ Vehicle detection is a subtask of object detection, specifically referring to th
     <th>Model</th>
     <th>mAP 0.5:0.95</th>
     <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time</th>
+    <th>CPU Inference Time (ms)</th>
     <th>Model Size (M)</th>
     <th>Description</th>
   </tr>
