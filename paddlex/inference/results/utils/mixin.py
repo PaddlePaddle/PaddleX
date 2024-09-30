@@ -27,6 +27,7 @@ from ...utils.io import (
     CSVWriter,
     HtmlWriter,
     XlsxWriter,
+    TextWriter,
 )
 
 
@@ -102,6 +103,28 @@ class JsonMixin:
             ensure_ascii=ensure_ascii,
             *args,
             **kwargs,
+        )
+
+
+class Base64Mixin:
+    def __init__(self, *args, **kwargs):
+        self._base64_writer = TextWriter(*args, **kwargs)
+        self._show_func_register()(self.save_to_base64)
+
+    @abstractmethod
+    def _to_base64(self):
+        raise NotImplementedError
+
+    @property
+    def base64(self):
+        return self._to_base64()
+
+    def save_to_base64(self, save_path, *args, **kwargs):
+        if not str(save_path).lower().endswith((".b64")):
+            fp = Path(self["input_path"])
+            save_path = Path(save_path) / f"{fp.stem}{fp.suffix}"
+        _save_list_data(
+            self._base64_writer.write, save_path, self.base64, *args, **kwargs
         )
 
 

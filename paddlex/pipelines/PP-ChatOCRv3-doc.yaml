@@ -3,12 +3,12 @@ Global:
   input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf
   #input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/report.png
 Pipeline:
-  layout_model: PicoDet_layout_1x
+  layout_model: RT-DETR-H_layout_3cls
   table_model: SLANet_plus
-  text_det_model: PP-OCRv4_mobile_det
-  text_rec_model: PP-OCRv4_mobile_rec
+  text_det_model: PP-OCRv4_server_det
+  text_rec_model: PP-OCRv4_server_rec
   uvdoc_model: UVDoc
-  curve_model: PP-OCRv4_mobile_seal_det
+  curve_model: PP-OCRv4_server_seal_det
   oricls_model: PP-LCNet_x1_0_doc_ori
   llm_name: "ernie-3.5"
   llm_params: 

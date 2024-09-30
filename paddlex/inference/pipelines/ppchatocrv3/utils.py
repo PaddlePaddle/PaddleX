@@ -51,8 +51,7 @@ def get_uvdoc_results(inputs, predictor):
     img_list = [img_info["img"] for img_info in inputs]
     for input, pred in zip(inputs, predictor(img_list)):
         results.append(pred)
-        img = np.array(pred["doctr_img"], dtype=np.uint8)
-        input["img"] = img
+        input["img"] = pred["doctr_img"]
     return results
 
 

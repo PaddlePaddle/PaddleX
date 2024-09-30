@@ -61,7 +61,7 @@ class Topk(BaseComponent):
                 label_name_list.append(self.class_id_map[i.item()])
         result = {
             "class_ids": clas_id_list,
-            "scores": np.around(score_list, decimals=5).tolist(),
+            "scores": np.around(score_list, decimals=5),
         }
         if label_name_list is not None:
             result["label_names"] = label_name_list
@@ -102,7 +102,7 @@ class MultiLabelThreshOutput(BaseComponent):
                 label_name_list.append(self.class_id_map[i.item()])
         result = {
             "class_ids": clas_id_list,
-            "scores": np.around(score_list, decimals=5).tolist(),
+            "scores": np.around(score_list, decimals=5),
         }
         if label_name_list is not None:
             result["label_names"] = label_name_list

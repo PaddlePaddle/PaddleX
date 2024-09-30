@@ -164,24 +164,28 @@ class ErnieBot(BaseLLM):
 
     def caculate_similar(self, vector, key_list, llm_params=None, sleep_time=0.5):
         """caculate similar with key and doc"""
-        if self.is_vector_store(vector):
-            # XXX: The initialization parameters are hard-coded.
-            if llm_params:
-                api_type = llm_params.get("api_type")
-                access_token = llm_params.get("access_token")
-                ak = llm_params.get("ak")
-                sk = llm_params.get("sk")
-            else:
-                api_type = self.config["api_type"]
-                access_token = self.config.get("access_token")
-                ak = self.config.get("ak")
-                sk = self.config.get("sk")
-            if api_type == "aistudio":
-                embeddings = ErnieEmbeddings(aistudio_access_token=access_token)
-            elif api_type == "qianfan":
-                embeddings = QianfanEmbeddingsEndpoint(qianfan_ak=ak, qianfan_sk=sk)
-            else:
-                raise ValueError(f"Unsupported api_type: {api_type}")
+        if not self.is_vector_store(vector):
+            logging.warning(
+                "The retrieved vectorstore is not for PaddleX and will return vectorstore directly"
+            )
+            return vector
+        # XXX: The initialization parameters are hard-coded.
+        if llm_params:
+            api_type = llm_params.get("api_type")
+            access_token = llm_params.get("access_token")
+            ak = llm_params.get("ak")
+            sk = llm_params.get("sk")
+        else:
+            api_type = self.config["api_type"]
+            access_token = self.config.get("access_token")
+            ak = self.config.get("ak")
+            sk = self.config.get("sk")
+        if api_type == "aistudio":
+            embeddings = ErnieEmbeddings(aistudio_access_token=access_token)
+        elif api_type == "qianfan":
+            embeddings = QianfanEmbeddingsEndpoint(qianfan_ak=ak, qianfan_sk=sk)
+        else:
+            raise ValueError(f"Unsupported api_type: {api_type}")
 
         vectorstore = vectorstores.FAISS.deserialize_from_bytes(
             self.decode_vector_store(vector), embeddings
