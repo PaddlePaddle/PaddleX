@@ -121,7 +121,7 @@ class PaddlePredictorOption(object):
 
     @property
     def shape_info_filename(self):
-        self._cfg["shape_info_filename"]
+        return self._cfg["shape_info_filename"]
 
     @shape_info_filename.setter
     def shape_info_filename(self, shape_info_filename: str):
@@ -130,7 +130,7 @@ class PaddlePredictorOption(object):
 
     @property
     def trt_calib_mode(self):
-        self._cfg["trt_calib_mode"]
+        return self._cfg["trt_calib_mode"]
 
     @trt_calib_mode.setter
     def trt_calib_mode(self, trt_calib_mode):
@@ -139,7 +139,7 @@ class PaddlePredictorOption(object):
 
     @property
     def cpu_threads(self):
-        self._cfg["cpu_threads"]
+        return self._cfg["cpu_threads"]
 
     @cpu_threads.setter
     def cpu_threads(self, cpu_threads):
@@ -150,7 +150,7 @@ class PaddlePredictorOption(object):
 
     @property
     def trt_use_static(self):
-        self._cfg["trt_use_static"]
+        return self._cfg["trt_use_static"]
 
     @trt_use_static.setter
     def trt_use_static(self, trt_use_static):
@@ -167,7 +167,7 @@ class PaddlePredictorOption(object):
 
     @property
     def enable_new_ir(self):
-        self._cfg["enable_new_ir"]
+        return self._cfg["enable_new_ir"]
 
     @enable_new_ir.setter
     def enable_new_ir(self, enable_new_ir: bool):
