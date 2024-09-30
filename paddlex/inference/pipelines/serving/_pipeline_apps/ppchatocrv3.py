@@ -395,6 +395,8 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
             kwargs = {"visual_info": request.visionInfo}
             if request.minChars is not None:
                 kwargs["min_characters"] = request.minChars
+            else:
+                kwargs["min_characters"] = 0
             if request.llmRequestInterval is not None:
                 kwargs["llm_request_interval"] = request.llmRequestInterval
             if request.llmName is not None:

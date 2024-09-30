@@ -73,7 +73,7 @@ def create_pipeline_app(pipeline: OCRPipeline, app_config: AppConfig) -> FastAPI
             )
             image = serving_utils.image_bytes_to_array(file_bytes)
 
-            result = await pipeline.infer(image)[0]
+            result = (await pipeline.infer(image))[0]
 
             texts: List[Text] = []
             for poly, text, score in zip(

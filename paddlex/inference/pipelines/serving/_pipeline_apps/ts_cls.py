@@ -29,7 +29,6 @@ class InferRequest(BaseModel):
 class InferResult(BaseModel):
     label: str
     score: float
-    image: str
 
 
 def create_pipeline_app(pipeline: TSCls, app_config: AppConfig) -> FastAPI:
@@ -50,17 +49,16 @@ def create_pipeline_app(pipeline: TSCls, app_config: AppConfig) -> FastAPI:
             file_bytes = await serving_utils.get_raw_bytes(request.csv, aiohttp_session)
             df = serving_utils.csv_bytes_to_data_frame(file_bytes)
 
-            result = await pipeline.infer(df)[0]
+            result = (await pipeline.infer(df))[0]
 
-            label = result["classification"]["classid"]
-            score = result["classification"]["score"]
-            output_image_base64 = serving_utils.image_to_base64(result.img)
+            label = str(result["classification"].at[0, "classid"])
+            score = float(result["classification"].at[0, "score"])
 
             return ResultResponse(
                 logId=serving_utils.generate_log_id(),
                 errorCode=0,
                 errorMsg="Success",
-                result=InferResult(label=label, score=score, image=output_image_base64),
+                result=InferResult(label=label, score=score),
             )
 
         except Exception as e:

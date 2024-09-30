@@ -16,6 +16,7 @@
 from pathlib import Path
 from typing import Any, Dict, Optional
 
+from ...utils import errors
 from ..utils.official_models import official_models
 from .base import BasePredictor, BasicPredictor
 from .image_classification import ClasPredictor
@@ -44,14 +45,20 @@ def _create_hp_predictor(
         raise RuntimeError(
             "The PaddleX HPI plugin is not properly installed, and the high-performance model inference features are not available."
         ) from None
-    return HPPredictor.get(model_name)(
-        model_dir=model_dir,
-        config=config,
-        device=device,
-        *args,
-        hpi_params=hpi_params,
-        **kwargs,
-    )
+    try:
+        predictor = HPPredictor.get(model_name)(
+            model_dir=model_dir,
+            config=config,
+            device=device,
+            *args,
+            hpi_params=hpi_params,
+            **kwargs,
+        )
+    except errors.others.ClassNotFoundException:
+        raise ValueError(
+            f"{model_name} is not supported by the PaddleX HPI plugin."
+        ) from None
+    return predictor
 
 
 def create_predictor(

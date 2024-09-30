@@ -75,7 +75,7 @@ def create_pipeline_app(pipeline: TableRecPipeline, app_config: AppConfig) -> Fa
             )
             image = serving_utils.image_bytes_to_array(file_bytes)
 
-            result = await pipeline.infer(image)[0]
+            result = (await pipeline.infer(image))[0]
 
             tables: List[Table] = []
             for item in result["table_result"]:

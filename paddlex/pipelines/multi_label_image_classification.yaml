@@ -5,4 +5,3 @@ Global:
 Pipeline:
   model: PP-LCNet_x1_0_ML
   batch_size: 1
-  device: "gpu:0"

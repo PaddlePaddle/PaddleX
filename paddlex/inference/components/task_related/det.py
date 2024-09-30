@@ -26,7 +26,7 @@ def restructured_boxes(boxes, labels, img_size):
     w, h = img_size
 
     for box in boxes:
-        xmin, ymin, xmax, ymax = list(map(int, box[2:]))
+        xmin, ymin, xmax, ymax = box[2:]
         xmin = max(0, xmin)
         ymin = max(0, ymin)
         xmax = min(w, xmax)

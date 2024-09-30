@@ -61,7 +61,7 @@ def create_pipeline_app(
             )
             image = serving_utils.image_bytes_to_array(file_bytes)
 
-            result = await pipeline.infer(image)[0]
+            result = (await pipeline.infer(image))[0]
 
             if "label_names" in result:
                 cat_names = result["label_names"]

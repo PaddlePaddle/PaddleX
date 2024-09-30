@@ -58,7 +58,7 @@ class PPChatOCRPipeline(TableRecPipeline):
         curve_batch_size=1,
         oricls_batch_size=1,
         recovery=True,
-        device="gpu",
+        device=None,
         predictor_kwargs=None,
     ):
         self.layout_model = layout_model

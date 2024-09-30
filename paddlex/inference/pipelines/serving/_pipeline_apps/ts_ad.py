@@ -28,7 +28,6 @@ class InferRequest(BaseModel):
 
 class InferResult(BaseModel):
     csv: str
-    image: str
 
 
 def create_pipeline_app(pipeline: TSAd, app_config: AppConfig) -> FastAPI:
@@ -49,16 +48,15 @@ def create_pipeline_app(pipeline: TSAd, app_config: AppConfig) -> FastAPI:
             file_bytes = await serving_utils.get_raw_bytes(request.csv, aiohttp_session)
             df = serving_utils.csv_bytes_to_data_frame(file_bytes)
 
-            result = await pipeline.infer(df)[0]
+            result = (await pipeline.infer(df))[0]
 
             output_csv = serving_utils.data_frame_to_base64(result["anomaly"])
-            output_image_base64 = serving_utils.image_to_base64(result.img)
 
             return ResultResponse(
                 logId=serving_utils.generate_log_id(),
                 errorCode=0,
                 errorMsg="Success",
-                result=InferResult(csv=output_csv, image=output_image_base64),
+                result=InferResult(csv=output_csv),
             )
 
         except Exception as e:

@@ -71,7 +71,7 @@ def csv_bytes_to_data_frame(data: bytes) -> pd.DataFrame:
 
 
 def data_frame_to_base64(df: str) -> str:
-    return base64.b64encode(df.to_csv()).decode("ascii")
+    return base64.b64encode(df.to_csv().encode("utf-8")).decode("ascii")
 
 
 def read_pdf(

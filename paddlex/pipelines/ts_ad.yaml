@@ -5,4 +5,3 @@ Global:
 Pipeline:
   model: DLinear_ad
   batch_size: 1
-  device: "gpu:0"
