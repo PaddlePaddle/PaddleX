@@ -360,20 +360,13 @@ Below are the API references and multi-language service invocation examples:
         |`llmName`|`string`|大语言模型名称。|否|
         |`llmParams`|`object`|大语言模型API参数。|否|
 
-        当前，`llmParams`可以采用如下两种形式之一：
+        当前，`llmParams`可以采用如下形式：
         
         ```json
         {
           "apiType": "qianfan",
           "apiKey": "{千帆平台API key}",
           "secretKey": "{千帆平台secret key}"
-        }
-        ```
-
-        ```json
-        {
-          "apiType": "{aistudio}",
-          "accessToken": "{AI Studio访问令牌}"
         }
         ```
 
