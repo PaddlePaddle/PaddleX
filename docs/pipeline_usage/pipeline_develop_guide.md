@@ -38,7 +38,7 @@ PaddleX提供了三种可以快速体验产线效果的方式，您可以根据�
 * 在线快速体验地址：[PaddleX产线列表(CPU/GPU)](../support_list/pipelines_list.md)
 * 命令行快速体验：[PaddleX产线命令行使用说明](../pipeline_usage/instructions/pipeline_CLI_usage.md)
 * Python脚本快速体验：[PaddleX产线Python脚本使用说明](../pipeline_usage/instructions/pipeline_python_API.md)
-* 
+  
 以实现登机牌识别任务的通用OCR产线为例，一行命令即可快速体验产线效果：
 
 ```bash
