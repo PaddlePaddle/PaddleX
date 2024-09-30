@@ -35,10 +35,10 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 在本地使用通用时序分类产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
 #### 2.2.1 命令行方式体验
-一行命令即可快速体验时序分类产线效果
+一行命令即可快速体验时序分类产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv)，并将 `--input` 替换为本地路径，进行预测
 
 ```
-paddlex --pipeline ts_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv --device gpu:0
+paddlex --pipeline ts_classification --input ts_cls.csv --device gpu:0
 ```
 参数说明：
 
@@ -65,7 +65,7 @@ paddlex --get_pipeline_config ts_classification --config_save_path ./my_path
 获取产线配置文件后，可将 `--pipeline` 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 `./ts_classification.yaml`，只需执行：
 
 ```
-paddlex --pipeline ./ts_classification.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv
+paddlex --pipeline ./ts_classification.yaml --input ts_cls.csv
 ```
 其中，`--model`、`--device` 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。
 
@@ -87,7 +87,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="ts_classification")
 
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv")
+output = pipeline.predict("ts_cls.csv")
 for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_csv("./output/") ## 保存csv格式结果
@@ -133,7 +133,7 @@ for res in output:
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/ts_forecast.yaml")
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv")
+output = pipeline.predict("ts_cls.csv")
 for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_csv("./output/") ## 保存csv格式结果
@@ -182,11 +182,11 @@ PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多�
 例如，您使用英伟达 GPU 进行时序分类产线的推理，使用的 Python 命令为：
 
 ```
-paddlex --pipeline ts_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv --device gpu:0
+paddlex --pipeline ts_classification --input ts_cls.csv --device gpu:0
 ```
 此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的 `--device` 进行修改即可：
 
 ```
-paddlex --pipeline ts_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv --device npu:0
+paddlex --pipeline ts_classification --input ts_cls.csv --device npu:0
 ```
 若您想在更多种类的硬件上使用通用时序分类产线，请参考[PaddleX多硬件使用指南](https://ku.baidu-int.com/knowledge/HFVrC7hq1Q/pKzJfZczuc/GvMbk70MZz/JDJHAqG0UcH4oR?t=mention&mt=doc&dt=doc)。
