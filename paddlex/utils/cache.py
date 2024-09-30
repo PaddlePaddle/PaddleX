@@ -114,7 +114,7 @@ class TempFileManager:
         atexit.register(self.cleanup)
 
     def create_temp_file(self, **kwargs):
-        temp_file = tempfile.NamedTemporaryFile(dir=TEMP_DIR, **kwargs)
+        temp_file = tempfile.NamedTemporaryFile(delete=False, dir=TEMP_DIR, **kwargs)
         self.temp_files.append(temp_file)
         return temp_file
 
