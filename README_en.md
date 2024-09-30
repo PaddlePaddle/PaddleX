@@ -3,10 +3,10 @@
 </p>
 
 <p align="center">
-    <a href="./LICENSE"><img src="https://img.shields.io/badge/license-Apache%202-red.svg"></a> 
-    <a href=""><img src="https://img.shields.io/badge/python-3.8%2C%203.9%2C%203.10-blue.svg"></a> 
-    <a href=""><img src="https://img.shields.io/badge/os-linux%2C%20windows-orange.svg"></a> 
-    <a href=""><img src="https://img.shields.io/badge/hardware-intel  cpu%2C%20gpu%2C%20xpu%2C%20npu%2C%20mlu-yellow.svg"></a>
+    <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202-red.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/Python-3.8%2C%203.9%2C%203.10-blue.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/OS-Linux%2C%20Windows-orange.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/hardware-CPU%2C%20GPU%2C%20XPU%2C%20NPU%2C%20MLU%2C%20DCU-yellow.svg"></a>
 </p>
 
 <h4 align="center">
@@ -350,7 +350,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
 * **Installing PaddlePaddle**
 ```bash
 # cpu
-python -m pip install paddlepaddle
+python -m pip install paddlepaddle==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
 
 # gpu, this command is only applicable to machines with CUDA version 11.8
 python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/ 
@@ -452,19 +452,19 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 
 | Production Line Name           | Corresponding Parameter               | Detailed Explanation                                                                                                      |
 |-------------------------------|-------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| PP-ChatOCRv3   | `pp_chatocrv3` | [PP-ChatOCRv3 Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md) |
+| PP-ChatOCRv3-doc   | `PP-ChatOCRv3-doc` | [PP-ChatOCRv3-doc Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md) |
 |  Image Classification       | `image_classification` | [ Image Classification Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification_en.md) |
 |  Object Detection       | `object_detection` | [ Object Detection Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification_en.md) |
 |  Instance Segmentation       | `instance_segmentation` | [ Instance Segmentation Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/instance_segmentation_en.md) |
 |  Semantic Segmentation       | `semantic_segmentation` | [ Semantic Segmentation Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation_en.md) |
 |  Image Multi-Label Classification | `multilabel_classification` | [ Image Multi-Label Classification Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_lassification_en.md) |
-| Small Object Detection         | `smallobject_detection` | [Small Object Detection Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection_en.md) |
+| Small Object Detection         | `small_object_detection` | [Small Object Detection Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection_en.md) |
 | Image Anomaly Detection       | `image_classification` | [Image Anomaly Detection Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection_en.md) |
 |  OCR            | `OCR` | [ OCR Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/ocr_pipelies/OCR_en.md) |
 |  Form Recognition       | `table_recognition` | [ Form Recognition Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/ocr_pipelies/table_recognition_en.md) |
 |  Time Series Forecast       | `ts_forecast` | [ Time Series Forecast Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting_en.md) |
 |  Time Series Anomaly Detection   | `ts_anomaly_detection` | [ Time Series Anomaly Detection Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md) |
-|  Time Series Classification       | `ts_classification` | [ Time Series Classification Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification_en.md) |
+|  Time Series Classification       | `ts_cls` | [ Time Series Classification Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification_en.md) |
 </details>
 
 ## 📖 Documentation
@@ -593,11 +593,6 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 
 </details>
 
-<details>
-  <summary> <b> 🔗 Multi-Module Combination Usage </b></summary>
-
-  * [[🧩 Multi-Function Module Combination Usage Guide]()
-</details>
 <details>
   <summary> <b> 🏗️ Model Production Line Deployment </b></summary>
 

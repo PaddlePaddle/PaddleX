@@ -15,7 +15,6 @@
 from abc import abstractmethod
 
 from ....utils.subclass_register import AutoRegisterABCMetaClass
-from ....utils.func_register import FuncRegister
 from ....utils import logging
 from ...components.base import BaseComponent, ComponentsEngine
 from ...utils.pp_option import PaddlePredictorOption
@@ -36,18 +35,12 @@ class BasicPredictor(
 
     def __init__(self, model_dir, config=None, device=None, pp_option=None):
         super().__init__(model_dir=model_dir, config=config)
-        self._pred_set_func_map = {}
-        self._pred_set_register = FuncRegister(self._pred_set_func_map)
-        self._pred_set_register("device")(self.set_device)
-        self._pred_set_register("pp_option")(self.set_pp_option)
-        self._pred_set_register("batch_size")(self.set_batch_size)
+        if not pp_option:
+            pp_option = PaddlePredictorOption(model_name=self.model_name)
+        if device:
+            pp_option.device = device
+        self._pp_option = pp_option
 
-        self.pp_option = (
-            pp_option
-            if pp_option
-            else PaddlePredictorOption(model_name=self.model_name)
-        )
-        self.pp_option.set_device(device)
         self.components = {}
         self._build_components()
         self.engine = ComponentsEngine(self.components)
@@ -81,10 +74,23 @@ class BasicPredictor(
 
     def set_predictor(self, **kwargs):
         for k in kwargs:
-            assert (
-                k in self._pred_set_func_map
-            ), f"The arg({k}) is not supported to specify in predict() func! Only supports: {self._pred_set_func_map.keys()}"
-            self._pred_set_func_map[k](kwargs[k])
+            if self._has_setter(k):
+                setattr(self, k, kwargs[k])
+            else:
+                raise Exception(
+                    f"The arg({k}) is not supported to specify in predict() func! Only supports: {self._get_settable_attributes}"
+                )
+
+    def _has_setter(self, attr):
+        prop = getattr(self.__class__, attr, None)
+        return isinstance(prop, property) and prop.fset is not None
+
+    def _get_settable_attributes(self):
+        return [
+            name
+            for name, prop in vars(self.__class__).items()
+            if isinstance(prop, property) and prop.fset is not None
+        ]
 
     @abstractmethod
     def _build_components(self):

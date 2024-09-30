@@ -115,7 +115,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 如果您对产线运行的效果满意，可以直接对产线进行集成部署，如果不满意，您也可以利用私有数据**对产线中的模型进行在线微调**。
 
 ### 2.2 本地体验
-在本地使用文档场景信息抽取v3产线前，请确保您已经按照[PaddleX本地安装教程](https://ku.baidu-int.com/knowledge/HFVrC7hq1Q/pKzJfZczuc/GvMbk70MZz/dF1VvOPZmZXXzn?t=mention&mt=doc&dt=doc)完成了PaddleX的wheel包安装。
+在本地使用文档场景信息抽取v3产线前，请确保您已经按照[PaddleX本地安装教程]../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
 几行代码即可完成产线的快速推理，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf)，以通用文档场景信息抽取v3产线为例：
 
@@ -125,7 +125,7 @@ from paddlex import create_pipeline
 predict = create_pipeline( pipeline="PP-ChatOCRv3-doc",
                             llm_name="ernie-3.5",
                             llm_params = {"api_type":"qianfan","ak":"","sk":""} )  ## 请填入您的ak与sk，否则无法调用大模型
-                            
+
 visual_result, visual_inf = predict(["contract.pdf"])
 
 for res in visual_result:
@@ -198,13 +198,13 @@ Pipeline:
   text_det_model: PP-OCRv4_server_det
   text_rec_model: PP-OCRv4_server_rec
   seal_text_det_model: PP-OCRv4_server_seal_det
-  doc_image_ori_cls_model: null 
-  doc_image_unwarp_model: null 
+  doc_image_ori_cls_model: null
+  doc_image_unwarp_model: null
   llm_name: "ernie-3.5"
-  llm_params: 
+  llm_params:
     api_type: qianfan
-    ak: 
-    sk: 
+    ak:
+    sk:
 ```
 
 在上述配置中，您可以修改产线各模块加载的模型，也可以修改使用的大模型。各模块支持模型列表请参考模块文档，大模型支持列表为：ernie-4.0、ernie-3.5、ernie-3.5-8k、ernie-lite、ernie-tiny-8k、ernie-speed、ernie-speed-128k、ernie-char-8k。
@@ -219,7 +219,7 @@ from paddlex import create_pipeline
 predict = create_pipeline( pipeline="./my_path/PP-ChatOCRv3-doc.yaml",
                             llm_name="ernie-3.5",
                             llm_params = {"api_type":"qianfan","ak":"","sk":""} )  ## 请填入您的ak与sk，否则无法调用大模型
-                            
+
 visual_result, visual_inf = predict(["contract.pdf"])
 
 for res in visual_result:
@@ -243,9 +243,9 @@ print(predict.chat("乙方,手机号"))
 
 下面是API参考和多语言服务调用示例：
 
-<details>  
-<summary>API参考</summary>  
-  
+<details>
+<summary>API参考</summary>
+
 对于服务提供的所有操作：
 
 - 响应体以及POST请求的请求体均为JSON数据（JSON对象）。
@@ -339,7 +339,7 @@ print(predict.chat("乙方,手机号"))
         |`llmParams`|`object`|大语言模型API参数。|否|
 
         当前，`llmParams`可以采用如下两种形式之一：
-        
+
         ```json
         {
           "apiType": "qianfan",
@@ -378,7 +378,7 @@ print(predict.chat("乙方,手机号"))
         |`llmParams`|`object`|大语言模型API参数。|否|
 
         当前，`llmParams`可以采用如下两种形式之一：
-        
+
         ```json
         {
           "apiType": "qianfan",
@@ -423,7 +423,7 @@ print(predict.chat("乙方,手机号"))
         |`llmParams`|`object`|大语言模型API参数。|否|
 
         当前，`llmParams`可以采用如下两种形式之一：
-        
+
         ```json
         {
           "apiType": "qianfan",
@@ -457,11 +457,11 @@ print(predict.chat("乙方,手机号"))
 </details>
 
 <details>
-<summary>多语言调用服务示例</summary>  
+<summary>多语言调用服务示例</summary>
 
-<details>  
-<summary>Python</summary>  
-  
+<details>
+<summary>Python</summary>
+
 ```python
 import base64
 import pprint
@@ -475,8 +475,8 @@ API_KEY = "{千帆平台API key}"
 SECRET_KEY = "{千帆平台secret key}"
 LLM_NAME = "ernie-3.5"
 LLM_PARAMS = {
-    "apiType": "qianfan", 
-    "apiKey": API_KEY, 
+    "apiType": "qianfan",
+    "apiKey": API_KEY,
     "secretKey": SECRET_KEY,
 }
 
@@ -485,8 +485,12 @@ if __name__ == "__main__":
     file_path = "./demo.jpg"
     keys = ["电话"]
 
+    with open(file_path, "rb") as file:
+        file_bytes = file.read()
+        file_data = base64.b64encode(file_bytes).decode("ascii")
+
     payload = {
-        "file": file_path,
+        "file": file_data,
         "useOricls": True,
         "useCurve": True,
         "useUvdoc": True,
@@ -577,7 +581,7 @@ if __name__ == "__main__":
     print("Final result:")
     print(len(result_chat["chatResult"]))
 ```
-</details>  
+</details>
 </details>
 <br/>
 
@@ -597,7 +601,7 @@ if __name__ == "__main__":
 * 有较多的文本未被检测出来（即文本漏检现象），那么可能是文本检测模型存在不足，您需要参考[文本检测模块开发教程](../../../module_usage/tutorials/ocr_modules/text_detection.md)中的**二次开发**章节，使用您的私有数据集对文本检测模型进行微调。
 * 已检测到的文本中出现较多的识别错误（即识别出的文本内容与实际文本内容不符），这表明文本识别模型需要进一步改进，您需要参考[文本识别模块开发教程](../../../module_usage/tutorials/ocr_modules/text_recognition.md)中的**二次开发**章节对文本识别模型进行微调。
 * 已检测到的印章文本出现较多的识别错误，这表明印章文本检测模块模型需要进一步改进，您需要参考[印章文本检测模块开发教程](../../../module_usage/tutorials/ocr_modules/)中的**二次开发**章节对印章文本检测模型进行微调。
-* 含文字区域的文档或证件的方向存在较多的识别错误，这表明文档图像方向分类模型需要进一步改进，您需要参考[文档图像方向分类模块开发教程](https://ku.baidu-int.com/knowledge/HFVrC7hq1Q/yKeL8Lljko/y0mmii50BW/J5-rNhRB_xfhDZ?t=mention&mt=doc&dt=doc)中的**二次开发**章节对文档图像方向分类模型进行微调。
+* 含文字区域的文档或证件的方向存在较多的识别错误，这表明文档图像方向分类模型需要进一步改进，您需要参考[文档图像方向分类模块开发教程](../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.md)中的**二次开发**章节对文档图像方向分类模型进行微调。
 
 ### 4.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。
@@ -629,7 +633,7 @@ from paddlex import create_pipeline
 predict = create_pipeline( pipeline="PP-ChatOCRv3-doc",
                             llm_name="ernie-3.5",
                             llm_params = {"api_type":"qianfan","ak":"","sk":""},  ## 请填入您的ak与sk，否则无法调用大模型
-                            device = "gpu:0" ) 
+                            device = "gpu:0" )
 ```
 此时，若您想将硬件切换为昇腾 NPU，仅需对脚本中的 `--device` 修改为 npu 即可：
 
@@ -638,6 +642,6 @@ from paddlex import create_pipeline
 predict = create_pipeline( pipeline="PP-ChatOCRv3-doc",
                             llm_name="ernie-3.5",
                             llm_params = {"api_type":"qianfan","ak":"","sk":""},  ## 请填入您的ak与sk，否则无法调用大模型
-                            device = "npu:0" ) 
+                            device = "npu:0" )
 ```
 若您想在更多种类的硬件上使用通用文档场景信息抽取产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。

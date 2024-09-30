@@ -117,4 +117,5 @@ exporting!"
         return {
             "weight_path": self.export_config.weight_path,
             "save_dir": self.global_config.output,
+            "device": self.get_device(),
         }

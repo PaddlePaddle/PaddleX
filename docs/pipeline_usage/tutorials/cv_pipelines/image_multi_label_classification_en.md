@@ -150,72 +150,72 @@ Additionally, PaddleX provides three other deployment methods, detailed as follo
 
 Below are the API references and multi-language service invocation examples:
 
-<details>  
-<summary>API Reference</summary>  
-  
-对于服务提供的所有操作：
+<details>
+<summary>API Reference</summary>
 
-- 响应体以及POST请求的请求体均为JSON数据（JSON对象）。
-- 当请求处理成功时，响应状态码为`200`，响应体的属性如下：
+For all operations provided by the service:
 
-    |名称|类型|含义|
-    |-|-|-|
-    |`errorCode`|`integer`|错误码。固定为`0`。|
-    |`errorMsg`|`string`|错误说明。固定为`"Success"`。|
+- Both the response body and the request body for POST requests are JSON data (JSON objects).
+- When the request is processed successfully, the response status code is `200`, and the response body attributes are as follows:
 
-    响应体还可能有`result`属性，类型为`object`，其中存储操作结果信息。
+    | Name | Type | Description |
+    |------|------|-------------|
+    |`errorCode`|`integer`|Error code. Fixed to `0`.|
+    |`errorMsg`|`string`|Error message. Fixed to `"Success"`.|
 
-- 当请求处理未成功时，响应体的属性如下：
+    The response body may also have a `result` attribute of type `object`, which stores the operation result information.
 
-    |名称|类型|含义|
-    |-|-|-|
-    |`errorCode`|`integer`|错误码。与响应状态码相同。|
-    |`errorMsg`|`string`|错误说明。|
+- When the request is not processed successfully, the response body attributes are as follows:
 
-服务提供的操作如下：
+    | Name | Type | Description |
+    |------|------|-------------|
+    |`errorCode`|`integer`|Error code. Same as the response status code.|
+    |`errorMsg`|`string`|Error message.|
+
+Operations provided by the service are as follows:
 
 - **`infer`**
 
-    对图像进行分类。
+    Classify images.
 
     `POST /multilabel-image-classification`
 
-    - 请求体的属性如下：
+    - The request body attributes are as follows:
 
-        |名称|类型|含义|是否必填|
-        |-|-|-|-|
-        |`image`|`string`|服务可访问的图像文件的URL或图像文件内容的Base64编码结果。|是|
-        |`inferenceParams`|`object`|推理参数。|否|
+        | Name | Type | Description | Required |
+        |------|------|-------------|----------|
+        |`image`|`string`|The URL of the image file accessible by the service or the Base64 encoded result of the image file content.|Yes|
+        |`inferenceParams`|`object`|Inference parameters.|No|
 
-        `inferenceParams`的属性如下：
+        The attributes of `inferenceParams` are as follows:
 
-        |名称|类型|含义|是否必填|
-        |-|-|-|-|
-        |`topK`|`integer`|结果中将只保留得分最高的`topK`个类别。|否|
+        | Name | Type | Description | Required |
+        |------|------|-------------|----------|
+        |`topK`|`integer`|Only the top `topK` categories with the highest scores will be retained in the result.|No|
 
-    - 请求处理成功时，响应体的`result`具有如下属性：
+    - When the request is processed successfully, the `result` of the response body has the following attributes:
 
-        |名称|类型|含义|
-        |-|-|-|
-        |`categories`|`array`|图像类别信息。|
-        |`image`|`string`|图像分类结果图。图像为JPEG格式，使用Base64编码。|
+        | Name | Type | Description |
+        |------|------|-------------|
+        |`categories`|`array`|Image category information.|
+        |`image`|`string`|Image classification result image. The image is in JPEG format and encoded in Base64.|
 
-        `categories`中的每个元素为一个`object`，具有如下属性：
+        Each element in `categories` is an `object` with the following attributes:
 
-        |名称|类型|含义|
-        |-|-|-|
-        |`id`|`integer`|类别ID。|
-        |`name`|`string`|类别名称。|
-        |`score`|`number`|类别得分。|
+        | Name | Type | Description |
+        |------|------|-------------|
+        |`id`|`integer`|Category ID.|
+        |`name`|`string`|Category name.|
+        |`score`|`number`|Category score.|
 
-        `result`示例如下：
+        An example of `result` is as follows:
 
         ```json
         {
           "categories": [
             {
               "id": 5,
-              "name": "兔子",
+              "name": "Rabbit",
               "score": 0.93
             }
           ],
@@ -226,30 +226,27 @@ Below are the API references and multi-language service invocation examples:
 </details>
 
 <details>
-<summary>Multilingual Service Invocation Examples</summary>  
+<summary>Multilingual Service Invocation Examples</summary>
 
-<details>  
-<summary>Python</summary>  
-  
+<details>
+<summary>Python</summary>
+
 ```python
 import base64
 import requests
 
-API_URL = "http://localhost:8080/multilabel-image-classification" # 服务URL
+API_URL = "http://localhost:8080/multilabel-image-classification"
 image_path = "./demo.jpg"
 output_image_path = "./out.jpg"
 
-# 对本地图像进行Base64编码
 with open(image_path, "rb") as file:
     image_bytes = file.read()
     image_data = base64.b64encode(image_bytes).decode("ascii")
 
-payload = {"image": image_data}  # Base64编码的文件内容或者图像URL
+payload = {"image": image_data}
 
-# 调用API
 response = requests.post(API_URL, json=payload)
 
-# 处理接口返回数据
 assert response.status_code == 200
 result = response.json()["result"]
 with open(output_image_path, "wb") as file:
@@ -258,11 +255,11 @@ print(f"Output image saved at {output_image_path}")
 print("\nCategories:")
 print(result["categories"])
 ```
-  
+
 </details>
-<details>  
-<summary>C++</summary>  
-  
+<details>
+<summary>C++</summary>
+
 ```cpp
 #include <iostream>
 #include "cpp-httplib/httplib.h" // https://github.com/Huiyicc/cpp-httplib
@@ -278,7 +275,6 @@ int main() {
         {"Content-Type", "application/json"}
     };
 
-    // 对本地图像进行Base64编码
     std::ifstream file(imagePath, std::ios::binary | std::ios::ate);
     std::streamsize size = file.tellg();
     file.seekg(0, std::ios::beg);
@@ -295,9 +291,7 @@ int main() {
     jsonObj["image"] = encodedImage;
     std::string body = jsonObj.dump();
 
-    // 调用API
     auto response = client.Post("/multilabel-image-classification", headers, body, "application/json");
-    // 处理接口返回数据
     if (response && response->status == 200) {
         nlohmann::json jsonResponse = nlohmann::json::parse(response->body);
         auto result = jsonResponse["result"];
@@ -327,12 +321,12 @@ int main() {
     return 0;
 }
 ```
-  
+
 </details>
 
-<details>  
-<summary>Java</summary>  
-  
+<details>
+<summary>Java</summary>
+
 ```java
 import okhttp3.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -346,20 +340,18 @@ import java.util.Base64;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String API_URL = "http://localhost:8080/multilabel-image-classification"; // 服务URL
-        String imagePath = "./demo.jpg"; // 本地图像
-        String outputImagePath = "./out.jpg"; // 输出图像
+        String API_URL = "http://localhost:8080/multilabel-image-classification";
+        String imagePath = "./demo.jpg";
+        String outputImagePath = "./out.jpg";
 
-        // 对本地图像进行Base64编码
         File file = new File(imagePath);
         byte[] fileContent = java.nio.file.Files.readAllBytes(file.toPath());
         String imageData = Base64.getEncoder().encodeToString(fileContent);
 
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode params = objectMapper.createObjectNode();
-        params.put("image", imageData); // Base64编码的文件内容或者图像URL
+        params.put("image", imageData);
 
-        // 创建 OkHttpClient 实例
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.Companion.get("application/json; charset=utf-8");
         RequestBody body = RequestBody.Companion.create(params.toString(), JSON);
@@ -368,7 +360,6 @@ public class Main {
                 .post(body)
                 .build();
 
-        // 调用API并处理接口返回数据
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 String responseBody = response.body().string();
@@ -389,102 +380,99 @@ public class Main {
         }
     }
 }
-``` 
-  
+```
+
 </details>
 
-<details>  
-<summary>Go</summary>  
-  
+<details>
+<summary>Go</summary>
+
 ```go
 package main
 
 import (
-	"bytes"
-	"encoding/base64"
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
+    "bytes"
+    "encoding/base64"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
 )
 
 func main() {
-	API_URL := "http://localhost:8080/multilabel-image-classification"
-	imagePath := "./demo.jpg"
-	outputImagePath := "./out.jpg"
+    API_URL := "http://localhost:8080/multilabel-image-classification"
+    imagePath := "./demo.jpg"
+    outputImagePath := "./out.jpg"
 
-	// 对本地图像进行Base64编码
-	imageBytes, err := ioutil.ReadFile(imagePath)
-	if err != nil {
-		fmt.Println("Error reading image file:", err)
-		return
-	}
-	imageData := base64.StdEncoding.EncodeToString(imageBytes)
+    imageBytes, err := ioutil.ReadFile(imagePath)
+    if err != nil {
+        fmt.Println("Error reading image file:", err)
+        return
+    }
+    imageData := base64.StdEncoding.EncodeToString(imageBytes)
 
-	payload := map[string]string{"image": imageData} // Base64编码的文件内容或者图像URL
-	payloadBytes, err := json.Marshal(payload)
-	if err != nil {
-		fmt.Println("Error marshaling payload:", err)
-		return
-	}
+    payload := map[string]string{"image": imageData}
+    payloadBytes, err := json.Marshal(payload)
+    if err != nil {
+        fmt.Println("Error marshaling payload:", err)
+        return
+    }
 
-	// 调用API
-	client := &http.Client{}
-	req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
-	if err != nil {
-		fmt.Println("Error creating request:", err)
-		return
-	}
+    client := &http.Client{}
+    req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
+    if err != nil {
+        fmt.Println("Error creating request:", err)
+        return
+    }
 
-	res, err := client.Do(req)
-	if err != nil {
-		fmt.Println("Error sending request:", err)
-		return
-	}
-	defer res.Body.Close()
+    res, err := client.Do(req)
+    if err != nil {
+        fmt.Println("Error sending request:", err)
+        return
+    }
+    defer res.Body.Close()
 
-    // 处理接口返回数据
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		fmt.Println("Error reading response body:", err)
-		return
-	}
-	type Response struct {
-		Result struct {
-			Image      string   `json:"image"`
-			Categories []map[string]interface{} `json:"categories"`
-		} `json:"result"`
-	}
-	var respData Response
-	err = json.Unmarshal([]byte(string(body)), &respData)
-	if err != nil {
-		fmt.Println("Error unmarshaling response body:", err)
-		return
-	}
+    body, err := ioutil.ReadAll(res.Body)
+    if err != nil {
+        fmt.Println("Error reading response body:", err)
+        return
+    }
+    type Response struct {
+        Result struct {
+            Image      string   `json:"image"`
+            Categories []map[string]interface{} `json:"categories"`
+        } `json:"result"`
+    }
+    var respData Response
+    err = json.Unmarshal([]byte(string(body)), &respData)
+    if err != nil {
+        fmt.Println("Error unmarshaling response body:", err)
+        return
+    }
 
-	outputImageData, err := base64.StdEncoding.DecodeString(respData.Result.Image)
-	if err != nil {
-		fmt.Println("Error decoding base64 image data:", err)
-		return
-	}
-	err = ioutil.WriteFile(outputImagePath, outputImageData, 0644)
-	if err != nil {
-		fmt.Println("Error writing image to file:", err)
-		return
-	}
-	fmt.Printf("Image saved at %s.jpg\n", outputImagePath)
-	fmt.Println("\nCategories:")
-	for _, category := range respData.Result.Categories {
-		fmt.Println(category)
-	}
+    outputImageData, err := base64.StdEncoding.DecodeString(respData.Result.Image)
+    if err != nil {
+        fmt.Println("Error decoding base64 image data:", err)
+        return
+    }
+    err = ioutil.WriteFile(outputImagePath, outputImageData, 0644)
+    if err != nil {
+        fmt.Println("Error writing image to file:", err)
+        return
+    }
+    fmt.Printf("Image saved at %s.jpg\n", outputImagePath)
+    fmt.Println("\nCategories:")
+    for _, category := range respData.Result.Categories {
+        fmt.Println(category)
+    }
 }
-``` 
-  
+```
+
 </details>
 
-<details>  
-<summary>C#</summary>  
-  
+<details>
+<summary>C#</summary>
+
 ```csharp
 using System;
 using System.IO;
@@ -504,18 +492,15 @@ class Program
     {
         var httpClient = new HttpClient();
 
-        // 对本地图像进行Base64编码
         byte[] imageBytes = File.ReadAllBytes(imagePath);
         string image_data = Convert.ToBase64String(imageBytes);
 
-        var payload = new JObject{ { "image", image_data } }; // Base64编码的文件内容或者图像URL
+        var payload = new JObject{ { "image", image_data } };
         var content = new StringContent(payload.ToString(), Encoding.UTF8, "application/json");
 
-        // 调用API
         HttpResponseMessage response = await httpClient.PostAsync(API_URL, content);
         response.EnsureSuccessStatusCode();
 
-        // 处理接口返回数据
         string responseBody = await response.Content.ReadAsStringAsync();
         JObject jsonResponse = JObject.Parse(responseBody);
 
@@ -529,12 +514,12 @@ class Program
     }
 }
 ```
-  
+
 </details>
 
-<details>  
-<summary>Node.js</summary>  
-  
+<details>
+<summary>Node.js</summary>
+
 ```js
 const axios = require('axios');
 const fs = require('fs');
@@ -548,20 +533,17 @@ let config = {
    maxBodyLength: Infinity,
    url: API_URL,
    data: JSON.stringify({
-    'image': encodeImageToBase64(imagePath)  // Base64编码的文件内容或者图像URL
+    'image': encodeImageToBase64(imagePath)
   })
 };
 
-// 对本地图像进行Base64编码
 function encodeImageToBase64(filePath) {
   const bitmap = fs.readFileSync(filePath);
   return Buffer.from(bitmap).toString('base64');
 }
 
-// 调用API
 axios.request(config)
 .then((response) => {
-    // 处理接口返回数据
     const result = response.data["result"];
     const imageBuffer = Buffer.from(result["image"], 'base64');
     fs.writeFile(outputImagePath, imageBuffer, (err) => {
@@ -575,23 +557,21 @@ axios.request(config)
   console.log(error);
 });
 ```
-  
+
 </details>
-<details>  
-<summary>PHP</summary>  
-  
+<details>
+<summary>PHP</summary>
+
 ```php
 <?php
 
-$API_URL = "http://localhost:8080/multilabel-image-classification"; // 服务URL
+$API_URL = "http://localhost:8080/multilabel-image-classification";
 $image_path = "./demo.jpg";
 $output_image_path = "./out.jpg";
 
-// 对本地图像进行Base64编码
 $image_data = base64_encode(file_get_contents($image_path));
-$payload = array("image" => $image_data); // Base64编码的文件内容或者图像URL
+$payload = array("image" => $image_data);
 
-// 调用API
 $ch = curl_init($API_URL);
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
@@ -599,7 +579,6 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($ch);
 curl_close($ch);
 
-// 处理接口返回数据
 $result = json_decode($response, true)["result"];
 file_put_contents($output_image_path, base64_decode($result["image"]));
 echo "Output image saved at " . $output_image_path . "\n";
@@ -607,7 +586,7 @@ echo "\nCategories:\n";
 print_r($result["categories"]);
 ?>
 ```
-  
+
 </details>
 </details>
 

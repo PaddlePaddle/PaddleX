@@ -270,9 +270,9 @@ for res in output:
 
 下面是API参考和多语言服务调用示例：
 
-<details>  
-<summary>API参考</summary>  
-  
+<details>
+<summary>API参考</summary>
+
 对于服务提供的所有操作：
 
 - 响应体以及POST请求的请求体均为JSON数据（JSON对象）。
@@ -331,11 +331,11 @@ for res in output:
 </details>
 
 <details>
-<summary>多语言调用服务示例</summary>  
+<summary>多语言调用服务示例</summary>
 
-<details>  
-<summary>Python</summary>  
-  
+<details>
+<summary>Python</summary>
+
 ```python
 import base64
 import requests
@@ -343,7 +343,7 @@ import requests
 API_URL = "http://localhost:8080/table-recognition" # 服务URL
 image_path = "./demo.jpg"
 ocr_image_path = "./ocr.jpg"
-layout_image_path = "./table.jpg"
+layout_image_path = "./layout.jpg"
 
 # 对本地图像进行Base64编码
 with open(image_path, "rb") as file:
@@ -367,12 +367,12 @@ print(f"Output image saved at {layout_image_path}")
 print("\nDetected tables:")
 print(result["tables"])
 ```
-  
+
 </details>
 
-<details>  
-<summary>C++</summary>  
-  
+<details>
+<summary>C++</summary>
+
 ```cpp
 #include <iostream>
 #include "cpp-httplib/httplib.h" // https://github.com/Huiyicc/cpp-httplib
@@ -383,7 +383,7 @@ int main() {
     httplib::Client client("localhost:8080");
     const std::string imagePath = "./demo.jpg";
     const std::string ocrImagePath = "./ocr.jpg";
-    const std::string layoutImagePath = "./table.jpg";
+    const std::string layoutImagePath = "./layout.jpg";
 
     httplib::Headers headers = {
         {"Content-Type", "application/json"}
@@ -450,12 +450,12 @@ int main() {
     return 0;
 }
 ```
-  
+
 </details>
 
-<details>  
-<summary>Java</summary>  
-  
+<details>
+<summary>Java</summary>
+
 ```java
 import okhttp3.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -472,7 +472,7 @@ public class Main {
         String API_URL = "http://localhost:8080/table-recognition"; // 服务URL
         String imagePath = "./demo.jpg"; // 本地图像
         String ocrImagePath = "./ocr.jpg";
-        String layoutImagePath = "./table.jpg";
+        String layoutImagePath = "./layout.jpg";
 
         // 对本地图像进行Base64编码
         File file = new File(imagePath);
@@ -522,116 +522,116 @@ public class Main {
     }
 }
 ```
-  
+
 </details>
 
-<details>  
-<summary>Go</summary>  
-  
+<details>
+<summary>Go</summary>
+
 ```go
 package main
 
 import (
-	"bytes"
-	"encoding/base64"
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
+    "bytes"
+    "encoding/base64"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
 )
 
 func main() {
-	API_URL := "http://localhost:8080/table-recognition"
-	imagePath := "./demo.jpg"
-	ocrImagePath := "./ocr.jpg"
-	layoutImagePath := "./table.jpg"
+    API_URL := "http://localhost:8080/table-recognition"
+    imagePath := "./demo.jpg"
+    ocrImagePath := "./ocr.jpg"
+    layoutImagePath := "./layout.jpg"
 
-	// 对本地图像进行Base64编码
-	imageBytes, err := ioutil.ReadFile(imagePath)
-	if err != nil {
-		fmt.Println("Error reading image file:", err)
-		return
-	}
-	imageData := base64.StdEncoding.EncodeToString(imageBytes)
+    // 对本地图像进行Base64编码
+    imageBytes, err := ioutil.ReadFile(imagePath)
+    if err != nil {
+        fmt.Println("Error reading image file:", err)
+        return
+    }
+    imageData := base64.StdEncoding.EncodeToString(imageBytes)
 
-	payload := map[string]string{"image": imageData} // Base64编码的文件内容或者图像URL
-	payloadBytes, err := json.Marshal(payload)
-	if err != nil {
-		fmt.Println("Error marshaling payload:", err)
-		return
-	}
+    payload := map[string]string{"image": imageData} // Base64编码的文件内容或者图像URL
+    payloadBytes, err := json.Marshal(payload)
+    if err != nil {
+        fmt.Println("Error marshaling payload:", err)
+        return
+    }
 
-	// 调用API
-	client := &http.Client{}
-	req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
-	if err != nil {
-		fmt.Println("Error creating request:", err)
-		return
-	}
+    // 调用API
+    client := &http.Client{}
+    req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
+    if err != nil {
+        fmt.Println("Error creating request:", err)
+        return
+    }
 
-	res, err := client.Do(req)
-	if err != nil {
-		fmt.Println("Error sending request:", err)
-		return
-	}
-	defer res.Body.Close()
+    res, err := client.Do(req)
+    if err != nil {
+        fmt.Println("Error sending request:", err)
+        return
+    }
+    defer res.Body.Close()
 
     // 处理接口返回数据
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		fmt.Println("Error reading response body:", err)
-		return
-	}
-	type Response struct {
-		Result struct {
-			OcrImage      string   `json:"ocrImage"`
+    body, err := ioutil.ReadAll(res.Body)
+    if err != nil {
+        fmt.Println("Error reading response body:", err)
+        return
+    }
+    type Response struct {
+        Result struct {
+            OcrImage      string   `json:"ocrImage"`
             TableImage      string   `json:"layoutImage"`
-			Tables []map[string]interface{} `json:"tables"`
-		} `json:"result"`
-	}
-	var respData Response
-	err = json.Unmarshal([]byte(string(body)), &respData)
-	if err != nil {
-		fmt.Println("Error unmarshaling response body:", err)
-		return
-	}
+            Tables []map[string]interface{} `json:"tables"`
+        } `json:"result"`
+    }
+    var respData Response
+    err = json.Unmarshal([]byte(string(body)), &respData)
+    if err != nil {
+        fmt.Println("Error unmarshaling response body:", err)
+        return
+    }
 
-	ocrImageData, err := base64.StdEncoding.DecodeString(respData.Result.OcrImage)
-	if err != nil {
-		fmt.Println("Error decoding base64 image data:", err)
-		return
-	}
-	err = ioutil.WriteFile(ocrImagePath, ocrImageData, 0644)
-	if err != nil {
-		fmt.Println("Error writing image to file:", err)
-		return
-	}
+    ocrImageData, err := base64.StdEncoding.DecodeString(respData.Result.OcrImage)
+    if err != nil {
+        fmt.Println("Error decoding base64 image data:", err)
+        return
+    }
+    err = ioutil.WriteFile(ocrImagePath, ocrImageData, 0644)
+    if err != nil {
+        fmt.Println("Error writing image to file:", err)
+        return
+    }
     fmt.Printf("Image saved at %s.jpg\n", ocrImagePath)
 
     layoutImageData, err := base64.StdEncoding.DecodeString(respData.Result.TableImage)
-	if err != nil {
-		fmt.Println("Error decoding base64 image data:", err)
-		return
-	}
-	err = ioutil.WriteFile(layoutImagePath, layoutImageData, 0644)
-	if err != nil {
-		fmt.Println("Error writing image to file:", err)
-		return
-	}
+    if err != nil {
+        fmt.Println("Error decoding base64 image data:", err)
+        return
+    }
+    err = ioutil.WriteFile(layoutImagePath, layoutImageData, 0644)
+    if err != nil {
+        fmt.Println("Error writing image to file:", err)
+        return
+    }
     fmt.Printf("Image saved at %s.jpg\n", layoutImagePath)
 
-	fmt.Println("\nDetected tables:")
-	for _, category := range respData.Result.Tables {
-		fmt.Println(category)
-	}
+    fmt.Println("\nDetected tables:")
+    for _, category := range respData.Result.Tables {
+        fmt.Println(category)
+    }
 }
 ```
-  
+
 </details>
 
-<details>  
-<summary>C#</summary>  
-  
+<details>
+<summary>C#</summary>
+
 ```csharp
 using System;
 using System.IO;
@@ -646,7 +646,7 @@ class Program
     static readonly string API_URL = "http://localhost:8080/table-recognition";
     static readonly string imagePath = "./demo.jpg";
     static readonly string ocrImagePath = "./ocr.jpg";
-    static readonly string layoutImagePath = "./table.jpg";
+    static readonly string layoutImagePath = "./layout.jpg";
 
     static async Task Main(string[] args)
     {
@@ -682,12 +682,12 @@ class Program
     }
 }
 ```
-  
+
 </details>
 
-<details>  
-<summary>Node.js</summary>  
-  
+<details>
+<summary>Node.js</summary>
+
 ```js
 const axios = require('axios');
 const fs = require('fs');
@@ -695,7 +695,7 @@ const fs = require('fs');
 const API_URL = 'http://localhost:8080/table-recognition'
 const imagePath = './demo.jpg'
 const ocrImagePath = "./ocr.jpg";
-const layoutImagePath = "./table.jpg";
+const layoutImagePath = "./layout.jpg";
 
 let config = {
    method: 'POST',
@@ -737,19 +737,19 @@ axios.request(config)
   console.log(error);
 });
 ```
-  
+
 </details>
 
-<details>  
-<summary>PHP</summary>  
-  
+<details>
+<summary>PHP</summary>
+
 ```php
 <?php
 
 $API_URL = "http://localhost:8080/table-recognition"; // 服务URL
 $image_path = "./demo.jpg";
 $ocr_image_path = "./ocr.jpg";
-$layout_image_path = "./table.jpg";
+$layout_image_path = "./layout.jpg";
 
 // 对本地图像进行Base64编码
 $image_data = base64_encode(file_get_contents($image_path));
@@ -776,7 +776,7 @@ print_r($result["tables"]);
 
 ?>
 ```
-  
+
 </details>
 </details>
 <br/>

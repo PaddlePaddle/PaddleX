@@ -3,10 +3,10 @@
 </p>
 
 <p align="center">
-    <a href="./LICENSE"><img src="https://img.shields.io/badge/license-Apache%202-red.svg"></a>
-    <a href=""><img src="https://img.shields.io/badge/python-3.8%2C%203.9%2C%203.10-blue.svg"></a>
-    <a href=""><img src="https://img.shields.io/badge/os-linux%2C%20windows-orange.svg"></a>
-    <a href=""><img src="https://img.shields.io/badge/hardware-intel cpu%2C%20gpu%2C%20xpu%2C%20npu%2C%20mlu-yellow.svg"></a>
+    <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202-red.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/Python-3.8%2C%203.9%2C%203.10-blue.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/OS-Linux%2C%20Windows-orange.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/Hardware-CPU%2C%20GPU%2C%20XPU%2C%20NPU%2C%20MLU%2C%20DCU-yellow.svg"></a>
 </p>
 
 <h4 align="center">
@@ -21,7 +21,7 @@
 
 ## 🔍 简介
 
-PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码全流程开发工具，它集成了众多**开箱即用的预训练模型**，可以实现模型从训练到推理的**全流程开发**，支持国内外**多款主流硬件**，助力AI 开发者进行产业实践。  
+PaddleX 3.0 是基于飞桨框架构建的一套AI模型低代码全流程开发工具，它集成了众多**开箱即用的预训练模型**，可以实现模型从训练到推理的**全流程开发**，支持国内外**多款主流硬件**，助力AI 开发者进行产业实践。  
 
 |                                                            **通用图像分类**                                                            |                                                            **图像多标签分类**                                                            |                                                            **通用目标检测**                                                            |                                                            **通用实例分割**                                                            |
 |:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|
@@ -32,9 +32,9 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码全流程开发�
 | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/e3d97f4e-ab46-411c-8155-494c61492b0a" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/6e897bf6-35fe-45e6-a040-e9a1a20cfdf2" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/c54c66cc-da4f-4631-877b-43b0fbb192a6" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/0ce925b2-3776-4dde-8ce0-5156d5a2476e" height="126px" width="180px"> |
 
 ## 🌟 特性
-  🎨 **模型丰富一键调用**：将覆盖文本图像智能分析、OCR、目标检测、时序预测等多个关键领域的**200+飞桨模型**整合为**19条模型产线**，通过极简的Python API一键调用，快速体验模型效果。同时支持**20+单功能模块**，方便开发者进行模型组合使用。
+  🎨 **模型丰富一键调用**：将覆盖文本图像智能分析、OCR、目标检测、时序预测等多个关键领域的 **200+ 飞桨模型**整合为 **19 条模型产线**，通过极简的 Python API 一键调用，快速体验模型效果。同时支持 **20+ 单功能模块**，方便开发者进行模型组合使用。
 
-  🚀 **提高效率降低门槛**：实现基于统一命令和图形界面的模型**全流程开发**，打造大小模型结合、大模型半监督学习和多模型融合的[**8条特色模型产线**](https://aistudio.baidu.com/intro/paddlex)，大幅度降低迭代模型的成本。  
+  🚀 **提高效率降低门槛**：实现基于统一命令和图形界面的模型**全流程开发**，打造大小模型结合、大模型半监督学习和多模型融合的[**8 条特色模型产线**](https://aistudio.baidu.com/intro/paddlex)，大幅度降低迭代模型的成本。  
 
   🌐 **多种场景灵活部署**：支持**高性能部署**、**服务化部署**和**端侧部署**等多种部署方式，确保不同应用场景下模型的高效运行和快速响应。
 
@@ -42,13 +42,13 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码全流程开发�
 
 ## 📣 近期更新
 
-🔥🔥《PaddleX文档信息个性化抽取新升级》，PP-ChatOCRv3创新性提供了基于数据融合技术的OCR模型二次开发功能，具备更强的模型微调能力。百万级高质量通用OCR文本识别数据，按特定比例自动融入垂类模型训练数据，破解产业垂类模型训练导致通用文本识别能力减弱难题。适用自动化办公、金融风控、医疗健康、教育出版、法律党政等产业实际场景。**10月10日（周四）19：00**直播为您详细解读数据融合技术以及如何利用提示词工程实现更好的信息抽取效果。 [报名链接](https://www.wjx.top/vm/mFhGfwx.aspx?udsid=772552)
+🔥🔥《PaddleX文档信息个性化抽取新升级》，PP-ChatOCRv3 创新性提供了基于数据融合技术的 OCR 模型二次开发功能，具备更强的模型微调能力。百万级高质量通用 OCR 文本识别数据，按特定比例自动融入垂类模型训练数据，破解产业垂类模型训练导致通用文本识别能力减弱难题。适用自动化办公、金融风控、医疗健康、教育出版、法律党政等产业实际场景。**10月10日（周四）19：00** 直播为您详细解读数据融合技术以及如何利用提示词工程实现更好的信息抽取效果。 [报名链接](https://www.wjx.top/vm/mFhGfwx.aspx?udsid=772552)
 
-🔥🔥 **2024.9.30**，PaddleX 3.0 Beta1 开源版正式发布，提供**200+模型**通过极简的Python API一键调用；实现基于统一命令的模型全流程开发，并开源**PP-ChatOCRv3**特色模型产线基础能力；支持**100+模型高性能推理和服务化部署**（持续迭代中），**7类重点视觉模型端侧部署**；**70+模型开发全流程适配昇腾910B**，**15+模型开发全流程适配昆仑芯和寒武纪**
+🔥🔥 **2024.9.30**，PaddleX 3.0 Beta1 开源版正式发布，提供 **200+ 模型** 通过极简的 Python API 一键调用；实现基于统一命令的模型全流程开发，并开源 **PP-ChatOCRv3** 特色模型产线基础能力；支持 **100+ 模型高性能推理和服务化部署**（持续迭代中），**7 类重点视觉模型端侧部署**；**70+ 模型开发全流程适配昇腾 910B**，**15+ 模型开发全流程适配昆仑芯和寒武纪**
 
 🔥 **2024.6.27**，PaddleX 3.0 Beta 开源版正式发布，支持以低代码的方式在本地端使用多种主流硬件进行产线和模型开发。
 
-🔥 **2024.3.25**，PaddleX 3.0 云端发布，支持在AI Studio 星河社区 以零代码的方式【创建产线】使用。
+🔥 **2024.3.25**，PaddleX 3.0 云端发布，支持在 AI Studio 星河社区 以零代码的方式【创建产线】使用。
 
 
  ## 📊 能力支持
@@ -57,7 +57,7 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
 
 
 
-此外，PaddleX为开发者提供了基于[云端图形化开发界面](https://aistudio.baidu.com/pipeline/mine)的全流程开发工具, 详细请参考[教程《零门槛开发产业级AI模型》](https://aistudio.baidu.com/practical/introduce/546656605663301)
+此外，PaddleX 为开发者提供了基于[云端图形化开发界面](https://aistudio.baidu.com/pipeline/mine)的全流程开发工具, 详细请参考[教程《零门槛开发产业级AI模型》](https://aistudio.baidu.com/practical/introduce/546656605663301)
 
 
 <table >
@@ -267,7 +267,7 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
 
 
 
-> ❗注：以上功能均基于GPU/CPU实现。PaddleX还可在昆仑、昇腾、寒武纪和海光等主流硬件上进行快速推理和二次开发。下表详细列出了模型产线的支持情况，具体支持的模型列表请参阅[模型列表(MLU)](../docs/support_list/model_list_mlu.md)/[模型列表(NPU)](../docs/support_list/model_list_npu.md)/[模型列表(XPU)](../docs/support_list/model_list_xpu.md)/[模型列表DCU](../docs/support_list/model_list_dcu.md)。我们正在适配更多的模型，并在主流硬件上推动高性能和服务化部署的实施。
+> ❗注：以上功能均基于 GPU/CPU 实现。PaddleX 还可在昆仑、昇腾、寒武纪和海光等主流硬件上进行快速推理和二次开发。下表详细列出了模型产线的支持情况，具体支持的模型列表请参阅[模型列表(MLU)](../docs/support_list/model_list_mlu.md)/[模型列表(NPU)](../docs/support_list/model_list_npu.md)/[模型列表(XPU)](../docs/support_list/model_list_xpu.md)/[模型列表(DCU)](../docs/support_list/model_list_dcu.md)。我们正在适配更多的模型，并在主流硬件上推动高性能和服务化部署的实施。
 
 <details>
   <summary>👉 国产化硬件能力支持</summary>
@@ -350,18 +350,18 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
 
 ### 🛠️ 安装
 
-> ❗安装PaddleX前请先确保您有基础的**Python运行环境**。
+> ❗安装 PaddleX 前请先确保您有基础的 **Python 运行环境**。
 
-* **安装PaddlePaddle**
+* **安装 PaddlePaddle**
 ```bash
 # cpu
-python -m pip install paddlepaddle
+python -m pip install paddlepaddle==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
 
 # gpu，该命令仅适用于 CUDA 版本为 11.8 的机器环境
- python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
+python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
 
 # gpu，该命令仅适用于 CUDA 版本为 12.3 的机器环境
- python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
+python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
 ```
 > ❗ 更多飞桨 Wheel 版本请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation./docs/zh/install/pip/linux-pip.html)。
 
@@ -372,7 +372,7 @@ python -m pip install paddlepaddle
 pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0.beta1-py3-none-any.whl
 ```
   
-> ❗ 更多安装方式参考[PaddleX安装教程](./docs/installation/installation.md)
+> ❗ 更多安装方式参考 [PaddleX 安装教程](./docs/installation/installation.md)
 
 ### 💻 命令行使用
 
@@ -384,11 +384,11 @@ paddlex --pipeline [产线名称] --input [输入图片] --device [运行设备]
 
 只需指定三个参数：
 * `pipeline`：产线名称
-* `input`：待处理的输入图片的本地路径或URL
-* `device`: 使用的GPU序号（例如`gpu:0`表示使用第0块GPU），也可选择使用CPU（`cpu`）
+* `input`：待处理的输入文件（如图片）的本地路径或 URL
+* `device`: 使用的 GPU 序号（例如`gpu:0`表示使用第 0 块 GPU），也可选择使用 CPU（`cpu`）
 
 
-以通用OCR产线为例：
+以通用 OCR 产线为例：
 ```bash
 paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0
 ```
@@ -406,7 +406,7 @@ paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddle
 
 </details>
 
-其他产线的命令行使用，只需将`pipeline`参数调整为相应产线的名称。下面列出了每个产线对应的命令：
+其他产线的命令行使用，只需将 `pipeline` 参数调整为相应产线的名称。下面列出了每个产线对应的命令：
 
 <details>
   <summary><b>👉 更多产线的命令行使用及说明</b></summary>
@@ -429,9 +429,9 @@ paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddle
 
 </details>
 
-### 📝 Python脚本使用
+### 📝 Python 脚本使用
 
-几行代码即可完成产线的快速推理，统一的Python脚本格式如下：
+几行代码即可完成产线的快速推理，统一的 Python 脚本格式如下：
 ```python
 from paddlex import create_pipeline
 
@@ -447,36 +447,36 @@ for batch in output:
 执行了如下几个步骤：
 
 * `create_pipeline()` 实例化产线对象
-* 传入图片并调用产线对象的`predict` 方法进行推理预测
+* 传入图片并调用产线对象的 `predict` 方法进行推理预测
 * 对预测结果进行处理
 
-其他产线的Python脚本使用，只需将`create_pipeline()`方法的`pipeline`参数调整为相应产线的名称。下面列出了每个产线对应的参数名称及详细的使用解释：
+其他产线的 Python 脚本使用，只需将 `create_pipeline()` 方法的 `pipeline` 参数调整为相应产线的名称。下面列出了每个产线对应的参数名称及详细的使用解释：
 <details>
   <summary><b>👉 更多产线的Python脚本使用</b></summary>
 
 | 产线名称           | 对应参数               | 详细说明                                                                                                      |
 |--------------------|------------------------|---------------------------------------------------------------------------------------------------------------|
-| 文档场景信息抽取   | `pp_chatocrv3` | [文档场景信息抽取v3产线Python脚本使用说明](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md) |
-| 通用图像分类       | `image_classification` | [通用图像分类产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification.md) |
-| 通用目标检测       | `object_detection` | [通用目标检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification.md) |
-| 通用实例分割       | `instance_segmentation` | [通用实例分割产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md) |
-| 通用语义分割       | `semantic_segmentation` | [通用语义分割产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md) |
-| 通用图像多标签分类 | `multilabel_classification` | [通用图像多标签分类产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md) |
-| 小目标检测         | `smallobject_detection` | [小目标检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection.md) |
-| 图像异常检测       | `image_classification` | [图像异常检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md) |
-| 通用OCR            | `OCR` | [通用OCR产线Python脚本使用说明](./docs/pipeline_usage/tutorials/ocr_pipelines/OCR.md) |
-| 通用表格识别       | `table_recognition` | [通用表格识别产线Python脚本使用说明](./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition.md) |
-| 通用时序预测       | `ts_forecast` | [通用时序预测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md) |
-| 通用时序异常检测   | `ts_anomaly_detection` | [通用时序异常检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md) |
-| 通用时序分类       | `ts_classification` | [通用时序分类产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md) |
+| 文档场景信息抽取   | `PP-ChatOCRv3-doc` | [文档场景信息抽取v3产线 Python 脚本使用说明](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md) |
+| 通用图像分类       | `image_classification` | [通用图像分类产线 Python 脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification.md) |
+| 通用目标检测       | `object_detection` | [通用目标检测产线 Python 脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification.md) |
+| 通用实例分割       | `instance_segmentation` | [通用实例分割产线 Python 脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md) |
+| 通用语义分割       | `semantic_segmentation` | [通用语义分割产线 Python 脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md) |
+| 通用图像多标签分类 | `multilabel_classification` | [通用图像多标签分类产线 Python 脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md) |
+| 小目标检测         | `small_object_detection` | [小目标检测产线 Python 脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection.md) |
+| 图像异常检测       | `image_classification` | [图像异常检测产线 Python 脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md) |
+| 通用 OCR            | `OCR` | [通用 OCR 产线 Python 脚本使用说明](./docs/pipeline_usage/tutorials/ocr_pipelines/OCR.md) |
+| 通用表格识别       | `table_recognition` | [通用表格识别产线 Python 脚本使用说明](./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition.md) |
+| 通用时序预测       | `ts_forecast` | [通用时序预测产线 Python 脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md) |
+| 通用时序异常检测   | `ts_anomaly_detection` | [通用时序异常检测产线 Python 脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md) |
+| 通用时序分类       | `ts_cls` | [通用时序分类产线 Python 脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md) |
 </details>
 
 ## 📖 文档
 <details>
   <summary> <b> ⬇️ 安装 </b></summary>
   
-  * [📦 PaddlePaddle安装教程](./docs/installation/paddlepaddle_install.md)
-  * [📦 PaddleX安装教程](./docs/installation/installation.md) 
+  * [📦 PaddlePaddle 安装教程](./docs/installation/paddlepaddle_install.md)
+  * [📦 PaddleX 安装教程](./docs/installation/installation.md) 
 
 
 </details>
@@ -484,7 +484,7 @@ for batch in output:
 <details open>
 <summary> <b> 🔥 产线使用 </b></summary>
 
-* [📑 PaddleX产线使用概览](./docs/pipeline_usage/pipeline_develop_guide.md)
+* [📑 PaddleX 产线使用概览](./docs/pipeline_usage/pipeline_develop_guide.md)
 
 * <details>
     <summary> <b> 📝 文本图像智能分析 </b></summary>
@@ -495,7 +495,7 @@ for batch in output:
 * <details>
     <summary> <b> 🔍 OCR </b></summary>
 
-    * [📜 通用OCR产线使用教程](./docs/pipeline_usage/tutorials/ocr_pipelines/OCR.md)
+    * [📜 通用 OCR 产线使用教程](./docs/pipeline_usage/tutorials/ocr_pipelines/OCR.md)
     * [📊 表格识别产线使用教程](./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition.md)
   </details>
 
@@ -507,7 +507,7 @@ for batch in output:
    * [📋 通用实例分割产线使用教程](./docs/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md)
    * [🗣️ 通用语义分割产线使用教程](./docs/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md)
    * [🏷️ 图像多标签分类产线使用教程](./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md)
-   * [🔍  小目标检测产线使用教程](./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection.md)
+   * [🔍 小目标检测产线使用教程](./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection.md)
    * [🖼️ 图像异常检测产线使用教程](./docs/module_usage/tutorials/cv_modules/anomaly_detection.md)
   
 
@@ -524,8 +524,8 @@ for batch in output:
 * <details>
     <summary> <b>🔧 相关说明文件</b> </summary>
 
-   * [🖥️ PaddleX产线命令行使用说明](./docs/pipeline_usage/instructions/pipeline_CLI_usage.md)
-   * [📝 PaddleX产线Python脚本使用说明](./docs/pipeline_usage/instructions/pipeline_python_API.md)
+   * [🖥️ PaddleX 产线命令行使用说明](./docs/pipeline_usage/instructions/pipeline_CLI_usage.md)
+   * [📝 PaddleX 产线 Python 脚本使用说明](./docs/pipeline_usage/instructions/pipeline_python_API.md)
   </details>
    
 </details>
@@ -593,33 +593,28 @@ for batch in output:
 * <details>
   <summary> <b> 📄 相关说明文件 </b></summary>
 
-  * [📝 PaddleX单模型Python脚本使用说明](./docs/module_usage/instructions/model_python_API.md)
-  * [📝 PaddleX通用模型配置文件参数说明](./docs/module_usage/instructions/config_parameters_common.md)
-  * [📝 PaddleX时序任务模型配置文件参数说明](./docs/module_usage/instructions/config_parameters_time_series.md)
+  * [📝 PaddleX 单模型 Python 脚本使用说明](./docs/module_usage/instructions/model_python_API.md)
+  * [📝 PaddleX 通用模型配置文件参数说明](./docs/module_usage/instructions/config_parameters_common.md)
+  * [📝 PaddleX 时序任务模型配置文件参数说明](./docs/module_usage/instructions/config_parameters_time_series.md)
   </details>
 
 </details>
 
 <details>
-  <summary> <b> 🔗 多模块组合使用 </b></summary>
-
-  * [🧩 多功能模块组合使用教程]()
-</details>
-<details>
   <summary> <b> 🏗️ 模型产线部署 </b></summary>
 
-  * [🚀 PaddleX高性能部署指南](./docs/pipeline_deploy/high_performance_deploy.md)
-  * [🖥️ PaddleX服务化部署指南](./docs/pipeline_deploy/service_deploy.md)
-  * [📱 PaddleX端侧部署指南](./docs/pipeline_deploy/lite_deploy.md)
+  * [🚀 PaddleX 高性能部署指南](./docs/pipeline_deploy/high_performance_deploy.md)
+  * [🖥️ PaddleX 服务化部署指南](./docs/pipeline_deploy/service_deploy.md)
+  * [📱 PaddleX 端侧部署指南](./docs/pipeline_deploy/lite_deploy.md)
 
 </details>
 <details>
   <summary> <b> 🖥️ 多硬件使用 </b></summary>
 
-  * [⚙️ DCU Paddle安装教程](./docs/other_devices_support/paddlepaddle_install_DCU.md)
-  * [⚙️ MLU Paddle安装教程](./docs/other_devices_support/paddlepaddle_install_MLU.md)
-  * [⚙️ NPU Paddle安装教程](./docs//other_devices_support/paddlepaddle_install_NPU.md)
-  * [⚙️ XPU Paddle安装教程](./docs/other_devices_support/paddlepaddle_install_XPU.md)
+  * [⚙️ DCU Paddle 安装教程](./docs/other_devices_support/paddlepaddle_install_DCU.md)
+  * [⚙️ MLU Paddle 安装教程](./docs/other_devices_support/paddlepaddle_install_MLU.md)
+  * [⚙️ NPU Paddle 安装教程](./docs//other_devices_support/paddlepaddle_install_NPU.md)
+  * [⚙️ XPU Paddle 安装教程](./docs/other_devices_support/paddlepaddle_install_XPU.md)
 
 </details>
 
@@ -630,8 +625,8 @@ for batch in output:
 * [🧩 通用实例分割模型产线———遥感图像实例分割教程](./docs/practical_tutorials/image_classification_garbage_tutorial.md)
 * [👥 通用目标检测模型产线———行人跌倒检测教程](./docs/practical_tutorials/object_detection_fall_tutorial.md)
 * [👗 通用目标检测模型产线———服装时尚元素检测教程](./docs/practical_tutorials/object_detection_fashion_pedia_tutorial.md)
-* [🚗 通用OCR模型产线———车牌识别教程](./docs/practical_tutorials/ocr_det_license_tutorial.md)
-* [✍️ 通用OCR模型产线———手写中文识别教程](./docs/practical_tutorials/ocr_rec_chinese_tutorial.md)
+* [🚗 通用 OCR 模型产线———车牌识别教程](./docs/practical_tutorials/ocr_det_license_tutorial.md)
+* [✍️ 通用 OCR 模型产线———手写中文识别教程](./docs/practical_tutorials/ocr_rec_chinese_tutorial.md)
 * [🗣️ 通用语义分割模型产线———车道线分割教程](./docs/practical_tutorials/semantic_segmentation_road_tutorial.md)
 * [🛠️ 时序异常检测模型产线———设备异常检测应用教程](./docs/practical_tutorials/ts_anomaly_detection.md)
 * [🎢 时序分类模型产线———心跳监测时序数据分类应用教程](./docs/practical_tutorials/ts_classification.md)
@@ -644,10 +639,10 @@ for batch in output:
 关于我们项目的一些常见问题解答，请参考[FAQ](./docs/FAQ.md)。如果您的问题没有得到解答，请随时在 [Issues](https://github.com/PaddlePaddle/PaddleX/issues) 中提出
 ## 💬 Discussion
 
-我们非常欢迎并鼓励社区成员在[Discussions](https://github.com/PaddlePaddle/PaddleX/discussions)板块中提出问题、分享想法和反馈。无论您是想要报告一个bug、讨论一个功能请求、寻求帮助还是仅仅想要了解项目的最新动态，这里都是一个绝佳的平台。
+我们非常欢迎并鼓励社区成员在 [Discussions](https://github.com/PaddlePaddle/PaddleX/discussions) 板块中提出问题、分享想法和反馈。无论您是想要报告一个 bug、讨论一个功能请求、寻求帮助还是仅仅想要了解项目的最新动态，这里都是一个绝佳的平台。
 
 
 ## 📄 许可证书
 
-本项目的发布受[Apache 2.0 license](./LICENSE)许可认证。
+本项目的发布受 [Apache 2.0 license](./LICENSE) 许可认证。
 
