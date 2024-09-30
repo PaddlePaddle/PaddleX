@@ -1,11 +1,11 @@
-# Document Scene Information Extraction v3 Pipeline Usage Tutorial
+# PP-ChatOCRv3 Pipeline Usage Tutorial
 
-## 1. Introduction to Document Scene Information Extraction v3 Pipeline
+## 1. Introduction to PP-ChatOCRv3-doc Pipeline
 Document Scene Information Extraction v3 (PP-ChatOCRv3) is a unique intelligent analysis solution for documents and images developed by PaddlePaddle. It combines Large Language Models (LLM) and OCR technology to provide a one-stop solution for complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. By integrating with ERNIE Bot, it fuses massive data and knowledge to achieve high accuracy and wide applicability.
 
 ![](https://github.com/user-attachments/assets/90cb740b-7741-4383-bc4c-663f9d042d02)
 
-The Document Scene Information Extraction v3 pipeline includes modules for **Table Structure Recognition, Layout Region Detection, Text Detection, Text Recognition, Seal Text Detection, Text Image Rectification, and Document Image Orientation Classification**.
+The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recognition, Layout Region Detection, Text Detection, Text Recognition, Seal Text Detection, Text Image Rectification, and Document Image Orientation Classification**.
 
 **If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, choose a model with faster inference speed. If you prioritize model storage size, choose a model with a smaller storage size.** Some benchmarks for these models are as follows:
 
@@ -69,7 +69,7 @@ If you are satisfied with the pipeline's performance, you can directly integrate
 ### 2.2 Local Experience
 Before using the Document Scene Information Extraction v3 pipeline locally, please ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Guide](https://ku.baidu-int.com/knowledge/HFVrC7hq1Q/pKzJfZczuc/GvMbk70MZz/dF1VvOPZmZXXzn?t=mention&mt=doc&dt=doc).
 
-A few lines of code are all you need to complete the quick inference of the pipeline. Using the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf), taking the General Document Scene Information Extraction v3 pipeline as an example:
+A few lines of code are all you need to complete the quick inference of the pipeline. Using the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf), taking the PP-ChatOCRv3-doc pipeline as an example:
 
 ```python
 from paddlex import create_pipeline
@@ -97,7 +97,7 @@ After running, the output is as follows:
 
 In the above Python script, the following steps are executed:
 
-(1) Instantiate the `create_pipeline` to create a Document Scene Information Extraction v3 pipeline object: Specific parameter descriptions are as follows:
+(1) Instantiate the `create_pipeline` to create a PP-ChatOCRv3-doc pipeline object: Specific parameter descriptions are as follows:
 
 | Parameter | Description | Default | Type |
 |-|-|-|-|
@@ -106,7 +106,7 @@ In the above Python script, the following steps are executed:
 | `llm_params` | API configuration | {} | dict |
 | `device(kwargs)` | Running device (None for automatic adaptation) | None | str/None |
 
-(2) Call the `predict` method of the Document Scene Information Extraction v3 pipeline object for inference prediction: The `predict` method parameter is `x`, used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
+(2) Call the `predict` method of the PP-ChatOCRv3-doc pipeline object for inference prediction: The `predict` method parameter is `x`, used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
 
 | Parameter Type | Description |
 |-|-|
@@ -122,12 +122,12 @@ When executing the above command, the default Pipeline configuration file is loa
 paddlex --get_pipeline_config PP-ChatOCRv3-doc
 ```
 
-After execution, the configuration file for the document scene information extraction v3 pipeline will be saved in the current path. If you wish to customize the save location, you can execute the following command (assuming the custom save location is `./my_path`):
+After execution, the configuration file for the PP-ChatOCRv3-doc pipeline will be saved in the current path. If you wish to customize the save location, you can execute the following command (assuming the custom save location is `./my_path`):
 
 ```bash
 paddlex --get_pipeline_config PP-ChatOCRv3-doc --config_save_path ./my_path
 ```
-After obtaining the configuration file, you can customize the various configurations of the document scene information extraction v3 pipeline:
+After obtaining the configuration file, you can customize the various configurations of the PP-ChatOCRv3-doc pipeline:
 
 ```yaml
 Pipeline:
@@ -181,10 +181,10 @@ Additionally, PaddleX provides three other deployment methods, detailed as follo
 
 📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing functions on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy_en.md).
 ## 4. Customization and Fine-tuning
-If the default model weights provided by the General Document Scene Information Extraction v3 Pipeline do not meet your requirements in terms of accuracy or speed for your specific scenario, you can attempt to further **fine-tune** the existing models using **your own domain-specific or application-specific data** to enhance the recognition performance of the general table recognition pipeline in your scenario.
+If the default model weights provided by the PP-ChatOCRv3-doc Pipeline do not meet your requirements in terms of accuracy or speed for your specific scenario, you can attempt to further **fine-tune** the existing models using **your own domain-specific or application-specific data** to enhance the recognition performance of the general table recognition pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
-Since the General Document Scene Information Extraction v3 Pipeline comprises four modules, unsatisfactory performance may stem from any of these modules (note that the text image rectification module does not support customization at this time).
+Since the PP-ChatOCRv3-doc Pipeline comprises four modules, unsatisfactory performance may stem from any of these modules (note that the text image rectification module does not support customization at this time).
 
 You can analyze images with poor recognition results and follow the guidelines below for analysis and model fine-tuning:
 
@@ -218,7 +218,7 @@ Subsequently, load the modified pipeline configuration file using the command-li
 ## 5. Multi-hardware Support
 PaddleX supports various mainstream hardware devices such as NVIDIA GPUs, Kunlun XPU, Ascend NPU, and Cambricon MLU. **Seamless switching between different hardware can be achieved by simply setting the `--device` parameter**.
 
-For example, to perform inference using the Document Scene Information Extraction v3 Pipeline on an NVIDIA GPU```
+For example, to perform inference using the PP-ChatOCRv3-doc Pipeline on an NVIDIA GPU```
 At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the script to `npu`:
 
 ```python
@@ -228,4 +228,4 @@ predict = create_pipeline(pipeline="PP-ChatOCRv3-doc",
                             llm_params = {"api_type":"qianfan","ak":"","sk":""},  ## Please fill in your ak and sk, or you will not be able to call the large model
                             device = "npu:0") 
 ```
-If you want to use the General Document Scene Information Extraction v3 Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/installation_other_devices_en.md).
+If you want to use the PP-ChatOCRv3-doc Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/installation_other_devices_en.md).
