@@ -211,12 +211,16 @@ PaddleX 为每个模型提供默认的高性能推理配置，并将其存储在
 
   <tr>
     <td rowspan="15">文档场景信息抽取v3产线</td>
-    <td>表格结构识别</td>
+    <td rowspan="2">表格识别</td>
     <td>SLANet</td>
   </tr>
 
   <tr>
-    <td>版面区域定位</td>
+    <td>SLANet_plus</td>
+  </tr>
+
+  <tr>
+    <td>版面区域检测</td>
     <td>PicoDet_layout_1x</td>
   </tr>
 
@@ -256,7 +260,7 @@ PaddleX 为每个模型提供默认的高性能推理配置，并将其存储在
   </tr>
 
   <tr>
-    <td>图像矫正</td>
+    <td>文本图像矫正</td>
     <td>UVDoc</td>
   </tr>
 
