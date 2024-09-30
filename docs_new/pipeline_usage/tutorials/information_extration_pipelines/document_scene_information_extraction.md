@@ -480,11 +480,11 @@ LLM_PARAMS = {
 
 
 if __name__ == "__main__":
-    file_url = "https://paddle-model-ecology.bj.bcebos.com/paddlex/serving/pipeline_data/ppchatocr/driving_license.jpg"
+    file_path = "./demo.jpg"
     keys = ["电话"]
 
     payload = {
-        "file": file_url,
+        "file": file_path,
         "useOricls": True,
         "useCurve": True,
         "useUvdoc": True,
