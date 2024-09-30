@@ -18,35 +18,35 @@
   <tr>
     <td>CLIP_vit_base_patch16_448_ML</td>
     <td>89.15</td>
-    <td>325.6</td>
+    <td>325.6 M</td>
     <td>CLIP_ML是一种基于CLIP的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
   </tr>
   <tr>
     <td>PP-HGNetV2-B0_ML</td>
     <td>80.98</td>
-    <td>39.6</td>
+    <td>39.6 M</td>
     <td rowspan="3">PP-HGNetV2_ML是一种基于PP-HGNetV2的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
   </tr>
   <tr>
     <td>PP-HGNetV2-B4_ML</td>
     <td>87.96</td>
-    <td>88.5</td>
+    <td>88.5 M</td>
   </tr>
   <tr>
     <td>PP-HGNetV2-B6_ML</td>
     <td>91.25</td>
-    <td>286.0</td>
+    <td>286.0 M</td>
   </tr>
   <tr>
     <td>PP-LCNet_x1_0_ML</td>
     <td>77.96</td>
-    <td>29.4</td>
+    <td>29.4 M</td>
     <td>PP-LCNet_ML是一种基于PP-LCNet的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
   </tr>
   <tr>
     <td>ResNet50_ML</td>
     <td>83.50</td>
-    <td>108.9</td>
+    <td>108.9 M</td>
     <td>ResNet50_ML是一种基于ResNet50的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
   </tr>
 </table>

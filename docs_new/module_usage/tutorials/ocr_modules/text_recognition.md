@@ -159,7 +159,7 @@ python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
 * `attributes.val_sample_paths`：该数据集验证集样本可视化图片相对路径列表；
 另外，数据集校验还对数据集中所有字符长度占比的分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 
-![](https://rte.weiyun.baidu.com/wiki/attach/image/api/imageDownloadAddress?attachId=8325d1ffedef49778a42421b93d76944&docGuid=H12geiDpbQ-_8Y "")
+![](/tmp/images/modules/text_recog/01.png)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
