@@ -100,7 +100,7 @@ dataset_dir                  # Root directory of the dataset, the directory name
 
 Annotation files adopt the `COCO` format. Please refer to the above specifications for data preparation. Additionally, refer to: [Example Dataset](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/instance_seg_coco_examples.tar).
 
-When using PaddleX 2.x version for instance segmentation datasets, please refer to the corresponding format conversion section in [Data Verification](https://github.com/PaddlePaddle/PaddleX/blob/release/3.0-beta/docs/tutorials/data/dataset_check.md) to convert VOC format datasets to COCO datasets. (Note in module development documentation)
+When using PaddleX 2.x version for instance segmentation datasets, please refer to the corresponding format conversion section in [ Instance Segmentation Module Development Tutorial](../../module_usage/tutorials/cv_modules/instance_segmentation_en.md) to convert VOC format datasets to COCO datasets. (Note in module development documentation)
 
 **Note**:
 
