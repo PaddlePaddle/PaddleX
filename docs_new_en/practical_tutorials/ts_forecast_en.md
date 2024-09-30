@@ -1,9 +1,9 @@
 # PaddleX 3.0 Time Series Forecasting Pipeline — Long-term Electricity Consumption Forecasting Tutorial
 
-PaddleX offers a rich set of pipelines, each consisting of one or more models tailored to solve specific scenario tasks. All PaddleX pipelines support quick trials, and if the results are not satisfactory, you can also fine-tune the models with private data. PaddleX provides Python APIs to easily integrate pipelines into personal projects. Before use, you need to install PaddleX. For installation instructions, refer to [PaddleX Local Installation Guide](../installation/installation.md). This tutorial introduces the usage of the time series forecasting pipeline tool with an example of long-term electricity consumption forecasting.
+PaddleX offers a rich set of pipelines, each consisting of one or more models tailored to solve specific scenario tasks. All PaddleX pipelines support quick trials, and if the results are not satisfactory, you can also fine-tune the models with private data. PaddleX provides Python APIs to easily integrate pipelines into personal projects. Before use, you need to install PaddleX. For installation instructions, refer to [PaddleX Local Installation Guide](../installation/installation_en.md). This tutorial introduces the usage of the time series forecasting pipeline tool with an example of long-term electricity consumption forecasting.
 
 ## 1. Select a Pipeline
-First, choose the corresponding PaddleX pipeline based on your task scenario. The goal of this task is to predict future electricity consumption based on historical data. Recognizing this as a time series forecasting task, we will use PaddleX's time series forecasting pipeline. If you're unsure about the correspondence between tasks and pipelines, you can refer to the [PaddleX Pipeline List (CPU/GPU)](../support_list/pipelines_list.md) for an overview of pipeline capabilities.
+First, choose the corresponding PaddleX pipeline based on your task scenario. The goal of this task is to predict future electricity consumption based on historical data. Recognizing this as a time series forecasting task, we will use PaddleX's time series forecasting pipeline. If you're unsure about the correspondence between tasks and pipelines, you can refer to the [PaddleX Pipeline List (CPU/GPU)](../support_list/pipelines_list_en.md) for an overview of pipeline capabilities.
 
 ## 2. Quick Experience
 PaddleX offers two ways to experience its pipelines: locally on your machine or on the **Baidu AIStudio Community**.
@@ -40,7 +40,7 @@ Based on your actual usage scenario, select an appropriate model for training. A
 ### 4.1 Data Preparation
 To demonstrate the entire time series forecasting process, we will use the [Electricity](https://archive.ics.uci.edu/dataset/321/electricityloaddiagrams20112014) dataset for model training and validation. This dataset collects electricity consumption at a certain node from 2012 to 2014, with data collected every hour. Each data point consists of the current timestamp and corresponding electricity consumption. This dataset is commonly used to test and validate the performance of time series forecasting models.
 
-In this tutorial, we will use this dataset to predict the electricity consumption for the next 96 hours. We have already converted this dataset into a standard data format, and you can obtain a sample dataset by running the following command. For an introduction to the data format, you can refer to the [Time Series Prediction Module Development Tutorial](../module_usage/tutorials/time_series_modules/time_series_forecasting.md).
+In this tutorial, we will use this dataset to predict the electricity consumption for the next 96 hours. We have already converted this dataset into a standard data format, and you can obtain a sample dataset by running the following command. For an introduction to the data format, you can refer to the [Time Series Prediction Module Development Tutorial](../module_usage/tutorials/time_series_modules/time_series_forecasting_en.md).
 
 
 You can use the following commands to download the demo dataset to a specified folder:
@@ -187,7 +187,7 @@ The above verification results have omitted some data parts. `check_pass` being 
 **Note**: Only data that passes the verification can be used for training and evaluation.
 
 ### 4.3 Dataset Format Conversion/Dataset Splitting (Optional)
-If you need to convert the dataset format or re-split the dataset, you can modify the configuration file or append hyperparameters for settings. Refer to Section 4.1.3 in the [Time Series Prediction Module Development Tutorial](../module_usage/tutorials/ts_modules/time_series_forecasting.md).
+If you need to convert the dataset format or re-split the dataset, you can modify the configuration file or append hyperparameters for settings. Refer to Section 4.1.3 in the [Time Series Prediction Module Development Tutorial](../module_usage/tutorials/ts_modules/time_series_forecasting_en.md).
 
 ## 5. Model Training and Evaluation
 
@@ -214,7 +214,7 @@ Each model in PaddleX provides a configuration file for model development to set
 
 * `Global`:
   * `mode`: Mode, supporting dataset validation (`check_dataset`), model training (`train`), model evaluation (`evaluate`), and single instance testing (`predict`);
-  * `device`: Training device, options include `cpu`, `gpu`, `xpu`, `npu`, `mlu`; check the [Model Support List](../support_list/models_list.md) for models supported on different devices.
+  * `device`: Training device, options include `cpu`, `gpu`, `xpu`, `npu`, `mlu`; check the [Model Support List](../support_list/models_list_en.md) for models supported on different devices.
 * `Train`: Training hyperparameter settings;
   * `epochs_iters`: Number of training epochs;
   * `learning_rate`: Training learning rate;
@@ -225,7 +225,7 @@ Each model in PaddleX provides a configuration file for model development to set
   * `input_len`: The length of historical time series input to the model; the input length should be considered comprehensively with the prediction length. Generally, the larger the setting, the more historical information can be referenced, and the higher the model accuracy.
   * `predict_len`: The length of the future sequence that the model is expected to predict; the prediction length should be considered comprehensively with the actual scenario. Generally, the larger the setting, the longer the future sequence you want to predict, and the lower the model accuracy.
   * `patience`: The parameter for the early stopping mechanism, indicating how many times the model's performance on the validation set can be continuously unimproved before stopping training; the larger the patience value, the longer the training time.
-For more hyperparameter introductions, refer to [PaddleX Time Series Task Model Configuration File Parameter Description](../module_usage/instructions/config_parameters_time_series.md).
+For more hyperparameter introductions, refer to [PaddleX Time Series Task Model Configuration File Parameter Description](../module_usage/instructions/config_parameters_time_series_en.md).
 
 **Note**:
 
