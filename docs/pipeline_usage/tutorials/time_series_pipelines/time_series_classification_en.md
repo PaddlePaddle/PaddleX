@@ -41,7 +41,7 @@ Experience the effects of the time series classification pipeline quickly with a
 Experience the image anomaly detection pipeline with a single command，Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv), and replace `--input` with the local path to perform prediction.
 
 ```bash
-paddlex --pipeline ts_classification --input ts_cls.csv --device gpu:0
+paddlex --pipeline ts_cls --input ts_cls.csv --device gpu:0
 ```
 Parameter Explanation:
 
@@ -57,18 +57,18 @@ When executing the above command, the default time series classification pipelin
    <summary> 👉Click to Expand</summary>
 
 ```bash
-paddlex --get_pipeline_yaml ts_classification
+paddlex --get_pipeline_yaml ts_cls
 ```
 After execution, the time series classification pipeline configuration file will be saved in the current path. If you wish to customize the save location, you can execute the following command (assuming the custom save location is `./my_path`):
 
 ```bash
-paddlex --get_pipeline_config ts_classification --config_save_path ./my_path
+paddlex --get_pipeline_config ts_cls --config_save_path ./my_path
 ```
 
 After obtaining the pipeline configuration file, you can replace `--pipeline` with the configuration file save path to make the configuration file take effect. For example, if the configuration file save path is `./ts_ad.yaml`, simply execute:
 
 ```bash
-paddlex --pipeline ./ts_classification.yaml --input ts_cls.csv
+paddlex --pipeline ./ts_cls.yaml --input ts_cls.csv
 ```
 
 In this command, parameters such as `--model` and `--device` are not required to be specified, as they will use the parameters defined in the configuration file. If these parameters are specified, the specified values will take precedence.
@@ -90,7 +90,7 @@ A few lines of code can complete rapid inference for production lines. Taking th
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="ts_classification")
+pipeline = create_pipeline(pipeline="ts_cls")
 
 output = pipeline.predict("ts_cls.csv")
 for res in output:
@@ -133,11 +133,11 @@ In the above Python script, the following steps are executed:
 
 If you have a configuration file, you can customize the configurations of the image anomaly detection pipeline by simply modifying the `pipeline` parameter in the `create_pipeline` method to the path of the pipeline configuration file.
 
-For example, if your configuration file is saved at `./my_path/ts_classification.yaml`, you only need to execute:
+For example, if your configuration file is saved at `./my_path/ts_cls.yaml`, you only need to execute:
 
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="./my_path/ts_classification.yaml")
+pipeline = create_pipeline(pipeline="./my_path/ts_cls.yaml")
 output = pipeline.predict("ts_cls.csv")
 for res in output:
     res.print()  # Print the structured output of prediction
@@ -567,12 +567,12 @@ PaddleX supports various mainstream hardware devices such as NVIDIA GPUs, Kunlun
 For example, if you use an NVIDIA GPU for time series classification pipeline inference, the Python command is:
 
 ```bash
-paddlex --pipeline ts_classification --input ts_cls.csv --device gpu:0
+paddlex --pipeline ts_cls --input ts_cls.csv --device gpu:0
 ``````
 At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` flag in the Python command as follows:
 
 ```bash
-paddlex --pipeline ts_classification --input ts_cls.csv --device npu:0
+paddlex --pipeline ts_cls --input ts_cls.csv --device npu:0
 ```
 
 If you intend to use the General Time Series Classification Pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/installation_other_devices_en.md).
