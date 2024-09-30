@@ -175,6 +175,7 @@ register_model_info(
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-LCNet_x1_0_doc_ori.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
+        "hpi_config_path": HPI_CONFIG_DIR / "PP-LCNet_x1_0_doc_ori.yaml",
     }
 )
 
