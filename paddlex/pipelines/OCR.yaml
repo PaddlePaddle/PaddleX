@@ -6,4 +6,3 @@ Pipeline:
   text_det_model: PP-OCRv4_mobile_det
   text_rec_model: PP-OCRv4_mobile_rec
   text_rec_batch_size: 1
-  device: "gpu:0"

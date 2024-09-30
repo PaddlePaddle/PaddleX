@@ -5,4 +5,3 @@ Global:
 Pipeline:
   model: PP-YOLOE_plus_SOD-L
   batch_size: 1
-  device: "gpu:0"

@@ -12,11 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-MODELS = [
-    "PP-OCRv4_mobile_det",
-    "PP-OCRv4_server_det",
-    "PP-OCRv4_mobile_seal_det",
-    "PP-OCRv4_server_seal_det",
-]
+from typing import Generic, TypeVar
 
-CURVE_MODELS = ["PP-OCRv4_mobile_seal_det", "PP-OCRv4_server_seal_det"]
+from pydantic import BaseModel
+
+
+class Response(BaseModel):
+    logId: str
+    errorCode: int
+    errorMsg: str
+
+
+ResultT = TypeVar("ResultT", bound=BaseModel)
+
+
+class ResultResponse(Response, Generic[ResultT]):
+    result: ResultT

@@ -1,42 +1,55 @@
-[简体中文](model_python_API.md) | English
+[简体中文](pipeline_python_API.md) | English
 
-# PaddleX Single Model Python Usage Instructions
+# PaddleX Model Pipeline Python Usage Instructions
 
-Before using Python scripts for single model quick inference, please ensure you have completed the installation of PaddleX following the [PaddleX Local Installation Tutorial](../../installation/installation_en.md).
+Before using Python scripts for rapid inference on model pipelines, please ensure you have installed PaddleX following the [PaddleX Local Installation Guide](../../installation/installation_en.md).
 
 ## I. Usage Example
-Taking the image classification model as an example, the usage is as follows:
+Taking the image classification pipeline as an example, the usage is as follows:
 
 ```python
-from paddlex import create_model
-model = create_model("PP-LCNet_x1_0")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg", batch_size=1)
+from paddlex import create_pipeline
+pipeline = create_pipeline("image_classification")
+output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
     res.save_to_json("./output/res.json")
 ```
-In short, just three steps:
+In short, there are only three steps:
 
-* Call the `create_model()` method to instantiate the prediction model object;
-* Call the `predict()` method of the prediction model object to perform inference prediction;
+* Call the `create_pipeline()` method to instantiate the prediction model pipeline object;
+* Call the `predict()` method of the prediction model pipeline object for inference;
 * Call `print()`, `save_to_xxx()` and other related methods to visualize or save the prediction results.
 
 ## II. API Description
 
-### 1. Instantiate the Prediction Model Object by Calling the `create_model()` Method
-* `create_model`: Instantiate the prediction model object;
+### 1. Instantiate the Prediction Model Pipeline Object by Calling `create_pipeline()`
+* `create_pipeline`: Instantiates the prediction model pipeline object;
   * Parameters:
-    * `model_name`: `str` type, model name or local inference model file path, such as "PP-LCNet_x1_0", "/path/to/PP-LCNet_x1_0_infer/";
-    * `device`: `str` type, used to set the model inference device, such as "cpu", "gpu:2" for GPU settings;
+    * `pipeline_name`: `str` type, the pipeline name or the local pipeline configuration file path, such as "image_classification", "/path/to/image_classification.yaml";
+    * `device`: `str` type, used to set the model inference device, such as "cpu" or "gpu:2" for GPU settings;
     * `pp_option`: `PaddlePredictorOption` type, used to set the model inference backend;
   * Return Value: `BasePredictor` type.
 
-### 2. Perform Inference Prediction by Calling the `predict()` Method of the Prediction Model Object
-* `predict`: Use the defined prediction model to predict the input data;
+### 2. Perform Inference by Calling the `predict()` Method of the Prediction Model Pipeline Object
+* `predict`: Uses the defined prediction model pipeline to predict input data;
   * Parameters:
-    * `input`: Any type, supports str type representing the path of the file to be predicted, or a directory containing files to be predicted, or a network URL; for CV models, supports numpy.ndarray representing image data; for TS models, supports pandas.DataFrame type data; also supports list types composed of the above types;
+    * `input`: Any type, supporting str representing the path of the file to be predicted, or a directory containing files to be predicted, or a network URL; for CV tasks, supports numpy.ndarray representing image data; for TS tasks, supports pandas.DataFrame type data; also supports lists of the above types;
   * Return Value: `generator`, returns the prediction result of one sample per call;
+
+### 3. Visualize the Prediction Results
+The prediction results of the model pipeline support access, visualization, and saving, which can be achieved through corresponding attributes or methods, specifically as follows:
+
+#### Attributes:
+* `str`: `str` type representation of the prediction result;
+  * Return Value: `str` type, string representation of the prediction result;
+* `json`: Prediction result in JSON format;
+  * Return Value: `dict` type;
+* `img`: Visualization image of the prediction result;
+  * Return Value: `PIL.Image` type;
+* `html`: HTML representation of the prediction result;
+  * Return Value: `str` type;
 
 ### 3. Visualize the Prediction Results
 The prediction results support to be accessed, visualized, and saved, which can be achieved through corresponding attributes or methods, specifically as follows:

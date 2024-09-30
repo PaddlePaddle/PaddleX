@@ -16,6 +16,7 @@
 from pathlib import Path
 from typing import Any, Dict, Optional
 
+from ...utils import errors
 from ..utils.official_models import official_models
 from .base import BasePredictor, BasicPredictor
 from .image_classification import ClasPredictor
@@ -39,26 +40,25 @@ def _create_hp_predictor(
     model_name, model_dir, device, config, hpi_params, *args, **kwargs
 ):
     try:
-        from paddlex_hpi.predictors import HPPredictor
-    except ModuleNotFoundError as e:
+        from paddlex_hpi.models import HPPredictor
+    except ModuleNotFoundError:
         raise RuntimeError(
             "The PaddleX HPI plugin is not properly installed, and the high-performance model inference features are not available."
+        ) from None
+    try:
+        predictor = HPPredictor.get(model_name)(
+            model_dir=model_dir,
+            config=config,
+            device=device,
+            *args,
+            hpi_params=hpi_params,
+            **kwargs,
         )
-    if hpi_params is None:
-        raise ValueError("No HPI params given")
-    if "serial_number" not in hpi_params:
-        raise ValueError("The serial number is required but was not provided.")
-    serial_number = hpi_params["serial_number"]
-    update_license = hpi_params.get("update_license", False)
-    return HPPredictor.get(model_name)(
-        model_dir=model_dir,
-        config=config,
-        device=device,
-        serial_number=serial_number,
-        update_license=update_license,
-        *args,
-        **kwargs,
-    )
+    except errors.others.ClassNotFoundException:
+        raise ValueError(
+            f"{model_name} is not supported by the PaddleX HPI plugin."
+        ) from None
+    return predictor
 
 
 def create_predictor(

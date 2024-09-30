@@ -35,38 +35,68 @@ class _SingleModelPipeline(BasePipeline):
 class ImageClassification(_SingleModelPipeline):
     entities = "image_classification"
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
 
 class ObjectDetection(_SingleModelPipeline):
     entities = "object_detection"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 class InstanceSegmentation(_SingleModelPipeline):
     entities = "instance_segmentation"
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
 
 class SemanticSegmentation(_SingleModelPipeline):
     entities = "semantic_segmentation"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 class TSFc(_SingleModelPipeline):
     entities = "ts_fc"
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
 
 class TSAd(_SingleModelPipeline):
     entities = "ts_ad"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 class TSCls(_SingleModelPipeline):
     entities = "ts_cls"
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
 
 class MultiLableImageClas(_SingleModelPipeline):
     entities = "multi_label_image_classification"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 class SmallObjDet(_SingleModelPipeline):
     entities = "small_object_detection"
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-class AnomolyDetection(_SingleModelPipeline):
+
+class AnomalyDetection(_SingleModelPipeline):
     entities = "anomaly_detection"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
