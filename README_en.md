@@ -433,12 +433,10 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline=[Pipeline Name])
 output = pipeline.predict([Input Image Name])
-for batch in output:
-    for item in batch:
-        res = item['result']
-        res.print()
-        res.save_to_img("./output/")
-        res.save_to_json("./output/")
+for res in output:
+    res.print()
+    res.save_to_img("./output/")
+    res.save_to_json("./output/")
 ```
 The following steps are executed:
 
