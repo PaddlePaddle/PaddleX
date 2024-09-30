@@ -175,4 +175,4 @@ paddlex --pipeline anomaly_detection --input uad_grid.png --device gpu:0
 ```
 paddlex --pipeline anomaly_detection --input uad_grid.png --device npu:0
 ```
-若您想在更多种类的硬件上使用图像异常检测产线，请参考[PaddleX多硬件使用指南](../../../installation/installation_other_devices.md)。
+若您想在更多种类的硬件上使用图像异常检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。
