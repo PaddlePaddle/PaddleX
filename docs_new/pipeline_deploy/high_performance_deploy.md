@@ -218,18 +218,16 @@ PaddleX 为每个模型提供默认的高性能推理配置，并将其存储在
   </tr>
 
   <tr>
-    <td>PicoDet-L_layout_3cls</td>
+    <td>PicoDet_layout_1x</td>
     
   </tr>
 
   <tr>
-    <td>PicoDet-L_layout_3cls</td>
-
-    
+    <td>RT-DETR-H_layout_17cls</td>
   </tr>
 
   <tr>
-    <td>PicoDet-L_layout_3cls</td>
+    <td>RT-DETR-H_layout_3cls</td>
   </tr>
 
   <tr>
