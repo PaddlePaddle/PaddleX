@@ -435,12 +435,10 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline=[产线名称])
 output = pipeline.predict([输入图片名称])
-for batch in output:
-    for item in batch:
-        res = item['result']
-        res.print()
-        res.save_to_img("./output/")
-        res.save_to_json("./output/")
+for res in output:
+    res.print()
+    res.save_to_img("./output/")
+    res.save_to_json("./output/")
 ```
 执行了如下几个步骤：
 
