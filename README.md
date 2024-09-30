@@ -541,6 +541,7 @@ for res in output:
   * [📊 表格结构识别模块使用教程](./docs/module_usage/tutorials/ocr_modules/table_structure_recognition.md)
   * [📄 文档图像方向分类使用教程](./docs/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.md)
   * [🔧 文本图像矫正模块使用教程](./docs/module_usage/tutorials/ocr_modules/text_image_unwarping.md)
+  * [📐 公式识别模块使用教程](./docs/module_usage/tutorials/ocr_modules/formula_recognition.md)
   
   </details>
 
