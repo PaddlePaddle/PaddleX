@@ -30,7 +30,7 @@ python -m pip install paddlepaddle
 # gpu，该命令仅适用于 CUDA 版本为 12.3 的机器环境
  python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
 ```
-注：更多飞桨 Wheel 版本请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/pip/linux-pip.html)。
+> ❗ **注**：更多飞桨 Wheel 版本请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/pip/linux-pip.html)。
 
 **关于其他硬件安装飞桨，请参考**[多硬件安装飞桨](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/tutorials/INSTALL_OTHER_DEVICES.md)**。**
 

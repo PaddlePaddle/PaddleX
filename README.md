@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/PaddlePaddle/PaddleX/assets/45199522/63c6d059-234f-4a27-955e-ac89d81409ee" width="360" height ="55" alt="PaddleX" align="middle" />
+  <img src="/tmp/logo.png" alt="PaddleX" align="middle" />
 </p>
 
 <p align="center">
@@ -10,10 +10,11 @@
 </p>
 
 <h4 align="center">
-  <a href=#README.md>🌟 特性</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐 在线体验</a>｜<a href=#️-快速开始>🚀 快速开始</a> | <a href=#-文档> 📖 文档</a> | <a href=/docs_new/support_list/pipelines_list.md> 🔥模型产线列表</a>
+  <a href=#-特性>🌟 特性</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐 在线体验</a>｜<a href=#️-快速开始>🚀 快速开始</a> | <a href=#-文档> 📖 文档</a> | <a href=/docs_new/support_list/pipelines_list.md> 🔥模型产线列表</a>
 
 </h4>
 
+[](#-特性)
 <h5 align="center">
   <a href="README.md">🇨🇳 简体中文</a> | <a href="README_en.md">🇬🇧 English</a></a>
 </h5>
@@ -26,7 +27,7 @@ PaddleX 3.0是基于飞桨框架构建的一套AI模型低代码全流程开发�
 |:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|
 | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/b302cd7e-e027-4ea6-86d0-8a4dd6d61f39" height="126px" width="180px"> | <img src="/tmp/images/multilabel_cls.png" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/099e2b00-0bbe-4b20-9c5a-96b69e473bd2" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/09f683b4-27df-4c24-b8a7-84da20fdd182" height="126px" width="180px"> |
 |                                                              **通用语义分割**                                                               |                                                            **图像异常检测**                                                            |                                                          **通用OCR**                                                          |                                                          **通用表格识别**                                                          |
-| <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/02637f8c-f248-415b-89ab-1276505f198c" height="126px" width="180px"> | <img src="https://rte.weiyun.baidu.com/wiki/attach/image/api/imageDownloadAddress?attachId=31aabc8473cb49d982126b48a864eaa2&docGuid=1NT96A2Q0Ln0o-" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1ef48536-48d4-484b-a6fb-0d6631ba2386" height="126px" width="180px"> |  <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1e798e05-dee7-4b41-9cc4-6708b6014efa" height="126px" width="180px"> |
+| <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/02637f8c-f248-415b-89ab-1276505f198c" height="126px" width="180px"> | <img src="/tmp/images/image_anomaly_detection.png" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1ef48536-48d4-484b-a6fb-0d6631ba2386" height="126px" width="180px"> |  <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1e798e05-dee7-4b41-9cc4-6708b6014efa" height="126px" width="180px"> |
 |                                                              **文本图像智能分析**                                                              |                                                            **时序预测**                                                            |                                                              **时序异常检测**                                                              |                                                         **时序分类**                                                         |
 | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/e3d97f4e-ab46-411c-8155-494c61492b0a" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/6e897bf6-35fe-45e6-a040-e9a1a20cfdf2" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/c54c66cc-da4f-4631-877b-43b0fbb192a6" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/0ce925b2-3776-4dde-8ce0-5156d5a2476e" height="126px" width="180px"> |
 
@@ -282,8 +283,8 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
   <tr>
     <td>通用OCR</td>
     <td>✅</td>
-    <td>🚧</td>
-    <td>🚧</td>
+    <td>✅</td>
+    <td>✅</td>
     <td>🚧</td>
   </tr>
   <tr>
@@ -297,7 +298,7 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
     <td>通用目标检测</td>
     <td>✅</td>
     <td>✅</td>
-    <td>🚧</td>
+    <td>✅</td>
     <td>🚧</td>
   </tr>
   <tr>
@@ -310,22 +311,22 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
   <tr>
     <td>通用图像分类</td>
     <td>✅</td>
-    <td>🚧</td>
-    <td>🚧</td>
+    <td>✅</td>
+    <td>✅</td>
     <td>✅</td>
   </tr>
   <tr>
     <td>通用语义分割</td>
     <td>✅</td>
-    <td>🚧</td>
-    <td>🚧</td>
-    <td>🚧</td>
+    <td>✅</td>
+    <td>✅</td>
+    <td>✅</td>
   </tr>
   <tr>
     <td>时序预测</td>
     <td>✅</td>
-    <td>🚧</td>
-    <td>🚧</td>
+    <td>✅</td>
+    <td>✅</td>
     <td>🚧</td>
   </tr>
   <tr>
@@ -349,7 +350,7 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
 
 ### 🛠️ 安装
 
-> ❗安装PaddleX前请先确保您有基础的Python运行环境。
+> ❗安装PaddleX前请先确保您有基础的**Python运行环境**。
 
 * **安装PaddlePaddle**
 ```bash
@@ -362,16 +363,16 @@ python -m pip install paddlepaddle
 # gpu，该命令仅适用于 CUDA 版本为 12.3 的机器环境
  python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
 ```
+> ❗ 更多飞桨 Wheel 版本请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/pip/linux-pip.html)。
+
 
 * **安装PaddleX**
 
 ```bash
-git clone https://github.com/PaddlePaddle/PaddleX.git
-cd PaddleX
-pip install -e .
+pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0.beta1-py3-none-any.whl
 ```
   
-更多安装方式参考[PaddleX安装教程](/docs_new/installation/installation.md)
+> ❗ 更多安装方式参考[PaddleX安装教程](/docs_new/installation/installation.md)
 
 ### 💻 命令行使用
 
@@ -485,33 +486,33 @@ for batch in output:
 
 * [📑 PaddleX产线使用概览](/docs_new/pipeline_usage/pipeline_develop_guide.md)
 
-* <details open>
+* <details>
     <summary> <b> 📝 文本图像智能分析 </b></summary>
 
    * [📄 文档场景信息抽取v3产线使用教程](/docs_new/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)
   </details>
 
-* <details open>
+* <details>
     <summary> <b> 🔍 OCR </b></summary>
 
-    * [📜 通用OCR产线使用教程](/docs_new/pipeline_usage/tutorials/ocr_pipelies/OCR.md)
-    * [📊 表格识别产线使用教程](/docs_new/pipeline_usage/tutorials/ocr_pipelies/table_recognition.md)
+    * [📜 通用OCR产线使用教程](/docs_new/pipeline_usage/tutorials/ocr_pipelines/OCR.md)
+    * [📊 表格识别产线使用教程](/docs_new/pipeline_usage/tutorials/ocr_pipelines/table_recognition.md)
   </details>
 
-* <details open>
+* <details>
     <summary> <b> 🎥 计算机视觉 </b></summary>
 
    * [🖼️ 通用图像分类产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_classification.md)
    * [🎯 通用目标检测产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/object_detection.md)
    * [📋 通用实例分割产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md)
    * [🗣️ 通用语义分割产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md)
-   * [🏷️ 图像多标签分类产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_multi_label_lassification.md)
+   * [🏷️ 图像多标签分类产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md)
    * [🔍  小目标检测产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/small_object_detection.md)
    * [🖼️ 图像异常检测产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md)
   </details>
   
 
-* <details open>
+* <details>
     <summary> <b> ⏱️ 时序分析</b> </summary>
 
    * [📈 通用时序预测产线使用教程](/docs_new/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md)
@@ -533,18 +534,16 @@ for batch in output:
 <details open>
 <summary> <b> ⚙️ 单功能模块使用 </b></summary>
 
-* [📘 PaddleX单功能模块使用概览](/docs_new/pipeline_usage/pipeline_develop_guide.md)
-
 * <details>
   <summary> <b> 🔍 OCR </b></summary>
 
   * [📝 文本检测模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/text_detection.md)
-  * [🔖 印章文本检测模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/curved_text_detection.md)
+  * [🔖 印章文本检测模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/seal_text_detection.md)
   * [🔠 文本识别模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/text_recognition.md)
-  * [🗺️ 版面区域检测模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/structure_analysis.md)
+  * [🗺️ 版面区域检测模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/layout_detection.md)
   * [📊 表格结构识别模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/table_structure_recognition.md)
   * [📄 文档图像方向分类使用教程](/docs_new/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.md)
-  * [🔧 文档图像矫正模块使用教程](/docs_new/module_usage/tutorials/cv_modules/image_correction.md)
+  * [🔧 文档图像矫正模块使用教程](/docs_new/module_usage/tutorials/ocr_modules/text_image_unwarping.md)
   </details>
 
 * <details>
@@ -561,7 +560,7 @@ for batch in output:
 * <details>
   <summary> <b> 🏞️ 图像特征 </b></summary>
 
-    * [🔗 通用图像特征模块使用教程](/docs_new/module_usage/tutorials/cv_modules/image_recognition.md)
+    * [🔗 通用图像特征模块使用教程](/docs_new/module_usage/tutorials/cv_modules/image_feature.md)
   </details>
 
 * <details>
@@ -605,7 +604,7 @@ for batch in output:
 <details>
   <summary> <b> 🔗 多模块组合使用 </b></summary>
 
-  * [多功能模块组合使用教程]()
+  * [[🧩 多功能模块组合使用教程]()
 </details>
 <details>
   <summary> <b> 🏗️ 模型产线部署 </b></summary>
@@ -618,15 +617,27 @@ for batch in output:
 <details>
   <summary> <b> 🖥️ 多硬件使用 </b></summary>
 
-  * [⚙️ DCU Paddle安装教程](/docs_new/other_devices_support/installation_other_devices.md)
-  * [⚙️ MLU Paddle安装教程](/docs_new/other_devices_support/installation_other_devices.md)
-  * [⚙️ NPU Paddle安装教程](/docs_new/other_devices_support/installation_other_devices.md)
-  * [⚙️ XPU Paddle安装教程](/docs_new/other_devices_support/installation_other_devices.md)
+  * [⚙️ DCU Paddle安装教程](/docs_new/other_devices_support/paddlepaddle_install_DCU.md)
+  * [⚙️ MLU Paddle安装教程](/docs_new/other_devices_support/paddlepaddle_install_MLU.md)
+  * [⚙️ NPU Paddle安装教程](/docs_new//other_devices_support/paddlepaddle_install_NPU.md)
+  * [⚙️ XPU Paddle安装教程](/docs_new/other_devices_support/paddlepaddle_install_XPU.md)
 
 </details>
 
 <details>
   <summary> <b> 📝 教程&范例 </b></summary>
+
+* [🖼️ 通用图像分类模型产线———垃圾分类教程](/docs_new/practical_tutorials/image_classification_garbage_tutorial.md)
+* [🧩 通用实例分割模型产线———遥感图像实例分割教程](/docs_new/practical_tutorials/image_classification_garbage_tutorial.md)
+* [👥 通用目标检测模型产线———行人跌倒检测教程](/docs_new/practical_tutorials/object_detection_fall_tutorial.md)
+* [👗 通用目标检测模型产线———服装时尚元素检测教程](/docs_new/practical_tutorials/object_detection_fashion_pedia_tutorial.md)
+* [🚗 通用OCR模型产线———车牌识别教程](/docs_new/practical_tutorials/ocr_det_license_tutorial.md)
+* [✍️ 通用OCR模型产线———手写中文识别教程](/docs_new/practical_tutorials/ocr_rec_chinese_tutorial.md)
+* [🗣️ 通用语义分割模型产线———车道线分割教程](/docs_new/practical_tutorials/semantic_segmentation_road_tutorial.md)
+* [🛠️ 时序异常检测模型产线———设备异常检测应用教程](/docs_new/practical_tutorials/ts_anomaly_detection.md)
+* [🎢 时序分类模型产线———心跳监测时序数据分类应用教程](/docs_new/practical_tutorials/ts_classification.md)
+* [🔋 时序预测模型产线———用电量长期预测应用教程](/docs_new/practical_tutorials/ts_forecast.md)
+
   </details>
 
 ## 🤔 FAQ

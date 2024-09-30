@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/PaddlePaddle/PaddleX/assets/45199522/63c6d059-234f-4a27-955e-ac89d81409ee"  width="360" height ="55" alt="PaddleX" align="middle" />
+  <img src="/tmp/logo.png" alt="PaddleX" align="middle" />
 </p>
 
 <p align="center">
@@ -10,12 +10,12 @@
 </p>
 
 <h4 align="center">
-  <a href=#-features>🌟 Features</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐  Online Experience</a>｜<a href=#️-quick-start>🚀  Quick Start</a> | <a href=#-documentation> 📖 Documentation</a> | <a href=#-model-pipeline-list List> 🔥Model Pipelines List</a>
+  <a href=##-why-paddlex->🌟 Features</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐  Online Experience</a>｜<a href=#️-quick-start>🚀  Quick Start</a> | <a href=#-documentation> 📖 Documentation</a> | <a href=/docs_new_en/support_list/pipelines_list_en.md> 🔥Pipelines List</a>
 </h4>
 
-
+[](/docs_new_en/support_list/pipelines_list_en.md)
 <h5 align="center">
-  <a href="README_en.md">🇨🇳 Simplified Chinese</a> | <a href="README_en.md">🇬🇧 English</a></a>
+  <a href="README.md">🇨🇳 Simplified Chinese</a> | <a href="README_en.md">🇬🇧 English</a></a>
 </h5>
 
 ## 🔍 Introduction
@@ -48,9 +48,9 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 
 🔥 **3.25, 2024**, PaddleX 3.0 cloud release, supporting the creation of pipelines in the AI Studio Galaxy Community in a zero-code manner.
 
-## 📊 Capability Support
+## 📊 What can PaddleX do？
 
-All pipelines of PaddleX support **online experience** and local **fast inference**. You can quickly experience the pre-trained effects of each production line. If you are satisfied with the pre-trained effects of the production line, you can directly perform [high-performance deployment](/docs_new_en/pipeline_deploy/high_performance_deploy_en.md) / [service deployment](/docs_new_en/pipeline_deploy/service_deploy_en.md) / [edge deployment](/docs_new_en/pipeline_deploy/lite_deploy_en.md) on the production line. If not satisfied, you can also **second development** to improve the production line effect. For the complete production line development process, please refer to the [PaddleX Production Line Development Tool Local Use Tutorial](/docs_new_en/pipeline_usage/pipeline_develop_guide_en.md).
+All pipelines of PaddleX support **online experience** and local **fast inference**. You can quickly experience the pre-trained effects of each production line. If you are satisfied with the pre-trained effects of the production line, you can directly perform [high-performance deployment](/docs_new_en/pipeline_deploy/high_performance_deploy_en.md) / [service deployment](/docs_new_en/pipeline_deploy/service_deploy_en.md) / [lite deployment](/docs_new_en/pipeline_deploy/lite_deploy_en.md) on the production line. If not satisfied, you can also **second development** to improve the production line effect. For the complete production line development process, please refer to the [PaddleX Production Line Development Tool Local Use Tutorial](/docs_new_en/pipeline_usage/pipeline_develop_guide_en.md).
 
 In addition, PaddleX provides developers with a full-process efficient model training and deployment tool based on a [cloud-based graphical development interface](https://aistudio.baidu.com/pipeline/mine). Developers **do not need code development**, just need to prepare a dataset that meets the production line requirements to **quickly start model training**. For details, please refer to the tutorial ["Developing Industrial-level AI Models with Zero Threshold"](https://aistudio.baidu.com/practical/introduce/546656605663301).
 
@@ -257,7 +257,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
 </table>
 
-> ❗Note: All the above features are implemented based on GPU/CPU. PaddleX can also perform quick inference and secondary development on mainstream hardware such as Kunlun, Ascend, Cambricon, and Hygon. The following table details the support status of the model production line, and for the specific list of supported models, please refer
+> ❗Note: All the above features are implemented based on GPU/CPU. PaddleX can also perform fast inference and secondary development on mainstream hardware such as Kunlun, Ascend, Cambricon, and Hygon. The following table details the support status of the model production line, and for the specific list of supported models, please refer to [Model List (MLU)](./docs_new_en/support_list/model_list_mlu_en.md) / [Model List (NPU)](./docs_new_en/support_list/model_list_npu_en.md) / [Model List (XPU)](./docs_new_en/support_list/model_list_xpu_en.md) / [Model List DCU](./docs_new_en/support_list/model_list_dcu_en.md). We are adapting more models and promoting the implementation of high-performance and service-oriented deployment on mainstream hardware.
+
 
 <details>
   <summary>👉 Support for Domestic Hardware Capabilities</summary>
@@ -273,8 +274,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
   <tr>
     <td>General OCR</td>
     <td>✅</td>
-    <td>🚧</td>
-    <td>🚧</td>
+    <td>✅</td>
+    <td>✅</td>
     <td>🚧</td>
   </tr>
   <tr>
@@ -288,35 +289,35 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <td>General Object Detection</td>
     <td>✅</td>
     <td>✅</td>
-    <td>🚧</td>
+    <td>✅</td>
     <td>🚧</td>
   </tr>
   <tr>
     <td>General Instance Segmentation</td>
     <td>✅</td>
     <td>🚧</td>
-    <td>✅</td>
+    <td>🚧</td>
     <td>🚧</td>
   </tr>
   <tr>
     <td>General Image Classification</td>
     <td>✅</td>
-    <td>🚧</td>
-    <td>🚧</td>
+    <td>✅</td>
+    <td>✅</td>
     <td>✅</td>
   </tr>
   <tr>
     <td>General Semantic Segmentation</td>
     <td>✅</td>
-    <td>🚧</td>
-    <td>🚧</td>
-    <td>🚧</td>
+    <td>✅</td>
+    <td>✅</td>
+    <td>✅</td>
   </tr>
   <tr>
     <td>Time Series Forecasting</td>
     <td>✅</td>
-    <td>🚧</td>
-    <td>🚧</td>
+    <td>✅</td>
+    <td>✅</td>
     <td>🚧</td>
   </tr>
   <tr>
@@ -364,7 +365,7 @@ cd PaddleX
 pip install -e .
 ```
 
-For more installation methods, please refer to the [PaddleX Installation Guide](/docs_new/installation/installation.md)
+For more installation methods, please refer to the [PaddleX Installation Guide](/docs_new_en/installation/installation_en.md)
 
 
 ### 💻 CLI Usage
@@ -466,134 +467,171 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 </details>
 
 ## 📖 Documentation
-
 <details>
-  <summary> <b> Installation </b></summary>
-
-  * [PaddleX Installation Guide](/docs_new_en/installation/installation_en.md) 
-  * [PaddlePaddle Installation Guide](/docs_new_en/installation/paddlepaddle_install_en.md)
+  <summary> <b> ⬇️ Installation </b></summary>
+  
+  * [📦 PaddlePaddle Installation Guide](/docs_new_en/installation/paddlepaddle_install_en.md)
+  * [📦 PaddleX Installation Guide](/docs_new_en/installation/installation_en.md) 
 
 </details>
 
 <details open>
-<summary> <b> Pipeline Usage </b></summary>
+<summary> <b> 🔥 Production Line Usage </b></summary>
 
-* [PaddleX Model Pipeline Usage Overview](/docs_new_en/pipeline_usage/pipeline_develop_guide_en.md)
+* [📑 PaddleX Production Line Usage Overview](/docs_new_en/pipeline_usage/pipeline_develop_guide_en.md)
 
-* <details open>
-    <summary> <b> Text Image Intelligent Analysis </b></summary>
+* <details>
+    <summary> <b> 📝 Text and Image Intelligent Analysis </b></summary>
 
-   * [Document Scene Information Extraction Pipeline Usage Guide](/docs_new_en/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md)
-  </details>
-
-* <details open>
-    <summary> <b> Computer Vision </b></summary>
-
-   * [ Image Classification Pipeline Usage Guide](/docs_new_en/pipeline_usage/tutorials/cv_pipelines/image_classification_en.md)
-   * [ Object Detection Pipeline Usage Guide](/docs_new_en/pipeline_usage/tutorials/cv_pipelines/object_detection_en.md)
-   * [ Instance Segmentation Pipeline Usage Guide](/docs_new_en/pipeline_usage/tutorials/cv_pipelines/instance_segmentation_en.md)
-   * [ Semantic Segmentation Pipeline Usage Guide](/docs_new_en/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation_en.md)
-   * [ Image Multi-Label Classification Pipeline Usage Guide](/docs_new_en/pipeline_usage/tutorials/cv_pipelines/image_multi_label_lassification_en.md)
-   * [Small Object Detection Pipeline Usage Guide](/docs_new_en/pipeline_usage/tutorials/cv_pipelines/small_object_detection_en.md)
-   * [Image Anomaly Detection Pipeline Usage Guide](/docs_new_en/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection_en.md)
-  </details>
-  
-* <details open>
-    <summary> <b> OCR </b></summary>
-
-    * [ OCR Pipeline Usage Guide](/docs_new_en/pipeline_usage/tutorials/ocr_pipelies/OCR_en.md)
-    * [ Form Recognition Pipeline Usage Guide](/docs_new_en/pipeline_usage/tutorials/ocr_pipelies/table_recognition_en.md)
-  </details>
-
-* <details open>
-    <summary> <b> Time Series Analysis</b> </summary>
-
-   * [ Time Series Forecasting Pipeline Usage Guide](/docs_new_en/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting_en.md)
-   * [ Time Series Anomaly Detection Pipeline Usage Guide](/docs_new_en/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md)
-   * [ Time Series Classification Pipeline Usage Guide](/docs_new_en/pipeline_usage/tutorials/time_series_pipelines/time_series_classification_en.md)
+   * [📄 Document Scene Information Extraction v3 Production Line Usage Guide](/docs_new_en/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md)
   </details>
 
 * <details>
-    <summary> <b> Related Documentation </b></summary>
+    <summary> <b> 🔍 OCR </b></summary>
 
-   * [PaddleX Pipeline CLI Usage Instructions](/docs_new_en/pipeline_usage/instructions/pipeline_CLI_usage_en.md)
-   * [PaddleX Pipeline Python Script Usage Instructions](/docs_new_en/pipeline_usage/instructions/pipeline_python_API_en.md)
+    * [📜 General OCR Production Line Usage Guide](/docs_new_en/pipeline_usage/tutorials/ocr_pipelies/OCR_en.md)
+    * [📊 Form Recognition Production Line Usage Guide](/docs_new_en/pipeline_usage/tutorials/ocr_pipelies/table_recognition_en.md)
   </details>
-   
+
+* <details>
+    <summary> <b> 🎥 Computer Vision </b></summary>
+
+   * [🖼️ General Image Classification Production Line Usage Guide](/docs_new_en/pipeline_usage/tutorials/cv_pipelines/image_classification_en.md)
+   * [🎯 General Object Detection Production Line Usage Guide](/docs_new_en/pipeline_usage/tutorials/cv_pipelines/object_detection_en.md)
+   * [📋 General Instance Segmentation Production Line Usage Guide](/docs_new_en/pipeline_usage/tutorials/cv_pipelines/instance_segmentation_en.md)
+   * [🗣️ General Semantic Segmentation Production Line Usage Guide](/docs_new_en/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation_en.md)
+   * [🏷️ Image Multi-Label Classification Production Line Usage Guide](/docs_new_en/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification_en.md)
+   * [🔍 Small Object Detection Production Line Usage Guide](/docs_new_en/pipeline_usage/tutorials/cv_pipelines/small_object_detection_en.md)
+   * [🖼️ Image Anomaly Detection Production Line Usage Guide](/docs_new_en/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection_en.md)
+  </details>
+  
+* <details>
+    <summary> <b> ⏱️ Time Series Analysis</b> </summary>
+
+   * [📈 General Time Series Forecasting Production Line Usage Guide](/docs_new_en/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting_en.md)
+   * [📉 General Time Series Anomaly Detection Production Line Usage Guide](/docs_new_en/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md)
+   * [🕒 General Time Series Classification Production Line Usage Guide](/docs_new_en/pipeline_usage/tutorials/time_series_pipelines/time_series_classification_en.md)
+  </details>
+
+* <details>
+    <summary> <b>🔧 Related Documentation</b> </summary>
+
+   * [🖥️ PaddleX Production Line Command Line Usage Guide](/docs_new_en/pipeline_usage/instructions/pipeline_CLI_usage_en.md)
+   * [📝 PaddleX Production Line Python Script Usage Guide](/docs_new_en/pipeline_usage/instructions/pipeline_python_API_en.md)
+  </details>
+  
 </details>
 
 <details open>
-<summary> <b> Single Function Module Usage </b></summary>
-
-* [PaddleX Single Function Module Usage Overview](/docs_new_en/pipeline_usage/pipeline_develop_guide_en.md)
+<summary> <b> ⚙️ Single Function Module Usage </b></summary>
 
 * <details>
-  <summary> <b> Computer Vision </b></summary>
-  
-  * [Image Classification Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/image_classification_en.md)
-  * [Image Recognition Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/image_recognition_en.md)
-  * [Object Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/object_detection_en.md)
-  * [Small Object Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/small_object_detection_en.md)
-  * [Face Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/face_detection_en.md)
-  * [Mainbody Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/mainbody_detection_en.md)
-  * [Pedestrian Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/human_detection_en.md)
-  * [Vehicle Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/vehicle_detection_en.md)
-  * [Semantic Segmentation Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/semantic_segmentation_en.md)
-  * [Instance Segmentation Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/instance_segmentation_en.md)
-  * [Document Image Orientation Classification Usage Guide](/docs_new_en/module_usage/tutorials/ocr_modules/doc_img_orientation_classification_en.md)
-  * [Image Multi-Label Classification Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/ml_classification_en.md)
-  * [Pedestrian Attribute Recognition Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/pedestrian_attribute_recognition_en.md)
-  * [Vehicle Attribute Recognition Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/vehicle_attribute_recognition_en.md)
-  * [Image Correction Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/image_correction_en.md)
-  * [Unsupervised Anomaly Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/unsupervised_anomaly_detection_en.md)
-  </details> 
-  
-* <details>
-  <summary> <b> OCR </b></summary>
+  <summary> <b> 🔍 OCR </b></summary>
 
-  * [Text Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/ocr_modules/text_detection_en.md)
-  * [Seal Text Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/ocr_modules/curved_text_detection_en.md)
-  * [Text Recognition Module Usage Guide](/docs_new_en/module_usage/tutorials/ocr_modules/text_recognition_en.md)
-  * [Layout Area Localization Module Usage Guide](/docs_new_en/module_usage/tutorials/ocr_modules/structure_analysis_en.md)
-  * [Table Structure Recognition Module Usage Guide](/docs_new_en/module_usage/tutorials/ocr_modules/table_structure_recognition_en.md)
+  * [📝 Text Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/ocr_modules/text_detection_en.md)
+  * [🔖 Seal Text Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/ocr_modules/seal_text_detection_en.md)
+  * [🔠 Text Recognition Module Usage Guide](/docs_new_en/module_usage/tutorials/ocr_modules/text_recognition_en.md)
+  * [🗺️ Layout Area Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/ocr_modules/layout_detection_en.md)
+  * [📊 Table Structure Recognition Module Usage Guide](/docs_new_en/module_usage/tutorials/ocr_modules/table_structure_recognition_en.md)
+  * [📄 Document Image Orientation Classification Usage Guide](/docs_new_en/module_usage/tutorials/ocr_modules/doc_img_orientation_classification_en.md)
+  * [🔧 Document Image Correction Module Usage Guide](/docs_new_en/module_usage/tutorials/ocr_modules/text_image_unwarping_en.md)
   </details>
 
 * <details>
-  <summary> <b> Time Series Analysis </b></summary>
+  <summary> <b> 🖼️ Image Classification </b></summary>
 
-  * [Time Series Forecasting Module Usage Guide](/docs_new_en/module_usage/tutorials/time_series_modules/time_series_forecasting_en.md)
-  * [Time Series Anomaly Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/time_series_modules/time_series_anomaly_detection_en.md)
-  * [Time Series Classification Module Usage Guide](/docs_new_en/module_usage/tutorials/time_series_modules/time_series_classification_en.md)
+  * [📂 Image Classification Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/image_classification_en.md)
+  * [🏷️ Image Multi-Label Classification Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/ml_classification_en.md)
+
+  * [👤 Pedestrian Attribute Recognition Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/pedestrian_attribute_recognition_en.md)
+  * [🚗 Vehicle Attribute Recognition Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/vehicle_attribute_recognition_en.md)
+
+  </details>
+
+* <details>
+  <summary> <b> 🏞️ Image Features </b></summary>
+
+    * [🔗 General Image Feature Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules//image_feature_en.md)
+  </details>
+
+* <details>
+  <summary> <b> 🎯 Object Detection </b></summary>
+
+  * [🎯 Object Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/object_detection_en.md)
+  * [📏 Small Object Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/small_object_detection_en.md)
+  * [🧑‍🤝‍🧑 Face Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/face_detection_en.md)
+  * [🔍 Main Body Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/mainbody_detection_en.md)
+  * [🚶 Pedestrian Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/human_detection_en.md)
+  * [🚗 Vehicle Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/vehicle_detection_en.md)
+
+  </details>
+
+* <details>
+  <summary> <b> 🖼️ Image Segmentation </b></summary>
+
+  * [🗺️ Semantic Segmentation Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/semantic_segmentation_en.md)
+  * [🔍 Instance Segmentation Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/instance_segmentation_en.md)
+  * [🚨 Image Anomaly Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/cv_modules/anomaly_detection_en.md)
+  </details>
+
+* <details>
+  <summary> <b> ⏱️ Time Series Analysis </b></summary>
+
+  * [📈 Time Series Forecasting Module Usage Guide](/docs_new_en/module_usage/tutorials/time_series_modules/time_series_forecasting_en.md)
+  * [🚨 Time Series Anomaly Detection Module Usage Guide](/docs_new_en/module_usage/tutorials/time_series_modules/time_series_anomaly_detection_en.md)
+  * [🕒 Time Series Classification Module Usage Guide](/docs_new_en/module_usage/tutorials/time_series_modules/time_series_classification_en.md)
   </details>
     
 * <details>
-  <summary> <b> Related Documentation </b></summary>
+  <summary> <b> 📄 Related Documentation </b></summary>
 
-  * [PaddleX Single Model Python Script Usage Instructions](/docs_new_en/module_usage/instructions/model_python_API_en.md)
-  * [PaddleX General Model Configuration File Parameter Explanation](/docs_new_en/module_usage/instructions/config_parameters_common_en.md)
-  * [PaddleX Time Series Task Model Configuration File Parameter Explanation](/docs_new_en/module_usage/instructions/config_parameters_time_series_en.md)
+  * [📝 PaddleX Single Model Python Script Usage Guide](/docs_new_en/module_usage/instructions/model_python_API_en.md)
+  * [📝 PaddleX General Model Configuration File Parameter Guide](/docs_new_en/module_usage/instructions/config_parameters_common_en.md)
+  * [📝 PaddleX Time Series Task Model Configuration File Parameter Guide](/docs_new_en/module_usage/instructions/config_parameters_time_series_en.md)
   </details>
 
 </details>
 
 <details>
-  <summary> <b> Multi-Module Combination Usage </b></summary>
+  <summary> <b> 🔗 Multi-Module Combination Usage </b></summary>
 
-  * [Multi-Function Module Combination Usage Guide]()
+  * [[🧩 Multi-Function Module Combination Usage Guide]()
 </details>
 <details>
-  <summary> <b> Model Pipeline Deployment </b></summary>
+  <summary> <b> 🏗️ Model Production Line Deployment </b></summary>
 
-  * [PaddleX High-Performance Deployment Guide](/docs_new_en/pipeline_deploy/high_performance_deploy_en.md)
-  * [PaddleX Service Deployment Guide](/docs_new_en/pipeline_deploy/service_deploy_en.md)
-  * [PaddleX Edge Deployment Guide](/docs_new_en/pipeline_deploy/lite_deploy_en.md)
+  * [🚀 PaddleX High-Performance Deployment Guide](/docs_new_en/pipeline_deploy/high_performance_deploy_en.md)
+  * [🖥️ PaddleX Service Deployment Guide](/docs_new_en/pipeline_deploy/service_deploy_en.md)
+  * [📱 PaddleX Edge Deployment Guide](/docs_new_en/pipeline_deploy/lite_deploy_en.md)
 
 </details>
 <details>
-  <summary> <b> Multi-Hardware Usage </b></summary>
+  <summary> <b> 🖥️ Multi-Hardware Usage </b></summary>
 
-  * [Multi-Hardware Usage Guide](/docs_new_en/other_devices_support/installation_other_devices_en.md)
+  * [⚙️ DCU Paddle Installation Guide](/docs_new_en/other_devices_support/installation_other_devices_en.md)
+  * [⚙️ MLU Paddle Installation Guide](/docs_new_en/other_devices_support/installation_other_devices_en.md)
+  * [⚙️ NPU Paddle Installation Guide](/docs_new_en/other_devices_support/installation_other_devices_en.md)
+  * [⚙️ XPU Paddle Installation Guide](/docs_new_en/other_devices_support/installation_other_devices_en.md)
+
 </details>
+
+<details>
+  <summary> <b> 📝 Tutorials & Examples </b></summary>
+
+* [🖼️ General Image Classification Model Line —— Garbage Classification Tutorial](/docs_new_en/practical_tutorials/image_classification_garbage_tutorial_en.md)
+* [🧩 General Instance Segmentation Model Line —— Remote Sensing Image Instance Segmentation Tutorial](/docs_new_en/practical_tutorials/image_classification_garbage_tutorial_en.md)
+* [👥 General Object Detection Model Line —— Pedestrian Fall Detection Tutorial](/docs_new_en/practical_tutorials/object_detection_fall_tutorial_en.md)
+* [👗 General Object Detection Model Line —— Fashion Element Detection Tutorial](/docs_new_en/practical_tutorials/object_detection_fashion_pedia_tutorial_en.md)
+* [🚗 General OCR Model Line —— License Plate Recognition Tutorial](/docs_new_en/practical_tutorials/ocr_det_license_tutorial_en.md)
+* [✍️ General OCR Model Line —— Handwritten Chinese Character Recognition Tutorial](/docs_new_en/practical_tutorials/ocr_rec_chinese_tutorial_en.md)
+* [🗣️ General Semantic Segmentation Model Line —— Road Line Segmentation Tutorial](/docs_new_en/practical_tutorials/semantic_segmentation_road_tutorial_en.md)
+* [🛠️ Time Series Anomaly Detection Model Line —— Equipment Anomaly Detection Application Tutorial](/docs_new_en/practical_tutorials/ts_anomaly_detection_en.md)
+* [🎢 Time Series Classification Model Line —— Heartbeat Monitoring Time Series Data Classification Application Tutorial](/docs_new_en/practical_tutorials/ts_classification_en.md)
+* [🔋 Time Series Forecasting Model Line —— Long-term Electricity Consumption Forecasting Application Tutorial](/docs_new_en/practical_tutorials/ts_forecast_en.md)
+
+  </details>
+
+
 
 
 ## 🤔 FAQ
