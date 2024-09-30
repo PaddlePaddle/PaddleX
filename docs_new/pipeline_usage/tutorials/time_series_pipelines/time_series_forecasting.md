@@ -108,7 +108,6 @@ output = pipeline.predict("ts_fc.csv")
 for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_csv("./output/") ## 保存csv格式结果
-    res.save_to_xlsx("./output/") ## 保存表格格式结果
 ```
 得到的结果与命令行方式相同。
 
@@ -154,7 +153,6 @@ output = pipeline.predict("ts_fc.csv")
 for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_csv("./output/") ## 保存csv格式结果
-    res.save_to_xlsx("./output/") ## 保存表格格式结果
 ```
 ## 3. 开发集成/部署
 如果产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。

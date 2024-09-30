@@ -106,7 +106,6 @@ output = pipeline.predict("ts_fc.csv")
 for res in output:
     res.print()  # Print the structured output of the prediction
     res.save_to_csv("./output/")  # Save the results in CSV format
-    res.save_to_xlsx("./output/")  # Save the results in Excel format
 ```
 The result obtained is the same as that of the command line method.
 
@@ -152,7 +151,6 @@ output = pipeline.predict("ts_fc.csv")
 for res in output:
     res.print()  # Print the structured output of prediction
     res.save_to_csv("./output/")  # Save results in CSV format
-    res.save_to_xlsx("./output/")  # Save results in Excel format
 ```
 
 ## 3. Development Integration/Deployment
