@@ -12,12 +12,12 @@ The text detection module is a crucial component in OCR (Optical Character Recog
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md).
 
-Just a few lines of code can complete the inference of the text detection module, allowing you to easily switch between models under this module. You can also integrate the model inference of the text detection module into your project.
+Just a few lines of code can complete the inference of the text detection module, allowing you to easily switch between models under this module. You can also integrate the model inference of the text detection module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png) to your local machine.
 
 ```python
 from paddlex import create_model
 model = create_model("PP-OCRv4_mobile_det")
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png", batch_size=1)
+output = model.predict("general_ocr_001.png", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -139,13 +139,13 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 After completing model training and evaluation, you can use the trained model weights for inference predictions or Python integration.
 
 #### 4.4.1 Model Inference
-To perform inference predictions via the command line, simply use the following command:
+To perform inference predictions via the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png) to your local machine.
 
 ```bash
 python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_accuracy/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png"
+    -o Predict.input="general_ocr_001.png"
 ```
 Similar to model training and evaluation, the following steps are required:
 
