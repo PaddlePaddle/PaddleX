@@ -15,21 +15,11 @@
 **模型的精度指标测量自**[DocUNet benchmark](https://www3.cs.stonybrook.edu/~cvl/docunet.html)。**GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。**
 
 </details>
-<<<<<<< HEAD
-=======
 
 ## 三、快速集成
-> ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
+在快速集成前，首先需要安装PaddleX的wheel包，wheel的安装方式请参考 [PaddleX本地安装教程](../../../installation/installation.md)。完成wheel包的安装后，几行代码即可完成文本检测模块的推理，可以任意切换该模块下的模型，您也可以将文本检测的模块中的模型推理集成到您的项目中。
 
-完成wheel包的安装后，几行代码即可完成文本检测模块的推理，可以任意切换该模块下的模型，您也可以将文本检测的模块中的模型推理集成到您的项目中。
->>>>>>> remotes/origin/docs_change
-
-## 三、快速集成
-> ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
-
-完成wheel包的安装后，几行代码即可完成文本检测模块的推理，可以任意切换该模块下的模型，您也可以将文本检测的模块中的模型推理集成到您的项目中。
-
-```python
+```
 from paddlex import create_model
 model = create_model("UVDoc")
 output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/doc_test.jpg", batch_size=1)
