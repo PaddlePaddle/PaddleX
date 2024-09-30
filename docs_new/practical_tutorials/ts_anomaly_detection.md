@@ -1,9 +1,9 @@
 # PaddleX 3.0 时序异常检测模型产线———设备异常检测应用教程
 
-PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组合实现，每个模型产线都能够解决特定的场景任务问题。PaddleX 所提供的模型产线均支持快速体验，如果效果不及预期，也同样支持使用私有数据微调模型，并且 PaddleX 提供了 Python API，方便将产线集成到个人项目中。在使用之前，您首先需要安装 PaddleX， 安装方式请参考[ ](../INSTALL.md)[PaddleX本地安装教程](../../../installation/installation.md)。此处以一个设备节点的异常检测的任务为例子，介绍模型产线工具的使用流程。
+PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组合实现，每个模型产线都能够解决特定的场景任务问题。PaddleX 所提供的模型产线均支持快速体验，如果效果不及预期，也同样支持使用私有数据微调模型，并且 PaddleX 提供了 Python API，方便将产线集成到个人项目中。在使用之前，您首先需要安装 PaddleX， 安装方式请参考[ ](../INSTALL.md)[PaddleX本地安装教程](../installation/installation.md)。此处以一个设备节点的异常检测的任务为例子，介绍模型产线工具的使用流程。
 
 ## 1. 选择产线
-首先，需要根据您的任务场景，选择对应的 PaddleX 产线，本任务该任务旨在识别和标记出设备节点中的异常行为或异常状态，帮助企业和组织及时发现和解决应用服务器节点中的问题，提高系统的可靠性和可用性。了解到这个任务属于时序异常检测任务，对应 PaddleX 的时序异常检测产线。如果无法确定任务和产线的对应关系，您可以在 PaddleX 支持的[PaddleX产线列表(CPU/GPU)](../../../support_list/models_list.md)中了解相关产线的能力介绍。
+首先，需要根据您的任务场景，选择对应的 PaddleX 产线，本任务该任务旨在识别和标记出设备节点中的异常行为或异常状态，帮助企业和组织及时发现和解决应用服务器节点中的问题，提高系统的可靠性和可用性。了解到这个任务属于时序异常检测任务，对应 PaddleX 的时序异常检测产线。如果无法确定任务和产线的对应关系，您可以在 PaddleX 支持的[PaddleX产线列表(CPU/GPU)](../support_list/pipelines_list.md)中了解相关产线的能力介绍。
 
 ## 2. 快速体验
 PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX 在本地体验，另外一种是可以在 **AI Studio 星河社区**上体验。
@@ -21,7 +21,7 @@ for res in output:
 注：由于时序数据和场景紧密相关，时序任务的在线体验官方内置模型仅是在一个特定场景下的模型方案，并非通用方案，不适用其他场景，因此体验方式不支持使用任意的文件来体验官方模型方案效果。但是，在完成自己场景数据下的模型训练之后，可以选择自己训练的模型方案，并使用对应场景的数据进行在线体验。
 
 ## 3. 选择模型
-PaddleX 提供了5个端到端的时序异常检测模型，具体可参考 [模型列表](../../../support_list/models_list.md)，其中模型的benchmark如下：
+PaddleX 提供了5个端到端的时序异常检测模型，具体可参考 [模型列表](../support_list/models_list.md)，其中模型的benchmark如下：
 
 |模型名称|precison|recall|f1_score|模型存储大小（M)|介绍|
 |-|-|-|-|-|-|
@@ -35,7 +35,7 @@ PaddleX 提供了5个端到端的时序异常检测模型，具体可参考 [模
 ### 4.1 数据准备
 为了演示时序异常检测任务整个流程，我们将使用公开的 MSL 数据集进行模型训练及验证。PSM（火星科学实验室）数据集由来自美国国家航空航天局，具有 55 个维度，其中包含来自航天器监测系统的意外事件异常（ISA）报告的遥测异常数据。具有实际应用背景，能够更好地反映真实场景中的异常情况，通常用于测试和验证时间序列异常检测模型的性能。本教程中基于该数据集进行异常检测。
 
-我们已经将该数据集转化为标准数据格式，可通过以下命令获取示例数据集。关于数据格式介绍，您可以参考 [时序异常检测模块开发教程](docs_new/module_usage/tutorials/ts_modules/time_series_anomaly_detection.md)。
+我们已经将该数据集转化为标准数据格式，可通过以下命令获取示例数据集。关于数据格式介绍，您可以参考 [时序异常检测模块开发教程](../module_usage/tutorials/ts_modules/time_series_anomaly_detection.md)。
 
 数据集获取命令：
 
@@ -94,7 +94,7 @@ python main.py -c paddlex/configs/ts_anomaly_detection/PatchTST_ad.yaml \
 **注**：只有通过数据校验的数据才可以训练和评估。
 
 ### 4.3 数据集格式转换/数据集划分（非必选）
-如需对数据集格式进行转换或是重新划分数据集，可参考[时序异常检测模块开发教程](docs_new/module_usage/tutorials/ts_modules/time_series_anomaly_detection.md)中的4.1.3。
+如需对数据集格式进行转换或是重新划分数据集，可参考[时序异常检测模块开发教程](../module_usage/tutorials/ts_modules/time_series_anomaly_detection.md)中的4.1.3。
 
 ## 5. 模型训练和评估
 ### 5.1 模型训练
@@ -119,7 +119,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 
 * `Global`：
   * `mode`：模式，支持数据校验（`check_dataset`）、模型训练（`train`）、模型评估（`evaluate`）、单例测试（`predict`）；
-  * `device`：训练设备，可选`cpu`、`gpu`；可在 [PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)同级目录的文档中，查看不同设备上支持的模型；
+  * `device`：训练设备，可选`cpu`、`gpu`；可在 [PaddleX模型列表（CPU/GPU）](../support_list/models_list.md)同级目录的文档中，查看不同设备上支持的模型；
 * `Train`：训练超参数设置；
   * `epochs_iters`：训练轮次数设置；
   * `learning_rate`：训练学习率设置；
@@ -129,7 +129,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
   * `freq`：频率，须结合自己的数据设置时间频率，如：1min、5min、1h;
   * `input_len`: 输入给模型的时间序列长度，会按照该长度对时间序列切片，预测该长度下这一段时序序列是否有异常；输入长度建议结合实际场景考虑。本教程中输入长度为 96。表示希望预测 96 个时间点是否有异常。
   * `label`：代表时序时间点是否异常的编号，异常点为 1，正常点为 0。本教程中异常监控数据集为 label。
-更多超参数介绍，请参考 [PaddleX时序任务模型配置文件参数说明](docs_new/module_usage/instructions/config_parameters_time_series.md)。以上参数可以通过追加令行参数的形式进行设置，如指定模式为模型训练：`-o Global.mode=train`；指定前 1 卡 gpu 训练：`-o Global.device=gpu:0`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。
+更多超参数介绍，请参考 [PaddleX时序任务模型配置文件参数说明](../module_usage/instructions/config_parameters_time_series.md)。以上参数可以通过追加令行参数的形式进行设置，如指定模式为模型训练：`-o Global.mode=train`；指定前 1 卡 gpu 训练：`-o Global.device=gpu:0`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。
 
 **更多说明（点击展开）**
 
@@ -137,7 +137,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 
 * 模型训练过程中，PaddleX 会自动保存模型权重文件，默认为`output`，如需指定保存路径，可通过配置文件中 `-o Global.output` 字段进行设置。
 * PaddleX 对您屏蔽了动态图权重和静态图权重的概念。在模型训练的过程中，会同时产出动态图和静态图的权重，在模型推理时，默认选择静态图权重推理。
-* 训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)。
+* 训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../support_list/models_list.md)。
 在完成模型训练后，所有产出保存在指定的输出目录（默认为`./output/`）下，通常有以下产出：
 
 **训练产出解释:**
@@ -205,7 +205,7 @@ python main.py -c paddlex/configs/ts_anomaly_detection/PatchTST_ad.yaml \
 * 指定模式为模型推理预测：`-o Global.mode=predict`
 * 指定模型权重路径：`-o Predict.model_dir=``"./output/inference"`
 * 指定输入数据路径：`-o Predict.input="..."`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX时序任务模型配置文件参数说明](docs_new/module_usage/instructions/config_parameters_time_series.md)。
+其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX时序任务模型配置文件参数说明](../module_usage/instructions/config_parameters_time_series.md)。
 
 ## 7.开发集成/部署
 如果通用时序异常检测产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
@@ -219,8 +219,8 @@ for res in output:
     res.print() # 打印预测的结构化输出
     res.save_to_csv("./output/") # 保存csv格式结果
 ```
-更多参数请参考[时序异常检测产线使用教程](docs_new/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md)
+更多参数请参考[时序异常检测产线使用教程](../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md)
 
 2. 此外，PaddleX 时序异常检测产线也提供了服务化部署方式，详细说明如下：
-* 服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX 服务化部署指南](docs_new/pipeline_deploy/service_deploy.md)。
+* 服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX 服务化部署指南](../pipeline_deploy/service_deploy.md)。
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
