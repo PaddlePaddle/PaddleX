@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="/tmp/logo.png" alt="PaddleX" align="middle" />
+  <img src="/tmp/logo.png" width="735" height ="200" alt="PaddleX" align="middle" />
 </p>
 
 <p align="center">
