@@ -124,8 +124,8 @@ paddlex --pipeline ./ocr.yaml --input general_ocr_002.png
 Here, parameters such as `--model` and `--device` do not need to be specified, as they will use the parameters in the configuration file. If parameters are still specified, the specified parameters will take precedence.
 
 </details>
- 
-#### 2.2.2  Python Script Integration
+
+#### 2.2.2 Integration via Python Script
 * Quickly perform inference on the production line with just a few lines of code, taking the general OCR production line as an example:
 
 ```python
@@ -715,7 +715,7 @@ If the default model weights provided by the general OCR pipeline do not meet yo
 ### 4.1 Model Fine-tuning
 Since the general OCR pipeline consists of two modules (text detection and text recognition), unsatisfactory performance may stem from either module.
 
-You can analyze images with poor recognition results. If you find that many texts are undetected (i.e., text miss detection), it may indicate that the text detection model needs improvement. You should refer to the [Customization](../../../module_usage/tutorials/ocr_modules/text_detection_en.md#iv-custom-development) section in the [Text Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_detection_en.md) and use your private dataset to fine-tune the text detection model. If many recognition errors occur in detected texts (i.e., the recognized text content does not match the actual text content), it suggests that the text recognition model requires further refinement. You should refer to the [Customization](../../../module_usage/tutorials/ocr_modules/text_recognition_en.md#iv-custom-development) section in the [Text Recognition Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_recognition_en.md) and fine-tune the text recognition model.
+You can analyze images with poor recognition results. If you find that many texts are undetected (i.e., text miss detection), it may indicate that the text detection model needs improvement. You should refer to the [Customization](../../../module_usage/tutorials/ocr_modules/text_detection_en.md#customization) section in the [Text Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_detection_en.md) and use your private dataset to fine-tune the text detection model. If many recognition errors occur in detected texts (i.e., the recognized text content does not match the actual text content), it suggests that the text recognition model requires further refinement. You should refer to the [Customization](../../../module_usage/tutorials/ocr_modules/text_recognition_en.md#customization) section in the [Text Recognition Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_recognition_en.md) and fine-tune the text recognition model.
 
 ### 4.2 Model Application
 After fine-tuning with your private dataset, you will obtain local model weights files.
@@ -749,4 +749,4 @@ Now, if you want to switch the hardware to Ascend NPU, you only need to modify t
 paddlex --pipeline OCR --input general_ocr_002.png --device npu:0
 ```
 
-If you want to use the General OCR pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/installation_other_devices_en.md).
+If you want to use the General OCR pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../installation/installation_other_devices_en.md).
