@@ -17,7 +17,7 @@ from pathlib import Path
 from abc import ABC, abstractmethod
 
 from .build_model import build_model
-from ...utils.device import update_device_num
+from ...utils.device import update_device_num, set_env_for_device
 from ...utils.misc import AutoRegisterABCMetaClass
 from ...utils.config import AttrDict
 from ...utils.logging import *
@@ -140,6 +140,7 @@ evaling!"
         """
         if using_device_number:
             return update_device_num(self.global_config.device, using_device_number)
+        set_env_for_device(self.global_config.device)
         return self.global_config.device
 
     @abstractmethod
