@@ -478,7 +478,6 @@ for batch in output:
   * [📦 PaddlePaddle安装教程](/docs_new/installation/paddlepaddle_install.md)
   * [📦 PaddleX安装教程](/docs_new/installation/installation.md) 
 
-
 </details>
 
 <details open>
@@ -508,7 +507,7 @@ for batch in output:
    * [🗣️ 通用语义分割产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md)
    * [🏷️ 图像多标签分类产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md)
    * [🔍  小目标检测产线使用教程](/docs_new/pipeline_usage/tutorials/cv_pipelines/small_object_detection.md)
-   * [🖼️ 图像异常检测产线使用教程](/docs_new/module_usage/tutorials/cv_modules/anomaly_detection.md
+   * [🖼️ 图像异常检测产线使用教程](/docs_new/module_usage/tutorials/cv_modules/anomaly_detection.md)
   
 
 * <details>
@@ -550,7 +549,6 @@ for batch in output:
 
   * [📂 图像分类模块使用教程](/docs_new/module_usage/tutorials/cv_modules/image_classification.md)
   * [🏷️ 图像多标签分类模块使用教程](/docs_new/module_usage/tutorials/cv_modules/ml_classification.md)
-
   * [👤 行人属性识别模块使用教程](/docs_new/module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.md)
   * [🚗 车辆属性识别模块使用教程](/docs_new/module_usage/tutorials/cv_modules/vehicle_attribute_recognition.md)
 
