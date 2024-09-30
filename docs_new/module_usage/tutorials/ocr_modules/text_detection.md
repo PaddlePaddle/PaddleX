@@ -29,14 +29,14 @@ for res in output:
     res.save_to_img("./output/")
     res.save_to_json("./output/res.json")
 ```
-关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考 [PaddleX单模型Python脚本使用说明](../../../module_usage/instructions/model_python_API.md)。
+关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考 [PaddleX单模型Python脚本使用说明](../../../module_usage/instructions/model_python_API.MD)。
 
 ## 四、二次开发
 如果你追求更高精度的现有模型，可以使用 PaddleX 的二次开发能力开发更好的文本检测模型。在使用 PaddleX 开发文本检测模型之前，请务必安装 PaddleX 的 PaddleOCR 插件，安装过程可以参考 [PaddleX本地安装教程](../../../installation/installation.md)。
 
 ### 4.1 数据准备
 在进行模型训练前，需要准备相应任务模块的数据集。PaddleX 针对每一个模块提供了数据校验功能，**只有通过数据校验的数据才可以进行模型训练**。
-此外，PaddleX 为每一个模块都提供了 Demo 数据集，您可以基于官方提供的 Demo 数据完成后续的开发。若您希望用私有数据集进行后续的模型训练，可以参考 [PaddleX文本检测/文本识别任务模块数据标注教程](../../../data_annotations/ocr_modules/text_detection_recognition.md)。
+此外，PaddleX 为每一个模块都提供了 Demo 数据集，您可以基于官方提供的 Demo 数据完成后续的开发。若您希望用私有数据集进行后续的模型训练，可以参考 [PaddleX文本检测/文本识别任务模块数据标注教程](../../../data_annotations/ocr_modules/text_detection_regognition.md)。
 
 #### 4.1.1 Demo 数据下载
 
@@ -95,7 +95,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 
 另外，数据集校验还对数据集中所有图片的长宽分布情况进行了分析分析，并绘制了分布直方图（histogram.png）： 
 
-![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/01.png)
+![](/tmp/images/modules/text_det/01.png)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
@@ -233,7 +233,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 
 1.**产线集成**
 
-文本检测模块可以集成的 PaddleX 产线有[通用 OCR 产线](../../../pipeline_usage/tutorials/ocr_pipelines/OCR.md)、[表格识别产线](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition.md)、[文档场景信息抽取产线v3（PP-ChatOCRv3）](../../../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)，只需要替换模型路径即可完成相关产线的文本检测模块的模型更新。
+文本检测模块可以集成的 PaddleX 产线有[通用 OCR 产线](../../../pipeline_usage/tutorials/ocr_pipelies/OCR.md)、[表格识别产线](../../../pipeline_usage/tutorials/ocr_pipelies/table_recognition.md)、[文档场景信息抽取产线v3（PP-ChatOCRv3）](../../../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)，只需要替换模型路径即可完成相关产线的文本检测模块的模型更新。
 
 2.**模块集成**
 
