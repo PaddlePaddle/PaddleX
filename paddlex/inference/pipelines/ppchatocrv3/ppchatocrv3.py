@@ -111,7 +111,7 @@ class PPChatOCRPipeline(TableRecPipeline):
         else:
             self.user_prompt_dict = None
         self.recovery = recovery
-        self.img_reader = ReadImage()
+        self.img_reader = ReadImage(format="RGB")
         self.visual_info = None
         self.vector = None
         self.visual_flag = False

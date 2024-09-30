@@ -24,6 +24,7 @@ from .base import CVResult
 
 
 class OCRResult(CVResult):
+    _HARD_FLAG = False
 
     def get_minarea_rect(self, points):
         bounding_box = cv2.minAreaRect(points)
@@ -60,6 +61,9 @@ class OCRResult(CVResult):
         txts = self["rec_text"]
         scores = self["rec_score"]
         image = self._img_reader.read(self["input_path"])
+        if self._HARD_FLAG:
+            image_np = np.array(image)
+            image = Image.fromarray(image_np[:, :, ::-1])
         h, w = image.height, image.width
         img_left = image.copy()
         img_right = np.ones((h, w, 3), dtype=np.uint8) * 255
