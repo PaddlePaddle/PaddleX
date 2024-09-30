@@ -1,6 +1,6 @@
 # Overview of PaddleX Model Pipeline Usage
 
-If you have already experienced the pre-trained model pipeline effects in PaddleX and wish to proceed directly with model fine-tuning, you can jump to [Model Selection](#3 Model Selection (Optional)).
+If you have already experienced the pre-trained model pipeline effects in PaddleX and wish to proceed directly with model fine-tuning, you can jump to [Model Selection](#3Model Selection (Optional)).
 
 The complete PaddleX model pipeline development process is illustrated in the following diagram:
 
@@ -29,7 +29,7 @@ Each pipeline in PaddleX can solve specific task scenarios such as object detect
 
 ## 2. Quick Start
 
-Each pipeline in PaddleX integrates numerous pre-trained models. You can first experience the effects of the PaddleX pre-trained model pipeline. If the effects of the pre-trained model pipeline meet your expectations, you can proceed directly with [Development Integration/Deployment](#6 Development Integration and Deployment). If not, optimize the pipeline effects according to the subsequent steps.
+Each pipeline in PaddleX integrates numerous pre-trained models. You can first experience the effects of the PaddleX pre-trained model pipeline. If the effects of the pre-trained model pipeline meet your expectations, you can proceed directly with [Development Integration/Deployment](#6Development Integration and Deployment). If not, optimize the pipeline effects according to the subsequent steps.
 
 PaddleX provides three ways to quickly experience pipeline effects. You can choose the appropriate method based on your needs:
 
@@ -106,9 +106,9 @@ Pipeline:
   rec_device: "gpu"
 ......
 ```
-Then, refer to the command line method or Python script method in [Quick Start](#2 Quick Start) to load the modified production line configuration file.
+Then, refer to the command line method or Python script method in [Quick Start](#2Quick Start) to load the modified production line configuration file.
 
-If the results are satisfactory, proceed with [Development Integration/Deployment](#6 Development Integration and Deployment). If not, return to [Model Selection](#3 Model Selection (Optional)) to continue fine-tuning other task modules until you achieve satisfactory results.
+If the results are satisfactory, proceed with [Development Integration/Deployment](#6 Development Integration and Deployment). If not, return to [Model Selection](#3Model Selection (Optional)) to continue fine-tuning other task modules until you achieve satisfactory results.
 
 ## 6. Development Integration and Deployment
 
