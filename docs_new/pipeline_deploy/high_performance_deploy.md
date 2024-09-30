@@ -71,6 +71,8 @@
 
 ### 1.3 启用高性能推理插件
 
+在启用高性能插件前，请确保当前环境的`LD_LIBRARY_PATH`没有指定 TensorRT 目录，因为插件中已经集成了 TensorRT，避免 TensorRT 版本冲突导致插件无法正常使用。
+
 对于 PaddleX CLI，指定 `--use_hpip`，并设置序列号，即可启用高性能推理插件。如果希望进行联网激活，在第一次使用序列号时，需指定 `--update_license`，以通用图像分类产线为例：
 
 ```diff

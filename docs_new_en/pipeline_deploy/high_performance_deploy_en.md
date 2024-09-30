@@ -69,6 +69,8 @@ Please note: Each serial number can only be bound to a unique device fingerprint
 
 ### 1.3 Enabling High-Performance Inference Plugins
 
+Before enabling high-performance plugins, please ensure that the `LD_LIBRARY_PATH` of the current environment does not specify the TensorRT directory, as the plugins already integrate TensorRT to avoid conflicts caused by different TensorRT versions that may prevent the plugins from functioning properly.
+
 For PaddleX CLI, specify `--use_hpip` and set the serial number to enable the high-performance inference plugin. If you wish to activate the license online, specify `--update_license` when using the serial number for the first time. Taking the general image classification pipeline as an example:
 
 ```diff
