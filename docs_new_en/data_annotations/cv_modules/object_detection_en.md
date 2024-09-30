@@ -7,14 +7,6 @@ This section will introduce how to use [Labelme](https://github.com/wkentaro/lab
 
 <div style="display: flex;">
   <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/obeject_detection/20.png" alt="Example Image 1">
-  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/obeject_detection/21.png" alt="Example Image 2">
-  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/obeject_detection/22.png" alt="Example Image 3">
-</div>
-
-<div style="display: flex;">
-  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/obeject_detection/23.png" alt="Example Image 4">
-  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/obeject_detection/24.png" alt="Example Image 5">
-  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/obeject_detection/25.png" alt="Example Image 6">
 </div>
 
 ## 2. Labelme Annotation
