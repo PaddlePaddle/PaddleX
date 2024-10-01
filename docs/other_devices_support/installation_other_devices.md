@@ -10,9 +10,9 @@
 
 昇腾 NPU：[昇腾 NPU 飞桨安装教程](./paddlepaddle_install_NPU.md)
 
-寒武纪 MLU：[寒武纪 MLU 飞桨安装教程](./paddlepaddle_install_MLU.md)
-
 昆仑 XPU：[昆仑 XPU 飞桨安装教程](./paddlepaddle_install_XPU.md)
+
+寒武纪 MLU：[寒武纪 MLU 飞桨安装教程](./paddlepaddle_install_MLU.md)
 
 海光 DCU：[海光 DCU 飞桨安装教程](./paddlepaddle_install_DCU.md)
 
