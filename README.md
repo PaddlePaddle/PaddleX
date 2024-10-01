@@ -617,10 +617,10 @@ for res in output:
 </details>
 
 <details>
-  <summary> <b> 📝 教程&范例 </b></summary>
+  <summary> <b> 📝 产业实践教程&范例 </b></summary>
 
 * [🖼️ 通用图像分类模型产线———垃圾分类教程](./docs/practical_tutorials/image_classification_garbage_tutorial.md)
-* [🧩 通用实例分割模型产线———遥感图像实例分割教程](./docs/practical_tutorials/image_classification_garbage_tutorial.md)
+* [🧩 通用实例分割模型产线———遥感图像实例分割教程](./docs/practical_tutorials/instance_segmentation_remote_sensing_tutorial.md)
 * [👥 通用目标检测模型产线———行人跌倒检测教程](./docs/practical_tutorials/object_detection_fall_tutorial.md)
 * [👗 通用目标检测模型产线———服装时尚元素检测教程](./docs/practical_tutorials/object_detection_fashion_pedia_tutorial.md)
 * [🚗 通用 OCR 模型产线———车牌识别教程](./docs/practical_tutorials/ocr_det_license_tutorial.md)
