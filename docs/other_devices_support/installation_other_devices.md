@@ -2,7 +2,7 @@
 
 # PaddleX多硬件使用指南
 
-本文档主要针对昇腾 NPU、寒武纪 MLU、昆仑 XPU、海光DCU 硬件平台，介绍 PaddleX 使用指南。
+本文档主要针对昇腾 NPU、昆仑 XPU、寒武纪 MLU、海光DCU 硬件平台，介绍 PaddleX 使用指南。
 
 ## 1、安装
 ### 1.1 PaddlePaddle安装
