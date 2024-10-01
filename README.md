@@ -10,7 +10,7 @@
 </p>
 
 <h4 align="center">
-  <a href=#-特性>🌟 特性</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐 在线体验</a>｜<a href=#️-快速开始>🚀 快速开始</a> | <a href=#-文档> 📖 文档</a> | <a href=./docs/support_list/pipelines_list.md> 🔥模型产线列表</a>
+  <a href=#-特性>🌟 特性</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐 在线体验</a>｜<a href=#️-快速开始>🚀 快速开始</a> | <a href=#-文档> 📖 文档</a> | <a href=#-能力支持> 🔥能力支持</a>
 
 </h4>
 
@@ -49,6 +49,10 @@ PaddleX 3.0 是基于飞桨框架构建的一站式全流程开发工具，它�
 🔥 **2024.6.27**，PaddleX 3.0 Beta 开源版正式发布，支持以低代码的方式在本地端使用多种主流硬件进行产线和模型开发。
 
 🔥 **2024.3.25**，PaddleX 3.0 云端发布，支持在 AI Studio 星河社区 以零代码的方式【创建产线】使用。
+
+ ## 🔠 模型产线说明
+
+ PaddleX 致力于实现产线级别的模型训练、推理与部署。模型产线是指一系列预定义好的、针对特定AI任务的开发流程，其中包含能够独立完成某类任务的单模型（单功能模块）组合。
 
 
  ## 📊 能力支持
@@ -265,14 +269,13 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
     
 </table>
 
-> ❗注：以上功能均基于 GPU/CPU 实现。PaddleX 还可在昆仑、昇腾、寒武纪和海光等主流硬件上进行快速推理和二次开发。下表详细列出了模型产线的支持情况，具体支持的模型列表请参阅[模型列表(MLU)](./docs/support_list/model_list_mlu.md)/[模型列表(NPU)](./docs/support_list/model_list_npu.md)/[模型列表(XPU)](./docs/support_list/model_list_xpu.md)/[模型列表(DCU)](./docs/support_list/model_list_dcu.md)。我们正在适配更多的模型，并在主流硬件上推动高性能和服务化部署的实施。
+> ❗注：以上功能均基于 GPU/CPU 实现。PaddleX 还可在昆仑、昇腾、寒武纪和海光等主流硬件上进行快速推理和二次开发。下表详细列出了模型产线的支持情况，具体支持的模型列表请参阅[模型列表(NPU)](./docs/support_list/model_list_npu.md)/[模型列表(XPU)](./docs/support_list/model_list_xpu.md)/[模型列表(MLU)](./docs/support_list/model_list_mlu.md)//[模型列表(DCU)](./docs/support_list/model_list_dcu.md)。我们正在适配更多的模型，并在主流硬件上推动高性能和服务化部署的实施。
 
-<details>
-  <summary>👉 国产化硬件能力支持</summary>
+🔥🔥 **国产化硬件能力支持**
 
 <table>
   <tr>
-    <th>产线名称</th>
+    <th>模型产线</th>
     <th>昇腾 910B</th>
     <th>昆仑 R200/R300</th>
     <th>寒武纪 MLU370X8</th>
@@ -342,7 +345,6 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
     <td>🚧</td>
   </tr>
 </table>
-</details>
 
 ## ⏭️ 快速开始
 
@@ -608,17 +610,17 @@ for res in output:
 </details>
 <details>
   <summary> <b> 🖥️ 多硬件使用 </b></summary>
-
-  * [⚙️ 多硬件使用指南](./docs/other_devices_support/installation_other_devices.md)
-  * [⚙️ DCU Paddle 安装教程](./docs/other_devices_support/paddlepaddle_install_DCU.md)
-  * [⚙️ MLU Paddle 安装教程](./docs/other_devices_support/paddlepaddle_install_MLU.md)
+  
   * [⚙️ NPU Paddle 安装教程](./docs//other_devices_support/paddlepaddle_install_NPU.md)
   * [⚙️ XPU Paddle 安装教程](./docs/other_devices_support/paddlepaddle_install_XPU.md)
+  * [⚙️ DCU Paddle 安装教程](./docs/other_devices_support/paddlepaddle_install_DCU.md)
+  * [⚙️ MLU Paddle 安装教程](./docs/other_devices_support/paddlepaddle_install_MLU.md)
+  * [⚙️ 多硬件使用指南](./docs/other_devices_support/installation_other_devices.md)
 
 </details>
 
 <details>
-  <summary> <b> 📝 教程&范例 </b></summary>
+  <summary> <b> 📝 产业实践教程&范例 </b></summary>
 
 * [🖼️ 通用图像分类模型产线———垃圾分类教程](./docs/practical_tutorials/image_classification_garbage_tutorial.md)
 * [🧩 通用实例分割模型产线———遥感图像实例分割教程](./docs/practical_tutorials/instance_segmentation_remote_sensing_tutorial.md)
