@@ -10,10 +10,9 @@
 </p>
 
 <h4 align="center">
-  <a href=##-why-paddlex->🌟 Features</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐  Online Experience</a>｜<a href=#️-quick-start>🚀  Quick Start</a> | <a href=#-documentation> 📖 Documentation</a> | <a href=./docs/support_list/pipelines_list_en.md> 🔥Pipelines List</a>
+  <a href=#-why-paddlex->🌟 Features</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐  Online Experience</a>｜<a href=#️-quick-start>🚀  Quick Start</a> | <a href=#-documentation> 📖 Documentation</a> | <a href=./docs/support_list/pipelines_list_en.md> 🔥Pipelines List</a>
 </h4>
 
-[](./docs/support_list/pipelines_list_en.md)
 <h5 align="center">
   <a href="README.md">🇨🇳 Simplified Chinese</a> | <a href="README_en.md">🇬🇧 English</a></a>
 </h5>
@@ -407,7 +406,6 @@ For other pipelines, just adjust the `pipeline` parameter to the corresponding n
 
 | pipeline Name           | Corresponding Parameter               | Detailed Explanation                                                                                                      |
 |-------------------------------|-------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| Document Scene Information Extraction |                                                                                                                                                                                                                              |
 | General Image Classification         | `paddlex --pipeline image_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg --device gpu:0`                           |
 | General Object Detection            | `paddlex --pipeline object_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png --device gpu:0`                                   |
 | General Instance Segmentation       | `paddlex --pipeline instance_segmentation --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png --device gpu:0`                         |
@@ -452,7 +450,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 |-------------------------------|-------------------------------------|---------------------------------------------------------------------------------------------------------------|
 | PP-ChatOCRv3-doc   | `PP-ChatOCRv3-doc` | [PP-ChatOCRv3-doc Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md) |
 |  Image Classification       | `image_classification` | [ Image Classification Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification_en.md) |
-|  Object Detection       | `object_detection` | [ Object Detection Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification_en.md) |
+|  Object Detection       | `object_detection` | [ Object Detection Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/object_detection_en.md) |
 |  Instance Segmentation       | `instance_segmentation` | [ Instance Segmentation Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/instance_segmentation_en.md) |
 |  Semantic Segmentation       | `semantic_segmentation` | [ Semantic Segmentation Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation_en.md) |
 |  Image Multi-Label Classification | `multilabel_classification` | [ Image Multi-Label Classification Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification_en.md) |
