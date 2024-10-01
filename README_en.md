@@ -601,6 +601,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 <details>
   <summary> <b> 🖥️ Multi-Hardware Usage </b></summary>
 
+  * [⚙️ Multi-Hardware Usage Guide](./docs/other_devices_support/installation_other_devices_en.md)
   * [⚙️ DCU Paddle Installation Guide](./docs/other_devices_support/installation_other_devices_en.md)
   * [⚙️ MLU Paddle Installation Guide](./docs/other_devices_support/installation_other_devices_en.md)
   * [⚙️ NPU Paddle Installation Guide](./docs/other_devices_support/installation_other_devices_en.md)
