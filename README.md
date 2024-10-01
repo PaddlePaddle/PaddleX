@@ -611,10 +611,6 @@ for res in output:
 <details>
   <summary> <b> 🖥️ 多硬件使用 </b></summary>
   
-  * [⚙️ NPU Paddle 安装教程](./docs//other_devices_support/paddlepaddle_install_NPU.md)
-  * [⚙️ XPU Paddle 安装教程](./docs/other_devices_support/paddlepaddle_install_XPU.md)
-  * [⚙️ DCU Paddle 安装教程](./docs/other_devices_support/paddlepaddle_install_DCU.md)
-  * [⚙️ MLU Paddle 安装教程](./docs/other_devices_support/paddlepaddle_install_MLU.md)
   * [⚙️ 多硬件使用指南](./docs/other_devices_support/installation_other_devices.md)
 
 </details>
