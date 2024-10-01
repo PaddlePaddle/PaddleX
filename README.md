@@ -271,8 +271,7 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
 
 > ❗注：以上功能均基于 GPU/CPU 实现。PaddleX 还可在昆仑、昇腾、寒武纪和海光等主流硬件上进行快速推理和二次开发。下表详细列出了模型产线的支持情况，具体支持的模型列表请参阅[模型列表(NPU)](./docs/support_list/model_list_npu.md)/[模型列表(XPU)](./docs/support_list/model_list_xpu.md)/[模型列表(MLU)](./docs/support_list/model_list_mlu.md)//[模型列表(DCU)](./docs/support_list/model_list_dcu.md)。我们正在适配更多的模型，并在主流硬件上推动高性能和服务化部署的实施。
 
-<details>
-  <summary>👉 国产化硬件能力支持</summary>
+🔥🔥 国产化硬件能力支持
 
 <table>
   <tr>
@@ -346,7 +345,6 @@ PaddleX的各个产线均支持**在线体验**和本地**快速推理**，您�
     <td>🚧</td>
   </tr>
 </table>
-</details>
 
 ## ⏭️ 快速开始
 
