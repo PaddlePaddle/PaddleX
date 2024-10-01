@@ -10,7 +10,7 @@
 </p>
 
 <h4 align="center">
-  <a href=#-特性>🌟 特性</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐 在线体验</a>｜<a href=#️-快速开始>🚀 快速开始</a> | <a href=#-文档> 📖 文档</a> | <a href=./docs/support_list/pipelines_list.md> 🔥模型产线列表</a>
+  <a href=#-特性>🌟 特性</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐 在线体验</a>｜<a href=#️-快速开始>🚀 快速开始</a> | <a href=#-文档> 📖 文档</a> | <a href=#-能力支持> 🔥能力支持</a>
 
 </h4>
 
@@ -42,13 +42,17 @@ PaddleX 3.0 是基于飞桨框架构建的一站式全流程开发工具，它�
 
 ## 📣 近期更新
 
-🔥🔥《PaddleX文档信息个性化抽取新升级》，PP-ChatOCRv3 创新性提供了基于数据融合技术的 OCR 模型二次开发功能，具备更强的模型微调能力。百万级高质量通用 OCR 文本识别数据，按特定比例自动融入垂类模型训练数据，破解产业垂类模型训练导致通用文本识别能力减弱难题。适用自动化办公、金融风控、医疗健康、教育出版、法律党政等产业实际场景。**10月10日（周四）19：00** 直播为您详细解读数据融合技术以及如何利用提示词工程实现更好的信息抽取效果。 [报名链接](https://www.wjx.top/vm/mFhGfwx.aspx?udsid=772552)
+🔥🔥《PaddleX文档信息个性化抽取新升级》，PP-ChatOCRv3 创新性提供了基于数据融合技术的 OCR 模型二次开发功能，具备更强的模型微调能力。百万级高质量通用 OCR 文本识别数据，按特定比例自动融入垂类模型训练数据，破解产业垂类模型训练导致通用文本识别能力减弱难题。适用自动化办公、金融风控、医疗健康、教育出版等产业实际场景。**10月10日（周四）19：00** 直播为您详细解读数据融合技术以及如何利用提示词工程实现更好的信息抽取效果。 [报名链接](https://www.wjx.top/vm/mFhGfwx.aspx?udsid=772552)
 
 🔥🔥 **2024.9.30**，PaddleX 3.0 Beta1 开源版正式发布，提供 **200+ 模型** 通过极简的 Python API 一键调用；实现基于统一命令的模型全流程开发，并开源 **PP-ChatOCRv3** 特色模型产线基础能力；支持 **100+ 模型高性能推理和服务化部署**（持续迭代中），**7 类重点视觉模型端侧部署**；**70+ 模型开发全流程适配昇腾 910B**，**15+ 模型开发全流程适配昆仑芯和寒武纪**
 
 🔥 **2024.6.27**，PaddleX 3.0 Beta 开源版正式发布，支持以低代码的方式在本地端使用多种主流硬件进行产线和模型开发。
 
 🔥 **2024.3.25**，PaddleX 3.0 云端发布，支持在 AI Studio 星河社区 以零代码的方式【创建产线】使用。
+
+ ## 🔠 模型产线说明
+
+ **PaddleX 致力于实现产线级别的模型训练、推理与部署。模型产线是指一系列预定义好的、针对特定AI任务的开发流程，其中包含能够独立完成某类任务的单模型（单功能模块）组合。**
 
 
  ## 📊 能力支持
@@ -265,14 +269,13 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持**在�
     
 </table>
 
-> ❗注：以上功能均基于 GPU/CPU 实现。PaddleX 还可在昆仑、昇腾、寒武纪和海光等主流硬件上进行快速推理和二次开发。下表详细列出了模型产线的支持情况，具体支持的模型列表请参阅[模型列表(MLU)](../docs/support_list/model_list_mlu.md)/[模型列表(NPU)](../docs/support_list/model_list_npu.md)/[模型列表(XPU)](../docs/support_list/model_list_xpu.md)/[模型列表(DCU)](../docs/support_list/model_list_dcu.md)。我们正在适配更多的模型，并在主流硬件上推动高性能和服务化部署的实施。
+> ❗注：以上功能均基于 GPU/CPU 实现。PaddleX 还可在昆仑、昇腾、寒武纪和海光等主流硬件上进行快速推理和二次开发。下表详细列出了模型产线的支持情况，具体支持的模型列表请参阅[模型列表(NPU)](./docs/support_list/model_list_npu.md)/[模型列表(XPU)](./docs/support_list/model_list_xpu.md)/[模型列表(MLU)](./docs/support_list/model_list_mlu.md)//[模型列表(DCU)](./docs/support_list/model_list_dcu.md)。我们正在适配更多的模型，并在主流硬件上推动高性能和服务化部署的实施。
 
-<details>
-  <summary>👉 国产化硬件能力支持</summary>
+🔥🔥 **国产化硬件能力支持**
 
 <table>
   <tr>
-    <th>产线名称</th>
+    <th>模型产线</th>
     <th>昇腾 910B</th>
     <th>昆仑 R200/R300</th>
     <th>寒武纪 MLU370X8</th>
@@ -342,7 +345,6 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持**在�
     <td>🚧</td>
   </tr>
 </table>
-</details>
 
 ## ⏭️ 快速开始
 
@@ -409,20 +411,20 @@ paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddle
 <details>
   <summary><b>👉 更多产线的命令行使用</b></summary>
 
-| 产线名称      | 使用命令                                                                                                                                                                                             |
-|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 通用图像分类    | `paddlex --pipeline image_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg --device gpu:0`                           |
-| 通用目标检测    | `paddlex --pipeline object_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png --device gpu:0`                                   |
-| 通用实例分割    | `paddlex --pipeline instance_segmentation --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png --device gpu:0`                         |
-| 通用语义分割    | `paddlex --pipeline semantic_segmentation --input https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png --device gpu:0`                              |
-| 通用图像多标签分类 | `paddlex --pipeline multi_label_image_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg --device gpu:0`                                          |
-| 小目标检测     | `paddlex --pipeline small_object_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg --device gpu:0`                                              |
-| 图像异常检测    |    `paddlex --pipeline anomaly_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png --device gpu:0 ` |
-| 通用OCR     | `paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0`                                                             |
-| 通用表格识别    | `paddlex --pipeline table_recognition --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg --device gpu:0`                                             |
-| 通用时序预测    | `paddlex --pipeline ts_fc --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv --device gpu:0`                                                                    |
-| 通用时序异常检测  | `paddlex --pipeline ts_ad --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.cs --device gpu:0` |
-| 通用时序分类    | `paddlex --pipeline ts_cls --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv --device gpu:0`       |
+| 产线名称           | 使用命令                                                                                                                                                                                    |
+|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 通用图像分类       | `paddlex --pipeline image_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg --device gpu:0`                    |
+| 通用目标检测       | `paddlex --pipeline object_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png --device gpu:0`                            |
+| 通用实例分割       | `paddlex --pipeline instance_segmentation --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png --device gpu:0`                  |
+| 通用语义分割       | `paddlex --pipeline semantic_segmentation --input https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png --device gpu:0` |
+| 通用图像多标签分类 | `paddlex --pipeline multi_label_image_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg --device gpu:0`        |
+| 小目标检测         | `paddlex --pipeline small_object_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg --device gpu:0`                            |
+| 图像异常检测       | `paddlex --pipeline anomaly_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png --device gpu:0 `                                              |
+| 通用OCR            | `paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0`                                                      |
+| 通用表格识别       | `paddlex --pipeline table_recognition --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg --device gpu:0`                                      |
+| 通用时序预测       | `paddlex --pipeline ts_fc --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv --device gpu:0`                                                                   |
+| 通用时序异常检测   | `paddlex --pipeline ts_ad --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.cs --device gpu:0`                                                                    |
+| 通用时序分类       | `paddlex --pipeline ts_cls --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv --device gpu:0`                                                                 |
 
 </details>
 
@@ -449,22 +451,21 @@ for res in output:
 <details>
   <summary><b>👉 更多产线的Python脚本使用</b></summary>
 
-| 产线名称           | 对应参数               | 详细说明                                                                                                      |
-|--------------------|------------------------|---------------------------------------------------------------------------------------------------------------|
-
-| 文档场景信息抽取   | `PP-ChatOCRv3-doc` | [文档场景信息抽取v3产线Python脚本使用说明](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md#22-本地体验) |
-| 通用图像分类       | `image_classification` | [通用图像分类产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification.md#222-python脚本方式集成) |
-| 通用目标检测       | `object_detection` | [通用目标检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/object_detection.md#222-python脚本方式集成) |
-| 通用实例分割       | `instance_segmentation` | [通用实例分割产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md#222-python脚本方式集成) |
-| 通用语义分割       | `semantic_segmentation` | [通用语义分割产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md#222-python脚本方式集成) |
-| 通用图像多标签分类 | `multi_label_image_classification` | [通用图像多标签分类产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md#22-python脚本方式集成) |
-| 小目标检测         | `small_object_detection` | [小目标检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection.md#22-python脚本方式集成) |
-| 图像异常检测       | `anomaly_detection` | [图像异常检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md#22-python脚本方式集成) |
-| 通用OCR            | `OCR` | [通用OCR产线Python脚本使用说明](./docs/pipeline_usage/tutorials/ocr_pipelines/OCR.md#222-python脚本方式集成) |
-| 通用表格识别       | `table_recognition` | [通用表格识别产线Python脚本使用说明](./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition.md#22-python脚本方式集成) |
-| 通用时序预测       | `ts_fc` | [通用时序预测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md#222-python脚本方式集成) |
-| 通用时序异常检测   | `ts_ad` | [通用时序异常检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md#222-python脚本方式集成) |
-| 通用时序分类       | `ts_cls` | [通用时序分类产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md#222-python脚本方式集成) |
+| 产线名称           | 对应参数                           | 详细说明                                                                                                                                                         |
+|--------------------|------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 文档场景信息抽取   | `PP-ChatOCRv3-doc`                 | [文档场景信息抽取v3产线Python脚本使用说明](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md#22-本地体验) |
+| 通用图像分类       | `image_classification`             | [通用图像分类产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification.md#222-python脚本方式集成)                                |
+| 通用目标检测       | `object_detection`                 | [通用目标检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/object_detection.md#222-python脚本方式集成)                                    |
+| 通用实例分割       | `instance_segmentation`            | [通用实例分割产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md#222-python脚本方式集成)                               |
+| 通用语义分割       | `semantic_segmentation`            | [通用语义分割产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md#222-python脚本方式集成)                               |
+| 通用图像多标签分类 | `multi_label_image_classification` | [通用图像多标签分类产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md#22-python脚本方式集成)               |
+| 小目标检测         | `small_object_detection`           | [小目标检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection.md#22-python脚本方式集成)                                 |
+| 图像异常检测       | `anomaly_detection`                | [图像异常检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md#22-python脚本方式集成)                              |
+| 通用OCR            | `OCR`                              | [通用OCR产线Python脚本使用说明](./docs/pipeline_usage/tutorials/ocr_pipelines/OCR.md#222-python脚本方式集成)                                                     |
+| 通用表格识别       | `table_recognition`                | [通用表格识别产线Python脚本使用说明](./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition.md#22-python脚本方式集成)                                   |
+| 通用时序预测       | `ts_fc`                            | [通用时序预测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md#222-python脚本方式集成)                    |
+| 通用时序异常检测   | `ts_ad`                            | [通用时序异常检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md#222-python脚本方式集成)          |
+| 通用时序分类       | `ts_cls`                           | [通用时序分类产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md#222-python脚本方式集成)                 |
 
 </details>
 
@@ -609,19 +610,16 @@ for res in output:
 </details>
 <details>
   <summary> <b> 🖥️ 多硬件使用 </b></summary>
-
-  * [⚙️ DCU Paddle 安装教程](./docs/other_devices_support/paddlepaddle_install_DCU.md)
-  * [⚙️ MLU Paddle 安装教程](./docs/other_devices_support/paddlepaddle_install_MLU.md)
-  * [⚙️ NPU Paddle 安装教程](./docs//other_devices_support/paddlepaddle_install_NPU.md)
-  * [⚙️ XPU Paddle 安装教程](./docs/other_devices_support/paddlepaddle_install_XPU.md)
+  
+  * [⚙️ 多硬件使用指南](./docs/other_devices_support/installation_other_devices.md)
 
 </details>
 
 <details>
-  <summary> <b> 📝 教程&范例 </b></summary>
+  <summary> <b> 📝 产业实践教程&范例 </b></summary>
 
 * [🖼️ 通用图像分类模型产线———垃圾分类教程](./docs/practical_tutorials/image_classification_garbage_tutorial.md)
-* [🧩 通用实例分割模型产线———遥感图像实例分割教程](./docs/practical_tutorials/image_classification_garbage_tutorial.md)
+* [🧩 通用实例分割模型产线———遥感图像实例分割教程](./docs/practical_tutorials/instance_segmentation_remote_sensing_tutorial.md)
 * [👥 通用目标检测模型产线———行人跌倒检测教程](./docs/practical_tutorials/object_detection_fall_tutorial.md)
 * [👗 通用目标检测模型产线———服装时尚元素检测教程](./docs/practical_tutorials/object_detection_fashion_pedia_tutorial.md)
 * [🚗 通用 OCR 模型产线———车牌识别教程](./docs/practical_tutorials/ocr_det_license_tutorial.md)
