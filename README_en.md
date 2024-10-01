@@ -601,6 +601,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 <details>
   <summary> <b> 🖥️ Multi-Hardware Usage </b></summary>
 
+  * [⚙️ Multi-Hardware Usage Guide](./docs/other_devices_support/installation_other_devices_en.md)
   * [⚙️ DCU Paddle Installation Guide](./docs/other_devices_support/installation_other_devices_en.md)
   * [⚙️ MLU Paddle Installation Guide](./docs/other_devices_support/installation_other_devices_en.md)
   * [⚙️ NPU Paddle Installation Guide](./docs/other_devices_support/installation_other_devices_en.md)
@@ -612,7 +613,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
   <summary> <b> 📝 Tutorials & Examples </b></summary>
 
 * [🖼️ General Image Classification Model Line —— Garbage Classification Tutorial](./docs/practical_tutorials/image_classification_garbage_tutorial_en.md)
-* [🧩 General Instance Segmentation Model Line —— Remote Sensing Image Instance Segmentation Tutorial](./docs/practical_tutorials/image_classification_garbage_tutorial_en.md)
+* [🧩 General Instance Segmentation Model Line —— Remote Sensing Image Instance Segmentation Tutorial](./docs/practical_tutorials/instance_segmentation_remote_sensing_tutorial_en.md)
 * [👥 General Object Detection Model Line —— Pedestrian Fall Detection Tutorial](./docs/practical_tutorials/object_detection_fall_tutorial_en.md)
 * [👗 General Object Detection Model Line —— Fashion Element Detection Tutorial](./docs/practical_tutorials/object_detection_fashion_pedia_tutorial_en.md)
 * [🚗 General OCR Model Line —— License Plate Recognition Tutorial](./docs/practical_tutorials/ocr_det_license_tutorial_en.md)
