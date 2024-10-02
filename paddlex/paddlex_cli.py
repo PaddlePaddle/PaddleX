@@ -112,19 +112,20 @@ def install(args):
     if "serving" in plugins:
         plugins.remove("serving")
         _install_serving_deps()
+        return
 
     if plugins:
         repo_names = plugins
-        if len(repo_names) == 0:
-            repo_names = get_all_supported_repo_names()
-        setup(
-            repo_names=repo_names,
-            no_deps=args.no_deps,
-            platform=args.platform,
-            update_repos=args.update_repos,
-            use_local_repos=args.use_local_repos,
-        )
-        return
+    elif len(plugins) == 0:
+        repo_names = get_all_supported_repo_names()
+    setup(
+        repo_names=repo_names,
+        no_deps=args.no_deps,
+        platform=args.platform,
+        update_repos=args.update_repos,
+        use_local_repos=args.use_local_repos,
+    )
+    return
 
 
 def _get_hpi_params(serial_number, update_license):
