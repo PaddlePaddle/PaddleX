@@ -65,7 +65,15 @@ When installing PaddleX on Linux, we **strongly recommend using the official Pad
 When using the official Docker image, **PaddlePaddle, PaddleX (including the wheel package and all plugins), and the corresponding CUDA environment are already pre-installed**. You can simply obtain the Docker image and start the container to begin using it.
 
 When using custom installation methods, you need to first install the PaddlePaddle framework, then obtain the PaddleX source code, and finally choose the PaddleX installation mode.
-```markdown
+### 2.1 Get PaddleX based on Docker
+Using the PaddleX official Docker image, create a container called 'paddlex' and map the current working directory to the '/paddle' directory inside the container by following the command.
+```bash
+# For CUDA11.8
+docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it registry.baidubce.com/paddlex/paddlex:paddlex3.0.0b1-paddlepaddle3.0.0b1-gpu-cuda11.8-cudnn8.9-trt8.5 /bin/bash
+
+# For CUDA12.3
+docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it registry.baidubce.com/paddlex/paddlex:paddlex3.0.0b1-paddlepaddle3.0.0b1-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
+```
 * If you want to delve deeper into the principles or usage of Docker, please refer to the [Docker Official Website](https://www.docker.com/) or the [Docker Official Tutorial](https://docs.docker.com/get-started/).
 * If you are a CUDA 11.8 user, please ensure your Docker version is >= 19.03; if you are a CUDA 12.3 user, please ensure your Docker version is >= 20.10.
 
