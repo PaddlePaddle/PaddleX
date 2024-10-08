@@ -140,8 +140,8 @@ pipeline = create_pipeline(pipeline="ocr")
 
 output = pipeline.predict("general_ocr_002.png")
 for res in output:
-    res.print() ## 打印预测的结构化输出
-    res.save_to_img("./output/") ## 保存可视化图像结果
+    res.print()
+    res.save_to_img("./output/")
 ```
 > ❗ Python脚本运行得到的结果与命令行方式相同。
 
@@ -185,8 +185,8 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/ocr.yaml")
 output = pipeline.predict("general_ocr_002.png")
 for res in output:
-    res.print() ## 打印预测的结构化输出
-    res.save_to_img("./output/") ## 保存可视化图像结果
+    res.print()
+    res.save_to_img("./output/")
 ```
 ## 3. 开发集成/部署
 如果通用 OCR 产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
