@@ -48,32 +48,99 @@
 
 **版面区域检测模块模型：**
 
-|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
-|-|-|-|-|-|
-|PicoDet_layout_1x|86.8|13.036|91.2634|7.4M |
-|PicoDet-L_layout_3cls|89.3|15.7425|159.771|22.6 M|
-|RT-DETR-H_layout_3cls|95.9|114.644|3832.62|470.1M|
-|RT-DETR-H_layout_17cls|92.6|115.126|3827.25|470.2M|
+|模型|mAP(0.5)（%）|GPU推理耗时（ms）|CPU推理耗时 (ms)|模型存储大小（M)|介绍|
+|-|-|-|-|-|-|
+|PicoDet-L_layout_3cls|89.3|15.7|159.8|22.6|基于PicoDet-L的高效率版面区域定位模型，包含3个类别：表格，图像和印章|
+|PicoDet_layout_1x|86.8|13.0|91.3|7.4|基于PicoDet-1x的高效率版面区域定位模型，包含文字、标题、表格、图片、列表|
+|RT-DETR-H_layout_17cls|92.6|115.1|3827.2|470.2|基于RT-DETR-H的的高精度版面区域定位模型，包含17个版面常见类别。|
+|RT-DETR-H_layout_3cls|95.9|114.6|3832.6|470.1|基于RT-DETR-H的的高精度版面区域定位模型，包含3个类别：表格，图像和印章|
 
-**注：以上精度指标的评估集是 PaddleX 自建的版面区域分析数据集，包含 1w 张图片。以上所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
+**注：以上精度指标的评估集是 PaddleOCR 自建的版面区域分析数据集，包含 1w 张图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。**
 
 **文本检测模块模型：**
 
-|模型名称|检测Hmean（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
-|-|-|-|-|-|
-|PP-OCRv4_mobile_det |77.79|10.6923|120.177|4.2 M|
-|PP-OCRv4_server_det |82.69|83.3501|2434.01|100.1M|
+|模型|检测Hmean（%）|GPU推理耗时（ms）|CPU推理耗时 (ms)|模型存储大小（M)|介绍|
+|-|-|-|-|-|-|
+|PP-OCRv4_server_det|82.69|83.3501|2434.01|109|PP-OCRv4 的服务端文本检测模型，精度更高，适合在性能较好的服务器上部署|
+|PP-OCRv4_mobile_det|77.79|10.6923|120.177|4.7|PP-OCRv4 的移动端文本检测模型，效率更高，适合在端侧设备部署|
 
 **注：以上精度指标的评估集是 PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中检测包含 500 张图片。以上所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
 
 **文本识别模块模型：**
 
-|模型名称|识别Avg Accuracy(%)|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
-|-|-|-|-|-|
-|PP-OCRv4_mobile_rec |78.20|7.95018|46.7868|10.6 M|
-|PP-OCRv4_server_rec |79.20|7.19439|140.179|71.2 M|
+<table >
+    <tr>
+        <th>模型</th>
+        <th>识别 Avg Accuracy(%)</th>
+        <th>GPU推理耗时（ms）</th>
+        <th>CPU推理耗时 (ms)</th>
+        <th>模型存储大小（M）</th>
+        <th>介绍</th>
+    </tr>
+    <tr>
+        <td>PP-OCRv4_mobile_rec</td>
+        <td>78.20</td>
+        <td>7.95018</td>
+        <td>46.7868</td>
+        <td>10.6 M</td>
+        <td rowspan="2">PP-OCRv4是百度飞桨视觉团队自研的文本识别模型PP-OCRv3的下一个版本，通过引入数据增强方案、GTC-NRTR指导分支等策略，在模型推理速度不变的情况下，进一步提升了文本识别精度。该模型提供了服务端（server）和移动端（mobile）两个不同版本，来满足不同场景下的工业需求。</td>
+    </tr>
+    <tr>
+        <td>PP-OCRv4_server_rec </td>
+        <td>79.20</td>
+        <td>7.19439</td>
+        <td>140.179</td>
+        <td>71.2 M</td>
+    </tr>
+</table>
 
-**注：以上精度指标的评估集是 PaddleOCR 自建的中文数据集 ，覆盖街景、网图、文档、手写多个场景，其中文本识别包含 1.1w 张图片。以上所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
+**注：以上精度指标的评估集是 PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中文本识别包含 1.1w 张图片。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
+
+
+<table >
+    <tr>
+        <th>模型</th>
+        <th>识别 Avg Accuracy(%)</th>
+        <th>GPU推理耗时（ms）</th>
+        <th>CPU推理耗时</th>
+        <th>模型存储大小（M）</th>
+        <th>介绍</th>
+    </tr>
+    <tr>
+        <td>ch_SVTRv2_rec</td>
+        <td>68.81</td>
+        <td>8.36801</td>
+        <td>165.706</td>
+        <td>73.9 M</td>
+        <td rowspan="1">
+        SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队研发的服务端文本识别模型，其在PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务中荣获一等奖，A榜端到端识别精度相比PP-OCRv4提升6%。
+    </td>
+    </tr>
+</table>
+
+
+**注：以上精度指标的评估集是 [PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务](https://aistudio.baidu.com/competition/detail/1131/0/introduction)A榜。 所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
+
+<table >
+    <tr>
+        <th>模型</th>
+        <th>识别 Avg Accuracy(%)</th>
+        <th>GPU推理耗时（ms）</th>
+        <th>CPU推理耗时</th>
+        <th>模型存储大小（M）</th>
+        <th>介绍</th>
+    </tr>
+    <tr>
+        <td>ch_RepSVTR_rec</td>
+        <td>65.07</td>
+        <td>10.5047</td>
+        <td>51.5647</td>
+        <td>22.1 M</td>
+        <td rowspan="1">    RepSVTR 文本识别模型是一种基于SVTRv2 的移动端文本识别模型，其在PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务中荣获一等奖，B榜端到端识别精度相比PP-OCRv4提升2.5%，推理速度持平。</td>
+    </tr>
+</table>
+
+**注：以上精度指标的评估集是 [PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务](https://aistudio.baidu.com/competition/detail/1131/0/introduction)B榜。 所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
 
 **印章文本检测模块模型：**
 
@@ -115,7 +182,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 如果您对产线运行的效果满意，可以直接对产线进行集成部署，如果不满意，您也可以利用私有数据**对产线中的模型进行在线微调**。
 
 ### 2.2 本地体验
-在本地使用文档场景信息抽取v3产线前，请确保您已经按照[PaddleX本地安装教程]../../../installation/installation.md)完成了PaddleX的wheel包安装。
+在本地使用文档场景信息抽取v3产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
 几行代码即可完成产线的快速推理，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf)，以通用文档场景信息抽取v3产线为例：
 
@@ -135,7 +202,7 @@ for res in visual_result:
 
 print(predict.chat("乙方,手机号"))
 ```
-**注**：请先在[百度云千帆平台](https://qianfan.cloud.baidu.com/)获取自己的ak与sk，将其填入至指定位置后才能正常调用大模型。
+**注**：请先在[百度云千帆平台](https://console.bce.baidu.com/qianfan/ais/console/onlineService)获取自己的ak与sk（详细流程请参考[AK和SK鉴权调用API流程](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8)），将ak与sk填入至指定位置后才能正常调用大模型。
 
 运行后，输出结果如下：
 
@@ -175,9 +242,9 @@ print(predict.chat("乙方,手机号"))
 （5）对预测结果进行处理：每个样本的预测结果均为 dict 类型，且支持打印，或保存为文件，支持保存的类型与具体产线相关，如：
 |方法|说明|方法参数|
 |-|-|-|
-|save_to_img|将版面分析、表格识别等结果保存为图片格式的文件|save_path：str类型，保存的文件路径；|
-|save_to_html|将表格识别等结果保存为html格式的文件|save_path：str类型，保存的文件路径；|
-|save_to_xlsx|将表格识别等结果保存为表格格式的文件|save_path：str类型，保存的文件路径；|
+|save_to_img|将版面分析、表格识别等结果保存为图片格式的文件|`save_path`：str类型，保存的文件路径；|
+|save_to_html|将表格识别等结果保存为html格式的文件|`save_path`：str类型，保存的文件路径；|
+|save_to_xlsx|将表格识别等结果保存为表格格式的文件|`save_path`：str类型，保存的文件路径；|
 
 在执行上述 Python 脚本时，加载的是默认的文档场景信息抽取v3产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
 
@@ -581,6 +648,7 @@ if __name__ == "__main__":
     print("Final result:")
     print(len(result_chat["chatResult"]))
 ```
+**注**：请在 `API_KEY`、`SECRET_KEY` 处填入您的 ak、sk。
 </details>
 </details>
 <br/>
