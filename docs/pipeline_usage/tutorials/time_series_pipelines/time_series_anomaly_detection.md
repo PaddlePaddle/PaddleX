@@ -68,7 +68,7 @@ paddlex --get_pipeline_config ts_ad
 执行后，时序异常检测产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为 `./my_path` ）：
 
 ```
-paddlex --get_pipeline_config ts_ad --config_save_path ./my_path
+paddlex --get_pipeline_config ts_ad --save_path ./my_path
 ```
 
 获取产线配置文件后，可将` --pipeline` 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 `./ts_ad.yaml`，只需执行：
@@ -84,7 +84,7 @@ paddlex --pipeline ./ts_ad.yaml --input ts_ad.cs
 
 ```
 {'ts_path': '/root/.paddlex/predict_input/ts_ad.csv', 'anomaly':            label
-timestamp  
+timestamp
 220226         0
 220227         0
 220228         0
@@ -172,9 +172,9 @@ for res in output:
 
 下面是API参考和多语言服务调用示例：
 
-<details>  
-<summary>API参考</summary>  
-  
+<details>
+<summary>API参考</summary>
+
 对于服务提供的所有操作：
 
 - 响应体以及POST请求的请求体均为JSON数据（JSON对象）。
@@ -225,11 +225,11 @@ for res in output:
 </details>
 
 <details>
-<summary>多语言调用服务示例</summary>  
+<summary>多语言调用服务示例</summary>
 
-<details>  
-<summary>Python</summary>  
-  
+<details>
+<summary>Python</summary>
+
 ```python
 import base64
 import requests
@@ -255,12 +255,12 @@ with open(output_csv_path, "wb") as f:
     f.write(base64.b64decode(result["csv"]))
 print(f"Output time-series data saved at  {output_csv_path}")
 ```
-  
+
 </details>
 
-<details>  
-<summary>C++</summary>  
-  
+<details>
+<summary>C++</summary>
+
 ```cpp
 #include <iostream>
 #include "cpp-httplib/httplib.h" // https://github.com/Huiyicc/cpp-httplib
@@ -321,12 +321,12 @@ int main() {
     return 0;
 }
 ```
-  
+
 </details>
 
-<details>  
-<summary>Java</summary>  
-  
+<details>
+<summary>Java</summary>
+
 ```java
 import okhttp3.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -383,97 +383,97 @@ public class Main {
     }
 }
 ```
-  
+
 </details>
 
-<details>  
-<summary>Go</summary>  
-  
+<details>
+<summary>Go</summary>
+
 ```go
 package main
 
 import (
-	"bytes"
-	"encoding/base64"
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
+    "bytes"
+    "encoding/base64"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
 )
 
 func main() {
-	API_URL := "http://localhost:8080/time-series-anomaly-detection"
-	csvPath := "./test.csv";
-	outputCsvPath := "./out.csv";
+    API_URL := "http://localhost:8080/time-series-anomaly-detection"
+    csvPath := "./test.csv";
+    outputCsvPath := "./out.csv";
 
-	// 读取csv文件并进行Base64编码
-	csvBytes, err := ioutil.ReadFile(csvPath)
-	if err != nil {
-		fmt.Println("Error reading csv file:", err)
-		return
-	}
-	csvData := base64.StdEncoding.EncodeToString(csvBytes)
+    // 读取csv文件并进行Base64编码
+    csvBytes, err := ioutil.ReadFile(csvPath)
+    if err != nil {
+        fmt.Println("Error reading csv file:", err)
+        return
+    }
+    csvData := base64.StdEncoding.EncodeToString(csvBytes)
 
-	payload := map[string]string{"csv": csvData} // Base64编码的文件内容
-	payloadBytes, err := json.Marshal(payload)
-	if err != nil {
-		fmt.Println("Error marshaling payload:", err)
-		return
-	}
+    payload := map[string]string{"csv": csvData} // Base64编码的文件内容
+    payloadBytes, err := json.Marshal(payload)
+    if err != nil {
+        fmt.Println("Error marshaling payload:", err)
+        return
+    }
 
-	// 调用API
-	client := &http.Client{}
-	req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
-	if err != nil {
-		fmt.Println("Error creating request:", err)
-		return
-	}
+    // 调用API
+    client := &http.Client{}
+    req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
+    if err != nil {
+        fmt.Println("Error creating request:", err)
+        return
+    }
 
-	res, err := client.Do(req)
-	if err != nil {
-		fmt.Println("Error sending request:", err)
-		return
-	}
-	defer res.Body.Close()
+    res, err := client.Do(req)
+    if err != nil {
+        fmt.Println("Error sending request:", err)
+        return
+    }
+    defer res.Body.Close()
 
-	// 处理返回数据
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		fmt.Println("Error reading response body:", err)
-		return
-	}
-	type Response struct {
-		Result struct {
-			Csv string `json:"csv"`
-		} `json:"result"`
-	}
-	var respData Response
-	err = json.Unmarshal([]byte(string(body)), &respData)
-	if err != nil {
-		fmt.Println("Error unmarshaling response body:", err)
-		return
-	}
+    // 处理返回数据
+    body, err := ioutil.ReadAll(res.Body)
+    if err != nil {
+        fmt.Println("Error reading response body:", err)
+        return
+    }
+    type Response struct {
+        Result struct {
+            Csv string `json:"csv"`
+        } `json:"result"`
+    }
+    var respData Response
+    err = json.Unmarshal([]byte(string(body)), &respData)
+    if err != nil {
+        fmt.Println("Error unmarshaling response body:", err)
+        return
+    }
 
-	// 将Base64编码的csv数据解码并保存为文件
-	outputCsvData, err := base64.StdEncoding.DecodeString(respData.Result.Csv)
-	if err != nil {
-		fmt.Println("Error decoding base64 csv data:", err)
-		return
-	}
-	err = ioutil.WriteFile(outputCsvPath, outputCsvData, 0644)
-	if err != nil {
-		fmt.Println("Error writing csv to file:", err)
-		return
-	}
-	fmt.Printf("Output time-series data saved at %s.csv", outputCsvPath)
+    // 将Base64编码的csv数据解码并保存为文件
+    outputCsvData, err := base64.StdEncoding.DecodeString(respData.Result.Csv)
+    if err != nil {
+        fmt.Println("Error decoding base64 csv data:", err)
+        return
+    }
+    err = ioutil.WriteFile(outputCsvPath, outputCsvData, 0644)
+    if err != nil {
+        fmt.Println("Error writing csv to file:", err)
+        return
+    }
+    fmt.Printf("Output time-series data saved at %s.csv", outputCsvPath)
 }
 ```
-  
+
 </details>
 
-<details>  
-<summary>C#</summary>  
-  
+<details>
+<summary>C#</summary>
+
 ```csharp
 using System;
 using System.IO;
@@ -516,12 +516,12 @@ class Program
     }
 }
 ```
-  
+
 </details>
 
-<details>  
-<summary>Node.js</summary>  
-  
+<details>
+<summary>Node.js</summary>
+
 ```js
 const axios = require('axios');
 const fs = require('fs');
@@ -560,12 +560,12 @@ axios.request(config)
   console.log(error);
 });
 ```
-  
+
 </details>
 
-<details>  
-<summary>PHP</summary>  
-  
+<details>
+<summary>PHP</summary>
+
 ```php
 <?php
 
@@ -593,7 +593,7 @@ echo "Output time-series data saved at " . $output_csv_path . "\n";
 
 ?>
 ```
-  
+
 </details>
 </details>
 <br/>

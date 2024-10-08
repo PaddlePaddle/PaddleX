@@ -170,7 +170,7 @@ paddlex --get_pipeline_config PP-ChatOCRv3-doc
 After execution, the configuration file for the PP-ChatOCRv3-doc pipeline will be saved in the current path. If you wish to customize the save location, you can execute the following command (assuming the custom save location is `./my_path`):
 
 ```bash
-paddlex --get_pipeline_config PP-ChatOCRv3-doc --config_save_path ./my_path
+paddlex --get_pipeline_config PP-ChatOCRv3-doc --save_path ./my_path
 ```
 After obtaining the configuration file, you can customize the various configurations of the PP-ChatOCRv3-doc pipeline:
 
