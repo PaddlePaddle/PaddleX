@@ -20,6 +20,6 @@ def run_server(app: FastAPI, *, host: str, port: int, debug: bool) -> None:
     # XXX: Currently, `debug` is not used.
     # HACK: Fix duplicate logs
     uvicorn_version = tuple(int(x) for x in uvicorn.__version__.split("."))
-    if uvicorn_version < (0, 19):
+    if uvicorn_version < (0, 19, 0):
         uvicorn.config.LOGGING_CONFIG["loggers"]["uvicorn"]["propagate"] = False
     uvicorn.run(app, host=host, port=port, log_level="info")
