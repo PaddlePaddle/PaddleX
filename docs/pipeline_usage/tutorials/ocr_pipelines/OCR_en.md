@@ -135,13 +135,10 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="ocr")
 
-output = pipeline.predict("pre_image.jpg")
-for batch in output:
-    for item in batch:
-        res = item['result']
-        res.print()
-        res.save_to_img("./output/")
-        res.save_to_json("./output/")
+output = pipeline.predict("general_ocr_002.png")
+for res in output:
+    res.print() 
+    res.save_to_img("./output/") 
 ```
 > ❗ The results obtained from running the Python script are the same as those from the command line.
 
@@ -185,9 +182,8 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/ocr.yaml")
 output = pipeline.predict("general_ocr_002.png")
 for res in output:
-    res.print(json_format=False)
-    res.save_to_img("./output/")
-    res.save_to_json("./output/res.json")
+    res.print()
+    res.save_to_img("./output/") 
 ```
 
 ## 3. Development Integration/Deployment
