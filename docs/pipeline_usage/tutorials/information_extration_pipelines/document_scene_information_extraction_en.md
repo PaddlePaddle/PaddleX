@@ -232,16 +232,16 @@ Below are the API references and multi-language service invocation examples:
 For all operations provided by the service:
 
 - Both the response body and the request body for POST requests are JSON data (JSON objects).
-- When the request is processed successfully, the response status code is `200`, and the response body attributes are as follows:
+- When the request is processed successfully, the response status code is `200`, and the response body properties are as follows:
 
     | Name | Type | Description |
     |------|------|-------------|
     | `errorCode` | `integer` | Error code. Fixed as `0`. |
     | `errorMsg` | `string` | Error description. Fixed as `"Success"`. |
 
-    The response body may also have a `result` attribute of type `object`, which stores the operation result information.
+    The response body may also have a `result` property of type `object`, which stores the operation result information.
 
-- When the request is not processed successfully, the response body attributes are as follows:
+- When the request is not processed successfully, the response body properties are as follows:
 
     | Name | Type | Description |
     |------|------|-------------|
@@ -256,12 +256,12 @@ Operations provided by the service are as follows:
 
     `POST /chatocr-vision`
 
-    - Request body attributes:
+    - Request body properties:
 
         | Name | Type | Description | Required |
         |------|------|-------------|----------|
         | `image` | `string` | The URL of an image file or PDF file accessible by the service, or the Base64 encoded result of the content of the above-mentioned file types. For PDF files with more than 10 pages, only the content of the first 10 pages will be used. | Yes |
-        | `fileType` | `integer` | File type. `0` indicates a PDF file, `1` indicates an image file. If this attribute is not present in the request body, the service will attempt to automatically infer the file type based on the URL. | No |
+        | `fileType` | `integer` | File type. `0` indicates a PDF file, `1` indicates an image file. If this property is not present in the request body, the service will attempt to automatically infer the file type based on the URL. | No |
         | `useOricls` | `boolean` | Whether to enable document image orientation classification. This feature is enabled by default. | No |
         | `useCurve` | `boolean` | Whether to enable seal text detection. This feature is enabled by default. | No |
         | `useUvdoc` | `boolean` | Whether to enable text image correction. This feature is enabled by default. | No |
@@ -273,14 +273,14 @@ Operations provided by the service are as follows:
         |------|------|-------------|----------|
         | `maxLongSide` | `integer` | During inference, if the length of the longer side of the input image for the text detection model is greater than `maxLongSide`, the image will be scaled so that the length of the longer side equals `maxLongSide`. | No |
 
-    - When the request is processed successfully, the `result` of the response body has the following attributes:
+    - When the request is processed successfully, the `result` of the response body has the following properties:
 
         | Name | Type | Description |
         |------|------|-------------|
         | `visionResults` | `array` | Analysis results obtained using computer vision models. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file. |
         | `visionInfo` | `object` | Key information in the image, which can be used as input for other operations. |
 
-        Each element in `visionResults` is an `object` with the following attributes:
+        Each element in `visionResults` is an `object` with the following properties:
 
         | Name | Type | Description |
         |------|------|-------------|
@@ -290,7 +290,7 @@ Operations provided by the service are as follows:
         | `ocrImage` | `string` | OCR result image. The image is in JPEG format and encoded using Base64. |
         | `layoutImage` | `string` | Layout area detection result image. The image is in JPEG format and encoded using Base64. |
 
-        Each element in `texts` is an `object` with the following attributes:
+        Each element in `texts` is an `object` with the following properties:
 
         | Name | Type | Description |
         |------|------|-------------|
@@ -301,7 +301,7 @@ Interact with large language models to extract key information.
 
 `POST /chatocr-vision`
 
-- Request body attributes:
+- Request body properties:
 
     | Name | Type | Description | Required |
     |------|------|-------------|----------|
@@ -327,7 +327,7 @@ Interact with large language models to extract key information.
     }
     ```
 
-- On successful request processing, the `result` in the response body has the following attributes:
+- On successful request processing, the `result` in the response body has the following properties:
 
     | Name | Type | Description |
     |------|------|-------------|

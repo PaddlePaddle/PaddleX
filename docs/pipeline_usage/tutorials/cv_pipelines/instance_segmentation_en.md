@@ -178,16 +178,16 @@ Below are the API references and multi-language service invocation examples:
 For all operations provided by the service:
 
 - Both the response body and the request body for POST requests are JSON data (JSON objects).
-- When the request is processed successfully, the response status code is `200`, and the response body attributes are as follows:
+- When the request is processed successfully, the response status code is `200`, and the response body properties are as follows:
 
     | Name | Type | Description |
     |------|------|-------------|
     |`errorCode`|`integer`|Error code. Fixed as `0`.|
     |`errorMsg`|`string`|Error message. Fixed as `"Success"`.|
 
-    The response body may also have a `result` attribute of type `object`, which stores the operation result information.
+    The response body may also have a `result` property of type `object`, which stores the operation result information.
 
-- When the request is not processed successfully, the response body attributes are as follows:
+- When the request is not processed successfully, the response body properties are as follows:
 
     | Name | Type | Description |
     |------|------|-------------|
@@ -202,20 +202,20 @@ Operations provided by the service:
 
     `POST /instance-segmentation`
 
-    - The request body attributes are as follows:
+    - The request body properties are as follows:
 
         | Name | Type | Description | Required |
         |------|------|-------------|----------|
         |`image`|`string`|The URL of an image file accessible by the service or the Base64 encoded result of the image file content.|Yes|
 
-    - When the request is processed successfully, the `result` of the response body has the following attributes:
+    - When the request is processed successfully, the `result` of the response body has the following properties:
 
         | Name | Type | Description |
         |------|------|-------------|
         |`instances`|`array`|Information about the locations and categories of instances.|
         |`image`|`string`|The result image of instance segmentation. The image is in JPEG format and encoded in Base64.|
 
-        Each element in `instances` is an `object` with the following attributes:
+        Each element in `instances` is an `object` with the following properties:
 
         | Name | Type | Description |
         |------|------|-------------|
@@ -224,7 +224,7 @@ Operations provided by the service:
         |`score`|`number`|The score of the instance.|
         |`mask`|`object`|The segmentation mask of the instance.|
 
-        The attributes of `mask` are as follows:
+        The properties of `mask` are as follows:
 
         | Name | Type | Description |
         |------|------|-------------|
