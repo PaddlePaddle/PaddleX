@@ -53,7 +53,7 @@ paddlex --get_pipeline_config small_object_detection
 After execution, the small object detection pipeline configuration file will be saved in the current directory. If you wish to customize the save location, execute the following command (assuming the custom save location is `./my_path`):
 
 ```bash
-paddlex --get_pipeline_config small_object_detection --config_save_path ./my_path
+paddlex --get_pipeline_config small_object_detection --save_path ./my_path
 ```
 
 After obtaining the pipeline configuration file, replace `--pipeline` with the configuration file's save path to make the configuration file effective. For example, if the configuration file's save path is `./small_object_detection.yaml`, simply execute:

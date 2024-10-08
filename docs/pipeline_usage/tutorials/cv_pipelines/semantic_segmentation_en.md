@@ -81,7 +81,7 @@ paddlex --get_pipeline_config semantic_segmentation
 After execution, the semantic segmentation pipeline configuration file will be saved in the current path. If you wish to customize the save location, execute the following command (assuming the custom save location is `./my_path`):
 
 ```bash
-paddlex --get_pipeline_config semantic_segmentation --config_save_path ./my_path
+paddlex --get_pipeline_config semantic_segmentation --save_path ./my_path
 ```
 
 After obtaining the pipeline configuration file, replace `--pipeline` with the configuration file save path to make the configuration file take effect. For example, if the configuration file save path is `./semantic_segmentation.yaml`, simply execute:

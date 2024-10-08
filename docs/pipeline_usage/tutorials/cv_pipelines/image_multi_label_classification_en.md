@@ -54,7 +54,7 @@ paddlex --get_pipeline_config multi_label_image_classification
 After execution, the configuration file for the image multi-label classification pipeline will be saved in the current path. If you wish to customize the save location, you can execute the following command (assuming the custom save location is `./my_path`):
 
 ```bash
-paddlex --get_pipeline_config multi_label_image_classification --config_save_path ./my_path
+paddlex --get_pipeline_config multi_label_image_classification --save_path ./my_path
 ```
 
 After obtaining the pipeline configuration file, replace `--pipeline` with the saved path of the configuration file to make it effective. For example, if the configuration file is saved at `./multi_label_image_classification.yaml`, simply execute:
