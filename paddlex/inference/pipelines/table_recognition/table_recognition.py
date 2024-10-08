@@ -103,14 +103,16 @@ class TableRecPipeline(BasePipeline):
             # update layout result
             single_img_res["input_path"] = layout_pred["input_path"]
             single_img_res["layout_result"] = layout_pred
-            subs_of_img = list(self._crop_by_boxes(layout_pred))
-            # get cropped images with label "table"
+            ocr_res = ocr_pred
             table_subs = []
-            for sub in subs_of_img:
-                box = sub["box"]
-                if sub["label"].lower() == "table":
-                    table_subs.append(sub)
-                    _, ocr_res = self.get_related_ocr_result(box, ocr_pred)
+            if len(layout_pred["boxes"]) > 0:
+                subs_of_img = list(self._crop_by_boxes(layout_pred))
+                # get cropped images with label "table"
+                for sub in subs_of_img:
+                    box = sub["box"]
+                    if sub["label"].lower() == "table":
+                        table_subs.append(sub)
+                        _, ocr_res = self.get_related_ocr_result(box, ocr_res)
             table_res, all_table_ocr_res = self.get_table_result(table_subs)
             for table_ocr_res in all_table_ocr_res:
                 ocr_res["dt_polys"].extend(table_ocr_res["dt_polys"])
