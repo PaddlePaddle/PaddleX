@@ -14,14 +14,14 @@ The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recogni
 <details>
    <summary> 👉Model List Details</summary>
 
-**Table Structure Recognition Module Models:**
+**Table Structure Recognition Module Models**:
 
 <table>
   <tr>
     <th>Model</th>
     <th>Accuracy (%)</th>
     <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time</th>
+    <th>CPU Inference Time (ms)</th>
     <th>Model Size (M)</th>
     <th>Description</th>
   </tr>
@@ -31,7 +31,7 @@ The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recogni
     <td>522.536</td>
     <td>1845.37</td>
     <td>6.9 M</td>
-    <td>SLANet is a table structure recognition model independently developed by Baidu's PaddlePaddle vision team. The model significantly enhances the accuracy and inference speed for table structure recognition by utilizing the CPU-friendly lightweight backbone network PP-LCNet, the CSP-PAN high-low layer feature fusion module, and the SLA Head feature decoding module that aligns structural and positional information.</td>
+    <td>SLANet is a table structure recognition model developed by Baidu PaddlePaddle Vision Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
   </tr>
   <tr>
     <td>SLANet_plus</td>
@@ -39,65 +39,132 @@ The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recogni
     <td>522.536</td>
     <td>1845.37</td>
     <td>6.9 M</td>
-    <td>SLANet_plus is an enhanced version of the SLANet model independently developed by Baidu's PaddlePaddle vision team. Compared to SLANet, SLANet_plus significantly improves the recognition capability for unbounded and complex tables, and reduces the model's sensitivity to table localization accuracy. Even if the table localization is offset, it can still accurately recognize the table structure.</td>
+    <td>SLANet_plus is an enhanced version of SLANet, the table structure recognition model developed by Baidu PaddlePaddle Vision Team. Compared to SLANet, SLANet_plus significantly improves the recognition ability for wireless and complex tables and reduces the model's sensitivity to the accuracy of table positioning, enabling more accurate recognition even with offset table positioning.</td>
   </tr>
 </table>
 
-**Note: The above accuracy metrics are measured on PaddleX's internal English table recognition dataset. All models' GPU inference times are based on NVIDIA Tesla T4 machines, with accuracy type FP32. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and accuracy type FP32.**
+**Note: The above accuracy metrics are measured on PaddleX's internally built English table recognition dataset. All GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 
-**Layout Area Detection Module Models:**
+**Layout Detection Module Models**:
 
-|Model Name|mAP (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
-|-|-|-|-|-|
-|PicoDet_layout_1x|86.8|13.036|91.2634|7.4 M|
-|PicoDet-L_layout_3cls|89.3|15.7425|159.771|22.6 M|
-|RT-DETR-H_layout_3cls|95.9|114.644|3832.62|470.1 M|
-|RT-DETR-H_layout_17cls|92.6|115.126|3827.25|470.2 M|
-
-**Note: The above accuracy metrics are evaluated on PaddleX's internal layout area analysis dataset, which includes 10,000 images. All models' GPU inference times are based on NVIDIA Tesla T4 machines, with accuracy type FP32. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and accuracy type FP32.**
-
-**Text Detection Module Models:**
-
-|Model Name|Detection Hmean (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
-|-|-|-|-|-|
-|PP-OCRv4_mobile_det|77.79|10.6923|120.177|4.2 M|
-|PP-OCRv4_server_det|82.69|83.3501|2434.01|100.1 M|
-
-**Note: The above accuracy metrics are evaluated on PaddleOCR's internal Chinese dataset, covering multiple scenarios such as street views, web images, documents, and handwriting, with 500 images for detection. All models' GPU inference times are based on NVIDIA Tesla T4 machines, with accuracy type FP32. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and accuracy type FP32.**
-
-**Text Recognition Module Models:**
-
-|Model Name|Avg Accuracy (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
-|-|-|-|-|-|
-|PP-OCRv4_mobile_rec|78.20|7.95018|46.7868|10.6 M|
-|PP-OCRv4_server_rec|79.20|7.19439|140.179|71.2 M|
-
-**Note: The above accuracy metrics are evaluated on PaddleOCR's internal Chinese dataset, covering various scenarios such as street views, web images, documents, and handwriting, with 11,000 images for text recognition. All models' GPU inference times are based on NVIDIA Tesla T4 machines, with accuracy type FP32. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and accuracy type FP32.**
-
-**Seal Text Detection Module Models:**
-
-|Model|Detection Hmean (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size (M)|Description|
+|Model|mAP(0.5) (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size (M)|Description|
 |-|-|-|-|-|-|
-|PP-OCRv4_server_seal_det|98.21|84.341|2425.06|109|The server-side seal text detection model of PP-OCRv4, with higher accuracy, suitable for deployment on high-performance servers.|
-|PP-OCRv4_mobile_seal_det|96.47|10.5878|131.813|4.6|The mobile-side seal text detection model of PP-OCRv4, with higher efficiency, suitable for edge deployment.|
+|PicoDet-L_layout_3cls|89.3|15.7|159.8|22.6|A high-efficiency layout detection model based on PicoDet-L, including 3 categories: table, image, and seal.|
+|PicoDet_layout_1x|86.8|13.0|91.3|7.4|A high-efficiency layout detection model based on PicoDet-1x, including text, title, table, image, and list.|
+|RT-DETR-H_layout_17cls|92.6|115.1|3827.2|470.2|A high-precision layout detection model based on RT-DETR-H, including 17 common layout categories.|
+|RT-DETR-H_layout_3cls|95.9|114.6|3832.6|470.1|A high-precision layout detection model based on RT-DETR-H, including 3 categories: table, image, and seal.|
 
-**Note: The above accuracy metrics are evaluated on an internal dataset containing 500 circular seal images. GPU inference times are based on NVIDIA Tesla T4 machines, with accuracy type FP32. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and accuracy type FP32.**
+**Note: The above accuracy metrics are evaluated on PaddleOCR's self-built layout analysis dataset, containing 10,000 images. GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 
-**Text Image Correction Module Models:**
+**Text Detection Module Models**:
 
-|Model|MS-SSIM (%)|Model Size (M)|Description|
-|-|-|-|-|
-|UVDoc|54.40|30.3 M|High-precision text image correction model|
+| Model | Detection Hmean (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
+|-------|---------------------|-------------------------|-------------------------|--------------|-------------|
+| PP-OCRv4_server_det | 82.69 | 83.3501 | 2434.01 | 109 | PP-OCRv4's server-side text detection model, featuring higher accuracy, suitable for deployment on high-performance servers |
+| PP-OCRv4_mobile_det | 77.79 | 10.6923 | 120.177 | 4.7 | PP-OCRv4's mobile text detection model, optimized for efficiency, suitable for deployment on edge devices |
 
-**The accuracy metrics for the model are measured using the [DocUNet benchmark](https://www3.cs.stonybrook.edu/~cvl/docunet.html).**
+**Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built Chinese dataset, covering street scenes, web images, documents, and handwritten texts, with 500 images for detection. All GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 
-**Document Image Orientation Classification Module Models:**
+**Text Recognition Module Models**:
 
-|Model|Top-1 Acc (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size (M)|Description|
-|-|-|-|-|-|-|
-|PP-LCNet_x1_0_doc_ori|99.06|3.84845|9.23735|7|Document image classification model based on PP-LCNet_x1_0, containing four categories: 0 degrees, 90 degrees, 180 degrees, and 270 degrees.|
+<table>
+    <tr>
+        <th>Model</th>
+        <th>Recognition Avg Accuracy (%)</th>
+        <th>GPU Inference Time (ms)</th>
+        <th>CPU Inference Time (ms)</th>
+        <th>Model Size (M)</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>PP-OCRv4_mobile_rec</td>
+        <td>78.20</td>
+        <td>7.95018</td>
+        <td>46.7868</td>
+        <td>10.6 M</td>
+        <td rowspan="2">PP-OCRv4 is the next version of Baidu PaddlePaddle's self-developed text recognition model PP-OCRv3. By introducing data augmentation schemes and GTC-NRTR guidance branches, it further improves text recognition accuracy without compromising inference speed. The model offers both server (server) and mobile (mobile) versions to meet industrial needs in different scenarios.</td>
+    </tr>
+    <tr>
+        <td>PP-OCRv4_server_rec</td>
+        <td>79.20</td>
+        <td>7.19439</td>
+        <td>140.179</td>
+        <td>71.2 M</td>
+    </tr>
+</table>
 
-**Note: The above accuracy metrics are evaluated on an internal dataset covering various scenarios such as certificates and documents, with 1,000 images. GPU inference times are based on NVIDIA Tesla T4 machines, with accuracy type FP32. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and accuracy type FP32.**
+**Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built Chinese dataset, covering street scenes, web images, documents, and handwritten texts, with 11,000 images for text recognition. All GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
+
+<table >
+    <tr>
+        <th>Model</th>
+        <th>Recognition Avg Accuracy (%)</th>
+        <th>GPU Inference Time (ms)</th>
+        <th>CPU Inference Time</th>
+        <th>Model Size (M)</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>ch_SVTRv2_rec</td>
+        <td>68.81</td>
+        <td>8.36801</td>
+        <td>165.706</td>
+        <td>73.9 M</td>
+        <td rowspan="1">
+        SVTRv2 is a server-side text recognition model developed by the OpenOCR team at the Vision and Learning Lab (FVL) of Fudan University. It won the first prize in the OCR End-to-End Recognition Task of the PaddleOCR Algorithm Model Challenge, with a 6% improvement in end-to-end recognition accuracy compared to PP-OCRv4 on the A-list.
+    </td>
+    </tr>
+</table>
+
+**Note: The evaluation set for the above accuracy metrics is the [PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task](https://aistudio.baidu.com/competition/detail/1131/0/introduction) A-list. GPU inference time is based on NVIDIA Tesla T4 with FP32 precision. CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
+
+<table >
+    <tr>
+        <th>Model</th>
+        <th>Recognition Avg Accuracy (%)</th>
+        <th>GPU Inference Time (ms)</th>
+        <th>CPU Inference Time</th>
+        <th>Model Size (M)</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>ch_RepSVTR_rec</td>
+        <td>65.07</td>
+        <td>10.5047</td>
+        <td>51.5647</td>
+        <td>22.1 M</td>
+        <td rowspan="1">
+        The RepSVTR text recognition model is a mobile-oriented text recognition model based on SVTRv2. It won the first prize in the OCR End-to-End Recognition Task of the PaddleOCR Algorithm Model Challenge, with a 2.5% improvement in end-to-end recognition accuracy compared to PP-OCRv4 on the B-list, while maintaining similar inference speed.
+    </td>
+    </tr>
+</table>
+
+**Note: The evaluation set for the above accuracy metrics is the [PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task](https://aistudio.baidu.com/competition/detail/1131/0/introduction) B-list. GPU inference time is based on NVIDIA Tesla T4 with FP32 precision. CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
+
+**Seal Text Detection Module Models**:
+
+| Model | Detection Hmean (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
+|-------|---------------------|-------------------------|-------------------------|--------------|-------------|
+| PP-OCRv4_server_seal_det | 98.21 | 84.341 | 2425.06 | 109 | PP-OCRv4's server-side seal text detection model, featuring higher accuracy, suitable for deployment on better-equipped servers |
+| PP-OCRv4_mobile_seal_det | 96.47 | 10.5878 | 131.813 | 4.6 | PP-OCRv4's mobile seal text detection model, offering higher efficiency, suitable for deployment on edge devices |
+
+**Note: The above accuracy metrics are evaluated on a self-built dataset containing 500 circular seal images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
+
+**Text Image Rectification Module Models**:
+
+| Model | MS-SSIM (%) | Model Size (M) | Description |
+|-------|-------------|--------------|-------------|
+| UVDoc | 54.40 | 30.3 M | High-precision text image rectification model |
+
+**The accuracy metrics of the models are measured from the [DocUNet benchmark](https://www3.cs.stonybrook.edu/~cvl/docunet.html).**
+
+**Document Image Orientation Classification Module Models**:
+
+| Model | Top-1 Acc (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
+|-------|---------------|-------------------------|-------------------------|--------------|-------------|
+| PP-LCNet_x1_0_doc_ori | 99.06 | 3.84845 | 9.23735 | 7 | A document image classification model based on PP-LCNet_x1_0, with four categories: 0°, 90°, 180°, 270° |
+
+**Note: The above accuracy metrics are evaluated on a self-built dataset covering various scenarios such as certificates and documents, containing 1000 images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 
 </details>
 
@@ -130,14 +197,14 @@ for res in visual_result:
     res.save_to_html('./output')
     res.save_to_xlsx('./output')
 
-print(predict.chat("Party B, Phone Number"))
+print(predict.chat("乙方,手机号"))
 ```
-**Note**: Please first obtain your ak and sk from the [Baidu Qianfan Platform](https://qianfan.cloud.baidu.com/) and fill them in the designated places to properly call the large model.
+**Note**: Please first obtain your ak and sk on the [Baidu Cloud Qianfan Platform](https://console.bce.baidu.com/qianfan/ais/console/onlineService) (for detailed steps, please refer to the [AK and SK Authentication API Call Process](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8)), and fill in your ak and sk to the specified locations to enable normal calls to the large model.
 
 After running, the output is as follows:
 
 ```
-{'chat_res': {'Party B': 'Shareholding Test Co., Ltd.', 'Phone Number': '19331729920'}, 'prompt': ''}
+{'chat_res': {'乙方': '股份测试有限公司', '手机号': '19331729920'}, 'prompt': ''}
 ```
 
 In the above Python script, the following steps are executed:
@@ -160,6 +227,18 @@ In the above Python script, the following steps are executed:
 | str | Supports passing the URL of the file to be predicted, such as [example](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf); |
 | str | Supports passing a local directory, which should contain files to be predicted, such as the local path: /root/data/; |
 | dict | Supports passing a dictionary type, where the key needs to correspond to the specific pipeline, such as "img
+
+(3) Obtain prediction results by calling the `predict` method: The `predict` method is a `generator`, so prediction results need to be obtained through calls. The `predict` method predicts data in batches, so the prediction results are represented as a list of prediction results.
+
+(4) Interact with the large model by calling the `predict.chat` method, which takes as input keywords (multiple keywords are supported) for information extraction. The prediction results are represented as a list of information extraction results.
+
+(5) Process the prediction results: The prediction result for each sample is in the form of a dict, which supports printing or saving to a file. The supported file types depend on the specific pipeline, such as:
+
+| Method | Description | Method Parameters |
+|-|-|-|
+| save_to_img | Saves layout analysis, table recognition, etc. results as image files. | `save_path`: str, the file path to save. |
+| save_to_html | Saves table recognition results as HTML files. | `save_path`: str, the file path to save. |
+| save_to_xlsx | Saves table recognition results as Excel files. | `save_path`: str, the file path to save. |
 
 When executing the above command, the default Pipeline configuration file is loaded. If you need to customize the configuration file, you can use the following command to obtain it:
 
@@ -210,7 +289,7 @@ for res in visual_result:
     res.save_to_html('./output')
     res.save_to_xlsx('./output')
 
-print(predict.chat("Party B, phone number"))
+print(predict.chat("乙方,手机号"))
 ```
 
 ## 3. Development Integration/Deployment
@@ -469,6 +548,7 @@ if __name__ == "__main__":
     print("Final result:")
     print(len(result_chat["chatResult"]))
 ```
+**Note**: Please fill in your ak and sk at `API_KEY` and `SECRET_KEY`.
 </details>
 </details>
 <br/>
@@ -512,7 +592,7 @@ Subsequently, load the modified pipeline configuration file using the command-li
 ## 5. Multi-hardware Support
 PaddleX supports various mainstream hardware devices such as NVIDIA GPUs, Kunlun XPU, Ascend NPU, and Cambricon MLU. **Seamless switching between different hardware can be achieved by simply setting the `--device` parameter**.
 
-For example, to perform inference using the PP-ChatOCRv3-doc Pipeline on an NVIDIA GPU```
+For example, to perform inference using the PP-ChatOCRv3-doc Pipeline on an NVIDIA GPU.
 At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the script to `npu`:
 
 ```python
