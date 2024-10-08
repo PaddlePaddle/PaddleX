@@ -61,7 +61,7 @@ When executing the above command, the default image anomaly detection pipeline c
    <summary> 👉Click to expand</summary>
 
 ```bash
-paddlex --get_pipeline_config ts_ad --config_save_path ./my_path
+paddlex --get_pipeline_config ts_ad --save_path ./my_path
 ```
 
 After obtaining the pipeline configuration file, you can replace `--pipeline` with the configuration file save path to make the configuration file take effect. For example, if the configuration file save path is `./ts_ad.yaml`, simply execute:

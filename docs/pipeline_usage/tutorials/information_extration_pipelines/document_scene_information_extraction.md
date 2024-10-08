@@ -187,7 +187,7 @@ paddlex --get_pipeline_config PP-ChatOCRv3-doc
 执行后，文档场景信息抽取v3产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为 `./my_path` ）：
 
 ```
-paddlex --get_pipeline_config PP-ChatOCRv3-doc --config_save_path ./my_path
+paddlex --get_pipeline_config PP-ChatOCRv3-doc --save_path ./my_path
 ```
 获取配置文件后，您即可对文档场景信息抽取v3产线各项配置进行自定义：
 
