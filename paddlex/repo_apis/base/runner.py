@@ -184,7 +184,7 @@ class BaseRunner(metaclass=abc.ABCMeta):
         if device is None:
             return args, None
         device, dev_ids = parse_device(device)
-        if len(dev_ids) == 0:
+        if dev_ids is None or len(dev_ids) == 0:
             return args, None
         else:
             num_devices = len(dev_ids)
