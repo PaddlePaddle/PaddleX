@@ -156,16 +156,16 @@ Below are the API references and multi-language service invocation examples:
 For all operations provided by the service:
 
 - Both the response body and the request body for POST requests are JSON data (JSON objects).
-- When the request is processed successfully, the response status code is `200`, and the response body attributes are as follows:
+- When the request is processed successfully, the response status code is `200`, and the response body properties are as follows:
 
     | Name | Type | Description |
     |------|------|-------------|
     |`errorCode`|`integer`|Error code. Fixed to `0`.|
     |`errorMsg`|`string`|Error message. Fixed to `"Success"`.|
 
-    The response body may also have a `result` attribute of type `object`, which stores the operation result information.
+    The response body may also have a `result` property of type `object`, which stores the operation result information.
 
-- When the request is not processed successfully, the response body attributes are as follows:
+- When the request is not processed successfully, the response body properties are as follows:
 
     | Name | Type | Description |
     |------|------|-------------|
@@ -180,27 +180,27 @@ Operations provided by the service are as follows:
 
     `POST /multilabel-image-classification`
 
-    - The request body attributes are as follows:
+    - The request body properties are as follows:
 
         | Name | Type | Description | Required |
         |------|------|-------------|----------|
         |`image`|`string`|The URL of the image file accessible by the service or the Base64 encoded result of the image file content.|Yes|
         |`inferenceParams`|`object`|Inference parameters.|No|
 
-        The attributes of `inferenceParams` are as follows:
+        The properties of `inferenceParams` are as follows:
 
         | Name | Type | Description | Required |
         |------|------|-------------|----------|
         |`topK`|`integer`|Only the top `topK` categories with the highest scores will be retained in the result.|No|
 
-    - When the request is processed successfully, the `result` of the response body has the following attributes:
+    - When the request is processed successfully, the `result` of the response body has the following properties:
 
         | Name | Type | Description |
         |------|------|-------------|
         |`categories`|`array`|Image category information.|
         |`image`|`string`|Image classification result image. The image is in JPEG format and encoded in Base64.|
 
-        Each element in `categories` is an `object` with the following attributes:
+        Each element in `categories` is an `object` with the following properties:
 
         | Name | Type | Description |
         |------|------|-------------|
