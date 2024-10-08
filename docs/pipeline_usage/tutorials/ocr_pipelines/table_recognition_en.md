@@ -109,7 +109,7 @@ paddlex --get_pipeline_config table_recognition
 After execution, the table recognition pipeline configuration file will be saved in the current directory. If you wish to customize the save location, you can execute the following command (assuming the custom save location is `./my_path`):
 
 ```bash
-paddlex --get_pipeline_config table_recognition --config_save_path ./my_path
+paddlex --get_pipeline_config table_recognition --save_path ./my_path
 ```
 
 After obtaining the pipeline configuration file, replace `--pipeline` with the configuration file save path to make the configuration file take effect. For example, if the configuration file save path is `./table_recognition.yaml`, simply execute:

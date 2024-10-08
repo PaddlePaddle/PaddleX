@@ -361,7 +361,7 @@ paddlex --get_pipeline_config object_detection
 After execution, the object detection pipeline configuration file will be saved in the current path. If you wish to customize the save location, you can execute the following command (assuming the custom save location is `./my_path`):
 
 ```bash
-paddlex --get_pipeline_config object_detection --config_save_path ./my_path
+paddlex --get_pipeline_config object_detection --save_path ./my_path
 ```
 
 After obtaining the pipeline configuration file, replace `--pipeline` with the configuration file save path to make the configuration file effective. For example, if the configuration file save path is `./object_detection.yaml`, simply execute:

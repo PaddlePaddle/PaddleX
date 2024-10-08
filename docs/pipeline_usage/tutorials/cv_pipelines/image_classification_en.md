@@ -648,7 +648,7 @@ paddlex --get_pipeline_config image_classification
 After execution, the image classification pipeline configuration file will be saved in the current path. If you wish to customize the save location, you can execute the following command (assuming the custom save location is `./my_path`):
 
 ```bash
-paddlex --get_pipeline_config image_classification --config_save_path ./my_path
+paddlex --get_pipeline_config image_classification --save_path ./my_path
 ```
 
 After obtaining the pipeline configuration file, replace `--pipeline` with the configuration file's save path to make the configuration file take effect. For example, if the configuration file's save path is `./image_classification.yaml`, simply execute:

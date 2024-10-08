@@ -114,7 +114,7 @@ paddlex --get_pipeline_config table_recognition
 执行后，表格识别产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为 `./my_path` ）：
 
 ```
-paddlex --get_pipeline_config table_recognition --config_save_path ./my_path
+paddlex --get_pipeline_config table_recognition --save_path ./my_path
 ```
 
 获取产线配置文件后，可将 `--pipeline` 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 `./table_recognition.yaml`，只需执行：

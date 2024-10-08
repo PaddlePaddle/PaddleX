@@ -57,7 +57,7 @@ paddlex --get_pipeline_config multi_label_image_classification
 执行后，图像多标签分类产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为 `./my_path` ）：
 
 ```
-paddlex --get_pipeline_config multi_label_image_classification --config_save_path ./my_path
+paddlex --get_pipeline_config multi_label_image_classification --save_path ./my_path
 ```
 
 获取产线配置文件后，可将 --pipeline 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 `./multi_label_image_classification.yaml`，只需执行：
@@ -152,9 +152,9 @@ for res in output:
 
 下面是API参考和多语言服务调用示例：
 
-<details>  
-<summary>API参考</summary>  
-  
+<details>
+<summary>API参考</summary>
+
 对于服务提供的所有操作：
 
 - 响应体以及POST请求的请求体均为JSON数据（JSON对象）。
@@ -228,11 +228,11 @@ for res in output:
 </details>
 
 <details>
-<summary>多语言调用服务示例</summary>  
+<summary>多语言调用服务示例</summary>
 
-<details>  
-<summary>Python</summary>  
-  
+<details>
+<summary>Python</summary>
+
 ```python
 import base64
 import requests
@@ -260,11 +260,11 @@ print(f"Output image saved at {output_image_path}")
 print("\nCategories:")
 print(result["categories"])
 ```
-  
+
 </details>
-<details>  
-<summary>C++</summary>  
-  
+<details>
+<summary>C++</summary>
+
 ```cpp
 #include <iostream>
 #include "cpp-httplib/httplib.h" // https://github.com/Huiyicc/cpp-httplib
@@ -329,12 +329,12 @@ int main() {
     return 0;
 }
 ```
-  
+
 </details>
 
-<details>  
-<summary>Java</summary>  
-  
+<details>
+<summary>Java</summary>
+
 ```java
 import okhttp3.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -391,102 +391,102 @@ public class Main {
         }
     }
 }
-``` 
-  
+```
+
 </details>
 
-<details>  
-<summary>Go</summary>  
-  
+<details>
+<summary>Go</summary>
+
 ```go
 package main
 
 import (
-	"bytes"
-	"encoding/base64"
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
+    "bytes"
+    "encoding/base64"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
 )
 
 func main() {
-	API_URL := "http://localhost:8080/multilabel-image-classification"
-	imagePath := "./demo.jpg"
-	outputImagePath := "./out.jpg"
+    API_URL := "http://localhost:8080/multilabel-image-classification"
+    imagePath := "./demo.jpg"
+    outputImagePath := "./out.jpg"
 
-	// 对本地图像进行Base64编码
-	imageBytes, err := ioutil.ReadFile(imagePath)
-	if err != nil {
-		fmt.Println("Error reading image file:", err)
-		return
-	}
-	imageData := base64.StdEncoding.EncodeToString(imageBytes)
+    // 对本地图像进行Base64编码
+    imageBytes, err := ioutil.ReadFile(imagePath)
+    if err != nil {
+        fmt.Println("Error reading image file:", err)
+        return
+    }
+    imageData := base64.StdEncoding.EncodeToString(imageBytes)
 
-	payload := map[string]string{"image": imageData} // Base64编码的文件内容或者图像URL
-	payloadBytes, err := json.Marshal(payload)
-	if err != nil {
-		fmt.Println("Error marshaling payload:", err)
-		return
-	}
+    payload := map[string]string{"image": imageData} // Base64编码的文件内容或者图像URL
+    payloadBytes, err := json.Marshal(payload)
+    if err != nil {
+        fmt.Println("Error marshaling payload:", err)
+        return
+    }
 
-	// 调用API
-	client := &http.Client{}
-	req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
-	if err != nil {
-		fmt.Println("Error creating request:", err)
-		return
-	}
+    // 调用API
+    client := &http.Client{}
+    req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
+    if err != nil {
+        fmt.Println("Error creating request:", err)
+        return
+    }
 
-	res, err := client.Do(req)
-	if err != nil {
-		fmt.Println("Error sending request:", err)
-		return
-	}
-	defer res.Body.Close()
+    res, err := client.Do(req)
+    if err != nil {
+        fmt.Println("Error sending request:", err)
+        return
+    }
+    defer res.Body.Close()
 
     // 处理接口返回数据
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		fmt.Println("Error reading response body:", err)
-		return
-	}
-	type Response struct {
-		Result struct {
-			Image      string   `json:"image"`
-			Categories []map[string]interface{} `json:"categories"`
-		} `json:"result"`
-	}
-	var respData Response
-	err = json.Unmarshal([]byte(string(body)), &respData)
-	if err != nil {
-		fmt.Println("Error unmarshaling response body:", err)
-		return
-	}
+    body, err := ioutil.ReadAll(res.Body)
+    if err != nil {
+        fmt.Println("Error reading response body:", err)
+        return
+    }
+    type Response struct {
+        Result struct {
+            Image      string   `json:"image"`
+            Categories []map[string]interface{} `json:"categories"`
+        } `json:"result"`
+    }
+    var respData Response
+    err = json.Unmarshal([]byte(string(body)), &respData)
+    if err != nil {
+        fmt.Println("Error unmarshaling response body:", err)
+        return
+    }
 
-	outputImageData, err := base64.StdEncoding.DecodeString(respData.Result.Image)
-	if err != nil {
-		fmt.Println("Error decoding base64 image data:", err)
-		return
-	}
-	err = ioutil.WriteFile(outputImagePath, outputImageData, 0644)
-	if err != nil {
-		fmt.Println("Error writing image to file:", err)
-		return
-	}
-	fmt.Printf("Image saved at %s.jpg\n", outputImagePath)
-	fmt.Println("\nCategories:")
-	for _, category := range respData.Result.Categories {
-		fmt.Println(category)
-	}
+    outputImageData, err := base64.StdEncoding.DecodeString(respData.Result.Image)
+    if err != nil {
+        fmt.Println("Error decoding base64 image data:", err)
+        return
+    }
+    err = ioutil.WriteFile(outputImagePath, outputImageData, 0644)
+    if err != nil {
+        fmt.Println("Error writing image to file:", err)
+        return
+    }
+    fmt.Printf("Image saved at %s.jpg\n", outputImagePath)
+    fmt.Println("\nCategories:")
+    for _, category := range respData.Result.Categories {
+        fmt.Println(category)
+    }
 }
-``` 
-  
+```
+
 </details>
 
-<details>  
-<summary>C#</summary>  
-  
+<details>
+<summary>C#</summary>
+
 ```csharp
 using System;
 using System.IO;
@@ -531,12 +531,12 @@ class Program
     }
 }
 ```
-  
+
 </details>
 
-<details>  
-<summary>Node.js</summary>  
-  
+<details>
+<summary>Node.js</summary>
+
 ```js
 const axios = require('axios');
 const fs = require('fs');
@@ -577,11 +577,11 @@ axios.request(config)
   console.log(error);
 });
 ```
-  
+
 </details>
-<details>  
-<summary>PHP</summary>  
-  
+<details>
+<summary>PHP</summary>
+
 ```php
 <?php
 
@@ -609,7 +609,7 @@ echo "\nCategories:\n";
 print_r($result["categories"]);
 ?>
 ```
-  
+
 </details>
 </details>
 <br/>
