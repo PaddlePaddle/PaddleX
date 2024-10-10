@@ -45,5 +45,7 @@ class Engine(object):
         elif self._mode == "predict":
             for res in self._model.predict():
                 res.print(json_format=False)
+            if self._output:
+                res.save_all(save_path=self._output)
         else:
             raise_unsupported_api_error(f"{self._mode}", self.__class__)
