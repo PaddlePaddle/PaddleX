@@ -114,10 +114,7 @@ class ClsModel(BaseModel):
                 config._update_amp(amp)
             # PDX related settings
             device_type = device.split(":")[0]
-            if device_type in ["npu", "xpu", "mlu"]:
-                uniform_output_enabled = False
-            else:
-                uniform_output_enabled = True
+            uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
             config.update([f"Global.uniform_output_enabled={uniform_output_enabled}"])
             config.update([f"Global.pdx_model_name={self.name}"])
             hpi_config_path = self.model_info.get("hpi_config_path", None)
