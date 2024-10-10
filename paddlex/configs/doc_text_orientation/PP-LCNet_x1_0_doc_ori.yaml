@@ -1,7 +1,7 @@
 Global:
   model: PP-LCNet_x1_0_doc_ori
   mode: check_dataset # check_dataset/train/evaluate/predict
-  dataset_dir: "/paddle/dataset/paddlex/cls/cls_flowers_examples"
+  dataset_dir: "/paddle/dataset/paddlex/cls/text_image_orientation"
   device: gpu:0,1,2,3
   output: "output"
 
@@ -15,7 +15,7 @@ CheckDataset:
     val_percent: null
 
 Train:
-  num_classes: 102
+  num_classes: 4
   epochs_iters: 50
   batch_size: 16
   learning_rate: 0.08
