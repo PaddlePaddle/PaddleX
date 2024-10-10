@@ -44,10 +44,10 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 在本地使用通用时序异常检测产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
 #### 2.2.1 命令行方式体验
-一行命令即可快速体验时序异常检测产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.cs)，并将 `--input` 替换为本地路径，进行预测
+一行命令即可快速体验时序异常检测产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.csv)，并将 `--input` 替换为本地路径，进行预测
 
 ```
-paddlex --pipeline ts_ad --input ts_ad.cs --device gpu:0
+paddlex --pipeline ts_ad --input ts_ad.csv --device gpu:0
 ```
 参数说明：
 
@@ -131,7 +131,7 @@ for res in output:
 |---------------|-----------------------------------------------------------------------------------------------------------|
 | Python Var    | 支持直接传入Python变量，如numpy.ndarray表示的图像数据。                                               |
 | str         | 支持传入待预测数据文件路径，如图像文件的本地路径：`/root/data/img.jpg`。                                   |
-| str           | 支持传入待预测数据文件URL，如图像文件的网络URL：[示例](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.cs)。|
+| str           | 支持传入待预测数据文件URL，如图像文件的网络URL：[示例](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.csv)。|
 | str           | 支持传入本地目录，该目录下需包含待预测数据文件，如本地路径：`/root/data/`。                               |
 | dict          | 支持传入字典类型，字典的key需与具体任务对应，如图像分类任务对应\"img\"，字典的val支持上述类型数据，例如：`{\"img\": \"/root/data1\"}`。|
 | list          | 支持传入列表，列表元素需为上述类型数据，如`[numpy.ndarray, numpy.ndarray]，[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]`，`[\"/root/data1\", \"/root/data2\"]`，`[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]`。|

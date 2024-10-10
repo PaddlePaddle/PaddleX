@@ -110,10 +110,7 @@ class TSModel(BaseModel):
             if num_workers is not None:
                 cli_args.append(CLIArgument("--num_workers", num_workers))
         # PDX related settings
-        if device_type in ["npu", "xpu", "mlu"]:
-            uniform_output_enabled = False
-        else:
-            uniform_output_enabled = True
+        uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
         config.update({"uniform_output_enabled": uniform_output_enabled})
         config.update({"pdx_model_name": self.name})
 
