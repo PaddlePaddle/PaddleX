@@ -59,7 +59,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 一行命令即可快速体验语义分割产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png)，并将 `--input` 替换为本地路径，进行预测
 
 ```
-paddlex --pipeline semantic_segmentation --input semantic_segmentation/makassaridn-road_demo.png --device gpu:0
+paddlex --pipeline semantic_segmentation --input makassaridn-road_demo.png --device gpu:0
 ```
 参数说明：
 
