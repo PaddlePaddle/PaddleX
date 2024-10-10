@@ -947,3 +947,14 @@ register_model_info(
         "hpi_config_path": None,
     }
 )
+
+register_model_info(
+    {
+        "model_name": "PP-LCNet_x1_0_textline_ori",
+        "suite": "Cls",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-LCNet_x1_0_textline_ori.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "infer_config": "deploy/configs/inference_cls.yaml",
+        "hpi_config_path": None,
+    }
+)
