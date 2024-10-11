@@ -62,6 +62,8 @@ The plugins supported by PaddleX are as follows. Please determine the name(s) of
 If the plugin(s) you need to install is/are PaddleXXX (can be multiple), after installing PaddlePaddle, you can directly execute the following commands to quickly install the corresponding PaddleX plugin(s):
 
 ```bash
+# obtain PaddleX source code
+git clone https://github.com/PaddlePaddle/PaddleX.git
 cd PaddleX
 
 # Install PaddleX whl
@@ -103,12 +105,3 @@ All packages are installed.
 ## 2. Usage
 
 The usage of PaddleX model pipeline development tool on hardware platforms such as Ascend NPU, Cambricon MLU, Kunlun XPU, and Hygon DCU is identical to that on GPU. You only need to modify the device configuration parameters according to your hardware platform. For detailed usage tutorials, please refer to [PaddleX Pipeline Development Tool Local Usage Guide](../pipeline_usage/pipeline_develop_guide_en.md).
-
-It is important to note that these hardware platforms currently do not support PaddleX’s simultaneous training and static graph export feature. After completing your training, when you are ready to test the capabilities in a module or prepare for deployment on the production line, you will need to manually export the static graph. For example, to export the trained PP-YOLOE_plus-S model on the Ascend NPU platform, you can run the following command:
-
-```
-python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
-    -o Global.mode=export \
-    -o Global.device=npu \
-    -o Export.weight_path=output/best_model/best_model.pdparams
-```
