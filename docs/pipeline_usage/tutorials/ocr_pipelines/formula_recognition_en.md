@@ -70,7 +70,7 @@ paddlex --get_pipeline_config formula_recognition --save_path ./my_path
 
 After obtaining the Pipeline configuration file, replace `--pipeline` with the configuration file's save path to make the configuration file effective. For example, if the configuration file is saved as  `./formula_recognition.yaml`, simply execute:
 ```
-paddlex --pipeline ./formula_recognition.yaml --input formula_recognition.jpg
+paddlex --pipeline ./formula_recognition.yaml --input general_formula_recognition.png
 ```
 Here, parameters such as `--model` and `--device` do not need to be specified, as they will use the parameters in the configuration file. If parameters are still specified, the specified parameters will take precedence.
 
