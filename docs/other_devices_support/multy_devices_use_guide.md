@@ -64,6 +64,8 @@ PaddleX支持的插件如下，请您根据开发需求，确定所需的一个�
 若您需要安装的插件为PaddleXXX（可以有多个），在安装飞桨后，您可以直接执行如下指令快速安装PaddleX的对应插件：
 
 ```
+# 下载 PaddleX 源码
+git clone https://github.com/PaddlePaddle/PaddleX.git
 cd PaddleX
 
 # 安装 PaddleX whl
@@ -100,12 +102,3 @@ All packages are installed.
 ```
 ## 2、使用
 基于昇腾 NPU、寒武纪 MLU、昆仑 XPU、海光DCU 硬件平台的 PaddleX 模型产线开发工具使用方法与 GPU 相同，只需根据所属硬件平台，修改配置设备的参数，详细的使用教程可以查阅[PaddleX产线开发工具本地使用教程](../pipeline_usage/pipeline_develop_guide.md)
-
-需要注意的是，这些硬件平台暂不支持 PaddleX 的边训练边导出静态图的功能，在您训练完之后，体验模块和产线的能力或准备部署时，需要先手动导出静态图。例如，在昇腾 NPU 平台下，导出训练好的 PP-YOLOE_plus-S 模型，可以运行如下命令：
-
-```
-python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
-    -o Global.mode=export \
-    -o Global.device=npu \
-    -o Export.weight_path=output/best_model/best_model.pdparams
-```
