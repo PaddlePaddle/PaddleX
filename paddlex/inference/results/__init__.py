@@ -20,6 +20,7 @@ from .table_rec import TableRecResult, StructureTableResult, TableResult
 from .ocr import OCRResult
 from .det import DetResult
 from .seg import SegResult
+from .formula_rec import FormulaRecResult
 from .instance_seg import InstanceSegResult
 from .ts import TSFcResult, TSAdResult, TSClsResult
 from .warp import DocTrResult
