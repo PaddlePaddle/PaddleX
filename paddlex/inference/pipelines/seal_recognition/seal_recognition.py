@@ -13,15 +13,28 @@
 # limitations under the License.
 
 import numpy as np
-from .utils import *
 from ..base import BasePipeline
 from ..ocr import OCRPipeline
 from ....utils import logging
 from ...components import CropByBoxes
-from ...results import SealResult
+from ...results import SealOCRResult
 
 
-class SealTextRecPipeline(BasePipeline):
+def get_ocr_res(pipeline, input):
+    """get ocr res"""
+    ocr_res_list = []
+    if isinstance(input, list):
+        img = [im["img"] for im in input]
+    elif isinstance(input, dict):
+        img = input["img"]
+    else:
+        img = input
+    for ocr_res in pipeline(img):
+        ocr_res_list.append(ocr_res)
+    return ocr_res_list
+
+
+class SealOCRPipeline(BasePipeline):
     """Seal Recognition Pipeline"""
 
     entities = "seal_recognition"
@@ -68,19 +81,30 @@ class SealTextRecPipeline(BasePipeline):
         layout_batch_size=None,
         text_det_batch_size=None,
         text_rec_batch_size=None,
+        device=None,
     ):
         if text_det_batch_size and text_det_batch_size > 1:
             logging.warning(
                 f"text det model only support batch_size=1 now,the setting of text_det_batch_size={text_det_batch_size} will not using! "
             )
         if layout_batch_size:
-            self.layout_predictor.set_predictor(batch_size=layout_batch_size)
+            self.layout_predictor.set_predictor(batch_size=layout_batch_size, device=device)
         if text_rec_batch_size:
             self.ocr_pipeline.text_rec_model.set_predictor(
-                batch_size=text_rec_batch_size
+                batch_size=text_rec_batch_size, device=device
             )
 
-    def predict(self, x):
+    def predict(self, x, **kwargs):
+        layout_batch_size = kwargs.get("layout_batch_size")
+        text_det_batch_size = kwargs.get("text_det_batch_size")
+        text_rec_batch_size = kwargs.get("text_rec_batch_size")
+        device = kwargs.get("device")
+        self.set_predictor(
+            layout_batch_size,
+            text_det_batch_size,
+            text_rec_batch_size,
+            device,
+        )
         for layout_pred in self.layout_predictor(x):
             single_img_res = {
                 "input_path": "",
@@ -101,4 +125,4 @@ class SealTextRecPipeline(BasePipeline):
                         seal_subs.append(sub)
             all_seal_ocr_res = get_ocr_res(self.ocr_pipeline, seal_subs)
             single_img_res["ocr_result"] = all_seal_ocr_res
-            yield SealResult(single_img_res)
+            yield SealOCRResult(single_img_res)
