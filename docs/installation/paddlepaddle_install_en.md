@@ -8,7 +8,10 @@ When installing PaddlePaddle, you can choose to install it via Docker or pip.
 **If you choose to install via Docker**, please refer to the following commands to use the official PaddlePaddle Docker image to create a container named `paddlex` and map the current working directory to the `/paddle` directory inside the container:
 
 ```bash
-# For GPU users
+# For CPU users:
+nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1 /bin/bash
+
+# For GPU users:
 # CUDA 11.8 users
 nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
 
