@@ -30,28 +30,36 @@ class FormulaRecognitionPipeline(BasePipeline):
         formula_rec_model,
         layout_batch_size=1,
         formula_rec_batch_size=1,
+        device=None,
         predictor_kwargs=None,
     ):
         super().__init__(predictor_kwargs=predictor_kwargs)
         self._build_predictor(layout_model, formula_rec_model)
-        self.set_predictor(layout_batch_size, formula_rec_batch_size)
+        self.set_predictor(
+            layout_batch_size=layout_batch_size,
+            formula_rec_batch_size=formula_rec_batch_size,
+            device=device,
+        )
 
     def _build_predictor(self, layout_model, formula_rec_model):
-        self.layout_predictor = self._create_model(layout_model)
-        self.formula_predictor = self._create_model(formula_rec_model)
+        self.layout_predictor = self._create(model=layout_model)
+        self.formula_predictor = self._create(model=formula_rec_model)
         self._crop_by_boxes = CropByBoxes()
 
-    def set_predictor(self, layout_batch_size=None, formula_rec_batch_size=None):
+    def set_predictor(
+        self, layout_batch_size=None, formula_rec_batch_size=None, device=None
+    ):
         if layout_batch_size:
             self.layout_predictor.set_predictor(batch_size=layout_batch_size)
         if formula_rec_batch_size:
             self.formula_predictor.set_predictor(batch_size=formula_rec_batch_size)
+        if device:
+            self.layout_predictor.set_predictor(device=device)
+            self.formula_predictor.set_predictor(device=device)
 
     def predict(self, x, **kwargs):
-        device = kwargs.get("device", None)
-        for layout_pred in self.layout_predictor(
-            x, batch_size=kwargs.get("layout_batch_size", 1), device=device
-        ):
+        self.set_predictor(**kwargs)
+        for layout_pred in self.layout_predictor(x):
             single_img_res = {
                 "input_path": "",
                 "layout_result": {},
@@ -78,11 +86,7 @@ class FormulaRecognitionPipeline(BasePipeline):
                         all_subs_of_formula_img.append(sub["img"])
                         single_img_res["dt_polys"].append(poly)
                 if len(all_subs_of_formula_img) > 0:
-                    for formula_res in self.formula_predictor(
-                        all_subs_of_formula_img,
-                        batch_size=kwargs.get("formula_rec_batch_size", 1),
-                        device=device,
-                    ):
+                    for formula_res in self.formula_predictor(all_subs_of_formula_img):
                         single_img_res["rec_formula"].append(
                             str(formula_res["rec_text"])
                         )

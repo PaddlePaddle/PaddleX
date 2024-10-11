@@ -24,7 +24,7 @@ from ....utils import logging
 from ...results import *
 from ...components.llm import ErnieBot
 from ...utils.io import ImageReader, PDFReader
-from ..table_recognition import TableRecPipeline
+from ..table_recognition import _TableRecPipeline
 from ...components.llm import create_llm_api, ErnieBot
 from ....utils.file_interface import read_yaml_file
 from ..table_recognition.utils import convert_4point2rect, get_ori_coordinate_for_table
@@ -32,7 +32,7 @@ from ..table_recognition.utils import convert_4point2rect, get_ori_coordinate_fo
 PROMPT_FILE = os.path.join(os.path.dirname(__file__), "ch_prompt.yaml")
 
 
-class PPChatOCRPipeline(TableRecPipeline):
+class PPChatOCRPipeline(_TableRecPipeline):
     """PP-ChatOCRv3 Pileline"""
 
     entities = "PP-ChatOCRv3-doc"
@@ -54,51 +54,38 @@ class PPChatOCRPipeline(TableRecPipeline):
         text_det_batch_size=1,
         text_rec_batch_size=1,
         table_batch_size=1,
-        uvdoc_batch_size=1,
-        curve_batch_size=1,
-        oricls_batch_size=1,
+        doc_image_ori_cls_batch_size=1,
+        doc_image_unwarp_batch_size=1,
+        seal_text_det_batch_size=1,
         recovery=True,
         device=None,
         predictor_kwargs=None,
     ):
-        self.layout_model = layout_model
-        self.text_det_model = text_det_model
-        self.text_rec_model = text_rec_model
-        self.table_model = table_model
-        self.doc_image_ori_cls_model = doc_image_ori_cls_model
-        self.doc_image_unwarp_model = doc_image_unwarp_model
-        self.seal_text_det_model = seal_text_det_model
-        self.llm_name = llm_name
-        self.llm_params = llm_params
-        self.task_prompt_yaml = task_prompt_yaml
-        self.user_prompt_yaml = user_prompt_yaml
-        self.layout_batch_size = layout_batch_size
-        self.text_det_batch_size = text_det_batch_size
-        self.text_rec_batch_size = text_rec_batch_size
-        self.table_batch_size = table_batch_size
-        self.uvdoc_batch_size = uvdoc_batch_size
-        self.curve_batch_size = curve_batch_size
-        self.oricls_batch_size = oricls_batch_size
-        self.recovery = recovery
-        self.device = device
-        self.predictor_kwargs = predictor_kwargs
         super().__init__(
+            predictor_kwargs=predictor_kwargs,
+        )
+        self._build_predictor(
             layout_model=layout_model,
             text_det_model=text_det_model,
             text_rec_model=text_rec_model,
             table_model=table_model,
+            doc_image_ori_cls_model=doc_image_ori_cls_model,
+            doc_image_unwarp_model=doc_image_unwarp_model,
+            seal_text_det_model=seal_text_det_model,
+            llm_name=llm_name,
+            llm_params=llm_params,
+        )
+        self.set_predictor(
             layout_batch_size=layout_batch_size,
             text_det_batch_size=text_det_batch_size,
             text_rec_batch_size=text_rec_batch_size,
             table_batch_size=table_batch_size,
-            predictor_kwargs=predictor_kwargs,
+            doc_image_ori_cls_batch_size=doc_image_ori_cls_batch_size,
+            doc_image_unwarp_batch_size=doc_image_unwarp_batch_size,
+            seal_text_det_batch_size=seal_text_det_batch_size,
+            device=device,
         )
-        self._build_predictor()
-        self.llm_api = create_llm_api(
-            llm_name,
-            llm_params,
-        )
-        self.cropper = CropByBoxes()
+
         # get base prompt from yaml info
         if task_prompt_yaml:
             self.task_prompt_dict = read_yaml_file(task_prompt_yaml)
@@ -110,44 +97,50 @@ class PPChatOCRPipeline(TableRecPipeline):
             self.user_prompt_dict = read_yaml_file(user_prompt_yaml)
         else:
             self.user_prompt_dict = None
+
         self.recovery = recovery
-        self.img_reader = ReadImage(format="RGB")
         self.visual_info = None
         self.vector = None
         self.visual_flag = False
 
-    def _build_predictor(self):
-        super()._build_predictor()
-        if self.seal_text_det_model:
-            self.curve_pipeline = OCRPipeline(
-                text_det_model=self.seal_text_det_model,
-                text_rec_model=self.text_rec_model,
-                text_det_batch_size=self.text_det_batch_size,
-                text_rec_batch_size=self.text_rec_batch_size,
-                predictor_kwargs=self.predictor_kwargs,
+    def _build_predictor(
+        self,
+        layout_model,
+        text_det_model,
+        text_rec_model,
+        table_model,
+        llm_name,
+        llm_params,
+        seal_text_det_model=None,
+        doc_image_ori_cls_model=None,
+        doc_image_unwarp_model=None,
+    ):
+        super()._build_predictor(
+            layout_model, text_det_model, text_rec_model, table_model
+        )
+        if seal_text_det_model:
+            self.curve_pipeline = self._create(
+                pipeline=OCRPipeline,
+                text_det_model=seal_text_det_model,
+                text_rec_model=text_rec_model,
             )
         else:
             self.curve_pipeline = None
-        if self.doc_image_ori_cls_model:
-            self.oricls_predictor = self._create_model(self.doc_image_ori_cls_model)
+        if doc_image_ori_cls_model:
+            self.oricls_predictor = self._create(doc_image_ori_cls_model)
         else:
             self.oricls_predictor = None
-        if self.doc_image_unwarp_model:
-            self.uvdoc_predictor = self._create_model(self.doc_image_unwarp_model)
+        if doc_image_unwarp_model:
+            self.uvdoc_predictor = self._create(doc_image_unwarp_model)
         else:
             self.uvdoc_predictor = None
-        if self.curve_pipeline and self.curve_batch_size:
-            self.curve_pipeline.text_det_model.set_predictor(
-                batch_size=self.curve_batch_size, device=self.device
-            )
-        if self.oricls_predictor and self.oricls_batch_size:
-            self.oricls_predictor.set_predictor(
-                batch_size=self.oricls_batch_size, device=self.device
-            )
-        if self.uvdoc_predictor and self.uvdoc_batch_size:
-            self.uvdoc_predictor.set_predictor(
-                batch_size=self.uvdoc_batch_size, device=self.device
-            )
+
+        self.img_reader = ReadImage(format="RGB")
+        self.llm_api = create_llm_api(
+            llm_name,
+            llm_params,
+        )
+        self.cropper = CropByBoxes()
 
     def set_predictor(
         self,
@@ -155,9 +148,9 @@ class PPChatOCRPipeline(TableRecPipeline):
         text_det_batch_size=None,
         text_rec_batch_size=None,
         table_batch_size=None,
-        curve_batch_size=None,
-        oricls_batch_size=None,
-        uvdoc_batch_size=None,
+        doc_image_ori_cls_batch_size=None,
+        doc_image_unwarp_batch_size=None,
+        seal_text_det_batch_size=None,
         device=None,
     ):
         if text_det_batch_size and text_det_batch_size > 1:
@@ -172,23 +165,46 @@ class PPChatOCRPipeline(TableRecPipeline):
             )
         if table_batch_size:
             self.table_predictor.set_predictor(batch_size=table_batch_size)
-        if self.curve_pipeline and curve_batch_size:
+        if self.curve_pipeline and seal_text_det_batch_size:
             self.curve_pipeline.text_det_model.set_predictor(
-                batch_size=curve_batch_size, device=device
+                batch_size=seal_text_det_batch_size
             )
-        if self.oricls_predictor and oricls_batch_size:
-            self.oricls_predictor.set_predictor(
-                batch_size=oricls_batch_size, device=device
-            )
-        if self.uvdoc_predictor and uvdoc_batch_size:
-            self.uvdoc_predictor.set_predictor(
-                batch_size=uvdoc_batch_size, device=device
-            )
+        if self.oricls_predictor and doc_image_ori_cls_batch_size:
+            self.oricls_predictor.set_predictor(batch_size=doc_image_ori_cls_batch_size)
+        if self.uvdoc_predictor and doc_image_unwarp_batch_size:
+            self.uvdoc_predictor.set_predictor(batch_size=doc_image_unwarp_batch_size)
 
-    def predict(self, input, **kwargs):
+        if device:
+            if self.curve_pipeline:
+                self.curve_pipeline.set_predictor(device=device)
+            if self.oricls_predictor:
+                self.oricls_predictor.set_predictor(device=device)
+            if self.uvdoc_predictor:
+                self.uvdoc_predictor.set_predictor(device=device)
+            self.layout_batch_size.set_predictor(device=device)
+            self.ocr_pipeline.set_predictor(device=device)
+
+    def predict(
+        self,
+        input,
+        use_doc_image_ori_cls_model=True,
+        use_doc_image_unwarp_model=True,
+        use_seal_text_det_model=True,
+        recovery=True,
+        **kwargs,
+    ):
+        self.set_predictor(**kwargs)
         visual_info = {"ocr_text": [], "table_html": [], "table_text": []}
         # get all visual result
-        visual_result = list(self.get_visual_result(input, **kwargs))
+        visual_result = list(
+            self.get_visual_result(
+                input,
+                use_doc_image_ori_cls_model=use_doc_image_ori_cls_model,
+                use_doc_image_unwarp_model=use_doc_image_unwarp_model,
+                use_seal_text_det_model=use_seal_text_det_model,
+                recovery=recovery,
+            )
+        )
         # decode visual result to get table_html, table_text, ocr_text
         ocr_text, table_text, table_html = self.decode_visual_result(visual_result)
 
@@ -202,32 +218,21 @@ class PPChatOCRPipeline(TableRecPipeline):
 
         return visual_result, visual_info
 
-    def get_visual_result(self, inputs, **kwargs):
-        layout_batch_size = kwargs.get("layout_batch_size")
-        text_det_batch_size = kwargs.get("text_det_batch_size")
-        text_rec_batch_size = kwargs.get("text_rec_batch_size")
-        table_batch_size = kwargs.get("table_batch_size")
-        curve_batch_size = kwargs.get("curve_batch_size")
-        oricls_batch_size = kwargs.get("oricls_batch_size")
-        uvdoc_batch_size = kwargs.get("uvdoc_batch_size")
-        device = kwargs.get("device")
-        self.set_predictor(
-            layout_batch_size,
-            text_det_batch_size,
-            text_rec_batch_size,
-            table_batch_size,
-            curve_batch_size,
-            oricls_batch_size,
-            uvdoc_batch_size,
-            device,
-        )
+    def get_visual_result(
+        self,
+        inputs,
+        use_doc_image_ori_cls_model=True,
+        use_doc_image_unwarp_model=True,
+        use_seal_text_det_model=True,
+        recovery=True,
+    ):
         # get oricls and uvdoc results
         img_info_list = list(self.img_reader(inputs))[0]
         oricls_results = []
-        if self.oricls_predictor and kwargs.get("use_doc_image_ori_cls_model", True):
+        if self.oricls_predictor and use_doc_image_ori_cls_model:
             oricls_results = get_oriclas_results(img_info_list, self.oricls_predictor)
         uvdoc_results = []
-        if self.uvdoc_predictor and kwargs.get("use_doc_image_unwarp_model", True):
+        if self.uvdoc_predictor and use_doc_image_unwarp_model:
             uvdoc_results = get_uvdoc_results(img_info_list, self.uvdoc_predictor)
         img_list = [img_info["img"] for img_info in img_info_list]
         for idx, (img_info, layout_pred) in enumerate(
@@ -269,7 +274,7 @@ class PPChatOCRPipeline(TableRecPipeline):
                     elif sub["label"].lower() == "seal":
                         curve_subs.append(sub)
                     else:
-                        if self.recovery and kwargs.get("recovery", True):
+                        if self.recovery and recovery:
                             # TODO: Why use the entire image?
                             wht_im = (
                                 np.ones(single_img.shape, dtype=single_img.dtype) * 255
@@ -303,7 +308,7 @@ class PPChatOCRPipeline(TableRecPipeline):
                         single_img[ymin:ymax, xmin:xmax, :] = 255
 
             curve_pipeline = self.ocr_pipeline
-            if self.curve_pipeline and kwargs.get("use_seal_text_det_model", True):
+            if self.curve_pipeline and use_seal_text_det_model:
                 curve_pipeline = self.curve_pipeline
 
             all_curve_res = get_ocr_res(curve_pipeline, curve_subs)

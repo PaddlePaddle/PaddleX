@@ -20,7 +20,6 @@ from abc import abstractmethod
 from ...components.base import BaseComponent
 from ...utils.pp_option import PaddlePredictorOption
 from ...utils.process_hook import generatorable_method
-from ..utils.predict_set import DeviceSetMixin, PPOptionSetMixin, BatchSizeSetMixin
 
 
 class BasePredictor(BaseComponent):
