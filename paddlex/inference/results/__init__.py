@@ -17,6 +17,7 @@ from .clas import TopkResult, MLClassResult
 from .text_det import TextDetResult
 from .text_rec import TextRecResult
 from .table_rec import TableRecResult, StructureTableResult, TableResult
+from .seal_rec import SealOCRResult
 from .ocr import OCRResult
 from .det import DetResult
 from .seg import SegResult
