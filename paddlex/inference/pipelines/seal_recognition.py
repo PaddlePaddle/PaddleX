@@ -13,11 +13,11 @@
 # limitations under the License.
 
 import numpy as np
-from ..base import BasePipeline
-from ..ocr import OCRPipeline
-from ....utils import logging
-from ...components import CropByBoxes
-from ...results import SealOCRResult
+from .base import BasePipeline
+from .ocr import OCRPipeline
+from ..components import CropByBoxes
+from ..results import SealOCRResult
+from ...utils import logging
 
 
 def get_ocr_res(pipeline, input):
