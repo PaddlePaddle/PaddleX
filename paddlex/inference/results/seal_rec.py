@@ -1,9 +1,9 @@
 from pathlib import Path
-from .base import BaseResult
+from .base import BaseResult, CVResult
 
 
-class SealResult(BaseResult):
-    """SealResult"""
+class SealOCRResult(CVResult):
+    """SealOCRResult"""
 
     def save_to_img(self, save_path):
         if not save_path.lower().endswith((".jpg", ".png")):

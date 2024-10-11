@@ -12,4 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .seal_recognition import SealTextRecPipeline
+from .seal_recognition import SealOCRPipeline

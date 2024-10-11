@@ -33,7 +33,7 @@ from .single_model_pipeline import (
 )
 from .ocr import OCRPipeline
 from .table_recognition import TableRecPipeline
-from .seal_recognition import SealTextRecPipeline
+from .seal_recognition import SealOCRPipeline
 from .ppchatocrv3 import PPChatOCRPipeline
 
 
