@@ -38,7 +38,7 @@
     <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3.10 - --arch x86_64 --os linux --device cpu --py 310</td>
   </tr>
   <tr>
-    <td rowspan="3">GPU(CUDA 11.8+cuDNN8.6)</td>
+    <td rowspan="3">GPU（CUDA11.8+cuDNN8.6）</td>
     <td>3.8</td>
     <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3.8 - --arch x86_64 --os linux --device gpu_cuda118_cudnn86 --py 38</td>
   </tr>
@@ -52,7 +52,7 @@
   </tr>
 </table>
 
-* 当设备类型为 GPU 时，注意使用匹配的 CUDA 版本（CUDA11.8+cuDNN8.6），其他版本未经验证。
+* 当设备类型为 GPU 时，请使用与环境匹配的 CUDA 和 cuDNN 版本对应的安装指令，否则，将无法正常使用高性能推理插件。
 * 对于 Linux 系统，使用 Bash 执行安装指令。
 * 当设备类型为 CPU 时，安装的高性能推理插件仅支持使用 CPU 进行推理；对于其他设备类型，安装的高性能推理插件则支持使用 CPU 或其他设备进行推理。
 

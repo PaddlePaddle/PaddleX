@@ -27,30 +27,34 @@ Find the corresponding installation command based on your processor architecture
   </tr>
   <tr>
     <td>3.8</td>
-    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3 - --arch x86_64 --os linux --device cpu --py 38</td>
+    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3.8 - --arch x86_64 --os linux --device cpu --py 38</td>
   </tr>
   <tr>
     <td>3.9</td>
-    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3 - --arch x86_64 --os linux --device cpu --py 39</td>
+    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3.9 - --arch x86_64 --os linux --device cpu --py 39</td>
   </tr>
   <tr>
     <td>3.10</td>
-    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3 - --arch x86_64 --os linux --device cpu --py 310</td>
+    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3.10 - --arch x86_64 --os linux --device cpu --py 310</td>
   </tr>
   <tr>
-    <td rowspan="3">GPU</td>
+    <td rowspan="3">GPU（CUDA11.8+cuDNN8.6）</td>
     <td>3.8</td>
-    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3 - --arch x86_64 --os linux --device gpu_cuda118_cudnn86 --py 38</td>
+    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3.8 - --arch x86_64 --os linux --device gpu_cuda118_cudnn86 --py 38</td>
   </tr>
   <tr>
     <td>3.9</td>
-    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3 - --arch x86_64 --os linux --device gpu_cuda118_cudnn86 --py 39</td>
+    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3.9 - --arch x86_64 --os linux --device gpu_cuda118_cudnn86 --py 39</td>
   </tr>
   <tr>
     <td>3.10</td>
-    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3 - --arch x86_64 --os linux --device gpu_cuda118_cudnn86 --py 310</td>
+    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3.10 - --arch x86_64 --os linux --device gpu_cuda118_cudnn86 --py 310</td>
   </tr>
 </table>
+
+* When the device type is GPU, please use the installation instructions corresponding to the CUDA and cuDNN versions that match your environment. Otherwise, you will not be able to use the high-performance inference plugin properly.
+* For Linux systems, execute the installation instructions using Bash.
+* When the device type is CPU, the installed high-performance inference plugin only supports inference using the CPU; for other device types, the installed high-performance inference plugin supports inference using the CPU or other devices.
 
 ### 1.2 Obtaining Serial Numbers and Activation
 
@@ -103,7 +107,7 @@ pipeline = create_pipeline(
 +   use_hpip=True,
 +   serial_number="{serial_number}",
 )
- 
+
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg")
 ```
 
