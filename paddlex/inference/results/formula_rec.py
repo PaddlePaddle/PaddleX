@@ -27,9 +27,8 @@ class FormulaRecResult(CVResult):
     _HARD_FLAG = False
 
     def _to_str(self):
-        rec_formula_str = ", ".join([str(formula) for formula in self['rec_formula']])
-        return str(self).replace("\\\\","\\")
-
+        rec_formula_str = ", ".join([str(formula) for formula in self["rec_formula"]])
+        return str(self).replace("\\\\", "\\")
 
     def get_minarea_rect(self, points):
         bounding_box = cv2.minAreaRect(points)
@@ -54,15 +53,11 @@ class FormulaRecResult(CVResult):
         ).astype(np.int32)
 
         return box
-    
-   
+
     def _to_img(
         self,
     ):
-        """draw ocr result"""
-        # TODO(gaotingquan): mv to postprocess
-        drop_score = 0.5
-
+        """draw formula result"""
         boxes = self["dt_polys"]
         formula = self["rec_formula"]
         image = self._img_reader.read(self["input_path"])
@@ -99,18 +94,3 @@ class FormulaRecResult(CVResult):
         img_show = Image.new("RGB", (w, h), (255, 255, 255))
         img_show.paste(img_left, (0, 0, w, h))
         return img_show
-
-
-def create_font(txt, sz, font_path):
-    """create font"""
-    font_size = int(sz[1] * 0.8)
-    font = ImageFont.truetype(font_path, font_size, encoding="utf-8")
-    if int(PIL.__version__.split(".")[0]) < 10:
-        length = font.getsize(txt)[0]
-    else:
-        length = font.getlength(txt)
-
-    if length > sz[0]:
-        font_size = int(font_size * sz[0] / length)
-        font = ImageFont.truetype(font_path, font_size, encoding="utf-8")
-    return font

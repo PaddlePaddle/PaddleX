@@ -1,6 +1,6 @@
 Global:
   pipeline_name: formula_recognition
-  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png
+  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/general_formula_recognition.png
   
 Pipeline:
   layout_model: RT-DETR-H_layout_17cls
