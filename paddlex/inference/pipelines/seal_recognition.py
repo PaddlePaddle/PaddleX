@@ -81,29 +81,29 @@ class SealOCRPipeline(BasePipeline):
         layout_batch_size=None,
         text_det_batch_size=None,
         text_rec_batch_size=None,
-        device=None,
+        # device=None,
     ):
         if text_det_batch_size and text_det_batch_size > 1:
             logging.warning(
                 f"text det model only support batch_size=1 now,the setting of text_det_batch_size={text_det_batch_size} will not using! "
             )
         if layout_batch_size:
-            self.layout_predictor.set_predictor(batch_size=layout_batch_size, device=device)
+            self.layout_predictor.set_predictor(batch_size=layout_batch_size)
         if text_rec_batch_size:
             self.ocr_pipeline.text_rec_model.set_predictor(
-                batch_size=text_rec_batch_size, device=device
+                batch_size=text_rec_batch_size
             )
 
     def predict(self, x, **kwargs):
         layout_batch_size = kwargs.get("layout_batch_size")
         text_det_batch_size = kwargs.get("text_det_batch_size")
         text_rec_batch_size = kwargs.get("text_rec_batch_size")
-        device = kwargs.get("device")
+        # device = kwargs.get("device")
         self.set_predictor(
             layout_batch_size,
             text_det_batch_size,
             text_rec_batch_size,
-            device,
+            # device,
         )
         for layout_pred in self.layout_predictor(x):
             single_img_res = {
