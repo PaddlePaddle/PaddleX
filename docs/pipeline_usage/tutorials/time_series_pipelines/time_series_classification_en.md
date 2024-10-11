@@ -3,11 +3,11 @@
 # Time Series Classification Pipeline Tutorial
 
 ## 1. Introduction to General Time Series Classification Pipeline
-Time series classification is a technique that categorizes time-series data into predefined classes, widely applied in fields such as behavior recognition, speech recognition, and financial trend analysis. By analyzing features that vary over time, it identifies different patterns or events, for example, classifying a speech signal as "greeting" or "request," or categorizing stock price movements as "rising" or "falling." Time series classification typically employs machine learning and deep learning models, effectively capturing temporal dependencies and variation patterns to provide accurate classification labels for data. This technology plays a pivotal role in applications such as intelligent monitoring, voice assistants, and market forecasting.
+Time series classification is a technique that categorizes time-series data into predefined classes, widely applied in fields such as behavior recognition and financial trend analysis. By analyzing features that vary over time, it identifies different patterns or events, for example, classifying a speech signal as "greeting" or "request," or categorizing stock price movements as "rising" or "falling." Time series classification typically employs machine learning and deep learning models, effectively capturing temporal dependencies and variation patterns to provide accurate classification labels for data. This technology plays a pivotal role in applications such as intelligent monitoring and market forecasting.
 
 ![](/tmp/images/pipelines/time_series/01.png)
 
-**The General Time Series Classification Pipeline includes a Time Series Classification module. If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, select a model with faster inference. If you prioritize model size, choose a model with a smaller storage footprint.**
+**The General Time Series Classification Pipeline includes a Time Series Classification module.**
 
 <details>
    <summary> 👉Model List Details</summary>
@@ -68,7 +68,7 @@ paddlex --get_pipeline_config ts_cls --save_path ./my_path
 After obtaining the pipeline configuration file, you can replace `--pipeline` with the configuration file save path to make the configuration file take effect. For example, if the configuration file save path is `./ts_ad.yaml`, simply execute:
 
 ```bash
-paddlex --pipeline ./ts_cls.yaml --input ts_cls.csv
+paddlex --pipeline ./ts_cls.yaml --input ts_cls.csv --device gpu:0
 ```
 
 In this command, parameters such as `--model` and `--device` are not required to be specified, as they will use the parameters defined in the configuration file. If these parameters are specified, the specified values will take precedence.
@@ -78,7 +78,7 @@ In this command, parameters such as `--model` and `--device` are not required to
 After execution, the result is:
 
 ```bash
-{'ts_path': '/root/.paddlex/predict_input/ts_cls.csv', 'classification':         classid     score
+{'input_path': 'ts_cls.csv', 'classification':         classid     score
 sample
 0             0  0.617688}
 ```
@@ -108,7 +108,7 @@ In the above Python script, the following steps are executed:
 |-----------|-------------|------|---------|
 | `pipeline` | The name of the pipeline or the path to the pipeline configuration file. If it's a pipeline name, it must be supported by PaddleX. | `str` | None |
 | `device` | The device for pipeline model inference. Supports: "gpu", "cpu". | `str` | "gpu" |
-| `enable_hpi` | Whether to enable high-performance inference. Available only if the pipeline supports it. | `bool` | `False` |
+| `use_hpip` | Whether to enable high-performance inference. Available only if the pipeline supports it. | `bool` | `False` |
 
 (2) Call the `predict` method of the pipeline object for inference: The `predict` method takes `x` as a parameter, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
 
@@ -151,7 +151,7 @@ If you need to directly apply the pipeline in your Python project, refer to the 
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
-🚀 **High-Performance Deployment**: In actual production environments, many applications have stringent standards for deployment performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins that deeply optimize model inference and pre/post-processing to significantly speed up the end-to-end process. Refer to the [PaddleX High-Performance Deployment Guide](../../../pipeline_deploy/high_performance_deploy_en.md) for detailed high-performance deployment procedures.
+🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for deployment performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins that deeply optimize model inference and pre/post-processing to significantly speed up the end-to-end process. Refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_deploy_en.md) for detailed High-Performance Inference procedures.
 
 ☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX enables users to achieve low-cost service-oriented deployment of pipelines. Refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy_en.md) for detailed service-oriented deployment procedures.
 
@@ -521,11 +521,11 @@ echo "label: " . $result["label"] . ", score: " . $result["score"];
 📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing capabilities on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. Refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy.md) for detailed edge deployment procedures.
 Choose the appropriate deployment method based on your needs to proceed with subsequent AI application integration.
 
-## 4. Customization and Fine-tuning
+## 4. Custom Development
 If the default model weights provided by the General Time Series Classification Pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing model using **your own domain-specific or application-specific data** to improve the recognition performance of the pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
-Since the General Time Series Classification Pipeline includes a time series classification module, if the performance of the pipeline does not meet expectations, you need to refer to the [Customization](../../../module_usage/tutorials/ts_modules/time_series_classification_en.md#iv-custom-development) section in the [Time Series Classification Module Tutorial](../../../module_usage/tutorials/ts_modules/time_series_classification_en.md) to fine-tune the time series classification model using your private dataset.
+Since the General Time Series Classification Pipeline includes a time series classification module, if the performance of the pipeline does not meet expectations, you need to refer to the [Customization](../../../module_usage/tutorials/time_series_modules/time_series_classification_en.md#iv-custom-development) section in the [Time Series Classification Module Tutorial](../../../module_usage/tutorials/time_series_modules/time_series_classification_en.md) to fine-tune the time series classification model using your private dataset.
 
 ### 4.2 Model Application
 After fine-tuning the model with your private dataset, you will obtain local model weights.
@@ -556,4 +556,4 @@ At this point, if you wish to switch the hardware to Ascend NPU, simply modify t
 paddlex --pipeline ts_cls --input ts_cls.csv --device npu:0
 ```
 
-If you intend to use the General Time Series Classification Pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/installation_other_devices_en.md).
+If you intend to use the General Time Series Classification Pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md).

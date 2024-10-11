@@ -13,8 +13,8 @@
 # limitations under the License.
 
 import inspect
+from abc import ABC, abstractmethod
 from copy import deepcopy
-from abc import ABC
 from types import GeneratorType
 
 from ...utils import logging
@@ -259,6 +259,10 @@ class BaseComponent(ABC):
     @property
     def name(self):
         return getattr(self, "NAME", self.__class__.__name__)
+
+    @abstractmethod
+    def apply(self, input):
+        raise NotImplementedError
 
 
 class ComponentsEngine(object):

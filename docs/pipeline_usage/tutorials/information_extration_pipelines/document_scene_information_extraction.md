@@ -7,7 +7,7 @@
 
 ![](https://github.com/user-attachments/assets/90cb740b-7741-4383-bc4c-663f9d042d02)
 
-文档场景信息抽取v3**产线中包含表格结构识别模块、版面区域检测模块、文本检测模块、文本识别模块、印章文本检测模块、文本图像矫正模块、文档图像方向分类模块**。
+文档场景信息抽取v3产线中包含**表格结构识别模块**、**版面区域检测模块**、**文本检测模块**、**文本识别模块**、**印章文本检测模块**、**文本图像矫正模块**、**文档图像方向分类模块**。
 
 **如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型**。其中部分模型的 benchmark 如下：
 
@@ -21,7 +21,7 @@
     <th>模型</th>
     <th>精度（%）</th>
     <th>GPU推理耗时 (ms)</th>
-    <th>CPU推理耗时</th>
+    <th>CPU推理耗时（ms）</th>
     <th>模型存储大小 (M)</th>
     <th>介绍</th>
   </tr>
@@ -48,14 +48,15 @@
 
 **版面区域检测模块模型：**
 
-|模型|mAP(0.5)（%）|GPU推理耗时（ms）|CPU推理耗时 (ms)|模型存储大小（M)|介绍|
+|模型|mAP(0.5)（%）|GPU推理耗时（ms）|CPU推理耗时 (ms)|模型存储大小（M）|介绍|
 |-|-|-|-|-|-|
-|PicoDet-L_layout_3cls|89.3|15.7|159.8|22.6|基于PicoDet-L的高效率版面区域定位模型，包含3个类别：表格，图像和印章|
-|PicoDet_layout_1x|86.8|13.0|91.3|7.4|基于PicoDet-1x的高效率版面区域定位模型，包含文字、标题、表格、图片、列表|
-|RT-DETR-H_layout_17cls|92.6|115.1|3827.2|470.2|基于RT-DETR-H的的高精度版面区域定位模型，包含17个版面常见类别。|
-|RT-DETR-H_layout_3cls|95.9|114.6|3832.6|470.1|基于RT-DETR-H的的高精度版面区域定位模型，包含3个类别：表格，图像和印章|
+|PicoDet_layout_1x|86.8|13.0|91.3|7.4|基于PicoDet-1x在PubLayNet数据集训练的高效率版面区域定位模型，可定位包含文字、标题、表格、图片以及列表这5类区域|
+|PicoDet-L_layout_3cls|89.3|15.7|159.8|22.6|基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含3个类别：表格，图像和印章|
+|RT-DETR-H_layout_3cls|95.9|114.6|3832.6|470.1|基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型，包含3个类别：表格，图像和印章|
+|RT-DETR-H_layout_17cls|92.6|115.1|3827.2|470.2|基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章|
 
-**注：以上精度指标的评估集是 PaddleOCR 自建的版面区域分析数据集，包含 1w 张图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。**
+
+**注：以上精度指标的评估集是 PaddleOCR 自建的版面区域分析数据集，包含中英文论文、杂志和研报等常见的 1w 张文档类型图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。**
 
 **文本检测模块模型：**
 
@@ -102,7 +103,7 @@
         <th>模型</th>
         <th>识别 Avg Accuracy(%)</th>
         <th>GPU推理耗时（ms）</th>
-        <th>CPU推理耗时</th>
+        <th>CPU推理耗时（ms）</th>
         <th>模型存储大小（M）</th>
         <th>介绍</th>
     </tr>
@@ -126,7 +127,7 @@
         <th>模型</th>
         <th>识别 Avg Accuracy(%)</th>
         <th>GPU推理耗时（ms）</th>
-        <th>CPU推理耗时</th>
+        <th>CPU推理耗时（ms）</th>
         <th>模型存储大小（M）</th>
         <th>介绍</th>
     </tr>
@@ -189,18 +190,21 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 ```python
 from paddlex import create_pipeline
 
-predict = create_pipeline( pipeline="PP-ChatOCRv3-doc",
-                            llm_name="ernie-3.5",
-                            llm_params = {"api_type":"qianfan","ak":"","sk":""} )  ## 请填入您的ak与sk，否则无法调用大模型
+pipeline = create_pipeline(
+    pipeline="PP-ChatOCRv3-doc",
+    llm_name="ernie-3.5",
+    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # 请填入您的ak与sk，否则无法调用大模型
+    )
 
-visual_result, visual_inf = predict(["contract.pdf"])
+visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf")
 
 for res in visual_result:
     res.save_to_img("./output")
     res.save_to_html('./output')
     res.save_to_xlsx('./output')
 
-print(predict.chat("乙方,手机号"))
+chat_result = pipeline.chat(["乙方", "手机号"])
+chat_result.print()
 ```
 **注**：请先在[百度云千帆平台](https://console.bce.baidu.com/qianfan/ais/console/onlineService)获取自己的ak与sk（详细流程请参考[AK和SK鉴权调用API流程](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8)），将ak与sk填入至指定位置后才能正常调用大模型。
 
@@ -210,55 +214,61 @@ print(predict.chat("乙方,手机号"))
 {'chat_res': {'乙方': '股份测试有限公司', '手机号': '19331729920'}, 'prompt': ''}
 ```
 
-在上述 Python 脚本中，执行了如下几个步骤：
+在上述 Python 脚本中，执行了如下四个步骤：
 
-（1）实例化 `create_pipeline` 实例化文档场景信息抽取v3产线对象：具体参数说明如下：
+（1）调用 `create_pipeline` 方法实例化文档场景信息抽取v3产线对象，相关参数说明如下：
 
-|参数|参数说明|默认值|参数类型|
+|参数|参数类型|默认值|参数说明|
 |-|-|-|-|
-|`pipeline`|产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。|无|str|
-|`llm_name`|大语言模型名称|"ernie-3.5"|str|
-|`llm_params`|api配置|{}|dict|
-|`device(kwargs)`|运行设备（None为自动适配）|None|str/None|
+|`pipeline`|str|无|产线名称或是产线配置文件路径，如为产线名称，则必须为 PaddleX 所支持的产线；|
+|`llm_name`|str|"ernie-3.5"|大语言模型名称;|
+|`llm_params`|dict|`{}`|LLM相关API配置；|
+|`device`|str、None|`None`|运行设备（`None`为自动适配）；|
 
-（2）调用文档场景信息抽取v3产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`x`，用于输入待预测数据，支持多种输入方式，具体示例如下：
+（2）调用文档场景信息抽取v3产线对象的 `visual_predict` 方法进行视觉推理预测，相关参数说明如下：
 
-|参数类型|参数说明|
-|-|-|
-|Python Var|支持直接传入Python变量，如numpy.ndarray表示的图像数据；|
-|str|支持传入待预测数据文件路径，如图像文件的本地路径：/root/data/img.jpg；|
-|str|支持传入待预测数据文件url，如[示例](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf)；|
-|str|支持传入本地目录，该目录下需包含待预测数据文件，如本地路径：/root/data/；|
-|dict|支持传入字典类型，字典的key需要与具体产线对应，如文档场景信息抽取v3产线为"img"，字典的val支持上述类型数据，如：{"img": "/root/data1"}；|
-|list|支持传入列表，列表元素需为上述类型数据，如[numpy.ndarray, numpy.ndarray, ]，["/root/data/img1.jpg", "/root/data/img2.jpg", ]，["/root/data1", "/root/data2", ]，[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}, ]；|
-|use_oricls_model|是否使用方向分类模型 (默认是False)|
-|use_curve_model|是否使用弯曲文本检测产线 (默认是False)|
-|use_uvdoc_model|是否使用版面矫正产线 (默认是False)|
+|参数|参数类型|默认值|参数说明|
+|-|-|-|-|
+|`input`|Python Var|无|用于输入待预测数据，支持直接传入Python变量，如`numpy.ndarray`表示的图像数据；|
+|`input`|str|无|用于输入待预测数据，支持传入待预测数据文件路径，如图像文件的本地路径：`/root/data/img.jpg`；|
+|`input`|str|无|用于输入待预测数据，支持传入待预测数据文件url，如`https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf`；|
+|`input`|str|无|用于输入待预测数据，支持传入本地目录，该目录下需包含待预测数据文件，如本地路径：`/root/data/`；|
+|`input`|dict|无|用于输入待预测数据，支持传入字典类型，字典的key需要与具体产线对应，如文档场景信息抽取v3产线为"img"，字典的val支持上述类型数据，如：`{"img": "/root/data1"}`；|
+|`input`|list|无|用于输入待预测数据，支持传入列表，列表元素需为上述类型数据，如`[numpy.ndarray, numpy.ndarray]`，`["/root/data/img1.jpg", "/root/data/img2.jpg"]`，`["/root/data1", "/root/data2"]`，`[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]`；|
+|`use_doc_image_ori_cls_model`|bool|`True`|是否使用方向分类模型；|
+|`use_doc_image_unwarp_model`|bool|`True`|是否使用版面矫正产线；|
+|`use_seal_text_det_model`|bool|`True`|是否使用弯曲文本检测产线；|
 
-（3）调用 `predict` 方法获取预测结果：`predict` 方法为`generator`，因此需要通过调用获得预测结果，`predict`方法以 batch 为单位对数据进行预测，因此预测结果为 list 形式表示的一组预测结果。
+（3）调用视觉推理预测结果对象的相关方法对视觉推理预测结果进行保存，具体方法如下：
 
-（4）调用 `predict.chat` 方法与大模型进行交互，其传入参数为需要抽取信息的关键字（支持多个），因此预测结果为 list 形式表示的一组信息抽取结果。
-
-（5）对预测结果进行处理：每个样本的预测结果均为 dict 类型，且支持打印，或保存为文件，支持保存的类型与具体产线相关，如：
-|方法|说明|方法参数|
+|方法|参数|方法说明|
 |-|-|-|
-|save_to_img|将版面分析、表格识别等结果保存为图片格式的文件|`save_path`：str类型，保存的文件路径；|
-|save_to_html|将表格识别等结果保存为html格式的文件|`save_path`：str类型，保存的文件路径；|
-|save_to_xlsx|将表格识别等结果保存为表格格式的文件|`save_path`：str类型，保存的文件路径；|
+|`save_to_img`|`save_path`|将OCR预测结果、版面分析结果、表格识别结果保存为图片文件，参数`save_path`用于指定保存的路径；|
+|`save_to_html`|`save_path`|将表格识别结果保存为html文件，参数`save_path`用于指定保存的路径；|
+|`save_to_xlsx`|`save_path`|将表格识别结果保存为xlsx文件，参数`save_path`用于指定保存的路径；|
+
+（4）调用文档场景信息抽取v3产线对象的 `chat` 方法与大模型进行交互，相关参数说明如下：
+
+|参数|参数类型|默认值|参数说明|
+|-|-|-|-|
+|`key_list`|str|无|用于查询的关键字（query）；支持“，”或“,”作为分隔符的多个关键字组成的字符串，如“乙方，手机号”；|
+|`key_list`|list|无|用于查询的关键字（query），支持`list`形式表示的一组关键字，其元素为`str`类型；|
 
 在执行上述 Python 脚本时，加载的是默认的文档场景信息抽取v3产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
 
 ```
 paddlex --get_pipeline_config PP-ChatOCRv3-doc
 ```
+
 执行后，文档场景信息抽取v3产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为 `./my_path` ）：
 
 ```
 paddlex --get_pipeline_config PP-ChatOCRv3-doc --save_path ./my_path
 ```
+
 获取配置文件后，您即可对文档场景信息抽取v3产线各项配置进行自定义：
 
-```
+```yaml
 Pipeline:
   layout_model: RT-DETR-H_layout_3cls
   table_model: SLANet_plus
@@ -283,28 +293,31 @@ Pipeline:
 ```python
 from paddlex import create_pipeline
 
-predict = create_pipeline( pipeline="./my_path/PP-ChatOCRv3-doc.yaml",
-                            llm_name="ernie-3.5",
-                            llm_params = {"api_type":"qianfan","ak":"","sk":""} )  ## 请填入您的ak与sk，否则无法调用大模型
+pipeline = create_pipeline(
+    pipeline="./my_path/PP-ChatOCRv3-doc.yaml",
+    llm_name="ernie-3.5",
+    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # 请填入您的ak与sk，否则无法调用大模型
+    )
 
-visual_result, visual_inf = predict(["contract.pdf"])
+visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf")
 
 for res in visual_result:
     res.save_to_img("./output")
     res.save_to_html('./output')
     res.save_to_xlsx('./output')
 
-print(predict.chat("乙方,手机号"))
+chat_result = pipeline.chat(["乙方", "手机号"])
+chat_result.print()
 ```
 
 ## 3. 开发集成/部署
 如果产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
 
-若您需要将产线直接应用在您的Python项目中，可以参考 [2.2 本地体验](#22-python脚本方式集成)中的示例代码。
+若您需要将产线直接应用在您的Python项目中，可以参考 [2.2 本地体验](#22-本地体验)中的示例代码。
 
 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
 
-🚀 **高性能部署**：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能部署流程请参考[PaddleX高性能部署指南](../../../pipeline_deploy/high_performance_deploy.md)。
+🚀 **高性能推理**：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能推理流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_deploy.md)。
 
 ☁️ **服务化部署**：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/service_deploy.md)。
 
@@ -660,7 +673,7 @@ if __name__ == "__main__":
 如果通用文档场景信息抽取v3产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用**您自己拥有的特定领域或应用场景的数据**对现有模型进行进一步的**微调**，以提升通用表格识别产线的在您的场景中的识别效果。
 
 ### 4.1 模型微调
-由于通用文档场景信息抽取v3产线包含四个模块，模型产线的效果不及预期可能来自于其中任何一个模块（文本图像矫正模块暂不支持二次开发）。
+由于通用文档场景信息抽取v3产线包含六个模块，模型产线的效果不及预期可能来自于其中任何一个模块（文本图像矫正模块暂不支持二次开发）。
 
 您可以对识别效果差的图片进行分析，参考如下规则进行分析和模型微调：
 
@@ -692,18 +705,21 @@ Pipeline:
 随后， 参考本地体验中的命令行方式或 Python 脚本方式，加载修改后的产线配置文件即可。
 
 ##  5. 多硬件支持
-PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，**仅需设置 `--device` 参数**即可完成不同硬件之间的无缝切换。
+PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，**仅需设置 `device` 参数**即可完成不同硬件之间的无缝切换。
 
-例如，您使用英伟达 GPU 进行文档场景信息抽取v3产线的推理，使用的 Python 脚本为：
+例如，使用文档场景信息抽取v3产线时，将运行设备从英伟达 GPU 更改为昇腾 NPU，仅需将脚本中的 `device` 修改为 npu 即可：
 
 ```python
 from paddlex import create_pipeline
-predict = create_pipeline( pipeline="PP-ChatOCRv3-doc",
-                            llm_name="ernie-3.5",
-                            llm_params = {"api_type":"qianfan","ak":"","sk":""},  ## 请填入您的ak与sk，否则无法调用大模型
-                            device = "gpu:0" )
+predict = create_pipeline(
+    pipeline="PP-ChatOCRv3-doc",
+    llm_name="ernie-3.5",
+    llm_params={"api_type": "qianfan", "ak": "", "sk": ""},  # 请填入您的ak与sk，否则无法调用大模型
+    device="npu:0" # gpu:0 --> npu:0
+    )
 ```
-此时，若您想将硬件切换为昇腾 NPU，仅需对脚本中的 `--device` 修改为 npu 即可：
+
+此时，若您想将硬件切换为昇腾 NPU，仅需对脚本中的 `--device` 修改为 npu:0 即可：
 
 ```python
 from paddlex import create_pipeline
@@ -712,4 +728,5 @@ predict = create_pipeline( pipeline="PP-ChatOCRv3-doc",
                             llm_params = {"api_type":"qianfan","ak":"","sk":""},  ## 请填入您的ak与sk，否则无法调用大模型
                             device = "npu:0" )
 ```
-若您想在更多种类的硬件上使用通用文档场景信息抽取产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。
+若您想在更多种类的硬件上使用通用文档场景信息抽取产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。
+

@@ -97,7 +97,7 @@ def args_cfg():
     parser.add_argument("--host", type=str, default="0.0.0.0")
     parser.add_argument("--port", type=int, default=8080)
 
-    return parser.parse_args()
+    return parser
 
 
 def install(args):
@@ -162,7 +162,12 @@ def serve(pipeline, *, device, use_hpip, serial_number, update_license, host, po
 # for CLI
 def main():
     """API for commad line"""
-    args = args_cfg()
+    args = args_cfg().parse_args()
+    if len(sys.argv) == 1:
+        logging.warning("No arguments provided. Displaying help information:")
+        args_cfg().print_help()
+        return
+
     if args.install:
         install(args)
     elif args.serve:
@@ -177,7 +182,7 @@ def main():
         )
     else:
         if args.get_pipeline_config is not None:
-            interactive_get_pipeline(args.get_pipeline_config)
+            interactive_get_pipeline(args.get_pipeline_config, args.save_path)
         else:
             return pipeline_predict(
                 args.pipeline,

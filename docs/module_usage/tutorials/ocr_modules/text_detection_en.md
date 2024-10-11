@@ -3,7 +3,7 @@
 # Text Detection Module Development Tutorial
 
 ## I. Overview
-The text detection module is a crucial component in OCR (Optical Character Recognition) systems, responsible for locating and marking regions containing text within images. The performance of this module directly impacts the accuracy and efficiency of the entire OCR system. The text detection module typically outputs bounding boxes (Bounding Boxes) for text regions, which are then passed on to the text recognition module for further processing.
+The text detection module is a crucial component in OCR (Optical Character Recognition) systems, responsible for locating and marking regions containing text within images. The performance of this module directly impacts the accuracy and efficiency of the entire OCR system. The text detection module typically outputs bounding boxes for text regions, which are then passed on to the text recognition module for further processing.
 
 ## II. Supported Models
 | Model | Detection Hmean (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
@@ -52,13 +52,48 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_det_dataset_examples
 ```
-After executing the above command, PaddleX will validate the dataset, summarize its basic information, and print `Check dataset passed !` in the log upon successful completion. 
+
+After executing the above command, PaddleX will validate the dataset and gather basic information about it. Once the command runs successfully, `Check dataset passed !` will be printed in the log. The validation result file is saved in `./output/check_dataset_result.json`, and related outputs will be stored in the `./output/check_dataset` directory in the current directory. The output directory includes sample images and histograms of sample distribution.
 
 <details>
-<summary>👉 <b>Validation Results Details (Click to Expand)</b></summary>
+  <summary>👉 <b>Validation Result Details (Click to Expand)</b></summary>
+The specific content of the validation result file is:
 
-The validation results file is saved in `./output/check_dataset_result.json`, and related outputs are saved in the current directory's `./output/check_dataset` directory, including visualized sample images and sample distribution histograms.
+```bash
+{
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "train_samples": 200,
+    "train_sample_paths": [
+      "../dataset/ocr_det_dataset_examples/images/train_img_61.jpg",
+      "../dataset/ocr_det_dataset_examples/images/train_img_289.jpg"
+    ],
+    "val_samples": 50,
+    "val_sample_paths": [
+      "../dataset/ocr_det_dataset_examples/images/val_img_61.jpg",
+      "../dataset/ocr_det_dataset_examples/images/val_img_137.jpg"
+    ]
+  },
+  "analysis": {
+    "histogram": "check_dataset/histogram.png"
+  },
+  "dataset_path": "./dataset/ocr_det_dataset_examples",
+  "show_type": "image",
+  "dataset_type": "TextDetDataset"
+}
+```
 
+In the above validation result, `check_pass` being `true` indicates that the dataset format meets the requirements. The explanation of other metrics is as follows:
+
+* `attributes.train_samples`: The number of training samples in the dataset is 200;
+* `attributes.val_samples`: The number of validation samples in the dataset is 50;
+* `attributes.train_sample_paths`: List of relative paths for visualizing training sample images in the dataset;
+* `attributes.val_sample_paths`: List of relative paths for visualizing validation sample images in the dataset;
+
+Additionally, the dataset validation also analyzed the distribution of the length and width of all images in the dataset and plotted a distribution histogram (histogram.png):
+
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/text_det/01.png)
 </details>
 
 ### 4.1.3 Dataset Format Conversion/Dataset Splitting (Optional)
@@ -154,7 +189,7 @@ Similar to model training and evaluation, the following steps are required:
 * Specify the `.yaml` configuration file path of the model (here it's `PP-OCRv4_mobile_det.yaml`)
 * Set the mode to model inference prediction: `-o Global.mode=predict`
 * Specify the model weights path: `-o Predict.model_dir="./output/best_accuracy/inference"`
-* Specify the input data path: `-o Predict.inputh="..."`
+* Specify the input data path: `-o Predict.input="..."`
 Other related parameters can be set by modifying the fields under `Global` and `Predict` in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../../module_usage/instructions/config_parameters_common_en.md).
 
 * Alternatively, you can use the PaddleX wheel package for inference, easily integrating the model into your own projects.
@@ -164,7 +199,7 @@ Models can be directly integrated into PaddleX pipelines or into your own projec
 
 1.**Pipeline Integration**
 
-The text detection module can be integrated into PaddleX pipelines such as the [General OCR Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/OCR_en.md), [Table Recognition Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md), and [Document Scene Information Extraction Pipeline v3 (PP-ChatOCRv3)](../../../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md). Simply replace the model path to update the text detection module of the relevant pipeline.
+The text detection module can be integrated into PaddleX pipelines such as the [General OCR Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/OCR_en.md), [Table Recognition Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md), and [PP-ChatOCRv3-doc](../../../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md). Simply replace the model path to update the text detection module of the relevant pipeline.
 
 2.**Module Integration**
 

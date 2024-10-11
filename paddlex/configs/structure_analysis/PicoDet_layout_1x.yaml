@@ -35,6 +35,6 @@ Export:
 Predict:
   batch_size: 1
   model_dir: "output/best_model/inference"
-  input: "/paddle/dataset/paddlex/layout/det_layout_examples/images/JPEGImages/train_0001.jpg"
+  input: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg"
   kernel_option:
     run_mode: paddle

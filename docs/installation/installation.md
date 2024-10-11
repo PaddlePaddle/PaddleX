@@ -20,7 +20,7 @@ PaddleX为您提供了两种安装模式：**Wheel包安装**和**插件安装**
 pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0b1-py3-none-any.whl
 ```
 ### 1.2 插件安装模式
-若您使用PaddleX的应用场景为**二次开发** ，那么推荐您使用**功能更加强大**的插件安装模式。
+若您使用PaddleX的应用场景为**二次开发** （例如重新训练模型、微调模型、自定义模型结构、自定义推理代码等），那么推荐您使用**功能更加强大**的插件安装模式。
 
 安装您需要的PaddleX插件之后，您不仅同样能够对插件支持的模型进行推理与集成，还可以对其进行模型训练等二次开发更高级的操作。
 
@@ -37,7 +37,7 @@ PaddleX支持的插件如下，请您根据开发需求，确定所需的一个�
 |通用实例分割|实例分割|`PaddleDetection`|
 |通用OCR|文本检测<br>文本识别|`PaddleOCR`|
 |通用表格识别|版面区域检测<br>表格结构识别<br>文本检测<br>文本识别|`PaddleOCR`<br>`PaddleDetection`|
-|文档场景信息抽取v3|表格结构识别<br>版面区域检测<br>文本检测<br>文本识别<br>印章文本检测<br>文档图像矫正<br>文档图像方向分类|`PaddleOCR`<br>`PaddleDetection`<br>`PaddleClas` |
+|文档场景信息抽取v3|表格结构识别<br>版面区域检测<br>文本检测<br>文本识别<br>印章文本检测<br>文本图像矫正<br>文档图像方向分类|`PaddleOCR`<br>`PaddleDetection`<br>`PaddleClas` |
 |时序预测|时序预测模块|`PaddleTS`|
 |时序异常检测|时序异常检测模块|`PaddleTS`|
 |时序分类|时序分类模块|`PaddleTS`|
@@ -55,7 +55,7 @@ PaddleX支持的插件如下，请您根据开发需求，确定所需的一个�
 git clone https://github.com/PaddlePaddle/PaddleX.git
 cd PaddleX
 pip install -e .
-paddlex --install PaddleXXX
+paddlex --install PaddleXXX  # 例如PaddleOCR
 ```
 
 > ❗ 注：采用这种安装方式后，是可编辑模式安装，当前项目的代码更改，都会直接作用到已经安装的 PaddleX Wheel 包。
@@ -76,15 +76,43 @@ paddlex --install PaddleXXX
 ### 2.1 基于Docker获取PaddleX
 参考下述命令，使用 PaddleX 官方 Docker 镜像，创建一个名为 `paddlex` 的容器，并将当前工作目录映射到容器内的 `/paddle` 目录。
 
+若您使用的 Docker 版本 >= 19.03，请执行：
+
 ```bash
+# 对于 CPU 用户
+docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it registry.baidubce.com/paddlex/paddlex:paddlex3.0.0b1-paddlepaddle3.0.0b1-cpu /bin/bash
+
+# 对于 GPU 用户
 # 对于 CUDA11.8 用户
-docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it registry.baidubce.com/paddlex/paddlex:paddlex3.0.0b1-paddlepaddle3.0.0b1-gpu-cuda11.8-cudnn8.9-trt8.5 /bin/bash
+docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it registry.baidubce.com/paddlex/paddlex:paddlex3.0.0b1-paddlepaddle3.0.0b1-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
 
 # 对于 CUDA12.3 用户
 docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it registry.baidubce.com/paddlex/paddlex:paddlex3.0.0b1-paddlepaddle3.0.0b1-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
 ```
+
+* 若您使用的 Docker 版本 <= 19.03 但 >= 17.06，请执行：
+
+<details>
+   <summary> 点击展开</summary>
+
+```bash
+# 对于 CPU 用户
+docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it registry.baidubce.com/paddlex/paddlex:paddlex3.0.0b1-paddlepaddle3.0.0b1-cpu /bin/bash
+
+# 对于 GPU 用户
+# 对于 CUDA11.8 用户
+nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it registry.baidubce.com/paddlex/paddlex:paddlex3.0.0b1-paddlepaddle3.0.0b1-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
+
+# 对于 CUDA12.3 用户
+nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it registry.baidubce.com/paddlex/paddlex:paddlex3.0.0b1-paddlepaddle3.0.0b1-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
+```
+
+</details>
+
+* 若您使用的 Docker 版本 <= 17.06，请升级 Docker 版本。
+
 * 若您想更深入了解 Docker 的原理或使用方式，请参考 [Docker官方网站](https://www.docker.com/) 或 [Docker官方教程](https://docs.docker.com/get-started/)。
-* 若您是 CUDA11.8 用户，请确保您的 Docker版本 >= 19.03；若您是 CUDA12.3 用户，请确保您的 Docker版本 >= 20.10。
+
 ### 2.2 自定义方式安装PaddleX
 在安装之前，请确保您已经参考[飞桨PaddlePaddle本地安装教程](paddlepaddle_install.md)完成飞桨的本地安装。
 
@@ -148,4 +176,4 @@ paddlex --install --platform gitee.com
 ```
 All packages are installed.
 ```
-更多硬件环境的PaddleX安装请参考[PaddleX多硬件使用指南](../other_devices_support/multy_devices_use_guide.md)
+更多硬件环境的PaddleX安装请参考[PaddleX多硬件使用指南](../other_devices_support/multi_devices_use_guide.md)
