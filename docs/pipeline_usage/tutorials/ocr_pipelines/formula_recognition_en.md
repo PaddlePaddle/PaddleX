@@ -8,20 +8,20 @@ Formula recognition is a technology that automatically identifies and extracts L
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/01.jpg)
 
-**The General Formula Recognition Pipeline comprises a layout analysis module and a formula recognition module.**
+**The General Formula Recognition Pipeline comprises a layout detection module and a formula recognition module.**
 
 **If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, select a model with faster inference. If you prioritize model size, choose a model with a smaller storage footprint.**
 
 <details>
    <summary> 👉Model List Details</summary>
 
-**Layout Analysis Module Models**:
+**Layout Detection Module Models**:
 
 | Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
 |-|-|-|-|-|
 | RT-DETR-H_layout_17cls | 92.6 | 115.126 | 3827.25 | 470.2M |
 
-**Note: The above accuracy metrics are evaluated on PaddleX's self-built layout analysis dataset, containing 10,000 images. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
+**Note: The above accuracy metrics are evaluated on PaddleX's self-built layout detection dataset, containing 10,000 images. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 
 **Formula Recognition Module Models**:
 
@@ -103,7 +103,7 @@ Where `dt_polys` represents the coordinates of the detected formula area, and `r
 </details>
 
 The visualization result is as follows:
-![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/03.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/02.jpg)
 
 The visualization image is saved in the `output` directory by default, and you can also customize it through `--save_path`. Additionally, you can visualize the recognized LaTeX code through the website [https://www.lddgo.net/math/latex-to-image](https://www.lddgo.net/math/latex-to-image).
 
@@ -221,7 +221,7 @@ Operations provided by the service:
 
         | Name | Type | Description | Required |
         |------|------|-------------|----------|
-        |`maxLongSide`|`integer`|During inference, if the length of the longer side of the input image for the layout analysis model is greater than `maxLongSide`, the image will be scaled so that the length of the longer side equals `maxLongSide`.|No|
+        |`maxLongSide`|`integer`|During inference, if the length of the longer side of the input image for the layout detection model is greater than `maxLongSide`, the image will be scaled so that the length of the longer side equals `maxLongSide`.|No|
 
     - When the request is processed successfully, the `result` in the response body has the following properties:
 
@@ -668,11 +668,11 @@ You can choose the appropriate deployment method based on your needs to proceed 
 
 ## 4. Customization and Fine-tuning
 If the default model weights provided by the general formula recognition pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing models using **your own domain-specific or application-specific data** to improve the recognition performance of the general formula recognition pipeline in your scenario.
- 
-### 4.1 Model Fine-tuning
-Since the general formula recognition pipeline consists of two modules (layout analysis and formula recognition), unsatisfactory performance may stem from either module.
 
-You can analyze images with poor recognition results. If you find that many formula are undetected (i.e., formula miss detection), it may indicate that the layout analysis model needs improvement. You should refer to the [Customization](../../../module_usage/tutorials/ocr_modules/layout_detection_en.md#iv-custom-development) section in the [Layout Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/layout_detection_en.md) and use your private dataset to fine-tune the layout analysis model. If many recognition errors occur in detected formula (i.e., the recognized formula content does not match the actual formula content), it suggests that the formula recognition model requires further refinement. You should refer to the [Customization](../../../module_usage/tutorials/ocr_modules/formula_recognition_en.md#iv-custom-development) section in the [Formula Recognition Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/formula_recognition_en.md) and fine-tune the formula recognition model.
+### 4.1 Model Fine-tuning
+Since the general formula recognition pipeline consists of two modules (layout detection and formula recognition), unsatisfactory performance may stem from either module.
+
+You can analyze images with poor recognition results. If you find that many formula are undetected (i.e., formula miss detection), it may indicate that the layout detection model needs improvement. You should refer to the [Customization](../../../module_usage/tutorials/ocr_modules/layout_detection_en.md#iv-custom-development) section in the [Layout Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/layout_detection_en.md) and use your private dataset to fine-tune the layout detection model. If many recognition errors occur in detected formula (i.e., the recognized formula content does not match the actual formula content), it suggests that the formula recognition model requires further refinement. You should refer to the [Customization](../../../module_usage/tutorials/ocr_modules/formula_recognition_en.md#iv-custom-development) section in the [Formula Recognition Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/formula_recognition_en.md) and fine-tune the formula recognition model.
 
 ### 4.2 Model Application
 After fine-tuning with your private dataset, you will obtain local model weights files.
@@ -682,8 +682,8 @@ If you need to use the fine-tuned model weights, simply modify the pipeline conf
 ```bash
 ......
 Pipeline:
-  layout_model: RT-DETR-H_layout_17cls #可修改为微调后版面区域检测模型的本地路径
-  formula_rec_model: LaTeX_OCR_rec #可修改为微调后公式识别模型的本地路径
+  layout_model: RT-DETR-H_layout_17cls # Can be replaced with the local path of the fine-tuned layout detection model
+  formula_rec_model: LaTeX_OCR_rec # Can be replaced with the local path of the fine-tuned formula recognition model
   formula_rec_batch_size: 5
   device: "gpu:0"
 ......

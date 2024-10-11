@@ -49,7 +49,7 @@ class FormulaRecognitionPipeline(BasePipeline):
 
     def predict(self, x, **kwargs):
         device = kwargs.get("device", None)
-        for layout_pred in self.layout_predictor(x):
+        for layout_pred in self.layout_predictor(x, device=device):
             single_img_res = {
                 "input_path": "",
                 "layout_result": {},
@@ -62,7 +62,9 @@ class FormulaRecognitionPipeline(BasePipeline):
             single_img_res["dt_polys"] = []
             single_img_res["rec_formula"] = []
             all_subs_of_formula_img = []
-            layout_pred["boxes"] = sorted(layout_pred["boxes"], key=lambda x : self.sorted_formula_box(x))
+            layout_pred["boxes"] = sorted(
+                layout_pred["boxes"], key=lambda x: self.sorted_formula_box(x)
+            )
             if len(layout_pred["boxes"]) > 0:
                 subs_of_img = list(self._crop_by_boxes(layout_pred))
                 # get cropped images with label "formula"
@@ -70,19 +72,21 @@ class FormulaRecognitionPipeline(BasePipeline):
                     if sub["label"].lower() == "formula":
                         boxes = sub["box"]
                         x1, y1, x2, y2 = list(boxes)
-                        poly = np.array([[x1, y1],[ x2, y1], [x2, y2], [x1, y2]])
+                        poly = np.array([[x1, y1], [x2, y1], [x2, y2], [x1, y2]])
                         all_subs_of_formula_img.append(sub["img"])
                         single_img_res["dt_polys"].append(poly)
-                if len(all_subs_of_formula_img)>0:
+                if len(all_subs_of_formula_img) > 0:
                     for formula_res in self.formula_predictor(
                         all_subs_of_formula_img,
                         batch_size=kwargs.get("formula_rec_batch_size", 1),
                         device=device,
                     ):
-                        single_img_res["rec_formula"].append(str(formula_res["rec_text"]))
+                        single_img_res["rec_formula"].append(
+                            str(formula_res["rec_text"])
+                        )
             yield FormulaRecResult(single_img_res)
 
     def sorted_formula_box(self, x):
         coordinate = x["coordinate"]
         x1, y1, x2, y2 = list(coordinate)
-        return (y1+y2)/2
+        return (y1 + y2) / 2
