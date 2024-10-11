@@ -49,7 +49,9 @@ class FormulaRecognitionPipeline(BasePipeline):
 
     def predict(self, x, **kwargs):
         device = kwargs.get("device", None)
-        for layout_pred in self.layout_predictor(x, device=device):
+        for layout_pred in self.layout_predictor(
+            x, batch_size=kwargs.get("layout_batch_size", 1), device=device
+        ):
             single_img_res = {
                 "input_path": "",
                 "layout_result": {},
