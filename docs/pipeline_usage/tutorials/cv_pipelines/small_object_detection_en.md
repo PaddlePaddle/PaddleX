@@ -12,7 +12,7 @@ Small object detection is a specialized technique for identifying tiny objects w
 <details>
    <summary> 👉Model List Details</summary>
 
-|Model Name|mAP (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|Model Name|mAP (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size (M)|
 |-|-|-|-|-|
 |PP-YOLOE_plus_SOD-S|25.1|65.4608|324.37|77.3 M|
 |PP-YOLOE_plus_SOD-L|31.9|57.1448|1006.98|325.0 M|
@@ -607,7 +607,7 @@ print_r($result["detectedObjects"]);
 📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing capabilities on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy_en.md).
 Choose the appropriate deployment method for your model pipeline based on your needs, and proceed with subsequent AI application integration.
 
-## 4. Customization and Fine-tuning
+## 4. Second Development
 If the default model weights provided by the General Small Object Detection Pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing model using **your own domain-specific or application-specific data** to improve the recognition performance of the small object detection pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
@@ -636,10 +636,10 @@ For example, if you use an NVIDIA GPU for inference with the small object detect
 ```bash
 paddlex --pipeline multilabel_classification --input small_object_detection.jpg --device gpu:0
 ``````
-At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu`:
+At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu:0`:
 
 ```bash
 paddlex --pipeline multilabel_classification --input small_object_detection.jpg --device npu:0
 ```
 
-If you want to use the General Small Object Detection Pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/installation_other_devices_en.md).
+If you want to use the General Small Object Detection Pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md).

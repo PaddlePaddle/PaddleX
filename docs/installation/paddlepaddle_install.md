@@ -20,7 +20,7 @@ nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -i
 # CUDA12.3 用户
 nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
 ```
-注：更多飞桨官方 docker 镜像请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/docker/linux-docker.html)。若您是 CUDA11.8 用户，请确保您的 Docker版本 >= 19.03；若您是 CUDA12.3 用户，请确保您的 Docker版本 >= 20.10。
+注：更多飞桨官方 docker 镜像请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/docker/linux-docker.html)。若您是 CUDA11.8 用户，请确保您的 Docker版本 >= 17.06；若您是 CUDA12.3 用户，请确保您的 Docker版本 >= 26.10。
 
 ## 基于 pip 安装飞桨
 **若您通过 pip 安装**，请参考下述命令，用 pip 在当前环境中安装飞桨 PaddlePaddle：

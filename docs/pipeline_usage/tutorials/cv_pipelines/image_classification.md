@@ -17,7 +17,7 @@
     <th>模型</th>
     <th>Top1 Acc(%)</th>
     <th>GPU推理耗时 (ms)</th>
-    <th>CPU推理耗时</th>
+    <th>CPU推理耗时（ms）</th>
     <th>模型存储大小 (M)</th>
     <th>介绍</th>
   </tr>
@@ -702,7 +702,7 @@ for res in output:
 |---------------|-----------------------------------------------------------------------------------------------------------|
 | Python Var    | 支持直接传入Python变量，如numpy.ndarray表示的图像数据。                                               |
 | str         | 支持传入待预测数据文件路径，如图像文件的本地路径：`/root/data/img.jpg`。                                   |
-| str           | 支持传入待预测数据文件URL，如图像文件的网络URL：[示例](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001)。|
+| str           | 支持传入待预测数据文件URL，如图像文件的网络URL：[示例](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg)。|
 | str           | 支持传入本地目录，该目录下需包含待预测数据文件，如本地路径：`/root/data/`。                               |
 | dict          | 支持传入字典类型，字典的key需与具体任务对应，如图像分类任务对应\"img\"，字典的val支持上述类型数据，例如：`{\"img\": \"/root/data1\"}`。|
 | list          | 支持传入列表，列表元素需为上述类型数据，如`[numpy.ndarray, numpy.ndarray]，[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]`，`[\"/root/data1\", \"/root/data2\"]`，`[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]`。|
@@ -1237,9 +1237,9 @@ PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多�
 ```
 paddlex --pipeline image_classification --input general_image_classification_001.jpg --device gpu:0
 ```
-此时，若您想将硬件切换为昇腾 NPU，仅需将 `--device` 修改为 npu 即可：
+此时，若您想将硬件切换为昇腾 NPU，仅需将 `--device` 修改为 npu:0 即可：
 
 ```
 paddlex --pipeline image_classification --input general_image_classification_001.jpg --device npu:0
 ```
-若您想在更多种类的硬件上使用通用图像分类产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。
+若您想在更多种类的硬件上使用通用图像分类产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

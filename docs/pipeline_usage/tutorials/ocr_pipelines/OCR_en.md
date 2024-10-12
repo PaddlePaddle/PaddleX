@@ -7,7 +7,7 @@ OCR (Optical Character Recognition) is a technology that converts text in images
 
 The General OCR Pipeline is designed to solve text recognition tasks, extracting text information from images and outputting it in text form. PP-OCRv4 is an end-to-end OCR system that achieves millisecond-level text content prediction on CPUs, reaching state-of-the-art (SOTA) performance in open-source projects for general scenarios. Based on this project, developers from academia, industry, and research have rapidly deployed various OCR applications across fields such as general use, manufacturing, finance, transportation, and more.
 
-![](/tmp/images/pipelines/ocr/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/01.png)
 
 **The General OCR Pipeline comprises a text detection module and a text recognition module**, each containing several models. The specific models to use can be selected based on the benchmark data provided below. **If you prioritize model accuracy, choose models with higher accuracy. If you prioritize inference speed, choose models with faster inference. If you prioritize model size, choose models with smaller storage requirements.**
 
@@ -20,7 +20,7 @@ The General OCR Pipeline is designed to solve text recognition tasks, extracting
     <th>Specific Model</th>
     <th>Accuracy</th>
     <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time</th>
+    <th>CPU Inference Time (ms)</th>
     <th>Model Size (M)</th>
   </tr>
   <tr>
@@ -79,9 +79,9 @@ PaddleX provides pre-trained models for the OCR Pipeline, allowing you to quickl
 ### 2.1 Online Experience
 You can [experience the General OCR Pipeline online](https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent) using the official demo images for recognition, for example:
 
-![](/tmp/images/pipelines/ocr/02.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/02.png)
 
-If you are satisfied with the pipeline's performance, you can directly integrate and deploy it. You can download the deployment package from the cloud or use the [local experience method in Section 2.2](#3-Development-and-Deployment). If not satisfied, you can also use your private data to **fine-tune the models in the pipeline online**.
+If you are satisfied with the pipeline's performance, you can directly integrate and deploy it. You can download the deployment package from the cloud or use the [local experience method in Section 2.2](#22-Local Experience). If not satisfied, you can also use your private data to **fine-tune the models in the pipeline online**.
 
 ### 2.2 Local Experience
 > ❗ Before using the General OCR Pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Installation Guide](../../../installation/installation_en.md).
@@ -189,7 +189,7 @@ for res in output:
 ## 3. Development Integration/Deployment
 If the general OCR pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
-If you need to apply the general OCR pipeline directly in your Python project, refer to the example code in [2.2.2 Python Script Integration](#222-python-script-integration).
+If you need to apply the general OCR pipeline directly in your Python project, refer to the example code in [2.2.2 Python Script Integration](#222-Integration-via-Python-Script).
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
@@ -686,7 +686,7 @@ print_r($result["texts"]);
 You can choose the appropriate deployment method based on your needs to proceed with subsequent AI application integration.
 
 
-## 4. Customization and Fine-tuning
+## 4. Second Development
 If the default model weights provided by the general OCR pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing models using **your own domain-specific or application-specific data** to improve the recognition performance of the general OCR pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
@@ -726,4 +726,4 @@ Now, if you want to switch the hardware to Ascend NPU, you only need to modify t
 paddlex --pipeline OCR --input general_ocr_002.png --device npu:0
 ```
 
-If you want to use the General OCR pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../installation/installation_other_devices_en.md).
+If you want to use the General OCR pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.md).

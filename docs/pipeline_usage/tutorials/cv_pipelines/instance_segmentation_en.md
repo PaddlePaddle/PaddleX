@@ -5,14 +5,15 @@
 ## 1. Introduction to the General Instance Segmentation Pipeline
 Instance segmentation is a computer vision task that not only identifies the object categories in an image but also distinguishes the pixels of different instances within the same category, enabling precise segmentation of each object. Instance segmentation can separately label each car, person, or animal in an image, ensuring they are independently processed at the pixel level. For example, in a street scene image containing multiple cars and pedestrians, instance segmentation can clearly separate the contours of each car and person, forming multiple independent region labels. This technology is widely used in autonomous driving, video surveillance, and robotic vision, often relying on deep learning models (such as Mask R-CNN) to achieve efficient pixel classification and instance differentiation through Convolutional Neural Networks (CNNs), providing powerful support for understanding complex scenes.
 
-![](/tmp/images/pipelines/instance_segmentation/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/instance_segmentation/01.png)
+
 
 **The General Instance Segmentation Pipeline includes a** **Object Detection** **module. If you prioritize model precision, choose a model with higher precision. If you prioritize inference speed, choose a model with faster inference. If you prioritize model storage size, choose a model with a smaller storage size.**
 
 <details>
    <summary> 👉Model List Details</summary>
 
-|Model Name|Mask AP|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|Model Name|Mask AP|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size (M)|
 |-|-|-|-|-|
 |Mask-RT-DETR-H|50.6|132.693|4896.17|449.9|
 |Mask-RT-DETR-L|45.7|46.5059|2575.92|113.6|
@@ -40,7 +41,7 @@ The pre-trained model pipelines provided by PaddleX allow for quick experience o
 ### 2.1 Online Experience
 You can [experience online](https://aistudio.baidu.com/community/app/100063/webUI) the effects of the General Instance Segmentation Pipeline using the demo images provided by the official. For example:
 
-![](/tmp/images/pipelines/instance_segmentation/02.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/instance_segmentation/02.png)
 
 If you are satisfied with the pipeline's performance, you can directly integrate and deploy it. If not, you can also use your private data to **fine-tune the model within the pipeline**.
 
@@ -94,7 +95,7 @@ After running, the result is:
 {'img_path': '/root/.paddlex/predict_input/general_instance_segmentation_004.png', 'boxes': [{'cls_id': 0, 'label': 'person', 'score': 0.8698326945304871, 'coordinate': [339, 0, 639, 575]}, {'cls_id': 0, 'label': 'person', 'score': 0.8571141362190247, 'coordinate': [0, 0, 195, 575]}, {'cls_id': 0, 'label': 'person', 'score': 0.8202633857727051, 'coordinate': [88, 113, 401, 574]}, {'cls_id': 0, 'label': 'person', 'score': 0.7108577489852905, 'coordinate': [522, 21, 767, 574]}, {'cls_id': 27, 'label': 'tie', 'score': 0.554280698299408, 'coordinate': [247, 311, 355, 574]}]}
 ```
 
-![](/tmp/images/pipelines/instance_segmentation/03.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/instance_segmentation/03.png)
 
 The visualization image is saved in the `output` directory by default, and you can customize it through `--save_path`.
 
@@ -632,7 +633,7 @@ print_r($result["instances"]);
 📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing functions on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy_en.md).
 You can choose the appropriate deployment method for your model pipeline based on your needs and proceed with subsequent AI application integration.
 
-## 4. Custom Development
+## 4. CSecond Development
 If the default model weights provided by the general instance segmentation pipeline do not meet your requirements for accuracy or speed in your scenario, you can try to further **fine-tune** the existing model using **data specific to your domain or application scenario** to improve the recognition effect of the general instance segmentation pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
@@ -662,10 +663,10 @@ For example, if you use an NVIDIA GPU for instance segmentation pipeline inferen
 ```bash
 paddlex --pipeline instance_segmentation --input general_instance_segmentation_004.png --device gpu:0
 ``````
-At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu`:
+At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu:0`:
 
 ```bash
 paddlex --pipeline instance_segmentation --input general_instance_segmentation_004.png --device npu:0
 ```
 
-If you want to use the General Instance Segmentation Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/installation_other_devices_en.md).
+If you want to use the General Instance Segmentation Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md).

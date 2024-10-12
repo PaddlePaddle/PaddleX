@@ -521,7 +521,7 @@ echo "label: " . $result["label"] . ", score: " . $result["score"];
 📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing capabilities on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. Refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy.md) for detailed edge deployment procedures.
 Choose the appropriate deployment method based on your needs to proceed with subsequent AI application integration.
 
-## 4. Customization and Fine-tuning
+## 4. Second Development
 If the default model weights provided by the General Time Series Classification Pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing model using **your own domain-specific or application-specific data** to improve the recognition performance of the pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
@@ -556,4 +556,4 @@ At this point, if you wish to switch the hardware to Ascend NPU, simply modify t
 paddlex --pipeline ts_cls --input ts_cls.csv --device npu:0
 ```
 
-If you intend to use the General Time Series Classification Pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/installation_other_devices_en.md).
+If you intend to use the General Time Series Classification Pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md).

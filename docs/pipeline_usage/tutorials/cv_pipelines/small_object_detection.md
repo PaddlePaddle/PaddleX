@@ -12,7 +12,7 @@
 <details>
    <summary> 👉模型列表详情</summary>
 
-|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时（ms）|模型存储大小（M)|
 |-|-|-|-|-|
 |PP-YOLOE_plus_SOD-S|25.1|65.4608|324.37|77.3 M|
 |PP-YOLOE_plus_SOD-L|31.9|57.1448|1006.98|325.0 M|
@@ -655,9 +655,9 @@ PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多�
 ```
 paddlex --pipeline multilabel_classification --input small_object_detection.jpg --device gpu:0
 ```
-此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的 `--device` 修改为 npu 即可：
+此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的 `--device` 修改为 npu:0 即可：
 
 ```
 paddlex --pipeline multilabel_classification --input small_object_detection.jpg --device npu:0
 ```
-若您想在更多种类的硬件上使用通用小目标检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。
+若您想在更多种类的硬件上使用通用小目标检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

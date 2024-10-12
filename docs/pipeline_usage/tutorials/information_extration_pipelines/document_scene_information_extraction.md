@@ -21,7 +21,7 @@
     <th>模型</th>
     <th>精度（%）</th>
     <th>GPU推理耗时 (ms)</th>
-    <th>CPU推理耗时</th>
+    <th>CPU推理耗时（ms）</th>
     <th>模型存储大小 (M)</th>
     <th>介绍</th>
   </tr>
@@ -102,7 +102,7 @@
         <th>模型</th>
         <th>识别 Avg Accuracy(%)</th>
         <th>GPU推理耗时（ms）</th>
-        <th>CPU推理耗时</th>
+        <th>CPU推理耗时（ms）</th>
         <th>模型存储大小（M）</th>
         <th>介绍</th>
     </tr>
@@ -126,7 +126,7 @@
         <th>模型</th>
         <th>识别 Avg Accuracy(%)</th>
         <th>GPU推理耗时（ms）</th>
-        <th>CPU推理耗时</th>
+        <th>CPU推理耗时（ms）</th>
         <th>模型存储大小（M）</th>
         <th>介绍</th>
     </tr>
@@ -300,7 +300,7 @@ print(predict.chat("乙方,手机号"))
 ## 3. 开发集成/部署
 如果产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
 
-若您需要将产线直接应用在您的Python项目中，可以参考 [2.2 本地体验](#22-python脚本方式集成)中的示例代码。
+若您需要将产线直接应用在您的Python项目中，可以参考 [2.2 本地体验](#22-本地体验)中的示例代码。
 
 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
 
@@ -660,7 +660,7 @@ if __name__ == "__main__":
 如果通用文档场景信息抽取v3产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用**您自己拥有的特定领域或应用场景的数据**对现有模型进行进一步的**微调**，以提升通用表格识别产线的在您的场景中的识别效果。
 
 ### 4.1 模型微调
-由于通用文档场景信息抽取v3产线包含四个模块，模型产线的效果不及预期可能来自于其中任何一个模块（文本图像矫正模块暂不支持二次开发）。
+由于通用文档场景信息抽取v3产线包含六个模块，模型产线的效果不及预期可能来自于其中任何一个模块（文本图像矫正模块暂不支持二次开发）。
 
 您可以对识别效果差的图片进行分析，参考如下规则进行分析和模型微调：
 
@@ -703,7 +703,7 @@ predict = create_pipeline( pipeline="PP-ChatOCRv3-doc",
                             llm_params = {"api_type":"qianfan","ak":"","sk":""},  ## 请填入您的ak与sk，否则无法调用大模型
                             device = "gpu:0" )
 ```
-此时，若您想将硬件切换为昇腾 NPU，仅需对脚本中的 `--device` 修改为 npu 即可：
+此时，若您想将硬件切换为昇腾 NPU，仅需对脚本中的 `--device` 修改为 npu:0 即可：
 
 ```python
 from paddlex import create_pipeline
@@ -712,4 +712,4 @@ predict = create_pipeline( pipeline="PP-ChatOCRv3-doc",
                             llm_params = {"api_type":"qianfan","ak":"","sk":""},  ## 请填入您的ak与sk，否则无法调用大模型
                             device = "npu:0" )
 ```
-若您想在更多种类的硬件上使用通用文档场景信息抽取产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。
+若您想在更多种类的硬件上使用通用文档场景信息抽取产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

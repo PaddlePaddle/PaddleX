@@ -19,9 +19,9 @@ pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0
 ```
 
 ### 1.2 Plugin Installation Mode
-If your use case for PaddleX involves **secondary development**, we recommend the more **powerful** plugin installation mode.
+If your use case for PaddleX involves **second development** (e.g. retraining models, fine-tuning models, customizing model structures, etc.), we recommend the more **powerful** plugin installation mode.
 
-After installing the PaddleX plugins you need, you can not only perform inference and integration with the supported models but also conduct advanced operations such as model training for secondary development.
+After installing the PaddleX plugins you need, you can not only perform inference and integration with the supported models but also conduct advanced operations such as model training for second development.
 
 The plugins supported by PaddleX are listed below. Please determine the name(s) of the plugin(s) you need based on your development requirements:
 
@@ -35,12 +35,12 @@ The plugins supported by PaddleX are listed below. Please determine the name(s) 
 | General Semantic Segmentation | Semantic Segmentation | `PaddleSeg` |
 | General Instance Segmentation | Instance Segmentation | `PaddleDetection` |
 | General OCR | Text Detection<br>Text Recognition | `PaddleOCR` |
-| General Table Recognition | Layout Region Detection<br>Table Structure Recognition<br>Text Detection<br>Text Recognition | `PaddleOCR`<br>`PaddleDetection` |
-| Document Scene Information Extraction v3 | Table Structure Recognition<br>Layout Region Detection<br>Text Detection<br>Text Recognition<br>Seal Text Detection<br>Document Image Correction<br>Document Image Orientation Classification | `PaddleOCR`<br>`PaddleDetection`<br>`PaddleClas` |
-| Time Series Prediction | Time Series Prediction Module | `PaddleTS` |
+| Table Recognition | Layout Region Detection<br>Table Structure Recognition<br>Text Detection<br>Text Recognition | `PaddleOCR`<br>`PaddleDetection` |
+| Document Scene Information Extraction v3 | Table Structure Recognition<br>Layout Region Detection<br>Text Detection<br>Text Recognition<br>Seal Text Detection<br>Text Image Correction<br>Document Image Orientation Classification | `PaddleOCR`<br>`PaddleDetection`<br>`PaddleClas` |
+| Time Series Forecasting | Time Series Forecasting Module | `PaddleTS` |
 | Time Series Anomaly Detection | Time Series Anomaly Detection Module | `PaddleTS` |
 | Time Series Classification | Time Series Classification Module | `PaddleTS` |
-| General Multi-label Classification | Image Multi-label Classification | `PaddleClas` |
+| Image Multi-Label Classification | Image Multi-label Classification | `PaddleClas` |
 | Small Object Detection | Small Object Detection | `PaddleDetection` |
 | Image Anomaly Detection | Unsupervised Anomaly Detection | `PaddleSeg` |
 
@@ -68,6 +68,10 @@ When using custom installation methods, you need to first install the PaddlePadd
 ### 2.1 Get PaddleX based on Docker
 Using the PaddleX official Docker image, create a container called 'paddlex' and map the current working directory to the '/paddle' directory inside the container by following the command.
 ```bash
+# For CPU
+docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it registry.baidubce.com/paddlex/paddlex:paddlex3.0.0b1-paddlepaddle3.0.0b1-cpu /bin/bash
+
+# For GPU
 # For CUDA11.8
 docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it registry.baidubce.com/paddlex/paddlex:paddlex3.0.0b1-paddlepaddle3.0.0b1-gpu-cuda11.8-cudnn8.9-trt8.5 /bin/bash
 
@@ -75,7 +79,7 @@ docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=hos
 docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it registry.baidubce.com/paddlex/paddlex:paddlex3.0.0b1-paddlepaddle3.0.0b1-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
 ```
 * If you want to delve deeper into the principles or usage of Docker, please refer to the [Docker Official Website](https://www.docker.com/) or the [Docker Official Tutorial](https://docs.docker.com/get-started/).
-* If you are a CUDA 11.8 user, please ensure your Docker version is >= 19.03; if you are a CUDA 12.3 user, please ensure your Docker version is >= 20.10.
+* If you are a CUDA 11.8 user, please ensure your Docker version is >= 17.06; if you are a CUDA 12.3 user, please ensure your Docker version is >= 26.10.
 
 ### 2.2 Custom Installation of PaddleX
 Before installation, please ensure you have completed the local installation of PaddlePaddle by referring to the [PaddlePaddle Local Installation Tutorial](paddlepaddle_install_en.md).

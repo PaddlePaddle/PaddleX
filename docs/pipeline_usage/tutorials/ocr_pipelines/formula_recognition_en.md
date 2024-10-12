@@ -17,7 +17,7 @@ Formula recognition is a technology that automatically identifies and extracts L
 
 **Layout Detection Module Models**:
 
-| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
+| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) |
 |-|-|-|-|-|
 | RT-DETR-H_layout_17cls | 92.6 | 115.126 | 3827.25 | 470.2M |
 
@@ -666,7 +666,7 @@ print_r($result["texts"]);
 You can choose the appropriate deployment method based on your needs to proceed with subsequent AI application integration.
 
 
-## 4. Customization and Fine-tuning
+## 4. Second Development
 If the default model weights provided by the general formula recognition pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing models using **your own domain-specific or application-specific data** to improve the recognition performance of the general formula recognition pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
@@ -706,4 +706,4 @@ Now, if you want to switch the hardware to Ascend NPU, you only need to modify t
 paddlex --pipeline formula_recognition --input general_formula_recognition.png --device npu:0
 ```
 
-If you want to use the general formula recognition pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/installation_other_devices_en.md).
+If you want to use the general formula recognition pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md).

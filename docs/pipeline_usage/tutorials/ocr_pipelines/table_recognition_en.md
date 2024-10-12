@@ -1,11 +1,12 @@
-[简体中文](table_recognition.md) | English
+[简体中文](table_recognition_en.md) | English
 
 # General Table Recognition Pipeline Usage Tutorial
 
 ## 1. Introduction to the General Table Recognition Pipeline
 Table recognition is a technology that automatically identifies and extracts table content and its structure from documents or images. It is widely used in data entry, information retrieval, and document analysis. By leveraging computer vision and machine learning algorithms, table recognition can convert complex table information into editable formats, facilitating further data processing and analysis for users.
 
-![](/tmp/images/pipelines/table_recognition/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/01.png)
+
 
 **The General Table Recognition Pipeline comprises modules for table structure recognition, layout analysis, text detection, and text recognition.**
 
@@ -31,7 +32,7 @@ Table recognition is a technology that automatically identifies and extracts tab
     <td>522.536</td>
     <td>1845.37</td>
     <td>6.9 M</td>
-    <td rowspan="1">SLANet is a table structure recognition model developed by Baidu PaddlePaddle Vision Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
+    <td rowspan="1">SLANet is a table structure recognition model developed by Baidu PaddleX Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
   </tr>
    </tr>
    <tr>
@@ -41,7 +42,7 @@ Table recognition is a technology that automatically identifies and extracts tab
     <td>1845.37</td>
     <td>6.9 M</td>
         <td rowspan="1">
-SLANet_plus is an enhanced version of SLANet, a table structure recognition model developed by Baidu PaddlePaddle's Vision Team. Compared to SLANet, SLANet_plus significantly improves its recognition capabilities for wireless and complex tables, while reducing the model's sensitivity to the accuracy of table localization. Even when there are offsets in table localization, it can still perform relatively accurate recognition.
+SLANet_plus is an enhanced version of SLANet, a table structure recognition model developed by Baidu PaddleX Team. Compared to SLANet, SLANet_plus significantly improves its recognition capabilities for wireless and complex tables, while reducing the model's sensitivity to the accuracy of table localization. Even when there are offsets in table localization, it can still perform relatively accurate recognition.
 </td>
   </tr>
 </table>
@@ -50,7 +51,7 @@ SLANet_plus is an enhanced version of SLANet, a table structure recognition mode
 
 **Layout Analysis Module Models**:
 
-|Model Name|mAP (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|Model Name|mAP (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size (M)|
 |-|-|-|-|-|
 |PicoDet_layout_1x|86.8|13.036|91.2634|7.4M|
 |PicoDet-L_layout_3cls|89.3|15.7425|159.771|22.6 M|
@@ -61,7 +62,7 @@ SLANet_plus is an enhanced version of SLANet, a table structure recognition mode
 
 **Text Detection Module Models**:
 
-|Model Name|Detection Hmean (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|Model Name|Detection Hmean (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size (M)|
 |-|-|-|-|-|
 |PP-OCRv4_mobile_det|77.79|10.6923|120.177|4.2 M|
 |PP-OCRv4_server_det|82.69|83.3501|2434.01|100.1M|
@@ -74,12 +75,12 @@ PaddleX's pre-trained model pipelines allow for quick experience of their effect
 ### 2.1 Online Experience
 You can [experience online](https://aistudio.baidu.com/community/app/91661/webUI) the effects of the General Table Recognition pipeline by using the demo images provided by the official. For example:
 
-![](/tmp/images/pipelines/table_recognition/02.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/02.png)
 
 If you are satisfied with the pipeline's performance, you can directly integrate and deploy it. If not, you can also use your private data to **fine-tune the models in the pipeline online**.
 
 ### 2.2 Local Experience
-Before using the General Table Recognition pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Guide](../../../installation/installation.md).
+Before using the General Table Recognition pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Guide](../../../installation/installation_en.md).
 
 ### 2.1 Command Line Experience
 Experience the effects of the table recognition pipeline with a single command:
@@ -124,7 +125,7 @@ Here, parameters like `--model` and `--device` do not need to be specified, as t
 
 After running, the result is:
 
-![](/tmp/images/pipelines/table_recognition/03.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/03.png)
 
 The visualized image is saved in the `output` directory by default, and you can customize it with `--save_path`.
 
@@ -139,7 +140,7 @@ pipeline = create_pipeline(pipeline="table_recognition")
 output = pipeline.predict("table_recognition.jpg")
 for res in output:
     res.print()  # Print the structured output of the prediction
-    res.save_to_csv("./output/")  # Save the results in CSV format
+    res.save_to_img("./output/")  # Save the results in img format
     res.save_to_xlsx("./output/")  # Save the results in Excel format
 ```
 The results are the same as those obtained through the command line.
@@ -169,11 +170,13 @@ In the above Python script, the following steps are executed:
 
 （4）Process the prediction results: The prediction result for each sample is of `dict` type and supports printing or saving to files, with the supported file types depending on the specific pipeline. For example:
 
-| Method         | Description                     | Method Parameters |
-|--------------|-----------------------------|--------------------------------------------------------------------------------------------------------|
-| print        | Prints results to the terminal  | `- format_json`: bool, whether to format the output content with json indentation, default is True;<br>`- indent`: int, json formatting setting, only valid when format_json is True, default is 4;<br>`- ensure_ascii`: bool, json formatting setting, only valid when format_json is True, default is False; |
-| save_to_json | Saves results as a json file   | `- save_path`: str, the path to save the file, when it's a directory, the saved file name is consistent with the input file type;<br>`- indent`: int, json formatting setting, default is 4;<br>`- ensure_ascii`: bool, json formatting setting, default is False; |
-| save_to_img  | Saves results as an image file | `- save_path`: str, the path to save the file, when it's a directory, the saved file name is consistent with the input file type; |
+| Method | Description | Method Parameters |
+|--------|-------------|-------------------|
+| save_to_img | Save the results as an img format file | `- save_path`: str, the path to save the file. When it's a directory, the saved file name will be consistent with the input file type; |
+| save_to_html | Save the results as an html format file | `- save_path`: str, the path to save the file. When it's a directory, the saved file name will be consistent with the input file type; |
+| save_to_xlsx | Save the results as a spreadsheet format file | `- save_path`: str, the path to save the file. When it's a directory, the saved file name will be consistent with the input file type; |
+
+Where `save_to_img` can visualize the cells by drawing them on the input image, `save_to_html` can directly save the table as an html file (including text and table formatting), and `save_to_xlsx` can save the table as an Excel format file (including text and formatting).
 
 If you have a configuration file, you can customize the configurations of the image anomaly detection pipeline by simply modifying the `pipeline` parameter in the `create_pipeline` method to the path of the pipeline configuration file.
 
@@ -185,20 +188,20 @@ pipeline = create_pipeline(pipeline="./my_path/table_recognition.yaml")
 output = pipeline.predict("table_recognition.jpg")
 for res in output:
     res.print()  # Print the structured output of prediction
-    res.save_to_csv("./output/")  # Save results in CSV format
+    res.save_to_img("./output/")  # Save results in img format
     res.save_to_xlsx("./output/")  # Save results in Excel format
 ```
 
 ## 3. Development Integration/Deployment
 If the pipeline meets your requirements for inference speed and accuracy in production, you can proceed with development integration/deployment.
 
-If you need to directly apply the pipeline in your Python project, refer to the example code in [2.2.2 Python Script Integration](#222-python-script-integration).
+If you need to directly apply the pipeline in your Python project, refer to the example code in [2.2 Python Script Integration](#22-python-script-integration).
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
-🚀 **High-Performance Deployment**: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins that aim to deeply optimize model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance deployment procedures, refer to the [PaddleX High-Performance Deployment Guide](../../../pipeline_deploy/high_performance_deploy.md).
+🚀 **High-Performance Deployment**: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins that aim to deeply optimize model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance deployment procedures, refer to the [PaddleX High-Performance Deployment Guide](../../../pipeline_deploy/high_performance_deploy_en.md).
 
-☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy.md).
+☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy_en.md).
 
 Below are the API references and multi-language service invocation examples:
 
@@ -693,10 +696,10 @@ print_r($result["tables"]);
 </details>
 <br/>
 
-📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy.md).
+📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy_en.md).
 Choose the appropriate deployment method for your model pipeline based on your needs, and proceed with subsequent AI application integration.
 
-## 4. Customization and Fine-tuning
+## 4. Second Development
 If the default model weights provided by the general table recognition pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing model using **your own domain-specific or application-specific data** to improve the recognition performance of the general table recognition pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
@@ -704,10 +707,10 @@ Since the general table recognition pipeline consists of four modules, unsatisfa
 
 Analyze images with poor recognition results and follow the rules below for analysis and model fine-tuning:
 
-* If the detected table structure is incorrect (e.g., row and column recognition errors, incorrect cell positions), the table structure recognition module may be insufficient. You need to refer to the [Customization](../../../module_usage/tutorials/ocr_modules/table_structure_recognition.md#customization) section in the [Table Structure Recognition Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/table_structure_recognition.md) and use your private dataset to fine-tune the table structure recognition model.
-* If the table area is incorrectly located within the overall layout, the layout detection module may be insufficient. You need to refer to the [Customization](../../../module_usage/tutorials/ocr_modules/layout_detection.md#customization) section in the [Layout Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/layout_detection.md) and use your private dataset to fine-tune the layout detection model.
-* If many texts are undetected (i.e., text miss detection), the text detection model may be insufficient. You need to refer to the [Customization](../../../module_usage/tutorials/ocr_modules/text_recognition.md#customization) section in the [Text Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_recognition.md) and use your private dataset to fine-tune the text detection model.
-* If many detected texts contain recognition errors (i.e., the recognized text content does not match the actual text content), the text recognition model requires further improvement. You need to refer to the [Customization](../../../module_usage/tutorials/ocr_modules/table_structure_recognition.md#customization) section.
+* If the detected table structure is incorrect (e.g., row and column recognition errors, incorrect cell positions), the table structure recognition module may be insufficient. You need to refer to the [Customization](../../../module_usage/tutorials/ocr_modules/table_structure_recognition_en.md#customization) section in the [Table Structure Recognition Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/table_structure_recognition_en.md) and use your private dataset to fine-tune the table structure recognition model.
+* If the table area is incorrectly located within the overall layout, the layout detection module may be insufficient. You need to refer to the [Customization](../../../module_usage/tutorials/ocr_modules/layout_detection_en.md#customization) section in the [Layout Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/layout_detection_en.md) and use your private dataset to fine-tune the layout detection model.
+* If many texts are undetected (i.e., text miss detection), the text detection model may be insufficient. You need to refer to the [Customization](../../../module_usage/tutorials/ocr_modules/text_recognition_en.md#customization) section in the [Text Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_recognition_en.md) and use your private dataset to fine-tune the text detection model.
+* If many detected texts contain recognition errors (i.e., the recognized text content does not match the actual text content), the text recognition model requires further improvement. You need to refer to the [Customization](../../../module_usage/tutorials/ocr_modules/table_structure_recognition_en.md#customization) section.
 ### 4.2 Model Application
 After fine-tuning your model with a private dataset, you will obtain local model weights files.
 
@@ -741,4 +744,4 @@ At this time, if you want to switch the hardware to Ascend NPU, simply modify `-
 ```bash
 paddlex --pipeline table_recognition --input table_recognition.jpg --device npu:0
 ```
-If you want to use the general table recognition pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../installation/installation_other_devices.md).
+If you want to use the general table recognition pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md).

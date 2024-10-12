@@ -631,9 +631,9 @@ PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多�
 ```
 paddlex --pipeline ts_ad --input ts_ad.cs --device gpu:0
 ```
-此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的` --device` 修改为 npu 即可：
+此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的` --device` 修改为 npu:0 即可：
 
 ```
 paddlex --pipeline ts_ad --input ts_ad.cs --device npu:0
 ```
-若您想在更多种类的硬件上使用通用时序异常检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。
+若您想在更多种类的硬件上使用通用时序异常检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

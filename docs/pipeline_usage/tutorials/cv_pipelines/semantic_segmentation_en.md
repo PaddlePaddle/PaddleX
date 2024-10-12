@@ -3,14 +3,14 @@
 # General Semantic Segmentation Pipeline Tutorial
 
 ## 1. Introduction to the General Semantic Segmentation Pipeline
-Semantic segmentation is a computer vision technique that aims to assign each pixel in an image to a specific category, enabling a detailed understanding of the image content. Semantic segmentation not only identifies the types of objects in an image but also classifies each pixel, allowing regions of the same category to be fully labeled. For example, in a street scene image, semantic segmentation can distinguish pedestrians, cars, the sky, and roads pixel by pixel, forming a detailed label map. This technology is widely used in autonomous driving, medical image analysis, and human-computer interaction, often relying on deep learning models (such as FCN, U-Net, etc.) to extract features and achieve high-precision pixel-level classification, providing a foundation for further intelligent analysis.
+Semantic segmentation is a computer vision technique that aims to assign each pixel in an image to a specific category, enabling a detailed understanding of the image content. Semantic segmentation not only identifies the types of objects in an image but also classifies each pixel, allowing regions of the same category to be fully labeled. For example, in a street scene image, semantic segmentation can distinguish pedestrians, cars, the sky, and roads pixel by pixel, forming a detailed label map. This technology is widely used in autonomous driving, medical image analysis, and human-computer interaction, often relying on deep learning models (such as SegFormer, etc.) to extract features and achieve high-precision pixel-level classification, providing a foundation for further intelligent analysis.
 
 ![](/tmp/images/pipelines/semantic_segmentation/01.png)
 
 <details>
    <summary> 👉 Model List Details</summary>
 
-|Model Name|mIoU (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|Model Name|mIoU (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size (M)|
 |-|-|-|-|-|
 |Deeplabv3_Plus-R50 |80.36|61.0531|1513.58|94.9 M|
 |Deeplabv3_Plus-R101|81.10|100.026|2460.71|162.5 M|
@@ -30,7 +30,7 @@ Semantic segmentation is a computer vision technique that aims to assign each pi
 **The accuracy metrics of the above models are measured on the [Cityscapes](https://www.cityscapes-dataset.com/) dataset. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 
 
-|Model Name|mIoU (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
+|Model Name|mIoU (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size (M)|
 |-|-|-|-|-|
 |SeaFormer_base(slice)|40.92|24.4073|397.574|30.8 M|
 |SeaFormer_large (slice)|43.66|27.8123|550.464|49.8 M|
@@ -595,7 +595,7 @@ echo "Output image saved at " . $output_image_path . "\n";
 📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing functions on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy.md).
 Choose the appropriate deployment method for your model pipeline based on your needs, and proceed with subsequent AI application integration.
 
-## 4. Customization and Fine-tuning
+## 4. Second Development
 If the default model weights provided by the general semantic segmentation pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing model using **your own domain-specific or application-specific data** to improve the recognition performance of the general semantic segmentation pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
@@ -624,9 +624,9 @@ For example, if you use an NVIDIA GPU for semantic segmentation pipeline inferen
 ```bash
 paddlex --pipeline semantic_segmentation --input makassaridn-road_demo.png --device gpu:0
 ``````
-At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` flag in the Python command to `npu`:
+At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` flag in the Python command to `npu:0`:
 
 ```bash
 paddlex --pipeline semantic_segmentation --input makassaridn-road_demo.png --device npu:0
 ```
-If you want to use the General Semantic Segmentation Pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/installation_other_devices_en.md).
+If you want to use the General Semantic Segmentation Pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md).

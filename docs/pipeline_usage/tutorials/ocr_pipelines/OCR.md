@@ -18,7 +18,7 @@ OCR（光学字符识别，Optical Character Recognition）是一种将图像中
     <th>具体模型</th>
     <th>精度</th>
     <th>GPU推理耗时 (ms)</th>
-    <th>CPU推理耗时</th>
+    <th>CPU推理耗时（ms）</th>
     <th>模型存储大小 (M)</th>
   </tr>
   <tr>
@@ -77,7 +77,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/02.png)
 
-如果您对产线运行的效果满意，可以直接对产线进行集成部署，您可以直接从云端下载部署包，也可以使用[2.2节本地体验](#3-开发集成部署)的方式。如果不满意，您也可以利用私有数据**对产线中的模型进行在线微调**。
+如果您对产线运行的效果满意，可以直接对产线进行集成部署，您可以直接从云端下载部署包，也可以使用[2.2节本地体验](#22-本地体验)的方式。如果不满意，您也可以利用私有数据**对产线中的模型进行在线微调**。
 
 ### 2.2 本地体验
 > ❗ 在本地使用通用OCR产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
@@ -747,4 +747,4 @@ paddlex --pipeline OCR --input general_ocr_002.png --device gpu:0
 ```bash
 paddlex --pipeline OCR --input general_ocr_002.png --device npu:0
 ```
-若您想在更多种类的硬件上使用通用OCR产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。
+若您想在更多种类的硬件上使用通用OCR产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

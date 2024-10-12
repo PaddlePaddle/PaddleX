@@ -16,7 +16,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <th>Model</th>
     <th>mAP(%)</th>
     <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time</th>
+    <th>CPU Inference Time (ms)</th>
     <th>Model Size (M)</th>
     <th>Description</th>
   </tr>
@@ -319,6 +319,7 @@ Object detection aims to identify the categories and locations of multiple objec
 </table>
 
 **Note: The precision metrics mentioned are based on the [COCO2017](https://cocodataset.org/#home) validation set mAP(0.5:0.95). All model GPU inference times are measured on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
+
 
 </details>
 
@@ -915,7 +916,7 @@ print_r($result["detectedObjects"]);
 
 Choose the appropriate deployment method for your model pipeline based on your needs, and proceed with subsequent AI application integration.
 
-## 4. Custom Development
+## 4. Second Development
 If the default model weights provided by the General Object Detection pipeline do not meet your requirements for precision or speed in your specific scenario, you can try to further **fine-tune** the existing model using **your own domain-specific or application-specific data** to improve the recognition performance of the General Object Detection pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
@@ -944,9 +945,9 @@ For example, if you use an NVIDIA GPU for inference of the General Object Detect
 ```bash
 paddlex --pipeline object_detection --input general_object_detection_002.png --device gpu:0
 ``````
-At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu`:
+At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu:0`:
 
 ```bash
 paddlex --pipeline object_detection --input general_object_detection_002.png --device npu:0
 ```
-If you want to use the General Object Detection Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/installation_other_devices_en.md).
+If you want to use the General Object Detection Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md).

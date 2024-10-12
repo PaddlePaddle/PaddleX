@@ -18,7 +18,7 @@ nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -i
 # CUDA 12.3 users
 nvidia-docker run --name paddlex -v $PWD:/paddle  --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
 ```
-Note: For more official PaddlePaddle Docker images, please refer to the [PaddlePaddle official website](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/en/install/docker/linux-docker.html). If you are a CUDA 11.8 user, please ensure your Docker version is >= 19.03; if you are a CUDA 12.3 user, please ensure your Docker version is >= 20.10.
+Note: For more official PaddlePaddle Docker images, please refer to the [PaddlePaddle official website](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/en/install/docker/linux-docker.html). If you are a CUDA 11.8 user, please ensure your Docker version is >= 17.06; if you are a CUDA 12.3 user, please ensure your Docker version is >= 26.10.
 
 ## Installing PaddlePaddle via pip
 **If you choose to install via pip**, please refer to the following commands to install PaddlePaddle in your current environment using pip:

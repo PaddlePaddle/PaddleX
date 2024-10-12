@@ -1,13 +1,13 @@
 [简体中文](document_scene_information_extraction.md) | English
 
-# PP-ChatOCRv3-doc Pipeline Usage Tutorial
+# PP-ChatOCRv3-doc Pipeline utorial
 
 ## 1. Introduction to PP-ChatOCRv3-doc Pipeline
 PP-ChatOCRv3-doc is a unique intelligent analysis solution for documents and images developed by PaddlePaddle. It combines Large Language Models (LLM) and OCR technology to provide a one-stop solution for complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. By integrating with ERNIE Bot, it fuses massive data and knowledge to achieve high accuracy and wide applicability.
 
 ![](https://github.com/user-attachments/assets/90cb740b-7741-4383-bc4c-663f9d042d02)
 
-The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recognition, Layout Region Detection, Text Detection, Text Recognition, Seal Text Detection, Text Image Rectification, and Document Image Orientation Classification**.
+The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recognition, Layout Detection Module, Text Detection, Text Recognition, Seal Text Detection, Text Image Rectification, and Document Image Orientation Classification**.
 
 **If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, choose a model with faster inference speed. If you prioritize model storage size, choose a model with a smaller storage size.** Some benchmarks for these models are as follows:
 
@@ -31,7 +31,7 @@ The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recogni
     <td>522.536</td>
     <td>1845.37</td>
     <td>6.9 M</td>
-    <td>SLANet is a table structure recognition model developed by Baidu PaddlePaddle Vision Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
+    <td>SLANet is a table structure recognition model developed by Baidu PaddleX Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
   </tr>
   <tr>
     <td>SLANet_plus</td>
@@ -39,7 +39,7 @@ The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recogni
     <td>522.536</td>
     <td>1845.37</td>
     <td>6.9 M</td>
-    <td>SLANet_plus is an enhanced version of SLANet, the table structure recognition model developed by Baidu PaddlePaddle Vision Team. Compared to SLANet, SLANet_plus significantly improves the recognition ability for wireless and complex tables and reduces the model's sensitivity to the accuracy of table positioning, enabling more accurate recognition even with offset table positioning.</td>
+    <td>SLANet_plus is an enhanced version of SLANet, the table structure recognition model developed by Baidu PaddleX Team. Compared to SLANet, SLANet_plus significantly improves the recognition ability for wireless and complex tables and reduces the model's sensitivity to the accuracy of table positioning, enabling more accurate recognition even with offset table positioning.</td>
   </tr>
 </table>
 
@@ -100,7 +100,7 @@ The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recogni
         <th>Model</th>
         <th>Recognition Avg Accuracy (%)</th>
         <th>GPU Inference Time (ms)</th>
-        <th>CPU Inference Time</th>
+        <th>CPU Inference Time (ms)</th>
         <th>Model Size (M)</th>
         <th>Description</th>
     </tr>
@@ -123,7 +123,7 @@ The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recogni
         <th>Model</th>
         <th>Recognition Avg Accuracy (%)</th>
         <th>GPU Inference Time (ms)</th>
-        <th>CPU Inference Time</th>
+        <th>CPU Inference Time (ms)</th>
         <th>Model Size (M)</th>
         <th>Description</th>
     </tr>
@@ -220,13 +220,17 @@ In the above Python script, the following steps are executed:
 
 (2) Call the `predict` method of the PP-ChatOCRv3-doc pipeline object for inference prediction: The `predict` method parameter is `x`, used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
 
-| Parameter Type | Description |
-|-|-|
-| Python Var | Supports directly passing Python variables, such as numpy.ndarray representing image data; |
-| str | Supports passing the path of the file to be predicted, such as the local path of an image file: /root/data/img.jpg; |
-| str | Supports passing the URL of the file to be predicted, such as [example](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf); |
-| str | Supports passing a local directory, which should contain files to be predicted, such as the local path: /root/data/; |
-| dict | Supports passing a dictionary type, where the key needs to correspond to the specific pipeline, such as "img
+| Parameter Type | Parameter Description |
+|----------------|-----------------------|
+| Python Var     | Supports direct input of Python variables, such as image data represented by numpy.ndarray; |
+| str            | Supports input of the file path of the data to be predicted, such as the local path of an image file: /root/data/img.jpg; |
+| str            | Supports input of the URL of the data file to be predicted, such as [example](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf); |
+| str            | Supports input of a local directory containing data files to be predicted, such as the local path: /root/data/; |
+| dict           | Supports input of dictionary type, where the key needs to correspond to a specific pipeline. For example, in the document scene information extraction v3 pipeline, the key is "img". The value of the dictionary supports the above-mentioned types of data, such as: {"img": "/root/data1"}; |
+| list           | Supports input of a list, where the elements of the list need to be of the above-mentioned types, such as [numpy.ndarray, numpy.ndarray, ], ["/root/data/img1.jpg", "/root/data/img2.jpg", ], ["/root/data1", "/root/data2", ], [{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}, ]; |
+| use_oricls_model | Whether to use the orientation classification pipeline (default is False) |
+| use_curve_model  | Whether to use the curved text detection pipeline (default is False) |
+| use_uvdoc_model  | Whether to use the layout correction pipeline (default is False) |
 
 (3) Obtain prediction results by calling the `predict` method: The `predict` method is a `generator`, so prediction results need to be obtained through calls. The `predict` method predicts data in batches, so the prediction results are represented as a list of prediction results.
 
@@ -554,11 +558,11 @@ if __name__ == "__main__":
 <br/>
 
 📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing functions on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy_en.md).
-## 4. Customization and Fine-tuning
+## 4. Second Development
 If the default model weights provided by the PP-ChatOCRv3-doc Pipeline do not meet your requirements in terms of accuracy or speed for your specific scenario, you can attempt to further **fine-tune** the existing models using **your own domain-specific or application-specific data** to enhance the recognition performance of the general table recognition pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
-Since the PP-ChatOCRv3-doc Pipeline comprises four modules, unsatisfactory performance may stem from any of these modules (note that the text image rectification module does not support customization at this time).
+Since the PP-ChatOCRv3-doc Pipeline comprises six modules, unsatisfactory performance may stem from any of these modules (note that the text image rectification module does not support customization at this time).
 
 You can analyze images with poor recognition results and follow the guidelines below for analysis and model fine-tuning:
 
@@ -566,7 +570,7 @@ You can analyze images with poor recognition results and follow the guidelines b
 * Misplaced layout elements (e.g., incorrect positioning of tables or seals) may suggest issues with the layout detection module. Consult the **Customization** section in the [Layout Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/layout_detection_en.md) and fine-tune the layout detection model with your private dataset.
 * Frequent undetected text (i.e., text leakage) may indicate limitations in the text detection model. Refer to the **Customization** section in the [Text Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_detection_en.md) and fine-tune the text detection model using your private dataset.
 * High text recognition errors (i.e., recognized text content does not match the actual text) suggest that the text recognition model requires improvement. Follow the **Customization** section in the [Text Recognition Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_recognition_en.md) to fine-tune the text recognition model.
-* Frequent recognition errors in detected seal text indicate that the seal text detection model needs further refinement. Consult the **Customization** section in the [Seal Text Detection Module Development Tutorials](../../../module_usage/tutorials/ocr_modules/text_detection_en.md) to fine-tune the seal text detection model.
+* Frequent recognition errors in detected seal text indicate that the seal text detection model needs further refinement. Consult the **Customization** section in the [Seal Text Detection Module Development Tutorials](../../../module_usage/tutorials/ocr_modules/seal_text_detection_en.md) to fine-tune the seal text detection model.
 * Frequent misidentifications of document or certificate orientations with text regions suggest that the document image orientation classification model requires improvement. Refer to the **Customization** section in the [Document Image Orientation Classification Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification_en.md) to fine-tune the document image orientation classification model.
 
 ### 4.2 Model Deployment
@@ -592,8 +596,16 @@ Subsequently, load the modified pipeline configuration file using the command-li
 ## 5. Multi-hardware Support
 PaddleX supports various mainstream hardware devices such as NVIDIA GPUs, Kunlun XPU, Ascend NPU, and Cambricon MLU. **Seamless switching between different hardware can be achieved by simply setting the `--device` parameter**.
 
-For example, to perform inference using the PP-ChatOCRv3-doc Pipeline on an NVIDIA GPU.
-At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the script to `npu`:
+For example, to perform inference using the PP-ChatOCRv3-doc Pipeline on an NVIDIA GPU, you run:
+```python
+from paddlex import create_pipeline
+predict = create_pipeline( pipeline="PP-ChatOCRv3-doc",
+                            llm_name="ernie-3.5",
+                            llm_params = {"api_type":"qianfan","ak":"","sk":""},  ## Please fill in your ak and sk, or you will not be able to call the large model
+                            device = "gpu:0" )
+```
+
+At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the script to `npu:0`:
 
 ```python
 from paddlex import create_pipeline
@@ -602,4 +614,4 @@ predict = create_pipeline(pipeline="PP-ChatOCRv3-doc",
                             llm_params = {"api_type":"qianfan","ak":"","sk":""},  ## Please fill in your ak and sk, or you will not be able to call the large model
                             device = "npu:0")
 ```
-If you want to use the PP-ChatOCRv3-doc Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/installation_other_devices_en.md).
+If you want to use the PP-ChatOCRv3-doc Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/multi_devices_use_guide_en.md).

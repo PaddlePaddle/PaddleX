@@ -17,7 +17,7 @@
 
 **版面区域检测模块模型：**
 
-|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时（ms）|模型存储大小（M)|
 |-|-|-|-|-|
 |RT-DETR-H_layout_17cls|92.6|115.126|3827.25|470.2M|
 
@@ -724,4 +724,4 @@ paddlex --pipeline formula_recognition --input general_formula_recognition.png -
 ```bash
 paddlex --pipeline formula_recognition --input general_formula_recognition.png --device npu:0
 ```
-若您想在更多种类的硬件上使用通用通用公式识别产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。
+若您想在更多种类的硬件上使用通用通用公式识别产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。
