@@ -14,10 +14,10 @@ The core task of structure analysis is to parse and segment the content of input
 |-|-|-|-|-|-|
 | PicoDet-L_layout_3cls | 89.3 | 15.7 | 159.8 | 22.6 | High-efficiency structure analysis model based on PicoDet-L, including 3 classes: table, image, and seal |
 | PicoDet_layout_1x | 86.8 | 13.0 | 91.3 | 7.4 | High-efficiency structure analysis model based on PicoDet-1x, including text, title, table, image, and list |
-| RT-DETR-H_layout_17cls | 92.6 | 115.1 | 3827.2 | 470.2 | High-precision structure analysis model based on RT-DETR-H, including 17 common layout categories. |
+| RT-DETR-H_layout_17cls | 92.6 | 115.1 | 3827.2 | 470.2 | High-precision structure analysis model based on RT-DETR-H, containing 17 common layout categories, namely: paragraph title, image, text, number, abstract, content, figure title, formula, table, table title, reference, document title, footnote, header, algorithm, footer, and seal. |
 | RT-DETR-H_layout_3cls | 95.9 | 114.6 | 3832.6 | 470.1 | High-precision structure analysis model based on RT-DETR-H, including 3 classes: table, image, and seal |
 
-**Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built layout region analysis dataset, containing 10,000 images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
+**Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built layout region analysis dataset, containing 10,000 images of common document types, including English and Chinese papers, magazines, research reports, etc. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 </details>
 
 ## III. Quick Integration  <a id="quick"> </a> 
