@@ -177,7 +177,7 @@ def main():
         )
     else:
         if args.get_pipeline_config is not None:
-            interactive_get_pipeline(args.get_pipeline_config)
+            interactive_get_pipeline(args.get_pipeline_config, args.save_path)
         else:
             return pipeline_predict(
                 args.pipeline,
