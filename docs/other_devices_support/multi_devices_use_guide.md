@@ -1,4 +1,4 @@
-简体中文 | [English](installation_other_devices_en.md)
+简体中文 | [English](multi_devices_use_guide_en.md)
 
 # PaddleX多硬件使用指南
 
@@ -29,7 +29,7 @@ PaddleX为您提供了两种安装模式：Wheel包安装和插件安装，下�
 安装飞桨后，您可直接执行如下指令快速安装PaddleX的Wheel包：
 
 ```
-pip install pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0.beta1-py3-none-any.whl
+pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0b1-py3-none-any.whl
 ```
 #### 1.2.2 插件安装模式
 若您使用PaddleX的应用场景为**二次开发** ，那么推荐您使用**功能更加强大**的插件安装模式。
@@ -50,7 +50,7 @@ PaddleX支持的插件如下，请您根据开发需求，确定所需的一个�
 |通用实例分割|实例分割|PaddleDetection|
 |通用OCR|文本检测<br>文本识别|PaddleOCR|
 |通用表格识别|版面区域检测<br>表格结构识别<br>文本检测<br>文本识别|PaddleOCR<br>PaddleDetection|
-|文档场景信息抽取v3|表格结构识别<br>版面区域检测<br>文本检测<br>文本识别<br>印章文本检测<br>文档图像矫正<br>文档图像方向分类|PaddleOCR<br>PaddleDetection<br>PaddleClas |
+|文档场景信息抽取v3|表格结构识别<br>版面区域检测<br>文本检测<br>文本识别<br>印章文本检测<br>文本图像矫正<br>文档图像方向分类|PaddleOCR<br>PaddleDetection<br>PaddleClas |
 |时序预测|时序预测模块|PaddleTS|
 |时序异常检测|时序异常检测模块|PaddleTS|
 |时序分类|时序分类模块|PaddleTS|

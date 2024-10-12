@@ -35,7 +35,7 @@ python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.
 ```
 Note: For more PaddlePaddle Wheel versions, please refer to the [PaddlePaddle official website](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/en/install/pip/linux-pip.html).
 
-**For installing PaddlePaddle on other hardware, please refer to** [PaddleX Multi-hardware Usage Guide](../other_devices_support/multy_devices_use_guide_en.md).
+**For installing PaddlePaddle on other hardware, please refer to** [PaddleX Multi-hardware Usage Guide](../other_devices_support/multi_devices_use_guide_en.md).
 
 After installation, you can verify if PaddlePaddle is successfully installed using the following command:
 
