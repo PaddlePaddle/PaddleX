@@ -28,8 +28,8 @@ class BasePredictor(BaseComponent):
     KEEP_INPUT = False
     YIELD_BATCH = False
 
-    INPUT_KEYS = "x"
-    DEAULT_INPUTS = {"x": "x"}
+    INPUT_KEYS = "input"
+    DEAULT_INPUTS = {"input": "input"}
     OUTPUT_KEYS = "result"
     DEAULT_OUTPUTS = {"result": "result"}
 
@@ -57,7 +57,7 @@ class BasePredictor(BaseComponent):
         return self.config["Global"]["model_name"]
 
     @abstractmethod
-    def apply(self, x):
+    def apply(self, input):
         raise NotImplementedError
 
     @abstractmethod

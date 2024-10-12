@@ -8,7 +8,10 @@ When installing PaddlePaddle, you can choose to install it via Docker or pip.
 **If you choose to install via Docker**, please refer to the following commands to use the official PaddlePaddle Docker image to create a container named `paddlex` and map the current working directory to the `/paddle` directory inside the container:
 
 ```bash
-# For GPU users
+# For CPU users:
+nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1 /bin/bash
+
+# For GPU users:
 # CUDA 11.8 users
 nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
 
@@ -32,7 +35,7 @@ python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.
 ```
 Note: For more PaddlePaddle Wheel versions, please refer to the [PaddlePaddle official website](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/en/install/pip/linux-pip.html).
 
-**For installing PaddlePaddle on other hardware, please refer to** [Installing PaddlePaddle on Other Devices](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/tutorials/INSTALL_OTHER_DEVICES.md).
+**For installing PaddlePaddle on other hardware, please refer to** [PaddleX Multi-hardware Usage Guide](../other_devices_support/multi_devices_use_guide_en.md).
 
 After installation, you can verify if PaddlePaddle is successfully installed using the following command:
 

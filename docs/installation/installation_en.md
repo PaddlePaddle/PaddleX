@@ -147,4 +147,4 @@ After installation, you will see the following prompt:
 All packages are installed.
 ```
 
-For PaddleX installation on more hardware environments, please refer to the [PaddleX Multi-hardware Usage Guide](installation_other_devices_en.md)
+For PaddleX installation on more hardware environments, please refer to the [PaddleX Multi-hardware Usage Guide](../other_devices_support/multi_devices_use_guide_en.md)

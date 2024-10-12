@@ -110,10 +110,7 @@ class TSModel(BaseModel):
             if num_workers is not None:
                 cli_args.append(CLIArgument("--num_workers", num_workers))
         # PDX related settings
-        if device_type in ["npu", "xpu", "mlu"]:
-            uniform_output_enabled = False
-        else:
-            uniform_output_enabled = True
+        uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
         config.update({"uniform_output_enabled": uniform_output_enabled})
         config.update({"pdx_model_name": self.name})
 
@@ -224,11 +221,11 @@ class TSModel(BaseModel):
         self, weight_path: str, save_dir: str = None, device: str = "gpu", **kwargs
     ):
         """export"""
-        weight_path = abspath(weight_path)
+        if not weight_path.startswith(("http://", "https://")):
+            weight_path = abspath(weight_path)
         save_dir = abspath(save_dir)
         cli_args = []
 
-        weight_path = abspath(weight_path)
         cli_args.append(CLIArgument("--checkpoints", weight_path))
         if save_dir is not None:
             save_dir = abspath(save_dir)

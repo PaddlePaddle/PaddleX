@@ -61,6 +61,13 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
         train_args = self.get_train_kwargs()
         if self.benchmark_config is not None:
             train_args.update({"benchmark": self.benchmark_config})
+        train_args.update(
+            {
+                "uniform_output_enabled": self.train_config.get(
+                    "uniform_output_enabled", True
+                )
+            }
+        )
         train_result = self.pdx_model.train(**train_args)
         assert (
             train_result.returncode == 0
