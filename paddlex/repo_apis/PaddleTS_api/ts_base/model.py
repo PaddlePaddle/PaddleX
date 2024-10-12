@@ -221,11 +221,11 @@ class TSModel(BaseModel):
         self, weight_path: str, save_dir: str = None, device: str = "gpu", **kwargs
     ):
         """export"""
-        weight_path = abspath(weight_path)
+        if not weight_path.startswith(("http://", "https://")):
+            weight_path = abspath(weight_path)
         save_dir = abspath(save_dir)
         cli_args = []
 
-        weight_path = abspath(weight_path)
         cli_args.append(CLIArgument("--checkpoints", weight_path))
         if save_dir is not None:
             save_dir = abspath(save_dir)

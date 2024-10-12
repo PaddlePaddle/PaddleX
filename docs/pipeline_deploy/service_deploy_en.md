@@ -9,7 +9,7 @@ Serving deployment is a common form of deployment in real-world production envir
 
 Serving Deployment Example Diagram:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/serving.png"  width="300" />
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/serving_en.png"  width="300" />
 
 ## 1. Basic Process
 

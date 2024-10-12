@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from abc import abstractmethod
+import inspect
 
 from ....utils.subclass_register import AutoRegisterABCMetaClass
 from ....utils import logging
@@ -46,9 +47,9 @@ class BasicPredictor(
         self.engine = ComponentsEngine(self.components)
         logging.debug(f"{self.__class__.__name__}: {self.model_dir}")
 
-    def apply(self, x):
+    def apply(self, input):
         """predict"""
-        yield from self._generate_res(self.engine(x))
+        yield from self._generate_res(self.engine(input))
 
     @generatorable_method
     def _generate_res(self, batch_data):
@@ -78,18 +79,19 @@ class BasicPredictor(
                 setattr(self, k, kwargs[k])
             else:
                 raise Exception(
-                    f"The arg({k}) is not supported to specify in predict() func! Only supports: {self._get_settable_attributes}"
+                    f"The arg({k}) is not supported to specify in predict() func! Only supports: {self._get_settable_attributes()}"
                 )
 
     def _has_setter(self, attr):
         prop = getattr(self.__class__, attr, None)
         return isinstance(prop, property) and prop.fset is not None
 
-    def _get_settable_attributes(self):
+    @classmethod
+    def _get_settable_attributes(cls):
         return [
             name
-            for name, prop in vars(self.__class__).items()
-            if isinstance(prop, property) and prop.fset is not None
+            for name, obj in inspect.getmembers(cls, lambda o: isinstance(o, property))
+            if obj.fset is not None
         ]
 
     @abstractmethod

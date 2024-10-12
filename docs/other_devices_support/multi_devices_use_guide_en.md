@@ -1,4 +1,4 @@
-[简体中文](installation_other_devices.md) | English
+[简体中文](multi_devices_use_guide.md) | English
 
 # PaddleX Multi-Hardware Usage Guide
 
@@ -27,7 +27,7 @@ If your application scenario for PaddleX is **model inference and integration**,
 After installing PaddlePaddle, you can directly execute the following commands to quickly install the PaddleX Wheel package:
 
 ```bash
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0.beta1-py3-none-any.whl
+pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0b1-py3-none-any.whl
 ```
 
 #### 1.2.2 Plugin Installation Mode
