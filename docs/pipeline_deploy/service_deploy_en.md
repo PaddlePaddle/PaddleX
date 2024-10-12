@@ -9,7 +9,7 @@ Serving deployment is a common form of deployment in real-world production envir
 
 Serving Deployment Example Diagram:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/serving.png"  width="300" />
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/serving_en.png"  width="300" />
 
 ## 1. Basic Process
 
@@ -78,7 +78,7 @@ Please refer to the **"Development Integration/Deployment"** section in the usag
 | Time Series Forecasting Pipeline | [Tutorial for Using the Time Series Forecasting Pipeline](../pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting_en.md) |
 | Time Series Anomaly Detection Pipeline | [Tutorial for Using the Time Series Anomaly Detection Pipeline](../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md) |
 | Time Series Classification Pipeline | [Tutorial for Using the Time Series Classification Pipeline](../pipeline_usage/tutorials/time_series_pipelines/time_series_classification_en.md) |
-| Document Scene Information Extraction v3 Pipeline | [Tutorial for Using the Document Scene Information Extraction v3 Pipeline](../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_en.md) |
+| Document Scene Information Extraction v3 Pipeline | [Tutorial for Using the Document Scene Information Extraction v3 Pipeline](../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md) |
 
 ## 2. Deploying Services for Production
 
