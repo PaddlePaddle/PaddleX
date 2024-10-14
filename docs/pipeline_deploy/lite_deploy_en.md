@@ -182,7 +182,7 @@ This guide applies to 8 models across 6 modules:
 
 3. Switch the working directory to `PaddleX_Lite_Deploy/{Task_Name}/android/shell/cxx/{Demo_Name}`, run the `build.sh` script to complete the compilation and execution of the executable file.
 
-4. Switch the working directory to `PaddleX-Lite-Deploy/{Task_Name}/android/shell/cxx/{Demo_Name}`, run the `run.sh` script to complete the prediction on the edge side.
+4. Switch the working directory to `PaddleX-Lite-Deploy/{Task_Name}/android/shell/cxx/{Demo_Name}`, run the `run.sh` script to complete the prediction on the edge.
 
     **Note**:
     - `{Pipeline_Name}` and `{Demo_Name}` are placeholders. Refer to the table at the end of this section for specific values.
@@ -302,11 +302,11 @@ This section describes the deployment steps applicable to the demos listed in th
 </table>
 
 **Note**
-- Currently, there is no demo for deploying the Layout Area Detection module on the edge side, so the `picodet_detection` demo is reused to deploy the `PicoDet_layout_1x` model.
+- Currently, there is no demo for deploying the Layout Area Detection module on the edge, so the `picodet_detection` demo is reused to deploy the `PicoDet_layout_1x` model.
 
 ## Reference Materials
 
-This guide only introduces the basic installation and usage process of the edge-side deployment demo. If you want to learn more detailed information, such as code introduction, code explanation, updating models, updating input and output preprocessing, updating prediction libraries, etc., please refer to the following documents:
+This guide only introduces the basic installation and usage process of the edge deployment demo. If you want to learn more detailed information, such as code introduction, code explanation, updating models, updating input and output preprocessing, updating prediction libraries, etc., please refer to the following documents:
 
 - [Object Detection](https://github.com/PaddlePaddle/Paddle-Lite-Demo/tree/feature/paddle-x/object_detection/android/shell/cxx/picodet_detection)
 - [Semantic Segmentation](https://github.com/PaddlePaddle/Paddle-Lite-Demo/blob/feature/paddle-x/semantic_segmentation/android/shell/cxx/semantic_segmentation/README.md)
@@ -315,4 +315,4 @@ This guide only introduces the basic installation and usage process of the edge-
 
 ## Feedback Section
 
-The edge-side deployment capabilities are continuously optimized. Welcome to submit [issue](https://github.com/PaddlePaddle/PaddleX/issues/new/choose) to report problems and needs, and we will follow up promptly.
+The edge deployment capabilities are continuously optimized. Welcome to submit [issue](https://github.com/PaddlePaddle/PaddleX/issues/new/choose) to report problems and needs, and we will follow up promptly.
