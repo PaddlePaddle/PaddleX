@@ -17,8 +17,10 @@ from typing import Any, Dict
 from fastapi import FastAPI
 
 from ...base import BasePipeline
+from ...formula_recognition import FormulaRecognitionPipeline
 from ...ocr import OCRPipeline
 from ...ppchatocrv3 import PPChatOCRPipeline
+from ...seal_recognition import SealOCRPipeline
 from ...single_model_pipeline import (
     AnomalyDetection,
     ImageClassification,
@@ -34,6 +36,7 @@ from ...single_model_pipeline import (
 from ...table_recognition import TableRecPipeline
 from ..app import create_app_config
 from .anomaly_detection import create_pipeline_app as create_anomaly_detection_app
+from .formula_recognition import create_pipeline_app as create_formula_recognition_app
 from .image_classification import create_pipeline_app as create_image_classification_app
 from .instance_segmentation import (
     create_pipeline_app as create_instance_segmentation_app,
@@ -44,8 +47,12 @@ from .multi_label_image_classification import (
 from .object_detection import create_pipeline_app as create_object_detection_app
 from .ocr import create_pipeline_app as create_ocr_app
 from .ppchatocrv3 import create_pipeline_app as create_ppchatocrv3_app
+from .seal_recognition import create_pipeline_app as create_seal_recognition_app
 from .semantic_segmentation import (
     create_pipeline_app as create_semantic_segmentation_app,
+)
+from .small_object_detection import (
+    create_pipeline_app as create_small_object_detection_app,
 )
 from .table_recognition import create_pipeline_app as create_table_recognition_app
 from .ts_ad import create_pipeline_app as create_ts_ad_app
@@ -118,7 +125,7 @@ def create_pipeline_app(
     elif pipeline_name == "small_object_detection":
         if not isinstance(pipeline, SmallObjDet):
             raise TypeError("Expected `pipeline` to be an instance of `SmallObjDet`.")
-        return create_object_detection_app(pipeline, app_config)
+        return create_small_object_detection_app(pipeline, app_config)
     elif pipeline_name == "anomaly_detection":
         if not isinstance(pipeline, AnomalyDetection):
             raise TypeError(
@@ -131,6 +138,18 @@ def create_pipeline_app(
                 "Expected `pipeline` to be an instance of `PPChatOCRPipeline`."
             )
         return create_ppchatocrv3_app(pipeline, app_config)
+    elif pipeline_name == "seal_recognition":
+        if not isinstance(pipeline, SealOCRPipeline):
+            raise TypeError(
+                "Expected `pipeline` to be an instance of `SealOCRPipeline`."
+            )
+        return create_seal_recognition_app(pipeline, app_config)
+    elif pipeline_name == "formula_recognition":
+        if not isinstance(pipeline, FormulaRecognitionPipeline):
+            raise TypeError(
+                "Expected `pipeline` to be an instance of `FormulaRecognitionPipeline`."
+            )
+        return create_formula_recognition_app(pipeline, app_config)
     else:
         if BasePipeline.get(pipeline_name):
             raise ValueError(
