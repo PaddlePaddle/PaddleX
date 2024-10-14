@@ -27,7 +27,7 @@ Small object detection typically refers to accurately detecting and locating sma
     <td>57.1</td>
     <td>1007.0</td>
     <td>324.93</td>
-    <td rowspan="3">PP-YOLOE_plus small object detection model trained on VisDrone</td>
+    <td rowspan="3">PP-YOLOE_plus small object detection model trained on VisDrone. VisDrone is a benchmark dataset specifically for unmanned aerial vehicle (UAV) visual data, which is used for small object detection due to the small size of the targets and the inherent challenges they pose.</td>
     
   </tr>
   <tr>
@@ -57,7 +57,7 @@ Small object detection typically refers to accurately detecting and locating sma
 After installing the wheel package, you can complete the inference of the small object detection module with just a few lines of code. You can switch models under this module freely, and you can also integrate the model inference of the small object detection module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg) to your local machine.
 
 ```python
-from paddlex.inference import create_model 
+from paddlex import create_model 
 
 model_name = "PP-YOLOE_plus_SOD-S"
 
@@ -151,7 +151,41 @@ After completing the dataset verification, you can convert the dataset format or
 
 **(1) Dataset Format Conversion**
 
-Small object detection does not support data format conversion.
+Small object detection supports converting datasets in `VOC` and `LabelMe` formats to `COCO` format.
+
+Parameters related to dataset validation can be set by modifying the fields under `CheckDataset` in the configuration file. Examples of some parameters in the configuration file are as follows:
+
+* `CheckDataset`:
+  * `convert`:
+    * `enable`: Whether to perform dataset format conversion. Small object detection supports converting `VOC` and `LabelMe` format datasets to `COCO` format. Default is `False`;
+    * `src_dataset_type`: If dataset format conversion is performed, the source dataset format needs to be set. Default is `null`, with optional values `VOC`, `LabelMe`, `VOCWithUnlabeled`, `LabelMeWithUnlabeled`;
+For example, if you want to convert a `LabelMe` format dataset to `COCO` format, taking the following `LabelMe` format dataset as an example, you need to modify the configuration as follows:
+
+```bash
+......
+CheckDataset:
+  ......
+  convert:
+    enable: True
+    src_dataset_type: LabelMe
+  ......
+```
+Then execute the command:
+
+```bash
+python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml \
+    -o Global.mode=check_dataset \
+    -o Global.dataset_dir=./path/to/your_smallobject_labelme_dataset
+```
+Of course, the above parameters also support being set by appending command line arguments. Taking a `LabelMe` format dataset as an example:
+
+```bash
+python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml \
+    -o Global.mode=check_dataset \
+    -o Global.dataset_dir=./path/to/your_smallobject_labelme_dataset \
+    -o CheckDataset.convert.enable=True \
+    -o CheckDataset.convert.src_dataset_type=LabelMe
+```
 
 **(2) Dataset Splitting**
 
