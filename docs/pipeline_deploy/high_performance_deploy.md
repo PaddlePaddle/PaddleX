@@ -1,6 +1,6 @@
 简体中文 | [English](high_performance_deploy_en.md)
 
-# PaddleX 高性能部署指南
+# PaddleX 高性能推理指南
 
 在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速。本文档将首先介绍高性能推理插件的安装和使用方式，然后列举目前支持使用高性能推理插件的产线与模型。
 
@@ -69,12 +69,12 @@
 使用序列号完成激活后，即可使用高性能推理插件。PaddleX 提供离线激活和在线激活两种方式（均只支持 Linux 系统）：
 
 * 联网激活：在使用推理 API 或 CLI 时，通过参数指定序列号及联网激活，使程序自动完成激活。
-* 离线激活：按照序列号管理界面中的指引（点击“操作”中的“离线激活”），获取机器的设备指纹，并将序列号与设备指纹绑定以获取证书，完成激活。使用这种激活方式，需要手动将证书存放在机器的${HOME}/.baidu/paddlex/licenses目录中（如果目录不存在，需要创建目录），并在使用推理 API 或 CLI 时指定序列号。
+* 离线激活：按照序列号管理界面中的指引（点击“操作”中的“离线激活”），获取机器的设备指纹，并将序列号与设备指纹绑定以获取证书，完成激活。使用这种激活方式，需要手动将证书存放在机器的`${HOME}/.baidu/paddlex/licenses`目录中（如果目录不存在，需要创建目录），并在使用推理 API 或 CLI 时指定序列号。
 请注意：每个序列号只能绑定到唯一的设备指纹，且只能绑定一次。这意味着用户如果使用不同的机器部署模型，则必须为每台机器准备单独的序列号。
 
 ### 1.3 启用高性能推理插件
 
-在启用高性能插件前，请确保当前环境的`LD_LIBRARY_PATH`没有指定 TensorRT 目录，因为插件中已经集成了 TensorRT，避免 TensorRT 版本冲突导致插件无法正常使用。
+在启用高性能插件前，请确保当前环境的`LD_LIBRARY_PATH`没有指定 TensorRT 的共享库目录，因为插件中已经集成了 TensorRT，避免 TensorRT 版本冲突导致插件无法正常使用。
 
 对于 PaddleX CLI，指定 `--use_hpip`，并设置序列号，即可启用高性能推理插件。如果希望进行联网激活，在第一次使用序列号时，需指定 `--update_license`，以通用图像分类产线为例：
 
@@ -107,7 +107,7 @@ pipeline = create_pipeline(
 +   serial_number="{序列号}",
 )
 
- output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg")
+output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg")
 ```
 
 启用高性能推理插件得到的推理结果与未启用插件时一致。对于部分模型，在首次启用高性能推理插件时，可能需要花费较长时间完成推理引擎的构建。PaddleX 将在推理引擎的第一次构建完成后将相关信息缓存在模型目录，并在后续复用缓存中的内容以提升初始化速度。
@@ -116,7 +116,7 @@ pipeline = create_pipeline(
 
 PaddleX 为每个模型提供默认的高性能推理配置，并将其存储在模型的配置文件中。由于实际部署环境的多样性，使用默认配置可能无法在特定环境中获取理想的性能，甚至可能出现推理失败的情况。对于默认配置无法满足要求的情形，可以通过如下方式，尝试更换模型的推理后端：
 
-1. 找到模型目录中的 `inference.yml` 文件，定位到其中的Hpi字段；
+1. 找到模型目录中的 `inference.yml` 文件，定位到其中的`Hpi`字段；
 2. 修改 `selected_backends` 的值。具体而言，`selected_backends` 可能被设置如下：
 
     ```
@@ -129,7 +129,7 @@ PaddleX 为每个模型提供默认的高性能推理配置，并将其存储在
     目前所有可选的推理后端如下：
 
     * `paddle_infer`：标准的 Paddle Inference 推理引擎。支持 CPU 和 GPU。
-    * `paddle_tensorrt`：[Paddle-TensorRT](https://www.paddlepaddle.org.cn/lite/v2.10/optimize/paddle_trt.html)，Paddle 官方﻿出品的高性能深度学习推理库，采用子图的形式对 TensorRT 进行了集成，以实现进一步优化加速。仅支持 GPU。
+    * `paddle_tensorrt`：[Paddle-TensorRT](https://www.paddlepaddle.org.cn/lite/v2.10/optimize/paddle_trt.html)，Paddle 官方出品的高性能深度学习推理库，采用子图的形式对 TensorRT 进行了集成，以实现进一步优化加速。仅支持 GPU。
     * `openvino`：[OpenVINO](https://github.com/openvinotoolkit/openvino)，Intel 提供的深度学习推理工具，优化了多种 Intel 硬件上的模型推理性能。仅支持 CPU。
     * `onnx_runtime`：[ONNX Runtime](https://onnxruntime.ai/)，跨平台、高性能的推理引擎。支持 CPU 和 GPU。
     * `tensorrt`：[TensorRT](https://developer.nvidia.com/tensorrt)，NVIDIA 提供的高性能深度学习推理库，针对 NVIDIA GPU 进行优化以提升速度。仅支持 GPU。

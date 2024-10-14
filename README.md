@@ -603,7 +603,7 @@ for res in output:
 <details>
   <summary> <b> 🏗️ 模型产线部署 </b></summary>
 
-  * [🚀 PaddleX 高性能部署指南](./docs/pipeline_deploy/high_performance_deploy.md)
+  * [🚀 PaddleX 高性能推理指南](./docs/pipeline_deploy/high_performance_deploy.md)
   * [🖥️ PaddleX 服务化部署指南](./docs/pipeline_deploy/service_deploy.md)
   * [📱 PaddleX 端侧部署指南](./docs/pipeline_deploy/lite_deploy.md)
 
