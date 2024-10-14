@@ -211,7 +211,7 @@ PaddleX 为每个模型提供默认的高性能推理配置，并将其存储在
 
   <tr>
     <td>文本识别</td>
-    <td>PP-OCRv4_server_rec<br/>PP-OCRv4_mobile_rec</td>
+    <td>PP-OCRv4_server_rec<br/>PP-OCRv4_mobile_rec<br/>ch_RepSVTR_rec<br/>ch_SVTRv2_rec</td>
   </tr>
 
   <tr>
