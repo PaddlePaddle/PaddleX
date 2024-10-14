@@ -143,13 +143,13 @@ After completing data validation, you can convert the dataset format and re-spli
 
 **(1) Dataset Format Conversion**
 
-Time-series classification supports converting `xlsx` and `xlss` format datasets to `csv` format.
+Time-series classification supports converting `xlsx` and `xls` format datasets to `csv` format.
 
 Parameters related to dataset validation can be set by modifying the fields under `CheckDataset` in the configuration file. Examples of some parameters in the configuration file are as follows:
 
 * `CheckDataset`:
   * `convert`:
-    * `enable`: Whether to perform dataset format conversion, supporting conversion from `xlsx` and `xlss` formats to `CSV` format, default is `False`;
+    * `enable`: Whether to perform dataset format conversion, supporting conversion from `xlsx` and `xls` formats to `CSV` format, default is `False`;
     * `src_dataset_type`: If dataset format conversion is performed, the source dataset format does not need to be set, default is `null`;
 
 To enable format conversion, modify the configuration as follows:

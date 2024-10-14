@@ -165,13 +165,13 @@ python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
 
 **（1）数据集格式转换**
 
-时序预测支持 `xlsx 和 xlss` 格式的数据集转换为 `csv` 格式。
+时序预测支持 `xlsx 和 xls` 格式的数据集转换为 `csv` 格式。
 
 数据集校验相关的参数可以通过修改配置文件中 `CheckDataset` 下的字段进行设置，配置文件中部分参数的示例说明如下：
 
 * `CheckDataset`:
   * `convert`:
-    * `enable`: 是否进行数据集格式转换，支持 `xlsx和xlss` 格式的数据集转换为 `CSV` 格式，默认为 `False`;
+    * `enable`: 是否进行数据集格式转换，支持 `xlsx和xls` 格式的数据集转换为 `CSV` 格式，默认为 `False`;
     * `src_dataset_type`: 如果进行数据集格式转换，无需设置源数据集格式，默认为 `null`，；
 则需要修改配置如下：
 
