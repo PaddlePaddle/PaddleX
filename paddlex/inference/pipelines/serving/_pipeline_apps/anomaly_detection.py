@@ -41,7 +41,7 @@ def create_pipeline_app(pipeline: AnomalyDetection, app_config: AppConfig) -> Fa
     )
 
     @app.post(
-        "/anomaly-detection",
+        "/image-anomaly-detection",
         operation_id="infer",
         responses={422: {"model": Response}},
     )
