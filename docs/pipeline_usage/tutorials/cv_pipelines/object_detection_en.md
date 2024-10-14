@@ -383,7 +383,8 @@ After running, the result will be:
 ```
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/object_detection/03.png)
-The visualized images are saved in the `output` directory by default, but you can customize this with `--save_path`.
+
+The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path.
 
 #### 2.2.2 Integration via Python Scripts
 A few lines of code are all you need to quickly perform inference on your production line. Taking General Object Detection as an example:
@@ -454,7 +455,7 @@ If you need to directly apply the pipeline in your Python project, refer to the 
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
-🚀 **High-Performance Deployment**: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies, especially response speed, to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing to significantly speed up the end-to-end process. Refer to the [PaddleX High-Performance Deployment Guide](../../../pipeline_deploy/high_performance_deploy.md) for detailed high-performance deployment procedures.
+🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies, especially response speed, to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing to significantly speed up the end-to-end process. Refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_deploy.md) for detailed High-Performance Inference procedures.
 
 ☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. Refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy.md) for detailed service-oriented deployment procedures.
 
@@ -916,7 +917,7 @@ print_r($result["detectedObjects"]);
 
 Choose the appropriate deployment method for your model pipeline based on your needs, and proceed with subsequent AI application integration.
 
-## 4. Second Development
+## 4. Custom Development
 If the default model weights provided by the General Object Detection pipeline do not meet your requirements for precision or speed in your specific scenario, you can try to further **fine-tune** the existing model using **your own domain-specific or application-specific data** to improve the recognition performance of the General Object Detection pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning

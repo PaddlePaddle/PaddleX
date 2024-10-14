@@ -74,7 +74,7 @@ After running, the result obtained is:
 ```
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_multi_label_classification/02.png)
 
-The visualization image is saved in the `output` directory by default, and you can also customize it through `--save_path`.
+The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path.
 
 ### 2.2 Integration via Python Script
 A few lines of code can complete the rapid inference of the pipeline. Taking the general image multi-label classification pipeline as an example:
@@ -144,7 +144,7 @@ If you need to directly apply the pipeline in your Python project, refer to the 
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
-🚀 **High-Performance Deployment**: In actual production environments, many applications have strict standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins that aim to deeply optimize model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed high-performance deployment procedures, refer to the [PaddleX High-Performance Deployment Guide](../../../pipeline_deploy/high_performance_deploy_en.md).
+🚀 **High-Performance Inference**: In actual production environments, many applications have strict standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins that aim to deeply optimize model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed High-Performance Inference procedures, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_deploy_en.md).
 
 ☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy_en.md).
 
@@ -595,7 +595,7 @@ print_r($result["categories"]);
 📱 **Edge Deployment**: Edge deployment is a way to place computing and data processing functions on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy_en.md).
 You can choose the appropriate deployment method for your model pipeline based on your needs and proceed with subsequent AI application integration.
 
-## 4. Second Development
+## 4. Custom Development
 If the default model weights provided by the general image multi-label classification pipeline do not meet your requirements in terms of accuracy or speed in your specific scenario, you can try to further fine-tune the existing model using **your own domain-specific or application-specific data** to improve the recognition performance of the general image multi-label classification pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning

@@ -19,9 +19,9 @@ pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0
 ```
 
 ### 1.2 Plugin Installation Mode
-If your use case for PaddleX involves **second development** (e.g. retraining models, fine-tuning models, customizing model structures, customizing inference codes, etc.), we recommend the more **powerful** plugin installation mode.
+If your use case for PaddleX involves **custom development** (e.g. retraining models, fine-tuning models, customizing model structures, customizing inference codes, etc.), we recommend the more **powerful** plugin installation mode.
 
-After installing the PaddleX plugins you need, you can not only perform inference and integration with the supported models but also conduct advanced operations such as model training for second development.
+After installing the PaddleX plugins you need, you can not only perform inference and integration with the supported models but also conduct advanced operations such as model training for custom development.
 
 The plugins supported by PaddleX are listed below. Please determine the name(s) of the plugin(s) you need based on your development requirements:
 
