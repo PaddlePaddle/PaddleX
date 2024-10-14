@@ -40,7 +40,7 @@
 完成whl包的安装后，几行代码即可完成主体检测模块的推理，可以任意切换该模块下的模型，您也可以将主体检测的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png)到本地。
 
 ```python
-from paddlex.inference import create_model 
+from paddlex import create_model 
 
 model_name = "PP-ShiTuV2_det"
 
