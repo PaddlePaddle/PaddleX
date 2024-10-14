@@ -35,7 +35,7 @@ for res in output:
 关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 
 ## 四、二次开发
-如果你追求更高精度的现有模型，可以使用PaddleX的二次开发能力，开发更好的文档图像方向分类模型模型。在使用PaddleX开发文档图像方向分类模型模型之前，请务必安装PaddleX的分类相关的模型训练能力，安装过程可以参考 [PaddleX本地安装教程](../../../installation/installation.md)
+如果你追求更高精度的现有模型，可以使用PaddleX的二次开发能力，开发更好的文档图像方向分类模型。在使用PaddleX开发文档图像方向分类模型之前，请务必安装PaddleX的分类相关的模型训练能力，安装过程可以参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
 ### 4.1 数据准备
 在进行模型训练前，需要准备相应任务模块的数据集。PaddleX 针对每一个模块提供了数据校验功能，**只有通过数据校验的数据才可以进行模型训练**。此外，PaddleX为每一个模块都提供了 Demo 数据集，您可以基于官方提供的 Demo 数据完成后续的开发。若您希望用私有数据集进行后续的模型训练，可以参考[PaddleX图像分类任务模块数据准备教程](../../../data_annotations/cv_modules/image_classification.md)。
@@ -118,7 +118,7 @@ python main.py -c paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yam
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/doc_img_ori_classification/01.png)
 </details>
 
-#### 4.1.3 数据集格式转换/数据集划分（可选）（折叠）
+#### 4.1.3 数据集格式转换/数据集划分（可选）
 在您完成数据校验之后，可以通过**修改配置文件**或是**追加超参数**的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。
 
 <details>

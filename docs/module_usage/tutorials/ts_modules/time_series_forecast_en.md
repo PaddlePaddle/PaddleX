@@ -173,13 +173,13 @@ After completing dataset verification, you can convert the dataset format or re-
 
 **(1) Dataset Format Conversion**
 
-Time Series Forecasting supports converting `xlsx` and `xlss` format datasets to the required format.
+Time Series Forecasting supports converting `xlsx` and `xls` format datasets to the required format.
 
 Parameters related to dataset verification can be set by modifying the `CheckDataset` fields in the configuration file. Example explanations for some parameters in the configuration file are as follows:
 
 * `CheckDataset`:
   * `convert`:
-    * `enable`: Whether to enable dataset format conversion, supporting `xlsx` and `xlss` format conversion, default is `False`;
+    * `enable`: Whether to enable dataset format conversion, supporting `xlsx` and `xls` format conversion, default is `False`;
     * `src_dataset_type`: If dataset format conversion is enabled, the source dataset format needs to be set, default is `null`.
 
 

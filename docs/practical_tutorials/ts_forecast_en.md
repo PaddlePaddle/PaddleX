@@ -24,7 +24,7 @@ for res in output:
 Note: Due to the tight correlation between time series data and scenarios, the official online experience models for time series tasks are tailored to specific scenarios and are not universal. Therefore, the online experience does not support using arbitrary files to test the official model solutions. However, after training your own model with scenario-specific data, you can select your trained model solution and use corresponding scenario data for online experience.
 
 ## 3. Choose a Model
-PaddleX provides five end-to-end time series forecasting models:
+PaddleX provides five end-to-end time series forecasting models. For details, refer to the [Model List](../support_list/models_list_en.md). The benchmarks of these models are as follows:
 
 | Model Name | MSE | MAE | Model Size (M) | Description |
 |-|-|-|-|-|
@@ -42,7 +42,7 @@ Based on your actual usage scenario, select an appropriate model for training. A
 ### 4.1 Data Preparation
 To demonstrate the entire time series forecasting process, we will use the [Electricity](https://archive.ics.uci.edu/dataset/321/electricityloaddiagrams20112014) dataset for model training and validation. This dataset collects electricity consumption at a certain node from 2012 to 2014, with data collected every hour. Each data point consists of the current timestamp and corresponding electricity consumption. This dataset is commonly used to test and validate the performance of time series forecasting models.
 
-In this tutorial, we will use this dataset to predict the electricity consumption for the next 96 hours. We have already converted this dataset into a standard data format, and you can obtain a sample dataset by running the following command. For an introduction to the data format, you can refer to the [Time Series Prediction Module Development Tutorial](../module_usage/tutorials/ts_modules/time_series_forecast_en.md).
+In this tutorial, we will use this dataset to predict the electricity consumption for the next 96 hours. We have already converted this dataset into a standard data format, and you can obtain a sample dataset by running the following command. For an introduction to the data format, you can refer to the [Time Series Prediction Module Development Tutorial](../module_usage/tutorials/time_series_modules/time_series_forecast_en.md).
 
 
 You can use the following commands to download the demo dataset to a specified folder:
@@ -53,7 +53,8 @@ wget https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/pr
 tar -xf ./dataset/electricity.tar -C ./dataset/
 ```
 
-* **Data Considerations**
+**Data Considerations**
+
  * When annotating data for time series forecasting tasks, based on the collected real data, all data is arranged in chronological order. During training, the data is automatically divided into multiple time segments, where the historical time series data and the future sequences respectively represent the input data for training the model and its corresponding prediction targets, forming a set of training samples.
  * Handling Missing Values: To ensure data quality and integrity, missing values can be imputed based on expert knowledge or statistical methods.
  * Non-Repetitiveness: Ensure that data is collected in chronological order by row, with no duplication of timestamps.
@@ -189,7 +190,7 @@ The above verification results have omitted some data parts. `check_pass` being 
 **Note**: Only data that passes the verification can be used for training and evaluation.
 
 ### 4.3 Dataset Format Conversion/Dataset Splitting (Optional)
-If you need to convert the dataset format or re-split the dataset, you can modify the configuration file or append hyperparameters for settings. Refer to Section 4.1.3 in the [Time Series Prediction Module Development Tutorial](../module_usage/tutorials/ts_modules/time_series_forecast_en.md).
+If you need to convert the dataset format or re-split the dataset, you can modify the configuration file or append hyperparameters for settings. Refer to Section 4.1.3 in the [Time Series Prediction Module Development Tutorial](../module_usage/tutorials/time_series_modules/time_series_forecast_en.md).
 
 ## 5. Model Training and Evaluation
 
@@ -233,6 +234,29 @@ For more hyperparameter introductions, refer to [PaddleX Time Series Task Model 
 
 * The above parameters can be set by appending command-line parameters, e.g., specifying the mode as model training: `-o Global.mode=train`; specifying the first GPU for training: `-o Global.device=gpu:0`; setting the number of training epochs to 10: `-o Train.epochs_iters=10`.
 * During model training, PaddleX automatically saves the model weight files, with the default being `output`. If you need to specify a save path, you can use the `-o Global.output` field in the configuration file.
+
+
+
+<details>
+   <summary> More Details (Click to Expand)  </summary>
+
+* During the model training process, PaddleX automatically saves the model weight files, with the default directory being output. If you need to specify a different save path, you can configure it through the `-o Global.output` field in the configuration file.
+* PaddleX abstracts away the concepts of dynamic graph weights and static graph weights from you. During model training, both dynamic and static graph weights are produced simultaneously. By default, static graph weights are selected for inference.
+* When training other models, you need to specify the corresponding configuration file. The correspondence between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../support_list/models_list_en.md)
+
+After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including the following:
+
+**Explanation of Training Outputs:**
+
+After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including the following:
+
+`train_result.json`: A training result record file that logs whether the training task was completed normally, as well as the output weight metrics, relevant file paths, etc.
+`train.log`: A training log file that records changes in model metrics, loss values, and other information during the training process.
+`config.yaml`: The training configuration file that records the hyperparameter configurations for this training session.
+`best_accuracy.pdparams.tar`, `scaler.pkl`, `.checkpoints`, `.inference*`: Files related to model weights, including network parameters, optimizers, static graph network parameters, etc.
+
+</details>
+
 
 ### 5.2 Model Evaluation
 

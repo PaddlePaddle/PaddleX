@@ -525,7 +525,7 @@ Choose the appropriate deployment method based on your needs to proceed with sub
 If the default model weights provided by the General Time Series Classification Pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing model using **your own domain-specific or application-specific data** to improve the recognition performance of the pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
-Since the General Time Series Classification Pipeline includes a time series classification module, if the performance of the pipeline does not meet expectations, you need to refer to the [Customization](../../../module_usage/tutorials/ts_modules/time_series_classification_en.md#iv-custom-development) section in the [Time Series Classification Module Tutorial](../../../module_usage/tutorials/ts_modules/time_series_classification_en.md) to fine-tune the time series classification model using your private dataset.
+Since the General Time Series Classification Pipeline includes a time series classification module, if the performance of the pipeline does not meet expectations, you need to refer to the [Customization](../../../module_usage/tutorials/time_series_modules/time_series_classification_en.md#iv-custom-development) section in the [Time Series Classification Module Tutorial](../../../module_usage/tutorials/time_series_modules/time_series_classification_en.md) to fine-tune the time series classification model using your private dataset.
 
 ### 4.2 Model Application
 After fine-tuning the model with your private dataset, you will obtain local model weights.
