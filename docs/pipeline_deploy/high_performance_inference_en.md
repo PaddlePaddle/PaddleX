@@ -188,7 +188,7 @@ PaddleX provides default high-performance inference configurations for each mode
 
   <tr>
     <td>Text Recognition</td>
-    <td>PP-OCRv4_server_rec<br/>PP-OCRv4_mobile_rec<br/>LaTeX_OCR_rec<br/>ch_RepSVTR_rec<br/>ch_SVTRv2_rec</td>
+    <td>PP-OCRv4_server_rec<br/>PP-OCRv4_mobile_rec<br/>ch_RepSVTR_rec<br/>ch_SVTRv2_rec</td>
   </tr>
 
   <tr>
@@ -217,7 +217,7 @@ PaddleX provides default high-performance inference configurations for each mode
   </tr>
 
   <tr>
-    <td rowspan="15">Document Scene Information Extraction v3 </td>
+    <td rowspan="15">Document Scene Information Extraction v3</td>
     <td rowspan="2">Table Recognition</td>
     <td>SLANet</td>
   </tr>
