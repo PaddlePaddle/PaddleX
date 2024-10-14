@@ -119,7 +119,7 @@ In the above Python script, the following steps are executed:
 |-----------|-------------|------|---------------|
 | `pipeline` | The name of the production line or the path to the production line configuration file. If it is the name of the production line, it must be supported by PaddleX. | `str` | None |
 | `device` | The device for production line model inference. Supports: "gpu", "cpu". | `str` | "gpu" |
-| `enable_hpi` | Whether to enable high-performance inference, only available when the production line supports high-performance inference. | `bool` | `False` |
+| `use_hpip` | Whether to enable high-performance inference, only available when the production line supports high-performance inference. | `bool` | `False` |
 
 （2）Invoke the `predict` method of the  production line object for inference prediction: The `predict` method parameter is `x`, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
 
@@ -162,7 +162,7 @@ If you need to directly apply the pipeline in your Python project, refer to the 
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
-🚀 **High-Performance Deployment**: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance deployment procedures, refer to the [PaddleX High-Performance Deployment Guide](../../../pipeline_deploy/high_performance_deploy_en.md).
+🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end process acceleration. For detailed High-Performance Inference procedures, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_deploy_en.md).
 
 ☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy_en.md).
 
@@ -573,7 +573,7 @@ echo "Output time-series data saved at " . $output_csv_path . "\n";
 📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing functions on user devices themselves, enabling devices to directly process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy.md).
 Choose the appropriate deployment method for your model pipeline based on your needs, and proceed with subsequent AI application integration.
 
-## 4. Customization and Fine-tuning
+## 4. Custom Development
 If the default model weights provided by the General Time Series Forecasting Pipeline do not meet your requirements in terms of accuracy or speed in your specific scenario, you can try to further fine-tune the existing model using **your own domain-specific or application-specific data** to improve the recognition performance of the pipeline in your scenario.
 
 #### 4.1 Model Fine-tuning
@@ -602,9 +602,9 @@ For example, if you use an NVIDIA GPU for inference with the time series forecas
 ```bash
 paddlex --pipeline ts_fc --input ts_fc.csv --device gpu:0
 ``````
-At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu`:
+At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu:0`:
 
 ```bash
 paddlex --pipeline ts_fc --input ts_fc.csv --device npu:0
 ```
-If you want to use the General Time Series Forecasting Pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/installation_other_devices_en.md).
+If you want to use the General Time Series Forecasting Pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md).

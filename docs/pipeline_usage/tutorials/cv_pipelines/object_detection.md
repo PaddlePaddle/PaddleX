@@ -12,47 +12,315 @@
 <details>
    <summary> 👉模型列表详情</summary>
 
-|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
-|-|-|-|-|-|
-|Cascade-FasterRCNN-ResNet50-FPN|41.1|-|-|245.4 M|
-|Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN|45.0|-|-|246.2 M|
-|CenterNet-DLA-34|37.6|-|-|75.4 M|
-|CenterNet-ResNet50|38.9|-|-|319.7 M|
-|DETR-R50|42.3|59.2132|5334.52|159.3 M|
-|FasterRCNN-ResNet34-FPN|37.8|-|-|137.5 M|
-|FasterRCNN-ResNet50-FPN|38.4|-|-|148.1 M|
-|FasterRCNN-ResNet50-vd-FPN|39.5|-|-|148.1 M|
-|FasterRCNN-ResNet50-vd-SSLDv2-FPN|41.4|-|-|148.1 M|
-|FasterRCNN-ResNet50|36.7|-|-|120.2 M|
-|FasterRCNN-ResNet101-FPN|41.4|-|-|216.3 M|
-|FasterRCNN-ResNet101|39.0|-|-|188.1 M|
-|FasterRCNN-ResNeXt101-vd-FPN|43.4|-|-|360.6 M|
-|FasterRCNN-Swin-Tiny-FPN|42.6|-|-|159.8 M|
-|FCOS-ResNet50|39.6|103.367|3424.91|124.2 M|
-|PicoDet-L|42.6|16.6715|169.904|20.9 M|
-|PicoDet-M|37.5|16.2311|71.7257|16.8 M|
-|PicoDet-S|29.1|14.097|37.6563|4.4 M |
-|PicoDet-XS|26.2|13.8102|48.3139|5.7M |
-|PP-YOLOE_plus-L|52.9|33.5644|814.825|185.3 M|
-|PP-YOLOE_plus-M|49.8|19.843|449.261|83.2 M|
-|PP-YOLOE_plus-S|43.7|16.8884|223.059|28.3 M|
-|PP-YOLOE_plus-X|54.7|57.8995|1439.93|349.4 M|
-|RT-DETR-H|56.3|114.814|3933.39|435.8 M|
-|RT-DETR-L|53.0|34.5252|1454.27|113.7 M|
-|RT-DETR-R18|46.5|19.89|784.824|70.7 M|
-|RT-DETR-R50|53.1|41.9327|1625.95|149.1 M|
-|RT-DETR-X|54.8|61.8042|2246.64|232.9 M|
-|YOLOv3-DarkNet53|39.1|40.1055|883.041|219.7 M|
-|YOLOv3-MobileNetV3|31.4|18.6692|267.214|83.8 M|
-|YOLOv3-ResNet50_vd_DCN|40.6|31.6276|856.047|163.0 M|
-|YOLOX-L|50.1|185.691|1250.58|192.5 M|
-|YOLOX-M|46.9|123.324|688.071|90.0 M|
-|YOLOX-N|26.1|79.1665|155.59|3.4M|
-|YOLOX-S|40.4|184.828|474.446|32.0 M|
-|YOLOX-T|32.9|102.748|212.52|18.1 M|
-|YOLOX-X|51.8|227.361|2067.84|351.5 M|
+<table >
+  <tr>
+    <th>模型</th>
+    <th>mAP(%)</th>
+    <th>GPU推理耗时 (ms)</th>
+    <th>CPU推理耗时 (ms)</th>
+    <th>模型存储大小 (M)</th>
+    <th>介绍</th>
+  </tr>
+  <tr>
+    <td>Cascade-FasterRCNN-ResNet50-FPN</td>
+    <td>41.1</td>
+    <td>-</td>
+    <td>-</td>
+    <td>245.4 M</td>
+    <td rowspan="2">Cascade-FasterRCNN 是一种改进的Faster R-CNN目标检测模型，通过耦联多个检测器，利用不同IoU阈值优化检测结果，解决训练和预测阶段的mismatch问题，提高目标检测的准确性。</td>
+  </tr>
+  <tr>
+    <td>Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN</td>
+    <td>45.0</td>
+    <td>-</td>
+    <td>-</td>
+    <td>246.2 M</td>
+  </tr>
+  <tr>
+    <td>CenterNet-DLA-34</td>
+    <td>37.6</td>
+    <td>-</td>
+    <td>-</td>
+    <td>75.4 M</td>
+    <td rowspan="2">CenterNet是一种anchor-free目标检测模型，把待检测物体的关键点视为单一点-即其边界框的中心点，并通过关键点进行回归。</td>
+  </tr>
+  <tr>
+    <td>CenterNet-ResNet50</td>
+    <td>38.9</td>
+    <td>-</td>
+    <td>-</td>
+    <td>319.7 M</td>
+
+  </tr>
+  <tr>
+    <td>DETR-R50</td>
+    <td>42.3</td>
+    <td>59.2132</td>
+    <td>5334.52</td>
+    <td>159.3 M</td>
+    <td >DETR 是Facebook提出的一种transformer目标检测模型，该模型在不需要预定义的先验框anchor和NMS的后处理策略的情况下，就可以实现端到端的目标检测。</td>
+  </tr>
+  <tr>
+    <td>FasterRCNN-ResNet34-FPN</td>
+    <td>37.8</td>
+    <td>-</td>
+    <td>-</td>
+    <td>137.5 M</td>
+    <td rowspan="9">Faster R-CNN是典型的two-stage目标检测模型，即先生成区域建议（Region Proposal），然后在生成的Region Proposal上做分类和回归。相较于前代R-CNN和Fast R-CNN，Faster R-CNN的改进主要在于区域建议方面，使用区域建议网络（Region Proposal Network, RPN）提供区域建议，以取代传统选择性搜索。RPN是卷积神经网络，并与检测网络共享图像的卷积特征，减少了区域建议的计算开销。</td>
+  </tr>
+  <tr>
+    <td>FasterRCNN-ResNet50-FPN</td>
+    <td>38.4</td>
+    <td>-</td>
+    <td>-</td>
+    <td>148.1 M</td>
+
+  </tr>
+  <tr>
+    <td>FasterRCNN-ResNet50-vd-FPN</td>
+    <td>39.5</td>
+    <td>-</td>
+    <td>-</td>
+    <td>148.1 M</td>
+
+  </tr>
+  <tr>
+    <td>FasterRCNN-ResNet50-vd-SSLDv2-FPN</td>
+    <td>41.4</td>
+    <td>-</td>
+    <td>-</td>
+    <td>148.1 M</td>
+
+  </tr>
+  <tr>
+    <td>FasterRCNN-ResNet50</td>
+    <td>36.7</td>
+    <td>-</td>
+    <td>-</td>
+    <td>120.2 M</td>
+
+  </tr>
+  <tr>
+    <td>FasterRCNN-ResNet101-FPN</td>
+    <td>41.4</td>
+    <td>-</td>
+    <td>-</td>
+    <td>216.3 M</td>
+
+  </tr>
+  <tr>
+    <td>FasterRCNN-ResNet101</td>
+    <td>39.0</td>
+    <td>-</td>
+    <td>-</td>
+    <td>188.1 M</td>
+
+  </tr>
+  <tr>
+    <td>FasterRCNN-ResNeXt101-vd-FPN</td>
+    <td>43.4</td>
+    <td>-</td>
+    <td>-</td>
+    <td>360.6 M</td>
+
+  </tr>
+  <tr>
+    <td>FasterRCNN-Swin-Tiny-FPN</td>
+    <td>42.6</td>
+    <td>-</td>
+    <td>-</td>
+    <td>159.8 M</td>
+
+  </tr>
+  <tr>
+    <td>FCOS-ResNet50</td>
+    <td>39.6</td>
+    <td>103.367</td>
+    <td>3424.91</td>
+    <td>124.2 M</td>
+    <td>FCOS是一种密集预测的anchor-free目标检测模型，使用RetinaNet的骨架，直接在feature map上回归目标物体的长宽，并预测物体的类别以及centerness（feature map上像素点离物体中心的偏移程度），centerness最终会作为权重来调整物体得分。</td>
+  </tr>
+  <tr>
+    <td>PicoDet-L</td>
+    <td>42.6</td>
+    <td>16.6715</td>
+    <td>169.904</td>
+    <td>20.9 M</td>
+    <td rowspan="4">PP-PicoDet是一种全尺寸、棱视宽目标的轻量级目标检测算法，它考虑移动端设备运算量。与传统目标检测算法相比，PP-PicoDet具有更小的模型尺寸和更低的计算复杂度，并在保证检测精度的同时更高的速度和更低的延迟。</td>
+  </tr>
+  <tr>
+    <td>PicoDet-M</td>
+    <td>37.5</td>
+    <td>16.2311</td>
+    <td>71.7257</td>
+    <td>16.8 M</td>
+
+  </tr>
+  <tr>
+    <td>PicoDet-S</td>
+    <td>29.1</td>
+    <td>14.097</td>
+    <td>37.6563</td>
+    <td>4.4 M</td>
+
+  </tr>
+  <tr>
+    <td>PicoDet-XS</td>
+    <td>26.2</td>
+    <td>13.8102</td>
+    <td>48.3139</td>
+    <td>5.7 M</td>
+
+  </tr>
+    <tr>
+    <td>PP-YOLOE_plus-L</td>
+    <td>52.9</td>
+    <td>33.5644</td>
+    <td>814.825</td>
+    <td>185.3 M</td>
+    <td rowspan="4">PP-YOLOE_plus 是一种是百度飞桨视觉团队自研的云边一体高精度模型PP-YOLOE迭代优化升级的版本，通过使用Objects365大规模数据集、优化预处理，大幅提升了模型端到端推理速度。</td>
+  </tr>
+  <tr>
+    <td>PP-YOLOE_plus-M</td>
+    <td>49.8</td>
+    <td>19.843</td>
+    <td>449.261</td>
+    <td>82.3 M</td>
+
+  </tr>
+  <tr>
+    <td>PP-YOLOE_plus-S</td>
+    <td>43.7</td>
+    <td>16.8884</td>
+    <td>223.059</td>
+    <td>28.3 M</td>
+
+  </tr>
+  <tr>
+    <td>PP-YOLOE_plus-X</td>
+    <td>54.7</td>
+    <td>57.8995</td>
+    <td>1439.93</td>
+    <td>349.4 M</td>
+
+  </tr>
+  <tr>
+    <td>RT-DETR-H</td>
+    <td>56.3</td>
+    <td>114.814</td>
+    <td>3933.39</td>
+    <td>435.8 M</td>
+    <td rowspan="5">RT-DETR是第一个实时端到端目标检测器。该模型设计了一个高效的混合编码器，满足模型效果与吞吐率的双需求，高效处理多尺度特征，并提出了加速和优化的查询选择机制，以优化解码器查询的动态化。RT-DETR支持通过使用不同的解码器来实现灵活端到端推理速度。</td>
+  </tr>
+  <tr>
+    <td>RT-DETR-L</td>
+    <td>53.0</td>
+    <td>34.5252</td>
+    <td>1454.27</td>
+    <td>113.7 M</td>
+
+  </tr>
+  <tr>
+    <td>RT-DETR-R18</td>
+    <td>46.5</td>
+    <td>19.89</td>
+    <td>784.824</td>
+    <td>70.7 M</td>
+
+  </tr>
+  <tr>
+    <td>RT-DETR-R50</td>
+    <td>53.1</td>
+    <td>41.9327</td>
+    <td>1625.95</td>
+    <td>149.1 M</td>
+
+  </tr>
+  <tr>
+    <td>RT-DETR-X</td>
+    <td>54.8</td>
+    <td>61.8042</td>
+    <td>2246.64</td>
+    <td>232.9 M</td>
+
+  </tr>
+  <tr>
+    <td>YOLOv3-DarkNet53</td>
+    <td>39.1</td>
+    <td>40.1055</td>
+    <td>883.041</td>
+    <td>219.7 M</td>
+    <td rowspan="3">YOLOv3是一种实时的端到端目标检测器。它使用一个独特的单个卷积神经网络，将目标检测问题分解为一个回归问题，从而实现实时的检测。该模型采用了多个尺度的检测，提高了不同尺度目标物体的检测性能。</td>
+  </tr>
+  <tr>
+    <td>YOLOv3-MobileNetV3</td>
+    <td>31.4</td>
+    <td>18.6692</td>
+    <td>267.214</td>
+    <td>83.8 M</td>
+
+  </tr>
+  <tr>
+    <td>YOLOv3-ResNet50_vd_DCN</td>
+    <td>40.6</td>
+    <td>31.6276</td>
+    <td>856.047</td>
+    <td>163.0 M</td>
+
+  </tr>
+  <tr>
+    <td>YOLOX-L</td>
+    <td>50.1</td>
+    <td>185.691</td>
+    <td>1250.58</td>
+    <td>192.5 M</td>
+    <td rowspan="6">YOLOX模型以YOLOv3作为目标检测网络的框架，通过设计Decoupled Head、Data Aug、Anchor Free以及SimOTA组件，显著提升了模型在各种复杂场景下的检测性能。</td>
+  </tr>
+  <tr>
+    <td>YOLOX-M</td>
+    <td>46.9</td>
+    <td>123.324</td>
+    <td>688.071</td>
+    <td>90.0 M</td>
+
+  </tr>
+  <tr>
+    <td>YOLOX-N</td>
+    <td>26.1</td>
+    <td>79.1665</td>
+    <td>155.59</td>
+    <td>3.4 M</td>
+
+  </tr>
+  <tr>
+    <td>YOLOX-S</td>
+    <td>40.4</td>
+    <td>184.828</td>
+    <td>474.446</td>
+    <td>32.0 M</td>
+
+  </tr>
+  <tr>
+    <td>YOLOX-T</td>
+    <td>32.9</td>
+    <td>102.748</td>
+    <td>212.52</td>
+    <td>18.1 M</td>
+
+  </tr>
+  <tr>
+    <td>YOLOX-X</td>
+    <td>51.8</td>
+    <td>227.361</td>
+    <td>2067.84</td>
+    <td>351.5 M</td>
+
+  </tr>
+</table>
+
 
 **注：以上精度指标为[COCO2017](https://cocodataset.org/#home)验证集 mAP(0.5:0.95)。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
+</details>
 
 </details>
 
@@ -116,7 +384,7 @@ paddlex --pipeline ./object_detection.yaml --input general_object_detection_002.
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/object_detection/03.png)
 
-可视化图片默认保存在 `output` 目录下，您也可以通过 `--save_path` 进行自定义。
+可视化图片默认不进行保存，您可以通过 `--save_path` 自定义保存路径，随后所有结果将被保存在指定路径下。
 
 #### 2.2.2 Python脚本方式集成
 几行代码即可完成产线的快速推理，以通用目标检测产线为例：
@@ -186,7 +454,7 @@ for res in output:
 
 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
 
-🚀 **高性能部署**：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能部署流程请参考[PaddleX高性能部署指南](../../../pipeline_deploy/high_performance_deploy.md)。
+🚀 **高性能推理**：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能推理流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_deploy.md)。
 
 ☁️ **服务化部署**：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/service_deploy.md)。
 
@@ -697,9 +965,9 @@ PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多�
 ```
 paddlex --pipeline object_detection --input general_object_detection_002.png --device gpu:0
 ```
-此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的 `--device` 修改为 npu 即可：
+此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的 `--device` 修改为 npu:0 即可：
 
 ```
 paddlex --pipeline object_detection --input general_object_detection_002.png --device npu:0
 ```
-若您想在更多种类的硬件上使用通用目标检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。
+若您想在更多种类的硬件上使用通用目标检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

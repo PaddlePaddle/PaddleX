@@ -1,6 +1,6 @@
 [简体中文](document_scene_information_extraction.md) | English
 
-# PP-ChatOCRv3-doc Pipeline Usage Tutorial
+# PP-ChatOCRv3-doc Pipeline utorial
 
 ## 1. Introduction to PP-ChatOCRv3-doc Pipeline
 PP-ChatOCRv3-doc is a unique intelligent analysis solution for documents and images developed by PaddlePaddle. It combines Large Language Models (LLM) and OCR technology to provide a one-stop solution for complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. By integrating with ERNIE Bot, it fuses massive data and knowledge to achieve high accuracy and wide applicability.
@@ -31,7 +31,7 @@ The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recogni
     <td>522.536</td>
     <td>1845.37</td>
     <td>6.9 M</td>
-    <td>SLANet is a table structure recognition model developed by Baidu PaddlePaddle Vision Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
+    <td>SLANet is a table structure recognition model developed by Baidu PaddleX Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
   </tr>
   <tr>
     <td>SLANet_plus</td>
@@ -39,7 +39,7 @@ The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recogni
     <td>522.536</td>
     <td>1845.37</td>
     <td>6.9 M</td>
-    <td>SLANet_plus is an enhanced version of SLANet, the table structure recognition model developed by Baidu PaddlePaddle Vision Team. Compared to SLANet, SLANet_plus significantly improves the recognition ability for wireless and complex tables and reduces the model's sensitivity to the accuracy of table positioning, enabling more accurate recognition even with offset table positioning.</td>
+    <td>SLANet_plus is an enhanced version of SLANet, the table structure recognition model developed by Baidu PaddleX Team. Compared to SLANet, SLANet_plus significantly improves the recognition ability for wireless and complex tables and reduces the model's sensitivity to the accuracy of table positioning, enabling more accurate recognition even with offset table positioning.</td>
   </tr>
 </table>
 
@@ -100,7 +100,7 @@ The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recogni
         <th>Model</th>
         <th>Recognition Avg Accuracy (%)</th>
         <th>GPU Inference Time (ms)</th>
-        <th>CPU Inference Time</th>
+        <th>CPU Inference Time (ms)</th>
         <th>Model Size (M)</th>
         <th>Description</th>
     </tr>
@@ -123,7 +123,7 @@ The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recogni
         <th>Model</th>
         <th>Recognition Avg Accuracy (%)</th>
         <th>GPU Inference Time (ms)</th>
-        <th>CPU Inference Time</th>
+        <th>CPU Inference Time (ms)</th>
         <th>Model Size (M)</th>
         <th>Description</th>
     </tr>
@@ -308,7 +308,7 @@ If you need to directly apply the pipeline in your Python project, you can refer
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
-🚀 **High-Performance Deployment**: In actual production environments, many applications have stringent standards for the performance metrics (especially response speed) of deployment strategies to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed high-performance deployment procedures, please refer to the [PaddleX High-Performance Deployment Guide](../../../pipeline_deploy/high_performance_deploy_en.md).
+🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for the performance metrics (especially response speed) of deployment strategies to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed High-Performance Inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_deploy_en.md).
 
 ☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy_en.md).
 
@@ -563,11 +563,11 @@ if __name__ == "__main__":
 <br/>
 
 📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing functions on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy_en.md).
-## 4. Customization and Fine-tuning
+## 4. Custom Development
 If the default model weights provided by the PP-ChatOCRv3-doc Pipeline do not meet your requirements in terms of accuracy or speed for your specific scenario, you can attempt to further **fine-tune** the existing models using **your own domain-specific or application-specific data** to enhance the recognition performance of the general table recognition pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
-Since the PP-ChatOCRv3-doc Pipeline comprises four modules, unsatisfactory performance may stem from any of these modules (note that the text image rectification module does not support customization at this time).
+Since the PP-ChatOCRv3-doc Pipeline comprises six modules, unsatisfactory performance may stem from any of these modules (note that the text image rectification module does not support customization at this time).
 
 You can analyze images with poor recognition results and follow the guidelines below for analysis and model fine-tuning:
 
@@ -575,7 +575,7 @@ You can analyze images with poor recognition results and follow the guidelines b
 * Misplaced layout elements (e.g., incorrect positioning of tables or seals) may suggest issues with the layout detection module. Consult the **Customization** section in the [Layout Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/layout_detection_en.md) and fine-tune the layout detection model with your private dataset.
 * Frequent undetected text (i.e., text leakage) may indicate limitations in the text detection model. Refer to the **Customization** section in the [Text Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_detection_en.md) and fine-tune the text detection model using your private dataset.
 * High text recognition errors (i.e., recognized text content does not match the actual text) suggest that the text recognition model requires improvement. Follow the **Customization** section in the [Text Recognition Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_recognition_en.md) to fine-tune the text recognition model.
-* Frequent recognition errors in detected seal text indicate that the seal text detection model needs further refinement. Consult the **Customization** section in the [Seal Text Detection Module Development Tutorials](../../../module_usage/tutorials/ocr_modules/text_detection_en.md) to fine-tune the seal text detection model.
+* Frequent recognition errors in detected seal text indicate that the seal text detection model needs further refinement. Consult the **Customization** section in the [Seal Text Detection Module Development Tutorials](../../../module_usage/tutorials/ocr_modules/seal_text_detection_en.md) to fine-tune the seal text detection model.
 * Frequent misidentifications of document or certificate orientations with text regions suggest that the document image orientation classification model requires improvement. Refer to the **Customization** section in the [Document Image Orientation Classification Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification_en.md) to fine-tune the document image orientation classification model.
 
 ### 4.2 Model Deployment
@@ -600,11 +600,17 @@ Subsequently, load the modified pipeline configuration file using the command-li
 
 ## 5. Multi-hardware Support
 
-PaddleX supports various devices such as NVIDIA GPUs, Kunlun XPU, Ascend NPU, and Cambricon MLU. Only need to set the **`device` parameter** simply.
+For example, to perform inference using the PP-ChatOCRv3-doc Pipeline on an NVIDIA GPU, you run:
+```python
+from paddlex import create_pipeline
+predict = create_pipeline( pipeline="PP-ChatOCRv3-doc",
+                            llm_name="ernie-3.5",
+                            llm_params = {"api_type":"qianfan","ak":"","sk":""},  ## Please fill in your ak and sk, or you will not be able to call the large model
+                            device = "gpu:0" )
+```
 
-例如，使用文档场景信息抽取v3产线时，将运行设备从英伟达 GPU 更改为昇腾 NPU，仅需将脚本中的 `device` 修改为 npu 即可：
+At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the script to `npu:0`:
 
-For example, when using the PP-ChatOCRv3-doc Pipeline, changing the running device from Nvidia GPU to Ascend NPU only requires modifying the `device`:
 
 ```python
 from paddlex import create_pipeline
@@ -616,4 +622,5 @@ predict = create_pipeline(
     )
 ```
 
-If you want to use the PP-ChatOCRv3-doc Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/installation_other_devices_en.md).
+If you want to use the PP-ChatOCRv3-doc Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/multi_devices_use_guide_en.md).
+
