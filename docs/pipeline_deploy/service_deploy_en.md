@@ -84,11 +84,11 @@ Please refer to the **"Development Integration/Deployment"** section in the usag
 
 When deploying services into production environments, the stability, efficiency, and security of the services are of paramount importance. Below are some recommendations for deploying services into production.
 
-### 2.1 Utilize PaddleX High-Performance Inference Plugin
+### 2.1 Utilize PaddleX high-performance inference Plugin
 
-In scenarios where strict response time requirements are imposed on applications, the PaddleX High-Performance Inference Plugin can be used to accelerate model inference and pre/post-processing, thereby reducing response time and increasing throughput.
+In scenarios where strict response time requirements are imposed on applications, the PaddleX high-performance inference Plugin can be used to accelerate model inference and pre/post-processing, thereby reducing response time and increasing throughput.
 
-To use the PaddleX High-Performance Inference Plugin, please refer to the [PaddleX High-Performance Inference Guide](./high_performance_inference_en.md) for installing the high-performance inference plugin, obtaining serial numbers, and activating the plugin. Additionally, not all pipelines, models, and environments support the use of the high-performance inference plugin. For detailed support information, please refer to the section on pipelines and models that support the high-performance inference plugin.
+To use the PaddleX high-performance inference Plugin, please refer to the [PaddleX High-Performance Inference Guide](./high_performance_inference_en.md) for installing the high-performance inference plugin, obtaining serial numbers, and activating the plugin. Additionally, not all pipelines, models, and environments support the use of the high-performance inference plugin. For detailed support information, please refer to the section on pipelines and models that support the high-performance inference plugin.
 
 When starting the PaddleX pipeline service, you can specify `--use_hpip` along with the serial number to use the high-performance inference plugin. If you wish to perform online activation, you should also specify `--update_license`. Example usage:
 
