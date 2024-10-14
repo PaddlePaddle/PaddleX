@@ -37,7 +37,7 @@ python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.
 ```
 > ❗ **注**：更多飞桨 Wheel 版本请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/pip/linux-pip.html)。
 
-**关于其他硬件安装飞桨，请参考**[PaddleX多硬件使用指南](../other_devices_support/multy_devices_use_guide.md)**。**
+**关于其他硬件安装飞桨，请参考**[PaddleX多硬件使用指南](../other_devices_support/multi_devices_use_guide.md)**。**
 
 安装完成后，使用以下命令可以验证 PaddlePaddle 是否安装成功：
 
