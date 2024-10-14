@@ -217,7 +217,7 @@ PaddleX provides default high-performance inference configurations for each mode
   </tr>
 
   <tr>
-    <td rowspan="15">Document Scene Information Extraction v3 Pipeline</td>
+    <td rowspan="15">Document Scene Information Extraction v3 </td>
     <td rowspan="2">Table Recognition</td>
     <td>SLANet</td>
   </tr>

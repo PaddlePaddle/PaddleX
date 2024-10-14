@@ -215,7 +215,7 @@ PaddleX 为每个模型提供默认的高性能推理配置，并将其存储在
   </tr>
 
   <tr>
-    <td rowspan="15">文档场景信息抽取v3产线</td>
+    <td rowspan="15">文档场景信息抽取v3</td>
     <td rowspan="2">表格识别</td>
     <td>SLANet</td>
   </tr>
