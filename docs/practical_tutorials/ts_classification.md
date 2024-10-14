@@ -49,7 +49,7 @@ tar -xf ./dataset/ts_classify_examples.tar -C ./dataset/
   * 时间频率一致：确保所有数据序列的时间频率一致，如每小时、每日或每周，对于不一致的时间序列，可以通过重采样方法调整到统一的时间频率。
   * 时间序列长度一致：确保每一个group的时间序列的长度一致。
   * 缺失值处理：为了保证数据的质量和完整性，可以基于专家经验或统计方法进行缺失值填充。
-  * 非重复性：保证数据是安装时间顺序按行收集的，同一个时间点不能重复出现。
+  * 非重复性：保证数据是按照时间顺序按行收集的，同一个时间点不能重复出现。
 ### 4.2 数据集校验
 在对数据集校验时，只需一行命令：
 
@@ -123,25 +123,38 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
   * `epochs_iters`：训练轮次数设置；
   * `learning_rate`：训练学习率设置；
   * `batch_size`：训练单卡批大小设置；
-  * `time_col`: 时间列，须结合自己的数据设置时间序列数据集的时间列的列名称;
-  * `target_cols`:结合自己的数据，设置时间序列数据集的目标变量的列名称，可以为多个，多个之间用','分隔。一般目标变量和希望预测的目标越相关，模型精度通常越高。本教程中心跳监控数据集中的时间列名有 61 个特征变量，如：dim_0, dim_1 等;
-  * `freq`：频率，须结合自己的数据设置时间频率，如：1min、5min、1h;
-  * `group_id`：一个群组编号表示的是一个时序样本，相同编号的时序序列组成一个样本。结合自己的数据设置指定群组编号的列名称, 如：group_id。
+  * `time_col`: 时间列，须结合自己的数据设置时间序列数据集的时间列的列名称；
+  * `target_cols`:结合自己的数据，设置时间序列数据集的目标变量的列名称，可以为多个，多个之间用','分隔。一般目标变量和希望预测的目标越相关，模型精度通常越高。本教程中心跳监控数据集中的时间列名有 61 个特征变量，如：dim_0, dim_1 等；
+  * `freq`：频率，须结合自己的数据设置时间频率，如：1min、5min、1h；
+  * `group_id`：一个群组编号表示的是一个时序样本，相同编号的时序序列组成一个样本。结合自己的数据设置指定群组编号的列名称, 如：group_id；
   * `static_cov_cols`：代表时序的类别编号列，同一个样本的标签相同。结合自己的数据设置类别的列名称，如：label。
 更多超参数介绍，请参考 [PaddleX时序任务模型配置文件参数说明](../module_usage/instructions/config_parameters_time_series.md)。
 
 **注：**
 
-* 以上参数可以通过追加令行参数的形式进行设置，如指定模式为模型训练：`-o Global.mode=train`；指定前 1 卡 gpu 训练：`-o Global.device=gpu:0`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。
-* 模型训练过程中，PaddleX 会自动保存模型权重文件，默认为`output`，如需指定保存路径，可通过配置文件中 `-o Global.output` 字段
+* 以上参数可以通过追加令行参数的形式进行设置，如指定模式为模型训练：`-o Global.mode=train`；指定前 1 卡 gpu 训练：`-o Global.device=gpu:0`；设置训练轮次数为 10：`-o Train.epochs_iters=10`；
+* 模型训练过程中，PaddleX 会自动保存模型权重文件，默认为`output`，如需指定保存路径，可通过配置文件中 `-o Global.output` 字段。
+
+<details>
+   <summary> 更多说明（点击展开） </summary>
+
+* 模型训练过程中，PaddleX 会自动保存模型权重文件，默认为`output`，如需指定保存路径，可通过配置文件中 `-o Global.output` 字段进行设置。
+* PaddleX 对您屏蔽了动态图权重和静态图权重的概念。在模型训练的过程中，会同时产出动态图和静态图的权重，在模型推理时，默认选择静态图权重推理。
+* 训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../support_list/models_list.md)。
+在完成模型训练后，所有产出保存在指定的输出目录（默认为`./output/`）下，通常有以下产出：
+
+
 **训练产出解释:**
 
 在完成模型训练后，所有产出保存在指定的输出目录（默认为`./output/`）下，通常有以下产出：
 
-* train_result.json：训练结果记录文件，记录了训练任务是否正常完成，以及产出的权重指标、相关文件路径等；
-* train.log：训练日志文件，记录了训练过程中的模型指标变化、loss 变化等；
-* config.yaml：训练配置文件，记录了本次训练的超参数的配置；
-* .pdparams、.pkl、model_meta、checkpoint、best_accuracy.pdparams.tar模型权重相关文件，包括网络参数、优化器、归一化、网络参数、数据信息和最佳模型权重压缩包等；
+* `train_result.json`：训练结果记录文件，记录了训练任务是否正常完成，以及产出的权重指标、相关文件路径等；
+* `train.log`：训练日志文件，记录了训练过程中的模型指标变化、loss 变化等；
+* `config.yaml`：训练配置文件，记录了本次训练的超参数的配置；
+* `best_accuracy.pdparams.tar`、`scaler.pkl`、`.checkpoints` 、`.inference*`：模型权重相关文件，包括网络参数、优化器、静态图权重等；
+
+</details>
+
 ### 5.2 模型评估
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，只需一行命令：
 
@@ -200,7 +213,7 @@ python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
 
 * 指定模型的`.yaml` 配置文件路径（此处为`TimesNet_cls.yaml`）
 * 指定模式为模型推理预测：`-o Global.mode=predict`
-* 指定模型权重路径：`-o Predict.model_dir=``"./output/inference"`
+* 指定模型权重路径：`-o Predict.model_dir="./output/inference"`
 * 指定输入数据路径：`-o Predict.input="..."`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX时序任务模型配置文件参数说明](../module_usage/instructions/config_parameters_time_series.md)。
 

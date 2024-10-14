@@ -20,15 +20,11 @@ from ....utils import logging
 from ...components.base import BaseComponent, ComponentsEngine
 from ...utils.pp_option import PaddlePredictorOption
 from ...utils.process_hook import generatorable_method
-from ..utils.predict_set import DeviceSetMixin, PPOptionSetMixin, BatchSizeSetMixin
 from .base_predictor import BasePredictor
 
 
 class BasicPredictor(
     BasePredictor,
-    DeviceSetMixin,
-    PPOptionSetMixin,
-    BatchSizeSetMixin,
     metaclass=AutoRegisterABCMetaClass,
 ):
 
@@ -40,7 +36,7 @@ class BasicPredictor(
             pp_option = PaddlePredictorOption(model_name=self.model_name)
         if device:
             pp_option.device = device
-        self._pp_option = pp_option
+        self.pp_option = pp_option
 
         self.components = {}
         self._build_components()
@@ -73,26 +69,17 @@ class BasicPredictor(
             ), f"The key ({key}) has been used: {self.components}!"
             self.components[key] = cmp
 
-    def set_predictor(self, **kwargs):
-        for k in kwargs:
-            if self._has_setter(k):
-                setattr(self, k, kwargs[k])
-            else:
-                raise Exception(
-                    f"The arg({k}) is not supported to specify in predict() func! Only supports: {self._get_settable_attributes()}"
-                )
+    def set_predictor(self, batch_size=None, device=None, pp_option=None):
+        if batch_size:
+            self.components["ReadCmp"].batch_size = batch_size
+        if device:
+            self.pp_option.device = device
+        if pp_option:
+            self.pp_option = pp_option
 
     def _has_setter(self, attr):
         prop = getattr(self.__class__, attr, None)
         return isinstance(prop, property) and prop.fset is not None
-
-    @classmethod
-    def _get_settable_attributes(cls):
-        return [
-            name
-            for name, obj in inspect.getmembers(cls, lambda o: isinstance(o, property))
-            if obj.fset is not None
-        ]
 
     @abstractmethod
     def _build_components(self):

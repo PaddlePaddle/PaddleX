@@ -50,7 +50,7 @@ After installing the wheel package, you can perform human detection with just a 
 
 
 ```python
-from paddlex.inference import create_model 
+from paddlex import create_model 
 
 model_name = "PP-YOLOE-S_human"
 
@@ -78,7 +78,7 @@ You can download the demo dataset to a specified folder using the following comm
 
 ```bash
 cd /path/to/paddlex
-wget https://bj.bcebos.com/v1/paddledet/data/widerperson_coco_examples.tar -P ./dataset
+wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/widerperson_coco_examples.tar -P ./dataset
 tar -xf ./dataset/widerperson_coco_examples.tar -C ./dataset/
 ```
 
