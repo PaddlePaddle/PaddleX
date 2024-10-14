@@ -258,7 +258,7 @@ The model can be directly integrated into the PaddleX pipeline or directly into 
 
 1. **Pipeline Integration**
 
-The main body detection module can be integrated into PaddleX pipelines such as **General Object Detection** (comming soon). Simply replace the model path to update the main body detection module of the relevant pipeline. In pipeline integration, you can use high-performance deployment and service-oriented deployment to deploy your trained model.
+The main body detection module can be integrated into PaddleX pipelines such as **General Object Detection** (comming soon). Simply replace the model path to update the main body detection module of the relevant pipeline. In pipeline integration, you can use High-Performance Inference and service-oriented deployment to deploy your trained model.
 
 2. **Module Integration**
 

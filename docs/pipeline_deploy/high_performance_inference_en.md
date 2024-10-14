@@ -1,6 +1,6 @@
-[简体中文](high_performance_deploy.md) | English
+[简体中文](high_performance_inference.md) | English
 
-# PaddleX High-Performance Deployment Guide
+# PaddleX High-Performance Inference Guide
 
 In real-world production environments, many applications have stringent standards for deployment strategy performance metrics, particularly response speed, to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins designed to deeply optimize model inference and pre/post-processing, achieving significant speedups in the end-to-end process. This document will first introduce the installation and usage of the high-performance inference plugins, followed by a list of pipelines and models currently supporting the use of these plugins.
 
@@ -117,7 +117,7 @@ The inference results obtained with the high-performance inference plugin enable
 
 PaddleX provides default high-performance inference configurations for each model and stores them in the model's configuration file. Due to the diversity of actual deployment environments, using the default configurations may not achieve ideal performance in specific environments or may even result in inference failures. For situations where the default configurations cannot meet requirements, you can try changing the model's inference backend as follows:
 
-1. Locate the `inference.yml` file in the model directory and find the Hpi field.
+1. Locate the `inference.yml` file in the model directory and find the `Hpi` field.
 
 2. Modify the value of `selected_backends`. Specifically, `selected_backends` may be set as follows:
 
@@ -143,7 +143,7 @@ PaddleX provides default high-performance inference configurations for each mode
     * GPU: NVIDIA Tesla T4
     * CUDA Version: 11.8
     * cuDNN Version: 8.6
-    * Docker
+    * Docker：registry.baidubce.com/paddlepaddle/paddle:latest-dev-cuda11.8-cudnn8.6-trt8.5-gcc82
 
 ## 2. Pipelines and Models Supporting High-Performance Inference Plugins
 

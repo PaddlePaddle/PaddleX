@@ -37,7 +37,7 @@ ntegrates numerous **ready-to-use pre-trained models**, enabling **full-process 
 
   🚀 **High Efficiency and Low barrier of entry**: Achieve model **full-process development** based on graphical interfaces and unified commands, creating **8 featured model pipelines** that combine large and small models, semi-supervised learning of large models, and multi-model fusion, greatly reducing the cost of iterating models.
 
-  🌐 **Flexible Deployment in Various Scenarios**: Support various deployment methods such as **high-performance deployment**, **service deployment**, and **lite deployment** to ensure efficient operation and rapid response of models in different application scenarios.
+  🌐 **Flexible Deployment in Various Scenarios**: Support various deployment methods such as **High-Performance Inference**, **service deployment**, and **lite deployment** to ensure efficient operation and rapid response of models in different application scenarios.
 
   🔧 **Efficient Support for Mainstream Hardware**: Support seamless switching of various mainstream hardware such as NVIDIA GPUs, Kunlun XPU, Ascend NPU, and Cambricon MLU to ensure efficient operation.
 
@@ -51,7 +51,7 @@ ntegrates numerous **ready-to-use pre-trained models**, enabling **full-process 
 
 ## 📊 What can PaddleX do？
 
-All pipelines of PaddleX support **online experience** and local **fast inference**. You can quickly experience the effects of each pre-trained pipeline. If you are satisfied with the effects of the pre-trained pipeline, you can directly perform [high-performance deployment](./docs/pipeline_deploy/high_performance_deploy_en.md) / [serving deployment](./docs/pipeline_deploy/service_deploy_en.md) / [edge deployment](./docs/pipeline_deploy/lite_deploy_en.md) on the pipeline. If not satisfied, you can also **second development** to improve the pipeline effect. For the complete pipeline development process, please refer to the [PaddleX pipeline Development Tool Local Use Tutorial](./docs/pipeline_usage/pipeline_develop_guide_en.md).
+All pipelines of PaddleX support **online experience** and local **fast inference**. You can quickly experience the effects of each pre-trained pipeline. If you are satisfied with the effects of the pre-trained pipeline, you can directly perform [High-Performance Inference](./docs/pipeline_deploy/high_performance_inference_en.md) / [serving deployment](./docs/pipeline_deploy/service_deploy_en.md) / [edge deployment](./docs/pipeline_deploy/lite_deploy_en.md) on the pipeline. If not satisfied, you can also **second development** to improve the pipeline effect. For the complete pipeline development process, please refer to the [PaddleX pipeline Development Tool Local Use Tutorial](./docs/pipeline_usage/pipeline_develop_guide_en.md).
 
 In addition, PaddleX provides developers with a full-process efficient model training and deployment tool based on a [cloud-based graphical development interface](https://aistudio.baidu.com/pipeline/mine). Developers **do not need code development**, just need to prepare a dataset that meets the pipeline requirements to **quickly start model training**. For details, please refer to the tutorial ["Developing Industrial-level AI Models with Zero Threshold"](https://aistudio.baidu.com/practical/introduce/546656605663301).
 
@@ -60,7 +60,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <th>Model pipeline</th>
         <th>Online Experience</th>
         <th>Quick Inference</th>
-        <th>High-Performance Deployment</th>
+        <th>High-Performance Inference</th>
         <th>Service Deployment</th>
         <th>Edge Deployment</th>
         <th>Secondary Development</th>
@@ -593,7 +593,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 <details>
   <summary> <b> 🏗️ Model pipeline Deployment </b></summary>
 
-  * [🚀 PaddleX High-Performance Deployment Guide](./docs/pipeline_deploy/high_performance_deploy_en.md)
+  * [🚀 PaddleX High-Performance Inference Guide](./docs/pipeline_deploy/high_performance_inference_en.md)
   * [🖥️ PaddleX Service Deployment Guide](./docs/pipeline_deploy/service_deploy_en.md)
   * [📱 PaddleX Edge Deployment Guide](./docs/pipeline_deploy/lite_deploy_en.md)
 

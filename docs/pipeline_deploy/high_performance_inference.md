@@ -1,4 +1,4 @@
-简体中文 | [English](high_performance_deploy_en.md)
+简体中文 | [English](high_performance_inference_en.md)
 
 # PaddleX 高性能推理指南
 

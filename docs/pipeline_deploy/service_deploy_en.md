@@ -55,7 +55,7 @@ Command-line options related to serving deployment are as follows:
 | `--host`           | Hostname or IP address bound to the server. Defaults to 0.0.0.0.                                                                                                |
 | `--port`           | Port number listened to by the server. Defaults to 8080.                                                                                                       |
 | `--use_hpip`       | Enables the high-performance inference plugin if specified.                                                                                                    |
-| `--serial_number`  | Serial number used by the high-performance inference plugin. Only valid when the high-performance inference plugin is enabled. Note that not all pipelines and models support the use of the high-performance inference plugin. For detailed support, please refer to the [PaddleX High-Performance Deployment Guide](./high_performance_deploy_en.md). |
+| `--serial_number`  | Serial number used by the high-performance inference plugin. Only valid when the high-performance inference plugin is enabled. Note that not all pipelines and models support the use of the high-performance inference plugin. For detailed support, please refer to the [PaddleX High-Performance Inference Guide](./high_performance_inference_en.md). |
 | `--update_license` | Activates the license online if specified. Only valid when the high-performance inference plugin is enabled.                                                      |
 
 </table>
@@ -88,7 +88,7 @@ When deploying services into production environments, the stability, efficiency,
 
 In scenarios where strict response time requirements are imposed on applications, the PaddleX High-Performance Inference Plugin can be used to accelerate model inference and pre/post-processing, thereby reducing response time and increasing throughput.
 
-To use the PaddleX High-Performance Inference Plugin, please refer to the [PaddleX High-Performance Deployment Guide](./high_performance_deploy_en.md) for installing the high-performance inference plugin, obtaining serial numbers, and activating the plugin. Additionally, not all pipelines, models, and environments support the use of the high-performance inference plugin. For detailed support information, please refer to the section on pipelines and models that support the high-performance inference plugin.
+To use the PaddleX High-Performance Inference Plugin, please refer to the [PaddleX High-Performance Inference Guide](./high_performance_inference_en.md) for installing the high-performance inference plugin, obtaining serial numbers, and activating the plugin. Additionally, not all pipelines, models, and environments support the use of the high-performance inference plugin. For detailed support information, please refer to the section on pipelines and models that support the high-performance inference plugin.
 
 When starting the PaddleX pipeline service, you can specify `--use_hpip` along with the serial number to use the high-performance inference plugin. If you wish to perform online activation, you should also specify `--update_license`. Example usage:
 
