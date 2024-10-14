@@ -184,7 +184,13 @@ class PPChatOCRPipeline(_TableRecPipeline):
             self.layout_batch_size.set_predictor(device=device)
             self.ocr_pipeline.set_predictor(device=device)
 
-    def predict(
+    def predict(self, *args, **kwargs):
+        logging.error(
+            "PP-ChatOCRv3-doc Pipeline do not support to call `predict()` directly! Please call `visual_predict(input)` firstly to get visual prediction of `input` and call `chat(key_list)` to get the result of query specified by `key_list`."
+        )
+        return
+
+    def visual_predict(
         self,
         input,
         use_doc_image_ori_cls_model=True,
@@ -194,6 +200,11 @@ class PPChatOCRPipeline(_TableRecPipeline):
         **kwargs,
     ):
         self.set_predictor(**kwargs)
+        if self.uvdoc_predictor and uvdoc_batch_size:
+            self.uvdoc_predictor.set_predictor(
+                batch_size=uvdoc_batch_size, device=device
+            )
+
         visual_info = {"ocr_text": [], "table_html": [], "table_text": []}
         # get all visual result
         visual_result = list(
@@ -390,7 +401,7 @@ class PPChatOCRPipeline(_TableRecPipeline):
 
         return ocr_text, table_text_list, table_html
 
-    def get_vector_text(
+    def build_vector(
         self,
         llm_name=None,
         llm_params={},
@@ -439,7 +450,7 @@ class PPChatOCRPipeline(_TableRecPipeline):
 
         return VectorResult({"vector": text_result})
 
-    def get_retrieval_text(
+    def retrieval(
         self,
         key_list,
         visual_info=None,
@@ -457,7 +468,7 @@ class PPChatOCRPipeline(_TableRecPipeline):
         is_seving = visual_info and llm_name
 
         if self.visual_flag and not is_seving:
-            self.vector = self.get_vector_text()
+            self.vector = self.build_vector()
 
         if not any([vector, self.vector]):
             logging.warning(
@@ -465,11 +476,11 @@ class PPChatOCRPipeline(_TableRecPipeline):
             )
             if is_seving:
                 # for serving
-                vector = self.get_vector_text(
+                vector = self.build_vector(
                     llm_name=llm_name, llm_params=llm_params, visual_info=visual_info
                 )
             else:
-                self.vector = self.get_vector_text()
+                self.vector = self.build_vector()
 
         if vector and llm_name:
             _vector = vector["vector"]
@@ -497,7 +508,7 @@ class PPChatOCRPipeline(_TableRecPipeline):
         user_task_description="",
         rules="",
         few_shot="",
-        use_vector=True,
+        use_retrieval=True,
         save_prompt=False,
         llm_name="ernie-3.5",
         llm_params={},
@@ -539,8 +550,8 @@ class PPChatOCRPipeline(_TableRecPipeline):
                 res = self.get_llm_result(prompt)
                 # TODO: why use one html but the whole table_text in next step
                 if list(res.values())[0] in failed_results:
-                    logging.info(
-                        "table html sequence is too much longer, using ocr directly"
+                    logging.debug(
+                        "table html sequence is too much longer, using ocr directly!"
                     )
                     prompt = self.get_prompt_for_ocr(
                         table_text, key_list, rules, few_shot, user_task_description
@@ -553,12 +564,12 @@ class PPChatOCRPipeline(_TableRecPipeline):
                         key_list.remove(key)
                         final_results[key] = value
         if len(key_list) > 0:
-            logging.info("get result from ocr")
+            logging.debug("get result from ocr")
             if retrieval_result:
                 ocr_text = retrieval_result.get("retrieval")
-            elif use_vector and any([visual_info, vector]):
+            elif use_retrieval and any([visual_info, vector]):
                 # for serving or local
-                ocr_text = self.get_retrieval_text(
+                ocr_text = self.retrieval(
                     key_list=key_list,
                     visual_info=visual_info,
                     vector=vector,
@@ -567,7 +578,7 @@ class PPChatOCRPipeline(_TableRecPipeline):
                 )["retrieval"]
             else:
                 # for local
-                ocr_text = self.get_retrieval_text(key_list=key_list)["retrieval"]
+                ocr_text = self.retrieval(key_list=key_list)["retrieval"]
             prompt = self.get_prompt_for_ocr(
                 ocr_text,
                 key_list,
