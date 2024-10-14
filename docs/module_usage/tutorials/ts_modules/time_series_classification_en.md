@@ -282,7 +282,7 @@ When evaluating the model, you need to specify the model weights file path. Each
 
 After completing the model evaluation, typically, the following outputs are generated:
 
-Upon completion of model evaluation, an `evaluate_result.json` file is produced, which records the evaluation results, specifically whether the evaluation task was completed successfully and the model's evaluation metrics, including Top-1 Accuracy.
+Upon completion of model evaluation, an `evaluate_result.json` file is produced, which records the evaluation results, specifically whether the evaluation task was completed successfully and the model's evaluation metrics, including Top-1 Accuracy and F1 score.
 
 </details>
 

@@ -36,7 +36,7 @@ PaddleX provides a time series classification model. Refer to the [Model List](.
 ### 4.1 Data Preparation
 To demonstrate the entire time series classification process, we will use the public [Heartbeat Dataset](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_classify_examples.tar) for model training and validation. The Heartbeat Dataset is part of the UEA Time Series Classification Archive, addressing the practical task of heartbeat monitoring for medical diagnosis. The dataset comprises multiple time series groups, with each data point consisting of a label variable, group ID, and 61 feature variables. This dataset is commonly used to test and validate the performance of time series classification prediction models.
 
-We have converted the dataset into a standard format, which can be obtained using the following commands. For data format details, refer to the [Time Series Classification Module Development Tutorial](../module_usage/tutorials/ts_modules/time_series_classification_en.md).
+We have converted the dataset into a standard format, which can be obtained using the following commands. For data format details, refer to the [Time Series Classification Module Development Tutorial](../module_usage/tutorials/time_series_modules/time_series_classification_en.md).
 
 Dataset Acquisition Command:
 
@@ -46,7 +46,7 @@ wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_classify_example
 tar -xf ./dataset/ts_classify_examples.tar -C ./dataset/
 ```
 
-* **Data Considerations**
+**Data Considerations**
   * Based on collected real data, clarify the classification objectives of the time series data and define corresponding classification labels. For example, in stock price classification, labels might be "Rise" or "Fall." For a time series that is "Rising" over a period, it can be considered a sample (group), where each time point in this period shares a common group_id.
   * Uniform Time Series Length: Ensure that the length of the time series for each group is consistent.
 Missing Value Handling: To guarantee the quality and integrity of the data, missing values can be imputed based on expert experience or statistical methods.
@@ -97,7 +97,7 @@ The above verification results have omitted some data parts. `check_pass` being 
 **Note**: Only data that passes the verification can be used for training and evaluation.
 
 ### 4.3 Dataset Format Conversion / Dataset Splitting (Optional)
-If you need to convert the dataset format or re-split the dataset, please refer to Section 4.1.3 in the [Time Series Classification Module Development Tutorial](../module_usage/tutorials/ts_modules/time_series_classification_en.md).
+If you need to convert the dataset format or re-split the dataset, please refer to Section 4.1.3 in the [Time Series Classification Module Development Tutorial](../module_usage/tutorials/time_series_modules/time_series_classification_en.md).
 
 ## 5. Model Training and Evaluation
 
@@ -140,14 +140,25 @@ For more hyperparameter introductions, please refer to [PaddleX Time Series Task
 * The above parameters can be set by appending command-line parameters, e.g., specifying the mode as model training: `-o Global.mode=train`; specifying the first GPU for training: `-o Global.device=gpu:0`; setting the number of training epochs to 10: `-o Train.epochs_iters=10`.
 * During model training, PaddleX automatically saves model weight files, with the default being `output`. To specify a save path, use the `-o Global.output` field in the configuration file.
 
-**Training Output Explanation**:
+<details>
+   <summary> More Details (Click to Expand)  </summary>
 
-After completing model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
+* During the model training process, PaddleX automatically saves the model weight files, with the default directory being output. If you need to specify a different save path, you can configure it through the `-o Global.output` field in the configuration file.
+* PaddleX abstracts away the concepts of dynamic graph weights and static graph weights from you. During model training, both dynamic and static graph weights are produced simultaneously. By default, static graph weights are selected for inference.
+* When training other models, you need to specify the corresponding configuration file. The correspondence between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../support_list/models_list_en.md)
 
-* train_result.json: Training result record file, recording whether the training task completed normally, as well as the output weight metrics, relevant file paths, etc.;
-* train.log: Training log file, recording changes in model metrics, loss, etc. during training;
-* config.yaml: Training configuration file;
-* The model weight-related files such as .pdparams, .pkl, model_meta, checkpoint, and best_accuracy.pdparams.tar contain network parameters, optimizers, normalization configurations, network parameters again (possibly for clarity or differentiation), data information, and compressed packages of the best model weights, among other things.
+After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including the following:
+
+**Explanation of Training Outputs:**
+
+After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including the following:
+
+`train_result.json`: A training result record file that logs whether the training task was completed normally, as well as the output weight metrics, relevant file paths, etc.
+`train.log`: A training log file that records changes in model metrics, loss values, and other information during the training process.
+`config.yaml`: The training configuration file that records the hyperparameter configurations for this training session.
+`best_accuracy.pdparams.tar`, `scaler.pkl`, `.checkpoints`, `.inference*`: Files related to model weights, including network parameters, optimizers, static graph network parameters, etc.
+
+</details>
 
 ### 5.2 Model Evaluation
 After completing model training, you can evaluate the specified model weights file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation requires just one command:

@@ -293,7 +293,7 @@ python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
 
 * 指定模型的.yaml 配置文件路径（此处为` PP-LiteSeg-T.yaml`）
 * 指定模式为模型推理预测：`-o Global.mode=predict`
-* 指定模型权重路径：`-o Predict.model_dir=``"./output/best_model/inference"`
+* 指定模型权重路径：`-o Predict.model_dir="./output/best_model/inference"`
 * 指定输入数据路径：`-o Predict.input="..."`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 

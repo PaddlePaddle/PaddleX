@@ -577,7 +577,7 @@ Choose the appropriate deployment method for your model pipeline based on your n
 If the default model weights provided by the General Time Series Forecasting Pipeline do not meet your requirements in terms of accuracy or speed in your specific scenario, you can try to further fine-tune the existing model using **your own domain-specific or application-specific data** to improve the recognition performance of the pipeline in your scenario.
 
 #### 4.1 Model Fine-tuning
-Since the General Time Series Forecasting Pipeline includes a time series forecasting module, if the performance of the pipeline does not meet expectations, you need to refer to the [Customization](../../../module_usage/tutorials/ts_modules/time_series_forecast_en.md#iv-custom-development) section in the [Time Series Forecasting Module Development Tutorial](../../../module_usage/tutorials/ts_modules/time_series_forecast_en.md) and use your private dataset to fine-tune the time series forecasting model.
+Since the General Time Series Forecasting Pipeline includes a time series forecasting module, if the performance of the pipeline does not meet expectations, you need to refer to the [Customization](../../../module_usage/tutorials/time_series_modules/time_series_forecast_en.md#iv-custom-development) section in the [Time Series Forecasting Module Development Tutorial](../../../module_usage/tutorials/time_series_modules/time_series_forecast_en.md) and use your private dataset to fine-tune the time series forecasting model.
 
 #### 4.2 Model Application
 After fine-tuning with your private dataset, you will obtain local model weight files.

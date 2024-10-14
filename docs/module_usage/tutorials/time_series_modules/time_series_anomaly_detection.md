@@ -1,3 +1,5 @@
+简体中文 | [English](time_series_anomaly_detection_en.md)
+
 # 时序异常检测模块使用教程
 
 ## 一、概述
@@ -260,7 +262,7 @@ python main.py -c paddlex/configs/ts_anomaly_detection/AutoEncoder_ad.yaml \
 <details>
   <summary>👉 <b>更多说明（点击展开）</b></summary>
 
-在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如`-o Evaluate.weight_path=``./output/best_model/model.pdparams`。
+在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如`-o Evaluate.weight_path=./output/best_model/model.pdparams`。
 
 在完成模型评估后，通常有以下产出：
 
@@ -285,7 +287,7 @@ python main.py -c paddlex/configs/ts_anomaly_detection/AutoEncoder_ad.yaml \
 
 * 指定模型的`.yaml` 配置文件路径（此处为`AutoEncoder_ad.yaml`）
 * 指定模式为模型推理预测：`-o Global.mode=predict`
-* 指定模型权重路径：`-o Predict.model_dir=``"./output/inference"`
+* 指定模型权重路径：`-o Predict.model_dir="./output/inference"`
 * 指定输入数据路径：`-o Predict.input="..."`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX时序任务模型配置文件参数说明](../../instructions/config_parameters_time_series.md)。
 
