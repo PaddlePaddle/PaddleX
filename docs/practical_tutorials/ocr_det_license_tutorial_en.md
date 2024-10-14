@@ -160,14 +160,14 @@ Each model in PaddleX provides a configuration file for model development to set
     * `epochs_iters`: Number of training epochs;
     * `learning_rate`: Training learning rate;
 
-For more hyperparameter introductions, please refer to [PaddleX Hyperparameter Introduction](../module_usage/instructions/config_parameters_common_en.md).
+For more hyperparameter introductions, please refer to [PaddleX General Model Configuration File Parameter Explanation](../module_usage/instructions/config_parameters_common_en.md).
 
 **Note**:
 - The above parameters can be set by appending command line arguments, e.g., specifying the mode as model training: `-o Global.mode=train`; specifying the first 2 GPUs for training: `-o Global.device=gpu:0,1`; setting the number of training epochs to 10: `-o Train.epochs_iters=10`.
 - During model training, PaddleX automatically saves model weight files, defaulting to `output`. To specify a save path, use the `-o Global.output` field in the configuration file.
 - PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced. During model inference, static graph weights are selected by default.
 
-**Training Output Explanation**:  
+**Training Output Explanation**:
 
 After completing model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
 
@@ -254,7 +254,7 @@ for res in output:
 ```
 For more parameters, please refer to the [General OCR Pipeline Usage Tutorial](../pipeline_usage/tutorials/ocr_pipelines/OCR_en.md).
 
-2. Additionally, PaddleX also offers service-oriented deployment methods, detailed as follows:
+2. Additionally, PaddleX offers three other deployment methods, detailed as follows:
 
 * High-Performance Deployment: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance deployment procedures, please refer to the [PaddleX High-Performance Deployment Guide](../pipeline_deploy/high_performance_deploy_en.md).
 * Service-Oriented Deployment: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving cost-effective service-oriented deployment of production lines. For detailed service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../pipeline_deploy/service_deploy_en.md).
