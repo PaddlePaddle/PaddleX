@@ -29,15 +29,20 @@ class OCRPipeline(BasePipeline):
         text_rec_model,
         text_det_batch_size=1,
         text_rec_batch_size=1,
+        device=None,
         predictor_kwargs=None,
     ):
         super().__init__(predictor_kwargs=predictor_kwargs)
         self._build_predictor(text_det_model, text_rec_model)
-        self.set_predictor(text_det_batch_size, text_rec_batch_size)
+        self.set_predictor(
+            text_det_batch_size=text_det_batch_size,
+            text_rec_batch_size=text_rec_batch_size,
+            device=device,
+        )
 
     def _build_predictor(self, text_det_model, text_rec_model):
-        self.text_det_model = self._create_model(text_det_model)
-        self.text_rec_model = self._create_model(text_rec_model)
+        self.text_det_model = self._create(model=text_det_model)
+        self.text_rec_model = self._create(model=text_rec_model)
         self.is_curve = self.text_det_model.model_name in [
             "PP-OCRv4_mobile_seal_det",
             "PP-OCRv4_server_seal_det",
@@ -47,19 +52,22 @@ class OCRPipeline(BasePipeline):
             det_box_type="poly" if self.is_curve else "quad"
         )
 
-    def set_predictor(self, text_det_batch_size=None, text_rec_batch_size=None):
+    def set_predictor(
+        self, text_det_batch_size=None, text_rec_batch_size=None, device=None
+    ):
         if text_det_batch_size and text_det_batch_size > 1:
             logging.warning(
                 f"text det model only support batch_size=1 now,the setting of text_det_batch_size={text_det_batch_size} will not using! "
             )
         if text_rec_batch_size:
             self.text_rec_model.set_predictor(batch_size=text_rec_batch_size)
+        if device:
+            self.text_rec_model.set_predictor(device=device)
+            self.text_det_model.set_predictor(device=device)
 
     def predict(self, input, **kwargs):
-        device = kwargs.get("device", None)
-        for det_res in self.text_det_model(
-            input, batch_size=kwargs.get("det_batch_size", 1), device=device
-        ):
+        self.set_predictor(**kwargs)
+        for det_res in self.text_det_model(input):
             single_img_res = (
                 det_res if self.is_curve else next(self._sort_boxes(det_res))
             )
@@ -67,11 +75,7 @@ class OCRPipeline(BasePipeline):
             single_img_res["rec_score"] = []
             if len(single_img_res["dt_polys"]) > 0:
                 all_subs_of_img = list(self._crop_by_polys(single_img_res))
-                for rec_res in self.text_rec_model(
-                    all_subs_of_img,
-                    batch_size=kwargs.get("rec_batch_size", 1),
-                    device=device,
-                ):
+                for rec_res in self.text_rec_model(all_subs_of_img):
                     single_img_res["rec_text"].append(rec_res["rec_text"])
                     single_img_res["rec_score"].append(rec_res["rec_score"])
             yield OCRResult(single_img_res)

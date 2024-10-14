@@ -47,41 +47,48 @@ class SealOCRPipeline(BasePipeline):
         layout_batch_size=1,
         text_det_batch_size=1,
         text_rec_batch_size=1,
+        device=None,
         predictor_kwargs=None,
     ):
-        self.layout_model = layout_model
-        self.text_det_model = text_det_model
-        self.text_rec_model = text_rec_model
-        self.layout_batch_size = layout_batch_size
-        self.text_det_batch_size = text_det_batch_size
-        self.text_rec_batch_size = text_rec_batch_size
-        self.predictor_kwargs = predictor_kwargs
         super().__init__(predictor_kwargs=predictor_kwargs)
-        self._build_predictor()
+        self._build_predictor(
+            layout_model=layout_model,
+            text_det_model=text_det_model,
+            text_rec_model=text_rec_model,
+            layout_batch_size=layout_batch_size,
+            text_det_batch_size=text_det_batch_size,
+            text_rec_batch_size=text_rec_batch_size,
+        )
+        self.set_predictor(
+            layout_batch_size=layout_batch_size,
+            text_det_batch_size=text_det_batch_size,
+            text_rec_batch_size=text_rec_batch_size,
+            device=device,
+        )
 
     def _build_predictor(
         self,
+        layout_model,
+        text_det_model,
+        text_rec_model,
+        layout_batch_size,
+        text_det_batch_size,
+        text_rec_batch_size,
     ):
-        self.layout_predictor = self._create_model(model=self.layout_model)
-        self.ocr_pipeline = OCRPipeline(
-            text_det_model=self.text_det_model,
-            text_rec_model=self.text_rec_model,
-            text_det_batch_size=self.text_det_batch_size,
-            text_rec_batch_size=self.text_rec_batch_size,
-            predictor_kwargs=self.predictor_kwargs,
+        self.layout_predictor = self._create(model=layout_model)
+        self.ocr_pipeline = self._create(
+            pipeline=OCRPipeline,
+            text_det_model=text_det_model,
+            text_rec_model=text_rec_model,
         )
         self._crop_by_boxes = CropByBoxes()
-        self.layout_predictor.set_predictor(batch_size=self.layout_batch_size)
-        self.ocr_pipeline.text_rec_model.set_predictor(
-            batch_size=self.text_rec_batch_size
-        )
 
     def set_predictor(
         self,
         layout_batch_size=None,
         text_det_batch_size=None,
         text_rec_batch_size=None,
-        # device=None,
+        device=None,
     ):
         if text_det_batch_size and text_det_batch_size > 1:
             logging.warning(
@@ -93,18 +100,12 @@ class SealOCRPipeline(BasePipeline):
             self.ocr_pipeline.text_rec_model.set_predictor(
                 batch_size=text_rec_batch_size
             )
+        if device:
+            self.layout_predictor.set_predictor(device=device)
+            self.ocr_pipeline.set_predictor(device=device)
 
     def predict(self, x, **kwargs):
-        layout_batch_size = kwargs.get("layout_batch_size")
-        text_det_batch_size = kwargs.get("text_det_batch_size")
-        text_rec_batch_size = kwargs.get("text_rec_batch_size")
-        # device = kwargs.get("device")
-        self.set_predictor(
-            layout_batch_size,
-            text_det_batch_size,
-            text_rec_batch_size,
-            # device,
-        )
+        self.set_predictor(**kwargs)
         for layout_pred in self.layout_predictor(x):
             single_img_res = {
                 "input_path": "",

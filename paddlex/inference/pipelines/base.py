@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from abc import ABC
+from abc import ABC, abstractmethod
 from contextvars import ContextVar, copy_context
 from typing import TypedDict, Type
 
@@ -55,6 +55,7 @@ class BasePipeline(ABC, metaclass=_PipelineMetaClass):
         super().__init__()
         self._predictor_kwargs = {} if predictor_kwargs is None else predictor_kwargs
 
+    @abstractmethod
     def set_predictor():
         raise NotImplementedError(
             "The method `set_predictor` has not been implemented yet."
@@ -64,5 +65,12 @@ class BasePipeline(ABC, metaclass=_PipelineMetaClass):
     def __call__(self, *args, **kwargs):
         yield from self.predict(*args, **kwargs)
 
-    def _create_model(self, *args, **kwargs):
-        return create_predictor(*args, **kwargs, **self._predictor_kwargs)
+    def _create(self, model=None, pipeline=None, *args, **kwargs):
+        if model:
+            return create_predictor(
+                model=model, *args, **kwargs, **self._predictor_kwargs
+            )
+        elif pipeline:
+            return pipeline(*args, **kwargs, predictor_kwargs=self._predictor_kwargs)
+        else:
+            raise Exception()
