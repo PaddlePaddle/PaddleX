@@ -3,7 +3,7 @@
 # Time Series Anomaly Detection Pipeline Tutorial
 
 ## 1. Introduction to the General Time Series Anomaly Detection Pipeline
-Time series anomaly detection is a technique for identifying abnormal patterns or behaviors in time series data. It is widely applied in fields such as network security, equipment monitoring, and financial fraud detection. By analyzing normal trends and patterns in historical data, it discovers events that significantly deviate from expected behaviors, such as sudden spikes in network traffic or unusual transaction activities. Time series anomaly detection typically employs statistical methods or machine learning algorithms (e.g., Isolation Forest, LSTM), enabling automatic identification of anomalies in data. This technology provides real-time alerts for enterprises and organizations, helping them promptly address potential risks and issues. It plays a crucial role in ensuring system stability and security.
+Time series anomaly detection is a technique for identifying abnormal patterns or behaviors in time series data. It is widely applied in fields such as network security, equipment monitoring, and financial fraud detection. By analyzing normal trends and patterns in historical data, it discovers events that significantly deviate from expected behaviors, such as sudden spikes in network traffic or unusual transaction activities. Time series anomaly detection enable automatic identification of anomalies in data. This technology provides real-time alerts for enterprises and organizations, helping them promptly address potential risks and issues. It plays a crucial role in ensuring system stability and security.
 
 ![](/tmp/images/pipelines/time_series/05.png)
 
@@ -118,7 +118,7 @@ In the above Python script, the following steps are executed:
 |-|-|-|-|
 |`pipeline`| The name of the production line or the path to the production line configuration file. If it is the name of the production line, it must be supported by PaddleX. |`str`|None|
 |`device`| The device for production line model inference. Supports: "gpu", "cpu". |`str`|`gpu`|
-|`enable_hpi`| Whether to enable high-performance inference, only available if the production line supports it. |`bool`|`False`|
+|`use_hpip`| Whether to enable high-performance inference, only available if the production line supports it. |`bool`|`False`|
 
 （2）Invoke the `predict` method of the  production line object for inference prediction: The `predict` method parameter is `x`, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
 
@@ -137,9 +137,8 @@ In the above Python script, the following steps are executed:
 
 | Method         | Description                     | Method Parameters |
 |--------------|-----------------------------|--------------------------------------------------------------------------------------------------------|
-| print        | Prints results to the terminal  | `- format_json`: bool, whether to format the output content with json indentation, default is True;<br>`- indent`: int, json formatting setting, only valid when format_json is True, default is 4;<br>`- ensure_ascii`: bool, json formatting setting, only valid when format_json is True, default is False; |
-| save_to_json | Saves results as a json file   | `- save_path`: str, the path to save the file, when it's a directory, the saved file name is consistent with the input file type;<br>`- indent`: int, json formatting setting, default is 4;<br>`- ensure_ascii`: bool, json formatting setting, default is False; |
-| save_to_img  | Saves results as an image file | `- save_path`: str, the path to save the file, when it's a directory, the saved file name is consistent with the input file type; |
+| save_to_csv | Saves results as a csv file   | `- save_path`: str, the path to save the file, when it's a directory, the saved file name is consistent with the input file type;<br>`- indent`: int, json formatting setting, default is 4;<br>`- ensure_ascii`: bool, json formatting setting, default is False; |
+| save_to_xlsx  | Saves results as table file | `- save_path`: str, the path to save the file, when it's a directory, the saved file name is consistent with the input file type; |
 
 If you have a configuration file, you can customize the configurations of the image anomaly detection pipeline by simply modifying the `pipeline` parameter in the `create_pipeline` method to the path of the pipeline configuration file.
 

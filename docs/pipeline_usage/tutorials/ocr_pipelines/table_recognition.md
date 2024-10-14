@@ -209,6 +209,7 @@ for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_img("./output/") ## 保存img格式结果
     res.save_to_xlsx("./output/") ## 保存表格格式结果
+    res.save_to_html("./output/") ## 保存html结果
 ```
 得到的结果与命令行方式相同。
 
@@ -220,7 +221,7 @@ for res in output:
 |-|-|-|-|
 |`pipeline`|产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。|`str`|无|
 |`device`|产线模型推理设备。支持：“gpu”，“cpu”。|`str`|`gpu`|
-|`enable_hpi`|是否启用高性能推理，仅当该产线支持高性能推理时可用。|`bool`|`False`|
+|`use_hpip`|是否启用高性能推理，仅当该产线支持高性能推理时可用。|`bool`|`False`|
 
 （2）调用产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`x`，用于输入待预测数据，支持多种输入方式，具体示例如下：
 
@@ -244,7 +245,7 @@ for res in output:
 |save_to_html|将结果保存为html格式的文件|`- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；|
 |save_to_xlsx|将结果保存为表格格式的文件|`- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；|
 
-其中，`save_to_img` 能够将单元格绘制在输入图片上进行可视化， `save_to_html` 能够将表格直接保存为html文件（包括文本和表格格式），`save_to_xlsx` 能够将表格保存为Excel格式文件（包括文本和格式）。
+其中，`save_to_img` 能够保存可视化结果（包括OCR结果图片、版面分析结果图片、表格结构识别结果图片）， `save_to_html` 能够将表格直接保存为html文件（包括文本和表格格式），`save_to_xlsx` 能够将表格保存为Excel格式文件（包括文本和格式）。
  
 若您获取了配置文件，即可对表格识别产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
 
@@ -258,6 +259,7 @@ for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_img("./output/") ## 保存img格式结果
     res.save_to_xlsx("./output/") ## 保存表格格式结果
+    res.save_to_html("./output/") ## 保存html结果
 ```
 ## 3. 开发集成/部署
 如果产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。

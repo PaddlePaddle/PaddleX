@@ -150,7 +150,7 @@ The Python script above executes the following steps:
 |-|-|-|-|
 |`pipeline`| The name of the production line or the path to the production line configuration file. If it is the name of the production line, it must be supported by PaddleX. |`str`|None|
 |`device`| The device for production line model inference. Supports: "gpu", "cpu". |`str`|`gpu`|
-|`enable_hpi`| Whether to enable high-performance inference, only available if the production line supports it. |`bool`|`False`|
+|`use_hpip`| Whether to enable high-performance inference, only available if the production line supports it. |`bool`|`False`|
 
 （2）Invoke the `predict` method of the OCR production line object for inference prediction: The `predict` method parameter is `x`, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
 

@@ -142,6 +142,7 @@ for res in output:
     res.print()  # Print the structured output of the prediction
     res.save_to_img("./output/")  # Save the results in img format
     res.save_to_xlsx("./output/")  # Save the results in Excel format
+    res.save_to_html("./output/") # Save results in HTML format
 ```
 The results are the same as those obtained through the command line.
 
@@ -153,7 +154,7 @@ In the above Python script, the following steps are executed:
 |-|-|-|-|
 |`pipeline`| The name of the production line or the path to the production line configuration file. If it is the name of the production line, it must be supported by PaddleX. |`str`|None|
 |`device`| The device for production line model inference. Supports: "gpu", "cpu". |`str`|`gpu`|
-|`enable_hpi`| Whether to enable high-performance inference, only available if the production line supports it. |`bool`|`False`|
+|`use_hpip`| Whether to enable high-performance inference, only available if the production line supports it. |`bool`|`False`|
 
 （2）Invoke the `predict` method of the  production line object for inference prediction: The `predict` method parameter is `x`, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
 
@@ -176,7 +177,7 @@ In the above Python script, the following steps are executed:
 | save_to_html | Save the results as an html format file | `- save_path`: str, the path to save the file. When it's a directory, the saved file name will be consistent with the input file type; |
 | save_to_xlsx | Save the results as a spreadsheet format file | `- save_path`: str, the path to save the file. When it's a directory, the saved file name will be consistent with the input file type; |
 
-Where `save_to_img` can visualize the cells by drawing them on the input image, `save_to_html` can directly save the table as an html file (including text and table formatting), and `save_to_xlsx` can save the table as an Excel format file (including text and formatting).
+Where `save_to_img` can save visualization results (including OCR result images, layout analysis result images, table structure recognition result images), `save_to_html` can directly save the table as an html file (including text and table formatting), and `save_to_xlsx` can save the table as an Excel format file (including text and formatting).
 
 If you have a configuration file, you can customize the configurations of the image anomaly detection pipeline by simply modifying the `pipeline` parameter in the `create_pipeline` method to the path of the pipeline configuration file.
 
@@ -190,6 +191,7 @@ for res in output:
     res.print()  # Print the structured output of prediction
     res.save_to_img("./output/")  # Save results in img format
     res.save_to_xlsx("./output/")  # Save results in Excel format
+    res.save_to_html("./output/") # Save results in HTML format
 ```
 
 ## 3. Development Integration/Deployment

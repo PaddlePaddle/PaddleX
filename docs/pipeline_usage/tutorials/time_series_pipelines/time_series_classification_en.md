@@ -3,11 +3,11 @@
 # Time Series Classification Pipeline Tutorial
 
 ## 1. Introduction to General Time Series Classification Pipeline
-Time series classification is a technique that categorizes time-series data into predefined classes, widely applied in fields such as behavior recognition, speech recognition, and financial trend analysis. By analyzing features that vary over time, it identifies different patterns or events, for example, classifying a speech signal as "greeting" or "request," or categorizing stock price movements as "rising" or "falling." Time series classification typically employs machine learning and deep learning models, effectively capturing temporal dependencies and variation patterns to provide accurate classification labels for data. This technology plays a pivotal role in applications such as intelligent monitoring, voice assistants, and market forecasting.
+Time series classification is a technique that categorizes time-series data into predefined classes, widely applied in fields such as behavior recognition and financial trend analysis. By analyzing features that vary over time, it identifies different patterns or events, for example, classifying a speech signal as "greeting" or "request," or categorizing stock price movements as "rising" or "falling." Time series classification typically employs machine learning and deep learning models, effectively capturing temporal dependencies and variation patterns to provide accurate classification labels for data. This technology plays a pivotal role in applications such as intelligent monitoring and market forecasting.
 
 ![](/tmp/images/pipelines/time_series/01.png)
 
-**The General Time Series Classification Pipeline includes a Time Series Classification module. If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, select a model with faster inference. If you prioritize model size, choose a model with a smaller storage footprint.**
+**The General Time Series Classification Pipeline includes a Time Series Classification module.**
 
 <details>
    <summary> 👉Model List Details</summary>
@@ -108,7 +108,7 @@ In the above Python script, the following steps are executed:
 |-----------|-------------|------|---------|
 | `pipeline` | The name of the pipeline or the path to the pipeline configuration file. If it's a pipeline name, it must be supported by PaddleX. | `str` | None |
 | `device` | The device for pipeline model inference. Supports: "gpu", "cpu". | `str` | "gpu" |
-| `enable_hpi` | Whether to enable high-performance inference. Available only if the pipeline supports it. | `bool` | `False` |
+| `use_hpip` | Whether to enable high-performance inference. Available only if the pipeline supports it. | `bool` | `False` |
 
 (2) Call the `predict` method of the pipeline object for inference: The `predict` method takes `x` as a parameter, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
 

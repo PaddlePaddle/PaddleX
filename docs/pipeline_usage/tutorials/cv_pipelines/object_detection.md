@@ -35,7 +35,6 @@
     <td>-</td>
     <td>-</td>
     <td>246.2 M</td>
-    <td></td>
   </tr>
   <tr>
     <td>CenterNet-DLA-34</td>
@@ -51,7 +50,7 @@
     <td>-</td>
     <td>-</td>
     <td>319.7 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>DETR-R50</td>
@@ -75,7 +74,7 @@
     <td>-</td>
     <td>-</td>
     <td>148.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNet50-vd-FPN</td>
@@ -83,7 +82,7 @@
     <td>-</td>
     <td>-</td>
     <td>148.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNet50-vd-SSLDv2-FPN</td>
@@ -91,7 +90,7 @@
     <td>-</td>
     <td>-</td>
     <td>148.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNet50</td>
@@ -99,7 +98,7 @@
     <td>-</td>
     <td>-</td>
     <td>120.2 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNet101-FPN</td>
@@ -107,7 +106,7 @@
     <td>-</td>
     <td>-</td>
     <td>216.3 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNet101</td>
@@ -115,7 +114,7 @@
     <td>-</td>
     <td>-</td>
     <td>188.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNeXt101-vd-FPN</td>
@@ -123,7 +122,7 @@
     <td>-</td>
     <td>-</td>
     <td>360.6 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-Swin-Tiny-FPN</td>
@@ -131,7 +130,7 @@
     <td>-</td>
     <td>-</td>
     <td>159.8 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FCOS-ResNet50</td>
@@ -155,7 +154,7 @@
     <td>16.2311</td>
     <td>71.7257</td>
     <td>16.8 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>PicoDet-S</td>
@@ -163,7 +162,7 @@
     <td>14.097</td>
     <td>37.6563</td>
     <td>4.4 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>PicoDet-XS</td>
@@ -171,7 +170,7 @@
     <td>13.8102</td>
     <td>48.3139</td>
     <td>5.7 M</td>
-    <td></td>
+
   </tr>
     <tr>
     <td>PP-YOLOE_plus-L</td>
@@ -187,7 +186,7 @@
     <td>19.843</td>
     <td>449.261</td>
     <td>82.3 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>PP-YOLOE_plus-S</td>
@@ -195,7 +194,7 @@
     <td>16.8884</td>
     <td>223.059</td>
     <td>28.3 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>PP-YOLOE_plus-X</td>
@@ -203,7 +202,7 @@
     <td>57.8995</td>
     <td>1439.93</td>
     <td>349.4 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>RT-DETR-H</td>
@@ -219,7 +218,7 @@
     <td>34.5252</td>
     <td>1454.27</td>
     <td>113.7 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>RT-DETR-R18</td>
@@ -227,7 +226,7 @@
     <td>19.89</td>
     <td>784.824</td>
     <td>70.7 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>RT-DETR-R50</td>
@@ -235,7 +234,7 @@
     <td>41.9327</td>
     <td>1625.95</td>
     <td>149.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>RT-DETR-X</td>
@@ -243,7 +242,7 @@
     <td>61.8042</td>
     <td>2246.64</td>
     <td>232.9 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOv3-DarkNet53</td>
@@ -259,7 +258,7 @@
     <td>18.6692</td>
     <td>267.214</td>
     <td>83.8 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOv3-ResNet50_vd_DCN</td>
@@ -267,7 +266,7 @@
     <td>31.6276</td>
     <td>856.047</td>
     <td>163.0 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOX-L</td>
@@ -283,7 +282,7 @@
     <td>123.324</td>
     <td>688.071</td>
     <td>90.0 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOX-N</td>
@@ -291,7 +290,7 @@
     <td>79.1665</td>
     <td>155.59</td>
     <td>3.4 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOX-S</td>
@@ -299,7 +298,7 @@
     <td>184.828</td>
     <td>474.446</td>
     <td>32.0 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOX-T</td>
@@ -307,7 +306,7 @@
     <td>102.748</td>
     <td>212.52</td>
     <td>18.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOX-X</td>
@@ -315,7 +314,7 @@
     <td>227.361</td>
     <td>2067.84</td>
     <td>351.5 M</td>
-    <td></td>
+
   </tr>
 </table>
 
