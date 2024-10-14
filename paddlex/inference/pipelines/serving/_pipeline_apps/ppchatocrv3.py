@@ -312,7 +312,8 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
                 max_num_imgs=ctx.extra["max_num_imgs"],
             )
 
-            result = await pipeline.infer(
+            result = await pipeline.call(
+                pipeline.pipeline.visual_predict,
                 images,
                 use_oricls=request.useOricls,
                 use_curve=request.useCurve,
@@ -405,7 +406,7 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
                 kwargs["llm_params"] = _llm_params_to_dict(request.llmParams)
 
             result = await serving_utils.call_async(
-                pipeline.pipeline.get_vector_text, **kwargs
+                pipeline.pipeline.build_vector, **kwargs
             )
 
             return ResultResponse(
@@ -441,7 +442,7 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
                 kwargs["llm_params"] = _llm_params_to_dict(request.llmParams)
 
             result = await serving_utils.call_async(
-                pipeline.pipeline.get_retrieval_text, **kwargs
+                pipeline.pipeline.retrieval, **kwargs
             )
 
             return ResultResponse(
@@ -474,7 +475,7 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
                 kwargs["rules"] = request.rules
             if request.fewShot is not None:
                 kwargs["few_shot"] = request.fewShot
-            kwargs["use_vector"] = request.useVectorStore
+            kwargs["use_retrieval"] = request.useVectorStore
             if request.vectorStore is not None:
                 kwargs["vector"] = request.vectorStore
             if request.retrievalResult is not None:
