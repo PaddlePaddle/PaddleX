@@ -50,7 +50,7 @@ After installing the wheel package, you can perform human detection with just a 
 
 
 ```python
-from paddlex.inference import create_model 
+from paddlex import create_model 
 
 model_name = "PP-YOLOE-S_human"
 
@@ -78,7 +78,7 @@ You can download the demo dataset to a specified folder using the following comm
 
 ```bash
 cd /path/to/paddlex
-wget https://bj.bcebos.com/v1/paddledet/data/widerperson_coco_examples.tar -P ./dataset
+wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/widerperson_coco_examples.tar -P ./dataset
 tar -xf ./dataset/widerperson_coco_examples.tar -C ./dataset/
 ```
 
@@ -212,9 +212,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 * During model training, PaddleX automatically saves model weight files, defaulting to `output`. To specify a save path, use the `-o Global.output` field in the configuration file.
 * PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.
 * When training other models, specify the corresponding configuration file. The correspondence between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md).
-After completing model training, all outputs are saved in the specified output directory (default is `./output/`), typically.
-
-Similar to model training, the following steps are required:
+After completing model training, all outputs are saved in the specified output directory (default is `./output/`), the following steps are required:
 
 * Specify the `.yaml` configuration file path of the model (here it is `PP-YOLOE-S_human.yaml`)
 * Set the mode to model evaluation: `-o Global.mode=evaluate`

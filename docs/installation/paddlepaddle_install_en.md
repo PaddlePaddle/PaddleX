@@ -7,9 +7,28 @@ When installing PaddlePaddle, you can choose to install it via Docker or pip.
 ## Installing PaddlePaddle via Docker
 **If you choose to install via Docker**, please refer to the following commands to use the official PaddlePaddle Docker image to create a container named `paddlex` and map the current working directory to the `/paddle` directory inside the container:
 
+If your Docker version >= 19.03, please use:
+
 ```bash
 # For CPU users:
-nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1 /bin/bash
+docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1 /bin/bash
+
+# For GPU users:
+# CUDA 11.8 users
+docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
+
+# CUDA 12.3 users
+docker run --gpus all --name paddlex -v $PWD:/paddle  --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
+```
+
+* If your Docker version <= 19.03 and >= 17.06, please use:
+
+<details>
+   <summary> Click Here</summary>
+
+```bash
+# For CPU users:
+docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1 /bin/bash
 
 # For GPU users:
 # CUDA 11.8 users
@@ -18,7 +37,13 @@ nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -i
 # CUDA 12.3 users
 nvidia-docker run --name paddlex -v $PWD:/paddle  --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
 ```
-Note: For more official PaddlePaddle Docker images, please refer to the [PaddlePaddle official website](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/en/install/docker/linux-docker.html). If you are a CUDA 11.8 user, please ensure your Docker version is >= 19.03; if you are a CUDA 12.3 user, please ensure your Docker version is >= 20.10.
+
+</details>
+
+* If your Docker version <= 17.06, please update your Docker.
+
+
+* Note: For more official PaddlePaddle Docker images, please refer to the [PaddlePaddle official website](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/en/install/docker/linux-docker.html)
 
 ## Installing PaddlePaddle via pip
 **If you choose to install via pip**, please refer to the following commands to install PaddlePaddle in your current environment using pip:
