@@ -37,7 +37,6 @@ class OCRPipeline(BasePipeline):
         self.set_predictor(
             text_det_batch_size=text_det_batch_size,
             text_rec_batch_size=text_rec_batch_size,
-            device=device,
         )
 
     def _build_predictor(self, text_det_model, text_rec_model):

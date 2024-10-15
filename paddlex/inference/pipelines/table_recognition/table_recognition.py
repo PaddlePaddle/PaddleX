@@ -187,5 +187,4 @@ class TableRecPipeline(_TableRecPipeline):
             text_det_batch_size=text_det_batch_size,
             text_rec_batch_size=text_rec_batch_size,
             table_batch_size=table_batch_size,
-            device=device,
         )
