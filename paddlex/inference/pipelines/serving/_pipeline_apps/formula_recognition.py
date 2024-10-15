@@ -81,7 +81,7 @@ def create_pipeline_app(
             result = (await pipeline.infer(image))[0]
 
             formulae: List[Formula] = []
-            for poly, latex in zip(result["polys"], result["rec_formula"]):
+            for poly, latex in zip(result["dt_polys"], result["rec_formula"]):
                 formulae.append(
                     Formula(
                         poly=poly,
