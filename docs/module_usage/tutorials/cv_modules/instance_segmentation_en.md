@@ -76,7 +76,7 @@ The instance segmentation module is a crucial component in computer vision syste
         <td>-</td>
         <td>-</td>
         <td>157.5 M</td>
-        <td rowspan="7">Mask R-CNN is a full-task deep learning model from Facebook AI Research (FAIR) that can perform object classification and localization in a single model, combined with image-level masks to complete segmentation tasks.</td>
+        <td rowspan="6">Mask R-CNN is a full-task deep learning model from Facebook AI Research (FAIR) that can perform object classification and localization in a single model, combined with image-level masks to complete segmentation tasks.</td>
     </tr>
     <tr>
         <td>MaskRCNN-ResNet50-vd-FPN</td>
@@ -84,13 +84,6 @@ The instance segmentation module is a crucial component in computer vision syste
         <td>-</td>
         <td>-</td>
         <td>157.5 M</td>
-    </tr>
-    <tr>
-        <td>MaskRCNN-ResNet50-vd-SSLDv2-FPN</td>
-        <td>38.2</td>
-        <td>-</td>
-        <td>-</td>
-        <td>127.2 M</td>
     </tr>
     <tr>
         <td>MaskRCNN-ResNet50</td>
@@ -128,6 +121,14 @@ The instance segmentation module is a crucial component in computer vision syste
         <td>-</td>
         <td>31.5 M</td>
         <td>PP-YOLOE_seg is an instance segmentation model based on PP-YOLOE. This model inherits PP-YOLOE's backbone and head, significantly enhancing instance segmentation performance and inference speed through the design of a PP-YOLOE instance segmentation head.</td>
+    </tr>
+        <tr>
+        <td>SOLOv2</td>
+        <td>35.5</td>
+        <td>-</td>
+        <td>-</td>
+        <td>179.1 M</td>
+        <td> Solov2 is a real-time instance segmentation algorithm that segments objects by location. This model is an improved version of SOLO, achieving a good balance between accuracy and speed through the introduction of mask learning and mask NMS.</td>
     </tr>
 </table>
 
@@ -244,7 +245,7 @@ tar -xf ./dataset/instance_seg_labelme_examples.tar -C ./dataset/
 ......
 CheckDataset:
   ......
-  convert: 
+  convert:
     enable: True
     src_dataset_type: LabelMe
   ......
@@ -254,7 +255,7 @@ Then execute the command:
 ```bash
 python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml\
     -o Global.mode=check_dataset \
-    -o Global.dataset_dir=./dataset/instance_seg_labelme_examples 
+    -o Global.dataset_dir=./dataset/instance_seg_labelme_examples
 ```
 After the data conversion is executed, the original annotation files will be renamed to `xxx.bak` in the original path.
 
@@ -295,7 +296,7 @@ Then execute the command:
 ```bash
 python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
     -o Global.mode=check_dataset \
-    -o Global.dataset_dir=./dataset/instance_seg_labelme_examples 
+    -o Global.dataset_dir=./dataset/instance_seg_labelme_examples
 ```
 After data splitting, the original annotation files will be renamed as `xxx.bak` in the original path.
 
@@ -323,7 +324,7 @@ The following steps are required:
 
 * Specify the path to the `.yaml` configuration file of the model (here it is `Mask-RT-DETR-L.yaml`)
 * Specify the mode as model training: `-o Global.mode=train`
-* Specify the path to the training dataset: `-o Global.dataset_dir`. 
+* Specify the path to the training dataset: `-o Global.dataset_dir`.
 Other related parameters can be set by modifying the fields under `Global` and `Train` in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify the first 2 GPUs for training: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration File Parameters Instructions](../../instructions/config_parameters_common_en.md).
 
 <details>

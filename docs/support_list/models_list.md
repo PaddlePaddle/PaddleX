@@ -262,12 +262,12 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 |Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN|39.1|-|-|254.7 M|[Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN.yaml](../../paddlex/configs/instance_segmentation/Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN.yaml)|
 |MaskRCNN-ResNet50-FPN|35.6|-|-|157.5 M|[MaskRCNN-ResNet50-FPN.yaml](../../paddlex/configs/instance_segmentation/MaskRCNN-ResNet50-FPN.yaml)|
 |MaskRCNN-ResNet50-vd-FPN|36.4|-|-|157.5 M|[MaskRCNN-ResNet50-vd-FPN.yaml](../../paddlex/configs/instance_segmentation/MaskRCNN-ResNet50-vd-FPN.yaml)|
-|MaskRCNN-ResNet50-vd-SSLDv2-FPN|38.2|-|-|157.2 M|[MaskRCNN-ResNet50-vd-SSLDv2-FPN.yaml](../../paddlex/configs/instance_segmentation/MaskRCNN-ResNet50-vd-SSLDv2-FPN.yaml)|
 |MaskRCNN-ResNet50|32.8|-|-|127.8 M|[MaskRCNN-ResNet50.yaml](../../paddlex/configs/instance_segmentation/MaskRCNN-ResNet50.yaml)|
 |MaskRCNN-ResNet101-FPN|36.6|-|-|225.4 M|[MaskRCNN-ResNet101-FPN.yaml](../../paddlex/configs/instance_segmentation/MaskRCNN-ResNet101-FPN.yaml)|
 |MaskRCNN-ResNet101-vd-FPN|38.1|-|-|225.1 M|[MaskRCNN-ResNet101-vd-FPN.yaml](../../paddlex/configs/instance_segmentation/MaskRCNN-ResNet101-vd-FPN.yaml)|
 |MaskRCNN-ResNeXt101-vd-FPN|39.5|-|-|370.0 M|[MaskRCNN-ResNeXt101-vd-FPN.yaml](../../paddlex/configs/instance_segmentation/MaskRCNN-ResNeXt101-vd-FPN.yaml)|
 |PP-YOLOE_seg-S|32.5|-|-|31.5 M|[PP-YOLOE_seg-S.yaml](../../paddlex/configs/instance_segmentation/PP-YOLOE_seg-S.yaml)|
+|SOLOv2| 35.5|-|-|179.1 M|[SOLOv2.yaml](../../paddlex/configs/instance_segmentation/SOLOv2.yaml)
 
 **注：以上精度指标为 **[COCO2017](https://cocodataset.org/#home)** 验证集 Mask AP(0.5:0.95)。**
 

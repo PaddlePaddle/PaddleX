@@ -77,7 +77,7 @@
         <td>-</td>
         <td>-</td>
         <td>157.5 M</td>
-        <td rowspan="7">Mask R-CNN是由华盛顿首例即现投影卡的一个全任务深度学习模型，能够在一个模型中完成图片实例的分类和定位，并结合图像级的遮罩（Mask）来完成分割任务。</td>
+        <td rowspan="6">Mask R-CNN是由华盛顿首例即现投影卡的一个全任务深度学习模型，能够在一个模型中完成图片实例的分类和定位，并结合图像级的遮罩（Mask）来完成分割任务。</td>
     </tr>
     <tr>
         <td>MaskRCNN-ResNet50-vd-FPN</td>
@@ -85,13 +85,6 @@
         <td>-</td>
         <td>-</td>
         <td>157.5 M</td>
-    </tr>
-    <tr>
-        <td>MaskRCNN-ResNet50-vd-SSLDv2-FPN</td>
-        <td>38.2</td>
-        <td>-</td>
-        <td>-</td>
-        <td>127.2 M</td>
     </tr>
     <tr>
         <td>MaskRCNN-ResNet50</td>
@@ -129,6 +122,14 @@
         <td>-</td>
         <td>31.5 M</td>
         <td>PP-YOLOE_seg 是一种基于PP-YOLOE的实例分割模型。该模型沿用了PP-YOLOE的backbone和head，通过设计PP-YOLOE实例分割头，大幅提升了实例分割的性能和推理速度。</td>
+    </tr>
+    <tr>
+        <td>SOLOv2</td>
+        <td>35.5</td>
+        <td>-</td>
+        <td>-</td>
+        <td>179.1 M</td>
+        <td> Solov2是一种按位置分割物体的实时实例分割算法。该模型是SOLO的改进版本，通过引入掩码学习和掩码NMS，实现了精度和速度上取得良好平衡。</td>
     </tr>
 </table>
 

@@ -42,7 +42,7 @@ Based on your actual usage scenario, select an appropriate model for training. A
 ### 4.1 Data Preparation
 To demonstrate the entire time series forecasting process, we will use the [Electricity](https://archive.ics.uci.edu/dataset/321/electricityloaddiagrams20112014) dataset for model training and validation. This dataset collects electricity consumption at a certain node from 2012 to 2014, with data collected every hour. Each data point consists of the current timestamp and corresponding electricity consumption. This dataset is commonly used to test and validate the performance of time series forecasting models.
 
-In this tutorial, we will use this dataset to predict the electricity consumption for the next 96 hours. We have already converted this dataset into a standard data format, and you can obtain a sample dataset by running the following command. For an introduction to the data format, you can refer to the [Time Series Prediction Module Development Tutorial](../module_usage/tutorials/time_series_modules/time_series_forecast_en.md).
+In this tutorial, we will use this dataset to predict the electricity consumption for the next 96 hours. We have already converted this dataset into a standard data format, and you can obtain a sample dataset by running the following command. For an introduction to the data format, you can refer to the [Time Series Prediction Module Development Tutorial](../module_usage/tutorials/ts_modules/time_series_forecast_en.md).
 
 
 You can use the following commands to download the demo dataset to a specified folder:
@@ -176,7 +176,7 @@ After executing the above command, PaddleX will validate the dataset, summarize 
   "dataset_path": "./dataset/electricity",
   "show_type": "csv",
   "dataset_type": "TSDataset"
-} 
+}
 ```
 
 The above verification results have omitted some data parts. `check_pass` being True indicates that the dataset format meets the requirements. Explanations for other indicators are as follows:
@@ -190,7 +190,7 @@ The above verification results have omitted some data parts. `check_pass` being 
 **Note**: Only data that passes the verification can be used for training and evaluation.
 
 ### 4.3 Dataset Format Conversion/Dataset Splitting (Optional)
-If you need to convert the dataset format or re-split the dataset, you can modify the configuration file or append hyperparameters for settings. Refer to Section 4.1.3 in the [Time Series Prediction Module Development Tutorial](../module_usage/tutorials/time_series_modules/time_series_forecast_en.md).
+If you need to convert the dataset format or re-split the dataset, you can modify the configuration file or append hyperparameters for settings. Refer to Section 4.1.3 in the [Time Series Prediction Module Development Tutorial](../module_usage/tutorials/ts_modules/time_series_forecast_en.md).
 
 ## 5. Model Training and Evaluation
 
@@ -343,8 +343,8 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="ts_forecast")
 output = pipeline.predict("pre_ts.csv")
 for res in output:
-    res.print() 
-    res.save_to_csv("./output/") 
+    res.print()
+    res.save_to_csv("./output/")
 ```
 For more parameters, please refer to the [Time Series forecast Pipeline Usage Tutorial](../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md)
 
