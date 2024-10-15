@@ -35,6 +35,26 @@ for res in output:
 ```
 For more information on using PaddleX's single-model inference API, refer to the [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API_en.md).
 
+**Note**: The index of the `output` value represents the following attributes: index 0 indicates whether a hat is worn, index 1 indicates whether glasses are worn, indexes 2-7 represent the style of the upper garment, indexes 8-13 represent the style of the lower garment, index 14 indicates whether boots are worn, indexes 15-17 represent the type of bag carried, index 18 indicates whether an object is held in front, indexes 19-21 represent age, index 22 represents gender, and indexes 23-25 represent orientation. Specifically, the attributes include the following types:
+
+```
+- Gender: Male, Female
+- Age: Under 18, 18-60, Over 60
+- Orientation: Front, Back, Side
+- Accessories: Glasses, Hat, None
+- Holding Object in Front: Yes, No
+- Bag: Backpack, Shoulder Bag, Handbag
+- Upper Garment Style: Striped, Logo, Plaid, Patchwork
+- Lower Garment Style: Striped, Patterned
+- Short-sleeved Shirt: Yes, No
+- Long-sleeved Shirt: Yes, No
+- Long Coat: Yes, No
+- Pants: Yes, No
+- Shorts: Yes, No
+- Skirt: Yes, No
+- Boots: Yes, No
+```
+
 ## IV. Custom Development
 If you seek higher accuracy from existing models, you can leverage PaddleX's custom development capabilities to develop better pedestrian attribute recognition models. Before developing pedestrian attribute recognition with PaddleX, ensure you have installed the classification-related model training plugins for PaddleX.  The installation process can be found in the custom development section of the [PaddleX Local Installation Guide](../../../installation/installation_en.md).
 

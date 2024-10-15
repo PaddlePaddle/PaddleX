@@ -104,7 +104,7 @@ for res in output:
 如果你追求更高精度的现有模型，可以使用 PaddleX 的二次开发能力，开发更好的文本识别模型。在使用 PaddleX 开发文本识别模型之前，请务必安装 PaddleX 的 OCR 相关模型训练插件，安装过程可以参考[PaddleX本地安装教程](../../../installation/installation.md)中的二次开发部分。
 
 ### 4.1 数据准备
-在进行模型训练前，需要准备相应任务模块的数据集。PaddleX 针对每一个模块提供了数据校验功能，**只有通过数据校验的数据才可以进行模型训练**。此外，PaddleX 为每一个模块都提供了 Demo 数据集，您可以基于官方提供的 Demo 数据完成后续的开发。若您希望用私有数据集进行后续的模型训练，可以参考[PaddleX文本检测/文本识别任务模块数据标注教程](https://ku.baidu-int.com/knowledge/HFVrC7hq1Q/yKeL8Lljko/y0mmii50BW/VtwlUU5Na5lpFB?t=mention&mt=doc&dt=doc)。
+在进行模型训练前，需要准备相应任务模块的数据集。PaddleX 针对每一个模块提供了数据校验功能，**只有通过数据校验的数据才可以进行模型训练**。此外，PaddleX 为每一个模块都提供了 Demo 数据集，您可以基于官方提供的 Demo 数据完成后续的开发。若您希望用私有数据集进行后续的模型训练，可以参考[PaddleX文本检测/文本识别任务模块数据标注教程](../../../data_annotations/ocr_modules/text_detection_recognition.md)。
 
 #### 4.1.1 Demo 数据下载
 您可以参考下面的命令将 Demo 数据集下载到指定文件夹：
@@ -161,7 +161,7 @@ python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
 * `attributes.val_sample_paths`：该数据集验证集样本可视化图片相对路径列表；
 另外，数据集校验还对数据集中所有字符长度占比的分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 
-![](/tmp/images/modules/text_recog/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/text_recog/01.png)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
@@ -229,9 +229,9 @@ python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
 * 指定模型的`.yaml` 配置文件路径（此处为`PP-OCRv4_mobile_rec.yaml`）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
-**更多说明（点击展开）**
+
 
 <details>
   <summary>👉 <b>更多说明（点击展开）</b></summary>
@@ -255,7 +255,7 @@ python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
 python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ocr_rec_dataset_examples
-    
+
 ```
 与模型训练类似，需要如下几步：
 
@@ -299,7 +299,7 @@ python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
 
 1.**产线集成**
 
-文本识别模块可以集成的PaddleX产线有[通用 OCR 产线](../../../pipeline_usage/tutorials/ocr_pipelies/OCR.md)、[通用表格识别产线](../../../pipeline_usage/tutorials/ocr_pipelies/table_recognition.md)、[文档场景信息抽取产线v3（PP-ChatOCRv3）](../../../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)，只需要替换模型路径即可完成相关产线的文本识别模块的模型更新。
+文本识别模块可以集成的PaddleX产线有[通用 OCR 产线](../../../pipeline_usage/tutorials/ocr_pipelines/OCR.md)、[通用表格识别产线](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition.md)、[文档场景信息抽取产线v3（PP-ChatOCRv3）](../../../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)，只需要替换模型路径即可完成相关产线的文本识别模块的模型更新。
 
 2.**模块集成**
 

@@ -38,7 +38,7 @@ pip install labelme
 
 * 在 `fruit` 文件夹中创建待标注数据集的类别标签文件 `label.txt`，并在 `label.txt` 中按行写入待标注数据集的类别。以水果实例分割数据集的 `label.txt` 为例，如下图所示：
 
-![alt text](/tmp//images/data_prepare/instance_segmentation/06.png)
+![alt text](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/instance_segmentation/06.png)
 
 #### 2.3.2 启动 Labelme
 终端进入到带标注数据集根目录，并启动 `labelme` 标注工具。
