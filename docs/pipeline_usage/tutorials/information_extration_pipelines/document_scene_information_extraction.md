@@ -203,20 +203,14 @@ for res in visual_result:
     res.save_to_html('./output')
     res.save_to_xlsx('./output')
 
-vector = pipeline.build_vector(visual_info=visual_info)
-
-chat_result = pipeline.chat(
-    key_list=["乙方", "手机号"],
-    visual_info=visual_info,
-    vector=vector,
-    )
+chat_result = pipeline.chat(["乙方", "手机号"])
 chat_result.print()
 ```
 **注**：请先在[百度云千帆平台](https://console.bce.baidu.com/qianfan/ais/console/onlineService)获取自己的ak与sk（详细流程请参考[AK和SK鉴权调用API流程](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8)），将ak与sk填入至指定位置后才能正常调用大模型。
 
 运行后，输出结果如下：
 
-```python
+```
 {'chat_res': {'乙方': '股份测试有限公司', '手机号': '19331729920'}, 'prompt': ''}
 ```
 
@@ -735,3 +729,4 @@ predict = create_pipeline( pipeline="PP-ChatOCRv3-doc",
                             device = "npu:0" )
 ```
 若您想在更多种类的硬件上使用通用文档场景信息抽取产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。
+
