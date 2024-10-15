@@ -17,7 +17,7 @@
 
 **版面区域检测模块模型：**
 
-|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时（ms）|模型存储大小（M)|
 |-|-|-|-|-|
 |RT-DETR-H_layout_17cls|92.6|115.126|3827.25|470.2M|
 
@@ -106,7 +106,7 @@ paddlex --pipeline ./formula_recognition.yaml --input general_formula_recognitio
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/02.jpg)
 
-可视化图片默认保存在 `output` 目录下，您也可以通过 `--save_path` 进行自定义。此外，您可以通过网站 [https://www.lddgo.net/math/latex-to-image](https://www.lddgo.net/math/latex-to-image) 对识别出来的LaTeX代码进行可视化。
+可视化图片默认不进行保存，您可以通过 `--save_path` 自定义保存路径，随后所有结果将被保存在指定路径下。此外，您可以通过网站 [https://www.lddgo.net/math/latex-to-image](https://www.lddgo.net/math/latex-to-image) 对识别出来的LaTeX代码进行可视化。
 
 ### 2.2 Python脚本方式集成
 几行代码即可完成产线的快速推理，以通用公式识别产线为例：
@@ -132,7 +132,7 @@ for res in output:
 |-|-|-|-|
 |`pipeline`|产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。|`str`|无|
 |`device`|产线模型推理设备。支持：“gpu”，“cpu”。|`str`|`gpu`|
-|`enable_hpi`|是否启用高性能推理，仅当该产线支持高性能推理时可用。|`bool`|`False`|
+|`use_hpip`|是否启用高性能推理，仅当该产线支持高性能推理时可用。|`bool`|`False`|
 
 （2）调用通用公式识别产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`x`，用于输入待预测数据，支持多种输入方式，具体示例如下：
 
@@ -174,7 +174,7 @@ for res in output:
 
 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
 
-🚀 **高性能部署**：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能部署流程请参考[PaddleX高性能部署指南](../../../pipeline_deploy/high_performance_deploy.md)。
+🚀 **高性能推理**：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能推理流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_deploy.md)。
 
 ☁️ **服务化部署**：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/service_deploy.md)。
 
@@ -724,4 +724,4 @@ paddlex --pipeline formula_recognition --input general_formula_recognition.png -
 ```bash
 paddlex --pipeline formula_recognition --input general_formula_recognition.png --device npu:0
 ```
-若您想在更多种类的硬件上使用通用通用公式识别产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。
+若您想在更多种类的硬件上使用通用通用公式识别产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

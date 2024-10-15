@@ -94,6 +94,8 @@ class ReadImage(_BaseRead):
             with temp_file_manager.temp_file_context(suffix=".png") as temp_file:
                 img_path = Path(temp_file.name)
                 self._writer.write(img_path, img)
+                if self.format == "RGB":
+                    img = img[:, :, ::-1]
                 yield [
                     {
                         "input_path": img_path,

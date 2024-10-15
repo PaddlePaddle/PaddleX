@@ -575,9 +575,9 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 * <details open>
   <summary> <b> ⏱️ Time Series Analysis </b></summary>
 
-  * [📈 Time Series Forecasting Module Usage Guide](./docs/module_usage/tutorials/ts_modules/time_series_forecast_en.md)
+  * [📈 Time Series Forecasting Module Usage Guide](./docs/module_usage/tutorials/time_series_modules/time_series_forecast_en.md)
   * [🚨 Time Series Anomaly Detection Module Usage Guide](./docs/module_usage/tutorials/time_series_modules/time_series_anomaly_detection.md)
-  * [🕒 Time Series Classification Module Usage Guide](./docs/module_usage/tutorials/ts_modules/time_series_classification_en.md)
+  * [🕒 Time Series Classification Module Usage Guide](./docs/module_usage/tutorials/time_series_modules/time_series_classification_en.md)
   </details>
     
 * <details open>

@@ -18,7 +18,7 @@ OCR（光学字符识别，Optical Character Recognition）是一种将图像中
     <th>具体模型</th>
     <th>精度</th>
     <th>GPU推理耗时 (ms)</th>
-    <th>CPU推理耗时</th>
+    <th>CPU推理耗时（ms）</th>
     <th>模型存储大小 (M)</th>
   </tr>
   <tr>
@@ -77,7 +77,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/02.png)
 
-如果您对产线运行的效果满意，可以直接对产线进行集成部署，您可以直接从云端下载部署包，也可以使用[2.2节本地体验](#3-开发集成部署)的方式。如果不满意，您也可以利用私有数据**对产线中的模型进行在线微调**。
+如果您对产线运行的效果满意，可以直接对产线进行集成部署，您可以直接从云端下载部署包，也可以使用[2.2节本地体验](#22-本地体验)的方式。如果不满意，您也可以利用私有数据**对产线中的模型进行在线微调**。
 
 ### 2.2 本地体验
 > ❗ 在本地使用通用OCR产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
@@ -129,7 +129,7 @@ paddlex --pipeline ./ocr.yaml --input general_ocr_002.png
 
 可视化结果如下：
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/03.png)
-可视化图片默认保存在 `output` 目录下，您也可以通过 `--save_path` 进行自定义。
+可视化图片默认不进行保存，您可以通过 `--save_path` 自定义保存路径，随后所有结果将被保存在指定路径下。
 #### 2.2.2 Python脚本方式集成
 * 几行代码即可完成产线的快速推理，以通用 OCR 产线为例：
 
@@ -153,7 +153,7 @@ for res in output:
 |-|-|-|-|
 |`pipeline`|产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。|`str`|无|
 |`device`|产线模型推理设备。支持：“gpu”，“cpu”。|`str`|`gpu`|
-|`enable_hpi`|是否启用高性能推理，仅当该产线支持高性能推理时可用。|`bool`|`False`|
+|`use_hpip`|是否启用高性能推理，仅当该产线支持高性能推理时可用。|`bool`|`False`|
 
 （2）调用OCR产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`x`，用于输入待预测数据，支持多种输入方式，具体示例如下：
 
@@ -195,7 +195,7 @@ for res in output:
 
 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
 
-🚀 **高性能部署**：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能部署流程请参考[PaddleX高性能部署指南](../../../pipeline_deploy/high_performance_deploy.md)。
+🚀 **高性能推理**：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能推理流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_deploy.md)。
 
 ☁️ **服务化部署**：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/service_deploy.md)。
 
@@ -747,4 +747,4 @@ paddlex --pipeline OCR --input general_ocr_002.png --device gpu:0
 ```bash
 paddlex --pipeline OCR --input general_ocr_002.png --device npu:0
 ```
-若您想在更多种类的硬件上使用通用OCR产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。
+若您想在更多种类的硬件上使用通用OCR产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

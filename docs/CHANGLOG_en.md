@@ -82,27 +82,27 @@ Added lightweight Python-based service deployment. Experience it now!
 A new RESTful API module is added, enabling developers to quickly develop training platforms based on PaddleX.
  > - Added an HTML Demo based on RESTful API.
  > - Added a Remote version of the visualization client based on RESTful API.
-Added deployment solutions for models through OpenVINO [Detailed Link](https://paddlex.readthedocs.io/en/develop/deploy/openvino/index.html)
+Added deployment solutions for models through OpenVINO.
 
 ### PaddleX v1.2.0 (9.9/2020)
 - Model Updates
-  > - Added the object detection model PPYOLO [Detailed Link](https://paddlex.readthedocs.io/en/develop/apis/models/detection.html#paddlex-det-ppyolo)
+  > - Added the object detection model PPYOLO.
   > - FasterRCNN, MaskRCNN, YOLOv3, DeepLabv3p, and other models now have pre-trained models on the COCO dataset.
-  > - Object Detection models FasterRCNN and MaskRCNN add the backbone HRNet_W18 [Detailed Link](https://paddlex.readthedocs.io/en/develop/apis/models/detection.html#paddlex-det-fasterrcnn)
-  > - Semantic Segmentation model DeepLabv3p adds the backbone MobileNetV3_large_ssld [Detailed Link](https://paddlex.readthedocs.io/en/develop/apis/models/semantic_segmentation.html#paddlex-seg-deeplabv3p)
+  > - Object Detection models FasterRCNN and MaskRCNN add the backbone HRNet_W18.
+  > - Semantic Segmentation model DeepLabv3p adds the backbone MobileNetV3_large_ssld.
 
 - Model Deployment Updates
-  > - Added deployment solutions for models through OpenVINO [Detailed Link](https://paddlex.readthedocs.io/en/develop/deploy/openvino/index.html)
-  > - Added deployment solutions for models on Raspberry Pi [Detailed Link](https://paddlex.readthedocs.io/en/develop/deploy/raspberry/index.html)
+  > - Added deployment solutions for models through OpenVINO.
+  > - Added deployment solutions for models on Raspberry Pi.
   > - Optimized data preprocessing and postprocessing code performance for PaddleLite Android deployment.
   > - Optimized Paddle Server-side C++ deployment code, added parameters such as use_mkl, significantly improving model prediction performance on CPUs through mkldnn.
 
 - Industry Case Updates
-  > - Added an RGB image remote sensing segmentation case [Detailed Link](https://paddlex.readthedocs.io/en/develop/examples/remote_sensing.html)
-  > - Added a multi-channel remote sensing segmentation case [Detailed Link](https://paddlex.readthedocs.io/en/develop/examples/multi-channel_remote_sensing/README.html)
+  > - Added an RGB image remote sensing segmentation case.
+  > - Added a multi-channel remote sensing segmentation case.
 
 - Others
-  > - Added a dataset splitting function, supporting command-line splitting of ImageNet, PascalVOC, MSCOCO, and semantic segmentation datasets [Detailed Link](https://paddlex.readthedocs.io/en/develop/data/format/classification.html#id2)
+  > - Added a dataset splitting function, supporting command-line splitting of ImageNet, PascalVOC, MSCOCO, and semantic segmentation datasets.
 
   ### PaddleX v1.1.0 (7.13/2020)
 - Model Updates

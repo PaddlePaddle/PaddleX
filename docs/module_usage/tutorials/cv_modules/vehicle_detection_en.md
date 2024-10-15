@@ -39,18 +39,18 @@ Vehicle detection is a subtask of object detection, specifically referring to th
 **Note: The evaluation set for the above accuracy metrics is PPVehicle dataset mAP(0.5:0.95). GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 </details>
 
-## III. Quick Integration  <a id="quick"> </a> 
+## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
 After installing the wheel package, you can complete the inference of the vehicle detection module with just a few lines of code. You can switch models under this module freely, and you can also integrate the model inference of the vehicle detection module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_detection.jpg) to your local machine.
 
 ```python
-from paddlex.inference import create_model 
+from paddlex import create_model 
 
 model_name = "PP-YOLOE-S_vehicle"
 
 model = create_model(model_name)
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_detection.jpg", batch_size=1)
+output = model.predict("vehicle_detection.jpg", batch_size=1)
 
 for res in output:
     res.print(json_format=False)
@@ -205,8 +205,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 * During model training, PaddleX automatically saves model weight files, defaulting to `output`. To specify a save path, use the `-o Global.output` field in the configuration file.
 * PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.
 * When training other models, specify the corresponding configuration file. The correspondence between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md).
-After completing model training, all outputs are saved in the specified output directory (default is `./output/`), typically```markdown
-Similar to model training, the following steps are required:
+After completing model training, all outputs are saved in the specified output directory (default is `./output/`), the following steps are required:
 
 * Specify the `.yaml` configuration file path of the model (here it is `PP-YOLOE-S_vehicle.yaml`)
 * Set the mode to model evaluation: `-o Global.mode=evaluate`
@@ -269,4 +268,4 @@ Similar to model training and evaluation, the following steps are required:
 Other related parameters can be set by modifying the fields under `Global` and `Predict` in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common_en.md).
 
 #### 4.4.2 Model Integration
-The weights you produced can be directly integrated into the vehicle detection module. You can refer to the Python example code in [Quick Integration](#quick), simply replace the model with the path to your trained model.
+The weights you produced can be directly integrated into the vehicle detection module. You can refer to the Python example code in [Quick Integration](#iii-quick-integration), simply replace the model with the path to your trained model.
