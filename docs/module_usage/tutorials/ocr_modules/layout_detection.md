@@ -26,7 +26,7 @@
 完成whl包的安装后，几行代码即可完成版面区域检测模块的推理，可以任意切换该模块下的模型，您也可以将版面区域检测模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg)到本地。
 
 ```python
-from paddlex import create_model 
+from paddlex import create_model
 
 model_name = "PicoDet-L_layout_3cls"
 
@@ -109,7 +109,7 @@ python main.py -c paddlex/configs/structure_analysis/PicoDet-L_layout_3cls.yaml 
 * `attributes.val_sample_paths`：该数据集验证集样本可视化图片相对路径列表；
 
 
-数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
+数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/layout_dec/01.png)
 </details>
@@ -123,7 +123,7 @@ python main.py -c paddlex/configs/structure_analysis/PicoDet-L_layout_3cls.yaml 
 
 **（1）数据集格式转换**
 
-人脸检测不支持数据格式转换。
+版面区域检测暂不支持数据格式转换。
 
 **（2）数据集划分**
 

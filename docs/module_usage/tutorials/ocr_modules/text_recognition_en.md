@@ -3,7 +3,7 @@
 # Text Recognition Module Development Tutorial
 
 ## I. Overview
-The text recognition module is the core component of an OCR (Optical Character Recognition) system, responsible for extracting text information from text regions within images. The performance of this module directly impacts the accuracy and efficiency of the entire OCR system. The text recognition module typically receives bounding boxes (Bounding Boxes) of text regions output by the text detection module as input. Through complex image processing and deep learning algorithms, it converts the text in images into editable and searchable electronic text. The accuracy of text recognition results is crucial for subsequent applications such as information extraction and data mining.
+The text recognition module is the core component of an OCR (Optical Character Recognition) system, responsible for extracting text information from text regions within images. The performance of this module directly impacts the accuracy and efficiency of the entire OCR system. The text recognition module typically receives bounding boxes of text regions output by the text detection module as input. Through complex image processing and deep learning algorithms, it converts the text in images into editable and searchable electronic text. The accuracy of text recognition results is crucial for subsequent applications such as information extraction and data mining.
 
 ## II. Supported Model List
 
@@ -83,7 +83,7 @@ The text recognition module is the core component of an OCR (Optical Character R
 
 **Note: The evaluation set for the above accuracy metrics is the [OCR End-to-End Recognition Task of the PaddleOCR Algorithm Model Challenge - Track 1](https://aistudio.baidu.com/competition/detail/1131/0/introduction) B-rank. GPU inference time for all models is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 
-</details>      
+</details>
 
 ## III. Quick Integration
 Before quick integration, you need to install the PaddleX wheel package. For the installation method, please refer to the [PaddleX Local Installation Tutorial](../../../installation/installation_en.md). After installing the wheel package, a few lines of code can complete the inference of the text recognition module. You can switch models under this module freely, and you can also integrate the model inference of the text recognition module into your project.
@@ -162,7 +162,7 @@ In the above validation result, `check_pass` being `true` indicates that the dat
 * `attributes.val_sample_paths`: A list of relative paths to the visualized validation set samples in this dataset;
 Additionally, the dataset validation also analyzes the distribution of character length ratios in the dataset and generates a distribution histogram (histogram.png):
 
-![](/tmp/images/modules/text_recog/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/text_recog/01.png)
 </details>
 
 #### 4.1.3 Dataset Format Conversion/Dataset Splitting (Optional)
@@ -230,10 +230,9 @@ The steps required are:
 
 * Specify the path to the model's `.yaml` configuration file (here it's `PP-OCRv4_mobile_rec.yaml`)
 * Specify the mode as model training: `-o Global.mode=train`
-* Specify the path to the training dataset: `-o Global.dataset_dir`. 
+* Specify the path to the training dataset: `-o Global.dataset_dir`.
 Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file or adjusted by appending parameters in the command line. For example, to specify training on the first 2 GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration File Parameters](../../instructions/config_parameters_common_en.md).
 
-**More Information (Click to Expand)**
 
 <details>
   <summary>👉 <b>More Information (Click to Expand)</b></summary>
@@ -258,7 +257,7 @@ After completing model training, you can evaluate the specified model weights fi
 python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ocr_rec_dataset_examples
-    
+
 ```
 Similar to model training, the following steps are required:
 
@@ -269,7 +268,7 @@ Other related parameters can be set by modifying the `Global` and `Evaluate` fie
 
 
 <details>
-  <summary>👉 <b>More Details (Click to Expand)</b></summary>
+  <summary>👉 <b>More Information (Click to Expand)</b></summary>
 
 When evaluating the model, you need to specify the model weights file path. Each configuration file has a default weight save path. If you need to change it, simply append the command line parameter to set it, such as `-o Evaluate.weight_path=./output/best_model/best_model.pdparams`.
 
