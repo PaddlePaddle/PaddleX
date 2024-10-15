@@ -41,7 +41,7 @@ PaddleX 支持在本地使用命令行或 Python 体验公式识别产线的效�
 ### 2.1 命令行方式体验
 一行命令即可快速体验公式识别产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/general_formula_recognition.png)，并将 `--input` 替换为本地路径，进行预测
 
-```
+```bash
 paddlex --pipeline formula_recognition --input general_formula_recognition.png --device gpu:0
 ```
 参数说明：

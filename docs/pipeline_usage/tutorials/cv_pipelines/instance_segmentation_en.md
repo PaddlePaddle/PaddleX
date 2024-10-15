@@ -81,7 +81,7 @@ paddlex --get_pipeline_config instance_segmentation --save_path ./my_path
 
 After obtaining the pipeline configuration file, you can replace `--pipeline` with the configuration file save path to make the configuration file take effect. For example, if the configuration file save path is `./instance_segmentation.yaml`, simply execute:
 
-```
+```bash
 paddlex --pipeline ./instance_segmentation.yaml --input general_instance_segmentation_004.png --device gpu:0
 ```
 
