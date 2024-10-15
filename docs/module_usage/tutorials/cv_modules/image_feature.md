@@ -152,7 +152,7 @@ python main.py -c paddlex/configs/general_recognition/PP-ShiTuV2_rec.yaml \
 * `attributes.train_sample_paths`：该数据集训练样本可视化图片相对路径列表；
 * `attributes.gallery_sample_paths`：该数据集被查询样本可视化图片相对路径列表；
 * `attributes.query_sample_paths`：该数据集查询样本可视化图片相对路径列表；
-另外，数据集校验还对数据集中图像数量和图像类别情况进行了分析，并绘制了分布直方图（histogram.png）： 
+另外，数据集校验还对数据集中图像数量和图像类别情况进行了分析，并绘制了分布直方图（histogram.png）：
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/img_recognition/01.png)
 </details>
@@ -184,7 +184,7 @@ tar -xf ./dataset/image_classification_labelme_examples.tar -C ./dataset/
 ......
 CheckDataset:
   ......
-  convert: 
+  convert:
     enable: True
     src_dataset_type: LabelMe
   ......
@@ -205,7 +205,7 @@ python main.py -c paddlex/configs/general_recognition/PP-ShiTuV2_rec.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/image_classification_labelme_examples \
     -o CheckDataset.convert.enable=True \
-    -o CheckDataset.convert.src_dataset_type=LabelMe 
+    -o CheckDataset.convert.src_dataset_type=LabelMe
 ```
 **（2）数据集划分**
 
@@ -248,7 +248,7 @@ python main.py -c paddlex/configs/general_recognition/PP-ShiTuV2_rec.yaml  \
     -o CheckDataset.split.enable=True \
     -o CheckDataset.split.train_percent=70 \
     -o CheckDataset.split.gallery_percent=20 \
-    -o CheckDataset.split.query_percent=10 
+    -o CheckDataset.split.query_percent=10
 ```
 > ❗注意 ：由于图像特征模型评估的特殊性，当且仅当 train、query、gallery 集合属于同一类别体系下，数据切分才有意义，在图像特征模的评估过程中，必须满足 gallery 集合和 query 集合属于同一类别体系，其允许和 train 集合不在同一类别体系， 如果 gallery 集合和 query 集合与 train 集合不在同一类别体系，则数据划分后的评估没有意义，建议谨慎操作。
 
@@ -267,7 +267,7 @@ python main.py -c paddlex/configs/general_recognition/PP-ShiTuV2_rec.yaml \
 * 指定模型的`.yaml` 配置文件路径（此处为`PP-ShiTuV2_rec.yaml`）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details>
   <summary>👉 <b>更多说明（点击展开）</b></summary>
@@ -296,7 +296,7 @@ python main.py -c paddlex/configs/general_recognition/PP-ShiTuV2_rec.yaml \
 
 * 指定模型的`.yaml` 配置文件路径（此处为`PP-ShiTuV2_rec.yaml`）
 * 指定模式为模型评估：`-o Global.mode=evaluate`
-* 指定验证数据集路径：`-o Global.dataset_dir`. 
+* 指定验证数据集路径：`-o Global.dataset_dir`.
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Evaluate`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details>
@@ -326,7 +326,7 @@ python main.py -c paddlex/configs/general_recognition/PP-ShiTuV2_rec.yaml  \
 * 指定模型的`.yaml` 配置文件路径（此处为`PP-ShiTuV2_rec.yaml`）
 * 指定模式为模型推理预测：`-o Global.mode=predict`
 * 指定模型权重路径：`-o Predict.model_dir="./output/best_model/inference"`
-* 指定输入数据路径：`-o Predict.input="..."`. 
+* 指定输入数据路径：`-o Predict.input="..."`.
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 > ❗ 注意：图像特征模型的推理结果为一组向量，需要配合检索模块完成图像的识别。

@@ -45,7 +45,7 @@
 完成wheel包的安装后，几行代码即可完成车辆检测模块的推理，可以任意切换该模块下的模型，您也可以将车辆检测的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_detection.jpg)到本地。
 
 ```python
-from paddlex import create_model 
+from paddlex import create_model
 
 model_name = "PP-YOLOE-S_vehicle"
 
@@ -126,7 +126,7 @@ python main.py -c paddlex/configs/vehicle_detection/PP-YOLOE-S_vehicle.yaml \
 * `attributes.val_sample_paths`：该数据集验证集样本可视化图片相对路径列表；
 
 
-数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
+数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/vehicle_det/01.png)
 </details>

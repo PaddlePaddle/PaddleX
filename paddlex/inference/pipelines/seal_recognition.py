@@ -50,7 +50,7 @@ class SealOCRPipeline(BasePipeline):
         device=None,
         predictor_kwargs=None,
     ):
-        super().__init__(predictor_kwargs=predictor_kwargs)
+        super().__init__(device, predictor_kwargs)
         self._build_predictor(
             layout_model=layout_model,
             text_det_model=text_det_model,

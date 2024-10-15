@@ -27,7 +27,7 @@
     <td>89.7 M</td>
     <td>LaTeX-OCR是一种基于自回归大模型的公式识别算法，通过采用 Hybrid ViT 作为骨干网络，transformer作为解码器，显著提升了公式识别的准确性</td>
   </tr>
-  
+
 </table>
 
 **注：以上精度指标测量自 LaTeX-OCR公式识别测试集。**
@@ -123,12 +123,12 @@ python main.py -c paddlex/configs/formula_recognition/LaTeX_OCR_rec.yaml \
 * `attributes.val_sample_paths`：该数据集验证集样本可视化图片相对路径列表；
 
 
-另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
+另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/data_prepare/formula_recognition/01.jpg)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
-在您完成数据校验之后，可以通过**修改配置文件**或是**追加超参数**的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。。
+在您完成数据校验之后，可以通过**修改配置文件**或是**追加超参数**的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。
 
 <details>
   <summary>👉 <b>格式转换/数据集划分详情（点击展开）</b></summary>
@@ -141,14 +141,14 @@ python main.py -c paddlex/configs/formula_recognition/LaTeX_OCR_rec.yaml \
   * `convert`:
     * `enable`: 是否进行数据集格式转换，公式识别支持 `PKL`格式的数据集转换为 `LaTeXOCRDataset`格式，默认为 `True`;
     * `src_dataset_type`: 如果进行数据集格式转换，则需设置源数据集格式，默认为 `PKL`，可选值为 `PKL` ；
-  
+
 例如，您想将 `PKL`格式的数据集转换为 `LaTeXOCRDataset`格式，则需将配置文件修改为：
 
 ```bash
 ......
 CheckDataset:
   ......
-  convert: 
+  convert:
     enable: True
     src_dataset_type: PKL
   ......
@@ -216,7 +216,7 @@ python main.py -c  paddlex/configs/formula_recognition/LaTeX_OCR_rec.yaml \
 </details>
 
 ### 4.2 模型训练
-一条命令即可完成模型的训练，以此处公式识别模型 LaTeX_OCR_rec.yaml 的训练为例：
+一条命令即可完成模型的训练，以此处公式识别模型 LaTeX_OCR_rec 的训练为例：
 
 ```bash
 python main.py -c paddlex/configs/formula_recognition/LaTeX_OCR_rec.yaml  \
@@ -228,7 +228,7 @@ python main.py -c paddlex/configs/formula_recognition/LaTeX_OCR_rec.yaml  \
 * 指定模型的`.yaml` 配置文件路径（此处为`LaTeX_OCR_rec.yaml`）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details>
   <summary>👉 <b>更多说明（点击展开）</b></summary>

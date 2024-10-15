@@ -29,7 +29,7 @@
     <td>1007.0</td>
     <td>324.93</td>
     <td rowspan="3">基于VisDrone训练的PP-YOLOE_plus小目标检测模型。VisDrone是针对无人机视觉数据的基准数据集，由于目标较小同时具有一定的挑战性而被用于小目标检测任务的训练和评测</td>
-    
+
   </tr>
   <tr>
     <td>PP-YOLOE_plus_SOD-S</td>
@@ -58,7 +58,7 @@
 完成whl包的安装后，几行代码即可完成小目标检测模块的推理，可以任意切换该模块下的模型，您也可以将小目标检测的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg)到本地。
 
 ```python
-from paddlex import create_model 
+from paddlex import create_model
 
 model_name = "PP-YOLOE_plus_SOD-S"
 
@@ -138,7 +138,7 @@ python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yam
 * `attributes.val_sample_paths`：该数据集验证集样本可视化图片相对路径列表；
 
 
-数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
+数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/smallobj_det/01.png)
 </details>

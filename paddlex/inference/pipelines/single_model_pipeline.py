@@ -18,7 +18,7 @@ from .base import BasePipeline
 class _SingleModelPipeline(BasePipeline):
 
     def __init__(self, model, batch_size=1, device=None, predictor_kwargs=None):
-        super().__init__(predictor_kwargs=predictor_kwargs)
+        super().__init__(device, predictor_kwargs)
         self._build_predictor(model)
         self.set_predictor(batch_size=batch_size, device=device)
 
