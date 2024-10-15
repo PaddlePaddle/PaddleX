@@ -189,7 +189,8 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(
     pipeline="PP-ChatOCRv3-doc",
     llm_name="ernie-3.5",
-    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # Please fill in ak and sk, required for LLM.
+    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # Please enter your ak and sk; otherwise, the large model cannot be invoked.
+    # llm_params={"api_type": "aistudio", "access_token": ""} # Please enter your access_token; otherwise, the large model cannot be invoked.
     )
 
 visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf")
@@ -199,10 +200,16 @@ for res in visual_result:
     res.save_to_html('./output')
     res.save_to_xlsx('./output')
 
-chat_result = pipeline.chat(["乙方", "手机号"])
+vector = pipeline.build_vector(visual_info=visual_info)
+
+chat_result = pipeline.chat(
+    key_list=["乙方", "手机号"],
+    visual_info=visual_info,
+    vector=vector,
+    )
 chat_result.print()
 ```
-**Note**: Please first obtain your ak and sk on the [Baidu Cloud Qianfan Platform](https://console.bce.baidu.com/qianfan/ais/console/onlineService) (for detailed steps, please refer to the [AK and SK Authentication API Call Process](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8)), and fill in your ak and sk to the specified locations to enable normal calls to the large model.
+**Note**: Currently, the large language model only supports Ernie. You can obtain the relevant ak/sk (access_token) on the [Baidu Cloud Qianfan Platform](https://console.bce.baidu.com/qianfan/ais/console/onlineService) or [Baidu AIStudio Community](https://aistudio.baidu.com/). If you use the Baidu Cloud Qianfan Platform, you can refer to the [AK and SK Authentication API Calling Process](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8) to obtain ak/sk. If you use Baidu AIStudio Community, you can obtain the access_token from the [Baidu AIStudio Community Access Token](https://aistudio.baidu.com/account/accessToken).
 
 After running, the output is as follows:
 
@@ -217,7 +224,7 @@ In the above Python script, the following steps are executed:
 | Parameter | Type | Default | Description |
 |-|-|-|-|
 | `pipeline` | str | None | Pipeline name or pipeline configuration file path. If it's a pipeline name, it must be supported by PaddleX; |
-| `llm_name` | str | "ernie-3.5" | Large Language Model name; |
+| `llm_name` | str | "ernie-3.5" | Large Language Model name, we support `ernie-4.0` and `ernie-3.5`, with more models on the way.|
 | `llm_params` | dict | `{}` | API configuration; |
 | `device(kwargs)` | str/`None` | `None` | Running device (`None` meaning automatic selection); |
 
@@ -225,12 +232,12 @@ In the above Python script, the following steps are executed:
 
 | Parameter | Type | Default | Description |
 |-|-|-|-|
-|`input`|Python Var|无|Support to pass Python variables directly, such as `numpy.ndarray` representing image data;|
-|`input`|str|无|Support to pass the path of the file to be predicted, such as the local path of an image file: `/root/data/img.jpg`;|
-|`input`|str|无|Support to pass the URL of the file to be predicted, such as: `https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf`;|
-|`input`|str|无|Support to pass the local directory, which should contain files to be predicted, such as: `/root/data/`;|
-|`input`|dict|无|Support to pass a dictionary, where the key needs to correspond to the specific pipeline, such as: `{"img": "/root/data1"}`；|
-|`input`|list|无|Support to pass a list, where the elements must be of the above types of data, such as: `[numpy.ndarray, numpy.ndarray]`，`["/root/data/img1.jpg", "/root/data/img2.jpg"]`，`["/root/data1", "/root/data2"]`，`[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]`；|
+|`input`|Python Var|-|Support to pass Python variables directly, such as `numpy.ndarray` representing image data;|
+|`input`|str|-|Support to pass the path of the file to be predicted, such as the local path of an image file: `/root/data/img.jpg`;|
+|`input`|str|-|Support to pass the URL of the file to be predicted, such as: `https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf`;|
+|`input`|str|-|Support to pass the local directory, which should contain files to be predicted, such as: `/root/data/`;|
+|`input`|dict|-|Support to pass a dictionary, where the key needs to correspond to the specific pipeline, such as: `{"img": "/root/data1"}`；|
+|`input`|list|-|Support to pass a list, where the elements must be of the above types of data, such as: `[numpy.ndarray, numpy.ndarray]`，`["/root/data/img1.jpg", "/root/data/img2.jpg"]`，`["/root/data1", "/root/data2"]`，`[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]`；|
 |`use_doc_image_ori_cls_model`|bool|`True`|Whether or not to use the orientation classification model;|
 |`use_doc_image_unwarp_model`|bool|`True`|Whether or not to use the unwarp model;|
 |`use_seal_text_det_model`|bool|`True`|Whether or not to use the seal text detection model;|
@@ -299,17 +306,28 @@ For example, if your configuration file is saved at `./my_path/PP-ChatOCRv3-doc.
 
 ```python
 from paddlex import create_pipeline
+
 pipeline = create_pipeline(
     pipeline="./my_path/PP-ChatOCRv3-doc.yaml",
     llm_name="ernie-3.5",
-    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # Please fill in ak and sk, required for LLM.
+    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # Please enter your ak and sk; otherwise, the large model cannot be invoked.
+    # llm_params={"api_type": "aistudio", "access_token": ""} # Please enter your access_token; otherwise, the large model cannot be invoked.
     )
+
 visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf")
+
 for res in visual_result:
     res.save_to_img("./output")
     res.save_to_html('./output')
     res.save_to_xlsx('./output')
-chat_result = pipeline.chat(["乙方", "手机号"])
+
+vector = pipeline.build_vector(visual_info=visual_info)
+
+chat_result = pipeline.chat(
+    key_list=["乙方", "手机号"],
+    visual_info=visual_info,
+    vector=vector,
+    )
 chat_result.print()
 ```
 
@@ -320,7 +338,7 @@ If you need to directly apply the pipeline in your Python project, you can refer
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
-🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for the performance metrics (especially response speed) of deployment strategies to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed High-Performance Inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_deploy_en.md).
+🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for the performance metrics (especially response speed) of deployment strategies to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference_en.md).
 
 ☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy_en.md).
 
@@ -352,95 +370,167 @@ Operations provided by the service are as follows:
 
 - **`analyzeImage`**
 
-    Analyzes images using computer vision models to obtain OCR, table recognition results, etc., and extracts key information from the images.
+    Analyze images using computer vision models to obtain OCR, table recognition results, and extract key information from the images.
 
     `POST /chatocr-vision`
 
     - Request body properties:
 
         | Name | Type | Description | Required |
-        |------|------|-------------|----------|
-        | `image` | `string` | The URL of an image file or PDF file accessible by the service, or the Base64 encoded result of the content of the above-mentioned file types. For PDF files with more than 10 pages, only the content of the first 10 pages will be used. | Yes |
-        | `fileType` | `integer` | File type. `0` indicates a PDF file, `1` indicates an image file. If this property is not present in the request body, the service will attempt to automatically infer the file type based on the URL. | No |
-        | `useOricls` | `boolean` | Whether to enable document image orientation classification. This feature is enabled by default. | No |
-        | `useCurve` | `boolean` | Whether to enable seal text detection. This feature is enabled by default. | No |
-        | `useUvdoc` | `boolean` | Whether to enable text image correction. This feature is enabled by default. | No |
-        | `inferenceParams` | `object` | Inference parameters. | No |
+        |-|-|-|-|
+        |`image`|`string`|The URL of an accessible image file or PDF file, or the Base64 encoded content of the above file types. For PDF files with more than 10 pages, only the first 10 pages will be used. | Yes |
+        |`fileType`|`integer`|File type. `0` represents PDF files, `1` represents image files. If this property is not present in the request body, the service will attempt to infer the file type automatically based on the URL. | No |
+        |`useOricls`|`boolean`|Whether to enable document image orientation classification. This feature is enabled by default. | No |
+        |`useCurve`|`boolean`|Whether to enable seal text detection. This feature is enabled by default. | No |
+        |`useUvdoc`|`boolean`|Whether to enable text image correction. This feature is enabled by default. | No |
+        |`inferenceParams`|`object`|Inference parameters. | No |
 
         Properties of `inferenceParams`:
 
         | Name | Type | Description | Required |
-        |------|------|-------------|----------|
-        | `maxLongSide` | `integer` | During inference, if the length of the longer side of the input image for the text detection model is greater than `maxLongSide`, the image will be scaled so that the length of the longer side equals `maxLongSide`. | No |
+        |-|-|-|-|
+        |`maxLongSide`|`integer`|During inference, if the length of the longer side of the input image for the text detection model is greater than `maxLongSide`, the image will be scaled so that the length of the longer side equals `maxLongSide`. | No |
 
-    - When the request is processed successfully, the `result` of the response body has the following properties:
+    - When the request is processed successfully, the `result` in the response body has the following properties:
 
         | Name | Type | Description |
-        |------|------|-------------|
-        | `visionResults` | `array` | Analysis results obtained using computer vision models. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file. |
-        | `visionInfo` | `object` | Key information in the image, which can be used as input for other operations. |
+        |-|-|-|
+        |`visionResults`|`array`|Analysis results obtained using the computer vision model. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file in sequence. |
+        |`visionInfo`|`object`|Key information in the image, which can be used as input for other operations. |
 
         Each element in `visionResults` is an `object` with the following properties:
 
         | Name | Type | Description |
-        |------|------|-------------|
-        | `texts` | `array` | Text positions, contents, and scores. |
-        | `tables` | `array` | Table positions and contents. |
-        | `inputImage` | `string` | Input image. The image is in JPEG format and encoded using Base64. |
-        | `ocrImage` | `string` | OCR result image. The image is in JPEG format and encoded using Base64. |
-        | `layoutImage` | `string` | Layout area detection result image. The image is in JPEG format and encoded using Base64. |
+        |-|-|-|
+        |`texts`|`array`|Text locations, contents, and scores. |
+        |`tables`|`array`|Table locations and contents. |
+        |`inputImage`|`string`|Input image. The image is in JPEG format and encoded in Base64. |
+        |`ocrImage`|`string`|OCR result image. The image is in JPEG format and encoded in Base64. |
+        |`layoutImage`|`string`|Layout area detection result image. The image is in JPEG format and encoded in Base64. |
 
         Each element in `texts` is an `object` with the following properties:
 
         | Name | Type | Description |
-        |------|------|-------------|
-        | `poly` | `array` | Text position. The elements in the array are the vertex coordinates of the polygon enclosing the text in```markdown
-### chat
+        |-|-|-|
+        |`poly`|`array`|Text location. The elements in the array are the vertex coordinates of the polygon enclosing the text in sequence. |
+        |`text`|`string`|Text content. |
+        |`score`|`number`|Text recognition score. |
 
-Interact with large language models to extract key information.
+        Each element in `tables` is an `object` with the following properties:
 
-`POST /chatocr-vision`
+        | Name | Type | Description |
+        |-|-|-|
+        |`bbox`|`array`|Table location. The elements in the array are the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner of the bounding box in sequence. |
+        |`html`|`string`|Table recognition result in HTML format. |
 
-- Request body properties:
+- **`buildVectorStore`**
 
-    | Name | Type | Description | Required |
-    |------|------|-------------|----------|
-    |`keys`|`array`|List of keywords.|Yes|
-    |`visionInfo`|`object`|Key information from the image. Provided by the `analyzeImage` operation.|Yes|
-    |`taskDescription`|`string`|Task prompt.|No|
-    |`rules`|`string`|Extraction rules. Used to customize the information extraction rules, e.g., to specify output formats.|No|
-    |`fewShot`|`string`|Example prompts.|No|
-    |`useVectorStore`|`boolean`|Whether to enable the vector database. Enabled by default.|No|
-    |`vectorStore`|`object`|Serialized result of the vector database. Provided by the `buildVectorStore` operation.|No|
-    |`retrievalResult`|`string`|Knowledge retrieval result. Provided by the `retrieveKnowledge` operation.|No|
-    |`returnPrompts`|`boolean`|Whether to return the prompts used. Enabled by default.|No|
-    |`llmName`|`string`|Name of the large language model.|No|
-    |`llmParams`|`object`|API parameters for the large language model.|No|
+    Builds a vector database.
 
-    Currently, `llmParams` can take the following form:
+    `POST /chatocr-vector`
 
-    ```json
-    {
-      "apiType": "qianfan",
-      "apiKey": "{Qianfan Platform API key}",
-      "secretKey": "{Qianfan Platform secret key}"
-    }
-    ```
+    - The request body properties are as follows:
 
-- On successful request processing, the `result` in the response body has the following properties:
+        | Name | Type | Description | Required |
+        |-|-|-|-|
+        |`visionInfo`|`object`|Key information from the image. Provided by the `analyzeImage` operation.|Yes|
+        |`minChars`|`integer`|Minimum data length to enable the vector database.|No|
+        |`llmRequestInterval`|`number`|Interval time for calling the large language model API.|No|
+        |`llmName`|`string`|Name of the large language model.|No|
+        |`llmParams`|`object`|Parameters for the large language model API.|No|
 
-    | Name | Type | Description |
-    |------|------|-------------|
-    |`chatResult`|`string`|Extracted key information result.|
-    |`prompts`|`object`|Prompts used.|
+        Currently, `llmParams` can take the following form:
 
-    Properties of `prompts`:
+        ```json
+        {
+          "apiType": "qianfan",
+          "apiKey": "{qianfan API key}",
+          "secretKey": "{qianfan secret key}"
+        }
+        ```
 
-    | Name | Type | Description |
-    |------|------|-------------|
-    |`ocr`|`string`|OCR prompt.|
-    |`table`|`string`|Table prompt.|
-    |`html`|`string`|HTML prompt.|
+    - When the request is processed successfully, the `result` in the response body has the following properties:
+
+        | Name | Type | Description |
+        |-|-|-|
+        |`vectorStore`|`object`|Serialized result of the vector database, which can be used as input for other operations.|
+
+- **`retrieveKnowledge`**
+
+    Perform knowledge retrieval.
+
+    `POST /chatocr-retrieval`
+
+    - The request body properties are as follows:
+
+        | Name | Type | Description | Required |
+        |-|-|-|-|
+        |`keys`|`array`|List of keywords.|Yes|
+        |`vectorStore`|`object`|Serialized result of the vector database. Provided by the `buildVectorStore` operation.|Yes|
+        |`llmName`|`string`|Name of the large language model.|No|
+        |`llmParams`|`object`|API parameters for the large language model.|No|
+
+        Currently, `llmParams` can take the following form:
+
+        ```json
+        {
+          "apiType": "qianfan",
+          "apiKey": "{Qianfan Platform API key}",
+          "secretKey": "{Qianfan Platform secret key}"
+        }
+        ```
+
+    - When the request is processed successfully, the `result` in the response body has the following properties:
+
+        | Name | Type | Description |
+        |-|-|-|
+        |`retrievalResult`|`object`|The result of knowledge retrieval, which can be used as input for other operations.|
+
+- **`chat`**
+
+    Interact with large language models to extract key information.
+
+    `POST /chatocr-vision`
+
+    - Request body properties:
+
+        | Name | Type | Description | Required |
+        |-|-|-|-|
+        |`keys` | `array` | List of keywords. | Yes |
+        |`visionInfo` | `object` | Key information from images. Provided by the `analyzeImage` operation. | Yes |
+        |`taskDescription` | `string` | Task prompt. | No |
+        |`rules` | `string` | Custom extraction rules, e.g., for output formatting. | No |
+        |`fewShot` | `string` | Example prompts. | No |
+        |`vectorStore` | `object` | Serialized result of the vector database. Provided by the `buildVectorStore` operation. | No |
+        |`retrievalResult` | `object` | Results of knowledge retrieval. Provided by the `retrieveKnowledge` operation. | No |
+        |`returnPrompts` | `boolean` | Whether to return the prompts used. Enabled by default. | No |
+        |`llmName` | `string` | Name of the large language model. | No |
+        |`llmParams` | `object` | API parameters for the large language model. | No |
+
+        Currently, `llmParams` can take the following form:
+
+        ```json
+        {
+          "apiType": "qianfan",
+          "apiKey": "{Qianfan Platform API key}",
+          "secretKey": "{Qianfan Platform secret key}"
+        }
+        ```
+
+    - On successful request processing, the `result` in the response body has the following properties:
+
+        | Name | Type | Description |
+        |-|-|-|
+        |`chatResult` | `string` | Extracted key information. |
+        |`prompts` | `object` | Prompts used. |
+
+        Properties of `prompts`:
+
+        | Name | Type | Description |
+        |-|-|-|
+        |`ocr` | `string` | OCR prompt. |
+        |`table` | `string` | Table prompt. |
+        |`html` | `string` | HTML prompt. |
 
 </details>
 
@@ -505,7 +595,6 @@ if __name__ == "__main__":
             f.write(base64.b64decode(res["layoutImage"]))
         print(f"Output images saved at {ocr_img_path} and {layout_img_path}")
         print("")
-    print("="*50 + "\n\n")
 
     payload = {
         "visionInfo": result_vision["visionInfo"],
@@ -522,7 +611,6 @@ if __name__ == "__main__":
         pprint.pp(resp_vector.json())
         sys.exit(1)
     result_vector = resp_vector.json()["result"]
-    print("="*50 + "\n\n")
 
     payload = {
         "keys": keys,
@@ -538,9 +626,6 @@ if __name__ == "__main__":
         pprint.pp(resp_retrieval.json())
         sys.exit(1)
     result_retrieval = resp_retrieval.json()["result"]
-    print("Knowledge retrieval result:")
-    print(result_retrieval["retrievalResult"])
-    print("="*50 + "\n\n")
 
     payload = {
         "keys": keys,
@@ -548,7 +633,6 @@ if __name__ == "__main__":
         "taskDescription": "",
         "rules": "",
         "fewShot": "",
-        "useVectorStore": True,
         "vectorStore": result_vector["vectorStore"],
         "retrievalResult": result_retrieval["retrievalResult"],
         "returnPrompts": True,
@@ -563,33 +647,44 @@ if __name__ == "__main__":
         pprint.pp(resp_chat.json())
         sys.exit(1)
     result_chat = resp_chat.json()["result"]
-    print("Prompts:")
+    print("\nPrompts:")
     pprint.pp(result_chat["prompts"])
     print("Final result:")
     print(len(result_chat["chatResult"]))
 ```
+  
 **Note**: Please fill in your API key and secret key at `API_KEY` and `SECRET_KEY`.
+
 </details>
 </details>
 <br/>
 
 📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing functions on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy_en.md).
+
 ## 4. Custom Development
+
 If the default model weights provided by the PP-ChatOCRv3-doc Pipeline do not meet your requirements in terms of accuracy or speed for your specific scenario, you can attempt to further **fine-tune** the existing models using **your own domain-specific or application-specific data** to enhance the recognition performance of the general table recognition pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
+
 Since the PP-ChatOCRv3-doc Pipeline comprises six modules, unsatisfactory performance may stem from any of these modules (note that the text image rectification module does not support customization at this time).
 
 You can analyze images with poor recognition results and follow the guidelines below for analysis and model fine-tuning:
 
 * Incorrect table structure detection (e.g., row/column misidentification, cell position errors) may indicate deficiencies in the table structure recognition module. You need to refer to the **Customization** section in the [Table Structure Recognition Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/table_structure_recognition_en.md) and fine-tune the table structure recognition model using your private dataset.
+
 * Misplaced layout elements (e.g., incorrect positioning of tables or seals) may suggest issues with the layout detection module. Consult the **Customization** section in the [Layout Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/layout_detection_en.md) and fine-tune the layout detection model with your private dataset.
+
 * Frequent undetected text (i.e., text leakage) may indicate limitations in the text detection model. Refer to the **Customization** section in the [Text Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_detection_en.md) and fine-tune the text detection model using your private dataset.
+
 * High text recognition errors (i.e., recognized text content does not match the actual text) suggest that the text recognition model requires improvement. Follow the **Customization** section in the [Text Recognition Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_recognition_en.md) to fine-tune the text recognition model.
+
 * Frequent recognition errors in detected seal text indicate that the seal text detection model needs further refinement. Consult the **Customization** section in the [Seal Text Detection Module Development Tutorials](../../../module_usage/tutorials/ocr_modules/seal_text_detection_en.md) to fine-tune the seal text detection model.
+
 * Frequent misidentifications of document or certificate orientations with text regions suggest that the document image orientation classification model requires improvement. Refer to the **Customization** section in the [Document Image Orientation Classification Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification_en.md) to fine-tune the document image orientation classification model.
 
 ### 4.2 Model Deployment
+
 After fine-tuning your models using your private dataset, you will obtain local model weights files.
 
 To use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local paths of the default model weights with those of your fine-tuned models:
@@ -617,9 +712,13 @@ At this point, if you wish to switch the hardware to Ascend NPU, simply modify t
 
 ```python
 from paddlex import create_pipeline
-predict = create_pipeline(pipeline="PP-ChatOCRv3-doc",
-                            llm_name="ernie-3.5",
-                            llm_params = {"api_type":"qianfan","ak":"","sk":""},  ## Please fill in your ak and sk, or you will not be able to call the large model
-                            device = "npu:0")
+pipeline = create_pipeline(
+    pipeline="PP-ChatOCRv3-doc",
+    llm_name="ernie-3.5",
+    llm_params={"api_type": "qianfan", "ak": "", "sk": ""}, 
+    device="npu:0" # gpu:0 --> npu:0
+    ) 
 ```
-If you want to use the PP-ChatOCRv3-doc Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/installation_other_devices_en.md).
+
+If you want to use the PP-ChatOCRv3-doc Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/multi_devices_use_guide_en.md).
+
