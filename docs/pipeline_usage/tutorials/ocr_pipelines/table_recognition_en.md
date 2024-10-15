@@ -127,7 +127,7 @@ After running, the result is:
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/03.png)
 
-The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path. 
+The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path.
 
 ### 2.2 Python Script Integration
 A few lines of code are all you need to quickly perform inference with the pipeline. Taking the General Table Recognition pipeline as an example:
@@ -268,7 +268,7 @@ Operations provided by the service:
 </details>
 
 <details>
-<summary>Multilingual Service Invocation Examples</summary>
+<summary>Multi-Language Service Invocation Examples</summary>
 
 <details>
 <summary>Python</summary>
@@ -371,8 +371,8 @@ int main() {
 
         auto tables = result["tables"];
         std::cout << "\nDetected tables:" << std::endl;
-        for (const auto& category : tables) {
-            std::cout << category << std::endl;
+        for (const auto& table : tables) {
+            std::cout << table << std::endl;
         }
     } else {
         std::cout << "Failed to send HTTP request." << std::endl;
@@ -547,8 +547,8 @@ func main() {
     fmt.Printf("Image saved at %s.jpg\n", layoutImagePath)
 
     fmt.Println("\nDetected tables:")
-    for _, category := range respData.Result.Tables {
-        fmt.Println(category)
+    for _, table := range respData.Result.Tables {
+        fmt.Println(table)
     }
 }
 ```

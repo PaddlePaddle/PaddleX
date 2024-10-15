@@ -346,8 +346,8 @@ int main() {
 
         auto instances = result["instances"];
         std::cout << "\nInstances:" << std::endl;
-        for (const auto& category : instances) {
-            std::cout << category << std::endl;
+        for (const auto& inst : instances) {
+            std::cout << inst << std::endl;
         }
     } else {
         std::cout << "Failed to send HTTP request." << std::endl;
@@ -504,8 +504,8 @@ func main() {
     }
     fmt.Printf("Image saved at %s.jpg\n", outputImagePath)
     fmt.Println("\nInstances:")
-    for _, category := range respData.Result.Instances {
-        fmt.Println(category)
+    for _, inst := range respData.Result.Instances {
+        fmt.Println(inst)
     }
 }
 ```

@@ -635,8 +635,8 @@ int main() {
 
         auto detectedObjects = result["detectedObjects"];
         std::cout << "\nDetected objects:" << std::endl;
-        for (const auto& category : detectedObjects) {
-            std::cout << category << std::endl;
+        for (const auto& obj : detectedObjects) {
+            std::cout << obj << std::endl;
         }
     } else {
         std::cout << "Failed to send HTTP request." << std::endl;
@@ -793,8 +793,8 @@ func main() {
     }
     fmt.Printf("Image saved at %s.jpg\n", outputImagePath)
     fmt.Println("\nDetected objects:")
-    for _, category := range respData.Result.DetectedObjects {
-        fmt.Println(category)
+    for _, obj := range respData.Result.DetectedObjects {
+        fmt.Println(obj)
     }
 }
 ```

@@ -246,7 +246,7 @@ for res in output:
 |save_to_xlsx|将结果保存为表格格式的文件|`- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；|
 
 其中，`save_to_img` 能够保存可视化结果（包括OCR结果图片、版面分析结果图片、表格结构识别结果图片）， `save_to_html` 能够将表格直接保存为html文件（包括文本和表格格式），`save_to_xlsx` 能够将表格保存为Excel格式文件（包括文本和格式）。
- 
+
 若您获取了配置文件，即可对表格识别产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
 
 例如，若您的配置文件保存在 `./my_path/table_recognition.yaml` ，则只需执行：
@@ -443,8 +443,8 @@ int main() {
 
         auto tables = result["tables"];
         std::cout << "\nDetected tables:" << std::endl;
-        for (const auto& category : tables) {
-            std::cout << category << std::endl;
+        for (const auto& table : tables) {
+            std::cout << table << std::endl;
         }
     } else {
         std::cout << "Failed to send HTTP request." << std::endl;
@@ -625,8 +625,8 @@ func main() {
     fmt.Printf("Image saved at %s.jpg\n", layoutImagePath)
 
     fmt.Println("\nDetected tables:")
-    for _, category := range respData.Result.Tables {
-        fmt.Println(category)
+    for _, table := range respData.Result.Tables {
+        fmt.Println(table)
     }
 }
 ```

@@ -136,7 +136,7 @@ Among them, `dt_polys` is the detected text box coordinates, `dt_polys` is the d
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/03.png)
 
-The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path. 
+The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path.
 
 </details>
 
@@ -327,7 +327,7 @@ Operations provided by the service:
 </details>
 
 <details>
-<summary>Multilingual Service Invocation Examples</summary>
+<summary>Multi-Language Service Invocation Examples</summary>
 
 <details>
 <summary>Python</summary>
@@ -412,8 +412,8 @@ int main() {
 
         auto texts = result["texts"];
         std::cout << "\nDetected texts:" << std::endl;
-        for (const auto& category : texts) {
-            std::cout << category << std::endl;
+        for (const auto& text : texts) {
+            std::cout << text << std::endl;
         }
     } else {
         std::cout << "Failed to send HTTP request." << std::endl;
@@ -564,8 +564,8 @@ func main() {
     }
     fmt.Printf("Image saved at %s.jpg\n", outputImagePath)
     fmt.Println("\nDetected texts:")
-    for _, category := range respData.Result.Texts {
-        fmt.Println(category)
+    for _, text := range respData.Result.Texts {
+        fmt.Println(text)
     }
 }
 ```
