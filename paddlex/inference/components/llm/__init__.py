@@ -16,6 +16,9 @@ from .erniebot import ErnieBot
 
 
 def create_llm_api(model_name: str, params={}) -> BaseLLM:
+    # for CI
+    if model_name == "paddlex_ci":
+        return
     return BaseLLM.get(model_name)(
         model_name=model_name,
         params=params,

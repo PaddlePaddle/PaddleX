@@ -199,14 +199,20 @@ for res in visual_result:
     res.save_to_html('./output')
     res.save_to_xlsx('./output')
 
-chat_result = pipeline.chat(["乙方", "手机号"])
+vector = pipeline.build_vector(visual_info=visual_info)
+
+chat_result = pipeline.chat(
+    key_list=["乙方", "手机号"],
+    visual_info=visual_info,
+    vector=vector,
+    )
 chat_result.print()
 ```
 **Note**: Please first obtain your ak and sk on the [Baidu Cloud Qianfan Platform](https://console.bce.baidu.com/qianfan/ais/console/onlineService) (for detailed steps, please refer to the [AK and SK Authentication API Call Process](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8)), and fill in your ak and sk to the specified locations to enable normal calls to the large model.
 
 After running, the output is as follows:
 
-```
+```python
 {'chat_res': {'乙方': '股份测试有限公司', '手机号': '19331729920'}, 'prompt': ''}
 ```
 
@@ -623,4 +629,3 @@ predict = create_pipeline(
 ```
 
 If you want to use the PP-ChatOCRv3-doc Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/multi_devices_use_guide_en.md).
-
