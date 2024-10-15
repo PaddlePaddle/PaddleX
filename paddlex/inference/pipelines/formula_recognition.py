@@ -33,7 +33,7 @@ class FormulaRecognitionPipeline(BasePipeline):
         device=None,
         predictor_kwargs=None,
     ):
-        super().__init__(predictor_kwargs=predictor_kwargs)
+        super().__init__(device, predictor_kwargs)
         self._build_predictor(layout_model, formula_rec_model)
         self.set_predictor(
             layout_batch_size=layout_batch_size,

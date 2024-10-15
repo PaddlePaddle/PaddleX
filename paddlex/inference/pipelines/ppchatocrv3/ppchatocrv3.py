@@ -62,9 +62,7 @@ class PPChatOCRPipeline(_TableRecPipeline):
         predictor_kwargs=None,
         _build_models=True,
     ):
-        super().__init__(
-            predictor_kwargs=predictor_kwargs,
-        )
+        super().__init__(device, predictor_kwargs)
         if _build_models:
             self._build_predictor(
                 layout_model=layout_model,
