@@ -128,7 +128,7 @@ The instance segmentation module is a crucial component in computer vision syste
         <td>-</td>
         <td>-</td>
         <td>179.1 M</td>
-        <td> Solov2 is a real-time instance segmentation algorithm that segments objects by location. This model is an improved version of SOLO, achieving a good balance between accuracy and speed through the introduction of mask learning and mask NMS.</td>
+        <td> SOLOv2 is a real-time instance segmentation algorithm that segments objects by location. This model is an improved version of SOLO, achieving a good balance between accuracy and speed through the introduction of mask learning and mask NMS.</td>
     </tr>
 </table>
 
