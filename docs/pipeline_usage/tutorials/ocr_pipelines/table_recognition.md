@@ -21,7 +21,7 @@
     <th>模型</th>
     <th>精度（%）</th>
     <th>GPU推理耗时 (ms)</th>
-    <th>CPU推理耗时</th>
+    <th>CPU推理耗时（ms）</th>
     <th>模型存储大小 (M)</th>
     <th>介绍</th>
   </tr>
@@ -47,7 +47,7 @@
 
 **版面区域分析模块模型：**
 
-|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时（ms）|模型存储大小（M)|
 |-|-|-|-|-|
 |PicoDet_layout_1x|86.8|13.036|91.2634|7.4M |
 |PicoDet-L_layout_3cls|89.3|15.7425|159.771|22.6 M|
@@ -58,7 +58,7 @@
 
 **文本检测模块模型：**
 
-|模型名称|检测Hmean（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+|模型名称|检测Hmean（%）|GPU推理耗时（ms）|CPU推理耗时（ms）|模型存储大小（M)|
 |-|-|-|-|-|
 |PP-OCRv4_mobile_det |77.79|10.6923|120.177|4.2 M|
 |PP-OCRv4_server_det |82.69|83.3501|2434.01|100.1M|
@@ -67,7 +67,7 @@
 
 **文本识别模块模型：**
 
-|模型名称|识别Avg Accuracy(%)|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+|模型名称|识别Avg Accuracy(%)|GPU推理耗时（ms）|CPU推理耗时（ms）|模型存储大小（M)|
 |-|-|-|-|-|
 |PP-OCRv4_mobile_rec |78.20|7.95018|46.7868|10.6 M|
 |PP-OCRv4_server_rec |79.20|7.19439|140.179|71.2 M|
@@ -194,7 +194,7 @@ paddlex --pipeline ./table_recognition.yaml --input table_recognition.jpg
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/03.png)
 
-可视化图片默认保存在 `output` 目录下，您也可以通过 `--save_path` 进行自定义。
+可视化图片默认不进行保存，您可以通过 `--save_path` 自定义保存路径，随后所有结果将被保存在指定路径下。
 
 ### 2.2 Python脚本方式集成
 几行代码即可完成产线的快速推理，以通用表格识别产线为例：
@@ -207,8 +207,9 @@ pipeline = create_pipeline(pipeline="table_recognition")
 output = pipeline.predict("table_recognition.jpg")
 for res in output:
     res.print() ## 打印预测的结构化输出
-    res.save_to_csv("./output/") ## 保存csv格式结果
+    res.save_to_img("./output/") ## 保存img格式结果
     res.save_to_xlsx("./output/") ## 保存表格格式结果
+    res.save_to_html("./output/") ## 保存html结果
 ```
 得到的结果与命令行方式相同。
 
@@ -220,7 +221,7 @@ for res in output:
 |-|-|-|-|
 |`pipeline`|产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。|`str`|无|
 |`device`|产线模型推理设备。支持：“gpu”，“cpu”。|`str`|`gpu`|
-|`enable_hpi`|是否启用高性能推理，仅当该产线支持高性能推理时可用。|`bool`|`False`|
+|`use_hpip`|是否启用高性能推理，仅当该产线支持高性能推理时可用。|`bool`|`False`|
 
 （2）调用产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`x`，用于输入待预测数据，支持多种输入方式，具体示例如下：
 
@@ -240,10 +241,12 @@ for res in output:
 
 |方法|说明|方法参数|
 |-|-|-|
-|save_to_csv|将结果保存为csv格式的文件|`- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；|
+|save_to_img|将结果保存为img格式的文件|`- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；|
 |save_to_html|将结果保存为html格式的文件|`- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；|
 |save_to_xlsx|将结果保存为表格格式的文件|`- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；|
 
+其中，`save_to_img` 能够保存可视化结果（包括OCR结果图片、版面分析结果图片、表格结构识别结果图片）， `save_to_html` 能够将表格直接保存为html文件（包括文本和表格格式），`save_to_xlsx` 能够将表格保存为Excel格式文件（包括文本和格式）。
+ 
 若您获取了配置文件，即可对表格识别产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
 
 例如，若您的配置文件保存在 `./my_path/table_recognition.yaml` ，则只需执行：
@@ -254,13 +257,14 @@ pipeline = create_pipeline(pipeline="./my_path/table_recognition.yaml")
 output = pipeline.predict("table_recognition.jpg")
 for res in output:
     res.print() ## 打印预测的结构化输出
-    res.save_to_csv("./output/") ## 保存csv格式结果
+    res.save_to_img("./output/") ## 保存img格式结果
     res.save_to_xlsx("./output/") ## 保存表格格式结果
+    res.save_to_html("./output/") ## 保存html结果
 ```
 ## 3. 开发集成/部署
 如果产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
 
-若您需要将产线直接应用在您的Python项目中，可以参考 [2.2.2 Python脚本方式](#222-python脚本方式集成)中的示例代码。
+若您需要将产线直接应用在您的Python项目中，可以参考 [2.2 Python脚本方式](#22-python脚本方式集成)中的示例代码。
 
 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
 
@@ -830,4 +834,4 @@ paddlex --pipeline table_recognition --input table_recognition.jpg --device gpu:
 ```
 paddlex --pipeline table_recognition --input table_recognition.jpg --device npu:0
 ```
-若您想在更多种类的硬件上使用通用表格识别产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。
+若您想在更多种类的硬件上使用通用表格识别产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

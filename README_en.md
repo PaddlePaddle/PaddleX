@@ -477,20 +477,20 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 
 * [📑 PaddleX pipeline Usage Overview](./docs/pipeline_usage/pipeline_develop_guide_en.md)
 
-* <details>
+* <details open>
     <summary> <b> 📝 Text and Image Intelligent Analysis </b></summary>
 
    * [📄 Document Scene Information Extraction v3 pipeline Usage Guide](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md)
   </details>
 
-* <details>
+* <details open>
     <summary> <b> 🔍 OCR </b></summary>
 
     * [📜 General OCR pipeline Usage Guide](./docs/pipeline_usage/tutorials/ocr_pipelines/OCR_en.md)
     * [📊 Form Recognition pipeline Usage Guide](./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md)
   </details>
 
-* <details>
+* <details open>
     <summary> <b> 🎥 Computer Vision </b></summary>
 
    * [🖼️ General Image Classification pipeline Usage Guide](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification_en.md)
@@ -502,7 +502,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
    * [🖼️ Image Anomaly Detection pipeline Usage Guide](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection_en.md)
   </details>
   
-* <details>
+* <details open>
     <summary> <b> ⏱️ Time Series Analysis</b> </summary>
 
    * [📈 General Time Series Forecasting pipeline Usage Guide](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting_en.md)
@@ -510,7 +510,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
    * [🕒 General Time Series Classification pipeline Usage Guide](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification_en.md)
   </details>
 
-* <details>
+* <details open>
     <summary> <b>🔧 Related Documentation</b> </summary>
 
    * [🖥️ PaddleX pipeline Command Line Usage Guide](./docs/pipeline_usage/instructions/pipeline_CLI_usage_en.md)
@@ -522,7 +522,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 <details open>
 <summary> <b> ⚙️ Single Function Module Usage </b></summary>
 
-* <details>
+* <details open>
   <summary> <b> 🔍 OCR </b></summary>
 
   * [📝 Text Detection Module Usage Guide](./docs/module_usage/tutorials/ocr_modules/text_detection_en.md)
@@ -535,7 +535,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
   * [📐 Formula Recognition Module Usage Guide](./docs/module_usage/tutorials/ocr_modules/formula_recognition_en.md)
   </details>
 
-* <details>
+* <details open>
   <summary> <b> 🖼️ Image Classification </b></summary>
 
   * [📂 Image Classification Module Usage Guide](./docs/module_usage/tutorials/cv_modules/image_classification_en.md)
@@ -546,13 +546,13 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 
   </details>
 
-* <details>
+* <details open>
   <summary> <b> 🏞️ Image Features </b></summary>
 
     * [🔗 General Image Feature Module Usage Guide](./docs/module_usage/tutorials/cv_modules//image_feature_en.md)
   </details>
 
-* <details>
+* <details open>
   <summary> <b> 🎯 Object Detection </b></summary>
 
   * [🎯 Object Detection Module Usage Guide](./docs/module_usage/tutorials/cv_modules/object_detection_en.md)
@@ -564,7 +564,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 
   </details>
 
-* <details>
+* <details open>
   <summary> <b> 🖼️ Image Segmentation </b></summary>
 
   * [🗺️ Semantic Segmentation Module Usage Guide](./docs/module_usage/tutorials/cv_modules/semantic_segmentation_en.md)
@@ -572,15 +572,15 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
   * [🚨 Image Anomaly Detection Module Usage Guide](./docs/module_usage/tutorials/cv_modules/anomaly_detection_en.md)
   </details>
 
-* <details>
+* <details open>
   <summary> <b> ⏱️ Time Series Analysis </b></summary>
 
-  * [📈 Time Series Forecasting Module Usage Guide](./docs/module_usage/tutorials/ts_modules/time_series_forecast_en.md)
+  * [📈 Time Series Forecasting Module Usage Guide](./docs/module_usage/tutorials/time_series_modules/time_series_forecast_en.md)
   * [🚨 Time Series Anomaly Detection Module Usage Guide](./docs/module_usage/tutorials/time_series_modules/time_series_anomaly_detection.md)
-  * [🕒 Time Series Classification Module Usage Guide](./docs/module_usage/tutorials/ts_modules/time_series_classification_en.md)
+  * [🕒 Time Series Classification Module Usage Guide](./docs/module_usage/tutorials/time_series_modules/time_series_classification_en.md)
   </details>
     
-* <details>
+* <details open>
   <summary> <b> 📄 Related Documentation </b></summary>
 
   * [📝 PaddleX Single Model Python Script Usage Guide](./docs/module_usage/instructions/model_python_API_en.md)

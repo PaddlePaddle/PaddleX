@@ -93,7 +93,7 @@ python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
   "dataset_path": "./dataset/fall_det",
   "show_type": "image",
   "dataset_type": "COCODetDataset"
-}  
+}
 ```
 上述校验结果中，check_pass 为 True 表示数据集格式符合要求，其他部分指标的说明如下：
 
@@ -153,14 +153,14 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
     * `epochs_iters`：训练轮次数设置；
     * `learning_rate`：训练学习率设置；
 
-更多超参数介绍，请参考 [PaddleX 超参数介绍](../module_usage/instructions/config_parameters_common.md)。
+更多超参数介绍，请参考 [PaddleX 通用模型配置文件参数说明](../module_usage/instructions/config_parameters_common.md)。
 
 **注：**
 - 以上参数可以通过追加令行参数的形式进行设置，如指定模式为模型训练：`-o Global.mode=train`；指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。
 - 模型训练过程中，PaddleX 会自动保存模型权重文件，默认为`output`，如需指定保存路径，可通过配置文件中 `-o Global.output` 字段
 - PaddleX 对您屏蔽了动态图权重和静态图权重的概念。在模型训练的过程中，会同时产出动态图和静态图的权重，在模型推理时，默认选择静态图权重推理。
 
-**训练产出解释:**  
+**训练产出解释:**
 
 在完成模型训练后，所有产出保存在指定的输出目录（默认为`./output/`）下，通常有以下产出：
 
@@ -245,10 +245,10 @@ for res in output:
     res.print() # 打印预测的结构化输出
     res.save_to_img("./output/") # 保存结果可视化图像
     res.save_to_json("./output/") # 保存预测的结构化输出
-```  
+```
 更多参数请参考 [目标检测产线使用教程](../pipeline_usage/tutorials/cv_pipelines/object_detection.md)。
 
-2. 此外，PaddleX 也提供了服务化部署方式，详细说明如下：
+2. 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
 
 * 高性能部署：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能部署流程请参考 [PaddleX 高性能推理指南](../pipeline_deploy/high_performance_inference.md)。
 * 服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考 [PaddleX 服务化部署指南](../pipeline_deploy/service_deploy.md)。

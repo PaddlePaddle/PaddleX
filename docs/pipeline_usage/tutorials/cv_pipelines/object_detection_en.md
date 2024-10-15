@@ -5,7 +5,8 @@
 ## 1. Introduction to General Object Detection Pipeline
 Object detection aims to identify the categories and locations of multiple objects in images or videos by generating bounding boxes to mark these objects. Unlike simple image classification, object detection not only requires recognizing what objects are present in an image, such as people, cars, and animals, but also accurately determining the specific position of each object within the image, typically represented by rectangular boxes. This technology is widely used in autonomous driving, surveillance systems, smart photo albums, and other fields, relying on deep learning models (e.g., YOLO, Faster R-CNN) that can efficiently extract features and perform real-time detection, significantly enhancing the computer's ability to understand image content.
 
-![](/tmp/images/pipelines/object_detection/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/object_detection/01.png)
+
 
 
 <details>
@@ -16,7 +17,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <th>Model</th>
     <th>mAP(%)</th>
     <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time</th>
+    <th>CPU Inference Time (ms)</th>
     <th>Model Size (M)</th>
     <th>Description</th>
   </tr>
@@ -34,7 +35,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>-</td>
     <td>-</td>
     <td>246.2 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>CenterNet-DLA-34</td>
@@ -50,7 +51,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>-</td>
     <td>-</td>
     <td>319.7 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>DETR-R50</td>
@@ -74,7 +75,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>-</td>
     <td>-</td>
     <td>148.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNet50-vd-FPN</td>
@@ -82,7 +83,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>-</td>
     <td>-</td>
     <td>148.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNet50-vd-SSLDv2-FPN</td>
@@ -90,7 +91,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>-</td>
     <td>-</td>
     <td>148.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNet50</td>
@@ -98,7 +99,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>-</td>
     <td>-</td>
     <td>120.2 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNet101-FPN</td>
@@ -106,7 +107,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>-</td>
     <td>-</td>
     <td>216.3 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNet101</td>
@@ -114,7 +115,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>-</td>
     <td>-</td>
     <td>188.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNeXt101-vd-FPN</td>
@@ -122,7 +123,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>-</td>
     <td>-</td>
     <td>360.6 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-Swin-Tiny-FPN</td>
@@ -130,7 +131,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>-</td>
     <td>-</td>
     <td>159.8 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FCOS-ResNet50</td>
@@ -154,7 +155,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>16.2311</td>
     <td>71.7257</td>
     <td>16.8 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>PicoDet-S</td>
@@ -162,7 +163,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>14.097</td>
     <td>37.6563</td>
     <td>4.4 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>PicoDet-XS</td>
@@ -170,7 +171,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>13.8102</td>
     <td>48.3139</td>
     <td>5.7 M</td>
-    <td></td>
+
   </tr>
     <tr>
     <td>PP-YOLOE_plus-L</td>
@@ -186,7 +187,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>19.843</td>
     <td>449.261</td>
     <td>82.3 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>PP-YOLOE_plus-S</td>
@@ -194,7 +195,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>16.8884</td>
     <td>223.059</td>
     <td>28.3 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>PP-YOLOE_plus-X</td>
@@ -202,7 +203,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>57.8995</td>
     <td>1439.93</td>
     <td>349.4 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>RT-DETR-H</td>
@@ -218,7 +219,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>34.5252</td>
     <td>1454.27</td>
     <td>113.7 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>RT-DETR-R18</td>
@@ -226,7 +227,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>19.89</td>
     <td>784.824</td>
     <td>70.7 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>RT-DETR-R50</td>
@@ -234,7 +235,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>41.9327</td>
     <td>1625.95</td>
     <td>149.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>RT-DETR-X</td>
@@ -242,7 +243,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>61.8042</td>
     <td>2246.64</td>
     <td>232.9 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOv3-DarkNet53</td>
@@ -258,7 +259,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>18.6692</td>
     <td>267.214</td>
     <td>83.8 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOv3-ResNet50_vd_DCN</td>
@@ -266,7 +267,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>31.6276</td>
     <td>856.047</td>
     <td>163.0 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOX-L</td>
@@ -282,7 +283,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>123.324</td>
     <td>688.071</td>
     <td>90.0 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOX-N</td>
@@ -290,7 +291,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>79.1665</td>
     <td>155.59</td>
     <td>3.4 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOX-S</td>
@@ -298,7 +299,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>184.828</td>
     <td>474.446</td>
     <td>32.0 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOX-T</td>
@@ -306,7 +307,7 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>102.748</td>
     <td>212.52</td>
     <td>18.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOX-X</td>
@@ -314,11 +315,12 @@ Object detection aims to identify the categories and locations of multiple objec
     <td>227.361</td>
     <td>2067.84</td>
     <td>351.5 M</td>
-    <td></td>
+
   </tr>
 </table>
 
 **Note: The precision metrics mentioned are based on the [COCO2017](https://cocodataset.org/#home) validation set mAP(0.5:0.95). All model GPU inference times are measured on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
+
 
 </details>
 
@@ -328,7 +330,7 @@ PaddleX's pre-trained model pipelines allow for quick experience of their effect
 ### 2.1 Online Experience
 You can [experience the General Object Detection Pipeline online](https://aistudio.baidu.com/community/app/70230/webUI) using the demo images provided by the official source, for example:
 
-![](/tmp/images/pipelines/object_detection/02.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/object_detection/02.png)
 
 If you are satisfied with the pipeline's performance, you can directly integrate and deploy it. If not, you can also use your private data to **fine-tune the model within the pipeline**.
 
@@ -380,9 +382,9 @@ After running, the result will be:
 {'img_path': '/root/.paddlex/predict_input/general_object_detection_002.png', 'boxes': [{'cls_id': 49, 'label': 'orange', 'score': 0.8188097476959229, 'coordinate': [661, 93, 870, 305]}, {'cls_id': 47, 'label': 'apple', 'score': 0.7743489146232605, 'coordinate': [76, 274, 330, 520]}, {'cls_id': 47, 'label': 'apple', 'score': 0.7270504236221313, 'coordinate': [285, 94, 469, 297]}, {'cls_id': 46, 'label': 'banana', 'score': 0.5570532083511353, 'coordinate': [310, 361, 685, 712]}, {'cls_id': 47, 'label': 'apple', 'score': 0.5484835505485535, 'coordinate': [764, 285, 924, 440]}, {'cls_id': 47, 'label': 'apple', 'score': 0.5160726308822632, 'coordinate': [853, 169, 987, 303]}, {'cls_id': 60, 'label': 'dining table', 'score': 0.5142655968666077, 'coordinate': [0, 0, 1072, 720]}, {'cls_id': 47, 'label': 'apple', 'score': 0.5101479291915894, 'coordinate': [57, 23, 213, 176]}]}
 ```
 
-![](/tmp/images/pipelines/object_detection/03.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/object_detection/03.png)
 
-The visualized images are saved in the `output` directory by default, but you can customize this with `--save_path`.
+The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path.
 
 #### 2.2.2 Integration via Python Scripts
 A few lines of code are all you need to quickly perform inference on your production line. Taking General Object Detection as an example:
@@ -944,9 +946,9 @@ For example, if you use an NVIDIA GPU for inference of the General Object Detect
 ```bash
 paddlex --pipeline object_detection --input general_object_detection_002.png --device gpu:0
 ``````
-At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu`:
+At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu:0`:
 
 ```bash
 paddlex --pipeline object_detection --input general_object_detection_002.png --device npu:0
 ```
-If you want to use the General Object Detection Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/installation_other_devices_en.md).
+If you want to use the General Object Detection Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md).

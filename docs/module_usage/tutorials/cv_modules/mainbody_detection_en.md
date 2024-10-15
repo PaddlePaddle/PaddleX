@@ -40,7 +40,7 @@ Mainbody detection is a fundamental task in object detection, aiming to identify
 After installing the wheel package, you can perform mainbody detection inference with just a few lines of code. You can easily switch between models under this module, and integrate the mainbody detection model inference into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png) to your local machine.
 
 ```python
-from paddlex.inference import create_model 
+from paddlex import create_model 
 
 model_name = "PP-ShiTuV2_det"
 

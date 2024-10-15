@@ -3,7 +3,7 @@
 # Time Series Anomaly Detection Pipeline Tutorial
 
 ## 1. Introduction to the General Time Series Anomaly Detection Pipeline
-Time series anomaly detection is a technique for identifying abnormal patterns or behaviors in time series data. It is widely applied in fields such as network security, equipment monitoring, and financial fraud detection. By analyzing normal trends and patterns in historical data, it discovers events that significantly deviate from expected behaviors, such as sudden spikes in network traffic or unusual transaction activities. Time series anomaly detection typically employs statistical methods or machine learning algorithms (e.g., Isolation Forest, LSTM), enabling automatic identification of anomalies in data. This technology provides real-time alerts for enterprises and organizations, helping them promptly address potential risks and issues. It plays a crucial role in ensuring system stability and security.
+Time series anomaly detection is a technique for identifying abnormal patterns or behaviors in time series data. It is widely applied in fields such as network security, equipment monitoring, and financial fraud detection. By analyzing normal trends and patterns in historical data, it discovers events that significantly deviate from expected behaviors, such as sudden spikes in network traffic or unusual transaction activities. Time series anomaly detection enable automatic identification of anomalies in data. This technology provides real-time alerts for enterprises and organizations, helping them promptly address potential risks and issues. It plays a crucial role in ensuring system stability and security.
 
 ![](/tmp/images/pipelines/time_series/05.png)
 
@@ -118,7 +118,7 @@ In the above Python script, the following steps are executed:
 |-|-|-|-|
 |`pipeline`| The name of the production line or the path to the production line configuration file. If it is the name of the production line, it must be supported by PaddleX. |`str`|None|
 |`device`| The device for production line model inference. Supports: "gpu", "cpu". |`str`|`gpu`|
-|`enable_hpi`| Whether to enable high-performance inference, only available if the production line supports it. |`bool`|`False`|
+|`use_hpip`| Whether to enable high-performance inference, only available if the production line supports it. |`bool`|`False`|
 
 （2）Invoke the `predict` method of the  production line object for inference prediction: The `predict` method parameter is `x`, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
 
@@ -137,9 +137,8 @@ In the above Python script, the following steps are executed:
 
 | Method         | Description                     | Method Parameters |
 |--------------|-----------------------------|--------------------------------------------------------------------------------------------------------|
-| print        | Prints results to the terminal  | `- format_json`: bool, whether to format the output content with json indentation, default is True;<br>`- indent`: int, json formatting setting, only valid when format_json is True, default is 4;<br>`- ensure_ascii`: bool, json formatting setting, only valid when format_json is True, default is False; |
-| save_to_json | Saves results as a json file   | `- save_path`: str, the path to save the file, when it's a directory, the saved file name is consistent with the input file type;<br>`- indent`: int, json formatting setting, default is 4;<br>`- ensure_ascii`: bool, json formatting setting, default is False; |
-| save_to_img  | Saves results as an image file | `- save_path`: str, the path to save the file, when it's a directory, the saved file name is consistent with the input file type; |
+| save_to_csv | Saves results as a csv file   | `- save_path`: str, the path to save the file, when it's a directory, the saved file name is consistent with the input file type;<br>`- indent`: int, json formatting setting, default is 4;<br>`- ensure_ascii`: bool, json formatting setting, default is False; |
+| save_to_xlsx  | Saves results as table file | `- save_path`: str, the path to save the file, when it's a directory, the saved file name is consistent with the input file type; |
 
 If you have a configuration file, you can customize the configurations of the image anomaly detection pipeline by simply modifying the `pipeline` parameter in the `create_pipeline` method to the path of the pipeline configuration file.
 
@@ -572,11 +571,11 @@ echo "Output time-series data saved at " . $output_csv_path . "\n";
 📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing capabilities on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy.md).
 Choose the appropriate deployment method for your model pipeline based on your needs, and proceed with subsequent AI application integration.
 
-## 4. Customization and Fine-tuning
+## 4. Custom Development
 If the default model weights provided by the General Time Series Anomaly Detection Pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing model using **your own domain-specific or application-specific data** to improve the recognition performance of the pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
-Since the General Time Series Anomaly Detection Pipeline includes a time series anomaly detection module, if the performance of the pipeline does not meet expectations, you need to refer to the [Customization](../../../module_usage/tutorials/ts_modules/time_series_anomaly_detection_en.md#iv-custom-development) section in the [Time Series Modules Development Tutorial](../../../module_usage/tutorials/ts_modules/time_series_anomaly_detection_en.md) to fine-tune the time series anomaly detection model using your private dataset.
+Since the General Time Series Anomaly Detection Pipeline includes a time series anomaly detection module, if the performance of the pipeline does not meet expectations, you need to refer to the [Customization](../../../module_usage/tutorials/time_series_modules/time_series_anomaly_detection_en.md#iv-custom-development) section in the [Time Series Modules Development Tutorial](../../../module_usage/tutorials/time_series_modules/time_series_anomaly_detection_en.md) to fine-tune the time series anomaly detection model using your private dataset.
 
 ### 4.2 Model Application
 After fine-tuning with your private dataset, you will obtain local model weights files.
@@ -602,9 +601,9 @@ For example, if you use an NVIDIA GPU for inference of the time series anomaly d
 ```bash
 paddlex --pipeline ts_ad --input ts_ad.csv --device gpu:0
 ``````
-At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu`:
+At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu:0`:
 
 ```bash
 paddlex --pipeline ts_ad --input ts_ad.csv --device npu:0
 ```
-If you want to use the General Time-Series Anomaly Detection Pipeline on more diverse hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/installation_other_devices_en.md).
+If you want to use the General Time-Series Anomaly Detection Pipeline on more diverse hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md).

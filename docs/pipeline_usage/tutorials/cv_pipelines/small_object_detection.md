@@ -12,7 +12,7 @@
 <details>
    <summary> 👉模型列表详情</summary>
 
-|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时|模型存储大小（M)|
+|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时（ms）|模型存储大小（M)|
 |-|-|-|-|-|
 |PP-YOLOE_plus_SOD-S|25.1|65.4608|324.37|77.3 M|
 |PP-YOLOE_plus_SOD-L|31.9|57.1448|1006.98|325.0 M|
@@ -72,7 +72,7 @@ paddlex --pipeline ./small_object_detection.yaml --input small_object_detection.
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/small_object_detection/02.png)
 
-可视化图片默认保存在 `output` 目录下，您也可以通过 `--save_path` 进行自定义。
+可视化图片默认不进行保存，您可以通过 `--save_path` 自定义保存路径，随后所有结果将被保存在指定路径下。
 
 ### 2.2 Python脚本方式集成
 几行代码即可完成产线的快速推理，以通用小目标检测产线为例：
@@ -98,7 +98,7 @@ for res in output:
 |-|-|-|-|
 |`pipeline`|产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。|`str`|无|
 |`device`|产线模型推理设备。支持：“gpu”，“cpu”。|`str`|`gpu`|
-|`enable_hpi`|是否启用高性能推理，仅当该产线支持高性能推理时可用。|`bool`|`False`|
+|`use_hpip`|是否启用高性能推理，仅当该产线支持高性能推理时可用。|`bool`|`False`|
 
 （2）调用产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`x`，用于输入待预测数据，支持多种输入方式，具体示例如下：
 
@@ -655,9 +655,9 @@ PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多�
 ```
 paddlex --pipeline multilabel_classification --input small_object_detection.jpg --device gpu:0
 ```
-此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的 `--device` 修改为 npu 即可：
+此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的 `--device` 修改为 npu:0 即可：
 
 ```
 paddlex --pipeline multilabel_classification --input small_object_detection.jpg --device npu:0
 ```
-若您想在更多种类的硬件上使用通用小目标检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。
+若您想在更多种类的硬件上使用通用小目标检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

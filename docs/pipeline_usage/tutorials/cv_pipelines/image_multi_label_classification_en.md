@@ -5,7 +5,7 @@
 ## 1. Introduction to the General Image Multi-Label Classification Pipeline
 Image multi-label classification is a technique that assigns multiple relevant categories to a single image simultaneously, widely used in image annotation, content recommendation, and social media analysis. It can identify multiple objects or features present in an image, for example, an image containing both "dog" and "outdoor" labels. By leveraging deep learning models, image multi-label classification automatically extracts image features and performs accurate classification, providing users with more comprehensive information. This technology is of great significance in applications such as intelligent search engines and automatic content generation.
 
-![](/tmp/images/pipelines/image_multi_label_classification/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_multi_label_classification/01.png)
 
 **The General Image Multi-Label Classification Pipeline includes a module for image multi-label classification. If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, choose a model with faster inference. If you prioritize model storage size, choose a model with a smaller storage size.**
 
@@ -72,9 +72,9 @@ After running, the result obtained is:
 ```
 {'img_path': '/root/.paddlex/predict_input/general_image_classification_001.jpg', 'class_ids': [21, 0, 30, 24], 'scores': [0.99257, 0.70596, 0.63001, 0.57852], 'label_names': ['bear', 'person', 'skis', 'backpack']}
 ```
-![](/tmp/images/pipelines/image_multi_label_classification/02.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_multi_label_classification/02.png)
 
-The visualization image is saved in the `output` directory by default, and you can also customize it through `--save_path`.
+The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path.
 
 ### 2.2 Integration via Python Script
 A few lines of code can complete the rapid inference of the pipeline. Taking the general image multi-label classification pipeline as an example:
@@ -100,7 +100,7 @@ In the above Python script, the following steps are executed:
 |-----------|-------------|------|---------------|
 |`pipeline` | The name of the pipeline or the path of the pipeline configuration file. If it is the name of the pipeline, it must be a pipeline supported by PaddleX. | `str` | None |
 |`device` | The device for pipeline model inference. Supports: "gpu", "cpu". | `str` | "gpu" |
-|`enable_hpi` | Whether to enable high-performance inference, which is only available when the pipeline supports it. | `bool` | `False` |
+|`use_hpip` | Whether to enable high-performance inference, which is only available when the pipeline supports it. | `bool` | `False` |
 
 (2) Call the `predict` method of the multi-label classification pipeline object for inference prediction: The `predict` method parameter is `x`, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
 
@@ -595,7 +595,7 @@ print_r($result["categories"]);
 📱 **Edge Deployment**: Edge deployment is a way to place computing and data processing functions on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy_en.md).
 You can choose the appropriate deployment method for your model pipeline based on your needs and proceed with subsequent AI application integration.
 
-## 4. Customization and Fine-tuning
+## 4. Custom Development
 If the default model weights provided by the general image multi-label classification pipeline do not meet your requirements in terms of accuracy or speed in your specific scenario, you can try to further fine-tune the existing model using **your own domain-specific or application-specific data** to improve the recognition performance of the general image multi-label classification pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
@@ -625,8 +625,8 @@ For example, if you use an NVIDIA GPU for inference of the image multi-label cla
 paddlex --pipeline multi_label_image_classification --input https://paddle-model-ecology.bj.bcebos.com/padd
 ```
 
-At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu`:
+At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu:0`:
 ```
 paddlex --pipeline multi_label_image_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg --device npu:0
 ```
-If you want to use the General Image Multi-label Classification Pipeline on more diverse hardware, please refer to the [PaddleX Multi-device Usage Guide](../../../installation/installation_other_devices_en.md).
+If you want to use the General Image Multi-label Classification Pipeline on more diverse hardware, please refer to the [PaddleX Multi-device Usage Guide](../../../installation/multi_devices_use_guide_en.md).

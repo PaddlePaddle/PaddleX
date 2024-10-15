@@ -10,7 +10,7 @@ The seal text detection module typically outputs multi-point bounding boxes arou
 <details>
    <summary> 👉 Model List Details</summary>
 
-|Model Name| Hmean（%）|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size (M)| Introduce |
+|Model Name| Hmean（%）|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size (M)| Description |
 |-|-|-|-|-|-|
 |PP-OCRv4_server_seal_det |98.21|84.341|2425.06|109 M|The server-side seal text detection model of PP-OCRv4 boasts higher accuracy and is suitable for deployment on better-equipped servers.|
 |PP-OCRv4_mobile_seal_det|96.47|10.5878|131.813|4.6 M| The mobile-side seal text detection model of PP-OCRv4, on the other hand, offers greater efficiency and is suitable for deployment on end devices.|
@@ -43,7 +43,7 @@ If you seek higher accuracy, you can leverage PaddleX's custom development capab
 
 ### 4.1 Dataset Preparation
 
-Before model training, you need to prepare a dataset for the task. PaddleX provides data validation functionality for each module. **Only data that passes validation can be used for model training.** Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development. If you wish to use private datasets for model training, refer to [PaddleX Seal Text Detection Task Module Data Preparation Tutorial](../../../data_annotations/cv_modules/text_detection_seal_en.md).
+Before model training, you need to prepare a dataset for the task. PaddleX provides data validation functionality for each module. **Only data that passes validation can be used for model training.** Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development. If you wish to use private datasets for model training, refer to [PaddleX Text Detection and Recognition Task Module Data Preparation Tutorial](../../../data_annotations/ocr_modules/text_detection_recognition_en.md).
 
 #### 4.1.1 Demo Data Download
 
@@ -275,7 +275,7 @@ The model can be directly integrated into the PaddleX pipeline or into your own 
 
 1. **Pipeline Integration**
 
-The document Seal Text Detection module can be integrated into PaddleX pipelines such as the [General OCR Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/OCR_en.md) and [Document Scene Information Extraction Pipeline v3 (PP-ChatOCRv3)](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_en.md). Simply replace the model path to update the text detection module of the relevant pipeline.
+The document Seal Text Detection module can be integrated into PaddleX pipelines such as the [General OCR Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/OCR_en.md) and [Document Scene Information Extraction Pipeline v3 (PP-ChatOCRv3)](../../../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md). Simply replace the model path to update the text detection module of the relevant pipeline.
 
 2. **Module Integration**
 

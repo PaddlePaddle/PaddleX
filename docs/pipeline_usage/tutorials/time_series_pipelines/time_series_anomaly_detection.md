@@ -3,7 +3,7 @@
 # 时序异常检测产线使用教程
 
 ## 1. 通用时序异常检测产线介绍
-时序异常检测是一种识别时间序列数据中异常模式或行为的技术，广泛应用于网络安全、设备监控和金融欺诈检测等领域。它通过分析历史数据中的正常趋势和规律，来发现与预期行为显著不同的事件，例如突然增加的网络流量或异常的交易活动。时序异常检测通常使用统计方法或机器学习算法（如孤立森林、LSTM等），能够自动识别数据中的异常点，为企业和组织提供实时警报，帮助及时应对潜在风险和问题。这项技术在保障系统稳定性和安全性方面发挥着重要作用。
+时序异常检测是一种识别时间序列数据中异常模式或行为的技术，广泛应用于网络安全、设备监控和金融欺诈检测等领域。它通过分析历史数据中的正常趋势和规律，来发现与预期行为显著不同的事件，例如突然增加的网络流量或异常的交易活动。时序异常检测能够自动识别数据中的异常点，为企业和组织提供实时警报，帮助及时应对潜在风险和问题。这项技术在保障系统稳定性和安全性方面发挥着重要作用。
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/time_series/05.png)
 
@@ -123,7 +123,7 @@ for res in output:
 |-|-|-|-|
 |`pipeline`|产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。|`str`|无|
 |`device`|产线模型推理设备。支持：“gpu”，“cpu”。|`str`|`gpu`|
-|`enable_hpi`|是否启用高性能推理，仅当该产线支持高性能推理时可用。|`bool`|`False`|
+|`use_hpip`|是否启用高性能推理，仅当该产线支持高性能推理时可用。|`bool`|`False`|
 
 （2）调用产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`x`，用于输入待预测数据，支持多种输入方式，具体示例如下：
 
@@ -143,7 +143,6 @@ for res in output:
 |方法|说明|方法参数|
 |-|-|-|
 |save_to_csv|将结果保存为csv格式的文件|`- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；|
-|save_to_html|将结果保存为html格式的文件|`- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；|
 |save_to_xlsx|将结果保存为表格格式的文件|`- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；|
 
 若您获取了配置文件，即可对时序异常检测产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
@@ -631,9 +630,9 @@ PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多�
 ```
 paddlex --pipeline ts_ad --input ts_ad.cs --device gpu:0
 ```
-此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的` --device` 修改为 npu 即可：
+此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的` --device` 修改为 npu:0 即可：
 
 ```
 paddlex --pipeline ts_ad --input ts_ad.cs --device npu:0
 ```
-若您想在更多种类的硬件上使用通用时序异常检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/installation_other_devices.md)。
+若您想在更多种类的硬件上使用通用时序异常检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

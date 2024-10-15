@@ -21,7 +21,7 @@
 
 ## 🔍 简介
 
-PaddleX 3.0 是基于飞桨框架构建的一站式全流程开发工具，它集成了众多**开箱即用的预训练模型**，可以实现模型从训练到推理的**全流程开发**，支持国内外**多款主流硬件**，助力AI 开发者进行产业实践。  
+PaddleX 3.0 是基于飞桨框架构建的低代码全流程开发工具，它集成了众多**开箱即用的预训练模型**，可以实现模型从训练到推理的**全流程开发**，支持国内外**多款主流硬件**，助力AI 开发者进行产业实践。  
 
 |                                                            **通用图像分类**                                                            |                                                            **图像多标签分类**                                                            |                                                            **通用目标检测**                                                            |                                                            **通用实例分割**                                                            |
 |:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|
@@ -485,20 +485,20 @@ for res in output:
 
 * [📑 PaddleX 产线使用概览](./docs/pipeline_usage/pipeline_develop_guide.md)
 
-* <details>
+* <details open>
     <summary> <b> 📝 文本图像智能分析 </b></summary>
 
    * [📄 文档场景信息抽取v3产线使用教程](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)
   </details>
 
-* <details>
+* <details open>
     <summary> <b> 🔍 OCR </b></summary>
 
     * [📜 通用 OCR 产线使用教程](./docs/pipeline_usage/tutorials/ocr_pipelines/OCR.md)
     * [📊 表格识别产线使用教程](./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition.md)
   </details>
 
-* <details>
+* <details open>
     <summary> <b> 🎥 计算机视觉 </b></summary>
 
    * [🖼️ 通用图像分类产线使用教程](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification.md)
@@ -510,7 +510,7 @@ for res in output:
    * [🖼️ 图像异常检测产线使用教程](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md)
   
 
-* <details>
+* <details open>
     <summary> <b> ⏱️ 时序分析</b> </summary>
 
    * [📈 通用时序预测产线使用教程](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md)
@@ -532,7 +532,7 @@ for res in output:
 <details open>
 <summary> <b> ⚙️ 单功能模块使用 </b></summary>
 
-* <details>
+* <details open>
   <summary> <b> 🔍 OCR </b></summary>
 
   * [📝 文本检测模块使用教程](./docs/module_usage/tutorials/ocr_modules/text_detection.md)
@@ -546,7 +546,7 @@ for res in output:
   
   </details>
 
-* <details>
+* <details open>
   <summary> <b> 🖼️ 图像分类 </b></summary>
 
   * [📂 图像分类模块使用教程](./docs/module_usage/tutorials/cv_modules/image_classification.md)
@@ -556,13 +556,13 @@ for res in output:
 
   </details>
 
-* <details>
+* <details open>
   <summary> <b> 🏞️ 图像特征 </b></summary>
 
     * [🔗 通用图像特征模块使用教程](./docs/module_usage/tutorials/cv_modules/image_feature.md)
   </details>
 
-* <details>
+* <details open>
   <summary> <b> 🎯 目标检测 </b></summary>
 
   * [🎯 目标检测模块使用教程](./docs/module_usage/tutorials/cv_modules/object_detection.md)
@@ -574,7 +574,7 @@ for res in output:
 
   </details>
 
-* <details>
+* <details open>
   <summary> <b> 🖼️ 图像分割 </b></summary>
 
   * [🗺️ 语义分割模块使用教程](./docs/module_usage/tutorials/cv_modules/semantic_segmentation.md)
@@ -582,7 +582,7 @@ for res in output:
   * [🚨 图像异常检测模块使用教程](./docs/module_usage/tutorials/cv_modules/anomaly_detection.md)
   </details>
 
-* <details>
+* <details open>
   <summary> <b> ⏱️ 时序分析 </b></summary>
 
   * [📈 时序预测模块使用教程](./docs/module_usage/tutorials/time_series_modules/time_series_forecasting.md)
@@ -600,7 +600,7 @@ for res in output:
 
 </details>
 
-<details>
+<details open>
   <summary> <b> 🏗️ 模型产线部署 </b></summary>
 
   * [🚀 PaddleX 高性能推理指南](./docs/pipeline_deploy/high_performance_inference.md)
@@ -608,14 +608,18 @@ for res in output:
   * [📱 PaddleX 端侧部署指南](./docs/pipeline_deploy/lite_deploy.md)
 
 </details>
-<details>
+<details open>
   <summary> <b> 🖥️ 多硬件使用 </b></summary>
   
   * [⚙️ 多硬件使用指南](./docs/other_devices_support/installation_other_devices.md)
+  * [⚙️ 海光 DCU 飞桨安装教程](./docs/other_devices_support/paddlepaddle_install_DCU.md)
+  * [⚙️ 寒武纪 MLU 飞桨安装教程](./docs/other_devices_support/paddlepaddle_install_MLU.md)
+  * [⚙️ 昇腾 NPU 飞桨安装教程](./docs/other_devices_support/paddlepaddle_install_NPU.md)
+  * [⚙️ 昆仑 XPU 飞桨安装教程](./docs/other_devices_support/paddlepaddle_install_XPU.md)
 
 </details>
 
-<details>
+<details open>
   <summary> <b> 📝 产业实践教程&范例 </b></summary>
 
 * [🖼️ 通用图像分类模型产线———垃圾分类教程](./docs/practical_tutorials/image_classification_garbage_tutorial.md)

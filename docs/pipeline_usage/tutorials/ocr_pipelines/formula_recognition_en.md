@@ -17,7 +17,7 @@ Formula recognition is a technology that automatically identifies and extracts L
 
 **Layout Detection Module Models**:
 
-| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time | Model Size (M) |
+| Model Name | mAP (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) |
 |-|-|-|-|-|
 | RT-DETR-H_layout_17cls | 92.6 | 115.126 | 3827.25 | 470.2M |
 
@@ -105,7 +105,7 @@ Where `dt_polys` represents the coordinates of the detected formula area, and `r
 The visualization result is as follows:
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/02.jpg)
 
-The visualization image is saved in the `output` directory by default, and you can also customize it through `--save_path`. Additionally, you can visualize the recognized LaTeX code through the website [https://www.lddgo.net/math/latex-to-image](https://www.lddgo.net/math/latex-to-image).
+The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path. Additionally, you can visualize the recognized LaTeX code through the website [https://www.lddgo.net/math/latex-to-image](https://www.lddgo.net/math/latex-to-image).
 
 
 #### 2.2 Python Script Integration
@@ -131,7 +131,7 @@ The Python script above executes the following steps:
 |-|-|-|-|
 |`pipeline`| The name of the pipeline or the path to the pipeline configuration file. If it is the name of the pipeline, it must be supported by PaddleX. |`str`|None|
 |`device`| The device for pipeline model inference. Supports: "gpu", "cpu". |`str`|`gpu`|
-|`enable_hpi`| Whether to enable high-performance inference, only available if the pipeline supports it. |`bool`|`False`|
+|`use_hpip`| Whether to enable high-performance inference, only available if the pipeline supports it. |`bool`|`False`|
 
 （2）Invoke the `predict` method of the general formula recognition pipeline object for inference prediction: The `predict` method parameter is `x`, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
 
@@ -666,7 +666,7 @@ print_r($result["texts"]);
 You can choose the appropriate deployment method based on your needs to proceed with subsequent AI application integration.
 
 
-## 4. Customization and Fine-tuning
+## 4. Custom Development
 If the default model weights provided by the general formula recognition pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing models using **your own domain-specific or application-specific data** to improve the recognition performance of the general formula recognition pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
@@ -706,4 +706,4 @@ Now, if you want to switch the hardware to Ascend NPU, you only need to modify t
 paddlex --pipeline formula_recognition --input general_formula_recognition.png --device npu:0
 ```
 
-If you want to use the general formula recognition pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/installation_other_devices_en.md).
+If you want to use the general formula recognition pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md).

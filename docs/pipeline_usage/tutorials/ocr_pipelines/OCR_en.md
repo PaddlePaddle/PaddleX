@@ -7,7 +7,7 @@ OCR (Optical Character Recognition) is a technology that converts text in images
 
 The General OCR Pipeline is designed to solve text recognition tasks, extracting text information from images and outputting it in text form. PP-OCRv4 is an end-to-end OCR system that achieves millisecond-level text content prediction on CPUs, reaching state-of-the-art (SOTA) performance in open-source projects for general scenarios. Based on this project, developers from academia, industry, and research have rapidly deployed various OCR applications across fields such as general use, manufacturing, finance, transportation, and more.
 
-![](/tmp/images/pipelines/ocr/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/01.png)
 
 **The General OCR Pipeline comprises a text detection module and a text recognition module**, each containing several models. The specific models to use can be selected based on the benchmark data provided below. **If you prioritize model accuracy, choose models with higher accuracy. If you prioritize inference speed, choose models with faster inference. If you prioritize model size, choose models with smaller storage requirements.**
 
@@ -20,7 +20,7 @@ The General OCR Pipeline is designed to solve text recognition tasks, extracting
     <th>Specific Model</th>
     <th>Accuracy</th>
     <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time</th>
+    <th>CPU Inference Time (ms)</th>
     <th>Model Size (M)</th>
   </tr>
   <tr>
@@ -79,9 +79,9 @@ PaddleX provides pre-trained models for the OCR Pipeline, allowing you to quickl
 ### 2.1 Online Experience
 You can [experience the General OCR Pipeline online](https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent) using the official demo images for recognition, for example:
 
-![](/tmp/images/pipelines/ocr/02.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/02.png)
 
-If you are satisfied with the pipeline's performance, you can directly integrate and deploy it. You can download the deployment package from the cloud or use the [local experience method in Section 2.2](#3-Development-and-Deployment). If not satisfied, you can also use your private data to **fine-tune the models in the pipeline online**.
+If you are satisfied with the pipeline's performance, you can directly integrate and deploy it. You can download the deployment package from the cloud or use the [local experience method in Section 2.2](#22-Local Experience). If not satisfied, you can also use your private data to **fine-tune the models in the pipeline online**.
 
 ### 2.2 Local Experience
 > ❗ Before using the General OCR Pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Installation Guide](../../../installation/installation_en.md).
@@ -125,6 +125,19 @@ paddlex --pipeline ./ocr.yaml --input general_ocr_002.png
 
 Here, parameters such as `--model` and `--device` do not need to be specified, as they will use the parameters in the configuration file. If parameters are still specified, the specified parameters will take precedence.
 
+After running, the result is:
+
+```bash
+{'img_path': '/root/.paddlex/predict_input/general_ocr_002.png', 'dt_polys': [[[5, 12], [88, 10], [88, 29], [5, 31]], [[208, 14], [249, 14], [249, 22], [208, 22]], [[695, 15], [824, 15], [824, 60], [695, 60]], [[158, 27], [355, 23], [356, 70], [159, 73]], [[421, 25], [659, 19], [660, 59], [422, 64]], [[337, 104], [460, 102], [460, 127], [337, 129]], [[486, 103], [650, 100], [650, 125], [486, 128]], [[675, 98], [835, 94], [835, 119], [675, 124]], [[64, 114], [192, 110], [192, 131], [64, 134]], [[210, 108], [318, 106], [318, 128], [210, 130]], [[82, 140], [214, 138], [214, 163], [82, 165]], [[226, 136], [328, 136], [328, 161], [226, 161]], [[404, 134], [432, 134], [432, 161], [404, 161]], [[509, 131], [570, 131], [570, 158], [509, 158]], [[730, 138], [771, 138], [771, 154], [730, 154]], [[806, 136], [817, 136], [817, 146], [806, 146]], [[342, 175], [470, 173], [470, 197], [342, 199]], [[486, 173], [616, 171], [616, 196], [486, 198]], [[677, 169], [813, 166], [813, 191], [677, 194]], [[65, 181], [170, 177], [171, 202], [66, 205]], [[96, 208], [171, 205], [172, 230], [97, 232]], [[336, 220], [476, 215], [476, 237], [336, 242]], [[507, 217], [554, 217], [554, 236], [507, 236]], [[87, 229], [204, 227], [204, 251], [87, 254]], [[344, 240], [483, 236], [483, 258], [344, 262]], [[66, 252], [174, 249], [174, 271], [66, 273]], [[75, 279], [264, 272], [265, 297], [76, 303]], [[459, 297], [581, 295], [581, 320], [459, 322]], [[101, 314], [210, 311], [210, 337], [101, 339]], [[68, 344], [165, 340], [166, 365], [69, 368]], [[345, 350], [662, 346], [662, 368], [345, 371]], [[100, 459], [832, 444], [832, 465], [100, 480]]], 'dt_scores': [0.8183103704439653, 0.7609575621092027, 0.8662357274035412, 0.8619508290334809, 0.8495855993183273, 0.8676840017933314, 0.8807986687956436, 0.822308525056085, 0.8686617037621976, 0.8279022169854463, 0.952332847006758, 0.8742692553015098, 0.8477013022907575, 0.8528771493227294, 0.7622965906848765, 0.8492388224448705, 0.8344203789965632, 0.8078477124353284, 0.6300434587457232, 0.8359967356998494, 0.7618617265751318, 0.9481573079350023, 0.8712182945408912, 0.837416955846334, 0.8292475059403851, 0.7860382856406026, 0.7350527486717117, 0.8701022267947695, 0.87172526903969, 0.8779847108088126, 0.7020437651809734, 0.6611684983372949], 'rec_text': ['www.997', '151', 'PASS', '登机牌', 'BOARDING', '舱位 CLASS', '序号SERIALNO.', '座位号SEATNO', '航班 FLIGHT', '日期DATE', 'MU 2379', '03DEC', 'W', '035', 'F', '1', '始发地FROM', '登机口 GATE', '登机时间BDT', '目的地TO', '福州', 'TAIYUAN', 'G11', 'FUZHOU', '身份识别IDNO.', '姓名NAME', 'ZHANGQIWEI', '票号TKTNO.', '张祺伟', '票价FARE', 'ETKT7813699238489/1', '登机口于起飞前10分钟关闭GATESCLOSE1OMINUTESBEFOREDEPARTURETIME'], 'rec_score': [0.9617719054222107, 0.4199012815952301, 0.9652514457702637, 0.9978302121162415, 0.9853208661079407, 0.9445787072181702, 0.9714463949203491, 0.9841841459274292, 0.9564052224159241, 0.9959094524383545, 0.9386572241783142, 0.9825271368026733, 0.9356589317321777, 0.9985442161560059, 0.3965512812137604, 0.15236201882362366, 0.9976775050163269, 0.9547433257102966, 0.9974752068519592, 0.9646636843681335, 0.9907559156417847, 0.9895358681678772, 0.9374122023582458, 0.9909093379974365, 0.9796401262283325, 0.9899340271949768, 0.992210865020752, 0.9478569626808167, 0.9982215762138367, 0.9924325942993164, 0.9941263794898987, 0.96443772315979]}
+......
+```
+
+Among them, `dt_polys` is the detected text box coordinates, `dt_polys` is the detected text box coordinates, `dt_scores` is the confidence of the detected text box, `rec_text` is the detected text, `rec_score` is the detection Confidence in the text.
+
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/03.png)
+
+The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path. 
+
 </details>
 
 #### 2.2.2 Integration via Python Script
@@ -150,7 +163,7 @@ The Python script above executes the following steps:
 |-|-|-|-|
 |`pipeline`| The name of the production line or the path to the production line configuration file. If it is the name of the production line, it must be supported by PaddleX. |`str`|None|
 |`device`| The device for production line model inference. Supports: "gpu", "cpu". |`str`|`gpu`|
-|`enable_hpi`| Whether to enable high-performance inference, only available if the production line supports it. |`bool`|`False`|
+|`use_hpip`| Whether to enable high-performance inference, only available if the production line supports it. |`bool`|`False`|
 
 （2）Invoke the `predict` method of the OCR production line object for inference prediction: The `predict` method parameter is `x`, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
 
@@ -189,7 +202,7 @@ for res in output:
 ## 3. Development Integration/Deployment
 If the general OCR pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
-If you need to apply the general OCR pipeline directly in your Python project, refer to the example code in [2.2.2 Python Script Integration](#222-python-script-integration).
+If you need to apply the general OCR pipeline directly in your Python project, refer to the example code in [2.2.2 Python Script Integration](#222-Integration-via-Python-Script).
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
@@ -686,7 +699,7 @@ print_r($result["texts"]);
 You can choose the appropriate deployment method based on your needs to proceed with subsequent AI application integration.
 
 
-## 4. Customization and Fine-tuning
+## 4. Custom Development
 If the default model weights provided by the general OCR pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing models using **your own domain-specific or application-specific data** to improve the recognition performance of the general OCR pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
@@ -726,4 +739,4 @@ Now, if you want to switch the hardware to Ascend NPU, you only need to modify t
 paddlex --pipeline OCR --input general_ocr_002.png --device npu:0
 ```
 
-If you want to use the General OCR pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../installation/installation_other_devices_en.md).
+If you want to use the General OCR pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.md).
