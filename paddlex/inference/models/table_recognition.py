@@ -62,7 +62,7 @@ class TablePredictor(BasicPredictor):
     def build_readimg(self, channel_first=False, img_mode="BGR"):
         assert channel_first is False
         assert img_mode == "BGR"
-        return ReadImage()
+        return ReadImage(format=img_mode)
 
     @register("TableLabelEncode")
     def foo(self, *args, **kwargs):
