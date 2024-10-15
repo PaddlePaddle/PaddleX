@@ -31,7 +31,7 @@ After trying the pipeline, determine if it meets your expectations (including ac
 
 ## 3. Choosing a Model
 
-PaddleX provides 80 end-to-end image classification models, which can be referenced in the [Model List](../support_list/models_list.md). Some of the benchmarks for these models are as follows:
+PaddleX provides 80 end-to-end image classification models, which can be referenced in the [Model List](../support_list/models_list_en.md). Some of the benchmarks for these models are as follows:
 
 | Model List          | Top-1 Accuracy (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) |
 | ------------------- | ------------------ | ----------------------- | ----------------------- | -------------- |

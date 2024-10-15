@@ -4,89 +4,69 @@
 
 # Global
 
-| Parameter Name | Data Type | Description | Default Value | Required/Optional |  
-| --- | --- | --- | --- | --- |  
-| model | str | Specifies the model name | - | Required |  
-| mode | str | Specifies the mode (check_dataset/train/evaluate/export/predict) | - | Required |  
-| dataset_dir | str | Path to the dataset | - | Required |  
-| device | str | Specifies the device to use | - | Required |  
-| output | str | Output directory path | "output" | Optional |
+| Parameter Name | Data Type | Description | Default Value |
+|-|-|-|-|
+| model | str | Specifies the model name | Model name specified in the YAML file |
+| mode | str | Specifies the mode (check_dataset/train/evaluate/export/predict) | check_dataset |
+| dataset_dir | str | Path to the dataset | Dataset path specified in the YAML file |
+| device | str | Specifies the device to use | Device ID specified in the YAML file |
+| output | str | Output path | "output" |
 
 # CheckDataset
 
-| Parameter Name | Data Type | Description | Default Value | Required/Optional |  
-| --- | --- | --- | --- | --- |  
-| convert.enable | bool | Whether to enable dataset format conversion | False | Optional |  
-| convert.src_dataset_type | str | The source dataset format to convert from | null | Required |  
-| split.enable | bool | Whether to re-split the dataset | False | Optional |  
-| split.train_percent | int | Sets the percentage of the training set, an integer between 0-100. It should sum up to 100 with `val_percent`. | - | Optional |  
-| split.val_percent | int | Sets the percentage of the validation set, an integer between 0-100. It should sum up to 100 with `train_percent`. | - | Optional |  
-  
+| Parameter Name | Data Type | Description | Default Value |
+|-|-|-|-|
+| convert.enable | bool | Whether to convert the dataset format; time series prediction, anomaly detection, and classification support data conversion from xlsx and xls formats | False |
+| convert.src_dataset_type | str | The source dataset format to be converted | null |
+| split.enable | bool | Whether to re-split the dataset | False |
+| split.train_percent | int | Sets the percentage of the training set, an integer between 0-100, ensuring the sum with val_percent is 100; | null |
+| split.val_percent | int | Sets the percentage of the validation set, an integer between 0-100, ensuring the sum with train_percent is 100; | null |
+
+
 # Train
+### Common Parameters for Time Series Tasks
+| Parameter Name | Data Type | Description | Default Value |
+|-|-|-|-|
+| epochs_iters | int | The number of times the model repeats learning the training data | Number of iterations specified in the YAML file |
+| batch_size | int | Batch size | Batch size specified in the YAML file |
+| learning_rate | float | Initial learning rate | Initial learning rate specified in the YAML file |
+| time_col | str | Time column, set the column name of the time series dataset's time column based on your data. | Time column specified in the YAML file |
+| freq | str or int | Frequency, set the time frequency based on your data, e.g., 1min, 5min, 1h. | Frequency specified in the YAML file |
+### Time Series Forecasting Parameters
+| Parameter Name | Data Type | Description | Default Value |
+|-|-|-|-|
+| target_cols | str | Target variable column(s), set the column name(s) of the target variable(s) in the time series dataset, can be multiple, separated by commas | OT |
+| input_len | int | For time series forecasting tasks, this parameter represents the length of historical time series input to the model; the input length should be considered in conjunction with the prediction length, generally, the larger the setting, the more historical information can be referenced, and the higher the model accuracy. | 96 |
+| predict_len | int | The length of the future sequence that you want the model to predict; the prediction length should be considered in conjunction with the actual scenario, generally, the larger the setting, the longer the future sequence you want to predict, and the lower the model accuracy. | 96 |
+| patience | int | Early stopping mechanism parameter, indicating how many times the model's performance on the validation set can be continuously unimproved before stopping training; a larger patience value generally results in longer training time. | 10 |
+### Time Series Anomaly Detection
+| Parameter Name | Data Type | Description | Default Value |
+|-|-|-|-|
+| input_len | int | For time series anomaly detection tasks, this parameter represents the length of the time series input to the model, which will slice the time series according to this length to predict whether there is an anomaly in this segment of the time series; the input length should be considered in conjunction with the actual scenario. For example, an input length of 96 indicates that you want to predict whether there are anomalies in 96 time points. | 96 |
+| feature_cols | str | Feature variables indicating variables related to whether the device is abnormal, e.g., whether the device is abnormal may be related to the heat dissipation during its operation. Set the column name(s) of the feature variable(s) based on your data, can be multiple, separated by commas. | feature_0,feature_1 |
+| label_col | str | Represents the number indicating whether a time series point is abnormal, with 1 for abnormal points and 0 for normal points. | label |
 
-### Common parameters for time series tasks
-
-| Parameter Name | Data Type | Description | Default Value | Required/Optional |  
-| --- | --- | --- | --- | --- |  
-| epochs_iters | int | Number of times the model learns from the training data | - | Required |  
-| batch_size | int | Batch size for training | - | Required |  
-| learning_rate | float | Initial learning rate | - | Required |  
-| time_col | str | Time column, must be set to the column name that represents the time series data's timestamp in your dataset. | - | Required |  
-| freq | str or int | Frequency, must be set to the time frequency of your data, such as '1min', '5min', '1h'. | - | Required |  
-  
-**Note**: The default values for these parameters are not specified ("-"), indicating that they must be explicitly provided by the user based on their specific dataset and requirements.
-
-### Time series forecasting parameters
-
-
-| Parameter Name | Data Type | Description | Default Value | Required/Optional |  
-| --- | --- | --- | --- | --- |  
-| target_cols | str | Target variable column(s), must be set to the column name(s) that represent the target variable(s) in your time series dataset. Multiple columns can be specified by separating them with commas. | - | Required |  
-| input_len | int | For time series prediction tasks, this parameter represents the length of historical time series data input to the model. The input length should be considered in conjunction with the prediction length and the specific scenario. Generally, a larger input length allows the model to reference more historical information, which may lead to higher accuracy. | - | Required |  
-| predict_len | int | The desired length of the future sequence that the model should predict. The prediction length should be considered in conjunction with the specific scenario. Generally, a larger prediction length means predicting a longer future sequence, which may lead to lower model accuracy. | - | Required |  
-| patience | int | A parameter for the early stopping mechanism, indicating how many times the model's performance on the validation set can be consecutively unchanged before stopping training. A larger patience value generally results in longer training time. | - | Required |  
-  
-**Note**: The default values for these parameters are not specified ("-"), indicating that they must be explicitly provided by the user based on their specific dataset and requirements.
-
-### Time series anomaly detection parameters
-
-| Parameter Name | Data Type | Description | Default Value | Required/Optional |  
-| --- | --- | --- | --- | --- |  
-| input_len | int | For time series anomaly detection tasks, this parameter represents the length of the time series input to the model. The time series will be sliced according to this length, and the model will predict whether there are anomalies within this segment. The input length should be considered based on the specific scenario. For example, an input length of 96 indicates the desire to predict whether there are anomalies at 96 time points. | - | Required |  
-| feature_cols | str | Feature columns represent variables that can be used to determine whether a device is anomalous. For instance, whether a device is anomalous may be related to the amount of heat it generates during operation. Based on your data, set the column names of the feature variables. Multiple columns can be specified by separating them with commas. | - | Required |  
-| label_col | str | Represents the label indicating whether a time series point is anomalous. Anomalous points are labeled as 1, and normal points are labeled as 0. | - | Required |  
-  
-**Note**: The default values for these parameters are not specified ("-"), indicating that they must be explicitly provided by the user based on their specific dataset and requirements. 
-
-### Time series classification parameters
-
-| Parameter Name | Data Type | Description | Default Value | Required/Optional |  
-| --- | --- | --- | --- | --- |  
-| num_classes | int | The number of classes in the dataset. | - | Required |  
-| target_cols | str | The column(s) of the feature variable used to determine the class, which must be set according to your dataset in the time series dataset. Multiple columns can be specified by separating them with commas. | - | Required |  
-| freq | str or int | The frequency of the time series, which must be set according to your data. Examples include '1min', '5min', '1h'. | - | Required |  
-| group_id | str | A group ID represents a time series sample. Time series sequences with the same ID constitute a sample. Set the column name for the specified group ID according to your data, e.g., 'group_id'. | - | Required |  
-| static_cov_cols | str | Represents the class ID column for the time series. Samples within the same class share the same label. Set the column name for the class according to your data, e.g., 'label'. | - | Required |  
-  
-**Note**: The default values for these parameters are not specified ("-"), indicating that they must be explicitly provided by the user based on their specific dataset and requirements. 
+### Time Series Classification
+| Parameter Name | Data Type | Description | Default Value |
+|-|-|-|-|
+| target_cols | str | Feature variable columns used for category discrimination. You need to set the column names of the target variables in the time series dataset based on your own data. It can be multiple, separated by commas. | dim_0,dim_1,dim_2 |
+| freq | str or int | Frequency, which needs to be set based on your own data. Examples of time frequencies include: 1min, 5min, 1h. | 1 |
+| group_id | str | A group ID represents a time series sample. Time series sequences with the same ID constitute a sample. Set the column name of the specified group ID based on your own data, e.g., group_id. | group_id |
+| static_cov_cols | str | Represents the category number column of the time series. The labels of the same sample are the same. Set the column name of the category based on your own data, e.g., label. | label |
 
 # Evaluate
-
-| Parameter Name | Data Type | Description | Default Value | Required/Optional |  
-| --- | --- | --- | --- | --- |  
-| weight_path | str | The path to the model weights for evaluation. | - | Required |  
+| Parameter Name | Data Type | Description | Default Value |
+|-|-|-|-|
+| weight_path | str | Evaluation model path | Default local path from training output, when specified as None, indicates using official weights |
 
 # Export
+| Parameter Name | Data Type | Description | Default Value |
+|-|-|-|-|
+| weight_path | str | Dynamic graph weight path for exporting the model | Default local path from training output, when specified as None, indicates using official weights |
 
-| Parameter Name | Data Type | Description | Default Value | Required/Optional |    
-| -------------- | --------- | -------------------------------------------------- | ------------------- | ------------- |    
-| weight_path    | str       | The path to the dynamic graph weight file used for exporting the model |The official dynamic graph weight URLs for each model. | Required      |    
-  
 # Predict
-
-| Parameter Name | Data Type | Description | Default Value | Required/Optional |  
-| -------------- | --------- | ---------------------------------- | --------------- | ------------- |    
-| model_dir      | str       | Path to the directory containing the prediction model |The official weight | Optional      |  
-| input          | str       | Path to the input data for prediction | (No default, user must specify) | Required      |  
-| batch_size     | int       | The number of samples processed in each prediction batch | (No default, user must specify) | Required      |  
-
+| Parameter Name | Data Type | Description | Default Value |
+|-|-|-|-|
+| batch_size | int | Prediction batch size | The prediction batch size specified in the YAML file |
+| model_dir | str | Path to the prediction model | The default local inference model path produced by training. When specified as None, it indicates the use of official weights |
+| input | str | Path to the prediction input | The prediction input path specified in the YAML file |

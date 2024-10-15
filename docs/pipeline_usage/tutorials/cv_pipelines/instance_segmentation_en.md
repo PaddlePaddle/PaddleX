@@ -24,12 +24,12 @@ Instance segmentation is a computer vision task that not only identifies the obj
 |Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN|39.1|-|-|254.7|
 |MaskRCNN-ResNet50-FPN|35.6|-|-|157.5 M|
 |MaskRCNN-ResNet50-vd-FPN|36.4|-|-|157.5 M|
-|MaskRCNN-ResNet50-vd-SSLDv2-FPN|38.2|-|-|157.2 M|
 |MaskRCNN-ResNet50|32.8|-|-|127.8 M|
 |MaskRCNN-ResNet101-FPN|36.6|-|-|225.4 M|
 |MaskRCNN-ResNet101-vd-FPN|38.1|-|-|225.1 M|
 |MaskRCNN-ResNeXt101-vd-FPN|39.5|-|-|370.0 M|
 |PP-YOLOE_seg-S|32.5|-|-|31.5 M|
+|SOLOv2| 35.5|-|-|179.1 M|
 
 **Note: The above accuracy metrics are Mask AP(0.5:0.95) on the **[COCO2017](https://cocodataset.org/#home)** validation set. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 
@@ -81,8 +81,8 @@ paddlex --get_pipeline_config instance_segmentation --save_path ./my_path
 
 After obtaining the pipeline configuration file, you can replace `--pipeline` with the configuration file save path to make the configuration file take effect. For example, if the configuration file save path is `./instance_segmentation.yaml`, simply execute:
 
-```
-paddlex --pipeline ./instance_segmentation.yaml --input general_instance_segmentation_004.png
+```bash
+paddlex --pipeline ./instance_segmentation.yaml --input general_instance_segmentation_004.png --device gpu:0
 ```
 
 Where `--model`, `--device`, and other parameters do not need to be specified, and the parameters in the configuration file will be used. If parameters are still specified, the specified parameters will take precedence.
@@ -92,7 +92,7 @@ Where `--model`, `--device`, and other parameters do not need to be specified, a
 After running, the result is:
 
 ```
-{'img_path': '/root/.paddlex/predict_input/general_instance_segmentation_004.png', 'boxes': [{'cls_id': 0, 'label': 'person', 'score': 0.8698326945304871, 'coordinate': [339, 0, 639, 575]}, {'cls_id': 0, 'label': 'person', 'score': 0.8571141362190247, 'coordinate': [0, 0, 195, 575]}, {'cls_id': 0, 'label': 'person', 'score': 0.8202633857727051, 'coordinate': [88, 113, 401, 574]}, {'cls_id': 0, 'label': 'person', 'score': 0.7108577489852905, 'coordinate': [522, 21, 767, 574]}, {'cls_id': 27, 'label': 'tie', 'score': 0.554280698299408, 'coordinate': [247, 311, 355, 574]}]}
+{'input_path': 'general_instance_segmentation_004.png', 'boxes': [{'cls_id': 0, 'label': 'person', 'score': 0.8698326945304871, 'coordinate': [339, 0, 639, 575]}, {'cls_id': 0, 'label': 'person', 'score': 0.8571141362190247, 'coordinate': [0, 0, 195, 575]}, {'cls_id': 0, 'label': 'person', 'score': 0.8202633857727051, 'coordinate': [88, 113, 401, 574]}, {'cls_id': 0, 'label': 'person', 'score': 0.7108577489852905, 'coordinate': [522, 21, 767, 574]}, {'cls_id': 27, 'label': 'tie', 'score': 0.554280698299408, 'coordinate': [247, 311, 355, 574]}]}
 ```
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/instance_segmentation/03.png)

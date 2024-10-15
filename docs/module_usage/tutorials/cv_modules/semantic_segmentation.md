@@ -120,7 +120,7 @@ python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
 * `attributes.val_sample_paths`：该数据集验证集样本可视化图片相对路径列表；
 
 
-数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
+数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/semanticseg/01.png)
 </details>
@@ -233,7 +233,7 @@ python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
 * 指定模型的.yaml 配置文件路径（此处为 `PP-LiteSeg-T.yam`）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details>
   <summary>👉 <b>更多说明（点击展开）</b></summary>

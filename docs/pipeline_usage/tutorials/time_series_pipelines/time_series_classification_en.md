@@ -5,7 +5,7 @@
 ## 1. Introduction to General Time Series Classification Pipeline
 Time series classification is a technique that categorizes time-series data into predefined classes, widely applied in fields such as behavior recognition and financial trend analysis. By analyzing features that vary over time, it identifies different patterns or events, for example, classifying a speech signal as "greeting" or "request," or categorizing stock price movements as "rising" or "falling." Time series classification typically employs machine learning and deep learning models, effectively capturing temporal dependencies and variation patterns to provide accurate classification labels for data. This technology plays a pivotal role in applications such as intelligent monitoring and market forecasting.
 
-![](/tmp/images/pipelines/time_series/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/time_series/01.png)
 
 **The General Time Series Classification Pipeline includes a Time Series Classification module.**
 
@@ -26,7 +26,7 @@ PaddleX provides pre-trained model pipelines that can be quickly experienced. Yo
 ### 2.1 Online Experience
 You can [experience online](https://aistudio.baidu.com/community/app/105707/webUI?source=appCenter) the effects of the General Time Series Classification Pipeline using the official demo for recognition, for example:
 
-![](/tmp/images/pipelines/time_series/02.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/time_series/02.png)
 
 If you are satisfied with the pipeline's performance, you can directly integrate and deploy it. If not, you can also use your private data to **fine-tune the model in the pipeline online**.
 
@@ -68,7 +68,7 @@ paddlex --get_pipeline_config ts_cls --save_path ./my_path
 After obtaining the pipeline configuration file, you can replace `--pipeline` with the configuration file save path to make the configuration file take effect. For example, if the configuration file save path is `./ts_ad.yaml`, simply execute:
 
 ```bash
-paddlex --pipeline ./ts_cls.yaml --input ts_cls.csv
+paddlex --pipeline ./ts_cls.yaml --input ts_cls.csv --device gpu:0
 ```
 
 In this command, parameters such as `--model` and `--device` are not required to be specified, as they will use the parameters defined in the configuration file. If these parameters are specified, the specified values will take precedence.
@@ -78,7 +78,7 @@ In this command, parameters such as `--model` and `--device` are not required to
 After execution, the result is:
 
 ```bash
-{'ts_path': '/root/.paddlex/predict_input/ts_cls.csv', 'classification':         classid     score
+{'input_path': 'ts_cls.csv', 'classification':         classid     score
 sample
 0             0  0.617688}
 ```

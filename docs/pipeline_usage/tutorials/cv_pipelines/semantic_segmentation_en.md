@@ -87,7 +87,7 @@ paddlex --get_pipeline_config semantic_segmentation --save_path ./my_path
 After obtaining the pipeline configuration file, replace `--pipeline` with the configuration file save path to make the configuration file take effect. For example, if the configuration file save path is `./semantic_segmentation.yaml`, simply execute:
 
 ```bash
-paddlex --pipeline ./semantic_segmentation.yaml --input makassaridn-road_demo.png
+paddlex --pipeline ./semantic_segmentation.yaml --input makassaridn-road_demo.png --device gpu:0
 ```
 
 Here, parameters such as `--model` and `--device` do not need to be specified, and the parameters in the configuration file will be used. If parameters are still specified, the specified parameters will take precedence.
@@ -97,7 +97,7 @@ Here, parameters such as `--model` and `--device` do not need to be specified, a
 After running, the result is:
 
 ```bash
-{'img_path': '/root/.paddlex/predict_input/general_object_detection_002.png'}
+{'input_path': 'general_object_detection_002.png'}
 ```
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/semantic_segmentation/03.png)

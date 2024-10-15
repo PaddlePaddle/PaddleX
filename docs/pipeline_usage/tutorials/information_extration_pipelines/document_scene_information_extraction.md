@@ -446,7 +446,6 @@ chat_result.print()
         |-|-|-|-|
         |`keys`|`array`|关键词列表。|是|
         |`vectorStore`|`object`|向量数据库序列化结果。由`buildVectorStore`操作提供。|是|
-        |`visionInfo`|`object`|图像中的关键信息。由`analyzeImage`操作提供。|是|
         |`llmName`|`string`|大语言模型名称。|否|
         |`llmParams`|`object`|大语言模型API参数。|否|
 
@@ -464,7 +463,7 @@ chat_result.print()
 
         |名称|类型|含义|
         |-|-|-|
-        |`retrievalResult`|`string`|知识检索结果，可用作其他操作的输入。|
+        |`retrievalResult`|`object`|知识检索结果，可用作其他操作的输入。|
 
 - **`chat`**
 
@@ -481,9 +480,8 @@ chat_result.print()
         |`taskDescription`|`string`|提示词任务。|否|
         |`rules`|`string`|提示词规则。用于自定义信息抽取规则，例如规范输出格式。|否|
         |`fewShot`|`string`|提示词示例。|否|
-        |`useVectorStore`|`boolean`|是否启用向量数据库。默认启用。|否|
         |`vectorStore`|`object`|向量数据库序列化结果。由`buildVectorStore`操作提供。|否|
-        |`retrievalResult`|`string`|知识检索结果。由`retrieveKnowledge`操作提供。|否|
+        |`retrievalResult`|`object`|知识检索结果。由`retrieveKnowledge`操作提供。|否|
         |`returnPrompts`|`boolean`|是否返回使用的提示词。默认启用。|否|
         |`llmName`|`string`|大语言模型名称。|否|
         |`llmParams`|`object`|大语言模型API参数。|否|
@@ -576,7 +574,6 @@ if __name__ == "__main__":
             f.write(base64.b64decode(res["layoutImage"]))
         print(f"Output images saved at {ocr_img_path} and {layout_img_path}")
         print("")
-    print("="*50 + "\n\n")
 
     payload = {
         "visionInfo": result_vision["visionInfo"],
@@ -593,12 +590,10 @@ if __name__ == "__main__":
         pprint.pp(resp_vector.json())
         sys.exit(1)
     result_vector = resp_vector.json()["result"]
-    print("="*50 + "\n\n")
 
     payload = {
         "keys": keys,
         "vectorStore": result_vector["vectorStore"],
-        "visionInfo": result_vision["visionInfo"],
         "llmName": LLM_NAME,
         "llmParams": LLM_PARAMS,
     }
@@ -610,9 +605,6 @@ if __name__ == "__main__":
         pprint.pp(resp_retrieval.json())
         sys.exit(1)
     result_retrieval = resp_retrieval.json()["result"]
-    print("Knowledge retrieval result:")
-    print(result_retrieval["retrievalResult"])
-    print("="*50 + "\n\n")
 
     payload = {
         "keys": keys,
@@ -620,7 +612,6 @@ if __name__ == "__main__":
         "taskDescription": "",
         "rules": "",
         "fewShot": "",
-        "useVectorStore": True,
         "vectorStore": result_vector["vectorStore"],
         "retrievalResult": result_retrieval["retrievalResult"],
         "returnPrompts": True,
@@ -635,12 +626,12 @@ if __name__ == "__main__":
         pprint.pp(resp_chat.json())
         sys.exit(1)
     result_chat = resp_chat.json()["result"]
-    print("Prompts:")
+    print("\nPrompts:")
     pprint.pp(result_chat["prompts"])
     print("Final result:")
     print(len(result_chat["chatResult"]))
 ```
-**注**：请在 `API_KEY`、`SECRET_KEY` 处填入您的 ak、sk。
+**注**：请在 `API_KEY`、`SECRET_KEY` 处填入您的 API key 和 secret key。
 </details>
 </details>
 <br/>

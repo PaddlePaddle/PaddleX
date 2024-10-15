@@ -20,13 +20,13 @@ The core task of structure analysis is to parse and segment the content of input
 **Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built layout region analysis dataset, containing 10,000 images of common document types, including English and Chinese papers, magazines, research reports, etc. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 </details>
 
-## III. Quick Integration  <a id="quick"> </a> 
+## III. Quick Integration  <a id="quick"> </a>
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Tutorial](../../../installation/installation_en.md)
 
 After installing the wheel package, a few lines of code can complete the inference of the structure analysis module. You can switch models under this module freely, and you can also integrate the model inference of the structure analysis module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg) to your local machine.
 
 ```python
-from paddlex import create_model 
+from paddlex import create_model
 
 model_name = "PicoDet-L_layout_3cls"
 
@@ -124,7 +124,7 @@ After completing dataset verification, you can convert the dataset format or re-
 
 **(1) Dataset Format Conversion**
 
-Structure analysis does not support data format conversion.
+Layout detection does not support data format conversion.
 
 **(2) Dataset Splitting**
 
@@ -191,8 +191,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 * During model training, PaddleX automatically saves model weight files, defaulting to `output`. To specify a save path, use the `-o Global.output` field in the configuration file.
 * PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.
 * When training other models, specify the corresponding configuration file. The correspondence between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md).
-After completing model training, all outputs are saved in the specified output directory (default is `./output/`), typically```markdown
-Similar to model training, the following steps are required:
+After completing model training, all outputs are saved in the specified output directory (default is `./output/`), the following steps are required:
 
 * Specify the `.yaml` configuration file path of the model (here it is `PicoDet-L_layout_3cls.yaml`)
 * Set the mode to model evaluation: `-o Global.mode=evaluate`

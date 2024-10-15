@@ -59,8 +59,8 @@ class _ModelBasedInference(_BaseModel):
     def predict(self, *args, **kwargs):
         yield from self._predictor(*args, **kwargs)
 
-    def set_predict(self, **kwargs):
-        self._predictor.set_predict(**kwargs)
+    def set_predictor(self, **kwargs):
+        self._predictor.set_predictor(**kwargs)
 
 
 class _ModelBasedConfig(_BaseModel):

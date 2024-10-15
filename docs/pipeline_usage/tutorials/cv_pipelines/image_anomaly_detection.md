@@ -24,7 +24,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，您可
 ### 2.1 命令行方式体验
 一行命令即可快速体验图像异常检测产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png)，并将 `--input` 替换为本地路径，进行预测
 
-```
+```bash
 paddlex --pipeline anomaly_detection --input uad_grid.png --device gpu:0
 ```
 参数说明：
@@ -52,8 +52,8 @@ paddlex --get_pipeline_config anomaly_detection --save_path ./my_path
 
 获取产线配置文件后，可将 --pipeline 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 `./anomaly_detection.yaml`，只需执行：
 
-```
-paddlex --pipeline ./anomaly_detection.yaml --input uad_grid.png
+```bash
+paddlex --pipeline ./anomaly_detection.yaml --input uad_grid.png --device gpu:0
 ```
 
 其中，`--model`、`--device` 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。
@@ -63,7 +63,7 @@ paddlex --pipeline ./anomaly_detection.yaml --input uad_grid.png
 运行后，得到的结果为：
 
 ```
-{'img_path': '/root/.paddlex/predict_input/uad_grid.png'}
+{'input_path': 'uad_grid.png'}
 ```
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_anomaly_detection/02.png)
 

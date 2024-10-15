@@ -152,13 +152,13 @@ python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yam
 * `attributes.val_sample_paths`：该数据集验证集样本可视化图片相对路径列表；
 
 
-另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
+另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/ml_classification/01.png)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
-在您完成数据校验之后，可以通过**修改配置文件**或是**追加超参数**的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。。
+在您完成数据校验之后，可以通过**修改配置文件**或是**追加超参数**的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。
 
 <details>
   <summary>👉 <b>格式转换/数据集划分详情（点击展开）</b></summary>
@@ -171,7 +171,7 @@ python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yam
   * `convert`:
     * `enable`: 是否进行数据集格式转换，图像多标签分类支持 `COCO`格式的数据集转换为 `MLClsDataset`格式，默认为 `False`;
     * `src_dataset_type`: 如果进行数据集格式转换，则需设置源数据集格式，默认为 `null`，可选值为 `COCO` ；
-  
+
 例如，您想将`COCO`格式的数据集转换为 `MLClsDataset`格式，则需将配置文件修改为：
 
 ```bash
@@ -183,7 +183,7 @@ tar -xf ./dataset/det_coco_examples.tar -C ./dataset/
 ......
 CheckDataset:
   ......
-  convert: 
+  convert:
     enable: True
     src_dataset_type: COCO
   ......
@@ -193,7 +193,7 @@ CheckDataset:
 ```bash
 python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=check_dataset \
-    -o Global.dataset_dir=./dataset/det_coco_examples 
+    -o Global.dataset_dir=./dataset/det_coco_examples
 ```
 数据转换执行之后，原有标注文件会被在原路径下重命名为 `xxx.bak`。
 
@@ -233,7 +233,7 @@ CheckDataset:
 ```bash
 python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=check_dataset \
-    -o Global.dataset_dir=./dataset/det_coco_examples 
+    -o Global.dataset_dir=./dataset/det_coco_examples
 ```
 数据划分执行之后，原有标注文件会被在原路径下重命名为 `xxx.bak`。
 
@@ -262,7 +262,7 @@ python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yam
 * 指定模型的`.yaml` 配置文件路径（此处为`PP-LCNet_x1_0_ML.yaml`）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details>
   <summary>👉 <b>更多说明（点击展开）</b></summary>
@@ -327,7 +327,7 @@ python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yam
 
 1.**产线集成**
 
-图像多标签分类模块可以集成的PaddleX产线有[通用图像多标签分类产线](../../../pipeline_usage/tutorials/cv_pipelines/image_multi_label_lassification.md)，只需要替换模型路径即可完成相关产线的图像多标签分类模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
+图像多标签分类模块可以集成的PaddleX产线有[通用图像多标签分类产线](../../../pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md)，只需要替换模型路径即可完成相关产线的图像多标签分类模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
 
 2.**模块集成**
 

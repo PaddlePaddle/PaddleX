@@ -92,7 +92,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 ### 2.1 命令行方式体验
 一行命令即可快速体验表格识别产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg)，并将 `--input` 替换为本地路径，进行预测
 
-```
+```bash
 paddlex --pipeline table_recognition --input table_recognition.jpg --device gpu:0
 ```
 参数说明：
@@ -119,8 +119,8 @@ paddlex --get_pipeline_config table_recognition --save_path ./my_path
 
 获取产线配置文件后，可将 `--pipeline` 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 `./table_recognition.yaml`，只需执行：
 
-```
-paddlex --pipeline ./table_recognition.yaml --input table_recognition.jpg
+```bash
+paddlex --pipeline ./table_recognition.yaml --input table_recognition.jpg --device gpu:0
 ```
 其中，`--model`、`--device` 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。
 
@@ -132,7 +132,7 @@ paddlex --pipeline ./table_recognition.yaml --input table_recognition.jpg
    <summary> 👉点击展开</summary>
 
 ```
-{'input_path': '/root/.paddlex/predict_input/table_recognition.jpg', 'layout_result': {'input_path': '/root/.paddlex/predict_input/table_recognition.jpg', 'boxes': [{'cls_id': 3, 'label': 'Table', 'score': 0.6014542579650879, 'coordinate': [0, 21, 551, 118]}]}, 'ocr_result': {'dt_polys': [array([[37., 40.],
+{'input_path': 'table_recognition.jpg', 'layout_result': {'input_path': 'table_recognition.jpg', 'boxes': [{'cls_id': 3, 'label': 'Table', 'score': 0.6014542579650879, 'coordinate': [0, 21, 551, 118]}]}, 'ocr_result': {'dt_polys': [array([[37., 40.],
        [75., 40.],
        [75., 60.],
        [37., 60.]], dtype=float32), array([[123.,  37.],
@@ -165,7 +165,7 @@ paddlex --pipeline ./table_recognition.yaml --input table_recognition.jpg
        [278., 118.]], dtype=float32), array([[446., 102.],
        [504., 104.],
        [503., 118.],
-       [445., 118.]], dtype=float32)], 'rec_text': ['Dres', '连续工作3', '取出来放在网上，没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_score': [0.9934158325195312, 0.9990204572677612, 0.9967061877250671, 0.9375461935997009, 0.9947397112846375, 0.9972746968269348, 0.9904290437698364, 0.973427414894104, 0.9983080625534058, 0.993423342704773, 0.9964120984077454], 'input_path': '/root/.paddlex/predict_input/table_recognition.jpg'}, 'table_result': [{'input_path': '/root/.paddlex/predict_input/table_recognition.jpg', 'layout_bbox': [0, 21, 551, 118], 'bbox': array([[  4.395736 ,  25.238262 , 113.31014  ,  25.316246 , 115.454315 ,
+       [445., 118.]], dtype=float32)], 'rec_text': ['Dres', '连续工作3', '取出来放在网上，没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_score': [0.9934158325195312, 0.9990204572677612, 0.9967061877250671, 0.9375461935997009, 0.9947397112846375, 0.9972746968269348, 0.9904290437698364, 0.973427414894104, 0.9983080625534058, 0.993423342704773, 0.9964120984077454], 'input_path': 'table_recognition.jpg'}, 'table_result': [{'input_path': 'table_recognition.jpg', 'layout_bbox': [0, 21, 551, 118], 'bbox': array([[  4.395736 ,  25.238262 , 113.31014  ,  25.316246 , 115.454315 ,
          71.8867   ,   3.7177477,  71.7937   ],
        [110.727455 ,  25.94007  , 210.07187  ,  26.028755 , 209.66394  ,
          65.96484  , 109.59861  ,  66.09809  ],
@@ -826,12 +826,12 @@ PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多�
 
 例如，您使用英伟达 GPU 进行表格识别产线的推理，使用的 Python 命令为：
 
-```
+```bash
 paddlex --pipeline table_recognition --input table_recognition.jpg --device gpu:0
 ```
 此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的 `--device` 修改为npu 即可：
 
-```
+```bash
 paddlex --pipeline table_recognition --input table_recognition.jpg --device npu:0
 ```
 若您想在更多种类的硬件上使用通用表格识别产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

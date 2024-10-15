@@ -58,7 +58,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 #### 2.2.1 命令行方式体验
 一行命令即可快速体验语义分割产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png)，并将 `--input` 替换为本地路径，进行预测
 
-```
+```bash
 paddlex --pipeline semantic_segmentation --input makassaridn-road_demo.png --device gpu:0
 ```
 参数说明：
@@ -85,8 +85,8 @@ paddlex --get_pipeline_config semantic_segmentation --save_path ./my_path
 
 获取产线配置文件后，可将 `--pipeline` 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 `./semantic_segmentation.yaml`，只需执行：
 
-```
-paddlex --pipeline ./semantic_segmentation.yaml --input semantic_segmentation/makassaridn-road_demo.png
+```bash
+paddlex --pipeline ./semantic_segmentation.yaml --input makassaridn-road_demo.png --device gpu:0
 ```
 其中，`--model`、`--device` 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。
 
@@ -95,7 +95,7 @@ paddlex --pipeline ./semantic_segmentation.yaml --input semantic_segmentation/ma
 运行后，得到的结果为：
 
 ```
-{'img_path': '/root/.paddlex/predict_input/general_object_detection_002.png'}
+{'input_path': 'general_object_detection_002.png'}
 ```
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/semantic_segmentation/03.png)
 可视化图片默认不进行保存，您可以通过 `--save_path` 自定义保存路径，随后所有结果将被保存在指定路径下。
@@ -108,7 +108,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="semantic_segmentation")
 
-output = pipeline.predict("semantic_segmentation/makassaridn-road_demo.png")
+output = pipeline.predict("makassaridn-road_demo.png")
 for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_img("./output/") ## 保存结果可视化图像
@@ -154,7 +154,7 @@ for res in output:
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/semantic_segmentation.yaml")
-output = pipeline.predict("semantic_segmentation/makassaridn-road_demo.png")
+output = pipeline.predict("makassaridn-road_demo.png")
 for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_img("./output/") ## 保存结果可视化图像
@@ -643,12 +643,12 @@ PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多�
 
 例如，您使用英伟达 GPU 进行语义分割产线的推理，使用的 Python 命令为：
 
-```
+```bash
 paddlex --pipeline semantic_segmentation --input semantic_segmentation/makassaridn-road_demo.png --device gpu:0
 ```
 此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的 `--device` 修改为 npu:0 即可：
 
-```
+```bash
 paddlex --pipeline semantic_segmentation --input semantic_segmentation/makassaridn-road_demo.png --device npu:0
 ```
 若您想在更多种类的硬件上使用通用语义分割产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

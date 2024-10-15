@@ -32,7 +32,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>-</td>
     <td>-</td>
     <td>246.2 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>CenterNet-DLA-34</td>
@@ -48,7 +48,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>-</td>
     <td>-</td>
     <td>319.7 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>DETR-R50</td>
@@ -72,7 +72,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>-</td>
     <td>-</td>
     <td>148.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNet50-vd-FPN</td>
@@ -80,7 +80,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>-</td>
     <td>-</td>
     <td>148.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNet50-vd-SSLDv2-FPN</td>
@@ -88,7 +88,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>-</td>
     <td>-</td>
     <td>148.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNet50</td>
@@ -96,7 +96,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>-</td>
     <td>-</td>
     <td>120.2 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNet101-FPN</td>
@@ -104,7 +104,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>-</td>
     <td>-</td>
     <td>216.3 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNet101</td>
@@ -112,7 +112,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>-</td>
     <td>-</td>
     <td>188.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNeXt101-vd-FPN</td>
@@ -120,7 +120,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>-</td>
     <td>-</td>
     <td>360.6 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-Swin-Tiny-FPN</td>
@@ -128,7 +128,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>-</td>
     <td>-</td>
     <td>159.8 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FCOS-ResNet50</td>
@@ -152,7 +152,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>16.2311</td>
     <td>71.7257</td>
     <td>16.8 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>PicoDet-S</td>
@@ -160,7 +160,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>14.097</td>
     <td>37.6563</td>
     <td>4.4 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>PicoDet-XS</td>
@@ -168,7 +168,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>13.8102</td>
     <td>48.3139</td>
     <td>5.7 M</td>
-    <td></td>
+
   </tr>
     <tr>
     <td>PP-YOLOE_plus-L</td>
@@ -184,7 +184,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>19.843</td>
     <td>449.261</td>
     <td>82.3 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>PP-YOLOE_plus-S</td>
@@ -192,7 +192,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>16.8884</td>
     <td>223.059</td>
     <td>28.3 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>PP-YOLOE_plus-X</td>
@@ -200,7 +200,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>57.8995</td>
     <td>1439.93</td>
     <td>349.4 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>RT-DETR-H</td>
@@ -216,7 +216,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>34.5252</td>
     <td>1454.27</td>
     <td>113.7 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>RT-DETR-R18</td>
@@ -224,7 +224,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>19.89</td>
     <td>784.824</td>
     <td>70.7 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>RT-DETR-R50</td>
@@ -232,7 +232,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>41.9327</td>
     <td>1625.95</td>
     <td>149.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>RT-DETR-X</td>
@@ -240,7 +240,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>61.8042</td>
     <td>2246.64</td>
     <td>232.9 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOv3-DarkNet53</td>
@@ -256,7 +256,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>18.6692</td>
     <td>267.214</td>
     <td>83.8 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOv3-ResNet50_vd_DCN</td>
@@ -264,7 +264,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>31.6276</td>
     <td>856.047</td>
     <td>163.0 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOX-L</td>
@@ -280,7 +280,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>123.324</td>
     <td>688.071</td>
     <td>90.0 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOX-N</td>
@@ -288,7 +288,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>79.1665</td>
     <td>155.59</td>
     <td>3.4 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOX-S</td>
@@ -296,7 +296,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>184.828</td>
     <td>474.446</td>
     <td>32.0 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOX-T</td>
@@ -304,7 +304,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>102.748</td>
     <td>212.52</td>
     <td>18.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOX-X</td>
@@ -312,7 +312,7 @@ The object detection module is a crucial component in computer vision systems, r
     <td>227.361</td>
     <td>2067.84</td>
     <td>351.5 M</td>
-    <td></td>
+
   </tr>
 </table>
 
@@ -460,14 +460,14 @@ CheckDataset:
 Then execute the command:
 
 ```bash
-python main.py -c paddlex/configs/object_detection/PicoDet-L.yaml \
+python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_labelme_examples
 ```
 Of course, the above parameters also support being set by appending command line arguments. Taking a `LabelMe` format dataset as an example:
 
 ```bash
-python main.py -c paddlex/configs/object_detection/PicoDet-L.yaml \
+python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_labelme_examples \
     -o CheckDataset.convert.enable=True \
@@ -498,16 +498,16 @@ CheckDataset:
 Then execute the command:
 
 ```bash
-python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
     -o Global.mode=check_dataset \
-    -o Global.dataset_dir=./dataset/det_coco_examples 
+    -o Global.dataset_dir=./dataset/det_coco_examples
 ```
 After dataset splitting is executed, the original annotation files will be renamed to `xxx.bak` in the original path.
 
 The above parameters also support being set by appending command line arguments:
 
 ```bash
-python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_coco_examples \
     -o CheckDataset.split.enable=True \
@@ -529,7 +529,7 @@ The following steps are required:
 
 * Specify the `.yaml` configuration file path for the model (here it is `PicoDet-S.yaml`)
 * Set the mode to model training: `-o Global.mode=train`
-* Specify the path to the training dataset: `-o Global.dataset_dir`. 
+* Specify the path to the training dataset: `-o Global.dataset_dir`.
 Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file instructions for the corresponding task module of the model [PaddleX Common Configuration File Parameters](../../instructions/config_parameters_common_en.md).
 
 <details>
@@ -598,5 +598,3 @@ The object detection module can be integrated into the [General Object Detection
 2.**Module Integration**
 
 The weights you produce can be directly integrated into the object detection module. Refer to the Python example code in [Quick Integration](#iii-quick-integration), and simply replace the model with the path to your trained model.
-
-

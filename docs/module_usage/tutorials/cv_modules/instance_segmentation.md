@@ -77,7 +77,7 @@
         <td>-</td>
         <td>-</td>
         <td>157.5 M</td>
-        <td rowspan="7">Mask R-CNN是由华盛顿首例即现投影卡的一个全任务深度学习模型，能够在一个模型中完成图片实例的分类和定位，并结合图像级的遮罩（Mask）来完成分割任务。</td>
+        <td rowspan="6">Mask R-CNN是由华盛顿首例即现投影卡的一个全任务深度学习模型，能够在一个模型中完成图片实例的分类和定位，并结合图像级的遮罩（Mask）来完成分割任务。</td>
     </tr>
     <tr>
         <td>MaskRCNN-ResNet50-vd-FPN</td>
@@ -85,13 +85,6 @@
         <td>-</td>
         <td>-</td>
         <td>157.5 M</td>
-    </tr>
-    <tr>
-        <td>MaskRCNN-ResNet50-vd-SSLDv2-FPN</td>
-        <td>38.2</td>
-        <td>-</td>
-        <td>-</td>
-        <td>127.2 M</td>
     </tr>
     <tr>
         <td>MaskRCNN-ResNet50</td>
@@ -130,6 +123,14 @@
         <td>31.5 M</td>
         <td>PP-YOLOE_seg 是一种基于PP-YOLOE的实例分割模型。该模型沿用了PP-YOLOE的backbone和head，通过设计PP-YOLOE实例分割头，大幅提升了实例分割的性能和推理速度。</td>
     </tr>
+    <tr>
+        <td>SOLOv2</td>
+        <td>35.5</td>
+        <td>-</td>
+        <td>-</td>
+        <td>179.1 M</td>
+        <td> SOLOv2 是一种按位置分割物体的实时实例分割算法。该模型是SOLO的改进版本，通过引入掩码学习和掩码NMS，实现了精度和速度上取得良好平衡。</td>
+    </tr>
 </table>
 
 
@@ -155,7 +156,7 @@ for res in output:
 关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 
 ## 四、二次开发
-如果你追求更高精度的现有模型，可以使用 PaddleX 的二次开发能力，开发更好的实例分割模型。在使用 PaddleX 开发实例分割模型之前，请务必安装 PaddleX 的 分割 相关模型训练插件，安装过程可以参考[PaddleX本地安装教程](https://ku.baidu-int.com/knowledge/HFVrC7hq1Q/yKeL8Lljko/y0mmii50BW/dF1VvOPZmZXXzn?t=mention&mt=doc&dt=doc)中的二次开发部分。
+如果你追求更高精度的现有模型，可以使用 PaddleX 的二次开发能力，开发更好的实例分割模型。在使用 PaddleX 开发实例分割模型之前，请务必安装 PaddleX 的 分割 相关模型训练插件，安装过程可以参考[PaddleX本地安装教程](../../../installation/installation.md)中的二次开发部分。
 
 ### 4.1 数据准备
 在进行模型训练前，需要准备相应任务模块的数据集。PaddleX 针对每一个模块提供了数据校验功能，**只有通过数据校验的数据才可以进行模型训练**。此外，PaddleX 为每一个模块都提供了 Demo 数据集，您可以基于官方提供的 Demo 数据完成后续的开发。若您希望用私有数据集进行后续的模型训练，可以参考[PaddleX实例分割任务模块数据标注教程](../../../data_annotations/cv_modules/instance_segmentation.md)。
@@ -215,7 +216,7 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
 * `attributes.val_samples`：该数据集验证集样本数量为 19；
 * `attributes.train_sample_paths`：该数据集训练集样本可视化图片相对路径列表；
 * `attributes.val_sample_paths`：该数据集验证集样本可视化图片相对路径列表；
-另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
+另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/instanceseg/01.png)
 </details>
@@ -246,7 +247,7 @@ tar -xf ./dataset/instance_seg_labelme_examples.tar -C ./dataset/
 ......
 CheckDataset:
   ......
-  convert: 
+  convert:
     enable: True
     src_dataset_type: LabelMe
   ......
@@ -256,7 +257,7 @@ CheckDataset:
 ```bash
 python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml\
     -o Global.mode=check_dataset \
-    -o Global.dataset_dir=./dataset/instance_seg_labelme_examples 
+    -o Global.dataset_dir=./dataset/instance_seg_labelme_examples
 ```
 数据转换执行之后，原有标注文件会被在原路径下重命名为 `xxx.bak`。
 
@@ -296,7 +297,7 @@ CheckDataset:
 ```bash
 python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
     -o Global.mode=check_dataset \
-    -o Global.dataset_dir=./dataset/instance_seg_labelme_examples 
+    -o Global.dataset_dir=./dataset/instance_seg_labelme_examples
 ```
 数据划分执行之后，原有标注文件会被在原路径下重命名为 `xxx.bak`。
 
@@ -322,10 +323,10 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
 ```
 需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`Mask-RT-DETR-L.yaml`）
+* 指定模型的`.yaml` 配置文件路径（此处为 `Mask-RT-DETR-L.yaml`）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details>
   <summary>👉 <b>更多说明（点击展开）</b></summary>
@@ -353,7 +354,7 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
 ```
 与模型训练类似，需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`Mask-RT-DETR-L`）
+* 指定模型的`.yaml` 配置文件路径（此处为 `Mask-RT-DETR-L.yaml`）
 * 指定模式为模型评估：`-o Global.mode=evaluate`
 * 指定验证数据集路径：`-o Global.dataset_dir`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Evaluate`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
@@ -382,7 +383,7 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
 ```
 与模型训练和评估类似，需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`Mask-RT-DETR-L.yaml`）
+* 指定模型的`.yaml` 配置文件路径（此处为 `Mask-RT-DETR-L.yaml`）
 * 指定模式为模型推理预测：`-o Global.mode=predict`
 * 指定模型权重路径：`-o Predict.model_dir="./output/best_model/inference"`
 * 指定输入数据路径：`-o Predict.input="..."`
