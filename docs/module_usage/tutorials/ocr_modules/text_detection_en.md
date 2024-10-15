@@ -189,7 +189,7 @@ Similar to model training and evaluation, the following steps are required:
 * Specify the `.yaml` configuration file path of the model (here it's `PP-OCRv4_mobile_det.yaml`)
 * Set the mode to model inference prediction: `-o Global.mode=predict`
 * Specify the model weights path: `-o Predict.model_dir="./output/best_accuracy/inference"`
-* Specify the input data path: `-o Predict.inputh="..."`
+* Specify the input data path: `-o Predict.input="..."`
 Other related parameters can be set by modifying the fields under `Global` and `Predict` in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../../module_usage/instructions/config_parameters_common_en.md).
 
 * Alternatively, you can use the PaddleX wheel package for inference, easily integrating the model into your own projects.
@@ -199,7 +199,7 @@ Models can be directly integrated into PaddleX pipelines or into your own projec
 
 1.**Pipeline Integration**
 
-The text detection module can be integrated into PaddleX pipelines such as the [General OCR Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/OCR_en.md), [Table Recognition Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md), and [Document Scene Information Extraction Pipeline v3 (PP-ChatOCRv3)](../../../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md). Simply replace the model path to update the text detection module of the relevant pipeline.
+The text detection module can be integrated into PaddleX pipelines such as the [General OCR Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/OCR_en.md), [Table Recognition Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md), and [PP-ChatOCRv3-doc](../../../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md). Simply replace the model path to update the text detection module of the relevant pipeline.
 
 2.**Module Integration**
 
