@@ -418,7 +418,7 @@ chat_result.print()
         |`llmName`|`string`|大语言模型名称。|否|
         |`llmParams`|`object`|大语言模型API参数。|否|
 
-        当前，`llmParams`可以采用如下形式：
+        当前，`llmParams` 可以采用如下形式：
 
         ```json
         {
@@ -450,7 +450,7 @@ chat_result.print()
         |`llmName`|`string`|大语言模型名称。|否|
         |`llmParams`|`object`|大语言模型API参数。|否|
 
-        当前，`llmParams`可以采用如下形式：
+        当前，`llmParams` 可以采用如下形式：
 
         ```json
         {
@@ -488,7 +488,7 @@ chat_result.print()
         |`llmName`|`string`|大语言模型名称。|否|
         |`llmParams`|`object`|大语言模型API参数。|否|
 
-        当前，`llmParams`可以采用如下形式：
+        当前，`llmParams` 可以采用如下形式：
 
         ```json
         {
