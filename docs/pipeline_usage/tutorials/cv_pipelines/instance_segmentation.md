@@ -23,12 +23,12 @@
 |Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN|39.1|-|-|254.7|
 |MaskRCNN-ResNet50-FPN|35.6|-|-|157.5 M|
 |MaskRCNN-ResNet50-vd-FPN|36.4|-|-|157.5 M|
-|MaskRCNN-ResNet50-vd-SSLDv2-FPN|38.2|-|-|157.2 M|
 |MaskRCNN-ResNet50|32.8|-|-|127.8 M|
 |MaskRCNN-ResNet101-FPN|36.6|-|-|225.4 M|
 |MaskRCNN-ResNet101-vd-FPN|38.1|-|-|225.1 M|
 |MaskRCNN-ResNeXt101-vd-FPN|39.5|-|-|370.0 M|
 |PP-YOLOE_seg-S|32.5|-|-|31.5 M|
+|SOLOv2| 35.5|-|-|179.1 M|
 
 **注：以上精度指标为 **[COCO2017](https://cocodataset.org/#home)** 验证集 Mask AP(0.5:0.95)。以上所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
 

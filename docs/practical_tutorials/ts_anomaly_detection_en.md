@@ -39,7 +39,7 @@ PaddleX provides five end-to-end time series anomaly detection models. For detai
 
 To demonstrate the entire process of time series anomaly detection, we will use the publicly available MSL (Mars Science Laboratory) dataset for model training and validation. The PSM (Planetary Science Mission) dataset, sourced from NASA, comprises 55 dimensions and includes telemetry anomaly data reported by the spacecraft's monitoring system for unexpected event anomalies (ISA). With its practical application background, it better reflects real-world anomaly scenarios and is commonly used to test and validate the performance of time series anomaly detection models. This tutorial will perform anomaly detection based on this dataset.
 
-We have converted the dataset into a standard data format, and you can obtain a sample dataset using the following command. For an introduction to the data format, please refer to the [Time Series Anomaly Detection Module Development Tutorial](../module_usage/tutorials/time_series_modules/time_series_anomaly_detection_en.md).
+We have converted the dataset into a standard data format, and you can obtain a sample dataset using the following command. For an introduction to the data format, please refer to the [Time Series Anomaly Detection Module Development Tutorial](../module_usage/tutorials/ts_modules/time_series_anomaly_detection_en.md).
 
 
 You can use the following commands to download the demo dataset to a specified folder:
@@ -54,7 +54,7 @@ tar -xf ./dataset/msl.tar -C ./dataset/
  * Time series anomaly detection is an unsupervised learning task, thus labeled training data is not required. The collected training samples should ideally consist solely of normal data, i.e., devoid of anomalies, with the label column in the training set set to 0 or, alternatively, the label column can be omitted entirely. For the validation set, to assess accuracy, labeling is necessary. Points that are anomalous at a particular timestamp should have their labels set to 1, while normal points should have labels of 0.
  * Handling Missing Values: To ensure data quality and integrity, missing values can be imputed based on expert knowledge or statistical methods.
  * Non-Repetitiveness: Ensure that data is collected in chronological order by row, with no duplication of timestamps.
-  
+
 ### 4.2 Data Validation
 Data Validation can be completed with just one command:
 
@@ -102,7 +102,7 @@ The above verification results have omitted some data parts. `check_pass` being 
 **Note**: Only data that passes the verification can be used for training and evaluation.
 
 ### 4.3 Dataset Format Conversion/Dataset Splitting (Optional)
-If you need to convert the dataset format or re-split the dataset, refer to Section 4.1.3 in the [Time Series Anomaly Detection Module Development Tutorial](../module_usage/tutorials/time_series_modules/time_series_anomaly_detection_en.md).
+If you need to convert the dataset format or re-split the dataset, refer to Section 4.1.3 in the [Time Series Anomaly Detection Module Development Tutorial](../module_usage/tutorials/ts_modules/time_series_anomaly_detection_en.md).
 
 ## 5. Model Training and Evaluation
 ### 5.1 Model Training
@@ -119,7 +119,7 @@ python main.py -c paddlex/configs/ts_anomaly_detection/PatchTST_ad.yaml \
 -o Train.feature_cols=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54 \
 -o Train.freq=1 \
 -o Train.label_col=label \
--o Train.seq_len=96 
+-o Train.seq_len=96
 ```
 PaddleX supports modifying training hyperparameters and single-machine single-GPU training (time series models only support single-GPU training). Simply modify the configuration file or append command-line parameters.
 
@@ -133,7 +133,7 @@ Each model in PaddleX provides a configuration file for model development to set
   * `learning_rate`: Training learning rate.
   * `batch_size`: Training batch size for a single GPU.
   * `time_col`: Time column, set the column name of the time series dataset's time column based on your data.
-  * `feature_cols`: Feature variables indicating variables related to whether the device is abnormal. 
+  * `feature_cols`: Feature variables indicating variables related to whether the device is abnormal.
   * `freq`: Frequency of the time series dataset.
   * `input_len`: The length of the time series input to the model. The time series will be sliced according to this length, and the model will predict whether there is an anomaly in this segment of the time series for that length. The recommended input length should be considered in the context of the actual scenario. In this tutorial, the input length is 96, which means we hope to predict whether there are anomalies at 96 time points.
   * `label`: Represents the number indicating whether a time point in the time series is abnormal. Anomalous points are labeled as 1, and normal points are labeled as 0. In this tutorial, the anomaly monitoring dataset uses label for this purpose.
@@ -228,8 +228,8 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="ts_anomaly_detection")
 output = pipeline.predict("pre_ts.csv")
 for res in output:
-    res.print() 
-    res.save_to_csv("./output/") 
+    res.print()
+    res.save_to_csv("./output/")
 ```
 For more parameters, please refer to the [Time Series Anomaly Detection Pipeline Usage Tutorial](../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md)
 

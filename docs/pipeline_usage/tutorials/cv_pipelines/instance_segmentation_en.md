@@ -24,12 +24,12 @@ Instance segmentation is a computer vision task that not only identifies the obj
 |Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN|39.1|-|-|254.7|
 |MaskRCNN-ResNet50-FPN|35.6|-|-|157.5 M|
 |MaskRCNN-ResNet50-vd-FPN|36.4|-|-|157.5 M|
-|MaskRCNN-ResNet50-vd-SSLDv2-FPN|38.2|-|-|157.2 M|
 |MaskRCNN-ResNet50|32.8|-|-|127.8 M|
 |MaskRCNN-ResNet101-FPN|36.6|-|-|225.4 M|
 |MaskRCNN-ResNet101-vd-FPN|38.1|-|-|225.1 M|
 |MaskRCNN-ResNeXt101-vd-FPN|39.5|-|-|370.0 M|
 |PP-YOLOE_seg-S|32.5|-|-|31.5 M|
+|SOLOv2| 35.5|-|-|179.1 M|
 
 **Note: The above accuracy metrics are Mask AP(0.5:0.95) on the **[COCO2017](https://cocodataset.org/#home)** validation set. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 
