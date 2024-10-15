@@ -69,7 +69,7 @@ paddlex --get_pipeline_config ts_fc --save_path ./my_path
 After obtaining the pipeline configuration file, you can replace `--pipeline` with the configuration file save path to make the configuration file take effect. For example, if the configuration file save path is `./ts_fc.yaml`, simply execute:
 
 ```bash
-paddlex --pipeline ./ts_fc.yaml --input ts_fc.csv
+paddlex --pipeline ./ts_fc.yaml --input ts_fc.csv --device gpu:0
 ```
 
 Here, parameters such as `--model` and `--device` do not need to be specified, as they will use the parameters in the configuration file. If parameters are still specified, the specified parameters will take precedence.
@@ -79,7 +79,7 @@ Here, parameters such as `--model` and `--device` do not need to be specified, a
 After running, the result is:
 
 ```bash
-{'ts_path': '/root/.paddlex/predict_input/ts_fc.csv', 'forecast':                            OT
+{'input_path': 'ts_fc.csv', 'forecast':                            OT
 date
 2018-06-26 20:00:00  9.586131
 2018-06-26 21:00:00  9.379762

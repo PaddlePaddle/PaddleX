@@ -44,7 +44,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 #### 2.2.1 命令行方式体验
 一行命令即可快速体验时序预测产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv)，并将 `--input` 替换为本地路径，进行预测
 
-```
+```bash
 paddlex --pipeline ts_fc --input ts_fc.csv --device gpu:0
 ```
 参数说明：
@@ -71,8 +71,8 @@ paddlex --get_pipeline_config ts_fc --save_path ./my_path
 
 获取产线配置文件后，可将 `--pipeline` 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 `./ts_fc.yaml`，只需执行：
 
-```
-paddlex --pipeline ./ts_fc.yaml --input ts_fc.csv
+```bash
+paddlex --pipeline ./ts_fc.yaml --input ts_fc.csv --device gpu:0
 ```
 其中，`--model`、`--device` 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。
 
@@ -81,7 +81,7 @@ paddlex --pipeline ./ts_fc.yaml --input ts_fc.csv
 运行后，得到的结果为：
 
 ```
-{'ts_path': '/root/.paddlex/predict_input/ts_fc.csv', 'forecast':                            OT
+{'input_path': 'ts_fc.csv', 'forecast':                            OT
 date
 2018-06-26 20:00:00  9.586131
 2018-06-26 21:00:00  9.379762

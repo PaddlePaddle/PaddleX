@@ -73,8 +73,8 @@ paddlex --get_pipeline_config ts_ad --save_path ./my_path
 
 获取产线配置文件后，可将` --pipeline` 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 `./ts_ad.yaml`，只需执行：
 
-```
-paddlex --pipeline ./ts_ad.yaml --input ts_ad.cs
+```bash
+paddlex --pipeline ./ts_ad.yaml --input ts_ad.cs --device gpu:0
 ```
 其中，`--model`、`--device` 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。
 
@@ -83,7 +83,7 @@ paddlex --pipeline ./ts_ad.yaml --input ts_ad.cs
 运行后，得到的结果为：
 
 ```
-{'ts_path': '/root/.paddlex/predict_input/ts_ad.csv', 'anomaly':            label
+{'input_path': 'ts_ad.csv', 'anomaly':            label
 timestamp
 220226         0
 220227         0

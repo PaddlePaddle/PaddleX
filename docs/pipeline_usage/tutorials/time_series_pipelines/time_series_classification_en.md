@@ -68,7 +68,7 @@ paddlex --get_pipeline_config ts_cls --save_path ./my_path
 After obtaining the pipeline configuration file, you can replace `--pipeline` with the configuration file save path to make the configuration file take effect. For example, if the configuration file save path is `./ts_ad.yaml`, simply execute:
 
 ```bash
-paddlex --pipeline ./ts_cls.yaml --input ts_cls.csv
+paddlex --pipeline ./ts_cls.yaml --input ts_cls.csv --device gpu:0
 ```
 
 In this command, parameters such as `--model` and `--device` are not required to be specified, as they will use the parameters defined in the configuration file. If these parameters are specified, the specified values will take precedence.
@@ -78,7 +78,7 @@ In this command, parameters such as `--model` and `--device` are not required to
 After execution, the result is:
 
 ```bash
-{'ts_path': '/root/.paddlex/predict_input/ts_cls.csv', 'classification':         classid     score
+{'input_path': 'ts_cls.csv', 'classification':         classid     score
 sample
 0             0  0.617688}
 ```

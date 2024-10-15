@@ -116,7 +116,7 @@ paddlex --get_pipeline_config table_recognition --save_path ./my_path
 After obtaining the pipeline configuration file, replace `--pipeline` with the configuration file save path to make the configuration file take effect. For example, if the configuration file save path is `./table_recognition.yaml`, simply execute:
 
 ```bash
-paddlex --pipeline ./table_recognition.yaml --input table_recognition.jpg
+paddlex --pipeline ./table_recognition.yaml --input table_recognition.jpg --device gpu:0
 ```
 
 Here, parameters like `--model` and `--device` do not need to be specified, as they will use the parameters in the configuration file. If they are still specified, the specified parameters will take precedence.

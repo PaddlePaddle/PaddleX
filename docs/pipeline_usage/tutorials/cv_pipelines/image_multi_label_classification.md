@@ -63,7 +63,7 @@ paddlex --get_pipeline_config multi_label_image_classification --save_path ./my_
 获取产线配置文件后，可将 --pipeline 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 `./multi_label_image_classification.yaml`，只需执行：
 
 ```
-paddlex --pipeline ./multi_label_image_classification.yaml --input general_image_classification_001.jpg
+paddlex --pipeline ./multi_label_image_classification.yaml --input general_image_classification_001.jpg --device gpu:0
 ```
 其中，`--model`、`--device` 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。
 
@@ -73,7 +73,7 @@ paddlex --pipeline ./multi_label_image_classification.yaml --input general_image
 运行后，得到的结果为：
 
 ```
-{'img_path': '/root/.paddlex/predict_input/general_image_classification_001.jpg', 'class_ids': [21, 0, 30, 24], 'scores': [0.99257, 0.70596, 0.63001, 0.57852], 'label_names': ['bear', 'person', 'skis', 'backpack']}
+{'input_path': 'general_image_classification_001.jpg', 'class_ids': [21, 0, 30, 24], 'scores': [0.99257, 0.70596, 0.63001, 0.57852], 'label_names': ['bear', 'person', 'skis', 'backpack']}
 ```
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_multi_label_classification/02.png)
 

@@ -53,7 +53,7 @@ paddlex --get_pipeline_config anomaly_detection --save_path ./my_path
 获取产线配置文件后，可将 --pipeline 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 `./anomaly_detection.yaml`，只需执行：
 
 ```
-paddlex --pipeline ./anomaly_detection.yaml --input uad_grid.png
+paddlex --pipeline ./anomaly_detection.yaml --input uad_grid.png --device gpu:0
 ```
 
 其中，`--model`、`--device` 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。
@@ -63,7 +63,7 @@ paddlex --pipeline ./anomaly_detection.yaml --input uad_grid.png
 运行后，得到的结果为：
 
 ```
-{'img_path': '/root/.paddlex/predict_input/uad_grid.png'}
+{'input_path': 'uad_grid.png'}
 ```
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_anomaly_detection/02.png)
 

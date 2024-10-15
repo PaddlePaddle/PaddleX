@@ -654,7 +654,7 @@ paddlex --get_pipeline_config image_classification --save_path ./my_path
 After obtaining the pipeline configuration file, replace `--pipeline` with the configuration file's save path to make the configuration file take effect. For example, if the configuration file's save path is `./image_classification.yaml`, simply execute:
 
 ```bash
-paddlex --pipeline ./image_classification.yaml --input general_image_classification_001.jpg
+paddlex --pipeline ./image_classification.yaml --input general_image_classification_001.jpg --device gpu:0
 ```
 Here, parameters such as `--model` and `--device` do not need to be specified, as they will use the parameters in the configuration file. If you still specify parameters, the specified parameters will take precedence.
 
@@ -663,7 +663,7 @@ Here, parameters such as `--model` and `--device` do not need to be specified, a
 After running, the result will be:
 
 ```
-{'img_path': '/root/.paddlex/predict_input/general_image_classification_001.jpg', 'class_ids': [296, 170, 356, 258, 248], 'scores': [0.62736, 0.03752, 0.03256, 0.0323, 0.03194], 'label_names': ['ice bear, polar bear, Ursus Maritimus, Thalarctos maritimus', 'Irish wolfhound', 'weasel', 'Samoyed, Samoyede', 'Eskimo dog, husky']}
+{'input_path': 'general_image_classification_001.jpg', 'class_ids': [296, 170, 356, 258, 248], 'scores': [0.62736, 0.03752, 0.03256, 0.0323, 0.03194], 'label_names': ['ice bear, polar bear, Ursus Maritimus, Thalarctos maritimus', 'Irish wolfhound', 'weasel', 'Samoyed, Samoyede', 'Eskimo dog, husky']}
 ```
 ![](/tmp/images/pipelines/image_classification/03.png)
 

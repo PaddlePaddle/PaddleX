@@ -655,7 +655,7 @@ paddlex --get_pipeline_config image_classification --save_path ./my_path
 获取产线配置文件后，可将 `--pipeline` 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 `./image_classification.yaml`，只需执行：
 
 ```
-paddlex --pipeline ./image_classification.yaml --input general_image_classification_001.jpg
+paddlex --pipeline ./image_classification.yaml --input general_image_classification_001.jpg --device gpu:0
 ```
 其中，`--model`、`--device` 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。
 
@@ -664,7 +664,7 @@ paddlex --pipeline ./image_classification.yaml --input general_image_classificat
 运行后，得到的结果为：
 
 ```
-{'img_path': './my_path/general_image_classification_001.jpg', 'class_ids': [296, 170, 356, 258, 248], 'scores': [0.62736, 0.03752, 0.03256, 0.0323, 0.03194], 'label_names': ['ice bear, polar bear, Ursus Maritimus, Thalarctos maritimus', 'Irish wolfhound', 'weasel', 'Samoyed, Samoyede', 'Eskimo dog, husky']}
+{'input_path': 'general_image_classification_001.jpg', 'class_ids': [296, 170, 356, 258, 248], 'scores': [0.62736, 0.03752, 0.03256, 0.0323, 0.03194], 'label_names': ['ice bear, polar bear, Ursus Maritimus, Thalarctos maritimus', 'Irish wolfhound', 'weasel', 'Samoyed, Samoyede', 'Eskimo dog, husky']}
 ```
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_classification/03.png)
 

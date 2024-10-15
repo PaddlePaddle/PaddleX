@@ -60,7 +60,7 @@ paddlex --get_pipeline_config multi_label_image_classification --save_path ./my_
 After obtaining the pipeline configuration file, replace `--pipeline` with the saved path of the configuration file to make it effective. For example, if the configuration file is saved at `./multi_label_image_classification.yaml`, simply execute:
 
 ```bash
-paddlex --pipeline ./multi_label_image_classification.yaml --input https://paddle-model-ecology.bj
+paddlex --pipeline ./multi_label_image_classification.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg --device gpu:0
 ```
 
 Where `--model`, `--device`, and other parameters are not specified, the parameters in the configuration file will be used. If parameters are specified, the specified parameters will take precedence.
@@ -70,7 +70,7 @@ Where `--model`, `--device`, and other parameters are not specified, the paramet
 After running, the result obtained is:
 
 ```
-{'img_path': '/root/.paddlex/predict_input/general_image_classification_001.jpg', 'class_ids': [21, 0, 30, 24], 'scores': [0.99257, 0.70596, 0.63001, 0.57852], 'label_names': ['bear', 'person', 'skis', 'backpack']}
+{'input_path': 'general_image_classification_001.jpg', 'class_ids': [21, 0, 30, 24], 'scores': [0.99257, 0.70596, 0.63001, 0.57852], 'label_names': ['bear', 'person', 'skis', 'backpack']}
 ```
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_multi_label_classification/02.png)
 
