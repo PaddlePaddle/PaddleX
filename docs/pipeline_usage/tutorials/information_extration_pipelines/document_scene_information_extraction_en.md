@@ -216,7 +216,7 @@ In the above Python script, the following steps are executed:
 
 | Parameter | Type | Default | Description |
 |-|-|-|-|
-| `pipeline` | str | None | Pipeline name or pipeline configuration file path. If it's a pipeline name, it must be supported by PaddleX; |
+| `pipeline` | str | - | Pipeline name or pipeline configuration file path. If it's a pipeline name, it must be supported by PaddleX; |
 | `llm_name` | str | "ernie-3.5" | Large Language Model name; |
 | `llm_params` | dict | `{}` | API configuration; |
 | `device(kwargs)` | str/`None` | `None` | Running device (`None` meaning automatic selection); |
@@ -225,12 +225,12 @@ In the above Python script, the following steps are executed:
 
 | Parameter | Type | Default | Description |
 |-|-|-|-|
-|`input`|Python Var|无|Support to pass Python variables directly, such as `numpy.ndarray` representing image data;|
-|`input`|str|无|Support to pass the path of the file to be predicted, such as the local path of an image file: `/root/data/img.jpg`;|
-|`input`|str|无|Support to pass the URL of the file to be predicted, such as: `https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf`;|
-|`input`|str|无|Support to pass the local directory, which should contain files to be predicted, such as: `/root/data/`;|
-|`input`|dict|无|Support to pass a dictionary, where the key needs to correspond to the specific pipeline, such as: `{"img": "/root/data1"}`；|
-|`input`|list|无|Support to pass a list, where the elements must be of the above types of data, such as: `[numpy.ndarray, numpy.ndarray]`，`["/root/data/img1.jpg", "/root/data/img2.jpg"]`，`["/root/data1", "/root/data2"]`，`[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]`；|
+|`input`|Python Var|-|Support to pass Python variables directly, such as `numpy.ndarray` representing image data;|
+|`input`|str|-|Support to pass the path of the file to be predicted, such as the local path of an image file: `/root/data/img.jpg`;|
+|`input`|str|-|Support to pass the URL of the file to be predicted, such as: `https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf`;|
+|`input`|str|-|Support to pass the local directory, which should contain files to be predicted, such as: `/root/data/`;|
+|`input`|dict|-|Support to pass a dictionary, where the key needs to correspond to the specific pipeline, such as: `{"img": "/root/data1"}`；|
+|`input`|list|-|Support to pass a list, where the elements must be of the above types of data, such as: `[numpy.ndarray, numpy.ndarray]`，`["/root/data/img1.jpg", "/root/data/img2.jpg"]`，`["/root/data1", "/root/data2"]`，`[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]`；|
 |`use_doc_image_ori_cls_model`|bool|`True`|Whether or not to use the orientation classification model;|
 |`use_doc_image_unwarp_model`|bool|`True`|Whether or not to use the unwarp model;|
 |`use_seal_text_det_model`|bool|`True`|Whether or not to use the seal text detection model;|
@@ -340,95 +340,169 @@ Operations provided by the service are as follows:
 
 - **`analyzeImage`**
 
-    Analyzes images using computer vision models to obtain OCR, table recognition results, etc., and extracts key information from the images.
+    Analyze images using computer vision models to obtain OCR, table recognition results, and extract key information from the images.
 
     `POST /chatocr-vision`
 
-    - Request body properties:
+    - Request body attributes:
 
         | Name | Type | Description | Required |
-        |------|------|-------------|----------|
-        | `image` | `string` | The URL of an image file or PDF file accessible by the service, or the Base64 encoded result of the content of the above-mentioned file types. For PDF files with more than 10 pages, only the content of the first 10 pages will be used. | Yes |
-        | `fileType` | `integer` | File type. `0` indicates a PDF file, `1` indicates an image file. If this property is not present in the request body, the service will attempt to automatically infer the file type based on the URL. | No |
-        | `useOricls` | `boolean` | Whether to enable document image orientation classification. This feature is enabled by default. | No |
-        | `useCurve` | `boolean` | Whether to enable seal text detection. This feature is enabled by default. | No |
-        | `useUvdoc` | `boolean` | Whether to enable text image correction. This feature is enabled by default. | No |
-        | `inferenceParams` | `object` | Inference parameters. | No |
+        |-|-|-|-|
+        |`image`|`string`|The URL of an accessible image file or PDF file, or the Base64 encoded content of the above file types. For PDF files with more than 10 pages, only the first 10 pages will be used. | Yes |
+        |`fileType`|`integer`|File type. `0` represents PDF files, `1` represents image files. If this attribute is not present in the request body, the service will attempt to infer the file type automatically based on the URL. | No |
+        |`useOricls`|`boolean`|Whether to enable document image orientation classification. This feature is enabled by default. | No |
+        |`useCurve`|`boolean`|Whether to enable seal text detection. This feature is enabled by default. | No |
+        |`useUvdoc`|`boolean`|Whether to enable text image correction. This feature is enabled by default. | No |
+        |`inferenceParams`|`object`|Inference parameters. | No |
 
-        Properties of `inferenceParams`:
+        Attributes of `inferenceParams`:
 
         | Name | Type | Description | Required |
-        |------|------|-------------|----------|
-        | `maxLongSide` | `integer` | During inference, if the length of the longer side of the input image for the text detection model is greater than `maxLongSide`, the image will be scaled so that the length of the longer side equals `maxLongSide`. | No |
+        |-|-|-|-|
+        |`maxLongSide`|`integer`|During inference, if the length of the longer side of the input image for the text detection model is greater than `maxLongSide`, the image will be scaled so that the length of the longer side equals `maxLongSide`. | No |
 
-    - When the request is processed successfully, the `result` of the response body has the following properties:
-
-        | Name | Type | Description |
-        |------|------|-------------|
-        | `visionResults` | `array` | Analysis results obtained using computer vision models. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file. |
-        | `visionInfo` | `object` | Key information in the image, which can be used as input for other operations. |
-
-        Each element in `visionResults` is an `object` with the following properties:
+    - When the request is processed successfully, the `result` in the response body has the following attributes:
 
         | Name | Type | Description |
-        |------|------|-------------|
-        | `texts` | `array` | Text positions, contents, and scores. |
-        | `tables` | `array` | Table positions and contents. |
-        | `inputImage` | `string` | Input image. The image is in JPEG format and encoded using Base64. |
-        | `ocrImage` | `string` | OCR result image. The image is in JPEG format and encoded using Base64. |
-        | `layoutImage` | `string` | Layout area detection result image. The image is in JPEG format and encoded using Base64. |
+        |-|-|-|
+        |`visionResults`|`array`|Analysis results obtained using the computer vision model. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file in sequence. |
+        |`visionInfo`|`object`|Key information in the image, which can be used as input for other operations. |
 
-        Each element in `texts` is an `object` with the following properties:
+        Each element in `visionResults` is an `object` with the following attributes:
 
         | Name | Type | Description |
-        |------|------|-------------|
-        | `poly` | `array` | Text position. The elements in the array are the vertex coordinates of the polygon enclosing the text in```markdown
-### chat
+        |-|-|-|
+        |`texts`|`array`|Text locations, contents, and scores. |
+        |`tables`|`array`|Table locations and contents. |
+        |`inputImage`|`string`|Input image. The image is in JPEG format and encoded in Base64. |
+        |`ocrImage`|`string`|OCR result image. The image is in JPEG format and encoded in Base64. |
+        |`layoutImage`|`string`|Layout area detection result image. The image is in JPEG format and encoded in Base64. |
 
-Interact with large language models to extract key information.
+        Each element in `texts` is an `object` with the following attributes:
 
-`POST /chatocr-vision`
+        | Name | Type | Description |
+        |-|-|-|
+        |`poly`|`array`|Text location. The elements in the array are the vertex coordinates of the polygon enclosing the text in sequence. |
+        |`text`|`string`|Text content. |
+        |`score`|`number`|Text recognition score. |
 
-- Request body properties:
+        Each element in `tables` is an `object` with the following attributes:
 
-    | Name | Type | Description | Required |
-    |------|------|-------------|----------|
-    |`keys`|`array`|List of keywords.|Yes|
-    |`visionInfo`|`object`|Key information from the image. Provided by the `analyzeImage` operation.|Yes|
-    |`taskDescription`|`string`|Task prompt.|No|
-    |`rules`|`string`|Extraction rules. Used to customize the information extraction rules, e.g., to specify output formats.|No|
-    |`fewShot`|`string`|Example prompts.|No|
-    |`useVectorStore`|`boolean`|Whether to enable the vector database. Enabled by default.|No|
-    |`vectorStore`|`object`|Serialized result of the vector database. Provided by the `buildVectorStore` operation.|No|
-    |`retrievalResult`|`string`|Knowledge retrieval result. Provided by the `retrieveKnowledge` operation.|No|
-    |`returnPrompts`|`boolean`|Whether to return the prompts used. Enabled by default.|No|
-    |`llmName`|`string`|Name of the large language model.|No|
-    |`llmParams`|`object`|API parameters for the large language model.|No|
+        | Name | Type | Description |
+        |-|-|-|
+        |`bbox`|`array`|Table location. The elements in the array are the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner of the bounding box in sequence. |
+        |`html`|`string`|Table recognition result in HTML format. |
 
-    Currently, `llmParams` can take the following form:
+- **`buildVectorStore`**
 
-    ```json
-    {
-      "apiType": "qianfan",
-      "apiKey": "{Qianfan Platform API key}",
-      "secretKey": "{Qianfan Platform secret key}"
-    }
-    ```
+    Builds a vector database.
 
-- On successful request processing, the `result` in the response body has the following properties:
+    `POST /chatocr-vector`
 
-    | Name | Type | Description |
-    |------|------|-------------|
-    |`chatResult`|`string`|Extracted key information result.|
-    |`prompts`|`object`|Prompts used.|
+    - The request body attributes are as follows:
 
-    Properties of `prompts`:
+        | Name | Type | Description | Required |
+        |-|-|-|-|
+        |`visionInfo`|`object`|Key information from the image. Provided by the `analyzeImage` operation.|Yes|
+        |`minChars`|`integer`|Minimum data length to enable the vector database.|No|
+        |`llmRequestInterval`|`number`|Interval time for calling the large language model API.|No|
+        |`llmName`|`string`|Name of the large language model.|No|
+        |`llmParams`|`object`|Parameters for the large language model API.|No|
 
-    | Name | Type | Description |
-    |------|------|-------------|
-    |`ocr`|`string`|OCR prompt.|
-    |`table`|`string`|Table prompt.|
-    |`html`|`string`|HTML prompt.|
+        Currently, `llmParams` can take the following form:
+
+        ```json
+        {
+          "apiType": "qianfan",
+          "apiKey": "{qianfan API key}",
+          "secretKey": "{qianfan secret key}"
+        }
+        ```
+
+    - When the request is processed successfully, the `result` in the response body has the following attributes:
+
+        | Name | Type | Description |
+        |-|-|-|
+        |`vectorStore`|`object`|Serialized result of the vector database, which can be used as input for other operations.|
+
+- **`retrieveKnowledge`**
+
+    Perform knowledge retrieval.
+
+    `POST /chatocr-retrieval`
+
+    - The request body attributes are as follows:
+
+        | Name | Type | Description | Required |
+        |-|-|-|-|
+        |`keys`|`array`|List of keywords.|Yes|
+        |`vectorStore`|`object`|Serialized result of the vector database. Provided by the `buildVectorStore` operation.|Yes|
+        |`visionInfo`|`object`|Key information from the image. Provided by the `analyzeImage` operation.|Yes|
+        |`llmName`|`string`|Name of the large language model.|No|
+        |`llmParams`|`object`|API parameters for the large language model.|No|
+
+        Currently, `llmParams` can take the following form:
+
+        ```json
+        {
+          "apiType": "qianfan",
+          "apiKey": "{Qianfan Platform API key}",
+          "secretKey": "{Qianfan Platform secret key}"
+        }
+        ```
+
+    - When the request is processed successfully, the `result` in the response body has the following attributes:
+
+        | Name | Type | Description |
+        |-|-|-|
+        |`retrievalResult`|`string`|The result of knowledge retrieval, which can be used as input for other operations.|
+
+- **`chat`**
+
+    Interact with large language models to extract key information.
+
+    `POST /chatocr-vision`
+
+    - Request body attributes:
+
+        | Name | Type | Description | Required |
+        |-|-|-|-|
+        |`keys` | `array` | List of keywords. | Yes |
+        |`visionInfo` | `object` | Key information from images. Provided by the `analyzeImage` operation. | Yes |
+        |`taskDescription` | `string` | Task prompt. | No |
+        |`rules` | `string` | Custom extraction rules, e.g., for output formatting. | No |
+        |`fewShot` | `string` | Example prompts. | No |
+        |`useVectorStore` | `boolean` | Whether to enable the vector database. Enabled by default. | No |
+        |`vectorStore` | `object` | Serialized result of the vector database. Provided by the `buildVectorStore` operation. | No |
+        |`retrievalResult` | `string` | Results of knowledge retrieval. Provided by the `retrieveKnowledge` operation. | No |
+        |`returnPrompts` | `boolean` | Whether to return the prompts used. Enabled by default. | No |
+        |`llmName` | `string` | Name of the large language model. | No |
+        |`llmParams` | `object` | API parameters for the large language model. | No |
+
+        Currently, `llmParams` can take the following form:
+
+        ```json
+        {
+          "apiType": "qianfan",
+          "apiKey": "{Qianfan Platform API key}",
+          "secretKey": "{Qianfan Platform secret key}"
+        }
+        ```
+
+    - On successful request processing, the `result` in the response body has the following attributes:
+
+        | Name | Type | Description |
+        |-|-|-|
+        |`chatResult` | `string` | Extracted key information. |
+        |`prompts` | `object` | Prompts used. |
+
+        Attributes of `prompts`:
+
+        | Name | Type | Description |
+        |-|-|-|
+        |`ocr` | `string` | OCR prompt. |
+        |`table` | `string` | Table prompt. |
+        |`html` | `string` | HTML prompt. |
 
 </details>
 
