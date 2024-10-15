@@ -5,7 +5,7 @@
 ## 1. Introduction to Image Anomaly Detection Pipeline
 Image anomaly detection is an image processing technique that identifies unusual or non-conforming patterns within images through analysis. It is widely applied in industrial quality inspection, medical image analysis, and security monitoring. By leveraging machine learning and deep learning algorithms, image anomaly detection can automatically recognize potential defects, anomalies, or abnormal behaviors in images, enabling us to promptly identify issues and take corresponding actions. The image anomaly detection system is designed to automatically detect and mark anomalies in images, enhancing work efficiency and accuracy.
 
-![](/tmp/images/pipelines/image_anomaly_detection/01.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_anomaly_detection/01.png)
 
 **The image anomaly detection pipeline includes an unsupervised anomaly detection module, with the following model benchmarks**:
 
@@ -64,7 +64,7 @@ After running, the result is:
 ```
 {'input_path': 'uad_grid.png'}
 ```
-![](/tmp/images/pipelines/image_anomaly_detection/02.png)
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_anomaly_detection/02.png)
 
 The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path.
 
