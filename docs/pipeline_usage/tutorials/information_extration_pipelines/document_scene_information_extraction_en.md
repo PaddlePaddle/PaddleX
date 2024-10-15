@@ -189,7 +189,8 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(
     pipeline="PP-ChatOCRv3-doc",
     llm_name="ernie-3.5",
-    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # Please fill in ak and sk, required for LLM.
+    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # Please enter your ak and sk; otherwise, the large model cannot be invoked.
+    # llm_params={"api_type": "aistudio", "access_token": ""} # Please enter your access_token; otherwise, the large model cannot be invoked.
     )
 
 visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf")
@@ -199,10 +200,16 @@ for res in visual_result:
     res.save_to_html('./output')
     res.save_to_xlsx('./output')
 
-chat_result = pipeline.chat(["乙方", "手机号"])
+vector = pipeline.build_vector(visual_info=visual_info)
+
+chat_result = pipeline.chat(
+    key_list=["乙方", "手机号"],
+    visual_info=visual_info,
+    vector=vector,
+    )
 chat_result.print()
 ```
-**Note**: Please first obtain your ak and sk on the [Baidu Cloud Qianfan Platform](https://console.bce.baidu.com/qianfan/ais/console/onlineService) (for detailed steps, please refer to the [AK and SK Authentication API Call Process](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8)), and fill in your ak and sk to the specified locations to enable normal calls to the large model.
+**Note**: Currently, the large language model only supports Ernie. You can obtain the relevant ak/sk (access_token) on the [Baidu Cloud Qianfan Platform](https://console.bce.baidu.com/qianfan/ais/console/onlineService) or [Baidu AIStudio Community](https://aistudio.baidu.com/). If you use the Baidu Cloud Qianfan Platform, you can refer to the [AK and SK Authentication API Calling Process](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8) to obtain ak/sk. If you use Baidu AIStudio Community, you can obtain the access_token from the [Baidu AIStudio Community Access Token](https://aistudio.baidu.com/account/accessToken).
 
 After running, the output is as follows:
 
@@ -217,7 +224,7 @@ In the above Python script, the following steps are executed:
 | Parameter | Type | Default | Description |
 |-|-|-|-|
 | `pipeline` | str | None | Pipeline name or pipeline configuration file path. If it's a pipeline name, it must be supported by PaddleX; |
-| `llm_name` | str | "ernie-3.5" | Large Language Model name; |
+| `llm_name` | str | "ernie-3.5" | Large Language Model name, we support `ernie-4.0` and `ernie-3.5`, with more models on the way.|
 | `llm_params` | dict | `{}` | API configuration; |
 | `device(kwargs)` | str/`None` | `None` | Running device (`None` meaning automatic selection); |
 
@@ -249,6 +256,18 @@ In the above Python script, the following steps are executed:
 |-|-|-|-|
 |`key_list`|str|-|Keywords used to query. A string composed of multiple keywords with "," as separators, such as "Party B, phone number";|
 |`key_list`|list|-|Keywords used to query. A list composed of multiple keywords.|
+
+(3) Obtain prediction results by calling the `predict` method: The `predict` method is a `generator`, so prediction results need to be obtained through calls. The `predict` method predicts data in batches, so the prediction results are represented as a list of prediction results.
+
+(4) Interact with the large model by calling the `predict.chat` method, which takes as input keywords (multiple keywords are supported) for information extraction. The prediction results are represented as a list of information extraction results.
+
+(5) Process the prediction results: The prediction result for each sample is in the form of a dict, which supports printing or saving to a file. The supported file types depend on the specific pipeline, such as:
+
+| Method | Description | Method Parameters |
+|-|-|-|
+| save_to_img | Saves layout analysis, table recognition, etc. results as image files. | `save_path`: str, the file path to save. |
+| save_to_html | Saves table recognition results as HTML files. | `save_path`: str, the file path to save. |
+| save_to_xlsx | Saves table recognition results as Excel files. | `save_path`: str, the file path to save. |
 
 When executing the above command, the default Pipeline configuration file is loaded. If you need to customize the configuration file, you can use the following command to obtain it:
 
@@ -287,17 +306,28 @@ For example, if your configuration file is saved at `./my_path/PP-ChatOCRv3-doc.
 
 ```python
 from paddlex import create_pipeline
+
 pipeline = create_pipeline(
     pipeline="./my_path/PP-ChatOCRv3-doc.yaml",
     llm_name="ernie-3.5",
-    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # Please fill in ak and sk, required for LLM.
+    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # Please enter your ak and sk; otherwise, the large model cannot be invoked.
+    # llm_params={"api_type": "aistudio", "access_token": ""} # Please enter your access_token; otherwise, the large model cannot be invoked.
     )
+
 visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf")
+
 for res in visual_result:
     res.save_to_img("./output")
     res.save_to_html('./output')
     res.save_to_xlsx('./output')
-chat_result = pipeline.chat(["乙方", "手机号"])
+
+vector = pipeline.build_vector(visual_info=visual_info)
+
+chat_result = pipeline.chat(
+    key_list=["乙方", "手机号"],
+    visual_info=visual_info,
+    vector=vector,
+    )
 chat_result.print()
 ```
 
@@ -598,28 +628,18 @@ Pipeline:
 Subsequently, load the modified pipeline configuration file using the command-line interface or Python script as described in the local experience section.
 
 ## 5. Multi-hardware Support
+PaddleX supports various mainstream hardware devices such as NVIDIA GPUs, Kunlun XPU, Ascend NPU, and Cambricon MLU. **Seamless switching between different hardware can be achieved by simply setting the `--device` parameter**.
 
-For example, to perform inference using the PP-ChatOCRv3-doc Pipeline on an NVIDIA GPU, you run:
-```python
-from paddlex import create_pipeline
-predict = create_pipeline( pipeline="PP-ChatOCRv3-doc",
-                            llm_name="ernie-3.5",
-                            llm_params = {"api_type":"qianfan","ak":"","sk":""},  ## Please fill in your ak and sk, or you will not be able to call the large model
-                            device = "gpu:0" )
-```
-
-At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the script to `npu:0`:
-
+For example, to perform inference using the PP-ChatOCRv3-doc Pipeline on an NVIDIA GPU.
+At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the script to `npu`:
 
 ```python
 from paddlex import create_pipeline
-predict = create_pipeline(
+pipeline = create_pipeline(
     pipeline="PP-ChatOCRv3-doc",
     llm_name="ernie-3.5",
-    llm_params={"api_type": "qianfan", "ak": "", "sk": ""},  # Please fill in ak and sk, required for LLM.
+    llm_params={"api_type": "qianfan", "ak": "", "sk": ""}, 
     device="npu:0" # gpu:0 --> npu:0
-    )
+    ) 
 ```
-
-If you want to use the PP-ChatOCRv3-doc Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/multi_devices_use_guide_en.md).
-
+If you want to use the PP-ChatOCRv3-doc Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/installation_other_devices_en.md).
