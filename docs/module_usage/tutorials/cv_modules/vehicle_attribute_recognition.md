@@ -34,6 +34,8 @@ for res in output:
 ```
 关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 
+**备注**：其中 `output` 的值索引为0-9表示颜色属性，对应的颜色分别是：yellow(黄色), orange(橙色), green(绿色), gray(灰色), red(红色), blue(蓝色), white(白色), golden(金色), brown(棕色), black(黑色)；索引为10-18表示车型属性，对应的车型分别是sedan(轿车), suv(越野车), van(面包车), hatchback(掀背车), mpv(多用途汽车), pickup(皮卡车), bus(公共汽车), truck(卡车), estate(旅行车)。
+
 ## 四、二次开发
 如果你追求更高精度的现有模型，可以使用 PaddleX 的二次开发能力，开发更好的车辆属性识别模型。在使用 PaddleX 开发车辆属性识别模型之前，请务必安装 PaddleX 的 分类 相关模型训练插件，安装过程可以参考[PaddleX本地安装教程](../../../installation/installation.md)。
 
@@ -115,13 +117,13 @@ python main.py -c paddlex/configs/vehicle_attribute/PP-LCNet_x1_0_vehicle_attrib
 
 
 
-另外，数据集校验还对数据集中所有图片的长宽分布情况进行了分析分析，并绘制了分布直方图（histogram.png）： 
+另外，数据集校验还对数据集中所有图片的长宽分布情况进行了分析分析，并绘制了分布直方图（histogram.png）：
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/vehicle_attri/01.png)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
-在您完成数据校验之后，可以通过**修改配置文件**或是**追加超参数**的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。。
+在您完成数据校验之后，可以通过**修改配置文件**或是**追加超参数**的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。
 
 <details>
   <summary>👉 <b>格式转换/数据集划分详情（点击展开）</b></summary>
@@ -186,7 +188,7 @@ python main.py -c paddlex/configs/vehicle_attribute/PP-LCNet_x1_0_vehicle_attrib
 * 指定模型的`.yaml` 配置文件路径（此处为`PP-LCNet_x1_0_vehicle_attribute.yaml`）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details>
   <summary>👉 <b>更多说明（点击展开）</b></summary>
@@ -255,7 +257,7 @@ python main.py -c paddlex/configs/vehicle_attribute/PP-LCNet_x1_0_vehicle_attrib
 
 1.**产线集成**
 
-车辆属性识别模块可以集成的PaddleX产线有[通用图像多标签分类产线](../../../pipeline_usage/tutorials/cv_pipelines/image_multi_label_lassification.md)，只需要替换模型路径即可完成相关产线的车辆属性识别模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
+车辆属性识别模块可以集成的PaddleX产线有[通用图像多标签分类产线](../../../pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md)，只需要替换模型路径即可完成相关产线的车辆属性识别模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
 
 2.**模块集成**
 

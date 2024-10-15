@@ -1,3 +1,5 @@
+简体中文 | [English](time_series_forecast_en.md)
+
 # 时序预测模块使用教程
 
 ## 一、概述
@@ -163,13 +165,13 @@ python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
 
 **（1）数据集格式转换**
 
-时序预测支持 `xlsx 和 xlss` 格式的数据集转换为 `csv` 格式。
+时序预测支持 `xlsx 和 xls` 格式的数据集转换为 `csv` 格式。
 
 数据集校验相关的参数可以通过修改配置文件中 `CheckDataset` 下的字段进行设置，配置文件中部分参数的示例说明如下：
 
 * `CheckDataset`:
   * `convert`:
-    * `enable`: 是否进行数据集格式转换，支持 `xlsx和xlss` 格式的数据集转换为 `CSV` 格式，默认为 `False`;
+    * `enable`: 是否进行数据集格式转换，支持 `xlsx和xls` 格式的数据集转换为 `CSV` 格式，默认为 `False`;
     * `src_dataset_type`: 如果进行数据集格式转换，无需设置源数据集格式，默认为 `null`，；
 则需要修改配置如下：
 
@@ -257,7 +259,7 @@ python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
 * 指定模型的`.yaml` 配置文件路径（此处为`DLinear.yaml`）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅查阅模型对应任务模块的配置文件说明[PaddleX时序任务模型配置文件参数说明](../../instructions/config_parameters_time_series.md)。
+其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX时序任务模型配置文件参数说明](../../instructions/config_parameters_time_series.md)。
 
 <details>
   <summary>👉 <b>更多说明（点击展开）</b></summary>
@@ -295,7 +297,7 @@ python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
 
 
 
-在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如`-o Evaluate.weight_path=``./output/best_model/model.pdparams`。
+在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如`-o Evaluate.weight_path=./output/best_model/model.pdparams`。
 
 在完成模型评估后，通常有以下产出：
 
@@ -319,7 +321,7 @@ python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
 
 * 指定模型的`.yaml` 配置文件路径（此处为`DLinear.yaml`）
 * 指定模式为模型推理预测：`-o Global.mode=predict`
-* 指定模型权重路径：`-o Predict.model_dir=``"./output/inference"`
+* 指定模型权重路径：`-o Predict.model_dir="./output/inference"`
 * 指定输入数据路径：`-o Predict.input="..."`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX时序任务模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 

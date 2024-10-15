@@ -23,7 +23,7 @@
 完成whl包的安装后，几行代码即可完成人脸检测模块的推理，可以任意切换该模块下的模型，您也可以将人脸检测的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/face_detection.png)到本地。
 
 ```python
-from paddlex.inference import create_model 
+from paddlex import create_model
 
 model_name = "PicoDet_LCNet_x2_5_face"
 
@@ -41,7 +41,7 @@ for res in output:
 如果你追求更高精度的现有模型，可以使用PaddleX的二次开发能力，开发更好的人脸检测模型。在使用PaddleX开发人脸检测模型之前，请务必安装PaddleX的PaddleDetection插件，安装过程可以参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
 ### 4.1 数据准备
-在进行模型训练前，需要准备相应任务模块的数据集。PaddleX 针对每一个模块提供了数据校验功能，**只有通过数据校验的数据才可以进行模型训练**。此外，PaddleX为每一个模块都提供了demo数据集，您可以基于官方提供的 Demo 数据完成后续的开发。若您希望用私有数据集进行后续的模型训练，可以参考[PaddleX目标检测任务模块数据标注教程](/data_annotations/cv_modules/object_detection.md)。
+在进行模型训练前，需要准备相应任务模块的数据集。PaddleX 针对每一个模块提供了数据校验功能，**只有通过数据校验的数据才可以进行模型训练**。此外，PaddleX为每一个模块都提供了demo数据集，您可以基于官方提供的 Demo 数据完成后续的开发。若您希望用私有数据集进行后续的模型训练，可以参考[PaddleX目标检测任务模块数据标注教程](../../../data_annotations/cv_modules/object_detection.md)。
 
 #### 4.1.1 Demo 数据下载
 您可以参考下面的命令将 Demo 数据集下载到指定文件夹：
@@ -103,7 +103,7 @@ python main.py -c paddlex/configs/face_detection/PicoDet_LCNet_x2_5_face.yaml \
 * `attributes.val_sample_paths`：该数据集验证集样本可视化图片相对路径列表；
 
 
-数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
+数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 
 
 
@@ -179,7 +179,7 @@ python main.py -c paddlex/configs/face_detection/PicoDet_LCNet_x2_5_face.yaml \
 * 指定模型的`.yaml` 配置文件路径（此处为`PicoDet_LCNet_x2_5_face.yaml`）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details>
   <summary>👉 <b>更多说明（点击展开）</b></summary>

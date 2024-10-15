@@ -45,7 +45,7 @@
 完成wheel包的安装后，几行代码即可完成车辆检测模块的推理，可以任意切换该模块下的模型，您也可以将车辆检测的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_detection.jpg)到本地。
 
 ```python
-from paddlex.inference import create_model 
+from paddlex import create_model
 
 model_name = "PP-YOLOE-S_vehicle"
 
@@ -126,7 +126,7 @@ python main.py -c paddlex/configs/vehicle_detection/PP-YOLOE-S_vehicle.yaml \
 * `attributes.val_sample_paths`：该数据集验证集样本可视化图片相对路径列表；
 
 
-数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
+数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/vehicle_det/01.png)
 </details>
@@ -140,7 +140,7 @@ python main.py -c paddlex/configs/vehicle_detection/PP-YOLOE-S_vehicle.yaml \
 
 **（1）数据集格式转换**
 
-人脸检测不支持数据格式转换。
+车辆检测不支持数据格式转换。
 
 **（2）数据集划分**
 
@@ -198,7 +198,7 @@ python main.py -c paddlex/configs/vehicle_detection/PP-YOLOE-S_vehicle.yaml \
 * 指定模型的`.yaml` 配置文件路径（此处为`PP-YOLOE-S_vehicle.yaml`）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details>
   <summary>👉 <b>更多说明（点击展开）</b></summary>
@@ -225,7 +225,7 @@ python main.py -c paddlex/configs/vehicle_detection/PP-YOLOE-S_vehicle.yaml \
 ```
 与模型训练类似，需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`PP-YOLOE-S_vehicle``.yaml`）
+* 指定模型的`.yaml` 配置文件路径（此处为`PP-YOLOE-S_vehicle.yaml`）
 * 指定模式为模型评估：`-o Global.mode=evaluate`
 * 指定验证数据集路径：`-o Global.dataset_dir`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Evaluate`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
@@ -234,7 +234,7 @@ python main.py -c paddlex/configs/vehicle_detection/PP-YOLOE-S_vehicle.yaml \
   <summary>👉 <b>更多说明（点击展开）</b></summary>
 
 
-在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如`-o Evaluate.weight_path=``./output/best_model/best_model/model.pdparams`。
+在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如`-o Evaluate.weight_path=./output/best_model/best_model/model.pdparams`。
 
 在完成模型评估后，会产出`evaluate_result.json，其记录了`评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标，包含 AP；
 

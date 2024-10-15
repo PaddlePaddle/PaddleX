@@ -19,7 +19,7 @@
     <th >GPU推理耗时（ms）</th>
     <th >CPU推理耗时 (ms)</th>
     <th >模型存储大小（M）</th>
-    <th >介绍VisDrone</th>
+    <th >介绍</th>
   </tr>
   <tr>
     <td>PP-YOLOE_plus_SOD-L</td>
@@ -28,8 +28,8 @@
     <td>57.1</td>
     <td>1007.0</td>
     <td>324.93</td>
-    <td rowspan="3">基于VisDrone训练的PP-YOLOE_plus小目标检测模型</td>
-    
+    <td rowspan="3">基于VisDrone训练的PP-YOLOE_plus小目标检测模型。VisDrone是针对无人机视觉数据的基准数据集，由于目标较小同时具有一定的挑战性而被用于小目标检测任务的训练和评测</td>
+
   </tr>
   <tr>
     <td>PP-YOLOE_plus_SOD-S</td>
@@ -58,7 +58,7 @@
 完成whl包的安装后，几行代码即可完成小目标检测模块的推理，可以任意切换该模块下的模型，您也可以将小目标检测的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg)到本地。
 
 ```python
-from paddlex.inference import create_model 
+from paddlex import create_model
 
 model_name = "PP-YOLOE_plus_SOD-S"
 
@@ -90,7 +90,7 @@ tar -xf ./dataset/small_det_examples.tar -C ./dataset/
 一行命令即可完成数据校验：
 
 ```bash
-python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml \
+python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/small_det_examples
 ```
@@ -138,7 +138,7 @@ python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml
 * `attributes.val_sample_paths`：该数据集验证集样本可视化图片相对路径列表；
 
 
-数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
+数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/smallobj_det/01.png)
 </details>
@@ -152,7 +152,41 @@ python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml
 
 **（1）数据集格式转换**
 
-小目标检测不支持数据格式转换。
+小目标检测支持 `VOC`、`LabelMe` 格式的数据集转换为 `COCO` 格式。
+
+数据集校验相关的参数可以通过修改配置文件中 `CheckDataset` 下的字段进行设置，配置文件中部分参数的示例说明如下：
+
+* `CheckDataset`:
+  * `convert`:
+    * `enable`: 是否进行数据集格式转换，小目标检测支持 `VOC`、`LabelMe` 格式的数据集转换为 `COCO` 格式，默认为 `False`;
+    * `src_dataset_type`: 如果进行数据集格式转换，则需设置源数据集格式，默认为 `null`，可选值为 `VOC`、`LabelMe` 和 `VOCWithUnlabeled`、`LabelMeWithUnlabeled` ；
+例如，您想转换 `LabelMe` 格式的数据集为 `COCO` 格式，以下面的`LabelMe` 格式的数据集为例，则需要修改配置如下：
+
+```bash
+......
+CheckDataset:
+  ......
+  convert:
+    enable: True
+    src_dataset_type: LabelMe
+  ......
+```
+随后执行命令：
+
+```bash
+python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
+    -o Global.mode=check_dataset \
+    -o Global.dataset_dir=./path/to/your_smallobject_labelme_dataset
+```
+当然，以上参数同样支持通过追加命令行参数的方式进行设置，以 `LabelMe` 格式的数据集为例：
+
+```bash
+python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
+    -o Global.mode=check_dataset \
+    -o Global.dataset_dir=./path/to/your_smallobject_labelme_dataset \
+    -o CheckDataset.convert.enable=True \
+    -o CheckDataset.convert.src_dataset_type=LabelMe
+```
 
 **（2）数据集划分**
 
@@ -179,7 +213,7 @@ CheckDataset:
 随后执行命令：
 
 ```bash
-python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml \
+python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/small_det_examples
 ```
@@ -188,7 +222,7 @@ python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml
 以上参数同样支持通过追加命令行参数的方式进行设置：
 
 ```bash
-python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml  \
+python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/small_det_examples \
     -o CheckDataset.split.enable=True \
@@ -198,10 +232,10 @@ python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml
 </details>
 
 ### 4.2 模型训练
-一条命令即可完成模型的训练，以此处PP-ShiTuV2_det的训练为例：
+一条命令即可完成模型的训练，以此处PP-YOLOE_plus_SOD-S的训练为例：
 
 ```bash
-python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml \
+python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/small_det_examples \
     -o Train.num_classes=10
@@ -211,7 +245,7 @@ python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml
 * 指定模型的`.yaml` 配置文件路径（此处为`PP-YOLOE_plus_SOD-S.yaml`）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details>
   <summary>👉 <b>更多说明（点击展开）</b></summary>
@@ -232,7 +266,7 @@ python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ```bash
-python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml \
+python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/small_det_examples
 ```
@@ -260,7 +294,7 @@ python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml
 #### 4.4.1 模型推理
 * 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg)到本地。
 ```bash
-python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml \
+python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="small_object_detection.jpg"
