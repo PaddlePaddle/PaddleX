@@ -1,0 +1,5 @@
+{
+  "done_flag": false,
+  "err_type": "<class 'paddlex.utils.errors.others.UnsupportedParamError'>",
+  "err_msg": "'PP-LCNet_x1_0_doc_ori' is not a registered model name."
+}
