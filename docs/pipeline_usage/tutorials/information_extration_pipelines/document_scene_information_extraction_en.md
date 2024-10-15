@@ -652,7 +652,7 @@ if __name__ == "__main__":
     print("Final result:")
     print(len(result_chat["chatResult"]))
 ```
-
+  
 **Note**: Please fill in your API key and secret key at `API_KEY` and `SECRET_KEY`.
 
 </details>
@@ -721,3 +721,4 @@ pipeline = create_pipeline(
 ```
 
 If you want to use the PP-ChatOCRv3-doc Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/multi_devices_use_guide_en.md).
+
