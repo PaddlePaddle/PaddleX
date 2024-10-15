@@ -445,7 +445,7 @@ Interact with large language models to extract key information.
 </details>
 
 <details>
-<summary>Multilingual Service Invocation Examples</summary>
+<summary>Multi-Language Service Invocation Examples</summary>
 
 <details>
 <summary>Python</summary>
@@ -527,7 +527,6 @@ if __name__ == "__main__":
     payload = {
         "keys": keys,
         "vectorStore": result_vector["vectorStore"],
-        "visionInfo": result_vision["visionInfo"],
         "llmName": LLM_NAME,
         "llmParams": LLM_PARAMS,
     }
@@ -569,7 +568,7 @@ if __name__ == "__main__":
     print("Final result:")
     print(len(result_chat["chatResult"]))
 ```
-**Note**: Please fill in your ak and sk at `API_KEY` and `SECRET_KEY`.
+**Note**: Please fill in your API key and secret key at `API_KEY` and `SECRET_KEY`.
 </details>
 </details>
 <br/>
