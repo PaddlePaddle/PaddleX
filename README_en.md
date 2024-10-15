@@ -21,7 +21,7 @@
 
 PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePaddle framework. It i
 ntegrates numerous **ready-to-use pre-trained models**, enabling **full-process development** from model training to inference, supporting **a variety of mainstream hardware** both domestic and international, and aiding AI developers in industrial practice.
- 
+
 
 |                                                            **Image Classification**                                                            |                                                            **Multi-label Image Classification**                                                            |                                                            **Object Detection**                                                            |                                                            **Instance Segmentation**                                                            |
 |:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|
@@ -60,15 +60,15 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <th>Model pipeline</th>
         <th>Online Experience</th>
         <th>Quick Inference</th>
-        <th>high-performance inference</th>
+        <th>High-Performance Inference</th>
         <th>Service Deployment</th>
         <th>Edge Deployment</th>
         <th>Secondary Development</th>
-        <th><a href="https://aistudio.baidu.com/pipeline/mine">Galaxy Zero-Code pipeline</a></td> 
+        <th><a href="https://aistudio.baidu.com/pipeline/mine">Galaxy Zero-Code pipeline</a></td>
     </tr>
     <tr>
         <td>General OCR</td>
-        <td><a href="https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">Link</a></td> 
+        <td><a href="https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -78,7 +78,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
     <tr>
         <td>Document Scene Information Extraction v3</td>
-        <td><a href="https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter">Link</a></td> 
+        <td><a href="https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter">Link</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -88,7 +88,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
     <tr>
         <td>Table Recognition</td>
-        <td><a href="https://aistudio.baidu.com/community/app/91661?source=appMineRecent">Link</a></td> 
+        <td><a href="https://aistudio.baidu.com/community/app/91661?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -98,7 +98,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
     <tr>
         <td>General Object Detection</td>
-        <td><a href="https://aistudio.baidu.com/community/app/70230/webUI?source=appMineRecent">Link</a></td> 
+        <td><a href="https://aistudio.baidu.com/community/app/70230/webUI?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -108,7 +108,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
     <tr>
         <td>General Instance Segmentation</td>
-        <td><a href="https://aistudio.baidu.com/community/app/100063/webUI?source=appMineRecent">Link</a></td> 
+        <td><a href="https://aistudio.baidu.com/community/app/100063/webUI?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -118,7 +118,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
     <tr>
         <td>General Image Classification</td>
-        <td><a href="https://aistudio.baidu.com/community/app/100061/webUI?source=appMineRecent">Link</a></td> 
+        <td><a href="https://aistudio.baidu.com/community/app/100061/webUI?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -128,7 +128,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
     <tr>
         <td>General Semantic Segmentation</td>
-        <td><a href="https://aistudio.baidu.com/community/app/100062/webUI?source=appMineRecent">Link</a></td> 
+        <td><a href="https://aistudio.baidu.com/community/app/100062/webUI?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -138,7 +138,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
     <tr>
         <td>Time Series Forecasting</td>
-        <td><a href="https://aistudio.baidu.com/community/app/105706/webUI?source=appMineRecent">Link</a></td> 
+        <td><a href="https://aistudio.baidu.com/community/app/105706/webUI?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -148,7 +148,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
     <tr>
         <td>Time Series Anomaly Detection</td>
-        <td><a href="https://aistudio.baidu.com/community/app/105708/webUI?source=appMineRecent">Link</a></td> 
+        <td><a href="https://aistudio.baidu.com/community/app/105708/webUI?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -158,7 +158,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
     <tr>
         <td>Time Series Classification</td>
-        <td><a href="https://aistudio.baidu.com/community/app/105707/webUI?source=appMineRecent">Link</a></td> 
+        <td><a href="https://aistudio.baidu.com/community/app/105707/webUI?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -352,12 +352,12 @@ In addition, PaddleX provides developers with a full-process efficient model tra
 python -m pip install paddlepaddle==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
 
 # gpu, this command is only applicable to machines with CUDA version 11.8
-python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/ 
+python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
 
 # gpu, this command is only applicable to machines with CUDA version 12.3
-python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/ 
+python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
 ```
-> ❗For more PaddlePaddle Wheel versions, please refer to the [PaddlePaddle official website](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation./docs/zh/install/pip/linux-pip.html). 
+> ❗For more PaddlePaddle Wheel versions, please refer to the [PaddlePaddle official website](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation./docs/zh/install/pip/linux-pip.html).
 
 * **Installing PaddleX**
 
@@ -466,9 +466,9 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 ## 📖 Documentation
 <details>
   <summary> <b> ⬇️ Installation </b></summary>
-  
+
   * [📦 PaddlePaddle Installation Guide](./docs/installation/paddlepaddle_install_en.md)
-  * [📦 PaddleX Installation Guide](./docs/installation/installation_en.md) 
+  * [📦 PaddleX Installation Guide](./docs/installation/installation_en.md)
 
 </details>
 
@@ -501,7 +501,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
    * [🔍 Small Object Detection pipeline Usage Guide](./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection_en.md)
    * [🖼️ Image Anomaly Detection pipeline Usage Guide](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection_en.md)
   </details>
-  
+
 * <details open>
     <summary> <b> ⏱️ Time Series Analysis</b> </summary>
 
@@ -516,7 +516,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
    * [🖥️ PaddleX pipeline Command Line Usage Guide](./docs/pipeline_usage/instructions/pipeline_CLI_usage_en.md)
    * [📝 PaddleX pipeline Python Script Usage Guide](./docs/pipeline_usage/instructions/pipeline_python_API_en.md)
   </details>
-  
+
 </details>
 
 <details open>
@@ -579,7 +579,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
   * [🚨 Time Series Anomaly Detection Module Usage Guide](./docs/module_usage/tutorials/time_series_modules/time_series_anomaly_detection.md)
   * [🕒 Time Series Classification Module Usage Guide](./docs/module_usage/tutorials/time_series_modules/time_series_classification_en.md)
   </details>
-    
+
 * <details open>
   <summary> <b> 📄 Related Documentation </b></summary>
 
@@ -639,9 +639,3 @@ We warmly welcome and encourage community members to raise questions, share idea
 ## 📄 License
 
 The release of this project is licensed under the [Apache 2.0 license](https://github.com/PaddlePaddle/PaddleX/blob/release/3.0-beta/LICENSE).
-
-
-
-
-
-
