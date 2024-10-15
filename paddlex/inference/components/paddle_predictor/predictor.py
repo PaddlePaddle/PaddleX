@@ -62,7 +62,7 @@ class BasePaddlePredictor(BaseComponent, PPEngineMixin):
         params_file = (self.model_dir / f"{self.model_prefix}.pdiparams").as_posix()
         config = Config(model_file, params_file)
 
-        if self.option.device == "gpu":
+        if self.option.device in ("gpu", "dcu"):
             config.enable_use_gpu(200, self.option.device_id)
             if paddle.is_compiled_with_rocm():
                 os.environ["FLAGS_conv_workspace_size_limit"] = "2000"
