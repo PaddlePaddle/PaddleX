@@ -32,7 +32,6 @@
     <td>-</td>
     <td>-</td>
     <td>246.2 M</td>
-    <td></td>
   </tr>
   <tr>
     <td>CenterNet-DLA-34</td>
@@ -48,7 +47,7 @@
     <td>-</td>
     <td>-</td>
     <td>319.7 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>DETR-R50</td>
@@ -72,7 +71,7 @@
     <td>-</td>
     <td>-</td>
     <td>148.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNet50-vd-FPN</td>
@@ -80,7 +79,7 @@
     <td>-</td>
     <td>-</td>
     <td>148.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNet50-vd-SSLDv2-FPN</td>
@@ -88,7 +87,7 @@
     <td>-</td>
     <td>-</td>
     <td>148.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNet50</td>
@@ -96,7 +95,7 @@
     <td>-</td>
     <td>-</td>
     <td>120.2 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNet101-FPN</td>
@@ -104,7 +103,7 @@
     <td>-</td>
     <td>-</td>
     <td>216.3 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNet101</td>
@@ -112,7 +111,7 @@
     <td>-</td>
     <td>-</td>
     <td>188.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-ResNeXt101-vd-FPN</td>
@@ -120,7 +119,7 @@
     <td>-</td>
     <td>-</td>
     <td>360.6 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FasterRCNN-Swin-Tiny-FPN</td>
@@ -128,7 +127,7 @@
     <td>-</td>
     <td>-</td>
     <td>159.8 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>FCOS-ResNet50</td>
@@ -152,7 +151,7 @@
     <td>16.2311</td>
     <td>71.7257</td>
     <td>16.8 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>PicoDet-S</td>
@@ -160,7 +159,7 @@
     <td>14.097</td>
     <td>37.6563</td>
     <td>4.4 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>PicoDet-XS</td>
@@ -168,7 +167,7 @@
     <td>13.8102</td>
     <td>48.3139</td>
     <td>5.7 M</td>
-    <td></td>
+
   </tr>
     <tr>
     <td>PP-YOLOE_plus-L</td>
@@ -184,7 +183,7 @@
     <td>19.843</td>
     <td>449.261</td>
     <td>82.3 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>PP-YOLOE_plus-S</td>
@@ -192,7 +191,7 @@
     <td>16.8884</td>
     <td>223.059</td>
     <td>28.3 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>PP-YOLOE_plus-X</td>
@@ -200,7 +199,7 @@
     <td>57.8995</td>
     <td>1439.93</td>
     <td>349.4 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>RT-DETR-H</td>
@@ -216,7 +215,7 @@
     <td>34.5252</td>
     <td>1454.27</td>
     <td>113.7 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>RT-DETR-R18</td>
@@ -224,7 +223,7 @@
     <td>19.89</td>
     <td>784.824</td>
     <td>70.7 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>RT-DETR-R50</td>
@@ -232,7 +231,7 @@
     <td>41.9327</td>
     <td>1625.95</td>
     <td>149.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>RT-DETR-X</td>
@@ -240,7 +239,7 @@
     <td>61.8042</td>
     <td>2246.64</td>
     <td>232.9 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOv3-DarkNet53</td>
@@ -256,7 +255,7 @@
     <td>18.6692</td>
     <td>267.214</td>
     <td>83.8 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOv3-ResNet50_vd_DCN</td>
@@ -264,7 +263,7 @@
     <td>31.6276</td>
     <td>856.047</td>
     <td>163.0 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOX-L</td>
@@ -280,7 +279,7 @@
     <td>123.324</td>
     <td>688.071</td>
     <td>90.0 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOX-N</td>
@@ -288,7 +287,7 @@
     <td>79.1665</td>
     <td>155.59</td>
     <td>3.4 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOX-S</td>
@@ -296,7 +295,7 @@
     <td>184.828</td>
     <td>474.446</td>
     <td>32.0 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOX-T</td>
@@ -304,7 +303,7 @@
     <td>102.748</td>
     <td>212.52</td>
     <td>18.1 M</td>
-    <td></td>
+
   </tr>
   <tr>
     <td>YOLOX-X</td>
@@ -312,7 +311,7 @@
     <td>227.361</td>
     <td>2067.84</td>
     <td>351.5 M</td>
-    <td></td>
+
   </tr>
 </table>
 
@@ -415,13 +414,13 @@ python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
 * `attributes.train_sample_paths`：该数据集训练集样本可视化图片相对路径列表；
 * `attributes.val_sample_paths`：该数据集验证集样本可视化图片相对路径列表；
 
-另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）： 
+另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/obj_det/01.png)
 </details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
-在您完成数据校验之后，可以通过**修改配置文件**或是**追加超参数**的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。。
+在您完成数据校验之后，可以通过**修改配置文件**或是**追加超参数**的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。
 
 <details>
   <summary>👉 <b>格式转换/数据集划分详情（点击展开）</b></summary>
@@ -455,14 +454,14 @@ CheckDataset:
 随后执行命令：
 
 ```bash
-python main.py -c paddlex/configs/object_detection/PicoDet-L.yaml \
+python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_labelme_examples
 ```
 当然，以上参数同样支持通过追加命令行参数的方式进行设置，以 `LabelMe` 格式的数据集为例：
 
 ```bash
-python main.py -c paddlex/configs/object_detection/PicoDet-L.yaml \
+python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_labelme_examples \
     -o CheckDataset.convert.enable=True \
@@ -492,16 +491,16 @@ CheckDataset:
 随后执行命令：
 
 ```bash
-python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
     -o Global.mode=check_dataset \
-    -o Global.dataset_dir=./dataset/det_coco_examples 
+    -o Global.dataset_dir=./dataset/det_coco_examples
 ```
 数据划分执行之后，原有标注文件会被在原路径下重命名为 `xxx.bak`。
 
 以上参数同样支持通过追加命令行参数的方式进行设置：
 
 ```bash
-python main.py -c paddlex/configs/multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_coco_examples \
     -o CheckDataset.split.enable=True \
@@ -523,7 +522,7 @@ python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
 * 指定模型的`.yaml` 配置文件路径（此处为`PicoDet-S.yaml`）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
-其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
+其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details>
   <summary>👉 <b>更多说明（点击展开）</b></summary>

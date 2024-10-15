@@ -19,7 +19,7 @@
 
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)。
-> 
+>
 几行代码即可完成文本检测模块的推理，可以任意切换该模块下的模型，您也可以将文本检测的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png)到本地。
 
 ```python
@@ -95,7 +95,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
 * `attributes.val_sample_paths`：该数据集验证集样本可视化图片相对路径列表；
 
 
-另外，数据集校验还对数据集中所有图片的长宽分布情况进行了分析分析，并绘制了分布直方图（histogram.png）： 
+另外，数据集校验还对数据集中所有图片的长宽分布情况进行了分析分析，并绘制了分布直方图（histogram.png）：
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/text_det/01.png)
 </details>
