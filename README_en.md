@@ -21,7 +21,6 @@
 
 PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePaddle framework. It integrates numerous **ready-to-use pre-trained models**, enabling **full-process development** from model training to inference, supporting **a variety of mainstream hardware** both domestic and international, and aiding AI developers in industrial practice.
  
-
 |                                                            [**Image Classification**](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification_en.md)                                                            |                                                            [**Multi-label Image Classification**](./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification_en.md)                                                            |                                                            [**Object Detection**](./docs/pipeline_usage/tutorials/cv_pipelines/object_detection_en.md)                                                            |                                                            [**Instance Segmentation**](./docs/pipeline_usage/tutorials/cv_pipelines/instance_segmentation_en.md)                                                            |
 |:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|
 | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/b302cd7e-e027-4ea6-86d0-8a4dd6d61f39" height="126px" width="180px"> | <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/multilabel_cls.png" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/099e2b00-0bbe-4b20-9c5a-96b69e473bd2" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/09f683b4-27df-4c24-b8a7-84da20fdd182" height="126px" width="180px"> |
@@ -36,7 +35,7 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 
   🚀 **High Efficiency and Low barrier of entry**: Achieve model **full-process development** based on graphical interfaces and unified commands, creating **8 featured model pipelines** that combine large and small models, semi-supervised learning of large models, and multi-model fusion, greatly reducing the cost of iterating models.
 
-  🌐 **Flexible Deployment in Various Scenarios**: Support various deployment methods such as **high-performance deployment**, **service-oriented deployment**, and **edge deployment** to ensure efficient operation and rapid response of models in different application scenarios.
+  🌐 **Flexible Deployment in Various Scenarios**: Support various deployment methods such as **high-performance inference**, **service deployment**, and **lite deployment** to ensure efficient operation and rapid response of models in different application scenarios.
 
   🔧 **Efficient Support for Mainstream Hardware**: Support seamless switching of various mainstream hardware such as NVIDIA GPUs, Kunlun XPU, Ascend NPU, and Cambricon MLU to ensure efficient operation.
 
@@ -55,7 +54,7 @@ PaddleX is dedicated to achieving pipeline-level model training, inference, and 
 
 ## 📊 What can PaddleX do？
 
-All pipelines of PaddleX support **online experience** and local **inference**. You can quickly experience the effects of each pre-trained pipeline. If you are satisfied with the effects of the pre-trained pipeline, you can directly perform [high-performance inference](./docs/pipeline_deploy/high_performance_deploy_en.md) / [Service-Oriented Deployment](./docs/pipeline_deploy/service_deploy_en.md) / [edge deployment](./docs/pipeline_deploy/lite_deploy_en.md) on the pipeline. If not satisfied, you can also **Custom Development** to improve the pipeline effect. For the complete pipeline development process, please refer to the [PaddleX pipeline Development Tool Local Use Tutorial](./docs/pipeline_usage/pipeline_develop_guide_en.md).
+All pipelines of PaddleX support **online experience** and local **fast inference**. You can quickly experience the effects of each pre-trained pipeline. If you are satisfied with the effects of the pre-trained pipeline, you can directly perform [high-performance inference](./docs/pipeline_deploy/high_performance_inference_en.md) / [serving deployment](./docs/pipeline_deploy/service_deploy_en.md) / [edge deployment](./docs/pipeline_deploy/lite_deploy_en.md) on the pipeline. If not satisfied, you can also **Custom Development** to improve the pipeline effect. For the complete pipeline development process, please refer to the [PaddleX pipeline Development Tool Local Use Tutorial](./docs/pipeline_usage/pipeline_develop_guide_en.md).
 
 In addition, PaddleX provides developers with a full-process efficient model training and deployment tool based on a [cloud-based GUI](https://aistudio.baidu.com/pipeline/mine). Developers **do not need code development**, just need to prepare a dataset that meets the pipeline requirements to **quickly start model training**. For details, please refer to the tutorial ["Developing Industrial-level AI Models with Zero Barrier"](https://aistudio.baidu.com/practical/introduce/546656605663301).
 
@@ -92,7 +91,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
     <tr>
         <td>Table Recognition</td>
-        <td><a href="https://aistudio.baidu.com/community/app/91661?source=appMineRecent">Link</a></td> 
+        <td><a href="https://aistudio.baidu.com/community/app/91661?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -142,7 +141,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
     <tr>
         <td>Time Series Forecasting</td>
-        <td><a href="https://aistudio.baidu.com/community/app/105706/webUI?source=appMineRecent">Link</a></td> 
+        <td><a href="https://aistudio.baidu.com/community/app/105706/webUI?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -152,7 +151,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
     <tr>
         <td>Time Series Anomaly Detection</td>
-        <td><a href="https://aistudio.baidu.com/community/app/105708/webUI?source=appMineRecent">Link</a></td> 
+        <td><a href="https://aistudio.baidu.com/community/app/105708/webUI?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -162,7 +161,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
     <tr>
         <td>Time Series Classification</td>
-        <td><a href="https://aistudio.baidu.com/community/app/105707/webUI?source=appMineRecent">Link</a></td> 
+        <td><a href="https://aistudio.baidu.com/community/app/105707/webUI?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -357,6 +356,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
 > ❗Before installing PaddleX, please ensure you have a basic **Python environment** (Note: Currently supports Python 3.8 to Python 3.10, with more Python versions being adapted).
 
 * **Installing PaddlePaddle**
+
 ```bash
 # cpu
 python -m pip install paddlepaddle==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
@@ -492,7 +492,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 ## 📖 Documentation
 <details>
   <summary> <b> ⬇️ Installation </b></summary>
-  
+
   * [📦 PaddlePaddle Installation](./docs/installation/paddlepaddle_install_en.md)
   * [📦 PaddleX Installation](./docs/installation/installation_en.md) 
 
@@ -529,7 +529,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
    * [🔍 Small Object Detection pipeline Tutorial](./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection_en.md)
    * [🖼️ Image Anomaly Detection pipeline Tutorial](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection_en.md)
   </details>
-  
+
 * <details open>
     <summary> <b> ⏱️ Time Series Analysis</b> </summary>
 
@@ -544,7 +544,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
    * [🖥️ PaddleX pipeline Command Line Instruction](./docs/pipeline_usage/instructions/pipeline_CLI_usage_en.md)
    * [📝 PaddleX pipeline Python Script Instruction](./docs/pipeline_usage/instructions/pipeline_python_API_en.md)
   </details>
-  
+
 </details>
 
 <details open>
@@ -607,7 +607,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
   * [🚨 Time Series Anomaly Detection Module Tutorial](./docs/module_usage/tutorials/time_series_modules/time_series_anomaly_detection.md)
   * [🕒 Time Series Classification Module Tutorial](./docs/module_usage/tutorials/ts_modules/time_series_classification_en.md)
   </details>
-    
+
 * <details open>
   <summary> <b> 📄 Related Instructions </b></summary>
 
@@ -621,9 +621,9 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 <details open>
   <summary> <b> 🏗️ Pipeline Deployment </b></summary>
 
-  * [🚀 PaddleX High-Performance Inference Tutorial](./docs/pipeline_deploy/high_performance_deploy_en.md)
-  * [🖥️ PaddleX Service-Oriented Deployment Tutorial](./docs/pipeline_deploy/service_deploy_en.md)
-  * [📱 PaddleX Edge Deployment Tutorial](./docs/pipeline_deploy/lite_deploy_en.md)
+  * [🚀 PaddleX High-Performance Inference Guide](./docs/pipeline_deploy/high_performance_inference_en.md)
+  * [🖥️ PaddleX Service Deployment Guide](./docs/pipeline_deploy/service_deploy_en.md)
+  * [📱 PaddleX Edge Deployment Guide](./docs/pipeline_deploy/lite_deploy_en.md)
 
 </details>
 <details open>
@@ -667,9 +667,3 @@ We warmly welcome and encourage community members to raise questions, share idea
 ## 📄 License
 
 The release of this project is licensed under the [Apache 2.0 license](https://github.com/PaddlePaddle/PaddleX/blob/release/3.0-beta/LICENSE).
-
-
-
-
-
-

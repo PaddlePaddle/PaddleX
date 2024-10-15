@@ -160,7 +160,7 @@ Among them, `dt_polys` is the detected text box coordinates, `dt_polys` is the d
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/03.png)
 
-The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path. 
+The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path.
 
 </details>
 
@@ -174,8 +174,8 @@ pipeline = create_pipeline(pipeline="OCR")
 
 output = pipeline.predict("general_ocr_002.png")
 for res in output:
-    res.print() 
-    res.save_to_img("./output/") 
+    res.print()
+    res.save_to_img("./output/")
 ```
 > ❗ The results obtained from running the Python script are the same as those from the command line.
 
@@ -220,7 +220,7 @@ pipeline = create_pipeline(pipeline="./my_path/OCR.yaml")
 output = pipeline.predict("general_ocr_002.png")
 for res in output:
     res.print()
-    res.save_to_img("./output/") 
+    res.save_to_img("./output/")
 ```
 
 ## 3. Development Integration/Deployment
@@ -230,7 +230,7 @@ If you need to apply the general OCR pipeline directly in your Python project, r
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
-🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end speedups. For detailed High-Performance Inference procedures, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_deploy_en.md).
+🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end speedups. For detailed high-performance inference procedures, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference_en.md).
 
 ☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy_en.md).
 
