@@ -27,7 +27,7 @@ Small object detection typically refers to accurately detecting and locating sma
     <td>57.1</td>
     <td>1007.0</td>
     <td>324.93</td>
-    <td rowspan="3">PP-YOLOE_plus small object detection model trained on VisDrone</td>
+    <td rowspan="3">PP-YOLOE_plus small object detection model trained on VisDrone. VisDrone is a benchmark dataset specifically for unmanned aerial vehicle (UAV) visual data, which is used for small object detection due to the small size of the targets and the inherent challenges they pose.</td>
     
   </tr>
   <tr>
@@ -57,12 +57,12 @@ Small object detection typically refers to accurately detecting and locating sma
 After installing the wheel package, you can complete the inference of the small object detection module with just a few lines of code. You can switch models under this module freely, and you can also integrate the model inference of the small object detection module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg) to your local machine.
 
 ```python
-from paddlex.inference import create_model 
+from paddlex import create_model 
 
 model_name = "PP-YOLOE_plus_SOD-S"
 
 model = create_model(model_name)
-output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg", batch_size=1)
+output = model.predict("small_object_detection.jpg", batch_size=1)
 
 for res in output:
     res.print(json_format=False)
@@ -90,7 +90,7 @@ tar -xf ./dataset/small_det_examples.tar -C ./dataset/
 You can complete data validation with a single command:
 
 ```bash
-python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml \
+python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/small_det_examples
 ```
@@ -151,7 +151,41 @@ After completing the dataset verification, you can convert the dataset format or
 
 **(1) Dataset Format Conversion**
 
-Small object detection does not support data format conversion.
+Small object detection supports converting datasets in `VOC` and `LabelMe` formats to `COCO` format.
+
+Parameters related to dataset validation can be set by modifying the fields under `CheckDataset` in the configuration file. Examples of some parameters in the configuration file are as follows:
+
+* `CheckDataset`:
+  * `convert`:
+    * `enable`: Whether to perform dataset format conversion. Small object detection supports converting `VOC` and `LabelMe` format datasets to `COCO` format. Default is `False`;
+    * `src_dataset_type`: If dataset format conversion is performed, the source dataset format needs to be set. Default is `null`, with optional values `VOC`, `LabelMe`, `VOCWithUnlabeled`, `LabelMeWithUnlabeled`;
+For example, if you want to convert a `LabelMe` format dataset to `COCO` format, taking the following `LabelMe` format dataset as an example, you need to modify the configuration as follows:
+
+```bash
+......
+CheckDataset:
+  ......
+  convert:
+    enable: True
+    src_dataset_type: LabelMe
+  ......
+```
+Then execute the command:
+
+```bash
+python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
+    -o Global.mode=check_dataset \
+    -o Global.dataset_dir=./path/to/your_smallobject_labelme_dataset
+```
+Of course, the above parameters also support being set by appending command line arguments. Taking a `LabelMe` format dataset as an example:
+
+```bash
+python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
+    -o Global.mode=check_dataset \
+    -o Global.dataset_dir=./path/to/your_smallobject_labelme_dataset \
+    -o CheckDataset.convert.enable=True \
+    -o CheckDataset.convert.src_dataset_type=LabelMe
+```
 
 **(2) Dataset Splitting**
 
@@ -177,7 +211,7 @@ CheckDataset:
 Then execute the command:
 
 ```bash
-python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml \
+python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/small_det_examples
 ```
@@ -186,7 +220,7 @@ After dataset splitting, the original annotation files will be renamed to `xxx.b
 The above parameters can also be set by appending command-line arguments:
 
 ```bash
-python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml  \
+python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/small_det_examples \
     -o CheckDataset.split.enable=True \
@@ -199,7 +233,7 @@ python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml
 Model training can be completed with a single command, taking the training of `PP-YOLOE_plus_SOD-S` as an example:
 
 ```bash
-python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml \
+python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/small_det_examples \
     -o Train.num_classes=10
@@ -217,8 +251,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 * During model training, PaddleX automatically saves model weight files, defaulting to `output`. To specify a save path, use the `-o Global.output` field in the configuration file.
 * PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.
 * When training other models, specify the corresponding configuration file. The correspondence between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md).
-After completing model training, all outputs are saved in the specified output directory (default is `./output/`), typically```markdown
-Similar to model training, the following steps are required:
+After completing model training, all outputs are saved in the specified output directory (default is `./output/`), the following steps are required:
 
 * Specify the `.yaml` configuration file path of the model (here it is `PP-YOLOE_plus_SOD-S.yaml`)
 * Set the mode to model evaluation: `-o Global.mode=evaluate`
@@ -230,7 +263,7 @@ Other related parameters can be set by modifying the fields under `Global` and `
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation, you can complete the evaluation with a single command:
 
 ```bash
-python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml \
+python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/small_det_examples
 ```
@@ -257,7 +290,7 @@ After completing model training and evaluation, you can use the trained model we
 #### 4.4.1 Model Inference
 * To perform inference predictions through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg) to your local machine.
 ```bash
-python main.py -c paddlex/configs/smallobject_detection/PP-YOLOE_plus_SOD-S.yaml \
+python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="small_object_detection.jpg"

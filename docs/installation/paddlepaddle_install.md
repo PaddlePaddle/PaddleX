@@ -9,15 +9,42 @@
 ## 基于 Docker 安装飞桨
 **若您通过 Docker 安装**，请参考下述命令，使用飞桨官方 Docker 镜像，创建一个名为 `paddlex` 的容器，并将当前工作目录映射到容器内的 `/paddle` 目录：
 
+若您使用的 Docker 版本 >= 19.03，请执行：
+
 ```bash
-# 对于 gpu 用户
+# 对于 cpu 用户:
+docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1 /bin/bash
+
+# 对于 gpu 用户:
+# CUDA11.8 用户
+docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
+
+# CUDA12.3 用户
+docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
+```
+
+* 若您使用的 Docker 版本 <= 19.03 但 >= 17.06，请执行：
+
+<details>
+   <summary> 点击展开</summary>
+
+```bash
+# 对于 cpu 用户:
+docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1 /bin/bash
+
+# 对于 gpu 用户:
 # CUDA11.8 用户
 nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
 
 # CUDA12.3 用户
-nvidia-docker run --name paddlex -v $PWD:/paddle  --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
+nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -it registry.baidubce.com/paddlepaddle/paddle:3.0.0b1-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
 ```
-注：更多飞桨官方 docker 镜像请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/docker/linux-docker.html)。若您是 CUDA11.8 用户，请确保您的 Docker版本 >= 19.03；若您是 CUDA12.3 用户，请确保您的 Docker版本 >= 20.10。
+
+</details>
+
+* 若您使用的 Docker 版本 <= 17.06，请升级 Docker 版本。
+
+* 注：更多飞桨官方 docker 镜像请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/docker/linux-docker.html)。
 
 ## 基于 pip 安装飞桨
 **若您通过 pip 安装**，请参考下述命令，用 pip 在当前环境中安装飞桨 PaddlePaddle：
@@ -34,7 +61,7 @@ python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.
 ```
 > ❗ **注**：更多飞桨 Wheel 版本请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/pip/linux-pip.html)。
 
-**关于其他硬件安装飞桨，请参考**[多硬件安装飞桨](https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/tutorials/INSTALL_OTHER_DEVICES.md)**。**
+**关于其他硬件安装飞桨，请参考**[PaddleX多硬件使用指南](../other_devices_support/multi_devices_use_guide.md)**。**
 
 安装完成后，使用以下命令可以验证 PaddlePaddle 是否安装成功：
 

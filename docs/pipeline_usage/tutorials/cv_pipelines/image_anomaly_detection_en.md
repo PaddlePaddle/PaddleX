@@ -66,7 +66,7 @@ After running, the result is:
 ```
 ![](/tmp/images/pipelines/image_anomaly_detection/02.png)
 
-The visualized image is saved in the `output` directory by default, which can be customized using `--save_path`.
+The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path.
 
 ### 2.2 Python Script Integration
 A few lines of code are sufficient for quick inference using the pipeline. Taking the image anomaly detection pipeline as an example:
@@ -93,7 +93,7 @@ In the above Python script, the following steps are executed:
 |-|-|-|-|
 |`pipeline`| The name of the pipeline or the path to the pipeline configuration file. If it's a pipeline name, it must be a pipeline supported by PaddleX. |`str`| None |
 |`device`| The device for pipeline model inference. Supports: "gpu", "cpu". |`str`|`gpu`|
-|`enable_hpi`| Whether to enable high-performance inference, only available if the pipeline supports it. |`bool`|`False`|
+|`use_hpip`| Whether to enable high-performance inference, only available if the pipeline supports it. |`bool`|`False`|
 
 （2）Invoke the `predict` method of the pipeline object for inference prediction: The `predict` method takes `x` as its parameter, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
 
@@ -137,7 +137,7 @@ If you need to apply the pipeline directly in your Python project, refer to the 
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
-🚀 **High-Performance Deployment**: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed high-performance deployment procedures, refer to the [PaddleX High-Performance Deployment Guide](../../../pipeline_deploy/high_performance_deploy_en.md).
+🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed High-Performance Inference procedures, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_deploy_en.md).
 
 ☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy_en.md).
 
@@ -149,16 +149,16 @@ Below are the API references and multi-language service invocation examples:
 For all operations provided by the service:
 
 - Both the response body and the request body for POST requests are JSON data (JSON objects).
-- When the request is processed successfully, the response status code is `200`, and the response body attributes are as follows:
+- When the request is processed successfully, the response status code is `200`, and the response body properties are as follows:
 
     |Name|Type|Description|
     |-|-|-|
     |`errorCode`|`integer`|Error code. Fixed as `0`.|
     |`errorMsg`|`string`|Error message. Fixed as `"Success"`.|
 
-    The response body may also have a `result` attribute of type `object`, which stores the operation result information.
+    The response body may also have a `result` property of type `object`, which stores the operation result information.
 
-- When the request is not processed successfully, the response body attributes are as follows:
+- When the request is not processed successfully, the response body properties are as follows:
 
     |Name|Type|Description|
     |-|-|-|
@@ -173,13 +173,13 @@ Operations provided by the service:
 
     `POST /anomaly-detection`
 
-    - Request body attributes:
+    - Request body properties:
 
         |Name|Type|Description|Required|
         |-|-|-|-|
         |`image`|`string`|The URL of the image file accessible by the service or the Base64 encoded result of the image file content.|Yes|
 
-    - When the request is processed successfully, the `result` of the response body has the following attributes:
+    - When the request is processed successfully, the `result` of the response body has the following properties:
 
         |Name|Type|Description|
         |-|-|-|
@@ -559,7 +559,7 @@ echo "Output image saved at " . $output_image_path . "\n";
 📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing functions on user devices themselves, enabling devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy_en.md).
 You can choose the appropriate deployment method for your model pipeline based on your needs and proceed with subsequent AI application integration.
 
-## 4. Customization and Fine-tuning
+## 4. Custom Development
 If the default model weights provided by the image anomaly detection pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing model using **your own domain-specific or application-specific data** to improve the recognition performance of the image anomaly detection pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
@@ -588,9 +588,9 @@ For example, if you use an NVIDIA GPU for inference with the image anomaly detec
 ```bash
 paddlex --pipeline anomaly_detection --input uad_grid.png --device gpu:0
 ``````
-At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu`:
+At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu:0`:
 
 ```bash
 paddlex --pipeline anomaly_detection --input uad_grid.png --device npu:0
 ```
-If you want to use the image anomaly detection pipeline on more types of hardware, please refer to the [PaddleX Multi-device Usage Guide](../../../other_devices_support/installation_other_devices_en.md).
+If you want to use the image anomaly detection pipeline on more types of hardware, please refer to the [PaddleX Multi-device Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md).

@@ -17,7 +17,7 @@ Image classification is a technique that assigns images to predefined categories
     <th>Model</th>
     <th>Top-1 Accuracy (%)</th>
     <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time</th>
+    <th>CPU Inference Time (ms)</th>
     <th>Model Size (M)</th>
     <th>Description</th>
   </tr>
@@ -668,7 +668,7 @@ After running, the result will be:
 ![](/tmp/images/pipelines/image_classification/03.png)
 
 
-The visualization images are saved in the `output` directory by default, and you can also customize it through `--save_path`.
+The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path.
 
 #### 2.2.2 Integration via Python Script
 A few lines of code can complete the quick inference of the pipeline. Taking the general image classification pipeline as an example:
@@ -694,7 +694,7 @@ In the above Python script, the following steps are executed:
 |-----------|-------------|------|---------|
 |`pipeline` | The name of the pipeline or the path to the pipeline configuration file. If it is the name of the pipeline, it must be a pipeline supported by PaddleX. | `str` | None |
 |`device` | The device for pipeline model inference. Supports: "gpu", "cpu". | `str` | "gpu" |
-|`enable_hpi` | Whether to enable high-performance inference, which is only available when the pipeline supports it. | `bool` | `False` |
+|`use_hpip` | Whether to enable high-performance inference, which is only available when the pipeline supports it. | `bool` | `False` |
 
 (2) Call the `predict` method of the image classification pipeline object for inference prediction: The `predict` method parameter is `x`, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
 
@@ -702,7 +702,7 @@ In the above Python script, the following steps are executed:
 |----------------|-------------|
 | Python Var | Supports directly passing Python variables, such as numpy.ndarray representing image data. |
 | `str` | Supports passing the path of the file to be predicted, such as the local path of an image file: `/root/data/img.jpg`. |
-| `str` | Supports passing the URL of the file to be predicted, such as the network URL of an image file: [Example](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001). |
+| `str` | Supports passing the URL of the file to be predicted, such as the network URL of an image file: [Example](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg). |
 | `str` | Supports passing a local directory, which should contain files to be predicted, such as the local path: `/root/data/`. |
 | `dict` | Supports passing a dictionary type, where the key needs to correspond to the specific task, such as "img" for the image classification task, and the value of the dictionary supports the above data types, e.g., `{"img": "/root/data1"}`. |
 | `list` | Supports passing a list, where the list elements need to be the above data types, such as `[numpy.ndarray, numpy.ndarray]`, `["/root/data/img1.jpg", "/root/data/img2.jpg"]`, `["/root/data1", "/root/data2"]`, `[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]`. |
@@ -738,7 +738,7 @@ If you need to apply the pipeline directly in your Python project, refer to the 
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
-🚀 **High-Performance Deployment**: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end speedups. For detailed high-performance deployment procedures, refer to the [PaddleX High-Performance Deployment Guide](../../../pipeline_deploy/high_performance_deploy_en.md).
+🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end speedups. For detailed High-Performance Inference procedures, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_deploy_en.md).
 
 ☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy_en.md).
 
@@ -750,16 +750,16 @@ Below are the API references and multi-language service invocation examples:
 For all operations provided by the service:
 
 - Both the response body and the request body for POST requests are JSON data (JSON objects).
-- When the request is processed successfully, the response status code is `200`, and the response body attributes are as follows:
+- When the request is processed successfully, the response status code is `200`, and the response body properties are as follows:
 
     | Name | Type | Description |
     |------|------|-------------|
     |`errorCode`|`integer`|Error code. Fixed as `0`.|
     |`errorMsg`|`string`|Error message. Fixed as `"Success"`.|
 
-    The response body may also have a `result` attribute of type `object`, which stores the operation result information.
+    The response body may also have a `result` property of type `object`, which stores the operation result information.
 
-- When the request is not processed successfully, the response body attributes are as follows:
+- When the request is not processed successfully, the response body properties are as follows:
 
     | Name | Type | Description |
     |------|------|-------------|
@@ -774,27 +774,27 @@ Operations provided by the service are as follows:
 
     `POST /image-classification`
 
-    - The request body attributes are as follows:
+    - The request body properties are as follows:
 
         | Name | Type | Description | Required |
         |------|------|-------------|----------|
         |`image`|`string`|The URL of an image file accessible by the service or the Base64 encoded result of the image file content.|Yes|
         |`inferenceParams`|`object`|Inference parameters.|No|
 
-        The attributes of `inferenceParams` are as follows:
+        The properties of `inferenceParams` are as follows:
 
         | Name | Type | Description | Required |
         |------|------|-------------|----------|
         |`topK`|`integer`|Only the top `topK` categories with the highest scores will be retained in the results.|No|
 
-    - When the request is processed successfully, the `result` of the response body has the following attributes:
+    - When the request is processed successfully, the `result` of the response body has the following properties:
 
         | Name | Type | Description |
         |------|------|-------------|
         |`categories`|`array`|Image category information.|
         |`image`|`string`|The image classification result image. The image is in JPEG format and encoded using Base64.|
 
-        Each element in `categories` is an `object` with the following attributes:
+        Each element in `categories` is an `object` with the following properties:
 
         | Name | Type | Description |
         |------|------|-------------|
@@ -1189,7 +1189,7 @@ print_r($result["categories"]);
 📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing functions on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy_en.md).
 You can choose the appropriate deployment method for your model pipeline based on your needs and proceed with subsequent AI application integration.
 
-## 4. Customization and Fine-tuning
+## 4. Custom Development
 If the default model weights provided by the general image classification pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing model using **data from your specific domain or application scenario** to improve the recognition performance of the general image classification pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
@@ -1218,9 +1218,9 @@ For example, if you use an NVIDIA GPU for inference in the image classification 
 ```bash
 paddlex --pipeline image_classification --input general_image_classification_001.jpg --device gpu:0
 ``````
-At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu`:
+At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu:0`:
 
 ```bash
 paddlex --pipeline image_classification --input general_image_classification_001.jpg --device npu:0
 ```
-If you want to use the General Image Classification Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/installation_other_devices_en.md).
+If you want to use the General Image Classification Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md).

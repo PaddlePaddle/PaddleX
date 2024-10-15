@@ -39,7 +39,7 @@ PaddleX provides five end-to-end time series anomaly detection models. For detai
 
 To demonstrate the entire process of time series anomaly detection, we will use the publicly available MSL (Mars Science Laboratory) dataset for model training and validation. The PSM (Planetary Science Mission) dataset, sourced from NASA, comprises 55 dimensions and includes telemetry anomaly data reported by the spacecraft's monitoring system for unexpected event anomalies (ISA). With its practical application background, it better reflects real-world anomaly scenarios and is commonly used to test and validate the performance of time series anomaly detection models. This tutorial will perform anomaly detection based on this dataset.
 
-We have converted the dataset into a standard data format, and you can obtain a sample dataset using the following command. For an introduction to the data format, please refer to the [Time Series Anomaly Detection Module Development Tutorial](../module_usage/tutorials/ts_modules/time_series_anomaly_detection_en.md)。.
+We have converted the dataset into a standard data format, and you can obtain a sample dataset using the following command. For an introduction to the data format, please refer to the [Time Series Anomaly Detection Module Development Tutorial](../module_usage/tutorials/time_series_modules/time_series_anomaly_detection_en.md).
 
 
 You can use the following commands to download the demo dataset to a specified folder:
@@ -50,7 +50,7 @@ wget https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/pr
 tar -xf ./dataset/msl.tar -C ./dataset/
 ```
 
-* **Data Considerations**
+**Data Considerations**
  * Time series anomaly detection is an unsupervised learning task, thus labeled training data is not required. The collected training samples should ideally consist solely of normal data, i.e., devoid of anomalies, with the label column in the training set set to 0 or, alternatively, the label column can be omitted entirely. For the validation set, to assess accuracy, labeling is necessary. Points that are anomalous at a particular timestamp should have their labels set to 1, while normal points should have labels of 0.
  * Handling Missing Values: To ensure data quality and integrity, missing values can be imputed based on expert knowledge or statistical methods.
  * Non-Repetitiveness: Ensure that data is collected in chronological order by row, with no duplication of timestamps.
@@ -102,7 +102,7 @@ The above verification results have omitted some data parts. `check_pass` being 
 **Note**: Only data that passes the verification can be used for training and evaluation.
 
 ### 4.3 Dataset Format Conversion/Dataset Splitting (Optional)
-If you need to convert the dataset format or re-split the dataset, refer to Section 4.1.3 in the [Time Series Anomaly Detection Module Development Tutorial](../module_usage/tutorials/ts_modules/time_series_anomaly_detection_en.md).
+If you need to convert the dataset format or re-split the dataset, refer to Section 4.1.3 in the [Time Series Anomaly Detection Module Development Tutorial](../module_usage/tutorials/time_series_modules/time_series_anomaly_detection_en.md).
 
 ## 5. Model Training and Evaluation
 ### 5.1 Model Training
@@ -134,6 +134,31 @@ Each model in PaddleX provides a configuration file for model development to set
   * `batch_size`: Training batch size for a single GPU.
   * `time_col`: Time column, set the column name of the time series dataset's time column based on your data.
   * `feature_cols`: Feature variables indicating variables related to whether the device is abnormal. 
+  * `freq`: Frequency of the time series dataset.
+  * `input_len`: The length of the time series input to the model. The time series will be sliced according to this length, and the model will predict whether there is an anomaly in this segment of the time series for that length. The recommended input length should be considered in the context of the actual scenario. In this tutorial, the input length is 96, which means we hope to predict whether there are anomalies at 96 time points.
+  * `label`: Represents the number indicating whether a time point in the time series is abnormal. Anomalous points are labeled as 1, and normal points are labeled as 0. In this tutorial, the anomaly monitoring dataset uses label for this purpose.
+
+For more introductions to hyperparameters, please refer to [PaddleX Time Series Task Model Configuration File Parameter Instructions](../module_usage/instructions/config_parameters_time_series_en.md). The above parameters can be set by appending command-line arguments. For example, to specify the mode as model training: `-o Global.mode=train`; to specify the first GPU for training: `-o Global.device=gpu:0`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`.
+
+<details>
+   <summary> More Details (Click to Expand)  </summary>
+
+* During the model training process, PaddleX automatically saves the model weight files, with the default directory being output. If you need to specify a different save path, you can configure it through the `-o Global.output` field in the configuration file.
+* PaddleX abstracts away the concepts of dynamic graph weights and static graph weights from you. During model training, both dynamic and static graph weights are produced simultaneously. By default, static graph weights are selected for inference.
+* When training other models, you need to specify the corresponding configuration file. The correspondence between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../support_list/models_list_en.md)
+
+After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including the following:
+
+**Explanation of Training Outputs:**
+
+After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including the following:
+
+`train_result.json`: A training result record file that logs whether the training task was completed normally, as well as the output weight metrics, relevant file paths, etc.
+`train.log`: A training log file that records changes in model metrics, loss values, and other information during the training process.
+`config.yaml`: The training configuration file that records the hyperparameter configurations for this training session.
+`best_accuracy.pdparams.tar`, `scaler.pkl`, `.checkpoints`, `.inference*`: Files related to model weights, including network parameters, optimizers, static graph network parameters, etc.
+
+</details>
 
 ### 5.2 Model Evaluation
 After completing model training, you can evaluate the specified model weights file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation requires just one command:

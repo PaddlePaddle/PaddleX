@@ -12,12 +12,12 @@ The core task of structure analysis is to parse and segment the content of input
 
 | Model | mAP(0.5) (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
 |-|-|-|-|-|-|
-| PicoDet-L_layout_3cls | 89.3 | 15.7 | 159.8 | 22.6 | High-efficiency structure analysis model based on PicoDet-L, including 3 classes: table, image, and seal |
-| PicoDet_layout_1x | 86.8 | 13.0 | 91.3 | 7.4 | High-efficiency structure analysis model based on PicoDet-1x, including text, title, table, image, and list |
-| RT-DETR-H_layout_17cls | 92.6 | 115.1 | 3827.2 | 470.2 | High-precision structure analysis model based on RT-DETR-H, including 17 common layout categories. |
-| RT-DETR-H_layout_3cls | 95.9 | 114.6 | 3832.6 | 470.1 | High-precision structure analysis model based on RT-DETR-H, including 3 classes: table, image, and seal |
+| PicoDet_layout_1x | 86.8 | 13.0 | 91.3 | 7.4 | An efficient layout area localization model trained on the PubLayNet dataset based on PicoDet-1x can locate five types of areas, including text, titles, tables, images, and lists. |
+| PicoDet-L_layout_3cls | 89.3 | 15.7 | 159.8 | 22.6 | An efficient layout area localization model trained on a self-constructed dataset based on PicoDet-L for scenarios such as Chinese and English papers, magazines, and research reports includes three categories: tables, images, and seals. |
+| RT-DETR-H_layout_3cls | 95.9 | 114.6 | 3832.6 | 470.1 | A high-precision layout area localization model trained on a self-constructed dataset based on RT-DETR-H for scenarios such as Chinese and English papers, magazines, and research reports includes three categories: tables, images, and seals. |
+| RT-DETR-H_layout_17cls | 92.6 | 115.1 | 3827.2 | 470.2 | A high-precision layout area localization model trained on a self-constructed dataset based on RT-DETR-H for scenarios such as Chinese and English papers, magazines, and research reports includes 17 common layout categories, namely: paragraph titles, images, text, numbers, abstracts, content, chart titles, formulas, tables, table titles, references, document titles, footnotes, headers, algorithms, footers, and seals. |
 
-**Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built layout region analysis dataset, containing 10,000 images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
+**Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built layout region analysis dataset, containing 10,000 images of common document types, including English and Chinese papers, magazines, research reports, etc. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 </details>
 
 ## III. Quick Integration  <a id="quick"> </a> 
@@ -26,7 +26,7 @@ The core task of structure analysis is to parse and segment the content of input
 After installing the wheel package, a few lines of code can complete the inference of the structure analysis module. You can switch models under this module freely, and you can also integrate the model inference of the structure analysis module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg) to your local machine.
 
 ```python
-from paddlex.inference import create_model 
+from paddlex import create_model 
 
 model_name = "PicoDet-L_layout_3cls"
 
@@ -191,8 +191,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 * During model training, PaddleX automatically saves model weight files, defaulting to `output`. To specify a save path, use the `-o Global.output` field in the configuration file.
 * PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.
 * When training other models, specify the corresponding configuration file. The correspondence between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md).
-After completing model training, all outputs are saved in the specified output directory (default is `./output/`), typically```markdown
-Similar to model training, the following steps are required:
+After completing model training, all outputs are saved in the specified output directory (default is `./output/`), the following steps are required:
 
 * Specify the `.yaml` configuration file path of the model (here it is `PicoDet-L_layout_3cls.yaml`)
 * Set the mode to model evaluation: `-o Global.mode=evaluate`
@@ -250,7 +249,7 @@ Other related parameters can be set by modifying the fields under `Global` and `
 The model can be directly integrated into PaddleX pipelines or into your own projects.
 
 1. **Pipeline Integration**
-The structure analysis module can be integrated into PaddleX pipelines such as the [General Table Recognition Pipeline](../../../pipeline_usage/tutorials/ocr_pipelies/table_recognition_en.md) and the [Document Scene Information Extraction Pipeline v3 (PP-ChatOCRv3)](../../..//pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md). Simply replace the model path to update the layout area localization module. In pipeline integration, you can use high-performance deployment and service-oriented deployment to deploy your model.
+The structure analysis module can be integrated into PaddleX pipelines such as the [General Table Recognition Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md) and the [Document Scene Information Extraction Pipeline v3 (PP-ChatOCRv3)](../../../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md). Simply replace the model path to update the layout area localization module. In pipeline integration, you can use high-performance deployment and service-oriented deployment to deploy your model.
 
 1. **Module Integration**
 The weights you produce can be directly integrated into the layout area localization module. You can refer to the Python example code in the [Quick Integration](#quick) section, simply replacing the model with the path to your trained model.

@@ -1,13 +1,13 @@
 [简体中文](document_scene_information_extraction.md) | English
 
-# PP-ChatOCRv3-doc Pipeline Usage Tutorial
+# PP-ChatOCRv3-doc Pipeline utorial
 
 ## 1. Introduction to PP-ChatOCRv3-doc Pipeline
 PP-ChatOCRv3-doc is a unique intelligent analysis solution for documents and images developed by PaddlePaddle. It combines Large Language Models (LLM) and OCR technology to provide a one-stop solution for complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. By integrating with ERNIE Bot, it fuses massive data and knowledge to achieve high accuracy and wide applicability.
 
 ![](https://github.com/user-attachments/assets/90cb740b-7741-4383-bc4c-663f9d042d02)
 
-The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recognition, Layout Region Detection, Text Detection, Text Recognition, Seal Text Detection, Text Image Rectification, and Document Image Orientation Classification**.
+The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recognition**, **Layout Region Detection**, **Text Detection**, **Text Recognition**, **Seal Text Detection**, **Text Image Rectification**, and **Document Image Orientation Classification**.
 
 **If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, choose a model with faster inference speed. If you prioritize model storage size, choose a model with a smaller storage size.** Some benchmarks for these models are as follows:
 
@@ -31,7 +31,7 @@ The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recogni
     <td>522.536</td>
     <td>1845.37</td>
     <td>6.9 M</td>
-    <td>SLANet is a table structure recognition model developed by Baidu PaddlePaddle Vision Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
+    <td>SLANet is a table structure recognition model developed by Baidu PaddleX Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
   </tr>
   <tr>
     <td>SLANet_plus</td>
@@ -39,7 +39,7 @@ The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recogni
     <td>522.536</td>
     <td>1845.37</td>
     <td>6.9 M</td>
-    <td>SLANet_plus is an enhanced version of SLANet, the table structure recognition model developed by Baidu PaddlePaddle Vision Team. Compared to SLANet, SLANet_plus significantly improves the recognition ability for wireless and complex tables and reduces the model's sensitivity to the accuracy of table positioning, enabling more accurate recognition even with offset table positioning.</td>
+    <td>SLANet_plus is an enhanced version of SLANet, the table structure recognition model developed by Baidu PaddleX Team. Compared to SLANet, SLANet_plus significantly improves the recognition ability for wireless and complex tables and reduces the model's sensitivity to the accuracy of table positioning, enabling more accurate recognition even with offset table positioning.</td>
   </tr>
 </table>
 
@@ -47,14 +47,14 @@ The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recogni
 
 **Layout Detection Module Models**:
 
-|Model|mAP(0.5) (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size (M)|Description|
+| Model | mAP(0.5) (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
 |-|-|-|-|-|-|
-|PicoDet-L_layout_3cls|89.3|15.7|159.8|22.6|A high-efficiency layout detection model based on PicoDet-L, including 3 categories: table, image, and seal.|
-|PicoDet_layout_1x|86.8|13.0|91.3|7.4|A high-efficiency layout detection model based on PicoDet-1x, including text, title, table, image, and list.|
-|RT-DETR-H_layout_17cls|92.6|115.1|3827.2|470.2|A high-precision layout detection model based on RT-DETR-H, including 17 common layout categories.|
-|RT-DETR-H_layout_3cls|95.9|114.6|3832.6|470.1|A high-precision layout detection model based on RT-DETR-H, including 3 categories: table, image, and seal.|
+| PicoDet_layout_1x | 86.8 | 13.0 | 91.3 | 7.4 | An efficient layout area localization model trained on the PubLayNet dataset based on PicoDet-1x can locate five types of areas, including text, titles, tables, images, and lists. |
+| PicoDet-L_layout_3cls | 89.3 | 15.7 | 159.8 | 22.6 | An efficient layout area localization model trained on a self-constructed dataset based on PicoDet-L for scenarios such as Chinese and English papers, magazines, and research reports includes three categories: tables, images, and seals. |
+| RT-DETR-H_layout_3cls | 95.9 | 114.6 | 3832.6 | 470.1 | A high-precision layout area localization model trained on a self-constructed dataset based on RT-DETR-H for scenarios such as Chinese and English papers, magazines, and research reports includes three categories: tables, images, and seals. |
+| RT-DETR-H_layout_17cls | 92.6 | 115.1 | 3827.2 | 470.2 | A high-precision layout area localization model trained on a self-constructed dataset based on RT-DETR-H for scenarios such as Chinese and English papers, magazines, and research reports includes 17 common layout categories, namely: paragraph titles, images, text, numbers, abstracts, content, chart titles, formulas, tables, table titles, references, document titles, footnotes, headers, algorithms, footers, and seals. |
 
-**Note: The above accuracy metrics are evaluated on PaddleOCR's self-built layout analysis dataset, containing 10,000 images. GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
+**Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built layout region analysis dataset, containing 10,000 images of common document types, including English and Chinese papers, magazines, research reports, etc. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 
 **Text Detection Module Models**:
 
@@ -100,7 +100,7 @@ The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recogni
         <th>Model</th>
         <th>Recognition Avg Accuracy (%)</th>
         <th>GPU Inference Time (ms)</th>
-        <th>CPU Inference Time</th>
+        <th>CPU Inference Time (ms)</th>
         <th>Model Size (M)</th>
         <th>Description</th>
     </tr>
@@ -123,7 +123,7 @@ The **PP-ChatOCRv3-doc** pipeline includes modules for **Table Structure Recogni
         <th>Model</th>
         <th>Recognition Avg Accuracy (%)</th>
         <th>GPU Inference Time (ms)</th>
-        <th>CPU Inference Time</th>
+        <th>CPU Inference Time (ms)</th>
         <th>Model Size (M)</th>
         <th>Description</th>
     </tr>
@@ -186,18 +186,21 @@ A few lines of code are all you need to complete the quick inference of the pipe
 ```python
 from paddlex import create_pipeline
 
-predict = create_pipeline(pipeline="PP-ChatOCRv3-doc",
-                          llm_name="ernie-3.5",
-                          llm_params={"api_type":"qianfan","ak":"","sk":""})  ## Please fill in your ak and sk, or you cannot call the large model
+pipeline = create_pipeline(
+    pipeline="PP-ChatOCRv3-doc",
+    llm_name="ernie-3.5",
+    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # Please fill in ak and sk, required for LLM.
+    )
 
-visual_result, visual_inf = predict(["contract.pdf"])
+visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf")
 
 for res in visual_result:
     res.save_to_img("./output")
     res.save_to_html('./output')
     res.save_to_xlsx('./output')
 
-print(predict.chat("乙方,手机号"))
+chat_result = pipeline.chat(["乙方", "手机号"])
+chat_result.print()
 ```
 **Note**: Please first obtain your ak and sk on the [Baidu Cloud Qianfan Platform](https://console.bce.baidu.com/qianfan/ais/console/onlineService) (for detailed steps, please refer to the [AK and SK Authentication API Call Process](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8)), and fill in your ak and sk to the specified locations to enable normal calls to the large model.
 
@@ -209,24 +212,43 @@ After running, the output is as follows:
 
 In the above Python script, the following steps are executed:
 
-(1) Instantiate the `create_pipeline` to create a PP-ChatOCRv3-doc pipeline object: Specific parameter descriptions are as follows:
+(1) Call the `create_pipeline` to instantiate a PP-ChatOCRv3-doc pipeline object, related parameters descriptions are as follows:
 
-| Parameter | Description | Default | Type |
+| Parameter | Type | Default | Description |
 |-|-|-|-|
-| `pipeline` | Pipeline name or pipeline configuration file path. If it's a pipeline name, it must be supported by PaddleX. | None | str |
-| `llm_name` | Large Language Model name | "ernie-3.5" | str |
-| `llm_params` | API configuration | {} | dict |
-| `device(kwargs)` | Running device (None for automatic adaptation) | None | str/None |
+| `pipeline` | str | None | Pipeline name or pipeline configuration file path. If it's a pipeline name, it must be supported by PaddleX; |
+| `llm_name` | str | "ernie-3.5" | Large Language Model name; |
+| `llm_params` | dict | `{}` | API configuration; |
+| `device(kwargs)` | str/`None` | `None` | Running device (`None` meaning automatic selection); |
 
-(2) Call the `predict` method of the PP-ChatOCRv3-doc pipeline object for inference prediction: The `predict` method parameter is `x`, used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
+(2) Call the `visual_predict` of the PP-ChatOCRv3-doc pipeline object to visual predict, related parameters descriptions are as follows:
 
-| Parameter Type | Description |
-|-|-|
-| Python Var | Supports directly passing Python variables, such as numpy.ndarray representing image data; |
-| str | Supports passing the path of the file to be predicted, such as the local path of an image file: /root/data/img.jpg; |
-| str | Supports passing the URL of the file to be predicted, such as [example](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf); |
-| str | Supports passing a local directory, which should contain files to be predicted, such as the local path: /root/data/; |
-| dict | Supports passing a dictionary type, where the key needs to correspond to the specific pipeline, such as "img
+| Parameter | Type | Default | Description |
+|-|-|-|-|
+|`input`|Python Var|无|Support to pass Python variables directly, such as `numpy.ndarray` representing image data;|
+|`input`|str|无|Support to pass the path of the file to be predicted, such as the local path of an image file: `/root/data/img.jpg`;|
+|`input`|str|无|Support to pass the URL of the file to be predicted, such as: `https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf`;|
+|`input`|str|无|Support to pass the local directory, which should contain files to be predicted, such as: `/root/data/`;|
+|`input`|dict|无|Support to pass a dictionary, where the key needs to correspond to the specific pipeline, such as: `{"img": "/root/data1"}`；|
+|`input`|list|无|Support to pass a list, where the elements must be of the above types of data, such as: `[numpy.ndarray, numpy.ndarray]`，`["/root/data/img1.jpg", "/root/data/img2.jpg"]`，`["/root/data1", "/root/data2"]`，`[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]`；|
+|`use_doc_image_ori_cls_model`|bool|`True`|Whether or not to use the orientation classification model;|
+|`use_doc_image_unwarp_model`|bool|`True`|Whether or not to use the unwarp model;|
+|`use_seal_text_det_model`|bool|`True`|Whether or not to use the seal text detection model;|
+
+(3) Call the relevant functions of prediction object to save the prediction results. The related functions are as follows:
+
+|Function|Parameter|Description|
+|-|-|-|
+|`save_to_img`|`save_path`|Save OCR prediction results, layout results, and table recognition results as image files, with the parameter `save_path` used to specify the save path;|
+|`save_to_html`|`save_path`|Save the table recognition results as an HTML file, with the parameter 'save_path' used to specify the save path;|
+|`save_to_xlsx`|`save_path`|Save the table recognition results as an Excel file, with the parameter 'save_path' used to specify the save path;|
+
+(4) Call the `chat` of PP-ChatOCRv3-doc pipeline object to query information with LLM, related parameters are described as follows:
+
+| Parameter | Type | Default | Description |
+|-|-|-|-|
+|`key_list`|str|-|Keywords used to query. A string composed of multiple keywords with "," as separators, such as "Party B, phone number";|
+|`key_list`|list|-|Keywords used to query. A list composed of multiple keywords.|
 
 (3) Obtain prediction results by calling the `predict` method: The `predict` method is a `generator`, so prediction results need to be obtained through calls. The `predict` method predicts data in batches, so the prediction results are represented as a list of prediction results.
 
@@ -277,19 +299,18 @@ For example, if your configuration file is saved at `./my_path/PP-ChatOCRv3-doc.
 
 ```python
 from paddlex import create_pipeline
-
-predict = create_pipeline(pipeline="./my_path/PP-ChatOCRv3-doc.yaml",
-                          llm_name="ernie-3.5",
-                          llm_params={"api_type":"qianfan","ak":"","sk":""} )  ## Please fill in your ak and sk, or you will not be able to call the large language model
-
-visual_result, visual_inf = predict(["contract.pdf"])
-
+pipeline = create_pipeline(
+    pipeline="./my_path/PP-ChatOCRv3-doc.yaml",
+    llm_name="ernie-3.5",
+    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # Please fill in ak and sk, required for LLM.
+    )
+visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf")
 for res in visual_result:
     res.save_to_img("./output")
     res.save_to_html('./output')
     res.save_to_xlsx('./output')
-
-print(predict.chat("乙方,手机号"))
+chat_result = pipeline.chat(["乙方", "手机号"])
+chat_result.print()
 ```
 
 ## 3. Development Integration/Deployment
@@ -299,7 +320,7 @@ If you need to directly apply the pipeline in your Python project, you can refer
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
-🚀 **High-Performance Deployment**: In actual production environments, many applications have stringent standards for the performance metrics (especially response speed) of deployment strategies to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed high-performance deployment procedures, please refer to the [PaddleX High-Performance Deployment Guide](../../../pipeline_deploy/high_performance_deploy_en.md).
+🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for the performance metrics (especially response speed) of deployment strategies to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed High-Performance Inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_deploy_en.md).
 
 ☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy_en.md).
 
@@ -311,16 +332,16 @@ Below are the API references and multi-language service invocation examples:
 For all operations provided by the service:
 
 - Both the response body and the request body for POST requests are JSON data (JSON objects).
-- When the request is processed successfully, the response status code is `200`, and the response body attributes are as follows:
+- When the request is processed successfully, the response status code is `200`, and the response body properties are as follows:
 
     | Name | Type | Description |
     |------|------|-------------|
     | `errorCode` | `integer` | Error code. Fixed as `0`. |
     | `errorMsg` | `string` | Error description. Fixed as `"Success"`. |
 
-    The response body may also have a `result` attribute of type `object`, which stores the operation result information.
+    The response body may also have a `result` property of type `object`, which stores the operation result information.
 
-- When the request is not processed successfully, the response body attributes are as follows:
+- When the request is not processed successfully, the response body properties are as follows:
 
     | Name | Type | Description |
     |------|------|-------------|
@@ -335,12 +356,12 @@ Operations provided by the service are as follows:
 
     `POST /chatocr-vision`
 
-    - Request body attributes:
+    - Request body properties:
 
         | Name | Type | Description | Required |
         |------|------|-------------|----------|
         | `image` | `string` | The URL of an image file or PDF file accessible by the service, or the Base64 encoded result of the content of the above-mentioned file types. For PDF files with more than 10 pages, only the content of the first 10 pages will be used. | Yes |
-        | `fileType` | `integer` | File type. `0` indicates a PDF file, `1` indicates an image file. If this attribute is not present in the request body, the service will attempt to automatically infer the file type based on the URL. | No |
+        | `fileType` | `integer` | File type. `0` indicates a PDF file, `1` indicates an image file. If this property is not present in the request body, the service will attempt to automatically infer the file type based on the URL. | No |
         | `useOricls` | `boolean` | Whether to enable document image orientation classification. This feature is enabled by default. | No |
         | `useCurve` | `boolean` | Whether to enable seal text detection. This feature is enabled by default. | No |
         | `useUvdoc` | `boolean` | Whether to enable text image correction. This feature is enabled by default. | No |
@@ -352,14 +373,14 @@ Operations provided by the service are as follows:
         |------|------|-------------|----------|
         | `maxLongSide` | `integer` | During inference, if the length of the longer side of the input image for the text detection model is greater than `maxLongSide`, the image will be scaled so that the length of the longer side equals `maxLongSide`. | No |
 
-    - When the request is processed successfully, the `result` of the response body has the following attributes:
+    - When the request is processed successfully, the `result` of the response body has the following properties:
 
         | Name | Type | Description |
         |------|------|-------------|
         | `visionResults` | `array` | Analysis results obtained using computer vision models. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file. |
         | `visionInfo` | `object` | Key information in the image, which can be used as input for other operations. |
 
-        Each element in `visionResults` is an `object` with the following attributes:
+        Each element in `visionResults` is an `object` with the following properties:
 
         | Name | Type | Description |
         |------|------|-------------|
@@ -369,7 +390,7 @@ Operations provided by the service are as follows:
         | `ocrImage` | `string` | OCR result image. The image is in JPEG format and encoded using Base64. |
         | `layoutImage` | `string` | Layout area detection result image. The image is in JPEG format and encoded using Base64. |
 
-        Each element in `texts` is an `object` with the following attributes:
+        Each element in `texts` is an `object` with the following properties:
 
         | Name | Type | Description |
         |------|------|-------------|
@@ -380,7 +401,7 @@ Interact with large language models to extract key information.
 
 `POST /chatocr-vision`
 
-- Request body attributes:
+- Request body properties:
 
     | Name | Type | Description | Required |
     |------|------|-------------|----------|
@@ -406,7 +427,7 @@ Interact with large language models to extract key information.
     }
     ```
 
-- On successful request processing, the `result` in the response body has the following attributes:
+- On successful request processing, the `result` in the response body has the following properties:
 
     | Name | Type | Description |
     |------|------|-------------|
@@ -554,11 +575,11 @@ if __name__ == "__main__":
 <br/>
 
 📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing functions on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy_en.md).
-## 4. Customization and Fine-tuning
+## 4. Custom Development
 If the default model weights provided by the PP-ChatOCRv3-doc Pipeline do not meet your requirements in terms of accuracy or speed for your specific scenario, you can attempt to further **fine-tune** the existing models using **your own domain-specific or application-specific data** to enhance the recognition performance of the general table recognition pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
-Since the PP-ChatOCRv3-doc Pipeline comprises four modules, unsatisfactory performance may stem from any of these modules (note that the text image rectification module does not support customization at this time).
+Since the PP-ChatOCRv3-doc Pipeline comprises six modules, unsatisfactory performance may stem from any of these modules (note that the text image rectification module does not support customization at this time).
 
 You can analyze images with poor recognition results and follow the guidelines below for analysis and model fine-tuning:
 
@@ -566,7 +587,7 @@ You can analyze images with poor recognition results and follow the guidelines b
 * Misplaced layout elements (e.g., incorrect positioning of tables or seals) may suggest issues with the layout detection module. Consult the **Customization** section in the [Layout Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/layout_detection_en.md) and fine-tune the layout detection model with your private dataset.
 * Frequent undetected text (i.e., text leakage) may indicate limitations in the text detection model. Refer to the **Customization** section in the [Text Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_detection_en.md) and fine-tune the text detection model using your private dataset.
 * High text recognition errors (i.e., recognized text content does not match the actual text) suggest that the text recognition model requires improvement. Follow the **Customization** section in the [Text Recognition Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_recognition_en.md) to fine-tune the text recognition model.
-* Frequent recognition errors in detected seal text indicate that the seal text detection model needs further refinement. Consult the **Customization** section in the [Seal Text Detection Module Development Tutorials](../../../module_usage/tutorials/ocr_modules/text_detection_en.md) to fine-tune the seal text detection model.
+* Frequent recognition errors in detected seal text indicate that the seal text detection model needs further refinement. Consult the **Customization** section in the [Seal Text Detection Module Development Tutorials](../../../module_usage/tutorials/ocr_modules/seal_text_detection_en.md) to fine-tune the seal text detection model.
 * Frequent misidentifications of document or certificate orientations with text regions suggest that the document image orientation classification model requires improvement. Refer to the **Customization** section in the [Document Image Orientation Classification Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification_en.md) to fine-tune the document image orientation classification model.
 
 ### 4.2 Model Deployment

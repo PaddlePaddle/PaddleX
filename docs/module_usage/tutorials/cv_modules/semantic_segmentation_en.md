@@ -42,12 +42,12 @@ Semantic segmentation is a technique in computer vision that classifies each pix
 </details>
 
 ## III. Quick Integration
-> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.md)
+> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md)
 
 
 Just a few lines of code can complete the inference of the Semantic Segmentation module, allowing you to easily switch between models under this module. You can also integrate the model inference of the the Semantic Segmentation module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png) to your local machine.
 
-```bash
+```python
 from paddlex import create_model
 model = create_model("PP-LiteSeg-T")
 output = model.predict("general_semantic_segmentation_002.png", batch_size=1)
@@ -56,15 +56,15 @@ for res in output:
     res.save_to_img("./output/")
     res.save_to_json("./output/res.json")
 ```
-For more information on using PaddleX's single-model inference API, refer to the [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.md).
+For more information on using PaddleX's single-model inference API, refer to the [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API_en.md).
 
 ## IV. Custom Development
 
-If you seek higher accuracy, you can leverage PaddleX's custom development capabilities to develop better Semantic Segmentation models. Before developing a Semantic Segmentation model with PaddleX, ensure you have installed PaddleClas plugin for PaddleX. The installation process can be found in the custom development section of the [PaddleX Local Installation Tutorial](https://github.com/AmberC0209/PaddleX/blob/docs_change/docs_new/installation/installation.md).
+If you seek higher accuracy, you can leverage PaddleX's custom development capabilities to develop better Semantic Segmentation models. Before developing a Semantic Segmentation model with PaddleX, ensure you have installed PaddleClas plugin for PaddleX. The installation process can be found in the custom development section of the [PaddleX Local Installation Tutorial](../../../installation/installation_en.md).
 
 ### 4.1 Dataset Preparation
 
-Before model training, you need to prepare a dataset for the task. PaddleX provides data validation functionality for each module. **Only data that passes validation can be used for model training.** Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development. If you wish to use private datasets for model training, refer to [PaddleX Semantic Segmentation Task Module Data Preparation Tutorial](/docs_new_en/data_annotations/cv_modules/semantic_segmentation_en.md).
+Before model training, you need to prepare a dataset for the task. PaddleX provides data validation functionality for each module. **Only data that passes validation can be used for model training.** Additionally, PaddleX provides demo datasets for each module, which you can use to complete subsequent development. If you wish to use private datasets for model training, refer to [PaddleX Semantic Segmentation Task Module Data Preparation Tutorial](../../../data_annotations/cv_modules/semantic_segmentation_en.md).
 
 #### 4.1.1 Demo Data Download
 
@@ -117,8 +117,6 @@ The specific content of the verification result file is:
   "dataset_type": "SegDataset"
 }
 ```
-
-</details>
 
 The verification results above indicate that `check_pass` being `True` means the dataset format meets the requirements. Explanations for other indicators are as follows:
 
@@ -247,14 +245,14 @@ You need to follow these steps:
 * Set the mode to model training: `-o Global.mode=train`
 * Specify the training dataset path: `-o Global.dataset_dir`
 
-Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to train using the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration Parameters Documentation](../../instructions/config_parameters_common.md).
+Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to train using the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration Parameters Documentation](../../instructions/config_parameters_common_en.md).
 
 <details>
   <summary>👉 <b>More Details (Click to Expand)</b></summary>
 
 * During model training, PaddleX automatically saves model weight files, with the default path being `output`. To specify a different save path, use the `-o Global.output` field in the configuration file.
 * PaddleX abstracts the concepts of dynamic graph weights and static graph weights from you. During model training, both dynamic and static graph weights are produced, and static graph weights are used by default for model inference.
-* When training other models, specify the corresponding configuration file. The mapping between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list.md).
+* When training other models, specify the corresponding configuration file. The mapping between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md).
 
 After model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
 
@@ -279,7 +277,7 @@ Similar to model training, follow these steps:
 * Set the mode to model evaluation: `-o Global.mode=evaluate`
 * Specify the validation dataset path: `-o Global.dataset_dir`
 
-Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For more details, refer to the [PaddleX Common Configuration Parameters Documentation](../../instructions/config_parameters_common.md).
+Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For more details, refer to the [PaddleX Common Configuration Parameters Documentation](../../instructions/config_parameters_common_en.md).
 
 <details>
   <summary>👉 <b>More Details (Click to Expand)</b></summary>
@@ -328,5 +326,5 @@ The document semantic segmentation module can be integrated into PaddleX pipelin
 
 2. **Module Integration**
 
-The weights you produce can be directly integrated into the semantic segmentation module. You can refer to the Python sample code in [Quick Integration](#quick-integration) and just replace the model with the path to the model you trained.
+The weights you produce can be directly integrated into the semantic segmentation module. You can refer to the Python sample code in [Quick Integration](#iii-quick-integration) and just replace the model with the path to the model you trained.
     
