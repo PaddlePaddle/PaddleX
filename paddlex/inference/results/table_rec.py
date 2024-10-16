@@ -65,7 +65,6 @@ class StructureTableResult(TableRecResult, HtmlMixin, XlsxMixin):
     def __init__(self, data):
         super().__init__(data)
         HtmlMixin.__init__(self)
-        self._show_func_register("save_to_html")(self.save_to_html)
         XlsxMixin.__init__(self)
 
     def _to_html(self):

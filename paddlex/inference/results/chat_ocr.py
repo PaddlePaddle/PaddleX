@@ -33,8 +33,10 @@ class VisualInfoResult(BaseResult):
 class VisualResult(BaseResult):
     """VisualInfoResult"""
 
-    def _to_str(self):
-        return str({"layout_parsing_result": self["layout_parsing_result"]})
+    def _to_str(self, _, *args, **kwargs):
+        return super()._to_str(
+            {"layout_parsing_result": self["layout_parsing_result"]}, *args, **kwargs
+        )
 
     def save_to_html(self, save_path):
         if not save_path.lower().endswith(("html")):

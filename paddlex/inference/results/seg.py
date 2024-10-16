@@ -66,7 +66,7 @@ class SegResult(CVResult):
             color_map[: len(custom_color)] = custom_color
         return color_map
 
-    def _to_str(self):
-        str_ = copy.deepcopy(self)
-        str_["pred"] = "..."
-        return str(str_)
+    def _to_str(self, _, *args, **kwargs):
+        data = copy.deepcopy(self)
+        data["pred"] = "..."
+        return super()._to_str(data, *args, **kwargs)
