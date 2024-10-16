@@ -17,13 +17,12 @@ import re
 import json
 import numpy as np
 from .utils import *
+from ...results import *
 from copy import deepcopy
 from ...components import *
 from ..ocr import OCRPipeline
 from ....utils import logging
-from ...results import *
 from ...components.llm import ErnieBot
-from ...utils.io import ImageReader, PDFReader
 from ..table_recognition import _TableRecPipeline
 from ...components.llm import create_llm_api, ErnieBot
 from ....utils.file_interface import read_yaml_file
@@ -362,7 +361,12 @@ class PPChatOCRPipeline(_TableRecPipeline):
 
             # sort the layout result by the left top point of the box
             structure_res = sorted_layout_boxes(structure_res, w=single_img.shape[1])
-            structure_res = [LayoutStructureResult(item) for item in structure_res]
+            structure_res = LayoutParsingResult(
+                {
+                    "input_path": layout_pred["input_path"],
+                    "layout_parsing_result": structure_res,
+                }
+            )
 
             single_img_res["table_result"] = all_table_res
             single_img_res["ocr_result"] = ocr_res
@@ -376,7 +380,7 @@ class PPChatOCRPipeline(_TableRecPipeline):
         table_text_list = []
         table_html = []
         for single_img_pred in visual_result:
-            layout_res = single_img_pred["structure_result"]
+            layout_res = single_img_pred["structure_result"]["layout_parsing_result"]
             layout_res_copy = deepcopy(layout_res)
             # layout_res is [{"layout_bbox": [x1, y1, x2, y2], "layout": "single","words in text block":"xxx"}, {"layout_bbox": [x1, y1, x2, y2], "layout": "double","印章":"xxx"}
             ocr_res = {}
@@ -505,6 +509,11 @@ class PPChatOCRPipeline(_TableRecPipeline):
 
         prompt_res = {"ocr_prompt": "str", "table_prompt": [], "html_prompt": []}
 
+        if llm_name:
+            llm_api = create_llm_api(llm_name, llm_params)
+        else:
+            llm_api = self.llm_api
+
         final_results = {}
         failed_results = ["大模型调用失败", "未知", "未找到关键信息", "None", ""]
         if html_list:
@@ -514,7 +523,7 @@ class PPChatOCRPipeline(_TableRecPipeline):
             prompt_res["html_prompt"] = prompt_list
             for prompt, table_text in zip(prompt_list, table_text_list):
                 logging.debug(prompt)
-                res = self.get_llm_result(prompt)
+                res = self.get_llm_result(llm_api, prompt)
                 # TODO: why use one html but the whole table_text in next step
                 if list(res.values())[0] in failed_results:
                     logging.debug(
@@ -525,7 +534,7 @@ class PPChatOCRPipeline(_TableRecPipeline):
                     )
                     logging.debug(prompt)
                     prompt_res["table_prompt"].append(prompt)
-                    res = self.get_llm_result(prompt)
+                    res = self.get_llm_result(llm_api, prompt)
                 for key, value in res.items():
                     if value not in failed_results and key in key_list:
                         key_list.remove(key)
@@ -558,22 +567,22 @@ class PPChatOCRPipeline(_TableRecPipeline):
             )
             logging.debug(prompt)
             prompt_res["ocr_prompt"] = prompt
-            res = self.get_llm_result(prompt)
+            res = self.get_llm_result(llm_api, prompt)
             if res:
                 final_results.update(res)
         if not res and not final_results:
-            final_results = self.llm_api.ERROR_MASSAGE
+            final_results = llm_api.ERROR_MASSAGE
         if save_prompt:
             return ChatResult({"chat_res": final_results, "prompt": prompt_res})
         else:
             return ChatResult({"chat_res": final_results, "prompt": ""})
 
-    def get_llm_result(self, prompt):
+    def get_llm_result(self, llm_api, prompt):
         """get llm result and decode to dict"""
-        llm_result = self.llm_api.pred(prompt)
+        llm_result = llm_api.pred(prompt)
         # when the llm pred failed, return None
         if not llm_result:
-            return None
+            return {}
 
         if "json" in llm_result or "```" in llm_result:
             llm_result = (
