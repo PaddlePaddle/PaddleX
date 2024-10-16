@@ -1,0 +1,13 @@
+Global:
+  pipeline_name: PP-ShiTu
+  input: ./drink_dataset_v2.0/test_images/100.jpeg
+  
+Pipeline:
+  det_model: PP-ShiTuV2_det
+  rec_model: PP-ShiTuV2_rec
+  det_batch_size: 1
+  rec_batch_size: 1
+  device: gpu
+  index_dir: "./drink_dataset_v2.0/index/"
+  score_thres: 0.5
+  return_k: 5

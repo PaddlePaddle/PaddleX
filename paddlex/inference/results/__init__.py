@@ -26,3 +26,4 @@ from .instance_seg import InstanceSegResult
 from .ts import TSFcResult, TSAdResult, TSClsResult
 from .warp import DocTrResult
 from .chat_ocr import *
+from .shitu import ShiTuResult
