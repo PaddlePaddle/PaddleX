@@ -18,6 +18,7 @@ from fastapi import FastAPI
 
 from ...base import BasePipeline
 from ...formula_recognition import FormulaRecognitionPipeline
+from ...layout_parsing import LayoutParsingPipeline
 from ...ocr import OCRPipeline
 from ...ppchatocrv3 import PPChatOCRPipeline
 from ...seal_recognition import SealOCRPipeline
@@ -37,6 +38,7 @@ from ...table_recognition import TableRecPipeline
 from ..app import create_app_config
 from .anomaly_detection import create_pipeline_app as create_anomaly_detection_app
 from .formula_recognition import create_pipeline_app as create_formula_recognition_app
+from .layout_parsing import create_pipeline_app as create_layout_parsing_app
 from .image_classification import create_pipeline_app as create_image_classification_app
 from .instance_segmentation import (
     create_pipeline_app as create_instance_segmentation_app,
@@ -150,6 +152,12 @@ def create_pipeline_app(
                 "Expected `pipeline` to be an instance of `FormulaRecognitionPipeline`."
             )
         return create_formula_recognition_app(pipeline, app_config)
+    elif pipeline_name == "layout_parsing":
+        if not isinstance(pipeline, LayoutParsingPipeline):
+            raise TypeError(
+                "Expected `pipeline` to be an instance of `LayoutParsingPipeline`."
+            )
+        return create_layout_parsing_app(pipeline, app_config)
     else:
         if BasePipeline.get(pipeline_name):
             raise ValueError(

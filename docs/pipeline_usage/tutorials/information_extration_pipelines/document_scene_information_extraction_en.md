@@ -378,11 +378,11 @@ Operations provided by the service are as follows:
 
         | Name | Type | Description | Required |
         |-|-|-|-|
-        |`image`|`string`|The URL of an accessible image file or PDF file, or the Base64 encoded content of the above file types. For PDF files with more than 10 pages, only the first 10 pages will be used. | Yes |
+        |`file`|`string`|The URL of an accessible image file or PDF file, or the Base64 encoded content of the above file types. For PDF files with more than 10 pages, only the first 10 pages will be used. | Yes |
         |`fileType`|`integer`|File type. `0` represents PDF files, `1` represents image files. If this property is not present in the request body, the service will attempt to infer the file type automatically based on the URL. | No |
-        |`useOricls`|`boolean`|Whether to enable document image orientation classification. This feature is enabled by default. | No |
-        |`useCurve`|`boolean`|Whether to enable seal text detection. This feature is enabled by default. | No |
-        |`useUvdoc`|`boolean`|Whether to enable text image correction. This feature is enabled by default. | No |
+        |`useImgOrientationCls`|`boolean`|Whether to enable document image orientation classification. This feature is enabled by default. | No |
+        |`useImgUnwrapping`|`boolean`|Whether to enable text image correction. This feature is enabled by default. | No |
+        |`useSealTextDet`|`boolean`|Whether to enable seal text detection. This feature is enabled by default. | No |
         |`inferenceParams`|`object`|Inference parameters. | No |
 
         Properties of `inferenceParams`:
@@ -453,7 +453,7 @@ Operations provided by the service are as follows:
 
         | Name | Type | Description |
         |-|-|-|
-        |`vectorStore`|`object`|Serialized result of the vector database, which can be used as input for other operations.|
+        |`vectorStore`|`string`|Serialized result of the vector database, which can be used as input for other operations.|
 
 - **`retrieveKnowledge`**
 
@@ -466,7 +466,7 @@ Operations provided by the service are as follows:
         | Name | Type | Description | Required |
         |-|-|-|-|
         |`keys`|`array`|List of keywords.|Yes|
-        |`vectorStore`|`object`|Serialized result of the vector database. Provided by the `buildVectorStore` operation.|Yes|
+        |`vectorStore`|`string`|Serialized result of the vector database. Provided by the `buildVectorStore` operation.|Yes|
         |`llmName`|`string`|Name of the large language model.|No|
         |`llmParams`|`object`|API parameters for the large language model.|No|
 
@@ -484,7 +484,7 @@ Operations provided by the service are as follows:
 
         | Name | Type | Description |
         |-|-|-|
-        |`retrievalResult`|`object`|The result of knowledge retrieval, which can be used as input for other operations.|
+        |`retrievalResult`|`string`|The result of knowledge retrieval, which can be used as input for other operations.|
 
 - **`chat`**
 
@@ -501,8 +501,8 @@ Operations provided by the service are as follows:
         |`taskDescription` | `string` | Task prompt. | No |
         |`rules` | `string` | Custom extraction rules, e.g., for output formatting. | No |
         |`fewShot` | `string` | Example prompts. | No |
-        |`vectorStore` | `object` | Serialized result of the vector database. Provided by the `buildVectorStore` operation. | No |
-        |`retrievalResult` | `object` | Results of knowledge retrieval. Provided by the `retrieveKnowledge` operation. | No |
+        |`vectorStore` | `string` | Serialized result of the vector database. Provided by the `buildVectorStore` operation. | No |
+        |`retrievalResult` | `string` | Results of knowledge retrieval. Provided by the `retrieveKnowledge` operation. | No |
         |`returnPrompts` | `boolean` | Whether to return the prompts used. Enabled by default. | No |
         |`llmName` | `string` | Name of the large language model. | No |
         |`llmParams` | `object` | API parameters for the large language model. | No |
@@ -521,7 +521,7 @@ Operations provided by the service are as follows:
 
         | Name | Type | Description |
         |-|-|-|
-        |`chatResult` | `string` | Extracted key information. |
+        |`chatResult` | `object` | Extracted key information. |
         |`prompts` | `object` | Prompts used. |
 
         Properties of `prompts`:
@@ -547,7 +547,6 @@ import sys
 
 import requests
 
-
 API_BASE_URL = "http://0.0.0.0:8080"
 API_KEY = "{Qianfan Platform API key}"
 SECRET_KEY = "{Qianfan Platform secret key}"
@@ -558,101 +557,99 @@ LLM_PARAMS = {
     "secretKey": SECRET_KEY,
 }
 
+file_path = "./demo.jpg"
+keys = ["phone number"]
 
-if __name__ == "__main__":
-    file_path = "./demo.jpg"
-    keys = ["phone number"]
+with open(file_path, "rb") as file:
+    file_bytes = file.read()
+    file_data = base64.b64encode(file_bytes).decode("ascii")
 
-    with open(file_path, "rb") as file:
-        file_bytes = file.read()
-        file_data = base64.b64encode(file_bytes).decode("ascii")
+payload = {
+    "file": file_data,
+    "fileType": 1,
+    "useImgOrientationCls": True,
+    "useImgUnwrapping": True,
+    "useSealTextDet": True,
+}
+resp_vision = requests.post(url=f"{API_BASE_URL}/chatocr-vision", json=payload)
+if resp_vision.status_code != 200:
+    print(
+        f"Request to chatocr-vision failed with status code {resp_vision.status_code}."
+    )
+    pprint.pp(resp_vision.json())
+    sys.exit(1)
+result_vision = resp_vision.json()["result"]
 
-    payload = {
-        "file": file_data,
-        "useOricls": True,
-        "useCurve": True,
-        "useUvdoc": True,
-    }
-    resp_vision = requests.post(url=f"{API_BASE_URL}/chatocr-vision", json=payload)
-    if resp_vision.status_code != 200:
-        print(
-            f"Request to chatocr-vision failed with status code {resp_vision.status_code}."
-        )
-        pprint.pp(resp_vision.json())
-        sys.exit(1)
-    result_vision = resp_vision.json()["result"]
+for i, res in enumerate(result_vision["visionResults"]):
+    print("Texts:")
+    pprint.pp(res["texts"])
+    print("Tables:")
+    pprint.pp(res["tables"])
+    ocr_img_path = f"ocr_{i}.jpg"
+    with open(ocr_img_path, "wb") as f:
+        f.write(base64.b64decode(res["ocrImage"]))
+    layout_img_path = f"layout_{i}.jpg"
+    with open(layout_img_path, "wb") as f:
+        f.write(base64.b64decode(res["layoutImage"]))
+    print(f"Output images saved at {ocr_img_path} and {layout_img_path}")
 
-    for i, res in enumerate(result_vision["visionResults"]):
-        print("Texts:")
-        pprint.pp(res["texts"])
-        print("Tables:")
-        pprint.pp(res["tables"])
-        ocr_img_path = f"ocr_{i}.jpg"
-        with open(ocr_img_path, "wb") as f:
-            f.write(base64.b64decode(res["ocrImage"]))
-        layout_img_path = f"layout_{i}.jpg"
-        with open(layout_img_path, "wb") as f:
-            f.write(base64.b64decode(res["layoutImage"]))
-        print(f"Output images saved at {ocr_img_path} and {layout_img_path}")
-        print("")
+payload = {
+    "visionInfo": result_vision["visionInfo"],
+    "minChars": 200,
+    "llmRequestInterval": 1000,
+    "llmName": LLM_NAME,
+    "llmParams": LLM_PARAMS,
+}
+resp_vector = requests.post(url=f"{API_BASE_URL}/chatocr-vector", json=payload)
+if resp_vector.status_code != 200:
+    print(
+        f"Request to chatocr-vector failed with status code {resp_vector.status_code}."
+    )
+    pprint.pp(resp_vector.json())
+    sys.exit(1)
+result_vector = resp_vector.json()["result"]
 
-    payload = {
-        "visionInfo": result_vision["visionInfo"],
-        "minChars": 200,
-        "llmRequestInterval": 1000,
-        "llmName": LLM_NAME,
-        "llmParams": LLM_PARAMS,
-    }
-    resp_vector = requests.post(url=f"{API_BASE_URL}/chatocr-vector", json=payload)
-    if resp_vector.status_code != 200:
-        print(
-            f"Request to chatocr-vector failed with status code {resp_vector.status_code}."
-        )
-        pprint.pp(resp_vector.json())
-        sys.exit(1)
-    result_vector = resp_vector.json()["result"]
+payload = {
+    "keys": keys,
+    "vectorStore": result_vector["vectorStore"],
+    "llmName": LLM_NAME,
+    "llmParams": LLM_PARAMS,
+}
+resp_retrieval = requests.post(url=f"{API_BASE_URL}/chatocr-retrieval", json=payload)
+if resp_retrieval.status_code != 200:
+    print(
+        f"Request to chatocr-retrieval failed with status code {resp_retrieval.status_code}."
+    )
+    pprint.pp(resp_retrieval.json())
+    sys.exit(1)
+result_retrieval = resp_retrieval.json()["result"]
 
-    payload = {
-        "keys": keys,
-        "vectorStore": result_vector["vectorStore"],
-        "llmName": LLM_NAME,
-        "llmParams": LLM_PARAMS,
-    }
-    resp_retrieval = requests.post(url=f"{API_BASE_URL}/chatocr-retrieval", json=payload)
-    if resp_retrieval.status_code != 200:
-        print(
-            f"Request to chatocr-retrieval failed with status code {resp_retrieval.status_code}."
-        )
-        pprint.pp(resp_retrieval.json())
-        sys.exit(1)
-    result_retrieval = resp_retrieval.json()["result"]
-
-    payload = {
-        "keys": keys,
-        "visionInfo": result_vision["visionInfo"],
-        "taskDescription": "",
-        "rules": "",
-        "fewShot": "",
-        "vectorStore": result_vector["vectorStore"],
-        "retrievalResult": result_retrieval["retrievalResult"],
-        "returnPrompts": True,
-        "llmName": LLM_NAME,
-        "llmParams": LLM_PARAMS,
-    }
-    resp_chat = requests.post(url=f"{API_BASE_URL}/chatocr-chat", json=payload)
-    if resp_chat.status_code != 200:
-        print(
-            f"Request to chatocr-chat failed with status code {resp_chat.status_code}."
-        )
-        pprint.pp(resp_chat.json())
-        sys.exit(1)
-    result_chat = resp_chat.json()["result"]
-    print("\nPrompts:")
-    pprint.pp(result_chat["prompts"])
-    print("Final result:")
-    print(len(result_chat["chatResult"]))
+payload = {
+    "keys": keys,
+    "visionInfo": result_vision["visionInfo"],
+    "taskDescription": "",
+    "rules": "",
+    "fewShot": "",
+    "vectorStore": result_vector["vectorStore"],
+    "retrievalResult": result_retrieval["retrievalResult"],
+    "returnPrompts": True,
+    "llmName": LLM_NAME,
+    "llmParams": LLM_PARAMS,
+}
+resp_chat = requests.post(url=f"{API_BASE_URL}/chatocr-chat", json=payload)
+if resp_chat.status_code != 200:
+    print(
+        f"Request to chatocr-chat failed with status code {resp_chat.status_code}."
+    )
+    pprint.pp(resp_chat.json())
+    sys.exit(1)
+result_chat = resp_chat.json()["result"]
+print("\nPrompts:")
+pprint.pp(result_chat["prompts"])
+print("Final result:")
+print(result_chat["chatResult"])
 ```
-  
+
 **Note**: Please fill in your API key and secret key at `API_KEY` and `SECRET_KEY`.
 
 </details>
@@ -715,10 +712,9 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(
     pipeline="PP-ChatOCRv3-doc",
     llm_name="ernie-3.5",
-    llm_params={"api_type": "qianfan", "ak": "", "sk": ""}, 
+    llm_params={"api_type": "qianfan", "ak": "", "sk": ""},
     device="npu:0" # gpu:0 --> npu:0
-    ) 
+    )
 ```
 
 If you want to use the PP-ChatOCRv3-doc Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/multi_devices_use_guide_en.md).
-
