@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from types import MappingProxyType
+import inspect
 
 from ...utils.func_register import FuncRegister
 from ..utils.io import ImageReader, ImageWriter
@@ -22,15 +22,14 @@ from .utils.mixin import JsonMixin, ImgMixin, StrMixin
 class BaseResult(dict, StrMixin, JsonMixin):
     def __init__(self, data):
         super().__init__(data)
-        self._show_func_map = {}
-        self._show_func_register = FuncRegister(self._show_func_map)
+        self._show_funcs = []
         StrMixin.__init__(self)
         JsonMixin.__init__(self)
 
     def save_all(self, save_path):
-        for key in self._show_func_map:
-            func = self._show_func_map[key]
-            if "save" in key:
+        for func in self._show_funcs:
+            signature = inspect.signature(func)
+            if "save_path" in signature.parameters:
                 func(save_path=save_path)
             else:
                 func()
@@ -42,4 +41,3 @@ class CVResult(BaseResult, ImgMixin):
         ImgMixin.__init__(self, "pillow")
         self._img_reader = ImageReader(backend="pillow")
         self._img_writer = ImageWriter(backend="pillow")
-        self._show_func_register("save_to_img")(self.save_to_img)

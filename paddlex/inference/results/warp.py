@@ -25,7 +25,7 @@ class DocTrResult(CVResult):
     def _to_img(self):
         return np.array(self["doctr_img"])
 
-    def _to_str(self, json_format=True, indent=4, ensure_ascii=False):
-        str_ = copy.deepcopy(self)
-        str_.pop("doctr_img")
-        return str_
+    def _to_str(self, _, *args, **kwargs):
+        data = copy.deepcopy(self)
+        data.pop("doctr_img")
+        return super()._to_str(data, *args, **kwargs)
