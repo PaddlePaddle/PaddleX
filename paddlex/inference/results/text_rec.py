@@ -12,11 +12,55 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import PIL
+from PIL import Image, ImageDraw, ImageFont
+import numpy as np
+import cv2
+
+from ...utils.fonts import PINGFANG_FONT_FILE_PATH
 from ...utils import logging
 from .base import CVResult
 
 
 class TextRecResult(CVResult):
     def _to_img(self):
-        logging.warning("TextRecResult don't support save to img!")
-        return None
+        """Draw label on image"""
+        image = self._img_reader.read(self["input_path"])
+        rec_text = self["rec_text"]
+        rec_score = self["rec_score"]
+        image = image.convert("RGB")
+        image_width, image_height = image.size
+        text = f"{rec_text} ({rec_score})"
+        font = self.adjust_font_size(image_width, text, PINGFANG_FONT_FILE_PATH)
+        row_height = font.getbbox(text)[3]
+        new_image_height = image_height + int(row_height * 1.2)
+        new_image = Image.new("RGB", (image_width, new_image_height), (255, 255, 255))
+        new_image.paste(image, (0, 0))
+
+        draw = ImageDraw.Draw(new_image)
+        draw.text(
+            (0, image_height),
+            text,
+            fill=(0, 0, 0),
+            font=font,
+        )
+        return new_image
+
+    def adjust_font_size(self, image_width, text, font_path):
+        font_size = int(image_width * 0.06)
+        font = ImageFont.truetype(font_path, font_size)
+
+        if int(PIL.__version__.split(".")[0]) < 10:
+            text_width, _ = font.getsize(text)
+        else:
+            text_width, _ = font.getbbox(text)[2:]
+
+        while text_width > image_width:
+            font_size -= 1
+            font = ImageFont.truetype(font_path, font_size)
+            if int(PIL.__version__.split(".")[0]) < 10:
+                text_width, _ = font.getsize(text)
+            else:
+                text_width, _ = font.getbbox(text)[2:]
+
+        return font
