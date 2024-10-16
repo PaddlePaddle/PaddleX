@@ -227,10 +227,10 @@ for res in output:
 
         |名称|类型|含义|
         |-|-|-|
-        |`formulae`|`array`|公式位置和内容。|
+        |`formulas`|`array`|公式位置和内容。|
         |`image`|`string`|公式识别结果图，其中标注检测到的公式位置。图像为JPEG格式，使用Base64编码。|
 
-        `formulae`中的每个元素为一个`object`，具有如下属性：
+        `formulas`中的每个元素为一个`object`，具有如下属性：
 
         |名称|类型|含义|
         |-|-|-|
@@ -241,7 +241,7 @@ for res in output:
 
         ```json
         {
-          "formulae": [
+          "formulas": [
             {
               "poly": [
                 [
@@ -300,8 +300,8 @@ result = response.json()["result"]
 with open(output_image_path, "wb") as file:
     file.write(base64.b64decode(result["image"]))
 print(f"Output image saved at {output_image_path}")
-print("\nDetected formulae:")
-print(result["formulae"])
+print("\nDetected formulas:")
+print(result["formulas"])
 ```
 
 </details>
@@ -360,9 +360,9 @@ int main() {
             std::cerr << "Unable to open file for writing: " << outPutImagePath << std::endl;
         }
 
-        auto formulae = result["formulae"];
-        std::cout << "\nDetected formulae:" << std::endl;
-        for (const auto& formula : formulae) {
+        auto formulas = result["formulas"];
+        std::cout << "\nDetected formulas:" << std::endl;
+        for (const auto& formula : formulas) {
             std::cout << formula << std::endl;
         }
     } else {
@@ -421,14 +421,14 @@ public class Main {
                 JsonNode resultNode = objectMapper.readTree(responseBody);
                 JsonNode result = resultNode.get("result");
                 String base64Image = result.get("image").asText();
-                JsonNode formulae = result.get("formulae");
+                JsonNode formulas = result.get("formulas");
 
                 byte[] imageBytes = Base64.getDecoder().decode(base64Image);
                 try (FileOutputStream fos = new FileOutputStream(outputImagePath)) {
                     fos.write(imageBytes);
                 }
                 System.out.println("Output image saved at " + outputImagePath);
-                System.out.println("\nDetected formulae: " + formulae.toString());
+                System.out.println("\nDetected formulas: " + formulas.toString());
             } else {
                 System.err.println("Request failed with code: " + response.code());
             }
@@ -498,7 +498,7 @@ func main() {
     type Response struct {
         Result struct {
             Image      string   `json:"image"`
-            Formulae []map[string]interface{} `json:"formulae"`
+            Formulas []map[string]interface{} `json:"formulas"`
         } `json:"result"`
     }
     var respData Response
@@ -519,8 +519,8 @@ func main() {
         return
     }
     fmt.Printf("Image saved at %s.jpg\n", outputImagePath)
-    fmt.Println("\nDetected formulae:")
-    for _, formula := range respData.Result.Formulae {
+    fmt.Println("\nDetected formulas:")
+    for _, formula := range respData.Result.Formulas {
         fmt.Println(formula)
     }
 }
@@ -570,8 +570,8 @@ class Program
 
         File.WriteAllBytes(outputImagePath, outputImageBytes);
         Console.WriteLine($"Output image saved at {outputImagePath}");
-        Console.WriteLine("\nDetected formulae:");
-        Console.WriteLine(jsonResponse["result"]["formulae"].ToString());
+        Console.WriteLine("\nDetected formulas:");
+        Console.WriteLine(jsonResponse["result"]["formulas"].ToString());
     }
 }
 ```
@@ -614,8 +614,8 @@ axios.request(config)
       if (err) throw err;
       console.log(`Output image saved at ${outputImagePath}`);
     });
-    console.log("\nDetected formulae:");
-    console.log(result["formulae"]);
+    console.log("\nDetected formulas:");
+    console.log(result["formulas"]);
 })
 .catch((error) => {
   console.log(error);
@@ -650,8 +650,8 @@ curl_close($ch);
 $result = json_decode($response, true)["result"];
 file_put_contents($output_image_path, base64_decode($result["image"]));
 echo "Output image saved at " . $output_image_path . "\n";
-echo "\nDetected formulae:\n";
-print_r($result["formulae"]);
+echo "\nDetected formulas:\n";
+print_r($result["formulas"]);
 
 ?>
 ```

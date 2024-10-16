@@ -44,7 +44,7 @@ class Formula(BaseModel):
 
 
 class InferResult(BaseModel):
-    formulae: List[Formula]
+    formulas: List[Formula]
     image: str
 
 
@@ -80,9 +80,9 @@ def create_pipeline_app(
 
             result = (await pipeline.infer(image))[0]
 
-            formulae: List[Formula] = []
+            formulas: List[Formula] = []
             for poly, latex in zip(result["dt_polys"], result["rec_formula"]):
-                formulae.append(
+                formulas.append(
                     Formula(
                         poly=poly,
                         latex=latex,
@@ -95,7 +95,7 @@ def create_pipeline_app(
                 errorCode=0,
                 errorMsg="Success",
                 result=InferResult(
-                    formulae=formulae,
+                    formulas=formulas,
                     image=output_image_base64,
                 ),
             )
