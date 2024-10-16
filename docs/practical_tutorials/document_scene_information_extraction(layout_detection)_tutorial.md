@@ -11,21 +11,15 @@ PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组
 文档信息抽取是文档处理的一部分，在众多场景中都有着广泛的应用，例如学术研究、图书馆管理、科技情报分析、文献综述撰写等场景。通过文档信息抽取技术，我们可以从论文文献中自动提取出标题、作者、摘要、关键词、发表年份、期刊名称、引用信息等关键信息，并以结构化的形式存储，便于后续的检索、分析与应用。这不仅提升了科研人员的工作效率，也为学术研究的深入发展提供了强有力的支持。
 
 
-首先，需要根据任务场景，选择对应的 PaddleX 产线，本节以论文文献的信息抽取为例，介绍如何进行 文档场景信息抽取v3 产线相关任务的二次开发，对应 PaddleX 的文档场景信息抽取v3。如果无法确定任务和产线的对应关系，您可以在 PaddleX 支持的[模型产线列表](../support_list/pipelines_list.md)中了解相关产线的能力介绍。
+首先，需要根据任务场景，选择对应的 PaddleX 产线，本节以论文文献的信息抽取为例，希望抽取出论文中的**页眉**和**表格标题**，对应 PaddleX 的文档场景信息抽取v3产线。如果无法确定任务和产线的对应关系，您可以在 PaddleX 支持的[模型产线列表](../support_list/pipelines_list.md)中了解相关产线的能力介绍。
 
 
 ## 2. 快速体验
 
-PaddleX 提供了两种体验的方式，你可以在线体验文档场景信息抽取v3产线的效果，也可以在本地使用  Python 体验文档场景信息抽取v3产线的效果。
-
-### 2.1 在线体验
-
-您可以在AI Studio 星河社区体验文档场景信息抽取v3产线的效果，点击链接下载 [论文文献测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/test.jpg)，上传至[官方文档场景信息抽取v3 应用](https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter) 体验抽取效果。如下：
-
-![](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/06.png)
+PaddleX 提供了两种体验的方式，你可以在线体验文档场景信息抽取v3产线的效果，也可以在本地使用 Python 体验文档场景信息抽取v3 产线的效果。
 
 
-### 2.2 本地体验
+### 2.1 本地体验
 
 在本地使用文档场景信息抽取v3产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。几行代码即可完成产线的快速推理：
 
@@ -36,7 +30,8 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(
     pipeline="PP-ChatOCRv3-doc",
     llm_name="ernie-3.5",
-    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # 请填入您的ak与sk，否则无法调用大模型
+    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # 使用千帆接口，请填入您的ak与sk，否则无法调用大模型
+    # llm_params={"api_type": "aistudio", "access_token": ""} # 或者使用AIStudio接口，请填入您的access_token，否则无法调用大模型
     )
 
 visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/test.jpg")
@@ -48,14 +43,14 @@ for res in visual_result:
 
 vector = pipeline.build_vector(visual_info=visual_info)
 chat_result = pipeline.chat(
-    key_list=["页眉", "图表标题"],
+    key_list=["页眉", "表格标题"],
     visual_info=visual_info,
     vector=vector,
     )
 chat_result.print()
 ```
 
-**注**：请先在[百度云千帆平台](https://console.bce.baidu.com/qianfan/ais/console/onlineService)获取自己的ak与sk（详细流程请参考[AK和SK鉴权调用API流程](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8)），将ak与sk填入至指定位置后才能正常调用大模型。
+**注**：目前仅支持文心大模型，支持在[百度云千帆平台](https://console.bce.baidu.com/qianfan/ais/console/onlineService)或者[星河社区 AIStudio](https://aistudio.baidu.com/)上获取相关的 ak/sk(access_token)。如果使用百度云千帆平台，可以参考[AK和SK鉴权调用API流程](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8) 获取ak/sk，如果使用星河社区 AIStudio，可以在[星河社区 AIStudio 访问令牌](https://aistudio.baidu.com/account/accessToken)中获取 access_token。
 
 
 输出打印的结果如下：
@@ -70,7 +65,7 @@ The result has been saved in output/tmpfnss9sq9/tmpfnss9sq9.html.
 The result has been saved in output/tmpfnss9sq9/tmpfnss9sq9.xlsx.
 The result has been saved in output/tmpfnss9sq9/tmpfnss9sq9.xlsx.
 
-{'chat_res': {'页眉': '未知', '图表标题': '未知'}, 'prompt': ''}
+{'chat_res': {'页眉': '未知', '表格标题': '未知'}, 'prompt': ''}
 
 ```
 
@@ -81,7 +76,14 @@ The result has been saved in output/tmpfnss9sq9/tmpfnss9sq9.xlsx.
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/PP-ChatOCRv3_doc/layout_detection_01.png)
 
 
-通过上面的文档场景信息抽取抽取的在线体验可以进行 Badcase 分析，发现文档场景信息抽取产线的官方模型，存在下面的问题：由于官方模型目前只区分了图，表格和印章三个类别，因此目前无法准确的定位并抽取出页眉和表格标题等其他信息，在`{'chat_res': {'页眉': '未知', '图表标题': '未知'}, 'prompt': ''}`中的结果是未知。因此，本节工作聚焦于论文文献的场景，利用论文文档数据集，以页眉和图表标题信息的抽取为例，对文档场景信息抽取产线中的版面分析模型进行微调，从而达到能够精确提取文档中页眉和表格标题信息的能力。
+通过上面的文档场景信息抽取的快速体验可以进行 Badcase 分析，发现文档场景信息抽取产线的官方模型，在当前需求场景中存在下面的问题：由于官方模型目前只区分了图，表格和印章三个类别，因此目前无法准确的定位并抽取出页眉和表格标题等其他信息，在`{'chat_res': {'页眉': '未知', '表格标题': '未知'}, 'prompt': ''}`中的结果是未知。因此，本节工作聚焦于论文文献的场景，利用论文文档数据集，以页眉和表格标题信息的抽取为例，对文档场景信息抽取产线中的版面分析模型进行微调，从而达到能够精确提取文档中页眉和表格标题信息的能力。
+
+
+### 2.2 在线体验
+
+您可以在 **AI Studio 星河社区** 体验文档场景信息抽取v3产线的效果，点击链接下载 [论文文献测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/test.jpg)，上传至[官方文档场景信息抽取v3 应用](https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter) 体验抽取效果。如下：
+
+![](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/06.png)
 
 
 
@@ -94,7 +96,7 @@ PaddleX 提供了 4 个端到端的版面区域定位模型，具体可参考 [�
 |PicoDet_layout_1x|86.8|13.0|91.3|7.4|基于PicoDet-1x在PubLayNet数据集训练的高效率版面区域定位模型，可定位包含文字、标题、表格、图片以及列表这5类区域|
 |PicoDet-L_layout_3cls|89.3|15.7|159.8|22.6|基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含3个类别：表格，图像和印章|
 |RT-DETR-H_layout_3cls|95.9|114.6|3832.6|470.1|基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型，包含3个类别：表格，图像和印章|
-|RT-DETR-H_layout_17cls|92.6|115.1|3827.2|470.2|基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章|
+|RT-DETR-H_layout_17cls|92.6|115.1|3827.2|470.2|基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、表格标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章|
 
 **注：以上精度指标的评估集是 PaddleOCR 自建的版面区域分析数据集，包含中英文论文、杂志和研报等常见的 1w 张文档类型图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。**
 
@@ -257,14 +259,14 @@ python main.py -c paddlex/configs/structure_analysis/RT-DETR-H_layout_3cls.yaml 
 
 推荐在调试参数时遵循控制变量法：
 1. 首先固定训练轮次为 30，批大小为 4。
-2. 基于 RT-DETR-H_layout 模型启动四个实验，学习率分别为：0.001，0.0005，0.0001，0.00001。
+2. 基于 `RT-DETR-H_layout_3cls` 模型启动四个实验，学习率分别为：0.001，0.0005，0.0001，0.00001。
 3. 可以发现实验二精度最高的配置为学习率为 0.0001，同时观察验证集分数，精度在最后几轮仍在上涨。因此可以提升训练轮次为 50、100，模型精度会有进一步的提升。
 
 学习率探寻实验结果：
 
 <center>
 
-| 实验ID           | 学习率 | mAP@0\.5|
+| 实验ID           | 学习率 | mAP@0.50:0.95|
 | --------------- | ------------- | -------------------- |
 | 1 | 0.00001     | 88.90        |
 | **2** | **0.0001**   | **92.41**      |
@@ -278,7 +280,7 @@ python main.py -c paddlex/configs/structure_analysis/RT-DETR-H_layout_3cls.yaml 
 <center>
 
 
-| 实验ID           | 训练轮次 |  mAP@0\.5| 
+| 实验ID           | 训练轮次 |  mAP@0.50:0.95|
 | --------------- | ------------- | -------------------- |
 | 2 | 30    |92.41   |
 | 4 | 50    |92.63   |
@@ -355,6 +357,7 @@ pipeline = create_pipeline(
     pipeline="./my_path/PP-ChatOCRv3-doc.yaml",
     llm_name="ernie-3.5",
     llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # 请填入您的ak与sk，否则无法调用大模型
+    # llm_params={"api_type": "aistudio", "access_token": ""} # 或者使用AIStudio接口，请填入您的access_token，否则无法调用大模型
     )
 
 visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/test.jpg")
@@ -366,7 +369,7 @@ for res in visual_result:
 
 vector = pipeline.build_vector(visual_info=visual_info)
 chat_result = pipeline.chat(
-    key_list=["页眉", "table caption"],
+    key_list=["页眉", "表格标题"],
     visual_info=visual_info,
     vector=vector,
     )
@@ -379,6 +382,7 @@ chat_result.print()
 ```
 {'chat_res': {'页眉': '第43卷\n 航空发动机\n 44', '表格标题': '表1模拟来流Ma=5飞行的空气加热器工作参数'}, 'prompt': ''}
 ```
+
 可以发现，在模型微调之后，关键信息已经被正确的提取出来。
 
 版面的可视化结果如下，已经正确增加了页眉和表格标题的区域定位能力：
@@ -399,6 +403,7 @@ pipeline = create_pipeline(
     pipeline="./my_path/PP-ChatOCRv3-doc.yaml",
     llm_name="ernie-3.5",
     llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # 请填入您的ak与sk，否则无法调用大模型
+    # llm_params={"api_type": "aistudio", "access_token": ""} # 或者使用AIStudio接口，请填入您的access_token，否则无法调用大模型
     )
 
 visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/test.jpg")
@@ -410,14 +415,14 @@ for res in visual_result:
 
 vector = pipeline.build_vector(visual_info=visual_info)
 chat_result = pipeline.chat(
-    key_list=["页眉", "图表标题"],
+    key_list=["页眉", "表格标题"],
     visual_info=visual_info,
     vector=vector,
     )
 chat_result.print()
 ```
 
-更多参数请参考 [文档场景信息抽取v3产线使用教程](../pipeline_usage/tutorials/cv_pipelines/image_classification.md)。
+更多参数请参考 [文档场景信息抽取v3产线使用教程](../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)。
 
 2. 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
 
@@ -426,13 +431,5 @@ chat_result.print()
 * 端侧部署：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考 [PaddleX端侧部署指南](../pipeline_deploy/lite_deploy.md)。
 
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
-
-
-
-
-
-
-
-
 
 
