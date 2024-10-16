@@ -15,7 +15,6 @@
 
 import os
 from pathlib import Path
-import lazy_paddle as paddle
 
 from ..base import BaseTrainer
 from ...utils.config import AttrDict
