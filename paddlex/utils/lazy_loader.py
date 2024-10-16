@@ -15,6 +15,18 @@
 # Code copied from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/util/lazy_loader.py
 import importlib
 import types
+import os
+
+from . import logging
+from .flags import FLAGS_json_format_model
+
+
+def disable_pir_bydefault():
+    # FLAGS_json_format_model not set
+    if not FLAGS_json_format_model:
+        os.environ["FLAGS_json_format_model"] = "0"
+        os.environ["FLAGS_enable_pir_api"] = "0"
+        logging.debug("FLAGS_enable_pir_api has been set 0")
 
 
 class LazyLoader(types.ModuleType):
@@ -35,6 +47,9 @@ class LazyLoader(types.ModuleType):
         module = importlib.import_module(self.__name__)
         self._parent_module_globals[self._local_name] = module
         self._module = module
+        # TODO(gaotingquan): disable PIR using Flag
+        if self.__name__ == "paddle":
+            disable_pir_bydefault()
 
     def __getattr__(self, item):
         if not self.loaded:
