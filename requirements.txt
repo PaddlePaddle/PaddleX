@@ -24,6 +24,7 @@ openpyxl
 premailer
 PyMuPDF
 ujson
+Pillow
 ######## For Chatocrv3 #######
 qianfan==0.0.3
 langchain==0.1.5

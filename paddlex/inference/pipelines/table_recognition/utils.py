@@ -284,7 +284,7 @@ def convert_4point2rect(bbox):
     y1 = min(bbox[:, 1])
     x2 = max(bbox[:, 0])
     y2 = max(bbox[:, 1])
-    return [x1, y1, x2, y2]
+    return np.array([x1, y1, x2, y2], dtype=np.float32)
 
 
 def get_ori_coordinate_for_table(x, y, table_bbox):

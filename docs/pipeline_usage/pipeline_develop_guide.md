@@ -114,15 +114,12 @@ paddlex --pipeline ./ocr.yaml --input general_ocr_002.png
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="ocr")
+pipeline = create_pipeline(pipeline="OCR")
 
 output = pipeline.predict("general_ocr_002.png")
-for batch in output:
-    for item in batch:
-        res = item['result']
-        res.print()
-        res.save_to_img("./output/")
-        res.save_to_json("./output/")
+for res in output:
+    res.print()
+    res.save_to_img("./output/")
 ```
 
 执行了如下几个步骤：
@@ -206,6 +203,7 @@ Pipeline:
 | 图像异常检测       | [图像异常检测产线使用教程](./tutorials/cv_pipelines/image_anomaly_detection.md) |
 | 通用OCR            | [通用OCR产线使用教程](./tutorials/ocr_pipelines/OCR.md) |
 | 通用表格识别       | [通用表格识别产线使用教程](./tutorials/ocr_pipelines/table_recognition.md) |
+| 通用版面解析       | [通用版面解析产线使用教程](./tutorials/ocr_pipelines/layout_parsing.md) |
 | 公式识别       | [公式识别产线使用教程](./tutorials/ocr_pipelines/formula_recognition.md) |
 | 印章识别       | [印章识别产线使用教程](./tutorials/ocr_pipelines/seal_recognition.md) |
 | 时序预测       | [通用时序预测产线使用教程](./tutorials/time_series_pipelines/time_series_forecasting.md) |
