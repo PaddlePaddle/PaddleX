@@ -5,7 +5,7 @@
 <p align="center">
     <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202-red.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/Python-3.8%2C%203.9%2C%203.10-blue.svg"></a>
-    <a href=""><img src="https://img.shields.io/badge/OS-Linux%2C%20Windows-orange.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/OS-Linux%2C%20Windows%2C%20Mac-orange.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/Hardware-CPU%2C%20GPU%2C%20XPU%2C%20NPU%2C%20MLU%2C%20DCU-yellow.svg"></a>
 </p>
 
@@ -204,23 +204,33 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持**在�
         <td>🚧</td>
     </tr>
     <tr>
+        <td>通用版面解析</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>🚧</td>
+    </tr>
+    <tr>
         <td>公式识别</td>
         <td>🚧</td>
+        <td>✅</td>
         <td>🚧</td>
+        <td>✅</td>
         <td>🚧</td>
-        <td>🚧</td>
-        <td>🚧</td>
-        <td>🚧</td>
+        <td>✅</td>
         <td>🚧</td>
     </tr>
     <tr>
         <td>印章识别</td>
         <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
         <td>🚧</td>
-        <td>🚧</td>
-        <td>🚧</td>
-        <td>🚧</td>
-        <td>🚧</td>
+        <td>✅</td>
         <td>🚧</td>
     </tr>
     <tr>
@@ -255,16 +265,6 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持**在�
     </tr>
     <tr>
         <td>人脸识别</td>
-        <td>🚧</td>
-        <td>🚧</td>
-        <td>🚧</td>
-        <td>🚧</td>
-        <td>🚧</td>
-        <td>🚧</td>
-        <td>🚧</td>
-    </tr>
-    <tr>
-        <td>版面解析</td>
         <td>🚧</td>
         <td>🚧</td>
         <td>🚧</td>
@@ -447,6 +447,9 @@ paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddle
 | 图像异常检测       | `paddlex --pipeline anomaly_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png --device gpu:0 `                                              |
 | 通用OCR            | `paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0`                                                      |
 | 通用表格识别       | `paddlex --pipeline table_recognition --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg --device gpu:0`                                      |
+| 通用版面解析       | `paddlex --pipeline layout_parsing --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/demo_paper.png --device gpu:0`                                      |
+| 公式识别       | `paddlex --pipeline formula_recognition --input https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/general_formula_recognition.png --device gpu:0`                                      |
+| 印章识别       | `paddlex --pipeline seal_recognition --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png --device gpu:0`                                      |
 | 时序预测       | `paddlex --pipeline ts_fc --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv --device gpu:0`                                                                   |
 | 时序异常检测   | `paddlex --pipeline ts_ad --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.csv --device gpu:0`                                                                    |
 | 时序分类       | `paddlex --pipeline ts_cls --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv --device gpu:0`                                                                 |
@@ -488,6 +491,9 @@ for res in output:
 | 图像异常检测       | `anomaly_detection`                | [图像异常检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md#22-python脚本方式集成)                              |
 | 通用OCR            | `OCR`                              | [通用OCR产线Python脚本使用说明](./docs/pipeline_usage/tutorials/ocr_pipelines/OCR.md#222-python脚本方式集成)                                                     |
 | 通用表格识别       | `table_recognition`                | [通用表格识别产线Python脚本使用说明](./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition.md#22-python脚本方式集成)                                   |
+| 通用版面解析       | `layout_parsing`                | [通用版面解析产线Python脚本使用说明](./docs/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.md#22-python脚本方式集成)                                   |
+| 公式识别       | `formula_recognition`                | [公式识别产线Python脚本使用说明](./docs/pipeline_usage/tutorials/ocr_pipelines/formula_recognition.md#22-python脚本方式集成)                                   |
+| 印章识别       | `seal_recognition`                | [印章识别产线Python脚本使用说明](./docs/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.md#22-python脚本方式集成)                                   |
 | 时序预测       | `ts_fc`                            | [通用时序预测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md#222-python脚本方式集成)                    |
 | 时序异常检测   | `ts_ad`                            | [通用时序异常检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md#222-python脚本方式集成)          |
 | 时序分类       | `ts_cls`                           | [通用时序分类产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md#222-python脚本方式集成)                 |
@@ -521,6 +527,7 @@ for res in output:
 
     * [📜 通用 OCR 产线使用教程](./docs/pipeline_usage/tutorials/ocr_pipelines/OCR.md)
     * [📊 通用表格识别产线使用教程](./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition.md)
+    * [📄 通用版面解析产线使用教程](./docs/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.md)
     * [📐 公式识别产线使用教程](./docs/pipeline_usage/tutorials/ocr_pipelines/formula_recognition.md)
     * [📝 印章识别产线使用教程](./docs/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.md)
   </details>
