@@ -112,15 +112,12 @@ A few lines of code can quickly experience the pipeline effects:
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="ocr")
+pipeline = create_pipeline(pipeline="OCR")
 
 output = pipeline.predict("general_ocr_002.png")
-for batch in output:
-    for item in batch:
-        res = item['result']
-        res.print()
-        res.save_to_img("./output/")
-        res.save_to_json("./output/")
+for res in output:
+    res.print()
+    res.save_to_img("./output/")
 ```
 
 The following steps are executed:
@@ -202,6 +199,7 @@ Choose the appropriate deployment method for your model pipeline based on your n
 | Image Anomaly Detection       | [Image Anomaly Detection Pipeline Usage Tutorial](./tutorials/cv_pipelines/image_anomaly_detection_en.md) |
 | OCR            | [OCR Pipeline Usage Tutorial](./tutorials/ocr_pipelines/OCR_en.md) |
 | Table Recognition       | [Table Recognition Pipeline Usage Tutorial](./tutorials/ocr_pipelines/table_recognition_en.md) |
+| Layout Parsing       | [Layout Parsing Pipeline Usage Tutorial](./tutorials/ocr_pipelines/layout_parsing_en.md) |
 | Formula Recognition       | [Formula Recognition Pipeline Usage Tutorial](./tutorials/ocr_pipelines/formula_recognition_en.md) |
 | Seal Recognition       | [Seal Recognition Pipeline Usage Tutorial](./tutorials/ocr_pipelines/seal_recognition_en.md) |
 | Time Series Forecasting       | [Time Series Forecasting Pipeline Usage Tutorial](./tutorials/time_series_pipelines/time_series_forecasting_en.md) |
