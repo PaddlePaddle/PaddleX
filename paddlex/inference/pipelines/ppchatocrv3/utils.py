@@ -12,10 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import re
-import numpy as np
-from pathlib import Path
 from scipy.ndimage import rotate
 
 
@@ -133,33 +130,21 @@ def sorted_layout_boxes(res, w):
 
     new_res = []
     res_left = []
-    res_mid = []
     res_right = []
     i = 0
 
     while True:
         if i >= num_boxes:
             break
-        # Check if there are three columns of pictures
-        if (
-            _boxes[i]["layout_bbox"][0] > w / 4
-            and _boxes[i]["layout_bbox"][0] + _boxes[i]["layout_bbox"][2] < 3 * w / 4
-        ):
-            _boxes[i]["layout"] = "double"
-            res_mid.append(_boxes[i])
-            i += 1
         # Check that the bbox is on the left
         elif (
             _boxes[i]["layout_bbox"][0] < w / 4
-            and _boxes[i]["layout_bbox"][0] + _boxes[i]["layout_bbox"][2] < 3 * w / 5
+            and _boxes[i]["layout_bbox"][2] < 3 * w / 5
         ):
             _boxes[i]["layout"] = "double"
             res_left.append(_boxes[i])
             i += 1
-        elif (
-            _boxes[i]["layout_bbox"][0] > 2 * w / 5
-            and _boxes[i]["layout_bbox"][0] + _boxes[i]["layout_bbox"][2] < w
-        ):
+        elif _boxes[i]["layout_bbox"][0] > 2 * w / 5:
             _boxes[i]["layout"] = "double"
             res_right.append(_boxes[i])
             i += 1
@@ -173,13 +158,10 @@ def sorted_layout_boxes(res, w):
             i += 1
 
     res_left = sorted(res_left, key=lambda x: (x["layout_bbox"][1]))
-    res_mid = sorted(res_mid, key=lambda x: (x["layout_bbox"][1]))
     res_right = sorted(res_right, key=lambda x: (x["layout_bbox"][1]))
 
     if res_left:
         new_res += res_left
-    if res_mid:
-        new_res += res_mid
     if res_right:
         new_res += res_right
 
