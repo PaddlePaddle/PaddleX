@@ -35,7 +35,7 @@ class BasePaddlePredictor(BaseComponent, PPEngineMixin):
         PPEngineMixin.__init__(self, option)
         self.model_dir = model_dir
         self.model_prefix = model_prefix
-        self._is_initialized = False
+        self.reset()
 
     def reset(self):
         if not self.option:
@@ -47,7 +47,6 @@ class BasePaddlePredictor(BaseComponent, PPEngineMixin):
             self.input_handlers,
             self.output_handlers,
         ) = self._create()
-        self._is_initialized = True
         logging.debug(f"Env: {self.option}")
 
     def _create(self):
@@ -163,9 +162,6 @@ No need to generate again."
         return self.input_names
 
     def apply(self, **kwargs):
-        if not self._is_initialized:
-            self.reset()
-
         x = self.to_batch(**kwargs)
         for idx in range(len(x)):
             self.input_handlers[idx].reshape(x[idx].shape)
