@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-NEWIR_BLOCKLIST = [
+NEWIR_BLACKLIST = [
     "FasterRCNN-ResNet34-FPN",
     "FasterRCNN-ResNet50",
     "FasterRCNN-ResNet50-FPN",
