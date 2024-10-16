@@ -12,13 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
 from pathlib import Path
 from .base import BaseResult
 from .utils.mixin import Base64Mixin
 
 
-class LayoutStructureResult(BaseResult):
-    """LayoutStructureResult"""
+class LayoutParsingResult(BaseResult):
+    """LayoutParsingResult"""
 
     pass
 
@@ -31,6 +32,9 @@ class VisualInfoResult(BaseResult):
 
 class VisualResult(BaseResult):
     """VisualInfoResult"""
+
+    def _to_str(self):
+        return str({"layout_parsing_result": self["layout_parsing_result"]})
 
     def save_to_html(self, save_path):
         if not save_path.lower().endswith(("html")):
@@ -67,28 +71,28 @@ class VisualResult(BaseResult):
         if unwarp_result:
             # unwarp_result._HARD_FLAG = True
             unwarp_result.save_to_img(uvdoc_save_path)
-        curve_save_path = f"{save_path}_curve.jpg"
+        curve_save_path = f"{save_path}_curve"
         curve_results = self["curve_result"]
         # TODO(): support list of result
         if isinstance(curve_results, dict):
             curve_results = [curve_results]
-        for curve_result in curve_results:
+        for idx, curve_result in enumerate(curve_results):
             curve_result._HARD_FLAG = True if not unwarp_result else False
-            curve_result.save_to_img(curve_save_path)
+            curve_result.save_to_img(f"{curve_save_path}_{idx}.jpg")
         layout_save_path = f"{save_path}_layout.jpg"
         layout_result = self["layout_result"]
         if layout_result:
             layout_result._HARD_FLAG = True if not unwarp_result else False
             layout_result.save_to_img(layout_save_path)
         ocr_save_path = f"{save_path}_ocr.jpg"
-        table_save_path = f"{save_path}_table.jpg"
+        table_save_path = f"{save_path}_table"
         ocr_result = self["ocr_result"]
         if ocr_result:
             ocr_result._HARD_FLAG = True if not unwarp_result else False
             ocr_result.save_to_img(ocr_save_path)
-        for table_result in self["table_result"]:
+        for idx, table_result in enumerate(self["table_result"]):
             table_result._HARD_FLAG = True if not unwarp_result else False
-            table_result.save_to_img(table_save_path)
+            table_result.save_to_img(f"{table_save_path}_{idx}.jpg")
 
 
 class VectorResult(BaseResult, Base64Mixin):

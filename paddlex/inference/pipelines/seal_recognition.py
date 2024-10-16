@@ -63,7 +63,6 @@ class SealOCRPipeline(BasePipeline):
             layout_batch_size=layout_batch_size,
             text_det_batch_size=text_det_batch_size,
             text_rec_batch_size=text_rec_batch_size,
-            device=device,
         )
 
     def _build_predictor(

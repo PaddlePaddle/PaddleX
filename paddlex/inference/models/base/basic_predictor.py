@@ -72,10 +72,12 @@ class BasicPredictor(
     def set_predictor(self, batch_size=None, device=None, pp_option=None):
         if batch_size:
             self.components["ReadCmp"].batch_size = batch_size
-        if device:
+        if device and device != self.pp_option.device:
             self.pp_option.device = device
-        if pp_option:
+            self.components["PPEngineCmp"].reset()
+        if pp_option and pp_option != self.pp_option:
             self.pp_option = pp_option
+            self.components["PPEngineCmp"].reset()
 
     def _has_setter(self, attr):
         prop = getattr(self.__class__, attr, None)

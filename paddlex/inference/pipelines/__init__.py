@@ -36,6 +36,7 @@ from .formula_recognition import FormulaRecognitionPipeline
 from .table_recognition import TableRecPipeline
 from .seal_recognition import SealOCRPipeline
 from .ppchatocrv3 import PPChatOCRPipeline
+from .layout_parsing import LayoutParsingPipeline
 
 
 def load_pipeline_config(pipeline: str) -> Dict[str, Any]:

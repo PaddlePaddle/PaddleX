@@ -308,7 +308,7 @@ The model can be directly integrated into the PaddleX pipelines or directly into
 
 1. **Pipeline Integration**
 
-The small object detection module can be integrated into the [Small Object Detection Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/small_object_detection_en.md) of PaddleX. Simply replace the model path to update the small object detection module of the relevant pipeline. In pipeline integration, you can use high-performance deployment and service-oriented deployment to deploy your obtained model.
+The small object detection module can be integrated into the [Small Object Detection Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/small_object_detection_en.md) of PaddleX. Simply replace the model path to update the small object detection module of the relevant pipeline. In pipeline integration, you can use high-performance inference and service-oriented deployment to deploy your obtained model.
 
 2. **Module Integration**
 

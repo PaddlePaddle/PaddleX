@@ -27,6 +27,7 @@ from pydantic import BaseModel, Field
 from typing_extensions import Annotated, TypeAlias, assert_never
 
 from .....utils import logging
+from .... import results
 from ...ppchatocrv3 import PPChatOCRPipeline
 from .. import file_storage
 from .. import utils as serving_utils
@@ -122,13 +123,12 @@ class BuildVectorStoreResult(BaseModel):
 class RetrieveKnowledgeRequest(BaseModel):
     keys: List[str]
     vectorStore: dict
-    visionInfo: dict
     llmName: Optional[LLMName] = None
     llmParams: Optional[Annotated[LLMParams, Field(discriminator="apiType")]] = None
 
 
 class RetrieveKnowledgeResult(BaseModel):
-    retrievalResult: str
+    retrievalResult: dict
 
 
 class ChatRequest(BaseModel):
@@ -137,9 +137,8 @@ class ChatRequest(BaseModel):
     taskDescription: Optional[str] = None
     rules: Optional[str] = None
     fewShot: Optional[str] = None
-    useVectorStore: bool = True
     vectorStore: Optional[dict] = None
-    retrievalResult: Optional[str] = None
+    retrievalResult: Optional[dict] = None
     returnPrompts: bool = True
     llmName: Optional[LLMName] = None
     llmParams: Optional[Annotated[LLMParams, Field(discriminator="apiType")]] = None
@@ -147,8 +146,8 @@ class ChatRequest(BaseModel):
 
 class Prompts(BaseModel):
     ocr: str
-    table: str
-    html: str
+    table: Optional[str] = None
+    html: Optional[str] = None
 
 
 class ChatResult(BaseModel):
@@ -315,9 +314,9 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
             result = await pipeline.call(
                 pipeline.pipeline.visual_predict,
                 images,
-                use_oricls=request.useOricls,
-                use_curve=request.useCurve,
-                use_uvdoc=request.useUvdoc,
+                use_doc_image_ori_cls_model=request.useOricls,
+                use_doc_image_unwarp_model=request.useCurve,
+                use_seal_text_det_model=request.useUvdoc,
             )
 
             vision_results: List[VisionResult] = []
@@ -393,7 +392,7 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
         pipeline = ctx.pipeline
 
         try:
-            kwargs = {"visual_info": request.visionInfo}
+            kwargs = {"visual_info": results.VisualInfoResult(request.visionInfo)}
             if request.minChars is not None:
                 kwargs["min_characters"] = request.minChars
             else:
@@ -433,8 +432,7 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
         try:
             kwargs = {
                 "key_list": request.keys,
-                "vector": request.vectorStore,
-                "visual_info": request.visionInfo,
+                "vector": results.VectorResult(request.vectorStore),
             }
             if request.llmName is not None:
                 kwargs["llm_name"] = request.llmName
@@ -449,7 +447,7 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
                 logId=serving_utils.generate_log_id(),
                 errorCode=0,
                 errorMsg="Success",
-                result=RetrieveKnowledgeResult(retrievalResult=result["retrieval"]),
+                result=RetrieveKnowledgeResult(retrievalResult=result),
             )
 
         except Exception as e:
@@ -457,7 +455,10 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
             raise HTTPException(status_code=500, detail="Internal server error")
 
     @app.post(
-        "/chatocr-chat", operation_id="chat", responses={422: {"model": Response}}
+        "/chatocr-chat",
+        operation_id="chat",
+        responses={422: {"model": Response}},
+        response_model_exclude_none=True,
     )
     async def _chat(
         request: ChatRequest,
@@ -467,7 +468,7 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
         try:
             kwargs = {
                 "key_list": request.keys,
-                "visual_info": request.visionInfo,
+                "visual_info": results.VisualInfoResult(request.visionInfo),
             }
             if request.taskDescription is not None:
                 kwargs["user_task_description"] = request.taskDescription
@@ -475,11 +476,12 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
                 kwargs["rules"] = request.rules
             if request.fewShot is not None:
                 kwargs["few_shot"] = request.fewShot
-            kwargs["use_retrieval"] = request.useVectorStore
             if request.vectorStore is not None:
-                kwargs["vector"] = request.vectorStore
+                kwargs["vector"] = results.VectorResult(request.vectorStore)
             if request.retrievalResult is not None:
-                kwargs["retrieval_result"] = request.retrievalResult
+                kwargs["retrieval_result"] = results.RetrievalResult(
+                    request.retrievalResult
+                )
             kwargs["save_prompt"] = request.returnPrompts
             if request.llmName is not None:
                 kwargs["llm_name"] = request.llmName
@@ -491,17 +493,15 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
             if result["prompt"]:
                 prompts = Prompts(
                     ocr=result["prompt"]["ocr_prompt"],
-                    table=result["prompt"]["table_prompt"],
-                    html=result["prompt"]["html_prompt"],
-                )
-                chat_result = ChatResult(
-                    chatResult=result["chat_res"],
-                    prompts=prompts,
+                    table=result["prompt"]["table_prompt"] or None,
+                    html=result["prompt"]["html_prompt"] or None,
                 )
             else:
-                chat_result = ChatResult(
-                    chatResult=result["chat_res"],
-                )
+                prompts = None
+            chat_result = ChatResult(
+                chatResult=result["chat_res"],
+                prompts=prompts,
+            )
             return ResultResponse(
                 logId=serving_utils.generate_log_id(),
                 errorCode=0,

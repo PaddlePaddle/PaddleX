@@ -38,7 +38,6 @@ class FormulaRecognitionPipeline(BasePipeline):
         self.set_predictor(
             layout_batch_size=layout_batch_size,
             formula_rec_batch_size=formula_rec_batch_size,
-            device=device,
         )
 
     def _build_predictor(self, layout_model, formula_rec_model):
