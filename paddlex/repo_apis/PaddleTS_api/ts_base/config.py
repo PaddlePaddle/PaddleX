@@ -153,6 +153,14 @@ class BaseTSConfig(BaseConfig):
         assert isinstance(print_mem_info, bool), "print_mem_info should be a bool"
         self.update({"print_mem_info": print_mem_info})
 
+    def update_log_interval(self, log_interval: int):
+        """update log interval(steps)
+
+        Args:
+            log_interval (int): the log interval value to set.
+        """
+        self.update({"log_interval": log_interval})
+
     def update_dataset(self, dataset_dir: str, dataset_type: str = None):
         """update dataset settings"""
         raise NotImplementedError

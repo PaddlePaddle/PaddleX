@@ -257,7 +257,7 @@ class PPChatOCRPipeline(_TableRecPipeline):
                 "ocr_result": OCRResult({}),
                 "table_ocr_result": [],
                 "table_result": StructureTableResult([]),
-                "structure_result": [],
+                "layout_parsing_result": {},
                 "oricls_result": TopkResult({}),
                 "unwarp_result": DocTrResult({}),
                 "curve_result": [],
@@ -364,14 +364,14 @@ class PPChatOCRPipeline(_TableRecPipeline):
             structure_res = LayoutParsingResult(
                 {
                     "input_path": layout_pred["input_path"],
-                    "layout_parsing_result": structure_res,
+                    "parsing_result": structure_res,
                 }
             )
 
             single_img_res["table_result"] = all_table_res
             single_img_res["ocr_result"] = ocr_res
             single_img_res["table_ocr_result"] = all_table_ocr_res
-            single_img_res["structure_result"] = structure_res
+            single_img_res["layout_parsing_result"] = structure_res
 
             yield VisualResult(single_img_res)
 
@@ -380,7 +380,7 @@ class PPChatOCRPipeline(_TableRecPipeline):
         table_text_list = []
         table_html = []
         for single_img_pred in visual_result:
-            layout_res = single_img_pred["structure_result"]["layout_parsing_result"]
+            layout_res = single_img_pred["layout_parsing_result"]["parsing_result"]
             layout_res_copy = deepcopy(layout_res)
             # layout_res is [{"layout_bbox": [x1, y1, x2, y2], "layout": "single","words in text block":"xxx"}, {"layout_bbox": [x1, y1, x2, y2], "layout": "double","印章":"xxx"}
             ocr_res = {}
