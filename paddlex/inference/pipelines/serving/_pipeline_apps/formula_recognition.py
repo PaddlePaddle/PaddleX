@@ -12,42 +12,65 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List
+from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
-from typing_extensions import Annotated
+from typing_extensions import Annotated, TypeAlias
 
 from .....utils import logging
-from ...single_model_pipeline import AnomalyDetection
+from ...formula_recognition import FormulaRecognitionPipeline
 from .. import utils as serving_utils
 from ..app import AppConfig, create_app
 from ..models import Response, ResultResponse
 
 
+class InferenceParams(BaseModel):
+    maxLongSide: Optional[Annotated[int, Field(gt=0)]] = None
+
+
 class InferRequest(BaseModel):
     image: str
+    inferenceParams: Optional[InferenceParams] = None
+
+
+Point: TypeAlias = Annotated[List[float], Field(min_length=2, max_length=2)]
+Polygon: TypeAlias = Annotated[List[Point], Field(min_length=3)]
+
+
+class Formula(BaseModel):
+    poly: Polygon
+    latex: str
 
 
 class InferResult(BaseModel):
-    labelMap: List[int]
-    size: Annotated[List[int], Field(min_length=2, max_length=2)]
+    formulas: List[Formula]
     image: str
 
 
-def create_pipeline_app(pipeline: AnomalyDetection, app_config: AppConfig) -> FastAPI:
+def create_pipeline_app(
+    pipeline: FormulaRecognitionPipeline, app_config: AppConfig
+) -> FastAPI:
     app, ctx = create_app(
         pipeline=pipeline, app_config=app_config, app_aiohttp_session=True
     )
 
     @app.post(
-        "/image-anomaly-detection",
+        "/formula-recognition",
         operation_id="infer",
         responses={422: {"model": Response}},
     )
     async def _infer(request: InferRequest) -> ResultResponse[InferResult]:
         pipeline = ctx.pipeline
         aiohttp_session = ctx.aiohttp_session
+
+        if request.inferenceParams:
+            max_long_side = request.inferenceParams.maxLongSide
+            if max_long_side:
+                raise HTTPException(
+                    status_code=422,
+                    detail="`max_long_side` is currently not supported.",
+                )
 
         try:
             file_bytes = await serving_utils.get_raw_bytes(
@@ -57,19 +80,23 @@ def create_pipeline_app(pipeline: AnomalyDetection, app_config: AppConfig) -> Fa
 
             result = (await pipeline.infer(image))[0]
 
-            pred = result["pred"][0].tolist()
-            size = [len(pred), len(pred[0])]
-            label_map = [item for sublist in pred for item in sublist]
-            output_image_base64 = serving_utils.image_to_base64(
-                result.img.convert("RGB")
-            )
+            formulas: List[Formula] = []
+            for poly, latex in zip(result["dt_polys"], result["rec_formula"]):
+                formulas.append(
+                    Formula(
+                        poly=poly,
+                        latex=latex,
+                    )
+                )
+            output_image_base64 = serving_utils.image_to_base64(result.img)
 
             return ResultResponse(
                 logId=serving_utils.generate_log_id(),
                 errorCode=0,
                 errorMsg="Success",
                 result=InferResult(
-                    labelMap=label_map, size=size, image=output_image_base64
+                    formulas=formulas,
+                    image=output_image_base64,
                 ),
             )
 

@@ -91,7 +91,7 @@ def read_pdf(
             image = np.frombuffer(pixmap.samples, dtype=np.uint8).reshape(
                 pixmap.h, pixmap.w, pixmap.n
             )
-            image = np.ascontiguousarray(image[..., ::-1])
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
             if resize:
                 if img_size is None:
                     img_size = (image.shape[1], image.shape[0])

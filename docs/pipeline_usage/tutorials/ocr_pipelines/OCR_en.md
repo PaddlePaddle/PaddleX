@@ -351,7 +351,7 @@ Operations provided by the service:
 </details>
 
 <details>
-<summary>Multilingual Service Invocation Examples</summary>
+<summary>Multi-Language Service Invocation Examples</summary>
 
 <details>
 <summary>Python</summary>
@@ -377,7 +377,7 @@ result = response.json()["result"]
 with open(output_image_path, "wb") as file:
     file.write(base64.b64decode(result["image"]))
 print(f"Output image saved at {output_image_path}")
-print("\nTexts:")
+print("\nDetected texts:")
 print(result["texts"])
 ```
 
@@ -435,9 +435,9 @@ int main() {
         }
 
         auto texts = result["texts"];
-        std::cout << "\nTexts:" << std::endl;
-        for (const auto& category : texts) {
-            std::cout << category << std::endl;
+        std::cout << "\nDetected texts:" << std::endl;
+        for (const auto& text : texts) {
+            std::cout << text << std::endl;
         }
     } else {
         std::cout << "Failed to send HTTP request." << std::endl;
@@ -499,7 +499,7 @@ public class Main {
                     fos.write(imageBytes);
                 }
                 System.out.println("Output image saved at " + outputImagePath);
-                System.out.println("\nTexts: " + texts.toString());
+                System.out.println("\nDetected texts: " + texts.toString());
             } else {
                 System.err.println("Request failed with code: " + response.code());
             }
@@ -587,9 +587,9 @@ func main() {
         return
     }
     fmt.Printf("Image saved at %s.jpg\n", outputImagePath)
-    fmt.Println("\nTexts:")
-    for _, category := range respData.Result.Texts {
-        fmt.Println(category)
+    fmt.Println("\nDetected texts:")
+    for _, text := range respData.Result.Texts {
+        fmt.Println(text)
     }
 }
 ```
@@ -635,7 +635,7 @@ class Program
 
         File.WriteAllBytes(outputImagePath, outputImageBytes);
         Console.WriteLine($"Output image saved at {outputImagePath}");
-        Console.WriteLine("\nTexts:");
+        Console.WriteLine("\nDetected texts:");
         Console.WriteLine(jsonResponse["result"]["texts"].ToString());
     }
 }
@@ -676,7 +676,7 @@ axios.request(config)
       if (err) throw err;
       console.log(`Output image saved at ${outputImagePath}`);
     });
-    console.log("\nTexts:");
+    console.log("\nDetected texts:");
     console.log(result["texts"]);
 })
 .catch((error) => {
@@ -709,7 +709,7 @@ curl_close($ch);
 $result = json_decode($response, true)["result"];
 file_put_contents($output_image_path, base64_decode($result["image"]));
 echo "Output image saved at " . $output_image_path . "\n";
-echo "\nTexts:\n";
+echo "\nDetected texts:\n";
 print_r($result["texts"]);
 
 ?>

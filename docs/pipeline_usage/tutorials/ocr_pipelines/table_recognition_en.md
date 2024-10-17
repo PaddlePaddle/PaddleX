@@ -268,7 +268,7 @@ Operations provided by the service:
 </details>
 
 <details>
-<summary>Multilingual Service Invocation Examples</summary>
+<summary>Multi-Language Service Invocation Examples</summary>
 
 <details>
 <summary>Python</summary>
@@ -359,11 +359,11 @@ int main() {
 
         encodedImage = result["layoutImage"];
         decodedString = base64::from_base64(encodedImage);
-        std::vector<unsigned char> decodedTableImage(decodedString.begin(), decodedString.end());
-        std::ofstream outputTableFile(layoutImagePath, std::ios::binary | std::ios::out);
-        if (outputTableFile.is_open()) {
-            outputTableFile.write(reinterpret_cast<char*>(decodedTableImage.data()), decodedTableImage.size());
-            outputTableFile.close();
+        std::vector<unsigned char> decodedLayoutImage(decodedString.begin(), decodedString.end());
+        std::ofstream outputLayoutFile(layoutImagePath, std::ios::binary | std::ios::out);
+        if (outputLayoutFile.is_open()) {
+            outputLayoutFile.write(reinterpret_cast<char*>(decodedLayoutImage.data()), decodedlayoutImage.size());
+            outputLayoutFile.close();
             std::cout << "Output image saved at " << layoutImagePath << std::endl;
         } else {
             std::cerr << "Unable to open file for writing: " << layoutImagePath << std::endl;
@@ -371,8 +371,8 @@ int main() {
 
         auto tables = result["tables"];
         std::cout << "\nDetected tables:" << std::endl;
-        for (const auto& category : tables) {
-            std::cout << category << std::endl;
+        for (const auto& table : tables) {
+            std::cout << table << std::endl;
         }
     } else {
         std::cout << "Failed to send HTTP request." << std::endl;
@@ -511,7 +511,7 @@ func main() {
     type Response struct {
         Result struct {
             OcrImage      string   `json:"ocrImage"`
-            TableImage      string   `json:"layoutImage"`
+            LayoutImage      string   `json:"layoutImage"`
             Tables []map[string]interface{} `json:"tables"`
         } `json:"result"`
     }
@@ -534,7 +534,7 @@ func main() {
     }
     fmt.Printf("Image saved at %s.jpg\n", ocrImagePath)
 
-    layoutImageData, err := base64.StdEncoding.DecodeString(respData.Result.TableImage)
+    layoutImageData, err := base64.StdEncoding.DecodeString(respData.Result.LayoutImage)
     if err != nil {
         fmt.Println("Error decoding base64 image data:", err)
         return
@@ -547,8 +547,8 @@ func main() {
     fmt.Printf("Image saved at %s.jpg\n", layoutImagePath)
 
     fmt.Println("\nDetected tables:")
-    for _, category := range respData.Result.Tables {
-        fmt.Println(category)
+    for _, table := range respData.Result.Tables {
+        fmt.Println(table)
     }
 }
 ```
