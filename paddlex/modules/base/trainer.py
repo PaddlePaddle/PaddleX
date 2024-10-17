@@ -65,7 +65,10 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
             {
                 "uniform_output_enabled": self.train_config.get(
                     "uniform_output_enabled", True
-                )
+                ),
+                "export_during_train": self.global_config.get(
+                    "export_during_train", True
+                ),
             }
         )
         train_result = self.pdx_model.train(**train_args)

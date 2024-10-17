@@ -115,7 +115,9 @@ class ClsModel(BaseModel):
             # PDX related settings
             device_type = device.split(":")[0]
             uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
+            export_during_train = kwargs.pop("export_during_train", True)
             config.update([f"Global.uniform_output_enabled={uniform_output_enabled}"])
+            config.update([f"Global.export_during_train={export_during_train}"])
             config.update([f"Global.pdx_model_name={self.name}"])
             hpi_config_path = self.model_info.get("hpi_config_path", None)
             config.update([f"Global.hpi_config_path={hpi_config_path}"])
