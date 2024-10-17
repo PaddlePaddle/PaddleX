@@ -558,7 +558,7 @@ LLM_PARAMS = {
 }
 
 file_path = "./demo.jpg"
-keys = ["phone number"]
+keys = ["电话"]
 
 with open(file_path, "rb") as file:
     file_bytes = file.read()
