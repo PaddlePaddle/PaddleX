@@ -20,11 +20,10 @@ import numpy as np
 from ....utils.flags import FLAGS_json_format_model
 from ....utils import logging
 from ...utils.pp_option import PaddlePredictorOption
-from ..utils.mixin import PPEngineMixin
 from ..base import BaseComponent
 
 
-class BasePaddlePredictor(BaseComponent, PPEngineMixin):
+class BasePaddlePredictor(BaseComponent):
     """Predictor based on Paddle Inference"""
 
     OUTPUT_KEYS = "pred"
@@ -33,10 +32,25 @@ class BasePaddlePredictor(BaseComponent, PPEngineMixin):
 
     def __init__(self, model_dir, model_prefix, option):
         super().__init__()
-        PPEngineMixin.__init__(self, option)
         self.model_dir = model_dir
         self.model_prefix = model_prefix
-        self.reset()
+        self._update_option(option)
+
+    def _update_option(self, option):
+        if option:
+            if self.option and option == self.option:
+                return
+            self._option = option
+            self._option.attach(self)
+            self.reset()
+
+    @property
+    def option(self):
+        return self._option if hasattr(self, "_option") else None
+
+    @option.setter
+    def option(self, option):
+        self._update_option(option)
 
     def reset(self):
         if not self.option:
