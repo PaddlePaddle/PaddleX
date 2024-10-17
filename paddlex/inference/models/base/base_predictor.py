@@ -18,7 +18,6 @@ from pathlib import Path
 from abc import abstractmethod
 
 from ...components.base import BaseComponent
-from ...utils.pp_option import PaddlePredictorOption
 from ...utils.process_hook import generatorable_method
 
 

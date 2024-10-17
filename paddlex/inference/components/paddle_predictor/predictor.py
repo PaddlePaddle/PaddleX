@@ -125,7 +125,7 @@ class BasePaddlePredictor(BaseComponent):
                 max_batch_size=self.option.batch_size,
                 min_subgraph_size=self.option.min_subgraph_size,
                 precision_mode=precision_map[self.option.run_mode],
-                trt_use_static=self.option.trt_use_static,
+                use_static=self.option.trt_use_static,
                 use_calib_mode=self.option.trt_calib_mode,
             )
 
