@@ -43,7 +43,7 @@ PaddleX提供了三种可以快速体验产线效果的方式，您可以根据�
 以实现登机牌识别任务的通用OCR产线为例，可以用三种方式体验产线效果：
 
 **🌐 在线体验**
-  
+
 您可以在AI Studio[在线体验](https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent)通用 OCR 产线的效果，用官方提供的 Demo 图片进行识别，例如：
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/02.png)
@@ -88,7 +88,7 @@ paddlex --pipeline OCR --input general_ocr_002.png --device gpu:0
 <details>
    <summary> 👉点击展开</summary>
 
-获取OCR产线配置文件：   
+获取OCR产线配置文件：
 ```bash
 paddlex --get_pipeline_config OCR
 ```
@@ -205,8 +205,7 @@ Pipeline:
 | 通用表格识别       | [通用表格识别产线使用教程](./tutorials/ocr_pipelines/table_recognition.md) |
 | 通用版面解析       | [通用版面解析产线使用教程](./tutorials/ocr_pipelines/layout_parsing.md) |
 | 公式识别       | [公式识别产线使用教程](./tutorials/ocr_pipelines/formula_recognition.md) |
-| 印章识别       | [印章识别产线使用教程](./tutorials/ocr_pipelines/seal_recognition.md) |
+| 印章文本识别       | [印章文本识别产线使用教程](./tutorials/ocr_pipelines/seal_recognition.md) |
 | 时序预测       | [通用时序预测产线使用教程](./tutorials/time_series_pipelines/time_series_forecasting.md) |
 | 时序异常检测   | [通用时序异常检测产线使用教程](./tutorials/time_series_pipelines/time_series_anomaly_detection.md) |
 | 时序分类       | [通用时序分类产线使用教程](./tutorials/time_series_pipelines/time_series_classification.md) |
-
