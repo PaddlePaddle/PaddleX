@@ -219,7 +219,7 @@ Operations provided by the service:
 </details>
 
 <details>
-<summary>Multilingual Service Invocation Examples</summary>
+<summary>Multi-Language Service Invocation Examples</summary>
 
 <details>
 <summary>Python</summary>

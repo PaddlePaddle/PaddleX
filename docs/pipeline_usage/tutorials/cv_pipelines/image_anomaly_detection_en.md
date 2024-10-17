@@ -171,7 +171,7 @@ Operations provided by the service:
 
     Performs anomaly detection on images.
 
-    `POST /anomaly-detection`
+    `POST /image-anomaly-detection`
 
     - Request body properties:
 
@@ -208,7 +208,7 @@ Operations provided by the service:
 </details>
 
 <details>
-<summary>Multilingual Service Invocation Examples</summary>
+<summary>Multi-Language Service Invocation Examples</summary>
 
 <details>
 <summary>Python</summary>
@@ -217,7 +217,7 @@ Operations provided by the service:
 import base64
 import requests
 
-API_URL = "http://localhost:8080/anomaly-detection"
+API_URL = "http://localhost:8080/image-anomaly-detection"
 image_path = "./demo.jpg"
 output_image_path = "./out.jpg"
 
@@ -272,7 +272,7 @@ int main() {
     jsonObj["image"] = encodedImage;
     std::string body = jsonObj.dump();
 
-    auto response = client.Post("/anomaly-detection", headers, body, "application/json");
+    auto response = client.Post("/image-anomaly-detection", headers, body, "application/json");
     if (response && response->status == 200) {
         nlohmann::json jsonResponse = nlohmann::json::parse(response->body);
         auto result = jsonResponse["result"];
@@ -315,7 +315,7 @@ import java.util.Base64;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String API_URL = "http://localhost:8080/anomaly-detection";
+        String API_URL = "http://localhost:8080/image-anomaly-detection";
         String imagePath = "./demo.jpg";
         String outputImagePath = "./out.jpg";
 
@@ -374,7 +374,7 @@ import (
 )
 
 func main() {
-    API_URL := "http://localhost:8080/anomaly-detection"
+    API_URL := "http://localhost:8080/image-anomaly-detection"
     imagePath := "./demo.jpg"
     outputImagePath := "./out.jpg"
 
@@ -454,7 +454,7 @@ using Newtonsoft.Json.Linq;
 
 class Program
 {
-    static readonly string API_URL = "http://localhost:8080/anomaly-detection";
+    static readonly string API_URL = "http://localhost:8080/image-anomaly-detection";
     static readonly string imagePath = "./demo.jpg";
     static readonly string outputImagePath = "./out.jpg";
 
@@ -492,7 +492,7 @@ class Program
 const axios = require('axios');
 const fs = require('fs');
 
-const API_URL = 'http://localhost:8080/anomaly-detection'
+const API_URL = 'http://localhost:8080/image-anomaly-detection'
 const imagePath = './demo.jpg'
 const outputImagePath = "./out.jpg";
 
@@ -532,7 +532,7 @@ axios.request(config)
 ```php
 <?php
 
-$API_URL = "http://localhost:8080/anomaly-detection";
+$API_URL = "http://localhost:8080/image-anomaly-detection";
 $image_path = "./demo.jpg";
 $output_image_path = "./out.jpg";
 

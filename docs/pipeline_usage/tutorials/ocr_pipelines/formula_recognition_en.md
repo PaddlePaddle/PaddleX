@@ -208,7 +208,7 @@ Operations provided by the service:
 
     Obtain formula recognition results from an image.
 
-    `POST /formula recognition`
+    `POST /formula-recognition`
 
     - Request body properties:
 
@@ -227,64 +227,41 @@ Operations provided by the service:
 
         | Name | Type | Description |
         |------|------|-------------|
-        |`texts`|`array`|Positions, contents, and scores of texts.|
-        |`image`|`string`|formula recognition result image with detected formula positions annotated. The image is in JPEG format and encoded in Base64.|
+        |`formulas`|`array`|Positions and contents of formulas.|
+        |`image`|`string`|Formula recognition result image with detected formula positions annotated. The image is in JPEG format and encoded in Base64.|
 
-        Each element in `texts` is an `object` with the following properties:
+        Each element in `formulas` is an `object` with the following properties:
 
         | Name | Type | Description |
         |------|------|-------------|
-        |`poly`|`array`|Text position. Elements in the array are the vertex coordinates of the polygon enclosing the formula.|
-        |`text`|`string`|Text content.|
+        |`poly`|`array`|Formula position. Elements in the array are the vertex coordinates of the polygon enclosing the formula.|
+        |`latex`|`string`|Formula content.|
 
         Example of `result`:
 
         ```json
         {
-          "texts": [
+          "formulas": [
             {
               "poly": [
                 [
-                  444,
-                  244
+                  444.0,
+                  244.0
                 ],
                 [
-                  705,
-                  244
+                  705.4,
+                  244.5
                 ],
                 [
-                  705,
-                  311
+                  705.8,
+                  311.3
                 ],
                 [
-                  444,
-                  311
+                  444.1,
+                  311.0
                 ]
               ],
-              "text": "Beijing South Railway Station",
-              "score": 0.9
-            },
-            {
-              "poly": [
-                [
-                  992,
-                  248
-                ],
-                [
-                  1263,
-                  251
-                ],
-                [
-                  1263,
-                  318
-                ],
-                [
-                  992,
-                  315
-                ]
-              ],
-              "text": "Tianjin Railway Station",
-              "score": 0.5
+              "latex": "F({\bf x})=C(F_{1}(x_{1}),\cdot\cdot\cdot,F_{N}(x_{N})).\qquad\qquad\qquad(1)"
             }
           ],
           "image": "xxxxxx"
@@ -294,7 +271,7 @@ Operations provided by the service:
 </details>
 
 <details>
-<summary>Multilingual Service Invocation Examples</summary>
+<summary>Multi-Language Service Invocation Examples</summary>
 
 <details>
 <summary>Python</summary>
@@ -303,7 +280,7 @@ Operations provided by the service:
 import base64
 import requests
 
-API_URL = "http://localhost:8080/formula recognition"
+API_URL = "http://localhost:8080/formula-recognition"
 image_path = "./demo.jpg"
 output_image_path = "./out.jpg"
 
@@ -320,8 +297,8 @@ result = response.json()["result"]
 with open(output_image_path, "wb") as file:
     file.write(base64.b64decode(result["image"]))
 print(f"Output image saved at {output_image_path}")
-print("\nTexts:")
-print(result["texts"])
+print("\nDetected formulas:")
+print(result["formulas"])
 ```
 
 </details>
@@ -360,7 +337,7 @@ int main() {
     jsonObj["image"] = encodedImage;
     std::string body = jsonObj.dump();
 
-    auto response = client.Post("/formula recognition", headers, body, "application/json");
+    auto response = client.Post("/formula-recognition", headers, body, "application/json");
     if (response && response->status == 200) {
         nlohmann::json jsonResponse = nlohmann::json::parse(response->body);
         auto result = jsonResponse["result"];
@@ -377,10 +354,10 @@ int main() {
             std::cerr << "Unable to open file for writing: " << outPutImagePath << std::endl;
         }
 
-        auto texts = result["texts"];
-        std::cout << "\nTexts:" << std::endl;
-        for (const auto& category : texts) {
-            std::cout << category << std::endl;
+        auto formulas = result["formulas"];
+        std::cout << "\nDetected formulas:" << std::endl;
+        for (const auto& formula : formulas) {
+            std::cout << formula << std::endl;
         }
     } else {
         std::cout << "Failed to send HTTP request." << std::endl;
@@ -409,7 +386,7 @@ import java.util.Base64;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String API_URL = "http://localhost:8080/formula recognition";
+        String API_URL = "http://localhost:8080/formula-recognition";
         String imagePath = "./demo.jpg";
         String outputImagePath = "./out.jpg";
 
@@ -435,14 +412,14 @@ public class Main {
                 JsonNode resultNode = objectMapper.readTree(responseBody);
                 JsonNode result = resultNode.get("result");
                 String base64Image = result.get("image").asText();
-                JsonNode texts = result.get("texts");
+                JsonNode formulas = result.get("formulas");
 
                 byte[] imageBytes = Base64.getDecoder().decode(base64Image);
                 try (FileOutputStream fos = new FileOutputStream(outputImagePath)) {
                     fos.write(imageBytes);
                 }
                 System.out.println("Output image saved at " + outputImagePath);
-                System.out.println("\nTexts: " + texts.toString());
+                System.out.println("\nDetected formulas: " + formulas.toString());
             } else {
                 System.err.println("Request failed with code: " + response.code());
             }
@@ -469,7 +446,7 @@ import (
 )
 
 func main() {
-    API_URL := "http://localhost:8080/formula recognition"
+    API_URL := "http://localhost:8080/formula-recognition"
     imagePath := "./demo.jpg"
     outputImagePath := "./out.jpg"
 
@@ -509,7 +486,7 @@ func main() {
     type Response struct {
         Result struct {
             Image      string   `json:"image"`
-            Texts []map[string]interface{} `json:"texts"`
+            Formulas []map[string]interface{} `json:"formulas"`
         } `json:"result"`
     }
     var respData Response
@@ -530,9 +507,9 @@ func main() {
         return
     }
     fmt.Printf("Image saved at %s.jpg\n", outputImagePath)
-    fmt.Println("\nTexts:")
-    for _, category := range respData.Result.Texts {
-        fmt.Println(category)
+    fmt.Println("\nDetected formulas:")
+    for _, formula := range respData.Result.Formulas {
+        fmt.Println(formula)
     }
 }
 ```
@@ -553,7 +530,7 @@ using Newtonsoft.Json.Linq;
 
 class Program
 {
-    static readonly string API_URL = "http://localhost:8080/formula recognition";
+    static readonly string API_URL = "http://localhost:8080/formula-recognition";
     static readonly string imagePath = "./demo.jpg";
     static readonly string outputImagePath = "./out.jpg";
 
@@ -578,8 +555,8 @@ class Program
 
         File.WriteAllBytes(outputImagePath, outputImageBytes);
         Console.WriteLine($"Output image saved at {outputImagePath}");
-        Console.WriteLine("\nTexts:");
-        Console.WriteLine(jsonResponse["result"]["texts"].ToString());
+        Console.WriteLine("\nDetected formulas:");
+        Console.WriteLine(jsonResponse["result"]["formulas"].ToString());
     }
 }
 ```
@@ -593,7 +570,7 @@ class Program
 const axios = require('axios');
 const fs = require('fs');
 
-const API_URL = 'http://localhost:8080/formula recognition'
+const API_URL = 'http://localhost:8080/formula-recognition'
 const imagePath = './demo.jpg'
 const outputImagePath = "./out.jpg";
 
@@ -619,8 +596,8 @@ axios.request(config)
       if (err) throw err;
       console.log(`Output image saved at ${outputImagePath}`);
     });
-    console.log("\nTexts:");
-    console.log(result["texts"]);
+    console.log("\nDetected formulas:");
+    console.log(result["formulas"]);
 })
 .catch((error) => {
   console.log(error);
@@ -635,7 +612,7 @@ axios.request(config)
 ```php
 <?php
 
-$API_URL = "http://localhost:8080/formula recognition";
+$API_URL = "http://localhost:8080/formula-recognition";
 $image_path = "./demo.jpg";
 $output_image_path = "./out.jpg";
 
@@ -652,8 +629,8 @@ curl_close($ch);
 $result = json_decode($response, true)["result"];
 file_put_contents($output_image_path, base64_decode($result["image"]));
 echo "Output image saved at " . $output_image_path . "\n";
-echo "\nTexts:\n";
-print_r($result["texts"]);
+echo "\nDetected formulas:\n";
+print_r($result["formulas"]);
 
 ?>
 ```

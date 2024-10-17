@@ -16,10 +16,10 @@ from typing import List
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
-from typing_extensions import Annotated
+from typing_extensions import Annotated, TypeAlias
 
 from .....utils import logging
-from ...single_model_pipeline import AnomalyDetection
+from ...single_model_pipeline import SmallObjDet
 from .. import utils as serving_utils
 from ..app import AppConfig, create_app
 from ..models import Response, ResultResponse
@@ -29,21 +29,27 @@ class InferRequest(BaseModel):
     image: str
 
 
+BoundingBox: TypeAlias = Annotated[List[float], Field(min_length=4, max_length=4)]
+
+
+class DetectedObject(BaseModel):
+    bbox: BoundingBox
+    categoryId: int
+    score: float
+
+
 class InferResult(BaseModel):
-    labelMap: List[int]
-    size: Annotated[List[int], Field(min_length=2, max_length=2)]
+    detectedObjects: List[DetectedObject]
     image: str
 
 
-def create_pipeline_app(pipeline: AnomalyDetection, app_config: AppConfig) -> FastAPI:
+def create_pipeline_app(pipeline: SmallObjDet, app_config: AppConfig) -> FastAPI:
     app, ctx = create_app(
         pipeline=pipeline, app_config=app_config, app_aiohttp_session=True
     )
 
     @app.post(
-        "/image-anomaly-detection",
-        operation_id="infer",
-        responses={422: {"model": Response}},
+        "/object-detection", operation_id="infer", responses={422: {"model": Response}}
     )
     async def _infer(request: InferRequest) -> ResultResponse[InferResult]:
         pipeline = ctx.pipeline
@@ -57,20 +63,22 @@ def create_pipeline_app(pipeline: AnomalyDetection, app_config: AppConfig) -> Fa
 
             result = (await pipeline.infer(image))[0]
 
-            pred = result["pred"][0].tolist()
-            size = [len(pred), len(pred[0])]
-            label_map = [item for sublist in pred for item in sublist]
-            output_image_base64 = serving_utils.image_to_base64(
-                result.img.convert("RGB")
-            )
+            objects: List[DetectedObject] = []
+            for obj in result["boxes"]:
+                objects.append(
+                    DetectedObject(
+                        bbox=obj["coordinate"],
+                        categoryId=obj["cls_id"],
+                        score=obj["score"],
+                    )
+                )
+            output_image_base64 = serving_utils.image_to_base64(result.img)
 
             return ResultResponse(
                 logId=serving_utils.generate_log_id(),
                 errorCode=0,
                 errorMsg="Success",
-                result=InferResult(
-                    labelMap=label_map, size=size, image=output_image_base64
-                ),
+                result=InferResult(detectedObjects=objects, image=output_image_base64),
             )
 
         except Exception as e:

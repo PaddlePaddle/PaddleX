@@ -354,15 +354,19 @@ for res in output:
 
 - **`infer`**
 
-    定位并识别图中的表格。
+    进行版面解析。
 
-    `POST /table-recognition`
+    `POST /layout-parsing`
 
     - 请求体的属性如下：
 
         |名称|类型|含义|是否必填|
         |-|-|-|-|
-        |`image`|`string`|服务可访问的图像文件的URL或图像文件内容的Base64编码结果。|是|
+        |`file`|`string`|服务可访问的图像文件或PDF文件的URL，或上述类型文件内容的Base64编码结果。对于超过10页的PDF文件，只有前10页的内容会被使用。|是|
+        |`fileType`|`integer`|文件类型。`0`表示PDF文件，`1`表示图像文件。若请求体无此属性，则服务将尝试根据URL自动推断文件类型。|否|
+        |`useImgOrientationCls`|`boolean`|是否启用文档图像方向分类功能。默认启用该功能。|否|
+        |`useImgUnwrapping`|`boolean`|是否启用文本图像矫正功能。默认启用该功能。|否|
+        |`useSealTextDet`|`boolean`|是否启用印章文本检测功能。默认启用该功能。|否|
         |`inferenceParams`|`object`|推理参数。|否|
 
         `inferenceParams`的属性如下：
@@ -375,18 +379,65 @@ for res in output:
 
         |名称|类型|含义|
         |-|-|-|
-        |`tables`|`array`|表格位置和内容。|
-        |`layoutImage`|`string`|版面区域检测结果图。图像为JPEG格式，使用Base64编码。|
-        |`ocrImage`|`string`|OCR结果图。图像为JPEG格式，使用Base64编码。|
+        |`layoutParsingResults`|`array`|版面解析结果。数组长度为1（对于图像输入）或文档页数与10中的较小者（对于PDF输入）。对于PDF输入，数组中的每个元素依次表示PDF文件中每一页的处理结果。|
 
-        `tables`中的每个元素为一个`object`，具有如下属性：
+        `layoutParsingResults`中的每个元素为一个`object`，具有如下属性：
 
         |名称|类型|含义|
         |-|-|-|
-        |`bbox`|`array`|表格位置。数组中元素依次为边界框左上角x坐标、左上角y坐标、右下角x坐标以及右下角y坐标。|
-        |`html`|`string`|HTML格式的表格识别结果。|
+        |`layoutElements`|`array`|版面元素信息。|
+
+        `layoutElements`中的每个元素为一个`object`，具有如下属性：
+
+        |名称|类型|含义|
+        |-|-|-|
+        |`bbox`|`array`|版面元素位置。数组中元素依次为边界框左上角x坐标、左上角y坐标、右下角x坐标以及右下角y坐标。|
+        |`label`|`string`|版面元素标签。|
+        |`text`|`string`|版面元素包含的文本。|
+        |`layoutType`|`string`|版面元素排列方式。|
+        |`image`|`string`|版面元素图像，JPEG格式，使用Base64编码。|
 
 </details>
+
+<details>
+<summary>多语言调用服务示例</summary>
+
+<details>
+<summary>Python</summary>
+
+```python
+import base64
+import requests
+
+API_URL = "http://localhost:8080/layout-parsing" # 服务URL
+
+# 对本地图像进行Base64编码
+with open(image_path, "rb") as file:
+    image_bytes = file.read()
+    image_data = base64.b64encode(image_bytes).decode("ascii")
+
+payload = {
+    "file": image_data, # Base64编码的文件内容或者文件URL
+    "fileType": 1,
+    "useImgOrientationCls": True,
+    "useImgUnwrapping": True,
+    "useSealTextDet": True,
+}
+
+# 调用API
+response = requests.post(API_URL, json=payload)
+
+# 处理接口返回数据
+assert response.status_code == 200
+result = response.json()["result"]
+print("\nDetected layout elements:")
+for res in result["layoutParsingResults"]:
+    for ele in res["layoutElements"]:
+        print("===============================")
+        print("bbox:", ele["bbox"])
+        print("label:", ele["label"])
+        print("text:", repr(ele["text"]))
+```
 
 </details>
 </details>
