@@ -571,7 +571,7 @@ class PPChatOCRPipeline(_TableRecPipeline):
             if res:
                 final_results.update(res)
         if not res and not final_results:
-            final_results = llm_api.ERROR_MASSAGE
+            final_results = {"error": llm_api.ERROR_MASSAGE}
         if save_prompt:
             return ChatResult({"chat_res": final_results, "prompt": prompt_res})
         else:
