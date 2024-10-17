@@ -9,7 +9,7 @@
 ![](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/01.png)
 
 
-**印章文本识别**产线中包含版面区域分析模块、印章印章文本检测模块和文本识别模块。
+**印章文本识别**产线中包含版面区域分析模块、印章文本检测模块和文本识别模块。
 
 **如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型**。
 
