@@ -18,8 +18,7 @@ import lazy_paddle as paddle
 
 from . import logging
 from .errors import raise_unsupported_device_error
-
-SUPPORTED_DEVICE_TYPE = ["cpu", "gpu", "xpu", "npu", "mlu"]
+from .other_devices_model_list import OTHER_DEVICES_MODEL_LIST
 
 
 def _constr_device(device_type, device_ids):
@@ -36,6 +35,21 @@ def get_default_device():
         return "cpu"
     else:
         return _constr_device("gpu", [avail_gpus[0]])
+
+
+def check_device(model_name, device_type):
+    supported_device_type = ["cpu", "gpu", "xpu", "npu", "mlu", "dcu"]
+    device_type = device_type.lower()
+    if device_type not in supported_device_type:
+        support_run_mode_str = ", ".join(supported_device_type)
+        raise ValueError(
+            f"The device type must be one of {support_run_mode_str}, but received {repr(device_type)}."
+        )
+    if device_type in OTHER_DEVICES_MODEL_LIST:
+        if model_name not in OTHER_DEVICES_MODEL_LIST[device_type]:
+            raise ValueError(
+                f"The model '{model_name}' is not supported on {device_type}."
+            )
 
 
 def parse_device(device):
@@ -55,14 +69,10 @@ def parse_device(device):
                     f"Device ID must be an integer. Invalid device ID: {device_id}"
                 )
         device_ids = list(map(int, device_ids))
-    device_type = device_type.lower()
-    # raise_unsupported_device_error(device_type, SUPPORTED_DEVICE_TYPE)
-    assert device_type.lower() in SUPPORTED_DEVICE_TYPE
     return device_type, device_ids
 
 
-def update_device_num(device, num):
-    device_type, device_ids = parse_device(device)
+def update_device_num(device_type, device_ids, num):
     if device_ids:
         assert len(device_ids) >= num
         return _constr_device(device_type, device_ids[:num])
