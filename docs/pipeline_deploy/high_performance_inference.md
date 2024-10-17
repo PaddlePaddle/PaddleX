@@ -190,6 +190,12 @@ PaddleX 为每个模型提供默认的高性能推理配置，并将其存储在
   </tr>
 
   <tr>
+    <td>通用印章文本检测</td>
+    <td>印章文本检测</td>
+    <td>PP-OCRv4_server_seal_det<br/>PP-OCRv4_server_seal_det</td>
+  </tr>
+
+  <tr>
     <td rowspan="5">通用表格识别</td>
     <td>版面区域检测</td>
     <td>PicoDet_layout_1x</td>
