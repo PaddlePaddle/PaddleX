@@ -101,10 +101,10 @@ class TableResult(BaseResult):
             save_path = Path(save_path).stem
         layout_save_path = f"{save_path}_layout.jpg"
         ocr_save_path = f"{save_path}_ocr.jpg"
-        table_save_path = f"{save_path}_table.jpg"
+        table_save_path = f"{save_path}_table"
         layout_result = self["layout_result"]
         layout_result.save_to_img(layout_save_path)
         ocr_result = self["ocr_result"]
         ocr_result.save_to_img(ocr_save_path)
-        for table_result in self["table_result"]:
-            table_result.save_to_img(table_save_path)
+        for idx, table_result in enumerate(self["table_result"]):
+            table_result.save_to_img(f"{table_save_path}_{idx}.jpg")
