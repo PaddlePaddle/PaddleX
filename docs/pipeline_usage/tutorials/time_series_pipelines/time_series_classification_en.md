@@ -5,7 +5,7 @@
 ## 1. Introduction to General Time Series Classification Pipeline
 Time series classification is a technique that categorizes time-series data into predefined classes, widely applied in fields such as behavior recognition and financial trend analysis. By analyzing features that vary over time, it identifies different patterns or events, for example, classifying a speech signal as "greeting" or "request," or categorizing stock price movements as "rising" or "falling." Time series classification typically employs machine learning and deep learning models, effectively capturing temporal dependencies and variation patterns to provide accurate classification labels for data. This technology plays a pivotal role in applications such as intelligent monitoring and market forecasting.
 
-![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/time_series/01.png)
+![](/tmp/images/pipelines/time_series/01.png)
 
 **The General Time Series Classification Pipeline includes a Time Series Classification module.**
 
@@ -26,7 +26,7 @@ PaddleX provides pre-trained model pipelines that can be quickly experienced. Yo
 ### 2.1 Online Experience
 You can [experience online](https://aistudio.baidu.com/community/app/105707/webUI?source=appCenter) the effects of the General Time Series Classification Pipeline using the official demo for recognition, for example:
 
-![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/time_series/02.png)
+![](/tmp/images/pipelines/time_series/02.png)
 
 If you are satisfied with the pipeline's performance, you can directly integrate and deploy it. If not, you can also use your private data to **fine-tune the model in the pipeline online**.
 
@@ -68,7 +68,7 @@ paddlex --get_pipeline_config ts_cls --save_path ./my_path
 After obtaining the pipeline configuration file, you can replace `--pipeline` with the configuration file save path to make the configuration file take effect. For example, if the configuration file save path is `./ts_ad.yaml`, simply execute:
 
 ```bash
-paddlex --pipeline ./ts_cls.yaml --input ts_cls.csv --device gpu:0
+paddlex --pipeline ./ts_cls.yaml --input ts_cls.csv
 ```
 
 In this command, parameters such as `--model` and `--device` are not required to be specified, as they will use the parameters defined in the configuration file. If these parameters are specified, the specified values will take precedence.
@@ -78,7 +78,7 @@ In this command, parameters such as `--model` and `--device` are not required to
 After execution, the result is:
 
 ```bash
-{'input_path': 'ts_cls.csv', 'classification':         classid     score
+{'ts_path': '/root/.paddlex/predict_input/ts_cls.csv', 'classification':         classid     score
 sample
 0             0  0.617688}
 ```
@@ -151,9 +151,9 @@ If you need to directly apply the pipeline in your Python project, refer to the 
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
-🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for deployment performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins that deeply optimize model inference and pre/post-processing to significantly speed up the end-to-end process. Refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference_en.md) for detailed high-performance inference procedures.
+🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for deployment performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins that deeply optimize model inference and pre/post-processing to significantly speed up the end-to-end process. Refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference_en.md) for detailed High-Performance Inference procedures.
 
-☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX enables users to achieve low-cost service-oriented deployment of pipelines. Refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy_en.md) for detailed service-oriented deployment procedures.
+☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX enables users to achieve low-cost service-oriented deployment of pipelines. Refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving_deploy_en.md) for detailed service-oriented deployment procedures.
 
 Below are the API references and multi-language service invocation examples:
 
@@ -518,7 +518,7 @@ echo "label: " . $result["label"] . ", score: " . $result["score"];
 </details>
 <br/>
 
-📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing capabilities on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. Refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy.md) for detailed edge deployment procedures.
+📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing capabilities on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. Refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy_en.md) for detailed edge deployment procedures.
 Choose the appropriate deployment method based on your needs to proceed with subsequent AI application integration.
 
 ## 4. Custom Development

@@ -1,6 +1,6 @@
 [简体中文](object_detection.md) | English
 
-# Tutorial on Developing Object Detection Modules
+# Object Detection Module Development Tutorial
 
 ## I. Overview
 The object detection module is a crucial component in computer vision systems, responsible for locating and marking regions containing specific objects in images or videos. The performance of this module directly impacts the accuracy and efficiency of the entire computer vision system. The object detection module typically outputs bounding boxes for the target regions, which are then passed as input to the object recognition module for further processing.
@@ -593,7 +593,7 @@ The model can be directly integrated into the PaddleX pipelines or directly into
 
 1.**Pipeline Integration**
 
-The object detection module can be integrated into the [General Object Detection Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/object_detection_en.md) of PaddleX. Simply replace the model path to update the object detection module of the relevant pipeline. In pipeline integration, you can use high-performance inference and service-oriented deployment to deploy your model.
+The object detection module can be integrated into the [General Object Detection Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/object_detection_en.md) of PaddleX. Simply replace the model path to update the object detection module of the relevant pipeline. In pipeline integration, you can use high-performance deployment and service-oriented deployment to deploy your model.
 
 2.**Module Integration**
 

@@ -1,6 +1,6 @@
 [简体中文](table_recognition_en.md) | English
 
-# General Table Recognition Pipeline Usage Tutorial
+# General Table Recognition Pipeline Tutorial
 
 ## 1. Introduction to the General Table Recognition Pipeline
 Table recognition is a technology that automatically identifies and extracts table content and its structure from documents or images. It is widely used in data entry, information retrieval, and document analysis. By leveraging computer vision and machine learning algorithms, table recognition can convert complex table information into editable formats, facilitating further data processing and analysis for users.
@@ -116,7 +116,7 @@ paddlex --get_pipeline_config table_recognition --save_path ./my_path
 After obtaining the pipeline configuration file, replace `--pipeline` with the configuration file save path to make the configuration file take effect. For example, if the configuration file save path is `./table_recognition.yaml`, simply execute:
 
 ```bash
-paddlex --pipeline ./table_recognition.yaml --input table_recognition.jpg --device gpu:0
+paddlex --pipeline ./table_recognition.yaml --input table_recognition.jpg
 ```
 
 Here, parameters like `--model` and `--device` do not need to be specified, as they will use the parameters in the configuration file. If they are still specified, the specified parameters will take precedence.
@@ -127,7 +127,7 @@ After running, the result is:
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/03.png)
 
-The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path.
+The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path. 
 
 ### 2.2 Python Script Integration
 A few lines of code are all you need to quickly perform inference with the pipeline. Taking the General Table Recognition pipeline as an example:
@@ -201,9 +201,9 @@ If you need to directly apply the pipeline in your Python project, refer to the 
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
-🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins that aim to deeply optimize model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance inference procedures, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.md).
+🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins that aim to deeply optimize model inference and pre/post-processing for significant end-to-end process acceleration. For detailed High-Performance Inference procedures, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference_en.md).
 
-☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy_en.md).
+☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving_deploy_en.md).
 
 Below are the API references and multi-language service invocation examples:
 
@@ -698,7 +698,7 @@ print_r($result["tables"]);
 </details>
 <br/>
 
-📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy_en.md).
+📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy_en.md).
 Choose the appropriate deployment method for your model pipeline based on your needs, and proceed with subsequent AI application integration.
 
 ## 4. Custom Development

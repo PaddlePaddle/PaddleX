@@ -194,7 +194,6 @@ pipeline = create_pipeline(
     pipeline="PP-ChatOCRv3-doc",
     llm_name="ernie-3.5",
     llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # 请填入您的ak与sk，否则无法调用大模型
-    # llm_params={"api_type": "aistudio", "access_token": ""} # 请填入您的access_token，否则无法调用大模型
     )
 
 visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf")
@@ -204,16 +203,10 @@ for res in visual_result:
     res.save_to_html('./output')
     res.save_to_xlsx('./output')
 
-vector = pipeline.build_vector(visual_info=visual_info)
-
-chat_result = pipeline.chat(
-    key_list=["乙方", "手机号"],
-    visual_info=visual_info,
-    vector=vector,
-    )
+chat_result = pipeline.chat(["乙方", "手机号"])
 chat_result.print()
 ```
-**注**：目前仅支持文心大模型，支持在[百度云千帆平台](https://console.bce.baidu.com/qianfan/ais/console/onlineService)或者[星河社区 AIStudio](https://aistudio.baidu.com/)上获取相关的 ak/sk(access_token)。如果使用百度云千帆平台，可以参考[AK和SK鉴权调用API流程](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8) 获取ak/sk，如果使用星河社区 AIStudio，可以在[星河社区 AIStudio 访问令牌](https://aistudio.baidu.com/account/accessToken)中获取 access_token。
+**注**：请先在[百度云千帆平台](https://console.bce.baidu.com/qianfan/ais/console/onlineService)获取自己的ak与sk（详细流程请参考[AK和SK鉴权调用API流程](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8)），将ak与sk填入至指定位置后才能正常调用大模型。
 
 运行后，输出结果如下：
 
@@ -228,7 +221,7 @@ chat_result.print()
 |参数|参数类型|默认值|参数说明|
 |-|-|-|-|
 |`pipeline`|str|无|产线名称或是产线配置文件路径，如为产线名称，则必须为 PaddleX 所支持的产线；|
-|`llm_name`|str|"ernie-3.5"|大语言模型名称，目前支持`ernie-4.0`，`ernie-3.5`，更多模型支持中;|
+|`llm_name`|str|"ernie-3.5"|大语言模型名称;|
 |`llm_params`|dict|`{}`|LLM相关API配置；|
 |`device`|str、None|`None`|运行设备（`None`为自动适配）；|
 
@@ -304,7 +297,6 @@ pipeline = create_pipeline(
     pipeline="./my_path/PP-ChatOCRv3-doc.yaml",
     llm_name="ernie-3.5",
     llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # 请填入您的ak与sk，否则无法调用大模型
-    # llm_params={"api_type": "aistudio", "access_token": ""} # 请填入您的access_token，否则无法调用大模型
     )
 
 visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf")
@@ -314,13 +306,7 @@ for res in visual_result:
     res.save_to_html('./output')
     res.save_to_xlsx('./output')
 
-vector = pipeline.build_vector(visual_info=visual_info)
-
-chat_result = pipeline.chat(
-    key_list=["乙方", "手机号"],
-    visual_info=visual_info,
-    vector=vector,
-    )
+chat_result = pipeline.chat(["乙方", "手机号"])
 chat_result.print()
 ```
 
@@ -333,7 +319,7 @@ chat_result.print()
 
 🚀 **高性能推理**：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能推理流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_inference.md)。
 
-☁️ **服务化部署**：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/service_deploy.md)。
+☁️ **服务化部署**：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/serving_deploy.md)。
 
 下面是API参考和多语言服务调用示例：
 
@@ -432,13 +418,20 @@ chat_result.print()
         |`llmName`|`string`|大语言模型名称。|否|
         |`llmParams`|`object`|大语言模型API参数。|否|
 
-        当前，`llmParams` 可以采用如下形式：
+        当前，`llmParams`可以采用如下两种形式之一：
 
         ```json
         {
           "apiType": "qianfan",
           "apiKey": "{千帆平台API key}",
           "secretKey": "{千帆平台secret key}"
+        }
+        ```
+
+        ```json
+        {
+          "apiType": "{aistudio}",
+          "accessToken": "{AI Studio访问令牌}"
         }
         ```
 
@@ -460,10 +453,11 @@ chat_result.print()
         |-|-|-|-|
         |`keys`|`array`|关键词列表。|是|
         |`vectorStore`|`object`|向量数据库序列化结果。由`buildVectorStore`操作提供。|是|
+        |`visionInfo`|`object`|图像中的关键信息。由`analyzeImage`操作提供。|是|
         |`llmName`|`string`|大语言模型名称。|否|
         |`llmParams`|`object`|大语言模型API参数。|否|
 
-        当前，`llmParams` 可以采用如下形式：
+        当前，`llmParams`可以采用如下两种形式之一：
 
         ```json
         {
@@ -473,11 +467,18 @@ chat_result.print()
         }
         ```
 
+        ```json
+        {
+          "apiType": "{aistudio}",
+          "accessToken": "{AI Studio访问令牌}"
+        }
+        ```
+
     - 请求处理成功时，响应体的`result`具有如下属性：
 
         |名称|类型|含义|
         |-|-|-|
-        |`retrievalResult`|`object`|知识检索结果，可用作其他操作的输入。|
+        |`retrievalResult`|`string`|知识检索结果，可用作其他操作的输入。|
 
 - **`chat`**
 
@@ -494,19 +495,27 @@ chat_result.print()
         |`taskDescription`|`string`|提示词任务。|否|
         |`rules`|`string`|提示词规则。用于自定义信息抽取规则，例如规范输出格式。|否|
         |`fewShot`|`string`|提示词示例。|否|
+        |`useVectorStore`|`boolean`|是否启用向量数据库。默认启用。|否|
         |`vectorStore`|`object`|向量数据库序列化结果。由`buildVectorStore`操作提供。|否|
-        |`retrievalResult`|`object`|知识检索结果。由`retrieveKnowledge`操作提供。|否|
+        |`retrievalResult`|`string`|知识检索结果。由`retrieveKnowledge`操作提供。|否|
         |`returnPrompts`|`boolean`|是否返回使用的提示词。默认启用。|否|
         |`llmName`|`string`|大语言模型名称。|否|
         |`llmParams`|`object`|大语言模型API参数。|否|
 
-        当前，`llmParams` 可以采用如下形式：
+        当前，`llmParams`可以采用如下两种形式之一：
 
         ```json
         {
           "apiType": "qianfan",
           "apiKey": "{千帆平台API key}",
           "secretKey": "{千帆平台secret key}"
+        }
+        ```
+
+        ```json
+        {
+          "apiType": "{aistudio}",
+          "accessToken": "{AI Studio访问令牌}"
         }
         ```
 
@@ -588,6 +597,7 @@ if __name__ == "__main__":
             f.write(base64.b64decode(res["layoutImage"]))
         print(f"Output images saved at {ocr_img_path} and {layout_img_path}")
         print("")
+    print("="*50 + "\n\n")
 
     payload = {
         "visionInfo": result_vision["visionInfo"],
@@ -604,10 +614,12 @@ if __name__ == "__main__":
         pprint.pp(resp_vector.json())
         sys.exit(1)
     result_vector = resp_vector.json()["result"]
+    print("="*50 + "\n\n")
 
     payload = {
         "keys": keys,
         "vectorStore": result_vector["vectorStore"],
+        "visionInfo": result_vision["visionInfo"],
         "llmName": LLM_NAME,
         "llmParams": LLM_PARAMS,
     }
@@ -619,6 +631,9 @@ if __name__ == "__main__":
         pprint.pp(resp_retrieval.json())
         sys.exit(1)
     result_retrieval = resp_retrieval.json()["result"]
+    print("Knowledge retrieval result:")
+    print(result_retrieval["retrievalResult"])
+    print("="*50 + "\n\n")
 
     payload = {
         "keys": keys,
@@ -626,6 +641,7 @@ if __name__ == "__main__":
         "taskDescription": "",
         "rules": "",
         "fewShot": "",
+        "useVectorStore": True,
         "vectorStore": result_vector["vectorStore"],
         "retrievalResult": result_retrieval["retrievalResult"],
         "returnPrompts": True,
@@ -640,17 +656,17 @@ if __name__ == "__main__":
         pprint.pp(resp_chat.json())
         sys.exit(1)
     result_chat = resp_chat.json()["result"]
-    print("\nPrompts:")
+    print("Prompts:")
     pprint.pp(result_chat["prompts"])
     print("Final result:")
     print(len(result_chat["chatResult"]))
 ```
-**注**：请在 `API_KEY`、`SECRET_KEY` 处填入您的 API key 和 secret key。
+**注**：请在 `API_KEY`、`SECRET_KEY` 处填入您的 ak、sk。
 </details>
 </details>
 <br/>
 
-📱 **端侧部署**：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/lite_deploy.md)。
+📱 **端侧部署**：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/edge_deploy.md)。
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
 
 ## 4. 二次开发
@@ -689,17 +705,28 @@ Pipeline:
 随后， 参考本地体验中的命令行方式或 Python 脚本方式，加载修改后的产线配置文件即可。
 
 ##  5. 多硬件支持
-PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU 和寒武纪 MLU 等多种主流硬件设备，**仅需设置 `device` 参数**即可完成不同硬件之间的无缝切换。
+PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，**仅需设置 `device` 参数**即可完成不同硬件之间的无缝切换。
 
 例如，使用文档场景信息抽取v3产线时，将运行设备从英伟达 GPU 更改为昇腾 NPU，仅需将脚本中的 `device` 修改为 npu 即可：
 
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(
+predict = create_pipeline(
     pipeline="PP-ChatOCRv3-doc",
     llm_name="ernie-3.5",
-    llm_params={"api_type": "qianfan", "ak": "", "sk": ""}, 
+    llm_params={"api_type": "qianfan", "ak": "", "sk": ""},  # 请填入您的ak与sk，否则无法调用大模型
     device="npu:0" # gpu:0 --> npu:0
-    )    
+    )
+```
+
+此时，若您想将硬件切换为昇腾 NPU，仅需对脚本中的 `--device` 修改为 npu:0 即可：
+
+```python
+from paddlex import create_pipeline
+predict = create_pipeline( pipeline="PP-ChatOCRv3-doc",
+                            llm_name="ernie-3.5",
+                            llm_params = {"api_type":"qianfan","ak":"","sk":""},  ## 请填入您的ak与sk，否则无法调用大模型
+                            device = "npu:0" )
 ```
 若您想在更多种类的硬件上使用通用文档场景信息抽取产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。
+

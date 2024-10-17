@@ -5,7 +5,7 @@
 ## 1. Introduction to Image Anomaly Detection Pipeline
 Image anomaly detection is an image processing technique that identifies unusual or non-conforming patterns within images through analysis. It is widely applied in industrial quality inspection, medical image analysis, and security monitoring. By leveraging machine learning and deep learning algorithms, image anomaly detection can automatically recognize potential defects, anomalies, or abnormal behaviors in images, enabling us to promptly identify issues and take corresponding actions. The image anomaly detection system is designed to automatically detect and mark anomalies in images, enhancing work efficiency and accuracy.
 
-![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_anomaly_detection/01.png)
+![](/tmp/images/pipelines/image_anomaly_detection/01.png)
 
 **The image anomaly detection pipeline includes an unsupervised anomaly detection module, with the following model benchmarks**:
 
@@ -52,7 +52,7 @@ paddlex --get_pipeline_config anomaly_detection --save_path ./my_path
 After obtaining the pipeline configuration file, replace `--pipeline` with the configuration file save path to make the configuration file take effect. For example, if the configuration file save path is `./anomaly_detection.yaml`, simply execute:
 
 ```bash
-paddlex --pipeline ./anomaly_detection.yaml --input uad_grid.png --device gpu:0
+paddlex --pipeline ./anomaly_detection.yaml --input uad_grid.png
 ```
 
 Here, parameters such as `--model` and `--device` do not need to be specified, as they will use the parameters in the configuration file. If parameters are still specified, the specified parameters will take precedence.
@@ -62,9 +62,9 @@ Here, parameters such as `--model` and `--device` do not need to be specified, a
 After running, the result is:
 
 ```
-{'input_path': 'uad_grid.png'}
+{'img_path': '/root/.paddlex/predict_input/uad_grid.png'}
 ```
-![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_anomaly_detection/02.png)
+![](/tmp/images/pipelines/image_anomaly_detection/02.png)
 
 The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path.
 
@@ -137,9 +137,9 @@ If you need to apply the pipeline directly in your Python project, refer to the 
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
-🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed high-performance inference procedures, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference_en.md).
+🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed High-Performance Inference procedures, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference_en.md).
 
-☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy_en.md).
+☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving_deploy_en.md).
 
 Below are the API references and multi-language service invocation examples:
 
@@ -556,7 +556,7 @@ echo "Output image saved at " . $output_image_path . "\n";
 </details>
 <br/>
 
-📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing functions on user devices themselves, enabling devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy_en.md).
+📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing functions on user devices themselves, enabling devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy_en.md).
 You can choose the appropriate deployment method for your model pipeline based on your needs and proceed with subsequent AI application integration.
 
 ## 4. Custom Development

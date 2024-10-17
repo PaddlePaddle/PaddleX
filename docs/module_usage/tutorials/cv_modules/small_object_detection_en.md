@@ -1,6 +1,6 @@
 [简体中文](small_object_detection.md) | English
 
-# Tutorial for Developing Small Object Detection Modules
+# Small Object Detection Module Development Tutorial
 
 ## I. Overview
 Small object detection typically refers to accurately detecting and locating small-sized target objects in images or videos. These objects often have a small pixel size in images, typically less than 32x32 pixels (as defined by datasets like MS COCO), and may be obscured by the background or other objects, making them difficult to observe directly by the human eye. Small object detection is an important research direction in computer vision, aiming to precisely detect small objects with minimal visual features in images.
@@ -308,7 +308,7 @@ The model can be directly integrated into the PaddleX pipelines or directly into
 
 1. **Pipeline Integration**
 
-The small object detection module can be integrated into the [Small Object Detection Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/small_object_detection_en.md) of PaddleX. Simply replace the model path to update the small object detection module of the relevant pipeline. In pipeline integration, you can use high-performance inference and service-oriented deployment to deploy your obtained model.
+The small object detection module can be integrated into the [Small Object Detection Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/small_object_detection_en.md) of PaddleX. Simply replace the model path to update the small object detection module of the relevant pipeline. In pipeline integration, you can use high-performance deployment and service-oriented deployment to deploy your obtained model.
 
 2. **Module Integration**
 

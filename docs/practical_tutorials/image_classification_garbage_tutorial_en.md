@@ -31,7 +31,7 @@ After trying the pipeline, determine if it meets your expectations (including ac
 
 ## 3. Choosing a Model
 
-PaddleX provides 80 end-to-end image classification models, which can be referenced in the [Model List](../support_list/models_list_en.md). Some of the benchmarks for these models are as follows:
+PaddleX provides 80 end-to-end image classification models, which can be referenced in the [Model List](../support_list/models_list.md). Some of the benchmarks for these models are as follows:
 
 | Model List          | Top-1 Accuracy (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) |
 | ------------------- | ------------------ | ----------------------- | ----------------------- | -------------- |
@@ -254,8 +254,8 @@ For more parameters, please refer to the [General Image Classification Pipeline 
 
 2. Additionally, PaddleX offers three other deployment methods, detailed as follows:
 
-* high-performance inference: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugin aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../pipeline_deploy/high_performance_inference_en.md).
-* Service-Oriented Deployment: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving cost-effective service-oriented deployment of production lines. For detailed service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../pipeline_deploy/service_deploy_en.md).
-* Edge Deployment: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../pipeline_deploy/lite_deploy_en.md).
+* High-Performance Deployment: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance deployment procedures, please refer to the [PaddleX High-Performance Deployment Guide](../pipeline_deploy/high_performance_inference_en.md).
+* Service-Oriented Deployment: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving cost-effective service-oriented deployment of production lines. For detailed service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../pipeline_deploy/serving_deploy_en.md).
+* Edge Deployment: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../pipeline_deploy/edge_deploy_en.md).
 
 You can select the appropriate deployment method for your model pipeline according to your needs, and proceed with subsequent AI application integration.

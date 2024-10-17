@@ -1,6 +1,6 @@
 [简体中文](image_classification.md) | English
 
-# Tutorial on Developing Image Classification Modules
+# Image Classification Module Development Tutorial
 
 ## I. Overview
 The image classification module is a crucial component in computer vision systems, responsible for categorizing input images. The performance of this module directly impacts the accuracy and efficiency of the entire computer vision system. Typically, the image classification module receives an image as input and, through deep learning or other machine learning algorithms, classifies it into predefined categories based on its characteristics and content. For instance, in an animal recognition system, the image classification module might need to classify an input image as "cat," "dog," "horse," etc. The classification results from the image classification module are then output for use by other modules or systems.
@@ -814,7 +814,7 @@ The model can be directly integrated into the PaddleX pipelines or directly into
 
 1.**Pipeline Integration**
 
-The image classification module can be integrated into the [General Image Classification Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/image_classification_en.md) of PaddleX. Simply replace the model path to update the image classification module of the relevant pipeline. In pipeline integration, you can use high-performance inference and service-oriented deployment to deploy your obtained model.
+The image classification module can be integrated into the [General Image Classification Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/image_classification_en.md) of PaddleX. Simply replace the model path to update the image classification module of the relevant pipeline. In pipeline integration, you can use high-performance deployment and service-oriented deployment to deploy your obtained model.
 
 2.**Module Integration**
 

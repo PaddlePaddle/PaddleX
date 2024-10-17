@@ -23,12 +23,12 @@
 |Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN|39.1|-|-|254.7|
 |MaskRCNN-ResNet50-FPN|35.6|-|-|157.5 M|
 |MaskRCNN-ResNet50-vd-FPN|36.4|-|-|157.5 M|
+|MaskRCNN-ResNet50-vd-SSLDv2-FPN|38.2|-|-|157.2 M|
 |MaskRCNN-ResNet50|32.8|-|-|127.8 M|
 |MaskRCNN-ResNet101-FPN|36.6|-|-|225.4 M|
 |MaskRCNN-ResNet101-vd-FPN|38.1|-|-|225.1 M|
 |MaskRCNN-ResNeXt101-vd-FPN|39.5|-|-|370.0 M|
 |PP-YOLOE_seg-S|32.5|-|-|31.5 M|
-|SOLOv2| 35.5|-|-|179.1 M|
 
 **注：以上精度指标为 **[COCO2017](https://cocodataset.org/#home)** 验证集 Mask AP(0.5:0.95)。以上所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
 
@@ -50,7 +50,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 #### 2.2.1 命令行方式体验
 一行命令即可快速体验实例分割产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png)，并将 `--input` 替换为本地路径，进行预测
 
-```bash
+```
 paddlex --pipeline instance_segmentation --input general_instance_segmentation_004.png --device gpu:0
 ```
 参数说明：
@@ -77,8 +77,8 @@ paddlex --get_pipeline_config instance_segmentation --save_path ./my_path
 
 获取产线配置文件后，可将 `--pipeline` 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 ./instance_segmentation.yaml，只需执行：
 
-```bash
-paddlex --pipeline ./instance_segmentation.yaml --input general_instance_segmentation_004.png --device gpu:0
+```
+paddlex --pipeline ./instance_segmentation.yaml --input general_instance_segmentation_004.png
 ```
 其中，`--model`、`--device` 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。
 
@@ -87,7 +87,7 @@ paddlex --pipeline ./instance_segmentation.yaml --input general_instance_segment
 运行后，得到的结果为：
 
 ```
-{'input_path': 'general_instance_segmentation_004.png', 'boxes': [{'cls_id': 0, 'label': 'person', 'score': 0.8698326945304871, 'coordinate': [339, 0, 639, 575]}, {'cls_id': 0, 'label': 'person', 'score': 0.8571141362190247, 'coordinate': [0, 0, 195, 575]}, {'cls_id': 0, 'label': 'person', 'score': 0.8202633857727051, 'coordinate': [88, 113, 401, 574]}, {'cls_id': 0, 'label': 'person', 'score': 0.7108577489852905, 'coordinate': [522, 21, 767, 574]}, {'cls_id': 27, 'label': 'tie', 'score': 0.554280698299408, 'coordinate': [247, 311, 355, 574]}]}
+{'img_path': '/my_path/general_instance_segmentation_004.png', 'boxes': [{'cls_id': 0, 'label': 'person', 'score': 0.8698326945304871, 'coordinate': [339, 0, 639, 575]}, {'cls_id': 0, 'label': 'person', 'score': 0.8571141362190247, 'coordinate': [0, 0, 195, 575]}, {'cls_id': 0, 'label': 'person', 'score': 0.8202633857727051, 'coordinate': [88, 113, 401, 574]}, {'cls_id': 0, 'label': 'person', 'score': 0.7108577489852905, 'coordinate': [522, 21, 767, 574]}, {'cls_id': 27, 'label': 'tie', 'score': 0.554280698299408, 'coordinate': [247, 311, 355, 574]}]}
 ```
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/instance_segmentation/03.png)
 
@@ -162,7 +162,7 @@ for res in output:
 
 🚀 **高性能推理**：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能推理流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_inference.md)。
 
-☁️ **服务化部署**：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/service_deploy.md)。
+☁️ **服务化部署**：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/serving_deploy.md)。
 
 下面是API参考和多语言服务调用示例：
 
@@ -644,7 +644,7 @@ print_r($result["instances"]);
 </details>
 <br/>
 
-📱 **端侧部署**：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/lite_deploy.md)。
+📱 **端侧部署**：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/edge_deploy.md)。
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
 
 ## 4. 二次开发
@@ -673,12 +673,12 @@ PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多�
 
 例如，您使用英伟达 GPU 进行实例分割产线的推理，使用的 Python 命令为：
 
-```bash
+```
 paddlex --pipeline instance_segmentation --input general_instance_segmentation_004.png --device gpu:0
 ```
 此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的 `--device` 修改为 npu:0 即可：
 
-```bash
+```
 paddlex --pipeline instance_segmentation --input general_instance_segmentation_004.png --device npu:0
 ```
 若您想在更多种类的硬件上使用通用实例分割产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

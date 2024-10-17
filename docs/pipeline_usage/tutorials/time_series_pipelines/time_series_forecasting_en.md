@@ -5,7 +5,7 @@
 ## 1. Introduction to the General Time Series Forecasting Pipeline
 Time series forecasting is a technique that utilizes historical data to predict future trends by analyzing the patterns of change in time series data. It is widely applied in fields such as financial markets, weather forecasting, and sales prediction. Time series forecasting often employs statistical methods or deep learning models (e.g., LSTM, ARIMA), capable of handling temporal dependencies in data to provide accurate predictions, assisting decision-makers in better planning and response. This technology plays a crucial role in various industries, including energy management, supply chain optimization, and market analysis.
 
-![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/time_series/03.png)
+![](/tmp/images/pipelines/time_series/03.png)
 
 **The General Time Series Forecasting Pipeline includes a time series forecasting module. If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, select a model with faster inference. If you prioritize model storage size, choose a model with a smaller storage size.**
 
@@ -32,7 +32,7 @@ The pre-trained model pipelines provided by PaddleX allow for quick experience o
 ### 2.1 Online Experience
 You can [experience the General Time Series Forecasting Pipeline online](https://aistudio.baidu.com/community/app/105706/webUI?source=appCenter) using the demo provided by the official team, for example:
 
-![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/time_series/04.png)
+![](/tmp/images/pipelines/time_series/04.png)
 
 If you are satisfied with the pipeline's performance, you can directly integrate and deploy it. If not, you can also use your private data to **fine-tune the model within the pipeline online**.
 
@@ -69,7 +69,7 @@ paddlex --get_pipeline_config ts_fc --save_path ./my_path
 After obtaining the pipeline configuration file, you can replace `--pipeline` with the configuration file save path to make the configuration file take effect. For example, if the configuration file save path is `./ts_fc.yaml`, simply execute:
 
 ```bash
-paddlex --pipeline ./ts_fc.yaml --input ts_fc.csv --device gpu:0
+paddlex --pipeline ./ts_fc.yaml --input ts_fc.csv
 ```
 
 Here, parameters such as `--model` and `--device` do not need to be specified, as they will use the parameters in the configuration file. If parameters are still specified, the specified parameters will take precedence.
@@ -79,7 +79,7 @@ Here, parameters such as `--model` and `--device` do not need to be specified, a
 After running, the result is:
 
 ```bash
-{'input_path': 'ts_fc.csv', 'forecast':                            OT
+{'ts_path': '/root/.paddlex/predict_input/ts_fc.csv', 'forecast':                            OT
 date
 2018-06-26 20:00:00  9.586131
 2018-06-26 21:00:00  9.379762
@@ -162,9 +162,9 @@ If you need to directly apply the pipeline in your Python project, refer to the 
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
-🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance inference procedures, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference_en.md).
+🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end process acceleration. For detailed High-Performance Inference procedures, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference_en.md).
 
-☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy_en.md).
+☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving_deploy_en.md).
 
 Below are the API references and multi-language service invocation examples:
 
@@ -570,7 +570,7 @@ echo "Output time-series data saved at " . $output_csv_path . "\n";
 </details>
 <br/>
 
-📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing functions on user devices themselves, enabling devices to directly process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy.md).
+📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing functions on user devices themselves, enabling devices to directly process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy_en.md).
 Choose the appropriate deployment method for your model pipeline based on your needs, and proceed with subsequent AI application integration.
 
 ## 4. Custom Development

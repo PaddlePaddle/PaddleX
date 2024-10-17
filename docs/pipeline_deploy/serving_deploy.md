@@ -1,4 +1,4 @@
-简体中文 | [English](service_deploy_en.md)
+简体中文 | [English](serving_deploy_en.md)
 
 # PaddleX 服务化部署指南
 
@@ -50,7 +50,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 | 名称             | 说明                                                                                                                                                        |
 |------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `--pipeline`       | 产线名称或产线配置文件路径。                                                                                                                                |
-| `--device`         | 产线部署设备。默认为 `cpu`（如 GPU 不可用）或 `gpu`（如 GPU 可用）。                                                                                       |
+| `--device`         | 产线部署设备。默认为 `cpu`（如机器不支持 `GPU`）或 `gpu`（如机器支持 `GPU`）。                                                                                       |
 | `--host`           | 服务器绑定的主机名或 IP 地址。默认为0.0.0.0。                                                                                                               |
 | `--port`           | 服务器监听的端口号。默认为8080。                                                                                                                            |
 | `--use_hpip`       | 如果指定，则启用高性能推理插件。                                                                                                                            |
@@ -69,7 +69,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 | 通用目标检测产线       | [通用目标检测产线使用教程](../pipeline_usage/tutorials/cv_pipelines/object_detection.md)       |
 | 通用语义分割产线       | [通用语义分割产线使用教程](../pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md)       |
 | 通用实例分割产线       | [通用实例分割产线使用教程](../pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md)       |
-| 通用图像多标签分类产线 | [通用图像多标签分类产线使用教程](../pipeline_usage/tutorials/cv_pipelines/image_multi_label_lassification.md) |
+| 通用图像多标签分类产线 | [通用图像多标签分类产线使用教程](../pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md) |
 | 小目标检测产线         | [小目标检测产线使用教程](../pipeline_usage/tutorials/cv_pipelines/small_object_detection.md)         |
 | 图像异常检测产线       | [图像异常检测产线使用教程](../pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md)       |
 | 通用OCR产线            | [通用OCR产线使用教程](../pipeline_usage/tutorials/ocr_pipelines/OCR.md)            |
@@ -77,7 +77,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 | 时序预测产线           | [时序预测产线使用教程](../pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md)           |
 | 时序异常检测产线       | [时序异常检测产线使用教程](../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md)       |
 | 时序分类产线           | [时序分类产线使用教程](../pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md)           |
-| 文档场景信息抽取v3产线 | [文档场景信息抽取v3产线使用教程](../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md) |
+| 文档场景信息抽取v3产线 | [文档场景信息抽取v3产线使用教程](../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md) |
 
 ## 2、将服务用于生产
 

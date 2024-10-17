@@ -1,6 +1,6 @@
 [简体中文](OCR.md) | English
 
-# General OCR Pipeline Usage Tutorial
+# General OCR Pipeline Tutorial
 
 ## 1. Introduction to OCR Pipeline
 OCR (Optical Character Recognition) is a technology that converts text in images into editable text. It is widely used in document digitization, information extraction, and data processing. OCR can recognize printed text, handwritten text, and even certain types of fonts and symbols.
@@ -14,86 +14,62 @@ The General OCR Pipeline is designed to solve text recognition tasks, extracting
 <details>
    <summary> 👉Model List Details</summary>
 
-**Text detection module:**
-| Model | Detection Hmean (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
-|-|-|-|-|-|-|
-| PP-OCRv4_server_det | 82.69 | 83.3501 | 2434.01 | 109 | The server-side text detection model of PP-OCRv4, featuring higher accuracy and suitable for deployment on high-performance servers |
-| PP-OCRv4_mobile_det | 77.79 | 10.6923 | 120.177 | 4.7 | The mobile text detection model of PP-OCRv4, optimized for efficiency and suitable for deployment on edge devices |
-
-
-**Text recognition module:**
 <table>
   <tr>
-    <th>Model</th>
-    <th>Recognition Avg Accuracy(%)</th>
+    <th>Pipeline Module</th>
+    <th>Specific Model</th>
+    <th>Accuracy</th>
     <th>GPU Inference Time (ms)</th>
     <th>CPU Inference Time (ms)</th>
     <th>Model Size (M)</th>
-    <th>Description</th>
   </tr>
-   <tr>
-        <td>PP-OCRv4_mobile_rec</td>
-        <td>78.20</td>
-        <td>7.95018</td>
-        <td>46.7868</td>
-        <td>10.6 M</td>
-        <td rowspan="2">PP-OCRv4, developed by Baidu's PaddlePaddle Vision Team, is the next version of the PP-OCRv3 text recognition model. By introducing data augmentation schemes, GTC-NRTR guidance branches, and other strategies, it further improves text recognition accuracy without compromising model inference speed. The model offers both server and mobile versions to meet industrial needs in different scenarios.</td>
-    </tr>
-    <tr>
-        <td>PP-OCRv4_server_rec </td>
-        <td>79.20</td>
-        <td>7.19439</td>
-        <td>140.179</td>
-        <td>71.2 M</td>
-    </tr>
-</table>
-
-**Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built Chinese dataset, covering street scenes, web images, documents, handwriting, and more, with 1.1w images for text recognition. GPU inference time for all models is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
-
-
-<table>
   <tr>
-    <th>Model</th>
-    <th>Recognition Avg Accuracy(%)</th>
-    <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time</th>
-    <th>Model Size (M)</th>
-    <th>Description</th>
+    <td rowspan="2">Text Detection</td>
+    <td>PP-OCRv4_mobile_det</td>
+    <td>77.79%</td>
+    <td>2.719474</td>
+    <td>79.1097</td>
+    <td>15</td>
   </tr>
-   <tr>
-        <td>ch_SVTRv2_rec</td>
-        <td>68.81</td>
-        <td>8.36801</td>
-        <td>165.706</td>
-        <td>73.9 M</td>
-        <td rowspan="1">SVTRv2, a server-side text recognition model developed by the OpenOCR team at the Vision and Learning Lab (FVL) of Fudan University, also won first place in the OCR End-to-End Recognition Task of the PaddleOCR Algorithm Model Challenge. Its A-rank end-to-end recognition accuracy is 6% higher than PP-OCRv4.
-</td>
-    </tr>
-</table>
-
-**Note: The evaluation set for the above accuracy metrics is the [OCR End-to-End Recognition Task of the PaddleOCR Algorithm Model Challenge - Track 1](https://aistudio.baidu.com/competition/detail/1131/0/introduction) A-rank. GPU inference time for all models is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
-
-<table>
   <tr>
-    <th>Model</th>
-    <th>Recognition Avg Accuracy(%)</th>
-    <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time</th>
-    <th>Model Size (M)</th>
-    <th>Description</th>
+    <td>PP-OCRv4_server_det</td>
+    <td>82.69%</td>
+    <td>22.20346</td>
+    <td>2662.158</td>
+    <td>198</td>
   </tr>
-   <tr>
-        <td>ch_RepSVTR_rec</td>
-        <td>65.07</td>
-        <td>10.5047</td>
-        <td>51.5647</td>
-        <td>22.1 M</td>
-        <td rowspan="1">  RepSVTR, a mobile text recognition model based on SVTRv2, won first place in the OCR End-to-End Recognition Task of the PaddleOCR Algorithm Model Challenge. Its B-rank end-to-end recognition accuracy is 2.5% higher than PP-OCRv4, with comparable inference speed.</td>
-    </tr>
+  <tr>
+    <td rowspan="5">Text Recognition</td>
+    <td>PP-OCRv4_mobile_rec</td>
+    <td>78.20%</td>
+    <td>2.719474</td>
+    <td>79.1097</td>
+    <td>15</td>
+  </tr>
+  <tr>
+    <td>PP-OCRv4_server_rec</td>
+    <td>79.20%</td>
+    <td>22.20346</td>
+    <td>2662.158</td>
+    <td>198</td>
+  </tr>
+  <tr>
+    <td>ch_RepSVTR_rec</td>
+    <td>65.07%</td>
+    <td>-</td>
+    <td>-</td>
+    <td>22.1 M</td>
+  </tr>
+  <tr>
+    <td>ch_SVTRv2_rec</td>
+    <td>68.81%</td>
+    <td> - </td>
+    <td> - </td>
+    <td>73.9 M</td>
+  </tr>
 </table>
 
-
-**Note: The evaluation set for the above accuracy metrics is the [OCR End-to-End Recognition Task of the PaddleOCR Algorithm Model Challenge - Track 1](https://aistudio.baidu.com/competition/detail/1131/0/introduction) B-rank. GPU inference time for all models is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
+**Note: The accuracy metric for text detection models is Hmean(%), and for text recognition models, it is Accuracy(%). All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 
 </details>
 
@@ -138,13 +114,13 @@ paddlex --get_pipeline_config OCR
 After execution, the OCR Pipeline configuration file will be saved in the current directory. If you wish to customize the save location, you can execute the following command (assuming the custom save location is `./my_path`):
 
 ```bash
-paddlex --get_pipeline_config OCR --save_path ./my_path --device gpu:0
+paddlex --get_pipeline_config OCR --save_path ./my_path
 ```
 
-After obtaining the Pipeline configuration file, replace `--pipeline` with the configuration file's save path to make the configuration file effective. For example, if the configuration file is saved as `./OCR.yaml`, simply execute:
+After obtaining the Pipeline configuration file, replace `--pipeline` with the configuration file's save path to make the configuration file effective. For example, if the configuration file is saved as `./ocr.yaml`, simply execute:
 
 ```bash
-paddlex --pipeline ./OCR.yaml --input general_ocr_002.png --device gpu:0
+paddlex --pipeline ./ocr.yaml --input general_ocr_002.png
 ```
 
 Here, parameters such as `--model` and `--device` do not need to be specified, as they will use the parameters in the configuration file. If parameters are still specified, the specified parameters will take precedence.
@@ -152,7 +128,7 @@ Here, parameters such as `--model` and `--device` do not need to be specified, a
 After running, the result is:
 
 ```bash
-{'input_path': 'general_ocr_002.png', 'dt_polys': [[[5, 12], [88, 10], [88, 29], [5, 31]], [[208, 14], [249, 14], [249, 22], [208, 22]], [[695, 15], [824, 15], [824, 60], [695, 60]], [[158, 27], [355, 23], [356, 70], [159, 73]], [[421, 25], [659, 19], [660, 59], [422, 64]], [[337, 104], [460, 102], [460, 127], [337, 129]], [[486, 103], [650, 100], [650, 125], [486, 128]], [[675, 98], [835, 94], [835, 119], [675, 124]], [[64, 114], [192, 110], [192, 131], [64, 134]], [[210, 108], [318, 106], [318, 128], [210, 130]], [[82, 140], [214, 138], [214, 163], [82, 165]], [[226, 136], [328, 136], [328, 161], [226, 161]], [[404, 134], [432, 134], [432, 161], [404, 161]], [[509, 131], [570, 131], [570, 158], [509, 158]], [[730, 138], [771, 138], [771, 154], [730, 154]], [[806, 136], [817, 136], [817, 146], [806, 146]], [[342, 175], [470, 173], [470, 197], [342, 199]], [[486, 173], [616, 171], [616, 196], [486, 198]], [[677, 169], [813, 166], [813, 191], [677, 194]], [[65, 181], [170, 177], [171, 202], [66, 205]], [[96, 208], [171, 205], [172, 230], [97, 232]], [[336, 220], [476, 215], [476, 237], [336, 242]], [[507, 217], [554, 217], [554, 236], [507, 236]], [[87, 229], [204, 227], [204, 251], [87, 254]], [[344, 240], [483, 236], [483, 258], [344, 262]], [[66, 252], [174, 249], [174, 271], [66, 273]], [[75, 279], [264, 272], [265, 297], [76, 303]], [[459, 297], [581, 295], [581, 320], [459, 322]], [[101, 314], [210, 311], [210, 337], [101, 339]], [[68, 344], [165, 340], [166, 365], [69, 368]], [[345, 350], [662, 346], [662, 368], [345, 371]], [[100, 459], [832, 444], [832, 465], [100, 480]]], 'dt_scores': [0.8183103704439653, 0.7609575621092027, 0.8662357274035412, 0.8619508290334809, 0.8495855993183273, 0.8676840017933314, 0.8807986687956436, 0.822308525056085, 0.8686617037621976, 0.8279022169854463, 0.952332847006758, 0.8742692553015098, 0.8477013022907575, 0.8528771493227294, 0.7622965906848765, 0.8492388224448705, 0.8344203789965632, 0.8078477124353284, 0.6300434587457232, 0.8359967356998494, 0.7618617265751318, 0.9481573079350023, 0.8712182945408912, 0.837416955846334, 0.8292475059403851, 0.7860382856406026, 0.7350527486717117, 0.8701022267947695, 0.87172526903969, 0.8779847108088126, 0.7020437651809734, 0.6611684983372949], 'rec_text': ['www.997', '151', 'PASS', '登机牌', 'BOARDING', '舱位 CLASS', '序号SERIALNO.', '座位号SEATNO', '航班 FLIGHT', '日期DATE', 'MU 2379', '03DEC', 'W', '035', 'F', '1', '始发地FROM', '登机口 GATE', '登机时间BDT', '目的地TO', '福州', 'TAIYUAN', 'G11', 'FUZHOU', '身份识别IDNO.', '姓名NAME', 'ZHANGQIWEI', '票号TKTNO.', '张祺伟', '票价FARE', 'ETKT7813699238489/1', '登机口于起飞前10分钟关闭GATESCLOSE1OMINUTESBEFOREDEPARTURETIME'], 'rec_score': [0.9617719054222107, 0.4199012815952301, 0.9652514457702637, 0.9978302121162415, 0.9853208661079407, 0.9445787072181702, 0.9714463949203491, 0.9841841459274292, 0.9564052224159241, 0.9959094524383545, 0.9386572241783142, 0.9825271368026733, 0.9356589317321777, 0.9985442161560059, 0.3965512812137604, 0.15236201882362366, 0.9976775050163269, 0.9547433257102966, 0.9974752068519592, 0.9646636843681335, 0.9907559156417847, 0.9895358681678772, 0.9374122023582458, 0.9909093379974365, 0.9796401262283325, 0.9899340271949768, 0.992210865020752, 0.9478569626808167, 0.9982215762138367, 0.9924325942993164, 0.9941263794898987, 0.96443772315979]}
+{'img_path': '/root/.paddlex/predict_input/general_ocr_002.png', 'dt_polys': [[[5, 12], [88, 10], [88, 29], [5, 31]], [[208, 14], [249, 14], [249, 22], [208, 22]], [[695, 15], [824, 15], [824, 60], [695, 60]], [[158, 27], [355, 23], [356, 70], [159, 73]], [[421, 25], [659, 19], [660, 59], [422, 64]], [[337, 104], [460, 102], [460, 127], [337, 129]], [[486, 103], [650, 100], [650, 125], [486, 128]], [[675, 98], [835, 94], [835, 119], [675, 124]], [[64, 114], [192, 110], [192, 131], [64, 134]], [[210, 108], [318, 106], [318, 128], [210, 130]], [[82, 140], [214, 138], [214, 163], [82, 165]], [[226, 136], [328, 136], [328, 161], [226, 161]], [[404, 134], [432, 134], [432, 161], [404, 161]], [[509, 131], [570, 131], [570, 158], [509, 158]], [[730, 138], [771, 138], [771, 154], [730, 154]], [[806, 136], [817, 136], [817, 146], [806, 146]], [[342, 175], [470, 173], [470, 197], [342, 199]], [[486, 173], [616, 171], [616, 196], [486, 198]], [[677, 169], [813, 166], [813, 191], [677, 194]], [[65, 181], [170, 177], [171, 202], [66, 205]], [[96, 208], [171, 205], [172, 230], [97, 232]], [[336, 220], [476, 215], [476, 237], [336, 242]], [[507, 217], [554, 217], [554, 236], [507, 236]], [[87, 229], [204, 227], [204, 251], [87, 254]], [[344, 240], [483, 236], [483, 258], [344, 262]], [[66, 252], [174, 249], [174, 271], [66, 273]], [[75, 279], [264, 272], [265, 297], [76, 303]], [[459, 297], [581, 295], [581, 320], [459, 322]], [[101, 314], [210, 311], [210, 337], [101, 339]], [[68, 344], [165, 340], [166, 365], [69, 368]], [[345, 350], [662, 346], [662, 368], [345, 371]], [[100, 459], [832, 444], [832, 465], [100, 480]]], 'dt_scores': [0.8183103704439653, 0.7609575621092027, 0.8662357274035412, 0.8619508290334809, 0.8495855993183273, 0.8676840017933314, 0.8807986687956436, 0.822308525056085, 0.8686617037621976, 0.8279022169854463, 0.952332847006758, 0.8742692553015098, 0.8477013022907575, 0.8528771493227294, 0.7622965906848765, 0.8492388224448705, 0.8344203789965632, 0.8078477124353284, 0.6300434587457232, 0.8359967356998494, 0.7618617265751318, 0.9481573079350023, 0.8712182945408912, 0.837416955846334, 0.8292475059403851, 0.7860382856406026, 0.7350527486717117, 0.8701022267947695, 0.87172526903969, 0.8779847108088126, 0.7020437651809734, 0.6611684983372949], 'rec_text': ['www.997', '151', 'PASS', '登机牌', 'BOARDING', '舱位 CLASS', '序号SERIALNO.', '座位号SEATNO', '航班 FLIGHT', '日期DATE', 'MU 2379', '03DEC', 'W', '035', 'F', '1', '始发地FROM', '登机口 GATE', '登机时间BDT', '目的地TO', '福州', 'TAIYUAN', 'G11', 'FUZHOU', '身份识别IDNO.', '姓名NAME', 'ZHANGQIWEI', '票号TKTNO.', '张祺伟', '票价FARE', 'ETKT7813699238489/1', '登机口于起飞前10分钟关闭GATESCLOSE1OMINUTESBEFOREDEPARTURETIME'], 'rec_score': [0.9617719054222107, 0.4199012815952301, 0.9652514457702637, 0.9978302121162415, 0.9853208661079407, 0.9445787072181702, 0.9714463949203491, 0.9841841459274292, 0.9564052224159241, 0.9959094524383545, 0.9386572241783142, 0.9825271368026733, 0.9356589317321777, 0.9985442161560059, 0.3965512812137604, 0.15236201882362366, 0.9976775050163269, 0.9547433257102966, 0.9974752068519592, 0.9646636843681335, 0.9907559156417847, 0.9895358681678772, 0.9374122023582458, 0.9909093379974365, 0.9796401262283325, 0.9899340271949768, 0.992210865020752, 0.9478569626808167, 0.9982215762138367, 0.9924325942993164, 0.9941263794898987, 0.96443772315979]}
 ......
 ```
 
@@ -160,7 +136,7 @@ Among them, `dt_polys` is the detected text box coordinates, `dt_polys` is the d
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/03.png)
 
-The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path.
+The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path. 
 
 </details>
 
@@ -170,12 +146,12 @@ The visualized image not saved by default. You can customize the save path throu
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="OCR")
+pipeline = create_pipeline(pipeline="ocr")
 
 output = pipeline.predict("general_ocr_002.png")
 for res in output:
-    res.print()
-    res.save_to_img("./output/")
+    res.print() 
+    res.save_to_img("./output/") 
 ```
 > ❗ The results obtained from running the Python script are the same as those from the command line.
 
@@ -212,15 +188,15 @@ The Python script above executes the following steps:
 
 If you have a configuration file, you can customize the configurations of the image anomaly detection pipeline by simply modifying the `pipeline` parameter in the `create_pipeline` method to the path of the pipeline configuration file.
 
-For example, if your configuration file is saved at `./my_path/OCR.yaml`, you only need to execute:
+For example, if your configuration file is saved at `./my_path/ocr.yaml`, you only need to execute:
 
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="./my_path/OCR.yaml")
+pipeline = create_pipeline(pipeline="./my_path/ocr.yaml")
 output = pipeline.predict("general_ocr_002.png")
 for res in output:
     res.print()
-    res.save_to_img("./output/")
+    res.save_to_img("./output/") 
 ```
 
 ## 3. Development Integration/Deployment
@@ -230,9 +206,9 @@ If you need to apply the general OCR pipeline directly in your Python project, r
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
-🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end speedups. For detailed high-performance inference procedures, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference_en.md).
+🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end speedups. For detailed High-Performance Inference procedures, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference_en.md).
 
-☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy_en.md).
+☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving_deploy_en.md).
 
 Below are the API references and multi-language service invocation examples:
 
@@ -719,7 +695,7 @@ print_r($result["texts"]);
 </details>
 <br/>
 
-📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing capabilities on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy_en.md).
+📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing capabilities on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy_en.md).
 You can choose the appropriate deployment method based on your needs to proceed with subsequent AI application integration.
 
 

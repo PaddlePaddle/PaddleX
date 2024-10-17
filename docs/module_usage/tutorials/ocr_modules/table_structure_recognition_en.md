@@ -1,6 +1,6 @@
 [简体中文](table_structure_recognition.md) | English
 
-# Tutorial for Developing Table Structure Recognition Modules
+# Table Structure Recognition Module Development Tutorial
 
 ## I. Overview
 Table structure recognition is a crucial component in table recognition systems, converting non-editable table images into editable table formats (e.g., HTML). The goal of table structure recognition is to identify the rows, columns, and cell positions of tables. The performance of this module directly impacts the accuracy and efficiency of the entire table recognition system. The module typically outputs HTML or LaTeX code for the table area, which is then passed to the table content recognition module for further processing.
@@ -268,7 +268,7 @@ The model can be directly integrated into the PaddleX pipeline or directly into 
 
 1.**Pipeline Integration**
 
-The table structure recognition module can be integrated into PaddleX pipelines such as the [General Table Recognition Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md) and the [Document Scene Information Extraction Pipeline v3 (PP-ChatOCRv3)](../../../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md). Simply replace the model path to update the table structure recognition module in the relevant pipelines. For pipeline integration, you can deploy your obtained model using high-performance inference and service-oriented deployment.
+The table structure recognition module can be integrated into PaddleX pipelines such as the [General Table Recognition Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md) and the [Document Scene Information Extraction Pipeline v3 (PP-ChatOCRv3)](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_en.md). Simply replace the model path to update the table structure recognition module in the relevant pipelines. For pipeline integration, you can deploy your obtained model using high-performance deployment and service-oriented deployment.
 
 2.**Module Integration**
 

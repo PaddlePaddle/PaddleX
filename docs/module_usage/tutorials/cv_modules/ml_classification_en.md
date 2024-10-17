@@ -1,6 +1,6 @@
 [简体中文](ml_classification.md) | English
 
-# Tutorial on Developing Image Multi-Label Classification Modules
+# Image Multi-Label Classification Module Development Tutorial
 
 ## I. Overview
 The image multi-label classification module is a crucial component in computer vision systems, responsible for assigning multiple labels to input images. Unlike traditional image classification tasks that assign a single category to an image, multi-label classification tasks require assigning multiple relevant categories to an image. The performance of this module directly impacts the accuracy and efficiency of the entire computer vision system. The image multi-label classification module typically takes an image as input and, through deep learning or other machine learning algorithms, classifies it into multiple predefined categories based on its characteristics and content. For example, an image containing both a cat and a dog might be labeled as both "cat" and "dog" by the image multi-label classification module. These classification labels are then output for subsequent processing and analysis by other modules or systems.
@@ -327,7 +327,7 @@ The model can be directly integrated into the PaddleX pipeline or directly into 
 
 1.**Pipeline Integration**
 
-The image multi-label classification module can be integrated into the [General Image Multi-label Classification Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification_en.md) of PaddleX. Simply replace the model path to update the image multi-label classification module of the relevant pipeline. In pipeline integration, you can use high-performance inference and service-oriented deployment to deploy your model.
+The image multi-label classification module can be integrated into the [General Image Multi-label Classification Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification_en.md) of PaddleX. Simply replace the model path to update the image multi-label classification module of the relevant pipeline. In pipeline integration, you can use high-performance deployment and service-oriented deployment to deploy your model.
 
 2.**Module Integration**
 

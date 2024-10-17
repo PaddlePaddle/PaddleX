@@ -60,7 +60,7 @@ paddlex --get_pipeline_config multi_label_image_classification --save_path ./my_
 After obtaining the pipeline configuration file, replace `--pipeline` with the saved path of the configuration file to make it effective. For example, if the configuration file is saved at `./multi_label_image_classification.yaml`, simply execute:
 
 ```bash
-paddlex --pipeline ./multi_label_image_classification.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg --device gpu:0
+paddlex --pipeline ./multi_label_image_classification.yaml --input https://paddle-model-ecology.bj
 ```
 
 Where `--model`, `--device`, and other parameters are not specified, the parameters in the configuration file will be used. If parameters are specified, the specified parameters will take precedence.
@@ -70,7 +70,7 @@ Where `--model`, `--device`, and other parameters are not specified, the paramet
 After running, the result obtained is:
 
 ```
-{'input_path': 'general_image_classification_001.jpg', 'class_ids': [21, 0, 30, 24], 'scores': [0.99257, 0.70596, 0.63001, 0.57852], 'label_names': ['bear', 'person', 'skis', 'backpack']}
+{'img_path': '/root/.paddlex/predict_input/general_image_classification_001.jpg', 'class_ids': [21, 0, 30, 24], 'scores': [0.99257, 0.70596, 0.63001, 0.57852], 'label_names': ['bear', 'person', 'skis', 'backpack']}
 ```
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_multi_label_classification/02.png)
 
@@ -144,9 +144,9 @@ If you need to directly apply the pipeline in your Python project, refer to the 
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
-🚀 **High-Performance Inference**: In actual production environments, many applications have strict standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins that aim to deeply optimize model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed high-performance inference procedures, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference_en.md).
+🚀 **High-Performance Inference**: In actual production environments, many applications have strict standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins that aim to deeply optimize model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed High-Performance Inference procedures, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference_en.md).
 
-☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy_en.md).
+☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving_deploy_en.md).
 
 Below are the API references and multi-language service invocation examples:
 
@@ -592,7 +592,7 @@ print_r($result["categories"]);
 
 <br/>
 
-📱 **Edge Deployment**: Edge deployment is a way to place computing and data processing functions on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy_en.md).
+📱 **Edge Deployment**: Edge deployment is a way to place computing and data processing functions on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy_en.md).
 You can choose the appropriate deployment method for your model pipeline based on your needs and proceed with subsequent AI application integration.
 
 ## 4. Custom Development
@@ -626,8 +626,7 @@ paddlex --pipeline multi_label_image_classification --input https://paddle-model
 ```
 
 At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu:0`:
-
-```bash
+```
 paddlex --pipeline multi_label_image_classification --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg --device npu:0
 ```
-If you want to use the General Image Multi-label Classification Pipeline on more diverse hardware, please refer to the [PaddleX Multi-device Usage Guide](../../../installation/multi_devices_use_guide_en.md).
+If you want to use the General Image Multi-label Classification Pipeline on more diverse hardware, please refer to the [PaddleX Multi-device Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md).
