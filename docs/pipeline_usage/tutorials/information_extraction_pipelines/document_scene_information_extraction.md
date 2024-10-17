@@ -357,11 +357,11 @@ chat_result.print()
 
         |名称|类型|含义|是否必填|
         |-|-|-|-|
-        |`image`|`string`|服务可访问的图像文件或PDF文件的URL，或上述类型文件内容的Base64编码结果。对于超过10页的PDF文件，只有前10页的内容会被使用。|是|
+        |`file`|`string`|服务可访问的图像文件或PDF文件的URL，或上述类型文件内容的Base64编码结果。对于超过10页的PDF文件，只有前10页的内容会被使用。|是|
         |`fileType`|`integer`|文件类型。`0`表示PDF文件，`1`表示图像文件。若请求体无此属性，则服务将尝试根据URL自动推断文件类型。|否|
-        |`useOricls`|`boolean`|是否启用文档图像方向分类功能。默认启用该功能。|否|
-        |`useCurve`|`boolean`|是否启用印章文本检测功能。默认启用该功能。|否|
-        |`useUvdoc`|`boolean`|是否启用文本图像矫正功能。默认启用该功能。|否|
+        |`useImgOrientationCls`|`boolean`|是否启用文档图像方向分类功能。默认启用该功能。|否|
+        |`useImgUnwrapping`|`boolean`|是否启用文本图像矫正功能。默认启用该功能。|否|
+        |`useSealTextDet`|`boolean`|是否启用印章文本检测功能。默认启用该功能。|否|
         |`inferenceParams`|`object`|推理参数。|否|
 
         `inferenceParams`的属性如下：
@@ -439,7 +439,7 @@ chat_result.print()
 
         |名称|类型|含义|
         |-|-|-|
-        |`vectorStore`|`object`|向量数据库序列化结果，可用作其他操作的输入。|
+        |`vectorStore`|`string`|向量数据库序列化结果，可用作其他操作的输入。|
 
 - **`retrieveKnowledge`**
 
@@ -452,8 +452,7 @@ chat_result.print()
         |名称|类型|含义|是否必填|
         |-|-|-|-|
         |`keys`|`array`|关键词列表。|是|
-        |`vectorStore`|`object`|向量数据库序列化结果。由`buildVectorStore`操作提供。|是|
-        |`visionInfo`|`object`|图像中的关键信息。由`analyzeImage`操作提供。|是|
+        |`vectorStore`|`string`|向量数据库序列化结果。由`buildVectorStore`操作提供。|是|
         |`llmName`|`string`|大语言模型名称。|否|
         |`llmParams`|`object`|大语言模型API参数。|否|
 
@@ -495,8 +494,7 @@ chat_result.print()
         |`taskDescription`|`string`|提示词任务。|否|
         |`rules`|`string`|提示词规则。用于自定义信息抽取规则，例如规范输出格式。|否|
         |`fewShot`|`string`|提示词示例。|否|
-        |`useVectorStore`|`boolean`|是否启用向量数据库。默认启用。|否|
-        |`vectorStore`|`object`|向量数据库序列化结果。由`buildVectorStore`操作提供。|否|
+        |`vectorStore`|`string`|向量数据库序列化结果。由`buildVectorStore`操作提供。|否|
         |`retrievalResult`|`string`|知识检索结果。由`retrieveKnowledge`操作提供。|否|
         |`returnPrompts`|`boolean`|是否返回使用的提示词。默认启用。|否|
         |`llmName`|`string`|大语言模型名称。|否|
@@ -523,7 +521,7 @@ chat_result.print()
 
         |名称|类型|含义|
         |-|-|-|
-        |`chatResult`|`string`|关键信息抽取结果。|
+        |`chatResult`|`object`|关键信息抽取结果。|
         |`prompts`|`object`|使用的提示词。|
 
         `prompts`的属性如下：
@@ -560,108 +558,101 @@ LLM_PARAMS = {
     "secretKey": SECRET_KEY,
 }
 
+file_path = "./demo.jpg"
+keys = ["电话"]
 
-if __name__ == "__main__":
-    file_path = "./demo.jpg"
-    keys = ["电话"]
+with open(file_path, "rb") as file:
+    file_bytes = file.read()
+    file_data = base64.b64encode(file_bytes).decode("ascii")
 
-    with open(file_path, "rb") as file:
-        file_bytes = file.read()
-        file_data = base64.b64encode(file_bytes).decode("ascii")
+payload = {
+    "file": file_data,
+    "fileType": 1,
+    "useImgOrientationCls": True,
+    "useImgUnwrapping": True,
+    "useSealTextDet": True,
+}
+resp_vision = requests.post(url=f"{API_BASE_URL}/chatocr-vision", json=payload)
+if resp_vision.status_code != 200:
+    print(
+        f"Request to chatocr-vision failed with status code {resp_vision.status_code}."
+    )
+    pprint.pp(resp_vision.json())
+    sys.exit(1)
+result_vision = resp_vision.json()["result"]
 
-    payload = {
-        "file": file_data,
-        "useOricls": True,
-        "useCurve": True,
-        "useUvdoc": True,
-    }
-    resp_vision = requests.post(url=f"{API_BASE_URL}/chatocr-vision", json=payload)
-    if resp_vision.status_code != 200:
-        print(
-            f"Request to chatocr-vision failed with status code {resp_vision.status_code}."
-        )
-        pprint.pp(resp_vision.json())
-        sys.exit(1)
-    result_vision = resp_vision.json()["result"]
+for i, res in enumerate(result_vision["visionResults"]):
+    print("Texts:")
+    pprint.pp(res["texts"])
+    print("Tables:")
+    pprint.pp(res["tables"])
+    ocr_img_path = f"ocr_{i}.jpg"
+    with open(ocr_img_path, "wb") as f:
+        f.write(base64.b64decode(res["ocrImage"]))
+    layout_img_path = f"layout_{i}.jpg"
+    with open(layout_img_path, "wb") as f:
+        f.write(base64.b64decode(res["layoutImage"]))
+    print(f"Output images saved at {ocr_img_path} and {layout_img_path}")
 
-    for i, res in enumerate(result_vision["visionResults"]):
-        print("Texts:")
-        pprint.pp(res["texts"])
-        print("Tables:")
-        pprint.pp(res["tables"])
-        ocr_img_path = f"ocr_{i}.jpg"
-        with open(ocr_img_path, "wb") as f:
-            f.write(base64.b64decode(res["ocrImage"]))
-        layout_img_path = f"layout_{i}.jpg"
-        with open(layout_img_path, "wb") as f:
-            f.write(base64.b64decode(res["layoutImage"]))
-        print(f"Output images saved at {ocr_img_path} and {layout_img_path}")
-        print("")
-    print("="*50 + "\n\n")
+payload = {
+    "visionInfo": result_vision["visionInfo"],
+    "minChars": 200,
+    "llmRequestInterval": 1000,
+    "llmName": LLM_NAME,
+    "llmParams": LLM_PARAMS,
+}
+resp_vector = requests.post(url=f"{API_BASE_URL}/chatocr-vector", json=payload)
+if resp_vector.status_code != 200:
+    print(
+        f"Request to chatocr-vector failed with status code {resp_vector.status_code}."
+    )
+    pprint.pp(resp_vector.json())
+    sys.exit(1)
+result_vector = resp_vector.json()["result"]
 
-    payload = {
-        "visionInfo": result_vision["visionInfo"],
-        "minChars": 200,
-        "llmRequestInterval": 1000,
-        "llmName": LLM_NAME,
-        "llmParams": LLM_PARAMS,
-    }
-    resp_vector = requests.post(url=f"{API_BASE_URL}/chatocr-vector", json=payload)
-    if resp_vector.status_code != 200:
-        print(
-            f"Request to chatocr-vector failed with status code {resp_vector.status_code}."
-        )
-        pprint.pp(resp_vector.json())
-        sys.exit(1)
-    result_vector = resp_vector.json()["result"]
-    print("="*50 + "\n\n")
+payload = {
+    "keys": keys,
+    "vectorStore": result_vector["vectorStore"],
+    "llmName": LLM_NAME,
+    "llmParams": LLM_PARAMS,
+}
+resp_retrieval = requests.post(url=f"{API_BASE_URL}/chatocr-retrieval", json=payload)
+if resp_retrieval.status_code != 200:
+    print(
+        f"Request to chatocr-retrieval failed with status code {resp_retrieval.status_code}."
+    )
+    pprint.pp(resp_retrieval.json())
+    sys.exit(1)
+result_retrieval = resp_retrieval.json()["result"]
 
-    payload = {
-        "keys": keys,
-        "vectorStore": result_vector["vectorStore"],
-        "visionInfo": result_vision["visionInfo"],
-        "llmName": LLM_NAME,
-        "llmParams": LLM_PARAMS,
-    }
-    resp_retrieval = requests.post(url=f"{API_BASE_URL}/chatocr-retrieval", json=payload)
-    if resp_retrieval.status_code != 200:
-        print(
-            f"Request to chatocr-retrieval failed with status code {resp_retrieval.status_code}."
-        )
-        pprint.pp(resp_retrieval.json())
-        sys.exit(1)
-    result_retrieval = resp_retrieval.json()["result"]
-    print("Knowledge retrieval result:")
-    print(result_retrieval["retrievalResult"])
-    print("="*50 + "\n\n")
-
-    payload = {
-        "keys": keys,
-        "visionInfo": result_vision["visionInfo"],
-        "taskDescription": "",
-        "rules": "",
-        "fewShot": "",
-        "useVectorStore": True,
-        "vectorStore": result_vector["vectorStore"],
-        "retrievalResult": result_retrieval["retrievalResult"],
-        "returnPrompts": True,
-        "llmName": LLM_NAME,
-        "llmParams": LLM_PARAMS,
-    }
-    resp_chat = requests.post(url=f"{API_BASE_URL}/chatocr-chat", json=payload)
-    if resp_chat.status_code != 200:
-        print(
-            f"Request to chatocr-chat failed with status code {resp_chat.status_code}."
-        )
-        pprint.pp(resp_chat.json())
-        sys.exit(1)
-    result_chat = resp_chat.json()["result"]
-    print("Prompts:")
-    pprint.pp(result_chat["prompts"])
-    print("Final result:")
-    print(len(result_chat["chatResult"]))
+payload = {
+    "keys": keys,
+    "visionInfo": result_vision["visionInfo"],
+    "taskDescription": "",
+    "rules": "",
+    "fewShot": "",
+    "vectorStore": result_vector["vectorStore"],
+    "retrievalResult": result_retrieval["retrievalResult"],
+    "returnPrompts": True,
+    "llmName": LLM_NAME,
+    "llmParams": LLM_PARAMS,
+}
+resp_chat = requests.post(url=f"{API_BASE_URL}/chatocr-chat", json=payload)
+if resp_chat.status_code != 200:
+    print(
+        f"Request to chatocr-chat failed with status code {resp_chat.status_code}."
+    )
+    pprint.pp(resp_chat.json())
+    sys.exit(1)
+result_chat = resp_chat.json()["result"]
+print("\nPrompts:")
+pprint.pp(result_chat["prompts"])
+print("Final result:")
+print(result_chat["chatResult"])
 ```
-**注**：请在 `API_KEY`、`SECRET_KEY` 处填入您的 ak、sk。
+
+**注**：请在 `API_KEY`、`SECRET_KEY` 处填入您的 API key 和 secret key。
+
 </details>
 </details>
 <br/>
@@ -714,7 +705,7 @@ from paddlex import create_pipeline
 predict = create_pipeline(
     pipeline="PP-ChatOCRv3-doc",
     llm_name="ernie-3.5",
-    llm_params={"api_type": "qianfan", "ak": "", "sk": ""},  # 请填入您的ak与sk，否则无法调用大模型
+    llm_params={"api_type": "qianfan", "ak": "", "sk": ""},
     device="npu:0" # gpu:0 --> npu:0
     )
 ```

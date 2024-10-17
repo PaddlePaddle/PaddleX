@@ -81,6 +81,8 @@ training!"
             self.pdx_config.update_learning_rate(self.train_config.learning_rate)
         if self.train_config.epochs_iters is not None:
             self.pdx_config.update_epochs(self.train_config.epochs_iters)
+        if self.train_config.log_interval is not None:
+            self.pdx_config.update_log_interval(self.train_config.log_interval)
         if self.global_config.output is not None:
             self.pdx_config.update_save_dir(self.global_config.output)
 

@@ -87,8 +87,33 @@ paddlex --get_pipeline_config OCR --save_path ./my_path
 paddlex --pipeline ./ocr.yaml --input general_ocr_002.png
 ```
 其中，`--model`、`--device` 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。
+</details>
+
+**💻Python脚本体验**
+
+几行代码即可快速体验产线效果：
+
+```python
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(pipeline="OCR")
+
+output = pipeline.predict("general_ocr_002.png")
+for res in output:
+    res.print()
+    res.save_to_img("./output/")
+```
+
+执行了如下几个步骤：
+
+* `create_pipeline()` 实例化产线对象
+* 传入图片并调用产线对象的 `predict` 方法进行推理预测
+* 对预测结果进行处理
+
+> ❗ Python脚本运行得到的结果与命令行方式相同。
 
 
+如果预训练模型产线的效果符合您的预期，即可直接进行[开发集成/部署](#6开发集成部署)，如果不符合，再根据后续步骤对产线的效果进行优化。
 ## 3、模型选择（可选）
 
 由于一个产线中可能包含一个或多个单功能模块，在进行模型微调时，您需要根据测试的情况确定微调其中的哪个模块的模型。以此处登机牌识别任务的OCR产线为例，该产线包含文本检测模型（如 `PP-OCRv4_mobile_det`）和文本识别模型（如 `PP-OCRv4_mobile_rec`），如发现文字的定位不准，则需要微调文本检测模型，如果发现文字的识别不准，则需要微调文本识别模型。如果您不清楚产线中包含哪些模型，可以查阅[模型列表](../support_list/models_list.md)。
@@ -164,7 +189,5 @@ for res in output:
 | 图像异常检测       | [图像异常检测产线使用教程](./tutorials/cv_pipelines/image_anomaly_detection.md) |
 | 通用OCR            | [通用OCR产线使用教程](./tutorials/ocr_pipelines/OCR.md) |
 | 通用表格识别       | [通用表格识别产线使用教程](./tutorials/ocr_pipelines/table_recognition.md) |
-| 通用时序预测       | [通用时序预测产线使用教程](./tutorials/time_series_pipelines/time_series_forecasting.md) |
-| 通用时序异常检测   | [通用时序异常检测产线使用教程](./tutorials/time_series_pipelines/time_series_anomaly_detection.md) |
-| 通用时序分类       | [通用时序分类产线使用教程](./tutorials/time_series_pipelines/time_series_classification.md) |
+| 通用版面解析       | [通用版面解析产线使用教程](./tutorials/ocr_pipelines/layout_parsing.md) |
 | 公式识别       | [公式识别产线使用教程](./tutorials/ocr_pipelines/formula_recognition.md) |

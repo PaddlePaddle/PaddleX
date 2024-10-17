@@ -185,7 +185,7 @@ class LayoutParsingPipeline(_TableRecPipeline):
                 "ocr_result": OCRResult({}),
                 "table_ocr_result": [],
                 "table_result": StructureTableResult([]),
-                "layout_parsing_result": [],
+                "layout_parsing_result": {},
                 "oricls_result": TopkResult({}),
                 "formula_result": TextRecResult({}),
                 "unwarp_result": DocTrResult({}),

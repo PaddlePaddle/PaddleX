@@ -12,6 +12,7 @@ OCR（光学字符识别，Optical Character Recognition）是一种将图像中
 
 **通用OCR产线中包含了文本检测模块和文本识别模块**，每个模块中包含了若干模型，具体使用哪些模型，您可以根据下边的 benchmark 数据来选择。**如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型**。
 
+<<<<<<< HEAD
 <table>
   <tr>
     <th>产线模块</th>
@@ -65,6 +66,43 @@ OCR（光学字符识别，Optical Character Recognition）是一种将图像中
     <td> - </td>
     <td>73.9 M</td>
   </tr>
+=======
+<details>
+   <summary> 👉模型列表详情</summary>
+
+**文本检测模块：**
+
+|模型|检测Hmean（%）|GPU推理耗时（ms）|CPU推理耗时 (ms)|模型存储大小（M)|介绍|
+|-|-|-|-|-|-|
+|PP-OCRv4_server_det|82.69|83.3501|2434.01|109|PP-OCRv4 的服务端文本检测模型，精度更高，适合在性能较好的服务器上部署|
+|PP-OCRv4_mobile_det|77.79|10.6923|120.177|4.7|PP-OCRv4 的移动端文本检测模型，效率更高，适合在端侧设备部署|
+
+**文本识别模块：**
+<table >
+    <tr>
+        <th>模型</th>
+        <th>识别 Avg Accuracy(%)</th>
+        <th>GPU推理耗时（ms）</th>
+        <th>CPU推理耗时 (ms)</th>
+        <th>模型存储大小（M）</th>
+        <th>介绍</th>
+    </tr>
+    <tr>
+        <td>PP-OCRv4_mobile_rec</td>
+        <td>78.20</td>
+        <td>7.95018</td>
+        <td>46.7868</td>
+        <td>10.6 M</td>
+        <td rowspan="2">PP-OCRv4是百度飞桨视觉团队自研的文本识别模型PP-OCRv3的下一个版本，通过引入数据增强方案、GTC-NRTR指导分支等策略，在模型推理速度不变的情况下，进一步提升了文本识别精度。该模型提供了服务端（server）和移动端（mobile）两个不同版本，来满足不同场景下的工业需求。</td>
+    </tr>
+    <tr>
+        <td>PP-OCRv4_server_rec </td>
+        <td>79.20</td>
+        <td>7.19439</td>
+        <td>140.179</td>
+        <td>71.2 M</td>
+    </tr>
+>>>>>>> remotes/upstream/develop
 </table>
 
 **注：文本检测模型精度指标为 Hmean(%)，文本识别模型精度指标为 Accuracy(%)。以上所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
@@ -345,7 +383,7 @@ result = response.json()["result"]
 with open(output_image_path, "wb") as file:
     file.write(base64.b64decode(result["image"]))
 print(f"Output image saved at {output_image_path}")
-print("\nTexts:")
+print("\nDetected texts:")
 print(result["texts"])
 ```
 
@@ -406,9 +444,9 @@ int main() {
         }
 
         auto texts = result["texts"];
-        std::cout << "\nTexts:" << std::endl;
-        for (const auto& category : texts) {
-            std::cout << category << std::endl;
+        std::cout << "\nDetected texts:" << std::endl;
+        for (const auto& text : texts) {
+            std::cout << text << std::endl;
         }
     } else {
         std::cout << "Failed to send HTTP request." << std::endl;
@@ -473,7 +511,7 @@ public class Main {
                     fos.write(imageBytes);
                 }
                 System.out.println("Output image saved at " + outputImagePath);
-                System.out.println("\nTexts: " + texts.toString());
+                System.out.println("\nDetected texts: " + texts.toString());
             } else {
                 System.err.println("Request failed with code: " + response.code());
             }
@@ -564,9 +602,9 @@ func main() {
         return
     }
     fmt.Printf("Image saved at %s.jpg\n", outputImagePath)
-    fmt.Println("\nTexts:")
-    for _, category := range respData.Result.Texts {
-        fmt.Println(category)
+    fmt.Println("\nDetected texts:")
+    for _, text := range respData.Result.Texts {
+        fmt.Println(text)
     }
 }
 ```
@@ -615,7 +653,7 @@ class Program
 
         File.WriteAllBytes(outputImagePath, outputImageBytes);
         Console.WriteLine($"Output image saved at {outputImagePath}");
-        Console.WriteLine("\nTexts:");
+        Console.WriteLine("\nDetected texts:");
         Console.WriteLine(jsonResponse["result"]["texts"].ToString());
     }
 }
@@ -659,7 +697,7 @@ axios.request(config)
       if (err) throw err;
       console.log(`Output image saved at ${outputImagePath}`);
     });
-    console.log("\nTexts:");
+    console.log("\nDetected texts:");
     console.log(result["texts"]);
 })
 .catch((error) => {
@@ -695,7 +733,7 @@ curl_close($ch);
 $result = json_decode($response, true)["result"];
 file_put_contents($output_image_path, base64_decode($result["image"]));
 echo "Output image saved at " . $output_image_path . "\n";
-echo "\nTexts:\n";
+echo "\nDetected texts:\n";
 print_r($result["texts"]);
 
 ?>

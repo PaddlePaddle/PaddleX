@@ -121,12 +121,13 @@ def create_app(
     async def _app_lifespan(app: fastapi.FastAPI) -> AsyncGenerator[None, None]:
         ctx.pipeline = PipelineWrapper[_PipelineT](pipeline)
         if app_aiohttp_session:
-            ctx.aiohttp_session = aiohttp.ClientSession(
+            async with aiohttp.ClientSession(
                 cookie_jar=aiohttp.DummyCookieJar()
-            )
-        yield
-        if app_aiohttp_session:
-            await ctx.aiohttp_session.close()
+            ) as aiohttp_session:
+                ctx.aiohttp_session = aiohttp_session
+                yield
+        else:
+            yield
 
     app = fastapi.FastAPI(lifespan=_app_lifespan)
     ctx = AppContext[_PipelineT](config=app_config)

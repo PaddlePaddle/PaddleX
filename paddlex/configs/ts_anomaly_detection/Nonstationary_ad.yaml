@@ -23,6 +23,7 @@ Train:
   epochs_iters: 20
   batch_size: 16
   learning_rate: 0.0005
+  log_interval: 10
 
 Evaluate:
   weight_path: "output/best_model/model.pdparams"

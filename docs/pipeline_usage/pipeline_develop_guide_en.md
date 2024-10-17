@@ -86,7 +86,33 @@ After obtaining the pipeline configuration file, you can replace `--pipeline` wi
 ```bash
 paddlex --pipeline ./ocr.yaml --input /path/to/general_ocr_002.png
 ```
-In this case, parameters such as `--model`, `--device` are not required, and the parameters in the configuration file will be used. If parameters are still specified, they will take precedence.
+Parameters such as `--model`, `--device` do not need to be specified, and the parameters in the configuration file will be used. If parameters are still specified, the specified parameters will prevail.
+</details>
+
+**💻 Python Script Experience**
+
+A few lines of code can quickly experience the pipeline effects:
+
+```python
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(pipeline="OCR")
+
+output = pipeline.predict("general_ocr_002.png")
+for res in output:
+    res.print()
+    res.save_to_img("./output/")
+```
+
+The following steps are executed:
+
+* `create_pipeline()` instantiates the pipeline object
+* Passes the image and calls the `predict` method of the pipeline object for inference prediction
+* Processes the prediction results
+
+> ❗ The results obtained from running the Python script are the same as those from the command line method.
+
+If the pre-trained model pipeline meets your expectations, you can proceed directly to [development integration/deployment](#6-development-integration-and-deployment). If not, optimize the pipeline effects according to the following steps.
 
 
 ## 3. Model Selection (Optional)
@@ -164,6 +190,9 @@ Choose the appropriate deployment method for your model pipeline based on your n
 | Image Anomaly Detection       | [Image Anomaly Detection Pipeline Usage Tutorial](./tutorials/cv_pipelines/image_anomaly_detection_en.md) |
 | OCR            | [OCR Pipeline Usage Tutorial](./tutorials/ocr_pipelines/OCR_en.md) |
 | Table Recognition       | [Table Recognition Pipeline Usage Tutorial](./tutorials/ocr_pipelines/table_recognition_en.md) |
+| Layout Parsing       | [Layout Parsing Pipeline Usage Tutorial](./tutorials/ocr_pipelines/layout_parsing_en.md) |
+| Formula Recognition       | [Formula Recognition Pipeline Usage Tutorial](./tutorials/ocr_pipelines/formula_recognition_en.md) |
+| Seal Recognition       | [Seal Recognition Pipeline Usage Tutorial](./tutorials/ocr_pipelines/seal_recognition_en.md) |
 | Time Series Forecasting       | [Time Series Forecasting Pipeline Usage Tutorial](./tutorials/time_series_pipelines/time_series_forecasting_en.md) |
 | Time Series Anomaly Detection   | [Time Series Anomaly Detection Pipeline Usage Tutorial](./tutorials/time_series_pipelines/time_series_anomaly_detection_en.md) |
 | Time Series Classification       | [Time Series Classification Pipeline Usage Tutorial](./tutorials/time_series_pipelines/time_series_classification_en.md) |

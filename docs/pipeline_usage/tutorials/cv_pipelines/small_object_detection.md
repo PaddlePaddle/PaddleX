@@ -262,7 +262,7 @@ result = response.json()["result"]
 with open(output_image_path, "wb") as file:
     file.write(base64.b64decode(result["image"]))
 print(f"Output image saved at {output_image_path}")
-print("\nDetectedobjects:")
+print("\nDetected objects:")
 print(result["detectedObjects"])
 ```
 
@@ -323,7 +323,7 @@ int main() {
         }
 
         auto detectedObjects = result["detectedObjects"];
-        std::cout << "\nDetectedobjects:" << std::endl;
+        std::cout << "\nDetected objects:" << std::endl;
         for (const auto& category : detectedObjects) {
             std::cout << category << std::endl;
         }
@@ -390,7 +390,7 @@ public class Main {
                     fos.write(imageBytes);
                 }
                 System.out.println("Output image saved at " + outputImagePath);
-                System.out.println("\nDetectedobjects: " + detectedObjects.toString());
+                System.out.println("\nDetected objects: " + detectedObjects.toString());
             } else {
                 System.err.println("Request failed with code: " + response.code());
             }
@@ -460,7 +460,7 @@ func main() {
     type Response struct {
         Result struct {
             Image      string   `json:"image"`
-            Detectedobjects []map[string]interface{} `json:"detectedObjects"`
+            DetectedObjects []map[string]interface{} `json:"detectedObjects"`
         } `json:"result"`
     }
     var respData Response
@@ -481,8 +481,8 @@ func main() {
         return
     }
     fmt.Printf("Image saved at %s.jpg\n", outputImagePath)
-    fmt.Println("\nDetectedobjects:")
-    for _, category := range respData.Result.Detectedobjects {
+    fmt.Println("\nDetected objects:")
+    for _, category := range respData.Result.DetectedObjects {
         fmt.Println(category)
     }
 }
@@ -532,7 +532,7 @@ class Program
 
         File.WriteAllBytes(outputImagePath, outputImageBytes);
         Console.WriteLine($"Output image saved at {outputImagePath}");
-        Console.WriteLine("\nDetectedobjects:");
+        Console.WriteLine("\nDetected objects:");
         Console.WriteLine(jsonResponse["result"]["detectedObjects"].ToString());
     }
 }
@@ -576,7 +576,7 @@ axios.request(config)
       if (err) throw err;
       console.log(`Output image saved at ${outputImagePath}`);
     });
-    console.log("\nDetectedobjects:");
+    console.log("\nDetected objects:");
     console.log(result["detectedObjects"]);
 })
 .catch((error) => {
@@ -612,7 +612,7 @@ curl_close($ch);
 $result = json_decode($response, true)["result"];
 file_put_contents($output_image_path, base64_decode($result["image"]));
 echo "Output image saved at " . $output_image_path . "\n";
-echo "\nDetectedobjects:\n";
+echo "\nDetected objects:\n";
 print_r($result["detectedObjects"]);
 
 ?>

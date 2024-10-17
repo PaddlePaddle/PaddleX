@@ -5,10 +5,8 @@ grpcio==1.51.3
 pydantic>=2
 editdistance
 openpyxl
-PyMuPDF==1.20.2
 premailer
 python-docx
-Pillow==9.5
 requests <= 2.29
 ######## For Chatocrv3 #######
 qianfan==0.0.3

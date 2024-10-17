@@ -5,7 +5,7 @@
 <p align="center">
     <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202-red.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/Python-3.8%2C%203.9%2C%203.10-blue.svg"></a>
-    <a href=""><img src="https://img.shields.io/badge/OS-Linux%2C%20Windows-orange.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/OS-Linux%2C%20Windows%2C%20Mac-orange.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/hardware-CPU%2C%20GPU%2C%20XPU%2C%20NPU%2C%20MLU%2C%20DCU-yellow.svg"></a>
 </p>
 
@@ -68,7 +68,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <th>Service-Oriented Deployment</th>
         <th>Edge Deployment</th>
         <th>Custom Development</th>
-        <th><a href="https://aistudio.baidu.com/pipeline/mine">No-Code Development On AI Studio</a></td> 
+        <th><a href="https://aistudio.baidu.com/pipeline/mine">Zero-Code Development On AI Studio</a></td> 
     </tr>
     <tr>
         <td>OCR</td>
@@ -201,23 +201,33 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>🚧</td>
     </tr>
     <tr>
+        <td>Layout Parsing</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>🚧</td>
+    </tr>
+    <tr>
         <td>Formula Recognition</td>
         <td>🚧</td>
+        <td>✅</td>
         <td>🚧</td>
+        <td>✅</td>
         <td>🚧</td>
-        <td>🚧</td>
-        <td>🚧</td>
-        <td>🚧</td>
+        <td>✅</td>
         <td>🚧</td>
     </tr>
     <tr>
         <td>Seal Recognition</td>
         <td>🚧</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
         <td>🚧</td>
-        <td>🚧</td>
-        <td>🚧</td>
-        <td>🚧</td>
-        <td>🚧</td>
+        <td>✅</td>
         <td>🚧</td>
     </tr>
     <tr>
@@ -252,16 +262,6 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
     <tr>
         <td>Face Recognition</td>
-        <td>🚧</td>
-        <td>🚧</td>
-        <td>🚧</td>
-        <td>🚧</td>
-        <td>🚧</td>
-        <td>🚧</td>
-        <td>🚧</td>
-    </tr>
-    <tr>
-        <td>Layout Parsing</td>
         <td>🚧</td>
         <td>🚧</td>
         <td>🚧</td>
@@ -442,6 +442,9 @@ To use the command line for other pipelines, simply adjust the `pipeline` parame
 | Image Anomaly Detection      | `paddlex --pipeline anomaly_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png --device gpu:0 `                                              |
 | OCR                  | `paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0`                                                      |
 | Table Recognition    | `paddlex --pipeline table_recognition --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg --device gpu:0`                                      |
+| Layout Parsing       | `paddlex --pipeline layout_parsing --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/demo_paper.png --device gpu:0`                                      |
+| Formula Recognition       | `paddlex --pipeline formula_recognition --input https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/general_formula_recognition.png --device gpu:0`                                      |
+| Seal Recognition       | `paddlex --pipeline seal_recognition --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png --device gpu:0`                                      |
 | Time Series Forecasting | `paddlex --pipeline ts_fc --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv --device gpu:0`                                                                   |
 | Time Series Anomaly Detection | `paddlex --pipeline ts_ad --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.csv --device gpu:0`                                                                    |
 | Time Series Classification | `paddlex --pipeline ts_cls --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv --device gpu:0`                                                                 |
@@ -483,7 +486,10 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 | Small Object Detection         | `small_object_detection` | [Small Object Detection Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection_en.md) |
 | Image Anomaly Detection       | `image_classification` | [Image Anomaly Detection Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection_en.md) |
 |  OCR            | `OCR` | [ OCR Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/ocr_pipelines/OCR_en.md) |
-|  Table Recognition       | `table_recognition` | [ Form Recognition Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md) |
+|  Table Recognition       | `table_recognition` | [Table Recognition Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md) |
+| Layout Parsing       | `layout_parsing`                | [Layout Parsing Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/ocr_pipelines/layout_parsing_en.md)                                   |
+| Formula Recognition       | `formula_recognition`                | [Formula Recognition Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/ocr_pipelines/formula_recognition_en.md)                                   |
+| Seal Recognition       | `seal_recognition`                | [Seal Recognition Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/ocr_pipelines/seal_recognition_en.md)                 |
 |  Time Series Forecast       | `ts_forecast` | [ Time Series Forecast Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting_en.md) |
 |  Time Series Anomaly Detection   | `ts_anomaly_detection` | [ Time Series Anomaly Detection Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md) |
 |  Time Series Classification       | `ts_cls` | [ Time Series Classification Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification_en.md) |
@@ -501,39 +507,42 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 <details open>
 <summary> <b> 🔥 Pipeline Usage </b></summary>
 
-* [📑 PaddleX pipeline Usage Overview](./docs/pipeline_usage/pipeline_develop_guide_en.md)
+* [📑 PaddleX Pipeline Usage Overview](./docs/pipeline_usage/pipeline_develop_guide_en.md)
 
 * <details open>
     <summary> <b> 📝 Information Extracion</b></summary>
 
-   * [📄 PP-ChatOCRv3 pipeline Tutorial](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md)
+   * [📄 PP-ChatOCRv3 Pipeline Tutorial](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md)
   </details>
 
 * <details open>
     <summary> <b> 🔍 OCR </b></summary>
 
-    * [📜 OCR pipeline Tutorial](./docs/pipeline_usage/tutorials/ocr_pipelines/OCR_en.md)
-    * [📊 Table Recognition pipeline Tutorial](./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md)
+    * [📜 OCR Pipeline Tutorial](./docs/pipeline_usage/tutorials/ocr_pipelines/OCR_en.md)
+    * [📊 Table Recognition Pipeline Tutorial](./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md)
+    * [📄 Layout Parsing Pipeline Tutorial](./docs/pipeline_usage/tutorials/ocr_pipelines/layout_parsing_en.md)
+    * [📐 Formula Recognition Pipeline Tutorial](./docs/pipeline_usage/tutorials/ocr_pipelines/formula_recognition_en.md)
+    * [📝 Seal Recognition Pipeline Tutorial](./docs/pipeline_usage/tutorials/ocr_pipelines/seal_recognition_en.md)
   </details>
 
 * <details open>
     <summary> <b> 🎥 Computer Vision </b></summary>
 
-   * [🖼️ Image Classification pipeline Tutorial](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification_en.md)
-   * [🎯 Object Detection pipeline Tutorial](./docs/pipeline_usage/tutorials/cv_pipelines/object_detection_en.md)
-   * [📋 Instance Segmentation pipeline Tutorial](./docs/pipeline_usage/tutorials/cv_pipelines/instance_segmentation_en.md)
-   * [🗣️ Semantic Segmentation pipeline Tutorial](./docs/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation_en.md)
-   * [🏷️ Multi-label Image Classification pipeline Tutorial](./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification_en.md)
-   * [🔍 Small Object Detection pipeline Tutorial](./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection_en.md)
-   * [🖼️ Image Anomaly Detection pipeline Tutorial](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection_en.md)
+   * [🖼️ Image Classification Pipeline Tutorial](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification_en.md)
+   * [🎯 Object Detection Pipeline Tutorial](./docs/pipeline_usage/tutorials/cv_pipelines/object_detection_en.md)
+   * [📋 Instance Segmentation Pipeline Tutorial](./docs/pipeline_usage/tutorials/cv_pipelines/instance_segmentation_en.md)
+   * [🗣️ Semantic Segmentation Pipeline Tutorial](./docs/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation_en.md)
+   * [🏷️ Multi-label Image Classification Pipeline Tutorial](./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification_en.md)
+   * [🔍 Small Object Detection Pipeline Tutorial](./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection_en.md)
+   * [🖼️ Image Anomaly Detection Pipeline Tutorial](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection_en.md)
   </details>
   
 * <details open>
     <summary> <b> ⏱️ Time Series Analysis</b> </summary>
 
-   * [📈 Time Series Forecasting pipeline Tutorial](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting_en.md)
-   * [📉 Time Series Anomaly Detection pipeline Tutorial](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md)
-   * [🕒 Time Series Classification pipeline Tutorial](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification_en.md)
+   * [📈 Time Series Forecasting Pipeline Tutorial](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting_en.md)
+   * [📉 Time Series Anomaly Detection Pipeline Tutorial](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md)
+   * [🕒 Time Series Classification Pipeline Tutorial](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification_en.md)
   </details>
 
 * <details open>

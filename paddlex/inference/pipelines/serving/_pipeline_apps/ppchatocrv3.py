@@ -48,9 +48,9 @@ class InferenceParams(BaseModel):
 class AnalyzeImageRequest(BaseModel):
     file: str
     fileType: Optional[FileType] = None
-    useOricls: bool = True
-    useCurve: bool = True
-    useUvdoc: bool = True
+    useImgOrientationCls: bool = True
+    useImgUnwrapping: bool = True
+    useSealTextDet: bool = True
     inferenceParams: Optional[InferenceParams] = None
 
 
@@ -117,18 +117,18 @@ class BuildVectorStoreRequest(BaseModel):
 
 
 class BuildVectorStoreResult(BaseModel):
-    vectorStore: dict
+    vectorStore: str
 
 
 class RetrieveKnowledgeRequest(BaseModel):
     keys: List[str]
-    vectorStore: dict
+    vectorStore: str
     llmName: Optional[LLMName] = None
     llmParams: Optional[Annotated[LLMParams, Field(discriminator="apiType")]] = None
 
 
 class RetrieveKnowledgeResult(BaseModel):
-    retrievalResult: dict
+    retrievalResult: str
 
 
 class ChatRequest(BaseModel):
@@ -137,8 +137,8 @@ class ChatRequest(BaseModel):
     taskDescription: Optional[str] = None
     rules: Optional[str] = None
     fewShot: Optional[str] = None
-    vectorStore: Optional[dict] = None
-    retrievalResult: Optional[dict] = None
+    vectorStore: Optional[str] = None
+    retrievalResult: Optional[str] = None
     returnPrompts: bool = True
     llmName: Optional[LLMName] = None
     llmParams: Optional[Annotated[LLMParams, Field(discriminator="apiType")]] = None
@@ -151,7 +151,7 @@ class Prompts(BaseModel):
 
 
 class ChatResult(BaseModel):
-    chatResult: str
+    chatResult: dict
     prompts: Optional[Prompts] = None
 
 
@@ -311,11 +311,12 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
                 max_num_imgs=ctx.extra["max_num_imgs"],
             )
 
-            result = await pipeline.infer(
+            result = await pipeline.call(
+                pipeline.pipeline.visual_predict,
                 images,
-                use_doc_image_ori_cls_model=request.useOricls,
-                use_doc_image_unwarp_model=request.useCurve,
-                use_seal_text_det_model=request.useUvdoc,
+                use_doc_image_ori_cls_model=request.useImgOrientationCls,
+                use_doc_image_unwarp_model=request.useImgUnwrapping,
+                use_seal_text_det_model=request.useSealTextDet,
             )
 
             vision_results: List[VisionResult] = []
@@ -404,14 +405,14 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
                 kwargs["llm_params"] = _llm_params_to_dict(request.llmParams)
 
             result = await serving_utils.call_async(
-                pipeline.pipeline.get_vector_text, **kwargs
+                pipeline.pipeline.build_vector, **kwargs
             )
 
             return ResultResponse(
                 logId=serving_utils.generate_log_id(),
                 errorCode=0,
                 errorMsg="Success",
-                result=BuildVectorStoreResult(vectorStore=result),
+                result=BuildVectorStoreResult(vectorStore=result["vector"]),
             )
 
         except Exception as e:
@@ -431,7 +432,7 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
         try:
             kwargs = {
                 "key_list": request.keys,
-                "vector": results.VectorResult(request.vectorStore),
+                "vector": results.VectorResult({"vector": request.vectorStore}),
             }
             if request.llmName is not None:
                 kwargs["llm_name"] = request.llmName
@@ -439,14 +440,14 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
                 kwargs["llm_params"] = _llm_params_to_dict(request.llmParams)
 
             result = await serving_utils.call_async(
-                pipeline.pipeline.get_retrieval_text, **kwargs
+                pipeline.pipeline.retrieval, **kwargs
             )
 
             return ResultResponse(
                 logId=serving_utils.generate_log_id(),
                 errorCode=0,
                 errorMsg="Success",
-                result=RetrieveKnowledgeResult(retrievalResult=result),
+                result=RetrieveKnowledgeResult(retrievalResult=result["retrieval"]),
             )
 
         except Exception as e:
@@ -476,10 +477,10 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
             if request.fewShot is not None:
                 kwargs["few_shot"] = request.fewShot
             if request.vectorStore is not None:
-                kwargs["vector"] = results.VectorResult(request.vectorStore)
+                kwargs["vector"] = results.VectorResult({"vector": request.vectorStore})
             if request.retrievalResult is not None:
                 kwargs["retrieval_result"] = results.RetrievalResult(
-                    request.retrievalResult
+                    {"retrieval": request.retrievalResult}
                 )
             kwargs["save_prompt"] = request.returnPrompts
             if request.llmName is not None:
@@ -501,6 +502,7 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
                 chatResult=result["chat_res"],
                 prompts=prompts,
             )
+
             return ResultResponse(
                 logId=serving_utils.generate_log_id(),
                 errorCode=0,
