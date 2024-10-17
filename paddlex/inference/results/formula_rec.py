@@ -22,9 +22,8 @@ from .base import CVResult
 class FormulaRecResult(CVResult):
     _HARD_FLAG = False
 
-    def _to_str(self):
-        rec_formula_str = ", ".join([str(formula) for formula in self["rec_formula"]])
-        return str(self).replace("\\\\", "\\")
+    def _to_str(self, *args, **kwargs):
+        return super()._to_str(*args, **kwargs).replace("\\\\", "\\")
 
     def _to_img(
         self,
