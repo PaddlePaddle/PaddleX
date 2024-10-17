@@ -72,6 +72,9 @@ class BasicPredictor(
     def set_predictor(self, batch_size=None, device=None, pp_option=None):
         if batch_size:
             self.components["ReadCmp"].batch_size = batch_size
+            self.pp_option.batch_size = batch_size
+            if self.pp_option.run_mode.startwith("trt"):
+                self.components["PPEngineCmp"].reset()
         if device and device != self.pp_option.device:
             self.pp_option.device = device
             self.components["PPEngineCmp"].reset()
