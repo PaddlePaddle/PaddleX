@@ -181,9 +181,19 @@ PaddleX provides default high-performance inference configurations for each mode
   </tr>
 
   <tr>
-    <td>General Seal Text Detection </td>
+    <td rowspan="3">Seal Text Recognition</td>
+    <td>Layout Analysis</td>
+    <td>PicoDet-L_layout_3cls<br/>RT-DETR-H_layout_3cls<br/>RT-DETR-H_layout_17cls</td>
+  </tr>
+
+  <tr>
     <td>Seal Text Detection</td>
-    <td>PP-OCRv4_server_seal_det<br/>PP-OCRv4_server_seal_det</td>
+    <td>PP-OCRv4_server_seal_det<br/>PP-OCRv4_mobile_seal_det</td>
+  </tr>
+
+  <tr>
+    <td>Text Recognition</td>
+    <td>PP-OCRv4_mobile_rec<br/>PP-OCRv4_server_rec</td>
   </tr>
 
   <tr>

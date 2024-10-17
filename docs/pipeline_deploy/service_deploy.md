@@ -74,7 +74,9 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 | 图像异常检测产线       | [图像异常检测产线使用教程](../pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md)       |
 | 通用OCR产线            | [通用OCR产线使用教程](../pipeline_usage/tutorials/ocr_pipelines/OCR.md)            |
 | 通用表格识别产线       | [通用表格识别产线使用教程](../pipeline_usage/tutorials/ocr_pipelines/table_recognition.md)       |
+| 通用版面解析产线       | [通用版面解析产线使用教程](../pipeline_usage/tutorials/ocr_pipelines/layout_parsing.md)       |
 | 通用公式识别产线       | [通用公式识别产线使用教程](../pipeline_usage/tutorials/ocr_pipelines/formula_recognition.md)       |
+| 印章文本识别产线       | [印章文本识别产线使用教程](../pipeline_usage/tutorials/ocr_pipelines/seal_recognition.md)       |
 | 时序预测产线           | [时序预测产线使用教程](../pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md)           |
 | 时序异常检测产线       | [时序异常检测产线使用教程](../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md)       |
 | 时序分类产线           | [时序分类产线使用教程](../pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md)           |
