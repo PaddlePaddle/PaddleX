@@ -26,8 +26,6 @@ from .modules import (
     build_trainer,
     build_evaluater,
 )
-
-
 from .model import create_model
 from .inference import create_predictor, create_pipeline
 

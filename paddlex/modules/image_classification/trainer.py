@@ -14,7 +14,6 @@
 
 import json
 import shutil
-import lazy_paddle as paddle
 from pathlib import Path
 
 from ..base import BaseTrainer
