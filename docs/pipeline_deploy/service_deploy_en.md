@@ -75,6 +75,7 @@ Please refer to the **"Development Integration/Deployment"** section in the usag
 | Image Anomaly Detection Pipeline | [Tutorial for Using the Image Anomaly Detection Pipeline](../pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection_en.md) |
 | General OCR Pipeline | [Tutorial for Using the General OCR Pipeline](../pipeline_usage/tutorials/ocr_pipelines/OCR_en.md) |
 | General Table Recognition Pipeline | [Tutorial for Using the General Table Recognition Pipeline](../pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md) |
+| General Formula Recognition Pipeline | [Tutorial for Using the General Formula Recognition Pipeline](../pipeline_usage/tutorials/ocr_pipelines/formula_recognition_en.md) |
 | Time Series Forecasting Pipeline | [Tutorial for Using the Time Series Forecasting Pipeline](../pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting_en.md) |
 | Time Series Anomaly Detection Pipeline | [Tutorial for Using the Time Series Anomaly Detection Pipeline](../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md) |
 | Time Series Classification Pipeline | [Tutorial for Using the Time Series Classification Pipeline](../pipeline_usage/tutorials/time_series_pipelines/time_series_classification_en.md) |
