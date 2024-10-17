@@ -167,7 +167,9 @@ class SegModel(BaseModel):
 
         # PDX related settings
         uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
+        export_during_train = kwargs.pop("export_during_train", True)
         config.set_val("uniform_output_enabled", uniform_output_enabled)
+        config.set_val("export_during_train", export_during_train)
         config.set_val("pdx_model_name", self.name)
         hpi_config_path = self.model_info.get("hpi_config_path", None)
         if hpi_config_path:
