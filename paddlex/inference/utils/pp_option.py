@@ -61,6 +61,7 @@ class PaddlePredictorOption(object):
             "trt_use_static": False,
             "delete_pass": [],
             "enable_new_ir": True if self.model_name not in NEWIR_BLOCKLIST else False,
+            "batch_size": 1,  # only for trt
         }
 
     @property
@@ -173,6 +174,14 @@ class PaddlePredictorOption(object):
     def enable_new_ir(self, enable_new_ir: bool):
         """set run mode"""
         self._cfg["enable_new_ir"] = enable_new_ir
+
+    @property
+    def batch_size(self):
+        return self._cfg["batch_size"]
+
+    @batch_size.setter
+    def batch_size(self, batch_size):
+        self._cfg["batch_size"] = batch_size
 
     def get_support_run_mode(self):
         """get supported run mode"""
