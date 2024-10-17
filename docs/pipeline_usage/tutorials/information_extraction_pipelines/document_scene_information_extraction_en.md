@@ -528,7 +528,7 @@ LLM_PARAMS = {
 }
 
 file_path = "./demo.jpg"
-keys = ["phone number"]
+keys = ["电话"]
 
 with open(file_path, "rb") as file:
     file_bytes = file.read()
@@ -686,5 +686,5 @@ predict = create_pipeline(
     )
 ```
 
-If you want to use the PP-ChatOCRv3-doc Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../installation/multi_devices_use_guide_en.md).
+If you want to use the PP-ChatOCRv3-doc Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md).
 

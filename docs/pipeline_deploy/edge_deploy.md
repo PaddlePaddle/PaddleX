@@ -1,4 +1,4 @@
-简体中文 | [English](lite_edge_en.md)
+简体中文 | [English](edge_deploy_en.md)
 
 # PaddleX 端侧部署 demo 使用指南
 

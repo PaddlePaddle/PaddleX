@@ -55,7 +55,7 @@ Command-line options related to serving deployment are as follows:
 | `--host`           | Hostname or IP address bound to the server. Defaults to 0.0.0.0.                                                                                                |
 | `--port`           | Port number listened to by the server. Defaults to 8080.                                                                                                       |
 | `--use_hpip`       | Enables the high-performance inference plugin if specified.                                                                                                    |
-| `--serial_number`  | Serial number used by the high-performance inference plugin. Only valid when the high-performance inference plugin is enabled. Note that not all pipelines and models support the use of the high-performance inference plugin. For detailed support, please refer to the [PaddleX High-Performance Deployment Guide](./high_performance_deploy_en.md). |
+| `--serial_number`  | Serial number used by the high-performance inference plugin. Only valid when the high-performance inference plugin is enabled. Note that not all pipelines and models support the use of the high-performance inference plugin. For detailed support, please refer to the [PaddleX High-Performance Deployment Guide](./high_performance_inference_en.md). |
 | `--update_license` | Activates the license online if specified. Only valid when the high-performance inference plugin is enabled.                                                      |
 
 </table>
@@ -75,6 +75,9 @@ Please refer to the **"Development Integration/Deployment"** section in the usag
 | Image Anomaly Detection Pipeline | [Tutorial for Using the Image Anomaly Detection Pipeline](../pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection_en.md) |
 | General OCR Pipeline | [Tutorial for Using the General OCR Pipeline](../pipeline_usage/tutorials/ocr_pipelines/OCR_en.md) |
 | General Table Recognition Pipeline | [Tutorial for Using the General Table Recognition Pipeline](../pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md) |
+| General Layout Parsing Pipeline | [Tutorial for Using the Layout Parsing Recognition Pipeline](../pipeline_usage/tutorials/ocr_pipelines/layout_parsing_en.md) |
+| Formula Recognition Pipeline | [Tutorial for Using the Formula Recognition Pipeline](../pipeline_usage/tutorials/ocr_pipelines/formula_recognition_en.md) |
+| Seal Text Recognition Pipeline | [Tutorial for Using the Seal Text Recognition Pipeline](../pipeline_usage/tutorials/ocr_pipelines/seal_recognition_en.md) |
 | Time Series Forecasting Pipeline | [Tutorial for Using the Time Series Forecasting Pipeline](../pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting_en.md) |
 | Time Series Anomaly Detection Pipeline | [Tutorial for Using the Time Series Anomaly Detection Pipeline](../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md) |
 | Time Series Classification Pipeline | [Tutorial for Using the Time Series Classification Pipeline](../pipeline_usage/tutorials/time_series_pipelines/time_series_classification_en.md) |
@@ -88,7 +91,7 @@ When deploying services into production environments, the stability, efficiency,
 
 In scenarios where strict response time requirements are imposed on applications, the PaddleX High-Performance Inference Plugin can be used to accelerate model inference and pre/post-processing, thereby reducing response time and increasing throughput.
 
-To use the PaddleX High-Performance Inference Plugin, please refer to the [PaddleX High-Performance Deployment Guide](./high_performance_deploy_en.md) for installing the high-performance inference plugin, obtaining serial numbers, and activating the plugin. Additionally, not all pipelines, models, and environments support the use of the high-performance inference plugin. For detailed support information, please refer to the section on pipelines and models that support the high-performance inference plugin.
+To use the PaddleX High-Performance Inference Plugin, please refer to the [PaddleX High-Performance Deployment Guide](./high_performance_inference_en.md) for installing the high-performance inference plugin, obtaining serial numbers, and activating the plugin. Additionally, not all pipelines, models, and environments support the use of the high-performance inference plugin. For detailed support information, please refer to the section on pipelines and models that support the high-performance inference plugin.
 
 When starting the PaddleX pipeline service, you can specify `--use_hpip` along with the serial number to use the high-performance inference plugin. If you wish to perform online activation, you should also specify `--update_license`. Example usage:
 

@@ -288,7 +288,7 @@ If you need to directly apply the production line to your Python project, you ca
 
 In addition, PaddleX also offers three other deployment methods, detailed as follows:
 
-🚀 ** High performance deployment: In actual production environments, many applications have strict standards for the performance indicators of deployment strategies, especially response speed, to ensure efficient system operation and smooth user experience. To this end, PaddleX provides a high-performance inference plugin aimed at deep performance optimization of model inference and pre-processing, achieving significant acceleration of end-to-end processes. For a detailed high-performance deployment process, please refer to the [PaddleX High Performance Deployment Guide] (../../../pipelin_deploy/high_performance_deploy. md).
+🚀 ** High performance deployment: In actual production environments, many applications have strict standards for the performance indicators of deployment strategies, especially response speed, to ensure efficient system operation and smooth user experience. To this end, PaddleX provides a high-performance inference plugin aimed at deep performance optimization of model inference and pre-processing, achieving significant acceleration of end-to-end processes. For a detailed high-performance deployment process, please refer to the [PaddleX High Performance Deployment Guide](../../../pipeline_deploy/high_performance_inference_en.md).
 
 ☁️ ** Service deployment * *: Service deployment is a common form of deployment in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users to achieve service-oriented deployment of production lines at low cost. For detailed service-oriented deployment processes, please refer to the PaddleX Service Deployment Guide (../../../ipeline_deploy/service_deploy. md).
 
@@ -776,4 +776,4 @@ At this point, if you want to switch the hardware to Ascend NPU, simply modify t
 paddlex --pipeline seal_recognition --input seal_text_det.png --device npu:0 --save_path output
 ```
 
-If you want to use the seal text recognition production line on a wider range of hardware, please refer to the [PaddleX Multi Hardware Usage Guide](../../../other_devices_support/installation_other_devices_en.md)。
+If you want to use the seal text recognition production line on a wider range of hardware, please refer to the [PaddleX Multi Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md)。

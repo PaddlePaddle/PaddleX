@@ -20,7 +20,7 @@
 
 ## 🔍 简介
 
-PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了众多**开箱即用的预训练模型**，可以实现模型从训练到推理的**全流程开发**，支持国内外**多款主流硬件**，助力AI 开发者进行产业实践。  
+PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了众多**开箱即用的预训练模型**，可以实现模型从训练到推理的**全流程开发**，支持国内外**多款主流硬件**，助力AI 开发者进行产业实践。
 
 |                                                            [**通用图像分类**](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification.md)                                                            |                                                            [**图像多标签分类**](./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md)                                                            |                                                            [**通用目标检测**](./docs/pipeline_usage/tutorials/cv_pipelines/object_detection.md)                                                            |                                                            [**通用实例分割**](./docs/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md)                                                            |
 |:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|
@@ -33,7 +33,7 @@ PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了�
 ## 🌟 特性
   🎨 **模型丰富一键调用**：将覆盖文本图像智能分析、OCR、目标检测、时序预测等多个关键领域的 **200+ 飞桨模型**整合为 **19 条模型产线**，通过极简的 Python API 一键调用，快速体验模型效果。同时支持 **20+ 单功能模块**，方便开发者进行模型组合使用。
 
-  🚀 **提高效率降低门槛**：实现基于统一命令和图形界面的模型**全流程开发**，打造大小模型结合、大模型半监督学习和多模型融合的[**8 条特色模型产线**](https://aistudio.baidu.com/intro/paddlex)，大幅度降低迭代模型的成本。  
+  🚀 **提高效率降低门槛**：实现基于统一命令和图形界面的模型**全流程开发**，打造大小模型结合、大模型半监督学习和多模型融合的[**8 条特色模型产线**](https://aistudio.baidu.com/intro/paddlex)，大幅度降低迭代模型的成本。
 
   🌐 **多种场景灵活部署**：支持**高性能部署**、**服务化部署**和**端侧部署**等多种部署方式，确保不同应用场景下模型的高效运行和快速响应。
 
@@ -224,7 +224,7 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持**在�
         <td>🚧</td>
     </tr>
     <tr>
-        <td>印章识别</td>
+        <td>印章文本识别</td>
         <td>🚧</td>
         <td>✅</td>
         <td>✅</td>
@@ -274,7 +274,7 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持**在�
         <td>🚧</td>
     </tr>
 
-    
+
 </table>
 
 > ❗注：以上功能均基于 GPU/CPU 实现。PaddleX 还可在昆仑芯、昇腾、寒武纪和海光等主流硬件上进行快速推理和二次开发。下表详细列出了模型产线的支持情况，具体支持的模型列表请参阅[模型列表(昆仑芯XPU)](./docs/support_list/model_list_xpu.md)/[模型列表(昇腾NPU)](./docs/support_list/model_list_npu.md)/[模型列表(寒武纪MLU)](./docs/support_list/model_list_mlu.md)/[模型列表(海光DCU)](./docs/support_list/model_list_dcu.md)。我们正在适配更多的模型，并在主流硬件上推动高性能和服务化部署的实施。
@@ -379,7 +379,7 @@ python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.
 ```bash
 pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0b1-py3-none-any.whl
 ```
-  
+
 > ❗ 更多安装方式参考 [PaddleX 安装教程](./docs/installation/installation.md)
 
 ### 💻 命令行使用
@@ -405,7 +405,7 @@ paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddle
 
 ```bash
 {
-'input_path': '/root/.paddlex/predict_input/general_ocr_002.png', 
+'input_path': '/root/.paddlex/predict_input/general_ocr_002.png',
 'dt_polys': [array([[161,  27],
        [353,  22],
        [354,  69],
@@ -419,9 +419,9 @@ paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddle
        [405, 106],
        [405, 128],
        [341, 128]], dtype=int16)
-       ...], 
-'dt_scores': [0.758478200014338, 0.7021546472698513, 0.8536622648391111, 0.8619181462164781, 0.8321051217096188, 0.8868756173427551, 0.7982964727675609, 0.8289939036796322, 0.8289428877522524, 0.8587063317632897, 0.7786755892491615, 0.8502032769081344, 0.8703346500042997, 0.834490931790065, 0.908291103353393, 0.7614978661708064, 0.8325774055997542, 0.7843421347676149, 0.8680889482955594, 0.8788859304537682, 0.8963341277518075, 0.9364654810069546, 0.8092413027028257, 0.8503743089091863, 0.7920740420391101, 0.7592224394793805, 0.7920547400069311, 0.6641757962457888, 0.8650289477605955, 0.8079483304467047, 0.8532207681055275, 0.8913377034754717], 
-'rec_text': ['登机牌', 'BOARDING', 'PASS', '舱位', 'CLASS', '序号 SERIALNO.', '座位号', '日期 DATE', 'SEAT NO', '航班 FLIGHW', '035', 'MU2379', '始发地', 'FROM', '登机口', 'GATE', '登机时间BDT', '目的地TO', '福州', 'TAIYUAN', 'G11', 'FUZHOU', '身份识别IDNO', '姓名NAME', 'ZHANGQIWEI', 票号TKTNO', '张祺伟', '票价FARE', 'ETKT7813699238489/1', '登机口于起飞前10分钟关闭GATESCLOSE10MINUTESBEFOREDEPARTURETIME'], 
+       ...],
+'dt_scores': [0.758478200014338, 0.7021546472698513, 0.8536622648391111, 0.8619181462164781, 0.8321051217096188, 0.8868756173427551, 0.7982964727675609, 0.8289939036796322, 0.8289428877522524, 0.8587063317632897, 0.7786755892491615, 0.8502032769081344, 0.8703346500042997, 0.834490931790065, 0.908291103353393, 0.7614978661708064, 0.8325774055997542, 0.7843421347676149, 0.8680889482955594, 0.8788859304537682, 0.8963341277518075, 0.9364654810069546, 0.8092413027028257, 0.8503743089091863, 0.7920740420391101, 0.7592224394793805, 0.7920547400069311, 0.6641757962457888, 0.8650289477605955, 0.8079483304467047, 0.8532207681055275, 0.8913377034754717],
+'rec_text': ['登机牌', 'BOARDING', 'PASS', '舱位', 'CLASS', '序号 SERIALNO.', '座位号', '日期 DATE', 'SEAT NO', '航班 FLIGHW', '035', 'MU2379', '始发地', 'FROM', '登机口', 'GATE', '登机时间BDT', '目的地TO', '福州', 'TAIYUAN', 'G11', 'FUZHOU', '身份识别IDNO', '姓名NAME', 'ZHANGQIWEI', 票号TKTNO', '张祺伟', '票价FARE', 'ETKT7813699238489/1', '登机口于起飞前10分钟关闭GATESCLOSE10MINUTESBEFOREDEPARTURETIME'],
 'rec_score': [0.9985831379890442, 0.999696917533874512, 0.9985735416412354, 0.9842517971992493, 0.9383274912834167, 0.9943678975105286, 0.9419361352920532, 0.9221674799919128, 0.9555020928382874, 0.9870321154594421, 0.9664073586463928, 0.9988052248954773, 0.9979352355003357, 0.9985110759735107, 0.9943482875823975, 0.9991195797920227, 0.9936401844024658, 0.9974591135978699, 0.9743705987930298, 0.9980487823486328, 0.9874696135520935, 0.9900962710380554, 0.9952947497367859, 0.9950481653213501, 0.989926815032959, 0.9915552139282227, 0.9938777685165405, 0.997239887714386, 0.9963340759277344, 0.9936134815216064, 0.97223961353302]}
 ```
 
@@ -449,7 +449,7 @@ paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddle
 | 通用表格识别       | `paddlex --pipeline table_recognition --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg --device gpu:0`                                      |
 | 通用版面解析       | `paddlex --pipeline layout_parsing --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/demo_paper.png --device gpu:0`                                      |
 | 公式识别       | `paddlex --pipeline formula_recognition --input https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/general_formula_recognition.png --device gpu:0`                                      |
-| 印章识别       | `paddlex --pipeline seal_recognition --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png --device gpu:0`                                      |
+| 印章文本识别       | `paddlex --pipeline seal_recognition --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png --device gpu:0`                                      |
 | 时序预测       | `paddlex --pipeline ts_fc --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv --device gpu:0`                                                                   |
 | 时序异常检测   | `paddlex --pipeline ts_ad --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.csv --device gpu:0`                                                                    |
 | 时序分类       | `paddlex --pipeline ts_cls --input https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv --device gpu:0`                                                                 |
@@ -493,7 +493,7 @@ for res in output:
 | 通用表格识别       | `table_recognition`                | [通用表格识别产线Python脚本使用说明](./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition.md#22-python脚本方式集成)                                   |
 | 通用版面解析       | `layout_parsing`                | [通用版面解析产线Python脚本使用说明](./docs/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.md#22-python脚本方式集成)                                   |
 | 公式识别       | `formula_recognition`                | [公式识别产线Python脚本使用说明](./docs/pipeline_usage/tutorials/ocr_pipelines/formula_recognition.md#22-python脚本方式集成)                                   |
-| 印章识别       | `seal_recognition`                | [印章识别产线Python脚本使用说明](./docs/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.md#22-python脚本方式集成)                                   |
+| 印章文本识别       | `seal_recognition`                | [印章文本识别产线Python脚本使用说明](./docs/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.md#22-python脚本方式集成)                                   |
 | 时序预测       | `ts_fc`                            | [通用时序预测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md#222-python脚本方式集成)                    |
 | 时序异常检测   | `ts_ad`                            | [通用时序异常检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md#222-python脚本方式集成)          |
 | 时序分类       | `ts_cls`                           | [通用时序分类产线Python脚本使用说明](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md#222-python脚本方式集成)                 |
@@ -504,9 +504,9 @@ for res in output:
 ## 📖 文档
 <details>
   <summary> <b> ⬇️ 安装 </b></summary>
-  
+
   * [📦 PaddlePaddle 安装教程](./docs/installation/paddlepaddle_install.md)
-  * [📦 PaddleX 安装教程](./docs/installation/installation.md) 
+  * [📦 PaddleX 安装教程](./docs/installation/installation.md)
 
 
 </details>
@@ -529,7 +529,7 @@ for res in output:
     * [📊 通用表格识别产线使用教程](./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition.md)
     * [📄 通用版面解析产线使用教程](./docs/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.md)
     * [📐 公式识别产线使用教程](./docs/pipeline_usage/tutorials/ocr_pipelines/formula_recognition.md)
-    * [📝 印章识别产线使用教程](./docs/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.md)
+    * [📝 印章文本识别产线使用教程](./docs/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.md)
   </details>
 
 * <details open>
@@ -542,7 +542,7 @@ for res in output:
    * [🏷️ 图像多标签分类产线使用教程](./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md)
    * [🔍 小目标检测产线使用教程](./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection.md)
    * [🖼️ 图像异常检测产线使用教程](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md)
-  
+
 
 * <details open>
     <summary> <b> ⏱️ 时序分析</b> </summary>
@@ -560,7 +560,7 @@ for res in output:
    * [🖥️ PaddleX 产线命令行使用说明](./docs/pipeline_usage/instructions/pipeline_CLI_usage.md)
    * [📝 PaddleX 产线 Python 脚本使用说明](./docs/pipeline_usage/instructions/pipeline_python_API.md)
   </details>
-   
+
 </details>
 
 <details open>
@@ -577,7 +577,7 @@ for res in output:
   * [📄 文档图像方向分类使用教程](./docs/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.md)
   * [🔧 文本图像矫正模块使用教程](./docs/module_usage/tutorials/ocr_modules/text_image_unwarping.md)
   * [📐 公式识别模块使用教程](./docs/module_usage/tutorials/ocr_modules/formula_recognition.md)
-  
+
   </details>
 
 * <details open>
@@ -623,7 +623,7 @@ for res in output:
   * [🚨 时序异常检测模块使用教程](./docs/module_usage/tutorials/time_series_modules/time_series_anomaly_detection.md)
   * [🕒 时序分类模块使用教程](./docs/module_usage/tutorials/time_series_modules/time_series_classification.md)
   </details>
-    
+
 * <details>
   <summary> <b> 📄 相关说明文件 </b></summary>
 
@@ -644,7 +644,7 @@ for res in output:
 </details>
 <details open>
   <summary> <b> 🖥️ 多硬件使用 </b></summary>
-  
+
   * [🔧 多硬件使用指南](./docs/other_devices_support/multi_devices_use_guide.md)
   * [🖲️ 海光 DCU 飞桨安装教程](./docs/other_devices_support/paddlepaddle_install_DCU.md)
   * [🔲 寒武纪 MLU 飞桨安装教程](./docs/other_devices_support/paddlepaddle_install_MLU.md)

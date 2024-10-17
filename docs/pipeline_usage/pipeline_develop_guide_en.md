@@ -180,7 +180,7 @@ Choose the appropriate deployment method for your model pipeline based on your n
 
 | Pipeline Name          | Detailed Description                                                                                                      |
 |------------------------|---------------------------------------------------------------------------------------------------------------------------|
-| PP-ChatOCR-doc v3   | [PP-ChatOCR-doc v3 Pipeline Usage Tutorial](./tutorials/information_extration_pipelines/document_scene_information_extraction_en.md) |
+| PP-ChatOCR-doc v3   | [PP-ChatOCR-doc v3 Pipeline Usage Tutorial](./tutorials/information_extraction_pipelines/document_scene_information_extraction_en.md) |
 | Image Classification       | [Image Classification Pipeline Usage Tutorial](./tutorials/cv_pipelines/image_classification_en.md) |
 | Object Detection       | [Object Detection Pipeline Usage Tutorial](./tutorials/cv_pipelines/object_detection_en.md) |
 | Instance Segmentation       | [Instance Segmentation Pipeline Usage Tutorial](./tutorials/cv_pipelines/instance_segmentation_en.md) |
@@ -190,7 +190,7 @@ Choose the appropriate deployment method for your model pipeline based on your n
 | Image Anomaly Detection       | [Image Anomaly Detection Pipeline Usage Tutorial](./tutorials/cv_pipelines/image_anomaly_detection_en.md) |
 | OCR            | [OCR Pipeline Usage Tutorial](./tutorials/ocr_pipelines/OCR_en.md) |
 | Table Recognition       | [Table Recognition Pipeline Usage Tutorial](./tutorials/ocr_pipelines/table_recognition_en.md) |
-| Layout Parsing       | [Layout Parsing Pipeline Usage Tutorial](./tutorials/ocr_pipelines/layout_parsing_en.md) |
+| Layout Parsing       | [Layout Parsing Pipeline Usage Tutorial](./tutorials/ocr_pipelines/layout_parsing.md) |
 | Formula Recognition       | [Formula Recognition Pipeline Usage Tutorial](./tutorials/ocr_pipelines/formula_recognition_en.md) |
 | Seal Recognition       | [Seal Recognition Pipeline Usage Tutorial](./tutorials/ocr_pipelines/seal_recognition_en.md) |
 | Time Series Forecasting       | [Time Series Forecasting Pipeline Usage Tutorial](./tutorials/time_series_pipelines/time_series_forecasting_en.md) |

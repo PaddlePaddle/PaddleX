@@ -39,8 +39,17 @@ PaddleX提供了三种可以快速体验产线效果的方式，您可以根据�
 * 命令行快速体验：[PaddleX产线命令行使用说明](../pipeline_usage/instructions/pipeline_CLI_usage.md)
 * Python脚本快速体验：[PaddleX产线Python脚本使用说明](../pipeline_usage/instructions/pipeline_python_API.md)
 
-以实现登机牌识别任务的通用OCR产线为例，一行命令即可快速体验产线效果,使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png)，并将 `--input` 替换为本地路径，进行预测：
+以实现登机牌识别任务的通用OCR产线为例，可以用三种方式体验产线效果：
 
+**🌐 在线体验**
+
+您可以在AI Studio[在线体验](https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent)通用 OCR 产线的效果，用官方提供的 Demo 图片进行识别，例如：
+
+![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/02.png)
+
+**💻 命令行方式体验**
+
+一行命令即可快速体验产线效果,使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png)，并将 `--input` 替换为本地路径，进行预测：
 ```bash
 paddlex --pipeline OCR --input general_ocr_002.png --device gpu:0
 ```
@@ -71,6 +80,10 @@ paddlex --pipeline OCR --input general_ocr_002.png --device gpu:0
 
 在执行上述命令时，加载的是默认的OCR产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
 
+<details>
+   <summary> 👉点击展开</summary>
+
+获取OCR产线配置文件：
 ```bash
 paddlex --get_pipeline_config OCR
 ```
@@ -179,7 +192,7 @@ for res in output:
 
 | 产线名称           | 详细说明                                                                                                      |
 |--------------------|----------------------------------------------------------------------------------------------------------------|
-| 文档场景信息抽取v3   | [文档场景信息抽取v3产线使用教程](./tutorials/information_extration_pipelines/document_scene_information_extraction.md) |
+| 文档场景信息抽取v3   | [文档场景信息抽取v3产线使用教程](./tutorials/information_extraction_pipelines/document_scene_information_extraction.md) |
 | 通用图像分类       | [通用图像分类产线使用教程](./tutorials/cv_pipelines/image_classification.md) |
 | 通用目标检测       | [通用目标检测产线使用教程](./tutorials/cv_pipelines/object_detection.md) |
 | 通用实例分割       | [通用实例分割产线使用教程](./tutorials/cv_pipelines/instance_segmentation.md) |
@@ -191,3 +204,7 @@ for res in output:
 | 通用表格识别       | [通用表格识别产线使用教程](./tutorials/ocr_pipelines/table_recognition.md) |
 | 通用版面解析       | [通用版面解析产线使用教程](./tutorials/ocr_pipelines/layout_parsing.md) |
 | 公式识别       | [公式识别产线使用教程](./tutorials/ocr_pipelines/formula_recognition.md) |
+| 印章文本识别       | [印章文本识别产线使用教程](./tutorials/ocr_pipelines/seal_recognition.md) |
+| 时序预测       | [通用时序预测产线使用教程](./tutorials/time_series_pipelines/time_series_forecasting.md) |
+| 时序异常检测   | [通用时序异常检测产线使用教程](./tutorials/time_series_pipelines/time_series_anomaly_detection.md) |
+| 时序分类       | [通用时序分类产线使用教程](./tutorials/time_series_pipelines/time_series_classification.md) |
