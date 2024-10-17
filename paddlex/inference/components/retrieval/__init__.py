@@ -12,7 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .transforms import *
-from .paddle_predictor import *
-from .task_related import *
-from .retrieval import *
+from .faiss import FaissIndexer
