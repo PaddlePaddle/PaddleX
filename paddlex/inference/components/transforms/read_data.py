@@ -17,18 +17,28 @@ from pathlib import Path
 
 from ....utils.download import download
 from ....utils.cache import CACHE_DIR
-from ..utils.mixin import BatchSizeMixin
 from ..base import BaseComponent
 
 
-class _BaseRead(BaseComponent, BatchSizeMixin):
+class _BaseRead(BaseComponent):
     """Load image from the file."""
 
+    NAME = "ReadCmp"
     SUFFIX = []
 
     def __init__(self, batch_size=1):
         super().__init__()
-        BatchSizeMixin.__init__(self, batch_size)
+        self._batch_size = batch_size
+
+    @property
+    def batch_size(self):
+        return self._batch_size
+
+    @batch_size.setter
+    def batch_size(self, value):
+        if value <= 0:
+            raise ValueError("Batch size must be positive.")
+        self._batch_size = value
 
     # XXX: auto download for url
     def _download_from_url(self, in_path):
