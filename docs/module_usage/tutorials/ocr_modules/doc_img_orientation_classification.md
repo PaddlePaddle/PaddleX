@@ -251,7 +251,7 @@ python main.py -c paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yam
 
 1.**产线集成**
 
-文档图像分类模块可以集成的PaddleX产线有[文档场景信息抽取产线（PP-ChatOCRv3）](../../../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)，只需要替换模型路径即可完成文本检测模块的模型更新。
+文档图像分类模块可以集成的PaddleX产线有[文档场景信息抽取v3产线（PP-ChatOCRv3）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md)，只需要替换模型路径即可完成文本检测模块的模型更新。
 
 2.**模块集成**
 

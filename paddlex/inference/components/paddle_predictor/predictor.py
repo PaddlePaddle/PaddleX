@@ -17,13 +17,13 @@ from abc import abstractmethod
 import lazy_paddle as paddle
 import numpy as np
 
+from ....utils.flags import FLAGS_json_format_model
 from ....utils import logging
 from ...utils.pp_option import PaddlePredictorOption
-from ..utils.mixin import PPEngineMixin
 from ..base import BaseComponent
 
 
-class BasePaddlePredictor(BaseComponent, PPEngineMixin):
+class BasePaddlePredictor(BaseComponent):
     """Predictor based on Paddle Inference"""
 
     OUTPUT_KEYS = "pred"
@@ -32,10 +32,25 @@ class BasePaddlePredictor(BaseComponent, PPEngineMixin):
 
     def __init__(self, model_dir, model_prefix, option):
         super().__init__()
-        PPEngineMixin.__init__(self, option)
         self.model_dir = model_dir
         self.model_prefix = model_prefix
-        self._is_initialized = False
+        self._update_option(option)
+
+    def _update_option(self, option):
+        if option:
+            if self.option and option == self.option:
+                return
+            self._option = option
+            self._option.attach(self)
+            self.reset()
+
+    @property
+    def option(self):
+        return self._option if hasattr(self, "_option") else None
+
+    @option.setter
+    def option(self, option):
+        self._update_option(option)
 
     def reset(self):
         if not self.option:
@@ -47,17 +62,13 @@ class BasePaddlePredictor(BaseComponent, PPEngineMixin):
             self.input_handlers,
             self.output_handlers,
         ) = self._create()
-        self._is_initialized = True
         logging.debug(f"Env: {self.option}")
 
     def _create(self):
         """_create"""
         from lazy_paddle.inference import Config, create_predictor
 
-        use_pir = (
-            hasattr(paddle.framework, "use_pir_api") and paddle.framework.use_pir_api()
-        )
-        model_postfix = ".json" if use_pir else ".pdmodel"
+        model_postfix = ".json" if FLAGS_json_format_model else ".pdmodel"
         model_file = (self.model_dir / f"{self.model_prefix}{model_postfix}").as_posix()
         params_file = (self.model_dir / f"{self.model_prefix}.pdiparams").as_posix()
         config = Config(model_file, params_file)
@@ -114,7 +125,7 @@ class BasePaddlePredictor(BaseComponent, PPEngineMixin):
                 max_batch_size=self.option.batch_size,
                 min_subgraph_size=self.option.min_subgraph_size,
                 precision_mode=precision_map[self.option.run_mode],
-                trt_use_static=self.option.trt_use_static,
+                use_static=self.option.trt_use_static,
                 use_calib_mode=self.option.trt_calib_mode,
             )
 
@@ -163,9 +174,6 @@ No need to generate again."
         return self.input_names
 
     def apply(self, **kwargs):
-        if not self._is_initialized:
-            self.reset()
-
         x = self.to_batch(**kwargs)
         for idx in range(len(x)):
             self.input_handlers[idx].reshape(x[idx].shape)
@@ -197,12 +205,12 @@ class ImagePredictor(BasePaddlePredictor):
 
 class ImageDetPredictor(BasePaddlePredictor):
 
-    INPUT_KEYS = [["img", "scale_factors"], ["img", "scale_factors", "img_size"]]
+    INPUT_KEYS = [["img", "scale_factors"], ["img", "scale_factors", "img_size"], ["img", "img_size"]]
     OUTPUT_KEYS = [["boxes"], ["boxes", "masks"]]
     DEAULT_INPUTS = {"img": "img", "scale_factors": "scale_factors"}
     DEAULT_OUTPUTS = None
 
-    def to_batch(self, img, scale_factors, img_size=None):
+    def to_batch(self, img, scale_factors=[[1., 1.]], img_size=None):
         scale_factors = [scale_factor[::-1] for scale_factor in scale_factors]
         if img_size is None:
             return [

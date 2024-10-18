@@ -146,7 +146,7 @@ class InstanceSegResult(CVResult):
 
         return image
 
-    def _to_str(self):
-        str_ = copy.deepcopy(self)
-        str_["masks"] = "..."
-        return str(str_)
+    def _to_str(self, _, *args, **kwargs):
+        data = copy.deepcopy(self)
+        data["masks"] = "..."
+        return super()._to_str(data, *args, **kwargs)

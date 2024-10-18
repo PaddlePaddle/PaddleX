@@ -1,14 +1,14 @@
 [简体中文](formula_recognition.md) | English
 
-# General Formula Recognition Pipeline Tutorial
+# Formula Recognition Pipeline Tutorial
 
-## 1. Introduction to the General Formula Recognition Pipeline
+## 1. Introduction to the Formula Recognition Pipeline
 
 Formula recognition is a technology that automatically identifies and extracts LaTeX formula content and its structure from documents or images. It is widely used in document editing and data analysis in fields such as mathematics, physics, and computer science. Leveraging computer vision and machine learning algorithms, formula recognition converts complex mathematical formula information into editable LaTeX format, facilitating further data processing and analysis for users.
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/01.jpg)
 
-**The General Formula Recognition Pipeline comprises a layout detection module and a formula recognition module.**
+**The Formula Recognition Pipeline comprises a layout detection module and a formula recognition module.**
 
 **If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, select a model with faster inference. If you prioritize model size, choose a model with a smaller storage footprint.**
 
@@ -109,7 +109,7 @@ The visualized image not saved by default. You can customize the save path throu
 
 
 #### 2.2 Python Script Integration
-* Quickly perform inference on the pipeline with just a few lines of code, taking the general formula recognition pipeline as an example:
+* Quickly perform inference on the pipeline with just a few lines of code, taking the formula recognition pipeline as an example:
 
 ```python
 from paddlex import create_pipeline
@@ -125,7 +125,7 @@ for res in output:
 
 The Python script above executes the following steps:
 
-（1）Instantiate the general formula recognition pipeline object using `create_pipeline`: Specific parameter descriptions are as follows:
+（1）Instantiate the formula recognition pipeline object using `create_pipeline`: Specific parameter descriptions are as follows:
 
 | Parameter | Description | Type | Default |
 |-|-|-|-|
@@ -133,7 +133,7 @@ The Python script above executes the following steps:
 |`device`| The device for pipeline model inference. Supports: "gpu", "cpu". |`str`|`gpu`|
 |`use_hpip`| Whether to enable high-performance inference, only available if the pipeline supports it. |`bool`|`False`|
 
-（2）Invoke the `predict` method of the general formula recognition pipeline object for inference prediction: The `predict` method parameter is `x`, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
+（2）Invoke the `predict` method of the formula recognition pipeline object for inference prediction: The `predict` method parameter is `x`, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
 
 | Parameter Type | Parameter Description |
 |---------------|-----------------------------------------------------------------------------------------------------------|
@@ -154,7 +154,7 @@ The Python script above executes the following steps:
 | save_to_json | Saves results as a json file   | `- save_path`: str, the path to save the file, when it's a directory, the saved file name is consistent with the input file type;<br>`- indent`: int, json formatting setting, default is 4;<br>`- ensure_ascii`: bool, json formatting setting, default is False; |
 | save_to_img  | Saves results as an image file | `- save_path`: str, the path to save the file, when it's a directory, the saved file name is consistent with the input file type; |
 
-If you have a configuration file, you can customize the configurations of the general formula recognition pipeline by simply modifying the `pipeline` parameter in the `create_pipeline` method to the path of the pipeline configuration file.
+If you have a configuration file, you can customize the configurations of the formula recognition pipeline by simply modifying the `pipeline` parameter in the `create_pipeline` method to the path of the pipeline configuration file.
 
 For example, if your configuration file is saved at `./my_path/formula_recognition.yaml`, you only need to execute:
 
@@ -168,9 +168,9 @@ for res in output:
 ```
 
 ## 3. Development Integration/Deployment
-If the general formula recognition pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
+If the formula recognition pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
-If you need to apply the general formula recognition pipeline directly in your Python project, refer to the example code in [2.2 Python Script Integration](#22-python-script-integration).
+If you need to apply the formula recognition pipeline directly in your Python project, refer to the example code in [2.2 Python Script Integration](#22-python-script-integration).
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
@@ -639,15 +639,15 @@ print_r($result["formulas"]);
 </details>
 <br/>
 
-📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing capabilities on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy_en.md).
+📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing capabilities on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy_en.md).
 You can choose the appropriate deployment method based on your needs to proceed with subsequent AI application integration.
 
 
 ## 4. Custom Development
-If the default model weights provided by the general formula recognition pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing models using **your own domain-specific or application-specific data** to improve the recognition performance of the general formula recognition pipeline in your scenario.
+If the default model weights provided by the formula recognition pipeline do not meet your requirements for accuracy or speed in your specific scenario, you can try to further fine-tune the existing models using **your own domain-specific or application-specific data** to improve the recognition performance of the formula recognition pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
-Since the general formula recognition pipeline consists of two modules (layout detection and formula recognition), unsatisfactory performance may stem from either module.
+Since the formula recognition pipeline consists of two modules (layout detection and formula recognition), unsatisfactory performance may stem from either module.
 
 You can analyze images with poor recognition results. If you find that many formula are undetected (i.e., formula miss detection), it may indicate that the layout detection model needs improvement. You should refer to the [Customization](../../../module_usage/tutorials/ocr_modules/layout_detection_en.md#iv-custom-development) section in the [Layout Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/layout_detection_en.md) and use your private dataset to fine-tune the layout detection model. If many recognition errors occur in detected formula (i.e., the recognized formula content does not match the actual formula content), it suggests that the formula recognition model requires further refinement. You should refer to the [Customization](../../../module_usage/tutorials/ocr_modules/formula_recognition_en.md#iv-custom-development) section in the [Formula Recognition Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/formula_recognition_en.md) and fine-tune the formula recognition model.
 
@@ -683,4 +683,4 @@ Now, if you want to switch the hardware to Ascend NPU, you only need to modify t
 paddlex --pipeline formula_recognition --input general_formula_recognition.png --device npu:0
 ```
 
-If you want to use the general formula recognition pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md).
+If you want to use the formula recognition pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md).

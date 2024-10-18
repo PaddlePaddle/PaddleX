@@ -2,12 +2,13 @@
 
 # PaddleX Edge Deployment Demo Usage Guide
 
-- [Installation Process and Usage](#installation-process-and-usage)
-  - [Environment Preparation](#environment-preparation)
-  - [Material Preparation](#material-preparation)
-  - [Deployment Steps](#deployment-steps)
-- [Reference Materials](#reference-materials)
-- [Feedback Section](#feedback-section)
+- [PaddleX Edge Deployment Demo Usage Guide](#paddlex-edge-deployment-demo-usage-guide)
+  - [Installation Process and Usage](#installation-process-and-usage)
+    - [Environment Preparation](#environment-preparation)
+    - [Material Preparation](#material-preparation)
+    - [Deployment Steps](#deployment-steps)
+  - [Reference Materials](#reference-materials)
+  - [Feedback Section](#feedback-section)
 
 This guide mainly introduces the operation method of the PaddleX edge deployment demo on the Android shell.
 This guide applies to 8 models across 6 modules:

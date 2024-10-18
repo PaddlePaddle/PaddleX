@@ -1,13 +1,13 @@
 [简体中文](seal_recognition.md) | English
 
-# Tutorial for Using Seal Text Recognition Pipeline
-
-## 1. Introduction to the Seal Text Recognition Pipeline
-Seal text recognition is a technology that automatically extracts and recognizes seal content from documents or images. The recognition of seal text is part of document processing and has various applications in many scenarios, such as contract comparison, inventory access approval, and invoice reimbursement approval.
+# Seal Recognition Pipeline Tutorial
+ 
+## 1. Introduction to the Seal Recognition Pipeline
+Seal recognition is a technology that automatically extracts and recognizes seal content from documents or images. The recognition of seal is part of document processing and has various applications in many scenarios, such as contract comparison, inventory access approval, and invoice reimbursement approval.
 
 ![](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/01.png)
 
-The **Seal Text Recognition** pipeline includes a layout area analysis module, a seal text detection module, and a text recognition module.
+The **Seal Recognition** pipeline includes a layout area analysis module, a seal detection module, and a text recognition module.
 
 **If you prioritize model accuracy, please choose a model with higher accuracy. If you prioritize inference speed, please choose a model with faster inference. If you prioritize model storage size, please choose a model with a smaller storage footprint.**
 
@@ -17,21 +17,21 @@ The **Seal Text Recognition** pipeline includes a layout area analysis module, a
 
 **Layout Analysis Module Models:**
 
-|Model Name|mAP (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
-|-|-|-|-|-|
-|PicoDet-L_layout_3cls|89.3|15.7425|159.771|22.6 M|
-|RT-DETR-H_layout_3cls|95.9|114.644|3832.62|470.1M|
-|RT-DETR-H_layout_17cls|92.6|115.126|3827.25|470.2M|
+| Model | mAP(0.5) (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
+|-|-|-|-|-|-|
+| PicoDet-L_layout_3cls | 89.3 | 15.7 | 159.8 | 22.6 | An efficient layout area localization model trained on a self-constructed dataset based on PicoDet-L for scenarios such as Chinese and English papers, magazines, and research reports includes three categories: tables, images, and seals. |
+| RT-DETR-H_layout_3cls | 95.9 | 114.6 | 3832.6 | 470.1 | A high-precision layout area localization model trained on a self-constructed dataset based on RT-DETR-H for scenarios such as Chinese and English papers, magazines, and research reports includes three categories: tables, images, and seals. |
+| RT-DETR-H_layout_17cls | 92.6 | 115.1 | 3827.2 | 470.2 | A high-precision layout area localization model trained on a self-constructed dataset based on RT-DETR-H for scenarios such as Chinese and English papers, magazines, and research reports includes 17 common layout categories, namely: paragraph titles, images, text, numbers, abstracts, content, chart titles, formulas, tables, table titles, references, document titles, footnotes, headers, algorithms, footers, and seals. |
 
-**Note: The evaluation set for the above accuracy indicators is a self-built layout area analysis dataset from PaddleX, containing 10,000 images. The GPU inference time for all models above is based on an NVIDIA Tesla T4 machine with a precision type of FP32. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads, and the precision type is also FP32.**
+**Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built layout region analysis dataset, containing 10,000 images of common document types, including English and Chinese papers, magazines, research reports, etc. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 
 
-**Seal Text Detection Module Models**:
+**Seal Detection Module Models**:
 
 | Model | Detection Hmean (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
 |-------|---------------------|-------------------------|-------------------------|--------------|-------------|
-| PP-OCRv4_server_seal_det | 98.21 | 84.341 | 2425.06 | 109 | PP-OCRv4's server-side seal text detection model, featuring higher accuracy, suitable for deployment on better-equipped servers |
-| PP-OCRv4_mobile_seal_det | 96.47 | 10.5878 | 131.813 | 4.6 | PP-OCRv4's mobile seal text detection model, offering higher efficiency, suitable for deployment on edge devices |
+| PP-OCRv4_server_seal_det | 98.21 | 84.341 | 2425.06 | 109 | PP-OCRv4's server-side seal detection model, featuring higher accuracy, suitable for deployment on better-equipped servers |
+| PP-OCRv4_mobile_seal_det | 96.47 | 10.5878 | 131.813 | 4.6 | PP-OCRv4's mobile seal detection model, offering higher efficiency, suitable for deployment on edge devices |
 
 **Note: The above accuracy metrics are evaluated on a self-built dataset containing 500 circular seal images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 
@@ -48,20 +48,13 @@ The **Seal Text Recognition** pipeline includes a layout area analysis module, a
 </details>
 
 ## 2.  Quick Start
-The pre trained model production line provided by PaddleX can quickly experience the effect. You can experience the effect of the seal text recognition production line online, or use the command line or Python locally to experience the effect of the seal text recognition production line.
+The pre trained model production line provided by PaddleX can quickly experience the effect. You can experience the effect of the seal recognition production line online, or use the command line or Python locally to experience the effect of the seal recognition production line.
 
-### 2.1 Online Experience
-You can [experience online](https://aistudio.baidu.com/community/app/182491/webUI) the effect of seal text recognition in the v3 production line for extracting document scene information, using official demo images for recognition, for example:
 
-! []( https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/seal_recognition/02.png )
+Before using the seal recognition production line locally, please ensure that you have completed the wheel package installation of PaddleX according to the  [PaddleX Local Installation Guide](../../../installation/installation_en.md).
 
-If you are satisfied with the performance of the production line, you can directly integrate and deploy the production line. If you are not satisfied, you can also use private data to fine tune the models in the production line online.
-
-### 2.2 Local Experience
-Before using the seal text recognition production line locally, please ensure that you have completed the wheel package installation of PaddleX according to the  [PaddleX Local Installation Guide](../../../installation/installation_en.md).
-
-### 2.3 Command line experience
-One command can quickly experience the effect of seal text recognition production line, use [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png), and replace ` --input ` with the local path for prediction
+### 2.1 Command line experience
+One command can quickly experience the effect of seal recognition production line, use [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png), and replace ` --input ` with the local path for prediction
 
 ```
 paddlex --pipeline seal_recognition --input seal_text_det.png --device gpu:0 --save_path output
@@ -70,12 +63,12 @@ paddlex --pipeline seal_recognition --input seal_text_det.png --device gpu:0 --s
 Parameter description:
 
 ```
---Pipeline: Production line name, here is the seal text recognition production line
+--Pipeline: Production line name, here is the seal recognition production line
 --Input: The local path or URL of the input image to be processed
 --The GPU serial number used by the device (e.g. GPU: 0 indicates the use of the 0th GPU, GPU: 1,2 indicates the use of the 1st and 2nd GPUs), or the CPU (-- device CPU) can be selected for use
 ```
 
-When executing the above Python script, the default seal text recognition production line configuration file is loaded. If you need to customize the configuration file, you can execute the following command to obtain it:
+When executing the above Python script, the default seal recognition production line configuration file is loaded. If you need to customize the configuration file, you can execute the following command to obtain it:
 
 <details>
 <summary>  👉 Click to expand</summary>
@@ -84,7 +77,7 @@ When executing the above Python script, the default seal text recognition produc
 paddlex --get_pipeline_config seal_recognition
 ```
 
-After execution, the seal text recognition production line configuration file will be saved in the current path. If you want to customize the save location, you can execute the following command (assuming the custom save location is `./my_path `):
+After execution, the seal recognition production line configuration file will be saved in the current path. If you want to customize the save location, you can execute the following command (assuming the custom save location is `./my_path `):
 
 ```bash
 paddlex --get_pipeline_config seal_recognition --save_path ./my_path --save_path output
@@ -221,7 +214,7 @@ The visualized image not saved by default. You can customize the save path throu
 
 
 ###  2.2 Python Script Integration
-A few lines of code can complete the fast inference of the production line. Taking the seal text recognition production line as an example:
+A few lines of code can complete the fast inference of the production line. Taking the seal recognition production line as an example:
 
 ```python
 from paddlex import create_pipeline
@@ -320,7 +313,7 @@ Operations provided by the service:
 
 - **`infer`**
 
-    Obtain seal text recognition results from an image.
+    Obtain seal recognition results from an image.
 
     `POST /seal-recognition`
 
@@ -341,7 +334,7 @@ Operations provided by the service:
 
         | Name | Type | Description |
         |------|------|-------------|
-        |`sealImpressions`|`array`|Seal text recognition results.|
+        |`sealImpressions`|`array`|Seal recognition results.|
         |`layoutImage`|`string`|Layout area detection result image. The image is in JPEG format and encoded using Base64.|
 
         Each element in `sealImpressions` is an `object` with the following properties:
@@ -646,7 +639,6 @@ class Program
     }
 }
 ```
-
 </details>
 
 <details>
@@ -730,10 +722,10 @@ print_r($result["sealImpressions"]);
 <br/>
 
 ## 4.  Secondary development
-If the default model weights provided by the seal text recognition production line are not satisfactory in terms of accuracy or speed in your scenario, you can try using your own specific domain or application scenario data to further fine tune the existing model to improve the recognition performance of the seal text recognition production line in your scenario.
+If the default model weights provided by the seal recognition production line are not satisfactory in terms of accuracy or speed in your scenario, you can try using your own specific domain or application scenario data to further fine tune the existing model to improve the recognition performance of the seal recognition production line in your scenario.
 
 ### 4.1 Model fine-tuning
-Due to the fact that the seal text recognition production line consists of three modules, the performance of the model production line may not be as expected due to any of these modules.
+Due to the fact that the seal recognition production line consists of three modules, the performance of the model production line may not be as expected due to any of these modules.
 
 You can analyze images with poor recognition performance and refer to the following rules for analysis and model fine-tuning:
 
@@ -764,7 +756,7 @@ Subsequently, refer to the command line or Python script in the local experience
 ##  5.  Multiple hardware support
 PaddleX supports various mainstream hardware devices such as Nvidia GPU, Kunlun Core XPU, Ascend NPU, and Cambrian MLU, and can seamlessly switch between different hardware devices by simply modifying the **`--device`** parameter.
 
-For example, if you use Nvidia GPU for inference on a seal text recognition production line, the Python command you use is:
+For example, if you use Nvidia GPU for inference on a seal recognition production line, the Python command you use is:
 
 ```
 paddlex --pipeline seal_recognition --input seal_text_det.png --device gpu:0 --save_path output
@@ -776,4 +768,4 @@ At this point, if you want to switch the hardware to Ascend NPU, simply modify t
 paddlex --pipeline seal_recognition --input seal_text_det.png --device npu:0 --save_path output
 ```
 
-If you want to use the seal text recognition production line on a wider range of hardware, please refer to the [PaddleX Multi Hardware Usage Guide](../../../other_devices_support/installation_other_devices_en.md)。
+If you want to use the seal recognition production line on a wider range of hardware, please refer to the [PaddleX Multi Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md)。

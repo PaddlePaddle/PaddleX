@@ -18,7 +18,7 @@ PaddleX offers two ways to experience its capabilities. You can try out the Docu
 
 ### 2.1 Local Experience
 
-Before using the Document Scene Information Extraction v3 pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Tutorial](../../../installation/installation_en.md). With just a few lines of code, you can quickly perform inference using the pipeline:
+Before using the Document Scene Information Extraction v3 pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Tutorial](../../docs/installation/installation_en.md). With just a few lines of code, you can quickly perform inference using the pipeline:
 
 
 ```python
@@ -420,12 +420,12 @@ chat_result = pipeline.chat(
 chat_result.print()
 ```
 
-For more parameters, please refer to the [Document Scene Information Extraction Pipeline Usage Tutorial](../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md).
+For more parameters, please refer to the [Document Scene Information Extraction Pipeline Usage Tutorial](../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_en.md).
 
 2. Additionally, PaddleX offers three other deployment methods, detailed as follows:
 
 * high-performance inference: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugin aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../pipeline_deploy/high_performance_inference_en.md).
 * Service-Oriented Deployment: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving cost-effective service-oriented deployment of production lines. For detailed service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../pipeline_deploy/service_deploy_en.md).
-* Edge Deployment: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../pipeline_deploy/lite_deploy_en.md).
+* Edge Deployment: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../pipeline_deploy/edge_deploy_en.md).
 
 You can select the appropriate deployment method for your model pipeline according to your needs, and proceed with subsequent AI application integration.
