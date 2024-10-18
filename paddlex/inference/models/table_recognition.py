@@ -46,12 +46,15 @@ class TablePredictor(BasicPredictor):
         )
         self._add_component(predictor)
 
-        op = self.build_postprocess(**self.config["PostProcess"])
+        op = self.build_postprocess(
+            model_name=self.config["Global"]["model_name"], **self.config["PostProcess"]
+        )
         self._add_component(op)
 
-    def build_postprocess(self, **kwargs):
+    def build_postprocess(self, model_name, **kwargs):
         if kwargs.get("name") == "TableLabelDecode":
             return TableLabelDecode(
+                model_name=model_name,
                 merge_no_span_structure=kwargs.get("merge_no_span_structure"),
                 dict_character=kwargs.get("character_dict"),
             )

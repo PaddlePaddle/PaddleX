@@ -27,7 +27,7 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/b302cd7e-e027-4ea6-86d0-8a4dd6d61f39" height="126px" width="180px"> | <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/multilabel_cls.png" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/099e2b00-0bbe-4b20-9c5a-96b69e473bd2" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/09f683b4-27df-4c24-b8a7-84da20fdd182" height="126px" width="180px"> |
 |                                                              [**Semantic Segmentation**](./docs/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation_en.md)                                                               |                                                            [**Image Anomaly Detection**](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection_en.md)                                                            |                                                          [**OCR**](./docs/pipeline_usage/tutorials/ocr_pipelines/OCR_en.md)                                                          |                                                          [**Table Recognition**](./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md)                                                          |
 | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/02637f8c-f248-415b-89ab-1276505f198c" height="126px" width="180px"> | <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/image_anomaly_detection.png" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1ef48536-48d4-484b-a6fb-0d6631ba2386" height="126px" width="180px"> |  <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1e798e05-dee7-4b41-9cc4-6708b6014efa" height="126px" width="180px"> |
-|                                                              [**PP-ChatOCRv3-doc**](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md)                                                              |                                                            [**Time Series Forecasting**](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting_en.md)                                                            |                                                              [**Time Series Anomaly Detection**](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md)                                                              |                                                         [**Time Series Classification**](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification_en.md)                                                         |
+|                                                              [**PP-ChatOCRv3-doc**](./docs/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_en.md)                                                              |                                                            [**Time Series Forecasting**](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting_en.md)                                                            |                                                              [**Time Series Anomaly Detection**](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md)                                                              |                                                         [**Time Series Classification**](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification_en.md)                                                         |
 | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/e3d97f4e-ab46-411c-8155-494c61492b0a" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/6e897bf6-35fe-45e6-a040-e9a1a20cfdf2" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/c54c66cc-da4f-4631-877b-43b0fbb192a6" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/0ce925b2-3776-4dde-8ce0-5156d5a2476e" height="126px" width="180px"> |
 
 ## 🌟 Why PaddleX ?
@@ -56,7 +56,7 @@ PaddleX is dedicated to achieving pipeline-level model training, inference, and 
 ## 📊 What can PaddleX do？
 
 
-All pipelines of PaddleX support **online experience** and local **fast inference**. You can quickly experience the effects of each pre-trained pipeline. If you are satisfied with the effects of the pre-trained pipeline, you can directly perform [high-performance inference](./docs/pipeline_deploy/high_performance_inference_en.md) / [serving deployment](./docs/pipeline_deploy/service_deploy_en.md) / [edge deployment](./docs/pipeline_deploy/lite_deploy_en.md) on the pipeline. If not satisfied, you can also **Custom Development** to improve the pipeline effect. For the complete pipeline development process, please refer to the [PaddleX pipeline Development Tool Local Use Tutorial](./docs/pipeline_usage/pipeline_develop_guide_en.md).
+All pipelines of PaddleX support **online experience** and local **fast inference**. You can quickly experience the effects of each pre-trained pipeline. If you are satisfied with the effects of the pre-trained pipeline, you can directly perform [high-performance inference](./docs/pipeline_deploy/high_performance_inference_en.md) / [serving deployment](./docs/pipeline_deploy/service_deploy_en.md) / [edge deployment](./docs/pipeline_deploy/edge_deploy_en.md) on the pipeline. If not satisfied, you can also **Custom Development** to improve the pipeline effect. For the complete pipeline development process, please refer to the [PaddleX pipeline Development Tool Local Use Tutorial](./docs/pipeline_usage/pipeline_develop_guide_en.md).
 
 In addition, PaddleX provides developers with a full-process efficient model training and deployment tool based on a [cloud-based GUI](https://aistudio.baidu.com/pipeline/mine). Developers **do not need code development**, just need to prepare a dataset that meets the pipeline requirements to **quickly start model training**. For details, please refer to the tutorial ["Developing Industrial-level AI Models with Zero Barrier"](https://aistudio.baidu.com/practical/introduce/546656605663301).
 
@@ -479,7 +479,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 
 | pipeline Name           | Corresponding Parameter               | Detailed Explanation                                                                                                      |
 |-------------------------------|-------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| PP-ChatOCRv3-doc   | `PP-ChatOCRv3-doc` | [PP-ChatOCRv3-doc Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md) |
+| PP-ChatOCRv3-doc   | `PP-ChatOCRv3-doc` | [PP-ChatOCRv3-doc Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_en.md) |
 |  Image Classification       | `image_classification` | [ Image Classification Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification_en.md) |
 |  Object Detection       | `object_detection` | [ Object Detection Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/object_detection_en.md) |
 |  Instance Segmentation       | `instance_segmentation` | [ Instance Segmentation Pipeline Python Script Usage Instructions](./docs/pipeline_usage/tutorials/cv_pipelines/instance_segmentation_en.md) |
@@ -514,7 +514,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 * <details open>
     <summary> <b> 📝 Information Extracion</b></summary>
 
-   * [📄 PP-ChatOCRv3 Pipeline Tutorial](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md)
+   * [📄 PP-ChatOCRv3 Pipeline Tutorial](./docs/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_en.md)
   </details>
 
 * <details open>
@@ -612,9 +612,9 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 * <details open>
   <summary> <b> ⏱️ Time Series Analysis </b></summary>
 
-  * [📈 Time Series Forecasting Module Tutorial](./docs/module_usage/tutorials/ts_modules/time_series_forecast_en.md)
+  * [📈 Time Series Forecasting Module Tutorial](./docs/module_usage/tutorials/time_series_modules/time_series_forecasting_en.md)
   * [🚨 Time Series Anomaly Detection Module Tutorial](./docs/module_usage/tutorials/time_series_modules/time_series_anomaly_detection.md)
-  * [🕒 Time Series Classification Module Tutorial](./docs/module_usage/tutorials/ts_modules/time_series_classification_en.md)
+  * [🕒 Time Series Classification Module Tutorial](./docs/module_usage/tutorials/time_series_modules/time_series_classification_en.md)
   </details>
 
 * <details open>
@@ -632,7 +632,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 
   * [🚀 PaddleX High-Performance Inference Guide](./docs/pipeline_deploy/high_performance_inference_en.md)
   * [🖥️ PaddleX Service Deployment Guide](./docs/pipeline_deploy/service_deploy_en.md)
-  * [📱 PaddleX Edge Deployment Guide](./docs/pipeline_deploy/lite_deploy_en.md)
+  * [📱 PaddleX Edge Deployment Guide](./docs/pipeline_deploy/edge_deploy_en.md)
 
 </details>
 <details open>

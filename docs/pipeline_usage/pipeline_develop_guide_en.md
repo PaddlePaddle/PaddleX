@@ -180,7 +180,7 @@ In addition, PaddleX also provides three other deployment methods, with detailed
 
 ☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. Refer to the [PaddleX Service-Oriented Deployment Guide](../pipeline_deploy/service_deploy_en.md) for detailed service-oriented deployment procedures.
 
-📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing capabilities on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. Refer to the [PaddleX Edge Deployment Guide](../pipeline_deploy/lite_deploy_en.md) for detailed edge deployment procedures.
+📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing capabilities on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. Refer to the [PaddleX Edge Deployment Guide](../pipeline_deploy/edge_deploy_en.md) for detailed edge deployment procedures.
 
 Choose the appropriate deployment method for your model pipeline based on your needs, and proceed with subsequent AI application integration.
 
@@ -189,7 +189,7 @@ Choose the appropriate deployment method for your model pipeline based on your n
 
 | Pipeline Name          | Detailed Description                                                                                                      |
 |------------------------|---------------------------------------------------------------------------------------------------------------------------|
-| PP-ChatOCR-doc v3   | [PP-ChatOCR-doc v3 Pipeline Usage Tutorial](./tutorials/information_extration_pipelines/document_scene_information_extraction_en.md) |
+| PP-ChatOCR-doc v3   | [PP-ChatOCR-doc v3 Pipeline Usage Tutorial](./tutorials/information_extraction_pipelines/document_scene_information_extraction_en.md) |
 | Image Classification       | [Image Classification Pipeline Usage Tutorial](./tutorials/cv_pipelines/image_classification_en.md) |
 | Object Detection       | [Object Detection Pipeline Usage Tutorial](./tutorials/cv_pipelines/object_detection_en.md) |
 | Instance Segmentation       | [Instance Segmentation Pipeline Usage Tutorial](./tutorials/cv_pipelines/instance_segmentation_en.md) |

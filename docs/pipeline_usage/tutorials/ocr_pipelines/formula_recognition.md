@@ -1,8 +1,8 @@
 简体中文 | [English](formula_recognition_en.md)
 
-# 通用公式识别产线使用教程
+# 公式识别产线使用教程
 
-## 1. 通用公式识别产线介绍
+## 1. 公式识别产线介绍
 
 公式识别是一种自动从文档或图像中识别和提取LaTeX公式内容及其结构的技术，广泛应用于数学、物理、计算机科学等领域的文档编辑和数据分析。通过使用计算机视觉和机器学习算法，公式识别能够将复杂的数学公式信息转换为可编辑的LaTeX格式，方便用户进一步处理和分析数据。
 
@@ -109,7 +109,7 @@ paddlex --pipeline ./formula_recognition.yaml --input general_formula_recognitio
 可视化图片默认不进行保存，您可以通过 `--save_path` 自定义保存路径，随后所有结果将被保存在指定路径下。此外，您可以通过网站 [https://www.lddgo.net/math/latex-to-image](https://www.lddgo.net/math/latex-to-image) 对识别出来的LaTeX代码进行可视化。
 
 ### 2.2 Python脚本方式集成
-几行代码即可完成产线的快速推理，以通用公式识别产线为例：
+几行代码即可完成产线的快速推理，以公式识别产线为例：
 
 ```python
 from paddlex import create_pipeline
@@ -126,7 +126,7 @@ for res in output:
 
 在上述 Python 脚本中，执行了如下几个步骤：
 
-（1）实例化 `create_pipeline` 实例化 通用公式识别产线对象：具体参数说明如下：
+（1）实例化 `create_pipeline` 实例化 公式识别产线对象：具体参数说明如下：
 
 |参数|参数说明|参数类型|默认值|
 |-|-|-|-|
@@ -134,7 +134,7 @@ for res in output:
 |`device`|产线模型推理设备。支持：“gpu”，“cpu”。|`str`|`gpu`|
 |`use_hpip`|是否启用高性能推理，仅当该产线支持高性能推理时可用。|`bool`|`False`|
 
-（2）调用通用公式识别产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`x`，用于输入待预测数据，支持多种输入方式，具体示例如下：
+（2）调用公式识别产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`x`，用于输入待预测数据，支持多种输入方式，具体示例如下：
 
 | 参数类型      | 参数说明                                                                                                  |
 |---------------|-----------------------------------------------------------------------------------------------------------|
@@ -155,7 +155,7 @@ for res in output:
 | save_to_json | 将结果保存为json格式的文件   | `- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；<br>`- indent`：int类型，json格式化设置，默认为4；<br>`- ensure_ascii`：bool类型，json格式化设置，默认为False； |
 | save_to_img  | 将结果保存为图像格式的文件  | `- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致； |
 
-若您获取了配置文件，即可对通用公式识别产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
+若您获取了配置文件，即可对公式识别产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
 
 例如，若您的配置文件保存在 `./my_path/formula_recognition.yaml` ，则只需执行：
 
@@ -168,9 +168,9 @@ for res in output:
     res.save_to_img("./output/")
 ```
 ## 3. 开发集成/部署
-如果通用公式识别产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
+如果公式识别产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
 
-若您需要将通用公式识别产线直接应用在您的Python项目中，可以参考 [2.2 Python脚本方式](#22-python脚本方式集成)中的示例代码。
+若您需要将公式识别产线直接应用在您的Python项目中，可以参考 [2.2 Python脚本方式](#22-python脚本方式集成)中的示例代码。
 
 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
 
@@ -660,15 +660,15 @@ print_r($result["formulas"]);
 </details>
 <br/>
 
-📱 **端侧部署**：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/lite_deploy.md)。
+📱 **端侧部署**：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/edge_deploy.md)。
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
 
 
 ## 4. 二次开发
-如果通用公式识别产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用**您自己拥有的特定领域或应用场景的数据**对现有模型进行进一步的**微调**，以提升通用公式识别产线的在您的场景中的识别效果。
+如果公式识别产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用**您自己拥有的特定领域或应用场景的数据**对现有模型进行进一步的**微调**，以提升公式识别产线的在您的场景中的识别效果。
 
 ### 4.1 模型微调
-由于通用通用公式识别产线包含两个模块（版面区域检测模块和公式识别），模型产线的效果不及预期可能来自于其中任何一个模块。
+由于公式识别产线包含两个模块（版面区域检测模块和公式识别），模型产线的效果不及预期可能来自于其中任何一个模块。
 
 您可以对识别效果差的图片进行分析，如果在分析过程中发现有较多的公式未被检测出来（即公式漏检现象），那么可能是版面区域检测模型存在不足，您需要参考[版面区域检测模块开发教程](../../../module_usage/tutorials/ocr_modules/layout_detection.md)中的[二次开发](../../../module_usage/tutorials/ocr_modules/layout_detection.md#四二次开发)章节，使用您的私有数据集对版面区域检测模型进行微调；如果在已检测到的公式中出现较多的识别错误（即识别出的公式内容与实际公式内容不符），这表明公式识别模型需要进一步改进，您需要参考[公式识别模块开发教程](../../../module_usage/tutorials/ocr_modules/formula_recognition.md)中的中的[二次开发](../../../module_usage/tutorials/ocr_modules/formula_recognition.md#四二次开发)章节,对公式识别模型进行微调。
 
@@ -701,4 +701,4 @@ paddlex --pipeline formula_recognition --input general_formula_recognition.png -
 ```bash
 paddlex --pipeline formula_recognition --input general_formula_recognition.png --device npu:0
 ```
-若您想在更多种类的硬件上使用通用通用公式识别产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。
+若您想在更多种类的硬件上使用公式识别产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

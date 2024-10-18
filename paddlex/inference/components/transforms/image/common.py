@@ -21,7 +21,6 @@ import cv2
 
 from .....utils.cache import CACHE_DIR, temp_file_manager
 from ....utils.io import ImageReader, ImageWriter, PDFReader
-from ...utils.mixin import BatchSizeMixin
 from ...base import BaseComponent
 from ..read_data import _BaseRead
 from . import funcs as F
