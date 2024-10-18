@@ -205,12 +205,12 @@ class ImagePredictor(BasePaddlePredictor):
 
 class ImageDetPredictor(BasePaddlePredictor):
 
-    INPUT_KEYS = [["img", "scale_factors"], ["img", "scale_factors", "img_size"]]
+    INPUT_KEYS = [["img", "scale_factors"], ["img", "scale_factors", "img_size"], ["img", "img_size"]]
     OUTPUT_KEYS = [["boxes"], ["boxes", "masks"]]
     DEAULT_INPUTS = {"img": "img", "scale_factors": "scale_factors"}
     DEAULT_OUTPUTS = None
 
-    def to_batch(self, img, scale_factors, img_size=None):
+    def to_batch(self, img, scale_factors=[[1., 1.]], img_size=None):
         scale_factors = [scale_factor[::-1] for scale_factor in scale_factors]
         if img_size is None:
             return [

@@ -53,6 +53,14 @@ class DetPredictor(BasicPredictor):
                 }
             )
 
+        if self.model_name == "Blazeface":
+            predictor.set_inputs(
+                {
+                    "img": "img",
+                    "img_size": "img_size",
+                }
+            )
+        
         self._add_component(
             [
                 predictor,
@@ -94,7 +102,7 @@ class DetPredictor(BasicPredictor):
         if norm_type != "mean_std":
             mean = 0
             std = 1
-        return Normalize(mean=mean, std=std)
+        return Normalize(scale=scale, mean=mean, std=std)
 
     @register("Permute")
     def build_to_chw(self):
