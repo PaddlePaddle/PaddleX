@@ -1,4 +1,4 @@
-[简体中文](time_series_forecasting) | English
+[简体中文](time_series_forecasting.md) | English
 
 # Time Series Forecasting Module Development Tutorial
 
