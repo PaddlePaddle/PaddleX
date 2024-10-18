@@ -17,13 +17,13 @@ The **Seal Recognition** pipeline includes a layout area analysis module, a seal
 
 **Layout Analysis Module Models:**
 
-|Model Name|mAP (%)|GPU Inference Time (ms)|CPU Inference Time|Model Size (M)|
-|-|-|-|-|-|
-|PicoDet-L_layout_3cls|89.3|15.7425|159.771|22.6 M|
-|RT-DETR-H_layout_3cls|95.9|114.644|3832.62|470.1M|
-|RT-DETR-H_layout_17cls|92.6|115.126|3827.25|470.2M|
+| Model | mAP(0.5) (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
+|-|-|-|-|-|-|
+| PicoDet-L_layout_3cls | 89.3 | 15.7 | 159.8 | 22.6 | An efficient layout area localization model trained on a self-constructed dataset based on PicoDet-L for scenarios such as Chinese and English papers, magazines, and research reports includes three categories: tables, images, and seals. |
+| RT-DETR-H_layout_3cls | 95.9 | 114.6 | 3832.6 | 470.1 | A high-precision layout area localization model trained on a self-constructed dataset based on RT-DETR-H for scenarios such as Chinese and English papers, magazines, and research reports includes three categories: tables, images, and seals. |
+| RT-DETR-H_layout_17cls | 92.6 | 115.1 | 3827.2 | 470.2 | A high-precision layout area localization model trained on a self-constructed dataset based on RT-DETR-H for scenarios such as Chinese and English papers, magazines, and research reports includes 17 common layout categories, namely: paragraph titles, images, text, numbers, abstracts, content, chart titles, formulas, tables, table titles, references, document titles, footnotes, headers, algorithms, footers, and seals. |
 
-**Note: The evaluation set for the above accuracy indicators is a self-built layout area analysis dataset from PaddleX, containing 10,000 images. The GPU inference time for all models above is based on an NVIDIA Tesla T4 machine with a precision type of FP32. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads, and the precision type is also FP32.**
+**Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built layout region analysis dataset, containing 10,000 images of common document types, including English and Chinese papers, magazines, research reports, etc. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 
 
 **Seal Detection Module Models**:
@@ -50,17 +50,10 @@ The **Seal Recognition** pipeline includes a layout area analysis module, a seal
 ## 2.  Quick Start
 The pre trained model production line provided by PaddleX can quickly experience the effect. You can experience the effect of the seal recognition production line online, or use the command line or Python locally to experience the effect of the seal recognition production line.
 
-### 2.1 Online Experience
-You can [experience online](https://aistudio.baidu.com/community/app/182491/webUI) the effect of seal recognition in the v3 production line for extracting document scene information, using official demo images for recognition, for example:
 
-! []( https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/seal_recognition/02.png )
-
-If you are satisfied with the performance of the production line, you can directly integrate and deploy the production line. If you are not satisfied, you can also use private data to fine tune the models in the production line online.
-
-### 2.2 Local Experience
 Before using the seal recognition production line locally, please ensure that you have completed the wheel package installation of PaddleX according to the  [PaddleX Local Installation Guide](../../../installation/installation_en.md).
 
-### 2.3 Command line experience
+### 2.1 Command line experience
 One command can quickly experience the effect of seal recognition production line, use [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png), and replace ` --input ` with the local path for prediction
 
 ```
