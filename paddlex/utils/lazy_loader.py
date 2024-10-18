@@ -18,7 +18,7 @@ import types
 import os
 
 from . import logging
-from .flags import FLAGS_json_format_model
+from .flags import FLAGS_enable_pir_api, FLAGS_json_format_model
 
 
 def disable_pir_bydefault():

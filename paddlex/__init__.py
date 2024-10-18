@@ -28,6 +28,7 @@ from .modules import (
 )
 from .model import create_model
 from .inference import create_predictor, create_pipeline
+from .utils.flags import FLAGS_enable_pir_api
 
 
 def _initialize():
@@ -66,6 +67,15 @@ def _check_paddle_version():
         )
 
 
+def disable_FLAGS_enable_pir_api():
+    # when FLAGS_enable_pir_api is not set
+    if FLAGS_enable_pir_api is None:
+        # set FLAGS_enable_pir_api to 0 to ensure that enable_new_ir() can control PIR
+        os.environ["FLAGS_enable_pir_api"] = "0"
+
+
 _initialize()
 
 __version__ = version.get_pdx_version()
+
+disable_FLAGS_enable_pir_api()

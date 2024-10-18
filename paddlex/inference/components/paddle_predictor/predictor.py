@@ -55,6 +55,7 @@ class BasePaddlePredictor(BaseComponent):
     def reset(self):
         if not self.option:
             self.option = PaddlePredictorOption()
+        logging.debug(f"Env: {self.option}")
         (
             self.predictor,
             self.inference_config,
@@ -62,7 +63,6 @@ class BasePaddlePredictor(BaseComponent):
             self.input_handlers,
             self.output_handlers,
         ) = self._create()
-        logging.debug(f"Env: {self.option}")
 
     def _create(self):
         """_create"""
@@ -205,12 +205,16 @@ class ImagePredictor(BasePaddlePredictor):
 
 class ImageDetPredictor(BasePaddlePredictor):
 
-    INPUT_KEYS = [["img", "scale_factors"], ["img", "scale_factors", "img_size"], ["img", "img_size"]]
+    INPUT_KEYS = [
+        ["img", "scale_factors"],
+        ["img", "scale_factors", "img_size"],
+        ["img", "img_size"],
+    ]
     OUTPUT_KEYS = [["boxes"], ["boxes", "masks"]]
     DEAULT_INPUTS = {"img": "img", "scale_factors": "scale_factors"}
     DEAULT_OUTPUTS = None
 
-    def to_batch(self, img, scale_factors=[[1., 1.]], img_size=None):
+    def to_batch(self, img, scale_factors=[[1.0, 1.0]], img_size=None):
         scale_factors = [scale_factor[::-1] for scale_factor in scale_factors]
         if img_size is None:
             return [
