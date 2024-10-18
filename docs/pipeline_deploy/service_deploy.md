@@ -69,7 +69,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 | 通用目标检测产线       | [通用目标检测产线使用教程](../pipeline_usage/tutorials/cv_pipelines/object_detection.md)       |
 | 通用语义分割产线       | [通用语义分割产线使用教程](../pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md)       |
 | 通用实例分割产线       | [通用实例分割产线使用教程](../pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md)       |
-| 通用图像多标签分类产线 | [通用图像多标签分类产线使用教程](../pipeline_usage/tutorials/cv_pipelines/image_multi_label_lassification.md) |
+| 通用图像多标签分类产线 | [通用图像多标签分类产线使用教程](../pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md) |
 | 小目标检测产线         | [小目标检测产线使用教程](../pipeline_usage/tutorials/cv_pipelines/small_object_detection.md)         |
 | 图像异常检测产线       | [图像异常检测产线使用教程](../pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md)       |
 | 通用OCR产线            | [通用OCR产线使用教程](../pipeline_usage/tutorials/ocr_pipelines/OCR.md)            |
@@ -80,7 +80,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 | 时序预测产线           | [时序预测产线使用教程](../pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md)           |
 | 时序异常检测产线       | [时序异常检测产线使用教程](../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md)       |
 | 时序分类产线           | [时序分类产线使用教程](../pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md)           |
-| 文档场景信息抽取v3产线 | [文档场景信息抽取v3产线使用教程](../pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md) |
+| 文档场景信息抽取v3产线 | [文档场景信息抽取v3产线使用教程](../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md) |
 
 ## 2、将服务用于生产
 

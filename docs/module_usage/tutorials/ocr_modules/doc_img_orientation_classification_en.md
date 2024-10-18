@@ -270,7 +270,7 @@ The model can be directly integrated into the PaddleX pipeline or into your own 
 
 1.**Pipeline Integration**
 
-The document image classification module can be integrated into PaddleX pipelines such as the [Document Scene Information Extraction Pipeline (PP-ChatOCRv3)](../../..//pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction_en.md). Simply replace the model path to update the The document image classification module's model.
+The document image classification module can be integrated into PaddleX pipelines such as the [Document Scene Information Extraction Pipeline (PP-ChatOCRv3)](../../..//pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_en.md). Simply replace the model path to update the The document image classification module's model.
 
 2.**Module Integration**
 
