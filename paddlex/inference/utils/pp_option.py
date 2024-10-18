@@ -12,9 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ...utils.device import parse_device, set_env_for_device, get_default_device
+from ...utils.device import (
+    parse_device,
+    set_env_for_device,
+    get_default_device,
+    check_device,
+)
 from ...utils import logging
-from .new_ir_blacklist import NEWIR_BLOCKLIST
+from .new_ir_blacklist import NEWIR_BLACKLIST
 
 
 class PaddlePredictorOption(object):
@@ -28,7 +33,6 @@ class PaddlePredictorOption(object):
         "mkldnn",
         "mkldnn_bf16",
     )
-    SUPPORT_DEVICE = ("gpu", "cpu", "npu", "xpu", "mlu", "dcu")
 
     def __init__(self, model_name=None, **kwargs):
         super().__init__()
@@ -61,7 +65,7 @@ class PaddlePredictorOption(object):
             "cpu_threads": 1,
             "trt_use_static": False,
             "delete_pass": [],
-            "enable_new_ir": True if self.model_name not in NEWIR_BLOCKLIST else False,
+            "enable_new_ir": True if self.model_name not in NEWIR_BLACKLIST else False,
             "batch_size": 1,  # only for trt
         }
 
@@ -101,11 +105,7 @@ class PaddlePredictorOption(object):
         if not device:
             return
         device_type, device_ids = parse_device(device)
-        if device_type not in self.SUPPORT_DEVICE:
-            support_run_mode_str = ", ".join(self.SUPPORT_DEVICE)
-            raise ValueError(
-                f"The device type must be one of {support_run_mode_str}, but received {repr(device_type)}."
-            )
+        check_device(device_type)
         self._update("device", device_type)
         device_id = device_ids[0] if device_ids is not None else 0
         self._update("device_id", device_id)
