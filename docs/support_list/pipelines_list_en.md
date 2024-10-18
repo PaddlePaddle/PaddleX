@@ -13,7 +13,7 @@
     <th width="20%">Applicable Scenarios</th>
   </tr>
   <tr>
-    <td>General Image Classification</td>
+    <td>Image Classification</td>
     <td>Image Classification</td>
     <td><a href="https://aistudio.baidu.com/community/app/100061/webUI">Online Experience</a></td>
     <td>Image classification is a technique that assigns images to predefined categories. It is widely used in object recognition, scene understanding, and automatic annotation. Image classification can identify various objects such as animals, plants, traffic signs, etc., and categorize them based on their features. By leveraging deep learning models, image classification can automatically extract image features and perform accurate classification. The General Image Classification Pipeline is designed to solve image classification tasks for given images.</td>
@@ -26,7 +26,7 @@
     </td>
   </tr>
   <tr>
-    <td>General Object Detection</td>
+    <td>Object Detection</td>
     <td>Object Detection</td>
     <td><a href="https://aistudio.baidu.com/community/app/70230/webUI">Online Experience</a></td>
     <td>Object detection aims to identify the categories and locations of multiple objects in images or videos by generating bounding boxes to mark these objects. Unlike simple image classification, object detection not only recognizes what objects are in the image, such as people, cars, and animals, but also accurately determines the specific location of each object, usually represented by a rectangular box. This technology is widely used in autonomous driving, surveillance systems, and smart photo albums, relying on deep learning models (e.g., YOLO, Faster R-CNN) that efficiently extract features and perform real-time detection, significantly enhancing the computer's ability to understand image content.</td>
@@ -40,7 +40,7 @@
     </td>
   </tr>
   <tr>
-    <td>General Semantic Segmentation</td>
+    <td>Semantic Segmentation</td>
     <td>Semantic Segmentation</td>
     <td><a href="https://aistudio.baidu.com/community/app/100062/webUI?source=appCenter">Online Experience</a></td>
     <td>Semantic segmentation is a computer vision technique that assigns each pixel in an image to a specific category, enabling detailed understanding of image content. Semantic segmentation not only identifies the types of objects in an image but also classifies each pixel, allowing entire regions of the same category to be marked. For example, in a street scene image, semantic segmentation can distinguish pedestrians, cars, sky, and roads at the pixel level, forming a detailed label map. This technology is widely used in autonomous driving, medical image analysis, and human-computer interaction, often relying on deep learning models (e.g., FCN, U-Net) that use Convolutional Neural Networks (CNNs) to extract features and achieve high-precision pixel-level classification, providing a foundation for further intelligent analysis.</td>
@@ -53,7 +53,7 @@
     </td>
   </tr>
   <tr>
-    <td>General Instance Segmentation</td>
+    <td>Instance Segmentation</td>
     <td>Instance Segmentation</td>
     <td><a href="https://aistudio.baidu.com/community/app/100063/webUI">Online Experience</a></td>
     <td>Instance segmentation is a computer vision task that identifies object categories in images and distinguishes the pixels of different instances within the same category, enabling precise segmentation of each object. Instance segmentation can separately mark each car, person, or animal in an image, ensuring they are processed independently at the pixel level. For example, in a street scene image with multiple cars and pedestrians, instance segmentation can clearly separate the contours of each car and person, forming multiple independent region labels. This technology is widely used in autonomous driving, video surveillance, and robot vision, often relying on deep learning models (e.g., Mask R-CNN) that use CNNs for efficient pixel classification and instance differentiation, providing powerful support for understanding complex scenes.</td>
@@ -65,8 +65,39 @@
       </ul>
     </td>
   </tr>
+<tr>
+    <td rowspan = 7>Document Scene Information Extraction v3</td>
+    <td>Table Structure Recognition</td>
+    <td rowspan = 7><a href="https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter">Online Experience</a></td>
+    <td rowspan = 7>Document Image Scene Information Extraction v3 (PP-ChatOCRv3-doc) is a PaddlePaddle-specific intelligent document and image analysis solution that integrates LLM and OCR technologies to solve common complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. By integrating the Wenxin large model, it combines vast data and knowledge, providing high accuracy and wide applicability. The open-source version supports local experience and deployment, and fine-tuning training for each module.</td>
+    <td rowspan="7">
+  <ul>
+    <li>Construction of knowledge graphs</li>
+    <li>Detection of information related to specific events in online news and social media</li>
+    <li>Extraction and analysis of key information in academic literature (especially in scenarios requiring recognition of seals, distorted images, and more complex tables)</li>
+  </ul>
+</td>
+  </tr>
   <tr>
-    <td rowspan = 2>General OCR</td>
+    <td>Layout Area Detection</td>
+  </tr>
+  <tr>
+    <td>Text Detection</td>
+  </tr>
+  <tr>
+    <td>Text Recognition</td>
+  </tr>
+  <tr>
+    <td>Seal Text Detection</td>
+  </tr>
+  <tr>
+    <td>Text Image Correction</td>
+  </tr>
+  <tr>
+    <td>Document Image Orientation Classification</td>
+  </tr>
+  <tr>
+    <td rowspan = 2>OCR</td>
     <td >Text Detection</td>
     <td rowspan = 2><a href="https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">Online Experience</a></td>
     <td rowspan = 2>OCR (Optical Character Recognition) is a technology that converts text in images into editable text. It is widely used in document digitization, information extraction, and data processing. OCR can recognize printed text, handwritten text, and even certain types of fonts and symbols. The General OCR Pipeline is designed to solve text recognition tasks, extracting text information from images and outputting it in text form. PP-OCRv4 is an end-to-end OCR system that achieves millisecond-level text content prediction on CPUs, achieving state-of-the-art (SOTA) performance in general scenarios. Based on this project, developers from academia, industry, and research have quickly implemented various OCR applications covering general, manufacturing, finance, transportation.</td>
@@ -82,7 +113,7 @@
     <td>Text Recognition</td>
   </tr>
 <tr>
-        <td rowspan = 4>General Table Recognition</td>
+        <td rowspan = 4>Table Recognition</td>
         <td>Layout Detection</td>
         <td rowspan = 4><a href="https://aistudio.baidu.com/community/app/91661/webUI">Online Experience</a></td>
         <td rowspan = 4>Table recognition is a technology that automatically identifies and extracts table content and its structure from documents or images. It is widely used in data entry, information retrieval, and document analysis. By leveraging computer vision and machine learning algorithms, table recognition can convert complex table information into editable formats, facilitating further data processing and analysis by users</td>
@@ -152,6 +183,127 @@
         <li>Equipment Operating Condition Classification</li>
       </ul>
       </td>
+<tr>
+    <td>Multi-label Image Classification</td>
+    <td>Multi-label Image Classification</td>
+    <td>None</td>
+    <td>Image multi-label classification is a technology that assigns an image to multiple related categories simultaneously. It is widely used in image tagging, content recommendation, and social media analysis. It can identify multiple objects or features present in an image, such as both "dog" and "outdoor" labels in a single picture. By using deep learning models, image multi-label classification can automatically extract image features and perform accurate classification to provide more comprehensive information for users. This technology is significant in applications like intelligent search engines and automatic content generation.</td>
+    <td>
+    <ul>
+        <li>Medical image diagnosis</li>
+        <li>Complex scene recognition</li>
+        <li>Multi-target monitoring</li>
+        <li>Product attribute recognition</li>
+        <li>Ecological environment monitoring</li>
+        <li>Security monitoring</li>
+        <li>Disaster warning</li>
+      </ul>
+      </td>
+  </tr>
+  <tr>
+    <td>Small Object Detection</td>
+    <td>Small Object Detection</td>
+    <td>None</td>
+    <td>Small object detection is a technology specifically for identifying small objects in images. It is widely used in surveillance, autonomous driving, and satellite image analysis. It can accurately find and classify small-sized objects like pedestrians, traffic signs, or small animals in complex scenes. By using deep learning algorithms and optimized convolutional neural networks, small object detection can effectively enhance the recognition ability of small objects, ensuring that important information is not missed in practical applications. This technology plays an important role in improving safety and automation levels.</td>
+    <td>
+  <ul>
+    <li>Pedestrian detection in autonomous vehicles</li>
+    <li>Identification of small buildings in satellite images</li>
+    <li>Detection of small traffic signs in intelligent transportation systems</li>
+    <li>Identification of small intruding objects in security surveillance</li>
+    <li>Detection of small defects in industrial inspection</li>
+    <li>Monitoring of small animals in drone images</li>
+  </ul>
+</td>
+  </tr>
+  <tr>
+    <td>Image Anomaly Detection</td>
+    <td>Image Anomaly Detection</td>
+    <td>None</td>
+    <td>Image anomaly detection is a technology that identifies images that deviate from or do not conform to normal patterns by analyzing their content. It is widely used in industrial quality inspection, medical image analysis, and security surveillance. By using machine learning and deep learning algorithms, image anomaly detection can automatically identify potential defects, anomalies, or abnormal behavior in images, helping us detect problems and take appropriate measures promptly. Image anomaly detection systems are designed to automatically detect and label abnormal situations in images to improve work efficiency and accuracy.</td>
+    <td>
+    <ul>
+    <li>Industrial quality control</li>
+    <li>Medical image analysis</li>
+    <li>Anomaly detection in surveillance videos</li>
+    <li>Identification of violations in traffic monitoring</li>
+    <li>Obstacle detection in autonomous driving</li>
+    <li>Agricultural pest and disease monitoring</li>
+    <li>Pollutant identification in environmental monitoring</li>
+  </ul></td>
+  </tr>
+  <tr>
+    <td rowspan = 8>Layout Parsing</td>
+    <td>Table Structure Recognition</td>
+    <td rowspan = 8>None</td>
+    <td rowspan = 8>Layout analysis is a technology for extracting structured information from document images, primarily used to convert complex document layouts into machine-readable data formats. This technology has wide applications in document management, information extraction, and data digitization. By combining optical character recognition (OCR), image processing, and machine learning algorithms, layout analysis can identify and extract text blocks, titles, paragraphs, images, tables, and other layout elements from documents. This process typically includes three main steps: layout analysis, element analysis, and data formatting, ultimately generating structured document data that enhances data processing efficiency and accuracy.</td>
+    <td rowspan="8">
+  <ul>
+    <li>Financial and legal document analysis</li>
+    <li>Digitization of historical documents and archives</li>
+    <li>Automated form filling</li>
+    <li>Page structure analysis</li>
+  </ul>
+</td>
+  </tr>
+  <tr>
+    <td>Layout Area Detection</td>
+  </tr>
+  <tr>
+    <td>Text Detection</td>
+  </tr>
+  <tr>
+    <td>Text Recognition</td>
+  </tr>
+  <tr>
+    <td>Formula Recognition</td>
+  </tr>
+  <tr>
+    <td>Seal Text Detection</td>
+  </tr>
+  <tr>
+    <td>Text Image Correction</td>
+  </tr>
+  <tr>
+    <td>Document Image Orientation Classification</td>
+  </tr>
+    <tr>
+    <td rowspan = 2>Formula Recognition</td>
+    <td>Layout Area Detection</td>
+    <td rowspan = 2>None</td>
+    <td rowspan = 2>Formula recognition is a technology that automatically identifies and extracts LaTeX formula content and its structure from documents or images. It is widely used in document editing and data analysis in fields such as mathematics, physics, and computer science. By using computer vision and machine learning algorithms, formula recognition can convert complex mathematical formula information into an editable LaTeX format, facilitating further data processing and analysis by users.</td>
+    <td rowspan = 2>
+    <ul>
+        <li>Document digitization and retrieval</li>
+        <li>Formula search engine</li>
+        <li>Formula editor</li>
+        <li>Automated typesetting</li>
+      </ul>
+      </td>
+  </tr>
+  <tr>
+    <td>Formula Recognition</td>
+  </tr>
+  <tr>
+    <td rowspan = 3>Seal Text Recognition</td>
+    <td>Layout Area Detection</td>
+    <td rowspan = 3>None</td>
+    <td rowspan = 3>Seal text recognition is a technology that automatically extracts and recognizes seal content from documents or images. Recognizing seal text is part of document processing and has applications in many scenarios, such as contract comparison, inventory audit, and invoice reimbursement audit.</td>
+    <td rowspan = 3>
+    <ul>
+        <li>Contract and agreement validation</li>
+        <li>Check processing</li>
+        <li>Loan approval</li>
+        <li>Legal document management</li>
+      </ul>
+      </td>
+  </tr>
+  <tr>
+    <td>Seal Text Detection</td>
+  </tr>
+  <tr>
+    <td>Text Recognition</td>
+  </tr>
 </table>
 
 ## 2. Featured Pipelines

@@ -1,6 +1,6 @@
 [简体中文](mainbody_detection.md) | English
 
-# Tutorial for Developing Mainbody detection Modules
+# Mainbody detection Module Development Tutorial
 
 ## I. Overview
 Mainbody detection is a fundamental task in object detection, aiming to identify and extract the location and size of specific target objects, people, or entities from images and videos. By constructing deep neural network models, mainbody detection learns the feature representations of image subjects to achieve efficient and accurate detection.

@@ -1,3 +1,5 @@
+[简体中文](time_series_classification.md) | English
+
 # Time Series Classification Module Development Tutorial
 
 ## I. Overview
