@@ -36,18 +36,19 @@ def draw_box(img, boxes):
 
     draw_thickness = int(max(img.size) * 0.005)
     draw = ImageDraw.Draw(img)
-    clsid2color = {}
+    label2color = {}
     catid2fontcolor = {}
     color_list = get_colormap(rgb=True)
 
     for i, dt in enumerate(boxes):
-        clsid, bbox, score = dt["cls_id"], dt["coordinate"], dt["score"]
-        if clsid not in clsid2color:
+        # clsid = dt["cls_id"]
+        label, bbox, score = dt["label"], dt["coordinate"], dt["score"]
+        if label not in label2color:
             color_index = i % len(color_list)
-            clsid2color[clsid] = color_list[color_index]
-            catid2fontcolor[clsid] = font_colormap(color_index)
-        color = tuple(clsid2color[clsid])
-        font_color = tuple(catid2fontcolor[clsid])
+            label2color[label] = color_list[color_index]
+            catid2fontcolor[label] = font_colormap(color_index)
+        color = tuple(label2color[label])
+        font_color = tuple(catid2fontcolor[label])
 
         xmin, ymin, xmax, ymax = bbox
         # draw bbox

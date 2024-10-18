@@ -113,12 +113,12 @@ class NormalizeFeatures(BaseComponent):
     """Normalize Features Transform"""
 
     INPUT_KEYS = ["pred"]
-    OUTPUT_KEYS = ["rec_feature"]
+    OUTPUT_KEYS = ["feature"]
     DEAULT_INPUTS = {"pred": "pred"}
-    DEAULT_OUTPUTS = {"rec_feature": "rec_feature"}
+    DEAULT_OUTPUTS = {"feature": "feature"}
 
     def apply(self, pred):
         """apply"""
         feas_norm = np.sqrt(np.sum(np.square(pred[0]), axis=0, keepdims=True))
-        rec_feature = np.divide(pred[0], feas_norm)
-        return {"rec_feature": rec_feature}
+        feature = np.divide(pred[0], feas_norm)
+        return {"feature": feature}
