@@ -1,6 +1,6 @@
 [简体中文](ml_classification.md) | English
 
-# Tutorial on Developing Image Multi-Label Classification Modules
+# Image Multi-Label Classification Module Development Tutorial
 
 ## I. Overview
 The image multi-label classification module is a crucial component in computer vision systems, responsible for assigning multiple labels to input images. Unlike traditional image classification tasks that assign a single category to an image, multi-label classification tasks require assigning multiple relevant categories to an image. The performance of this module directly impacts the accuracy and efficiency of the entire computer vision system. The image multi-label classification module typically takes an image as input and, through deep learning or other machine learning algorithms, classifies it into multiple predefined categories based on its characteristics and content. For example, an image containing both a cat and a dog might be labeled as both "cat" and "dog" by the image multi-label classification module. These classification labels are then output for subsequent processing and analysis by other modules or systems.

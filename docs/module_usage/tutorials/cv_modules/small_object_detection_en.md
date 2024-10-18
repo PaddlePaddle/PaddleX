@@ -1,6 +1,6 @@
 [简体中文](small_object_detection.md) | English
 
-# Tutorial for Developing Small Object Detection Modules
+# Small Object Detection Module Development Tutorial
 
 ## I. Overview
 Small object detection typically refers to accurately detecting and locating small-sized target objects in images or videos. These objects often have a small pixel size in images, typically less than 32x32 pixels (as defined by datasets like MS COCO), and may be obscured by the background or other objects, making them difficult to observe directly by the human eye. Small object detection is an important research direction in computer vision, aiming to precisely detect small objects with minimal visual features in images.

@@ -27,7 +27,7 @@ PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了�
 | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/b302cd7e-e027-4ea6-86d0-8a4dd6d61f39" height="126px" width="180px"> | <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/multilabel_cls.png" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/099e2b00-0bbe-4b20-9c5a-96b69e473bd2" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/09f683b4-27df-4c24-b8a7-84da20fdd182" height="126px" width="180px"> |
 |                                                              [**通用语义分割**](./docs/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md)                                                               |                                                            [**图像异常检测**](./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md)                                                            |                                                         [ **通用OCR**](./docs/pipeline_usage/tutorials/ocr_pipelines/OCR.md)                                                          |                                                          [**通用表格识别**](./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition.md)                                                          |
 | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/02637f8c-f248-415b-89ab-1276505f198c" height="126px" width="180px"> | <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/image_anomaly_detection.png" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1ef48536-48d4-484b-a6fb-0d6631ba2386" height="126px" width="180px"> |  <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1e798e05-dee7-4b41-9cc4-6708b6014efa" height="126px" width="180px"> |
-|                                                              [**文本图像智能分析**](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)                                                              |                                                            [**时序预测**](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md)                                                            |                                                              [**时序异常检测**](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md)                                                              |                                                         [**时序分类**](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md)                                                         |
+|                                                              [**文本图像智能分析**](./docs/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md)                                                              |                                                            [**时序预测**](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md)                                                            |                                                              [**时序异常检测**](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md)                                                              |                                                         [**时序分类**](./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md)                                                         |
 | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/e3d97f4e-ab46-411c-8155-494c61492b0a" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/6e897bf6-35fe-45e6-a040-e9a1a20cfdf2" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/c54c66cc-da4f-4631-877b-43b0fbb192a6" height="126px" width="180px"> | <img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/0ce925b2-3776-4dde-8ce0-5156d5a2476e" height="126px" width="180px"> |
 
 ## 🌟 特性
@@ -57,7 +57,7 @@ PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了�
  ## 📊 能力支持
 
 
-PaddleX的各个产线均支持本地**快速推理**，部分模型支持**在线体验**，您可以快速体验各个产线的预训练模型效果，如果您对产线的预训练模型效果满意，可以直接对产线进行[高性能推理](./docs/pipeline_deploy/high_performance_deploy.md)/[服务化部署](./docs/pipeline_deploy/service_deploy.md)/[端侧部署](./docs/pipeline_deploy/lite_deploy.md)，如果不满意，您也可以使用产线的**二次开发**能力，提升效果。完整的产线开发流程请参考[PaddleX产线使用概览](./docs/pipeline_usage/pipeline_develop_guide.md)或各产线使用[教程](#-文档)。
+PaddleX的各个产线均支持本地**快速推理**，部分模型支持**在线体验**，您可以快速体验各个产线的预训练模型效果，如果您对产线的预训练模型效果满意，可以直接对产线进行[高性能推理](./docs/pipeline_deploy/high_performance_deploy.md)/[服务化部署](./docs/pipeline_deploy/service_deploy.md)/[端侧部署](./docs/pipeline_deploy/edge_deploy.md)，如果不满意，您也可以使用产线的**二次开发**能力，提升效果。完整的产线开发流程请参考[PaddleX产线使用概览](./docs/pipeline_usage/pipeline_develop_guide.md)或各产线使用[教程](#-文档)。
 
 
 此外，PaddleX 为开发者提供了基于[云端图形化开发界面](https://aistudio.baidu.com/pipeline/mine)的全流程开发工具, 点击【创建产线】，选择对应的任务场景和模型产线，就可以开启全流程开发。详细请参考[教程《零门槛开发产业级AI模型》](https://aistudio.baidu.com/practical/introduce/546656605663301)
@@ -67,7 +67,7 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持**在�
         <th>模型产线</th>
         <th>在线体验</th>
         <th>快速推理</th>
-        <th>高性能部署</th>
+        <th>高性能推理</th>
         <th>服务化部署</th>
         <th>端侧部署</th>
         <th>二次开发</th>
@@ -481,7 +481,7 @@ for res in output:
 
 | 产线名称           | 对应参数                           | 详细说明                                                                                                                                                         |
 |--------------------|------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 文档场景信息抽取v3   | `PP-ChatOCRv3-doc`                 | [文档场景信息抽取v3产线Python脚本使用说明](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md#22-本地体验) |
+| 文档场景信息抽取v3   | `PP-ChatOCRv3-doc`                 | [文档场景信息抽取v3产线Python脚本使用说明](./docs/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md#22-本地体验) |
 | 通用图像分类       | `image_classification`             | [通用图像分类产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/image_classification.md#222-python脚本方式集成)                                |
 | 通用目标检测       | `object_detection`                 | [通用目标检测产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/object_detection.md#222-python脚本方式集成)                                    |
 | 通用实例分割       | `instance_segmentation`            | [通用实例分割产线Python脚本使用说明](./docs/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md#222-python脚本方式集成)                               |
@@ -519,7 +519,7 @@ for res in output:
 * <details open>
     <summary> <b> 📝 文本图像智能分析 </b></summary>
 
-   * [📄 文档场景信息抽取v3产线使用教程](./docs/pipeline_usage/tutorials/information_extration_pipelines/document_scene_information_extraction.md)
+   * [📄 文档场景信息抽取v3产线使用教程](./docs/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md)
   </details>
 
 * <details open>
@@ -639,7 +639,7 @@ for res in output:
 
   * [🚀 PaddleX 高性能推理指南](./docs/pipeline_deploy/high_performance_inference.md)
   * [🖥️ PaddleX 服务化部署指南](./docs/pipeline_deploy/service_deploy.md)
-  * [📱 PaddleX 端侧部署指南](./docs/pipeline_deploy/lite_deploy.md)
+  * [📱 PaddleX 端侧部署指南](./docs/pipeline_deploy/edge_deploy.md)
 
 </details>
 <details open>

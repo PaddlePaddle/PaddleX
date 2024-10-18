@@ -343,7 +343,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 
 **Note: The evaluation set for the above accuracy metrics is the ****PaddleX self-built Layout Detection Dataset****, containing 10,000 images.**
 
-## [Time Series Forecasting Module](../module_usage/tutorials/ts_modules/time_series_forecast_en.md)
+## [Time Series Forecasting Module](../module_usage/tutorials/time_series_modules/time_series_forecast_en.md)
 |Model Name|mse|mae|Model Size|YAML File|
 |-|-|-|-|-|
 |DLinear|0.382|0.394|72 K|[DLinear.yaml](../../paddlex/configs/ts_forecast/DLinear.yaml)|
@@ -356,7 +356,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 
 **Note: The above accuracy metrics are measured on the **[ETTH1](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/Etth1.tar)** dataset ****(evaluation results on the test set test.csv)****.**
 
-## [Time Series Anomaly Detection Module](../module_usage/tutorials/ts_modules/time_series_anomaly_detection_en.md)
+## [Time Series Anomaly Detection Module](../module_usage/tutorials/time_series_modules/time_series_anomaly_detection_en.md)
 |Model Name|Precision|Recall|f1_score|Model Size|YAML File|
 |-|-|-|-|-|-|
 |AutoEncoder_ad|99.36|84.36|91.25|52 K |[AutoEncoder_ad.yaml](../../paddlex/configs/ts_anomaly_detection/AutoEncoder_ad.yaml)|
@@ -367,7 +367,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 
 **Note: The above accuracy metrics are measured on the **[PSM](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_anomaly_examples.tar)** dataset.**
 
-## [Time Series Classification Module](../module_usage/tutorials/ts_modules/time_series_classification_en.md)
+## [Time Series Classification Module](../module_usage/tutorials/time_series_modules/time_series_classification_en.md)
 |Model Name|acc (%)|Model Size|YAML File|
 |-|-|-|-|
 |TimesNet_cls|87.5|792 K|[TimesNet_cls.yaml](../../paddlex/configs/ts_classification/TimesNet_cls.yaml)|

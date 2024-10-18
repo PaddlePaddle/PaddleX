@@ -66,6 +66,37 @@
     </td>
   </tr>
   <tr>
+    <td rowspan = 7>文档场景信息抽取v3</td>
+    <td>表格结构识别</td>
+    <td rowspan = 7><a href="https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter">在线体验</a></td>
+    <td rowspan = 7>文档图像场景信息抽取v3（PP-ChatOCRv3-doc）是飞桨特色的文档和图像智能分析解决方案，结合了 LLM 和 OCR 技术，一站式解决版面分析、生僻字、多页 pdf、表格、印章识别等常见的复杂文档信息抽取难点问题，结合文心大模型将海量数据和知识相融合，准确率高且应用广泛。开源版支持本地体验和本地部署，支持各个模块的微调训练。</td>
+    <td rowspan="7">
+  <ul>
+    <li>知识图谱的构建</li>
+    <li>在线新闻和社交媒体中特定事件相关信息的检测</li>
+    <li>学术文献中关键信息的抽取和分析（特别是需要对印章、扭曲图片、更复杂表格进行识别的场景）</li>
+  </ul>
+</td>
+  </tr>
+  <tr>
+    <td>版面区域检测</td>
+  </tr>
+  <tr>
+    <td>文本检测</td>
+  </tr>
+  <tr>
+    <td>文本识别</td>
+  </tr>
+  <tr>
+    <td>印章文本检测</td>
+  </tr>
+  <tr>
+    <td>文本图像矫正</td>
+  </tr>
+  <tr>
+    <td>文档图像方向分类</td>
+  </tr>
+  <tr>
     <td rowspan = 2>通用OCR</td>
     <td>文本检测</td>
     <td rowspan = 2><a href="https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">在线体验</a></td>
@@ -82,7 +113,6 @@
   <tr>
     <td>文本识别</td>
   </tr>
-  <tr>
     <td rowspan = 4>通用表格识别</td>
     <td>版面区域检测</td>
     <td rowspan = 4><a href="https://aistudio.baidu.com/community/app/91661/webUI">在线体验</a></td>
@@ -204,15 +234,16 @@
   </ul></td>
   </tr>
   <tr>
-    <td rowspan = 7>文档场景信息抽取v3</td>
+    <td rowspan = 8>通用版面解析</td>
     <td>表格结构识别</td>
-    <td rowspan = 7><a href="https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter">在线体验</a></td>
-    <td rowspan = 7>文档图像场景信息抽取v3（PP-ChatOCRv3-doc）是飞桨特色的文档和图像智能分析解决方案，结合了 LLM 和 OCR 技术，一站式解决版面分析、生僻字、多页 pdf、表格、印章识别等常见的复杂文档信息抽取难点问题，结合文心大模型将海量数据和知识相融合，准确率高且应用广泛。开源版支持本地体验和本地部署，支持各个模块的微调训练。</td>
-    <td rowspan="7">
+    <td rowspan = 8>暂无</td>
+    <td rowspan = 8>版面解析是一种从文档图像中提取结构化信息的技术，主要用于将复杂的文档版面转换为机器可读的数据格式。这项技术在文档管理、信息提取和数据数字化等领域具有广泛的应用。版面解析通过结合光学字符识别（OCR）、图像处理和机器学习算法，能够识别和提取文档中的文本块、标题、段落、图片、表格以及其他版面元素。此过程通常包括版面分析、元素分析和数据格式化三个主要步骤，最终生成结构化的文档数据，提升数据处理的效率和准确性。</td>
+    <td rowspan="8">
   <ul>
-    <li>知识图谱的构建</li>
-    <li>在线新闻和社交媒体中特定事件相关信息的检测</li>
-    <li>学术文献中关键信息的抽取和分析（特别是需要对印章、扭曲图片、更复杂表格进行识别的场景）</li>
+    <li>金融与法律文档分析</li>
+    <li>历史文献和档案数字化</li>
+    <li>自动化表单填写</li>
+    <li>页面结构解析</li>
   </ul>
 </td>
   </tr>
@@ -226,14 +257,55 @@
     <td>文本识别</td>
   </tr>
   <tr>
+    <td>公式识别</td>
+  </tr>
+  <tr>
     <td>印章文本检测</td>
   </tr>
   <tr>
-    <td>文档图像矫正</td>
+    <td>文本图像矫正</td>
   </tr>
   <tr>
     <td>文档图像方向分类</td>
   </tr>
+  <tr>
+    <td rowspan = 2>公式识别</td>
+    <td>版面区域检测</td>
+    <td rowspan = 2>暂无</td>
+    <td rowspan = 2>公式识别是一种自动从文档或图像中识别和提取LaTeX公式内容及其结构的技术，广泛应用于数学、物理、计算机科学等领域的文档编辑和数据分析。通过使用计算机视觉和机器学习算法，公式识别能够将复杂的数学公式信息转换为可编辑的LaTeX格式，方便用户进一步处理和分析数据。</td>
+    <td rowspan = 2>
+    <ul>
+        <li>文档数字化与检索</li>
+        <li>公式搜索引擎</li>
+        <li>公式编辑器</li>
+        <li>自动化排版</li>
+      </ul>
+      </td>
+  </tr>
+  <tr>
+    <td>公式识别</td>
+  </tr>
+  <tr>
+    <td rowspan = 3>印章文本识别</td>
+    <td>版面区域检测</td>
+    <td rowspan = 3>暂无</td>
+    <td rowspan = 3>印章文本识别是一种自动从文档或图像中提取和识别印章内容的技术，印章文本的识别是文档处理的一部分，在很多场景都有用途，例如合同比对，出入库审核以及发票报销审核等场景。</td>
+    <td rowspan = 3>
+    <ul>
+        <li>合同和协议验证</li>
+        <li>支票处理</li>
+        <li>贷款审批</li>
+        <li>法律文书管理</li>
+      </ul>
+      </td>
+  </tr>
+  <tr>
+    <td>印章文本检测</td>
+  </tr>
+  <tr>
+    <td>文本识别</td>
+  </tr>
+  <tr>
 </table>
 
 

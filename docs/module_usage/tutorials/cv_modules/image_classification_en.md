@@ -1,6 +1,6 @@
 [简体中文](image_classification.md) | English
 
-# Tutorial on Developing Image Classification Modules
+# Image Classification Module Development Tutorial
 
 ## I. Overview
 The image classification module is a crucial component in computer vision systems, responsible for categorizing input images. The performance of this module directly impacts the accuracy and efficiency of the entire computer vision system. Typically, the image classification module receives an image as input and, through deep learning or other machine learning algorithms, classifies it into predefined categories based on its characteristics and content. For instance, in an animal recognition system, the image classification module might need to classify an input image as "cat," "dog," "horse," etc. The classification results from the image classification module are then output for use by other modules or systems.

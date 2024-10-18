@@ -1,3 +1,5 @@
+[简体中文](time_series_forecasting.md) | English
+
 # Time Series Forecasting Module Development Tutorial
 
 ## I. Overview
@@ -40,7 +42,7 @@ For more information on using PaddleX's single-model inference API, refer to the
 
 ## IV. Custom Development
 
-If you seek higher accuracy, you can leverage PaddleX's custom development capabilities to develop better Time Series Forecasting models. Before developing a Time Series Forecasting model with PaddleX, ensure you have installed PaddleClas plugin for PaddleX. The installation process can be found in the custom development section of the [PaddleX Local Installation Tutorial](../../installation/installation_en.md).
+If you seek higher accuracy, you can leverage PaddleX's custom development capabilities to develop better Time Series Forecasting models. Before developing a Time Series Forecasting model with PaddleX, ensure you have installed PaddleClas plugin for PaddleX. The installation process can be found in the custom development section of the [PaddleX Local Installation Tutorial](../../../installation/installation_en.md).
 
 ### 4.1 Dataset Preparation
 

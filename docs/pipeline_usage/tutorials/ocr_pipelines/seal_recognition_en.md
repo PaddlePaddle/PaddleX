@@ -1,6 +1,6 @@
 [简体中文](seal_recognition.md) | English
 
-# Tutorial for Using Seal Text Recognition Pipeline
+# Seal Text Recognition Pipeline Tutorial
 
 ## 1. Introduction to the Seal Text Recognition Pipeline
 Seal text recognition is a technology that automatically extracts and recognizes seal content from documents or images. The recognition of seal text is part of document processing and has various applications in many scenarios, such as contract comparison, inventory access approval, and invoice reimbursement approval.
@@ -776,4 +776,4 @@ At this point, if you want to switch the hardware to Ascend NPU, simply modify t
 paddlex --pipeline seal_recognition --input seal_text_det.png --device npu:0 --save_path output
 ```
 
-If you want to use the seal text recognition production line on a wider range of hardware, please refer to the [PaddleX Multi Hardware Usage Guide](../../../other_devices_support/installation_other_devices_en.md)。
+If you want to use the seal text recognition production line on a wider range of hardware, please refer to the [PaddleX Multi Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md)。

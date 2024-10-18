@@ -1,6 +1,6 @@
 [简体中文](image_classification.md) | English
 
-# General Image Classification Pipeline Usage Tutorial
+# General Image Classification Pipeline Tutorial
 
 ## 1. Introduction to the General Image Classification Pipeline
 Image classification is a technique that assigns images to predefined categories. It is widely applied in object recognition, scene understanding, and automatic annotation. Image classification can identify various objects such as animals, plants, traffic signs, and categorize them based on their features. By leveraging deep learning models, image classification can automatically extract image features and perform accurate classification.
@@ -1186,7 +1186,7 @@ print_r($result["categories"]);
 </details>
 <br/>
 
-📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing functions on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy_en.md).
+📱 **Edge Deployment**: Edge deployment is a method that places computing and data processing functions on user devices themselves, allowing devices to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy_en.md).
 You can choose the appropriate deployment method for your model pipeline based on your needs and proceed with subsequent AI application integration.
 
 ## 4. Custom Development
