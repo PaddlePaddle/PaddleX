@@ -1,7 +1,0 @@
-FilePath,LineNum,Link
-README_en.md,6,https://img.shields.io/badge/License-Apache%202-red.svg
-README_en.md,7,https://img.shields.io/badge/Python-3.8%2C%203.9%2C%203.10-blue.svg
-README_en.md,8,https://img.shields.io/badge/OS-Linux%2C%20Windows%2C%20Mac-orange.svg
-README_en.md,9,https://img.shields.io/badge/hardware-CPU%2C%20GPU%2C%20XPU%2C%20NPU%2C%20MLU%2C%20DCU-yellow.svg
-README_en.md,615,./docs/module_usage/tutorials/ts_modules/time_series_forecast_en.md
-README_en.md,617,./docs/module_usage/tutorials/ts_modules/time_series_classification_en.md
