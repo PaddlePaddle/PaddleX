@@ -55,6 +55,7 @@ class BasePaddlePredictor(BaseComponent):
     def reset(self):
         if not self.option:
             self.option = PaddlePredictorOption()
+        logging.debug(f"Env: {self.option}")
         (
             self.predictor,
             self.inference_config,
@@ -62,11 +63,13 @@ class BasePaddlePredictor(BaseComponent):
             self.input_handlers,
             self.output_handlers,
         ) = self._create()
-        logging.debug(f"Env: {self.option}")
 
     def _create(self):
         """_create"""
         from lazy_paddle.inference import Config, create_predictor
+
+        # set FLAGS_enable_pir_api to 0 to ensure that enable_new_ir() can control PIR
+        os.environ["FLAGS_enable_pir_api"] = "0"
 
         model_postfix = ".json" if FLAGS_json_format_model else ".pdmodel"
         model_file = (self.model_dir / f"{self.model_prefix}{model_postfix}").as_posix()
