@@ -114,14 +114,14 @@ The visualized image not saved by default. You can customize the save path throu
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="formula_recognition")
+pipeline = create_pipeline(pipeline="formula_recognition", device="gpu")
 
 output = pipeline.predict("general_formula_recognition.png")
 for res in output:
     res.print()
     res.save_to_img("./output/")
 ```
-> ❗ The results obtained from running the Python script are the same as those from the command line.
+> ❗ The results obtained from running the Python script are the same as those from the command line. Formula recognition does not support CPU inference, so the device needs to be specified as GPU in the Python script.
 
 The Python script above executes the following steps:
 

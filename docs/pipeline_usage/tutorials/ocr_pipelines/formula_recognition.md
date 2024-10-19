@@ -114,7 +114,7 @@ paddlex --pipeline ./formula_recognition.yaml --input general_formula_recognitio
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="formula_recognition")
+pipeline = create_pipeline(pipeline="formula_recognition", device="gpu")
 
 output = pipeline.predict("general_formula_recognition.png")
 for res in output:
@@ -122,7 +122,7 @@ for res in output:
     res.save_to_img("./output/")
 ```
 
-> ❗ Python脚本运行得到的结果与命令行方式相同。
+> ❗ Python脚本运行得到的结果与命令行方式相同。 公式识别暂不支持cpu推理，因此需要在python脚本中指定设备为gpu。
 
 在上述 Python 脚本中，执行了如下几个步骤：
 
