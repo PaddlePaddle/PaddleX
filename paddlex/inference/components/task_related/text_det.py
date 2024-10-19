@@ -425,6 +425,8 @@ class DBPostProcess(BaseComponent):
 class CropByPolys(BaseComponent):
     """Crop Image by Polys"""
 
+    YIELD_BATCH = False
+
     INPUT_KEYS = ["input_path", "dt_polys"]
     OUTPUT_KEYS = ["img"]
     DEAULT_INPUTS = {"input_path": "input_path", "dt_polys": "dt_polys"}

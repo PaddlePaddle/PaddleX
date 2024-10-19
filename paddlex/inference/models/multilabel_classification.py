@@ -18,7 +18,6 @@ from ...utils.func_register import FuncRegister
 from ...modules.multilabel_classification.model_list import MODELS
 from ..components import *
 from ..results import MLClassResult
-from ..utils.process_hook import batchable_method
 from .image_classification import ClasPredictor
 
 
