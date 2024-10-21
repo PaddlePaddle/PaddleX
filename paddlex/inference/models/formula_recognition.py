@@ -16,7 +16,7 @@ import numpy as np
 
 from ...modules.formula_recognition.model_list import MODELS
 from ..components import *
-from ..results import TextRecResult
+from ..results import FormulaRecResult
 from .base import BasicPredictor
 
 
@@ -52,4 +52,4 @@ class LaTeXOCRPredictor(BasicPredictor):
 
     def _pack_res(self, single):
         keys = ["input_path", "rec_text"]
-        return TextRecResult({key: single[key] for key in keys})
+        return FormulaRecResult({key: single[key] for key in keys})
