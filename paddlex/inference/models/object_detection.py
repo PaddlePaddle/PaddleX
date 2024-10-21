@@ -91,7 +91,7 @@ class DetPredictor(BasicPredictor):
         norm_type=None,
         mean=[0.485, 0.456, 0.406],
         std=[0.229, 0.224, 0.225],
-        is_scale=None,
+        is_scale=True,
     ):
         if is_scale:
             scale = 1.0 / 255.0
