@@ -17,6 +17,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from .base import CVResult
+from ...utils import logging
 
 
 class FormulaRecResult(CVResult):
@@ -29,30 +30,5 @@ class FormulaRecResult(CVResult):
         self,
     ):
         """draw formula result"""
-        boxes = self["dt_polys"]
-        formula = self["rec_formula"]
-        image = self._img_reader.read(self["input_path"])
-        if self._HARD_FLAG:
-            image_np = np.array(image)
-            image = Image.fromarray(image_np[:, :, ::-1])
-        img = image.copy()
-        random.seed(0)
-        draw_img = ImageDraw.Draw(img)
-        if formula is None or len(formula) != len(boxes):
-            formula = [None] * len(boxes)
-        for idx, (box, txt) in enumerate(zip(boxes, formula)):
-            try:
-                color = (
-                    random.randint(0, 255),
-                    random.randint(0, 255),
-                    random.randint(0, 255),
-                )
-                box = np.array(box)
-                pts = [(x, y) for x, y in box.tolist()]
-                draw_img.polygon(pts, outline=color, width=8)
-                draw_img.polygon(box, fill=color)
-            except:
-                continue
-
-        img = Image.blend(image, img, 0.5)
-        return img
+        logging.warning("FormulaRecResult don't support save to img!")
+        return None
