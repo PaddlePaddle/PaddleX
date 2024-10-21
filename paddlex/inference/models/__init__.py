@@ -34,6 +34,7 @@ from .image_unwarping import WarpPredictor
 from .multilabel_classification import MLClasPredictor
 from .anomaly_detection import UadPredictor
 from .formula_recognition import LaTeXOCRPredictor
+from .face_recognition import FaceRecPredictor
 
 
 def _create_hp_predictor(

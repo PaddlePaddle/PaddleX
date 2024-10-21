@@ -1,0 +1,129 @@
+# global configs
+Global:
+  checkpoints: null
+  pretrained_model: null
+  output_dir: ./output/
+  device: gpu
+  save_interval: 10
+  eval_during_train: True
+  eval_interval: 1
+  epochs: 25
+  print_batch_step: 20
+  use_visualdl: False
+  eval_mode: face_recognition
+  retrieval_feature_from: backbone 
+  flip_test: True
+  feature_normalize: False
+  re_ranking: False
+  use_dali: False
+  # used for static mode and model export
+  image_shape: [3, 112, 112]
+  save_inference_dir: ./inference
+
+AMP:
+  scale_loss: 27648.0
+  use_dynamic_loss_scaling: True
+  # O1: mixed fp16
+  level: O1
+
+# model architecture
+Arch:
+  name: RecModel
+  infer_output_key: features
+  infer_add_softmax: False
+
+  Backbone:
+    name: ResNet50
+    max_pool: False
+    stride_list: [1, 2, 2, 2, 2]
+    class_num: 512
+  Head:
+    name: ArcMargin
+    embedding_size: 512
+    class_num: 995
+    margin: 0.5
+    scale: 64
+# loss function config for traing/eval process
+Loss:
+  Train:
+    - CELoss:
+        weight: 1.0
+
+Optimizer:
+  name: AdamW
+  beta1: 0.9
+  beta2: 0.999
+  epsilon: 1e-8
+  weight_decay: 0.05
+  one_dim_param_no_weight_decay: True
+  lr:
+    # for 8 cards
+    name: Cosine
+    learning_rate: 4e-3  # lr 4e-3 for total_batch_size 1024
+    eta_min: 1e-6
+    warmup_epoch: 1
+    warmup_start_lr: 0
+
+# data loader for train and eval
+DataLoader:
+  Train:
+    dataset:
+      name: ImageNetDataset
+      image_root: dataset/MS1M_v3/
+      cls_label_path: dataset/MS1M_v3/label.txt
+      transform_ops:
+        - DecodeImage:
+            to_rgb: True
+            channel_first: False
+            backend: cv2
+        - RandFlipImage:
+            flip_code: 1
+        - ResizeImage:
+            size: [112, 112]
+            return_numpy: False
+            interpolation: bilinear
+            backend: cv2
+        - NormalizeImage:
+            scale: 1.0/255.0
+            mean: [0.5, 0.5, 0.5]
+            std: [0.5, 0.5, 0.5]
+            order: hwc
+    sampler:
+      name: DistributedBatchSampler
+      batch_size: 128
+      drop_last: False
+      shuffle: True
+    loader:
+      num_workers: 8
+      use_shared_memory: True
+
+  Eval:
+    dataset:
+      name: FaceEvalDataset
+      transform_ops:
+        - DecodeImage:
+            to_rgb: True
+            channel_first: False
+            backend: cv2
+        - ResizeImage:
+            size: [112, 112]
+            return_numpy: False
+            interpolation: bilinear
+            backend: cv2
+        - NormalizeImage:
+            scale: 1.0/255.0
+            mean: [0.5, 0.5, 0.5]
+            std: [0.5, 0.5, 0.5]
+            order: hwc
+    sampler:
+      name: DistributedBatchSampler
+      batch_size: 32
+      drop_last: False
+      shuffle: False
+    loader:
+      num_workers: 4
+      use_shared_memory: True
+
+Metric:
+  Eval:
+    - BestAccuracy: {}

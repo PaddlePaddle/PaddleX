@@ -1,0 +1,13 @@
+Global:
+  pipeline_name: face_recognition
+  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/friends1.jpg
+
+Pipeline:
+  det_model: "BlazeFace"
+  rec_model: "MobileFaceNet"
+  det_batch_size: 1
+  rec_batch_size: 1
+  device: gpu
+  index_dir: None
+  score_thres: 0.4
+  return_k: 5

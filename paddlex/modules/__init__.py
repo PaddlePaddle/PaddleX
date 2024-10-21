@@ -95,4 +95,11 @@ from .ts_classification import (
     TSCLSExportor,
 )
 
+from .face_recognition import (
+    FaceRecDatasetChecker,
+    FaceRecTrainer,
+    FaceRecEvaluator,
+    FaceRecExportor,
+)
+
 from .ts_forecast import TSFCDatasetChecker, TSFCTrainer, TSFCEvaluator

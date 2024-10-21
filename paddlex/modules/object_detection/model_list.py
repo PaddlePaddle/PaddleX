@@ -64,4 +64,7 @@ MODELS = [
     "CenterNet-DLA-34",
     "CenterNet-ResNet50",
     "PicoDet_LCNet_x2_5_face",
+    "BlazeFace",
+    "BlazeFace-FPN-SSH",
+    "PP-YOLOE_plus-S_face"
 ]
