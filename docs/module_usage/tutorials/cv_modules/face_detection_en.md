@@ -7,15 +7,12 @@ Face detection is a fundamental task in object detection, aiming to automaticall
 
 ## II. Supported Model List
 
-<details>
-   <summary> 👉Model List Details</summary>
 
 | Model | mAP（%）| GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
 |-|-|-|-|-|-|
 | PicoDet_LCNet_x2_5_face | 35.8 | 33.7 | 537.0 | 28.9 | Face detection model based on PicoDet_LCNet_x2_5 |
 
 **Note: The evaluation set for the above accuracy metrics is wider_face dataset mAP(0.5:0.95). GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
-</details>
 
 ## III. Quick Integration  <a id="quick"> </a> 
 Before quick integration, you need to install the PaddleX wheel package. For the installation method of the wheel package, please refer to the [PaddleX Local Installation Tutorial](../../../installation/installation_en.md). After installing the wheel package, a few lines of code can complete the inference of the face detection module. You can switch models under this module freely, and you can also integrate the model inference of the face detection module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/face_detection.png) to your local machine.
@@ -173,7 +170,7 @@ python main.py -c paddlex/configs/face_detection/PicoDet_LCNet_x2_5_face.yaml \
 ```
 The steps required are:
 
-* Specify the path to the `.yaml` configuration file of the model (here it is `PicoDet_LCNet_x2_5_face.yaml`)
+* Specify the path to the `.yaml` configuration file of the model (here it is `PicoDet_LCNet_x2_5_face.yaml`，When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md))
 * Specify the mode as model training: `-o Global.mode=train`
 * Specify the path to the training dataset: `-o Global.dataset_dir`
 
@@ -184,13 +181,12 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 
 * During model training, PaddleX automatically saves model weight files, defaulting to `output`. To specify a save path, use the `-o Global.output` field in the configuration file.
 * PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.
-* When training other models, specify the corresponding configuration file. The correspondence between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md).
-After completing model training, all outputs are saved in the specified output directory (default is `./output/`), the following steps are required:
+* After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
 
-* Specify the `.yaml` configuration file path of the model (here it is `PicoDet_LCNet_x2_5_face.yaml`)
-* Set the mode to model evaluation: `-o Global.mode=evaluate`
-* Specify the path of the validation dataset: `-o Global.dataset_dir`
-Other related parameters can be set by modifying the fields under `Global` and `Evaluate` in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common_en.md).
+* `train_result.json`: Training result record file, recording whether the training task was completed normally, as well as the output weight metrics, related file paths, etc.;
+* `train.log`: Training log file, recording changes in model metrics and loss during training;
+* `config.yaml`: Training configuration file, recording the hyperparameter configuration for this training session;
+* `.pdparams`, `.pdema`, `.pdopt.pdstate`, `.pdiparams`, `.pdmodel`: Model weight-related files, including network parameters, optimizer, EMA, static graph network parameters, static graph network structure, etc.;
 </details>
 
 ### **4.3 Model Evaluation**
