@@ -16,11 +16,14 @@ import os
 import argparse
 import subprocess
 import sys
+import shutil
 import tempfile
+from pathlib import Path
 
 from . import create_pipeline
 from .inference.pipelines import create_pipeline_from_config, load_pipeline_config
 from .repo_manager import setup, get_all_supported_repo_names
+from .utils.cache import CACHE_DIR
 from .utils import logging
 from .utils.interactive_get_pipeline import interactive_get_pipeline
 
@@ -65,6 +68,7 @@ def args_cfg():
 
     ################# install pdx #################
     parser.add_argument("--install", action="store_true", default=False, help="")
+    parser.add_argument("--clear_cache", action="store_true", default=False, help="")
     parser.add_argument("plugins", nargs="*", default=[])
     parser.add_argument("--no_deps", action="store_true")
     parser.add_argument("--platform", type=str, default="github.com")
@@ -159,6 +163,15 @@ def serve(pipeline, *, device, use_hpip, serial_number, update_license, host, po
     run_server(app, host=host, port=port, debug=False)
 
 
+def clear_cache():
+    cache_dir = Path(CACHE_DIR) / "official_models"
+    if cache_dir.exists() and cache_dir.is_dir():
+        shutil.rmtree(cache_dir)
+        logging.info(f"Successfully cleared the cache models at {cache_dir}")
+    else:
+        logging.info(f"No cache models found at {cache_dir}")
+
+
 # for CLI
 def main():
     """API for commad line"""
@@ -180,6 +193,8 @@ def main():
             host=args.host,
             port=args.port,
         )
+    elif args.clear_cache:
+        clear_cache()
     else:
         if args.get_pipeline_config is not None:
             interactive_get_pipeline(args.get_pipeline_config, args.save_path)
