@@ -7,7 +7,6 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
 
 ## II. Supported Model List
 
-
 | Model Name | Precision | Recall | F1-Score | Model Size (M) | Description |
 |-|-|-|-|-|-|
 | AutoEncoder_ad_ad | 0.9898 | 0.9396 | 0.9641 | 72.8K | AutoEncoder_ad_ad is a simple, efficient, and easy-to-use time series anomaly detection model |
@@ -17,7 +16,6 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
 | TimesNet_ad | 0.9837 | 0.9480 | 0.9656 | 732K | Through multi-period analysis, TimesNet is an adaptive and high-precision time series anomaly detection model |
 
 **Note: The above accuracy metrics are measured on the PSM dataset with a time series length of 100.**
-
 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For details, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md)
@@ -235,6 +233,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 * During model training, PaddleX automatically saves model weight files, with the default path being `output`. To specify a different save path, use the `-o Global.output` field in the configuration file.
 * PaddleX abstracts the concepts of dynamic graph weights and static graph weights from you. During model training, both dynamic and static graph weights are produced, and static graph weights are used by default for model inference.
 * After model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
+
 
 * `train_result.json`: Training result record file, including whether the training task completed successfully, produced weight metrics, and related file paths.
 * `train.log`: Training log file, recording model metric changes, loss changes, etc.

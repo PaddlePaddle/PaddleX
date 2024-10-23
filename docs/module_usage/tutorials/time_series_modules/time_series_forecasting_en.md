@@ -7,7 +7,6 @@ Time series forecasting aims to predict the possible values or states at a futur
 
 ## II. Supported Model List
 
-
 |Model Name| mse | mae |Model Size (M)| Introduce |
 |-|-|-|-|-|
 |DLinear|0.382|0.394|76k|Simple structure, high efficiency and easy-to-use time series prediction model|
@@ -18,7 +17,6 @@ Time series forecasting aims to predict the possible values or states at a futur
 
 
 **Note: The above accuracy metrics are measured on the [ETTH1](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/Etth1.tar) test dataset, with an input sequence length of 96, and a prediction sequence length of 96 for all models except TiDE, which has a prediction sequence length of 720.**
-
 
 
 ## III. Quick Integration
