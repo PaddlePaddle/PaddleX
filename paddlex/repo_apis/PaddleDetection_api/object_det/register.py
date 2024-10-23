@@ -790,12 +790,56 @@ register_model_info(
     }
 )
 
+register_model_info(
+    {
+        "model_name": "PicoDet-S_layout_3cls",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PicoDet-S_layout_3cls.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PicoDet-S_layout_17cls",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PicoDet-S_layout_17cls.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
 
 register_model_info(
     {
         "model_name": "PicoDet-L_layout_3cls",
         "suite": "Det",
         "config_path": osp.join(PDX_CONFIG_DIR, "PicoDet-L_layout_3cls.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PicoDet-L_layout_17cls",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PicoDet-L_layout_17cls.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "supported_dataset_types": ["COCODetDataset"],
         "supported_train_opts": {
