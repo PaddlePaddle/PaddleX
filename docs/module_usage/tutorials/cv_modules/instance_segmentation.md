@@ -7,6 +7,34 @@
 
 ## 二、支持模型列表
 
+<table>
+    <tr>
+        <th>模型</th>
+        <th>Mask AP</th>
+        <th>GPU推理耗时（ms）</th>
+        <th>CPU推理耗时 (ms)</th>
+        <th>模型存储大小（M）</th>
+        <th>介绍</th>
+    </tr>
+    <tr>
+        <td>Mask-RT-DETR-H</td>
+        <td>50.6</td>
+        <td>132.693</td>
+        <td>4896.17</td>
+        <td>449.9 M</td>
+        <td rowspan="5">Mask-RT-DETR 是一种基于RT-DETR的实例分割模型，通过采用最优性能的更好的PP-HGNetV2作为骨干网络，构建了MaskHybridEncoder编码器，引入了IOU-aware Query Selection 技术，使其在相同推理耗时上取得了SOTA实例分割精度。</td>
+    </tr>
+    <tr>
+        <td>Mask-RT-DETR-L</td>
+        <td>45.7</td>
+        <td>46.5059</td>
+        <td>2575.92</td>
+        <td>113.6 M</td>
+    </tr>
+    </table>
+
+> ❗ 以上列出的是实例分割模块重点支持的**2个核心模型**，该模块总共支持**15个模型**，完整的模型列表如下：
+
 <details>
    <summary> 👉模型列表详情</summary>
 
@@ -323,7 +351,7 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
 ```
 需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为 `Mask-RT-DETR-L.yaml`）
+* 指定模型的`.yaml` 配置文件路径（此处为 `Mask-RT-DETR-L.yaml`，训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
@@ -335,8 +363,7 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
 
 * 模型训练过程中，PaddleX 会自动保存模型权重文件，默认为`output`，如需指定保存路径，可通过配置文件中 `-o Global.output` 字段进行设置。
 * PaddleX 对您屏蔽了动态图权重和静态图权重的概念。在模型训练的过程中，会同时产出动态图和静态图的权重，在模型推理时，默认选择静态图权重推理。
-* 训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)。
-在完成模型训练后，所有产出保存在指定的输出目录（默认为`./output/`）下，通常有以下产出：
+* 在完成模型训练后，所有产出保存在指定的输出目录（默认为`./output/`）下，通常有以下产出：
 
 * `train_result.json`：训练结果记录文件，记录了训练任务是否正常完成，以及产出的权重指标、相关文件路径等；
 * `train.log`：训练日志文件，记录了训练过程中的模型指标变化、loss 变化等；

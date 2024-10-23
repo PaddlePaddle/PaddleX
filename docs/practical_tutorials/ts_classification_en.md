@@ -36,7 +36,7 @@ PaddleX provides a time series classification model. Refer to the [Model List](.
 ### 4.1 Data Preparation
 To demonstrate the entire time series classification process, we will use the public [Heartbeat Dataset](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_classify_examples.tar) for model training and validation. The Heartbeat Dataset is part of the UEA Time Series Classification Archive, addressing the practical task of heartbeat monitoring for medical diagnosis. The dataset comprises multiple time series groups, with each data point consisting of a label variable, group ID, and 61 feature variables. This dataset is commonly used to test and validate the performance of time series classification prediction models.
 
-We have converted the dataset into a standard format, which can be obtained using the following commands. For data format details, refer to the [Time Series Classification Module Development Tutorial](../module_usage/tutorials/ts_modules/time_series_classification_en.md).
+We have converted the dataset into a standard format, which can be obtained using the following commands. For data format details, refer to the [Time Series Classification Module Development Tutorial](../module_usage/tutorials/time_series_modules/time_series_classification_en.md).
 
 Dataset Acquisition Command:
 
@@ -97,7 +97,7 @@ The above verification results have omitted some data parts. `check_pass` being 
 **Note**: Only data that passes the verification can be used for training and evaluation.
 
 ### 4.3 Dataset Format Conversion / Dataset Splitting (Optional)
-If you need to convert the dataset format or re-split the dataset, please refer to Section 4.1.3 in the [Time Series Classification Module Development Tutorial](../module_usage/tutorials/ts_modules/time_series_classification_en.md).
+If you need to convert the dataset format or re-split the dataset, please refer to Section 4.1.3 in the [Time Series Classification Module Development Tutorial](../module_usage/tutorials/time_series_modules/time_series_classification_en.md).
 
 ## 5. Model Training and Evaluation
 

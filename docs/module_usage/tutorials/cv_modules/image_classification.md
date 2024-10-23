@@ -6,9 +6,84 @@
 图像分类模块是计算机视觉系统中的关键组成部分，负责对输入的图像进行分类。该模块的性能直接影响到整个计算机视觉系统的准确性和效率。图像分类模块通常会接收图像作为输入，然后通过深度学习或其他机器学习算法，根据图像的特性和内容，将其分类到预定义的类别中。例如，对于一个动物识别系统，图像分类模块可能需要将输入的图像分类为“猫”、“狗”、“马”等类别。图像分类模块的分类结果将作为输出，供其他模块或系统使用。
 
 ## 二、支持模型列表
+
+
+<table>
+    <tr>
+        <th>模型</th>
+        <th>Top1 Acc(%)</th>
+        <th>GPU推理耗时 (ms)</th>
+        <th>CPU推理耗时 (ms)</th>
+        <th>模型存储大小 (M)</th>
+    </tr>
+  <tr>
+    <td>CLIP_vit_base_patch16_224</td>
+    <td>85.36</td>
+    <td>13.1957</td>
+    <td>285.493</td>
+    <td >306.5 M</td>
+  </tr>
+  <tr>
+    <td>MobileNetV3_small_x1_0</td>
+    <td>68.2</td>
+    <td>6.00993</td>
+    <td>12.9598</td>
+    <td>10.5 M</td>
+  </tr>
+ <tr>
+    <td>PP-HGNet_small</td>
+    <td>81.51</td>
+    <td>5.50661</td>
+    <td>119.041</td>
+    <td>86.5 M</td>
+  </tr>
+  <tr>
+    <td>PP-HGNetV2-B0</td>
+    <td>77.77</td>
+    <td>6.53694</td>
+    <td>23.352</td>
+    <td>21.4 M</td>
+  </tr>
+<tr>
+    <td>PP-HGNetV2-B4</td>
+    <td>83.57</td>
+    <td>9.66407</td>
+    <td>54.2462</td>
+    <td>70.4 M</td>
+  </tr>
+<tr>
+    <td>PP-HGNetV2-B6</td>
+    <td>86.30</td>
+    <td>21.226</td>
+    <td>255.279</td>
+    <td>268.4 M</td>
+  </tr>
+<tr>
+    <td>PP-LCNet_x1_0</td>
+    <td>71.32</td>
+    <td>3.84845</td>
+    <td>9.23735</td>
+    <td>10.5 M</td>
+  </tr>
+ <tr>
+    <td>ResNet50</td>
+    <td>76.5</td>
+    <td>9.62383</td>
+    <td>64.8135</td>
+    <td>90.8 M</td>
+  </tr>
+<tr>
+    <td>SwinTransformer_tiny_patch4_window7_224</td>
+    <td>81.10</td>
+    <td>8.54846</td>
+    <td>156.306</td>
+    <td>100.1 M</td>
+  </tr>
+</table>
+
+> ❗ 以上列出的是图像分类模块重点支持的**9个核心模型**，该模块总共支持**80个模型**，完整的模型列表如下：
 <details>
    <summary> 👉模型列表详情</summary>
-
 <table>
   <tr>
     <th>模型</th>
@@ -424,8 +499,6 @@
     <td>32.1 M</td>
   </tr>
   <tr>
-
-  <tr>
     <td>PP-LCNetV2_base</td>
     <td>77.05</td>
     <td>5.23428</td>
@@ -447,7 +520,6 @@
     <td>13.0273</td>
     <td>14.6 M</td>
   </tr>
-<tr>
 <tr>
     <td>ResNet18_vd</td>
     <td>72.3</td>
@@ -526,7 +598,6 @@
     <td>235.185</td>
     <td>266.0 M</td>
   </tr>
-<tr>
   <tr>
     <td>StarNet-S1</td>
     <td>73.6</td>
@@ -556,7 +627,6 @@
     <td>43.2497</td>
     <td>28.9 M</td>
   </tr>
-<tr>
   <tr>
     <td>SwinTransformer_base_patch4_window7_224</td>
     <td>83.37</td>
@@ -600,9 +670,7 @@
     <td>156.306</td>
     <td>100.1 M</td>
   </tr>
-<tr>
 </table>
-
 
 **注：以上精度指标为 [ImageNet-1k](https://www.image-net.org/index.php) 验证集 Top1 Acc。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。**
 </details>
@@ -621,6 +689,7 @@ for res in output:
     res.save_to_img("./output/")
     res.save_to_json("./output/res.json")
 ```
+
 关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 
 ## 四、二次开发
@@ -754,7 +823,7 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml  \
 ```
 需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`PP-LCNet_x1_0.yaml`）
+* 指定模型的`.yaml` 配置文件路径（此处为`PP-LCNet_x1_0.yaml`,训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
@@ -764,8 +833,7 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml  \
 
 * 模型训练过程中，PaddleX 会自动保存模型权重文件，默认为`output`，如需指定保存路径，可通过配置文件中 `-o Global.output` 字段进行设置。
 * PaddleX 对您屏蔽了动态图权重和静态图权重的概念。在模型训练的过程中，会同时产出动态图和静态图的权重，在模型推理时，默认选择静态图权重推理。
-* 训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)。
-在完成模型训练后，所有产出保存在指定的输出目录（默认为`./output/`）下，通常有以下产出：
+* 在完成模型训练后，所有产出保存在指定的输出目录（默认为`./output/`）下，通常有以下产出：
 
 * `train_result.json`：训练结果记录文件，记录了训练任务是否正常完成，以及产出的权重指标、相关文件路径等；
 * `train.log`：训练日志文件，记录了训练过程中的模型指标变化、loss 变化等；

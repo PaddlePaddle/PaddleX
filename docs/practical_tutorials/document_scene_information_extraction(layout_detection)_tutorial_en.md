@@ -77,7 +77,7 @@ Through the online experience of the document scene information extraction, a Ba
 
 ### 2.2 Online Experience
 
-You can experience the effectiveness of the Document Scene Information Extraction v3 pipeline on the **AIStudio Community**. Click the link to download the [Test Paper Document File](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/test.jpg), and then upload it to the [official Document Scene Information Extraction v3 application]((https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter)) to experience the extraction results. The process is as follows:
+You can experience the effectiveness of the Document Scene Information Extraction v3 pipeline on the **AIStudio Community**. Click the link to download the [Test Paper Document File](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/test.jpg), and then upload it to the [official Document Scene Information Extraction v3 application](https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter) to experience the extraction results. The process is as follows:
 
 ![](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/06.png)
 
@@ -318,7 +318,7 @@ By following the above steps, prediction results can be generated under the ./ou
 
 ## 6. Pipeline Inference
 
-Replace the model in the production line with the fine-tuned model for testing, and use the academic paper literature [test file]((https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/test.jpg)) to perform predictions.
+Replace the model in the production line with the fine-tuned model for testing, and use the academic paper literature [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/test.jpg) to perform predictions.
 
 
 First, obtain and update the configuration file for the Document Information Extraction v3. Execute the following command to retrieve the configuration file (assuming a custom save location of `./my_path`):

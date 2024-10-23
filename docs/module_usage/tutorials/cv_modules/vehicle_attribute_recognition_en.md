@@ -7,8 +7,6 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 
 ## II. Supported Model List
 
-<details>
-   <summary> 👉Model List Details</summary>
 
 | Model | mA (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
 |-|-|-|-|-|-|
@@ -16,7 +14,6 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 
 **Note: The above accuracy metrics are mA on the VeRi dataset. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 
-</details>
 
 ## <span id="lable">III. Quick Integration</span>
 
@@ -185,7 +182,7 @@ python main.py -c paddlex/configs/vehicle_attribute/PP-LCNet_x1_0_vehicle_attrib
 ```
 The steps required are:
 
-* Specify the path to the model's `.yaml` configuration file (here it's `PP-LCNet_x1_0_vehicle_attribute.yaml`)
+* Specify the path to the model's `.yaml` configuration file (here it's `PP-LCNet_x1_0_vehicle_attribute.yaml`,When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md))
 * Set the mode to model training: `-o Global.mode=train`
 * Specify the path to the training dataset: `-o Global.dataset_dir`
 Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration Parameters](../../instructions/config_parameters_common_en.md).
@@ -196,7 +193,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 
 * During model training, PaddleX automatically saves the model weight files, with the default being `output`. If you need to specify a save path, you can set it through the `-o Global.output` field in the configuration file.
 * PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.
-* When training other models, you need to specify the corresponding configuration file. The correspondence between models and configuration files can be found in [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md). After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
+* After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
 
 * `train_result.json`: Training result record file, recording whether the training task was completed normally, as well as the output weight metrics, related file paths, etc.;
 * `train.log`: Training log file, recording changes in model metrics and loss during training;
@@ -244,7 +241,7 @@ python main.py -c paddlex/configs/vehicle_attribute/PP-LCNet_x1_0_vehicle_attrib
 ```
 Similar to model training and evaluation, the following steps are required:
 
-* Specify the `.yaml` configuration file path for the model (here it is `PP-LCNet_x1_0_vehicle_attribute.yaml`)
+* Specify the `.yaml` configuration file path for the model (here it is `PP-LCNet_x1_0_vehicle_attribute.yaml`,When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md))
 * Set the mode to model inference prediction: `-o Global.mode=predict`
 * Specify the model weights path: `-o Predict.model_dir="./output/best_model/inference"`
 * Specify the input data path: `-o Predict.input="..."`

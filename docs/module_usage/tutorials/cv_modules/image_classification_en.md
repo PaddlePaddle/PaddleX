@@ -6,6 +6,83 @@
 The image classification module is a crucial component in computer vision systems, responsible for categorizing input images. The performance of this module directly impacts the accuracy and efficiency of the entire computer vision system. Typically, the image classification module receives an image as input and, through deep learning or other machine learning algorithms, classifies it into predefined categories based on its characteristics and content. For instance, in an animal recognition system, the image classification module might need to classify an input image as "cat," "dog," "horse," etc. The classification results from the image classification module are then output for use by other modules or systems.
 
 ## II. List of Supported Models
+
+
+<table>
+    <tr>
+        <th>Model</th>
+        <th>Top1 Acc(%)</th>
+        <th>GPU Inference Time (ms)</th>
+        <th>CPU Inference Time (ms)</th>
+        <th>Model Storage Size (M)</th>
+    </tr>
+    <tr>
+        <td>CLIP_vit_base_patch16_224</td>
+        <td>85.36</td>
+        <td>13.1957</td>
+        <td>285.493</td>
+        <td>306.5 M</td>
+    </tr>
+    <tr>
+        <td>MobileNetV3_small_x1_0</td>
+        <td>68.2</td>
+        <td>6.00993</td>
+        <td>12.9598</td>
+        <td>10.5 M</td>
+    </tr>
+    <tr>
+        <td>PP-HGNet_small</td>
+        <td>81.51</td>
+        <td>5.50661</td>
+        <td>119.041</td>
+        <td>86.5 M</td>
+    </tr>
+    <tr>
+        <td>PP-HGNetV2-B0</td>
+        <td>77.77</td>
+        <td>6.53694</td>
+        <td>23.352</td>
+        <td>21.4 M</td>
+    </tr>
+    <tr>
+        <td>PP-HGNetV2-B4</td>
+        <td>83.57</td>
+        <td>9.66407</td>
+        <td>54.2462</td>
+        <td>70.4 M</td>
+    </tr>
+    <tr>
+        <td>PP-HGNetV2-B6</td>
+        <td>86.30</td>
+        <td>21.226</td>
+        <td>255.279</td>
+        <td>268.4 M</td>
+    </tr>
+    <tr>
+        <td>PP-LCNet_x1_0</td>
+        <td>71.32</td>
+        <td>3.84845</td>
+        <td>9.23735</td>
+        <td>10.5 M</td>
+    </tr>
+    <tr>
+        <td>ResNet50</td>
+        <td>76.5</td>
+        <td>9.62383</td>
+        <td>64.8135</td>
+        <td>90.8 M</td>
+    </tr>
+    <tr>
+        <td>SwinTransformer_tiny_patch4_window7_224</td>
+        <td>81.10</td>
+        <td>8.54846</td>
+        <td>156.306</td>
+        <td>100.1 M</td>
+    </tr>
+</table>
+
+> ❗ The above list features the **9 core models** that the image classification module primarily supports. In total, this module supports **80 models**. The complete list of models is as follows:
+
 <details>
    <summary> 👉Details of Model List</summary>
 
@@ -749,7 +826,7 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml  \
 
 the following steps are required:
 
-* Specify the path of the model's `.yaml` configuration file (here it is `PP-LCNet_x1_0.yaml`)
+* Specify the path of the model's `.yaml` configuration file (here it is `PP-LCNet_x1_0.yaml`. When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md))
 * Specify the mode as model training: `-o Global.mode=train`
 * Specify the path of the training dataset: `-o Global.dataset_dir`. Other related parameters can be set by modifying the fields under `Global` and `Train` in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first 2 GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file parameter instructions for the corresponding task module of the model [PaddleX Common Model Configuration File Parameters](../../instructions/config_parameters_common_en.md).
 
@@ -759,7 +836,7 @@ the following steps are required:
 
 * During model training, PaddleX automatically saves the model weight files, with the default being `output`. If you need to specify a save path, you can set it through the `-o Global.output` field in the configuration file.
 * PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.
-* When training other models, you need to specify the corresponding configuration file. The correspondence between models and configuration files can be found in [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md). After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
+* After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
 
 * `train_result.json`: Training result record file, recording whether the training task was completed normally, as well as the output weight metrics, related file paths, etc.;
 * `train.log`: Training log file, recording changes in model metrics and loss during training;

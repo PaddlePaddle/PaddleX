@@ -6,6 +6,65 @@
 The object detection module is a crucial component in computer vision systems, responsible for locating and marking regions containing specific objects in images or videos. The performance of this module directly impacts the accuracy and efficiency of the entire computer vision system. The object detection module typically outputs bounding boxes for the target regions, which are then passed as input to the object recognition module for further processing.
 
 ## II. List of Supported Models
+
+<table>
+  <tr>
+    <th>Model</th>
+    <th>mAP(%)</th>
+    <th>GPU Inference Time (ms)</th>
+    <th>CPU Inference Time (ms)</th>
+    <th>Model Storage Size (M)</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>PicoDet-L</td>
+    <td>42.6</td>
+    <td>16.6715</td>
+    <td>169.904</td>
+    <td>20.9 M</td>
+    <td rowspan="2">PP-PicoDet is a lightweight object detection algorithm for full-size, wide-angle targets, considering the computational capacity of mobile devices. Compared to traditional object detection algorithms, PP-PicoDet has a smaller model size and lower computational complexity, achieving higher speed and lower latency while maintaining detection accuracy.</td>
+  </tr>
+  <tr>
+    <td>PicoDet-S</td>
+    <td>29.1</td>
+    <td>14.097</td>
+    <td>37.6563</td>
+    <td>4.4 M</td>
+  </tr>
+  <tr>
+    <td>PP-YOLOE_plus-L</td>
+    <td>52.9</td>
+    <td>33.5644</td>
+    <td>814.825</td>
+    <td>185.3 M</td>
+    <td rowspan="2">PP-YOLOE_plus is an upgraded version of the high-precision cloud-edge integrated model PP-YOLOE, developed by Baidu's PaddlePaddle vision team. By using the large-scale Objects365 dataset and optimizing preprocessing, it significantly enhances the model's end-to-end inference speed.</td>
+  </tr>
+  <tr>
+    <td>PP-YOLOE_plus-S</td>
+    <td>43.7</td>
+    <td>16.8884</td>
+    <td>223.059</td>
+    <td>28.3 M</td>
+  </tr>
+  <tr>
+    <td>RT-DETR-H</td>
+    <td>56.3</td>
+    <td>114.814</td>
+    <td>3933.39</td>
+    <td>435.8 M</td>
+    <td rowspan="2">RT-DETR is the first real-time end-to-end object detector. The model features an efficient hybrid encoder to meet both model performance and throughput requirements, efficiently handling multi-scale features, and proposes an accelerated and optimized query selection mechanism to optimize the dynamics of decoder queries. RT-DETR supports flexible end-to-end inference speeds by using different decoders.</td>
+  </tr>
+  <tr>
+    <td>RT-DETR-L</td>
+    <td>53.0</td>
+    <td>34.5252</td>
+    <td>1454.27</td>
+    <td>113.7 M</td>
+  </tr>
+</table>
+
+> ❗ The above list features the **6 core models** that the image classification module primarily supports. In total, this module supports **37 models**. The complete list of models is as follows:
+
 <details>
    <summary> 👉Details of Model List</summary>
 
@@ -527,7 +586,7 @@ python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
 ```
 The following steps are required:
 
-* Specify the `.yaml` configuration file path for the model (here it is `PicoDet-S.yaml`)
+* Specify the `.yaml` configuration file path for the model (here it is `PicoDet-S.yaml`,When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md))
 * Set the mode to model training: `-o Global.mode=train`
 * Specify the path to the training dataset: `-o Global.dataset_dir`.
 Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file instructions for the corresponding task module of the model [PaddleX Common Configuration File Parameters](../../instructions/config_parameters_common_en.md).
@@ -537,7 +596,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 
 * During model training, PaddleX automatically saves the model weight files, with the default being `output`. If you need to specify a save path, you can set it through the `-o Global.output` field in the configuration file.
 * PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.
-* When training other models, you need to specify the corresponding configuration file. The correspondence between models and configuration files can be found in [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md). After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
+* After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
 
 * `train_result.json`: Training result record file, recording whether the training task was completed normally, as well as the output weight metrics, related file paths, etc.;
 * `train.log`: Training log file, recording changes in model metrics and loss during training;

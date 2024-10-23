@@ -318,7 +318,7 @@ To directly apply the pipeline in your Python project, refer to the example code
 
 Additionally, PaddleX offers three other deployment methods, detailed as follows:
 
-🚀 **High-Performance Inference**: In production environments, many applications require stringent performance metrics, especially response speed, to ensure efficient operation and smooth user experience. PaddleX provides a high-performance inference plugin that deeply optimizes model inference and pre/post-processing for significant end-to-end speedups. For detailed instructions on high-performance inference, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_deploy.md).
+🚀 **High-Performance Inference**: In production environments, many applications require stringent performance metrics, especially response speed, to ensure efficient operation and smooth user experience. PaddleX provides a high-performance inference plugin that deeply optimizes model inference and pre/post-processing for significant end-to-end speedups. For detailed instructions on high-performance inference, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference_en.md).
 
 ☁️ **Service Deployment**: Service deployment is a common form in production environments, where reasoning functions are encapsulated as services accessible via network requests. PaddleX enables cost-effective service deployment of pipelines. For detailed instructions on service deployment, refer to the [PaddleX Service Deployment Guide](../../../pipeline_deploy/service_deploy.md).
 
@@ -440,7 +440,7 @@ for res in result["layoutParsingResults"]:
 </details>
 <br/>
 
-📱 **Edge Deployment**: Edge deployment refers to placing computational and data processing capabilities directly on user devices, enabling them to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/lite_deploy.md).
+📱 **Edge Deployment**: Edge deployment refers to placing computational and data processing capabilities directly on user devices, enabling them to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy_en.md).
 
 You can choose an appropriate method to deploy your model pipeline based on your needs, and proceed with subsequent AI application integration.
 

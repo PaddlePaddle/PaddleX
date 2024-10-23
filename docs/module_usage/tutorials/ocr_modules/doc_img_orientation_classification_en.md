@@ -7,15 +7,12 @@ The document image orientation classification module is aim to distinguish the o
 
 ## II. Supported Model List
 
-<details>
-   <summary> 👉 Model List Details</summary>
 
 | Model | Top-1 Accuracy (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | Description |
 |-|-|-|-|-|-|
 | PP-LCNet_x1_0_doc_ori | 99.06 | 3.84845|9.23735 | 7 | A document image classification model based on PP-LCNet_x1_0, with four categories: 0°, 90°, 180°, 270° |
 
 **Note: The above accuracy metrics are evaluated on a self-built dataset covering various scenarios such as IDs and documents, containing 1000 images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
-</details>
 
 ## III. Quick Integration
 
@@ -187,7 +184,7 @@ python main.py -c paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yam
 
 You need to follow these steps:
 
-* Specify the path to the model's `.yaml` configuration file (here, `PP-LCNet_x1_0_doc_ori.yaml`).
+* Specify the path to the model's `.yaml` configuration file (here, `PP-LCNet_x1_0_doc_ori.yaml`,When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md)).
 * Set the mode to model training: `-o Global.mode=train`.
 * Specify the training dataset path: `-o Global.dataset_dir`.
 
@@ -198,9 +195,7 @@ Other relevant parameters can be set by modifying fields under `Global` and `Tra
 
 * During model training, PaddleX automatically saves the model weight files, defaulting to `output`. If you want to specify a different save path, you can set it using the `-o Global.output` field in the configuration file.
 * PaddleX abstracts away the concept of dynamic graph weights and static graph weights. During model training, it produces both dynamic and static graph weights. For model inference, it defaults to using static graph weights.
-* To train other models, specify the corresponding configuration file. The relationship between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md).
-
-After completing model training, all outputs are saved in the specified output directory (default is `./output/`), typically including the following:
+* After completing model training, all outputs are saved in the specified output directory (default is `./output/`), typically including the following:
 
 * `train_result.json`: Training result record file, which records whether the training task was completed normally, as well as the output weight metrics and related file paths.
 * `train.log`: Training log file, which records changes in model metrics and loss during training.

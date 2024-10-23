@@ -39,7 +39,7 @@ PaddleX provides five end-to-end time series anomaly detection models. For detai
 
 To demonstrate the entire process of time series anomaly detection, we will use the publicly available MSL (Mars Science Laboratory) dataset for model training and validation. The PSM (Planetary Science Mission) dataset, sourced from NASA, comprises 55 dimensions and includes telemetry anomaly data reported by the spacecraft's monitoring system for unexpected event anomalies (ISA). With its practical application background, it better reflects real-world anomaly scenarios and is commonly used to test and validate the performance of time series anomaly detection models. This tutorial will perform anomaly detection based on this dataset.
 
-We have converted the dataset into a standard data format, and you can obtain a sample dataset using the following command. For an introduction to the data format, please refer to the [Time Series Anomaly Detection Module Development Tutorial](../module_usage/tutorials/ts_modules/time_series_anomaly_detection_en.md).
+We have converted the dataset into a standard data format, and you can obtain a sample dataset using the following command. For an introduction to the data format, please refer to the [Time Series Anomaly Detection Module Development Tutorial](../module_usage/tutorials/time_series_modules/time_series_anomaly_detection_en.md).
 
 
 You can use the following commands to download the demo dataset to a specified folder:
@@ -102,7 +102,7 @@ The above verification results have omitted some data parts. `check_pass` being 
 **Note**: Only data that passes the verification can be used for training and evaluation.
 
 ### 4.3 Dataset Format Conversion/Dataset Splitting (Optional)
-If you need to convert the dataset format or re-split the dataset, refer to Section 4.1.3 in the [Time Series Anomaly Detection Module Development Tutorial](../module_usage/tutorials/ts_modules/time_series_anomaly_detection_en.md).
+If you need to convert the dataset format or re-split the dataset, refer to Section 4.1.3 in the [Time Series Anomaly Detection Module Development Tutorial](../module_usage/tutorials/time_series_modules/time_series_anomaly_detection_en.md).
 
 ## 5. Model Training and Evaluation
 ### 5.1 Model Training

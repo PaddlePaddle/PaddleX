@@ -7,6 +7,34 @@ The instance segmentation module is a crucial component in computer vision syste
 
 ## II. Supported Model List
 
+<table>
+    <tr>
+        <th>Model</th>
+        <th>Mask AP</th>
+        <th>GPU Inference Time (ms)</th>
+        <th>CPU Inference Time (ms)</th>
+        <th>Model Size (M)</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>Mask-RT-DETR-H</td>
+        <td>50.6</td>
+        <td>132.693</td>
+        <td>4896.17</td>
+        <td>449.9 M</td>
+        <td rowspan="5">Mask-RT-DETR is an instance segmentation model based on RT-DETR. By adopting the high-performance PP-HGNetV2 as the backbone network and constructing a MaskHybridEncoder encoder, along with introducing IOU-aware Query Selection technology, it achieves state-of-the-art (SOTA) instance segmentation accuracy with the same inference time.</td>
+    </tr>
+    <tr>
+        <td>Mask-RT-DETR-L</td>
+        <td>45.7</td>
+        <td>46.5059</td>
+        <td>2575.92</td>
+        <td>113.6 M</td>
+    </tr>
+    </table>
+
+> ❗ The above list features the **2 core models** that the image classification module primarily supports. In total, this module supports **15 models**. The complete list of models is as follows:
+
 <details>
    <summary> 👉Model List Details</summary>
 
@@ -322,7 +350,7 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
 ```
 The following steps are required:
 
-* Specify the path to the `.yaml` configuration file of the model (here it is `Mask-RT-DETR-L.yaml`)
+* Specify the path to the `.yaml` configuration file of the model (here it is `Mask-RT-DETR-L.yaml`,When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md))
 * Specify the mode as model training: `-o Global.mode=train`
 * Specify the path to the training dataset: `-o Global.dataset_dir`.
 Other related parameters can be set by modifying the fields under `Global` and `Train` in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify the first 2 GPUs for training: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration File Parameters Instructions](../../instructions/config_parameters_common_en.md).
@@ -332,7 +360,7 @@ Other related parameters can be set by modifying the fields under `Global` and `
 
 * During model training, PaddleX automatically saves the model weight files, with the default being `output`. If you need to specify a save path, you can set it through the `-o Global.output` field in the configuration file.
 * PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.
-* When training other models, you need to specify the corresponding configuration file. The correspondence between models and configuration files can be found in [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md). After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
+* After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
 
 * `train_result.json`: Training result record file, recording whether the training task was completed normally, as well as the output weight metrics, related file paths, etc.;
 * `train.log`: Training log file, recording changes in model metrics and loss during training;
