@@ -177,7 +177,7 @@ class DetModel(BaseModel):
         if batch_size is not None:
             config.update_batch_size(batch_size, "eval")
         device_type, device_ids = parse_device(device)
-        if len(device_ids) > 1:
+        if device_ids is not None and len(device_ids) > 1:
             raise ValueError(
                 f"multi-{device_type} evaluation is not supported. Please use a single {device_type}."
             )
