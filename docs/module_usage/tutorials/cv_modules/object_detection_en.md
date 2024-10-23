@@ -63,6 +63,8 @@ The object detection module is a crucial component in computer vision systems, r
   </tr>
 </table>
 
+> ❗ The above list features the **6 core models** that the image classification module primarily supports. In total, this module supports **37 models**. The complete list of models is as follows:
+
 <details>
    <summary> 👉Details of Model List</summary>
 

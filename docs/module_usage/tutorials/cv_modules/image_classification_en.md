@@ -81,6 +81,8 @@ The image classification module is a crucial component in computer vision system
     </tr>
 </table>
 
+> ❗ The above list features the **9 core models** that the image classification module primarily supports. In total, this module supports **80 models**. The complete list of models is as follows:
+
 <details>
    <summary> 👉Details of Model List</summary>
 

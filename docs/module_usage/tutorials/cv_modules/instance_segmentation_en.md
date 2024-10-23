@@ -32,6 +32,9 @@ The instance segmentation module is a crucial component in computer vision syste
         <td>113.6 M</td>
     </tr>
     </table>
+
+> ❗ The above list features the **2 core models** that the image classification module primarily supports. In total, this module supports **15 models**. The complete list of models is as follows:
+
 <details>
    <summary> 👉Model List Details</summary>
 

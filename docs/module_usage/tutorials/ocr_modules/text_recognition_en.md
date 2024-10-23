@@ -35,6 +35,8 @@ The text recognition module is the core component of an OCR (Optical Character R
 
 **Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built Chinese dataset, covering street scenes, web images, documents, handwriting, and more, with 1.1w images for text recognition. GPU inference time for all models is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 
+> ❗ The above list features the **2 core models** that the image classification module primarily supports. In total, this module supports **4 models**. The complete list of models is as follows:
+
 <details>
    <summary> 👉Model List Details</summary>
 

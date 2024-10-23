@@ -12,6 +12,8 @@ Semantic segmentation is a technique in computer vision that classifies each pix
 |OCRNet_HRNet-W48|82.15|78.9976|2226.95|249.8 M|
 |PP-LiteSeg-T|73.10|7.6827|138.683|28.5 M|
 
+> ❗ The above list features the **2 core models** that the image classification module primarily supports. In total, this module supports **18 models**. The complete list of models is as follows:
+
 <details>
    <summary> 👉Model List Details</summary>
 |Model Name|mIoU (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size (M)|
