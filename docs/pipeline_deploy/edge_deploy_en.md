@@ -1,4 +1,4 @@
-[简体中文](lite_deploy.md) | English
+[简体中文](edge_deploy.md) | English
 
 # PaddleX Edge Deployment Demo Usage Guide
 

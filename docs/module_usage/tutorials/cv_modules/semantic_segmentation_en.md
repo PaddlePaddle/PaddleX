@@ -7,9 +7,15 @@ Semantic segmentation is a technique in computer vision that classifies each pix
 
 ## II. Supported Model List
 
-<details>
-   <summary> 👉 Model List Details</summary>
+|Model Name|mIoU (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size (M)|
+|-|-|-|-|-|
+|OCRNet_HRNet-W48|82.15|78.9976|2226.95|249.8 M|
+|PP-LiteSeg-T|73.10|7.6827|138.683|28.5 M|
 
+> ❗ The above list features the **2 core models** that the image classification module primarily supports. In total, this module supports **18 models**. The complete list of models is as follows:
+
+<details>
+   <summary> 👉Model List Details</summary>
 |Model Name|mIoU (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size (M)|
 |-|-|-|-|-|
 |Deeplabv3_Plus-R50 |80.36|61.0531|1513.58|94.9 M|
@@ -241,7 +247,7 @@ python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
 
 You need to follow these steps:
 
-* Specify the `.yaml` configuration file path for the model (here it's `PP-LiteSeg-T.yaml`).
+* Specify the `.yaml` configuration file path for the model (here it's `PP-LiteSeg-T.yaml`,When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md)).
 * Set the mode to model training: `-o Global.mode=train`
 * Specify the training dataset path: `-o Global.dataset_dir`
 
@@ -252,9 +258,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 
 * During model training, PaddleX automatically saves model weight files, with the default path being `output`. To specify a different save path, use the `-o Global.output` field in the configuration file.
 * PaddleX abstracts the concepts of dynamic graph weights and static graph weights from you. During model training, both dynamic and static graph weights are produced, and static graph weights are used by default for model inference.
-* When training other models, specify the corresponding configuration file. The mapping between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md).
-
-After model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
+* After model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
 
 * `train_result.json`: Training result record file, including whether the training task completed successfully, produced weight metrics, and related file paths.
 * `train.log`: Training log file, recording model metric changes, loss changes, etc.

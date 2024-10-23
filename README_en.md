@@ -42,7 +42,7 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 
 ## 📣 Recent Updates
 
-🔥🔥 **"PaddleX Document Information Personalized Extraction Upgrade"**, PP-ChatOCRv3 innovatively provides custom development functions for OCR models based on data fusion technology, offering stronger model fine-tuning capabilities. Millions of high-quality general OCR text recognition data are automatically integrated into vertical model training data at a specific ratio, solving the problem of weakened general text recognition capabilities caused by vertical model training in the industry. Suitable for practical scenarios in industries such as automated office, financial risk control, healthcare, education and publishing, and legal and government sectors. **October 17th (Thursday) at 19:00** live broadcast will provide a detailed interpretation of data fusion technology and how to use prompt engineering to achieve better information extraction results. [Registration Link](https://www.wjx.top/vm/mFhGfwx.aspx?udsid=772552)
+🔥🔥 **"PaddleX Document Information Personalized Extraction Upgrade"**, PP-ChatOCRv3 innovatively provides custom development functions for OCR models based on data fusion technology, offering stronger model fine-tuning capabilities. Millions of high-quality general OCR text recognition data are automatically integrated into vertical model training data at a specific ratio, solving the problem of weakened general text recognition capabilities caused by vertical model training in the industry. Suitable for practical scenarios in industries such as automated office, financial risk control, healthcare, education and publishing, and legal and government sectors. **October 24th (Thursday) 19:00** Join our live session for an in-depth analysis of the open-source version of PP-ChatOCRv3 and the outstanding advantages of PaddleX 3.0 Beta1 in terms of accuracy and speed. [Registration Link](https://www.wjx.top/vm/wpPu8HL.aspx?udsid=994465)
 
 🔥🔥 **9.30, 2024**, PaddleX 3.0 Beta1 open source version is officially released, providing **more than 200 models** that can be called with a simple Python API; achieve model full-process development based on unified commands, and open source the basic capabilities of the **PP-ChatOCRv3** pipeline; support **more than 100 models for high-performance inference and service-oriented deployment** (iterating continuously), **more than 7 key visual models for edge-deployment**; **more than 70 models have been adapted for the full development process of Ascend 910B**, **more than 15 models have been adapted for the full development process of Kunlun chips and Cambricon**
 
@@ -56,7 +56,7 @@ PaddleX is dedicated to achieving pipeline-level model training, inference, and 
 ## 📊 What can PaddleX do？
 
 
-All pipelines of PaddleX support **online experience** and local **fast inference**. You can quickly experience the effects of each pre-trained pipeline. If you are satisfied with the effects of the pre-trained pipeline, you can directly perform [high-performance inference](./docs/pipeline_deploy/high_performance_inference_en.md) / [serving deployment](./docs/pipeline_deploy/service_deploy_en.md) / [edge deployment](./docs/pipeline_deploy/edge_deploy_en.md) on the pipeline. If not satisfied, you can also **Custom Development** to improve the pipeline effect. For the complete pipeline development process, please refer to the [PaddleX pipeline Development Tool Local Use Tutorial](./docs/pipeline_usage/pipeline_develop_guide_en.md).
+All pipelines of PaddleX support **online experience** on [AI Studio]((https://aistudio.baidu.com/overview)) and local **fast inference**. You can quickly experience the effects of each pre-trained pipeline. If you are satisfied with the effects of the pre-trained pipeline, you can directly perform [high-performance inference](./docs/pipeline_deploy/high_performance_inference_en.md) / [serving deployment](./docs/pipeline_deploy/service_deploy_en.md) / [edge deployment](./docs/pipeline_deploy/edge_deploy_en.md) on the pipeline. If not satisfied, you can also **Custom Development** to improve the pipeline effect. For the complete pipeline development process, please refer to the [PaddleX pipeline Development Tool Local Use Tutorial](./docs/pipeline_usage/pipeline_develop_guide_en.md).
 
 In addition, PaddleX provides developers with a full-process efficient model training and deployment tool based on a [cloud-based GUI](https://aistudio.baidu.com/pipeline/mine). Developers **do not need code development**, just need to prepare a dataset that meets the pipeline requirements to **quickly start model training**. For details, please refer to the tutorial ["Developing Industrial-level AI Models with Zero Barrier"](https://aistudio.baidu.com/practical/introduce/546656605663301).
 
@@ -72,7 +72,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <th><a href="https://aistudio.baidu.com/pipeline/mine">Zero-Code Development On AI Studio</a></td> 
     </tr>
     <tr>
-        <td>OCR</td>
+        <td><a href="./docs/pipeline_usage/tutorials/ocr_pipelines/OCR_en.md">OCR</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">Link</a></td> 
         <td>✅</td>
         <td>✅</td>
@@ -82,7 +82,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td>PP-ChatOCRv3</td>
+        <td><a href="./docs/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_en.md">PP-ChatOCRv3</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter">Link</a></td> 
         <td>✅</td>
         <td>✅</td>
@@ -92,7 +92,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td>Table Recognition</td>
+        <td><a href="./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md">Table Recognition</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/91661?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>✅</td>
@@ -102,7 +102,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td>Object Detection</td>
+        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/object_detection_en.md">Object Detection</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/70230/webUI?source=appMineRecent">Link</a></td> 
         <td>✅</td>
         <td>✅</td>
@@ -112,7 +112,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td>Instance Segmentation</td>
+        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/instance_segmentation_en.md">Instance Segmentation</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/100063/webUI?source=appMineRecent">Link</a></td> 
         <td>✅</td>
         <td>✅</td>
@@ -122,7 +122,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td>Image Classification</td>
+        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/image_classification_en.md">Image Classification</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/100061/webUI?source=appMineRecent">Link</a></td> 
         <td>✅</td>
         <td>✅</td>
@@ -132,7 +132,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td>Semantic Segmentation</td>
+        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation_en.md">Semantic Segmentation</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/100062/webUI?source=appMineRecent">Link</a></td> 
         <td>✅</td>
         <td>✅</td>
@@ -142,7 +142,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td>Time Series Forecasting</td>
+        <td><a href="./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting_en.md">Time Series Forecasting</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/105706/webUI?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>🚧</td>
@@ -152,7 +152,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td>Time Series Anomaly Detection</td>
+        <td><a href="./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md">Time Series Anomaly Detection</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/105708/webUI?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>🚧</td>
@@ -162,7 +162,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td>Time Series Classification</td>
+        <td><a href="./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification_en.md">Time Series Classification</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/105707/webUI?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>🚧</td>
@@ -172,7 +172,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
         <tr>
-        <td>Small Object Detection</td>
+        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection_en.md">Small Object Detection</a></td>
         <td>🚧</td>
         <td>✅</td>
         <td>✅</td>
@@ -182,7 +182,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>🚧</td>
     </tr>
         <tr>
-        <td>Multi-label Image Classification</td>
+        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification_en.md">Multi-label Image Classification</a></td>
         <td>🚧</td>
         <td>✅</td>
         <td>✅</td>
@@ -192,7 +192,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>🚧</td>
     </tr>
     <tr>
-        <td>Image Anomaly Detection</td>
+        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection_en.md">Image Anomaly Detection</a></td>
         <td>🚧</td>
         <td>✅</td>
         <td>✅</td>
@@ -202,7 +202,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>🚧</td>
     </tr>
     <tr>
-        <td>Layout Parsing</td>
+        <td><a href="./docs/pipeline_usage/tutorials/ocr_pipelines/layout_parsing_en.md">Layout Parsing</a></td>
         <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
@@ -212,7 +212,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>🚧</td>
     </tr>
     <tr>
-        <td>Formula Recognition</td>
+        <td><a href="./docs/pipeline_usage/tutorials/ocr_pipelines/formula_recognition_en.md">Formula Recognition</a></td>
         <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
@@ -222,7 +222,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>🚧</td>
     </tr>
     <tr>
-        <td>Seal Recognition</td>
+        <td><a href="./docs/pipeline_usage/tutorials/ocr_pipelines/seal_recognition_en.md">Seal Recognition</a></td>
         <td>🚧</td>
         <td>✅</td>
         <td>✅</td>

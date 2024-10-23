@@ -7,8 +7,6 @@ The image feature module is one of the important tasks in computer vision, prima
 
 ## II. Supported Model List
 
-<details>
-   <summary> 👉Model List Details</summary>
 
 <table>
   <tr>
@@ -44,7 +42,6 @@ The image feature module is one of the important tasks in computer vision, prima
 </table>
 
 **Note: The above accuracy metrics are Recall@1 from AliProducts. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
-</details>
 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md)
@@ -265,7 +262,7 @@ python main.py -c paddlex/configs/general_recognition/PP-ShiTuV2_rec.yaml \
 ```
 The following steps are required:
 
-* Specify the `.yaml` configuration file path for the model (here it is `PP-ShiTuV2_rec.yaml`)
+* Specify the `.yaml` configuration file path for the model (here it is `PP-ShiTuV2_rec.yaml`，When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md))
 * Set the mode to model training: `-o Global.mode=train`
 * Specify the path to the training dataset: `-o Global.dataset_dir`. 
 Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file instructions for the corresponding task module of the model [PaddleX Common Configuration File Parameters](../../instructions/config_parameters_common_en.md).
@@ -275,7 +272,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 
 * During model training, PaddleX automatically saves the model weight files, with the default being `output`. If you need to specify a save path, you can set it through the `-o Global.output` field in the configuration file.
 * PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.
-* When training other models, you need to specify the corresponding configuration file. The correspondence between models and configuration files can be found in [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md). After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
+* After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
 
 * `train_result.json`: Training result record file, recording whether the training task was completed normally, as well as the output weight metrics, related file paths, etc.;
 * `train.log`: Training log file, recording changes in model metrics and loss during training;

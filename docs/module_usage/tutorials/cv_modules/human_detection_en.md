@@ -7,8 +7,6 @@ Human detection is a subtask of object detection, which utilizes computer vision
 
 ## II. Supported Model List
 
-<details>
-   <summary> 👉Model List Details</summary>
 
 <table>
   <tr>
@@ -40,7 +38,6 @@ Human detection is a subtask of object detection, which utilizes computer vision
 </table>
 
 **Note: The evaluation set for the above accuracy metrics is CrowdHuman dataset mAP(0.5:0.95). GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
-</details>
 
 
 ## III. Quick Integration
@@ -201,7 +198,7 @@ python main.py -c paddlex/configs/human_detection/PP-YOLOE-S_human.yaml \
 ```
 The steps required are:
 
-* Specify the `.yaml` configuration file path for the model (here it is `PP-YOLOE-S_human.yaml`)
+* Specify the `.yaml` configuration file path for the model (here it is `PP-YOLOE-S_human.yaml`，When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md))
 * Specify the mode as model training: `-o Global.mode=train`
 * Specify the training dataset path: `-o Global.dataset_dir`
 Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration Parameters for Model Tasks](../../instructions/config_parameters_common_en.md).
@@ -211,13 +208,12 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 
 * During model training, PaddleX automatically saves model weight files, defaulting to `output`. To specify a save path, use the `-o Global.output` field in the configuration file.
 * PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.
-* When training other models, specify the corresponding configuration file. The correspondence between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md).
-After completing model training, all outputs are saved in the specified output directory (default is `./output/`), the following steps are required:
+* After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
 
-* Specify the `.yaml` configuration file path of the model (here it is `PP-YOLOE-S_human.yaml`)
-* Set the mode to model evaluation: `-o Global.mode=evaluate`
-* Specify the path of the validation dataset: `-o Global.dataset_dir`
-Other related parameters can be set by modifying the fields under `Global` and `Evaluate` in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common_en.md).
+* `train_result.json`: Training result record file, recording whether the training task was completed normally, as well as the output weight metrics, related file paths, etc.;
+* `train.log`: Training log file, recording changes in model metrics and loss during training;
+* `config.yaml`: Training configuration file, recording the hyperparameter configuration for this training session;
+* `.pdparams`, `.pdema`, `.pdopt.pdstate`, `.pdiparams`, `.pdmodel`: Model weight-related files, including network parameters, optimizer, EMA, static graph network parameters, static graph network structure, etc.;
 </details>
 
 ### **4.3 Model Evaluation**

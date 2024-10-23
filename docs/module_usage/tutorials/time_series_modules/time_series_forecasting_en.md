@@ -7,9 +7,6 @@ Time series forecasting aims to predict the possible values or states at a futur
 
 ## II. Supported Model List
 
-<details>
-   <summary> 👉 Model List Details</summary>
-
 |Model Name| mse | mae |Model Size (M)| Introduce |
 |-|-|-|-|-|
 |DLinear|0.382|0.394|76k|Simple structure, high efficiency and easy-to-use time series prediction model|
@@ -21,8 +18,6 @@ Time series forecasting aims to predict the possible values or states at a futur
 
 **Note: The above accuracy metrics are measured on the [ETTH1](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/Etth1.tar) test dataset, with an input sequence length of 96, and a prediction sequence length of 96 for all models except TiDE, which has a prediction sequence length of 720.**
 
-
-</details>
 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md)
@@ -270,7 +265,7 @@ python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
 
 You need to follow these steps:
 
-* Specify the `.yaml` configuration file path for the model (here it's `DLinear.yaml`).
+* Specify the `.yaml` configuration file path for the model (here it's `DLinear.yaml`,When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md)).
 * Set the mode to model training: `-o Global.mode=train`
 * Specify the training dataset path: `-o Global.dataset_dir`
 
@@ -281,9 +276,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 
 * During model training, PaddleX automatically saves model weight files, with the default path being `output`. To specify a different save path, use the `-o Global.output` field in the configuration file.
 * PaddleX abstracts the concepts of dynamic graph weights and static graph weights from you. During model training, both dynamic and static graph weights are produced, and static graph weights are used by default for model inference.
-* When training other models, specify the corresponding configuration file. The mapping between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md).
-
-After model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
+* After model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
 
 * `train_result.json`: Training result record file, including whether the training task completed successfully, produced weight metrics, and related file paths.
 * `train.log`: Training log file, recording model metric changes, loss changes, etc.

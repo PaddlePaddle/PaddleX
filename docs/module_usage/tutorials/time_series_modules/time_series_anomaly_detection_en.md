@@ -7,9 +7,6 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
 
 ## II. Supported Model List
 
-<details>
-   <summary> 👉 Model List Details</summary>
-
 | Model Name | Precision | Recall | F1-Score | Model Size (M) | Description |
 |-|-|-|-|-|-|
 | AutoEncoder_ad_ad | 0.9898 | 0.9396 | 0.9641 | 72.8K | AutoEncoder_ad_ad is a simple, efficient, and easy-to-use time series anomaly detection model |
@@ -19,8 +16,6 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
 | TimesNet_ad | 0.9837 | 0.9480 | 0.9656 | 732K | Through multi-period analysis, TimesNet is an adaptive and high-precision time series anomaly detection model |
 
 **Note: The above accuracy metrics are measured on the PSM dataset with a time series length of 100.**
-
-</details>
 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For details, refer to the [PaddleX Local Installation Guide](../../../installation/installation_en.md)
@@ -226,7 +221,7 @@ python main.py -c paddlex/configs/ts_anomaly_detection/AutoEncoder_ad.yaml \
 
 You need to follow these steps:
 
-* Specify the `.yaml` configuration file path for the model (here it's `AutoEncoder_ad.yaml`).
+* Specify the `.yaml` configuration file path for the model (here it's `AutoEncoder_ad.yaml`,When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md)).
 * Set the mode to model training: `-o Global.mode=train`
 * Specify the training dataset path: `-o Global.dataset_dir`
 
@@ -237,9 +232,8 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 
 * During model training, PaddleX automatically saves model weight files, with the default path being `output`. To specify a different save path, use the `-o Global.output` field in the configuration file.
 * PaddleX abstracts the concepts of dynamic graph weights and static graph weights from you. During model training, both dynamic and static graph weights are produced, and static graph weights are used by default for model inference.
-* When training other models, specify the corresponding configuration file. The mapping between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md).
+* After model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
 
-After model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
 
 * `train_result.json`: Training result record file, including whether the training task completed successfully, produced weight metrics, and related file paths.
 * `train.log`: Training log file, recording model metric changes, loss changes, etc.

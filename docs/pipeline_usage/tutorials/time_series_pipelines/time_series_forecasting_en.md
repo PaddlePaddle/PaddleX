@@ -127,7 +127,7 @@ In the above Python script, the following steps are executed:
 |---------------|-----------------------------------------------------------------------------------------------------------|
 | Python Var    | Supports directly passing in Python variables, such as numpy.ndarray representing image data. |
 | str         | Supports passing in the path of the file to be predicted, such as the local path of an image file: `/root/data/img.jpg`. |
-| str           | Supports passing in the URL of the file to be predicted, such as the network URL of an image file: [Example](ttps://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv). |
+| str           | Supports passing in the URL of the file to be predicted, such as the network URL of an image file: [Example](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv). |
 | str           | Supports passing in a local directory, which should contain files to be predicted, such as the local path: `/root/data/`. |
 | dict          | Supports passing in a dictionary type, where the key needs to correspond to a specific task, such as "img" for image classification tasks. The value of the dictionary supports the above types of data, for example: `{"img": "/root/data1"}`. |
 | list          | Supports passing in a list, where the list elements need to be of the above types of data, such as `[numpy.ndarray, numpy.ndarray], ["/root/data/img1.jpg", "/root/data/img2.jpg"], ["/root/data1", "/root/data2"], [{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]`. |
@@ -577,7 +577,7 @@ Choose the appropriate deployment method for your model pipeline based on your n
 If the default model weights provided by the General Time Series Forecasting Pipeline do not meet your requirements in terms of accuracy or speed in your specific scenario, you can try to further fine-tune the existing model using **your own domain-specific or application-specific data** to improve the recognition performance of the pipeline in your scenario.
 
 #### 4.1 Model Fine-tuning
-Since the General Time Series Forecasting Pipeline includes a time series forecasting module, if the performance of the pipeline does not meet expectations, you need to refer to the [Customization](../../../module_usage/tutorials/time_series_modules/time_series_forecast_en.md#iv-custom-development) section in the [Time Series Forecasting Module Development Tutorial](../../../module_usage/tutorials/time_series_modules/time_series_forecast_en.md) and use your private dataset to fine-tune the time series forecasting model.
+Since the General Time Series Forecasting Pipeline includes a time series forecasting module, if the performance of the pipeline does not meet expectations, you need to refer to the [Customization](../../../module_usage/tutorials/time_series_modules/time_series_forecast_en.md#iv-custom-development) section in the [Time Series Forecasting Module Development Tutorial](../../../module_usage/tutorials/time_series_modules/time_series_forecasting_en.md) and use your private dataset to fine-tune the time series forecasting model.
 
 #### 4.2 Model Application
 After fine-tuning with your private dataset, you will obtain local model weight files.

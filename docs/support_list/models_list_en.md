@@ -343,7 +343,8 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 
 **Note: The evaluation set for the above accuracy metrics is the ****PaddleX self-built Layout Detection Dataset****, containing 10,000 images.**
 
-## [Time Series Forecasting Module](../module_usage/tutorials/time_series_modules/time_series_forecast_en.md)
+
+## [Time Series Forecasting Module](../module_usage/tutorials/time_series_modules/time_series_forecasting_en.md)
 |Model Name|mse|mae|Model Size|YAML File|
 |-|-|-|-|-|
 |DLinear|0.382|0.394|72 K|[DLinear.yaml](../../paddlex/configs/ts_forecast/DLinear.yaml)|
