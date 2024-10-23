@@ -192,7 +192,8 @@ PaddleX 为每个模型提供默认的高性能推理配置，并将其存储在
   <tr>
     <td rowspan="3">印章文本识别</td>
     <td>版面区域分析</td>
-    <td>PicoDet-L_layout_3cls<br/>RT-DETR-H_layout_3cls<br/>RT-DETR-H_layout_17cls</td>
+    <td>PicoDet-S_layout_3cls<br/>PicoDet-S_layout_17cls<details>
+    <summary><b>more</b></summary>PicoDet-L_layout_3cls<br/>PicoDet-L_layout_17cls<br/>RT-DETR-H_layout_3cls<br/>RT-DETR-H_layout_17cls</details></td>
   </tr>
 
   <tr>
