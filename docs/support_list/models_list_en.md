@@ -337,7 +337,10 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 |Model Name|mAP (%)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size|YAML File|
 |-|-|-|-|-|-|
 |PicoDet_layout_1x|86.8|13.036|91.2634|7.4 M |[PicoDet_layout_1x.yaml](../../paddlex/configs/structure_analysis/PicoDet_layout_1x.yaml)|
+|PicoDet-S_layout_3cls|87.1|13.521 |45.7633 |4.8 M|[PicoDet-S_layout_3cls.yaml](../../paddlex/configs/structure_analysis/PicoDet-S_layout_3cls.yaml)|
+|PicoDet-S_layout_17cls|70.3|13.5632|46.2059|4.8 M  |[PicoDet-S_layout_17cls.yaml](../../paddlex/configs/structure_analysis/PicoDet-S_layout_17cls.yaml)|
 |PicoDet-L_layout_3cls|89.3|15.7425|159.771|22.6 M|[PicoDet-L_layout_3cls.yaml](../../paddlex/configs/structure_analysis/PicoDet-L_layout_3cls.yaml)|
+|PicoDet-L_layout_17cls|79.9|17.1901 |160.262|22.6 M |[PicoDet-L_layout_17cls.yaml](../../paddlex/configs/structure_analysis/PicoDet-L_layout_17cls.yaml)|
 |RT-DETR-H_layout_3cls|95.9|114.644|3832.62|470.1 M|[RT-DETR-H_layout_3cls.yaml](../../paddlex/configs/structure_analysis/RT-DETR-H_layout_3cls.yaml)|
 |RT-DETR-H_layout_17cls|92.6|115.126|3827.25|470.2 M|[RT-DETR-H_layout_17cls.yaml](../../paddlex/configs/structure_analysis/RT-DETR-H_layout_17cls.yaml)|
 

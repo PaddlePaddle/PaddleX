@@ -183,7 +183,8 @@ PaddleX provides default high-performance inference configurations for each mode
   <tr>
     <td rowspan="3">Seal Text Recognition</td>
     <td>Layout Analysis</td>
-    <td>PicoDet-L_layout_3cls<br/>RT-DETR-H_layout_3cls<br/>RT-DETR-H_layout_17cls</td>
+    <td>PicoDet-S_layout_3cls<br/>PicoDet-S_layout_17cls<details>
+    <summary><b>more</b></summary>PicoDet-L_layout_3cls<br/>PicoDet-L_layout_17cls<br/>RT-DETR-H_layout_3cls<br/>RT-DETR-H_layout_17cls</details></td>
   </tr>
 
   <tr>
