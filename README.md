@@ -172,7 +172,7 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
         <td>✅</td>
     </tr>
         <tr>
-        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/object_detection.md">小目标检测</a></td>
+        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection.md">小目标检测</a></td>
         <td>🚧</td>
         <td>✅</td>
         <td>✅</td>

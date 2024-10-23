@@ -167,8 +167,41 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 <details>
   <summary>👉 <b>More Information (Click to Expand)</b></summary>
 
-* During model training, PaddleX automatically saves model weight files, with the default path being `output`. To specify a different save path, use the `-o Global.output` field in the configuration file.
-* PaddleX abstracts away the concepts of dynamic graph weights and static graph weights from you. During model training, both dynamic and static graph weights are produced, and static graph weights are used by default for model inference.
+* During model training, PaddleX automatically saves the model weight files, with the default being `output`. If you need to specify a save path, you can set it through the `-o Global.output` field in the configuration file.
+* PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.
+* After completing the model training, all outputs are saved in the specified output directory (default is `./output/`), typically including:
+
+* `train_result.json`: Training result record file, recording whether the training task was completed normally, as well as the output weight metrics, related file paths, etc.;
+* `train.log`: Training log file, recording changes in model metrics and loss during training;
+* `config.yaml`: Training configuration file, recording the hyperparameter configuration for this training session;
+* `.pdparams`, `.pdema`, `.pdopt.pdstate`, `.pdiparams`, `.pdmodel`: Model weight-related files, including network parameters, optimizer, EMA, static graph network parameters, static graph network structure, etc.;
+</details>
+
+### **4.3 Model Evaluation**
+
+After completing model training, you can evaluate the specified model weight file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation can be done with a single command:
+
+```bash
+python main.py -c paddlex/configs/text_detection/PP-OCRv4_mobile_det.yaml \
+    -o Global.mode=evaluate \
+    -o Global.dataset_dir=./dataset/ocr_det_dataset_examples
+```
+
+Similar to model training, the following steps are required:
+
+* Specify the path to the model's `.yaml` configuration file (in this case, `PP-OCRv4_mobile_det.yaml`)
+* Specify the mode as model evaluation: `-o Global.mode=evaluate`
+* Specify the path to the validation dataset: `-o Global.dataset_dir`
+
+Other related parameters can be set by modifying the fields under `Global` and `Evaluate` in the `.yaml` configuration file. For details, please refer to [PaddleX General Model Configuration File Parameter Instructions](../../../module_usage/instructions/config_parameters_common.md).
+
+<details>
+  <summary>👉 <b>More Instructions (Click to Expand)</b></summary>
+
+During model evaluation, you need to specify the path to the model weight file. Each configuration file has a built-in default weight save path. If you need to change it, you can set it by adding a command line argument, such as `-o Evaluate.weight_path=./output/best_accuracy/best_accuracy.pdparams`.
+
+After completing the model evaluation, an `evaluate_result.json` will be generated, which records the evaluation results. Specifically, it records whether the evaluation task was completed successfully and the model's evaluation metrics, including `precision`, `recall`, and `hmean`.
+
 </details>
 
 ### **4.4 Model Inference and Model Integration**

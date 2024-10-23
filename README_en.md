@@ -72,7 +72,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <th><a href="https://aistudio.baidu.com/pipeline/mine">Zero-Code Development On AI Studio</a></td> 
     </tr>
     <tr>
-        <td><a href="./docs/pipeline_usage/tutorials/ocr_pipelines/OCR.md">OCR</a></td>
+        <td><a href="./docs/pipeline_usage/tutorials/ocr_pipelines/OCR_en.md">OCR</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">Link</a></td> 
         <td>✅</td>
         <td>✅</td>
@@ -82,7 +82,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td><a href="./docs/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md">PP-ChatOCRv3</a></td>
+        <td><a href="./docs/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_en.md">PP-ChatOCRv3</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/182491/webUI?source=appCenter">Link</a></td> 
         <td>✅</td>
         <td>✅</td>
@@ -92,7 +92,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td><a href="./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition.md">Table Recognition</a></td>
+        <td><a href="./docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition_en.md">Table Recognition</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/91661?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>✅</td>
@@ -102,7 +102,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/object_detection.md">Object Detection</a></td>
+        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/object_detection_en.md">Object Detection</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/70230/webUI?source=appMineRecent">Link</a></td> 
         <td>✅</td>
         <td>✅</td>
@@ -112,7 +112,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.md">Instance Segmentation</a></td>
+        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/instance_segmentation_en.md">Instance Segmentation</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/100063/webUI?source=appMineRecent">Link</a></td> 
         <td>✅</td>
         <td>✅</td>
@@ -122,7 +122,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/image_classification.md">Image Classification</a></td>
+        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/image_classification_en.md">Image Classification</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/100061/webUI?source=appMineRecent">Link</a></td> 
         <td>✅</td>
         <td>✅</td>
@@ -132,7 +132,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.md">Semantic Segmentation</a></td>
+        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation_en.md">Semantic Segmentation</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/100062/webUI?source=appMineRecent">Link</a></td> 
         <td>✅</td>
         <td>✅</td>
@@ -142,7 +142,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td><a href="./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md">Time Series Forecasting</a></td>
+        <td><a href="./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting_en.md">Time Series Forecasting</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/105706/webUI?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>🚧</td>
@@ -152,7 +152,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td><a href="./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md">Time Series Anomaly Detection</a></td>
+        <td><a href="./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection_en.md">Time Series Anomaly Detection</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/105708/webUI?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>🚧</td>
@@ -162,7 +162,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td><a href="./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.md">Time Series Classification</a></td>
+        <td><a href="./docs/pipeline_usage/tutorials/time_series_pipelines/time_series_classification_en.md">Time Series Classification</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/105707/webUI?source=appMineRecent">Link</a></td>
         <td>✅</td>
         <td>🚧</td>
@@ -172,7 +172,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
         <tr>
-        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/object_detection.md">Small Object Detection</a></td>
+        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/small_object_detection_en.md">Small Object Detection</a></td>
         <td>🚧</td>
         <td>✅</td>
         <td>✅</td>
@@ -182,7 +182,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>🚧</td>
     </tr>
         <tr>
-        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md">Multi-label Image Classification</a></td>
+        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification_en.md">Multi-label Image Classification</a></td>
         <td>🚧</td>
         <td>✅</td>
         <td>✅</td>
@@ -192,7 +192,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>🚧</td>
     </tr>
     <tr>
-        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.md">Image Anomaly Detection</a></td>
+        <td><a href="./docs/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection_en.md">Image Anomaly Detection</a></td>
         <td>🚧</td>
         <td>✅</td>
         <td>✅</td>
@@ -202,7 +202,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>🚧</td>
     </tr>
     <tr>
-        <td><a href="./docs/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.md">Layout Parsing</a></td>
+        <td><a href="./docs/pipeline_usage/tutorials/ocr_pipelines/layout_parsing_en.md">Layout Parsing</a></td>
         <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
@@ -212,7 +212,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>🚧</td>
     </tr>
     <tr>
-        <td><a href="./docs/pipeline_usage/tutorials/ocr_pipelines/formula_recognition.md">Formula Recognition</a></td>
+        <td><a href="./docs/pipeline_usage/tutorials/ocr_pipelines/formula_recognition_en.md">Formula Recognition</a></td>
         <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
@@ -222,7 +222,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>🚧</td>
     </tr>
     <tr>
-        <td><a href="./docs/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.md">Seal Recognition</a></td>
+        <td><a href="./docs/pipeline_usage/tutorials/ocr_pipelines/seal_recognition_en.md">Seal Recognition</a></td>
         <td>🚧</td>
         <td>✅</td>
         <td>✅</td>
