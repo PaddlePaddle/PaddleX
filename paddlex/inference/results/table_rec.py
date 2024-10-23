@@ -71,8 +71,13 @@ class StructureTableResult(TableRecResult, HtmlMixin, XlsxMixin):
         return self["html"]
 
 
-class TableResult(BaseResult):
+class TableResult(CVResult, HtmlMixin, XlsxMixin):
     """TableResult"""
+
+    def __init__(self, data):
+        super().__init__(data)
+        HtmlMixin.__init__(self)
+        XlsxMixin.__init__(self)
 
     def save_to_html(self, save_path):
         if not save_path.lower().endswith(("html")):
