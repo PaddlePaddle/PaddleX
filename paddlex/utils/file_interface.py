@@ -25,7 +25,7 @@ import chardet
 try:
     import ujson as json
 except:
-    logging.error("failed to import ujson, using json instead")
+    logging.warning("failed to import ujson, using json instead")
     import json
 
 from contextlib import contextmanager
