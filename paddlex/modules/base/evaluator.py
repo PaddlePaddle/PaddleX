@@ -93,7 +93,7 @@ class BaseEvaluator(ABC, metaclass=AutoRegisterABCMetaClass):
             return False
         for metric in metrics:
             val = metrics[metric]
-            if not isinstance(val, float):
+            if not isinstance(val, (float, int)):
                 return False
         return True
 
