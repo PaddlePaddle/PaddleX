@@ -23,7 +23,6 @@ from .config import TableRecConfig
 
 REPO_ROOT_PATH = os.environ.get("PADDLE_PDX_PADDLEOCR_PATH")
 PDX_CONFIG_DIR = osp.abspath(osp.join(osp.dirname(__file__), "..", "configs"))
-HPI_CONFIG_DIR = Path(__file__).parent.parent.parent.parent / "utils" / "hpi_configs"
 
 register_suite_info(
     {
@@ -41,7 +40,6 @@ register_model_info(
         "suite": "TableRec",
         "config_path": osp.join(PDX_CONFIG_DIR, "SLANet.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
-        "hpi_config_path": HPI_CONFIG_DIR / "SLANet.yaml",
     }
 )
 
@@ -51,6 +49,5 @@ register_model_info(
         "suite": "TableRec",
         "config_path": osp.join(PDX_CONFIG_DIR, "SLANet_plus.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
-        "hpi_config_path": HPI_CONFIG_DIR / "SLANet_plus.yaml",
     }
 )

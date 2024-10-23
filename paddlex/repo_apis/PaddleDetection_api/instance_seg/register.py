@@ -23,7 +23,6 @@ from .runner import InstanceSegRunner
 
 REPO_ROOT_PATH = os.environ.get("PADDLE_PDX_PADDLEDETECTION_PATH")
 PDX_CONFIG_DIR = osp.abspath(osp.join(osp.dirname(__file__), "..", "configs"))
-HPI_CONFIG_DIR = Path(__file__).parent.parent.parent.parent / "utils" / "hpi_configs"
 
 register_suite_info(
     {
@@ -78,7 +77,6 @@ register_model_info(
             "dy2st": False,
             "amp": ["OFF"],
         },
-        "hpi_config_path": HPI_CONFIG_DIR / "Mask-RT-DETR-L.yaml",
     }
 )
 
@@ -109,7 +107,6 @@ register_model_info(
             "dy2st": False,
             "amp": ["OFF"],
         },
-        "hpi_config_path": HPI_CONFIG_DIR / "Mask-RT-DETR-H.yaml",
     }
 )
 
