@@ -330,10 +330,13 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 **注：以上精度指标测量自 ****PaddleX自建的图像矫正数据集****。**
 
 ## [版面区域检测模块](../module_usage/tutorials/ocr_modules/layout_detection.md)
-|模型名称|mAP（%）|GPU推理耗时（ms）|CPU推理耗时（ms）|模型存储大小|yaml 文件|
+|模型名称|mAP@(0.50:0.95)（%）|GPU推理耗时（ms）|CPU推理耗时（ms）|模型存储大小|yaml 文件|
 |-|-|-|-|-|-|
 |PicoDet_layout_1x|86.8|13.036|91.2634|7.4 M |[PicoDet_layout_1x.yaml](../../paddlex/configs/structure_analysis/PicoDet_layout_1x.yaml)|
+|PicoDet-S_layout_3cls|87.1|?|?|4.8 M|[PicoDet-S_layout_3cls.yaml](../../paddlex/configs/structure_analysis/PicoDet-S_layout_3cls.yaml)|
+|PicoDet-S_layout_17cls|70.3|?|?|4.8 M|[PicoDet-S_layout_17cls.yaml](../../paddlex/configs/structure_analysis/PicoDet-S_layout_17cls.yaml)|
 |PicoDet-L_layout_3cls|89.3|15.7425|159.771|22.6 M|[PicoDet-L_layout_3cls.yaml](../../paddlex/configs/structure_analysis/PicoDet-L_layout_3cls.yaml)|
+|PicoDet-L_layout_17cls|79.9|?|?|22.6 M|[PicoDet-L_layout_17cls.yaml](../../paddlex/configs/structure_analysis/PicoDet-L_layout_17cls.yaml)|
 |RT-DETR-H_layout_3cls|95.9|114.644|3832.62|470.1 M|[RT-DETR-H_layout_3cls.yaml](../../paddlex/configs/structure_analysis/RT-DETR-H_layout_3cls.yaml)|
 |RT-DETR-H_layout_17cls|92.6|115.126|3827.25|470.2 M|[RT-DETR-H_layout_17cls.yaml](../../paddlex/configs/structure_analysis/RT-DETR-H_layout_17cls.yaml)|
 
