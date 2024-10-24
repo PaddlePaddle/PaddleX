@@ -1,0 +1,147 @@
+# Runtime
+use_gpu: true
+use_xpu: false
+use_mlu: false
+use_npu: false
+log_iter: 20
+save_dir: output
+print_flops: false
+print_params: false
+weights: output/blazeface_1000e/model_final
+snapshot_epoch: 10
+
+# Model
+architecture: BlazeFace
+BlazeFace:
+  backbone: BlazeNet
+  neck: BlazeNeck
+  blaze_head: FaceHead
+  post_process: BBoxPostProcess
+BlazeNet:
+  blaze_filters: [[24, 24], [24, 24], [24, 48, 2], [48, 48], [48, 48]]
+  double_blaze_filters: [[48, 24, 96, 2], [96, 24, 96], [96, 24, 96],
+                          [96, 24, 96, 2], [96, 24, 96], [96, 24, 96]]
+  act: relu
+BlazeNeck:
+  neck_type : None
+  in_channel: [96,96]
+FaceHead:
+  in_channels: [96,96]
+  anchor_generator: AnchorGeneratorSSD
+  loss: SSDLoss
+SSDLoss:
+  overlap_threshold: 0.35
+AnchorGeneratorSSD:
+  steps: [8., 16.]
+  aspect_ratios: [[1.], [1.]]
+  min_sizes: [[16.,24.], [32., 48., 64., 80., 96., 128.]]
+  max_sizes: [[], []]
+  offset: 0.5
+  flip: False
+  min_max_aspect_ratios_order: false
+BBoxPostProcess:
+  decode:
+    name: SSDBox
+  nms:
+    name: MultiClassNMS
+    keep_top_k: 750
+    score_threshold: 0.01
+    nms_threshold: 0.3
+    nms_top_k: 5000
+    nms_eta: 1.0
+
+# Optimizer
+epoch: 1000
+LearningRate:
+  base_lr: 0.001
+  schedulers:
+  - !PiecewiseDecay
+    gamma: 0.1
+    milestones:
+    - 333
+    - 800
+  - !LinearWarmup
+    start_factor: 0.3333333333333333
+    steps: 500
+OptimizerBuilder:
+  optimizer:
+    momentum: 0.0
+    type: RMSProp
+  regularizer:
+    factor: 0.0005
+    type: L2
+
+# Dataset
+metric: WiderFace
+num_classes: 1
+TrainDataset:
+  name: COCODataSet
+  image_dir: WIDER_train/images
+  anno_path: train.json
+  dataset_dir: data_face
+  data_fields: ['image', 'gt_bbox', 'gt_class', 'is_crowd']
+
+EvalDataset:
+  name: COCODataSet
+  image_dir: WIDER_val/images
+  anno_path: val.json
+  dataset_dir: data_face
+  allow_empty: true
+
+TestDataset:
+  name: COCODataSet
+  image_dir: WIDER_val/images
+  anno_path: val.json
+  dataset_dir: data_face
+
+# Reader
+worker_num: 8
+TrainReader:
+  inputs_def:
+    num_max_boxes: 90
+  sample_transforms:
+    - Decode: {}
+    - RandomDistort: {brightness: [0.5, 1.125, 0.875], random_apply: False}
+    - RandomExpand: {fill_value: [123.675, 116.28, 103.53]}
+    - RandomFlip: {}
+    - CropWithDataAchorSampling: {
+      anchor_sampler: [[1, 10, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.2, 0.0]],
+      batch_sampler: [
+        [1, 50, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0],
+        [1, 50, 0.3, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0],
+        [1, 50, 0.3, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0],
+        [1, 50, 0.3, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0],
+        [1, 50, 0.3, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0],
+      ],
+      target_size: 640}
+    - Resize: {target_size: [640, 640], keep_ratio: False, interp: 1}
+    - NormalizeBox: {}
+    - PadBox: {num_max_boxes: 90}
+  batch_transforms:
+    - NormalizeImage: {mean:  [123, 117, 104], std: [127.502231, 127.502231, 127.502231], is_scale: false}
+    - Permute: {}
+  batch_size: 16
+  shuffle: true
+  drop_last: true
+EvalReader:
+  sample_transforms:
+    - Decode: {}
+    - NormalizeImage: {mean:  [123, 117, 104], std: [127.502231, 127.502231, 127.502231], is_scale: false}
+    - Permute: {}
+  batch_size: 1
+  collate_samples: false
+  shuffle: false
+  drop_last: false
+TestReader:
+  sample_transforms:
+    - Decode: {}
+    - NormalizeImage: {mean:  [123, 117, 104], std: [127.502231, 127.502231, 127.502231], is_scale: false}
+    - Permute: {}
+  batch_size: 1
+
+# Exporting the model
+export:
+  post_process: True  # Whether post-processing is included in the network when export model.
+  nms: True           # Whether NMS is included in the network when export model.
+  benchmark: False    # It is used to testing model performance, if set `True`, post-process and NMS will not be exported.
+  fuse_conv_bn: False

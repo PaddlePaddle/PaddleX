@@ -881,3 +881,50 @@ register_model_info(
         },
     }
 )
+
+
+register_model_info(
+    {
+        "model_name": "BlazeFace",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "BlazeFace.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+
+register_model_info(
+    {
+        "model_name": "BlazeFace-FPN-SSH",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "BlazeFace-FPN-SSH.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-YOLOE_plus-S_face",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-YOLOE_plus-S_face.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)

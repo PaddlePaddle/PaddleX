@@ -34,6 +34,7 @@ from .single_model_pipeline import (
 from .ocr import OCRPipeline
 from .formula_recognition import FormulaRecognitionPipeline
 from .table_recognition import TableRecPipeline
+from .face_recognition import FaceRecPipeline
 from .seal_recognition import SealOCRPipeline
 from .ppchatocrv3 import PPChatOCRPipeline
 from .layout_parsing import LayoutParsingPipeline

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .transforms import *
-from .paddle_predictor import *
-from .task_related import *
-from .retrieval import *
+from .trainer import FaceRecTrainer
+from .dataset_checker import FaceRecDatasetChecker
+from .evaluator import FaceRecEvaluator
+from .exportor import FaceRecExportor

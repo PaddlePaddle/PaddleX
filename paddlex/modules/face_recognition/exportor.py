@@ -12,7 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .transforms import *
-from .paddle_predictor import *
-from .task_related import *
-from .retrieval import *
+from ..base import BaseExportor
+from .model_list import MODELS
+
+
+class FaceRecExportor(BaseExportor):
+    """Image Classification Model Exportor"""
+
+    entities = MODELS

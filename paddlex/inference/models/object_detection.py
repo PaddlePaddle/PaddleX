@@ -53,7 +53,7 @@ class DetPredictor(BasicPredictor):
                 }
             )
 
-        if self.model_name == "Blazeface":
+        if self.model_name in ["BlazeFace", "BlazeFace-FPN-SSH"]:
             predictor.set_inputs(
                 {
                     "img": "img",
