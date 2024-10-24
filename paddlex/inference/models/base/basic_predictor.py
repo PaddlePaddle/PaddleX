@@ -19,7 +19,6 @@ from ....utils.subclass_register import AutoRegisterABCMetaClass
 from ....utils import logging
 from ...components.base import BaseComponent, ComponentsEngine
 from ...utils.pp_option import PaddlePredictorOption
-from ...utils.process_hook import generatorable_method
 from .base_predictor import BasePredictor
 
 
@@ -45,11 +44,9 @@ class BasicPredictor(
 
     def apply(self, input):
         """predict"""
-        yield from self._generate_res(self.engine(input))
-
-    @generatorable_method
-    def _generate_res(self, batch_data):
-        return [{"result": self._pack_res(data)} for data in batch_data]
+        for batch_data in self.engine(input):
+            for single_data in batch_data:
+                yield {"result": self._pack_res(single_data)}
 
     def _add_component(self, cmps):
         if not isinstance(cmps, list):

@@ -73,7 +73,9 @@ class OCRPipeline(BasePipeline):
             single_img_res["rec_text"] = []
             single_img_res["rec_score"] = []
             if len(single_img_res["dt_polys"]) > 0:
-                all_subs_of_img = list(self._crop_by_polys(single_img_res))
+                all_subs_of_img = [
+                    sub["img"] for sub in self._crop_by_polys(single_img_res)
+                ]
                 for rec_res in self.text_rec_model(all_subs_of_img):
                     single_img_res["rec_text"].append(rec_res["rec_text"])
                     single_img_res["rec_score"].append(rec_res["rec_score"])

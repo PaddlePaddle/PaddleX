@@ -18,10 +18,10 @@ from pathlib import Path
 from abc import abstractmethod
 
 from ...components.base import BaseComponent
-from ...utils.process_hook import generatorable_method
 
 
 class BasePredictor(BaseComponent):
+    ENABLE_BATCH = True
 
     KEEP_INPUT = False
     YIELD_BATCH = False

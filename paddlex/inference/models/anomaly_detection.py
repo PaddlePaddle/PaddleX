@@ -18,7 +18,6 @@ from ...utils.func_register import FuncRegister
 from ...modules.anomaly_detection.model_list import MODELS
 from ..components import *
 from ..results import SegResult
-from ..utils.process_hook import batchable_method
 from .base import BasicPredictor
 
 
