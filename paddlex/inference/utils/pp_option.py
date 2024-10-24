@@ -66,8 +66,9 @@ class PaddlePredictorOption(object):
         }
 
     def _update(self, k, v):
-        self._cfg[k] = v
-        self.notify()
+        if k in self._cfg and self._cfg[k] != v:
+            self._cfg[k] = v
+            self.notify()
 
     @property
     def run_mode(self):

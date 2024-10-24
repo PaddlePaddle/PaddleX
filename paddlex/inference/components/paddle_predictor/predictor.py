@@ -34,15 +34,18 @@ class BasePaddlePredictor(BaseComponent):
         super().__init__()
         self.model_dir = model_dir
         self.model_prefix = model_prefix
-        self._update_option(option)
+        self._set_option(option)
+        self._needs_reset = False
 
-    def _update_option(self, option):
-        if option:
-            if self.option and option == self.option:
-                return
-            self._option = option
-            self._option.attach(self)
-            self.reset()
+    def _set_option(self, option=None):
+        if option is not None:
+            if self.option and option != self.option:
+                self._option = option
+                self._option.attach(self)
+                self.reset()
+
+    def notify(self):
+        self._needs_reset = True
 
     @property
     def option(self):
@@ -50,7 +53,7 @@ class BasePaddlePredictor(BaseComponent):
 
     @option.setter
     def option(self, option):
-        self._update_option(option)
+        self._set_option(option)
 
     def reset(self):
         if not self.option:
@@ -174,6 +177,9 @@ No need to generate again."
         return self.input_names
 
     def apply(self, **kwargs):
+        if self._needs_reset:
+            self.reset()
+            self._needs_reset = False
         x = self.to_batch(**kwargs)
         for idx in range(len(x)):
             self.input_handlers[idx].reshape(x[idx].shape)
@@ -205,12 +211,16 @@ class ImagePredictor(BasePaddlePredictor):
 
 class ImageDetPredictor(BasePaddlePredictor):
 
-    INPUT_KEYS = [["img", "scale_factors"], ["img", "scale_factors", "img_size"], ["img", "img_size"]]
+    INPUT_KEYS = [
+        ["img", "scale_factors"],
+        ["img", "scale_factors", "img_size"],
+        ["img", "img_size"],
+    ]
     OUTPUT_KEYS = [["boxes"], ["boxes", "masks"]]
     DEAULT_INPUTS = {"img": "img", "scale_factors": "scale_factors"}
     DEAULT_OUTPUTS = None
 
-    def to_batch(self, img, scale_factors=[[1., 1.]], img_size=None):
+    def to_batch(self, img, scale_factors=[[1.0, 1.0]], img_size=None):
         scale_factors = [scale_factor[::-1] for scale_factor in scale_factors]
         if img_size is None:
             return [
