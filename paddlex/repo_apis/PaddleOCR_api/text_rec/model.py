@@ -137,8 +137,6 @@ class TextRecModel(BaseModel):
         uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
         config.update({"Global.uniform_output_enabled": uniform_output_enabled})
         config.update({"Global.pdx_model_name": self.name})
-        hpi_config_path = self.model_info.get("hpi_config_path", None)
-        config.update({"Global.hpi_config_path": hpi_config_path})
 
         self._assert_empty_kwargs(kwargs)
 
@@ -270,9 +268,9 @@ class TextRecModel(BaseModel):
             config.update_class_path(class_path)
 
         # PDX related settings
+        uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
+        config.update({"Global.uniform_output_enabled": uniform_output_enabled})
         config.update({"Global.pdx_model_name": self.name})
-        hpi_config_path = self.model_info.get("hpi_config_path", None)
-        config.update({"Global.hpi_config_path": hpi_config_path})
 
         self._assert_empty_kwargs(kwargs)
 

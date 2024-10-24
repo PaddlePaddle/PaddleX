@@ -117,8 +117,6 @@ class ClsModel(BaseModel):
             uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
             config.update([f"Global.uniform_output_enabled={uniform_output_enabled}"])
             config.update([f"Global.pdx_model_name={self.name}"])
-            hpi_config_path = self.model_info.get("hpi_config_path", None)
-            config.update([f"Global.hpi_config_path={hpi_config_path}"])
 
             config.dump(config_path)
             self._assert_empty_kwargs(kwargs)
@@ -232,9 +230,9 @@ class ClsModel(BaseModel):
             if device:
                 config.update_device(device)
             # PDX related settings
+            uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
+            config.update([f"Global.uniform_output_enabled={uniform_output_enabled}"])
             config.update([f"Global.pdx_model_name={self.name}"])
-            hpi_config_path = self.model_info.get("hpi_config_path", None)
-            config.update([f"Global.hpi_config_path={hpi_config_path}"])
 
             config.dump(config_path)
 

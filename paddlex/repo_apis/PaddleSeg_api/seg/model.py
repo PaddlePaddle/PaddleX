@@ -169,10 +169,6 @@ class SegModel(BaseModel):
         uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
         config.set_val("uniform_output_enabled", uniform_output_enabled)
         config.set_val("pdx_model_name", self.name)
-        hpi_config_path = self.model_info.get("hpi_config_path", None)
-        if hpi_config_path:
-            hpi_config_path = hpi_config_path.as_posix()
-        config.set_val("hpi_config_path", hpi_config_path)
 
         self._assert_empty_kwargs(kwargs)
 
@@ -355,11 +351,9 @@ class SegModel(BaseModel):
             cli_args.append(CLIArgument("--output_op", output_op))
 
         # PDX related settings
+        uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
+        config.set_val("uniform_output_enabled", uniform_output_enabled)
         config.set_val("pdx_model_name", self.name)
-        hpi_config_path = self.model_info.get("hpi_config_path", None)
-        if hpi_config_path:
-            hpi_config_path = hpi_config_path.as_posix()
-        config.set_val("hpi_config_path", hpi_config_path)
 
         self._assert_empty_kwargs(kwargs)
 
