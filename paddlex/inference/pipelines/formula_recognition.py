@@ -14,7 +14,7 @@
 
 import numpy as np
 from ..components import CropByBoxes
-from ..results import FormulaRecResult
+from ..results import FormulaResult
 from .base import BasePipeline
 from ...utils import logging
 
@@ -89,7 +89,7 @@ class FormulaRecognitionPipeline(BasePipeline):
                         single_img_res["rec_formula"].append(
                             str(formula_res["rec_text"])
                         )
-            yield FormulaRecResult(single_img_res)
+            yield FormulaResult(single_img_res)
 
     def sorted_formula_box(self, x):
         coordinate = x["coordinate"]

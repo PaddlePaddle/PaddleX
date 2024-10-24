@@ -28,11 +28,11 @@ from .....utils.logging import info, warning
 
 def check_src_dataset(root_dir, dataset_type):
     """check src dataset format validity"""
-    if dataset_type in ("PKL"):
-        anno_suffix = ".pkl"
+    if dataset_type in ("MSTextRecDataset"):
+        anno_suffix = ".txt"
     else:
         raise ConvertFailedError(
-            message=f"数据格式转换失败！不支持{dataset_type}格式数据集。当前仅支持 PKL 格式。"
+            message=f"数据格式转换失败！不支持{dataset_type}格式数据集。当前仅支持 MSTextRecDataset 格式。"
         )
 
     err_msg_prefix = f"数据格式转换失败！请参考上述`{dataset_type}格式数据集示例`检查待转换数据集格式。"
@@ -50,11 +50,11 @@ def convert(dataset_type, input_dir):
     """convert dataset to pkl format"""
     # check format validity
     check_src_dataset(input_dir, dataset_type)
-    if dataset_type in ("PKL"):
+    if dataset_type in ("MSTextRecDataset"):
         convert_pkl_dataset(input_dir)
     else:
         raise ConvertFailedError(
-            message=f"数据格式转换失败！不支持{dataset_type}格式数据集。当前仅支持 PKL 格式。"
+            message=f"数据格式转换失败！不支持{dataset_type}格式数据集。当前仅支持 MSTextRecDataset 格式。"
         )
 
 

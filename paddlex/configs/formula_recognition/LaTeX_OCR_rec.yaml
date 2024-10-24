@@ -2,13 +2,13 @@ Global:
   model: LaTeX_OCR_rec
   mode: check_dataset # check_dataset/train/evaluate/predict
   dataset_dir: "./dataset/ocr_rec_latexocr_dataset_example"
-  device: gpu:0
+  device: gpu:0,1,2,3
   output: "output"
 
 CheckDataset:
   convert: 
     enable: True
-    src_dataset_type: PKL
+    src_dataset_type: MSTextRecDataset
   split: 
     enable: False
     train_percent: null
@@ -16,7 +16,7 @@ CheckDataset:
 
 Train:
   epochs_iters: 20
-  batch_size_train: 40
+  batch_size_train: 30
   batch_size_val: 10
   learning_rate: 0.0001
   pretrain_weight_path: null
