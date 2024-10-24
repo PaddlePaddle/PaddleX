@@ -105,7 +105,7 @@ Where `dt_polys` represents the coordinates of the detected formula area, and `r
 The visualization result is as follows:
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/02.jpg)
 
-The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path. Additionally, you can visualize the recognized LaTeX code through the website [https://www.lddgo.net/math/latex-to-image](https://www.lddgo.net/math/latex-to-image).
+The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path. Formula recognition visualization requires a separate environment configuration. Please refer to [2.3 Formula Recognition Pipeline Visualization](#23-formula-recognition-pipeline-visualization) to install the LaTeX rendering engine.
 
 
 #### 2.2 Python Script Integration
@@ -119,7 +119,6 @@ pipeline = create_pipeline(pipeline="formula_recognition")
 output = pipeline.predict("general_formula_recognition.png")
 for res in output:
     res.print()
-    res.save_to_img("./output/")
 ```
 > ❗ The results obtained from running the Python script are the same as those from the command line.
 
@@ -164,8 +163,30 @@ pipeline = create_pipeline(pipeline="./my_path/formula_recognition.yaml")
 output = pipeline.predict("general_formula_recognition.png")
 for res in output:
     res.print()
+```
+
+### 2.3 Formula Recognition Pipeline Visualization
+If you need to visualize the formula recognition pipeline, you need to run the following command to install the LaTeX rendering environment:
+```python
+apt-get install sudo
+sudo apt-get update
+sudo apt-get install texlive
+sudo apt-get install texlive-latex-base
+sudo apt-get install texlive-latex-extra
+python -m pip install PyMuPDF==1.24.12
+```
+After that, use the `save_to_img` method to save the visualization image. The specific command is as follows:
+```python
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(pipeline="formula_recognition")
+
+output = pipeline.predict("general_formula_recognition.png")
+for res in output:
+    res.print()
     res.save_to_img("./output/")
 ```
+**Note**: Since the formula recognition visualization process requires rendering each formula image, it may take a relatively long time. Please be patient.
 
 ## 3. Development Integration/Deployment
 If the formula recognition pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.

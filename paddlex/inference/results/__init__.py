@@ -21,7 +21,7 @@ from .seal_rec import SealOCRResult
 from .ocr import OCRResult
 from .det import DetResult
 from .seg import SegResult
-from .formula_rec import FormulaRecResult
+from .formula_rec import FormulaRecResult, FormulaResult
 from .instance_seg import InstanceSegResult
 from .ts import TSFcResult, TSAdResult, TSClsResult
 from .warp import DocTrResult

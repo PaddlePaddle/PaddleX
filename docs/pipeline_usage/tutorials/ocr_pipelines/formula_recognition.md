@@ -106,7 +106,7 @@ paddlex --pipeline ./formula_recognition.yaml --input general_formula_recognitio
 
 ![](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/02.jpg)
 
-可视化图片默认不进行保存，您可以通过 `--save_path` 自定义保存路径，随后所有结果将被保存在指定路径下。此外，您可以通过网站 [https://www.lddgo.net/math/latex-to-image](https://www.lddgo.net/math/latex-to-image) 对识别出来的LaTeX代码进行可视化。
+可视化图片默认不进行保存，您可以通过 `--save_path` 自定义保存路径，随后所有结果将被保存在指定路径下。公式识别可视化需要单独配置环境，请您参考[2.3 公式识别产线可视化](#23-公式识别产线可视化) 对LaTeX渲染引擎进行安装。
 
 ### 2.2 Python脚本方式集成
 几行代码即可完成产线的快速推理，以公式识别产线为例：
@@ -119,7 +119,6 @@ pipeline = create_pipeline(pipeline="formula_recognition")
 output = pipeline.predict("general_formula_recognition.png")
 for res in output:
     res.print()
-    res.save_to_img("./output/")
 ```
 
 > ❗ Python脚本运行得到的结果与命令行方式相同。
@@ -165,8 +164,30 @@ pipeline = create_pipeline(pipeline="./my_path/formula_recognition.yaml")
 output = pipeline.predict("general_formula_recognition.png")
 for res in output:
     res.print()
+```
+### 2.3 公式识别产线可视化
+如果您需要对公式识别产线进行可视化，需要运行如下命令来对LaTeX渲染环境进行安装：
+```python
+apt-get install sudo
+sudo apt-get update
+sudo apt-get install texlive
+sudo apt-get install texlive-latex-base
+sudo apt-get install texlive-latex-extra
+python -m pip install PyMuPDF==1.24.12
+```
+之后，使用 `save_to_img` 方法对可视化图片进行保存。具体命令如下：
+```python
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(pipeline="formula_recognition")
+
+output = pipeline.predict("general_formula_recognition.png")
+for res in output:
+    res.print()
     res.save_to_img("./output/")
 ```
+**备注**： 由于公式识别可视化过程中需要对每张公式图片进行渲染，因此耗时较长，请您耐心等待。
+
 ## 3. 开发集成/部署
 如果公式识别产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
 

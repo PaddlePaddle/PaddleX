@@ -25,7 +25,7 @@ The formula recognition module is a crucial component of OCR (Optical Character 
     <td>89.7 M</td>
     <td>LaTeX-OCR is a formula recognition algorithm based on an autoregressive large model. By adopting Hybrid ViT as the backbone network and transformer as the decoder, it significantly improves the accuracy of formula recognition.</td>
   </tr>
-  
+
 </table>
 
 **Note: The above accuracy metrics are measured on the LaTeX-OCR formula recognition test set.**
@@ -132,22 +132,22 @@ After completing the data verification, you can convert the dataset format and r
 
 **(1) Dataset Format Conversion**
 
-The formula recognition supports converting `PKL` format datasets to `LaTeXOCRDataset` format. The parameters for dataset format conversion can be set by modifying the fields under `CheckDataset` in the configuration file. Examples of some parameters in the configuration file are as follows:
+The formula recognition supports converting `MSTextRecDataset` format datasets to `LaTeXOCRDataset` format ( `PKL` format ). The parameters for dataset format conversion can be set by modifying the fields under `CheckDataset` in the configuration file. Examples of some parameters in the configuration file are as follows:
 
 * `CheckDataset`:
   * `convert`:
-    * `enable`: Whether to perform dataset format conversion. Formula recognition supports converting `PKL` format datasets to `LaTeXOCRDataset` format, default is `True`;
-    * `src_dataset_type`: If dataset format conversion is performed, the source dataset format needs to be set, default is `PKL`, optional value is `PKL`;
+    * `enable`: Whether to perform dataset format conversion. Formula recognition supports converting `MSTextRecDataset` format datasets to `LaTeXOCRDataset` format, default is `True`;
+    * `src_dataset_type`: If dataset format conversion is performed, the source dataset format needs to be set, default is `MSTextRecDataset`, optional value is `MSTextRecDataset`;
 
-For example, if you want to convert a `PKL` format dataset to `LaTeXOCRDataset` format, you need to modify the configuration file as follows:
+For example, if you want to convert a `MSTextRecDataset` format dataset to `LaTeXOCRDataset` format, you need to modify the configuration file as follows:
 
 ```bash
 ......
 CheckDataset:
   ......
-  convert: 
+  convert:
     enable: True
-    src_dataset_type: PKL
+    src_dataset_type: MSTextRecDataset
   ......
 ```
 Then execute the command:
@@ -166,7 +166,7 @@ python main.py -c  paddlex/configs/formula_recognition/LaTeX_OCR_rec.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_rec_latexocr_dataset_example \
     -o CheckDataset.convert.enable=True \
-    -o CheckDataset.convert.src_dataset_type=PKL
+    -o CheckDataset.convert.src_dataset_type=MSTextRecDataset
 ```
 **(2) Dataset Splitting**
 
@@ -222,7 +222,7 @@ The following steps are required:
 
 * Specify the `.yaml` configuration file path for the model (here it is `LaTeX_OCR_rec.yaml`,When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list_en.md))
 * Set the mode to model training: `-o Global.mode=train`
-* Specify the path to the training dataset: `-o Global.dataset_dir`. 
+* Specify the path to the training dataset: `-o Global.dataset_dir`.
 Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file instructions for the corresponding task module of the model [PaddleX Common Configuration File Parameters](../../instructions/config_parameters_common_en.md).
 
 <details>
@@ -251,7 +251,7 @@ Similar to model training, the following steps are required:
 
 * Specify the `.yaml` configuration file path for the model (here it is `LaTeX_OCR_rec.yaml`)
 * Set the mode to model evaluation: `-o Global.mode=evaluate`
-* Specify the path to the validation dataset: `-o Global.dataset_dir`. 
+* Specify the path to the validation dataset: `-o Global.dataset_dir`.
 Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file, detailed instructions can be found in [PaddleX Common Configuration File Parameters](../../instructions/config_parameters_common_en.md).
 
 <details>
@@ -282,7 +282,7 @@ Similar to model training and evaluation, the following steps are required:
 * Specify the `.yaml` configuration file path for the model (here it is `LaTeX_OCR_rec.yaml`)
 * Set the mode to model inference prediction: `-o Global.mode=predict`
 * Specify the model weights path: `-o Predict.model_dir="./output/best_accuracy/inference"`
-* Specify the input data path: `-o Predict.input="..."`. 
+* Specify the input data path: `-o Predict.input="..."`.
 Other related parameters can be set by modifying the `Global` and `Predict` fields in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common_en.md).
 
 

@@ -132,14 +132,14 @@ python main.py -c paddlex/configs/formula_recognition/LaTeX_OCR_rec.yaml \
 
 **（1）数据集格式转换**
 
-公式识别支持 `PKL`格式的数据集转换为 `LaTeXOCRDataset`格式，数据集格式转换的参数可以通过修改配置文件中 `CheckDataset` 下的字段进行设置，配置文件中部分参数的示例说明如下：
+公式识别支持 `MSTextRecDataset`格式的数据集转换为 `LaTeXOCRDataset`格式(`PKL`格式)，数据集格式转换的参数可以通过修改配置文件中 `CheckDataset` 下的字段进行设置，配置文件中部分参数的示例说明如下：
 
 * `CheckDataset`:
   * `convert`:
-    * `enable`: 是否进行数据集格式转换，公式识别支持 `PKL`格式的数据集转换为 `LaTeXOCRDataset`格式，默认为 `True`;
-    * `src_dataset_type`: 如果进行数据集格式转换，则需设置源数据集格式，默认为 `PKL`，可选值为 `PKL` ；
+    * `enable`: 是否进行数据集格式转换，公式识别支持 `MSTextRecDataset`格式的数据集转换为 `LaTeXOCRDataset`格式，默认为 `True`;
+    * `src_dataset_type`: 如果进行数据集格式转换，则需设置源数据集格式，默认为 `MSTextRecDataset`，可选值为 `MSTextRecDataset` ；
 
-例如，您想将 `PKL`格式的数据集转换为 `LaTeXOCRDataset`格式，则需将配置文件修改为：
+例如，您想将 `MSTextRecDataset`格式的数据集转换为 `LaTeXOCRDataset`格式，则需将配置文件修改为：
 
 ```bash
 ......
@@ -147,7 +147,7 @@ CheckDataset:
   ......
   convert:
     enable: True
-    src_dataset_type: PKL
+    src_dataset_type: MSTextRecDataset
   ......
 ```
 随后执行命令：
@@ -166,7 +166,7 @@ python main.py -c  paddlex/configs/formula_recognition/LaTeX_OCR_rec.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_rec_latexocr_dataset_example \
     -o CheckDataset.convert.enable=True \
-    -o CheckDataset.convert.src_dataset_type=PKL
+    -o CheckDataset.convert.src_dataset_type=MSTextRecDataset
 ```
 **（2）数据集划分**
 
