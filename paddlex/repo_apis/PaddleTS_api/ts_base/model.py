@@ -111,7 +111,9 @@ class TSModel(BaseModel):
                 cli_args.append(CLIArgument("--num_workers", num_workers))
         # PDX related settings
         uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
+        export_during_train = kwargs.pop("export_during_train", True)
         config.update({"uniform_output_enabled": uniform_output_enabled})
+        config.update({"export_during_train": export_during_train})
         config.update({"pdx_model_name": self.name})
 
         self._assert_empty_kwargs(kwargs)
