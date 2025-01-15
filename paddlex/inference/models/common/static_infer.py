@@ -19,7 +19,7 @@ from pathlib import Path
 import lazy_paddle as paddle
 import numpy as np
 
-from ....utils.flags import DEBUG, FLAGS_json_format_model
+from ....utils.flags import DEBUG, FLAGS_json_format_model, USE_PIR_TRT
 from ....utils import logging
 from ...utils.pp_option import PaddlePredictorOption
 
@@ -47,15 +47,13 @@ def collect_trt_shapes(
         predictor.run()
 
 
-def convert_trt(mode, pp_model_path, trt_dynamic_shapes):
+def convert_trt(mode, pp_model_path, trt_save_path, trt_dynamic_shapes):
     from lazy_paddle.tensorrt.export import (
         Input,
         TensorRTConfig,
         convert,
         PrecisionMode,
     )
-
-    trt_save_dir = str(Path(pp_model_path) / "trt" / "inference")
 
     precision_map = {
         "trt_int8": PrecisionMode.INT8,
@@ -75,10 +73,8 @@ def convert_trt(mode, pp_model_path, trt_dynamic_shapes):
     # Create TensorRTConfig
     trt_config = TensorRTConfig(inputs=trt_inputs)
     trt_config.precision_mode = precision_map[mode]
-    trt_config.save_model_dir = trt_save_dir
-    convert(str(Path(pp_model_path) / "inference"), trt_config)
-    # copy inference.yaml to new model dir
-    shutil.copy(str(Path(pp_model_path) / "inference.yml"), trt_save_dir + ".yml")
+    trt_config.save_model_dir = trt_save_path
+    convert(pp_model_path, trt_config)
 
 
 class Copy2GPU:
@@ -179,34 +175,10 @@ class StaticInfer:
                 ).as_posix()
         params_file = (self.model_dir / f"{self.model_prefix}.pdiparams").as_posix()
 
-        config = Config(model_file, params_file)
-        if self.option.device == "gpu":
-            if self.option.device == "gpu":
-                config.exp_disable_mixed_precision_ops({"feed", "fetch"})
-            config.enable_use_gpu(100, self.option.device_id)
-
-            if hasattr(config, "enable_new_ir"):
-                config.enable_new_ir(self.option.enable_new_ir)
-            if hasattr(config, "enable_new_executor"):
-                config.enable_new_executor()
-            config.set_optimization_level(3)
-
-            # NOTE: The pptrt settings are not aligned with those of FD.
-            precision_map = {
-                "trt_int8": Config.Precision.Int8,
-                "trt_fp32": Config.Precision.Float32,
-                "trt_fp16": Config.Precision.Half,
-            }
-            if self.option.run_mode in precision_map.keys():
-                config.enable_tensorrt_engine(
-                    workspace_size=(1 << 25) * self.option.batch_size,
-                    max_batch_size=self.option.batch_size,
-                    min_subgraph_size=self.option.min_subgraph_size,
-                    precision_mode=precision_map[self.option.run_mode],
-                    use_static=self.option.trt_use_static,
-                    use_calib_mode=self.option.trt_calib_mode,
-                )
-
+        # for TRT
+        if self.option.run_mode.startswith("trt"):
+            assert self.option.device == "gpu"
+            if not USE_PIR_TRT:
                 if not os.path.exists(self.option.shape_info_filename):
                     logging.info(
                         f"Dynamic shape info is collected into: {self.option.shape_info_filename}"
@@ -222,10 +194,49 @@ class StaticInfer:
                     logging.info(
                         f"A dynamic shape info file ( {self.option.shape_info_filename} ) already exists. No need to collect again."
                     )
-                config.enable_tuned_tensorrt_dynamic_shape(
-                    self.option.shape_info_filename, True
+            else:
+                trt_save_path = (
+                    Path(self.model_dir) / "trt" / self.model_prefix
+                ).as_posix()
+                pp_model_path = (Path(self.model_dir) / self.model_prefix).as_posix()
+                convert_trt(
+                    self.option.run_mode,
+                    pp_model_path,
+                    trt_save_path,
+                    self.option.trt_dynamic_shapes,
                 )
+                model_file = trt_save_path + ".json"
+                params_file = trt_save_path + ".pdiparams"
 
+        config = Config(model_file, params_file)
+        if self.option.device == "gpu":
+            config.exp_disable_mixed_precision_ops({"feed", "fetch"})
+            config.enable_use_gpu(100, self.option.device_id)
+            if not self.option.run_mode.startswith("trt"):
+                if hasattr(config, "enable_new_ir"):
+                    config.enable_new_ir(self.option.enable_new_ir)
+                if hasattr(config, "enable_new_executor"):
+                    config.enable_new_executor()
+                config.set_optimization_level(3)
+            # NOTE: The pptrt settings are not aligned with those of FD.
+            else:
+                if not USE_PIR_TRT:
+                    precision_map = {
+                        "trt_int8": Config.Precision.Int8,
+                        "trt_fp32": Config.Precision.Float32,
+                        "trt_fp16": Config.Precision.Half,
+                    }
+                    config.enable_tensorrt_engine(
+                        workspace_size=(1 << 25) * self.option.batch_size,
+                        max_batch_size=self.option.batch_size,
+                        min_subgraph_size=self.option.min_subgraph_size,
+                        precision_mode=precision_map[self.option.run_mode],
+                        use_static=self.option.trt_use_static,
+                        use_calib_mode=self.option.trt_calib_mode,
+                    )
+                    config.enable_tuned_tensorrt_dynamic_shape(
+                        self.option.shape_info_filename, True
+                    )
         elif self.option.device == "npu":
             config.enable_custom_device("npu")
         elif self.option.device == "xpu":
