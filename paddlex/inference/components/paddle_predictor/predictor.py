@@ -147,7 +147,7 @@ class BasePaddlePredictor(BaseComponent):
                 }
                 if self.option.run_mode in precision_map.keys():
                     config.enable_tensorrt_engine(
-                        workspace_size=(1 << 25) * self.option.batch_size,
+                        workspace_size=(1 << 30) * self.option.batch_size,
                         max_batch_size=self.option.batch_size,
                         min_subgraph_size=self.option.min_subgraph_size,
                         precision_mode=precision_map[self.option.run_mode],
