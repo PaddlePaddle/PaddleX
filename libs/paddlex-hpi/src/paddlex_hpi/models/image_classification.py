@@ -18,7 +18,7 @@ from typing import Any, Dict, List, Optional, Union
 import ultra_infer as ui
 import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.results import TopkResult
+from paddlex.inference.models_new.image_classification.result import TopkResult
 from paddlex.modules.image_classification.model_list import MODELS
 from pydantic import BaseModel
 
@@ -38,16 +38,19 @@ class ClasPredictor(CVPredictor):
         model_dir: Union[str, os.PathLike],
         config: Optional[Dict[str, Any]] = None,
         device: Optional[str] = None,
+        use_onnx_model: Optional[bool] = None,
         hpi_params: Optional[HPIParams] = None,
+        topk: Union[int, None] = None,
     ) -> None:
         super().__init__(
             model_dir=model_dir,
             config=config,
             device=device,
+            use_onnx_model=use_onnx_model,
             hpi_params=hpi_params,
         )
         self._pp_params = self._get_pp_params()
-        self._ui_model.postprocessor.topk = self._pp_params.topk
+        self._topk = topk or self._pp_params.topk
 
     def _build_batch_sampler(self) -> ImageBatchSampler:
         return ImageBatchSampler()
@@ -58,17 +61,29 @@ class ClasPredictor(CVPredictor):
     def _build_ui_model(
         self, option: ui.RuntimeOption
     ) -> ui.vision.classification.PaddleClasModel:
-        model = ui.vision.classification.PaddleClasModel(
-            str(self.model_path),
-            str(self.params_path),
-            str(self.config_path),
-            runtime_option=option,
-        )
+        if self._onnx_format:
+            model = ui.vision.classification.PaddleClasModel(
+                str(self.model_path),
+                str(self.params_path),
+                str(self.config_path),
+                runtime_option=option,
+                model_format=ui.ModelFormat.ONNX,
+            )
+        else:
+            model = ui.vision.classification.PaddleClasModel(
+                str(self.model_path),
+                str(self.params_path),
+                str(self.config_path),
+                runtime_option=option,
+            )
         return model
 
-    def process(self, batch_data: List[Any]) -> Dict[str, List[Any]]:
+    def process(
+        self, batch_data: List[Any], topk: Union[int, None] = None
+    ) -> Dict[str, List[Any]]:
         batch_raw_imgs = self._data_reader(imgs=batch_data)
         imgs = [np.ascontiguousarray(img) for img in batch_raw_imgs]
+        self._ui_model.postprocessor.topk = topk or self._topk
         ui_results = self._ui_model.batch_predict(imgs)
 
         class_ids_list = []

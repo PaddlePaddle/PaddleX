@@ -20,6 +20,7 @@ sys.modules["lazy_paddle"] = paddle
 
 import os
 
+
 from . import version
 from .modules import (
     build_dataset_checker,

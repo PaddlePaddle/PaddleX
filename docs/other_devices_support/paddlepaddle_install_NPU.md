@@ -8,14 +8,14 @@ comments: true
 
 ## 1、docker环境准备
 * 拉取镜像，此镜像仅为开发环境，镜像中不包含预编译的飞桨安装包，镜像中已经默认安装了昇腾算子库 CANN-8.0.T13。
-```
+```bash
 # 适用于 X86 架构
 docker pull registry.baidubce.com/device/paddle-npu:cann80T13-ubuntu20-x86_64-gcc84-py39
 # 适用于 Aarch64 架构
 docker pull registry.baidubce.com/device/paddle-npu:cann80T13-ubuntu20-aarch64-gcc84-py39
 ```
 * 参考如下命令启动容器，ASCEND_RT_VISIBLE_DEVICES 指定可见的 NPU 卡号
-```
+```bash
 docker run -it --name paddle-npu-dev -v $(pwd):/work \
     --privileged --network=host --shm-size=128G -w=/work \
     -v /usr/local/Ascend/driver:/usr/local/Ascend/driver \
@@ -28,13 +28,19 @@ docker run -it --name paddle-npu-dev -v $(pwd):/work \
 当前提供 Python3.9 的 wheel 安装包。如有其他 Python 版本需求，可以参考[飞桨官方文档](https://www.paddlepaddle.org.cn/install/quick)自行编译安装。
 
 * 下载安装 Python3.9 的 wheel 安装包
-```
+```bash
 # 注意需要先安装飞桨 cpu 版本
 python3.9 -m pip install paddlepaddle==3.0.0.dev20240520 -i https://www.paddlepaddle.org.cn/packages/nightly/cpu/
 python3.9 -m pip install paddle_custom_npu==3.0.0.dev20240719 -i https://www.paddlepaddle.org.cn/packages/nightly/npu/
 ```
-* 验证安装包安装完成之后，运行如下命令
+* arm机器上需要设置环境变量（x86环境无需设置）
+```bash
+# 解决libgomp在arm机器上报错
+# "libgomp cannot allocate memory in static TLS block"
+export LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1:$LD_PRELOAD
 ```
+* 验证安装包安装完成之后，运行如下命令
+```bash
 python -c "import paddle; paddle.utils.run_check()"
 ```
 预期得到如下输出结果

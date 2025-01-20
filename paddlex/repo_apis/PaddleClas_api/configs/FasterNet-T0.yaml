@@ -137,9 +137,11 @@ Infer:
     - DecodeImage:
         to_rgb: True
         channel_first: False
-    - ResizeImage:
-        resize_short: 256
-    - CropImage:
+    - ResizeImage: 
+        interpolation: bicubic
+        backend: pil
+        resize_short: 248
+    - CropImage: 
         size: 224
     - NormalizeImage:
         scale: 1.0/255.0

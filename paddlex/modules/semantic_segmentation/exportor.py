@@ -20,3 +20,12 @@ class SegExportor(BaseExportor):
     """Semantic Segmentation Model Exportor"""
 
     entities = MODELS
+
+    def get_export_kwargs(self):
+        """get key-value arguments of model export function"""
+        kwargs = super().get_export_kwargs()
+
+        input_shape = self.export_config.get("input_shape")
+        if input_shape is not None:
+            kwargs["input_shape"] = input_shape
+        return kwargs

@@ -72,6 +72,15 @@ class SegConfig(BaseSegConfig):
         if "model" in self:
             self.model["num_classes"] = num_classes
 
+        if self.model_name in ["MaskFormer_tiny", "MaskFormer_small"]:
+            for tf_cfg in self.train_dataset["transforms"]:
+                if tf_cfg["type"] == "GenerateInstanceTargets":
+                    tf_cfg["num_classes"] = num_classes
+
+            losses = self.loss["types"]
+            for loss_cfg in losses:
+                loss_cfg["num_classes"] = num_classes
+
     def update_train_crop_size(self, crop_size: Union[int, list]):
         """update the image cropping size of training preprocessing
 

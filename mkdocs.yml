@@ -211,6 +211,7 @@ plugins:
             设备异常检测应用教程: Equipment Anomaly Detection Application Tutorial
             心跳监测时序数据分类应用教程: Heartbeat Monitoring Time Series Data Classification Application Tutorial
             用电量长期预测应用教程: Long-term Electricity Consumption Forecasting Application Tutorial
+            多语种语音识别模块: Multilingual Speech Recognition Task
             FAQ: FAQ
             近期更新: Recently Update
       repository: PaddlePaddle/PaddleX #仓库名称
@@ -358,6 +359,8 @@ nav:
          - 时序预测模块: module_usage/tutorials/time_series_modules/time_series_forecasting.md
          - 时序异常检测模块: module_usage/tutorials/time_series_modules/time_series_anomaly_detection.md
          - 时序分类模块: module_usage/tutorials/time_series_modules/time_series_classification.md  
+       - 语音识别:
+         - 多语种语音识别模块: module_usage/tutorials/speech_modules/multilingual_speech_recognition.md
        - 说明文件:
          - PaddleX单模型Python脚本使用说明: module_usage/instructions/model_python_API.md
          - PaddleX通用模型配置文件参数说明: module_usage/instructions/config_parameters_common.md

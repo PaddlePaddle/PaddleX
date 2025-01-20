@@ -12,60 +12,90 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Dict
 import math
 import random
+from pathlib import Path
+import copy
 import numpy as np
 import cv2
 import PIL
 from PIL import Image, ImageDraw, ImageFont
-
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH, create_font
-from ..components import CVResult
+from ...common.result import BaseCVResult, StrMixin, JsonMixin
 
 
-class DocPreprocessorResult(CVResult):
+class DocPreprocessorResult(BaseCVResult):
     """doc preprocessor result"""
 
-    def save_to_img(self, save_path: str, *args, **kwargs) -> None:
-        """
-        Save the image to the specified path.
-
-        Args:
-            save_path (str): The path to save the image.
-                If the path does not end with '.jpg' or '.png', it appends '_res_doc_preprocess_<img_id>.jpg'
-                to the path where <img_id> is retrieved from the object's 'img_id' attribute.
-            *args: Variable length argument list.
-            **kwargs: Arbitrary keyword arguments.
-
-        Returns:
-            None
-        """
-        if not str(save_path).lower().endswith((".jpg", ".png")):
-            img_id = self["img_id"]
-            save_path = save_path + "/res_doc_preprocess_%d.jpg" % img_id
-        super().save_to_img(save_path, *args, **kwargs)
-
-    def _to_img(self) -> PIL.Image:
+    def _to_img(self) -> Dict[str, Image.Image]:
         """
         Generate an image combining the original, rotated, and unwarping images.
 
         Returns:
-            PIL.Image: A new image that displays the original, rotated, and unwarping images side by side.
+            Dict[Image.Image]: A new image combining the original, rotated, and unwarping images
         """
-        image = self["input_image"][:, :, ::-1]
-        angle = self["angle"]
+        image = self["input_img"][:, :, ::-1]
         rot_img = self["rot_img"][:, :, ::-1]
+        angle = self["angle"]
         output_img = self["output_img"][:, :, ::-1]
-        h, w = image.shape[0:2]
-        img_show = Image.new("RGB", (w * 3, h + 25), (255, 255, 255))
-        img_show.paste(Image.fromarray(image), (0, 0, w, h))
-        img_show.paste(Image.fromarray(rot_img), (w, 0, w * 2, h))
-        img_show.paste(Image.fromarray(output_img), (w * 2, 0, w * 3, h))
+        use_doc_orientation_classify = self["model_settings"][
+            "use_doc_orientation_classify"
+        ]
+        use_doc_unwarping = self["model_settings"]["use_doc_unwarping"]
+        h1, w1 = image.shape[0:2]
+        h2, w2 = rot_img.shape[0:2]
+        h3, w3 = output_img.shape[0:2]
+        h = max(max(h1, h2), h3)
+        img_show = Image.new("RGB", (w1 + w2 + w3, h + 25), (255, 255, 255))
+        img_show.paste(Image.fromarray(image), (0, 0, w1, h1))
+        img_show.paste(Image.fromarray(rot_img), (w1, 0, w1 + w2, h2))
+        img_show.paste(Image.fromarray(output_img), (w1 + w2, 0, w1 + w2 + w3, h3))
 
         draw_text = ImageDraw.Draw(img_show)
         txt_list = ["Original Image", "Rotated Image", "Unwarping Image"]
+        txt_list[1] = f"Rotated Image ({use_doc_orientation_classify}, {angle})"
+        txt_list[2] = f"Unwarping Image ({use_doc_unwarping})"
+        region_w_list = [w1, w2, w3]
+        beg_w_list = [0, w1, w1 + w2]
         for tno in range(len(txt_list)):
             txt = txt_list[tno]
-            font = create_font(txt, (w, 20), PINGFANG_FONT_FILE_PATH)
-            draw_text.text([10 + w * tno, h + 2], txt, fill=(0, 0, 0), font=font)
-        return img_show
+            font = create_font(txt, (region_w_list[tno], 20), PINGFANG_FONT_FILE_PATH)
+            draw_text.text(
+                [10 + beg_w_list[tno], h + 2], txt, fill=(0, 0, 0), font=font
+            )
+        imgs = {"preprocessed_img": img_show}
+        return imgs
+
+    def _to_str(self, *args, **kwargs) -> Dict[str, str]:
+        """Converts the instance's attributes to a dictionary and then to a string.
+
+        Args:
+            *args: Additional positional arguments passed to the base class method.
+            **kwargs: Additional keyword arguments passed to the base class method.
+
+        Returns:
+            Dict[str, str]: A dictionary with the instance's attributes converted to strings.
+        """
+        data = {}
+        data["input_path"] = self["input_path"]
+        data["model_settings"] = self["model_settings"]
+        data["angle"] = self["angle"]
+        return StrMixin._to_str(data, *args, **kwargs)
+
+    def _to_json(self, *args, **kwargs) -> Dict[str, str]:
+        """
+        Converts the object's data to a JSON dictionary.
+
+        Args:
+            *args: Positional arguments passed to the JsonMixin._to_json method.
+            **kwargs: Keyword arguments passed to the JsonMixin._to_json method.
+
+        Returns:
+            Dict[str, str]: A dictionary containing the object's data in JSON format.
+        """
+        data = {}
+        data["input_path"] = self["input_path"]
+        data["model_settings"] = self["model_settings"]
+        data["angle"] = self["angle"]
+        return JsonMixin._to_json(data, *args, **kwargs)

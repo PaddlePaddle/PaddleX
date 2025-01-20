@@ -42,6 +42,8 @@ class TestUadPredictor(BaseTestPredictor):
 
     def _check_result(self, result, expected_result):
         assert isinstance(result, SegResult)
+        assert "input_img" in result
+        result.pop("input_img")
         assert set(result) == set(expected_result)
         pred = result["pred"]
         expected_pred = np.array(expected_result["pred"], dtype=np.int32)

@@ -48,7 +48,6 @@ class BaseRunner(metaclass=abc.ABCMeta):
             runner_root_path (str): Path of the directory where the scripts reside.
         """
         super().__init__()
-
         self.runner_root_path = abspath(runner_root_path)
         # Path to python interpreter
         self.python = sys.executable

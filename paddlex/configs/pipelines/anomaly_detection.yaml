@@ -1,0 +1,8 @@
+pipeline_name: anomaly_detection
+
+SubModules:
+  AnomalyDetection:
+    module_name: anomaly_detection
+    model_name: STFPM
+    model_dir: null
+    batch_size: 1   

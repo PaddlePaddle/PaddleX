@@ -24,6 +24,29 @@ from ....utils import logging
 from ...utils.pp_option import PaddlePredictorOption
 
 
+def collect_trt_shapes(
+    model_file, model_params, gpu_id, shape_range_info_path, trt_dynamic_shapes
+):
+    config = paddle.inference.Config(model_file, model_params)
+    config.enable_use_gpu(100, gpu_id)
+    min_arrs, opt_arrs, max_arrs = {}, {}, {}
+    for name, candidate_shapes in trt_dynamic_shapes.items():
+        min_shape, opt_shape, max_shape = candidate_shapes
+        min_arrs[name] = np.ones(min_shape, dtype=np.float32)
+        opt_arrs[name] = np.ones(opt_shape, dtype=np.float32)
+        max_arrs[name] = np.ones(max_shape, dtype=np.float32)
+
+    config.collect_shape_range_info(shape_range_info_path)
+    predictor = paddle.inference.create_predictor(config)
+    # opt_arrs would be used twice to simulate the most common situations
+    for arrs in [min_arrs, opt_arrs, opt_arrs, max_arrs]:
+        for name, arr in arrs.items():
+            input_handler = predictor.get_input_handle(name)
+            input_handler.reshape(arr.shape)
+            input_handler.copy_from_cpu(arr)
+        predictor.run()
+
+
 class Copy2GPU:
 
     def __init__(self, input_handlers):
@@ -103,15 +126,25 @@ class StaticInfer:
     def _create(
         self,
     ) -> Tuple[
-        paddle.base.libpaddle.PaddleInferPredictor,
-        paddle.base.libpaddle.PaddleInferTensor,
-        paddle.base.libpaddle.PaddleInferTensor,
+        "paddle.base.libpaddle.PaddleInferPredictor",
+        "paddle.base.libpaddle.PaddleInferTensor",
+        "paddle.base.libpaddle.PaddleInferTensor",
     ]:
         """_create"""
         from lazy_paddle.inference import Config, create_predictor
 
-        model_postfix = ".json" if FLAGS_json_format_model else ".pdmodel"
-        model_file = (self.model_dir / f"{self.model_prefix}{model_postfix}").as_posix()
+        if FLAGS_json_format_model:
+            model_file = (self.model_dir / f"{self.model_prefix}.json").as_posix()
+        # when FLAGS_json_format_model is not set, use inference.json if exist, otherwise inference.pdmodel
+        else:
+            model_file = self.model_dir / f"{self.model_prefix}.json"
+            if model_file.exists():
+                model_file = model_file.as_posix()
+            # default by `pdmodel` suffix
+            else:
+                model_file = (
+                    self.model_dir / f"{self.model_prefix}.pdmodel"
+                ).as_posix()
         params_file = (self.model_dir / f"{self.model_prefix}.pdiparams").as_posix()
         config = Config(model_file, params_file)
 
@@ -137,22 +170,25 @@ class StaticInfer:
                         use_calib_mode=self.option.trt_calib_mode,
                     )
 
-                    if self.option.shape_info_filename is not None:
-                        if not os.path.exists(self.option.shape_info_filename):
-                            config.collect_shape_range_info(
-                                self.option.shape_info_filename
-                            )
-                            logging.info(
-                                f"Dynamic shape info is collected into: {self.option.shape_info_filename}"
-                            )
-                        else:
-                            logging.info(
-                                f"A dynamic shape info file ( {self.option.shape_info_filename} ) already exists. \
-        No need to generate again."
-                            )
-                        config.enable_tuned_tensorrt_dynamic_shape(
-                            self.option.shape_info_filename, True
+                    if not os.path.exists(self.option.shape_info_filename):
+                        logging.info(
+                            f"Dynamic shape info is collected into: {self.option.shape_info_filename}"
                         )
+                        collect_trt_shapes(
+                            model_file,
+                            params_file,
+                            self.option.device_id,
+                            self.option.shape_info_filename,
+                            self.option.trt_dynamic_shapes,
+                        )
+                    else:
+                        logging.info(
+                            f"A dynamic shape info file ( {self.option.shape_info_filename} ) already exists. No need to collect again."
+                        )
+                    config.enable_tuned_tensorrt_dynamic_shape(
+                        self.option.shape_info_filename, True
+                    )
+
         elif self.option.device == "npu":
             config.enable_custom_device("npu")
         elif self.option.device == "xpu":

@@ -56,6 +56,7 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
         self.config = config
         self.global_config = config.Global
         self.train_config = config.Train
+        self.eval_config = config.Evaluate
         self.benchmark_config = config.get("Benchmark", None)
         config_path = self.train_config.get("basic_config_path", None)
 
@@ -71,11 +72,15 @@ class BaseTrainer(ABC, metaclass=AutoRegisterABCMetaClass):
         train_args = self.get_train_kwargs()
         if self.benchmark_config is not None:
             train_args.update({"benchmark": self.benchmark_config})
+        export_with_pir = self.global_config.get("export_with_pir", False) or os.getenv(
+            "FLAGS_json_format_model"
+        ) in ["1", "True"]
         train_args.update(
             {
                 "uniform_output_enabled": self.train_config.get(
                     "uniform_output_enabled", True
-                )
+                ),
+                "export_with_pir": export_with_pir,
             }
         )
         train_result = self.pdx_model.train(**train_args)

@@ -43,6 +43,8 @@ class TestTSClsPredictor(BaseTestPredictor):
 
     def _check_result(self, result, expected_result):
         assert isinstance(result, TSClsResult)
+        assert "input_ts" in result
+        result.pop("input_ts")
         assert set(result) == set(expected_result)
         expected_result = json.loads(expected_result["classification"])
         result = result["classification"].to_dict(orient="records")

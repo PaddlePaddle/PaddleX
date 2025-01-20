@@ -13,3 +13,4 @@
 # limitations under the License.
 
 from .ernie_bot_retriever import ErnieBotRetriever
+from .openai_bot_retriever import OpenAIBotRetriever

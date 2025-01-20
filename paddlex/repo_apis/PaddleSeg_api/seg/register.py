@@ -238,6 +238,26 @@ register_model_info(
 )
 
 
+register_model_info(
+    {
+        "model_name": "MaskFormer_tiny",
+        "suite": "Seg",
+        "config_path": osp.join(PDX_CONFIG_DIR, "MaskFormer_tiny.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+
+register_model_info(
+    {
+        "model_name": "MaskFormer_small",
+        "suite": "Seg",
+        "config_path": osp.join(PDX_CONFIG_DIR, "MaskFormer_small.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+
 # For compatibility
 def _set_alias(model_name, alias):
     from ...base.register import get_registered_model_info

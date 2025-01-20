@@ -41,9 +41,11 @@ class TestShiTuRecPredictor(BaseTestPredictor):
 
     def _check_result(self, result, expected_result):
         assert isinstance(result, BaseResult)
+        assert "input_img" in result
+        result.pop("input_img")
         assert set(result) == set(expected_result)
-        expected_result = expected_result["rec_feature"]
-        result = result["rec_feature"].tolist()
+        expected_result = expected_result["feature"]
+        result = result["feature"].tolist()
         assert sum([abs(x - y) for x, y in zip(result, expected_result)]) < 0.001 * len(
             result
         )

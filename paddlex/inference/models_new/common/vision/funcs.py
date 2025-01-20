@@ -13,6 +13,9 @@
 # limitations under the License.
 
 import cv2
+import numpy as np
+from PIL import Image
+from .....utils import logging
 
 
 def check_image_size(input_):
@@ -26,11 +29,32 @@ def check_image_size(input_):
         raise TypeError(f"{input_} cannot represent a valid image size.")
 
 
-def resize(im, target_size, interp):
+def resize(im, target_size, interp, backend="cv2"):
     """resize image to target size"""
     w, h = target_size
-    im = cv2.resize(im, (w, h), interpolation=interp)
+    if backend.lower() == "pil":
+        resize_function = _pil_resize
+    else:
+        resize_function = _cv2_resize
+        if backend.lower() != "cv2":
+            logging.warning(
+                f"Unknown backend {backend}. Defaulting to cv2 for resizing."
+            )
+    im = resize_function(im, (w, h), interp)
     return im
+
+
+def _cv2_resize(src, size, resample):
+    return cv2.resize(src, size, interpolation=resample)
+
+
+def _pil_resize(src, size, resample):
+    if isinstance(src, np.ndarray):
+        pil_img = Image.fromarray(src)
+    else:
+        pil_img = src
+    pil_img = pil_img.resize(size, resample)
+    return np.asarray(pil_img)
 
 
 def flip_h(im):

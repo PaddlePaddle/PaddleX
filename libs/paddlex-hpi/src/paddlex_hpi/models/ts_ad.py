@@ -12,19 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, List
+from typing import Any, Dict, List, Union
 
 import ultra_infer as ui
 import pandas as pd
-from paddlex.inference.results import TSAdResult
+from paddlex.inference.common.batch_sampler import TSBatchSampler
+from paddlex.inference.models_new.ts_anomaly_detection.result import TSAdResult
 from paddlex.modules.ts_anomaly_detection.model_list import MODELS
 
-from paddlex_hpi._utils.typing import BatchData, Data
 from paddlex_hpi.models.base import TSPredictor
 
 
 class TSAdPredictor(TSPredictor):
     entities = MODELS
+
+    def _build_batch_sampler(self) -> TSBatchSampler:
+        return TSBatchSampler()
+
+    def _get_result_class(self) -> type:
+        return TSAdResult
 
     def _build_ui_model(
         self, option: ui.RuntimeOption
@@ -37,22 +43,23 @@ class TSAdPredictor(TSPredictor):
         )
         return model
 
-    def _predict(self, batch_data: BatchData) -> BatchData:
-        ts_data = [data["ts"] for data in batch_data]
-        ui_results = self._ui_model.batch_predict(ts_data)
-        results: BatchData = []
-        for data, ui_result in zip(batch_data, ui_results):
-            ts_ad_result = self._create_ts_ad_result(data, ui_result)
-            results.append({"result": ts_ad_result})
-        return results
+    def process(self, batch_data: List[Union[str, pd.DataFrame]]) -> Dict[str, Any]:
+        batch_raw_ts = self._data_reader(ts_list=batch_data)
+        ui_results = self._ui_model.batch_predict(batch_raw_ts)
 
-    def _create_ts_ad_result(self, data: Data, ui_result: Any) -> TSAdResult:
-        data_dict = {
-            ui_result.col_names[i]: ui_result.data[i]
-            for i in range(len(ui_result.col_names))
+        anomaly_list = []
+        for ui_result in ui_results:
+            data_dict = {
+                ui_result.col_names[i]: ui_result.data[i]
+                for i in range(len(ui_result.col_names))
+            }
+            anomaly = pd.DataFrame.from_dict(data_dict)
+            anomaly.index = ui_result.dates
+            anomaly.index.name = "timestamp"
+            anomaly_list.append(anomaly)
+
+        return {
+            "input_path": batch_data,
+            "input_ts": batch_raw_ts,
+            "anomaly": anomaly_list,
         }
-        anomaly = pd.DataFrame.from_dict(data_dict)
-        anomaly.index = ui_result.dates
-        anomaly.index.name = "timestamp"
-        dic = {"input_path": data["input_path"], "anomaly": anomaly}
-        return TSAdResult(dic)

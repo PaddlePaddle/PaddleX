@@ -2,163 +2,7 @@
   "x86_64": {
     "linux": {
       "cpu": {
-        "RT-DETR-H_layout_17cls":{
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-YOLOE_plus_SOD-largesize-L": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-YOLOE_plus_SOD-L": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-YOLOE_plus_SOD-S": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "ResNet50_ML": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNet_x1_0_ML": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-HGNetV2-B6_ML": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-HGNetV2-B4_ML": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-HGNetV2-B0_ML": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "CLIP_vit_base_patch16_448_ML": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "ResNet50_face": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileFaceNet": {
+        "STFPM": {
           "backend_config_pairs": [
             [
               "onnx_runtime",
@@ -166,6 +10,54 @@
             ],
             [
               "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNet_x1_0_doc_ori": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "BlazeFace": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "BlazeFace-FPN-SSH": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PicoDet_LCNet_x2_5_face": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
               {}
             ]
           ]
@@ -182,12 +74,20 @@
             ]
           ]
         },
-        "PicoDet_LCNet_x2_5_face": {
+        "MobileFaceNet": {
           "backend_config_pairs": [
             [
-              "openvino",
+              "paddle_infer",
               {}
             ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "ResNet50_face": {
+          "backend_config_pairs": [
             [
               "onnx_runtime",
               {}
@@ -195,33 +95,24 @@
             [
               "paddle_infer",
               {}
-            ]
-          ]
-        },
-        "BlazeFace-FPN-SSH": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "BlazeFace": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-ShiTuV2_rec_CLIP_vit_large": {
-          "backend_config_pairs": [
+            ],
             [
               "openvino",
               {}
-            ],
+            ]
+          ]
+        },
+        "LaTeX_OCR_rec": {
+          "backend_config_pairs": []
+        },
+        "PP-ShiTuV2_rec": {
+          "backend_config_pairs": [
             [
               "onnx_runtime",
+              {}
+            ],
+            [
+              "openvino",
               {}
             ],
             [
@@ -233,65 +124,9 @@
         "PP-ShiTuV2_rec_CLIP_vit_base": {
           "backend_config_pairs": [
             [
-              "openvino",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
               "paddle_infer",
               {}
-            ]
-          ]
-        },
-        "PP-ShiTuV2_rec": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
             ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-ShiTuV2_det": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "STFPM": {
-          "backend_config_pairs": [
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "ResNet18": {
-          "backend_config_pairs": [
             [
               "onnx_runtime",
               {}
@@ -299,19 +134,39 @@
             [
               "openvino",
               {}
-            ],
-            [
-              "paddle_infer",
-              {}
             ]
           ]
         },
-        "ResNet34": {
+        "PP-ShiTuV2_rec_CLIP_vit_large": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
             [
               "onnx_runtime",
               {}
             ],
+            [
+              "openvino",
+              {}
+            ]
+          ]
+        },
+        "PP-YOLOE-L_human": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ]
+          ]
+        },
+        "PP-YOLOE-S_human": {
+          "backend_config_pairs": [
             [
               "openvino",
               {}
@@ -322,8 +177,12 @@
             ]
           ]
         },
-        "ResNet50": {
+        "CLIP_vit_base_patch16_224": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
             [
               "onnx_runtime",
               {}
@@ -331,15 +190,15 @@
             [
               "openvino",
               {}
-            ],
-            [
-              "paddle_infer",
-              {}
             ]
           ]
         },
-        "ResNet101": {
+        "CLIP_vit_large_patch14_224": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
             [
               "onnx_runtime",
               {}
@@ -347,46 +206,74 @@
             [
               "openvino",
               {}
-            ],
-            [
-              "paddle_infer",
-              {}
             ]
           ]
         },
-        "ResNet152": {
+        "ConvNeXt_base_224": {
           "backend_config_pairs": [
             [
               "onnx_runtime",
               {}
             ],
             [
-              "openvino",
+              "paddle_infer",
               {}
             ],
             [
-              "paddle_infer",
+              "openvino",
               {}
             ]
           ]
         },
-        "ResNet18_vd": {
+        "ConvNeXt_base_384": {
           "backend_config_pairs": [
             [
               "onnx_runtime",
               {}
             ],
             [
+              "paddle_infer",
+              {}
+            ],
+            [
               "openvino",
+              {}
+            ]
+          ]
+        },
+        "ConvNeXt_large_224": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
               {}
             ],
             [
               "paddle_infer",
               {}
+            ],
+            [
+              "openvino",
+              {}
             ]
           ]
         },
-        "ResNet34_vd": {
+        "ConvNeXt_large_384": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ]
+          ]
+        },
+        "ConvNeXt_small": {
           "backend_config_pairs": [
             [
               "onnx_runtime",
@@ -402,7 +289,7 @@
             ]
           ]
         },
-        "ResNet50_vd": {
+        "ConvNeXt_tiny": {
           "backend_config_pairs": [
             [
               "onnx_runtime",
@@ -418,183 +305,7 @@
             ]
           ]
         },
-        "ResNet101_vd": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "ResNet152_vd": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "ResNet200_vd": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNet_x0_25": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNet_x0_35": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNet_x0_5": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNet_x0_75": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNet_x1_0": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNet_x1_5": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNet_x2_5": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNet_x2_0": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNetV2_small": {
+        "MobileNetV1_x0_5": {
           "backend_config_pairs": [
             [
               "onnx_runtime",
@@ -610,7 +321,7 @@
             ]
           ]
         },
-        "PP-LCNetV2_base": {
+        "MobileNetV1_x0_25": {
           "backend_config_pairs": [
             [
               "openvino",
@@ -626,7 +337,39 @@
             ]
           ]
         },
-        "PP-LCNetV2_large": {
+        "MobileNetV1_x0_75": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV1_x1_0": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV2_x0_5": {
           "backend_config_pairs": [
             [
               "openvino",
@@ -635,21 +378,49 @@
             [
               "paddle_infer",
               {}
-            ],
-            [
-              "onnx_runtime",
-              {}
             ]
           ]
         },
-        "MobileNetV3_large_x0_35": {
+        "MobileNetV2_x0_25": {
           "backend_config_pairs": [
             [
               "openvino",
               {}
             ],
             [
-              "onnx_runtime",
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV2_x1_0": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV2_x1_5": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV2_x2_0": {
+          "backend_config_pairs": [
+            [
+              "openvino",
               {}
             ],
             [
@@ -659,6 +430,22 @@
           ]
         },
         "MobileNetV3_large_x0_5": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV3_large_x0_35": {
           "backend_config_pairs": [
             [
               "openvino",
@@ -697,16 +484,32 @@
               {}
             ],
             [
-              "onnx_runtime",
+              "paddle_infer",
               {}
             ],
             [
-              "paddle_infer",
+              "onnx_runtime",
               {}
             ]
           ]
         },
         "MobileNetV3_large_x1_25": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV3_small_x0_5": {
           "backend_config_pairs": [
             [
               "openvino",
@@ -723,22 +526,6 @@
           ]
         },
         "MobileNetV3_small_x0_35": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV3_small_x0_5": {
           "backend_config_pairs": [
             [
               "openvino",
@@ -802,270 +589,18 @@
             ]
           ]
         },
-        "ConvNeXt_tiny": {
+        "PP-HGNet_base": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ],
             [
               "onnx_runtime",
-              {}
-            ],
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "ConvNeXt_small": {
-          "backend_config_pairs": [
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "ConvNeXt_base_224": {
-          "backend_config_pairs": [
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "openvino",
-              {}
-            ]
-          ]
-        },
-        "ConvNeXt_base_384": {
-          "backend_config_pairs": [
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "ConvNeXt_large_224": {
-          "backend_config_pairs": [
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "openvino",
-              {}
-            ]
-          ]
-        },
-        "ConvNeXt_large_384": {
-          "backend_config_pairs": [
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV1_x0_25": {
-          "backend_config_pairs": [
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV1_x0_5": {
-          "backend_config_pairs": [
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV1_x0_75": {
-          "backend_config_pairs": [
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV1_x1_0": {
-          "backend_config_pairs": [
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV2_x0_25": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV2_x0_5": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV2_x1_0": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV2_x1_5": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV2_x2_0": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "SwinTransformer_tiny_patch4_window7_224": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "SwinTransformer_small_patch4_window7_224": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "SwinTransformer_base_patch4_window7_224": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "SwinTransformer_base_patch4_window12_384": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "SwinTransformer_large_patch4_window7_224": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "SwinTransformer_large_patch4_window12_384": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
               {}
             ]
           ]
@@ -1073,7 +608,7 @@
         "PP-HGNet_small": {
           "backend_config_pairs": [
             [
-              "openvino",
+              "paddle_infer",
               {}
             ],
             [
@@ -1081,7 +616,7 @@
               {}
             ],
             [
-              "paddle_infer",
+              "openvino",
               {}
             ]
           ]
@@ -1089,31 +624,15 @@
         "PP-HGNet_tiny": {
           "backend_config_pairs": [
             [
-              "openvino",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-HGNet_base": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
               "paddle_infer",
               {}
             ],
             [
               "onnx_runtime",
+              {}
+            ],
+            [
+              "openvino",
               {}
             ]
           ]
@@ -1201,11 +720,11 @@
         "PP-HGNetV2-B5": {
           "backend_config_pairs": [
             [
-              "openvino",
+              "paddle_infer",
               {}
             ],
             [
-              "paddle_infer",
+              "openvino",
               {}
             ],
             [
@@ -1230,7 +749,487 @@
             ]
           ]
         },
-        "CLIP_vit_base_patch16_224": {
+        "PP-LCNet_x0_5": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNet_x0_25": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNet_x0_35": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNet_x0_75": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNet_x1_0": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNet_x1_5": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNet_x2_0": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNet_x2_5": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNetV2_base": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNetV2_large": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNetV2_small": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "ResNet18_vd": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ]
+          ]
+        },
+        "ResNet18": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ]
+          ]
+        },
+        "ResNet34_vd": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ]
+          ]
+        },
+        "ResNet34": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ]
+          ]
+        },
+        "ResNet50_vd": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ]
+          ]
+        },
+        "ResNet50": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ]
+          ]
+        },
+        "ResNet101_vd": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "ResNet101": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ]
+          ]
+        },
+        "ResNet152_vd": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "ResNet152": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ]
+          ]
+        },
+        "ResNet200_vd": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "SwinTransformer_base_patch4_window7_224": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "SwinTransformer_base_patch4_window12_384": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "SwinTransformer_large_patch4_window7_224": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "SwinTransformer_large_patch4_window12_384": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "SwinTransformer_small_patch4_window7_224": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "SwinTransformer_tiny_patch4_window7_224": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "FasterNet-L": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ]
+          ]
+        },
+        "FasterNet-M": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ]
+          ]
+        },
+        "FasterNet-S": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ]
+          ]
+        },
+        "FasterNet-T0": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "FasterNet-T1": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "FasterNet-T2": {
           "backend_config_pairs": [
             [
               "onnx_runtime",
@@ -1246,7 +1245,7 @@
             ]
           ]
         },
-        "CLIP_vit_large_patch14_224": {
+        "MobileNetV4_conv_large": {
           "backend_config_pairs": [
             [
               "onnx_runtime",
@@ -1262,7 +1261,39 @@
             ]
           ]
         },
-        "PP-YOLOE_plus-X": {
+        "MobileNetV4_conv_medium": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV4_conv_small": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV4_hybrid_large": {
           "backend_config_pairs": [
             [
               "openvino",
@@ -1270,6 +1301,295 @@
             ],
             [
               "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV4_hybrid_medium": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "StarNet-S1": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "StarNet-S2": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "StarNet-S3": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "StarNet-S4": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "UVDoc": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "Mask-RT-DETR-M": {
+          "backend_config_pairs": []
+        },
+        "Mask-RT-DETR-S": {
+          "backend_config_pairs": []
+        },
+        "Mask-RT-DETR-X": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "Cascade-MaskRCNN-ResNet50-FPN": {
+          "backend_config_pairs": []
+        },
+        "Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN": {
+          "backend_config_pairs": []
+        },
+        "MaskRCNN-ResNet50-FPN": {
+          "backend_config_pairs": []
+        },
+        "MaskRCNN-ResNet50-vd-FPN": {
+          "backend_config_pairs": []
+        },
+        "MaskRCNN-ResNet50": {
+          "backend_config_pairs": []
+        },
+        "MaskRCNN-ResNet101-FPN": {
+          "backend_config_pairs": []
+        },
+        "MaskRCNN-ResNet101-vd-FPN": {
+          "backend_config_pairs": []
+        },
+        "MaskRCNN-ResNeXt101-vd-FPN": {
+          "backend_config_pairs": []
+        },
+        "PP-YOLOE_seg-S": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "Mask-RT-DETR-H": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "Mask-RT-DETR-L": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "SOLOv2": {
+          "backend_config_pairs": []
+        },
+        "PP-ShiTuV2_det": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "CLIP_vit_base_patch16_448_ML": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ]
+          ]
+        },
+        "PP-HGNetV2-B0_ML": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-HGNetV2-B4_ML": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ]
+          ]
+        },
+        "PP-HGNetV2-B6_ML": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNet_x1_0_ML": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "ResNet50_ML": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ]
+          ]
+        },
+        "PicoDet-L": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PicoDet-S": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
               {}
             ]
           ]
@@ -1277,11 +1597,11 @@
         "PP-YOLOE_plus-L": {
           "backend_config_pairs": [
             [
-              "openvino",
+              "paddle_infer",
               {}
             ],
             [
-              "paddle_infer",
+              "openvino",
               {}
             ]
           ]
@@ -1289,11 +1609,11 @@
         "PP-YOLOE_plus-M": {
           "backend_config_pairs": [
             [
-              "openvino",
+              "paddle_infer",
               {}
             ],
             [
-              "paddle_infer",
+              "openvino",
               {}
             ]
           ]
@@ -1310,126 +1630,14 @@
             ]
           ]
         },
-        "YOLOX-N": {
+        "PP-YOLOE_plus-X": {
           "backend_config_pairs": [
-            [
-              "onnx_runtime",
-              {}
-            ],
             [
               "paddle_infer",
               {}
-            ]
-          ]
-        },
-        "YOLOX-T": {
-          "backend_config_pairs": [
-            [
-              "onnx_runtime",
-              {}
             ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "YOLOX-S": {
-          "backend_config_pairs": [
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "YOLOX-M": {
-          "backend_config_pairs": [
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "YOLOX-L": {
-          "backend_config_pairs": [
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "YOLOX-X": {
-          "backend_config_pairs": [
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "YOLOv3-DarkNet53": {
-          "backend_config_pairs": [
             [
               "openvino",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "YOLOv3-ResNet50_vd_DCN": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "YOLOv3-MobileNetV3": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "RT-DETR-L": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
               {}
             ]
           ]
@@ -1442,7 +1650,7 @@
             ]
           ]
         },
-        "RT-DETR-X": {
+        "RT-DETR-L": {
           "backend_config_pairs": [
             [
               "paddle_infer",
@@ -1466,7 +1674,194 @@
             ]
           ]
         },
-        "PicoDet-S": {
+        "RT-DETR-X": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "YOLOv3-DarkNet53": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ]
+          ]
+        },
+        "YOLOv3-MobileNetV3": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "YOLOv3-ResNet50_vd_DCN": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "YOLOX-L": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "YOLOX-M": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "YOLOX-N": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "YOLOX-S": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "YOLOX-T": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "YOLOX-X": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "Cascade-FasterRCNN-ResNet50-FPN": {
+          "backend_config_pairs": []
+        },
+        "Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN": {
+          "backend_config_pairs": []
+        },
+        "CenterNet-DLA-34": {
+          "backend_config_pairs": []
+        },
+        "CenterNet-ResNet50": {
+          "backend_config_pairs": []
+        },
+        "DETR-R50": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "FasterRCNN-ResNet34-FPN": {
+          "backend_config_pairs": []
+        },
+        "FasterRCNN-ResNet50-FPN": {
+          "backend_config_pairs": []
+        },
+        "FasterRCNN-ResNet50-vd-FPN": {
+          "backend_config_pairs": []
+        },
+        "FasterRCNN-ResNet50-vd-SSLDv2-FPN": {
+          "backend_config_pairs": []
+        },
+        "FasterRCNN-ResNet50": {
+          "backend_config_pairs": []
+        },
+        "FasterRCNN-ResNet101-FPN": {
+          "backend_config_pairs": []
+        },
+        "FasterRCNN-ResNet101": {
+          "backend_config_pairs": []
+        },
+        "FasterRCNN-ResNeXt101-vd-FPN": {
+          "backend_config_pairs": []
+        },
+        "FasterRCNN-Swin-Tiny-FPN": {
+          "backend_config_pairs": []
+        },
+        "FCOS-ResNet50": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PicoDet-M": {
           "backend_config_pairs": [
             [
               "openvino",
@@ -1482,7 +1877,7 @@
             ]
           ]
         },
-        "PicoDet-L": {
+        "PicoDet-XS": {
           "backend_config_pairs": [
             [
               "openvino",
@@ -1498,36 +1893,12 @@
             ]
           ]
         },
-        "Mask-RT-DETR-H": {
+        "PP-LCNet_x1_0_pedestrian_attribute": {
           "backend_config_pairs": [
             [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "Mask-RT-DETR-L": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "Deeplabv3-R50": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
+              "openvino",
               {}
             ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "Deeplabv3-R101": {
-          "backend_config_pairs": [
             [
               "paddle_infer",
               {}
@@ -1562,14 +1933,38 @@
             ]
           ]
         },
-        "PP-LiteSeg-T": {
+        "Deeplabv3-R50": {
           "backend_config_pairs": [
             [
-              "onnx_runtime",
+              "paddle_infer",
               {}
             ],
             [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "Deeplabv3-R101": {
+          "backend_config_pairs": [
+            [
               "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "OCRNet_HRNet-W18": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
               {}
             ]
           ]
@@ -1586,44 +1981,12 @@
             ]
           ]
         },
-        "OCRNet_HRNet-W18": {
+        "PP-LiteSeg-T": {
           "backend_config_pairs": [
             [
               "onnx_runtime",
               {}
             ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "SeaFormer_tiny": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "SeaFormer_small": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "SeaFormer_base": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "SeaFormer_large": {
-          "backend_config_pairs": [
             [
               "paddle_infer",
               {}
@@ -1681,11 +2044,11 @@
         "SegFormer-B4": {
           "backend_config_pairs": [
             [
-              "paddle_infer",
+              "onnx_runtime",
               {}
             ],
             [
-              "onnx_runtime",
+              "paddle_infer",
               {}
             ]
           ]
@@ -1693,6 +2056,102 @@
         "SegFormer-B5": {
           "backend_config_pairs": [
             [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "SeaFormer_base": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "SeaFormer_large": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "SeaFormer_small": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "SeaFormer_tiny": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-LiteSeg-B": {
+          "backend_config_pairs": [
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-YOLOE_plus_SOD-S": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-YOLOE_plus_SOD-L": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-YOLOE_plus_SOD-largesize-L": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ]
+          ]
+        },
+        "PicoDet-S_layout_3cls": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
               "paddle_infer",
               {}
             ],
@@ -1702,19 +2161,7 @@
             ]
           ]
         },
-        "PP-OCRv4_server_rec": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "openvino",
-              {}
-            ]
-          ]
-        },
-        "PP-OCRv4_mobile_rec": {
+        "PicoDet-S_layout_17cls": {
           "backend_config_pairs": [
             [
               "openvino",
@@ -1723,34 +2170,14 @@
             [
               "paddle_infer",
               {}
-            ]
-          ]
-        },
-        "ch_RepSVTR_rec": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
             ],
             [
-              "paddle_infer",
+              "onnx_runtime",
               {}
             ]
           ]
         },
-        "ch_SVTRv2_rec": {
-          "backend_config_pairs": [
-            [
-              "openvino",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-OCRv4_server_det": {
+        "PicoDet-L_layout_3cls": {
           "backend_config_pairs": [
             [
               "paddle_infer",
@@ -1766,8 +2193,12 @@
             ]
           ]
         },
-        "PP-OCRv4_mobile_det": {
+        "PicoDet-L_layout_17cls": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
             [
               "openvino",
               {}
@@ -1775,7 +2206,19 @@
             [
               "onnx_runtime",
               {}
-            ],
+            ]
+          ]
+        },
+        "RT-DETR-H_layout_3cls": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "RT-DETR-H_layout_17cls": {
+          "backend_config_pairs": [
             [
               "paddle_infer",
               {}
@@ -1798,7 +2241,23 @@
             ]
           ]
         },
-        "SLANet": {
+        "PicoDet_layout_1x_table": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-OCRv4_mobile_det": {
           "backend_config_pairs": [
             [
               "paddle_infer",
@@ -1806,18 +2265,335 @@
             ]
           ]
         },
-        "SLANet_plus": {
+        "PP-OCRv4_server_det": {
           "backend_config_pairs": [
             [
               "paddle_infer",
               {}
             ]
           ]
+        },
+        "PP-OCRv4_mobile_seal_det": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-OCRv4_server_seal_det": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "AutoEncoder_ad": {
+          "backend_config_pairs": []
+        },
+        "DLinear_ad": {
+          "backend_config_pairs": []
+        },
+        "Nonstationary_ad": {
+          "backend_config_pairs": []
+        },
+        "PatchTST_ad": {
+          "backend_config_pairs": []
+        },
+        "TimesNet_ad": {
+          "backend_config_pairs": []
+        },
+        "TimesNet_cls": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "DLinear": {
+          "backend_config_pairs": []
+        },
+        "NLinear": {
+          "backend_config_pairs": []
+        },
+        "Nonstationary": {
+          "backend_config_pairs": []
+        },
+        "PatchTST": {
+          "backend_config_pairs": []
+        },
+        "RLinear": {
+          "backend_config_pairs": []
+        },
+        "TiDE": {
+          "backend_config_pairs": []
+        },
+        "TimesNet": {
+          "backend_config_pairs": []
+        },
+        "PP-LCNet_x1_0_vehicle_attribute": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-YOLOE-S_vehicle": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-YOLOE-L_vehicle": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ]
+          ]
         }
       },
       "gpu_cuda118_cudnn86": {
-        "RT-DETR-H_layout_17cls": {
+        "STFPM": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNet_x1_0_doc_ori": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "BlazeFace": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "BlazeFace-FPN-SSH": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PicoDet_LCNet_x2_5_face": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-YOLOE_plus-S_face": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MobileFaceNet": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "ResNet50_face": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
             [
               "paddle_infer",
               {}
@@ -1832,290 +2608,21 @@
             ]
           ]
         },
-        "PP-YOLOE_plus_SOD-largesize-L": {
+        "PP-ShiTuV2_rec": {
           "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-YOLOE_plus_SOD-L": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-YOLOE_plus_SOD-S": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "ResNet50_ML": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
             [
               "tensorrt",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNet_x1_0_ML": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
               {
-                "enable_trt": true
-              }
-            ],
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-HGNetV2-B6_ML": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-HGNetV2-B4_ML": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-HGNetV2-B0_ML": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "CLIP_vit_base_patch16_448_ML": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "ResNet50_face": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileFaceNet": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-YOLOE_plus-S_face": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
+                "precision": "FP16"
               }
             ],
             [
               "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PicoDet_LCNet_x2_5_face": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
               {
-                "enable_trt": true
+                "enable_trt": true,
+                "trt_precision": "FP16"
               }
             ],
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "BlazeFace-FPN-SSH": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "BlazeFace": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-ShiTuV2_rec_CLIP_vit_large": {
-          "backend_config_pairs": [
             [
               "paddle_infer",
               {
@@ -2141,25 +2648,16 @@
             [
               "paddle_infer",
               {
-                "enable_trt": true
+                "enable_trt": true,
+                "trt_precision": "FP16"
               }
             ],
             [
               "tensorrt",
-              {}
+              {
+                "precision": "FP16"
+              }
             ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-ShiTuV2_rec": {
-          "backend_config_pairs": [
             [
               "paddle_infer",
               {
@@ -2171,17 +2669,38 @@
               {}
             ],
             [
+              "paddle_infer",
+              {}
+            ],
+            [
               "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-ShiTuV2_rec_CLIP_vit_large": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
               {}
             ],
             [
               "paddle_infer",
               {}
-            ]
-          ]
-        },
-        "PP-ShiTuV2_det": {
-          "backend_config_pairs": [
+            ],
             [
               "paddle_infer",
               {
@@ -2191,6 +2710,23 @@
             [
               "onnx_runtime",
               {}
+            ]
+          ]
+        },
+        "PP-YOLOE-L_human": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
             ],
             [
               "paddle_infer",
@@ -2198,8 +2734,42 @@
             ]
           ]
         },
-        "STFPM": {
+        "PP-YOLOE-S_human": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "CLIP_vit_base_patch16_224": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
             [
               "paddle_infer",
               {
@@ -2211,21 +2781,28 @@
               {}
             ],
             [
-              "onnx_runtime",
+              "paddle_infer",
               {}
             ],
             [
-              "paddle_infer",
+              "onnx_runtime",
               {}
             ]
           ]
         },
-        "ResNet18": {
+        "CLIP_vit_large_patch14_224": {
           "backend_config_pairs": [
             [
               "paddle_infer",
               {
-                "enable_trt": true
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
               }
             ],
             [
@@ -2233,41 +2810,7 @@
               {}
             ],
             [
-              "onnx_runtime",
-              {}
-            ],
-            [
               "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "ResNet34": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "ResNet50": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
               {}
             ],
             [
@@ -2278,692 +2821,6 @@
             ],
             [
               "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "ResNet101": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "ResNet152": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "ResNet18_vd": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "ResNet34_vd": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "ResNet50_vd": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "ResNet101_vd": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "ResNet152_vd": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "ResNet200_vd": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNet_x0_25": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNet_x0_35": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNet_x0_5": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNet_x0_75": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNet_x1_0": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNet_x1_5": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNet_x2_5": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNet_x2_0": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNetV2_small": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNetV2_base": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-LCNetV2_large": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV3_large_x0_35": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV3_large_x0_5": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV3_large_x0_75": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV3_large_x1_0": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV3_large_x1_25": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV3_small_x0_35": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV3_small_x0_5": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV3_small_x0_75": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV3_small_x1_0": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV3_small_x1_25": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "ConvNeXt_tiny": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "ConvNeXt_small": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
               {}
             ]
           ]
@@ -3056,7 +2913,7 @@
             ]
           ]
         },
-        "MobileNetV1_x0_25": {
+        "ConvNeXt_small": {
           "backend_config_pairs": [
             [
               "paddle_infer",
@@ -3067,6 +2924,63 @@
             [
               "tensorrt",
               {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "ConvNeXt_tiny": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV1_x0_5": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
             ],
             [
               "onnx_runtime",
@@ -3078,17 +2992,30 @@
             ]
           ]
         },
-        "MobileNetV1_x0_5": {
+        "MobileNetV1_x0_25": {
           "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
             [
               "paddle_infer",
               {
-                "enable_trt": true
+                "enable_trt": true,
+                "trt_precision": "FP16"
               }
             ],
             [
               "tensorrt",
               {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
             ],
             [
               "onnx_runtime",
@@ -3103,14 +3030,27 @@
         "MobileNetV1_x0_75": {
           "backend_config_pairs": [
             [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
               "paddle_infer",
               {
-                "enable_trt": true
+                "enable_trt": true,
+                "trt_precision": "FP16"
               }
             ],
             [
               "tensorrt",
               {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
             ],
             [
               "onnx_runtime",
@@ -3126,7 +3066,16 @@
           "backend_config_pairs": [
             [
               "tensorrt",
-              {}
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
             ],
             [
               "paddle_infer",
@@ -3135,8 +3084,33 @@
               }
             ],
             [
+              "tensorrt",
+              {}
+            ],
+            [
               "onnx_runtime",
               {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV2_x0_5": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
             ],
             [
               "paddle_infer",
@@ -3149,17 +3123,10 @@
             [
               "paddle_infer",
               {
-                "enable_trt": true
+                "enable_trt": true,
+                "trt_precision": "FP16"
               }
             ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "MobileNetV2_x0_5": {
-          "backend_config_pairs": [
             [
               "paddle_infer",
               {
@@ -3177,6 +3144,13 @@
             [
               "paddle_infer",
               {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
                 "enable_trt": true
               }
             ],
@@ -3188,6 +3162,13 @@
         },
         "MobileNetV2_x1_5": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
             [
               "paddle_infer",
               {
@@ -3205,17 +3186,10 @@
             [
               "paddle_infer",
               {
-                "enable_trt": true
+                "enable_trt": true,
+                "trt_precision": "FP16"
               }
             ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "SwinTransformer_tiny_patch4_window7_224": {
-          "backend_config_pairs": [
             [
               "paddle_infer",
               {
@@ -3228,13 +3202,34 @@
             ]
           ]
         },
-        "SwinTransformer_small_patch4_window7_224": {
+        "MobileNetV3_large_x0_5": {
           "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
             [
               "paddle_infer",
               {
                 "enable_trt": true
               }
+            ],
+            [
+              "onnx_runtime",
+              {}
             ],
             [
               "paddle_infer",
@@ -3242,13 +3237,34 @@
             ]
           ]
         },
-        "SwinTransformer_base_patch4_window7_224": {
+        "MobileNetV3_large_x0_35": {
           "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
             [
               "paddle_infer",
               {
                 "enable_trt": true
               }
+            ],
+            [
+              "onnx_runtime",
+              {}
             ],
             [
               "paddle_infer",
@@ -3256,13 +3272,34 @@
             ]
           ]
         },
-        "SwinTransformer_base_patch4_window12_384": {
+        "MobileNetV3_large_x0_75": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
             [
               "paddle_infer",
               {
                 "enable_trt": true
               }
+            ],
+            [
+              "onnx_runtime",
+              {}
             ],
             [
               "paddle_infer",
@@ -3270,13 +3307,34 @@
             ]
           ]
         },
-        "SwinTransformer_large_patch4_window7_224": {
+        "MobileNetV3_large_x1_0": {
           "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
             [
               "paddle_infer",
               {
                 "enable_trt": true
               }
+            ],
+            [
+              "onnx_runtime",
+              {}
             ],
             [
               "paddle_infer",
@@ -3284,8 +3342,21 @@
             ]
           ]
         },
-        "SwinTransformer_large_patch4_window12_384": {
+        "MobileNetV3_large_x1_25": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
             [
               "paddle_infer",
               {
@@ -3293,13 +3364,244 @@
               }
             ],
             [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
               "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV3_small_x0_5": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV3_small_x0_35": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV3_small_x0_75": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV3_small_x1_0": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV3_small_x1_25": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-HGNet_base": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
               {}
             ]
           ]
         },
         "PP-HGNet_small": {
           "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
             [
               "tensorrt",
               {}
@@ -3325,34 +3627,25 @@
             [
               "paddle_infer",
               {
-                "enable_trt": true
+                "enable_trt": true,
+                "trt_precision": "FP16"
               }
             ],
             [
               "tensorrt",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-HGNet_base": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
+              {
+                "precision": "FP16"
+              }
             ],
             [
               "paddle_infer",
               {
                 "enable_trt": true
               }
+            ],
+            [
+              "tensorrt",
+              {}
             ],
             [
               "paddle_infer",
@@ -3367,14 +3660,27 @@
         "PP-HGNetV2-B0": {
           "backend_config_pairs": [
             [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
               "paddle_infer",
               {
-                "enable_trt": true
+                "enable_trt": true,
+                "trt_precision": "FP16"
               }
             ],
             [
               "tensorrt",
               {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
             ],
             [
               "onnx_runtime",
@@ -3391,12 +3697,25 @@
             [
               "paddle_infer",
               {
-                "enable_trt": true
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
               }
             ],
             [
               "tensorrt",
               {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
             ],
             [
               "onnx_runtime",
@@ -3410,6 +3729,19 @@
         },
         "PP-HGNetV2-B2": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
             [
               "paddle_infer",
               {
@@ -3432,6 +3764,19 @@
         },
         "PP-HGNetV2-B3": {
           "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
             [
               "paddle_infer",
               {
@@ -3457,6 +3802,19 @@
             [
               "paddle_infer",
               {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
                 "enable_trt": true
               }
             ],
@@ -3478,13 +3836,26 @@
           "backend_config_pairs": [
             [
               "tensorrt",
-              {}
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
             ],
             [
               "paddle_infer",
               {
                 "enable_trt": true
               }
+            ],
+            [
+              "tensorrt",
+              {}
             ],
             [
               "onnx_runtime",
@@ -3499,27 +3870,18 @@
         "PP-HGNetV2-B6": {
           "backend_config_pairs": [
             [
-              "tensorrt",
-              {}
-            ],
-            [
               "paddle_infer",
               {
-                "enable_trt": true
+                "enable_trt": true,
+                "trt_precision": "FP16"
               }
             ],
             [
-              "onnx_runtime",
-              {}
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
             ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "CLIP_vit_base_patch16_224": {
-          "backend_config_pairs": [
             [
               "paddle_infer",
               {
@@ -3540,8 +3902,56 @@
             ]
           ]
         },
-        "CLIP_vit_large_patch14_224": {
+        "PP-LCNet_x0_5": {
           "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNet_x0_25": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
             [
               "tensorrt",
               {}
@@ -3562,64 +3972,21 @@
             ]
           ]
         },
-        "PP-YOLOE_plus-X": {
+        "PP-LCNet_x0_35": {
           "backend_config_pairs": [
             [
-              "paddle_infer",
+              "tensorrt",
               {
-                "enable_trt": true
+                "precision": "FP16"
               }
             ],
             [
               "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-YOLOE_plus-L": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
               {
-                "enable_trt": true
+                "enable_trt": true,
+                "trt_precision": "FP16"
               }
             ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-YOLOE_plus-M": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PP-YOLOE_plus-S": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "YOLOX-N": {
-          "backend_config_pairs": [
             [
               "tensorrt",
               {}
@@ -3640,246 +4007,21 @@
             ]
           ]
         },
-        "YOLOX-T": {
+        "PP-LCNet_x0_75": {
           "backend_config_pairs": [
             [
               "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
               {
-                "enable_trt": true
+                "precision": "FP16"
               }
             ],
             [
               "paddle_infer",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "YOLOX-S": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
               {
-                "enable_trt": true
+                "enable_trt": true,
+                "trt_precision": "FP16"
               }
             ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "YOLOX-M": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "YOLOX-L": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "YOLOX-X": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "YOLOv3-DarkNet53": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "YOLOv3-ResNet50_vd_DCN": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "YOLOv3-MobileNetV3": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "RT-DETR-L": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "RT-DETR-H": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "RT-DETR-X": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "RT-DETR-R18": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "RT-DETR-R50": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "PicoDet-S": {
-          "backend_config_pairs": [
             [
               "tensorrt",
               {}
@@ -3900,8 +4042,812 @@
             ]
           ]
         },
-        "PicoDet-L": {
+        "PP-LCNet_x1_0": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNet_x1_5": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNet_x2_0": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNet_x2_5": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNetV2_base": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNetV2_large": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNetV2_small": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "ResNet18_vd": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "ResNet18": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "ResNet34_vd": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "ResNet34": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "ResNet50_vd": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "ResNet50": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "ResNet101_vd": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "ResNet101": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "ResNet152_vd": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "ResNet152": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "ResNet200_vd": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "SwinTransformer_base_patch4_window7_224": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "SwinTransformer_base_patch4_window12_384": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "SwinTransformer_large_patch4_window7_224": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "SwinTransformer_large_patch4_window12_384": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "SwinTransformer_small_patch4_window7_224": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "SwinTransformer_tiny_patch4_window7_224": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "FasterNet-L": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "FasterNet-M": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
             [
               "tensorrt",
               {}
@@ -3918,6 +4864,525 @@
             ],
             [
               "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "FasterNet-S": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "FasterNet-T0": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "FasterNet-T1": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "FasterNet-T2": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV4_conv_large": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV4_conv_medium": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV4_conv_small": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV4_hybrid_large": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "MobileNetV4_hybrid_medium": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "StarNet-S1": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "StarNet-S2": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "StarNet-S3": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "StarNet-S4": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "UVDoc": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "Mask-RT-DETR-M": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "Mask-RT-DETR-S": {
+          "backend_config_pairs": []
+        },
+        "Mask-RT-DETR-X": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "Cascade-MaskRCNN-ResNet50-FPN": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MaskRCNN-ResNet50-FPN": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MaskRCNN-ResNet50-vd-FPN": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MaskRCNN-ResNet50": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MaskRCNN-ResNet101-FPN": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MaskRCNN-ResNet101-vd-FPN": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "MaskRCNN-ResNeXt101-vd-FPN": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-YOLOE_seg-S": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
               {}
             ]
           ]
@@ -3938,8 +5403,119 @@
             ]
           ]
         },
-        "Deeplabv3-R50": {
+        "SOLOv2": {
+          "backend_config_pairs": []
+        },
+        "PP-ShiTuV2_det": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "CLIP_vit_base_patch16_448_ML": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ]
+          ]
+        },
+        "PP-HGNetV2-B0_ML": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-HGNetV2-B4_ML": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
             [
               "tensorrt",
               {}
@@ -3949,6 +5525,1054 @@
               {
                 "enable_trt": true
               }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-HGNetV2-B6_ML": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNet_x1_0_ML": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "ResNet50_ML": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PicoDet-L": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PicoDet-S": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-YOLOE_plus-L": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-YOLOE_plus-M": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-YOLOE_plus-S": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-YOLOE_plus-X": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "RT-DETR-H": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "RT-DETR-L": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "RT-DETR-R18": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "RT-DETR-R50": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "RT-DETR-X": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "YOLOv3-DarkNet53": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "YOLOv3-MobileNetV3": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ]
+          ]
+        },
+        "YOLOv3-ResNet50_vd_DCN": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "YOLOX-L": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "YOLOX-M": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "YOLOX-N": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "YOLOX-S": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "YOLOX-T": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "YOLOX-X": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "Cascade-FasterRCNN-ResNet50-FPN": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "CenterNet-DLA-34": {
+          "backend_config_pairs": []
+        },
+        "CenterNet-ResNet50": {
+          "backend_config_pairs": []
+        },
+        "DETR-R50": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "FasterRCNN-ResNet34-FPN": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "FasterRCNN-ResNet50-FPN": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "FasterRCNN-ResNet50-vd-FPN": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "FasterRCNN-ResNet50-vd-SSLDv2-FPN": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "FasterRCNN-ResNet50": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ]
+          ]
+        },
+        "FasterRCNN-ResNet101-FPN": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "FasterRCNN-ResNet101": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "FasterRCNN-ResNeXt101-vd-FPN": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ]
+          ]
+        },
+        "FasterRCNN-Swin-Tiny-FPN": {
+          "backend_config_pairs": []
+        },
+        "FCOS-ResNet50": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PicoDet-M": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PicoDet-XS": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNet_x1_0_pedestrian_attribute": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "Deeplabv3_Plus-R50": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "Deeplabv3_Plus-R101": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "Deeplabv3-R50": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
             ],
             [
               "paddle_infer",
@@ -3964,70 +6588,10 @@
           "backend_config_pairs": [
             [
               "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
               {
-                "enable_trt": true
+                "precision": "FP16"
               }
             ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "Deeplabv3_Plus-R50": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "Deeplabv3_Plus-R101": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "onnx_runtime",
-              {}
-            ]
-          ]
-        },
-        "PP-LiteSeg-T": {
-          "backend_config_pairs": [
             [
               "tensorrt",
               {}
@@ -4035,30 +6599,6 @@
             [
               "onnx_runtime",
               {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "OCRNet_HRNet-W48": {
-          "backend_config_pairs": [
-            [
-              "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
             ],
             [
               "paddle_infer",
@@ -4070,87 +6610,49 @@
           "backend_config_pairs": [
             [
               "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
               {
-                "enable_trt": true
+                "precision": "FP16"
               }
             ],
-            [
-              "paddle_infer",
-              {}
-            ]
-          ]
-        },
-        "SeaFormer_tiny": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ]
-          ]
-        },
-        "SeaFormer_small": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ]
-          ]
-        },
-        "SeaFormer_base": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ]
-          ]
-        },
-        "SeaFormer_large": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {}
-            ],
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
-            ]
-          ]
-        },
-        "SegFormer-B0": {
-          "backend_config_pairs": [
             [
               "tensorrt",
               {}
             ],
             [
               "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "OCRNet_HRNet-W48": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
               {
-                "enable_trt": true
+                "precision": "FP16"
               }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-LiteSeg-T": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
             ],
             [
               "paddle_infer",
@@ -4158,6 +6660,28 @@
             ],
             [
               "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "SegFormer-B0": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
               {}
             ]
           ]
@@ -4166,20 +6690,20 @@
           "backend_config_pairs": [
             [
               "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
               {
-                "enable_trt": true
+                "precision": "FP16"
               }
             ],
             [
-              "paddle_infer",
+              "tensorrt",
               {}
             ],
             [
               "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
               {}
             ]
           ]
@@ -4188,20 +6712,20 @@
           "backend_config_pairs": [
             [
               "tensorrt",
-              {}
-            ],
-            [
-              "paddle_infer",
               {
-                "enable_trt": true
+                "precision": "FP16"
               }
             ],
             [
-              "paddle_infer",
+              "tensorrt",
               {}
             ],
             [
               "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
               {}
             ]
           ]
@@ -4209,9 +6733,9 @@
         "SegFormer-B3": {
           "backend_config_pairs": [
             [
-              "paddle_infer",
+              "tensorrt",
               {
-                "enable_trt": true
+                "precision": "FP16"
               }
             ],
             [
@@ -4231,17 +6755,17 @@
         "SegFormer-B4": {
           "backend_config_pairs": [
             [
-              "paddle_infer",
+              "tensorrt",
               {
-                "enable_trt": true
+                "precision": "FP16"
               }
             ],
             [
-              "tensorrt",
+              "onnx_runtime",
               {}
             ],
             [
-              "onnx_runtime",
+              "tensorrt",
               {}
             ],
             [
@@ -4253,14 +6777,166 @@
         "SegFormer-B5": {
           "backend_config_pairs": [
             [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "SeaFormer_base": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "SeaFormer_large": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "SeaFormer_small": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "SeaFormer_tiny": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-LiteSeg-B": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-YOLOE_plus_SOD-S": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
               "paddle_infer",
               {
                 "enable_trt": true
               }
             ],
             [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-YOLOE_plus_SOD-L": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-YOLOE_plus_SOD-largesize-L": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PicoDet-S_layout_3cls": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
               "tensorrt",
               {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
             ],
             [
               "onnx_runtime",
@@ -4272,7 +6948,133 @@
             ]
           ]
         },
-        "PP-OCRv4_server_rec": {
+        "PicoDet-S_layout_17cls": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PicoDet-L_layout_3cls": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PicoDet-L_layout_17cls": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "RT-DETR-H_layout_3cls": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "RT-DETR-H_layout_17cls": {
           "backend_config_pairs": [
             [
               "paddle_infer",
@@ -4286,8 +7088,21 @@
             ]
           ]
         },
-        "PP-OCRv4_mobile_rec": {
+        "PicoDet_layout_1x": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
             [
               "paddle_infer",
               {
@@ -4295,35 +7110,34 @@
               }
             ],
             [
-              "paddle_infer",
+              "tensorrt",
               {}
-            ]
-          ]
-        },
-        "ch_RepSVTR_rec": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {
-                "enable_trt": true
-              }
             ],
             [
               "paddle_infer",
               {}
-            ]
-          ]
-        },
-        "ch_SVTRv2_rec": {
-          "backend_config_pairs": [
+            ],
             [
-              "paddle_infer",
+              "onnx_runtime",
               {}
             ]
           ]
         },
-        "PP-OCRv4_server_det": {
+        "PicoDet_layout_1x_table": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
             [
               "paddle_infer",
               {
@@ -4349,12 +7163,140 @@
             [
               "paddle_infer",
               {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
                 "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-OCRv4_server_det": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ]
+          ]
+        },
+        "PP-OCRv4_mobile_seal_det": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-OCRv4_server_seal_det": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ]
+          ]
+        },
+        "AutoEncoder_ad": {
+          "backend_config_pairs": []
+        },
+        "DLinear_ad": {
+          "backend_config_pairs": []
+        },
+        "Nonstationary_ad": {
+          "backend_config_pairs": []
+        },
+        "PatchTST_ad": {
+          "backend_config_pairs": []
+        },
+        "TimesNet_ad": {
+          "backend_config_pairs": []
+        },
+        "TimesNet_cls": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "DLinear": {
+          "backend_config_pairs": []
+        },
+        "NLinear": {
+          "backend_config_pairs": []
+        },
+        "Nonstationary": {
+          "backend_config_pairs": []
+        },
+        "PatchTST": {
+          "backend_config_pairs": []
+        },
+        "RLinear": {
+          "backend_config_pairs": []
+        },
+        "TiDE": {
+          "backend_config_pairs": []
+        },
+        "TimesNet": {
+          "backend_config_pairs": []
+        },
+        "PP-LCNet_x1_0_vehicle_attribute": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
               }
             ],
             [
               "tensorrt",
               {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
             ],
             [
               "onnx_runtime",
@@ -4366,21 +7308,20 @@
             ]
           ]
         },
-        "PicoDet_layout_1x": {
+        "PP-YOLOE-S_vehicle": {
           "backend_config_pairs": [
             [
-              "tensorrt",
-              {}
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
             ],
             [
               "paddle_infer",
               {
                 "enable_trt": true
               }
-            ],
-            [
-              "onnx_runtime",
-              {}
             ],
             [
               "paddle_infer",
@@ -4388,31 +7329,24 @@
             ]
           ]
         },
-        "SLANet": {
+        "PP-YOLOE-L_vehicle": {
           "backend_config_pairs": [
             [
               "paddle_infer",
-              {}
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
             ],
             [
               "paddle_infer",
               {
                 "enable_trt": true
               }
-            ]
-          ]
-        },
-        "SLANet_plus": {
-          "backend_config_pairs": [
-            [
-              "paddle_infer",
-              {}
             ],
             [
               "paddle_infer",
-              {
-                "enable_trt": true
-              }
+              {}
             ]
           ]
         }

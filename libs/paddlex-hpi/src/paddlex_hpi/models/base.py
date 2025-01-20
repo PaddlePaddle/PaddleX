@@ -27,7 +27,7 @@ from typing import (
 
 import ultra_infer as ui
 from ultra_infer.model import BaseUltraInferModel
-from paddlex.inference.common.reader import ReadImage
+from paddlex.inference.common.reader import ReadImage, ReadTS
 from paddlex.inference.models_new import BasePredictor
 from paddlex.inference.utils.new_ir_blacklist import NEWIR_BLOCKLIST
 from paddlex.utils import device as device_helper
@@ -42,8 +42,6 @@ HPI_CONFIG_KEY: Final[str] = "Hpi"
 
 
 class HPIParams(TypedDict, total=False):
-    serial_number: Optional[str]
-    update_license: bool
     config: Dict[str, Any]
 
 
@@ -55,37 +53,47 @@ class HPPredictor(BasePredictor, metaclass=AutoRegisterABCMetaClass):
         model_dir: Union[str, PathLike],
         config: Optional[Dict[str, Any]] = None,
         device: Optional[str] = None,
+        use_onnx_model: Optional[bool] = None,
         hpi_params: Optional[HPIParams] = None,
     ) -> None:
         super().__init__(model_dir=model_dir, config=config)
         self._device = device or device_helper.get_default_device()
+        self._onnx_format = use_onnx_model
+        self._check_and_choose_model_format()
         self._hpi_params = hpi_params or {}
         self._hpi_config = self._get_hpi_config()
         self._ui_model = self.build_ui_model()
         self._data_reader = self._build_data_reader()
 
-    def __call__(self, input: Any, **kwargs: dict[str, Any]) -> Iterator[Any]:
-        self.set_predictor(**kwargs)
-        yield from self.apply(input)
+    def __call__(
+        self,
+        input: Any,
+        batch_size: int = None,
+        device: str = None,
+        **kwargs: dict[str, Any],
+    ) -> Iterator[Any]:
+        self.set_predictor(batch_size, device)
+        yield from self.apply(input, **kwargs)
 
     @property
     def model_path(self) -> Path:
-        return self.model_dir / f"{self.MODEL_FILE_PREFIX}.pdmodel"
+        if self._onnx_format:
+            return self.model_dir / f"{self.MODEL_FILE_PREFIX}.onnx"
+        else:
+            return self.model_dir / f"{self.MODEL_FILE_PREFIX}.pdmodel"
 
     @property
-    def params_path(self) -> Path:
-        return self.model_dir / f"{self.MODEL_FILE_PREFIX}.pdiparams"
+    def params_path(self) -> Union[Path, None]:
+        if self._onnx_format:
+            return None
+        else:
+            return self.model_dir / f"{self.MODEL_FILE_PREFIX}.pdiparams"
 
-    def set_predictor(self, **kwargs: Any) -> None:
-        if "device" in kwargs:
-            device = kwargs.pop("device")
-            if device is not None:
-                if device != self._device:
-                    raise RuntimeError("Currently, changing devices is not supported.")
-        if "batch_size" in kwargs:
-            self.batch_sampler.batch_size = kwargs.pop("batch_size")
-        if kwargs:
-            raise TypeError(f"Unexpected arguments: {kwargs}")
+    def set_predictor(self, batch_size: int = None, device: str = None) -> None:
+        if device and device != self._device:
+            raise RuntimeError("Currently, changing devices is not supported.")
+        if batch_size:
+            self.batch_sampler.batch_size = batch_size
 
     def build_ui_model(self) -> BaseUltraInferModel:
         option = self._create_ui_option()
@@ -101,11 +109,6 @@ class HPPredictor(BasePredictor, metaclass=AutoRegisterABCMetaClass):
             }
         )
         return hpi_config
-
-    def _get_selected_backend(self) -> Backend:
-        device_type, _ = device_helper.parse_device(self._device)
-        backend = self._hpi_config.get_selected_backend(self.model_name, device_type)
-        return backend
 
     def _create_ui_option(self) -> ui.RuntimeOption:
         option = ui.RuntimeOption()
@@ -128,12 +131,46 @@ class HPPredictor(BasePredictor, metaclass=AutoRegisterABCMetaClass):
         else:
             assert_never(device_type)
         backend, backend_config = self._hpi_config.get_backend_and_config(
-            model_name=self.model_name, device_type=device_type
+            model_name=self.model_name,
+            device_type=device_type,
+            onnx_format=self._onnx_format,
         )
         logging.info("Backend: %s", backend)
         logging.info("Backend config: %s", backend_config)
         backend_config.update_ui_option(option, self.model_dir)
         return option
+
+    def _check_and_choose_model_format(self) -> None:
+        has_onnx_model = any(self.model_dir.glob(f"{self.MODEL_FILE_PREFIX}.onnx"))
+        has_pd_model = any(self.model_dir.glob(f"{self.MODEL_FILE_PREFIX}.pdmodel"))
+        if self._onnx_format is None:
+            if has_onnx_model and has_pd_model:
+                logging.warning(
+                    "Both ONNX and Paddle models are detected, but no preference is set. Default model (.pdmodel) will be used."
+                )
+            elif has_pd_model:
+                logging.warning(
+                    "Only Paddle model is detected. Paddle model will be used by default."
+                )
+            elif has_onnx_model:
+                self._onnx_format = True
+                logging.warning(
+                    "Only ONNX model is detected. ONNX model will be used by default."
+                )
+            else:
+                raise RuntimeError(
+                    "No models are detected. Please ensure the model file exists."
+                )
+        elif self._onnx_format:
+            if not has_onnx_model:
+                raise RuntimeError(
+                    "ONNX model is specified but not detected. Please ensure the ONNX model file exists."
+                )
+        else:
+            if not has_pd_model:
+                raise RuntimeError(
+                    "Paddle model is specified but not detected. Please ensure the Paddle model file exists."
+                )
 
     @abc.abstractmethod
     def _build_ui_model(self, option: ui.RuntimeOption) -> BaseUltraInferModel:
@@ -151,4 +188,4 @@ class CVPredictor(HPPredictor):
 
 class TSPredictor(HPPredictor):
     def _build_data_reader(self):
-        return None
+        return ReadTS()

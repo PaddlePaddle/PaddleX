@@ -22,11 +22,14 @@ from .modules import (
     build_evaluater,
     build_exportor,
 )
+from .utils.flags import NEW_PREDICTOR
 
 
 # TODO(gaotingquan): support _ModelBasedConfig
-def create_model(model=None, *args, **kwargs):
-    return _ModelBasedInference(model, *args, **kwargs)
+def create_model(model_name, model_dir=None, *args, **kwargs):
+    return _ModelBasedInference(
+        model_name=model_name, model_dir=model_dir, *args, **kwargs
+    )
 
 
 class _BaseModel:
@@ -62,6 +65,13 @@ class _ModelBasedInference(_BaseModel):
     def set_predictor(self, **kwargs):
         self._predictor.set_predictor(**kwargs)
 
+    def __getattr__(self, name):
+        if hasattr(self._predictor, name):
+            return getattr(self._predictor, name)
+        raise AttributeError(
+            f"'{self.__class__.__name__}' object has no attribute '{name}'"
+        )
+
 
 class _ModelBasedConfig(_BaseModel):
     def __init__(self, config=None, *args, **kwargs):
@@ -73,15 +83,19 @@ class _ModelBasedConfig(_BaseModel):
         predict_kwargs = deepcopy(self._config.Predict)
 
         model_dir = predict_kwargs.pop("model_dir", None)
-        # if model_dir is None, using official
-        model = self._model_name if model_dir is None else model_dir
 
         device = self._config.Global.get("device")
         kernel_option = predict_kwargs.pop("kernel_option", {})
         kernel_option.update({"device": device})
 
         pp_option = PaddlePredictorOption(self._model_name, **kernel_option)
-        predictor = create_predictor(model, pp_option=pp_option)
+        if NEW_PREDICTOR:
+            predictor = create_predictor(
+                self._model_name, model_dir, pp_option=pp_option
+            )
+        else:
+            model = self._model_name if model_dir is None else model_dir
+            predictor = create_predictor(model, pp_option=pp_option)
         assert "input" in predict_kwargs
         return predict_kwargs, predictor
 

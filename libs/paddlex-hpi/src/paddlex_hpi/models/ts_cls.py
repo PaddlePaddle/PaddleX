@@ -12,19 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, List
+from typing import Any, Dict, List, Union
 
 import ultra_infer as ui
 import pandas as pd
-from paddlex.inference.results import TSClsResult
+from paddlex.inference.common.batch_sampler import TSBatchSampler
+from paddlex.inference.models_new.ts_classification.result import TSClsResult
 from paddlex.modules.ts_classification.model_list import MODELS
 
-from paddlex_hpi._utils.typing import BatchData, Data
 from paddlex_hpi.models.base import TSPredictor
 
 
 class TSClsPredictor(TSPredictor):
     entities = MODELS
+
+    def _build_batch_sampler(self) -> TSBatchSampler:
+        return TSBatchSampler()
+
+    def _get_result_class(self) -> type:
+        return TSClsResult
 
     def _build_ui_model(
         self, option: ui.RuntimeOption
@@ -37,19 +43,20 @@ class TSClsPredictor(TSPredictor):
         )
         return model
 
-    def _predict(self, batch_data: BatchData) -> BatchData:
-        ts_data = [data["ts"] for data in batch_data]
-        ui_results = self._ui_model.batch_predict(ts_data)
-        results: BatchData = []
-        for data, ui_result in zip(batch_data, ui_results):
-            ts_cls_result = self._create_ts_cls_result(data, ui_result)
-            results.append({"result": ts_cls_result})
-        return results
+    def process(self, batch_data: List[Union[str, pd.DataFrame]]) -> Dict[str, Any]:
+        batch_raw_ts = self._data_reader(ts_list=batch_data)
+        ui_results = self._ui_model.batch_predict(batch_raw_ts)
 
-    def _create_ts_cls_result(self, data: Data, ui_result: Any) -> TSClsResult:
-        classification = pd.DataFrame.from_dict(
-            {"classid": [ui_result.class_id], "score": [ui_result.score]}
-        )
-        classification.index.name = "sample"
-        dic = {"input_path": data["input_path"], "classification": classification}
-        return TSClsResult(dic)
+        classification_list = []
+        for ui_result in ui_results:
+            classification = pd.DataFrame.from_dict(
+                {"classid": [ui_result.class_id], "score": [ui_result.score]}
+            )
+            classification.index.name = "sample"
+            classification_list.append(classification)
+
+        return {
+            "input_path": batch_data,
+            "input_ts": batch_raw_ts,
+            "classification": classification_list,
+        }

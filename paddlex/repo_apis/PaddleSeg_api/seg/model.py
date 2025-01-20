@@ -126,6 +126,10 @@ class SegModel(BaseModel):
         if log_iters is not None:
             cli_args.append(CLIArgument("--log_iters", log_iters))
 
+        input_shape = kwargs.pop("input_shape", None)
+        if input_shape is not None:
+            cli_args.append(CLIArgument("--input_shape", *input_shape))
+
         # Benchmarking mode settings
         benchmark = kwargs.pop("benchmark", None)
         if benchmark is not None:
@@ -167,8 +171,11 @@ class SegModel(BaseModel):
 
         # PDX related settings
         uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
+        export_with_pir = kwargs.pop("export_with_pir", False)
         config.set_val("uniform_output_enabled", uniform_output_enabled)
         config.set_val("pdx_model_name", self.name)
+        if export_with_pir:
+            config.set_val("export_with_pir", export_with_pir)
 
         self._assert_empty_kwargs(kwargs)
 
@@ -352,8 +359,11 @@ class SegModel(BaseModel):
 
         # PDX related settings
         uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
+        export_with_pir = kwargs.pop("export_with_pir", False)
         config.set_val("uniform_output_enabled", uniform_output_enabled)
         config.set_val("pdx_model_name", self.name)
+        if export_with_pir:
+            config.set_val("export_with_pir", export_with_pir)
 
         self._assert_empty_kwargs(kwargs)
 

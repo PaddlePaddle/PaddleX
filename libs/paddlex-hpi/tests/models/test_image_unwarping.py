@@ -42,6 +42,8 @@ class TestWarpPredictor(BaseTestPredictor):
 
     def _check_result(self, result, expected_result):
         assert isinstance(result, DocTrResult)
+        assert "input_img" in result
+        result.pop("input_img")
         assert set(result) == set(expected_result)
         assert np.allclose(
             result["doctr_img"],

@@ -12,16 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .....utils import logging
-from .base import BaseChat
+import re
+import json
 import erniebot
 from typing import Dict
+from .....utils import logging
+from .base import BaseChat
 
 
 class ErnieBotChat(BaseChat):
     """Ernie Bot Chat"""
 
     entities = [
+        "aistudio",
+        "qianfan",
+    ]
+
+    MODELS = [
         "ernie-4.0",
         "ernie-3.5",
         "ernie-3.5-8k",
@@ -51,8 +58,8 @@ class ErnieBotChat(BaseChat):
         sk = config.get("sk", None)
         access_token = config.get("access_token", None)
 
-        if model_name not in self.entities:
-            raise ValueError(f"model_name must be in {self.entities} of ErnieBotChat.")
+        if model_name not in self.MODELS:
+            raise ValueError(f"model_name must be in {self.MODELS} of ErnieBotChat.")
 
         if api_type not in ["aistudio", "qianfan"]:
             raise ValueError("api_type must be one of ['aistudio', 'qianfan']")
@@ -110,3 +117,76 @@ class ErnieBotChat(BaseChat):
                 logging.error(e)
                 self.ERROR_MASSAGE = "大模型调用失败"
         return None
+
+    def fix_llm_result_format(self, llm_result: str) -> dict:
+        """
+        Fix the format of the LLM result.
+
+        Args:
+            llm_result (str): The result from the LLM (Large Language Model).
+
+        Returns:
+            dict: A fixed format dictionary from the LLM result.
+        """
+        if not llm_result:
+            return {}
+
+        if "json" in llm_result or "```" in llm_result:
+            index = llm_result.find("{")
+            if index != -1:
+                llm_result = llm_result[index:]
+            index = llm_result.rfind("}")
+            if index != -1:
+                llm_result = llm_result[: index + 1]
+            llm_result = (
+                llm_result.replace("```", "").replace("json", "").replace("/n", "")
+            )
+            llm_result = llm_result.replace("[", "").replace("]", "")
+
+        try:
+            llm_result = json.loads(llm_result)
+            llm_result_final = {}
+            if "问题" in llm_result.keys() and "答案" in llm_result.keys():
+                key = llm_result["问题"]
+                value = llm_result["答案"]
+                if isinstance(value, list):
+                    if len(value) > 0:
+                        llm_result_final[key] = value[0].strip(f"{key}:").strip(key)
+                else:
+                    llm_result_final[key] = value.strip(f"{key}:").strip(key)
+                return llm_result_final
+            for key in llm_result:
+                value = llm_result[key]
+                if isinstance(value, list):
+                    if len(value) > 0:
+                        llm_result_final[key] = value[0]
+                else:
+                    llm_result_final[key] = value
+            return llm_result_final
+
+        except:
+            results = (
+                llm_result.replace("\n", "")
+                .replace("    ", "")
+                .replace("{", "")
+                .replace("}", "")
+            )
+            if not results.endswith('"'):
+                results = results + '"'
+            pattern = r'"(.*?)": "([^"]*)"'
+            matches = re.findall(pattern, str(results))
+            if len(matches) > 0:
+                llm_result = {k: v for k, v in matches}
+                if "问题" in llm_result.keys() and "答案" in llm_result.keys():
+                    llm_result_final = {}
+                    key = llm_result["问题"]
+                    value = llm_result["答案"]
+                    if isinstance(value, list):
+                        if len(value) > 0:
+                            llm_result_final[key] = value[0].strip(f"{key}:").strip(key)
+                    else:
+                        llm_result_final[key] = value.strip(f"{key}:").strip(key)
+                    return llm_result_final
+                return llm_result
+            else:
+                return {}

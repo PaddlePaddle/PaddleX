@@ -22,6 +22,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing_extensions import Annotated, TypeAlias, TypedDict, assert_never
 
 from paddlex_hpi._model_info import get_model_info
+from paddlex_hpi._strategy import SelectSpecificStrategy, SelectFirstStrategy
 from paddlex_hpi._utils.typing import Backend, DeviceType
 
 
@@ -81,7 +82,9 @@ class TensorRTConfig(_BackendConfig):
 
     def update_ui_option(self, option: ui.RuntimeOption, model_dir: Path) -> None:
         option.use_trt_backend()
-        option.trt_option.serialize_file = str(model_dir / "trt_serialized.trt")
+        option.trt_option.serialize_file = str(
+            model_dir / f"trt_serialized_{self.precision}.trt"
+        )
         if self.precision == "FP16":
             option.trt_option.enable_fp16 = True
         if self.dynamic_shapes is not None:
@@ -152,7 +155,7 @@ class HPIConfig(BaseModel):
     ] = None
 
     def get_backend_and_config(
-        self, model_name: str, device_type: DeviceType
+        self, model_name: str, device_type: DeviceType, onnx_format: bool
     ) -> Tuple[Backend, BackendConfig]:
         # Do we need an extensible selector?
         model_info = get_model_info(model_name, device_type)
@@ -160,21 +163,17 @@ class HPIConfig(BaseModel):
             backend_config_pairs = model_info["backend_config_pairs"]
         else:
             backend_config_pairs = []
-        config_dict: Dict[str, Any] = {}
-        if self.selected_backends and device_type in self.selected_backends:
-            backend = self.selected_backends[device_type]
-            for pair in backend_config_pairs:
-                # Use the first one
-                if pair[0] == self.selected_backends[device_type]:
-                    config_dict.update(pair[1])
-                    break
+
+        use_specific_backend = (
+            self.selected_backends and device_type in self.selected_backends
+        )
+        if use_specific_backend:
+            specified_backend = self.selected_backends[device_type]
+            strategy = SelectSpecificStrategy(onnx_format, specified_backend)
         else:
-            if backend_config_pairs:
-                # Currently we select the first one
-                backend = backend_config_pairs[0][0]
-                config_dict.update(backend_config_pairs[0][1])
-            else:
-                backend = "paddle_infer"
+            strategy = SelectFirstStrategy(onnx_format)
+
+        backend, config_dict = strategy.select_backend_and_config(backend_config_pairs)
         if self.backend_configs and backend in self.backend_configs:
             config_dict.update(
                 self.backend_configs[backend].model_dump(exclude_unset=True)

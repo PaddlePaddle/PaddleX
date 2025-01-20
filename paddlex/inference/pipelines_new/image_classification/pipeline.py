@@ -14,13 +14,13 @@
 
 from typing import Any, Dict, Optional
 import numpy as np
-
 from ...common.reader import ReadImage
 from ...common.batch_sampler import ImageBatchSampler
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
+
+# [TODO] 待更新models_new到models
 from ...models_new.image_classification.result import TopkResult
-from ...results import TopkResult
 
 
 class ImageClassificationPipeline(BasePipeline):
@@ -34,7 +34,6 @@ class ImageClassificationPipeline(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
-        hpi_params: Optional[Dict[str, Any]] = None,
     ) -> None:
         """
         Initializes the class with given configurations and options.
@@ -44,19 +43,17 @@ class ImageClassificationPipeline(BasePipeline):
             device (str): The device to run the prediction on. Default is None.
             pp_option (PaddlePredictorOption): Options for PaddlePaddle predictor. Default is None.
             use_hpip (bool): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            hpi_params (Optional[Dict[str, Any]]): HPIP specific parameters. Default is None.
         """
-        super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_params=hpi_params
-        )
+        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
 
         image_classification_model_config = config["SubModules"]["ImageClassification"]
+        model_kwargs = {}
+        if (topk := image_classification_model_config.get("topk", None)) is not None:
+            model_kwargs = {"topk": topk}
         self.image_classification_model = self.create_model(
-            image_classification_model_config
+            image_classification_model_config, **model_kwargs
         )
-        batch_size = image_classification_model_config["batch_size"]
-        self.batch_sampler = ImageBatchSampler(batch_size=batch_size)
-        self.img_reader = ReadImage(format="BGR")
+        self.topk = image_classification_model_config.get("topk", 5)
 
     def predict(
         self, input: str | list[str] | np.ndarray | list[np.ndarray], **kwargs
@@ -71,7 +68,5 @@ class ImageClassificationPipeline(BasePipeline):
             TopkResult: The predicted top k results.
         """
 
-        for img_id, batch_data in enumerate(self.batch_sampler(input)):
-            batch_imgs = self.img_reader(batch_data)
-            for topk_single_result in self.image_classification_model(batch_imgs):
-                yield topk_single_result
+        topk = kwargs.pop("topk", self.topk)
+        yield from self.image_classification_model(input, topk=topk)

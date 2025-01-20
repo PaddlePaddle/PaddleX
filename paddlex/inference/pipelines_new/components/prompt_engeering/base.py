@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import inspect
 from abc import ABC, abstractmethod
 from .....utils.subclass_register import AutoRegisterABCMetaClass
-
-import inspect
 
 
 class BaseGeneratePrompt(ABC, metaclass=AutoRegisterABCMetaClass):

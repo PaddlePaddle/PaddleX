@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import numpy as np
+import pytest
 from paddlex.inference.results import MLClassResult
 from tests.models.base import BaseTestPredictor
 
@@ -21,6 +22,7 @@ from paddlex_hpi.models import MLClasPredictor
 MODEL_URL = "https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/tests/models/ml_clas_model.zip"
 INPUT_DATA_URL = "https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/tests/models/ml_clas_input.jpg"
 EXPECTED_RESULT_URL = "https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/tests/models/ml_clas_result.json"
+EXPECTED_RESULT_WITH_ARGS_URL = "https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/tests/models/ml_clas_result_with_args.json"
 
 
 class TestMLClasPredictor(BaseTestPredictor):
@@ -37,11 +39,41 @@ class TestMLClasPredictor(BaseTestPredictor):
         return EXPECTED_RESULT_URL
 
     @property
+    def expected_result_with_args_url(self):
+        return EXPECTED_RESULT_WITH_ARGS_URL
+
+    @property
+    def should_test_with_args(self):
+        return True
+
+    @property
     def predictor_cls(self):
         return MLClasPredictor
 
+    def _predict_with_predictor_args(
+        self, model_path, input_data_path, device, expected_result_with_args
+    ):
+        predictor = self.predictor_cls(model_path, device=device, threshold=0.85)
+        output = predictor(str(input_data_path))
+        self._check_output(output, expected_result_with_args, 1)
+
+    def _predict_with_predict_args(
+        self,
+        model_path,
+        input_data_path,
+        device,
+        expected_result,
+        expected_result_with_args,
+    ):
+        predictor = self.predictor_cls(model_path, device=device)
+        with pytest.raises(TypeError):
+            output = predictor(str(input_data_path), threshold=0.85)
+            output = list(output)
+
     def _check_result(self, result, expected_result):
         assert isinstance(result, MLClassResult)
+        assert "input_img" in result
+        result.pop("input_img")
         assert set(result) == set(expected_result)
         assert result["class_ids"] == expected_result["class_ids"]
         assert np.allclose(

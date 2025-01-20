@@ -18,5 +18,10 @@ NEWIR_BLOCKLIST = [
     "TimesNet_ad",
     "Nonstationary_ad",
     "DLinear_ad",
+    "Co-Deformable-DETR-R50",
+    "Co-Deformable-DETR-Swin-T",
+    "Co-DINO-R50",
+    "Co-DINO-Swin-L",
     "LaTeX_OCR_rec",
+    "GroundingDINO-T",
 ]

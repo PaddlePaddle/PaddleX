@@ -16,13 +16,38 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="doc_preprocessor")
 
-test_img_path = "./test_samples/img_rot180_demo.jpg"
-# test_img_path = "./test_samples/doc_distort_test.jpg"
-
 output = pipeline.predict(
-    test_img_path, use_doc_orientation_classify=True, use_doc_unwarping=True
+    "./test_samples/img_rot180_demo.jpg",
+    use_doc_orientation_classify=True,
+    use_doc_unwarping=False,
 )
+
+# output = pipeline.predict(
+#     "./test_samples/img_rot180_demo.jpg",
+#     use_doc_orientation_classify=False,
+#     use_doc_unwarping=True,
+# )
+
+# output = pipeline.predict(
+#     "./test_samples/img_rot180_demo.jpg",
+#     use_doc_orientation_classify=True,
+#     use_doc_unwarping=True,
+# )
+
+# output = pipeline.predict(
+#     "./test_samples/img_rot180_demo.jpg",
+#     use_doc_orientation_classify=False,
+#     use_doc_unwarping=False,
+# )
+
+# output = pipeline.predict(
+#     "./test_samples/doc_distort_test.jpg",
+#     use_doc_orientation_classify=True,
+#     use_doc_unwarping=True
+# )
 
 for res in output:
     print(res)
+    res.print()
     res.save_to_img("./output")
+    res.save_to_json("./output")

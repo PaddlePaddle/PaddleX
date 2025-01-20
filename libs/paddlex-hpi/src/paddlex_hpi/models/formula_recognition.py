@@ -17,7 +17,7 @@ from typing import Any, Dict, List
 import ultra_infer as ui
 import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.results import FormulaRecResult
+from paddlex.inference.models_new.formula_recognition.result import FormulaRecResult
 from paddlex.modules.formula_recognition.model_list import MODELS
 
 from paddlex_hpi.models.base import CVPredictor

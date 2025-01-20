@@ -140,4 +140,6 @@ official_categories = {
     "BlazeFace-FPN-SSH": [{"name": "face", "id": 0}],
     "PicoDet_LCNet_x2_5_face": [{"name": "face", "id": 0}],
     "PP-YOLOE_plus-S_face": [{"name": "face", "id": 0}],
+    "RT-DETR-L_wired_table_cell_det": [{"name": "cell", "id": 0}],
+    "RT-DETR-L_wireless_table_cell_det": [{"name": "cell", "id": 0}],
 }

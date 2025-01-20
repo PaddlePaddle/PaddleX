@@ -103,16 +103,16 @@ def install_packages_using_pip(
 
 def install_external_deps(repo_name, repo_root):
     """install paddle repository custom dependencies"""
-    gcc_version = (
-        subprocess.check_output(["gcc", "--version"]).decode("utf-8").split()[2]
-    )
+
+    def get_gcc_version():
+        return subprocess.check_output(["gcc", "--version"]).decode("utf-8").split()[2]
 
     if repo_name == "PaddleDetection":
         if os.path.exists(os.path.join(repo_root, "ppdet", "ext_op")):
             """Install custom op for rotated object detection"""
             if (
                 PLATFORM == "Linux"
-                and _compare_version(gcc_version, "8.2.0") >= 0
+                and _compare_version(get_gcc_version(), "8.2.0") >= 0
                 and "gpu" in get_device_type()
                 and (
                     paddle.is_compiled_with_cuda()

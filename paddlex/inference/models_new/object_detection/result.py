@@ -13,13 +13,13 @@
 # limitations under the License.
 
 from typing import List
-
+import copy
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH
 from ...utils.color_map import get_colormap, font_colormap
-from ...common.result import BaseCVResult
+from ...common.result import BaseCVResult, StrMixin, JsonMixin
 
 
 def draw_box(img: Image.Image, boxes: List[dict]) -> Image.Image:
@@ -99,5 +99,14 @@ class DetResult(BaseCVResult):
     def _to_img(self) -> Image.Image:
         """apply"""
         boxes = self["boxes"]
-        image = Image.fromarray(self._input_img)
-        return draw_box(image, boxes)
+        image = Image.fromarray(self["input_img"])
+        return {"res": draw_box(image, boxes)}
+
+    def _to_str(self, *args, **kwargs):
+        data = copy.deepcopy(self)
+        return StrMixin._to_str(data, *args, **kwargs)
+
+    def _to_json(self, *args, **kwargs):
+        data = copy.deepcopy(self)
+        data.pop("input_img")
+        return JsonMixin._to_json(data, *args, **kwargs)

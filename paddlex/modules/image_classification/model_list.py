@@ -95,4 +95,5 @@ MODELS = [
     "FasterNet-T0",
     "FasterNet-T1",
     "FasterNet-T2",
+    "PP-LCNet_x1_0_table_cls",
 ]

@@ -13,23 +13,32 @@
 # limitations under the License.
 
 
+import copy
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH
 from ...utils.color_map import get_colormap
-from ...common.result import BaseCVResult
+from ...common.result import BaseCVResult, StrMixin, JsonMixin
 
 
 class TopkResult(BaseCVResult):
+    def _to_str(self, *args, **kwargs):
+        data = copy.deepcopy(self)
+        return StrMixin._to_str(data, *args, **kwargs)
+
+    def _to_json(self, *args, **kwargs):
+        data = copy.deepcopy(self)
+        data.pop("input_img")
+        return JsonMixin._to_json(data, *args, **kwargs)
 
     def _to_img(self):
         """Draw label on image"""
         labels = self.get("label_names", self["class_ids"])
         label_str = f"{labels[0]} {self['scores'][0]:.2f}"
 
-        image = Image.fromarray(self._input_img)
+        image = Image.fromarray(self["input_img"])
         image_size = image.size
         draw = ImageDraw.Draw(image)
         min_font_size = int(image_size[0] * 0.02)
@@ -66,7 +75,7 @@ class TopkResult(BaseCVResult):
         text_x = rect_left + 3
         text_y = rect_top
         draw.text((text_x, text_y), label_str, fill=font_color, font=font)
-        return image
+        return {"res": image}
 
     def _get_font_colormap(self, color_index):
         """

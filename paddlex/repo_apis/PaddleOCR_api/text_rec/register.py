@@ -57,7 +57,7 @@ register_model_info(
     {
         "model_name": "korean_PP-OCRv3_mobile_rec",
         "suite": "TextRec",
-        "config_path": osp.join(PDX_CONFIG_DIR, "korean_PP-OCRv3_mobile_rec.yml"),
+        "config_path": osp.join(PDX_CONFIG_DIR, "korean_PP-OCRv3_mobile_rec.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export"],
     }
 )

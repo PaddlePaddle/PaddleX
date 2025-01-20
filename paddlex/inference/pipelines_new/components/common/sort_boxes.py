@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .base_operator import BaseOperator
 import numpy as np
+from .base_operator import BaseOperator
 
 
 class SortQuadBoxes(BaseOperator):

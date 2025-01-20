@@ -13,3 +13,4 @@
 # limitations under the License.
 
 from .pipeline import LayoutParsingPipeline
+from .pipeline_v2 import LayoutParsingPipelineV2

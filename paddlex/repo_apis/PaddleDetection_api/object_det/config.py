@@ -89,6 +89,22 @@ class DetConfig(BaseConfig, PPDetConfigMixin):
                 val_anno_path,
                 test_anno_path,
             )
+        elif dataset_type == "KeypointTopDownCocoDataset":
+            ds_cfg = {
+                "TrainDataset": {
+                    "image_dir": image_dir,
+                    "anno_path": train_anno_path,
+                    "dataset_dir": dataset_path,
+                },
+                "EvalDataset": {
+                    "image_dir": image_dir,
+                    "anno_path": val_anno_path,
+                    "dataset_dir": dataset_path,
+                },
+                "TestDataset": {
+                    "anno_path": test_anno_path,
+                },
+            }
         else:
             raise ValueError(f"{repr(dataset_type)} is not supported.")
         self.update(ds_cfg)

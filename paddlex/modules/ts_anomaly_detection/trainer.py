@@ -35,6 +35,17 @@ class TSADTrainer(BaseTrainer):
         self.update_config()
         self.dump_config()
         train_args = self.get_train_kwargs()
+        export_with_pir = self.global_config.get("export_with_pir", False) or os.getenv(
+            "FLAGS_json_format_model"
+        ) in ["1", "True"]
+        train_args.update(
+            {
+                "uniform_output_enabled": self.train_config.get(
+                    "uniform_output_enabled", True
+                ),
+                "export_with_pir": export_with_pir,
+            }
+        )
         if self.benchmark_config is not None:
             train_args.update({"benchmark": self.benchmark_config})
         train_result = self.pdx_model.train(**train_args)

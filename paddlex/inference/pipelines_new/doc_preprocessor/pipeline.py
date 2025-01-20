@@ -12,16 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ..base import BasePipeline
 from typing import Any, Dict, Optional
 from scipy.ndimage import rotate
+import numpy as np
+from ..base import BasePipeline
 from .result import DocPreprocessorResult
 from ....utils import logging
-import numpy as np
-
-########## [TODO]后续需要更新路径
-from ...components.transforms import ReadImage
-
+from ...common.reader import ReadImage
+from ...common.batch_sampler import ImageBatchSampler
 from ...utils.pp_option import PaddlePredictorOption
 
 
@@ -33,10 +31,9 @@ class DocPreprocessorPipeline(BasePipeline):
     def __init__(
         self,
         config: Dict,
-        device: str = None,
-        pp_option: PaddlePredictorOption = None,
+        device: Optional[str] = None,
+        pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
-        hpi_params: Optional[Dict[str, Any]] = None,
     ) -> None:
         """Initializes the doc preprocessor pipeline.
 
@@ -45,29 +42,29 @@ class DocPreprocessorPipeline(BasePipeline):
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
             use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            hpi_params (Optional[Dict[str, Any]], optional): HPIP parameters. Defaults to None.
         """
 
-        super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_params=hpi_params
+        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
+
+        self.use_doc_orientation_classify = config.get(
+            "use_doc_orientation_classify", True
         )
-
-        self.use_doc_orientation_classify = True
-        if "use_doc_orientation_classify" in config:
-            self.use_doc_orientation_classify = config["use_doc_orientation_classify"]
-
-        self.use_doc_unwarping = True
-        if "use_doc_unwarping" in config:
-            self.use_doc_unwarping = config["use_doc_unwarping"]
-
         if self.use_doc_orientation_classify:
-            doc_ori_classify_config = config["SubModules"]["DocOrientationClassify"]
+            doc_ori_classify_config = config.get("SubModules", {}).get(
+                "DocOrientationClassify",
+                {"model_config_error": "config error for doc_ori_classify_model!"},
+            )
             self.doc_ori_classify_model = self.create_model(doc_ori_classify_config)
 
+        self.use_doc_unwarping = config.get("use_doc_unwarping", True)
         if self.use_doc_unwarping:
-            doc_unwarping_config = config["SubModules"]["DocUnwarping"]
+            doc_unwarping_config = config.get("SubModules", {}).get(
+                "DocUnwarping",
+                {"model_config_error": "config error for doc_unwarping_model!"},
+            )
             self.doc_unwarping_model = self.create_model(doc_unwarping_config)
 
+        self.batch_sampler = ImageBatchSampler(batch_size=1)
         self.img_reader = ReadImage(format="BGR")
 
     def rotate_image(self, image_array: np.ndarray, rotate_angle: float) -> np.ndarray:
@@ -89,19 +86,19 @@ class DocPreprocessorPipeline(BasePipeline):
         ), "rotate_angle must in [0-360), but get {rotate_angle}."
         return rotate(image_array, rotate_angle, reshape=True)
 
-    def check_input_params_valid(self, input_params: Dict) -> bool:
+    def check_model_settings_valid(self, model_settings: Dict) -> bool:
         """
-        Check if the input parameters are valid based on the initialized models.
+        Check if the the input params for model settings are valid based on the initialized models.
 
         Args:
-            input_params (Dict): A dictionary containing input parameters.
+            model_settings (Dict): A dictionary containing model settings.
 
         Returns:
-            bool: True if all required models are initialized according to input parameters, False otherwise.
+            bool: True if all required models are initialized according to the model settings, False otherwise.
         """
 
         if (
-            input_params["use_doc_orientation_classify"]
+            model_settings["use_doc_orientation_classify"]
             and not self.use_doc_orientation_classify
         ):
             logging.error(
@@ -109,7 +106,7 @@ class DocPreprocessorPipeline(BasePipeline):
             )
             return False
 
-        if input_params["use_doc_unwarping"] and not self.use_doc_unwarping:
+        if model_settings["use_doc_unwarping"] and not self.use_doc_unwarping:
             logging.error(
                 "Set use_doc_unwarping, but the model for doc unwarping is not initialized."
             )
@@ -117,18 +114,40 @@ class DocPreprocessorPipeline(BasePipeline):
 
         return True
 
+    def get_model_settings(
+        self, use_doc_orientation_classify, use_doc_unwarping
+    ) -> dict:
+        """
+        Retrieve the model settings dictionary based on input parameters.
+
+        Args:
+            use_doc_orientation_classify (bool, optional): Whether to use document orientation classification.
+            use_doc_unwarping (bool, optional): Whether to use document unwarping.
+
+        Returns:
+            dict: A dictionary containing the model settings.
+        """
+        if use_doc_orientation_classify is None:
+            use_doc_orientation_classify = self.use_doc_orientation_classify
+        if use_doc_unwarping is None:
+            use_doc_unwarping = self.use_doc_unwarping
+        model_settings = {
+            "use_doc_orientation_classify": use_doc_orientation_classify,
+            "use_doc_unwarping": use_doc_unwarping,
+        }
+        return model_settings
+
     def predict(
         self,
         input: str | list[str] | np.ndarray | list[np.ndarray],
-        use_doc_orientation_classify: bool = True,
-        use_doc_unwarping: bool = False,
-        **kwargs
+        use_doc_orientation_classify: Optional[bool] = None,
+        use_doc_unwarping: Optional[bool] = None,
     ) -> DocPreprocessorResult:
         """
         Predict the preprocessing result for the input image or images.
 
         Args:
-            input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or path(s) to the images.
+            input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or path(s) to the images or pdfs.
             use_doc_orientation_classify (bool): Whether to use document orientation classification.
             use_doc_unwarping (bool): Whether to use document unwarping.
             **kwargs: Additional keyword arguments.
@@ -137,29 +156,22 @@ class DocPreprocessorPipeline(BasePipeline):
             DocPreprocessorResult: A generator yielding preprocessing results.
         """
 
-        if not isinstance(input, list):
-            input_list = [input]
-        else:
-            input_list = input
+        model_settings = self.get_model_settings(
+            use_doc_orientation_classify, use_doc_unwarping
+        )
+        if not self.check_model_settings_valid(model_settings):
+            yield {"error": "the input params for model settings are invalid!"}
 
-        input_params = {
-            "use_doc_orientation_classify": use_doc_orientation_classify,
-            "use_doc_unwarping": use_doc_unwarping,
-        }
-
-        if not self.check_input_params_valid(input_params):
-            yield {"error": "input params invalid"}
-
-        img_id = 1
-        for input in input_list:
-            if isinstance(input, str):
-                image_array = next(self.img_reader(input))[0]["img"]
+        for img_id, batch_data in enumerate(self.batch_sampler(input)):
+            if not isinstance(batch_data[0], str):
+                # TODO: add support input_pth for ndarray and pdf
+                input_path = f"{img_id}.jpg"
             else:
-                image_array = input
+                input_path = batch_data[0]
 
-            assert len(image_array.shape) == 3
+            image_array = self.img_reader(batch_data)[0]
 
-            if input_params["use_doc_orientation_classify"]:
+            if model_settings["use_doc_orientation_classify"]:
                 pred = next(self.doc_ori_classify_model(image_array))
                 angle = int(pred["label_names"][0])
                 rot_img = self.rotate_image(image_array, angle)
@@ -167,18 +179,17 @@ class DocPreprocessorPipeline(BasePipeline):
                 angle = -1
                 rot_img = image_array
 
-            if input_params["use_doc_unwarping"]:
+            if model_settings["use_doc_unwarping"]:
                 output_img = next(self.doc_unwarping_model(rot_img))["doctr_img"]
             else:
                 output_img = rot_img
 
             single_img_res = {
-                "input_image": image_array,
-                "input_params": input_params,
+                "input_path": input_path,
+                "input_img": image_array,
+                "model_settings": model_settings,
                 "angle": angle,
                 "rot_img": rot_img,
                 "output_img": output_img,
-                "img_id": img_id,
             }
-            img_id += 1
             yield DocPreprocessorResult(single_img_res)

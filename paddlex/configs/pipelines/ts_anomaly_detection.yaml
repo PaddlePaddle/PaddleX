@@ -1,0 +1,8 @@
+pipeline_name: ts_anomaly_detection
+
+SubModules:
+  TSAnomalyDetection:
+    module_name: ts_anomaly_detection
+    model_name: DLinear_ad
+    model_dir: null
+    batch_size: 1   

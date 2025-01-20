@@ -124,7 +124,7 @@ class BasePredictor(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def set_predictor(self) -> None:
+    def set_predictor(self, batch_size: int = None, device: str = None, *args) -> None:
         """Sets up the predictor."""
         raise NotImplementedError
 

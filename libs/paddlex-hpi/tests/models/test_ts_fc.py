@@ -43,6 +43,8 @@ class TestTSFcPredictor(BaseTestPredictor):
 
     def _check_result(self, result, expected_result):
         assert isinstance(result, TSFcResult)
+        assert "input_ts" in result
+        result.pop("input_ts")
         assert set(result) == set(expected_result)
         expected_result = json.loads(expected_result["forecast"])
         expected_result = [{"OT": round(i["OT"], 3)} for i in expected_result]

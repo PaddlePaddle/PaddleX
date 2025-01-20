@@ -18,7 +18,7 @@ from typing import Any, Dict, List, Optional, Union
 import ultra_infer as ui
 import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.results import InstanceSegResult
+from paddlex.inference.models_new.instance_segmentation.result import InstanceSegResult
 from paddlex.modules.instance_segmentation.model_list import MODELS
 from pydantic import BaseModel
 
@@ -39,6 +39,7 @@ class InstanceSegPredictor(CVPredictor):
         config: Optional[Dict[str, Any]] = None,
         device: Optional[str] = None,
         hpi_params: Optional[HPIParams] = None,
+        threshold: Optional[float] = None,
     ) -> None:
         super().__init__(
             model_dir=model_dir,
@@ -46,7 +47,10 @@ class InstanceSegPredictor(CVPredictor):
             device=device,
             hpi_params=hpi_params,
         )
+        if threshold and self.model_name == "SOLOv2":
+            raise TypeError("SOLOv2 does not support `threshold` in PaddleX HPI.")
         self._pp_params = self._get_pp_params()
+        self._threshold = threshold or self._pp_params.threshold
 
     def _build_ui_model(
         self, option: ui.RuntimeOption
@@ -65,9 +69,15 @@ class InstanceSegPredictor(CVPredictor):
     def _get_result_class(self) -> type:
         return InstanceSegResult
 
-    def process(self, batch_data: List[Any]) -> Dict[str, List[Any]]:
+    def process(
+        self, batch_data: List[Any], threshold: Optional[float] = None
+    ) -> Dict[str, List[Any]]:
+        if threshold and self.model_name == "SOLOv2":
+            raise TypeError("SOLOv2 does not support `threshold` in PaddleX HPI.")
+
         batch_raw_imgs = self._data_reader(imgs=batch_data)
         imgs = [np.ascontiguousarray(img) for img in batch_raw_imgs]
+        threshold = threshold or self._threshold
         ui_results = self._ui_model.batch_predict(imgs)
 
         boxes_list = []
@@ -78,7 +88,7 @@ class InstanceSegPredictor(CVPredictor):
                 key=ui_result.scores.__getitem__,
                 reverse=True,
             )
-            inds = [i for i in inds if ui_result.scores[i] > self._pp_params.threshold]
+            inds = [i for i in inds if ui_result.scores[i] > threshold]
             inds = [i for i in inds if ui_result.label_ids[i] > -1]
             ids = [ui_result.label_ids[i] for i in inds]
             scores = [ui_result.scores[i] for i in inds]

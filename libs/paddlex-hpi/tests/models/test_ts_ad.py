@@ -43,6 +43,8 @@ class TestTSAdPredictor(BaseTestPredictor):
 
     def _check_result(self, result, expected_result):
         assert isinstance(result, TSAdResult)
+        assert "input_ts" in result
+        result.pop("input_ts")
         assert set(result) == set(expected_result)
         expected_result = json.loads(expected_result["anomaly"])
         result = result["anomaly"].to_dict(orient="records")

@@ -13,14 +13,12 @@
 # limitations under the License.
 
 from .base_result import BaseResult
-from .mixin import StrMixin, JsonMixin, ImgMixin
+from .mixin import ImgMixin
 from ...utils.io import ImageWriter
 
 
-class BaseCVResult(BaseResult, StrMixin, JsonMixin, ImgMixin):
+class BaseCVResult(BaseResult, ImgMixin):
     """Base class for computer vision results."""
-
-    INPUT_IMG_KEY = "input_img"
 
     def __init__(self, data: dict) -> None:
         """
@@ -32,13 +30,5 @@ class BaseCVResult(BaseResult, StrMixin, JsonMixin, ImgMixin):
         Raises:
             AssertionError: If the required key (`BaseCVResult.INPUT_IMG_KEY`) are not found in the data.
         """
-        assert (
-            BaseCVResult.INPUT_IMG_KEY in data
-        ), f"`{BaseCVResult.INPUT_IMG_KEY}` is needed, but not found in `{list(data.keys())}`!"
-        self._input_img = data.pop("input_img", None)
-        self._img_writer = ImageWriter(backend="pillow")
-
         super().__init__(data)
-        StrMixin.__init__(self)
-        JsonMixin.__init__(self)
         ImgMixin.__init__(self, "pillow")

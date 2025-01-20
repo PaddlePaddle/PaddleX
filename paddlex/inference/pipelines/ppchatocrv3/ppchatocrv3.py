@@ -547,7 +547,7 @@ class PPChatOCRPipeline(_TableRecPipeline):
                 logging.debug(prompt)
                 res = self.get_llm_result(llm_api, prompt)
                 # TODO: why use one html but the whole table_text in next step
-                if list(res.values())[0] in failed_results:
+                if not res or list(res.values())[0] in failed_results:
                     logging.debug(
                         "table html sequence is too much longer, using ocr directly!"
                     )

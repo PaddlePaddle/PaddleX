@@ -170,7 +170,7 @@ class InstanceSegPredictor(DetPredictor):
         box_idx_start = 0
         pred_box = []
 
-        if isinstance(pred, list) and len(pred[0]) == 4:
+        if isinstance(pred[0], list) and len(pred[0]) == 4:
             # Adapt to SOLOv2, which only support prediction with a batch_size of 1.
             pred_class_id = [[pred_[1], pred_[2]] for pred_ in pred]
             pred_mask = [pred_[3] for pred_ in pred]
@@ -181,7 +181,7 @@ class InstanceSegPredictor(DetPredictor):
                 }
                 for i in range(len(pred_class_id))
             ]
-        if isinstance(pred, list) and len(pred[0]) == 3:
+        if isinstance(pred[0], list) and len(pred[0]) == 3:
             # Adapt to PP-YOLOE_seg-S, which only support prediction with a batch_size of 1.
             return [
                 {"boxes": np.array(pred[i][0]), "masks": np.array(pred[i][2])}

@@ -12,19 +12,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, List
+import os
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import ultra_infer as ui
 import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.results import SegResult
+from paddlex.inference.models_new.semantic_segmentation.result import SegResult
 from paddlex.modules.semantic_segmentation.model_list import MODELS
 
-from paddlex_hpi.models.base import CVPredictor
+from paddlex_hpi.models.base import CVPredictor, HPIParams
 
 
 class SegPredictor(CVPredictor):
     entities = MODELS
+
+    def __init__(
+        self,
+        model_dir: Union[str, os.PathLike],
+        config: Optional[Dict[str, Any]] = None,
+        device: Optional[str] = None,
+        hpi_params: Optional[HPIParams] = None,
+        target_size: Union[int, Tuple[int], None] = None,
+    ) -> None:
+        if target_size:
+            raise TypeError("`target_size` is not supported in PaddleX HPI.")
+        super().__init__(
+            model_dir=model_dir,
+            config=config,
+            device=device,
+            hpi_params=hpi_params,
+        )
 
     def _build_ui_model(
         self, option: ui.RuntimeOption
@@ -43,7 +61,12 @@ class SegPredictor(CVPredictor):
     def _get_result_class(self) -> type:
         return SegResult
 
-    def process(self, batch_data: List[Any]) -> Dict[str, List[Any]]:
+    def process(
+        self, batch_data: List[Any], target_size: Union[int, Tuple[int], None] = None
+    ) -> Dict[str, List[Any]]:
+        if target_size:
+            raise TypeError("`target_size` is not supported in PaddleX HPI.")
+
         batch_raw_imgs = self._data_reader(imgs=batch_data)
         imgs = [np.ascontiguousarray(img) for img in batch_raw_imgs]
         ui_results = self._ui_model.batch_predict(imgs)

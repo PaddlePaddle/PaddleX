@@ -39,7 +39,7 @@ register_model_info(
     {
         "model_name": "LaTeX_OCR_rec",
         "suite": "FormulaRec",
-        "config_path": osp.join(PDX_CONFIG_DIR, "LaTeX_OCR_rec.yml"),
+        "config_path": osp.join(PDX_CONFIG_DIR, "LaTeX_OCR_rec.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
     }
 )

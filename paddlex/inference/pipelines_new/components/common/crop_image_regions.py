@@ -12,15 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .base_operator import BaseOperator
-import numpy as np
-from ....utils.io import ImageReader
+from typing import Tuple
 import copy
+import numpy as np
 import cv2
-from .seal_det_warp import AutoRectifier
 from shapely.geometry import Polygon
 from numpy.linalg import norm
-from typing import Tuple
+from .base_operator import BaseOperator
+from ....utils.io import ImageReader
+from .seal_det_warp import AutoRectifier
 
 
 class CropByBoxes(BaseOperator):

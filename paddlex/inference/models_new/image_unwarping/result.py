@@ -14,7 +14,7 @@
 
 import copy
 import numpy as np
-from ...common.result import BaseCVResult
+from ...common.result import BaseCVResult, StrMixin, JsonMixin
 
 
 class DocTrResult(BaseCVResult):
@@ -31,9 +31,14 @@ class DocTrResult(BaseCVResult):
 
     def _to_img(self) -> np.ndarray:
         result = np.array(self["doctr_img"])
-        return result
+        return {"res": result}
 
-    def _to_str(self, _, *args, **kwargs):
+    def _to_str(self, *args, **kwargs):
         data = copy.deepcopy(self)
         data["doctr_img"] = "..."
-        return super()._to_str(data, *args, **kwargs)
+        return StrMixin._to_str(data, *args, **kwargs)
+
+    def _to_json(self, *args, **kwargs):
+        data = copy.deepcopy(self)
+        data.pop("input_img")
+        return JsonMixin._to_json(data, *args, **kwargs)

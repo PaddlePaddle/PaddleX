@@ -1402,6 +1402,15 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 </table>
 <b>Note: The above accuracy metrics are evaluated on the </b>[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)<b> dataset using the average anomaly score.</b>
 
+## [Human Keypoint Detection Module](../module_usage/tutorials/cv_modules/human_keypoint_detection.en.md)
+
+| Model Name|Method|Input Size|AP(0.5:0.95)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size|YAML File|
+|-|-|-|-|-|-|-|-|
+| PP-TinyPose_128x96    | Top-Down| 128*96   | 58.4         |                   |                  | 4.9 M        | [PP-TinyPose_128x96.yaml](../../paddlex/configs/modules/keypoint_detection/PP-TinyPose_128x96.yaml) |
+| PP-TinyPose_256x192   | Top-Down| 128*96   | 68.3         |                   |                  | 4.9 M        | [PP-TinyPose_128x96.yaml](../../paddlex/configs/modules/keypoint_detection/PP-TinyPose_128x96.yaml) |
+
+**Note: The above accuracy metrics are based on the COCO dataset with AP(0.5:0.95), and the detection boxes are obtained from ground truth annotations. All model GPU inference times are measured on machines with NVIDIA Tesla T4 GPUs, using FP32 precision. The CPU inference speeds are based on an Intel® Xeon® Gold 5117 CPU @ 2.00GHz, with 8 threads and FP32 precision.**
+
 ## [Semantic Segmentation Module](../module_usage/tutorials/cv_modules/semantic_segmentation.en.md)
 <table>
 <thead>

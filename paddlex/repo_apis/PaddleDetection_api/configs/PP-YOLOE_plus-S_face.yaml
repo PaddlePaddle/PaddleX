@@ -17,10 +17,6 @@ metric: COCO
 num_classes: 1
 
 worker_num: 4
-eval_height: &eval_height 1088
-eval_width: &eval_width 1088
-eval_size: &eval_size [*eval_height, *eval_width]
-
 TrainDataset:
   name: COCODataSet
   image_dir: WIDER_train/images
@@ -62,17 +58,15 @@ TrainReader:
 EvalReader:
   sample_transforms:
     - Decode: {}
-    - Resize: {target_size: *eval_size, keep_ratio: False, interp: 2}
+    - Resize: {target_size: [1088, 1088], keep_ratio: False, interp: 2}
     - NormalizeImage: {mean: [0., 0., 0.], std: [1., 1., 1.], norm_type: none}
     - Permute: {}
   batch_size: 2
 
 TestReader:
-  inputs_def:
-    image_shape: [3, *eval_height, *eval_width]
   sample_transforms:
     - Decode: {}
-    - Resize: {target_size: *eval_size, keep_ratio: False, interp: 2}
+    - Resize: {target_size: [1088, 1088], keep_ratio: False, interp: 2}
     - NormalizeImage: {mean: [0., 0., 0.], std: [1., 1., 1.], norm_type: none}
     - Permute: {}
   batch_size: 1

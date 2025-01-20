@@ -863,7 +863,6 @@ register_model_info(
     }
 )
 
-
 register_model_info(
     {
         "model_name": "PicoDet_LCNet_x2_5_face",
@@ -879,7 +878,6 @@ register_model_info(
     }
 )
 
-
 register_model_info(
     {
         "model_name": "BlazeFace",
@@ -894,7 +892,6 @@ register_model_info(
         },
     }
 )
-
 
 register_model_info(
     {
@@ -931,6 +928,173 @@ register_model_info(
         "model_name": "PP-YOLOE-R_L",
         "suite": "Det",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-YOLOE-R_L.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "RT-DETR-L_wired_table_cell_det",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "RT-DETR-L_wired_table_cell_det.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "RT-DETR-L_wireless_table_cell_det",
+        "suite": "Det",
+        "config_path": osp.join(
+            PDX_CONFIG_DIR, "RT-DETR-L_wireless_table_cell_det.yaml"
+        ),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "Co-Deformable-DETR-R50",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "Co-Deformable-DETR-R50.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "Co-Deformable-DETR-Swin-T",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "Co-Deformable-DETR-Swin-T.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "Co-DINO-R50",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "Co-DINO-R50.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "Co-DINO-Swin-L",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "Co-DINO-Swin-L.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-TinyPose_128x96",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-TinyPose_128x96.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["KeypointTopDownCocoDetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-TinyPose_256x192",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-TinyPose_256x192.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["KeypointTopDownCocoDetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-DocLayout-L",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-DocLayout-L.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-DocLayout-M",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-DocLayout-M.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-DocLayout-S",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-DocLayout-S.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "supported_dataset_types": ["COCODetDataset"],
         "supported_train_opts": {

@@ -13,10 +13,9 @@
 # limitations under the License.
 
 from abc import ABC, abstractmethod
-from .....utils.subclass_register import AutoRegisterABCMetaClass
-
 import inspect
 import base64
+from .....utils.subclass_register import AutoRegisterABCMetaClass
 
 
 class BaseRetriever(ABC, metaclass=AutoRegisterABCMetaClass):

@@ -115,13 +115,19 @@ class PPRepository(object):
         """install_deps"""
         return RepositoryGroupInstaller([self]).install_deps(*args, **kwargs)
 
-    def install_package(self, no_deps=False, clean=True):
+    def install_package(self, no_deps=False, clean=True, install_extra_only=False):
         """install_package"""
         editable = self.meta.get("editable", True)
         extra_editable = self.meta.get("extra_editable", None)
         if editable:
             logging.warning(f"{self.pkg_name} will be installed in editable mode.")
         with switch_working_dir(self.root_dir):
+            if install_extra_only:
+                src_requirements = os.path.join(self.root_dir, "requirements.txt")
+                paddlex_requirements = os.path.join(
+                    self.root_dir, "requirements_paddlex.txt"
+                )
+                shutil.copy(paddlex_requirements, src_requirements)
             try:
                 install_packages_using_pip(["."], editable=editable, no_deps=no_deps)
                 install_external_deps(self.name, self.root_dir)
@@ -211,10 +217,13 @@ class PPRepository(object):
         """get_pdx"""
         return importlib.import_module(self.pdx_mod_name)
 
-    def get_deps(self):
+    def get_deps(self, install_extra_only=False):
         """get_deps"""
         # Merge requirement files
-        req_list = [self.main_req_file]
+        if install_extra_only:
+            req_list = []
+        else:
+            req_list = [self.main_req_file]
         req_list.extend(self.meta.get("extra_req_files", []))
         deps = []
         for req in req_list:
@@ -270,7 +279,10 @@ class RepositoryGroupInstaller(object):
         # failure of one repo package aborts the entire installation process.
         for ins_flag, repo in zip(ins_flags, repos):
             if ins_flag:
-                repo.install_package(no_deps=True)
+                if repo.name in ["PaddleVideo"]:
+                    repo.install_package(no_deps=True, install_extra_only=True)
+                else:
+                    repo.install_package(no_deps=True)
 
     def uninstall(self):
         """uninstall"""
@@ -286,7 +298,10 @@ class RepositoryGroupInstaller(object):
         deps_list = []
         repos = self._sort_repos(self.repos, check_missing=True)
         for repo in repos:
-            deps = repo.get_deps()
+            if repo.name in ["PaddleVideo"]:
+                deps = repo.get_deps(install_extra_only=True)
+            else:
+                deps = repo.get_deps()
             deps = self._normalize_deps(deps, headline=f"# {repo.name} dependencies")
             deps_list.append(deps)
         # Add an extra new line to separate dependencies of different repos.

@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from abc import ABC, abstractmethod
-from ...utils.subclass_register import AutoRegisterABCMetaClass
-import yaml
-import codecs
 from pathlib import Path
 from typing import Any, Dict, Optional
+from abc import ABC, abstractmethod
+import yaml
+import codecs
+from ...utils.subclass_register import AutoRegisterABCMetaClass
 from ..utils.pp_option import PaddlePredictorOption
 from ..models import BasePredictor
 
@@ -37,7 +37,6 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
-        hpi_params: Optional[Dict[str, Any]] = None,
         *args,
         **kwargs,
     ) -> None:
@@ -48,13 +47,11 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
             device (str, optional): The device to use for prediction. Defaults to None.
             pp_option (PaddlePredictorOption, optional): The options for PaddlePredictor. Defaults to None.
             use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            hpi_params (Dict[str, Any], optional): Additional parameters for hpip. Defaults to None.
         """
         super().__init__()
         self.device = device
         self.pp_option = pp_option
         self.use_hpip = use_hpip
-        self.hpi_params = hpi_params
 
     @abstractmethod
     def predict(self, input, **kwargs):
@@ -67,36 +64,33 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         """
         raise NotImplementedError("The method `predict` has not been implemented yet.")
 
-    def create_model(self, config: Dict) -> BasePredictor:
+    def create_model(self, config: Dict, **kwargs) -> BasePredictor:
         """
         Create a model instance based on the given configuration.
 
         Args:
             config (Dict): A dictionary containing configuration settings.
+            **kwargs: The model arguments that needed to be pass.
 
         Returns:
             BasePredictor: An instance of the model.
         """
+        if "model_config_error" in config:
+            raise ValueError(config["model_config_error"])
 
-        model_dir = config["model_dir"]
-        if model_dir == None:
-            model_dir = config["model_name"]
+        model_dir = config.get("model_dir", None)
+        hpi_params = config.get("hpi_params", None)
 
-        from ...model import create_model
+        from .. import create_predictor
 
-        model = create_model(
-            model=model_dir,
+        model = create_predictor(
+            model_name=config["model_name"],
+            model_dir=model_dir,
             device=self.device,
             pp_option=self.pp_option,
             use_hpip=self.use_hpip,
-            hpi_params=self.hpi_params,
+            **kwargs,
         )
-
-        # [TODO] Support initializing with additional parameters
-        if "batch_size" in config:
-            batch_size = config["batch_size"]
-            model.set_predictor(batch_size=batch_size)
-
         return model
 
     def create_pipeline(self, config: Dict):
@@ -109,6 +103,9 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         Returns:
             BasePipeline: An instance of the created pipeline.
         """
+        if "pipeline_config_error" in config:
+            raise ValueError(config["pipeline_config_error"])
+
         from . import create_pipeline
 
         pipeline_name = config["pipeline_name"]
@@ -118,7 +115,6 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
             device=self.device,
             pp_option=self.pp_option,
             use_hpip=self.use_hpip,
-            hpi_params=self.hpi_params,
         )
         return pipeline
 

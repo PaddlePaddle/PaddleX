@@ -13,3 +13,4 @@
 # limitations under the License.
 
 from .ernie_bot_chat import ErnieBotChat
+from .openai_bot_chat import OpenAIBotChat

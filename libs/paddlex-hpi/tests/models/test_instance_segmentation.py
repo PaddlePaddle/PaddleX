@@ -21,6 +21,7 @@ from paddlex_hpi.models import InstanceSegPredictor
 MODEL_URL = "https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/tests/models/instance_seg_model.zip"
 INPUT_DATA_URL = "https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/tests/models/instance_seg_input.jpg"
 EXPECTED_RESULT_URL = "https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/tests/models/instance_seg_result.json"
+EXPECTED_RESULT_WITH_ARGS_URL = "https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/tests/models/instance_seg_result_with_args.json"
 
 
 class TestInstanceSegPredictor(BaseTestPredictor):
@@ -37,11 +38,42 @@ class TestInstanceSegPredictor(BaseTestPredictor):
         return EXPECTED_RESULT_URL
 
     @property
+    def expected_result_with_args_url(self):
+        return EXPECTED_RESULT_WITH_ARGS_URL
+
+    @property
+    def should_test_with_args(self):
+        return True
+
+    @property
     def predictor_cls(self):
         return InstanceSegPredictor
 
+    def _predict_with_predictor_args(
+        self, model_path, input_data_path, device, expected_result_with_args
+    ):
+        predictor = self.predictor_cls(model_path, device=device, threshold=0.85)
+        output = predictor(str(input_data_path))
+        self._check_output(output, expected_result_with_args, 1)
+
+    def _predict_with_predict_args(
+        self,
+        model_path,
+        input_data_path,
+        device,
+        expected_result,
+        expected_result_with_args,
+    ):
+        predictor = self.predictor_cls(model_path, device=device)
+        output = predictor(str(input_data_path), threshold=0.85)
+        self._check_output(output, expected_result_with_args, 1)
+        output = predictor(str(input_data_path))
+        self._check_output(output, expected_result, 1)
+
     def _check_result(self, result, expected_result):
         assert isinstance(result, InstanceSegResult)
+        assert "input_img" in result
+        result.pop("input_img")
         assert set(result) == set(expected_result)
         # TODO: Check masks
         compare_det_results(

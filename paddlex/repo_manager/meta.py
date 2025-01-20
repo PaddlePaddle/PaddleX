@@ -25,6 +25,7 @@ REPO_NAMES = [
     "PaddleSeg",
     "PaddleNLP",
     "PaddleTS",
+    "PaddleVideo",
 ]
 
 REPO_META = {
@@ -129,6 +130,19 @@ REPO_META = {
         "extra_editable": "ppdiffusers",
         "path_env": "PADDLE_PDX_PADDLEMIX_PATH",
         "requires": ["PaddleNLP"],
+    },
+    "PaddleVideo": {
+        "git_path": "/PaddlePaddle/PaddleVideo.git",
+        "platform": "github",
+        "branch": "develop",
+        "pkg_name": "paddlevideo",
+        "lib_name": "ppvideo",
+        "pdx_pkg_name": "PaddleVideo_api",
+        "editable": False,
+        "extra_req_files": [
+            "requirements_paddlex.txt",
+        ],
+        "path_env": "PADDLE_PDX_PADDLEVIDEO_PATH",
     },
 }
 

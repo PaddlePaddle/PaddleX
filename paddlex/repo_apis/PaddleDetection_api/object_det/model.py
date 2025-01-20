@@ -131,8 +131,11 @@ class DetModel(BaseModel):
 
         # PDX related settings
         uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
+        export_with_pir = kwargs.pop("export_with_pir", False)
         config.update({"uniform_output_enabled": uniform_output_enabled})
         config.update({"pdx_model_name": self.name})
+        if export_with_pir:
+            config.update({"export_with_pir": export_with_pir})
 
         self._assert_empty_kwargs(kwargs)
 
@@ -282,8 +285,11 @@ class DetModel(BaseModel):
 
         # PDX related settings
         uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
+        export_with_pir = kwargs.pop("export_with_pir", False)
         config.update({"uniform_output_enabled": uniform_output_enabled})
         config.update({"pdx_model_name": self.name})
+        if export_with_pir:
+            config.update({"export_with_pir": export_with_pir})
 
         if self.name in official_categories.keys():
             anno_val_file = abspath(

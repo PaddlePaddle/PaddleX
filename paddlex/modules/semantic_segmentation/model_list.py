@@ -32,4 +32,6 @@ MODELS = [
     "SeaFormer_tiny",
     "SeaFormer_small",
     "SeaFormer_large",
+    "MaskFormer_tiny",
+    "MaskFormer_small",
 ]

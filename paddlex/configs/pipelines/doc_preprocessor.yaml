@@ -9,9 +9,7 @@ SubModules:
     module_name: doc_text_orientation
     model_name: PP-LCNet_x1_0_doc_ori
     model_dir: null
-    batch_size: 1
   DocUnwarping:
     module_name: image_unwarping
     model_name: UVDoc
     model_dir: null
-    batch_size: 1

@@ -44,7 +44,7 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
-<th>mA (%)</th>
+<th>mAP (%)</th>
 <th>GPU Inference Time (ms)</th>
 <th>CPU Inference Time (ms)</th>
 <th>Model Size (M)</th>

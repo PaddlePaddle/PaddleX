@@ -68,4 +68,6 @@ class SegTrainer(BaseTrainer):
             train_args["do_eval"] = True
             train_args["save_interval"] = self.train_config.eval_interval
         train_args["dy2st"] = self.train_config.get("dy2st", False)
+        if self.train_config.get("input_shape") is not None:
+            train_args["input_shape"] = self.train_config.input_shape
         return train_args

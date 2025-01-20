@@ -41,5 +41,7 @@ class TestLaTeXOCRPredictor(BaseTestPredictor):
 
     def _check_result(self, result, expected_result):
         assert isinstance(result, FormulaRecResult)
+        assert "input_img" in result
+        result.pop("input_img")
         assert set(result) == set(expected_result)
         assert result["rec_text"] == expected_result["rec_text"]

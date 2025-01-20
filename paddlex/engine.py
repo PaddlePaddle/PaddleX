@@ -47,7 +47,7 @@ class Engine(object):
             return self._model.export()
         elif self._mode == "predict":
             for res in self._model.predict():
-                res.print(json_format=False)
+                res.print()
                 if self._output:
                     res.save_all(save_path=self._output)
         else:

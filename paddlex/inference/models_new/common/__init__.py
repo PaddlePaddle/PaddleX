@@ -31,3 +31,5 @@ from .ts import (
     TStoBatch,
 )
 from .static_infer import StaticInfer
+
+from .tokenizer import PretrainedTokenizer, PretrainedTokenizer

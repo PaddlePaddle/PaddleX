@@ -12,14 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .base import BaseGeneratePrompt
 from typing import Dict
+from .base import BaseGeneratePrompt
+from .....utils import logging
 
 
 class GenerateKIEPrompt(BaseGeneratePrompt):
     """Generate KIE Prompt"""
 
-    entities = ["text_kie_prompt", "table_kie_prompt"]
+    entities = [
+        "text_kie_prompt_v1",
+        "table_kie_prompt_v1",
+        "text_kie_prompt_v2",
+        "table_kie_prompt_v2",
+    ]
 
     def __init__(self, config: Dict) -> None:
         """Initializes the GenerateKIEPrompt instance with the given configuration.
@@ -92,7 +98,6 @@ class GenerateKIEPrompt(BaseGeneratePrompt):
             rules_str (str, optional): A string containing rules or instructions. Defaults to None.
             few_shot_demo_text_content (str, optional): Text content for few-shot demos. Defaults to None.
             few_shot_demo_key_value_list (str, optional): Key-value list for few-shot demos. Defaults to None.
-
         Returns:
             str: The generated prompt.
 
@@ -115,28 +120,29 @@ class GenerateKIEPrompt(BaseGeneratePrompt):
             few_shot_demo_key_value_list = self.few_shot_demo_key_value_list
 
         prompt = f"""{task_description}{rules_str}{output_format}{few_shot_demo_text_content}{few_shot_demo_key_value_list}"""
-        if self.task_type == "table_kie_prompt":
+        task_type = self.task_type
+        if task_type == "table_kie_prompt_v1":
+            prompt += f"""\n结合上面，下面正式开始：\
+                表格内容：```{text_content}```\
+                关键词列表：[{key_list}]。""".replace(
+                "    ", ""
+            )
+        elif task_type == "text_kie_prompt_v1":
+            prompt += f"""\n结合上面的例子，下面正式开始：\
+                OCR文字：```{text_content}```\
+                关键词列表：[{key_list}]。""".replace(
+                "    ", ""
+            )
+        elif task_type == "table_kie_prompt_v2":
             prompt += f"""\n结合上面，下面正式开始：\
                 表格内容：```{text_content}```\
                 \n问题列表：{key_list}。""".replace(
                 "    ", ""
             )
-            # prompt += f"""\n结合上面，下面正式开始：\
-            #     表格内容：```{text_content}```\
-            #     \n关键词列表：{key_list}。""".replace(
-            #     "    ", ""
-            # )
-        elif self.task_type == "text_kie_prompt":
+        elif task_type == "text_kie_prompt_v2":
             prompt += f"""\n结合上面的例子，下面正式开始：\
                 OCR文字：```{text_content}```\
                 \n问题列表：{key_list}。""".replace(
                 "    ", ""
             )
-            # prompt += f"""\n结合上面的例子，下面正式开始：\
-            #     OCR文字：```{text_content}```\
-            #     \n关键词列表：{key_list}。""".replace(
-            #     "    ", ""
-            # )
-        else:
-            raise ValueError(f"{self.task_type} is currently not supported.")
         return prompt

@@ -12,18 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH
-from ...common.result import BaseCVResult
+from ...common.result import BaseCVResult, StrMixin, JsonMixin
 
 
 class TextRecResult(BaseCVResult):
 
+    def _to_str(self, *args, **kwargs):
+        data = copy.deepcopy(self)
+        return StrMixin._to_str(data, *args, **kwargs)
+
+    def _to_json(self, *args, **kwargs):
+        data = copy.deepcopy(self)
+        data.pop("input_img")
+        return JsonMixin._to_json(data, *args, **kwargs)
+
     def _to_img(self):
         """Draw label on image"""
-        image = Image.fromarray(self._input_img)
+        image = Image.fromarray(self["input_img"])
         rec_text = self["rec_text"]
         rec_score = self["rec_score"]
         image = image.convert("RGB")
@@ -42,7 +52,7 @@ class TextRecResult(BaseCVResult):
             fill=(0, 0, 0),
             font=font,
         )
-        return new_image
+        return {"res": new_image}
 
     def adjust_font_size(self, image_width, text, font_path):
         font_size = int(image_width * 0.06)

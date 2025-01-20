@@ -56,7 +56,7 @@ class Crop:
         x2 = min(w, x1 + cw)
         y2 = min(h, y1 + ch)
         coords = (x1, y1, x2, y2)
-        if coords == (0, 0, w, h):
+        if w < cw or h < ch:
             raise ValueError(
                 f"Input image ({w}, {h}) smaller than the target size ({cw}, {ch})."
             )

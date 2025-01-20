@@ -54,6 +54,14 @@ class BasicPredictor(
             pp_option = PaddlePredictorOption(model_name=self.model_name)
         if device:
             pp_option.device = device
+        trt_dynamic_shapes = (
+            self.config.get("Hpi", {})
+            .get("backend_configs", {})
+            .get("paddle_infer", {})
+            .get("trt_dynamic_shapes", None)
+        )
+        if trt_dynamic_shapes:
+            pp_option.trt_dynamic_shapes = trt_dynamic_shapes
         self.pp_option = pp_option
 
         logging.debug(f"{self.__class__.__name__}: {self.model_dir}")

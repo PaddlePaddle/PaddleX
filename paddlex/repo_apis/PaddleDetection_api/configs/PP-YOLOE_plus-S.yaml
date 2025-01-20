@@ -98,6 +98,7 @@ CSPResNet:
   channels: [64, 128, 256, 512, 1024]
   return_idx: [1, 2, 3]
   use_large_stem: true
+  use_alpha: True
 
 CustomCSPPAN:
   out_channels: [768, 384, 192]

@@ -115,8 +115,11 @@ class ClsModel(BaseModel):
             # PDX related settings
             device_type = device.split(":")[0]
             uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
+            export_with_pir = kwargs.pop("export_with_pir", False)
             config.update([f"Global.uniform_output_enabled={uniform_output_enabled}"])
             config.update([f"Global.pdx_model_name={self.name}"])
+            if export_with_pir:
+                config.update([f"Global.export_with_pir={export_with_pir}"])
 
             config.dump(config_path)
             self._assert_empty_kwargs(kwargs)
@@ -231,8 +234,11 @@ class ClsModel(BaseModel):
                 config.update_device(device)
             # PDX related settings
             uniform_output_enabled = kwargs.pop("uniform_output_enabled", True)
+            export_with_pir = kwargs.pop("export_with_pir", False)
             config.update([f"Global.uniform_output_enabled={uniform_output_enabled}"])
             config.update([f"Global.pdx_model_name={self.name}"])
+            if export_with_pir:
+                config.update([f"Global.export_with_pir={export_with_pir}"])
 
             config.dump(config_path)
 

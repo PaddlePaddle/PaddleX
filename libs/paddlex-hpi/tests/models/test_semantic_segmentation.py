@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import numpy as np
+import pytest
 from paddlex.inference.results import SegResult
 from tests.models.base import BaseTestPredictor
 
@@ -37,11 +38,40 @@ class TestSegPredictor(BaseTestPredictor):
         return EXPECTED_RESULT_URL
 
     @property
+    def expected_result_with_args_url(self):
+        return EXPECTED_RESULT_URL
+
+    @property
     def predictor_cls(self):
         return SegPredictor
 
+    @property
+    def should_test_with_args(self):
+        return True
+
+    def _predict_with_predictor_args(
+        self, model_path, input_data_path, device, expected_result_with_args
+    ):
+        with pytest.raises(TypeError):
+            predictor = self.predictor_cls(model_path, device=device, target_size=400)
+
+    def _predict_with_predict_args(
+        self,
+        model_path,
+        input_data_path,
+        device,
+        expected_result,
+        expected_result_with_args,
+    ):
+        predictor = self.predictor_cls(model_path, device=device)
+        with pytest.raises(TypeError):
+            output = predictor(str(input_data_path), target_size=400)
+            output = list(output)
+
     def _check_result(self, result, expected_result):
         assert isinstance(result, SegResult)
+        assert "input_img" in result
+        result.pop("input_img")
         assert set(result) == set(expected_result)
         pred = result["pred"]
         expected_pred = np.array(expected_result["pred"], dtype=np.int32)

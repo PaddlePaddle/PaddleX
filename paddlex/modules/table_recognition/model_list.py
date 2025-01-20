@@ -16,4 +16,6 @@
 MODELS = [
     "SLANet",
     "SLANet_plus",
+    "SLANeXt_wired",
+    "SLANeXt_wireless",
 ]

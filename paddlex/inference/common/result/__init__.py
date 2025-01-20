@@ -15,6 +15,7 @@
 from .base_result import BaseResult
 from .base_cv_result import BaseCVResult
 from .base_ts_result import BaseTSResult
+from .base_video_result import BaseVideoResult
 from .mixin import (
     StrMixin,
     JsonMixin,
@@ -23,4 +24,6 @@ from .mixin import (
     CSVMixin,
     HtmlMixin,
     XlsxMixin,
+    VideoMixin,
+    MarkdownMixin,
 )

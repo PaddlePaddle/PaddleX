@@ -51,3 +51,21 @@ register_model_info(
         "supported_apis": ["train", "evaluate", "predict", "export"],
     }
 )
+
+register_model_info(
+    {
+        "model_name": "SLANeXt_wired",
+        "suite": "TableRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "SLANeXt_wired.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "SLANeXt_wireless",
+        "suite": "TableRec",
+        "config_path": osp.join(PDX_CONFIG_DIR, "SLANeXt_wireless.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export"],
+    }
+)

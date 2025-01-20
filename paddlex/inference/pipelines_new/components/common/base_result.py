@@ -13,10 +13,9 @@
 # limitations under the License.
 
 import inspect
-
+from typing import Dict
 from ....utils.io import ImageReader, ImageWriter
 from ..utils.mixin import JsonMixin, ImgMixin, StrMixin
-from typing import Dict
 
 
 class BaseResult(dict, StrMixin, JsonMixin):

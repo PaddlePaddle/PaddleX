@@ -22,27 +22,32 @@ from .base import BasePredictor, BasicPredictor
 
 from .image_classification import ClasPredictor
 from .object_detection import DetPredictor
+from .keypoint_detection import KptPredictor
 from .text_detection import TextDetPredictor
 from .text_recognition import TextRecPredictor
+from .table_structure_recognition import TablePredictor
 from .formula_recognition import FormulaRecPredictor
-
-# from .table_recognition import TablePredictor
-# from .object_detection import DetPredictor
 from .instance_segmentation import InstanceSegPredictor
 from .semantic_segmentation import SegPredictor
 from .image_feature import ImageFeaturePredictor
-
-# from .general_recognition import ShiTuRecPredictor
-
-from .ts_forecast import TSFcPredictor
-from .ts_anomaly import TSAdPredictor
-from .ts_classify import TSClsPredictor
+from .ts_forecasting import TSFcPredictor
+from .ts_anomaly_detection import TSAdPredictor
+from .ts_classification import TSClsPredictor
 from .image_unwarping import WarpPredictor
+from .image_multilabel_classification import MLClasPredictor
+from .face_feature import FaceFeaturePredictor
+from .open_vocabulary_detection import OVDetPredictor
+from .open_vocabulary_segmentation import OVSegPredictor
 
-# from .multilabel_classification import MLClasPredictor
-# from .anomaly_detection import UadPredictor
+
+# from .table_recognition import TablePredictor
+# from .general_recognition import ShiTuRecPredictor
+from .anomaly_detection import UadPredictor
 
 # from .face_recognition import FaceRecPredictor
+from .multilingual_speech_recognition import WhisperPredictor
+from .video_classification import VideoClasPredictor
+from .video_detection import VideoDetPredictor
 
 
 def _create_hp_predictor(
@@ -71,7 +76,8 @@ def _create_hp_predictor(
 
 
 def create_predictor(
-    model: str,
+    model_name: str,
+    model_dir: Optional[str] = None,
     device=None,
     pp_option=None,
     use_hpip: bool = False,
@@ -79,9 +85,16 @@ def create_predictor(
     *args,
     **kwargs,
 ) -> BasePredictor:
-    model_dir = check_model(model)
+    if model_dir is None:
+        model_dir = check_model(model_name)
+    else:
+        assert Path(model_dir).exists(), f"{model_dir} is not exists!"
+        model_dir = Path(model_dir)
     config = BasePredictor.load_config(model_dir)
-    model_name = config["Global"]["model_name"]
+    assert (
+        model_name == config["Global"]["model_name"]
+    ), f"Model name mismatch，please input the correct model dir."
+
     if use_hpip:
         return _create_hp_predictor(
             model_name=model_name,

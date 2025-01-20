@@ -13,3 +13,4 @@
 # limitations under the License.
 
 from .generate_kie_prompt import GenerateKIEPrompt
+from .generate_ensemble_prompt import GenerateEnsemblePrompt

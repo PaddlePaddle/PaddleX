@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+from typing import Dict, List
 
 from ...utils.device import parse_device, set_env_for_device, get_default_device
 from ...utils import logging
@@ -75,6 +76,7 @@ class PaddlePredictorOption(object):
             "delete_pass": [],
             "enable_new_ir": True if self.model_name not in NEWIR_BLOCKLIST else False,
             "batch_size": 1,  # only for trt
+            "trt_dynamic_shapes": {},  # only for trt
         }
 
     def _update(self, k, v):
@@ -148,6 +150,17 @@ class PaddlePredictorOption(object):
     def shape_info_filename(self, shape_info_filename: str):
         """set shape info filename"""
         self._update("shape_info_filename", shape_info_filename)
+
+    @property
+    def trt_dynamic_shapes(self):
+        return self._cfg["trt_dynamic_shapes"]
+
+    @trt_dynamic_shapes.setter
+    def trt_dynamic_shapes(self, trt_dynamic_shapes: Dict[str, List[List[int]]]):
+        assert isinstance(trt_dynamic_shapes, dict)
+        for input_k in trt_dynamic_shapes:
+            assert isinstance(trt_dynamic_shapes[input_k], list)
+        self._update("trt_dynamic_shapes", trt_dynamic_shapes)
 
     @property
     def trt_calib_mode(self):

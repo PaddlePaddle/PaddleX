@@ -20,20 +20,28 @@ from copy import deepcopy
 
 import numpy as np
 import cv2
+from PIL import Image
 
 from . import funcs as F
 
 
 class _BaseResize:
-    _INTERP_DICT = {
+    _CV2_INTERP_DICT = {
         "NEAREST": cv2.INTER_NEAREST,
         "LINEAR": cv2.INTER_LINEAR,
-        "CUBIC": cv2.INTER_CUBIC,
+        "BICUBIC": cv2.INTER_CUBIC,
         "AREA": cv2.INTER_AREA,
         "LANCZOS4": cv2.INTER_LANCZOS4,
     }
+    _PIL_INTERP_DICT = {
+        "NEAREST": Image.NEAREST,
+        "BILINEAR": Image.BILINEAR,
+        "BICUBIC": Image.BICUBIC,
+        "BOX": Image.BOX,
+        "LANCZOS4": Image.LANCZOS,
+    }
 
-    def __init__(self, size_divisor, interp):
+    def __init__(self, size_divisor, interp, backend="cv2"):
         super().__init__()
 
         if size_divisor is not None:
@@ -43,12 +51,26 @@ class _BaseResize:
         self.size_divisor = size_divisor
 
         try:
-            interp = self._INTERP_DICT[interp]
+            interp = interp.upper()
+            if backend == "cv2":
+                interp = self._CV2_INTERP_DICT[interp]
+            elif backend == "pil":
+                interp = self._PIL_INTERP_DICT[interp]
+            else:
+                raise ValueError("backend must be `cv2` or `pil`")
         except KeyError:
             raise ValueError(
-                "`interp` should be one of {}.".format(self._INTERP_DICT.keys())
+                "For backend '{}', `interp` should be one of {}. Please ensure the interpolation method matches the selected backend.".format(
+                    backend,
+                    (
+                        self._CV2_INTERP_DICT.keys()
+                        if backend == "cv2"
+                        else self._PIL_INTERP_DICT.keys()
+                    ),
+                )
             )
         self.interp = interp
+        self.backend = backend
 
     @staticmethod
     def _rescale_size(img_size, target_size):
@@ -62,7 +84,12 @@ class Resize(_BaseResize):
     """Resize the image."""
 
     def __init__(
-        self, target_size, keep_ratio=False, size_divisor=None, interp="LINEAR"
+        self,
+        target_size,
+        keep_ratio=False,
+        size_divisor=None,
+        interp="LINEAR",
+        backend="cv2",
     ):
         """
         Initialize the instance.
@@ -76,7 +103,7 @@ class Resize(_BaseResize):
             interp (str, optional): Interpolation method. Choices are 'NEAREST',
                 'LINEAR', 'CUBIC', 'AREA', and 'LANCZOS4'. Default: 'LINEAR'.
         """
-        super().__init__(size_divisor=size_divisor, interp=interp)
+        super().__init__(size_divisor=size_divisor, interp=interp, backend=backend)
 
         if isinstance(target_size, int):
             target_size = [target_size, target_size]
@@ -102,7 +129,7 @@ class Resize(_BaseResize):
                 math.ceil(i / self.size_divisor) * self.size_divisor
                 for i in target_size
             ]
-        img = F.resize(img, target_size, interp=self.interp)
+        img = F.resize(img, target_size, interp=self.interp, backend=self.backend)
         return img
 
 
@@ -112,7 +139,9 @@ class ResizeByLong(_BaseResize):
     longest side.
     """
 
-    def __init__(self, target_long_edge, size_divisor=None, interp="LINEAR"):
+    def __init__(
+        self, target_long_edge, size_divisor=None, interp="LINEAR", backend="cv2"
+    ):
         """
         Initialize the instance.
 
@@ -123,7 +152,7 @@ class ResizeByLong(_BaseResize):
             interp (str, optional): Interpolation method. Choices are 'NEAREST',
                 'LINEAR', 'CUBIC', 'AREA', and 'LANCZOS4'. Default: 'LINEAR'.
         """
-        super().__init__(size_divisor=size_divisor, interp=interp)
+        super().__init__(size_divisor=size_divisor, interp=interp, backend=backend)
         self.target_long_edge = target_long_edge
 
     def __call__(self, imgs):
@@ -139,7 +168,9 @@ class ResizeByLong(_BaseResize):
             h_resize = math.ceil(h_resize / self.size_divisor) * self.size_divisor
             w_resize = math.ceil(w_resize / self.size_divisor) * self.size_divisor
 
-        img = F.resize(img, (w_resize, h_resize), interp=self.interp)
+        img = F.resize(
+            img, (w_resize, h_resize), interp=self.interp, backend=self.backend
+        )
         return img
 
 
@@ -149,7 +180,9 @@ class ResizeByShort(_BaseResize):
     shortest side.
     """
 
-    def __init__(self, target_short_edge, size_divisor=None, interp="LINEAR"):
+    def __init__(
+        self, target_short_edge, size_divisor=None, interp="LINEAR", backend="cv2"
+    ):
         """
         Initialize the instance.
 
@@ -160,7 +193,7 @@ class ResizeByShort(_BaseResize):
             interp (str, optional): Interpolation method. Choices are 'NEAREST',
                 'LINEAR', 'CUBIC', 'AREA', and 'LANCZOS4'. Default: 'LINEAR'.
         """
-        super().__init__(size_divisor=size_divisor, interp=interp)
+        super().__init__(size_divisor=size_divisor, interp=interp, backend=backend)
         self.target_short_edge = target_short_edge
 
     def __call__(self, imgs):
@@ -176,7 +209,9 @@ class ResizeByShort(_BaseResize):
             h_resize = math.ceil(h_resize / self.size_divisor) * self.size_divisor
             w_resize = math.ceil(w_resize / self.size_divisor) * self.size_divisor
 
-        img = F.resize(img, (w_resize, h_resize), interp=self.interp)
+        img = F.resize(
+            img, (w_resize, h_resize), interp=self.interp, backend=self.backend
+        )
         return img
 
 

@@ -13,9 +13,10 @@
 # limitations under the License.
 
 import inspect
+from .mixin import StrMixin, JsonMixin, ImgMixin
 
 
-class BaseResult(dict):
+class BaseResult(dict, JsonMixin, StrMixin):
     """Base class for result objects that can save themselves.
 
     This class inherits from dict and provides properties and methods for handling result.
@@ -29,6 +30,8 @@ class BaseResult(dict):
         """
         super().__init__(data)
         self._save_funcs = []
+        StrMixin.__init__(self)
+        JsonMixin.__init__(self)
 
     def save_all(self, save_path: str) -> None:
         """Calls all registered save methods with the given save path.

@@ -124,8 +124,8 @@ class SegPredictor(BasicPredictor):
         batch_imgs = self.preprocessors["Resize"](
             imgs=batch_raw_imgs, target_size=target_size
         )
-        batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_imgs)
+        batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
         x = self.preprocessors["ToBatch"](imgs=batch_imgs)
         batch_preds = self.infer(x=x)
         if len(batch_data) > 1:

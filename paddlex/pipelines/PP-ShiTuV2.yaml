@@ -7,7 +7,6 @@ Pipeline:
   rec_model: PP-ShiTuV2_rec
   det_batch_size: 1
   rec_batch_size: 1
-  device: gpu
   index: None
   score_thres: 0.5
   return_k: 5

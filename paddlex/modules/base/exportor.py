@@ -78,7 +78,12 @@ class BaseExportor(ABC, metaclass=AutoRegisterABCMetaClass):
         """
 
         config_path = Path(weight_path).parent / "config.yaml"
-        if not config_path.exists():
+        # `Path("https://xxx/xxx")` would cause error on Windows
+        try:
+            is_exists = config_path.exists()
+        except Exception:
+            is_exists = False
+        if not is_exists:
             logging.warning(
                 f"The config file(`{config_path}`) related to weight file(`{weight_path}`) is not exist, use default instead."
             )
@@ -122,8 +127,12 @@ exporting!"
 
     def get_export_kwargs(self):
         """get key-value arguments of model export function"""
+        export_with_pir = self.global_config.get("export_with_pir", False) or os.getenv(
+            "FLAGS_json_format_model"
+        ) in ["1", "True"]
         return {
             "weight_path": self.export_config.weight_path,
             "save_dir": self.global_config.output,
             "device": self.get_device(1),
+            "export_with_pir": export_with_pir,
         }

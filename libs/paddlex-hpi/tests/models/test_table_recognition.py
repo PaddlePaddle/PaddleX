@@ -50,6 +50,8 @@ class TestTablePredictor(BaseTestPredictor):
             ]
 
         assert isinstance(result, TableRecResult)
+        assert "input_img" in result
+        result.pop("input_img")
         assert set(result) == set(expected_result)
         compare_det_results(
             [_unflatten_poly(poly) for poly in result["bbox"]],

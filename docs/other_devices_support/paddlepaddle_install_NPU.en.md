@@ -33,6 +33,12 @@ Currently, Python 3.9 wheel installation packages are provided. If you have a ne
 python3.9 -m pip install paddlepaddle==3.0.0.dev20240520 -i https://www.paddlepaddle.org.cn/packages/nightly/cpu/
 python3.9 -m pip install paddle_custom_npu==3.0.0.dev20240719 -i https://www.paddlepaddle.org.cn/packages/nightly/npu/
 ```
+* Set environment variables on the arm machine (not required for x86 environment)
+```bash
+# Solve the error reported by libgomp on the arm machine
+# "libgomp cannot allocate memory in static TLS block"
+export LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1:$LD_PRELOAD
+```
 * After verifying that the installation package is installed, run the following command
 ```bash
 python -c "import paddle; paddle.utils.run_check()"

@@ -289,7 +289,7 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     <th>昇腾 910B</th>
     <th>昆仑芯 R200/R300</th>
     <th>寒武纪 MLU370X8</th>
-    <th>海光 Z100</th>
+    <th>海光 Z100/K100AI</th>
   </tr>
   <tr>
     <td>通用OCR</td>

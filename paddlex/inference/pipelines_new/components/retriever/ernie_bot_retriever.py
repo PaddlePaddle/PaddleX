@@ -12,26 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .base import BaseRetriever
+from typing import Dict
+import time
 import os
-
 from langchain.docstore.document import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-
 from langchain_community.embeddings import QianfanEmbeddingsEndpoint
 from langchain_community.vectorstores import FAISS
 from langchain_community import vectorstores
 from erniebot_agent.extensions.langchain.embeddings import ErnieEmbeddings
-
-import time
-
-from typing import Dict
+from .base import BaseRetriever
 
 
 class ErnieBotRetriever(BaseRetriever):
     """Ernie Bot Retriever"""
 
     entities = [
+        "aistudio",
+        "qianfan",
+    ]
+
+    MODELS = [
         "ernie-4.0",
         "ernie-3.5",
         "ernie-3.5-8k",
@@ -49,7 +50,7 @@ class ErnieBotRetriever(BaseRetriever):
         Args:
             config (Dict): A dictionary containing configuration settings.
                 - model_name (str): The name of the model to use.
-                - api_type (str): The type of API to use ('aistudio' or 'qianfan').
+                - api_type (str): The type of API to use ('aistudio', 'qianfan' or 'openai').
                 - ak (str, optional): The access key for 'qianfan' API.
                 - sk (str, optional): The secret key for 'qianfan' API.
                 - access_token (str, optional): The access token for 'aistudio' API.
@@ -68,8 +69,8 @@ class ErnieBotRetriever(BaseRetriever):
         sk = config.get("sk", None)
         access_token = config.get("access_token", None)
 
-        if model_name not in self.entities:
-            raise ValueError(f"model_name must be in {self.entities} of ErnieBotChat.")
+        if model_name not in self.MODELS:
+            raise ValueError(f"model_name must be in {self.MODELS} of ErnieBotChat.")
 
         if api_type not in ["aistudio", "qianfan"]:
             raise ValueError("api_type must be one of ['aistudio', 'qianfan']")
@@ -112,7 +113,6 @@ class ErnieBotRetriever(BaseRetriever):
         )
         texts = text_splitter.split_text("\t".join(text_list))
         all_splits = [Document(page_content=text) for text in texts]
-
         api_type = self.config["api_type"]
         if api_type == "qianfan":
             os.environ["QIANFAN_AK"] = os.environ.get("EB_AK", self.config["ak"])
@@ -192,7 +192,12 @@ class ErnieBotRetriever(BaseRetriever):
         return vector
 
     def similarity_retrieval(
-        self, query_text_list: list[str], vectorstore: FAISS, sleep_time: float = 0.5
+        self,
+        query_text_list: list[str],
+        vectorstore: FAISS,
+        sleep_time: float = 0.5,
+        topk: int = 2,
+        min_characters: int = 3500,
     ) -> str:
         """
         Retrieve similar contexts based on a list of query texts.
@@ -201,18 +206,22 @@ class ErnieBotRetriever(BaseRetriever):
             query_text_list (list[str]): A list of query texts to search for similar contexts.
             vectorstore (FAISS): The vector store where to perform the similarity search.
             sleep_time (float): The time to sleep between each query, in seconds. Default is 0.5.
-
+            topk (int): The number of results to retrieve per query. Default is 2.
+            min_characters (int): The minimum number of characters required for text processing, defaults to 3500.
         Returns:
             str: A concatenated string of all unique contexts found.
         """
         C = []
+        all_C = ""
         for query_text in query_text_list:
             QUESTION = query_text
             time.sleep(sleep_time)
-            docs = vectorstore.similarity_search_with_relevance_scores(QUESTION, k=2)
+            docs = vectorstore.similarity_search_with_relevance_scores(QUESTION, k=topk)
             context = [(document.page_content, score) for document, score in docs]
             context = sorted(context, key=lambda x: x[1])
-            C.extend([x[0] for x in context[::-1]])
-        C = list(set(C))
-        all_C = " ".join(C)
+            for text, score in context[::-1]:
+                if score >= -0.1:
+                    if len(all_C) + len(text) > min_characters:
+                        break
+                    all_C += text
         return all_C

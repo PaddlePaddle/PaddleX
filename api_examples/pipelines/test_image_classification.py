@@ -16,7 +16,10 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="image_classification")
 
-output = pipeline.predict("./test_samples/general_image_classification_001.jpg")
+output = pipeline.predict("./test_samples/general_image_classification_001.jpg", topk=5)
+
+# output = pipeline.predict("./test_samples/财报1.pdf")
+
 for res in output:
     print(res)
     res.print()  ## 打印预测的结构化输出

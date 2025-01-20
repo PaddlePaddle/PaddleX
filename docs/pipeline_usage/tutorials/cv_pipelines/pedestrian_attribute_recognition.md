@@ -48,7 +48,7 @@ comments: true
 <thead>
 <tr>
 <th>模型</th><th>模型下载链接</th>
-<th>mA（%）</th>
+<th>mAP（%）</th>
 <th>GPU推理耗时（ms）</th>
 <th>CPU推理耗时 (ms)</th>
 <th>模型存储大小（M)</th>
