@@ -494,7 +494,7 @@ class MultiHeadAttention(paddle.nn.Layer):
         if mask is not None:
             qk = qk + mask[:n_ctx, :n_ctx]
 
-        w = paddle.nn.functional.softmax(qk.astype("float32"), axis=-1).to(q.dtype)
+        w = paddle.nn.functional.softmax(qk.astype(q.dtype), axis=-1)
         return paddle.transpose((w @ v), (0, 2, 1, 3)).flatten(start_axis=2)
 
 
