@@ -17,7 +17,7 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="layout_parsing_v2")
 
 output = pipeline.predict(
-    "./test_samples/test_layout_parsing_v2.png",
+    "./test_samples/demo_paper.png",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
     use_common_ocr=True,
