@@ -43,7 +43,7 @@ comments: true
 </tr>
 </table>
 
-<b>注：以上精度指标测量自 PaddleX 内部自建公式识别测试集。LaTeX_OCR_rec在LaTeX-OCR公式识别测试集的BLEU score为 0.8821。所有模型 GPU 推理耗时基于 Tesla V100 GPUs 机器，精度类型为 FP32</b>
+<b>注：以上精度指标测量自 PaddleX 内部自建公式识别测试集。LaTeX_OCR_rec在LaTeX-OCR公式识别测试集的BLEU score为 0.8821。所有模型 GPU 推理耗时基于 Tesla V100 GPUs 机器，精度类型为 FP32。</b>
 
 
 ## 三、快速集成
