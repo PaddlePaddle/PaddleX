@@ -35,7 +35,8 @@ from ....utils.file_interface import custom_open
 class FormulaRecResult(BaseCVResult):
     def _to_str(self, *args, **kwargs):
         data = copy.deepcopy(self)
-        _str = StrMixin._to_str(data, *args, **kwargs)["res"].replace("\\\\", "\\")
+        data.pop("input_img")
+        _str = JsonMixin._to_str(data, *args, **kwargs)["res"].replace("\\\\", "\\")
         return {"res": _str}
 
     def _to_json(self, *args, **kwargs):

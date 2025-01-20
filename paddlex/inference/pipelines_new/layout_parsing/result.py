@@ -126,7 +126,7 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
                 formula_res = self["formula_res_list"][sno]
                 data["formula_res_list"].append(formula_res.str["res"])
 
-        return StrMixin._to_str(data, *args, **kwargs)
+        return JsonMixin._to_str(data, *args, **kwargs)
 
     def _to_json(self, *args, **kwargs) -> Dict[str, str]:
         """

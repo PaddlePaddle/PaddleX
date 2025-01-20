@@ -59,7 +59,7 @@ class SealRecognitionResult(BaseCVResult):
         for sno in range(len(self["seal_res_list"])):
             seal_res = self["seal_res_list"][sno]
             data["seal_res_list"].append(seal_res.str["res"])
-        return StrMixin._to_str(data, *args, **kwargs)
+        return JsonMixin._to_str(data, *args, **kwargs)
 
     def _to_json(self, *args, **kwargs) -> Dict[str, str]:
         """

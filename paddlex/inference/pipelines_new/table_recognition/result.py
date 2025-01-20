@@ -59,7 +59,7 @@ class SingleTableRecognitionResult(BaseCVResult, HtmlMixin, XlsxMixin):
         data["cell_box_list"] = self["cell_box_list"]
         data["pred_html"] = self["pred_html"]
         data["table_ocr_pred"] = self["table_ocr_pred"]
-        return StrMixin._to_str(data, *args, **kwargs)
+        return JsonMixin._to_str(data, *args, **kwargs)
 
     def _to_json(self, *args, **kwargs) -> Dict[str, str]:
         """
@@ -132,7 +132,7 @@ class TableRecognitionResult(BaseCVResult, HtmlMixin, XlsxMixin):
         for sno in range(len(self["table_res_list"])):
             table_res = self["table_res_list"][sno]
             data["table_res_list"].append(table_res.str["res"])
-        return StrMixin._to_str(data, *args, **kwargs)
+        return JsonMixin._to_str(data, *args, **kwargs)
 
     def _to_json(self, *args, **kwargs) -> Dict[str, str]:
         """
