@@ -36,10 +36,10 @@ class InferRequest(ocr.BaseInferRequest):
 
 class FormulaRecResult(BaseModel):
     prunedResult: dict
-    inputImage: Optional[str] = None
+    formulaRecImage: Optional[str] = None
     layoutDetImage: Optional[str] = None
-    ocrImage: Optional[str] = None
     preprocessedImage: Optional[str] = None
+    inputImage: Optional[str] = None
 
 
 class InferResult(BaseModel):

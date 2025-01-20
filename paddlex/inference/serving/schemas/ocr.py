@@ -49,9 +49,9 @@ class InferRequest(ocr.BaseInferRequest):
 
 class OCRResult(BaseModel):
     prunedResult: dict
-    inputImage: Optional[str] = None
     ocrImage: Optional[str] = None
     preprocessedImage: Optional[str] = None
+    inputImage: Optional[str] = None
 
 
 class InferResult(BaseModel):

@@ -47,10 +47,10 @@ class InferRequest(ocr.BaseInferRequest):
 
 class SealRecResult(BaseModel):
     prunedResult: dict
-    inputImage: Optional[str] = None
-    layoutDetImage: Optional[str] = None
     ocrImage: Optional[str] = None
+    layoutDetImage: Optional[str] = None
     preprocessedImage: Optional[str] = None
+    inputImage: Optional[str] = None
 
 
 class InferResult(BaseModel):

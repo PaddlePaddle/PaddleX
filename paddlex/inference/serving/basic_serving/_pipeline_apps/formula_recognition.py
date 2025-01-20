@@ -60,10 +60,10 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
                     "input_img": img,
                     "formula_rec_img": output_imgs["formula_res_img"],
                 }
-                if "preprocessed_img" in output_imgs:
-                    imgs["preprocessed_img"] = (output_imgs["preprocessed_img"],)
                 if "layout_detection_result" in item:
-                    imgs["layout_det_img"] = item["layout_detection_result"].img["res"]
+                    imgs["layout_det_img"] = item["layout_det_res"]
+                if "preprocessed_img" in output_imgs:
+                    imgs["preprocessed_img"] = output_imgs["preprocessed_img"]
                 imgs = await serving_utils.call_async(
                     common.postprocess_images,
                     imgs,
@@ -78,10 +78,10 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             formula_rec_results.append(
                 dict(
                     prunedResult=pruned_res,
-                    inputImage=imgs.get("input_img"),
-                    layoutDetImage=imgs.get("layout_det_img"),
                     formulaRecImage=imgs.get("formula_rec_img"),
+                    layoutDetImage=imgs.get("layout_det_img"),
                     preprocessedImage=imgs.get("preprocesed_img"),
+                    inputImage=imgs.get("input_img"),
                 )
             )
 
