@@ -159,7 +159,7 @@ def args_cfg():
         help="Output directory for the ONNX model",
     )
     paddle2onnx_group.add_argument(
-        "--opset_version", type=int, default=19, help="Version of the ONNX opset to use"
+        "--opset_version", type=int, help="Version of the ONNX opset to use"
     )
 
     # Parse known arguments to get the pipeline name
@@ -274,24 +274,22 @@ def serve(pipeline, *, device, use_hpip, host, port):
     run_server(app, host=host, port=port, debug=False)
 
 
+# TODO: Move to another module
 def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
-    # TODO: Move to another module
-    PD_MODEL_FILENAME = (
-        "inference.json" if FLAGS_json_format_model else "inference.pdmodel"
-    )
+    PD_MODEL_FILE_PREFIX = "inference"
     PD_PARAMS_FILENAME = "inference.pdiparams"
     ONNX_MODEL_FILENAME = "inference.onnx"
     CONFIG_FILENAME = "inference.yml"
     ADDITIONAL_FILENAMES = ["scaler.pkl"]
 
-    def _check_input_dir(input_dir):
+    def _check_input_dir(input_dir, pd_model_file_ext):
         if input_dir is None:
             sys.exit("Input directory must be specified")
         if not input_dir.exists():
             sys.exit(f"{input_dir} does not exist")
         if not input_dir.is_dir():
             sys.exit(f"{input_dir} is not a directory")
-        model_path = input_dir / PD_MODEL_FILENAME
+        model_path = (input_dir / PD_MODEL_FILE_PREFIX).with_suffix(pd_model_file_ext)
         if not model_path.exists():
             sys.exit(f"{model_path} does not exist")
         params_path = input_dir / PD_PARAMS_FILENAME
@@ -305,14 +303,21 @@ def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
         if shutil.which("paddle2onnx") is None:
             sys.exit("Paddle2ONNX is not available. Please install the plugin first.")
 
-    def _run_paddle2onnx(input_dir, output_dir, opset_version):
+    def _run_paddle2onnx(input_dir, pd_model_file_ext, output_dir, opset_version):
         logging.info("Paddle2ONNX conversion starting...")
+        # XXX: To circumvent Paddle2ONNX's bug
+        if opset_version is None:
+            if pd_model_file_ext == ".json":
+                opset_version = 19
+            else:
+                opset_version = 7
+            logging.info("Using default ONNX opset version: %d", opset_version)
         cmd = [
             "paddle2onnx",
             "--model_dir",
             str(input_dir),
             "--model_filename",
-            PD_MODEL_FILENAME,
+            str(Path(PD_MODEL_FILE_PREFIX).with_suffix(pd_model_file_ext)),
             "--params_filename",
             PD_PARAMS_FILENAME,
             "--save_file",
@@ -345,9 +350,13 @@ def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
     onnx_model_dir = Path(onnx_model_dir)
     logging.info(f"Input dir: {paddle_model_dir}")
     logging.info(f"Output dir: {onnx_model_dir}")
-    _check_input_dir(paddle_model_dir)
+    pd_model_file_ext = ".json"
+    if not FLAGS_json_format_model:
+        if not (paddle_model_dir / f"{PD_MODEL_FILE_PREFIX}.json").exists():
+            pd_model_file_ext = ".pdmodel"
+    _check_input_dir(paddle_model_dir, pd_model_file_ext)
     _check_paddle2onnx()
-    _run_paddle2onnx(paddle_model_dir, onnx_model_dir, opset_version)
+    _run_paddle2onnx(paddle_model_dir, pd_model_file_ext, onnx_model_dir, opset_version)
     if not (onnx_model_dir.exists() and onnx_model_dir.samefile(paddle_model_dir)):
         _copy_config_file(paddle_model_dir, onnx_model_dir)
         _copy_additional_files(paddle_model_dir, onnx_model_dir)
