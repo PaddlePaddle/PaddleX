@@ -14,8 +14,8 @@
 
 from typing import Final, List, Optional
 
-from pydantic import BaseModel, Field
-from typing_extensions import Annotated
+from pydantic import BaseModel
+from typing_extensions import Literal
 
 from ..infra.models import DataInfo, PrimaryOperations
 from .shared import ocr
@@ -39,10 +39,23 @@ ANALYZE_IMAGES_ENDPOINT: Final[str] = "/chatocr-visual"
 
 
 class InferenceParams(BaseModel):
-    maxLongSide: Optional[Annotated[int, Field(gt=0)]] = None
+    textDetLimitSideLen: Optional[int] = None
+    textDetLimitType: Optional[Literal["min", "max"]] = None
+    textDetThresh: Optional[float] = None
+    textDetBoxThresh: Optional[float] = None
+    textDetUnclipRatio: Optional[float] = None
+    textRecScoreThresh: Optional[float] = None
+    sealDetLimitSideLen: Optional[int] = None
+    sealDetLimitType: Optional[Literal["min", "max"]] = None
+    sealDetThresh: Optional[float] = None
+    sealDetBoxThresh: Optional[float] = None
+    sealDetUnclipRatio: Optional[float] = None
+    sealRecScoreThresh: Optional[float] = None
 
 
 class AnalyzeImagesRequest(ocr.BaseInferRequest):
+    useDocOrientationClassify: Optional[bool] = None
+    useDocUnwarping: Optional[bool] = None
     useGeneralOcr: Optional[bool] = None
     useSealRecognition: Optional[bool] = None
     useTableRecognition: Optional[bool] = None

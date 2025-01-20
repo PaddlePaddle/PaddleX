@@ -15,50 +15,36 @@
 from typing import Final, List, Optional
 
 from pydantic import BaseModel
-from typing_extensions import Literal
 
 from ..infra.models import DataInfo, PrimaryOperations
 from .shared import ocr
 
 __all__ = [
     "INFER_ENDPOINT",
-    "InferenceParams",
     "InferRequest",
-    "TableRecResult",
+    "DocPreprocessingResult",
     "InferResult",
     "PRIMARY_OPERATIONS",
 ]
 
-INFER_ENDPOINT: Final[str] = "/table-recognition"
-
-
-class InferenceParams(BaseModel):
-    textDetLimitSideLen: Optional[int] = None
-    textDetLimitType: Optional[Literal["min", "max"]] = None
-    textDetThresh: Optional[float] = None
-    textDetBoxThresh: Optional[float] = None
-    textDetUnclipRatio: Optional[float] = None
-    textRecScoreThresh: Optional[float] = None
+INFER_ENDPOINT: Final[str] = "/document-preprocessing"
 
 
 class InferRequest(ocr.BaseInferRequest):
+    # Should it be "Classification" instead of "Classify"? Keep the names
+    # consistent with the parameters of the wrapped function though.
     useDocOrientationClassify: Optional[bool] = None
     useDocUnwarping: Optional[bool] = None
-    useLayoutDetection: Optional[bool] = None
-    useOcrModel: Optional[bool] = None
-    inferenceParams: Optional[InferenceParams] = None
 
 
-class TableRecResult(BaseModel):
+class DocPreprocessingResult(BaseModel):
     prunedResult: dict
-    formulaRecImage: Optional[str] = None
-    layoutDetImage: Optional[str] = None
     preprocessedImage: Optional[str] = None
     inputImage: Optional[str] = None
 
 
 class InferResult(BaseModel):
-    tableRecResults: List[TableRecResult]
+    docPreprocessingResults: List[DocPreprocessingResult]
     dataInfo: DataInfo
 
 

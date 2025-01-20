@@ -43,6 +43,8 @@ class InferenceParams(BaseModel):
 
 
 class InferRequest(ocr.BaseInferRequest):
+    useDocOrientationClassify: Optional[bool] = None
+    useDocUnwarping: Optional[bool] = None
     useTextLineOrientation: Optional[bool] = False
     inferenceParams: Optional[InferenceParams] = None
 

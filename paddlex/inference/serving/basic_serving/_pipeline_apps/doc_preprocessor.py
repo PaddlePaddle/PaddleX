@@ -19,7 +19,7 @@ from fastapi import FastAPI
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
 from ...infra.models import ResultResponse
-from ...schemas.table_recognition import INFER_ENDPOINT, InferRequest, InferResult
+from ...schemas.doc_preprocessor import INFER_ENDPOINT, InferRequest, InferResult
 from .._app import create_app, primary_operation
 from ._common import common
 from ._common import ocr as ocr_common
@@ -43,38 +43,22 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
         log_id = serving_utils.generate_log_id()
 
         images, data_info = await ocr_common.get_images(request, ctx)
-        if request.inferenceParams is not None:
-            inference_params = request.inferenceParams.model_dump(exclude_unset=True)
-        else:
-            inference_params = {}
 
         result = await pipeline.infer(
             images,
             use_doc_orientation_classify=request.useDocOrientationClassify,
             use_doc_unwarping=request.useDocUnwarping,
-            use_layout_detection=request.useLayoutDetection,
-            use_ocr_model=request.useOcrModel,
-            text_det_limit_side_len=inference_params.get("textDetLimitSideLen"),
-            text_det_limit_type=inference_params.get("textDetLimitType"),
-            text_det_thresh=inference_params.get("textDetThresh"),
-            text_det_box_thresh=inference_params.get("textDetBoxThresh"),
-            text_det_unclip_ratio=inference_params.get("textDetUnclipRatio"),
-            text_rec_score_thresh=inference_params.get("textRecScoreThresh"),
         )
 
-        table_rec_results: List[Dict[str, Any]] = []
+        doc_pp_results: List[Dict[str, Any]] = []
         for i, (img, item) in enumerate(zip(images, result)):
             pruned_res = common.prune_result(item.json["res"])
             if ctx.config.visualize:
                 output_imgs = item.img
                 imgs = {
                     "input_img": img,
-                    "ocr_img": output_imgs["ocr_res_img"],
+                    "preprocessed_img": output_imgs["preprocessed_img"],
                 }
-                if "layout_det_res" in output_imgs:
-                    imgs["layout_det_img"] = output_imgs["layout_det_res"]
-                if "preprocessed_img" in output_imgs:
-                    imgs["preprocessed_img"] = output_imgs["preprocessed_img"]
                 imgs = await serving_utils.call_async(
                     common.postprocess_images,
                     imgs,
@@ -86,20 +70,18 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
                 )
             else:
                 imgs = {}
-            table_rec_results.append(
+            doc_pp_results.append(
                 dict(
                     prunedResult=pruned_res,
-                    ocrImage=imgs.get("ocr_img"),
-                    layoutDetImage=imgs.get("layout_det_img"),
-                    preprocessedImage=imgs.get("preprocesed_img"),
+                    preprocessedImage=imgs.get("preprocessed_img"),
                     inputImage=imgs.get("input_img"),
                 )
             )
 
         return ResultResponse[InferResult](
-            logId=serving_utils.generate_log_id(),
+            logId=log_id,
             result=InferResult(
-                tableRecResults=table_rec_results,
+                docPreprocessingResults=doc_pp_results,
                 dataInfo=data_info,
             ),
         )

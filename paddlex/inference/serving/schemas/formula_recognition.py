@@ -31,7 +31,9 @@ INFER_ENDPOINT: Final[str] = "/formula-recognition"
 
 
 class InferRequest(ocr.BaseInferRequest):
-    useLayoutDetection: Optional[bool] = False
+    useLayoutDetection: Optional[bool] = None
+    useDocOrientationClassify: Optional[bool] = None
+    useDocUnwarping: Optional[bool] = None
 
 
 class FormulaRecResult(BaseModel):

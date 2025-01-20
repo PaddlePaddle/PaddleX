@@ -22,6 +22,7 @@ from .shared import ocr
 
 __all__ = [
     "INFER_ENDPOINT",
+    "InferenceParams",
     "InferRequest",
     "SealRecResult",
     "InferResult",
@@ -41,7 +42,9 @@ class InferenceParams(BaseModel):
 
 
 class InferRequest(ocr.BaseInferRequest):
-    useLayoutDetection: Optional[bool] = False
+    useDocOrientationClassify: Optional[bool] = None
+    useDocUnwarping: Optional[bool] = None
+    useLayoutDetection: Optional[bool] = None
     inferenceParams: Optional[InferenceParams] = None
 
 

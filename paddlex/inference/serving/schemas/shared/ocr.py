@@ -23,7 +23,3 @@ FileType: TypeAlias = Literal[0, 1]
 class BaseInferRequest(BaseModel):
     file: str
     fileType: Optional[FileType] = None
-    # Should it be "Classification" instead of "Classify"? Keep the names
-    # consistent with the parameters of the wrapped function though.
-    useDocOrientationClassify: Optional[bool] = None
-    useDocUnwarping: Optional[bool] = None
