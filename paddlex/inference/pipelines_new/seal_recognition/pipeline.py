@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import os, sys
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union, List
 import numpy as np
 import cv2
 from ..base import BasePipeline
@@ -151,7 +151,7 @@ class SealRecognitionPipeline(BasePipeline):
 
     def predict(
         self,
-        input: str | list[str] | np.ndarray | list[np.ndarray],
+        input: Union[str, List[str], np.ndarray, List[np.ndarray]],
         use_doc_orientation_classify: Optional[bool] = None,
         use_doc_unwarping: Optional[bool] = None,
         use_layout_detection: Optional[bool] = None,

@@ -21,7 +21,7 @@ from langchain_community import vectorstores
 
 import time
 
-from typing import Dict
+from typing import Dict, List
 
 
 class OpenAIBotRetriever(BaseRetriever):
@@ -85,9 +85,9 @@ class OpenAIBotRetriever(BaseRetriever):
 
     def generate_vector_database(
         self,
-        text_list: list[str],
+        text_list: List[str],
         block_size: int = 300,
-        separators: list[str] = ["\t", "\n", "。", "\n\n", ""],
+        separators: List[str] = ["\t", "\n", "。", "\n\n", ""],
         sleep_time: float = 0.5,
     ) -> FAISS:
         """
@@ -155,7 +155,7 @@ class OpenAIBotRetriever(BaseRetriever):
         return vector
 
     def similarity_retrieval(
-        self, query_text_list: list[str], vectorstore: FAISS, sleep_time: float = 0.5
+        self, query_text_list: List[str], vectorstore: FAISS, sleep_time: float = 0.5
     ) -> str:
         """
         Retrieve similar contexts based on a list of query texts.

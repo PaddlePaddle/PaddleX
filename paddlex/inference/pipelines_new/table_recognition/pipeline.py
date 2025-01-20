@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import os, sys
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union, Tuple, List
 import numpy as np
 import cv2
 from ..base import BasePipeline
@@ -190,7 +190,7 @@ class TableRecognitionPipeline(BasePipeline):
 
     def predict_doc_preprocessor_res(
         self, image_array: np.ndarray, input_params: dict
-    ) -> tuple[DocPreprocessorResult, np.ndarray]:
+    ) -> Tuple[DocPreprocessorResult, np.ndarray]:
         """
         Preprocess the document image based on input parameters.
 
@@ -254,7 +254,7 @@ class TableRecognitionPipeline(BasePipeline):
 
     def predict(
         self,
-        input: str | list[str] | np.ndarray | list[np.ndarray],
+        input: Union[str, List[str], np.ndarray, List[np.ndarray]],
         use_doc_orientation_classify: Optional[bool] = None,
         use_doc_unwarping: Optional[bool] = None,
         use_layout_detection: Optional[bool] = None,
@@ -273,7 +273,7 @@ class TableRecognitionPipeline(BasePipeline):
         This function predicts the layout parsing result for the given input.
 
         Args:
-            input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) of pdf(s) to be processed.
+            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): The input image(s) of pdf(s) to be processed.
             use_layout_detection (bool): Whether to use layout detection.
             use_doc_orientation_classify (bool): Whether to use document orientation classification.
             use_doc_unwarping (bool): Whether to use document unwarping.

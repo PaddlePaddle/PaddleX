@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import os, sys
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union, List
 import numpy as np
 import cv2
 from ..base import BasePipeline
@@ -177,7 +177,7 @@ class FormulaRecognitionPipeline(BasePipeline):
 
     def predict(
         self,
-        input: str | list[str] | np.ndarray | list[np.ndarray],
+        input: Union[str, List[str], np.ndarray, List[np.ndarray]],
         use_layout_detection: Optional[bool] = None,
         use_doc_orientation_classify: Optional[bool] = None,
         use_doc_unwarping: Optional[bool] = None,
@@ -188,7 +188,7 @@ class FormulaRecognitionPipeline(BasePipeline):
         This function predicts the layout parsing result for the given input.
 
         Args:
-            input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) of pdf(s) to be processed.
+            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): The input image(s) of pdf(s) to be processed.
             use_layout_detection (Optional[bool]): Whether to use layout detection.
             use_doc_orientation_classify (Optional[bool]): Whether to use document orientation classification.
             use_doc_unwarping (Optional[bool]): Whether to use document unwarping.

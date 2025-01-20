@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, Tuple
+from typing import Any, Dict, Optional, Union, Tuple, List
 import numpy as np
 
 from ...utils.pp_option import PaddlePredictorOption
@@ -55,12 +55,14 @@ class ObjectDetectionPipeline(BasePipeline):
         if "layout_unclip_ratio" in model_cfg:
             model_kwargs["layout_unclip_ratio"] = model_cfg["layout_unclip_ratio"]
         if "layout_merge_bboxes_mode" in model_cfg:
-            model_kwargs["layout_merge_bboxes_mode"] = model_cfg["layout_merge_bboxes_mode"]
+            model_kwargs["layout_merge_bboxes_mode"] = model_cfg[
+                "layout_merge_bboxes_mode"
+            ]
         self.det_model = self.create_model(model_cfg, **model_kwargs)
 
     def predict(
         self,
-        input: str | list[str] | np.ndarray | list[np.ndarray],
+        input: Union[str, List[str], np.ndarray, List[np.ndarray]],
         threshold: Optional[Union[float, dict]] = None,
         layout_nms: bool = False,
         layout_unclip_ratio: Optional[Union[float, Tuple[float, float]]] = None,
@@ -70,7 +72,7 @@ class ObjectDetectionPipeline(BasePipeline):
         """Predicts object detection results for the given input.
 
         Args:
-            input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or path(s) to the images.
+            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): The input image(s) or path(s) to the images.
             img_size (Optional[Union[int, Tuple[int, int]]]): The size of the input image. Default is None.
             threshold (Optional[float]): The threshold value to filter out low-confidence predictions. Default is None.
             layout_nms (bool, optional): Whether to use layout-aware NMS. Defaults to False.
@@ -85,9 +87,10 @@ class ObjectDetectionPipeline(BasePipeline):
             DetResult: The predicted detection results.
         """
         yield from self.det_model(
-                input, 
-                threshold=threshold, 
-                layout_nms=layout_nms, 
-                layout_unclip_ratio=layout_unclip_ratio, 
-                layout_merge_bboxes_mode=layout_merge_bboxes_mode,
-                **kwargs)
+            input,
+            threshold=threshold,
+            layout_nms=layout_nms,
+            layout_unclip_ratio=layout_unclip_ratio,
+            layout_merge_bboxes_mode=layout_merge_bboxes_mode,
+            **kwargs,
+        )
