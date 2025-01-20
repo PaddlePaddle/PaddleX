@@ -18,7 +18,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import ultra_infer as ui
 import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.results import SegResult
+from paddlex.inference.models_new.semantic_segmentation.result import SegResult
 from paddlex.modules.semantic_segmentation.model_list import MODELS
 
 from paddlex_hpi.models.base import CVPredictor, HPIParams

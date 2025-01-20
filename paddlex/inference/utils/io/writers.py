@@ -36,6 +36,7 @@ __all__ = [
     "XlsxWriter",
     "YAMLWriter",
     "VideoWriter",
+    "MarkdownWriter",
 ]
 
 
@@ -233,6 +234,28 @@ class YAMLWriter(_BaseWriter):
         return WriterType.YAML
 
 
+class MarkdownWriter(_BaseWriter):
+    """MarkdownWriter"""
+
+    def __init__(self, backend="markdown", **bk_args):
+        super().__init__(backend=backend, **bk_args)
+
+    def write(self, out_path, obj):
+        """write"""
+        return self._backend.write_obj(str(out_path), obj)
+
+    def _init_backend(self, bk_type, bk_args):
+        """init backend"""
+        if bk_type == "markdown":
+            return MarkdownWriterBackend(**bk_args)
+        else:
+            raise ValueError("Unsupported backend type")
+
+    def get_type(self):
+        """get type"""
+        return WriterType.MARKDOWN
+
+
 class _BaseWriterBackend(object):
     """_BaseWriterBackend"""
 
@@ -421,3 +444,15 @@ class PandasCSVWriterBackend(_CSVWriterBackend):
         else:
             raise TypeError("Unsupported object type")
         return ts.to_csv(out_path)
+
+
+class MarkdownWriterBackend(_BaseWriterBackend):
+    """MarkdownWriterBackend"""
+
+    def __init__(self):
+        super().__init__()
+
+    def _write_obj(self, out_path, obj):
+        """write markdown obj"""
+        with open(out_path, mode="a", encoding="utf-8", errors="replace") as f:
+            f.write(obj)

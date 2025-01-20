@@ -34,7 +34,6 @@ class DocPreprocessorPipeline(BasePipeline):
         device: Optional[str] = None,
         pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
-        hpi_params: Optional[Dict[str, Any]] = None,
     ) -> None:
         """Initializes the doc preprocessor pipeline.
 
@@ -43,12 +42,9 @@ class DocPreprocessorPipeline(BasePipeline):
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
             use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            hpi_params (Optional[Dict[str, Any]], optional): HPIP parameters. Defaults to None.
         """
 
-        super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_params=hpi_params
-        )
+        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
 
         self.use_doc_orientation_classify = config.get(
             "use_doc_orientation_classify", True
@@ -169,7 +165,7 @@ class DocPreprocessorPipeline(BasePipeline):
         for img_id, batch_data in enumerate(self.batch_sampler(input)):
             if not isinstance(batch_data[0], str):
                 # TODO: add support input_pth for ndarray and pdf
-                input_path = f"{img_id}"
+                input_path = f"{img_id}.jpg"
             else:
                 input_path = batch_data[0]
 

@@ -12,17 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import math
-import random
-import numpy as np
-import cv2
-import PIL
-from PIL import Image, ImageDraw, ImageFont
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH
-from ...common.result import BaseResult
+from .model_list import MODELS
+from ..base import BaseEvaluator
+from ...utils.errors import UnsupportedAPIError
 
 
-class VisualInfoResult(BaseResult):
-    """VisualInfoResult"""
+class OVSegEvaluator(BaseEvaluator):
+    """Open Vocabulary Segmentation Model Evaluator"""
 
-    pass
+    entities = MODELS
+
+    def __init__(self, config):
+        # not support for now
+        raise UnsupportedAPIError(
+            "open vocabulary segmentation models do not support evaluate for now."
+        )

@@ -3,6 +3,7 @@ imagesize
 colorlog
 PyYAML
 filelock
+ftfy
 ruamel.yaml
 chardet
 numpy==1.24.4

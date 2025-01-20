@@ -18,7 +18,9 @@ from typing import Any, Dict, List
 import ultra_infer as ui
 import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.results import TableRecResult
+from paddlex.inference.models_new.table_structure_recognition.result import (
+    TableRecResult,
+)
 from paddlex.modules.table_recognition.model_list import MODELS
 
 from paddlex_hpi._utils.compat import get_compat_version

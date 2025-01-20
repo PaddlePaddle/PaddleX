@@ -53,15 +53,24 @@ class FormulaRecognitionResult(BaseCVResult):
             Dict[str, Image.Image]: An image with detection boxes, texts, and scores blended on it.
         """
         image = Image.fromarray(self["doc_preprocessor_res"]["output_img"])
+        res_img_dict = {}
+        model_settings = self["model_settings"]
+        if model_settings["use_doc_preprocessor"]:
+            res_img_dict.update(**self["doc_preprocessor_res"].img)
+
+        layout_det_res = self["layout_det_res"]
+        if len(layout_det_res) > 0:
+            res_img_dict["layout_det_res"] = layout_det_res.img["res"]
         try:
             env_valid()
         except subprocess.CalledProcessError as e:
             logging.warning(
                 "Please refer to 2.3 Formula Recognition Pipeline Visualization in Formula Recognition Pipeline Tutorial to install the LaTeX rendering engine at first."
             )
-            return {f"formula_res_img": image}
+            res_img_dict["formula_res_img"] = image
+            return res_img_dict
 
-        if len(self["layout_det_res"]) <= 0:
+        if len(layout_det_res) <= 0:
             image = np.array(image.convert("RGB"))
             rec_formula = self["formula_res_list"][0]["rec_formula"]
             xywh = crop_white_area(image)
@@ -92,10 +101,12 @@ class FormulaRecognitionResult(BaseCVResult):
                 )
                 new_image.paste(image, (0, 0))
                 new_image.paste(img_formula, (image.width + 10, 0))
-                return {f"formula_res_img": new_image}
+                res_img_dict["formula_res_img"] = new_image
+                return res_img_dict
             except subprocess.CalledProcessError as e:
                 logging.warning("Syntax error detected in formula, rendering failed.")
-                return {f"formula_res_img": image}
+                res_img_dict["formula_res_img"] = image
+                return res_img_dict
 
         h, w = image.height, image.width
         img_left = image.copy()
@@ -137,11 +148,7 @@ class FormulaRecognitionResult(BaseCVResult):
         img_show = Image.new("RGB", (int(w * 2), h), (255, 255, 255))
         img_show.paste(img_left, (0, 0, w, h))
         img_show.paste(Image.fromarray(img_right), (w, 0, w * 2, h))
-
-        model_settings = self["model_settings"]
-        res_img_dict = {f"formula_res_img": img_show}
-        if model_settings["use_doc_preprocessor"]:
-            res_img_dict.update(**self["doc_preprocessor_res"].img)
+        res_img_dict["formula_res_img"] = img_show
         return res_img_dict
 
     def _to_str(self, *args, **kwargs) -> Dict[str, str]:
@@ -159,7 +166,8 @@ class FormulaRecognitionResult(BaseCVResult):
         data["model_settings"] = self["model_settings"]
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].str["res"]
-
+        if len(self["layout_det_res"]) > 0:
+            data["layout_det_res"] = self["layout_det_res"].str["res"]
         data["formula_res_list"] = []
         for tno in range(len(self["formula_res_list"])):
             rec_formula_dict = {
@@ -190,7 +198,8 @@ class FormulaRecognitionResult(BaseCVResult):
         data["model_settings"] = self["model_settings"]
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].str["res"]
-
+        if len(self["layout_det_res"]) > 0:
+            data["layout_det_res"] = self["layout_det_res"].str["res"]
         data["formula_res_list"] = []
         for tno in range(len(self["formula_res_list"])):
             rec_formula_dict = {

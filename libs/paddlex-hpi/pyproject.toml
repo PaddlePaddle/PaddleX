@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "paddlex-hpi"
-version = "3.0.0.b2"
+version = "3.0.0.rc0"
 description = ""
 readme = "README.md"
 authors = []

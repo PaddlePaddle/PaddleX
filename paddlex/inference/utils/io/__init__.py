@@ -32,4 +32,5 @@ from .writers import (
     XlsxWriter,
     YAMLWriter,
     VideoWriter,
+    MarkdownWriter,
 )

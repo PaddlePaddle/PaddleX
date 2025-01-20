@@ -123,14 +123,6 @@ def args_cfg():
         "--use_hpip", action="store_true", help="Enable HPIP acceleration if available."
     )
     pipeline_group.add_argument(
-        "--serial_number", type=str, help="Serial number for device identification."
-    )
-    pipeline_group.add_argument(
-        "--update_license",
-        action="store_true",
-        help="Update the software license information.",
-    )
-    pipeline_group.add_argument(
         "--get_pipeline_config",
         type=str,
         default=None,
@@ -214,25 +206,16 @@ def install(args):
     return
 
 
-def _get_hpi_params(serial_number, update_license):
-    return {"serial_number": serial_number, "update_license": update_license}
-
-
 def pipeline_predict(
     pipeline,
     input,
     device,
     save_path,
     use_hpip,
-    serial_number,
-    update_license,
     **pipeline_args,
 ):
     """pipeline predict"""
-    hpi_params = _get_hpi_params(serial_number, update_license)
-    pipeline = create_pipeline(
-        pipeline, device=device, use_hpip=use_hpip, hpi_params=hpi_params
-    )
+    pipeline = create_pipeline(pipeline, device=device, use_hpip=use_hpip)
     result = pipeline.predict(input, **pipeline_args)
     for res in result:
         res.print()
@@ -240,13 +223,12 @@ def pipeline_predict(
             res.save_all(save_path=save_path)
 
 
-def serve(pipeline, *, device, use_hpip, serial_number, update_license, host, port):
+def serve(pipeline, *, device, use_hpip, host, port):
     from .inference.pipelines.serving import create_pipeline_app, run_server
 
-    hpi_params = _get_hpi_params(serial_number, update_license)
     pipeline_config = load_pipeline_config(pipeline)
     pipeline = create_pipeline_from_config(
-        pipeline_config, device=device, use_hpip=use_hpip, hpi_params=hpi_params
+        pipeline_config, device=device, use_hpip=use_hpip
     )
     app = create_pipeline_app(pipeline, pipeline_config)
     run_server(app, host=host, port=port, debug=False)
@@ -270,8 +252,6 @@ def main():
             args.pipeline,
             device=args.device,
             use_hpip=args.use_hpip,
-            serial_number=args.serial_number,
-            update_license=args.update_license,
             host=args.host,
             port=args.port,
         )
@@ -294,7 +274,5 @@ def main():
                 args.device,
                 args.save_path,
                 use_hpip=args.use_hpip,
-                serial_number=args.serial_number,
-                update_license=args.update_license,
                 **pipeline_args_dict,
             )

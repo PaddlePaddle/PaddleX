@@ -21,7 +21,9 @@ from pathlib import Path
 import tempfile
 import yaml
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.results import MLClassResult
+from paddlex.inference.models_new.image_multilabel_classification.result import (
+    MLClassResult,
+)
 from paddlex.modules.multilabel_classification.model_list import MODELS
 
 from paddlex_hpi.models.base import CVPredictor, HPIParams

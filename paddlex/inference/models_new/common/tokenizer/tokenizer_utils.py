@@ -267,7 +267,13 @@ def adapt_stale_fwd_patch(self, name, value):
     return value
 
 
-class InitTrackerMeta(type(paddle.nn.Layer)):
+# NOTE:
+# Modification:
+#   class InitTrackerMeta(type(paddle.nn.Layer)) -> class InitTrackerMeta(type)
+# Context:
+#   1. In paddle 3.0rc, type(paddle.nn.Layer) == type
+#   2. Solve the conflict between ultra-infer and paddle
+class InitTrackerMeta(type):
     """
     This metaclass wraps the `__init__` method of a class to add `init_config`
     attribute for instances of that class, and `init_config` use a dict to track
@@ -639,7 +645,7 @@ class ChatTemplateMixin:
         tokenize: bool = True,
         context_data: Dict[str, Any] = {},
         **tokenizer_kwargs,
-    ) -> str | dict[str, numpy.ndarray | paddle.Tensor]:
+    ) -> str | dict[str, Union["numpy.ndarray", "paddle.Tensor"]]:
         """apply chat_template rules to conversation which should not be batched data
 
         Args:
@@ -648,7 +654,7 @@ class ChatTemplateMixin:
             tokenize (bool, optional): whether do tokenization. Defaults to True.
 
         Returns:
-            str | dict[str, numpy.ndarray | paddle.Tensor]: return the result of applied data
+            str | dict[str, Union["numpy.ndarray", "paddle.Tensor"]]: return the result of applied data
         """
         if not self.chat_template:
             raise ValueError(
@@ -673,7 +679,7 @@ class ChatTemplateMixin:
         self,
         conversation: List[Dict[str, str]] | str,
         context_data: Dict[str, Any] = {},
-    ) -> str | dict[str, numpy.ndarray | paddle.Tensor]:
+    ) -> str | dict[str, Union["numpy.ndarray", "paddle.Tensor"]]:
         context_data = self.chat_template._init_context_data(context_data)
 
         if isinstance(conversation, str):
@@ -691,7 +697,7 @@ class ChatTemplateMixin:
         self,
         conversation: Union[Dict[str, str] | Dict[str, str]] | str,
         add_generation_prompt=True,
-    ) -> str | dict[str, numpy.ndarray | paddle.Tensor]:
+    ) -> str | dict[str, Union["numpy.ndarray", "paddle.Tensor"]]:
         if isinstance(conversation, str):
             conversations = [{"role": "user", "content": conversation}]
         elif isinstance(conversation, list):
@@ -2047,6 +2053,7 @@ class PretrainedTokenizer(ChatTemplateMixin, PretrainedTokenizerBase):
         else:
             return "", prefix_offset, read_offset
 
+
 def _is_control(char):
     """Checks whether `chars` is a control character."""
     # These are technically control characters but we count them as whitespace
@@ -2058,6 +2065,7 @@ def _is_control(char):
         return True
     return False
 
+
 def _is_punctuation(char):
     """Checks whether `chars` is a punctuation character."""
     cp = ord(char)
@@ -2065,12 +2073,18 @@ def _is_punctuation(char):
     # Characters such as "^", "$", and "`" are not in the Unicode
     # Punctuation class but we treat them as punctuation anyways, for
     # consistency.
-    if (cp >= 33 and cp <= 47) or (cp >= 58 and cp <= 64) or (cp >= 91 and cp <= 96) or (cp >= 123 and cp <= 126):
+    if (
+        (cp >= 33 and cp <= 47)
+        or (cp >= 58 and cp <= 64)
+        or (cp >= 91 and cp <= 96)
+        or (cp >= 123 and cp <= 126)
+    ):
         return True
     cat = unicodedata.category(char)
     if cat.startswith("P"):
         return True
     return False
+
 
 def _is_symbol(char):
     """Check whether CP is the codepoint of a Symbol character."""
@@ -2080,6 +2094,7 @@ def _is_symbol(char):
     ):
         return True
     return False
+
 
 def _is_whitespace(char):
     """
@@ -2093,6 +2108,7 @@ def _is_whitespace(char):
     if cat == "Zs":
         return True
     return False
+
 
 def convert_to_unicode(text):
     """
@@ -2109,6 +2125,7 @@ def convert_to_unicode(text):
     else:
         raise ValueError("Unsupported string type: %s" % (type(text)))
 
+
 def whitespace_tokenize(text):
     """
     Runs basic whitespace cleaning and splitting on a peice of text.
@@ -2122,4 +2139,3 @@ def whitespace_tokenize(text):
         return []
     tokens = text.split()
     return tokens
-    

@@ -45,7 +45,6 @@ class FormulaRecognitionPipeline(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
-        hpi_params: Optional[Dict[str, Any]] = None,
     ) -> None:
         """Initializes the formula recognition pipeline.
 
@@ -54,12 +53,9 @@ class FormulaRecognitionPipeline(BasePipeline):
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
             use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            hpi_params (Optional[Dict[str, Any]], optional): HPIP parameters. Defaults to None.
         """
 
-        super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_params=hpi_params
-        )
+        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
 
         self.use_doc_preprocessor = config.get("use_doc_preprocessor", True)
         if self.use_doc_preprocessor:
@@ -182,10 +178,10 @@ class FormulaRecognitionPipeline(BasePipeline):
     def predict(
         self,
         input: str | list[str] | np.ndarray | list[np.ndarray],
-        use_layout_detection: bool = True,
-        use_doc_orientation_classify: bool = False,
-        use_doc_unwarping: bool = False,
-        layout_det_res: DetResult = None,
+        use_layout_detection: Optional[bool] = None,
+        use_doc_orientation_classify: Optional[bool] = None,
+        use_doc_unwarping: Optional[bool] = None,
+        layout_det_res: Optional[DetResult] = None,
         **kwargs,
     ) -> FormulaRecognitionResult:
         """
@@ -193,10 +189,10 @@ class FormulaRecognitionPipeline(BasePipeline):
 
         Args:
             input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) of pdf(s) to be processed.
-            use_layout_detection (bool): Whether to use layout detection.
-            use_doc_orientation_classify (bool): Whether to use document orientation classification.
-            use_doc_unwarping (bool): Whether to use document unwarping.
-            layout_det_res (DetResult): The layout detection result.
+            use_layout_detection (Optional[bool]): Whether to use layout detection.
+            use_doc_orientation_classify (Optional[bool]): Whether to use document orientation classification.
+            use_doc_unwarping (Optional[bool]): Whether to use document unwarping.
+            layout_det_res (Optional[DetResult]): The layout detection result.
                 It will be used if it is not None and use_layout_detection is False.
             **kwargs: Additional keyword arguments.
 
@@ -252,7 +248,9 @@ class FormulaRecognitionPipeline(BasePipeline):
                     layout_det_res = next(self.layout_det_model(doc_preprocessor_image))
                 for box_info in layout_det_res["boxes"]:
                     if box_info["label"].lower() in ["formula"]:
-                        crop_img_info = self._crop_by_boxes(image_array, [box_info])
+                        crop_img_info = self._crop_by_boxes(
+                            doc_preprocessor_image, [box_info]
+                        )
                         crop_img_info = crop_img_info[0]
                         single_formula_rec_res = (
                             self.predict_single_formula_recognition_res(
