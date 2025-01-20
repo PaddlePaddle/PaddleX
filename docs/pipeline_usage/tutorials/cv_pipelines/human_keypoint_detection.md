@@ -10,7 +10,7 @@ PaddleX 的人体关键点检测产线是一个 Top-Down 方案，由行人检�
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/human_keypoint_detection/01.jpg">
 
-<b>人体关键点检测产线中包含了行人检测模块和关键点检测模块</b>，有若干模型可供选择，您可以根据下边的 benchmark 数据来选择使用的模型。<b>如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型</b>。
+<b>人体关键点检测产线中包含了行人检测模块和人体关键点检测模块</b>，有若干模型可供选择，您可以根据下边的 benchmark 数据来选择使用的模型。<b>如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型</b>。
 
 <summary> 👉模型列表详情</summary>
 
@@ -47,7 +47,7 @@ PaddleX 的人体关键点检测产线是一个 Top-Down 方案，由行人检�
 
 <b>注：以上精度指标为CrowdHuman数据集 mAP(0.5:0.95)。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b>
 
-<b>关键点检测模块：</b>
+<b>人体关键点检测模块：</b>
 
 <table>
   <tr>
@@ -774,9 +774,9 @@ print_r($result[&quot;texts&quot;]);
 
 ### 4.1 模型微调
 
-由于人体关键点检测产线包含两个模块（行人检测模块和关键点检测模块），模型产线的效果不及预期可能来自于其中任何一个模块。
+由于人体关键点检测产线包含两个模块（行人检测模块和人体关键点检测模块），模型产线的效果不及预期可能来自于其中任何一个模块。
 
-您可以对识别效果差的图片进行分析，如果在分析过程中发现有较多的行人目标未被检测出来，那么可能是行人检测模型存在不足，您需要参考[行人检测模块开发教程](../../../module_usage/tutorials/cv_modules/human_detection.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/human_detection.md#四二次开发)章节，使用您的私有数据集对行人检测模型进行微调；如果在已检测到行人出现关键点检测错误，这表明关键点检测模型需要进一步改进，您需要参考[关键点检测模块开发教程](../../../module_usage/tutorials/cv_modules/keypoint_detection.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/keypoint_detection.md#四二次开发)章节,对关键点检测模型进行微调。
+您可以对识别效果差的图片进行分析，如果在分析过程中发现有较多的行人目标未被检测出来，那么可能是行人检测模型存在不足，您需要参考[行人检测模块开发教程](../../../module_usage/tutorials/cv_modules/human_detection.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/human_detection.md#四二次开发)章节，使用您的私有数据集对行人检测模型进行微调；如果在已检测到行人出现关键点检测错误，这表明关键点检测模型需要进一步改进，您需要参考[关键点检测模块开发教程](../../../module_usage/tutorials/cv_modules/human_keypoint_detection.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/human_keypoint_detection.md#四二次开发)章节,对关键点检测模型进行微调。
 
 ### 4.2 模型应用
 

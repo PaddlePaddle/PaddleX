@@ -1400,7 +1400,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 </table>
 <b>注：以上精度指标为 </b>[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)<b> 验证集 平均异常分数。</b>
 
-## [关键点检测模块](../module_usage/tutorials//cv_modules/keypoint_detection.md)
+## [人体关键点检测模块](../module_usage/tutorials//cv_modules/human_keypoint_detection.md)
 
 | 模型|方案|输入尺寸|AP(0.5:0.95)|GPU推理耗时（ms|CPU推理耗时 (ms)|模型存储大小|yaml文件|
 |-|-|-|-|-|-|-|-|

@@ -1,7 +1,7 @@
 
 pipeline_name: PP-ChatOCRv3-doc
 
-use_layout_parser: False
+use_layout_parser: True
 
 SubModules:
   LLM_Chat:
@@ -17,6 +17,7 @@ SubModules:
     api_type: qianfan
     ak: "api_key" # Set this to a real API key
     sk: "secret_key"  # Set this to a real secret key
+
 
   PromptEngneering:
     KIE_CommonText:
@@ -58,18 +59,18 @@ SubModules:
 SubPipelines:
   LayoutParser:
     pipeline_name: layout_parsing
-    
+
     use_doc_preprocessor: True
     use_general_ocr: True
     use_seal_recognition: True
     use_table_recognition: True
+    use_formula_recognition: False
 
     SubModules:
       LayoutDetection:
         module_name: layout_detection
         model_name: RT-DETR-H_layout_3cls
         model_dir: null
-        batch_size: 1
 
     SubPipelines:
       DocPreprocessor:
@@ -81,27 +82,33 @@ SubPipelines:
             module_name: doc_text_orientation
             model_name: PP-LCNet_x1_0_doc_ori
             model_dir: null
-            batch_size: 1
           DocUnwarping:
             module_name: image_unwarping
             model_name: UVDoc
             model_dir: null
-            batch_size: 1
 
       GeneralOCR:
         pipeline_name: OCR
         text_type: general
+        use_doc_preprocessor: False
+        use_textline_orientation: False
         SubModules:
           TextDetection:
             module_name: text_detection
             model_name: PP-OCRv4_server_det
             model_dir: null
-            batch_size: 1    
+            limit_side_len: 960
+            limit_type: max
+            thresh: 0.3
+            box_thresh: 0.6
+            unclip_ratio: 2.0
+            
           TextRecognition:
             module_name: text_recognition
             model_name: PP-OCRv4_server_rec
             model_dir: null
             batch_size: 1
+            score_thresh: 0
 
       TableRecognition:
         pipeline_name: table_recognition
@@ -113,7 +120,6 @@ SubPipelines:
             module_name: table_structure_recognition
             model_name: SLANet_plus
             model_dir: null
-            batch_size: 1
 
       SealRecognition:
         pipeline_name: seal_recognition
@@ -123,14 +129,21 @@ SubPipelines:
           SealOCR:
             pipeline_name: OCR
             text_type: seal
+            use_doc_preprocessor: False
+            use_textline_orientation: False
             SubModules:
               TextDetection:
                 module_name: seal_text_detection
                 model_name: PP-OCRv4_server_seal_det
                 model_dir: null
-                batch_size: 1    
+                limit_side_len: 736
+                limit_type: min
+                thresh: 0.2
+                box_thresh: 0.6
+                unclip_ratio: 0.5
               TextRecognition:
                 module_name: text_recognition
                 model_name: PP-OCRv4_server_rec
                 model_dir: null
                 batch_size: 1
+                score_thresh: 0

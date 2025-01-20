@@ -78,4 +78,7 @@ MODELS = [
     "Co-DINO-Swin-L",
     "RT-DETR-L_wired_table_cell_det",
     "RT-DETR-L_wireless_table_cell_det",
+    "PP-DocLayout-L",
+    "PP-DocLayout-M",
+    "PP-DocLayout-S",
 ]

@@ -19,18 +19,24 @@ import numpy as np
 import PIL
 from copy import deepcopy
 
-import paddle
-import paddle.vision.transforms as T
-import paddle.nn.functional as F
+from .....utils.lazy_loader import LazyLoader
 
-def _get_preprocess_shape(oldh: int, oldw: int, long_side_length: int) -> Tuple[int, int]:
-    """Compute the output size given input size and target long side length.
-    """
+# NOTE: LazyLoader is used to avoid conflicts between ultra-infer and Paddle
+paddle = LazyLoader("lazy_paddle", globals(), "paddle")
+T = LazyLoader("T", globals(), "paddle.vision.transforms")
+F = LazyLoader("F", globals(), "paddle.nn.functional")
+
+
+def _get_preprocess_shape(
+    oldh: int, oldw: int, long_side_length: int
+) -> Tuple[int, int]:
+    """Compute the output size given input size and target long side length."""
     scale = long_side_length * 1.0 / max(oldh, oldw)
     newh, neww = oldh * scale, oldw * scale
     neww = int(neww + 0.5)
     newh = int(newh + 0.5)
     return (newh, neww)
+
 
 class SAMProcessor(object):
 
@@ -53,7 +59,9 @@ class SAMProcessor(object):
         self.image_mean = image_mean
         self.image_std = image_std
 
-        self.image_processor = SamImageProcessor(self.size, self.image_mean, self.image_std)
+        self.image_processor = SamImageProcessor(
+            self.size, self.image_mean, self.image_std
+        )
         self.prompt_processor = SamPromptProcessor(self.size)
 
     def preprocess(
@@ -74,8 +82,12 @@ class SAMProcessor(object):
                 "SAM must use either points or boxes as prompt, now both is None."
             )
 
-        point_prompt = np.array(point_prompt).reshape(-1, 2) if point_prompt is not None else None
-        box_prompt = np.array(box_prompt).reshape(-1, 4) if box_prompt is not None else None
+        point_prompt = (
+            np.array(point_prompt).reshape(-1, 2) if point_prompt is not None else None
+        )
+        box_prompt = (
+            np.array(box_prompt).reshape(-1, 4) if box_prompt is not None else None
+        )
 
         if point_prompt is not None and point_prompt.size > 2:
             raise ValueError(
@@ -94,11 +106,11 @@ class SAMProcessor(object):
         return image_seg, prompt
 
     def postprocess(self, low_res_masks, mask_threshold: float = 0.0):
-        
+
         if isinstance(low_res_masks, list):
             assert len(low_res_masks) == 1
             low_res_masks = low_res_masks[0]
-            
+
         masks = F.interpolate(
             paddle.to_tensor(low_res_masks),
             (self.size, self.size),
@@ -106,15 +118,16 @@ class SAMProcessor(object):
             align_corners=False,
         )
         masks = masks[..., : self.input_size[0], : self.input_size[1]]
-        masks = F.interpolate(masks, self.original_size, mode="bilinear", align_corners=False)
+        masks = F.interpolate(
+            masks, self.original_size, mode="bilinear", align_corners=False
+        )
         masks = (masks > mask_threshold).numpy().astype(np.int8)
 
         return [masks]
 
 
 class SamPromptProcessor(object):
-    """Constructs a Sam prompt processor.
-    """
+    """Constructs a Sam prompt processor."""
 
     def __init__(
         self,
@@ -122,20 +135,26 @@ class SamPromptProcessor(object):
     ):
         self.size = size
 
-    def apply_coords(self, coords: np.ndarray, original_size: Tuple[int, ...]) -> np.ndarray:
+    def apply_coords(
+        self, coords: np.ndarray, original_size: Tuple[int, ...]
+    ) -> np.ndarray:
         """Expects a numpy array of length 2 in the final dimension. Requires the
-           original image size in (H, W) format.
+        original image size in (H, W) format.
         """
         old_h, old_w = original_size
-        new_h, new_w = _get_preprocess_shape(original_size[0], original_size[1], self.size)
+        new_h, new_w = _get_preprocess_shape(
+            original_size[0], original_size[1], self.size
+        )
         coords = deepcopy(coords).astype(float)
         coords[..., 0] = coords[..., 0] * (new_w / old_w)
         coords[..., 1] = coords[..., 1] * (new_h / old_h)
         return coords
 
-    def apply_boxes(self, boxes: np.ndarray, original_size: Tuple[int, ...]) -> np.ndarray:
+    def apply_boxes(
+        self, boxes: np.ndarray, original_size: Tuple[int, ...]
+    ) -> np.ndarray:
         """Expects a numpy array shape Nx4. Requires the original image size
-           in (H, W) format.
+        in (H, W) format.
         """
         boxes = self.apply_coords(boxes.reshape([-1, 2, 2]), original_size)
         return boxes.reshape([-1, 4])
@@ -160,9 +179,9 @@ class SamPromptProcessor(object):
             box = self.apply_boxes(box, original_size)
             return box.astype(np.float32)
 
+
 class SamImageProcessor(object):
-    """Constructs a Sam image processor.
-    """
+    """Constructs a Sam image processor."""
 
     def __init__(
         self,
@@ -171,7 +190,7 @@ class SamImageProcessor(object):
         image_std: Union[float, List[float]] = [0.5, 0.5, 0.5],
         **kwargs,
     ) -> None:
-    
+
         size = size if size is not None else 1024
         self.size = size
 
@@ -187,8 +206,7 @@ class SamImageProcessor(object):
         self.input_size = None
 
     def apply_image(self, image: np.ndarray) -> np.ndarray:
-        """Expects a numpy array with shape HxWxC in uint8 format.
-        """
+        """Expects a numpy array with shape HxWxC in uint8 format."""
         target_size = _get_preprocess_shape(image.shape[0], image.shape[1], self.size)
         if isinstance(image, np.ndarray):
             image = PIL.Image.fromarray(image)
@@ -199,13 +217,12 @@ class SamImageProcessor(object):
         if not isinstance(images, (list, tuple)):
             images = [images]
         return self.preprocess(images)
-        
+
     def preprocess(
         self,
         images,
     ):
-        """Preprocess an image or a batch of images with a same shape.
-        """
+        """Preprocess an image or a batch of images with a same shape."""
 
         size = self.size
 

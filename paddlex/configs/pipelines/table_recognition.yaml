@@ -1,14 +1,14 @@
 
 pipeline_name: table_recognition
 
-use_layout_detection: True
 use_doc_preprocessor: True
+use_layout_detection: True
 use_ocr_model: True
 
 SubModules:
   LayoutDetection:
     module_name: layout_detection
-    model_name: RT-DETR-H_layout_3cls
+    model_name: PicoDet_layout_1x_table
     model_dir: null
 
   TableStructureRecognition:

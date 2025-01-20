@@ -14,13 +14,14 @@
 
 import os
 import cv2
+import copy
 import numpy as np
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH
 from ...utils.io import ImageReader
-from ...common.result import BaseCVResult
+from ...common.result import BaseCVResult, StrMixin, JsonMixin
 from ...utils.color_map import get_colormap, font_colormap
 
 
@@ -73,6 +74,16 @@ def draw_attribute_result(img, boxes):
 
 
 class AttributeRecResult(BaseCVResult):
+
+    def _to_str(self, *args, **kwargs):
+        data = copy.deepcopy(self)
+        data.pop("input_img")
+        return StrMixin._to_str(data, *args, **kwargs)
+
+    def _to_json(self, *args, **kwargs):
+        data = copy.deepcopy(self)
+        data.pop("input_img")
+        return JsonMixin._to_json(data, *args, **kwargs)
 
     def _to_img(self):
         """apply"""

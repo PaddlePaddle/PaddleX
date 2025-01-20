@@ -35,8 +35,7 @@ class BaseTSResult(BaseResult, CSVMixin):
         assert (
             BaseTSResult.INPUT_TS_KEY in data
         ), f"`{BaseTSResult.INPUT_TS_KEY}` is needed, but not found in `{list(data.keys())}`!"
-        self._input_ts = data.pop("input_ts", None)
-        self._ts_writer = CSVWriter(backend="pandas")
+        data.pop("input_ts", None)
 
         super().__init__(data)
         CSVMixin.__init__(self, "pandas")

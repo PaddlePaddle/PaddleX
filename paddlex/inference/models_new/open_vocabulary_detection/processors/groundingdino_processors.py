@@ -18,10 +18,14 @@ from typing import Dict, List, Optional, Union, Tuple
 import numpy as np
 import PIL
 
-import paddle
-import paddle.vision.transforms as T
-import paddle.nn.functional as F
 from ...common.tokenizer.bert_tokenizer import BertTokenizer
+from .....utils.lazy_loader import LazyLoader
+
+# NOTE: LazyLoader is used to avoid conflicts between ultra-infer and Paddle
+paddle = LazyLoader("lazy_paddle", globals(), "paddle")
+T = LazyLoader("T", globals(), "paddle.vision.transforms")
+F = LazyLoader("F", globals(), "paddle.nn.functional")
+
 
 def _max_by_axis(the_list):
     maxes = the_list[0]
@@ -29,6 +33,7 @@ def _max_by_axis(the_list):
         for index, item in enumerate(sublist):
             maxes[index] = max(maxes[index], item)
     return maxes
+
 
 def _text_pad_batch_data(
     insts,
@@ -45,7 +50,7 @@ def _text_pad_batch_data(
     extract=False,
 ):
     """Pad the instances to the max sequence length in batch, and generate the
-       corresponding position data and attention bias.
+    corresponding position data and attention bias.
     """
     return_list = []
     max_len = max(len(inst) for inst in insts) if max_seq_len is None else max_seq_len
@@ -54,16 +59,25 @@ def _text_pad_batch_data(
         boxes = np.array(boxes, dtype="int64")
         return boxes
 
-    inst_data = np.array([inst + list([pad_idx] * (max_len - len(inst))) for inst in insts])
+    inst_data = np.array(
+        [inst + list([pad_idx] * (max_len - len(inst))) for inst in insts]
+    )
     return_list += [inst_data.astype("int64").reshape([-1, max_len, 1])]
 
     if return_pos:
-        inst_pos = np.array([list(range(0, len(inst))) + [pad_idx] * (max_len - len(inst)) for inst in insts])
+        inst_pos = np.array(
+            [
+                list(range(0, len(inst))) + [pad_idx] * (max_len - len(inst))
+                for inst in insts
+            ]
+        )
 
         return_list += [inst_pos.astype("int64").reshape([-1, max_len, 1])]
 
     if return_input_mask:
-        input_mask_data = np.array([[1] * len(inst) + [0] * (max_len - len(inst)) for inst in insts])
+        input_mask_data = np.array(
+            [[1] * len(inst) + [0] * (max_len - len(inst)) for inst in insts]
+        )
         input_mask_data = np.expand_dims(input_mask_data, axis=-1)
         return_list += [input_mask_data.astype("float32")]
 
@@ -84,8 +98,8 @@ def _text_pad_batch_data(
 
 
 class GroundingDINOPostProcessor(object):
-    """PostProcessors for GroundingDINO
-    """
+    """PostProcessors for GroundingDINO"""
+
     def __init__(
         self,
         tokenizer,
@@ -103,10 +117,21 @@ class GroundingDINOPostProcessor(object):
         self.box_threshold = box_threshold
         self.text_threshold = text_threshold
 
-    def __call__(self, pred_boxes, pred_logits, prompt, src_images, box_threshold = None, text_threshold = None, **kwargs):
-        
+    def __call__(
+        self,
+        pred_boxes,
+        pred_logits,
+        prompt,
+        src_images,
+        box_threshold=None,
+        text_threshold=None,
+        **kwargs,
+    ):
+
         box_threshold = self.box_threshold if box_threshold is None else box_threshold
-        text_threshold = self.text_threshold if text_threshold is None else text_threshold
+        text_threshold = (
+            self.text_threshold if text_threshold is None else text_threshold
+        )
 
         if isinstance(pred_logits, np.ndarray):
             pred_logits = paddle.to_tensor(pred_logits)
@@ -119,16 +144,30 @@ class GroundingDINOPostProcessor(object):
         rst_boxes = []
         for pred_logit, pred_box, src_image in zip(pred_logits, pred_boxes, src_images):
             rst_boxes.append(
-                self.postprocess(pred_logit, pred_box, prompt, src_image, box_threshold, text_threshold)
+                self.postprocess(
+                    pred_logit,
+                    pred_box,
+                    prompt,
+                    src_image,
+                    box_threshold,
+                    text_threshold,
+                )
             )
 
         return rst_boxes
-        
-    def postprocess(self, pred_logits, pred_boxes, src_prompt, src_image, box_threshold, text_threshold):
-        """Post Process for prediction result of single image.
-        """
 
-        logits = F.sigmoid(pred_logits) 
+    def postprocess(
+        self,
+        pred_logits,
+        pred_boxes,
+        src_prompt,
+        src_image,
+        box_threshold,
+        text_threshold,
+    ):
+        """Post Process for prediction result of single image."""
+
+        logits = F.sigmoid(pred_logits)
         boxes = pred_boxes
 
         logits_filt = logits.clone()
@@ -150,7 +189,7 @@ class GroundingDINOPostProcessor(object):
                 {
                     "coordinate": box.detach().cpu().tolist(),
                     "label": pred_phrase,
-                    "score": pred_score
+                    "score": pred_score,
                 }
             )
 
@@ -168,8 +207,7 @@ class GroundingDINOPostProcessor(object):
 
 
 class GroundingDINOProcessor(object):
-    """Image and Text Processors for GroundingDINO
-    """
+    """Image and Text Processors for GroundingDINO"""
 
     def __init__(
         self,
@@ -192,9 +230,8 @@ class GroundingDINOProcessor(object):
             image_std=image_std,
             do_nested=image_do_nested,
         )
-        tokenizer_dir = os.path.join(model_dir, 'tokenizer')
-        assert os.path.isdir(tokenizer_dir), \
-            f'{tokenizer_dir} not exists.'
+        tokenizer_dir = os.path.join(model_dir, "tokenizer")
+        assert os.path.isdir(tokenizer_dir), f"{tokenizer_dir} not exists."
         self.tokenizer = BertTokenizer.from_pretrained(tokenizer_dir)
 
     def __call__(
@@ -203,23 +240,30 @@ class GroundingDINOProcessor(object):
         text: str,
         **kwargs,
     ):
-            
+
         self.prompt = self.text_processor.pre_caption(text)
-        input_ids = self.tokenizer([self.prompt]).input_ids 
-        special_tokens = self.tokenizer.convert_tokens_to_ids(["[CLS]", "[SEP]", ".", "?"])
+        input_ids = self.tokenizer([self.prompt]).input_ids
+        special_tokens = self.tokenizer.convert_tokens_to_ids(
+            ["[CLS]", "[SEP]", ".", "?"]
+        )
         tokenized_out = self.text_processor(input_ids, special_tokens)
 
         image_tensor, mask = self.image_processor(images)
 
         paddle_rst = [
-            tokenized_out['attention_mask'], tokenized_out['input_ids'], mask, tokenized_out['position_ids'], tokenized_out['text_self_attention_masks'], image_tensor
+            tokenized_out["attention_mask"],
+            tokenized_out["input_ids"],
+            mask,
+            tokenized_out["position_ids"],
+            tokenized_out["text_self_attention_masks"],
+            image_tensor,
         ]
         return [arr.numpy() for arr in paddle_rst]
 
 
 class GroundingDinoTextProcessor(object):
-    """Constructs a GroundingDino text processor.
-    """
+    """Constructs a GroundingDino text processor."""
+
     def __init__(
         self,
         max_words: int = 256,
@@ -231,39 +275,45 @@ class GroundingDinoTextProcessor(object):
         input_ids,
         special_tokens_list,
     ):
-        """Preprocess the text with tokenization.
-        """
+        """Preprocess the text with tokenization."""
         tokenized_out = {}
         input_ids = _text_pad_batch_data(input_ids)
         input_ids = paddle.to_tensor(input_ids, dtype=paddle.int64).squeeze(-1)
-        tokenized_out["input_ids"] = input_ids 
+        tokenized_out["input_ids"] = input_ids
         tokenized_out["attention_mask"] = paddle.cast(input_ids != 0, paddle.int64)
 
         (
             text_self_attention_masks,
             position_ids,
             cate_to_token_mask_list,
-        ) = self.generate_masks_with_special_tokens_and_transfer_map(tokenized_out, special_tokens_list)
+        ) = self.generate_masks_with_special_tokens_and_transfer_map(
+            tokenized_out, special_tokens_list
+        )
 
         if text_self_attention_masks.shape[1] > self.max_words:
-            text_self_attention_masks = text_self_attention_masks[:, : self.max_words, : self.max_words]
+            text_self_attention_masks = text_self_attention_masks[
+                :, : self.max_words, : self.max_words
+            ]
             position_ids = position_ids[:, : self.max_words]
             tokenized_out["input_ids"] = tokenized_out["input_ids"][:, : self.max_words]
-            tokenized_out["attention_mask"] = tokenized_out["attention_mask"][:, : self.max_words]
+            tokenized_out["attention_mask"] = tokenized_out["attention_mask"][
+                :, : self.max_words
+            ]
         tokenized_out["position_ids"] = position_ids
         tokenized_out["text_self_attention_masks"] = text_self_attention_masks
 
         return tokenized_out
 
     def pre_caption(self, caption: str) -> str:
-        """Preprocess the text before tokenization.
-        """
+        """Preprocess the text before tokenization."""
         caption = caption.strip()
         if not caption.endswith("."):
             caption = caption + "."
         return caption
 
-    def generate_masks_with_special_tokens_and_transfer_map(self, tokenized, special_tokens_list):
+    def generate_masks_with_special_tokens_and_transfer_map(
+        self, tokenized, special_tokens_list
+    ):
         """Generate attention mask between each pair of special tokens
         Args:
             input_ids (torch.Tensor): input ids. Shape: [bs, num_token]
@@ -279,19 +329,28 @@ class GroundingDinoTextProcessor(object):
 
         idxs = paddle.nonzero(special_tokens_mask)
 
-        attention_mask = paddle.eye(num_token, dtype=paddle.int32).cast(paddle.bool).unsqueeze(0).tile([bs, 1, 1])
+        attention_mask = (
+            paddle.eye(num_token, dtype=paddle.int32)
+            .cast(paddle.bool)
+            .unsqueeze(0)
+            .tile([bs, 1, 1])
+        )
         position_ids = paddle.zeros((bs, num_token), dtype=paddle.int64)
         cate_to_token_mask_list = [[] for _ in range(bs)]
         previous_col = 0
 
-        for i in range(idxs.shape[0]): 
-            row, col = idxs[i] 
+        for i in range(idxs.shape[0]):
+            row, col = idxs[i]
             if (col == 0) or (col == num_token - 1):
                 attention_mask[row, col, col] = True
                 position_ids[row, col] = 0
             else:
-                attention_mask[row, previous_col + 1 : col + 1, previous_col + 1 : col + 1] = True
-                position_ids[row, previous_col + 1 : col + 1] = paddle.arange(0, col - previous_col)
+                attention_mask[
+                    row, previous_col + 1 : col + 1, previous_col + 1 : col + 1
+                ] = True
+                position_ids[row, previous_col + 1 : col + 1] = paddle.arange(
+                    0, col - previous_col
+                )
                 c2t_maski = paddle.zeros(
                     [
                         num_token,
@@ -299,13 +358,14 @@ class GroundingDinoTextProcessor(object):
                 ).cast(paddle.bool)
                 c2t_maski[previous_col + 1 : col] = True
                 cate_to_token_mask_list[row].append(c2t_maski)
-            previous_col = col 
+            previous_col = col
 
         return attention_mask, position_ids.cast(paddle.int64), cate_to_token_mask_list
 
+
 class GroundingDinoImageProcessor(object):
-    """Constructs a GroundingDino image processor.
-    """
+    """Constructs a GroundingDino image processor."""
+
     def __init__(
         self,
         do_resize: bool = True,
@@ -323,7 +383,7 @@ class GroundingDinoImageProcessor(object):
 
         self.do_resize = do_resize
         self.do_normalize = do_normalize
-        self.image_mean = image_mean 
+        self.image_mean = image_mean
         self.image_std = image_std
         self.do_nested = do_nested
 
@@ -332,8 +392,8 @@ class GroundingDinoImageProcessor(object):
         return self.preprocess(images, **kwargs)
 
     def resize(self, image, size=None, max_size=1333):
-        """Officially aligned Image resize.
-        """
+        """Officially aligned Image resize."""
+
         def get_size_with_aspect_ratio(image_size, size, max_size=None):
             w, h = image_size
             if max_size is not None:
@@ -394,8 +454,7 @@ class GroundingDinoImageProcessor(object):
         do_nested: bool = None,
         **kwargs,
     ):
-        """Preprocess an image or batch of images.
-        """
+        """Preprocess an image or batch of images."""
         do_resize = do_resize if do_resize is not None else self.do_resize
         do_normalize = do_normalize if do_normalize is not None else self.do_normalize
         do_nested = do_nested if do_nested is not None else self.do_nested
@@ -407,14 +466,15 @@ class GroundingDinoImageProcessor(object):
         if not isinstance(images, (list, tuple)):
             images = [images]
         if isinstance(images[0], np.ndarray):
-            images = [
-                PIL.Image.fromarray(image) for image in images
-            ]
+            images = [PIL.Image.fromarray(image) for image in images]
 
         if do_resize:
             min_size = min(self.target_size)
             max_size = max(self.target_size)
-            images = [T.to_tensor(self.resize(image=image, size=min_size, max_size = max_size)) for image in images]
+            images = [
+                T.to_tensor(self.resize(image=image, size=min_size, max_size=max_size))
+                for image in images
+            ]
 
         if do_normalize:
             images = T.normalize(images, mean=image_mean, std=image_std)

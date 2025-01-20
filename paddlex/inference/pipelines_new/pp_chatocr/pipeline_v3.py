@@ -18,7 +18,6 @@ import json
 import numpy as np
 import copy
 from .pipeline_base import PP_ChatOCR_Pipeline
-from .result import VisualInfoResult
 from ...common.reader import ReadImage
 from ...common.batch_sampler import ImageBatchSampler
 from ....utils import logging
@@ -37,7 +36,6 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
-        hpi_params: Optional[Dict[str, Any]] = None,
     ) -> None:
         """Initializes the pp-chatocrv3-doc pipeline.
 
@@ -46,13 +44,10 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
             use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            hpi_params (Optional[Dict[str, Any]], optional): HPIP parameters. Defaults to None.
             use_layout_parsing (bool, optional): Whether to use layout parsing. Defaults to True.
         """
 
-        super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_params=hpi_params
-        )
+        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
 
         self.pipeline_name = config["pipeline_name"]
 
@@ -74,36 +69,54 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
             None
         """
 
-        self.use_layout_parser = True
-        if "use_layout_parser" in config:
-            self.use_layout_parser = config["use_layout_parser"]
-
+        self.use_layout_parser = config.get("use_layout_parser", True)
         if self.use_layout_parser:
-            layout_parsing_config = config["SubPipelines"]["LayoutParser"]
+            layout_parsing_config = config.get("SubPipelines", {}).get(
+                "LayoutParser",
+                {"pipeline_config_error": "config error for layout_parsing_pipeline!"},
+            )
             self.layout_parsing_pipeline = self.create_pipeline(layout_parsing_config)
 
         from .. import create_chat_bot
 
-        chat_bot_config = config["SubModules"]["LLM_Chat"]
+        chat_bot_config = config.get("SubModules", {}).get(
+            "LLM_Chat",
+            {"chat_bot_config_error": "config error for llm chat bot!"},
+        )
         self.chat_bot = create_chat_bot(chat_bot_config)
 
         from .. import create_retriever
 
-        retriever_config = config["SubModules"]["LLM_Retriever"]
+        retriever_config = config.get("SubModules", {}).get(
+            "LLM_Retriever",
+            {"retriever_config_error": "config error for llm retriever!"},
+        )
         self.retriever = create_retriever(retriever_config)
 
         from .. import create_prompt_engeering
 
-        text_pe_config = config["SubModules"]["PromptEngneering"]["KIE_CommonText"]
+        text_pe_config = (
+            config.get("SubModules", {})
+            .get("PromptEngneering", {})
+            .get(
+                "KIE_CommonText",
+                {"pe_config_error": "config error for text_pe!"},
+            )
+        )
         self.text_pe = create_prompt_engeering(text_pe_config)
 
-        table_pe_config = config["SubModules"]["PromptEngneering"]["KIE_Table"]
+        table_pe_config = (
+            config.get("SubModules", {})
+            .get("PromptEngneering", {})
+            .get(
+                "KIE_Table",
+                {"pe_config_error": "config error for table_pe!"},
+            )
+        )
         self.table_pe = create_prompt_engeering(table_pe_config)
         return
 
-    def decode_visual_result(
-        self, layout_parsing_result: LayoutParsingResult
-    ) -> VisualInfoResult:
+    def decode_visual_result(self, layout_parsing_result: LayoutParsingResult) -> dict:
         """
         Decodes the visual result from the layout parsing result.
 
@@ -111,21 +124,21 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
             layout_parsing_result (LayoutParsingResult): The result of layout parsing.
 
         Returns:
-            VisualInfoResult: The decoded visual information.
+            dict: The decoded visual information.
         """
         text_paragraphs_ocr_res = layout_parsing_result["text_paragraphs_ocr_res"]
         seal_res_list = layout_parsing_result["seal_res_list"]
         normal_text_dict = {}
 
         for seal_res in seal_res_list:
-            for text in seal_res["rec_text"]:
+            for text in seal_res["rec_texts"]:
                 layout_type = "印章"
                 if layout_type not in normal_text_dict:
                     normal_text_dict[layout_type] = f"{text}"
                 else:
                     normal_text_dict[layout_type] += f"\n {text}"
 
-        for text in text_paragraphs_ocr_res["rec_text"]:
+        for text in text_paragraphs_ocr_res["rec_texts"]:
             layout_type = "words in text block"
             if layout_type not in normal_text_dict:
                 normal_text_dict[layout_type] = text
@@ -137,24 +150,36 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         table_html_list = []
         for table_res in table_res_list:
             table_html_list.append(table_res["pred_html"])
-            single_table_text = " ".join(table_res["table_ocr_pred"]["rec_text"])
+            single_table_text = " ".join(table_res["table_ocr_pred"]["rec_texts"])
             table_text_list.append(single_table_text)
 
         visual_info = {}
         visual_info["normal_text_dict"] = normal_text_dict
         visual_info["table_text_list"] = table_text_list
         visual_info["table_html_list"] = table_html_list
-        return VisualInfoResult(visual_info)
+        return visual_info
 
     # Function to perform visual prediction on input images
     def visual_predict(
         self,
         input: str | list[str] | np.ndarray | list[np.ndarray],
-        use_doc_orientation_classify: bool = False,  # Whether to use document orientation classification
-        use_doc_unwarping: bool = False,  # Whether to use document unwarping
-        use_general_ocr: bool = True,  # Whether to use general OCR
-        use_seal_recognition: bool = True,  # Whether to use seal recognition
-        use_table_recognition: bool = True,  # Whether to use table recognition
+        use_doc_orientation_classify: Optional[bool] = None,
+        use_doc_unwarping: Optional[bool] = None,
+        use_general_ocr: Optional[bool] = None,
+        use_seal_recognition: Optional[bool] = None,
+        use_table_recognition: Optional[bool] = None,
+        text_det_limit_side_len: Optional[int] = None,
+        text_det_limit_type: Optional[str] = None,
+        text_det_thresh: Optional[float] = None,
+        text_det_box_thresh: Optional[float] = None,
+        text_det_unclip_ratio: Optional[float] = None,
+        text_rec_score_thresh: Optional[float] = None,
+        seal_det_limit_side_len: Optional[int] = None,
+        seal_det_limit_type: Optional[str] = None,
+        seal_det_thresh: Optional[float] = None,
+        seal_det_box_thresh: Optional[float] = None,
+        seal_det_unclip_ratio: Optional[float] = None,
+        seal_rec_score_thresh: Optional[float] = None,
         **kwargs,
     ) -> dict:
         """
@@ -178,7 +203,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
 
         if self.use_layout_parser == False:
             logging.error("The models for layout parser are not initialized.")
-            yield None
+            yield {"error": "The models for layout parser are not initialized."}
 
         for layout_parsing_result in self.layout_parsing_pipeline.predict(
             input,
@@ -187,6 +212,18 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
             use_general_ocr=use_general_ocr,
             use_seal_recognition=use_seal_recognition,
             use_table_recognition=use_table_recognition,
+            text_det_limit_side_len=text_det_limit_side_len,
+            text_det_limit_type=text_det_limit_type,
+            text_det_thresh=text_det_thresh,
+            text_det_box_thresh=text_det_box_thresh,
+            text_det_unclip_ratio=text_det_unclip_ratio,
+            text_rec_score_thresh=text_rec_score_thresh,
+            seal_det_box_thresh=seal_det_box_thresh,
+            seal_det_limit_side_len=seal_det_limit_side_len,
+            seal_det_limit_type=seal_det_limit_type,
+            seal_det_thresh=seal_det_thresh,
+            seal_det_unclip_ratio=seal_det_unclip_ratio,
+            seal_rec_score_thresh=seal_rec_score_thresh,
         ):
 
             visual_info = self.decode_visual_result(layout_parsing_result)
@@ -197,14 +234,12 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
             }
             yield visual_predict_res
 
-    def save_visual_info_list(
-        self, visual_info: VisualInfoResult, save_path: str
-    ) -> None:
+    def save_visual_info_list(self, visual_info: dict, save_path: str) -> None:
         """
         Save the visual info list to the specified file path.
 
         Args:
-            visual_info (VisualInfoResult): The visual info result, which can be a single object or a list of objects.
+            visual_info (dict): The visual info result, which can be a single object or a list of objects.
             save_path (str): The file path to save the visual info list.
 
         Returns:
@@ -219,7 +254,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
             fout.write(json.dumps(visual_info_list, ensure_ascii=False) + "\n")
         return
 
-    def load_visual_info_list(self, data_path: str) -> list[VisualInfoResult]:
+    def load_visual_info_list(self, data_path: str) -> list[dict]:
         """
         Loads visual info list from a JSON file.
 
@@ -227,7 +262,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
             data_path (str): The path to the JSON file containing visual info.
 
         Returns:
-            list[VisualInfoResult]: A list of VisualInfoResult objects parsed from the JSON file.
+            list[dict]: A list of dict objects parsed from the JSON file.
         """
         with open(data_path, "r") as fin:
             data = fin.readline()
@@ -235,13 +270,13 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         return visual_info_list
 
     def merge_visual_info_list(
-        self, visual_info_list: list[VisualInfoResult]
+        self, visual_info_list: list[dict]
     ) -> tuple[list, list, list]:
         """
         Merge visual info lists.
 
         Args:
-            visual_info_list (list[VisualInfoResult]): A list of visual info results.
+            visual_info_list (list[dict]): A list of visual info results.
 
         Returns:
             tuple[list, list, list]: A tuple containing four lists, one for normal text dicts,
@@ -263,17 +298,19 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
 
     def build_vector(
         self,
-        visual_info: VisualInfoResult,
+        visual_info: dict,
         min_characters: int = 3500,
         llm_request_interval: float = 1.0,
+        flag_save_bytes_vector: bool = False,
     ) -> dict:
         """
         Build a vector representation from visual information.
 
         Args:
-            visual_info (VisualInfoResult): The visual information input, can be a single instance or a list of instances.
+            visual_info (dict): The visual information input, can be a single instance or a list of instances.
             min_characters (int): The minimum number of characters required for text processing, defaults to 3500.
             llm_request_interval (float): The interval between LLM requests, defaults to 1.0.
+            flag_save_bytes_vector (bool): Whether to save the vector as bytes, defaults to False.
 
         Returns:
             dict: A dictionary containing the vector info and a flag indicating if the text is too short.
@@ -304,30 +341,23 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
                 all_items += [f"table：{table_text}"]
 
         all_text_str = "".join(all_items)
-
+        vector_info["flag_save_bytes_vector"] = False
         if len(all_text_str) > min_characters:
             vector_info["flag_too_short_text"] = False
             vector_info["vector"] = self.retriever.generate_vector_database(all_items)
+            if flag_save_bytes_vector:
+                vector_info["vector"] = self.retriever.encode_vector_store_to_bytes(
+                    vector_info["vector"]
+                )
+                vector_info["flag_save_bytes_vector"] = True
         else:
             vector_info["flag_too_short_text"] = True
             vector_info["vector"] = all_items
         return vector_info
 
     def save_vector(self, vector_info: dict, save_path: str) -> None:
-        if "flag_too_short_text" not in vector_info or "vector" not in vector_info:
-            logging.error("Invalid vector info.")
-            return
-        save_vector_info = {}
-        save_vector_info["flag_too_short_text"] = vector_info["flag_too_short_text"]
-        if not vector_info["flag_too_short_text"]:
-            save_vector_info["vector"] = self.retriever.encode_vector_store_to_bytes(
-                vector_info["vector"]
-            )
-        else:
-            save_vector_info["vector"] = vector_info["vector"]
-
         with open(save_path, "w") as fout:
-            fout.write(json.dumps(save_vector_info, ensure_ascii=False) + "\n")
+            fout.write(json.dumps(vector_info, ensure_ascii=False) + "\n")
         return
 
     def load_vector(self, data_path: str) -> dict:
@@ -335,10 +365,15 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         with open(data_path, "r") as fin:
             data = fin.readline()
             vector_info = json.loads(data)
-            if "flag_too_short_text" not in vector_info or "vector" not in vector_info:
+            if (
+                "flag_too_short_text" not in vector_info
+                or "flag_save_bytes_vector" not in vector_info
+                or "vector" not in vector_info
+            ):
                 logging.error("Invalid vector info.")
-                return {}
-            if not vector_info["flag_too_short_text"]:
+                return {"error": "Invalid vector info when load vector!"}
+
+            if vector_info["flag_save_bytes_vector"]:
                 vector_info["vector"] = self.retriever.decode_vector_store_from_bytes(
                     vector_info["vector"]
                 )
@@ -448,7 +483,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
     def chat(
         self,
         key_list: str | list[str],
-        visual_info: VisualInfoResult,
+        visual_info: list[dict],
         use_vector_retrieval: bool = True,
         vector_info: dict = None,
         min_characters: int = 3500,
@@ -468,7 +503,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
 
         Args:
             key_list (str | list[str]): A single key or a list of keys to extract information.
-            visual_info (VisualInfoResult): The visual information result.
+            visual_info (dict): The visual information result.
             use_vector_retrieval (bool): Whether to use vector retrieval.
             vector_info (dict): The vector information for retrieval.
             min_characters (int): The minimum number of characters required.

@@ -13,12 +13,13 @@
 # limitations under the License.
 
 import cv2
+import copy
 import math
 
 import matplotlib.pyplot as plt
 import numpy as np
 
-from ...common.result import BaseCVResult
+from ...common.result import BaseCVResult, StrMixin, JsonMixin
 
 
 def get_color(idx):
@@ -175,3 +176,13 @@ class KptResult(BaseCVResult):
             ]  # for top-down pipeline result
         image = draw_keypoints(self["input_img"], dict(keypoints=np.stack(keypoints)))
         return {"res": image}
+
+    def _to_str(self, *args, **kwargs):
+        data = copy.deepcopy(self)
+        data.pop("input_img")
+        return StrMixin._to_str(data, *args, **kwargs)
+
+    def _to_json(self, *args, **kwargs):
+        data = copy.deepcopy(self)
+        data.pop("input_img")
+        return JsonMixin._to_json(data, *args, **kwargs)

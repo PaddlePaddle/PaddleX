@@ -43,7 +43,7 @@ class DetPredictor(BasicPredictor):
             model_prefix=self.MODEL_FILE_PREFIX,
             option=self.pp_option,
         )
-        model_names = ["DETR", "RCNN", "YOLOv3", "CenterNet"]
+        model_names = ["DETR", "RCNN", "YOLOv3", "CenterNet", "PP-DocLayout-L"]
         if any(name in self.model_name for name in model_names):
             predictor.set_inputs(
                 {

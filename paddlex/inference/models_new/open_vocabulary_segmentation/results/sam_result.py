@@ -18,9 +18,11 @@ import numpy as np
 import copy, random
 import PIL
 from PIL import Image, ImageDraw, ImageFont
+from ....common.result import BaseCVResult, StrMixin, JsonMixin
 
 from ....utils.color_map import get_colormap
 from ....common.result import BaseCVResult
+
 
 def draw_segm(im, masks, mask_info, alpha=0.7):
     """
@@ -34,7 +36,8 @@ def draw_segm(im, masks, mask_info, alpha=0.7):
     masks = np.array(masks)
     masks = masks.astype(np.uint8)
     for i in range(masks.shape[0]):
-        mask, clsid = masks[i], mask_info[i]["class_id"]
+        mask = masks[i]
+        clsid = random.randint(0, len(get_colormap(rgb=True)) - 1)
 
         if clsid not in clsid2color:
             color_index = i % len(color_list)
@@ -101,19 +104,20 @@ def draw_segm(im, masks, mask_info, alpha=0.7):
             )
     return Image.fromarray(im.astype("uint8"))
 
+
 class SAMSegResult(BaseCVResult):
     """Save Result Transform for SAM"""
+
     def __init__(self, data: dict) -> None:
 
         data["masks"] = [mask.squeeze(0) for mask in list(data["masks"])]
-        
-        prompts = data['prompts']
+
+        prompts = data["prompts"]
         assert isinstance(prompts, dict) and len(prompts) == 1
         prompt_type, prompts = list(prompts.items())[0]
         mask_infos = [
             {
                 "label": prompt_type,
-                "class_id": random.randint(0, len(get_colormap(rgb=True)) - 1),
                 "prompt": p,
             }
             for p in prompts
@@ -129,10 +133,16 @@ class SAMSegResult(BaseCVResult):
         mask_infos = self["mask_infos"]
         masks = self["masks"]
         image = draw_segm(image, masks, mask_infos)
+        return {"res": image}
 
-        return image
-
-    def _to_str(self, _, *args, **kwargs):
+    def _to_str(self, *args, **kwargs):
         data = copy.deepcopy(self)
         data["masks"] = "..."
-        return super()._to_str(data, *args, **kwargs)
+        data.pop("input_img")
+        return StrMixin._to_str(data, *args, **kwargs)
+
+    def _to_json(self, *args, **kwargs):
+        data = copy.deepcopy(self)
+        data["masks"] = "..."
+        data.pop("input_img")
+        return JsonMixin._to_json(data, *args, **kwargs)

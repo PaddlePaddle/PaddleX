@@ -42,8 +42,6 @@ HPI_CONFIG_KEY: Final[str] = "Hpi"
 
 
 class HPIParams(TypedDict, total=False):
-    serial_number: Optional[str]
-    update_license: bool
     config: Dict[str, Any]
 
 

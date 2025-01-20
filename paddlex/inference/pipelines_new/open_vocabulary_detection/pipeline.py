@@ -21,10 +21,10 @@ from ..base import BasePipeline
 from ...models_new.object_detection.result import DetResult
 
 
-class RotatedObjectDetectionPipeline(BasePipeline):
-    """Rotated Object Detection Pipeline"""
+class OpenVocabularyDetectionPipeline(BasePipeline):
+    """Open Vocabulary Detection Pipeline"""
 
-    entities = "rotated_object_detection"
+    entities = "open_vocabulary_detection"
 
     def __init__(
         self,
@@ -32,7 +32,6 @@ class RotatedObjectDetectionPipeline(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
-        hpi_params: Optional[Dict[str, Any]] = None,
     ) -> None:
         """
         Initializes the class with given configurations and options.
@@ -42,30 +41,34 @@ class RotatedObjectDetectionPipeline(BasePipeline):
             device (str): The device to run the prediction on. Default is None.
             pp_option (PaddlePredictorOption): Options for PaddlePaddle predictor. Default is None.
             use_hpip (bool): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            hpi_params (Optional[Dict[str, Any]]): HPIP specific parameters. Default is None.
         """
-        super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_params=hpi_params
-        )
+        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
 
-        rotated_object_detection_model_config = config["SubModules"][
-            "RotatedObjectDetection"
-        ]
-        self.rotated_object_detection_model = self.create_model(
-            rotated_object_detection_model_config
+        open_vocabulary_detection_model_config = config.get("SubModules", {}).get(
+            "OpenVocabularyDetection",
+            {"model_config_error": "config error for doc_ori_classify_model!"},
         )
-        self.threshold = rotated_object_detection_model_config["threshold"]
+        self.open_vocabulary_detection_model = self.create_model(
+            open_vocabulary_detection_model_config
+        )
+        self.thresholds = open_vocabulary_detection_model_config["thresholds"]
 
     def predict(
-        self, input: str | list[str] | np.ndarray | list[np.ndarray], **kwargs
+        self,
+        input: str | list[str] | np.ndarray | list[np.ndarray],
+        prompt: str,
+        **kwargs
     ) -> DetResult:
-        """Predicts rotated object detection results for the given input.
+        """Predicts open vocabulary detection results for the given input.
 
         Args:
             input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or path(s) to the images.
+            prompt (str): The text prompt used to describe the objects.
             **kwargs: Additional keyword arguments that can be passed to the function.
 
         Returns:
-            DetResult: The predicted rotated object detection results.
+            DetResult: The predicted open vocabulary detection results.
         """
-        yield from self.rotated_object_detection_model(input, threshold=self.threshold)
+        yield from self.open_vocabulary_detection_model(
+            input, prompt=prompt, thresholds=self.thresholds
+        )

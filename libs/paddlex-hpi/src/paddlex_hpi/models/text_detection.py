@@ -18,7 +18,7 @@ from typing import Any, Dict, List, Optional, Union
 import ultra_infer as ui
 import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.results import TextDetResult
+from paddlex.inference.models_new.text_detection.result import TextDetResult
 from paddlex.modules.text_detection.model_list import CURVE_MODELS, MODELS
 
 from paddlex_hpi._utils.misc import parse_scale

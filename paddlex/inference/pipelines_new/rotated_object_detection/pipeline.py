@@ -21,10 +21,10 @@ from ..base import BasePipeline
 from ...models_new.object_detection.result import DetResult
 
 
-class SmallObjectDetectionPipeline(BasePipeline):
-    """Small Object Detection Pipeline"""
+class RotatedObjectDetectionPipeline(BasePipeline):
+    """Rotated Object Detection Pipeline"""
 
-    entities = "small_object_detection"
+    entities = "rotated_object_detection"
 
     def __init__(
         self,
@@ -32,7 +32,6 @@ class SmallObjectDetectionPipeline(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
-        hpi_params: Optional[Dict[str, Any]] = None,
     ) -> None:
         """
         Initializes the class with given configurations and options.
@@ -42,30 +41,27 @@ class SmallObjectDetectionPipeline(BasePipeline):
             device (str): The device to run the prediction on. Default is None.
             pp_option (PaddlePredictorOption): Options for PaddlePaddle predictor. Default is None.
             use_hpip (bool): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            hpi_params (Optional[Dict[str, Any]]): HPIP specific parameters. Default is None.
         """
-        super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_params=hpi_params
-        )
+        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
 
-        small_object_detection_model_config = config["SubModules"][
-            "SmallObjectDetection"
+        rotated_object_detection_model_config = config["SubModules"][
+            "RotatedObjectDetection"
         ]
-        self.small_object_detection_model = self.create_model(
-            small_object_detection_model_config
+        self.rotated_object_detection_model = self.create_model(
+            rotated_object_detection_model_config
         )
-        self.threshold = small_object_detection_model_config["threshold"]
+        self.threshold = rotated_object_detection_model_config["threshold"]
 
     def predict(
         self, input: str | list[str] | np.ndarray | list[np.ndarray], **kwargs
     ) -> DetResult:
-        """Predicts small object detection results for the given input.
+        """Predicts rotated object detection results for the given input.
 
         Args:
             input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or path(s) to the images.
             **kwargs: Additional keyword arguments that can be passed to the function.
 
         Returns:
-            DetResult: The predicted small object detection results.
+            DetResult: The predicted rotated object detection results.
         """
-        yield from self.small_object_detection_model(input, threshold=self.threshold)
+        yield from self.rotated_object_detection_model(input, threshold=self.threshold)

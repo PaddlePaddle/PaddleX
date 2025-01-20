@@ -27,7 +27,7 @@ PP-TSM是一种百度飞桨视觉团队自研的视频分类模型。该模型�
 </tr>
 
 <tr>
-<td>PPTSMv2_LCNet_k400_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PPTSMv2_LCNet_k400_8frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PPTSMv2_LCNet_k400_8frames_uniform_pretrained.pdparams">训练模型</a></td>
+<td>PP-TSMv2-LCNetV2_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-TSMv2-LCNetV2_8frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_8frames_uniform_pretrained.pdparams">训练模型</a></td>
 <td>71.71</td>
 <td>22.5 M</td>
 <td rowspan="2">PP-TSMv2是轻量化的视频分类模型，基于CPU端模型PP-LCNetV2进行优化，从骨干网络与预训练模型选择、数据增强、tsm模块调优、输入帧数优化、解码速度优化、DML蒸馏、LTA模块等7个方面进行模型调优，在中心采样评估方式下，精度达到75.16%，输入10s视频在CPU端的推理速度仅需456ms。</td>
@@ -42,7 +42,8 @@ PP-TSM是一种百度飞桨视觉团队自研的视频分类模型。该模型�
 
 
 
-<p><b>注：以上精度指标为 <a href="https://github.com/PaddlePaddle/PaddleVideo/blob/develop/docs/zh-CN/dataset/k400.md">K400</a> 验证集 Top1 Acc。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p></details>
+<p><b>注：以上精度指标为 <a href="https://github.com/PaddlePaddle/PaddleVideo/blob/develop/docs/zh-CN/dataset/k400.md">K400</a> 验证集 Top1 Acc。</b></p></details>
+
 
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)。
@@ -51,13 +52,186 @@ PP-TSM是一种百度飞桨视觉团队自研的视频分类模型。该模型�
 
 ```python
 from paddlex import create_model
-model = create_model("PPTSMv2_LCNet_k400_8frames_uniform")
-output = model.predict("general_video_classification_001.mp4", batch_size=1)
+model = create_model(model_name="PP-TSMv2-LCNetV2_8frames_uniform")
+output = model.predict(input="general_video_classification_001.mp4", batch_size=1)
 for res in output:
-    res.print(json_format=False)
-    res.save_to_video("./output/")
-    res.save_to_json("./output/res.json")
+    res.print()
+    res.save_to_video(save_path="./output/")
+    res.save_to_json(save_path="./output/res.json")
 ```
+
+运行后，得到的结果为：
+```bash
+{'res': "{'input_path': 'general_video_classification_001.mp4', 'class_ids': array([0], dtype=int32), 'scores': array([0.91997], dtype=float32), 'label_names': ['abseiling']}"}
+```
+
+参数含义如下：
+- `input_path`：表示输入待预测视频的路径
+- `class_ids`：表示视频的分类id
+- `scores`：表示视频的分类分数
+- `label_names`：表示视频的分类标签名称
+
+可视化视频如下：
+
+
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/video_classification/general_video_classification_001.jpg">
+
+上述Python脚本中，执行了如下几个步骤：
+* `create_model`实例化视频分类模型（此处以`PP-TSMv2-LCNetV2_8frames_uniform`为例），具体说明如下：
+
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td><code>model_name</code></td>
+<td>模型名称</td>
+<td><code>str</code></td>
+<td>所有PaddleX支持的模型名称</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>model_dir</code></td>
+<td>模型存储路径</td>
+<td><code>str</code></td>
+<td>无</td>
+<td>无</td>
+</tr>
+</table>
+
+* 调用视频分类模型的`predict`方法进行推理预测，`predict` 方法参数为`input`，用于输入待预测数据，支持多种输入类型，具体说明如下：
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>待预测数据，支持多种输入类型</td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
+<td>
+<ul>
+  <li><b>Python变量</b>，如<code>str</code>表示的视频文件的本地路径</li>
+  <li><b>文件路径</b>，如视频文件的本地路径：<code>/root/data/video.mp4</code></li>
+  <li><b>URL链接</b>，如视频文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/general_video_classification_001.mp4">示例</a></li>
+  <li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
+  <li><b>列表</b>，列表元素需为上述类型数据，如 <code>[\"/root/data/video1.mp4\", \"/root/data/video2.mp4\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
+</ul>
+</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td>批大小</td>
+<td><code>int</code></td>
+<td>无</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code> topk</code></td>
+<td>预测结果的前 `topk` 个类别和对应的分类概率</td>
+<td><code>int</code></td>
+<td>无</td>
+<td><code>1</code></td>
+</tr>
+</table>
+
+* 对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为图片、保存为`json`文件的操作:
+
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>方法说明</th>
+<th>参数</th>
+<th>参数类型</th>
+<th>参数说明</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "3"><code>print()</code></td>
+<td rowspan = "3">打印结果到终端</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>是否对输出内容进行使用<code>json</code>缩进格式化</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>json格式化设置，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>json格式化设置，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan = "3"><code>save_to_json()</code></td>
+<td rowspan = "3">将结果保存为json格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>json格式化设置</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>json格式化设置</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_video()</code></td>
+<td>将结果保存为视频格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+</table>
+
+* 此外，也支持通过属性获取结果可视化视频和`json`结果:
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>属性说明</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "1"><code>json</code></td>
+<td rowspan = "1">获取预测的<code>json</code>格式的结果</td>
+</tr>
+<tr>
+<td rowspan = "1"><code>video</code></td>
+<td rowspan = "1">获取格式为<code>dict</code>的可视化视频和视频帧率</td>
+</tr>
+
+</table>
 
 关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 
@@ -79,7 +253,7 @@ tar -xf ./dataset/k400_examples.tar -C ./dataset/
 一行命令即可完成数据校验：
 
 ```bash
-python main.py -c paddlex/configs/modules/video_classification/PPTSMv2_LCNet_k400_8frames_uniform.yaml \
+python main.py -c paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/k400_examples
 ```
@@ -165,13 +339,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>随后执行命令：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/modules/video_classification/PPTSMv2_LCNet_k400_8frames_uniform.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/k400_examples
 </code></pre>
 <p>数据划分执行之后，原有标注文件会被在原路径下重命名为 <code>xxx.bak</code>。</p>
 <p>以上参数同样支持通过追加命令行参数的方式进行设置：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/modules/video_classification/PPTSMv2_LCNet_k400_8frames_uniform.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/k400_examples \
     -o CheckDataset.split.enable=True \
@@ -180,16 +354,16 @@ CheckDataset:
 </code></pre></details>
 
 ### 4.2 模型训练
-一条命令即可完成模型的训练，以此处视频分类模型 PPTSMv2_LCNet_k400_8frames_uniform 的训练为例：
+一条命令即可完成模型的训练，以此处视频分类模型 PP-TSMv2-LCNetV2_8frames_uniform 的训练为例：
 
 ```
-python main.py -c paddlex/configs/modules/video_classification/PPTSMv2_LCNet_k400_8frames_uniform.yaml  \
+python main.py -c paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml  \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/k400_examples
 ```
 需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`PPTSMv2_LCNet_k400_8frames_uniform.yaml`,训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)）
+* 指定模型的`.yaml` 配置文件路径（此处为`PP-TSMv2-LCNetV2_8frames_uniform.yaml`,训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
@@ -214,13 +388,13 @@ python main.py -c paddlex/configs/modules/video_classification/PPTSMv2_LCNet_k40
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ```bash
-python main.py -c  paddlex/configs/modules/video_classification/PPTSMv2_LCNet_k400_8frames_uniform.yaml  \
+python main.py -c  paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml  \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/k400_examples
 ```
 与模型训练类似，需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`PPTSMv2_LCNet_k400_8frames_uniform.yaml`）
+* 指定模型的`.yaml` 配置文件路径（此处为`PP-TSMv2-LCNetV2_8frames_uniform.yaml`）
 * 指定模式为模型评估：`-o Global.mode=evaluate`
 * 指定验证数据集路径：`-o Global.dataset_dir`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Evaluate`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
@@ -238,14 +412,14 @@ python main.py -c  paddlex/configs/modules/video_classification/PPTSMv2_LCNet_k4
 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例视频](https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/general_video_classification_001.mp4)到本地。
 
 ```bash
-python main.py -c paddlex/configs/modules/video_classification/PPTSMv2_LCNet_k400_8frames_uniform.yaml \
+python main.py -c paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="general_video_classification_001.mp4"
 ```
 与模型训练和评估类似，需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`PPTSMv2_LCNet_k400_8frames_uniform.yaml`）
+* 指定模型的`.yaml` 配置文件路径（此处为`PP-TSMv2-LCNetV2_8frames_uniform.yaml`）
 * 指定模式为模型推理预测：`-o Global.mode=predict`
 * 指定模型权重路径：`-o Predict.model_dir="./output/best_model/inference"`
 * 指定输入数据路径：`-o Predict.input="..."`

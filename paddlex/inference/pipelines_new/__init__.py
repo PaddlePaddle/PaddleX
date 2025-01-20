@@ -27,6 +27,7 @@ from .image_classification import ImageClassificationPipeline
 from .object_detection import ObjectDetectionPipeline
 from .seal_recognition import SealRecognitionPipeline
 from .table_recognition import TableRecognitionPipeline
+from .table_recognition import TableRecognitionPipelineV2
 from .multilingual_speech_recognition import MultilingualSpeechRecognitionPipeline
 from .formula_recognition import FormulaRecognitionPipeline
 from .image_multilabel_classification import ImageMultiLabelClassificationPipeline
@@ -45,9 +46,11 @@ from .attribute_recognition import (
 
 from .semantic_segmentation import SemanticSegmentationPipeline
 from .instance_segmentation import InstanceSegmentationPipeline
-from .small_object__detection import SmallObjectDetectionPipeline
-from .rotated_object__detection import RotatedObjectDetectionPipeline
+from .small_object_detection import SmallObjectDetectionPipeline
+from .rotated_object_detection import RotatedObjectDetectionPipeline
 from .keypoint_detection import KeypointDetectionPipeline
+from .open_vocabulary_detection import OpenVocabularyDetectionPipeline
+from .open_vocabulary_segmentation import OpenVocabularySegmentationPipeline
 
 
 def get_pipeline_path(pipeline_name: str) -> str:
@@ -83,7 +86,7 @@ def load_pipeline_config(pipeline_name: str) -> Dict[str, Any]:
     Raises:
         Exception: If the config file of pipeline does not exist.
     """
-    if not Path(pipeline_name).exists():
+    if not (pipeline_name.endswith(".yml") or pipeline_name.endswith(".yaml")):
         pipeline_path = get_pipeline_path(pipeline_name)
         if pipeline_path is None:
             raise Exception(
@@ -101,7 +104,6 @@ def create_pipeline(
     device: Optional[str] = None,
     pp_option: Optional[PaddlePredictorOption] = None,
     use_hpip: bool = False,
-    hpi_params: Optional[Dict[str, Any]] = None,
     *args: Any,
     **kwargs: Any,
 ) -> BasePipeline:
@@ -122,8 +124,6 @@ def create_pipeline(
             the PaddlePredictor. Defaults to None.
         use_hpip (bool, optional): Whether to use high-performance inference
             plugin (HPIP) for prediction. Defaults to False.
-        hpi_params (Optional[Dict[str, Any]], optional): Additional parameters
-            for high-performance inference. Defaults to None.
         *args: Additional positional arguments.
         **kwargs: Additional keyword arguments.
 
@@ -150,7 +150,6 @@ def create_pipeline(
         device=device,
         pp_option=pp_option,
         use_hpip=use_hpip,
-        hpi_params=hpi_params,
         *args,
         **kwargs,
     )
@@ -168,6 +167,9 @@ def create_chat_bot(config: Dict, *args, **kwargs) -> BaseChat:
     Returns:
         BaseChat: An instance of the chat bot class corresponding to the 'model_name' in the config.
     """
+    if "chat_bot_config_error" in config:
+        raise ValueError(config["chat_bot_config_error"])
+
     api_type = config["api_type"]
     chat_bot = BaseChat.get(api_type)(config)
     return chat_bot
@@ -189,6 +191,8 @@ def create_retriever(
     Returns:
         BaseRetriever: An instance of a retriever class corresponding to the 'model_name' in the config.
     """
+    if "retriever_config_error" in config:
+        raise ValueError(config["retriever_config_error"])
     api_type = config["api_type"]
     retriever = BaseRetriever.get(api_type)(config)
     return retriever
@@ -210,6 +214,8 @@ def create_prompt_engeering(
     Returns:
         BaseGeneratePrompt: An instance of a prompt engineering class corresponding to the 'task_type' in the config.
     """
+    if "pe_config_error" in config:
+        raise ValueError(config["pe_config_error"])
     task_type = config["task_type"]
     pe = BaseGeneratePrompt.get(task_type)(config)
     return pe

@@ -20,13 +20,6 @@ from ...common.batch_sampler import AudioBatchSampler
 from ..base import BasicPredictor
 from .result import WhisperResult
 from ...utils.io import AudioReader
-from .processors import (
-    ModelDimensions,
-    log_mel_spectrogram,
-    Whisper,
-    LANGUAGES,
-    TO_LANGUAGE_CODE,
-)
 from ....modules.multilingual_speech_recognition.model_list import MODELS
 from ....utils.download import download_and_extract
 
@@ -70,6 +63,13 @@ class WhisperPredictor(BasicPredictor):
         Returns:
             AudioReader: An instance of AudioReader.
         """
+        from .processors import (
+            ModelDimensions,
+            Whisper,
+            LANGUAGES,
+            TO_LANGUAGE_CODE,
+        )
+
         # build model
         model_dict = paddle.load(self.config["model_file"])
         dims = ModelDimensions(**model_dict["dims"])
@@ -91,6 +91,8 @@ class WhisperPredictor(BasicPredictor):
         Returns:
             dict: A dictionary containing the input path and result. The result include 'text', 'segments' and 'language'.
         """
+        from .processors import log_mel_spectrogram
+
         # load mel_filters from resource_dir and extract feature for audio
         audio, sample_rate = self.audio_reader.read(batch_data[0])
         audio = paddle.to_tensor(audio)
