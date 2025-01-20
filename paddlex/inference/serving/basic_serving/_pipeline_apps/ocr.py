@@ -71,7 +71,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
                     "ocr_img": output_imgs["ocr_res_img"],
                 }
                 if "preprocessed_img" in output_imgs:
-                    imgs["preprocessed_img"] = output_imgs["preprocessed_img"]
+                    imgs["doc_preprocessing_img"] = output_imgs["preprocessed_img"]
                 imgs = await serving_utils.call_async(
                     common.postprocess_images,
                     imgs,
@@ -87,7 +87,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
                 dict(
                     prunedResult=pruned_res,
                     ocrImage=imgs.get("ocr_img"),
-                    preprocessedImage=imgs.get("preprocessed_img"),
+                    docPreprocessingImage=imgs.get("doc_preprocessing_img"),
                     inputImage=imgs.get("input_img"),
                 )
             )

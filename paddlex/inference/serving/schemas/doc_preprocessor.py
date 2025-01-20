@@ -39,7 +39,7 @@ class InferRequest(ocr.BaseInferRequest):
 
 class DocPreprocessingResult(BaseModel):
     prunedResult: dict
-    preprocessedImage: Optional[str] = None
+    docPreprocessingImage: Optional[str] = None
     inputImage: Optional[str] = None
 
 

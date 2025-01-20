@@ -74,7 +74,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
                 if "layout_det_res" in output_imgs:
                     imgs["layout_det_img"] = output_imgs["layout_det_res"]
                 if "preprocessed_img" in output_imgs:
-                    imgs["preprocessed_img"] = output_imgs["preprocessed_img"]
+                    imgs["doc_preprocessing_img"] = output_imgs["preprocessed_img"]
                 imgs = await serving_utils.call_async(
                     common.postprocess_images,
                     imgs,
@@ -91,7 +91,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
                     prunedResult=pruned_res,
                     ocrImage=imgs.get("ocr_img"),
                     layoutDetImage=imgs.get("layout_det_img"),
-                    preprocessedImage=imgs.get("preprocesed_img"),
+                    docPreprocessingImage=imgs.get("doc_preprocessing_img"),
                     inputImage=imgs.get("input_img"),
                 )
             )

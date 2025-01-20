@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import os
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, Union
 
 import cv2
 import numpy as np
@@ -78,7 +78,7 @@ def postprocess_image(
 
 
 def postprocess_images(
-    images: Dict[str, Image],
+    images: Dict[str, Union[Image, ArrayLike]],
     log_id: str,
     filename_template: str = "{key}.jpg",
     file_storage: Optional[Storage] = None,
@@ -88,7 +88,7 @@ def postprocess_images(
     output_images: Dict[str, str] = {}
     for key, img in images.items():
         output_images[key] = postprocess_image(
-            img,
+            np.array(img) if isinstance(img, Image) else img,
             log_id=log_id,
             filename=filename_template.format(key=key),
             file_storage=file_storage,

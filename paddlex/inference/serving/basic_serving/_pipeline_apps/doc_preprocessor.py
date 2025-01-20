@@ -57,7 +57,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
                 output_imgs = item.img
                 imgs = {
                     "input_img": img,
-                    "preprocessed_img": output_imgs["preprocessed_img"],
+                    "doc_preprocessing_img": output_imgs["preprocessed_img"],
                 }
                 imgs = await serving_utils.call_async(
                     common.postprocess_images,
@@ -73,7 +73,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             doc_pp_results.append(
                 dict(
                     prunedResult=pruned_res,
-                    preprocessedImage=imgs.get("preprocessed_img"),
+                    docPreprocessingImage=imgs.get("doc_preprocessing_img"),
                     inputImage=imgs.get("input_img"),
                 )
             )

@@ -66,7 +66,7 @@ class VisualResult(BaseModel):
     prunedResult: dict
     ocrImage: Optional[str] = None
     layoutDetImage: Optional[str] = None
-    preprocessedImage: Optional[str] = None
+    docPreprocessingImage: Optional[str] = None
     inputImage: Optional[str] = None
 
 

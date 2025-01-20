@@ -53,7 +53,7 @@ class TableRecResult(BaseModel):
     prunedResult: dict
     formulaRecImage: Optional[str] = None
     layoutDetImage: Optional[str] = None
-    preprocessedImage: Optional[str] = None
+    docPreprocessingImage: Optional[str] = None
     inputImage: Optional[str] = None
 
 
