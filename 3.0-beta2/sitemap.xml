@@ -2,1442 +2,1442 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/index.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/index.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/index.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/CHANGLOG.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/CHANGLOG.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/CHANGLOG.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/FAQ.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/FAQ.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/FAQ.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/cv_modules/image_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/cv_modules/image_classification.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/data_annotations/cv_modules/image_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/cv_modules/image_feature.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/cv_modules/image_feature.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/data_annotations/cv_modules/image_feature.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/cv_modules/instance_segmentation.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/cv_modules/instance_segmentation.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/data_annotations/cv_modules/instance_segmentation.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/cv_modules/ml_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/cv_modules/ml_classification.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/data_annotations/cv_modules/ml_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/cv_modules/object_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/cv_modules/object_detection.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/data_annotations/cv_modules/object_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/cv_modules/semantic_segmentation.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/cv_modules/semantic_segmentation.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/data_annotations/cv_modules/semantic_segmentation.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/ocr_modules/table_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/ocr_modules/table_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/data_annotations/ocr_modules/table_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/ocr_modules/text_detection_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/ocr_modules/text_detection_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/data_annotations/ocr_modules/text_detection_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/time_series_modules/time_series_anomaly_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/time_series_modules/time_series_anomaly_detection.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/data_annotations/time_series_modules/time_series_anomaly_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/time_series_modules/time_series_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/time_series_modules/time_series_classification.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/data_annotations/time_series_modules/time_series_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/time_series_modules/time_series_forecasting.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/data_annotations/time_series_modules/time_series_forecasting.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/data_annotations/time_series_modules/time_series_forecasting.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/installation/installation.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/installation/installation.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/installation/installation.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/installation/paddlepaddle_install.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/installation/paddlepaddle_install.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/installation/paddlepaddle_install.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/instructions/benchmark.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/instructions/benchmark.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/instructions/benchmark.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/instructions/config_parameters_common.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/instructions/config_parameters_common.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/instructions/config_parameters_common.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/instructions/config_parameters_time_series.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/instructions/config_parameters_time_series.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/instructions/config_parameters_time_series.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/instructions/model_python_API.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/instructions/model_python_API.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/instructions/model_python_API.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/anomaly_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/anomaly_detection.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/cv_modules/anomaly_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/face_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/face_detection.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/cv_modules/face_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/face_feature.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/face_feature.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/cv_modules/face_feature.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/human_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/human_detection.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/cv_modules/human_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/image_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/image_classification.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/cv_modules/image_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/image_feature.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/image_feature.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/cv_modules/image_feature.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/image_multilabel_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/image_multilabel_classification.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/cv_modules/image_multilabel_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/instance_segmentation.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/instance_segmentation.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/cv_modules/instance_segmentation.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/mainbody_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/mainbody_detection.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/cv_modules/mainbody_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/object_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/object_detection.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/cv_modules/object_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/semantic_segmentation.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/semantic_segmentation.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/cv_modules/semantic_segmentation.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/small_object_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/small_object_detection.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/cv_modules/small_object_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/vehicle_attribute_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/vehicle_attribute_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/cv_modules/vehicle_attribute_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/vehicle_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/cv_modules/vehicle_detection.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/cv_modules/vehicle_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/ocr_modules/formula_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/ocr_modules/formula_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/ocr_modules/formula_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/ocr_modules/layout_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/ocr_modules/layout_detection.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/ocr_modules/layout_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/ocr_modules/seal_text_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/ocr_modules/seal_text_detection.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/ocr_modules/seal_text_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/ocr_modules/table_structure_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/ocr_modules/table_structure_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/ocr_modules/table_structure_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/ocr_modules/text_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/ocr_modules/text_detection.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/ocr_modules/text_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/ocr_modules/text_image_unwarping.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/ocr_modules/text_image_unwarping.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/ocr_modules/text_image_unwarping.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/ocr_modules/text_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/ocr_modules/text_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/ocr_modules/text_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/time_series_modules/time_series_anomaly_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/time_series_modules/time_series_anomaly_detection.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/time_series_modules/time_series_anomaly_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/time_series_modules/time_series_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/time_series_modules/time_series_classification.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/time_series_modules/time_series_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/time_series_modules/time_series_forecasting.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/module_usage/tutorials/time_series_modules/time_series_forecasting.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/module_usage/tutorials/time_series_modules/time_series_forecasting.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/other_devices_support/multi_devices_use_guide.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/other_devices_support/multi_devices_use_guide.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/other_devices_support/multi_devices_use_guide.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/other_devices_support/paddlepaddle_install_DCU.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/other_devices_support/paddlepaddle_install_DCU.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/other_devices_support/paddlepaddle_install_DCU.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/other_devices_support/paddlepaddle_install_MLU.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/other_devices_support/paddlepaddle_install_MLU.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/other_devices_support/paddlepaddle_install_MLU.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/other_devices_support/paddlepaddle_install_NPU.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/other_devices_support/paddlepaddle_install_NPU.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/other_devices_support/paddlepaddle_install_NPU.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/other_devices_support/paddlepaddle_install_XPU.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/other_devices_support/paddlepaddle_install_XPU.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/other_devices_support/paddlepaddle_install_XPU.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_deploy/edge_deploy.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_deploy/edge_deploy.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_deploy/edge_deploy.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_deploy/high_performance_inference.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_deploy/high_performance_inference.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_deploy/high_performance_inference.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_deploy/service_deploy.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_deploy/service_deploy.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_deploy/service_deploy.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/pipeline_develop_guide.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/pipeline_develop_guide.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/pipeline_develop_guide.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/instructions/pipeline_CLI_usage.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/instructions/pipeline_CLI_usage.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/instructions/pipeline_CLI_usage.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/instructions/pipeline_python_API.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/instructions/pipeline_python_API.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/instructions/pipeline_python_API.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/face_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/face_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/tutorials/cv_pipelines/face_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/general_image_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/general_image_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/tutorials/cv_pipelines/general_image_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/image_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/image_classification.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/tutorials/cv_pipelines/image_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/object_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/object_detection.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/tutorials/cv_pipelines/object_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/small_object_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/small_object_detection.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/tutorials/cv_pipelines/small_object_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/vehicle_attribute_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/cv_pipelines/vehicle_attribute_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/tutorials/cv_pipelines/vehicle_attribute_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/ocr_pipelines/OCR.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/ocr_pipelines/OCR.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/tutorials/ocr_pipelines/OCR.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/ocr_pipelines/formula_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/ocr_pipelines/formula_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/tutorials/ocr_pipelines/formula_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/ocr_pipelines/table_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/ocr_pipelines/table_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/tutorials/ocr_pipelines/table_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/anomaly_detection_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/anomaly_detection_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/practical_tutorials/anomaly_detection_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/anomaly_detection_tutorial_en.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/anomaly_detection_tutorial_en.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/practical_tutorials/anomaly_detection_tutorial_en.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/deployment_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/deployment_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/practical_tutorials/deployment_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/document_scene_information_extraction%28layout_detection%29_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/document_scene_information_extraction%28layout_detection%29_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/practical_tutorials/document_scene_information_extraction%28layout_detection%29_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/document_scene_information_extraction%28seal_recognition%29_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/document_scene_information_extraction%28seal_recognition%29_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/practical_tutorials/document_scene_information_extraction%28seal_recognition%29_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/image_classification_garbage_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/image_classification_garbage_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/practical_tutorials/image_classification_garbage_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/instance_segmentation_remote_sensing_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/instance_segmentation_remote_sensing_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/practical_tutorials/instance_segmentation_remote_sensing_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/object_detection_fall_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/object_detection_fall_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/practical_tutorials/object_detection_fall_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/object_detection_fashion_pedia_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/object_detection_fashion_pedia_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/practical_tutorials/object_detection_fashion_pedia_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/ocr_det_license_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/ocr_det_license_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/practical_tutorials/ocr_det_license_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/ocr_rec_chinese_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/ocr_rec_chinese_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/practical_tutorials/ocr_rec_chinese_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/semantic_segmentation_road_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/semantic_segmentation_road_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/practical_tutorials/semantic_segmentation_road_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/ts_anomaly_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/ts_anomaly_detection.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/practical_tutorials/ts_anomaly_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/ts_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/ts_classification.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/practical_tutorials/ts_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/ts_forecast.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/practical_tutorials/ts_forecast.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/practical_tutorials/ts_forecast.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/support_list/model_list_dcu.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/support_list/model_list_dcu.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/support_list/model_list_dcu.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/support_list/model_list_mlu.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/support_list/model_list_mlu.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/support_list/model_list_mlu.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/support_list/model_list_npu.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/support_list/model_list_npu.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/support_list/model_list_npu.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/support_list/model_list_xpu.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/support_list/model_list_xpu.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/support_list/model_list_xpu.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/support_list/models_list.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/support_list/models_list.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/support_list/models_list.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/support_list/pipelines_list.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/support_list/pipelines_list.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/support_list/pipelines_list.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/support_list/pipelines_list_dcu.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/support_list/pipelines_list_dcu.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/support_list/pipelines_list_dcu.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/support_list/pipelines_list_mlu.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/support_list/pipelines_list_mlu.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/support_list/pipelines_list_mlu.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/support_list/pipelines_list_npu.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/support_list/pipelines_list_npu.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/support_list/pipelines_list_npu.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/support_list/pipelines_list_xpu.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/support_list/pipelines_list_xpu.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/support_list/pipelines_list_xpu.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/blog/index.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/blog/index.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2en/blog/index.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/index.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/index.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2index.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/CHANGLOG.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/CHANGLOG.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2CHANGLOG.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/FAQ.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/FAQ.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2FAQ.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/blog/index.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/blog/index.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2blog/index.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/cv_modules/image_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/cv_modules/image_classification.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2data_annotations/cv_modules/image_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/cv_modules/image_feature.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/cv_modules/image_feature.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2data_annotations/cv_modules/image_feature.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/cv_modules/instance_segmentation.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/cv_modules/instance_segmentation.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2data_annotations/cv_modules/instance_segmentation.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/cv_modules/ml_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/cv_modules/ml_classification.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2data_annotations/cv_modules/ml_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/cv_modules/object_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/cv_modules/object_detection.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2data_annotations/cv_modules/object_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/cv_modules/semantic_segmentation.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/cv_modules/semantic_segmentation.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2data_annotations/cv_modules/semantic_segmentation.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/ocr_modules/table_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/ocr_modules/table_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2data_annotations/ocr_modules/table_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/ocr_modules/text_detection_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/ocr_modules/text_detection_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2data_annotations/ocr_modules/text_detection_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/time_series_modules/time_series_anomaly_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/time_series_modules/time_series_anomaly_detection.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2data_annotations/time_series_modules/time_series_anomaly_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/time_series_modules/time_series_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/time_series_modules/time_series_classification.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2data_annotations/time_series_modules/time_series_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/time_series_modules/time_series_forecasting.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/data_annotations/time_series_modules/time_series_forecasting.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2data_annotations/time_series_modules/time_series_forecasting.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/installation/installation.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/installation/installation.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2installation/installation.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/installation/paddlepaddle_install.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/installation/paddlepaddle_install.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2installation/paddlepaddle_install.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/instructions/benchmark.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/instructions/benchmark.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/instructions/benchmark.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/instructions/config_parameters_common.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/instructions/config_parameters_common.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/instructions/config_parameters_common.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/instructions/config_parameters_time_series.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/instructions/config_parameters_time_series.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/instructions/config_parameters_time_series.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/instructions/model_python_API.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/instructions/model_python_API.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/instructions/model_python_API.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/anomaly_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/anomaly_detection.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/cv_modules/anomaly_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/face_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/face_detection.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/cv_modules/face_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/face_feature.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/face_feature.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/cv_modules/face_feature.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/human_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/human_detection.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/cv_modules/human_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/image_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/image_classification.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/cv_modules/image_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/image_feature.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/image_feature.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/cv_modules/image_feature.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/image_multilabel_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/image_multilabel_classification.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/cv_modules/image_multilabel_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/instance_segmentation.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/instance_segmentation.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/cv_modules/instance_segmentation.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/mainbody_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/mainbody_detection.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/cv_modules/mainbody_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/object_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/object_detection.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/cv_modules/object_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/semantic_segmentation.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/semantic_segmentation.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/cv_modules/semantic_segmentation.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/small_object_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/small_object_detection.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/cv_modules/small_object_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/vehicle_attribute_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/vehicle_attribute_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/cv_modules/vehicle_attribute_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/vehicle_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/cv_modules/vehicle_detection.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/cv_modules/vehicle_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/ocr_modules/formula_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/ocr_modules/formula_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/ocr_modules/formula_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/ocr_modules/layout_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/ocr_modules/layout_detection.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/ocr_modules/layout_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/ocr_modules/seal_text_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/ocr_modules/seal_text_detection.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/ocr_modules/seal_text_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/ocr_modules/table_structure_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/ocr_modules/table_structure_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/ocr_modules/table_structure_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/ocr_modules/text_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/ocr_modules/text_detection.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/ocr_modules/text_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/ocr_modules/text_image_unwarping.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/ocr_modules/text_image_unwarping.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/ocr_modules/text_image_unwarping.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/ocr_modules/text_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/ocr_modules/text_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/ocr_modules/text_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/time_series_modules/time_series_anomaly_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/time_series_modules/time_series_anomaly_detection.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/time_series_modules/time_series_anomaly_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/time_series_modules/time_series_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/time_series_modules/time_series_classification.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/time_series_modules/time_series_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/time_series_modules/time_series_forecasting.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/module_usage/tutorials/time_series_modules/time_series_forecasting.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2module_usage/tutorials/time_series_modules/time_series_forecasting.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/other_devices_support/multi_devices_use_guide.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/other_devices_support/multi_devices_use_guide.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2other_devices_support/multi_devices_use_guide.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/other_devices_support/paddlepaddle_install_DCU.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/other_devices_support/paddlepaddle_install_DCU.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2other_devices_support/paddlepaddle_install_DCU.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/other_devices_support/paddlepaddle_install_MLU.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/other_devices_support/paddlepaddle_install_MLU.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2other_devices_support/paddlepaddle_install_MLU.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/other_devices_support/paddlepaddle_install_NPU.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/other_devices_support/paddlepaddle_install_NPU.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2other_devices_support/paddlepaddle_install_NPU.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/other_devices_support/paddlepaddle_install_XPU.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/other_devices_support/paddlepaddle_install_XPU.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2other_devices_support/paddlepaddle_install_XPU.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_deploy/edge_deploy.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_deploy/edge_deploy.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_deploy/edge_deploy.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_deploy/high_performance_inference.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_deploy/high_performance_inference.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_deploy/high_performance_inference.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_deploy/service_deploy.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_deploy/service_deploy.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_deploy/service_deploy.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/pipeline_develop_guide.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/pipeline_develop_guide.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/pipeline_develop_guide.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/instructions/pipeline_CLI_usage.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/instructions/pipeline_CLI_usage.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/instructions/pipeline_CLI_usage.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/instructions/pipeline_python_API.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/instructions/pipeline_python_API.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/instructions/pipeline_python_API.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/face_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/face_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/tutorials/cv_pipelines/face_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/general_image_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/general_image_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/tutorials/cv_pipelines/general_image_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/image_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/image_classification.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/tutorials/cv_pipelines/image_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/tutorials/cv_pipelines/instance_segmentation.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/object_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/object_detection.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/tutorials/cv_pipelines/object_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/small_object_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/small_object_detection.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/tutorials/cv_pipelines/small_object_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/vehicle_attribute_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/cv_pipelines/vehicle_attribute_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/tutorials/cv_pipelines/vehicle_attribute_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/ocr_pipelines/OCR.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/ocr_pipelines/OCR.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/tutorials/ocr_pipelines/OCR.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/ocr_pipelines/formula_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/ocr_pipelines/formula_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/tutorials/ocr_pipelines/formula_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/ocr_pipelines/table_recognition.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/ocr_pipelines/table_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/tutorials/ocr_pipelines/table_recognition.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/tutorials/time_series_pipelines/time_series_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/anomaly_detection_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/anomaly_detection_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2practical_tutorials/anomaly_detection_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/anomaly_detection_tutorial_en.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/anomaly_detection_tutorial_en.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2practical_tutorials/anomaly_detection_tutorial_en.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/deployment_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/deployment_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2practical_tutorials/deployment_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/document_scene_information_extraction%28layout_detection%29_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/document_scene_information_extraction%28layout_detection%29_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2practical_tutorials/document_scene_information_extraction%28layout_detection%29_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/document_scene_information_extraction%28seal_recognition%29_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/document_scene_information_extraction%28seal_recognition%29_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2practical_tutorials/document_scene_information_extraction%28seal_recognition%29_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/image_classification_garbage_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/image_classification_garbage_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2practical_tutorials/image_classification_garbage_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/instance_segmentation_remote_sensing_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/instance_segmentation_remote_sensing_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2practical_tutorials/instance_segmentation_remote_sensing_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/object_detection_fall_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/object_detection_fall_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2practical_tutorials/object_detection_fall_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/object_detection_fashion_pedia_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/object_detection_fashion_pedia_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2practical_tutorials/object_detection_fashion_pedia_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/ocr_det_license_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/ocr_det_license_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2practical_tutorials/ocr_det_license_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/ocr_rec_chinese_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/ocr_rec_chinese_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2practical_tutorials/ocr_rec_chinese_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/semantic_segmentation_road_tutorial.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/semantic_segmentation_road_tutorial.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2practical_tutorials/semantic_segmentation_road_tutorial.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/ts_anomaly_detection.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/ts_anomaly_detection.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2practical_tutorials/ts_anomaly_detection.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/ts_classification.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/ts_classification.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2practical_tutorials/ts_classification.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/ts_forecast.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/practical_tutorials/ts_forecast.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2practical_tutorials/ts_forecast.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/support_list/model_list_dcu.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/support_list/model_list_dcu.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2support_list/model_list_dcu.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/support_list/model_list_mlu.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/support_list/model_list_mlu.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2support_list/model_list_mlu.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/support_list/model_list_npu.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/support_list/model_list_npu.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2support_list/model_list_npu.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/support_list/model_list_xpu.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/support_list/model_list_xpu.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2support_list/model_list_xpu.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/support_list/models_list.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/support_list/models_list.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2support_list/models_list.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/support_list/pipelines_list.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/support_list/pipelines_list.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2support_list/pipelines_list.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/support_list/pipelines_list_dcu.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/support_list/pipelines_list_dcu.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2support_list/pipelines_list_dcu.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/support_list/pipelines_list_mlu.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/support_list/pipelines_list_mlu.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2support_list/pipelines_list_mlu.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/support_list/pipelines_list_npu.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/support_list/pipelines_list_npu.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2support_list/pipelines_list_npu.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/support_list/pipelines_list_xpu.html</loc>
-        <lastmod>2025-01-15</lastmod>
+        <lastmod>2025-01-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2/en/support_list/pipelines_list_xpu.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-beta2support_list/pipelines_list_xpu.html"/>
