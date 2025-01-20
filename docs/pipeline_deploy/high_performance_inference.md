@@ -148,7 +148,7 @@ PaddleX 结合模型信息与运行环境信息为每个模型提供默认的高
       ...
     ```
 
-    对于产线模块，通过传入 `hpi_params` 参数，即可更换推理后端，以图像分类模块为例：
+    对于单功能模块，通过传入 `hpi_params` 参数，即可更换推理后端，以图像分类模块为例：
 
     ```python
     from paddlex import create_model
@@ -213,7 +213,7 @@ PaddleX 结合模型信息与运行环境信息为每个模型提供默认的高
       ...
     ```
 
-    对于产线模块，在 `hpi_params` 参数中新增 `trt_dynamic_shapes` 或 `dynamic_shapes` 字段，以图像分类模块为例：
+    对于单功能模块，在 `hpi_params` 参数中新增 `trt_dynamic_shapes` 或 `dynamic_shapes` 字段，以图像分类模块为例：
 
     ```python
     from paddlex import create_model
@@ -257,13 +257,13 @@ PaddleX 结合模型信息与运行环境信息为每个模型提供默认的高
     output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg"
     ```
 
-    在 `trt_dynamic_shapes` 或 `dynamic_shapes` 中，需要为每一个输入张量指定动态形状，格式为：`{输入张量名称}: [{最小形状}, [{最优形状}], [{最大形状}]]`。有关最小形状、最优形状以及最大形状的相关介绍及更多细节，请参考 TensorRT 官方文档。
+    在 `trt_dynamic_shapes` 或 `dynamic_shapes` 中，需要为每一个输入张量指定动态形状，格式为：`{输入张量名称}: [{最小形状}, [{最优形状}], [{最大形状}]]`。有关最小形状、最优形状以及最大形状的相关介绍及更多细节，请参考 [TensorRT 官方文档](https://docs.nvidia.com/deeplearning/tensorrt/developer-guide/index.html#work_dynamic_shapes)。
 
     在完成修改后，请删除模型目录中的缓存文件（`shape_range_info.pbtxt` 与 `trt_serialized` 开头的文件）。
 
 ### 2.2 二次开发高性能推理插件
 
-对高性能推理插件进行二次开发可以为特定应用场景提供更高的灵活性和性能优化选项。通过使用 `paddlex-hpi` 和  `ultra-infer` 提供的接口和功能模块，编写自定义的推理逻辑。这可能包括：
+我们已经提供了完善的配置，通常情况下不建议进行二次开发。如果有以下需求，确实需要进行二次开发，请务必在充分评估后再进行。如以下场景：
 
 - 自定义数据预处理或后处理逻辑。
 - 实现特定算子的优化。
@@ -315,248 +315,312 @@ python -m pip install ../../python/dist/ultra_infer*.whl
 <table>
   <tr>
     <th>模型产线</th>
-    <th>产线模块</th>
-    <th>模型支持情况</th>
+    <th>单功能模块</th>
+    <th>支持数量/模型总数</th>
+    <th>不支持模型</th>
   </tr>
 
   <tr>
     <td rowspan="2">通用OCR</td>
     <td>文本检测</td>
-    <td>✅</td>
+    <td><b>2</b> / 2 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>文本识别</td>
-    <td>✅</td>
+    <td><b>2</b> / 2 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td rowspan="7">文档场景信息抽取v3</td>
     <td>表格识别</td>
-    <td>✅</td>
+    <td><b>2</b> / 2 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>版面区域检测</td>
-    <td>✅</td>
+    <td><b>8</b> / 8 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>文本检测</td>
-    <td>✅</td>
+    <td><b>2</b> / 2 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>文本识别</td>
-    <td>✅</td>
+    <td><b>2</b> / 2 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>印章文本检测</td>
-    <td>✅</td>
+    <td><b>2</b> / 2 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>文本图像矫正</td>
-    <td>✅</td>
+    <td><b>1</b> / 1 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>文档图像方向分类</td>
-    <td>✅</td>
+    <td><b>1</b> / 1 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td rowspan="4">通用表格识别</td>
     <td>版面区域检测</td>
-    <td>✅</td>
+    <td><b>8</b> / 8 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>表格识别</td>
-    <td>✅</td>
+    <td><b>2</b> / 2 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>文本检测</td>
-    <td>✅</td>
+    <td><b>2</b> / 2 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>文本识别</td>
-    <td>✅</td>
+    <td><b>2</b> / 2 </td>
+    <td>无</td>
   </tr>
 
   <tr>
     <td>通用目标检测</td>
     <td>目标检测</td>
-    <td>FasterRCNN-Swin-Tiny-FPN ❌</br>CenterNet-DLA-34 ❌ </br>CenterNet-ResNet50 ❌</td>
+    <td><b>34</b> / 37</td>
+    <td>
+      <details>
+            <summary>查看详情</summary>
+            FasterRCNN-Swin-Tiny-FPN<br>
+            CenterNet-DLA-34<br>
+            CenterNet-ResNet50
+      </details>
+    </td>
   </tr>
 
   <tr>
     <td>通用实例分割</td>
     <td>实例分割</td>
-    <td>Mask-RT-DETR-S ❌</br>PP-YOLOE_seg-S ❌</br>SOLOv2 ❌</td>
+    <td><b>12</b> / 15</td>
+    <td>
+      <details>
+            <summary>查看详情</summary>
+            Mask-RT-DETR-S</br>
+            PP-YOLOE_seg-S</br>
+            SOLOv2
+      </details>
+    </td>
   </tr>
 
   <tr>
     <td>通用图像分类</td>
     <td>图像分类</td>
-    <td>✅</td>
+    <td><b>80</b> / 80 </td>
+    <td>无</td>
   </tr>
 
   <tr>
     <td>通用语义分割</td>
     <td>语义分割</td>
-    <td>✅</td>
+    <td><b>14</b> / 14 </td>
+    <td>无</td>
   </tr>
 
   <tr>
     <td>时序预测</td>
     <td>时序预测</td>
-    <td>✅</td>
+    <td><b>7</b> / 7 </td>
+    <td>无</td>
   </tr>
 
   <tr>
     <td>时序异常检测</td>
     <td>时序异常预测</td>
-    <td>TimesNet_ad ❌</td>
+    <td><b>4</b> / 5</td>
+    <td>
+      <details>
+            <summary>查看详情</summary>
+            TimesNet_ad</br>
+      </details>
+    </td>
   </tr>
 
   <tr>
     <td>时序分类</td>
     <td>时序分类</td>
-    <td>✅</td>
+    <td><b>1</b> / 1 </td>
+    <td>无</td>
   </tr>
 
   <tr>
     <td>小目标检测</td>
     <td>小目标检测</td>
-    <td>✅</td>
+    <td><b>3</b> / 3 </td>
+    <td>无</td>
   </tr>
 
   <tr>
     <td>图像多标签分类</td>
     <td>图像多标签分类</td>
-    <td>✅</td>
+    <td><b>6</b> / 6 </td>
+    <td>无</td>
   </tr>
 
   <tr>
     <td>图像异常检测</td>
     <td>无监督异常检测</td>
-    <td>✅</td>
+    <td><b>1</b> / 1 </td>
+    <td>无</td>
   </tr>
 
   <tr>
     <td rowspan="8">通用版面解析</td>
     <td>表格结构识别</td>
-    <td>✅</td>
+    <td><b>2</b> / 2 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>版面区域分析</td>
-    <td>✅</td>
+    <td><b>8</b> / 8 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>文本检测</td>
-    <td>✅</td>
+    <td><b>2</b> / 2 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>文本识别</td>
-    <td>✅</td>
+    <td><b>2</b> / 2 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>公式识别</td>
-    <td>✅</td>
+    <td><b>1</b> / 1 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>印章文本检测</td>
-    <td>✅</td>
+    <td><b>2</b> / 2 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>文本图像矫正</td>
-    <td>✅</td>
+    <td><b>1</b> / 1 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>文档图像方向分类</td>
-    <td>✅</td>
+    <td><b>1</b> / 1 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td rowspan="2">公式识别</td>
     <td>版面区域检测</td>
-    <td>✅</td>
+    <td><b>8</b> / 8 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>公式识别</td>
-    <td>✅</td>
+    <td><b>1</b> / 1 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td rowspan="3">印章文本识别</td>
     <td>版面区域分析</td>
-    <td>✅</td>
+    <td><b>8</b> / 8 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>印章文本检测</td>
-    <td>✅</td>
+    <td><b>2</b> / 2 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>文本识别</td>
-    <td>✅</td>
+    <td><b>2</b> / 2 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td rowspan="2">通用图像识别</td>
     <td>主体检测</td>
-    <td>✅</td>
+    <td><b>1</b> / 1 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>图像特征</td>
-    <td>✅</td>
+    <td><b>3</b> / 3 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td rowspan="2">行人属性识别</td>
     <td>行人检测</td>
-    <td>✅</td>
+    <td><b>2</b> / 2 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>行人属性识别</td>
-    <td>✅</td>
+    <td><b>1</b> / 1 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td rowspan="2">车辆属性识别</td>
     <td>车辆检测</td>
-    <td>✅</td>
+    <td><b>2</b> / 2 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>车辆属性识别</td>
-    <td>✅</td>
+    <td><b>1</b> / 1 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td rowspan="2">人脸识别</td>
     <td>人脸检测</td>
-    <td>✅</td>
+    <td><b>4</b> / 4 </td>
+    <td>无 </td>
   </tr>
 
   <tr>
     <td>人脸特征</td>
-    <td>✅</td>
+    <td><b>2</b> / 2 </td>
+    <td>无 </td>
   </tr>
 
 </table>
