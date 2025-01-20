@@ -51,10 +51,10 @@ class AnalyzeImagesRequest(ocr.BaseInferRequest):
 
 class VisualResult(BaseModel):
     prunedResult: dict
-    inputImage: Optional[str] = None
-    layoutDetImage: Optional[str] = None
     ocrImage: Optional[str] = None
+    layoutDetImage: Optional[str] = None
     preprocessedImage: Optional[str] = None
+    inputImage: Optional[str] = None
 
 
 class AnalyzeImagesResult(BaseModel):
