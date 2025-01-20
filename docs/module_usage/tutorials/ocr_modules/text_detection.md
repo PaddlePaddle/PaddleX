@@ -148,7 +148,7 @@ for res in output:
 <td><code>max_candidates</code></td>
 <td>输出的最大文本框数量 </td>
 <td><code>int/None</code></td>
-<td>大于0的任意整数</td>
+<td>大于0的任意整数/None</td>
 <td>None</td>
 </tr>
 <tr>
@@ -236,14 +236,14 @@ for res in output:
 <td><code>max_candidates</code></td>
 <td>输出的最大文本框数量 </td>
 <td><code>int/None</code></td>
-<td>大于0的任意整数</td>
+<td>大于0的任意整数/None</td>
 <td>None</td>
 </tr>
 <tr>
 <td><code>unclip_ratio</code></td>
 <td>Vatti clipping算法的扩张系数，使用该方法对文字区域进行扩张 </td>
 <td><code>float/None</code></td>
-<td>大于0的浮点数</td>
+<td>大于0的浮点数/None</td>
 <td>None</td>
 </tr>
 <tr>
