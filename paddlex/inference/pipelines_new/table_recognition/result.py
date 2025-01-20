@@ -15,6 +15,7 @@
 import os
 from typing import Dict
 from pathlib import Path
+from PIL import Image, ImageDraw
 import numpy as np
 import cv2
 import copy
@@ -100,13 +101,15 @@ class TableRecognitionResult(BaseCVResult, HtmlMixin, XlsxMixin):
         res_img_dict.update(**self["overall_ocr_res"].img)
 
         if len(self["table_res_list"]) > 0:
-            table_cell_img = copy.deepcopy(self["doc_preprocessor_res"]["output_img"])
+            table_cell_img = Image.fromarray(copy.deepcopy(self["doc_preprocessor_res"]["output_img"]))
+            draw = ImageDraw.Draw(table_cell_img)
+            rectangle_color = (255, 0, 0)  # 红色
             for sno in range(len(self["table_res_list"])):
                 table_res = self["table_res_list"][sno]
                 cell_box_list = table_res["cell_box_list"]
                 for box in cell_box_list:
                     x1, y1, x2, y2 = [int(pos) for pos in box]
-                    cv2.rectangle(table_cell_img, (x1, y1), (x2, y2), (255, 0, 0), 2)
+                    draw.rectangle([x1, y1, x2, y2], outline=rectangle_color, width=2)
             res_img_dict["table_cell_img"] = table_cell_img
         return res_img_dict
 
