@@ -82,7 +82,7 @@ for res in output:
 
 运行结果参数含义如下：
 - `input_path`：表示输入待预测图像的路径
-- `dt_polys`：表示预测的文本检测框，其中每个文本检测框是一个四点坐标。
+- `dt_polys`：表示预测的文本检测框，其中每个文本检测框包含一个四边形的四个顶点。其中每个顶点都是一个二元组，分别表示该顶点的x坐标和y坐标
 - `dt_scores`：表示预测的文本检测框的置信度
 
 可视化图片如下：
@@ -120,42 +120,67 @@ for res in output:
 <td><code>limit_side_len</code></td>
 <td>检测的图像边长限制</td>
 <td><code>int/None</code></td>
-<td>大于0的任意整数/None</td>
+<td>
+<ul>
+<li><b>int</b>: 大于0的任意整数
+<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</td>
+</ul>
 <td>None</td>
 </tr>
 <tr>
 <td><code>limit_type</code></td>
-<td>检测的图像边长限制,检测的边长限制类型，目前支持min和max，min表示保证图像最短边不小于det_limit_side_len，max表示保证图像最长边不大于limit_side_len </td>
+<td>检测的图像边长限制,检测的边长限制类型 </td>
 <td><code>str/None</code></td>
-<td>min/max/None</td>
+<td>
+<ul>
+<li><b>str</b>: 支持min和max. min表示保证图像最短边不小于det_limit_side_len, max: 表示保证图像最长边不大于limit_side_len
+<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</td>
+</ul>
+</td>
 <td>None</td>
 </tr>
 <tr>
 <td><code>thresh</code></td>
 <td>输出的概率图中，得分大于该阈值的像素点才会被认为是文字像素点 </td>
 <td><code>float/None</code></td>
-<td>0-1之间的浮点数/None</td>
+<td>
+<ul>
+<li><b>float</b>: 大于0的任意浮点数
+<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</td>
+</ul>
 <td>None</td>
 </tr>
 <tr>
 <td><code>box_thresh</code></td>
 <td>检测结果边框内，所有像素点的平均得分大于该阈值时，该结果会被认为是文字区域 </td>
 <td><code>float/None</code></td>
-<td>0-1之间的浮点数/None</td>
+<td>
+<ul>
+<li><b>float</b>: 大于0的任意浮点数
+<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</td>
+</ul>
 <td>None</td>
 </tr>
 <tr>
 <td><code>max_candidates</code></td>
 <td>输出的最大文本框数量 </td>
 <td><code>int/None</code></td>
-<td>大于0的任意整数/None</td>
+<td>
+<ul>
+<li><b>int</b>: 大于0的任意整数
+<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</td>
+</ul>
 <td>None</td>
 </tr>
 <tr>
 <td><code>unclip_ratio</code></td>
 <td>Vatti clipping算法的扩张系数，使用该方法对文字区域进行扩张 </td>
 <td><code>float/None</code></td>
-<td>大于0的浮点数</td>
+<td>
+<ul>
+<li><b>float</b>: 大于0的任意浮点数
+<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</td>
+</ul>
 <td>None</td>
 </tr>
 <tr>
@@ -208,42 +233,67 @@ for res in output:
 <td><code>limit_side_len</code></td>
 <td>检测的图像边长限制</td>
 <td><code>int/None</code></td>
-<td>大于0的任意整数/None</td>
+<td>
+<ul>
+<li><b>int</b>: 大于0的任意整数
+<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</td>
+</ul>
 <td>None</td>
 </tr>
 <tr>
 <td><code>limit_type</code></td>
-<td>检测的图像边长限制,检测的边长限制类型，目前支持min和max，min表示保证图像最短边不小于det_limit_side_len，max表示保证图像最长边不大于limit_side_len </td>
+<td>检测的图像边长限制,检测的边长限制类型 </td>
 <td><code>str/None</code></td>
-<td>min/max/None</td>
+<td>
+<ul>
+<li><b>str</b>: 支持min和max. min表示保证图像最短边不小于det_limit_side_len, max: 表示保证图像最长边不大于limit_side_len
+<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</td>
+</ul>
+</td>
 <td>None</td>
 </tr>
 <tr>
 <td><code>thresh</code></td>
 <td>输出的概率图中，得分大于该阈值的像素点才会被认为是文字像素点 </td>
 <td><code>float/None</code></td>
-<td>0-1之间的浮点数/None</td>
+<td>
+<ul>
+<li><b>float</b>: 大于0的任意浮点数
+<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</td>
+</ul>
 <td>None</td>
 </tr>
 <tr>
 <td><code>box_thresh</code></td>
 <td>检测结果边框内，所有像素点的平均得分大于该阈值时，该结果会被认为是文字区域 </td>
 <td><code>float/None</code></td>
-<td>0-1之间的浮点数/None</td>
+<td>
+<ul>
+<li><b>float</b>: 大于0的任意浮点数
+<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</td>
+</ul>
 <td>None</td>
 </tr>
 <tr>
 <td><code>max_candidates</code></td>
 <td>输出的最大文本框数量 </td>
 <td><code>int/None</code></td>
-<td>大于0的任意整数/None</td>
+<td>
+<ul>
+<li><b>int</b>: 大于0的任意整数
+<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</td>
+</ul>
 <td>None</td>
 </tr>
 <tr>
 <td><code>unclip_ratio</code></td>
 <td>Vatti clipping算法的扩张系数，使用该方法对文字区域进行扩张 </td>
 <td><code>float/None</code></td>
-<td>大于0的浮点数/None</td>
+<td>
+<ul>
+<li><b>float</b>: 大于0的任意浮点数
+<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</td>
+</ul>
 <td>None</td>
 </tr>
 <tr>
