@@ -26,9 +26,6 @@ class BaseCVResult(BaseResult, ImgMixin):
 
         Args:
             data (dict): The initial data.
-
-        Raises:
-            AssertionError: If the required key (`BaseCVResult.INPUT_IMG_KEY`) are not found in the data.
         """
         super().__init__(data)
         ImgMixin.__init__(self, "pillow")

@@ -75,7 +75,7 @@ class FormulaRecPredictor(BasicPredictor):
         return pre_tfs, infer, post_op
 
     def process(self, batch_data):
-        batch_raw_imgs = self.pre_tfs["Read"](imgs=batch_data)
+        batch_raw_imgs = self.pre_tfs["Read"](imgs=batch_data.instances)
         if self.model_name in ("LaTeX_OCR_rec"):
             batch_imgs = self.pre_tfs["MinMaxResize"](imgs=batch_raw_imgs)
             batch_imgs = self.pre_tfs["LatexTestTransform"](imgs=batch_imgs)
@@ -95,7 +95,8 @@ class FormulaRecPredictor(BasicPredictor):
         batch_preds = [p.reshape([-1]) for p in batch_preds[0]]
         rec_formula = self.post_op(batch_preds)
         return {
-            "input_path": batch_data,
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
             "input_img": batch_raw_imgs,
             "rec_formula": rec_formula,
         }

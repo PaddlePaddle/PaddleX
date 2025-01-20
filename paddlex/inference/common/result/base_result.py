@@ -13,6 +13,8 @@
 # limitations under the License.
 
 import inspect
+from pathlib import Path
+
 from .mixin import StrMixin, JsonMixin, ImgMixin
 
 
@@ -45,3 +47,9 @@ class BaseResult(dict, JsonMixin, StrMixin):
                 func(save_path=save_path)
             else:
                 func()
+
+    def _get_input_fn(self):
+        assert (
+            fp := self["input_path"]
+        ) is not None, f"The `save_path` must be path to csv file when there is not input file name."
+        return Path(fp).name
