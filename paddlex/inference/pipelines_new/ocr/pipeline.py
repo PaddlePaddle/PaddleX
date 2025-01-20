@@ -363,7 +363,7 @@ class OCRPipeline(BasePipeline):
                 # use textline orientation model
                 if model_settings["use_textline_orientation"]:
                     angles = [
-                        textline_angle_info["class_ids"][0]
+                        int(textline_angle_info["class_ids"][0])
                         for textline_angle_info in self.textline_orientation_model(
                             all_subs_of_img
                         )

@@ -63,7 +63,7 @@ class StrMixin:
         Returns:
             Dict[str, str]: The string representation of the result.
         """
-        return {"res": str(self)}
+        return {"res": self}
 
     def print(self) -> None:
         """Print the string representation of the result."""
@@ -177,9 +177,13 @@ class JsonMixin:
             ensure_ascii (bool): If True, ensure all characters are ASCII. Default is False.
         """
         if json_format:
-            str_ = json.dumps(self.json, indent=indent, ensure_ascii=ensure_ascii)
+            str_ = json.dumps(
+                self.__class__._to_str(self.json["res"]),
+                indent=indent,
+                ensure_ascii=ensure_ascii,
+            )
         else:
-            str_ = str(self.json)
+            str_ = str(self.__class__._to_str(self.json["res"]))
         logging.info(str_)
 
 

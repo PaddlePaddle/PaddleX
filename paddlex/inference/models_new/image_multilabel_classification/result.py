@@ -25,7 +25,6 @@ from ...common.result import BaseCVResult, StrMixin, JsonMixin
 class MLClassResult(BaseCVResult):
     def _to_str(self, *args, **kwargs):
         data = copy.deepcopy(self)
-        data.pop("input_img")
         return StrMixin._to_str(data, *args, **kwargs)
 
     def _to_json(self, *args, **kwargs):
