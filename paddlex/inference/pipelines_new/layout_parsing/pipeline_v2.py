@@ -40,7 +40,7 @@ from .utils import get_sub_regions_ocr_res
 class LayoutParsingPipelineV2(BasePipeline):
     """Layout Parsing Pipeline V2"""
 
-    entities = ["layout_parsing"]
+    entities = ["layout_parsing_v2"]
 
     def __init__(
         self,

@@ -389,11 +389,11 @@ for res in output:
 
 参数含义如下：
 - `input_path`：输入的待预测图像的路径
-- `boxes`：预测的目标框信息，一个字典列表。每个字典包含以下信息：
+- `boxes`：预测的目标框信息，一个字典列表。每个字典代表一个检出的目标，包含以下信息：
   - `cls_id`：类别ID，一个整数
   - `label`：类别标签，一个字符串
   - `score`：目标框置信度，一个浮点数
-  - `coordinate`：目标框坐标，一个列表[xmin, ymin, xmax, ymax]
+  - `coordinate`：目标框坐标，一个浮点数列表，格式为<code>[xmin, ymin, xmax, ymax]</code>
 
 </details>
 
@@ -444,8 +444,13 @@ for res in output:
 <tr>
 <td><code>threshold</code></td>
 <td>用于过滤掉低置信度预测结果的阈值；如果不指定，将默认使用PaddleX官方模型配置</td>
-<td><code>float</code></td>
-<td>无</td>
+<td><code>float/dict</code></td>
+<td>
+<ul>
+  <li><b>float</b>，如 0.2， 表示过滤掉所有阈值小于0.2的目标框</li>
+  <li><b>字典</b>，字典的key为<b>int</b>类型，代表<code>cls_id</code>，val为<b>float</b>类型阈值。如 <code>{0: 0.45, 2: 0.48, 7: 0.4}</code>，表示对cls_id为0的类别应用阈值0.45、cls_id为1的类别应用阈值0.48、cls_id为7的类别应用阈值0.4</li>
+</ul>
+</td>
 <td>无</td>
 </tr>
 </table>
@@ -489,9 +494,14 @@ for res in output:
 </tr>
 <tr>
 <td><code>threshold</code></td>
-<td>用于过滤掉低置信度预测结果的阈值；如果不指定，将默认使用 <code>creat_model</code> 指定的<code>threshold</code> 参数，如果<code>creat_model</code> 也没有指定， 则默认使用PaddleX官方模型配置</td>
-<td><code>float</code></td>
-<td>无</td>
+<td>用于过滤掉低置信度预测结果的阈值；如果不指定，将默认使用 <code>creat_model</code> 指定的 <code>threshold</code> 参数，如果 <code>creat_model</code> 也没有指定，则默认使用PaddleX官方模型配置</td>
+<td><code>float/dict</code></td>
+<td>
+<ul>
+  <li><b>float</b>，如 0.2， 表示过滤掉所有阈值小于0.2的目标框</li>
+  <li><b>字典</b>，字典的key为<b>int</b>类型，代表<code>cls_id</code>，val为<b>float</b>类型阈值。如 <code>{0: 0.45, 2: 0.48, 7: 0.4}</code>，表示对cls_id为0的类别应用阈值0.45、cls_id为1的类别应用阈值0.48、cls_id为7的类别应用阈值0.4</li>
+</ul>
+</td>
 <td>无</td>
 </tr>
 </table>

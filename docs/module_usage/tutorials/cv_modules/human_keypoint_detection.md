@@ -73,7 +73,7 @@ for res in output:
 参数含义如下：
 - `input_path`：输入的待预测图像的路径
 - `kpts`：预测的关键点信息，一个字典列表。每个字典包含以下信息：
-  - `keypoints`：关键点坐标信息，一个numpy数组，形状为[num_keypoints, 3]，其中每个关键点由[x, y, score]组成，score为该关键点的置信度
+  - `keypoints`：关键点坐标和置信度列表，一个列表。每个元素是一个包含关键点信息的列表，格式为<code>[x, y, score]</code>，其中score为关键点的置信度
   - `kpt_score`：关键点整体的置信度，即关键点的平均置信度
 
 </details>
