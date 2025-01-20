@@ -49,7 +49,7 @@ class DetPredictor(BasicPredictor):
         *args,
         img_size: Optional[Union[int, Tuple[int, int]]] = None,
         threshold: Optional[Union[float, dict]] = None,
-        layout_nms: bool = False,
+        layout_nms: Optional[bool] = None,
         layout_unclip_ratio: Optional[Union[float, Tuple[float, float]]] = None,
         layout_merge_bboxes_mode: Optional[str] = None,
         **kwargs,
@@ -97,7 +97,6 @@ class DetPredictor(BasicPredictor):
         if layout_merge_bboxes_mode is not None:
             assert layout_merge_bboxes_mode in ["union", "large", "small"], \
                 f"The value of `layout_merge_bboxes_mode` must be one of ['union', 'large', 'small'], but got {layout_merge_bboxes_mode}"
-
         self.img_size = img_size
         self.threshold = threshold
         self.layout_nms = layout_nms
@@ -201,7 +200,7 @@ class DetPredictor(BasicPredictor):
     def process(self, 
             batch_data: List[Any], 
             threshold: Optional[Union[float, dict]] = None,
-            layout_nms: bool = False,
+            layout_nms: Optional[bool] = None,
             layout_unclip_ratio: Optional[Union[float, Tuple[float, float]]] = None,
             layout_merge_bboxes_mode: Optional[str] = None,
         ):
@@ -211,7 +210,7 @@ class DetPredictor(BasicPredictor):
         Args:
             batch_data (List[Union[str, np.ndarray], ...]): A batch of input data (e.g., image file paths).
             threshold (Optional[float, dict], optional): The threshold for filtering out low-confidence predictions.
-            layout_nms (bool, optional): Whether to use layout-aware NMS. Defaults to False.
+            layout_nms (bool, optional): Whether to use layout-aware NMS. Defaults to None.
             layout_unclip_ratio (Optional[Union[float, Tuple[float, float]]], optional): The ratio of unclipping the bounding box.
             layout_merge_bboxes_mode (Optional[str], optional): The mode for merging bounding boxes. Defaults to None.
 
@@ -327,7 +326,7 @@ class DetPredictor(BasicPredictor):
         if self.threshold is None:
             self.threshold = self.config.get("draw_threshold", 0.5)
         if not self.layout_nms:
-            self.layout_nms = self.config.get("layout_nms", False)
+            self.layout_nms = self.config.get("layout_nms", None)
         if self.layout_unclip_ratio is None:
             self.layout_unclip_ratio = self.config.get("layout_unclip_ratio", None)
         if self.layout_merge_bboxes_mode is None:
