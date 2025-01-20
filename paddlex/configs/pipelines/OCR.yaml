@@ -41,4 +41,4 @@ SubModules:
     model_name: PP-OCRv4_mobile_rec 
     model_dir: null
     batch_size: 1
-    score_thresh: 0
+    score_thresh: 0.0
