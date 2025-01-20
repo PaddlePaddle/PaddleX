@@ -25,6 +25,8 @@ from ....infra.storage import Storage, SupportsGetURL
 
 
 def prune_result(result: dict) -> dict:
+    KEYS_TO_REMOVE = ["input_path"]
+
     def _process_obj(obj):
         if isinstance(obj, dict):
             return {
@@ -34,8 +36,6 @@ def prune_result(result: dict) -> dict:
             return [_process_obj(item) for item in obj]
         else:
             return obj
-
-    KEYS_TO_REMOVE = ["input_path"]
 
     return _process_obj(result)
 
