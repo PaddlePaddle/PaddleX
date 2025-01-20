@@ -71,11 +71,6 @@ class OCRPipeline(BasePipeline):
                 "TextLineOrientation",
                 {"model_config_error": "config error for textline_orientation_model!"},
             )
-            # TODO: add batch_size
-            # batch_size = textline_orientation_config.get("batch_size", 1)
-            # self.textline_orientation_model = self.create_model(
-            #     textline_orientation_config, batch_size=batch_size
-            # )
             self.textline_orientation_model = self.create_model(
                 textline_orientation_config
             )
@@ -116,10 +111,6 @@ class OCRPipeline(BasePipeline):
             "TextRecognition",
             {"model_config_error": "config error for text_rec_model!"},
         )
-        # TODO: add batch_size
-        # batch_size = text_rec_config.get("batch_size", 1)
-        # self.text_rec_model = self.create_model(text_rec_config,
-        #     batch_size=batch_size)
         self.text_rec_score_thresh = text_rec_config.get("score_thresh", 0)
         self.text_rec_model = self.create_model(text_rec_config)
 
