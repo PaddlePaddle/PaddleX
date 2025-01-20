@@ -191,7 +191,7 @@ def _sort_box_by_y_projection(layout_bbox, ocr_res, line_height_threshold=0.7):
         first_span = line[0]
         end_span = line[-1]
         if first_span[0][0] - x_min > 20:
-            first_span[1] = "\n " + first_span[1]
+            first_span[1] = "\n" + first_span[1]
         if x_max - end_span[0][2] > 20:
             end_span[1] = end_span[1] + "\n"
 
@@ -235,13 +235,12 @@ def get_structure_res(
         layout_bbox = box_info["coordinate"]
         label = box_info["label"]
         rec_res = {"boxes": [], "rec_texts": [], "flag": False}
-        drop_index = []
         seg_start_flag = True
         seg_end_flag = True
 
         if label == "table":
             for i, table_res in enumerate(table_res_list):
-                if calculate_iou(layout_bbox, table_res["layout_bbox"]) > 0.5:
+                if calculate_iou(layout_bbox, table_res["cell_box_list"][0]) > 0.5:
                     structure_boxes.append(
                         {
                             "label": label,
@@ -262,7 +261,6 @@ def get_structure_res(
                         overall_ocr_res["rec_texts"][box_no],
                     )
                     rec_res["flag"] = True
-                    drop_index.append(box_no)
 
             if rec_res["flag"]:
                 rec_res = _sort_box_by_y_projection(layout_bbox, rec_res, 0.7)
@@ -272,6 +270,11 @@ def get_structure_res(
                     seg_start_flag = False
                 if layout_bbox[2] - rec_res_end_bbox[2] < 20:
                     seg_end_flag = False
+                if label == "formula":
+                    rec_res["rec_texts"] = [
+                        rec_res_text.replace("$", "")
+                        for rec_res_text in rec_res["rec_texts"]
+                    ]
 
             if label in ["chart", "image"]:
                 structure_boxes.append(

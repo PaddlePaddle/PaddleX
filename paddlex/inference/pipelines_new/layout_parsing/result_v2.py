@@ -395,11 +395,11 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 return "\n".join(img_tags)
 
             def format_reference():
-                pattern = r"\[\d+\]"
+                pattern = r"\s*\[\s*\d+\s*\]\s*"
                 res = re.sub(
                     pattern,
                     lambda match: "\n" + match.group(),
-                    sub_block["reference"],
+                    sub_block["reference"].replace("\n", ""),
                 )
                 return "\n" + res
 
