@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ....utils import logging
 from ....utils.func_register import FuncRegister
 from ....modules.formula_recognition.model_list import MODELS
 from ...common.batch_sampler import ImageBatchSampler
@@ -64,6 +65,15 @@ class FormulaRecPredictor(BasicPredictor):
             if op:
                 pre_tfs[name] = op
         pre_tfs["ToBatch"] = ToBatch()
+
+        if self.model_name in ("LaTeX_OCR_rec") and self.pp_option.device in ("cpu"):
+            import cpuinfo
+
+            if "GenuineIntel" in cpuinfo.get_cpu_info().get("vendor_id_raw", ""):
+                self.pp_option.run_mode = "mkldnn"
+                logging.warning(
+                    "Now, the `LaTeX_OCR_rec` model only support `mkldnn` mode when running on Intel CPU devices. So using `mkldnn` instead."
+                )
 
         infer = StaticInfer(
             model_dir=self.model_dir,
