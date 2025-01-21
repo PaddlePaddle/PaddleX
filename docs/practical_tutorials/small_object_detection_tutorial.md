@@ -35,7 +35,7 @@ PaddleX 提供了以下快速体验的方式，可以直接通过 PaddleX wheel 
   快速体验产出推理结果示例：
   <center>
 
-  <img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/small_obj_det/01.png" width=600>
+  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/smallobj_det/02.png" width=600>
 
   </center>
 
@@ -160,7 +160,7 @@ python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-large
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 <center>
 
-<img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/small_obj_det/02.png" width=600>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/smallobj_det/03.png" width=600>
 
 </center>
 
@@ -283,7 +283,7 @@ python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-large
 通过上述可在`./output`下生成预测结果，预测结果如下：
 <center>
 
-<img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/small_obj_det/03.png" width="600"/>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/smallobj_det/04.png" width="600"/>
 
 </center>
 

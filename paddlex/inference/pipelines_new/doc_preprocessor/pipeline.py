@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union, List
 from scipy.ndimage import rotate
 import numpy as np
 from ..base import BasePipeline
@@ -139,7 +139,7 @@ class DocPreprocessorPipeline(BasePipeline):
 
     def predict(
         self,
-        input: str | list[str] | np.ndarray | list[np.ndarray],
+        input: Union[str, List[str], np.ndarray, List[np.ndarray]],
         use_doc_orientation_classify: Optional[bool] = None,
         use_doc_unwarping: Optional[bool] = None,
     ) -> DocPreprocessorResult:
@@ -147,7 +147,7 @@ class DocPreprocessorPipeline(BasePipeline):
         Predict the preprocessing result for the input image or images.
 
         Args:
-            input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or path(s) to the images or pdfs.
+            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): The input image(s) or path(s) to the images or pdfs.
             use_doc_orientation_classify (bool): Whether to use document orientation classification.
             use_doc_unwarping (bool): Whether to use document unwarping.
             **kwargs: Additional keyword arguments.

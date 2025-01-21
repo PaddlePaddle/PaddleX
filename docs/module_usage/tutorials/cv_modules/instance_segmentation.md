@@ -170,8 +170,8 @@ comments: true
 
 ```python
 from paddlex import create_model
-model = create_model("PP-YOLOE_seg-S")
-output = model.predict("general_instance_segmentation_004.png", batch_size=1)
+model = create_model(model_name="Mask-RT-DETR-L")
+output = model.predict(input="general_instance_segmentation_004.png", batch_size=1)
 for res in output:
     res.print()
     res.save_to_img("./output/")
@@ -182,7 +182,7 @@ for res in output:
 
 运行后，得到的结果为：
 ```bash
-{'res': "{'input_path': 'general_instance_segmentation_004.png', 'boxes': [{'cls_id': 0, 'label': 'person', 'score': 0.8723232746124268, 'coordinate': [88.34339, 109.87673, 401.85236, 575.59576]}, {'cls_id': 0, 'label': 'person', 'score': 0.8711188435554504, 'coordinate': [325.114, 1.1152496, 644.10266, 575.359]}, {'cls_id': 0, 'label': 'person', 'score': 0.842758297920227, 'coordinate': [514.18964, 21.760618, 768, 576]}, {'cls_id': 0, 'label': 'person', 'score': 0.8332827091217041, 'coordinate': [0.105075076, 0, 189.23515, 575.9612]}], 'masks': '...'}"}
+{'res': {'input_path': 'general_instance_segmentation_004.png', 'boxes': [{'cls_id': 0, 'label': 'person', 'score': 0.897335946559906, 'coordinate': [0, 0.46382904052734375, 195.22256469726562, 572.8294067382812]}, {'cls_id': 0, 'label': 'person', 'score': 0.8606418967247009, 'coordinate': [341.30389404296875, 0, 640.4802856445312, 575.7348022460938]}, {'cls_id': 0, 'label': 'person', 'score': 0.6397128105163574, 'coordinate': [520.0907592773438, 23.334789276123047, 767.5140380859375, 574.5650634765625]}, {'cls_id': 0, 'label': 'person', 'score': 0.6008261442184448, 'coordinate': [91.02522277832031, 112.34088897705078, 405.4962158203125, 574.1039428710938]}, {'cls_id': 0, 'label': 'person', 'score': 0.5031726360321045, 'coordinate': [200.81265258789062, 58.161617279052734, 272.8892517089844, 140.88356018066406]}], 'masks': '...'}}
 ```
 运行结果参数含义如下：
 - `input_path`: 表示输入待预测图像的路径
@@ -191,16 +191,15 @@ for res in output:
   - `label`: 类别名称
   - `score`: 预测得分
   - `coordinate`: 预测框的坐标，格式为<code>[xmin, ymin, xmax, ymax]</code>
-- `pred`: 实例分割模型实际预测的mask，由于数据过大不便于直接print，所以此处用`...`替换，可以通过`res.save_to_img()`将预测结果保存为图片，通过`res.save_to_json()`将预测结果保存为json文件。
+- `masks`: 实例分割模型实际预测的mask，由于数据过大不便于直接print，所以此处用`...`替换，可以通过`res.save_to_img()`将预测结果保存为图片，通过`res.save_to_json()`将预测结果保存为json文件。
 
 可视化图片如下：
 
-<img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/instance_segmentation/general_instance_segmentation_004_res.png">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/instanceseg/general_instance_segmentation_004_res.png">
 
 相关方法、参数等说明如下：
 
-* `create_model`实例化通用实例分割模型（此处以`PP-YOLOE_seg-S`为例），具体说明如下：
+* `create_model`实例化通用实例分割模型（此处以`Mask-RT-DETR-L`为例），具体说明如下：
 <table>
 <thead>
 <tr>

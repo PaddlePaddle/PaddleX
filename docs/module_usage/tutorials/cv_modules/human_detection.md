@@ -48,9 +48,8 @@ comments: true
 
 ```python
 from paddlex import create_model
-model_name = "PP-YOLOE-S_human"
-model = create_model(model_name)
-output = model.predict("human_detection.jpg", batch_size=1)
+model = create_model(model_name="PP-YOLOE-S_human")
+output = model.predict(input="human_detection.jpg", batch_size=1)
 for res in output:
     res.print()
     res.save_to_img("./output/")
@@ -71,8 +70,7 @@ for res in output:
 
 可视化图片如下：
 
-<img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/human_detection/human_detection_res.jpg">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/human_detection/human_detection_res.jpg">
 
 相关方法、参数等说明如下：
 
@@ -104,7 +102,7 @@ for res in output:
 <tr>
 <td><code>threshold</code></td>
 <td>低分object过滤阈值</td>
-<td><code>float/None/dict</code></td>
+<td><code>float/None/dict[int, float]</code></td>
 <td>无</td>
 <td>None</td>
 </tr>
@@ -113,7 +111,7 @@ for res in output:
 * 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
 * `threshold`为低分object过滤阈值，默认为None，表示使用上一层设置，参数设置的优先级从高到低为：`predict参数传入 > create_model初始化传入 > yaml配置文件设置`。目前支持float和dict两种阈值设置方式：
   * `float`, 对于所有的类别使用同一个阈值。
-  * `dict`, key为类别ID，value为阈值，对于不同的类别使用不同的阈值。行人检测为单类别检测，无需此设置。
+  * `dict[int, float]`, key为类别ID，value为阈值，对于不同的类别使用不同的阈值。行人检测为单类别检测，无需此设置。
 
 * 调用行人检测模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` 、 `batch_size` 和 `threshold`，具体说明如下：
 
@@ -152,12 +150,12 @@ for res in output:
 <tr>
 <td><code>threshold</code></td>
 <td>低分object过滤阈值</td>
-<td><code>float</code>/<code>dict</code>/<code>None</code></td>
+<td><code>float</code>/<code>dict[int, float]</code>/<code>None</code></td>
 <td>
 <ul>
   <li><b>None</b>，表示沿用上一层设置, 参数设置优先级从高到低为: <code>predict参数传入 > create_model初始化传入 > yaml配置文件设置</code></li>
-  <li><b>float</b>，如0.5，表示推理时使用0.5作为低分object过滤阈值</li>
-  <li><b>dict</b>，如<code>{0: 0.5, 1: 0.35}</code>，表示推理时对类别0使用0.5低分过滤阈值，对类别1使用0.35低分过滤阈值。行人检测为单类别检测，无需此设置。</li>
+  <li><b>float</b>，对于所有的类别使用同一个阈值。如0.5，表示推理时使用0.5作为所有类别的低分object过滤阈值</li>
+  <li><b>dict[int, float]</b>，如<code>{0: 0.5, 1: 0.35}</code>，表示推理时对类别0使用0.5低分过滤阈值，对类别1使用0.35低分过滤阈值。行人检测为单类别检测，无需此设置。</li>
 </ul>
 </td>
 <td>None</td>

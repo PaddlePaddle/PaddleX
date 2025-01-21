@@ -24,11 +24,12 @@ import copy
 import cv2
 import uuid
 from pathlib import Path
+from typing import List
 from ..ocr.result import OCRResult
 from ...models_new.object_detection.result import DetResult
 
 
-def get_overlap_boxes_idx(src_boxes: np.ndarray, ref_boxes: np.ndarray) -> list:
+def get_overlap_boxes_idx(src_boxes: np.ndarray, ref_boxes: np.ndarray) -> List:
     """
     Get the indices of source boxes that overlap with reference boxes based on a specified threshold.
 
@@ -56,7 +57,7 @@ def get_overlap_boxes_idx(src_boxes: np.ndarray, ref_boxes: np.ndarray) -> list:
 
 
 def get_sub_regions_ocr_res(
-    overall_ocr_res: OCRResult, object_boxes: list, flag_within: bool = True
+    overall_ocr_res: OCRResult, object_boxes: List, flag_within: bool = True
 ) -> OCRResult:
     """
     Filters OCR results to only include text boxes within specified object boxes based on a flag.
@@ -362,7 +363,7 @@ def split_projection_profile(arr_values: np.ndarray, min_value: float, min_gap: 
     return segment_starts, segment_ends
 
 
-def recursive_yx_cut(boxes: np.ndarray, indices: list[int], res: list[int], min_gap=1):
+def recursive_yx_cut(boxes: np.ndarray, indices: List[int], res: List[int], min_gap=1):
     """
     Recursively project and segment bounding boxes, starting with Y-axis and followed by X-axis.
 
@@ -423,7 +424,7 @@ def recursive_yx_cut(boxes: np.ndarray, indices: list[int], res: list[int], min_
             )
 
 
-def recursive_xy_cut(boxes: np.ndarray, indices: list[int], res: list[int], min_gap=1):
+def recursive_xy_cut(boxes: np.ndarray, indices: List[int], res: List[int], min_gap=1):
     """
     Recursively performs X-axis projection followed by Y-axis projection to segment bounding boxes.
 

@@ -24,7 +24,8 @@ class IdentityResult(BaseResult):
 
     def _to_str(self, *args, **kwargs):
         data = copy.deepcopy(self)
-        return StrMixin._to_str(data, *args, **kwargs)
+        data.pop("input_img")
+        return JsonMixin._to_str(data, *args, **kwargs)
 
     def _to_json(self, *args, **kwargs):
         data = copy.deepcopy(self)

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict
+from typing import Dict, List
 import time
 import os
 from langchain.docstore.document import Document
@@ -88,9 +88,9 @@ class ErnieBotRetriever(BaseRetriever):
 
     def generate_vector_database(
         self,
-        text_list: list[str],
+        text_list: List[str],
         block_size: int = 300,
-        separators: list[str] = ["\t", "\n", "。", "\n\n", ""],
+        separators: List[str] = ["\t", "\n", "。", "\n\n", ""],
         sleep_time: float = 0.5,
     ) -> FAISS:
         """
@@ -193,7 +193,7 @@ class ErnieBotRetriever(BaseRetriever):
 
     def similarity_retrieval(
         self,
-        query_text_list: list[str],
+        query_text_list: List[str],
         vectorstore: FAISS,
         sleep_time: float = 0.5,
         topk: int = 2,

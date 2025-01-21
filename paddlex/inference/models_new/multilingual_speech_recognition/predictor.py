@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import lazy_paddle as paddle
+import numpy as np
 
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import AudioBatchSampler
@@ -99,6 +100,24 @@ class WhisperPredictor(BasicPredictor):
         audio = audio[:, 0]
         audio = log_mel_spectrogram(audio, resource_path=self.config["resource_dir"])
 
+        # adapt temperature
+        temperature_increment_on_fallback = self.config[
+            "temperature_increment_on_fallback"
+        ]
+        if (
+            temperature_increment_on_fallback is not None
+            and temperature_increment_on_fallback != "None"
+        ):
+            temperature = tuple(
+                np.arange(
+                    self.config["temperature"],
+                    1.0 + 1e-6,
+                    temperature_increment_on_fallback,
+                )
+            )
+        else:
+            temperature = [self.config["temperature"]]
+
         # model inference
         result = self.model.transcribe(
             audio,
@@ -106,7 +125,7 @@ class WhisperPredictor(BasicPredictor):
             task=self.config["task"],
             language=self.config["language"],
             resource_path=self.config["resource_dir"],
-            temperature=self.config["temperature"],
+            temperature=temperature,
             compression_ratio_threshold=self.config["compression_ratio_threshold"],
             logprob_threshold=self.config["logprob_threshold"],
             best_of=self.config["best_of"],

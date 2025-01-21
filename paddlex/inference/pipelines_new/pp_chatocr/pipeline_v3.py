@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union, List, Tuple
 import re
 import json
 import numpy as np
@@ -162,7 +162,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
     # Function to perform visual prediction on input images
     def visual_predict(
         self,
-        input: str | list[str] | np.ndarray | list[np.ndarray],
+        input: Union[str, List[str], np.ndarray, List[np.ndarray]],
         use_doc_orientation_classify: Optional[bool] = None,
         use_doc_unwarping: Optional[bool] = None,
         use_general_ocr: Optional[bool] = None,
@@ -188,7 +188,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         general OCR, seal recognition, and table recognition based on the provided flags.
 
         Args:
-            input (str | list[str] | np.ndarray | list[np.ndarray]): Input image path, list of image paths,
+            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): Input image path, list of image paths,
                                                                         numpy array of an image, or list of numpy arrays.
             use_doc_orientation_classify (bool): Flag to use document orientation classification.
             use_doc_unwarping (bool): Flag to use document unwarping.
@@ -254,7 +254,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
             fout.write(json.dumps(visual_info_list, ensure_ascii=False) + "\n")
         return
 
-    def load_visual_info_list(self, data_path: str) -> list[dict]:
+    def load_visual_info_list(self, data_path: str) -> List[dict]:
         """
         Loads visual info list from a JSON file.
 
@@ -270,8 +270,8 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         return visual_info_list
 
     def merge_visual_info_list(
-        self, visual_info_list: list[dict]
-    ) -> tuple[list, list, list]:
+        self, visual_info_list: List[dict]
+    ) -> Tuple[list, list, list]:
         """
         Merge visual info lists.
 
@@ -379,7 +379,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
                 )
         return vector_info
 
-    def format_key(self, key_list: str | list[str]) -> list[str]:
+    def format_key(self, key_list: Union[str, List[str]]) -> List[str]:
         """
         Formats the key list.
 
@@ -438,7 +438,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         self,
         use_vector_retrieval: bool,
         vector_info: dict,
-        key_list: list[str],
+        key_list: List[str],
         all_normal_text_list: list,
         min_characters: int,
     ) -> str:
@@ -482,8 +482,8 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
 
     def chat(
         self,
-        key_list: str | list[str],
-        visual_info: list[dict],
+        key_list: Union[str, List[str]],
+        visual_info: List[dict],
         use_vector_retrieval: bool = True,
         vector_info: dict = None,
         min_characters: int = 3500,
@@ -502,7 +502,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         Generates chat results based on the provided key list and visual information.
 
         Args:
-            key_list (str | list[str]): A single key or a list of keys to extract information.
+            key_list (Union[str, list[str]]): A single key or a list of keys to extract information.
             visual_info (dict): The visual information result.
             use_vector_retrieval (bool): Whether to use vector retrieval.
             vector_info (dict): The vector information for retrieval.

@@ -15,9 +15,7 @@ from __future__ import annotations
 
 import os
 import sys
-from typing import Any
-from typing import Dict
-from typing import Optional
+from typing import Any, Dict, Optional, Union
 
 import cv2
 import numpy as np
@@ -261,7 +259,7 @@ class LayoutParsingPipelineV2(BasePipeline):
 
     def predict(
         self,
-        input: str | list[str] | np.ndarray | list[np.ndarray],
+        input: Union[str, list[str], np.ndarray, list[np.ndarray]],
         use_doc_orientation_classify: bool | None = None,
         use_doc_unwarping: bool | None = None,
         use_general_ocr: bool | None = None,
@@ -269,13 +267,13 @@ class LayoutParsingPipelineV2(BasePipeline):
         use_table_recognition: bool | None = None,
         use_formula_recognition: bool | None = None,
         text_det_limit_side_len: int | None = None,
-        text_det_limit_type: str | None = None,
+        text_det_limit_type: Union[str, None] = None,
         text_det_thresh: float | None = None,
         text_det_box_thresh: float | None = None,
         text_det_unclip_ratio: float | None = None,
         text_rec_score_thresh: float | None = None,
         seal_det_limit_side_len: int | None = None,
-        seal_det_limit_type: str | None = None,
+        seal_det_limit_type: Union[str, None] = None,
         seal_det_thresh: float | None = None,
         seal_det_box_thresh: float | None = None,
         seal_det_unclip_ratio: float | None = None,
@@ -286,7 +284,7 @@ class LayoutParsingPipelineV2(BasePipeline):
         This function predicts the layout parsing result for the given input.
 
         Args:
-            input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or pdf(s) to be processed.
+            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): The input image(s) or pdf(s) to be processed.
             use_doc_orientation_classify (bool): Whether to use document orientation classification.
             use_doc_unwarping (bool): Whether to use document unwarping.
             use_general_ocr (bool): Whether to use general OCR.

@@ -70,6 +70,31 @@ class StrMixin:
         logging.info(self.str)
 
 
+def _format_data(obj):
+    """Helper function to format data into a JSON-serializable format.
+
+    Args:
+        obj: The object to be formatted.
+
+    Returns:
+        Any: The formatted object.
+    """
+    if isinstance(obj, np.float32):
+        return float(obj)
+    elif isinstance(obj, np.ndarray):
+        return [_format_data(item) for item in obj.tolist()]
+    elif isinstance(obj, pd.DataFrame):
+        return json.loads(obj.to_json(orient="records", force_ascii=False))
+    elif isinstance(obj, Path):
+        return obj.as_posix()
+    elif isinstance(obj, dict):
+        return dict({k: _format_data(v) for k, v in obj.items()})
+    elif isinstance(obj, (list, tuple)):
+        return [_format_data(i) for i in obj]
+    else:
+        return obj
+
+
 class JsonMixin:
     """Mixin class for adding JSON serialization capabilities."""
 
@@ -83,30 +108,6 @@ class JsonMixin:
         Returns:
             Dict[str, Dict[str, Any]]: A dictionary representation of the object that is JSON-serializable.
         """
-
-        def _format_data(obj):
-            """Helper function to format data into a JSON-serializable format.
-
-            Args:
-                obj: The object to be formatted.
-
-            Returns:
-                Any: The formatted object.
-            """
-            if isinstance(obj, np.float32):
-                return float(obj)
-            elif isinstance(obj, np.ndarray):
-                return [_format_data(item) for item in obj.tolist()]
-            elif isinstance(obj, pd.DataFrame):
-                return json.loads(obj.to_json(orient="records", force_ascii=False))
-            elif isinstance(obj, Path):
-                return obj.as_posix()
-            elif isinstance(obj, dict):
-                return dict({k: _format_data(v) for k, v in obj.items()})
-            elif isinstance(obj, (list, tuple)):
-                return [_format_data(i) for i in obj]
-            else:
-                return obj
 
         return {"res": _format_data(copy.deepcopy(self))}
 
@@ -166,6 +167,28 @@ class JsonMixin:
                 **kwargs,
             )
 
+    def _to_str(
+        self,
+        json_format: bool = False,
+        indent: int = 4,
+        ensure_ascii: bool = False,
+    ):
+        """Convert the given result data to a string representation.
+        Args:
+            data (dict): The data would be converted to str.
+            json_format (bool): If True, return a JSON formatted string. Default is False.
+            indent (int): Number of spaces to indent for JSON formatting. Default is 4.
+            ensure_ascii (bool): If True, ensure all characters are ASCII. Default is False.
+        Returns:
+            Dict[str, str]: The string representation of the result.
+        """
+        if json_format:
+            return json.dumps(
+                _format_data({"res": self}), indent=indent, ensure_ascii=ensure_ascii
+            )
+        else:
+            return {"res": self}
+
     def print(
         self, json_format: bool = False, indent: int = 4, ensure_ascii: bool = False
     ) -> None:
@@ -176,14 +199,9 @@ class JsonMixin:
             indent (int): Number of spaces to indent for JSON formatting. Default is 4.
             ensure_ascii (bool): If True, ensure all characters are ASCII. Default is False.
         """
-        if json_format:
-            str_ = json.dumps(
-                self.__class__._to_str(self.json["res"]),
-                indent=indent,
-                ensure_ascii=ensure_ascii,
-            )
-        else:
-            str_ = str(self.__class__._to_str(self.json["res"]))
+        str_ = self._to_str(
+            json_format=json_format, indent=indent, ensure_ascii=ensure_ascii
+        )
         logging.info(str_)
 
 

@@ -139,8 +139,8 @@ class OCRResult(BaseCVResult):
         data["rec_scores"] = self["rec_scores"]
         data["rec_polys"] = self["rec_polys"]
         data["rec_boxes"] = self["rec_boxes"]
-        
-        return StrMixin._to_str(data, *args, **kwargs)
+
+        return JsonMixin._to_str(data, *args, **kwargs)
 
     def _to_json(self, *args, **kwargs) -> Dict[str, str]:
         """

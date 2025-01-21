@@ -1,5 +1,5 @@
 Global:
-  model: PP-YOLOE-R_L
+  model: PP-YOLOE-R-L
   mode: check_dataset # check_dataset/train/evaluate/predict
   dataset_dir: "dataset/rdet_dota_examples"
   device: gpu:0,1,2,3

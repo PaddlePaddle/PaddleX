@@ -645,7 +645,7 @@ class DetPostProcess:
             boxes: ndarray, 
             img_size: Tuple[int, int],
             threshold: Union[float, dict], 
-            layout_nms: bool, 
+            layout_nms: Optional[bool],
             layout_unclip_ratio: Optional[Union[float, Tuple[float, float]]], 
             layout_merge_bboxes_mode: Optional[str]
         ) -> Boxes:
@@ -723,7 +723,7 @@ class DetPostProcess:
         batch_outputs: List[dict],
         datas: List[dict],
         threshold: Optional[Union[float, dict]] = None,
-        layout_nms: bool = False,
+        layout_nms: Optional[bool] = None,
         layout_unclip_ratio: Optional[Union[float, Tuple[float, float]]] = None,
         layout_merge_bboxes_mode: Optional[str] = None,
     ) -> List[Boxes]:

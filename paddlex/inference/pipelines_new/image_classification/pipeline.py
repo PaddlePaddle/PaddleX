@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union, List
 import numpy as np
 from ...common.reader import ReadImage
 from ...common.batch_sampler import ImageBatchSampler
@@ -56,12 +56,12 @@ class ImageClassificationPipeline(BasePipeline):
         self.topk = image_classification_model_config.get("topk", 5)
 
     def predict(
-        self, input: str | list[str] | np.ndarray | list[np.ndarray], **kwargs
+        self, input: Union[str, List[str], np.ndarray, List[np.ndarray]], **kwargs
     ) -> TopkResult:
         """Predicts image classification results for the given input.
 
         Args:
-            input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or path(s) to the images.
+            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): The input image(s) or path(s) to the images.
             **kwargs: Additional keyword arguments that can be passed to the function.
 
         Returns:

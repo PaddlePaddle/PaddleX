@@ -81,7 +81,7 @@ class DocPreprocessorResult(BaseCVResult):
         data["input_path"] = self["input_path"]
         data["model_settings"] = self["model_settings"]
         data["angle"] = self["angle"]
-        return StrMixin._to_str(data, *args, **kwargs)
+        return JsonMixin._to_str(data, *args, **kwargs)
 
     def _to_json(self, *args, **kwargs) -> Dict[str, str]:
         """

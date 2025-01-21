@@ -19,7 +19,7 @@ Rotated object detection is a derivative of the object detection module, specifi
 <th>Introduction</th>
 </tr>
 <tr>
-<td>PP-YOLOE-R_L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1_v2/PP-YOLOE-R_L_infer.tar">Inference Model</a>/<a href="https://paddledet.bj.bcebos.com/models/ppyoloe_r_crn_l_3x_dota.pdparams">Training Model</a></td>
+<td>PP-YOLOE-R-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1_v2/PP-YOLOE-R-L_infer.tar">Inference Model</a>/<a href="https://paddledet.bj.bcebos.com/models/ppyoloe_r_crn_l_3x_dota.pdparams">Training Model</a></td>
 <td>78.14</td>
 <td>20.7039</td>
 <td>157.942</td>
@@ -38,7 +38,7 @@ After completing the installation of the wheel package, a few lines of code can 
 
 ```python
 from paddlex import create_model
-model = create_model("PP-YOLOE-R_L")
+model = create_model("PP-YOLOE-R-L")
 output = model.predict("rotated_object_detection_001.png", batch_size=1)
 for res in output:
     res.print(json_format=False)
@@ -76,7 +76,7 @@ After decompression, the dataset directory structure is as follows:：
 A single command can complete data verification:
 
 ```bash
-python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R_L.yaml \
+python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R-L.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/DOTA-sampled200_crop1024_data
 ```
@@ -134,7 +134,7 @@ After executing the above command, PaddleX will verify the dataset and count the
 <li><code>attributes.val_sample_paths</code>：The relative path list of visualized validation set sample images in this dataset;</li>
 </ul>
 <p>Additionally, the dataset verification also analyzes the distribution of sample quantities for all categories in the dataset and draws a distribution histogram (histogram.png):</p>
-<p><img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/robj_det/01.png"></p></details>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/rotated_object_detection/01.png"></p></details>
 
 #### 4.1.3 Dataset Format Conversion/Dataset Splitting (Optional)
 After completing the data verification, you can convert the dataset format or re-split the training/validation ratio of the dataset by modifying the configuration file or adding hyperparameters.
@@ -165,13 +165,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R_L.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R-L.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/DOTA-sampled200_crop1024_data
 </code></pre>
 <p>After the dataset splitting is executed, the original annotation files will be renamed to <code>xxx.bak</code>.</p>
 <p>The above parameters also support setting through adding command line parameters:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R_L.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R-L.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/DOTA-sampled200_crop1024_data \
     -o CheckDataset.split.enable=True \
@@ -180,16 +180,16 @@ CheckDataset:
 </code></pre></details>
 
 ### 4.2 Model Training
-A single command can complete model training, taking the training of the rotated object detection model `PP-YOLOE-R_L` as an example:
+A single command can complete model training, taking the training of the rotated object detection model `PP-YOLOE-R-L` as an example:
 
 ```bash
-python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R_L.yaml \
+python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R-L.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/DOTA-sampled200_crop1024_data
 ```
 The following steps are required:
 
-* Specify the path of the model's `.yaml` configuration file (here it is `PP-YOLOE-R_L.yaml`. When training other models, you need to specify the corresponding configuration file. The correspondence between models and configuration files can be found in [PaddleX Model List (CPU/GPU))](../../../support_list/models_list.en.md)）
+* Specify the path of the model's `.yaml` configuration file (here it is `PP-YOLOE-R-L.yaml`. When training other models, you need to specify the corresponding configuration file. The correspondence between models and configuration files can be found in [PaddleX Model List (CPU/GPU))](../../../support_list/models_list.en.md)）
 * Specify the mode as model training: `-o Global.mode=train`
 * Specify the training dataset path: `-o Global.dataset_dir`
 Other related parameters can be set by modifying the fields under Global and Train in the `.yaml` configuration file, or by adding parameters in the command line. For example, specify the first 2 GPU cards for training: `-o Global.device=gpu:0,1`; set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and detailed explanations, please refer to the configuration file instructions for the corresponding task module [PaddleX Common Model Configuration File Parameter Instructions.](../../instructions/config_parameters_common.en.md).
@@ -214,13 +214,13 @@ Other related parameters can be set by modifying the fields under Global and Tra
 After completing model training, you can evaluate the specified model weights file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation can be done with a single command:
 
 ```bash
-python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R_L.yaml \
+python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R-L.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/DOTA-sampled200_crop1024_data
 ```
 Similar to model training, the following steps are required:
 
-* Specify the `.yaml` configuration file path for the model (here it is `PP-YOLOE-R_L.yaml`)
+* Specify the `.yaml` configuration file path for the model (here it is `PP-YOLOE-R-L.yaml`)
 * Specify the mode as model evaluation: `-o Global.mode=evaluate`
 * Specify the path to the validation dataset: `-o Global.dataset_dir`. Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
 
@@ -236,14 +236,14 @@ After completing model training and evaluation, you can use the trained model we
 
 * To perform inference predictions through the command line, use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/rotated_object_detection_001.png) to your local machine.
 ```bash
-python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R_L.yaml  \
+python main.py -c paddlex/configs/rotated_object_detection/PP-YOLOE-R-L.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="rotated_object_detection_001.png"
 ```
 Similar to model training and evaluation, the following steps are required:
 
-* Specify the `.yaml` configuration file path for the model (here it is `PP-YOLOE-R_L.yaml`)
+* Specify the `.yaml` configuration file path for the model (here it is `PP-YOLOE-R-L.yaml`)
 * Specify the mode as model inference prediction: `-o Global.mode=predict`
 * Specify the model weights path: `-o Predict.model_dir="./output/best_model/inference"`
 * Specify the input data path: `-o Predict.input="..."`
@@ -255,4 +255,3 @@ The model can be directly integrated into the PaddleX pipelines or directly into
 2.<b>Module Integration</b>
 
 The weights you produce can be directly integrated into the object detection module. Refer to the Python example code in [Quick Integration](#iii-quick-integration), and simply replace the model with the path to your trained model.
-

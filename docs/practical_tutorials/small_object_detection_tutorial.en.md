@@ -30,7 +30,7 @@ PaddleX provides the following quick experience methods, which can be directly e
   The quick experience produces the following inference result example:
   <center>
 
-  <img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/small_obj_det/01.png" width=600>
+  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/smallobj_det/02.png" width=600>
 
   </center>
 
@@ -154,7 +154,7 @@ In the above validation result, `check_pass` being `True` indicates that the dat
 In addition, the dataset validation also analyzed the sample number distribution of all categories in the dataset and plotted the distribution histogram (`histogram.png`):
 <center>
 
-<img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/small_obj_det/02.png" width=600>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/smallobj_det/03.png" width=600>
 
 </center>
 
@@ -276,7 +276,7 @@ python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-large
 Through the above, the prediction results can be generated under `./output`, as follows:
 <center>
 
-<img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/small_obj_det/03.png" width="600"/>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/smallobj_det/04.png" width="600"/>
 
 </center>
 

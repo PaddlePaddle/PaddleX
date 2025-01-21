@@ -27,39 +27,23 @@ comments: true
 <td>0.8712</td>
 <td>202.25</td>
 <td>167.9 M</td>
-<td rowspan="2">PP-FormulaNet 是由百度飞桨视觉团队开发的一款先进的公式识别模型。PP-FormulaNet-S 版本采用了 PP-HGNetV2-B4 作为其骨干网络，通过并行掩码和模型蒸馏等技术，大幅提升了模型的推理速度，同时保持了较高的识别精度，特别适合对推理速度有较高要求的应用场景。而 PP-FormulaNet-L 版本则基于 Vary_VIT_B 作为骨干网络，并在大规模公式数据集上进行了深入训练，在复杂公式的识别方面，相较于PP-FormulaNet-S表现出显著的提升。 </td>
+<td rowspan="2">PP-FormulaNet 是由百度飞桨视觉团队开发的一款先进的公式识别模型，支持5万个常见LateX源码词汇的识别。PP-FormulaNet-S 版本采用了 PP-HGNetV2-B4 作为其骨干网络，通过并行掩码和模型蒸馏等技术，大幅提升了模型的推理速度，同时保持了较高的识别精度，适用于简单印刷公式、跨行简单印刷公式等场景。而 PP-FormulaNet-L 版本则基于 Vary_VIT_B 作为骨干网络，并在大规模公式数据集上进行了深入训练，在复杂公式的识别方面，相较于PP-FormulaNet-S表现出显著的提升，适用于简单印刷公式、复杂印刷公式、手写公式等场景。 </td>
 
 </tr>
 <td>PP-FormulaNet-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-FormulaNet-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-L_pretrained.pdparams">训练模型</a></td>
 <td>0.9213</td>
 <td>1976.52</td>
 <td>535.2 M</td>
-</table>
-
-<b>注：以上精度指标测量自 PaddleX 内部自建公式识别测试集。所有模型 GPU 推理耗时基于 Tesla V100 GPUs 机器，精度类型为 FP32</b>
-
-
-<table>
-<tr>
-<th>模型</th><th>模型下载链接</th>
-<th>BLEU score</th>
-<th>normed edit distance</th>
-<th>ExpRate （%）</th>
-<th>模型存储大小 (M)</th>
-<th>介绍</th>
-</tr>
 <tr>
 <td>LaTeX_OCR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/LaTeX_OCR_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">训练模型</a></td>
-<td>0.8821</td>
-<td>0.0823</td>
-<td>40.01</td>
+<td>0.7163</td>
+<td>-</td>
 <td>89.7 M</td>
-<td>LaTeX-OCR是一种基于自回归大模型的公式识别算法，通过采用 Hybrid ViT 作为骨干网络，transformer作为解码器，显著提升了公式识别的准确性</td>
+<td>LaTeX-OCR是一种基于自回归大模型的公式识别算法，通过采用 Hybrid ViT 作为骨干网络，transformer作为解码器，显著提升了公式识别的准确性。</td>
 </tr>
 </table>
 
-<b>注：以上精度指标测量自 LaTeX-OCR公式识别测试集。</b>
-
+<b>注：以上精度指标测量自 PaddleX 内部自建公式识别测试集。LaTeX_OCR_rec在LaTeX-OCR公式识别测试集的BLEU score为 0.8821。所有模型 GPU 推理耗时基于 Tesla V100 GPUs 机器，精度类型为 FP32。</b>
 
 
 ## 三、快速集成
@@ -85,11 +69,11 @@ for res in output:
 - `rec_formula`：表示公式图像的预测LaTeX源码
 
 
-可视化图片如下：
+可视化图片如下，左侧是待预测的公式图像，右边是预测的结果渲染后的公式图像：
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/formula_recog/general_formula_rec_001_res.png">
 
-<b> 注：如果您需要对公式识别产线进行可视化，需要运行如下命令来对LaTeX渲染环境进行安装：</b>
+<b> 注：如果您需要对公式识别产线进行可视化，需要运行如下命令来对LaTeX渲染环境进行安装。目前公式识别产线可视化只支持Ubuntu环境，其他环境暂不支持：</b>
 ```bash
 sudo apt-get update
 sudo apt-get install texlive texlive-latex-base texlive-latex-extra -y
