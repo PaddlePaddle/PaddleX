@@ -483,7 +483,7 @@ python main.py -c paddlex/configs/ts_anomaly_detection/AutoEncoder_ad.yaml \
 
 1.<b>产线集成</b>
 
-时序预测模块可以集成的PaddleX产线有[时序异常检测](../../../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md)，只需要替换模型路径即可完成时序预测的模型更新。在产线集成中，你可以使用服务化部署来部署你得到的模型。
+时序异常检测模块可以集成的PaddleX产线有[时序异常检测](../../../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md)，只需要替换模型路径即可完成时序异常检测的模型更新。在产线集成中，你可以使用服务化部署来部署你得到的模型。
 
 2.<b>模块集成</b>
 
