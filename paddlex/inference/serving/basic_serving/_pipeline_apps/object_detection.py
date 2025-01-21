@@ -46,9 +46,6 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             await pipeline.infer(
                 image,
                 threshold=request.threshold,
-                layout_nms=request.layoutNms,
-                layout_unclip_ratio=request.layoutUnclipRatio,
-                layout_merge_bboxes_mode=request.layoutMergeBboxesMode,
             )
         )[0]
 

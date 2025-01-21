@@ -14,8 +14,7 @@
 
 from typing import Dict, Final, List, Optional, Union
 
-from pydantic import BaseModel, Field
-from typing_extensions import Annotated, Literal
+from pydantic import BaseModel
 
 from ..infra.models import PrimaryOperations
 from .shared import object_detection
@@ -34,11 +33,6 @@ INFER_ENDPOINT: Final[str] = "/object-detection"
 class InferRequest(BaseModel):
     image: str
     threshold: Optional[Union[float, Dict[int, float]]] = None
-    layoutNms: Optional[bool] = None
-    layoutUnclipRatio: Optional[
-        Union[float, Annotated[List[float], Field(min_length=2, max_length=2)]]
-    ] = None
-    layoutMergeBboxesMode: Optional[Literal["union", "large", "small"]] = None
 
 
 class DetectedObject(BaseModel):
