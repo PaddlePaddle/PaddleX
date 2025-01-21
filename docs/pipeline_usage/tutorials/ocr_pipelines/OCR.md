@@ -1513,7 +1513,7 @@ SubModules:
 ##  5. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device`参数</b>即可完成不同硬件之间的无缝切换。
 
-例如，您使用英伟达 GPU 进行 OCR 产线的推理，使用的 Python 命令为：
+例如，您使用昇腾 NPU 进行 OCR 产线的推理，使用的 Python 命令为：
 
 ```bash
 paddlex --pipeline OCR \
