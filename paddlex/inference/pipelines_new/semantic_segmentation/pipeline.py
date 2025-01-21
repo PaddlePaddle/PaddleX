@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, List
+from typing import Any, Dict, Optional, Literal
 import numpy as np
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
@@ -53,15 +53,23 @@ class SemanticSegmentationPipeline(BasePipeline):
         self.target_size = semantic_segmentation_model_config["target_size"]
 
     def predict(
-        self, input: Union[str, List[str], np.ndarray, List[np.ndarray]], **kwargs
+        self,
+        input: str | list[str] | np.ndarray | list[np.ndarray],
+        target_size: Literal[-1] | None | int | tuple[int] = None,
+        **kwargs
     ) -> SegResult:
         """Predicts semantic segmentation results for the given input.
 
         Args:
-            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): The input image(s) or path(s) to the images.
+            input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or path(s) to the images.
+            target_size (Literal[-1] | None | int | tuple[int]): The Image size model used to do prediction. Default is None.
+                If it's set to -1, the original image size will be used.
+                If it's set to None, the previous level's setting will be used.
+                If it's set to an integer value, the image will be rescaled to the size of (value, value).
+                If it's set to a tuple of two integers, the image will be rescaled to the size of (height, width).
             **kwargs: Additional keyword arguments that can be passed to the function.
 
         Returns:
             SegResult: The predicted segmentation results.
         """
-        yield from self.semantic_segmentation_model(input, target_size=self.target_size)
+        yield from self.semantic_segmentation_model(input, target_size=target_size)

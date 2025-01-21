@@ -53,15 +53,23 @@ class SmallObjectDetectionPipeline(BasePipeline):
         self.threshold = small_object_detection_model_config["threshold"]
 
     def predict(
-        self, input: Union[str, List[str], np.ndarray, List[np.ndarray]], **kwargs
+        self,
+        input: str | list[str] | np.ndarray | list[np.ndarray],
+        threshold: None | dict[int, float] | float = None,
+        **kwargs
     ) -> DetResult:
         """Predicts small object detection results for the given input.
 
         Args:
-            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): The input image(s) or path(s) to the images.
+            input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or path(s) to the images.
+            threshold (Optional[float]): The threshold value to filter out low-confidence predictions. Default is None.
+                If None, it will use the default threshold specified during initialization.
+                If a dictionary is provided, it should have integer keys corresponding to the class IDs and float values
+                representing the respective thresholds for each class.
+                If a single float value is provided, it will be used as the threshold for all classes.
             **kwargs: Additional keyword arguments that can be passed to the function.
 
         Returns:
             DetResult: The predicted small object detection results.
         """
-        yield from self.small_object_detection_model(input, threshold=self.threshold)
+        yield from self.small_object_detection_model(input, threshold=threshold)

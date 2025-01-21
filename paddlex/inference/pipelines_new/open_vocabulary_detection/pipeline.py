@@ -57,6 +57,7 @@ class OpenVocabularyDetectionPipeline(BasePipeline):
         self,
         input: Union[str, List[str], np.ndarray, List[np.ndarray]],
         prompt: str,
+        thresholds: dict[str, float] | None = None,
         **kwargs
     ) -> DetResult:
         """Predicts open vocabulary detection results for the given input.
@@ -64,11 +65,12 @@ class OpenVocabularyDetectionPipeline(BasePipeline):
         Args:
             input (Union[str, list[str], np.ndarray, list[np.ndarray]]): The input image(s) or path(s) to the images.
             prompt (str): The text prompt used to describe the objects.
+            thresholds (dict | None): Threshold values for different models. If provided, these will override any default threshold values set during initialization. Default is None.
             **kwargs: Additional keyword arguments that can be passed to the function.
 
         Returns:
             DetResult: The predicted open vocabulary detection results.
         """
         yield from self.open_vocabulary_detection_model(
-            input, prompt=prompt, thresholds=self.thresholds
+            input, prompt=prompt, thresholds=thresholds
         )

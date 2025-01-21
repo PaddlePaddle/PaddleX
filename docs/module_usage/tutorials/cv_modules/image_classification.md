@@ -707,7 +707,7 @@ for res in output:
 
 相关方法、参数等说明如下：
 
-* `create_model`实例化文本识别模型（此处以`PP-LCNet_x1_0`为例），具体说明如下：
+* `create_model`实例化图像分类模型（此处以`PP-LCNet_x1_0`为例），具体说明如下：
 <table>
 <thead>
 <tr>
@@ -723,7 +723,7 @@ for res in output:
 <td>模型名称</td>
 <td><code>str</code></td>
 <td>无</td>
-<td><code>PP-LCNet_x1_0</code></td>
+<td><code>无</code></td>
 </tr>
 <tr>
 <td><code>model_dir</code></td>
@@ -732,11 +732,22 @@ for res in output:
 <td>无</td>
 <td>无</td>
 </tr>
+<tr>
+<td><code>topk</code></td>
+<td>预测结果的前<code>topk</code>值，如果不指定，将默认使用PaddleX官方模型配置</td>
+<td><code>int</code></td>
+<td>
+<ul>
+  <li><b>int</b>，如 5 ，表示打印（返回）预测结果的前<code>5</code>个类别和对应的分类概率</li>
+</ul>
+</td>
+<td>5</td>
+</tr>
 </table>
 
 * 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
 
-* 调用文本识别模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` 和 `batch_size`，具体说明如下：
+* 调用图像分类模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` 和 `batch_size`，具体说明如下：
 
 <table>
 <thead>
@@ -770,6 +781,17 @@ for res in output:
 <td><code>int</code></td>
 <td>任意整数</td>
 <td>1</td>
+</tr>
+<tr>
+<td><code>topk</code></td>
+<td>预测结果的前<code>topk</code>值；如果不指定，将默认使用 <code>creat_model</code> 指定的 <code>topk</code> 参数，如果 <code>creat_model</code> 也没有指定，则默认使用PaddleX官方模型配置</td>
+<td><code>int</code></td>
+<td>
+<ul>
+  <li><b>int</b>，如 5 ，表示打印（返回）预测结果的前<code>5</code>个类别和对应的分类概率</li>
+</ul>
+</td>
+<td>5</td>
 </tr>
 </table>
 

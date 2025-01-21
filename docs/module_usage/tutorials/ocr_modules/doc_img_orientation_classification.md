@@ -57,7 +57,7 @@ for res in output:
 
 运行结果参数含义如下：
 - `input_path`：表示输入图片的路径。
-- `class_ids`：表示预测结果的类别id。
+- `class_ids`：表示预测结果的类别id，含有四个类别，即0度，90度，180度和270度。
 - `scores`：表示预测结果的置信度。
 - `label_names`：表示预测结果的类别名。
 
@@ -67,7 +67,7 @@ for res in output:
 
 相关方法、参数等说明如下：
 
-* `create_model`实例化文本识别模型（此处以`PP-LCNet_x1_0_doc_ori`为例），具体说明如下：
+* `create_model`实例化文档图像方向分类模型（此处以`PP-LCNet_x1_0_doc_ori`为例），具体说明如下：
 <table>
 <thead>
 <tr>
@@ -83,7 +83,7 @@ for res in output:
 <td>模型名称</td>
 <td><code>str</code></td>
 <td>无</td>
-<td><code>PP-LCNet_x1_0_doc_ori</code></td>
+<td><code>无</code></td>
 </tr>
 <tr>
 <td><code>model_dir</code></td>
@@ -96,7 +96,7 @@ for res in output:
 
 * 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
 
-* 调用文本识别模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` 和 `batch_size`，具体说明如下：
+* 调用文档图像方向分类模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` 和 `batch_size`，具体说明如下：
 
 <table>
 <thead>
@@ -413,7 +413,7 @@ python main.py -c paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yam
 
 1.<b>产线集成</b>
 
-文档图像分类模块可以集成的PaddleX产线有[文档场景信息抽取v3产线（PP-ChatOCRv3）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md)，只需要替换模型路径即可完成文本检测模块的模型更新。
+文档图像分类模块可以集成的PaddleX产线有[文档场景信息抽取v3产线（PP-ChatOCRv3）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md)，只需要替换模型路径即可完成文档图像分类模块的模型更新。
 
 2.<b>模块集成</b>
 

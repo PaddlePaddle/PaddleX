@@ -53,15 +53,19 @@ class InstanceSegmentationPipeline(BasePipeline):
         self.threshold = instance_segmentation_model_config["threshold"]
 
     def predict(
-        self, input: Union[str, List[str], np.ndarray, List[np.ndarray]], **kwargs
+        self,
+        input: str | list[str] | np.ndarray | list[np.ndarray],
+        threshold: float | None = None,
+        **kwargs
     ) -> InstanceSegResult:
         """Predicts instance segmentation results for the given input.
 
         Args:
-            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): The input image(s) or path(s) to the images.
+            input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or path(s) to the images.
+            threshold (float | None): The threshold value to filter out low-confidence predictions. Default is None.
             **kwargs: Additional keyword arguments that can be passed to the function.
 
         Returns:
             InstanceSegResult: The predicted instance segmentation results.
         """
-        yield from self.instance_segmentation_model(input, threshold=self.threshold)
+        yield from self.instance_segmentation_model(input, threshold=threshold)

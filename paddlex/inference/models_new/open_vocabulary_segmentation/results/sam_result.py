@@ -143,6 +143,5 @@ class SAMSegResult(BaseCVResult):
 
     def _to_json(self, *args, **kwargs):
         data = copy.deepcopy(self)
-        data["masks"] = "..."
         data.pop("input_img")
         return JsonMixin._to_json(data, *args, **kwargs)
