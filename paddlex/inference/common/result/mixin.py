@@ -146,7 +146,6 @@ class JsonMixin:
         if not _is_json_file(save_path):
             fn = Path(self._get_input_fn())
             stem = fn.stem
-            suffix = fn.suffix
             base_save_path = Path(save_path)
             for key in self.json:
                 save_path = base_save_path / f"{stem}_{key}.json"
@@ -249,7 +248,6 @@ class Base64Mixin:
         if not str(save_path).lower().endswith((".b64")):
             fn = Path(self._get_input_fn())
             stem = fn.stem
-            suffix = fn.suffix
             base_save_path = Path(save_path)
             for key in self.base64:
                 save_path = base_save_path / f"{stem}_{key}.b64"
@@ -581,7 +579,7 @@ class VideoMixin:
         if not _is_video_file(save_path):
             fn = Path(self._get_input_fn())
             stem = fn.stem
-            suffix = fn.suffix
+            suffix = fn.suffix if _is_video_file(fn) else ".mp4"
             base_save_path = Path(save_path)
             for key in self.video:
                 save_path = base_save_path / f"{stem}_{key}{suffix}"
