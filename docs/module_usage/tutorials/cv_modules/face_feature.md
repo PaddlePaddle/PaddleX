@@ -72,7 +72,7 @@ for res in output:
 
 参数含义如下：
 - `input_path`：输入的待预测图像的路径
-- `feature`：模型提取的特征向量
+- `feature`：表示特征向量的浮点数列表，长度为128
 
 </details>
 

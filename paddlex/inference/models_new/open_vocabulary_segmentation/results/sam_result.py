@@ -137,9 +137,9 @@ class SAMSegResult(BaseCVResult):
 
     def _to_str(self, *args, **kwargs):
         data = copy.deepcopy(self)
-        data["masks"] = "..."
         data.pop("input_img")
-        return StrMixin._to_str(data, *args, **kwargs)
+        data["masks"] = "..."
+        return JsonMixin._to_str(data, *args, **kwargs)
 
     def _to_json(self, *args, **kwargs):
         data = copy.deepcopy(self)

@@ -24,11 +24,12 @@ import copy
 import cv2
 import uuid
 from pathlib import Path
+from typing import List
 from ..ocr.result import OCRResult
 from ...models_new.object_detection.result import DetResult
 
 
-def get_overlap_boxes_idx(src_boxes: np.ndarray, ref_boxes: np.ndarray) -> list:
+def get_overlap_boxes_idx(src_boxes: np.ndarray, ref_boxes: np.ndarray) -> List:
     """
     Get the indices of source boxes that overlap with reference boxes based on a specified threshold.
 
@@ -56,7 +57,7 @@ def get_overlap_boxes_idx(src_boxes: np.ndarray, ref_boxes: np.ndarray) -> list:
 
 
 def get_sub_regions_ocr_res(
-    overall_ocr_res: OCRResult, object_boxes: list, flag_within: bool = True
+    overall_ocr_res: OCRResult, object_boxes: List, flag_within: bool = True
 ) -> OCRResult:
     """
     Filters OCR results to only include text boxes within specified object boxes based on a flag.
@@ -191,7 +192,7 @@ def _sort_box_by_y_projection(layout_bbox, ocr_res, line_height_threshold=0.7):
         first_span = line[0]
         end_span = line[-1]
         if first_span[0][0] - x_min > 20:
-            first_span[1] = "\n " + first_span[1]
+            first_span[1] = "\n" + first_span[1]
         if x_max - end_span[0][2] > 20:
             end_span[1] = end_span[1] + "\n"
 
@@ -235,13 +236,12 @@ def get_structure_res(
         layout_bbox = box_info["coordinate"]
         label = box_info["label"]
         rec_res = {"boxes": [], "rec_texts": [], "flag": False}
-        drop_index = []
         seg_start_flag = True
         seg_end_flag = True
 
         if label == "table":
             for i, table_res in enumerate(table_res_list):
-                if calculate_iou(layout_bbox, table_res["layout_bbox"]) > 0.5:
+                if calculate_iou(layout_bbox, table_res["cell_box_list"][0]) > 0.5:
                     structure_boxes.append(
                         {
                             "label": label,
@@ -262,7 +262,6 @@ def get_structure_res(
                         overall_ocr_res["rec_texts"][box_no],
                     )
                     rec_res["flag"] = True
-                    drop_index.append(box_no)
 
             if rec_res["flag"]:
                 rec_res = _sort_box_by_y_projection(layout_bbox, rec_res, 0.7)
@@ -272,6 +271,11 @@ def get_structure_res(
                     seg_start_flag = False
                 if layout_bbox[2] - rec_res_end_bbox[2] < 20:
                     seg_end_flag = False
+                if label == "formula":
+                    rec_res["rec_texts"] = [
+                        rec_res_text.replace("$", "")
+                        for rec_res_text in rec_res["rec_texts"]
+                    ]
 
             if label in ["chart", "image"]:
                 structure_boxes.append(
@@ -359,7 +363,7 @@ def split_projection_profile(arr_values: np.ndarray, min_value: float, min_gap: 
     return segment_starts, segment_ends
 
 
-def recursive_yx_cut(boxes: np.ndarray, indices: list[int], res: list[int], min_gap=1):
+def recursive_yx_cut(boxes: np.ndarray, indices: List[int], res: List[int], min_gap=1):
     """
     Recursively project and segment bounding boxes, starting with Y-axis and followed by X-axis.
 
@@ -420,7 +424,7 @@ def recursive_yx_cut(boxes: np.ndarray, indices: list[int], res: list[int], min_
             )
 
 
-def recursive_xy_cut(boxes: np.ndarray, indices: list[int], res: list[int], min_gap=1):
+def recursive_xy_cut(boxes: np.ndarray, indices: List[int], res: List[int], min_gap=1):
     """
     Recursively performs X-axis projection followed by Y-axis projection to segment bounding boxes.
 

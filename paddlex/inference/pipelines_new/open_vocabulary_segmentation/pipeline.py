@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, Tuple
+from typing import Any, Dict, Optional, Union, Tuple, List
 import numpy as np
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
@@ -62,15 +62,15 @@ class OpenVocabularySegmentationPipeline(BasePipeline):
 
     def predict(
         self,
-        input: str | list[str] | np.ndarray | list[np.ndarray],
-        prompt: list[list[float]] | np.ndarray,
+        input: Union[str, List[str], np.ndarray, List[np.ndarray]],
+        prompt: Union[List[List[float]], np.ndarray],
         prompt_type: str = "box",
         **kwargs
     ) -> SAMSegResult:
         """Predicts image segmentation results for the given input.
 
         Args:
-            input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or path(s) to the images.
+            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): The input image(s) or path(s) to the images.
             prompt (list[list[int]] | np.ndarray): The prompt for the input image(s).
             prompt_type (str): The type of prompt, either 'box' or 'point'. Default is 'box'.
             **kwargs: Additional keyword arguments that can be passed to the function.

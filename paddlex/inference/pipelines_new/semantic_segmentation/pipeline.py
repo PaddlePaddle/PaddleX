@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union, List
 import numpy as np
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
@@ -53,12 +53,12 @@ class SemanticSegmentationPipeline(BasePipeline):
         self.target_size = semantic_segmentation_model_config["target_size"]
 
     def predict(
-        self, input: str | list[str] | np.ndarray | list[np.ndarray], **kwargs
+        self, input: Union[str, List[str], np.ndarray, List[np.ndarray]], **kwargs
     ) -> SegResult:
         """Predicts semantic segmentation results for the given input.
 
         Args:
-            input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or path(s) to the images.
+            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): The input image(s) or path(s) to the images.
             **kwargs: Additional keyword arguments that can be passed to the function.
 
         Returns:

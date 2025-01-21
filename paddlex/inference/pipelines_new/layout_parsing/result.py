@@ -76,8 +76,7 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
                 formula_region_id = formula_res["formula_region_id"]
                 sub_formula_res_dict = formula_res.img
                 key = f"formula_res_region{formula_region_id}"
-                res_img_dict[key] = sub_formula_res_dict
-
+                res_img_dict[key] = sub_formula_res_dict["res"]
         return res_img_dict
 
     def _to_str(self, *args, **kwargs) -> Dict[str, str]:
@@ -127,7 +126,7 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
                 formula_res = self["formula_res_list"][sno]
                 data["formula_res_list"].append(formula_res.str["res"])
 
-        return StrMixin._to_str(data, *args, **kwargs)
+        return JsonMixin._to_str(data, *args, **kwargs)
 
     def _to_json(self, *args, **kwargs) -> Dict[str, str]:
         """

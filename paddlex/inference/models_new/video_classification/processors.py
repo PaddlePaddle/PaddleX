@@ -387,7 +387,8 @@ class VideoClasTopk:
         preds[0] = self.softmax(preds[0])
         indexes = preds[0].argsort(axis=1)[:, -topk:][:, ::-1].astype("int32")
         scores = [
-            np.around(pred[index], decimals=5) for pred, index in zip(preds[0], indexes)
+            list(np.around(pred[index], decimals=5))
+            for pred, index in zip(preds[0], indexes)
         ]
         label_names = [[self.class_id_map[i] for i in index] for index in indexes]
         return indexes, scores, label_names
