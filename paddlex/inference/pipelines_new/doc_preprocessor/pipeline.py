@@ -163,13 +163,7 @@ class DocPreprocessorPipeline(BasePipeline):
             yield {"error": "the input params for model settings are invalid!"}
 
         for img_id, batch_data in enumerate(self.batch_sampler(input)):
-            if not isinstance(batch_data[0], str):
-                # TODO: add support input_pth for ndarray and pdf
-                input_path = f"{img_id}.jpg"
-            else:
-                input_path = batch_data[0]
-
-            image_array = self.img_reader(batch_data)[0]
+            image_array = self.img_reader(batch_data.instances)[0]
 
             if model_settings["use_doc_orientation_classify"]:
                 pred = next(self.doc_ori_classify_model(image_array))
@@ -185,7 +179,8 @@ class DocPreprocessorPipeline(BasePipeline):
                 output_img = rot_img
 
             single_img_res = {
-                "input_path": input_path,
+                "input_path": batch_data.input_paths[0],
+                "page_index": batch_data.page_indexes[0],
                 "input_img": image_array,
                 "model_settings": model_settings,
                 "angle": angle,
