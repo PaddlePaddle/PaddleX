@@ -242,7 +242,6 @@ class DBPostProcess:
         dest_width,
         dest_height,
         box_thresh,
-        max_candidates,
         unclip_ratio,
     ):
         """_bitmap: single map with shape (1, H, W), whose values are binarized as {0, 1}"""
@@ -257,7 +256,7 @@ class DBPostProcess:
             (bitmap * 255).astype(np.uint8), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE
         )
 
-        for contour in contours[:max_candidates]:
+        for contour in contours[:self.max_candidates]:
             epsilon = 0.002 * cv2.arcLength(contour, True)
             approx = cv2.approxPolyDP(contour, epsilon, True)
             points = approx.reshape((-1, 2))
@@ -299,7 +298,6 @@ class DBPostProcess:
         dest_width,
         dest_height,
         box_thresh,
-        max_candidates,
         unclip_ratio,
     ):
         """_bitmap: single map with shape (1, H, W), whose values are binarized as {0, 1}"""
@@ -315,7 +313,7 @@ class DBPostProcess:
         elif len(outs) == 2:
             contours, _ = outs[0], outs[1]
 
-        num_contours = min(len(contours), max_candidates)
+        num_contours = min(len(contours), self.max_candidates)
 
         boxes = []
         scores = []
@@ -420,9 +418,7 @@ class DBPostProcess:
         img_shapes,
         thresh: Union[float, None] = None,
         box_thresh: Union[float, None] = None,
-        max_candidates: Union[int, None] = None,
         unclip_ratio: Union[float, None] = None,
-        use_dilation: Union[bool, None] = None,
     ):
         """apply"""
         boxes, scores = [], []
@@ -432,9 +428,7 @@ class DBPostProcess:
                 img_shape,
                 thresh or self.thresh,
                 box_thresh or self.box_thresh,
-                max_candidates or self.max_candidates,
                 unclip_ratio or self.unclip_ratio,
-                use_dilation or self.use_dilation,
             )
             boxes.append(box)
             scores.append(score)
@@ -446,13 +440,11 @@ class DBPostProcess:
         img_shape,
         thresh,
         box_thresh,
-        max_candidates,
         unclip_ratio,
-        use_dilation,
     ):
         pred = pred[0, :, :]
         segmentation = pred > thresh
-        dilation_kernel = None if not use_dilation else np.array([[1, 1], [1, 1]])
+        dilation_kernel = None if not self.use_dilation else np.array([[1, 1], [1, 1]])
         src_h, src_w, ratio_h, ratio_w = img_shape
         if dilation_kernel is not None:
             mask = cv2.dilate(
@@ -463,11 +455,11 @@ class DBPostProcess:
             mask = segmentation
         if self.box_type == "poly":
             boxes, scores = self.polygons_from_bitmap(
-                pred, mask, src_w, src_h, box_thresh, max_candidates, unclip_ratio
+                pred, mask, src_w, src_h, box_thresh, unclip_ratio
             )
         elif self.box_type == "quad":
             boxes, scores = self.boxes_from_bitmap(
-                pred, mask, src_w, src_h, box_thresh, max_candidates, unclip_ratio
+                pred, mask, src_w, src_h, box_thresh, unclip_ratio
             )
         else:
             raise ValueError("box_type can only be one of ['quad', 'poly']")

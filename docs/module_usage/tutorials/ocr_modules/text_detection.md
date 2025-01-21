@@ -162,17 +162,6 @@ for res in output:
 <td>None</td>
 </tr>
 <tr>
-<td><code>max_candidates</code></td>
-<td>输出的最大文本框数量 </td>
-<td><code>int/None</code></td>
-<td>
-<ul>
-<li><b>int</b>: 大于0的任意整数
-<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</td>
-</ul>
-<td>None</td>
-</tr>
-<tr>
 <td><code>unclip_ratio</code></td>
 <td>Vatti clipping算法的扩张系数，使用该方法对文字区域进行扩张 </td>
 <td><code>float/None</code></td>
@@ -181,13 +170,6 @@ for res in output:
 <li><b>float</b>: 大于0的任意浮点数
 <li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</td>
 </ul>
-<td>None</td>
-</tr>
-<tr>
-<td><code>use_dilation</code></td>
-<td>是否对分割结果进行膨胀 </td>
-<td><code>bool/None</code></td>
-<td>True/False/None</td>
 <td>None</td>
 </tr>
 </table>
@@ -275,17 +257,6 @@ for res in output:
 <td>None</td>
 </tr>
 <tr>
-<td><code>max_candidates</code></td>
-<td>输出的最大文本框数量 </td>
-<td><code>int/None</code></td>
-<td>
-<ul>
-<li><b>int</b>: 大于0的任意整数
-<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</td>
-</ul>
-<td>None</td>
-</tr>
-<tr>
 <td><code>unclip_ratio</code></td>
 <td>Vatti clipping算法的扩张系数，使用该方法对文字区域进行扩张 </td>
 <td><code>float/None</code></td>
@@ -294,13 +265,6 @@ for res in output:
 <li><b>float</b>: 大于0的任意浮点数
 <li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</td>
 </ul>
-<td>None</td>
-</tr>
-<tr>
-<td><code>use_dilation</code></td>
-<td>是否对分割结果进行膨胀 </td>
-<td><code>bool/None</code></td>
-<td>True/False/None</td>
 <td>None</td>
 </tr>
 </table>
