@@ -143,7 +143,8 @@ class OCRResult(BaseCVResult):
         data["dt_polys"] = self["dt_polys"]
         data["text_det_params"] = self["text_det_params"]
         data["text_type"] = self["text_type"]
-        data["textline_orientation_angles"] = self["textline_orientation_angles"]
+        if "textline_orientation_angles" in self:
+            data["textline_orientation_angles"] = self["textline_orientation_angles"]
         data["text_rec_score_thresh"] = self["text_rec_score_thresh"]
         data["rec_texts"] = self["rec_texts"]
         data["rec_scores"] = self["rec_scores"]
@@ -172,7 +173,8 @@ class OCRResult(BaseCVResult):
         data["dt_polys"] = self["dt_polys"]
         data["text_det_params"] = self["text_det_params"]
         data["text_type"] = self["text_type"]
-        data["textline_orientation_angles"] = self["textline_orientation_angles"]
+        if "textline_orientation_angles" in self:
+            data["textline_orientation_angles"] = self["textline_orientation_angles"]
         data["text_rec_score_thresh"] = self["text_rec_score_thresh"]
         data["rec_texts"] = self["rec_texts"]
         data["rec_scores"] = self["rec_scores"]
