@@ -24,7 +24,7 @@ comments: true
 <td>TimesNet_cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/TimesNet_cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_cls_pretrained.pdparams">训练模型</a></td>
 <td>87.5</td>
 <td>792K</td>
-<td>通过多周期分析，TimesNet是适应性强的高精度时序分类模型</td>
+<td>通过多周期分析，TimesNet_cls是适应性强的高精度时序分类模型</td>
 </tr>
 </tbody>
 </table>
@@ -38,12 +38,185 @@ comments: true
 
 ```bash
 from paddlex import create_model
-model = create_model("TimesNet_cls")
+model = create_model(model_name="TimesNet_cls")
 output = model.predict("ts_cls.csv", batch_size=1)
 for res in output:
-    res.print(json_format=False)
-    res.save_to_csv("./output/")
+    res.print()
+    res.save_to_csv(save_path="./output/")
+    res.save_to_json(save_path="./output/res.json")
 ```
+
+运行后，得到的结果为：
+```bash
+{
+    "res": {
+        "input_path": "ts_cls.csv",
+        "classification": [
+            {
+                "classid": 0,
+                "score": 0.617687881
+            }
+        ]
+    }
+}
+```
+
+
+运行结果参数含义如下：
+- `input_path`：表示输入待预测类别的时序文件路径
+- `classification`：表示时序分类结果，classid表示预测类别，score表示预测置信度，可以通过`res.save_to_csv()`将预测结果保存为csv文件，通过`res.save_to_json()`将预测结果保存为json文件。
+
+相关方法、参数等说明如下：
+
+
+* `create_model`实例化时序分类模型（此处以`TimesNet_cls`为例），具体说明如下：
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td><code>model_name</code></td>
+<td>模型名称</td>
+<td><code>str</code></td>
+<td>所有PaddleX支持的模型名称</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>model_dir</code></td>
+<td>模型存储路径</td>
+<td><code>str</code></td>
+<td>无</td>
+<td>无</td>
+</tr>
+</table>
+
+* 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
+
+* 调用时序分类模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` 和 `batch_size`，具体说明如下：
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>待预测数据，支持多种输入类型</td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
+<td>
+<ul>
+  <li><b>Python变量</b>，如<code>pandas.DataFrame</code>表示的时序数据</li>
+  <li><b>文件路径</b>，如时序文件的本地路径：<code>/root/data/ts.csv</code></li>
+  <li><b>URL链接</b>，如时序文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv">示例</a></li>
+  <li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
+  <li><b>列表</b>，列表元素需为上述类型数据，如<code>[pandas.DataFrame, pandas.DataFrame]</code>，<code>[\"/root/data/ts1.csv\", \"/root/data/ts2.csv\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"ts\": \"/root/data1\"}, {\"ts\": \"/root/data2/ts.csv\"}]</code></li>
+</ul>
+</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td>批大小</td>
+<td><code>int</code></td>
+<td>大于0任意整数</td>
+<td>1</td>
+</tr>
+</table>
+
+* 对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为`csv`文件、保存为`json`文件的操作:
+
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>方法说明</th>
+<th>参数</th>
+<th>参数类型</th>
+<th>参数说明</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "3"><code>print()</code></td>
+<td rowspan = "3">打印结果到终端</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan = "3"><code>save_to_json()</code></td>
+<td rowspan = "3">将结果保存为json格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_csv()</code></td>
+<td>将结果保存为时序csv格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+</table>
+
+* 此外，也支持通过属性获取带结果的可视化时序和预测结果，具体如下：
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>属性说明</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "1"><code>json</code></td>
+<td rowspan = "1">获取预测的<code>json</code>格式的结果</td>
+</tr>
+<tr>
+<td rowspan = "1"><code>csv</code></td>
+<td rowspan = "1">获取格式为<code>csv</code>的时序分类预测结果</td>
+</tr>
+
+</table>
+
 关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 
 ## 四、二次开发

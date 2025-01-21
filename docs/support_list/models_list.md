@@ -2070,29 +2070,29 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Nonstationary_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>PatchTST</td>
-<td>0.385</td>
-<td>0.397</td>
+<td>0.379</td>
+<td>0.391</td>
 <td>2.0 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/ts_forecast/PatchTST.yaml">PatchTST.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PatchTST_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>RLinear</td>
-<td>0.384</td>
+<td>0.385</td>
 <td>0.392</td>
 <td>40 K</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/ts_forecast/RLinear.yaml">RLinear.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/RLinear_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RLinear_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>TiDE</td>
-<td>0.405</td>
-<td>0.412</td>
+<td>0.407</td>
+<td>0.414</td>
 <td>31.7 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/ts_forecast/TiDE.yaml">TiDE.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/TiDE_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TiDE_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
 <td>TimesNet</td>
-<td>0.417</td>
-<td>0.431</td>
+<td>0.416</td>
+<td>0.429</td>
 <td>4.9 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/ts_forecast/TimesNet.yaml">TimesNet.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/TimesNet_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_pretrained.pdparams">训练模型</a></td></tr>
