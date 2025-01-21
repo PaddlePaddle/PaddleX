@@ -94,16 +94,16 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 key = f"seal_res_region{seal_region_id}"
                 res_img_dict[key] = sub_seal_res_dict["ocr_res_img"]
 
-        if (
-            model_settings["use_formula_recognition"]
-            and len(self["formula_res_list"]) > 0
-        ):
-            for sno in range(len(self["formula_res_list"])):
-                formula_res = self["formula_res_list"][sno]
-                formula_region_id = formula_res["formula_region_id"]
-                sub_formula_res_dict = formula_res.img
-                key = f"formula_res_region{formula_region_id}"
-                res_img_dict[key] = sub_formula_res_dict["res"]
+        # if (
+        #     model_settings["use_formula_recognition"]
+        #     and len(self["formula_res_list"]) > 0
+        # ):
+        #     for sno in range(len(self["formula_res_list"])):
+        #         formula_res = self["formula_res_list"][sno]
+        #         formula_region_id = formula_res["formula_region_id"]
+        #         sub_formula_res_dict = formula_res.img
+        #         key = f"formula_res_region{formula_region_id}"
+        #         res_img_dict[key] = sub_formula_res_dict["res"]
 
         return res_img_dict
 

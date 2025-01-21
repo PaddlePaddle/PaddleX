@@ -274,7 +274,12 @@ def get_structure_res(
 
         if label == "table":
             for i, table_res in enumerate(table_res_list):
-                if _calculate_iou(layout_bbox, table_res["cell_box_list"][0]) > 0.5:
+                if (
+                    _calculate_iou(
+                        layout_bbox, table_res["table_ocr_pred"]["rec_boxes"][0]
+                    )
+                    > 0.5
+                ):
                     structure_boxes.append(
                         {
                             "label": label,
@@ -1158,7 +1163,6 @@ def get_layout_ordering(data, no_mask_labels=[], already_sorted=False):
                 ),
             )
             block_bboxes = np.array(block_bboxes)
-            print("sort by yxcut...")
             sorted_indices = sort_by_xycut(
                 block_bboxes,
                 direction=1,
