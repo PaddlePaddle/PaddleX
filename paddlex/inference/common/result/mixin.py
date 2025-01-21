@@ -313,8 +313,8 @@ class ImgMixin:
 
         if not _is_image_file(save_path):
             fn = Path(self._get_input_fn())
+            suffix = fn.suffix if _is_image_file(fn) else ".png"
             stem = fn.stem
-            suffix = fn.suffix
             base_save_path = Path(save_path)
             for key in self.img:
                 save_path = base_save_path / f"{stem}_{key}{suffix}"

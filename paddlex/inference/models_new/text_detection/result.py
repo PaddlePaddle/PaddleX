@@ -27,7 +27,7 @@ class TextDetResult(BaseCVResult):
         if (page_idx := self["page_index"]) is not None:
             fp = Path(fn)
             stem, suffix = fp.stem, fp.suffix
-            return f"{stem}_{page_idx}.{suffix}"
+            return f"{stem}_{page_idx}{suffix}"
         else:
             return fn
 

@@ -29,6 +29,15 @@ from ...common.result import BaseCVResult, StrMixin, JsonMixin
 class OCRResult(BaseCVResult):
     """OCR result"""
 
+    def _get_input_fn(self):
+        fn = super()._get_input_fn()
+        if (page_idx := self["page_index"]) is not None:
+            fp = Path(fn)
+            stem, suffix = fp.stem, fp.suffix
+            return f"{stem}_{page_idx}{suffix}"
+        else:
+            return fn
+
     def get_minarea_rect(self, points: np.ndarray) -> np.ndarray:
         """
         Get the minimum area rectangle for the given points using OpenCV.
