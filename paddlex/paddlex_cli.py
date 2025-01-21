@@ -231,7 +231,7 @@ def install(args):
             + packages
             + [
                 "--find-links",
-                "https://zhang-prog.github.io/pipeline_deploy/high_performance_inference.html",
+                "https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/pipeline_deploy/high_performance_inference.md",
             ]
         )
 
