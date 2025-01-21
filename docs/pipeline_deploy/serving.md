@@ -93,7 +93,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 可以通过指定 `--use_hpip` 以使用高性能推理插件。示例如下：
 
 ```bash
-paddlex --serve --pipeline image_classfication --use_hpip
+paddlex --serve --pipeline image_classification --use_hpip
 ```
 
 ### 1.3 调用服务

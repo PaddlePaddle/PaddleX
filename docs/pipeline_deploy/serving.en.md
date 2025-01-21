@@ -97,7 +97,7 @@ To use the PaddleX high-performance inference plugin, please refer to the [Paddl
 You can use the `--use_hpip` flag to enable the high-performance inference plugin. An example is as follows:
 
 ```bash
-paddlex --serve --pipeline image_classfication --use_hpip
+paddlex --serve --pipeline image_classification --use_hpip
 ```
 
 ### 1.3 Invoke the Service
