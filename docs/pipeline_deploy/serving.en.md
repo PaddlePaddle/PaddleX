@@ -86,14 +86,6 @@ The command-line options related to serving are as follows:
 <td><code>--use_hpip</code></td>
 <td>If specified, enables the high-performance inference plugin.</td>
 </tr>
-<tr>
-<td><code>--serial_number</code></td>
-<td>Serial number used by the high-performance inference plugin. Only effective when the plugin is enabled. Note that not all pipelines and models support the use of the high-performance inference plugin. For detailed support information, please refer to the <a href="./high_performance_inference.en.md">PaddleX High-Performance Inference Guide</a>.</td>
-</tr>
-<tr>
-<td><code>--update_license</code></td>
-<td>If specified, performs online activation. Only effective when the high-performance inference plugin is enabled.</td>
-</tr>
 </tbody>
 </table>
 </table>
@@ -102,13 +94,10 @@ In application scenarios where strict requirements are placed on service respons
 
 To use the PaddleX high-performance inference plugin, please refer to the [PaddleX High-Performance Inference Guide](./high_performance_inference.en.md) for instructions on installing the high-performance inference plugin, obtaining a serial number, and completing the activation process. Additionally, note that not all pipelines, models, and environments support the use of the high-performance inference plugin. For detailed information on supported pipelines and models, please refer to the section on supported pipelines and models for high-performance inference plugins.
 
-You can use the `--use_hpip` flag and specify a serial number to enable the high-performance inference plugin. If you wish to activate online, you need to specify --update_license. An example is as follows:
+You can use the `--use_hpip` flag to enable the high-performance inference plugin. An example is as follows:
 
 ```bash
-paddlex --serve --pipeline image_classfication --use_hpip --serial_number {serial number}
-
-# If online activation is required
-paddlex --serve --pipeline image_classfication --use_hpip --serial_number {serial number} --update_license
+paddlex --serve --pipeline image_classfication --use_hpip
 ```
 
 ### 1.3 Invoke the Service

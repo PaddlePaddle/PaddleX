@@ -82,18 +82,6 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td><code>--port</code></td>
 <td>服务器监听的端口号。默认为 `8080`。</td>
 </tr>
-<tr>
-<td><code>--use_hpip</code></td>
-<td>如果指定，则启用高性能推理插件。</td>
-</tr>
-<tr>
-<td><code>--serial_number</code></td>
-<td>高性能推理插件使用的序列号。只在启用高性能推理插件时生效。 请注意，并非所有产线、模型都支持使用高性能推理插件，详细的支持情况请参考 <a href="./high_performance_inference.md">PaddleX 高性能推理指南</a>。</td>
-</tr>
-<tr>
-<td><code>--update_license</code></td>
-<td>如果指定，则进行联网激活。只在启用高性能推理插件时生效。</td>
-</tr>
 </tbody>
 </table>
 </table>
@@ -102,13 +90,10 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 
 使用 PaddleX 高性能推理插件，请参考 [PaddleX 高性能推理指南](./high_performance_inference.md) 中安装高性能推理插件、获取序列号与激活部分完成插件的安装与序列号的申请。同时，不是所有的产线、模型和环境都支持使用高性能推理插件，支持的详细情况请参考支持使用高性能推理插件的产线与模型部分。
 
-可以通过指定 `--use_hpip` 及序列号以使用高性能推理插件。如果希望进行联网激活，需指定 `--update_license`。示例如下：
+可以通过指定 `--use_hpip` 以使用高性能推理插件。示例如下：
 
 ```bash
-paddlex --serve --pipeline image_classfication --use_hpip --serial_number {序列号}
-
-# 如果希望进行联网激活
-paddlex --serve --pipeline image_classfication --use_hpip --serial_number {序列号} --update_license
+paddlex --serve --pipeline image_classfication --use_hpip
 ```
 
 ### 1.3 调用服务
