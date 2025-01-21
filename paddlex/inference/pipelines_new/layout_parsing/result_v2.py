@@ -415,31 +415,23 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 "table_title": lambda: format_centered_text("table_title"),
                 "figure_title": lambda: format_centered_text("figure_title"),
                 "chart_title": lambda: format_centered_text("chart_title"),
-                "text": lambda: sub_block["text"].strip("\n"),
+                "text": lambda: sub_block["text"]
+                .replace("-\n", " ")
+                .replace("\n", " "),
                 # 'number': lambda: str(sub_block['number']),
-                "abstract": lambda: "\n" + sub_block["abstract"].strip("\n"),
+                "abstract": lambda: sub_block["abstract"]
+                .replace("-\n", " ")
+                .replace("\n", " "),
                 "content": lambda: sub_block["content"]
-                .replace("-\n", "")
-                .replace("\n", " ")
-                .strip(),
+                .replace("-\n", " ")
+                .replace("\n", " "),
                 "image": format_image,
                 "chart": format_chart,
-                "formula": lambda: f"$${sub_block['formula']}$$".replace(
-                    "-\n",
-                    "",
-                ).replace("\n", " "),
+                "formula": lambda: f"$${sub_block['formula']}$$",
                 "table": format_table,
                 "reference": format_reference,
-                "algorithm": lambda: "\n"
-                + f"**Algorithm**: {sub_block['algorithm']}".replace("-\n", "").replace(
-                    "\n",
-                    " ",
-                ),
-                "seal": lambda: "\n"
-                + f"**Seal**: {sub_block['seal']}".replace("-\n", "").replace(
-                    "\n",
-                    " ",
-                ),
+                "algorithm": lambda: sub_block["algorithm"].strip("\n"),
+                "seal": lambda: sub_block["seal"].strip("\n"),
             }
             parsing_result = obj["layout_parsing_result"]
             markdown_content = ""

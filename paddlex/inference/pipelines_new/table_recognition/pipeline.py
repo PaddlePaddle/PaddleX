@@ -224,6 +224,7 @@ class TableRecognitionPipeline(BasePipeline):
         overall_ocr_res: OCRResult,
         table_box: list,
         flag_find_nei_text: bool = True,
+        cell_sort_by_y_projection: bool = False,
     ) -> SingleTableRecognitionResult:
         """
         Predict table recognition results from an image array, layout detection results, and OCR results.
@@ -234,12 +235,16 @@ class TableRecognitionPipeline(BasePipeline):
                 The overall OCR results containing text recognition information.
             table_box (list): The table box coordinates.
             flag_find_nei_text (bool): Whether to find neighboring text.
+            cell_sort_by_y_projection (bool): Whether to sort the matched OCR boxes by y-projection.
         Returns:
             SingleTableRecognitionResult: single table recognition result.
         """
         table_structure_pred = next(self.table_structure_model(image_array))
         single_table_recognition_res = get_table_recognition_res(
-            table_box, table_structure_pred, overall_ocr_res
+            table_box,
+            table_structure_pred,
+            overall_ocr_res,
+            cell_sort_by_y_projection=cell_sort_by_y_projection,
         )
         neighbor_text = ""
         if flag_find_nei_text:
@@ -267,6 +272,7 @@ class TableRecognitionPipeline(BasePipeline):
         text_det_box_thresh: Optional[float] = None,
         text_det_unclip_ratio: Optional[float] = None,
         text_rec_score_thresh: Optional[float] = None,
+        cell_sort_by_y_projection: Optional[bool] = None,
         **kwargs,
     ) -> TableRecognitionResult:
         """
@@ -281,6 +287,7 @@ class TableRecognitionPipeline(BasePipeline):
                 It will be used if it is not None and use_ocr_model is False.
             layout_det_res (DetResult): The layout detection result.
                 It will be used if it is not None and use_layout_detection is False.
+            cell_sort_by_y_projection (bool): Whether to sort the matched OCR boxes by y-projection.
             **kwargs: Additional keyword arguments.
 
         Returns:
@@ -293,6 +300,8 @@ class TableRecognitionPipeline(BasePipeline):
             use_layout_detection,
             use_ocr_model,
         )
+        if cell_sort_by_y_projection is None:
+            cell_sort_by_y_projection = False
 
         if not self.check_model_settings_valid(
             model_settings, overall_ocr_res, layout_det_res
@@ -345,6 +354,7 @@ class TableRecognitionPipeline(BasePipeline):
                     overall_ocr_res,
                     table_box,
                     flag_find_nei_text=False,
+                    cell_sort_by_y_projection=cell_sort_by_y_projection,
                 )
                 single_table_rec_res["table_region_id"] = table_region_id
                 table_res_list.append(single_table_rec_res)
@@ -360,7 +370,10 @@ class TableRecognitionPipeline(BasePipeline):
                         table_box = crop_img_info["box"]
                         single_table_rec_res = (
                             self.predict_single_table_recognition_res(
-                                crop_img_info["img"], overall_ocr_res, table_box
+                                crop_img_info["img"],
+                                overall_ocr_res,
+                                table_box,
+                                cell_sort_by_y_projection=cell_sort_by_y_projection,
                             )
                         )
                         single_table_rec_res["table_region_id"] = table_region_id

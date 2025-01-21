@@ -406,6 +406,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                         use_ocr_model=False,
                         overall_ocr_res=overall_ocr_res,
                         layout_det_res=layout_det_res,
+                        cell_sort_by_y_projection=True,
                     ),
                 )
                 table_res_list = table_res_all["table_res_list"]
