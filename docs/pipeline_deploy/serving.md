@@ -82,6 +82,10 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td><code>--port</code></td>
 <td>服务器监听的端口号。默认为 `8080`。</td>
 </tr>
+<tr>
+<td><code>--use_hpip</code></td>
+<td>如果指定，则启用高性能推理插件。</td>
+</tr>
 </tbody>
 </table>
 </table>
