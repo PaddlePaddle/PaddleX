@@ -56,17 +56,104 @@ After installing the wheel package, you can complete the inference of the small 
 
 ```python
 from paddlex import create_model
-
 model_name = "PP-YOLOE_plus_SOD-S"
-
 model = create_model(model_name)
 output = model.predict("small_object_detection.jpg", batch_size=1)
-
 for res in output:
-    res.print(json_format=False)
+    res.print()
     res.save_to_img("./output/")
     res.save_to_json("./output/res.json")
 ```
+
+After running, the result obtained is:
+
+```bash
+{'res': "{'input_path': 'small_object_detection.jpg', 'boxes': [{'cls_id': 0, 'label': 'pedestrian', 'score': 0.8025697469711304, 'coordinate': [184.14276, 709.97455, 203.60669, 745.6286]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.7245782017707825, 'coordinate': [203.48488, 700.377, 223.07726, 742.5181]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.7014670968055725, 'coordinate': [851.23553, 435.81937, 862.94385, 466.81384]}, ... ]}"}
+```
+
+* The prediction results are processed as `dict` type for each sample, and support operations such as printing, saving as an image, and saving as a `json` file:
+
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+<th>Parameter</th>
+<th>Parameter Type</th>
+<th>Parameter Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print the result to the terminal</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>Whether to format the output content with <code>JSON</code> indentation</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save the result as a file in <code>json</code> format</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving. When it is a directory, the saved file name will match the input file name</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>Save the result as a file in image format</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving. When it is a directory, the saved file name will match the input file name</td>
+<td>None</td>
+</tr>
+</table>
+
+* Additionally, it also supports obtaining the visualization image with results and the prediction results through attributes, as follows:
+
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format</td>
+</tr>
+<tr>
+<td rowspan="1"><code>img</code></td>
+<td rowspan="1">Get the visualization image in <code>dict</code> format</td>
+</tr>
+</table>
+
+
 For more information on using PaddleX's single-model inference API, refer to the [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.en.md).
 
 ## IV. Custom Development

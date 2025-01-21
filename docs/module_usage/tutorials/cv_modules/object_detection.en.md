@@ -367,6 +367,204 @@ for res in output:
     res.save_to_json("./output/res.json")
 ```
 
+<details><summary>👉 <b>The result obtained after running is: (Click to expand)</b></summary>
+
+```bash
+{'res': {'input_path': 'general_object_detection_002.png', 'boxes': [{'cls_id': 49, 'label': 'orange', 'score': 0.8188614249229431, 'coordinate': [661.351806640625, 93.0582275390625, 870.759033203125, 305.9371337890625]}, {'cls_id': 47, 'label': 'apple', 'score': 0.7745078206062317, 'coordinate': [76.80911254882812, 274.7490539550781, 330.5422058105469, 520.0427856445312]}, {'cls_id': 47, 'label': 'apple', 'score': 0.7271787524223328, 'coordinate': [285.3264465332031, 94.31749725341797, 469.7364501953125, 297.4034423828125]}, {'cls_id': 46, 'label': 'banana', 'score': 0.5576589703559875, 'coordinate': [310.8041076660156, 361.4362487792969, 685.1868896484375, 712.591552734375]}, {'cls_id': 47, 'label': 'apple', 'score': 0.5490103363990784, 'coordinate': [764.6251831054688, 285.7609558105469, 924.8153076171875, 440.9289245605469]}, {'cls_id': 47, 'label': 'apple', 'score': 0.515821635723114, 'coordinate': [853.9830932617188, 169.4142303466797, 987.802978515625, 303.5861511230469]}, {'cls_id': 60, 'label': 'dining table', 'score': 0.514293372631073, 'coordinate': [0.5308971405029297, 0.32445716857910156, 1072.953369140625, 720]}, {'cls_id': 47, 'label': 'apple', 'score': 0.510750949382782, 'coordinate': [57.36802673339844, 23.455347061157227, 213.39601135253906, 176.45611572265625]}]}}
+```
+
+Parameter meanings are as follows:
+- `input_path`: The path of the input image to be predicted.
+- `boxes`: Information of the predicted bounding boxes, a list of dictionaries. Each dictionary contains the following information:
+  - `cls_id`: Class ID, an integer.
+  - `label`: Class label, a string.
+  - `score`: Confidence score of the bounding box, a float.
+  - `coordinate`: Coordinates of the bounding box, a list [xmin, ymin, xmax, ymax].
+
+</details>
+
+The visualization image is as follows:
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/obj_det/general_object_detection_002_res.png">
+
+**Note:** Due to network issues, the above URL may not be accessible. If you need to access this link, please check the validity of the URL and try again. If the problem persists, it may be related to the link itself or the network connection.
+
+Related methods, parameters, and explanations are as follows:
+
+* `create_model` instantiates an object detection model (here, `PicoDet-S` is used as an example), and the specific explanations are as follows:
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Parameter Description</th>
+<th>Parameter Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>model_name</code></td>
+<td>Name of the model</td>
+<td><code>str</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>model_dir</code></td>
+<td>Path to store the model</td>
+<td><code>str</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>img_size</code></td>
+<td>Size of the input image; if not specified, the default configuration of the PaddleX official model will be used</td>
+<td><code>int/list</code></td>
+<td>
+<ul>
+  <li><b>int</b>, such as 640, indicating that the input image will be resized to 640x640</li>
+  <li><b>List</b>, such as [640, 512], indicating that the input image will be resized to a width of 640 and a height of 512</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td>Threshold for filtering low-confidence prediction results; if not specified, the default configuration of the PaddleX official model will be used</td>
+<td><code>float</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+</table>
+
+* The `model_name` must be specified. After specifying `model_name`, the default model parameters built into PaddleX are used. If `model_dir` is specified, the user-defined model is used.
+
+* The `predict()` method of the object detection model is called for inference prediction. The `predict()` method has parameters `input`, `batch_size`, and `threshold`, which are explained as follows:
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Parameter Description</th>
+<th>Parameter Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>Data to be predicted, supporting multiple input types</td>
+<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td>
+<ul>
+  <li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
+  <li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
+  <li><b>URL link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">Example</a></li>
+  <li><b>Local directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
+  <li><b>Dictionary</b>, the <code>key</code> of the dictionary must correspond to the specific task, such as <code>"img"</code> for image classification tasks. The <code>value</code> of the dictionary supports the above types of data, for example: <code>{"img": "/root/data1"}</code></li>
+  <li><b>List</b>, elements of the list must be of the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code></li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td>Batch size</td>
+<td><code>int</code></td>
+<td>Any integer</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td>Threshold for filtering low-confidence prediction results; if not specified, the <code>threshold</code> parameter specified in <code>create_model</code> will be used. If <code>create_model</code> also does not specify it, the default configuration of the PaddleX official model will be used</td>
+<td><code>float</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+</table>
+
+* The prediction results are processed, and the prediction result for each sample is of type `dict`. It supports operations such as printing, saving as an image, and saving as a `json` file:
+
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Method Description</th>
+<th>Parameter</th>
+<th>Parameter Type</th>
+<th>Parameter Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print the results to the terminal</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>Whether to format the output content using <code>JSON</code> indentation</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable, only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. If set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters, only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save the results as a JSON file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The path to save the file. If it is a directory, the saved file name will be consistent with the input file name</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable, only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. If set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters, only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>Save the results as an image file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The path to save the file. If it is a directory, the saved file name will be consistent with the input file name</td>
+<td>None</td>
+</tr>
+</table>
+
+* Additionally, it supports obtaining the visualization image with results and the prediction results through attributes, as follows:
+
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Attribute Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format</td>
+</tr>
+<tr>
+<td rowspan="1"><code>img</code></td>
+<td rowspan="1">Get the visualization image in <code>dict</code> format</td>
+</tr>
+</table>
+
 For more information on using PaddleX's single-model inference APIs, refer to the [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.en.md).
 
 ## IV. Custom Development

@@ -178,8 +178,6 @@ for res in output:
     res.save_to_json("./output/res.json")
 ```
 
-关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
-
 运行后，得到的结果为：
 ```bash
 {'res': {'input_path': 'general_instance_segmentation_004.png', 'boxes': [{'cls_id': 0, 'label': 'person', 'score': 0.897335946559906, 'coordinate': [0, 0.46382904052734375, 195.22256469726562, 572.8294067382812]}, {'cls_id': 0, 'label': 'person', 'score': 0.8606418967247009, 'coordinate': [341.30389404296875, 0, 640.4802856445312, 575.7348022460938]}, {'cls_id': 0, 'label': 'person', 'score': 0.6397128105163574, 'coordinate': [520.0907592773438, 23.334789276123047, 767.5140380859375, 574.5650634765625]}, {'cls_id': 0, 'label': 'person', 'score': 0.6008261442184448, 'coordinate': [91.02522277832031, 112.34088897705078, 405.4962158203125, 574.1039428710938]}, {'cls_id': 0, 'label': 'person', 'score': 0.5031726360321045, 'coordinate': [200.81265258789062, 58.161617279052734, 272.8892517089844, 140.88356018066406]}], 'masks': '...'}}

@@ -217,7 +217,6 @@ for res in output:
 
 关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 
-关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 
 ## 四、二次开发
 如果你追求更高精度的现有模型，可以使用PaddleX的二次开发能力，开发更好的图像异常检测模型。在使用PaddleX开发图像异常检测模型之前，请务必安装PaddleSeg插件，安装过程可以参考[PaddleX本地安装教程](../../../installation/installation.md)。

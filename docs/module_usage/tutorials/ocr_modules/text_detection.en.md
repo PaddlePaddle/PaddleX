@@ -45,13 +45,293 @@ Just a few lines of code can complete the inference of the text detection module
 
 ```python
 from paddlex import create_model
-model = create_model("PP-OCRv4_mobile_det")
+model = create_model(model_name="PP-OCRv4_mobile_det")
 output = model.predict("general_ocr_001.png", batch_size=1)
 for res in output:
-    res.print(json_format=False)
-    res.save_to_img("./output/")
-    res.save_to_json("./output/res.json")
+    res.print()
+    res.save_to_img(save_path="./output/")
+    res.save_to_json(save_path="./output/res.json")
 ```
+
+After running, the result obtained is:
+
+```bash
+{'res': {'input_path': 'general_ocr_001.png', 'dt_polys': [[[73, 553], [443, 541], [444, 574], [74, 585]], [[17, 507], [515, 489], [517, 534], [19, 552]], [[191, 458], [398, 449], [400, 481], [193, 490]], [[41, 413], [483, 390], [485, 431], [43, 453]]], 'dt_scores': [0.7555687038101032, 0.701620896397861, 0.8839516283528792, 0.8123399529333318]}}
+```
+
+The meanings of the running result parameters are as follows:
+- `input_path`: Indicates the path of the input image to be predicted.
+- `dt_polys`: Indicates the predicted text detection boxes, where each text detection box contains four vertices of a quadrilateral. Each vertex is a tuple representing the x and y coordinates of the vertex.
+- `dt_scores`: Indicates the confidence scores of the predicted text detection boxes.
+
+The visualization image is as follows:
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/text_det/general_ocr_001_res.png">
+
+Note: Due to network issues, the above URL may not be successfully parsed. If you need the content of this webpage, please check the validity of the link and try again. Alternatively, if parsing this link is not necessary for your question, please proceed with other questions.
+
+Relevant methods, parameters, and explanations are as follows:
+
+* `create_model` instantiates a text detection model (here using `PP-OCRv4_mobile_det` as an example). The specific explanation is as follows:
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Parameter Description</th>
+<th>Parameter Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>model_name</code></td>
+<td>Name of the model</td>
+<td><code>str</code></td>
+<td>All text detection model names supported by PaddleX</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>model_dir</code></td>
+<td>Path to store the model</td>
+<td><code>str</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>limit_side_len</code></td>
+<td>Limit on the side length of the detection image</td>
+<td><code>int/None</code></td>
+<td>
+<ul>
+<li><b>int</b>: Any integer greater than 0
+<li><b>None</b>: If set to None, the default value from the PaddleX official model configuration will be used</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>limit_type</code></td>
+<td>Type of side length limit for detection</td>
+<td><code>str/None</code></td>
+<td>
+<ul>
+<li><b>str</b>: Supports "min" and "max". "min" ensures the shortest side of the image is not less than `limit_side_len`, "max" ensures the longest side is not greater than `limit_side_len`
+<li><b>None</b>: If set to None, the default value from the PaddleX official model configuration will be used</td>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>thresh</code></td>
+<td>Threshold for considering a pixel as a text pixel in the output probability map</td>
+<td><code>float/None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any float greater than 0
+<li><b>None</b>: If set to None, the default value from the PaddleX official model configuration will be used</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>box_thresh</code></td>
+<td>Threshold for considering a detected box as a text region based on the average score of pixels inside the box</td>
+<td><code>float/None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any float greater than 0
+<li><b>None</b>: If set to None, the default value from the PaddleX official model configuration will be used</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>unclip_ratio</code></td>
+<td>Expansion ratio for text regions using the Vatti clipping algorithm</td>
+<td><code>float/None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any float greater than 0
+<li><b>None</b>: If set to None, the default value from the PaddleX official model configuration will be used</td>
+</ul>
+<td>None</td>
+</tr>
+</table>
+
+* The `model_name` must be specified. After specifying `model_name`, the default model parameters built into PaddleX will be used. If `model_dir` is specified, the user-defined model will be used.
+
+* The `predict()` method of the text detection model is called for inference prediction. The parameters of the `predict()` method are `input`, `batch_size`, `limit_side_len`, `limit_type`, `thresh`, `box_thresh`, `max_candidates`, `unclip_ratio`, and `use_dilation`. The specific explanation is as follows:
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Parameter Description</th>
+<th>Parameter Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>Data to be predicted, supporting multiple input types</td>
+<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td>
+<ul>
+  <li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
+  <li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
+  <li><b>URL link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">Example</a></li>
+  <li><b>Local directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
+  <li><b>Dictionary</b>, the <code>key</code> of the dictionary must correspond to the specific task, such as <code>"img"</code> for image classification tasks. The <code>value</code> of the dictionary supports the above types of data, for example: <code>{"img": "/root/data1"}</code></li>
+  <li><b>List</b>, elements of the list must be the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code></li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td>Batch size</td>
+<td><code>int</code></td>
+<td>Any integer greater than 0</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>limit_side_len</code></td>
+<td>Limit on the side length of the detection image</td>
+<td><code>int/None</code></td>
+<td>
+<ul>
+<li><b>int</b>: Any integer greater than 0
+<li><b>None</b>: If set to None, the default value from model initialization will be used</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>limit_type</code></td>
+<td>Type of side length limit for detection</td>
+<td><code>str/None</code></td>
+<td>
+<ul>
+<li><b>str</b>: Supports "min" and "max". "min" ensures the shortest side of the image is not less than `limit_side_len`, "max" ensures the longest side is not greater than `limit_side_len`
+<li><b>None</b>: If set to None, the default value from model initialization will be used</td>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>thresh</code></td>
+<td>Threshold for considering a pixel as a text pixel in the output probability map</td>
+<td><code>float/None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any float greater than 0
+<li><b>None</b>: If set to None, the default value from model initialization will be used</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>box_thresh</code></td>
+<td>Threshold for considering a detected box as a text region based on the average score of pixels inside the box</td>
+<td><code>float/None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any float greater than 0
+<li><b>None</b>: If set to None, the default value from model initialization will be used</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>unclip_ratio</code></td>
+<td>Expansion ratio for text regions using the Vatti clipping algorithm</td>
+<td><code>float/None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any float greater than 0
+<li><b>None</b>: If set to None, the default value from model initialization will be used</td>
+</ul>
+<td>None</td>
+</tr>
+</table>
+
+* The prediction results are processed, with each sample's prediction result being of type `dict`, and supporting operations such as printing, saving as an image, and saving as a `json` file:
+
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Method Description</th>
+<th>Parameter</th>
+<th>Parameter Type</th>
+<th>Parameter Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print the result to the terminal</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>Whether to format the output content using <code>JSON</code> indentation</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether non-<code>ASCII</code> characters are escaped to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save the result as a JSON file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving. When it is a directory, the saved file name will match the input file name</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether non-<code>ASCII</code> characters are escaped to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>Save the result as an image file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving. When it is a directory, the saved file name will match the input file name</td>
+<td>None</td>
+</tr>
+</table>
+
+* Additionally, it also supports obtaining visualized images with results and prediction results through attributes, as follows:
+
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Attribute Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format</td>
+</tr>
+<tr>
+<td rowspan="1"><code>img</code></td>
+<td rowspan="1">Get the visualized image in <code>dict</code> format</td>
+</tr>
+</table>
+
 For more information on using PaddleX's single-model inference APIs, refer to the [PaddleX Single Model Python Script Usage Instructions](../../../module_usage/instructions/model_python_API.en.md).
 
 ## IV. Custom Development
