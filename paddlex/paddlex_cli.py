@@ -30,43 +30,6 @@ from .utils.interactive_get_pipeline import interactive_get_pipeline
 from .utils.pipeline_arguments import PIPELINE_ARGUMENTS
 
 
-<<<<<<< HEAD
-=======
-def _install_serving_deps():
-    with as_file(files("paddlex").joinpath("serving_requirements.txt")) as req_file:
-        return subprocess.check_call(
-            [sys.executable, "-m", "pip", "install", "-r", str(req_file)]
-        )
-
-
-def _install_hpi_deps(device_type):
-    support_device_type = ["cpu", "gpu"]
-    if device_type not in support_device_type:
-        logging.error(
-            "HPI installation failed!\n"
-            "Supported device_type: %s. Your input device_type: %s.\n"
-            "Please ensure the device_type is correct.",
-            support_device_type,
-            device_type,
-        )
-        return
-
-    if device_type == "cpu":
-        packages = ["ultra_infer_python", "paddlex_hpi"]
-    elif device_type == "gpu":
-        packages = ["ultra_infer_gpu_python", "paddlex_hpi"]
-
-    return subprocess.check_call(
-        [sys.executable, "-m", "pip", "install"]
-        + packages
-        + [
-            "--find-links",
-            "https://zhang-prog.github.io/pipeline_deploy/high_performance_inference.html",
-        ]
-    )
-
-
->>>>>>> 279d1037 (add hpi installation)
 def args_cfg():
     """parse cli arguments"""
 
@@ -246,6 +209,32 @@ def install(args):
                 [sys.executable, "-m", "pip", "install", "-r", str(req_file)]
             )
 
+    def _install_hpi_deps(device_type):
+        support_device_type = ["cpu", "gpu"]
+        if device_type not in support_device_type:
+            logging.error(
+                "HPI installation failed!\n"
+                "Supported device_type: %s. Your input device_type: %s.\n"
+                "Please ensure the device_type is correct.",
+                support_device_type,
+                device_type,
+            )
+            return
+
+        if device_type == "cpu":
+            packages = ["ultra_infer_python", "paddlex_hpi"]
+        elif device_type == "gpu":
+            packages = ["ultra_infer_gpu_python", "paddlex_hpi"]
+
+        return subprocess.check_call(
+            [sys.executable, "-m", "pip", "install"]
+            + packages
+            + [
+                "--find-links",
+                "https://zhang-prog.github.io/pipeline_deploy/high_performance_inference.html",
+            ]
+        )
+
     # Enable debug info
     os.environ["PADDLE_PDX_DEBUG"] = "True"
     # Disable eager initialization
@@ -261,16 +250,21 @@ def install(args):
         _install_serving_deps()
         return
 
-<<<<<<< HEAD
     if "paddle2onnx" in plugins:
         plugins.remove("paddle2onnx")
         if plugins:
             logging.error("`paddle2onnx` cannot be used together with other plugins.")
             sys.exit(2)
         _install_paddle2onnx_deps()
-=======
+        return
+
     hpi_plugins = list(filter(lambda name: name.startswith("hpi-"), plugins))
     if hpi_plugins:
+        for i in hpi_plugins:
+            plugins.remove(i)
+        if plugins:
+            logging.error("`hpi` cannot be used together with other plugins.")
+            sys.exit(2)
         if len(hpi_plugins) > 1 or len(hpi_plugins[0].split("-")) != 2:
             logging.error(
                 "Invalid HPI plugin installation format detected.\n"
@@ -280,7 +274,6 @@ def install(args):
             sys.exit(2)
         device_type = hpi_plugins[0].split("-")[1]
         _install_hpi_deps(device_type=device_type)
->>>>>>> 279d1037 (add hpi installation)
         return
 
     if plugins:
