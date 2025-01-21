@@ -14,6 +14,7 @@
 
 import os
 from pathlib import Path
+from typing import Dict
 import copy
 import math
 import random
@@ -22,7 +23,7 @@ import cv2
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH, create_font
-from ...common.result import BaseCVResult
+from ...common.result import BaseCVResult, StrMixin, JsonMixin
 
 
 class OCRResult(BaseCVResult):
@@ -62,14 +63,14 @@ class OCRResult(BaseCVResult):
 
         return box
 
-    def _to_img(self) -> PIL.Image:
+    def _to_img(self) -> Dict[str, Image.Image]:
         """
         Converts the internal data to a PIL Image with detection and recognition results.
 
         Returns:
-            PIL.Image: An image with detection boxes, texts, and scores blended on it.
+            Dict[Image.Image]: A dictionary containing two images: 'doc_preprocessor_res' and 'ocr_res_img'.
         """
-        boxes = self["rec_boxes"]
+        boxes = self["rec_polys"]
         txts = self["rec_texts"]
         image = self["doc_preprocessor_res"]["output_img"]
         h, w = image.shape[0:2]
@@ -109,13 +110,64 @@ class OCRResult(BaseCVResult):
         img_show.paste(Image.fromarray(img_right), (w, 0, w * 2, h))
 
         model_settings = self["model_settings"]
+        res_img_dict = {f"ocr_res_img": img_show}
         if model_settings["use_doc_preprocessor"]:
-            return {
-                **self["doc_preprocessor_res"].img,
-                f"ocr_res_img": img_show,
-            }
-        else:
-            return {f"ocr_res_img": img_show}
+            res_img_dict.update(**self["doc_preprocessor_res"].img)
+        return res_img_dict
+
+    def _to_str(self, *args, **kwargs) -> Dict[str, str]:
+        """Converts the instance's attributes to a dictionary and then to a string.
+
+        Args:
+            *args: Additional positional arguments passed to the base class method.
+            **kwargs: Additional keyword arguments passed to the base class method.
+
+        Returns:
+            Dict[str, str]: A dictionary with the instance's attributes converted to strings.
+        """
+        data = {}
+        data["input_path"] = self["input_path"]
+        data["model_settings"] = self["model_settings"]
+        if self["model_settings"]["use_doc_preprocessor"]:
+            data["doc_preprocessor_res"] = self["doc_preprocessor_res"].str["res"]
+        data["dt_polys"] = self["dt_polys"]
+        data["text_det_params"] = self["text_det_params"]
+        data["text_type"] = self["text_type"]
+        data["textline_orientation_angles"] = self["textline_orientation_angles"]
+        data["text_rec_score_thresh"] = self["text_rec_score_thresh"]
+        data["rec_texts"] = self["rec_texts"]
+        data["rec_scores"] = self["rec_scores"]
+        data["rec_polys"] = self["rec_polys"]
+        data["rec_boxes"] = self["rec_boxes"]
+
+        return JsonMixin._to_str(data, *args, **kwargs)
+
+    def _to_json(self, *args, **kwargs) -> Dict[str, str]:
+        """
+        Converts the object's data to a JSON dictionary.
+
+        Args:
+            *args: Positional arguments passed to the JsonMixin._to_json method.
+            **kwargs: Keyword arguments passed to the JsonMixin._to_json method.
+
+        Returns:
+            Dict[str, str]: A dictionary containing the object's data in JSON format.
+        """
+        data = {}
+        data["input_path"] = self["input_path"]
+        data["model_settings"] = self["model_settings"]
+        if self["model_settings"]["use_doc_preprocessor"]:
+            data["doc_preprocessor_res"] = self["doc_preprocessor_res"].json["res"]
+        data["dt_polys"] = self["dt_polys"]
+        data["text_det_params"] = self["text_det_params"]
+        data["text_type"] = self["text_type"]
+        data["textline_orientation_angles"] = self["textline_orientation_angles"]
+        data["text_rec_score_thresh"] = self["text_rec_score_thresh"]
+        data["rec_texts"] = self["rec_texts"]
+        data["rec_scores"] = self["rec_scores"]
+        data["rec_polys"] = self["rec_polys"]
+        data["rec_boxes"] = self["rec_boxes"]
+        return JsonMixin._to_json(data, *args, **kwargs)
 
 
 # Adds a function comment according to Google Style Guide

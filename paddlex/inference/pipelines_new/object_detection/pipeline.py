@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union, Tuple, List
 import numpy as np
 
 from ...utils.pp_option import PaddlePredictorOption
@@ -33,7 +33,6 @@ class ObjectDetectionPipeline(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
-        hpi_params: Optional[Dict[str, Any]] = None,
     ) -> None:
         """
         Initializes the class with given configurations and options.
@@ -43,32 +42,55 @@ class ObjectDetectionPipeline(BasePipeline):
             device (str): The device to run the prediction on. Default is None.
             pp_option (PaddlePredictorOption): Options for PaddlePaddle predictor. Default is None.
             use_hpip (bool): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            hpi_params (Optional[Dict[str, Any]]): HPIP specific parameters. Default is None.
         """
-        super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_params=hpi_params
-        )
+        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
         model_cfg = config["SubModules"]["ObjectDetection"]
         model_kwargs = {}
         if "threshold" in model_cfg:
             model_kwargs["threshold"] = model_cfg["threshold"]
-        if "imgsz" in model_cfg:
-            model_kwargs["imgsz"] = model_cfg["imgsz"]
+        if "img_size" in model_cfg:
+            model_kwargs["img_size"] = model_cfg["img_size"]
+        if "layout_nms" in model_cfg:
+            model_kwargs["layout_nms"] = model_cfg["layout_nms"]
+        if "layout_unclip_ratio" in model_cfg:
+            model_kwargs["layout_unclip_ratio"] = model_cfg["layout_unclip_ratio"]
+        if "layout_merge_bboxes_mode" in model_cfg:
+            model_kwargs["layout_merge_bboxes_mode"] = model_cfg[
+                "layout_merge_bboxes_mode"
+            ]
         self.det_model = self.create_model(model_cfg, **model_kwargs)
 
     def predict(
         self,
-        input: str | list[str] | np.ndarray | list[np.ndarray],
-        threshold: Optional[float] = None,
+        input: Union[str, List[str], np.ndarray, List[np.ndarray]],
+        threshold: Optional[Union[float, dict]] = None,
+        layout_nms: Optional[bool] = None,
+        layout_unclip_ratio: Optional[Union[float, Tuple[float, float]]] = None,
+        layout_merge_bboxes_mode: Optional[str] = None,
         **kwargs,
     ) -> DetResult:
         """Predicts object detection results for the given input.
 
         Args:
-            input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or path(s) to the images.
+            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): The input image(s) or path(s) to the images.
+            img_size (Optional[Union[int, Tuple[int, int]]]): The size of the input image. Default is None.
             threshold (Optional[float]): The threshold value to filter out low-confidence predictions. Default is None.
+            layout_nms (bool, optional): Whether to use layout-aware NMS. Defaults to False.
+            layout_unclip_ratio (Optional[Union[float, Tuple[float, float]]], optional): The ratio of unclipping the bounding box.
+                Defaults to None.
+                If it's a single number, then both width and height are used.
+                If it's a tuple of two numbers, then they are used separately for width and height respectively.
+                If it's None, then no unclipping will be performed.
+            layout_merge_bboxes_mode (Optional[str], optional): The mode for merging bounding boxes. Defaults to None.
             **kwargs: Additional keyword arguments that can be passed to the function.
         Returns:
             DetResult: The predicted detection results.
         """
-        yield from self.det_model(input, threshold=threshold, **kwargs)
+        yield from self.det_model(
+            input,
+            threshold=threshold,
+            layout_nms=layout_nms,
+            layout_unclip_ratio=layout_unclip_ratio,
+            layout_merge_bboxes_mode=layout_merge_bboxes_mode,
+            **kwargs,
+        )

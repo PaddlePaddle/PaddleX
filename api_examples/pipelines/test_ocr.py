@@ -75,10 +75,13 @@ output = pipeline.predict(
 #     use_textline_orientation=True
 # )
 
+# output = pipeline.predict(
+#     "./test_samples/general_ocr_002.png")
+
 # output = pipeline.predict("./test_samples/财报1.pdf")
 
 for res in output:
     print(res)
+    res.print()
     res.save_to_img("./output")
-    # TODO: need to check the json format
-    # res.save_to_json("./output/res.json")
+    res.save_to_json("./output")

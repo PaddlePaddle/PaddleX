@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union, List
 from scipy.ndimage import rotate
 import numpy as np
 from ..base import BasePipeline
@@ -34,7 +34,6 @@ class DocPreprocessorPipeline(BasePipeline):
         device: Optional[str] = None,
         pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
-        hpi_params: Optional[Dict[str, Any]] = None,
     ) -> None:
         """Initializes the doc preprocessor pipeline.
 
@@ -43,27 +42,26 @@ class DocPreprocessorPipeline(BasePipeline):
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
             use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            hpi_params (Optional[Dict[str, Any]], optional): HPIP parameters. Defaults to None.
         """
 
-        super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_params=hpi_params
+        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
+
+        self.use_doc_orientation_classify = config.get(
+            "use_doc_orientation_classify", True
         )
-
-        self.use_doc_orientation_classify = True
-        if "use_doc_orientation_classify" in config:
-            self.use_doc_orientation_classify = config["use_doc_orientation_classify"]
-
-        self.use_doc_unwarping = True
-        if "use_doc_unwarping" in config:
-            self.use_doc_unwarping = config["use_doc_unwarping"]
-
         if self.use_doc_orientation_classify:
-            doc_ori_classify_config = config["SubModules"]["DocOrientationClassify"]
+            doc_ori_classify_config = config.get("SubModules", {}).get(
+                "DocOrientationClassify",
+                {"model_config_error": "config error for doc_ori_classify_model!"},
+            )
             self.doc_ori_classify_model = self.create_model(doc_ori_classify_config)
 
+        self.use_doc_unwarping = config.get("use_doc_unwarping", True)
         if self.use_doc_unwarping:
-            doc_unwarping_config = config["SubModules"]["DocUnwarping"]
+            doc_unwarping_config = config.get("SubModules", {}).get(
+                "DocUnwarping",
+                {"model_config_error": "config error for doc_unwarping_model!"},
+            )
             self.doc_unwarping_model = self.create_model(doc_unwarping_config)
 
         self.batch_sampler = ImageBatchSampler(batch_size=1)
@@ -141,7 +139,7 @@ class DocPreprocessorPipeline(BasePipeline):
 
     def predict(
         self,
-        input: str | list[str] | np.ndarray | list[np.ndarray],
+        input: Union[str, List[str], np.ndarray, List[np.ndarray]],
         use_doc_orientation_classify: Optional[bool] = None,
         use_doc_unwarping: Optional[bool] = None,
     ) -> DocPreprocessorResult:
@@ -149,7 +147,7 @@ class DocPreprocessorPipeline(BasePipeline):
         Predict the preprocessing result for the input image or images.
 
         Args:
-            input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or path(s) to the images or pdfs.
+            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): The input image(s) or path(s) to the images or pdfs.
             use_doc_orientation_classify (bool): Whether to use document orientation classification.
             use_doc_unwarping (bool): Whether to use document unwarping.
             **kwargs: Additional keyword arguments.
@@ -167,7 +165,7 @@ class DocPreprocessorPipeline(BasePipeline):
         for img_id, batch_data in enumerate(self.batch_sampler(input)):
             if not isinstance(batch_data[0], str):
                 # TODO: add support input_pth for ndarray and pdf
-                input_path = f"{img_id}"
+                input_path = f"{img_id}.jpg"
             else:
                 input_path = batch_data[0]
 
@@ -188,7 +186,7 @@ class DocPreprocessorPipeline(BasePipeline):
 
             single_img_res = {
                 "input_path": input_path,
-                "input_image": image_array,
+                "input_img": image_array,
                 "model_settings": model_settings,
                 "angle": angle,
                 "rot_img": rot_img,

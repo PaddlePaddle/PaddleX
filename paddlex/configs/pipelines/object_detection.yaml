@@ -6,5 +6,5 @@ SubModules:
     model_name: PicoDet-S
     model_dir: null
     batch_size: 1
-    imgsz: null
+    img_size: null
     threshold: null

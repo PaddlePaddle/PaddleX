@@ -13,10 +13,10 @@
 # limitations under the License.
 
 from .base_result import BaseResult
-from .mixin import StrMixin, JsonMixin, ImgMixin, VideoMixin
+from .mixin import ImgMixin, VideoMixin
 
 
-class BaseVideoResult(BaseResult, StrMixin, JsonMixin, VideoMixin):
+class BaseVideoResult(BaseResult, VideoMixin):
     """Base class for computer vision results."""
 
     INPUT_IMG_KEY = "input_img"
@@ -33,6 +33,4 @@ class BaseVideoResult(BaseResult, StrMixin, JsonMixin, VideoMixin):
         """
 
         super().__init__(data)
-        StrMixin.__init__(self)
-        JsonMixin.__init__(self)
         VideoMixin.__init__(self, "opencv")

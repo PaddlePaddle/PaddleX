@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, Tuple
+from typing import Any, Dict, Optional, Union, Tuple, List
 import numpy as np
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
@@ -34,7 +34,6 @@ class KeypointDetectionPipeline(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
-        hpi_params: Optional[Dict[str, Any]] = None,
     ) -> None:
         """
         Initializes the class with given configurations and options.
@@ -44,19 +43,16 @@ class KeypointDetectionPipeline(BasePipeline):
             device (str): The device to run the prediction on. Default is None.
             pp_option (PaddlePredictorOption): Options for PaddlePaddle predictor. Default is None.
             use_hpip (bool): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            hpi_params (Optional[Dict[str, Any]]): HPIP specific parameters. Default is None.
         """
-        super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_params=hpi_params
-        )
+        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
 
         # create object detection model
         model_cfg = config["SubModules"]["ObjectDetection"]
         model_kwargs = {}
         if "threshold" in model_cfg:
             model_kwargs["threshold"] = model_cfg["threshold"]
-        if "imgsz" in model_cfg:
-            model_kwargs["imgsz"] = model_cfg["imgsz"]
+        if "img_size" in model_cfg:
+            model_kwargs["img_size"] = model_cfg["img_size"]
         self.det_model = self.create_model(model_cfg, **model_kwargs)
 
         # create keypoint detection model
@@ -99,12 +95,12 @@ class KeypointDetectionPipeline(BasePipeline):
         return center, scale
 
     def predict(
-        self, input: str | list[str] | np.ndarray | list[np.ndarray], **kwargs
+        self, input: Union[str, List[str], np.ndarray, List[np.ndarray]], **kwargs
     ) -> KptResult:
         """Predicts image classification results for the given input.
 
         Args:
-            input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or path(s) to the images.
+            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): The input image(s) or path(s) to the images.
             **kwargs: Additional keyword arguments that can be passed to the function.
 
         Returns:

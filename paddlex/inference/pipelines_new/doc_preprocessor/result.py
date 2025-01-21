@@ -22,7 +22,7 @@ import cv2
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH, create_font
-from ...common.result import BaseCVResult
+from ...common.result import BaseCVResult, StrMixin, JsonMixin
 
 
 class DocPreprocessorResult(BaseCVResult):
@@ -35,7 +35,7 @@ class DocPreprocessorResult(BaseCVResult):
         Returns:
             Dict[Image.Image]: A new image combining the original, rotated, and unwarping images
         """
-        image = self["input_image"][:, :, ::-1]
+        image = self["input_img"][:, :, ::-1]
         rot_img = self["rot_img"][:, :, ::-1]
         angle = self["angle"]
         output_img = self["output_img"][:, :, ::-1]
@@ -66,3 +66,36 @@ class DocPreprocessorResult(BaseCVResult):
             )
         imgs = {"preprocessed_img": img_show}
         return imgs
+
+    def _to_str(self, *args, **kwargs) -> Dict[str, str]:
+        """Converts the instance's attributes to a dictionary and then to a string.
+
+        Args:
+            *args: Additional positional arguments passed to the base class method.
+            **kwargs: Additional keyword arguments passed to the base class method.
+
+        Returns:
+            Dict[str, str]: A dictionary with the instance's attributes converted to strings.
+        """
+        data = {}
+        data["input_path"] = self["input_path"]
+        data["model_settings"] = self["model_settings"]
+        data["angle"] = self["angle"]
+        return JsonMixin._to_str(data, *args, **kwargs)
+
+    def _to_json(self, *args, **kwargs) -> Dict[str, str]:
+        """
+        Converts the object's data to a JSON dictionary.
+
+        Args:
+            *args: Positional arguments passed to the JsonMixin._to_json method.
+            **kwargs: Keyword arguments passed to the JsonMixin._to_json method.
+
+        Returns:
+            Dict[str, str]: A dictionary containing the object's data in JSON format.
+        """
+        data = {}
+        data["input_path"] = self["input_path"]
+        data["model_settings"] = self["model_settings"]
+        data["angle"] = self["angle"]
+        return JsonMixin._to_json(data, *args, **kwargs)

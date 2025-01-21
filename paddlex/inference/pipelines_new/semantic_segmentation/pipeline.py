@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Literal
 import numpy as np
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
@@ -32,7 +32,6 @@ class SemanticSegmentationPipeline(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
-        hpi_params: Optional[Dict[str, Any]] = None,
     ) -> None:
         """
         Initializes the class with given configurations and options.
@@ -42,11 +41,8 @@ class SemanticSegmentationPipeline(BasePipeline):
             device (str): The device to run the prediction on. Default is None.
             pp_option (PaddlePredictorOption): Options for PaddlePaddle predictor. Default is None.
             use_hpip (bool): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            hpi_params (Optional[Dict[str, Any]]): HPIP specific parameters. Default is None.
         """
-        super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_params=hpi_params
-        )
+        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
 
         semantic_segmentation_model_config = config["SubModules"][
             "SemanticSegmentation"
@@ -57,15 +53,23 @@ class SemanticSegmentationPipeline(BasePipeline):
         self.target_size = semantic_segmentation_model_config["target_size"]
 
     def predict(
-        self, input: str | list[str] | np.ndarray | list[np.ndarray], **kwargs
+        self,
+        input: str | list[str] | np.ndarray | list[np.ndarray],
+        target_size: Literal[-1] | None | int | tuple[int] = None,
+        **kwargs
     ) -> SegResult:
         """Predicts semantic segmentation results for the given input.
 
         Args:
             input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or path(s) to the images.
+            target_size (Literal[-1] | None | int | tuple[int]): The Image size model used to do prediction. Default is None.
+                If it's set to -1, the original image size will be used.
+                If it's set to None, the previous level's setting will be used.
+                If it's set to an integer value, the image will be rescaled to the size of (value, value).
+                If it's set to a tuple of two integers, the image will be rescaled to the size of (height, width).
             **kwargs: Additional keyword arguments that can be passed to the function.
 
         Returns:
             SegResult: The predicted segmentation results.
         """
-        yield from self.semantic_segmentation_model(input, target_size=self.target_size)
+        yield from self.semantic_segmentation_model(input, target_size=target_size)

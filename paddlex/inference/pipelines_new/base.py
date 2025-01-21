@@ -37,7 +37,6 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
-        hpi_params: Optional[Dict[str, Any]] = None,
         *args,
         **kwargs,
     ) -> None:
@@ -48,13 +47,11 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
             device (str, optional): The device to use for prediction. Defaults to None.
             pp_option (PaddlePredictorOption, optional): The options for PaddlePredictor. Defaults to None.
             use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            hpi_params (Dict[str, Any], optional): Additional parameters for hpip. Defaults to None.
         """
         super().__init__()
         self.device = device
         self.pp_option = pp_option
         self.use_hpip = use_hpip
-        self.hpi_params = hpi_params
 
     @abstractmethod
     def predict(self, input, **kwargs):
@@ -78,19 +75,21 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         Returns:
             BasePredictor: An instance of the model.
         """
+        if "model_config_error" in config:
+            raise ValueError(config["model_config_error"])
 
-        model_dir = config["model_dir"]
-        if model_dir == None:
-            model_dir = config["model_name"]
+        model_dir = config.get("model_dir", None)
+        hpi_params = config.get("hpi_params", None)
 
         from .. import create_predictor
 
         model = create_predictor(
-            model=model_dir,
+            model_name=config["model_name"],
+            model_dir=model_dir,
             device=self.device,
+            batch_size=config.get("batch_size", 1),
             pp_option=self.pp_option,
             use_hpip=self.use_hpip,
-            hpi_params=self.hpi_params,
             **kwargs,
         )
         return model
@@ -105,16 +104,16 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         Returns:
             BasePipeline: An instance of the created pipeline.
         """
+        if "pipeline_config_error" in config:
+            raise ValueError(config["pipeline_config_error"])
+
         from . import create_pipeline
 
-        pipeline_name = config["pipeline_name"]
         pipeline = create_pipeline(
-            pipeline_name,
             config=config,
             device=self.device,
             pp_option=self.pp_option,
             use_hpip=self.use_hpip,
-            hpi_params=self.hpi_params,
         )
         return pipeline
 

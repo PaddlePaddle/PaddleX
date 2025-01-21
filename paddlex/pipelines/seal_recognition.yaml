@@ -3,7 +3,7 @@ Global:
   input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png
 
 Pipeline:
-  layout_model: RT-DETR-H_layout_3cls
+  layout_model: PP-DocLayout-L
   text_det_model: PP-OCRv4_server_seal_det
   text_rec_model: PP-OCRv4_server_rec
   layout_batch_size: 1

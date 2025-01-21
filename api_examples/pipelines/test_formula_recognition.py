@@ -39,5 +39,7 @@ output = pipeline.predict(
 # )
 
 for res in output:
-    # res.save_to_img("./output/")
-    res.save_results("./output")
+    print(res)
+    res.print()
+    res.save_to_img("./output")
+    res.save_to_json("./output")

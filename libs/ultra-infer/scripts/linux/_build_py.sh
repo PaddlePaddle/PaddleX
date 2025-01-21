@@ -2,10 +2,6 @@
 
 set -e
 
-TRT_VERSION='8.5.2.2'
-CUDA_VERSION='11.8'
-CUDNN_VERSION='8.6'
-
 while [[ "$#" -gt 0 ]]; do
     case "$1" in
         --with-gpu) WITH_GPU="$2"; shift ;;
@@ -13,6 +9,13 @@ while [[ "$#" -gt 0 ]]; do
         --python) PYTHON_VERSION="$2"; shift ;;
         --paddleinference-url) PADDLEINFERENCE_URL="$2"; shift ;;
         --paddleinference-version) PADDLEINFERENCE_VERSION="$2"; shift ;;
+        --enable-paddle-backend) ENABLE_PADDLE_BACKEND="$2"; shift ;;
+        --enable-ort-backend) ENABLE_ORT_BACKEND="$2"; shift ;;
+        --enable-openvino-backend) ENABLE_OPENVINO_BACKEND="$2"; shift ;;
+        --enable-trt-backend) ENABLE_TRT_BACKEND="$2"; shift ;;
+        --trt-directory) TRT_DIRECTORY="$2"; shift ;;
+        --enable-vision) ENABLE_VISION="$2"; shift ;;
+        --enable-text) ENABLE_TEXT="$2"; shift ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
@@ -47,20 +50,26 @@ python -m pip install numpy pandas
 
 cd /workspace/ultra-infer
 
-rm -rf "TensorRT-${TRT_VERSION}" "TensorRT-${TRT_VERSION}.Linux.x86_64-gnu.cuda-${CUDA_VERSION}.cudnn${CUDNN_VERSION}.tar.gz"
-http_proxy= https_proxy= wget "https://fastdeploy.bj.bcebos.com/resource/TensorRT/TensorRT-${TRT_VERSION}.Linux.x86_64-gnu.cuda-${CUDA_VERSION}.cudnn${CUDNN_VERSION}.tar.gz"
-tar -xzvf "TensorRT-${TRT_VERSION}.Linux.x86_64-gnu.cuda-${CUDA_VERSION}.cudnn${CUDNN_VERSION}.tar.gz"
+if [ "$ENABLE_TRT_BACKEND" = "ON" ] && [ "$TRT_DIRECTORY" = "Default" ]; then
+    TRT_VERSION='8.5.2.2'
+    CUDA_VERSION='11.8'
+    CUDNN_VERSION='8.6'
+    rm -rf "TensorRT-${TRT_VERSION}" "TensorRT-${TRT_VERSION}.Linux.x86_64-gnu.cuda-${CUDA_VERSION}.cudnn${CUDNN_VERSION}.tar.gz"
+    http_proxy= https_proxy= wget "https://fastdeploy.bj.bcebos.com/resource/TensorRT/TensorRT-${TRT_VERSION}.Linux.x86_64-gnu.cuda-${CUDA_VERSION}.cudnn${CUDNN_VERSION}.tar.gz"
+    tar -xzvf "TensorRT-${TRT_VERSION}.Linux.x86_64-gnu.cuda-${CUDA_VERSION}.cudnn${CUDNN_VERSION}.tar.gz"
+    TRT_DIRECTORY="/workspace/ultra-infer/TensorRT-${TRT_VERSION}"
+fi
 
 export WITH_GPU="${WITH_GPU}"
-export ENABLE_TRT_BACKEND="${WITH_GPU}"
-export TRT_DIRECTORY="/workspace/ultra-infer/TensorRT-${TRT_VERSION}"
-export ENABLE_ORT_BACKEND=ON
-export ENABLE_PADDLE_BACKEND=ON
+export ENABLE_TRT_BACKEND="${ENABLE_TRT_BACKEND}"
+export TRT_DIRECTORY="${TRT_DIRECTORY}"
+export ENABLE_ORT_BACKEND="${ENABLE_ORT_BACKEND}"
+export ENABLE_PADDLE_BACKEND="${ENABLE_PADDLE_BACKEND}"
 export PADDLEINFERENCE_URL="${PADDLEINFERENCE_URL}"
 export PADDLEINFERENCE_VERSION="${PADDLEINFERENCE_VERSION}"
-export ENABLE_OPENVINO_BACKEND=ON
-export ENABLE_VISION=ON
-export ENABLE_TEXT=ON
+export ENABLE_OPENVINO_BACKEND="${ENABLE_OPENVINO_BACKEND}"
+export ENABLE_VISION="${ENABLE_VISION}"
+export ENABLE_TEXT="${ENABLE_TEXT}"
 export ENABLE_BENCHMARK="${ENABLE_BENCHMARK}"
 export CC=/usr/local/gcc-8.2/bin/gcc
 export CXX=/usr/local/gcc-8.2/bin/g++

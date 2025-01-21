@@ -1,3 +1,0 @@
-[简体中文](keypoint_detection.md) | English
-
-Coming soon...

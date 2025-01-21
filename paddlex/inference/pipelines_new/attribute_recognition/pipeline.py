@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union, List
 
 import pickle
 from pathlib import Path
@@ -35,18 +35,15 @@ class AttributeRecPipeline(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
-        hpi_params: Optional[Dict[str, Any]] = None,
     ):
-        super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_params=hpi_params
-        )
+        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
 
         self.det_model = self.create_model(config["SubModules"]["Detection"])
         self.cls_model = self.create_model(config["SubModules"]["Classification"])
         self._crop_by_boxes = CropByBoxes()
         self._img_reader = ReadImage(format="BGR")
 
-        self.det_threshold = config["SubModules"]["Detection"].get("threshold", 0.7)
+        self.det_threshold = config["SubModules"]["Detection"].get("threshold", 0.5)
         self.cls_threshold = config["SubModules"]["Classification"].get(
             "threshold", 0.7
         )
@@ -56,9 +53,15 @@ class AttributeRecPipeline(BasePipeline):
         )
         self.img_reader = ReadImage(format="BGR")
 
-    def predict(self, input, **kwargs):
-        det_threshold = kwargs.pop("det_threshold", self.det_threshold)
-        cls_threshold = kwargs.pop("cls_threshold", self.cls_threshold)
+    def predict(
+        self,
+        input: Union[str, List[str], np.ndarray, List[np.ndarray]],
+        det_threshold: float = None,
+        cls_threshold: Union[float, dict, list, None] = None,
+        **kwargs
+    ):
+        det_threshold = self.det_threshold if det_threshold is None else det_threshold
+        cls_threshold = self.cls_threshold if cls_threshold is None else cls_threshold
         for img_id, batch_data in enumerate(self.batch_sampler(input)):
             raw_imgs = self.img_reader(batch_data)
             all_det_res = list(self.det_model(raw_imgs, threshold=det_threshold))
@@ -79,12 +82,12 @@ class AttributeRecPipeline(BasePipeline):
     def get_final_result(self, input_data, raw_img, det_res, rec_res):
         single_img_res = {"input_path": input_data, "input_img": raw_img, "boxes": []}
         for i, obj in enumerate(det_res["boxes"]):
-            rec_scores = rec_res["score"][i]
+            cls_scores = rec_res["score"][i]
             labels = rec_res["label"][i]
             single_img_res["boxes"].append(
                 {
                     "labels": labels,
-                    "rec_scores": rec_scores,
+                    "cls_scores": cls_scores,
                     "det_score": obj["score"],
                     "coordinate": obj["coordinate"],
                 }

@@ -1,4 +1,4 @@
-# copyright (c) 2025 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union, List
 import pandas as pd
 
 from ...utils.pp_option import PaddlePredictorOption
@@ -33,7 +33,6 @@ class TSAnomalyDetPipeline(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
-        hpi_params: Optional[Dict[str, Any]] = None,
     ) -> None:
         """Initializes the Time Series ad pipeline.
 
@@ -42,25 +41,20 @@ class TSAnomalyDetPipeline(BasePipeline):
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
             use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            hpi_params (Optional[Dict[str, Any]], optional): HPIP parameters. Defaults to None.
         """
 
-        super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_params=hpi_params
-        )
+        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
 
         ts_ad_model_config = config["SubModules"]["TSAnomalyDetection"]
-        self.ts_ad_model = self.create_model(
-            ts_ad_model_config
-        )
+        self.ts_ad_model = self.create_model(ts_ad_model_config)
 
     def predict(
-        self, input: str | list[str] | pd.DataFrame | list[pd.DataFrame], **kwargs
+        self, input: Union[str, List[str], pd.DataFrame, List[pd.DataFrame]], **kwargs
     ) -> TSAdResult:
         """Predicts time series anomaly detection results for the given input.
 
         Args:
-            input (str | list[str] | pd.DataFrame | list[pd.DataFrame]): The input image(s) or path(s) to the images.
+            input (Union[str, list[str], pd.DataFrame, list[pd.DataFrame]]): The input image(s) or path(s) to the images.
             **kwargs: Additional keyword arguments that can be passed to the function.
 
         Returns:

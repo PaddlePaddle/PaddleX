@@ -15,10 +15,13 @@
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="video_detection")
-output = pipeline.predict("./test_samples/HorseRiding.avi")
+output = pipeline.predict(
+    "./test_samples/HorseRiding.avi", nms_thresh=0.5, score_thresh=0.85
+)
 
 for res in output:
     print(res)
     res.print()  ## 打印预测的结构化输出
+    res.save_to_video("./output/1.mp4")  ## 保存结果可视化视频
     res.save_to_video("./output/")  ## 保存结果可视化视频
     res.save_to_json("./output/")  ## 保存预测的结构化输出

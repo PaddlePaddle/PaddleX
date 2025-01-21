@@ -1402,7 +1402,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 </table>
 <b>Note: The above accuracy metrics are evaluated on the </b>[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)<b> dataset using the average anomaly score.</b>
 
-## [Keypoint Detection Module](../module_usage/tutorials//cv_modules/keypoint_detection.en.md)
+## [Human Keypoint Detection Module](../module_usage/tutorials/cv_modules/human_keypoint_detection.en.md)
 
 | Model Name|Method|Input Size|AP(0.5:0.95)|GPU Inference Time (ms)|CPU Inference Time (ms)|Model Size|YAML File|
 |-|-|-|-|-|-|-|-|

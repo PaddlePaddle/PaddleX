@@ -108,8 +108,8 @@ def create_pipeline_app(
                     index=i,
                     app_context=ctx,
                     input_image=img,
-                    ocr_image=ocr_img,
                     layout_image=layout_img,
+                    ocr_image=ocr_img,
                 )
                 if ocr_img is not None:
                     input_img, layout_img, ocr_img = output_imgs

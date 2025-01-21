@@ -13,7 +13,8 @@
 # limitations under the License.
 from typing import Any, Dict, Optional
 import numpy as np
-from ..layout_parsing.utils import convert_points_to_boxes, get_sub_regions_ocr_res
+from ..layout_parsing.utils import get_sub_regions_ocr_res
+from ..components import convert_points_to_boxes
 from .result import SingleTableRecognitionResult
 from ..ocr.result import OCRResult
 
@@ -59,6 +60,7 @@ def convert_table_structure_pred_bbox(
     )
     ori_cell_points_list = np.reshape(ori_cell_points_list, (-1, 4, 2))
     cell_box_list = convert_points_to_boxes(ori_cell_points_list)
+
     img_height, img_width = img_shape
     cell_box_list = np.clip(
         cell_box_list, 0, [img_width, img_height, img_width, img_height]
@@ -225,17 +227,18 @@ def get_table_recognition_res(
     table_ocr_pred = get_sub_regions_ocr_res(overall_ocr_res, table_box)
 
     crop_start_point = [table_box[0][0], table_box[0][1]]
-    img_shape = overall_ocr_res["doc_preprocessor_image"].shape[0:2]
+    img_shape = overall_ocr_res["doc_preprocessor_res"]["output_img"].shape[0:2]
 
     convert_table_structure_pred_bbox(table_structure_pred, crop_start_point, img_shape)
 
     structures = table_structure_pred["structure"]
     cell_box_list = table_structure_pred["cell_box_list"]
-    ocr_dt_boxes = table_ocr_pred["dt_boxes"]
-    ocr_text_res = table_ocr_pred["rec_text"]
+
+    ocr_dt_boxes = table_ocr_pred["rec_boxes"]
+    ocr_texts_res = table_ocr_pred["rec_texts"]
 
     matched_index = match_table_and_ocr(cell_box_list, ocr_dt_boxes)
-    pred_html = get_html_result(matched_index, ocr_text_res, structures)
+    pred_html = get_html_result(matched_index, ocr_texts_res, structures)
 
     single_img_res = {
         "cell_box_list": cell_box_list,

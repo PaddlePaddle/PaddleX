@@ -12,12 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ...common.result import BaseResult, StrMixin, JsonMixin
+from ...common.result import BaseResult
 
 
-class WhisperResult(BaseResult, StrMixin, JsonMixin):
+class WhisperResult(BaseResult):
 
     def __init__(self, data: dict) -> None:
         super().__init__(data)
-        StrMixin.__init__(self)
-        JsonMixin.__init__(self)

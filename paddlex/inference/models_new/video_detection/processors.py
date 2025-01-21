@@ -406,28 +406,17 @@ class DetVideoPostProcess:
 
     def __init__(
         self,
-        nms_thresh: float = 0.5,
-        score_thresh: float = 0.5,
         label_list: List[str] = [],
     ) -> None:
         """
         Args:
-            nms_thresh : float
-                The IoU (Intersection over Union) threshold used for Non-Maximum Suppression (NMS).
-                Detections with an IoU greater than this threshold will be suppressed.
-            score_thresh : float
-                The threshold for filtering out low-confidence detections.
-                Detections with a confidence score below this threshold will be discarded.
             labels : List[str]
                 A list of labels or class names associated with the detection results.
         """
         super().__init__()
-
-        self.nms_thresh = nms_thresh
-        self.score_thresh = score_thresh
         self.labels = label_list
 
-    def postprocess(self, pred: List) -> List:
+    def postprocess(self, pred: List, nms_thresh: float, score_thresh: float) -> List:
         font = cv2.FONT_HERSHEY_SIMPLEX
         num_seg = len(pred)
         pred_all = []
@@ -436,11 +425,10 @@ class DetVideoPostProcess:
             for out in outputs:
                 preds = []
                 out = paddle.to_tensor(out)
-                all_boxes = get_region_boxes(out, self.score_thresh, len(self.labels))
+                all_boxes = get_region_boxes(out, num_classes=len(self.labels))
                 for i in range(out.shape[0]):
                     boxes = all_boxes[i]
-                    boxes = nms(boxes, self.nms_thresh)
-
+                    boxes = nms(boxes, nms_thresh)
                     for box in boxes:
                         x1 = round(float(box[0] - box[2] / 2.0) * 320.0)
                         y1 = round(float(box[1] - box[3] / 2.0) * 240.0)
@@ -451,9 +439,12 @@ class DetVideoPostProcess:
                         for j in range((len(box) - 5) // 2):
                             cls_conf = float(box[5 + 2 * j].item())
                             prob = det_conf * cls_conf
-                        preds.append([[x1, y1, x2, y2], prob, self.labels[int(box[6])]])
+                        if prob > score_thresh:
+                            preds.append(
+                                [[x1, y1, x2, y2], prob, self.labels[int(box[6])]]
+                            )
             pred_all.append(preds)
         return pred_all
 
-    def __call__(self, preds: List) -> List:
-        return [self.postprocess(pred) for pred in preds]
+    def __call__(self, preds: List, nms_thresh, score_thresh) -> List:
+        return [self.postprocess(pred, nms_thresh, score_thresh) for pred in preds]

@@ -15,13 +15,40 @@
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="seal_recognition")
-output = pipeline.predict("./test_samples/seal_text_det.png")
+output = pipeline.predict(
+    "./test_samples/seal_text_det.png",
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+)
 
-# output = pipeline.predict("./test_samples/seal_text_det.png",
-#     use_layout_detection=False)
+# output = pipeline.predict(
+#     "./test_samples/seal_text_det.png",
+#     use_doc_orientation_classify=False,
+#     use_doc_unwarping=False,
+#     text_rec_score_thresh = 0.9
+# )
+
+# output = pipeline.predict(
+#     "./test_samples/seal_text_det.png",
+#     use_doc_orientation_classify=True,
+#     use_doc_unwarping=True
+# )
+
+# output = pipeline.predict(
+#     "./test_samples/seal_text_det.png",
+#     use_doc_orientation_classify=False,
+#     use_doc_unwarping=False,
+#     use_layout_detection=False
+# )
+
+# output = pipeline.predict(
+#     "./test_samples/seal_text_det.png"
+# )
 
 # output = pipeline.predict("./test_samples/财报1.pdf")
 
 for res in output:
     print(res)
-    res.save_results("./output")
+    res.print()
+    res.save_to_img("./output")
+    res.save_to_json("./output")

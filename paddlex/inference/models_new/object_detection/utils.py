@@ -62,4 +62,7 @@ STATIC_SHAPE_MODEL_LIST = [
     "YOLOX-S",
     "YOLOX-T",
     "YOLOX-X",
+    "PP-DocLayout-L",
+    "PP-DocLayout-M",
+    "PP-DocLayout-S",
 ]

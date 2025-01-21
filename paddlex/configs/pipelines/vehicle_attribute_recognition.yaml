@@ -12,4 +12,4 @@ SubModules:
     model_name: PP-LCNet_x1_0_vehicle_attribute
     model_dir: null
     batch_size: 1
-    threshold: 0.5
+    threshold: 0.7

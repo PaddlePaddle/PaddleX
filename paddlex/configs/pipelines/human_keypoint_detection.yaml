@@ -7,7 +7,7 @@ SubModules:
     model_dir: null
     batch_size: 1
     threshold: null
-    imgsz: null
+    img_size: null
   KeypointDetection:
     module_name: keypoint_detection
     model_name: PP-TinyPose_128x96

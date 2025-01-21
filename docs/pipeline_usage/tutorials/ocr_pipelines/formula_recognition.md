@@ -255,12 +255,9 @@ for res in output:
 ```
 ### 2.3 公式识别产线可视化
 如果您需要对公式识别产线进行可视化，需要运行如下命令来对LaTeX渲染环境进行安装：
-```python
-apt-get install sudo
+```shell
 sudo apt-get update
-sudo apt-get install texlive
-sudo apt-get install texlive-latex-base
-sudo apt-get install texlive-latex-extra
+sudo apt-get install texlive texlive-latex-base texlive-latex-extra -y
 ```
 之后，使用 `save_to_img` 方法对可视化图片进行保存。具体命令如下：
 ```python

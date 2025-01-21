@@ -23,18 +23,17 @@ def console_entry() -> int:
     try:
         # Flush output here to force SIGPIPE to be triggered while inside this
         # try block.
-        code = main()
+        main()
         sys.stdout.flush()
         sys.stderr.flush()
-        return code
     except BrokenPipeError:
         # Python flushes standard streams on exit;
         # redirect remaining output to devnull to avoid another BrokenPipeError
         # at shutdown.
         devnull = os.open(os.devnull, os.O_WRONLY)
         os.dup2(devnull, sys.stdout.fileno())
-        return 1
+        sys.exit(1)
 
 
 if __name__ == "__main__":
-    sys.exit(console_entry())
+    console_entry()

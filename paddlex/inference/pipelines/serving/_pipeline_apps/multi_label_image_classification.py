@@ -18,7 +18,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 from .....utils import logging
-from ...single_model_pipeline import ImageClassification
+from ...single_model_pipeline import MultiLableImageClas
 from .. import utils as serving_utils
 from ..app import AppConfig, create_app
 from ..models import NoResultResponse, ResultResponse
@@ -45,7 +45,7 @@ class InferResult(BaseModel):
 
 
 def create_pipeline_app(
-    pipeline: ImageClassification, app_config: AppConfig
+    pipeline: MultiLableImageClas, app_config: AppConfig
 ) -> FastAPI:
     app, ctx = create_app(
         pipeline=pipeline, app_config=app_config, app_aiohttp_session=True

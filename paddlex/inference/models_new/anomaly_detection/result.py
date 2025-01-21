@@ -16,7 +16,7 @@ import copy
 import numpy as np
 from PIL import Image
 
-from ...common.result import BaseCVResult
+from ...common.result import BaseCVResult, StrMixin, JsonMixin
 
 
 class UadResult(BaseCVResult):
@@ -60,12 +60,11 @@ class UadResult(BaseCVResult):
 
     def _to_str(self, *args, **kwargs):
         data = copy.deepcopy(self)
-        data["pred"] = "..."
         data.pop("input_img")
-        return data._to_str(*args, **kwargs)
+        data["pred"] = "..."
+        return JsonMixin._to_str(data, *args, **kwargs)
 
     def _to_json(self, *args, **kwargs):
         data = copy.deepcopy(self)
-        data["pred"] = "..."
         data.pop("input_img")
-        return data._to_json(*args, **kwargs)
+        return JsonMixin._to_json(data, *args, **kwargs)

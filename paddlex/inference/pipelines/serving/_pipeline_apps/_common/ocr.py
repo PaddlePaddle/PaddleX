@@ -24,8 +24,8 @@ from typing_extensions import Annotated, TypeAlias, assert_never
 from ......utils import logging
 from ... import utils as serving_utils
 from .cv import postprocess_image
-from ...models import DataInfo, ImageInfo, PDFInfo
-from ...storage import create_storage
+from ...models import DataInfo
+from ...storage import create_storage, SupportsGetURL
 from ...app import AppContext
 
 DEFAULT_MAX_NUM_INPUT_IMGS: Final[int] = 10
@@ -49,6 +49,17 @@ def update_app_context(app_context: AppContext) -> None:
     app_context.extra["file_storage"] = None
     if "file_storage" in extra_cfg:
         app_context.extra["file_storage"] = create_storage(extra_cfg["file_storage"])
+    app_context.extra["return_img_urls"] = extra_cfg.get("return_img_urls", False)
+    if app_context.extra["return_img_urls"]:
+        file_storage = app_context.extra["file_storage"]
+        if not file_storage:
+            raise ValueError(
+                "The file storage must be properly configured when URLs need to be returned."
+            )
+        if not isinstance(file_storage, SupportsGetURL):
+            raise TypeError(
+                f"`{type(file_storage).__name__}` does not support getting URLs."
+            )
     app_context.extra["max_num_input_imgs"] = extra_cfg.get(
         "max_num_input_imgs", DEFAULT_MAX_NUM_INPUT_IMGS
     )
@@ -111,12 +122,13 @@ async def postprocess_images(
     index: str,
     app_context: AppContext,
     input_image: Optional[ArrayLike] = None,
-    ocr_image: Optional[ArrayLike] = None,
     layout_image: Optional[ArrayLike] = None,
+    ocr_image: Optional[ArrayLike] = None,
 ) -> List[str]:
-    if input_image is None and ocr_image is None and layout_image is None:
+    if input_image is None and layout_image is None and ocr_image is None:
         raise ValueError("At least one of the images must be provided.")
     file_storage = app_context.extra["file_storage"]
+    return_img_urls = app_context.extra["return_img_urls"]
     max_img_size = app_context.extra["max_output_img_size"]
     futures: List[Awaitable] = []
     if input_image is not None:
@@ -126,16 +138,7 @@ async def postprocess_images(
             log_id=log_id,
             filename=f"input_image_{index}.jpg",
             file_storage=file_storage,
-            max_img_size=max_img_size,
-        )
-        futures.append(future)
-    if ocr_image is not None:
-        future = serving_utils.call_async(
-            postprocess_image,
-            ocr_image,
-            log_id=log_id,
-            filename=f"ocr_image_{index}.jpg",
-            file_storage=file_storage,
+            return_url=return_img_urls,
             max_img_size=max_img_size,
         )
         futures.append(future)
@@ -145,6 +148,17 @@ async def postprocess_images(
             layout_image,
             log_id=log_id,
             filename=f"layout_image_{index}.jpg",
+            file_storage=file_storage,
+            return_url=return_img_urls,
+            max_img_size=max_img_size,
+        )
+        futures.append(future)
+    if ocr_image is not None:
+        future = serving_utils.call_async(
+            postprocess_image,
+            ocr_image,
+            log_id=log_id,
+            filename=f"ocr_image_{index}.jpg",
             file_storage=file_storage,
             max_img_size=max_img_size,
         )

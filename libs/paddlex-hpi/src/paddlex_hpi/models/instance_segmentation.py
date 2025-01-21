@@ -18,7 +18,7 @@ from typing import Any, Dict, List, Optional, Union
 import ultra_infer as ui
 import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.results import InstanceSegResult
+from paddlex.inference.models_new.instance_segmentation.result import InstanceSegResult
 from paddlex.modules.instance_segmentation.model_list import MODELS
 from pydantic import BaseModel
 

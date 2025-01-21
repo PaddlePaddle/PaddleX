@@ -6,4 +6,5 @@ SubModules:
     model_name: YOWO
     model_dir: null
     batch_size: 1    
-    topk: 1
+    nms_thresh: 0.5
+    score_thresh: 0.8

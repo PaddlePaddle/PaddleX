@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union, List
 import numpy as np
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
@@ -32,7 +32,6 @@ class InstanceSegmentationPipeline(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
-        hpi_params: Optional[Dict[str, Any]] = None,
     ) -> None:
         """
         Initializes the class with given configurations and options.
@@ -42,11 +41,8 @@ class InstanceSegmentationPipeline(BasePipeline):
             device (str): The device to run the prediction on. Default is None.
             pp_option (PaddlePredictorOption): Options for PaddlePaddle predictor. Default is None.
             use_hpip (bool): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            hpi_params (Optional[Dict[str, Any]]): HPIP specific parameters. Default is None.
         """
-        super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_params=hpi_params
-        )
+        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
 
         instance_segmentation_model_config = config["SubModules"][
             "InstanceSegmentation"
@@ -57,15 +53,19 @@ class InstanceSegmentationPipeline(BasePipeline):
         self.threshold = instance_segmentation_model_config["threshold"]
 
     def predict(
-        self, input: str | list[str] | np.ndarray | list[np.ndarray], **kwargs
+        self,
+        input: str | list[str] | np.ndarray | list[np.ndarray],
+        threshold: float | None = None,
+        **kwargs
     ) -> InstanceSegResult:
         """Predicts instance segmentation results for the given input.
 
         Args:
             input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or path(s) to the images.
+            threshold (float | None): The threshold value to filter out low-confidence predictions. Default is None.
             **kwargs: Additional keyword arguments that can be passed to the function.
 
         Returns:
             InstanceSegResult: The predicted instance segmentation results.
         """
-        yield from self.instance_segmentation_model(input, threshold=self.threshold)
+        yield from self.instance_segmentation_model(input, threshold=threshold)

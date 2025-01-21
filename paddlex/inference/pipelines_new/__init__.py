@@ -17,6 +17,7 @@ from typing import Any, Dict, Optional
 from .base import BasePipeline
 from ..utils.pp_option import PaddlePredictorOption
 from .components import BaseChat, BaseRetriever, BaseGeneratePrompt
+from ...utils import logging
 from ...utils.config import parse_config
 from .ocr import OCRPipeline
 from .doc_preprocessor import DocPreprocessorPipeline
@@ -26,6 +27,7 @@ from .image_classification import ImageClassificationPipeline
 from .object_detection import ObjectDetectionPipeline
 from .seal_recognition import SealRecognitionPipeline
 from .table_recognition import TableRecognitionPipeline
+from .table_recognition import TableRecognitionPipelineV2
 from .multilingual_speech_recognition import MultilingualSpeechRecognitionPipeline
 from .formula_recognition import FormulaRecognitionPipeline
 from .image_multilabel_classification import ImageMultiLabelClassificationPipeline
@@ -36,6 +38,7 @@ from .ts_forecasting import TSFcPipeline
 from .ts_anomaly_detection import TSAnomalyDetPipeline
 from .ts_classification import TSClsPipeline
 from .pp_shitu_v2 import ShiTuV2Pipeline
+from .face_recognition import FaceRecPipeline
 from .attribute_recognition import (
     PedestrianAttributeRecPipeline,
     VehicleAttributeRecPipeline,
@@ -43,9 +46,11 @@ from .attribute_recognition import (
 
 from .semantic_segmentation import SemanticSegmentationPipeline
 from .instance_segmentation import InstanceSegmentationPipeline
-from .small_object__detection import SmallObjectDetectionPipeline
-from .rotated_object__detection import RotatedObjectDetectionPipeline
+from .small_object_detection import SmallObjectDetectionPipeline
+from .rotated_object_detection import RotatedObjectDetectionPipeline
 from .keypoint_detection import KeypointDetectionPipeline
+from .open_vocabulary_detection import OpenVocabularyDetectionPipeline
+from .open_vocabulary_segmentation import OpenVocabularySegmentationPipeline
 
 
 def get_pipeline_path(pipeline_name: str) -> str:
@@ -81,7 +86,7 @@ def load_pipeline_config(pipeline_name: str) -> Dict[str, Any]:
     Raises:
         Exception: If the config file of pipeline does not exist.
     """
-    if not Path(pipeline_name).exists():
+    if not (pipeline_name.endswith(".yml") or pipeline_name.endswith(".yaml")):
         pipeline_path = get_pipeline_path(pipeline_name)
         if pipeline_path is None:
             raise Exception(
@@ -94,46 +99,57 @@ def load_pipeline_config(pipeline_name: str) -> Dict[str, Any]:
 
 
 def create_pipeline(
-    pipeline: str,
-    config: Dict = None,
-    device: str = None,
-    pp_option: PaddlePredictorOption = None,
+    pipeline_name: Optional[str] = None,
+    config: Optional[Dict[str, Any]] = None,
+    device: Optional[str] = None,
+    pp_option: Optional[PaddlePredictorOption] = None,
     use_hpip: bool = False,
-    hpi_params: Optional[Dict[str, Any]] = None,
-    *args,
-    **kwargs,
+    *args: Any,
+    **kwargs: Any,
 ) -> BasePipeline:
     """
     Create a pipeline instance based on the provided parameters.
-    If the input parameter config is not provided,
-    it is obtained from the default config corresponding to the pipeline name.
+
+    If the input parameter config is not provided, it is obtained from the
+    default config corresponding to the pipeline name.
 
     Args:
-        pipeline (str): The name of the pipeline to create.
-        config (Dict, optional): The path to the pipeline configuration file. Defaults to None.
-        device (str, optional): The device to run the pipeline on. Defaults to None.
-        pp_option (PaddlePredictorOption, optional): The options for the PaddlePredictor. Defaults to None.
-        use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-        hpi_params (Optional[Dict[str, Any]], optional): Additional parameters for hpip. Defaults to None.
+        pipeline_name (Optional[str], optional): The name of the pipeline to
+            create, or the path to the config file. Defaults to None.
+        config (Optional[Dict[str, Any]], optional): The pipeline configuration.
+            Defaults to None.
+        device (Optional[str], optional): The device to run the pipeline on.
+            Defaults to None.
+        pp_option (Optional[PaddlePredictorOption], optional): The options for
+            the PaddlePredictor. Defaults to None.
+        use_hpip (bool, optional): Whether to use high-performance inference
+            plugin (HPIP) for prediction. Defaults to False.
         *args: Additional positional arguments.
         **kwargs: Additional keyword arguments.
 
     Returns:
         BasePipeline: The created pipeline instance.
     """
-
+    if pipeline_name is None and config is None:
+        raise ValueError(
+            "Both `pipeline_name` and `config` cannot be None at the same time."
+        )
     if config is None:
-        config = load_pipeline_config(pipeline)
-        pipeline_name = config["pipeline_name"]
-    else:
-        pipeline_name = pipeline
+        config = load_pipeline_config(pipeline_name)
+    if pipeline_name is not None and config["pipeline_name"] != pipeline_name:
+        logging.warning(
+            "The pipeline name in the config (%r) is different from the specified pipeline name (%r). %r will be used.",
+            config["pipeline_name"],
+            pipeline_name,
+            config["pipeline_name"],
+        )
+    pipeline_name = config["pipeline_name"]
 
     pipeline = BasePipeline.get(pipeline_name)(
         config=config,
         device=device,
         pp_option=pp_option,
         use_hpip=use_hpip,
-        hpi_params=hpi_params,
         *args,
         **kwargs,
     )
@@ -151,6 +167,9 @@ def create_chat_bot(config: Dict, *args, **kwargs) -> BaseChat:
     Returns:
         BaseChat: An instance of the chat bot class corresponding to the 'model_name' in the config.
     """
+    if "chat_bot_config_error" in config:
+        raise ValueError(config["chat_bot_config_error"])
+
     api_type = config["api_type"]
     chat_bot = BaseChat.get(api_type)(config)
     return chat_bot
@@ -172,6 +191,8 @@ def create_retriever(
     Returns:
         BaseRetriever: An instance of a retriever class corresponding to the 'model_name' in the config.
     """
+    if "retriever_config_error" in config:
+        raise ValueError(config["retriever_config_error"])
     api_type = config["api_type"]
     retriever = BaseRetriever.get(api_type)(config)
     return retriever
@@ -193,6 +214,8 @@ def create_prompt_engeering(
     Returns:
         BaseGeneratePrompt: An instance of a prompt engineering class corresponding to the 'task_type' in the config.
     """
+    if "pe_config_error" in config:
+        raise ValueError(config["pe_config_error"])
     task_type = config["task_type"]
     pe = BaseGeneratePrompt.get(task_type)(config)
     return pe

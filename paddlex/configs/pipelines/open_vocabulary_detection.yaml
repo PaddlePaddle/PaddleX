@@ -1,0 +1,12 @@
+
+pipeline_name: open_vocabulary_detection
+
+SubModules:
+  OpenVocabularyDetection:
+    module_name: open_vocabulary_detection
+    model_name: GroundingDINO-T
+    model_dir: null
+    batch_size: 1
+    thresholds:
+      box_threshold: 0.3
+      text_threshold: 0.25

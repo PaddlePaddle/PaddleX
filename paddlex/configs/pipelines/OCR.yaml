@@ -30,9 +30,7 @@ SubModules:
     limit_type: max
     thresh: 0.3
     box_thresh: 0.6
-    max_candidates: 1000
     unclip_ratio: 2.0
-    use_dilation: False
   TextLineOrientation:
     module_name: textline_orientation
     model_name: PP-LCNet_x0_25_textline_ori 
@@ -43,4 +41,4 @@ SubModules:
     model_name: PP-OCRv4_mobile_rec 
     model_dir: null
     batch_size: 1
-    score_thresh: 0
+    score_thresh: 0.0

@@ -14,14 +14,10 @@
 
 from typing import Any, Dict, Optional
 
-import pickle
-from pathlib import Path
-import numpy as np
-
 from ...utils.pp_option import PaddlePredictorOption
 from ...common.reader import ReadImage
 from ...common.batch_sampler import ImageBatchSampler
-from ..components import CropByBoxes, FaissIndexer, FaissBuilder
+from ..components import CropByBoxes, FaissIndexer, FaissBuilder, IndexData
 from ..base import BasePipeline
 from .result import ShiTuResult
 
@@ -37,11 +33,8 @@ class ShiTuV2Pipeline(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
-        hpi_params: Optional[Dict[str, Any]] = None,
     ):
-        super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_params=hpi_params
-        )
+        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
 
         self._topk, self._rec_threshold, self._hamming_radius, self._det_threshold = (
             config.get("topk", 5),
@@ -63,6 +56,7 @@ class ShiTuV2Pipeline(BasePipeline):
     def predict(self, input, index=None, **kwargs):
         indexer = FaissIndexer(index) if index is not None else self.indexer
         assert indexer
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
         topk = kwargs.get("topk", self._topk)
         rec_threshold = kwargs.get("rec_threshold", self._rec_threshold)
         hamming_radius = kwargs.get("hamming_radius", self._hamming_radius)

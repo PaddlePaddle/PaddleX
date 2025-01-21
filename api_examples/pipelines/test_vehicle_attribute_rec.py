@@ -17,7 +17,7 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="vehicle_attribute_recognition")
 
 output = pipeline.predict(
-    "./test_samples/vehicle_attribute_002.jpg", det_threshold=0.7, cls_threshold=0.7
+    "./test_samples/vehicle_attribute_002.jpg", det_threshold=0.5, cls_threshold=0.7
 )
 
 for res in output:

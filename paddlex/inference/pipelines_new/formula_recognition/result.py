@@ -13,18 +13,20 @@
 # limitations under the License.
 
 import os, sys
-from typing import Tuple
+from typing import Tuple, List, Dict, Any
 import cv2
 import PIL
 import math
+import copy
 import random
 import tempfile
 import subprocess
 import numpy as np
 from pathlib import Path
+import PIL
 from PIL import Image, ImageDraw, ImageFont
 
-from ...common.result import BaseCVResult
+from ...common.result import BaseCVResult, JsonMixin, ImgMixin, StrMixin
 from ....utils import logging
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH
 from ...models_new.formula_recognition.result import (
@@ -36,53 +38,82 @@ from ...models_new.formula_recognition.result import (
     create_font,
     crop_white_area,
     draw_box_txt_fine,
+    draw_formula_module,
 )
 
 
-class FormulaRecognitionResult(dict):
-    """Layout Parsing Result"""
+class FormulaRecognitionResult(BaseCVResult):
+    """Formula Recognition Result"""
 
-    def __init__(self, data) -> None:
-        """Initializes a new instance of the class with the specified data."""
-        super().__init__(data)
-
-    def save_to_img(self, save_path: str) -> None:
+    def _to_img(self) -> Dict[str, Image.Image]:
         """
-        Saves an image with overlaid formula recognition results.
-
-        This function attempts to save an image with recognized formulas highlighted
-        and annotated. It verifies the environment setup before proceeding and logs
-        a warning if the necessary rendering engine is not installed. The output image
-        consists of two halves: the left side shows the original image with bounding
-        boxes, and the right side shows the recognized formulas.
-
-        Args:
-            save_path (str): The directory path where the output image will be saved.
+        Converts the internal data to a PIL Image with detection and recognition results.
 
         Returns:
-            None
+            Dict[str, Image.Image]: An image with detection boxes, texts, and scores blended on it.
         """
+        image = Image.fromarray(self["doc_preprocessor_res"]["output_img"])
+        res_img_dict = {}
+        model_settings = self["model_settings"]
+        if model_settings["use_doc_preprocessor"]:
+            res_img_dict.update(**self["doc_preprocessor_res"].img)
+
+        layout_det_res = self["layout_det_res"]
+        if len(layout_det_res) > 0:
+            res_img_dict["layout_det_res"] = layout_det_res.img["res"]
         try:
             env_valid()
         except subprocess.CalledProcessError as e:
             logging.warning(
                 "Please refer to 2.3 Formula Recognition Pipeline Visualization in Formula Recognition Pipeline Tutorial to install the LaTeX rendering engine at first."
             )
-            return None
-        if not os.path.exists(save_path):
-            os.makedirs(save_path)
-        img_id = self["img_id"]
-        img_name = self["img_name"]
-        if len(self["layout_det_res"]) <= 0:
-            return
-        image = Image.fromarray(self["layout_det_res"]["input_img"])
+            res_img_dict["formula_res_img"] = image
+            return res_img_dict
+
+        if len(layout_det_res) <= 0:
+            image = np.array(image.convert("RGB"))
+            rec_formula = self["formula_res_list"][0]["rec_formula"]
+            xywh = crop_white_area(image)
+            if xywh is not None:
+                x, y, w, h = xywh
+                image = image[y : y + h, x : x + w]
+            image = Image.fromarray(image)
+            image_width, image_height = image.size
+            box = [
+                [0, 0],
+                [image_width, 0],
+                [image_width, image_height],
+                [0, image_height],
+            ]
+            try:
+                img_formula = draw_formula_module(
+                    image.size, box, rec_formula, is_debug=False
+                )
+                img_formula = Image.fromarray(img_formula)
+                render_width, render_height = img_formula.size
+                resize_height = render_height
+                resize_width = int(resize_height * image_width / image_height)
+                image = image.resize((resize_width, resize_height), Image.LANCZOS)
+
+                new_image_width = image.width + int(render_width) + 10
+                new_image = Image.new(
+                    "RGB", (new_image_width, render_height), (255, 255, 255)
+                )
+                new_image.paste(image, (0, 0))
+                new_image.paste(img_formula, (image.width + 10, 0))
+                res_img_dict["formula_res_img"] = new_image
+                return res_img_dict
+            except subprocess.CalledProcessError as e:
+                logging.warning("Syntax error detected in formula, rendering failed.")
+                res_img_dict["formula_res_img"] = image
+                return res_img_dict
+
         h, w = image.height, image.width
         img_left = image.copy()
         img_right = np.ones((h, w, 3), dtype=np.uint8) * 255
         random.seed(0)
         draw_left = ImageDraw.Draw(img_left)
 
-        formula_save_path = os.path.join(save_path, "formula_img_{}.jpg".format(img_id))
         formula_res_list = self["formula_res_list"]
         for tno in range(len(self["formula_res_list"])):
             formula_res = self["formula_res_list"][tno]
@@ -117,38 +148,71 @@ class FormulaRecognitionResult(dict):
         img_show = Image.new("RGB", (int(w * 2), h), (255, 255, 255))
         img_show.paste(img_left, (0, 0, w, h))
         img_show.paste(Image.fromarray(img_right), (w, 0, w * 2, h))
-        img_show.save(formula_save_path)
+        res_img_dict["formula_res_img"] = img_show
+        return res_img_dict
 
-    def save_results(self, save_path: str) -> None:
-        """Save the formula recognition results to the specified directory.
+    def _to_str(self, *args, **kwargs) -> Dict[str, str]:
+        """Converts the instance's attributes to a dictionary and then to a string.
 
         Args:
-            save_path (str): The directory path to save the results.
-        """
-        if not os.path.exists(save_path):
-            os.makedirs(save_path)
-        if not os.path.isdir(save_path):
-            return
+            *args: Additional positional arguments passed to the base class method.
+            **kwargs: Additional keyword arguments passed to the base class method.
 
-        img_id = self["img_id"]
-        layout_det_res = self["layout_det_res"]
-        if len(layout_det_res) > 0:
-            save_img_path = Path(save_path) / f"layout_det_result_img{img_id}.jpg"
-            layout_det_res.save_to_img(save_img_path)
-        self.save_to_img(save_path)
-        input_params = self["input_params"]
-        if input_params["use_doc_preprocessor"]:
-            save_img_path = Path(save_path) / f"doc_preprocessor_result_img{img_id}.jpg"
-            self["doc_preprocessor_res"].save_to_img(save_img_path)
+        Returns:
+            Dict[str, str]: A dictionary with the instance's attributes converted to strings.
+        """
+        data = {}
+        data["input_path"] = self["input_path"]
+        data["model_settings"] = self["model_settings"]
+        if self["model_settings"]["use_doc_preprocessor"]:
+            data["doc_preprocessor_res"] = self["doc_preprocessor_res"].str["res"]
+        if len(self["layout_det_res"]) > 0:
+            data["layout_det_res"] = self["layout_det_res"].str["res"]
+        data["formula_res_list"] = []
         for tno in range(len(self["formula_res_list"])):
-            formula_res = self["formula_res_list"][tno]
-            formula_region_id = formula_res["formula_region_id"]
-            save_img_path = (
-                Path(save_path)
-                / f"formula_res_img{img_id}_region{formula_region_id}.jpg"
-            )
-            formula_res.save_to_img(save_img_path)
-        return
+            rec_formula_dict = {
+                "rec_formula": self["formula_res_list"][tno]["rec_formula"],
+                "formula_region_id": self["formula_res_list"][tno]["formula_region_id"],
+            }
+            if "dt_polys" in self["formula_res_list"][tno]:
+                rec_formula_dict["dt_polys"] = (
+                    self["formula_res_list"][tno]["dt_polys"],
+                )
+            data["formula_res_list"].append(rec_formula_dict)
+
+        return JsonMixin._to_str(data, *args, **kwargs)
+
+    def _to_json(self, *args, **kwargs) -> Dict[str, str]:
+        """
+        Converts the object's data to a JSON dictionary.
+
+        Args:
+            *args: Positional arguments passed to the JsonMixin._to_json method.
+            **kwargs: Keyword arguments passed to the JsonMixin._to_json method.
+
+        Returns:
+            Dict[str, str]: A dictionary containing the object's data in JSON format.
+        """
+        data = {}
+        data["input_path"] = self["input_path"]
+        data["model_settings"] = self["model_settings"]
+        if self["model_settings"]["use_doc_preprocessor"]:
+            data["doc_preprocessor_res"] = self["doc_preprocessor_res"].str["res"]
+        if len(self["layout_det_res"]) > 0:
+            data["layout_det_res"] = self["layout_det_res"].str["res"]
+        data["formula_res_list"] = []
+        for tno in range(len(self["formula_res_list"])):
+            rec_formula_dict = {
+                "rec_formula": self["formula_res_list"][tno]["rec_formula"],
+                "formula_region_id": self["formula_res_list"][tno]["formula_region_id"],
+            }
+            if "dt_polys" in self["formula_res_list"][tno]:
+                rec_formula_dict["dt_polys"] = (
+                    self["formula_res_list"][tno]["dt_polys"],
+                )
+            data["formula_res_list"].append(rec_formula_dict)
+
+        return JsonMixin._to_json(data, *args, **kwargs)
 
 
 def draw_box_formula_fine(

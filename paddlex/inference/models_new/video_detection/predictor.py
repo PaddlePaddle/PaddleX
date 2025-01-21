@@ -33,8 +33,16 @@ class VideoDetPredictor(BasicPredictor):
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
-    def __init__(self, topk: Union[int, None] = None, *args, **kwargs):
+    def __init__(
+        self,
+        nms_thresh: Union[float, None] = None,
+        score_thresh: Union[float, None] = None,
+        *args,
+        **kwargs
+    ):
         super().__init__(*args, **kwargs)
+        self.nms_thresh = nms_thresh
+        self.score_thresh = score_thresh
         self.pre_tfs, self.infer, self.post_op = self._build()
 
     def _build_batch_sampler(self):
@@ -73,7 +81,12 @@ class VideoDetPredictor(BasicPredictor):
 
         return pre_tfs, infer, post_op
 
-    def process(self, batch_data):
+    def process(
+        self,
+        batch_data,
+        nms_thresh: Union[float, None] = None,
+        score_thresh: Union[float, None] = None,
+    ):
         batch_raw_videos = self.pre_tfs["ReadVideo"](videos=batch_data)
         batch_videos = self.pre_tfs["ResizeVideo"](videos=batch_raw_videos)
         batch_videos = self.pre_tfs["Image2Array"](videos=batch_videos)
@@ -83,7 +96,11 @@ class VideoDetPredictor(BasicPredictor):
         for i in range(num_seg):
             batch_preds = self.infer(x=[x[0][i]])
             pred_seg.append(batch_preds)
-        batch_bboxes = self.post_op["DetVideoPostProcess"](preds=[pred_seg])
+        batch_bboxes = self.post_op["DetVideoPostProcess"](
+            preds=[pred_seg],
+            nms_thresh=nms_thresh or self.nms_thresh,
+            score_thresh=score_thresh or self.score_thresh,
+        )
         return {
             "input_path": batch_data,
             "result": batch_bboxes,
@@ -111,7 +128,9 @@ class VideoDetPredictor(BasicPredictor):
         return "NormalizeVideo", NormalizeVideo(scale=scale)
 
     @register("DetVideoPostProcess")
-    def build_postprocess(self, nms_thresh=0.5, score_thresh=0.4, label_list=[]):
-        return "DetVideoPostProcess", DetVideoPostProcess(
-            nms_thresh=nms_thresh, score_thresh=score_thresh, label_list=label_list
-        )
+    def build_postprocess(self, nms_thresh, score_thresh, label_list=[]):
+        if not self.nms_thresh:
+            self.nms_thresh = nms_thresh
+        if not self.score_thresh:
+            self.score_thresh = score_thresh
+        return "DetVideoPostProcess", DetVideoPostProcess(label_list=label_list)

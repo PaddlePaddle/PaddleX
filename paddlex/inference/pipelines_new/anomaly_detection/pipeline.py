@@ -1,4 +1,4 @@
-# copyright (c) 2025 PaddlePaddle Authors. All Rights Reserve.
+# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union, List
 import numpy as np
 
 from ...utils.pp_option import PaddlePredictorOption
@@ -33,7 +33,6 @@ class AnomalyDetectionPipeline(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
-        hpi_params: Optional[Dict[str, Any]] = None,
     ) -> None:
         """Initializes the image anomaly detection pipeline.
 
@@ -42,25 +41,20 @@ class AnomalyDetectionPipeline(BasePipeline):
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
             use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            hpi_params (Optional[Dict[str, Any]], optional): HPIP parameters. Defaults to None.
         """
 
-        super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_params=hpi_params
-        )
+        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
 
         anomaly_detetion_model_config = config["SubModules"]["AnomalyDetection"]
-        self.anomaly_detetion_model = self.create_model(
-            anomaly_detetion_model_config
-        )
+        self.anomaly_detetion_model = self.create_model(anomaly_detetion_model_config)
 
     def predict(
-        self, input: str | list[str] | np.ndarray | list[np.ndarray], **kwargs
+        self, input: Union[str, List[str], np.ndarray, List[np.ndarray]], **kwargs
     ) -> UadResult:
         """Predicts anomaly detection results for the given input.
 
         Args:
-            input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or path(s) to the images.
+            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): The input image(s) or path(s) to the images.
             **kwargs: Additional keyword arguments that can be passed to the function.
 
         Returns:
