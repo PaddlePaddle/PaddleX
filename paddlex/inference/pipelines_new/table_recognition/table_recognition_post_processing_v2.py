@@ -32,12 +32,38 @@ def get_ori_image_coordinate(x: int, y: int, box_list: list) -> list:
     """
     if not box_list:
         return box_list
-    offset = np.array([x, y] * 4)
+    offset = np.array([x, y] * 2)
     box_list = np.array(box_list)
-    if box_list.shape[-1] == 2:
-        offset = offset.reshape(4, 2)
     ori_box_list = offset + box_list
     return ori_box_list
+
+
+def convert_table_structure_pred_bbox(
+    cell_points_list: list, crop_start_point: list, img_shape: tuple
+) -> None:
+    """
+    Convert the predicted table structure bounding boxes to the original image coordinate system.
+
+    Args:
+        cell_points_list (list):  Bounding boxes ('bbox').
+        crop_start_point (list): A list of two integers representing the starting point (x, y) of the cropped image region.
+        img_shape (tuple): A tuple of two integers representing the shape (height, width) of the original image.
+
+    Returns:
+        cell_points_list (list):  Bounding boxes ('bbox').
+    """
+
+    ori_cell_points_list = get_ori_image_coordinate(
+        crop_start_point[0], crop_start_point[1], cell_points_list
+    )
+    ori_cell_points_list = np.reshape(ori_cell_points_list, (-1, 4, 2))
+    cell_box_list = convert_points_to_boxes(ori_cell_points_list)
+
+    img_height, img_width = img_shape
+    cell_box_list = np.clip(
+        cell_box_list, 0, [img_width, img_height, img_width, img_height]
+    )
+    return cell_box_list
 
 
 def distance(box_1: list, box_2: list) -> float:
@@ -244,7 +270,8 @@ def get_table_recognition_res(
 
     Args:
         table_box (list): Information about the location of cropped image, including the bounding box.
-        table_structure_pred (dict): Predicted table structure.
+        table_structure_result (list): Predicted table structure.
+        table_cells_result (list): Predicted table cells.
         overall_ocr_res (OCRResult): Overall OCR result from the input image.
 
     Returns:
@@ -256,6 +283,8 @@ def get_table_recognition_res(
     crop_start_point = [table_box[0][0], table_box[0][1]]
     img_shape = overall_ocr_res["doc_preprocessor_res"]["output_img"].shape[0:2]
 
+    ori_table_cells = convert_table_structure_pred_bbox(table_cells_result, crop_start_point, img_shape)
+
     ocr_dt_boxes = table_ocr_pred["rec_boxes"]
     ocr_texts_res = table_ocr_pred["rec_texts"]
 
@@ -266,7 +295,7 @@ def get_table_recognition_res(
     pred_html = get_html_result(matched_index, ocr_texts_res, table_structure_result)
 
     single_img_res = {
-        "cell_box_list": table_cells_result,
+        "cell_box_list": ori_table_cells,
         "table_ocr_pred": table_ocr_pred,
         "pred_html": pred_html,
     }
