@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Final, List, Optional
+from typing import Dict, Final, List, Optional, Union
 
 from pydantic import BaseModel
+from typing_extensions import Literal
 
 from ..infra.models import PrimaryOperations
 from .shared import object_detection
@@ -34,7 +35,9 @@ INFER_ENDPOINT: Final[str] = "/vehicle-attribute-recognition"
 class InferRequest(BaseModel):
     image: str
     detThreshold: Optional[float] = None
-    clsThreshold: Optional[float] = None
+    clsThreshold: Optional[
+        Union[float, Dict[Union[Literal["default"], int], float], List[float]]
+    ] = None
 
 
 class Attribute(BaseModel):

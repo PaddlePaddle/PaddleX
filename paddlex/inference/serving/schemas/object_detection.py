@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Final, List, Optional, Union
+from typing import Dict, Final, List, Optional, Union
 
 from pydantic import BaseModel, Field
 from typing_extensions import Annotated, Literal
@@ -33,7 +33,7 @@ INFER_ENDPOINT: Final[str] = "/object-detection"
 
 class InferRequest(BaseModel):
     image: str
-    threshold: Optional[Union[float, dict]] = None
+    threshold: Optional[Union[float, Dict[int, float]]] = None
     layoutNms: Optional[bool] = None
     layoutUnclipRatio: Optional[
         Union[float, Annotated[List[float], Field(min_length=2, max_length=2)]]

@@ -15,6 +15,7 @@
 from typing import Dict, Final, List, Optional, Union
 
 from pydantic import BaseModel
+from typing_extensions import Literal
 
 from ..infra.models import PrimaryOperations
 from .shared import classification
@@ -31,7 +32,9 @@ INFER_ENDPOINT: Final[str] = "/multilabel-image-classification"
 
 class InferRequest(BaseModel):
     image: str
-    threshold: Optional[Union[float, Dict[Union[str, int], float], List[float]]] = None
+    threshold: Optional[
+        Union[float, Dict[Union[Literal["default"], int], float], List[float]]
+    ] = None
 
 
 class InferResult(BaseModel):

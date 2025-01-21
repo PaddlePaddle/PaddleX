@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Final, List, Optional, Union
+from typing import Dict, Final, List, Optional, Union
 
 from pydantic import BaseModel
 
@@ -32,7 +32,7 @@ INFER_ENDPOINT: Final[str] = "/small-object-detection"
 
 class InferRequest(BaseModel):
     image: str
-    threshold: Optional[Union[float, dict]] = None
+    threshold: Optional[Union[float, Dict[int, float]]] = None
 
 
 class DetectedObject(BaseModel):
