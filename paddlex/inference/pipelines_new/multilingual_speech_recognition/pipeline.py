@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union, List
 import numpy as np
 
 from ...utils.pp_option import PaddlePredictorOption
@@ -53,12 +53,12 @@ class MultilingualSpeechRecognitionPipeline(BasePipeline):
         batch_size = multilingual_speech_recognition_model_config["batch_size"]
 
     def predict(
-        self, input: str | list[str] | np.ndarray | list[np.ndarray], **kwargs
+        self, input: Union[str, List[str], np.ndarray, List[np.ndarray]], **kwargs
     ) -> WhisperResult:
         """Predicts speech recognition results for the given input.
 
         Args:
-            input (str | list[str] | np.ndarray | list[np.ndarray]): The input audio or path.
+            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): The input audio or path.
             **kwargs: Additional keyword arguments that can be passed to the function.
 
         Returns:

@@ -15,9 +15,7 @@ from __future__ import annotations
 
 import os
 import sys
-from typing import Any
-from typing import Dict
-from typing import Optional
+from typing import Any, Dict, Optional, Union
 
 import cv2
 import numpy as np
@@ -40,7 +38,7 @@ from .utils import get_sub_regions_ocr_res
 class LayoutParsingPipelineV2(BasePipeline):
     """Layout Parsing Pipeline V2"""
 
-    entities = ["layout_parsing"]
+    entities = ["layout_parsing_v2"]
 
     def __init__(
         self,
@@ -261,7 +259,7 @@ class LayoutParsingPipelineV2(BasePipeline):
 
     def predict(
         self,
-        input: str | list[str] | np.ndarray | list[np.ndarray],
+        input: Union[str, list[str], np.ndarray, list[np.ndarray]],
         use_doc_orientation_classify: bool | None = None,
         use_doc_unwarping: bool | None = None,
         use_general_ocr: bool | None = None,
@@ -269,13 +267,13 @@ class LayoutParsingPipelineV2(BasePipeline):
         use_table_recognition: bool | None = None,
         use_formula_recognition: bool | None = None,
         text_det_limit_side_len: int | None = None,
-        text_det_limit_type: str | None = None,
+        text_det_limit_type: Union[str, None] = None,
         text_det_thresh: float | None = None,
         text_det_box_thresh: float | None = None,
         text_det_unclip_ratio: float | None = None,
         text_rec_score_thresh: float | None = None,
         seal_det_limit_side_len: int | None = None,
-        seal_det_limit_type: str | None = None,
+        seal_det_limit_type: Union[str, None] = None,
         seal_det_thresh: float | None = None,
         seal_det_box_thresh: float | None = None,
         seal_det_unclip_ratio: float | None = None,
@@ -286,7 +284,7 @@ class LayoutParsingPipelineV2(BasePipeline):
         This function predicts the layout parsing result for the given input.
 
         Args:
-            input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or pdf(s) to be processed.
+            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): The input image(s) or pdf(s) to be processed.
             use_doc_orientation_classify (bool): Whether to use document orientation classification.
             use_doc_unwarping (bool): Whether to use document unwarping.
             use_general_ocr (bool): Whether to use general OCR.
@@ -336,6 +334,24 @@ class LayoutParsingPipelineV2(BasePipeline):
                 self.layout_det_model(doc_preprocessor_image),
             )
 
+            if model_settings["use_formula_recognition"]:
+                formula_res_all = next(
+                    self.formula_recognition_pipeline(
+                        doc_preprocessor_image,
+                        use_layout_detection=False,
+                        use_doc_orientation_classify=False,
+                        use_doc_unwarping=False,
+                        layout_det_res=layout_det_res,
+                    ),
+                )
+                formula_res_list = formula_res_all["formula_res_list"]
+            else:
+                formula_res_list = []
+
+            for formula_res in formula_res_list:
+                x_min, y_min, x_max, y_max = list(map(int, formula_res["dt_polys"]))
+                doc_preprocessor_image[y_min:y_max, x_min:x_max, :] = 255.0
+
             if (
                 model_settings["use_general_ocr"]
                 or model_settings["use_table_recognition"]
@@ -351,6 +367,24 @@ class LayoutParsingPipelineV2(BasePipeline):
                         text_rec_score_thresh=text_rec_score_thresh,
                     ),
                 )
+
+                for formula_res in formula_res_list:
+                    x_min, y_min, x_max, y_max = list(map(int, formula_res["dt_polys"]))
+                    poly_points = [
+                        (x_min, y_min),
+                        (x_max, y_min),
+                        (x_max, y_max),
+                        (x_min, y_max),
+                    ]
+                    overall_ocr_res["dt_polys"].append(poly_points)
+                    overall_ocr_res["rec_texts"].append(
+                        f"${formula_res['rec_formula']}$"
+                    )
+                    overall_ocr_res["rec_boxes"] = np.vstack(
+                        (overall_ocr_res["rec_boxes"], [formula_res["dt_polys"]])
+                    )
+                    overall_ocr_res["rec_polys"].append(poly_points)
+                    overall_ocr_res["rec_scores"].append(1)
             else:
                 overall_ocr_res = {}
 
@@ -398,22 +432,11 @@ class LayoutParsingPipelineV2(BasePipeline):
             else:
                 seal_res_list = []
 
-            if model_settings["use_formula_recognition"]:
-                formula_res_all = next(
-                    self.formula_recognition_pipeline(
-                        doc_preprocessor_image,
-                        use_layout_detection=False,
-                        use_doc_orientation_classify=False,
-                        use_doc_unwarping=False,
-                        layout_det_res=layout_det_res,
-                    ),
-                )
-                formula_res_list = formula_res_all["formula_res_list"]
-            else:
-                formula_res_list = []
-
-            for table_res in table_res_list:
-                table_res["layout_bbox"] = table_res["cell_box_list"][0]
+            for formula_res in formula_res_list:
+                x_min, y_min, x_max, y_max = list(map(int, formula_res["dt_polys"]))
+                doc_preprocessor_image[y_min:y_max, x_min:x_max, :] = formula_res[
+                    "input_img"
+                ]
 
             structure_res = get_structure_res(
                 overall_ocr_res,

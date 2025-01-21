@@ -41,8 +41,8 @@ comments: true
 
 ```python
 from paddlex import create_model
-model = create_model('GroundingDINO-T')
-results = model.predict('open_vocabulary_detection.jpg', prompt = 'bus . walking man . rearview mirror .')
+model = create_model(model_name='GroundingDINO-T')
+results = model.predict(input='open_vocabulary_detection.jpg', prompt = 'bus . walking man . rearview mirror .', batch_size=1)
 for res in results:
     res.print()
     res.save_to_img(f"./output/")
@@ -62,7 +62,7 @@ for res in results:
 
 可视化图片如下：
 
-<img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/open_vocabulary_detection/open_vocabulary_detection_res.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/open_vocabulary_detection/open_vocabulary_detection_res.jpg">
 
 
 相关方法、参数等说明如下：
@@ -156,7 +156,7 @@ for res in results:
 <td>模型预测使用的提示词</td>
 <td><code>str</code></td>
 <td>任意字符串</td>
-<td>1</td>
+<td>无</td>
 </tr>
 </table>
 

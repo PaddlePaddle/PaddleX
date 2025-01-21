@@ -60,7 +60,7 @@ class SingleTableRecognitionResult(BaseCVResult, HtmlMixin, XlsxMixin):
         data["cell_box_list"] = self["cell_box_list"]
         data["pred_html"] = self["pred_html"]
         data["table_ocr_pred"] = self["table_ocr_pred"]
-        return StrMixin._to_str(data, *args, **kwargs)
+        return JsonMixin._to_str(data, *args, **kwargs)
 
     def _to_json(self, *args, **kwargs) -> Dict[str, str]:
         """
@@ -102,14 +102,14 @@ class TableRecognitionResult(BaseCVResult, HtmlMixin, XlsxMixin):
 
         if len(self["table_res_list"]) > 0:
             table_cell_img = Image.fromarray(copy.deepcopy(self["doc_preprocessor_res"]["output_img"]))
-            draw = ImageDraw.Draw(table_cell_img)
-            rectangle_color = (255, 0, 0)  # 红色
+            table_draw = ImageDraw.Draw(table_cell_img)
+            rectangle_color = (255, 0, 0)
             for sno in range(len(self["table_res_list"])):
                 table_res = self["table_res_list"][sno]
                 cell_box_list = table_res["cell_box_list"]
                 for box in cell_box_list:
                     x1, y1, x2, y2 = [int(pos) for pos in box]
-                    draw.rectangle([x1, y1, x2, y2], outline=rectangle_color, width=2)
+                    table_draw.rectangle([x1, y1, x2, y2], outline=rectangle_color, width=2)
             res_img_dict["table_cell_img"] = table_cell_img
         return res_img_dict
 
@@ -135,7 +135,7 @@ class TableRecognitionResult(BaseCVResult, HtmlMixin, XlsxMixin):
         for sno in range(len(self["table_res_list"])):
             table_res = self["table_res_list"][sno]
             data["table_res_list"].append(table_res.str["res"])
-        return StrMixin._to_str(data, *args, **kwargs)
+        return JsonMixin._to_str(data, *args, **kwargs)
 
     def _to_json(self, *args, **kwargs) -> Dict[str, str]:
         """

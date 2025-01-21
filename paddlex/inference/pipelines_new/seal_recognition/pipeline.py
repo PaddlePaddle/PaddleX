@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import os, sys
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union, Tuple, List
 import numpy as np
 import cv2
 from ..base import BasePipeline
@@ -70,8 +70,16 @@ class SealRecognitionPipeline(BasePipeline):
                 "LayoutDetection",
                 {"model_config_error": "config error for layout_det_model!"},
             )
-            self.layout_det_model = self.create_model(layout_det_config)
-
+            layout_kwargs = {}
+            if (threshold := layout_det_config.get("threshold", None)) is not None:
+                layout_kwargs["threshold"] = threshold
+            if (layout_nms := layout_det_config.get("layout_nms", None)) is not None:
+                layout_kwargs["layout_nms"] = layout_nms
+            if (layout_unclip_ratio := layout_det_config.get("layout_unclip_ratio", None)) is not None:
+                layout_kwargs["layout_unclip_ratio"] = layout_unclip_ratio
+            if (layout_merge_bboxes_mode := layout_det_config.get("layout_merge_bboxes_mode", None)) is not None:
+                layout_kwargs["layout_merge_bboxes_mode"] = layout_merge_bboxes_mode
+            self.layout_det_model = self.create_model(layout_det_config, **layout_kwargs)
         seal_ocr_config = config.get("SubPipelines", {}).get(
             "SealOCR", {"pipeline_config_error": "config error for seal_ocr_pipeline!"}
         )
@@ -151,11 +159,15 @@ class SealRecognitionPipeline(BasePipeline):
 
     def predict(
         self,
-        input: str | list[str] | np.ndarray | list[np.ndarray],
+        input: Union[str, List[str], np.ndarray, List[np.ndarray]],
         use_doc_orientation_classify: Optional[bool] = None,
         use_doc_unwarping: Optional[bool] = None,
         use_layout_detection: Optional[bool] = None,
         layout_det_res: Optional[DetResult] = None,
+        layout_threshold: Optional[Union[float, dict]] = None,
+        layout_nms: Optional[bool] = None,
+        layout_unclip_ratio: Optional[Union[float, Tuple[float, float]]] = None,
+        layout_merge_bboxes_mode: Optional[str] = None,
         seal_det_limit_side_len: Optional[int] = None,
         seal_det_limit_type: Optional[str] = None,
         seal_det_thresh: Optional[float] = None,
@@ -214,7 +226,14 @@ class SealRecognitionPipeline(BasePipeline):
                 seal_region_id += 1
             else:
                 if model_settings["use_layout_detection"]:
-                    layout_det_res = next(self.layout_det_model(doc_preprocessor_image))
+                    layout_det_res = next(self.layout_det_model(
+                        doc_preprocessor_image,
+                        threshold=layout_threshold,
+                        layout_nms=layout_nms,
+                        layout_unclip_ratio=layout_unclip_ratio,
+                        layout_merge_bboxes_mode=layout_merge_bboxes_mode
+                    )
+                )
 
                 for box_info in layout_det_res["boxes"]:
                     if box_info["label"].lower() in ["seal"]:

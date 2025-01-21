@@ -24,7 +24,7 @@ comments: true
 <tbody>
 <tr>
 <td>PP-OCRv4_server_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-OCRv4_server_seal_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_seal_det_pretrained.pdparams">训练模型</a></td>
-<td>98.21</td>
+<td>98.40</td>
 <td>84.341</td>
 <td>2425.06</td>
 <td>109</td>
@@ -32,7 +32,7 @@ comments: true
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-OCRv4_mobile_seal_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_seal_det_pretrained.pdparams">训练模型</a></td>
-<td>96.47</td>
+<td>96.36</td>
 <td>10.5878</td>
 <td>131.813</td>
 <td>4.6</td>
@@ -50,13 +50,329 @@ comments: true
 
 ```bash
 from paddlex import create_model
-model = create_model("PP-OCRv4_server_seal_det")
+model = create_model(model_name="PP-OCRv4_server_seal_det")
 output = model.predict("seal_text_det.png", batch_size=1)
 for res in output:
-    res.print(json_format=False)
-    res.save_to_img("./output/")
-    res.save_to_json("./output/res.json")
+    res.print()
+    res.save_to_img(save_path="./output/")
+    res.save_to_json(save_path="./output/res.json")
 ```
+
+运行后，得到的结果为：
+
+```bash
+{'res': {'input_path': 'seal_text_det.png', 'dt_polys': [[[165, 469], [202, 500], [251, 523], [309, 535], [374, 527], [425, 506], [465, 475], [469, 473], [473, 473], [478, 476], [508, 506], [510, 510], [510, 514], [507, 521], [455, 561], [452, 562], [391, 586], [389, 587], [310, 597], [308, 597], [235, 583], [232, 583], [171, 554], [170, 552], [121, 510], [118, 506], [117, 503], [118, 498], [121, 496], [153, 469], [157, 466], [161, 466]], [[444, 444], [448, 447], [450, 450], [450, 453], [450, 497], [449, 501], [446, 503], [443, 505], [440, 506], [197, 506], [194, 505], [190, 503], [189, 499], [187, 493], [186, 490], [187, 453], [188, 449], [190, 446], [194, 444], [197, 443], [441, 443]], [[466, 346], [471, 350], [473, 351], [476, 356], [477, 361], [477, 425], [477, 430], [474, 434], [470, 437], [463, 439], [175, 440], [170, 439], [166, 437], [163, 432], [161, 426], [160, 361], [161, 357], [163, 352], [168, 349], [171, 347], [177, 345], [462, 345]], [[324, 38], [484, 92], [490, 95], [492, 97], [586, 227], [588, 231], [589, 236], [590, 384], [590, 390], [587, 394], [583, 397], [579, 399], [571, 398], [508, 379], [503, 377], [500, 374], [497, 369], [497, 366], [494, 260], [429, 170], [324, 136], [207, 173], [143, 261], [139, 366], [138, 370], [136, 375], [131, 378], [129, 379], [66, 397], [61, 397], [56, 397], [51, 393], [49, 390], [47, 383], [49, 236], [50, 230], [51, 227], [148, 96], [151, 92], [156, 90], [316, 38], [320, 37]]], 'dt_scores': [0.9929380286534535, 0.9980056201238314, 0.9936831226022099, 0.9884004535508197]}}
+```
+
+运行结果参数含义如下：
+- `input_path`：表示输入待预测图像的路径
+- `dt_polys`：表示预测的文本检测框，其中每个文本检测框包含一个多边形的多个顶点。其中每个顶点都是一个二元组，分别表示该顶点的x坐标和y坐标
+- `dt_scores`：表示预测的文本检测框的置信度
+
+
+可视化图片如下：
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/seal_text_det/seal_text_det_res.png">
+
+相关方法、参数等说明如下：
+
+* `create_model`实例化文本检测模型（此处以`PP-OCRv4_server_seal_det`为例），具体说明如下：
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td><code>model_name</code></td>
+<td>模型名称</td>
+<td><code>str</code></td>
+<td>所有PaddleX支持的印章文本检测模型名称</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>model_dir</code></td>
+<td>模型存储路径</td>
+<td><code>str</code></td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>limit_side_len</code></td>
+<td>检测的图像边长限制</td>
+<td><code>int/None</code></td>
+<td>
+<ul>
+<li><b>int</b>: 大于0的任意整数
+<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>limit_type</code></td>
+<td>检测的图像边长限制,检测的边长限制类型 </td>
+<td><code>str/None</code></td>
+<td>
+<ul>
+<li><b>str</b>: 支持min和max. min表示保证图像最短边不小于det_limit_side_len, max: 表示保证图像最长边不大于limit_side_len
+<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</td>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>thresh</code></td>
+<td>输出的概率图中，得分大于该阈值的像素点才会被认为是文字像素点 </td>
+<td><code>float/None</code></td>
+<td>
+<ul>
+<li><b>float</b>: 大于0的任意浮点数
+<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>box_thresh</code></td>
+<td>检测结果边框内，所有像素点的平均得分大于该阈值时，该结果会被认为是文字区域 </td>
+<td><code>float/None</code></td>
+<td>
+<ul>
+<li><b>float</b>: 大于0的任意浮点数
+<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>max_candidates</code></td>
+<td>输出的最大文本框数量 </td>
+<td><code>int/None</code></td>
+<td>
+<ul>
+<li><b>int</b>: 大于0的任意整数
+<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>unclip_ratio</code></td>
+<td>Vatti clipping算法的扩张系数，使用该方法对文字区域进行扩张 </td>
+<td><code>float/None</code></td>
+<td>
+<ul>
+<li><b>float</b>: 大于0的任意浮点数
+<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>use_dilation</code></td>
+<td>是否对分割结果进行膨胀 </td>
+<td><code>bool/None</code></td>
+<td>True/False/None</td>
+<td>None</td>
+</tr>
+</table>
+
+* 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
+
+* 调用印章文本检测模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input`、 `batch_size`、 `limit_side_len`、 `limit_type`、 `thresh`、 `box_thresh`、 `max_candidates`、`unclip_ratio`和`use_dilation`，具体说明如下：
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>待预测数据，支持多种输入类型</td>
+<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td>
+<ul>
+  <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
+  <li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
+  <li><b>URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">示例</a></li>
+  <li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
+  <li><b>字典</b>，字典的<code>key</code>需与具体任务对应，如图像分类任务对应<code>\"img\"</code>，字典的<code>val</code>支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code></li>
+  <li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code></li>
+</ul>
+</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td>批大小</td>
+<td><code>int</code></td>
+<td>大于0的任意整数</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>limit_side_len</code></td>
+<td>检测的图像边长限制</td>
+<td><code>int/None</code></td>
+<td>
+<ul>
+<li><b>int</b>: 大于0的任意整数
+<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>limit_type</code></td>
+<td>检测的图像边长限制,检测的边长限制类型 </td>
+<td><code>str/None</code></td>
+<td>
+<ul>
+<li><b>str</b>: 支持min和max. min表示保证图像最短边不小于det_limit_side_len, max: 表示保证图像最长边不大于limit_side_len
+<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</td>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>thresh</code></td>
+<td>输出的概率图中，得分大于该阈值的像素点才会被认为是文字像素点 </td>
+<td><code>float/None</code></td>
+<td>
+<ul>
+<li><b>float</b>: 大于0的任意浮点数
+<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>box_thresh</code></td>
+<td>检测结果边框内，所有像素点的平均得分大于该阈值时，该结果会被认为是文字区域 </td>
+<td><code>float/None</code></td>
+<td>
+<ul>
+<li><b>float</b>: 大于0的任意浮点数
+<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>max_candidates</code></td>
+<td>输出的最大文本框数量 </td>
+<td><code>int/None</code></td>
+<td>
+<ul>
+<li><b>int</b>: 大于0的任意整数
+<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>unclip_ratio</code></td>
+<td>Vatti clipping算法的扩张系数，使用该方法对文字区域进行扩张 </td>
+<td><code>float/None</code></td>
+<td>
+<ul>
+<li><b>float</b>: 大于0的任意浮点数
+<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>use_dilation</code></td>
+<td>是否对分割结果进行膨胀 </td>
+<td><code>bool/None</code></td>
+<td>True/False/None</td>
+<td>None</td>
+</tr>
+</table>
+
+* 对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为图片、保存为`json`文件的操作:
+
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>方法说明</th>
+<th>参数</th>
+<th>参数类型</th>
+<th>参数说明</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "3"><code>print()</code></td>
+<td rowspan = "3">打印结果到终端</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan = "3"><code>save_to_json()</code></td>
+<td rowspan = "3">将结果保存为json格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>将结果保存为图像格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+</table>
+
+* 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>属性说明</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "1"><code>json</code></td>
+<td rowspan = "1">获取预测的<code>json</code>格式的结果</td>
+</tr>
+<tr>
+<td rowspan = "1"><code>img</code></td>
+<td rowspan = "1">获取格式为<code>dict</code>的可视化图像</td>
+</tr>
+
+</table>
+
 关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 
 ## 四、二次开发

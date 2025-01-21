@@ -62,7 +62,7 @@ for res in output:
 
 运行后，得到的结果为：
 ```bash
-{'res': "{'input_path': 'general_video_classification_001.mp4', 'class_ids': array([0], dtype=int32), 'scores': array([0.91997], dtype=float32), 'label_names': ['abseiling']}"}
+{'res': {'input_path': 'general_video_classification_001.mp4', 'class_ids': [0], 'scores': [0.9199600219726562], 'label_names': ['abseiling']}}
 ```
 
 参数含义如下：
@@ -72,11 +72,7 @@ for res in output:
 - `label_names`：表示视频的分类标签名称
 
 可视化视频如下：
-
-
-
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/video_classification/general_video_classification_001.jpg">
-
 上述Python脚本中，执行了如下几个步骤：
 * `create_model`实例化视频分类模型（此处以`PP-TSMv2-LCNetV2_8frames_uniform`为例），具体说明如下：
 
@@ -104,6 +100,13 @@ for res in output:
 <td><code>str</code></td>
 <td>无</td>
 <td>无</td>
+</tr>
+<tr>
+<td><code> topk</code></td>
+<td>预测结果的前 <code>topk</code> 个类别和对应的分类概率；如果不指定，将默认使用PaddleX官方模型配置</td>
+<td><code>int</code></td>
+<td>无</td>
+<td><code>1</code></td>
 </tr>
 </table>
 
@@ -143,7 +146,7 @@ for res in output:
 </tr>
 <tr>
 <td><code> topk</code></td>
-<td>预测结果的前 `topk` 个类别和对应的分类概率</td>
+<td>预测结果的前 <code>topk</code> 个类别和对应的分类概率；如果不指定，将默认使用 creat_model 指定的 <code>topk</code> 参数，如果creat_model 也没有指定， 则默认使用PaddleX官方模型配置</td>
 <td><code>int</code></td>
 <td>无</td>
 <td><code>1</code></td>
@@ -228,7 +231,7 @@ for res in output:
 </tr>
 <tr>
 <td rowspan = "1"><code>video</code></td>
-<td rowspan = "1">获取格式为<code>dict</code>的可视化视频和视频帧率</td>
+<td rowspan = "1">获取格式为<code>dict</code>的可视化视频和视频帧率。这里，可视化视频是np.array数组，维度是（视频帧数，视频高度，视频宽度，视频通道数）</td>
 </tr>
 
 </table>

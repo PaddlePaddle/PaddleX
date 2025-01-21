@@ -58,17 +58,17 @@ for res in output:
 
 运行结果参数含义如下：
 - `input_path`：表示输入图片的路径。
-- `class_ids`：表示预测结果的类别id。
+- `class_ids`：表示预测结果的类别 id，含有两个类别，即0度和180度。
 - `scores`：表示预测结果的置信度。
 - `label_names`：表示预测结果的类别名。
 
 可视化图片如下：
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/image_classification/general_image_classification_001_res.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/textline_ori_classification/textline_rot180_demo_res.jpg">
 
 相关方法、参数等说明如下：
 
-* `create_model`实例化文本识别模型（此处以`PP-LCNet_x0_25_textline_ori`为例），具体说明如下：
+* `create_model`实例化文本行方向分类模型（此处以`PP-LCNet_x0_25_textline_ori`为例），具体说明如下：
 <table>
 <thead>
 <tr>
@@ -84,7 +84,7 @@ for res in output:
 <td>模型名称</td>
 <td><code>str</code></td>
 <td>无</td>
-<td><code>PP-LCNet_x0_25_textline_ori</code></td>
+<td><code>无</code></td>
 </tr>
 <tr>
 <td><code>model_dir</code></td>
@@ -97,7 +97,7 @@ for res in output:
 
 * 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
 
-* 调用文本识别模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` 和 `batch_size`，具体说明如下：
+* 调用文本行方向分类模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` 和 `batch_size`，具体说明如下：
 
 <table>
 <thead>

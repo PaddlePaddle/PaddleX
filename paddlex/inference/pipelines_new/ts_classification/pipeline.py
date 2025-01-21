@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union, List
 import pandas as pd
 
 from ...utils.pp_option import PaddlePredictorOption
@@ -49,12 +49,12 @@ class TSClsPipeline(BasePipeline):
         self.ts_classification_model = self.create_model(ts_classification_model_config)
 
     def predict(
-        self, input: str | list[str] | pd.DataFrame | list[pd.DataFrame], **kwargs
+        self, input: Union[str, List[str], pd.DataFrame, List[pd.DataFrame]], **kwargs
     ) -> TSClsResult:
         """Predicts time series classification results for the given input.
 
         Args:
-            input (str | list[str] | pd.DataFrame | list[pd.DataFrame]): The input image(s) or path(s) to the images.
+            input (Union[str, list[str], pd.DataFrame, list[pd.DataFrame]]): The input image(s) or path(s) to the images.
             **kwargs: Additional keyword arguments that can be passed to the function.
 
         Returns:

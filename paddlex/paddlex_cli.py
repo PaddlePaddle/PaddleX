@@ -16,22 +16,18 @@ import os
 import argparse
 import subprocess
 import sys
+import shutil
+from pathlib import Path
 
 from importlib_resources import files, as_file
 
 from . import create_pipeline
 from .inference.pipelines import create_pipeline_from_config, load_pipeline_config
 from .repo_manager import setup, get_all_supported_repo_names
+from .utils.flags import FLAGS_json_format_model
 from .utils import logging
 from .utils.interactive_get_pipeline import interactive_get_pipeline
 from .utils.pipeline_arguments import PIPELINE_ARGUMENTS
-
-
-def _install_serving_deps():
-    with as_file(files("paddlex").joinpath("serving_requirements.txt")) as req_file:
-        return subprocess.check_call(
-            [sys.executable, "-m", "pip", "install", "-r", str(req_file)]
-        )
 
 
 def args_cfg():
@@ -57,6 +53,7 @@ def args_cfg():
     install_group = parser.add_argument_group("Install PaddleX Options")
     pipeline_group = parser.add_argument_group("Pipeline Predict Options")
     serving_group = parser.add_argument_group("Serving Options")
+    paddle2onnx_group = parser.add_argument_group("Paddle2ONNX Options")
 
     ################# install pdx #################
     install_group.add_argument(
@@ -148,6 +145,23 @@ def args_cfg():
         help="Port number to serve on (default: 8080).",
     )
 
+    ################# paddle2onnx #################
+    paddle2onnx_group.add_argument(
+        "--paddle2onnx", action="store_true", help="Convert Paddle model to ONNX format"
+    )
+    paddle2onnx_group.add_argument(
+        "--paddle_model_dir", type=str, help="Directory containing the Paddle model"
+    )
+    paddle2onnx_group.add_argument(
+        "--onnx_model_dir",
+        type=str,
+        default="onnx",
+        help="Output directory for the ONNX model",
+    )
+    paddle2onnx_group.add_argument(
+        "--opset_version", type=int, help="Version of the ONNX opset to use"
+    )
+
     # Parse known arguments to get the pipeline name
     args, remaining_args = parser.parse_known_args()
     pipeline_name = args.pipeline
@@ -180,6 +194,21 @@ def args_cfg():
 
 def install(args):
     """install paddlex"""
+
+    def _install_serving_deps():
+        with as_file(files("paddlex").joinpath("serving_requirements.txt")) as req_file:
+            return subprocess.check_call(
+                [sys.executable, "-m", "pip", "install", "-r", str(req_file)]
+            )
+
+    def _install_paddle2onnx_deps():
+        with as_file(
+            files("paddlex").joinpath("paddle2onnx_requirements.txt")
+        ) as req_file:
+            return subprocess.check_call(
+                [sys.executable, "-m", "pip", "install", "-r", str(req_file)]
+            )
+
     # Enable debug info
     os.environ["PADDLE_PDX_DEBUG"] = "True"
     # Disable eager initialization
@@ -189,7 +218,18 @@ def install(args):
 
     if "serving" in plugins:
         plugins.remove("serving")
+        if plugins:
+            logging.error("`serving` cannot be used together with other plugins.")
+            sys.exit(2)
         _install_serving_deps()
+        return
+
+    if "paddle2onnx" in plugins:
+        plugins.remove("paddle2onnx")
+        if plugins:
+            logging.error("`paddle2onnx` cannot be used together with other plugins.")
+            sys.exit(2)
+        _install_paddle2onnx_deps()
         return
 
     if plugins:
@@ -234,6 +274,95 @@ def serve(pipeline, *, device, use_hpip, host, port):
     run_server(app, host=host, port=port, debug=False)
 
 
+# TODO: Move to another module
+def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
+    PD_MODEL_FILE_PREFIX = "inference"
+    PD_PARAMS_FILENAME = "inference.pdiparams"
+    ONNX_MODEL_FILENAME = "inference.onnx"
+    CONFIG_FILENAME = "inference.yml"
+    ADDITIONAL_FILENAMES = ["scaler.pkl"]
+
+    def _check_input_dir(input_dir, pd_model_file_ext):
+        if input_dir is None:
+            sys.exit("Input directory must be specified")
+        if not input_dir.exists():
+            sys.exit(f"{input_dir} does not exist")
+        if not input_dir.is_dir():
+            sys.exit(f"{input_dir} is not a directory")
+        model_path = (input_dir / PD_MODEL_FILE_PREFIX).with_suffix(pd_model_file_ext)
+        if not model_path.exists():
+            sys.exit(f"{model_path} does not exist")
+        params_path = input_dir / PD_PARAMS_FILENAME
+        if not params_path.exists():
+            sys.exit(f"{params_path} does not exist")
+        config_path = input_dir / CONFIG_FILENAME
+        if not config_path.exists():
+            sys.exit(f"{config_path} does not exist")
+
+    def _check_paddle2onnx():
+        if shutil.which("paddle2onnx") is None:
+            sys.exit("Paddle2ONNX is not available. Please install the plugin first.")
+
+    def _run_paddle2onnx(input_dir, pd_model_file_ext, output_dir, opset_version):
+        logging.info("Paddle2ONNX conversion starting...")
+        # XXX: To circumvent Paddle2ONNX's bug
+        if opset_version is None:
+            if pd_model_file_ext == ".json":
+                opset_version = 19
+            else:
+                opset_version = 7
+            logging.info("Using default ONNX opset version: %d", opset_version)
+        cmd = [
+            "paddle2onnx",
+            "--model_dir",
+            str(input_dir),
+            "--model_filename",
+            str(Path(PD_MODEL_FILE_PREFIX).with_suffix(pd_model_file_ext)),
+            "--params_filename",
+            PD_PARAMS_FILENAME,
+            "--save_file",
+            str(output_dir / ONNX_MODEL_FILENAME),
+            "--opset_version",
+            str(opset_version),
+        ]
+        try:
+            subprocess.check_call(cmd)
+        except subprocess.CalledProcessError as e:
+            sys.exit(f"Paddle2ONNX conversion failed with exit code {e.returncode}")
+        logging.info("Paddle2ONNX conversion succeeded")
+
+    def _copy_config_file(input_dir, output_dir):
+        src_path = input_dir / CONFIG_FILENAME
+        dst_path = output_dir / CONFIG_FILENAME
+        shutil.copy(src_path, dst_path)
+        logging.info(f"Copied {src_path} to {dst_path}")
+
+    def _copy_additional_files(input_dir, output_dir):
+        for filename in ADDITIONAL_FILENAMES:
+            src_path = input_dir / filename
+            if not src_path.exists():
+                continue
+            dst_path = output_dir / filename
+            shutil.copy(src_path, dst_path)
+            logging.info(f"Copied {src_path} to {dst_path}")
+
+    paddle_model_dir = Path(paddle_model_dir)
+    onnx_model_dir = Path(onnx_model_dir)
+    logging.info(f"Input dir: {paddle_model_dir}")
+    logging.info(f"Output dir: {onnx_model_dir}")
+    pd_model_file_ext = ".json"
+    if not FLAGS_json_format_model:
+        if not (paddle_model_dir / f"{PD_MODEL_FILE_PREFIX}.json").exists():
+            pd_model_file_ext = ".pdmodel"
+    _check_input_dir(paddle_model_dir, pd_model_file_ext)
+    _check_paddle2onnx()
+    _run_paddle2onnx(paddle_model_dir, pd_model_file_ext, onnx_model_dir, opset_version)
+    if not (onnx_model_dir.exists() and onnx_model_dir.samefile(paddle_model_dir)):
+        _copy_config_file(paddle_model_dir, onnx_model_dir)
+        _copy_additional_files(paddle_model_dir, onnx_model_dir)
+    logging.info("Done")
+
+
 # for CLI
 def main():
     """API for commad line"""
@@ -243,7 +372,7 @@ def main():
     if len(sys.argv) == 1:
         logging.warning("No arguments provided. Displaying help information:")
         parser.print_help()
-        return
+        sys.exit(2)
 
     if args.install:
         install(args)
@@ -255,12 +384,19 @@ def main():
             host=args.host,
             port=args.port,
         )
+    elif args.paddle2onnx:
+        paddle_to_onnx(
+            args.paddle_model_dir,
+            args.onnx_model_dir,
+            opset_version=args.opset_version,
+        )
     else:
         if args.get_pipeline_config is not None:
             interactive_get_pipeline(args.get_pipeline_config, args.save_path)
         else:
             pipeline_args_dict = {}
             from .utils.flags import USE_NEW_INFERENCE
+
             if USE_NEW_INFERENCE:
                 for arg in pipeline_args:
                     arg_name = arg["name"].lstrip("-")

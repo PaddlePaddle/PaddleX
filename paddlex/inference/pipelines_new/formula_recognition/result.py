@@ -180,7 +180,7 @@ class FormulaRecognitionResult(BaseCVResult):
                 )
             data["formula_res_list"].append(rec_formula_dict)
 
-        return StrMixin._to_str(data, *args, **kwargs)
+        return JsonMixin._to_str(data, *args, **kwargs)
 
     def _to_json(self, *args, **kwargs) -> Dict[str, str]:
         """

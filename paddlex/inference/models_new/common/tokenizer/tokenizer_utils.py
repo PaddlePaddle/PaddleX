@@ -66,8 +66,8 @@ __all__ = [
 
 @dataclass
 class ChatTemplate:
-    conversation: list[str] | None = None
-    system: str | None = None
+    conversation: Union[List[str], None] = None
+    system: Union[str, None] = None
     query: str = None
 
     @staticmethod
@@ -84,10 +84,10 @@ class ChatTemplate:
 
     def render_conversation(
         self,
-        conversation_data: list[str] | dict[str, str],
+        conversation_data: Union[List[str], Dict[str, str]],
         index: int = 0,
         context_data: Dict[str, Any] = {},
-    ) -> list[str]:
+    ) -> List[str]:
         """
         Args:
             conversation_data (list[str]): the conversation data which must be two parts
@@ -145,7 +145,7 @@ class ChatTemplate:
 
     def __call__(
         self,
-        conversations: list[list[str]] | str,
+        conversations: Union[List[List[str]], str],
         context_data: Dict[str, Union[int, str]] = {},
     ) -> str:
         """render the conversations by chat-template
@@ -188,7 +188,7 @@ class ChatTemplate:
         return final_query
 
     @classmethod
-    def from_dict(cls, config: dict):
+    def from_dict(cls, config: Dict):
         return cls(**config)
 
     @classmethod
@@ -641,11 +641,11 @@ class ChatTemplateMixin:
 
     def apply_chat_template(
         self,
-        conversation: Union[Dict[str, str] | Dict[str, str]] | str,
+        conversation: Union[Dict[str, str], str],
         tokenize: bool = True,
         context_data: Dict[str, Any] = {},
         **tokenizer_kwargs,
-    ) -> str | dict[str, Union["numpy.ndarray", "paddle.Tensor"]]:
+    ) -> Union[str, Dict[str, Union["numpy.ndarray", "paddle.Tensor"]]]:
         """apply chat_template rules to conversation which should not be batched data
 
         Args:
@@ -677,9 +677,9 @@ class ChatTemplateMixin:
 
     def _apply_chat_template_paddle(
         self,
-        conversation: List[Dict[str, str]] | str,
+        conversation: Union[List[Dict[str, str]], str],
         context_data: Dict[str, Any] = {},
-    ) -> str | dict[str, Union["numpy.ndarray", "paddle.Tensor"]]:
+    ) -> Union[str, Dict[str, Union["numpy.ndarray", "paddle.Tensor"]]]:
         context_data = self.chat_template._init_context_data(context_data)
 
         if isinstance(conversation, str):
@@ -695,9 +695,9 @@ class ChatTemplateMixin:
 
     def _apply_chat_template(
         self,
-        conversation: Union[Dict[str, str] | Dict[str, str]] | str,
+        conversation: Union[Dict[str, str], str],
         add_generation_prompt=True,
-    ) -> str | dict[str, Union["numpy.ndarray", "paddle.Tensor"]]:
+    ) -> Union[str, Dict[str, Union["numpy.ndarray", "paddle.Tensor"]]]:
         if isinstance(conversation, str):
             conversations = [{"role": "user", "content": conversation}]
         elif isinstance(conversation, list):
@@ -893,7 +893,7 @@ class ChatTemplateMixin:
         tokenizer.init_chat_template(chat_template_file)
         return tokenizer
 
-    def init_chat_template(self, chat_template: str | dict):
+    def init_chat_template(self, chat_template: Union[str, Dict]):
         """init chat_tempalte by file_path or template dict data
 
         Args:

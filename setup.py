@@ -39,6 +39,11 @@ def serving_dependencies():
         return file.read()
 
 
+def paddle2onnx_dependencies():
+    with open(os.path.join("paddlex", "paddle2onnx_requirements.txt"), "r") as file:
+        return file.read()
+
+
 def version():
     """get version"""
     with open(os.path.join("paddlex", ".version"), "r") as file:
@@ -92,6 +97,7 @@ if __name__ == "__main__":
         install_requires=dependencies(),
         extras_require={
             "serving": serving_dependencies(),
+            "paddle2onnx": paddle2onnx_dependencies(),
         },
         packages=pkgs,
         package_data=pkg_data,

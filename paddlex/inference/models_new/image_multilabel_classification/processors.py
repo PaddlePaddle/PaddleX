@@ -41,9 +41,11 @@ class MultiLabelThreshOutput:
                 raise ValueError(
                     "If using dictionary format, please specify default threshold explicitly with key 'default'."
                 )
-            default_threshold = threshold.pop("default")
+            default_threshold = threshold.get("default")
             threshold_list = [default_threshold for _ in range(num_classes)]
             for k, v in threshold.items():
+                if k == "default":
+                    continue
                 if isinstance(k, str):
                     assert (
                         k.isdigit()

@@ -23,7 +23,7 @@ comments: true
 <td>144.9</td>
 <td>33920.7</td>
 <td>2433.7</td>
-<td rowspan="2">SAM（Segment Anything Model）是一种先进的图像分割模型，能够根据用户提供的简单提示（如点、框或文本）对图像中的任意对象进行分割。基于SA-1B数据集训练，有一千万的图像数据和十一亿掩码标注，在大部分场景均有较好的效果。</td>
+<td rowspan="2">SAM（Segment Anything Model）是一种先进的图像分割模型，能够根据用户提供的简单提示（如点、框或文本）对图像中的任意对象进行分割。基于SA-1B数据集训练，有一千万的图像数据和十一亿掩码标注，在大部分场景均有较好的效果。其中SAM-H_box表示使用框作为分割提示输入，SAM会分割被框包裹主的主体；SAM-H_point表示使用点作为分割提示输入，SAM会分割点所在的主体。</td>
 </tr>
 <tr>
 <td>SAM-H_point</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SAM-H_point_infer.tar">推理模型</a></td>
@@ -43,16 +43,17 @@ comments: true
 
 ```python
 from paddlex import create_model
-model = create_model('SAM-H_box')
+model = create_model(model_name='SAM-H_box')
 results = model.predict(
-    "open_vocabulary_segmentation.jpg",
-    prompts = {
+    input="open_vocabulary_segmentation.jpg",
+    prompts={
         "box_prompt": [
             [112.9239273071289,118.38755798339844,513.7587890625,382.0570068359375],
             [4.597158432006836,263.5540771484375,92.20092010498047,336.5640869140625],
             [592.3548583984375,260.8838806152344,607.1813354492188,294.2261962890625]
         ],
-    }
+    },
+    batch_size=1
 )
 for res in results:
     res.print()
@@ -62,7 +63,7 @@ for res in results:
 
 运行后，得到的结果为：
 ```bash
-{'res': "{'input_path': '000000004505.jpg', 'prompts': {'box_prompt': [[112.9239273071289, 118.38755798339844, 513.7587890625, 382.0570068359375], [4.597158432006836, 263.5540771484375, 92.20092010498047, 336.5640869140625], [592.3548583984375, 260.8838806152344, 607.1813354492188, 294.2261962890625]]}, 'masks': '...', 'mask_infos': [{'label': 'box_prompt', 'prompt': [112.9239273071289, 118.38755798339844, 513.7587890625, 382.0570068359375]}, {'label': 'box_prompt', 'prompt': [4.597158432006836, 263.5540771484375, 92.20092010498047, 336.5640869140625]}, {'label': 'box_prompt', 'prompt': [592.3548583984375, 260.8838806152344, 607.1813354492188, 294.2261962890625]}]}"}
+{'res': "{'input_path': 'open_vocabulary_segmentation.jpg', 'prompts': {'box_prompt': [[112.9239273071289, 118.38755798339844, 513.7587890625, 382.0570068359375], [4.597158432006836, 263.5540771484375, 92.20092010498047, 336.5640869140625], [592.3548583984375, 260.8838806152344, 607.1813354492188, 294.2261962890625]]}, 'masks': '...', 'mask_infos': [{'label': 'box_prompt', 'prompt': [112.9239273071289, 118.38755798339844, 513.7587890625, 382.0570068359375]}, {'label': 'box_prompt', 'prompt': [4.597158432006836, 263.5540771484375, 92.20092010498047, 336.5640869140625]}, {'label': 'box_prompt', 'prompt': [592.3548583984375, 260.8838806152344, 607.1813354492188, 294.2261962890625]}]}"}
 ```
 运行结果参数含义如下：
 - `input_path`: 表示输入待预测图像的路径
@@ -74,8 +75,7 @@ for res in results:
 
 可视化图片如下：
 
-<img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/open_vocabulary_segmentation/open_vocabulary_segmentation_res.jpg">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/open_vocabulary_segmentation/open_vocabulary_segmentation_res.jpg">
 
 相关方法、参数等说明如下：
 

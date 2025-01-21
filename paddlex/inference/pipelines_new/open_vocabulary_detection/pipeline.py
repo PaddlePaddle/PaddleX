@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union, List
 import numpy as np
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
@@ -55,20 +55,22 @@ class OpenVocabularyDetectionPipeline(BasePipeline):
 
     def predict(
         self,
-        input: str | list[str] | np.ndarray | list[np.ndarray],
+        input: Union[str, List[str], np.ndarray, List[np.ndarray]],
         prompt: str,
+        thresholds: dict[str, float] | None = None,
         **kwargs
     ) -> DetResult:
         """Predicts open vocabulary detection results for the given input.
 
         Args:
-            input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or path(s) to the images.
+            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): The input image(s) or path(s) to the images.
             prompt (str): The text prompt used to describe the objects.
+            thresholds (dict | None): Threshold values for different models. If provided, these will override any default threshold values set during initialization. Default is None.
             **kwargs: Additional keyword arguments that can be passed to the function.
 
         Returns:
             DetResult: The predicted open vocabulary detection results.
         """
         yield from self.open_vocabulary_detection_model(
-            input, prompt=prompt, thresholds=self.thresholds
+            input, prompt=prompt, thresholds=thresholds
         )

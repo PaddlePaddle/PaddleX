@@ -203,8 +203,8 @@ comments: true
 
 ```python
 from paddlex import create_model
-model = create_model("PP-LiteSeg-T")
-output = model.predict("general_semantic_segmentation_002.png", batch_size=1)
+model = create_model(model_name="PP-LiteSeg-T")
+output = model.predict(input="general_semantic_segmentation_002.png", batch_size=1)
 for res in output:
     res.print()
     res.save_to_img("./output/")
@@ -221,7 +221,7 @@ for res in output:
 
 可视化图片如下：
 
-<img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/semantic_segmentation/general_semantic_segmentation_002_res.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/semanticseg/general_semantic_segmentation_002_res.png">
 
 相关方法、参数等说明如下：
 
