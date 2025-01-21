@@ -21,7 +21,6 @@ from .shared import image_segmentation
 
 __all__ = [
     "INFER_ENDPOINT",
-    "InferenceParams",
     "InferRequest",
     "InferResult",
     "PRIMARY_OPERATIONS",
@@ -30,13 +29,9 @@ __all__ = [
 INFER_ENDPOINT: Final[str] = "/semantic-segmentation"
 
 
-class InferenceParams(BaseModel):
-    targetSize: Optional[Union[int, image_segmentation.Size]] = None
-
-
 class InferRequest(BaseModel):
     image: str
-    inferenceParams: Optional[InferenceParams] = None
+    targetSize: Optional[Union[int, image_segmentation.Size]] = None
 
 
 class InferResult(BaseModel):

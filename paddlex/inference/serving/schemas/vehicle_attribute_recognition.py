@@ -21,7 +21,6 @@ from .shared import object_detection
 
 __all__ = [
     "INFER_ENDPOINT",
-    "InferenceParams",
     "InferRequest",
     "Attribute",
     "Vehicle",
@@ -32,14 +31,10 @@ __all__ = [
 INFER_ENDPOINT: Final[str] = "/vehicle-attribute-recognition"
 
 
-class InferenceParams(BaseModel):
-    detThreshold: Optional[float] = None
-    clsThreshold: Optional[float] = None
-
-
 class InferRequest(BaseModel):
     image: str
-    inferenceParams: Optional[InferenceParams] = None
+    detThreshold: Optional[float] = None
+    clsThreshold: Optional[float] = None
 
 
 class Attribute(BaseModel):

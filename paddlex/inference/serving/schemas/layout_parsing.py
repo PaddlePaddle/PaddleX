@@ -12,17 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict, Final, List, Optional
+from typing import Final, List, Optional, Union
 
-from pydantic import BaseModel
-from typing_extensions import Literal
+from pydantic import BaseModel, Field
+from typing_extensions import Annotated, Literal
 
 from ..infra.models import DataInfo, PrimaryOperations
 from .shared import ocr
 
 __all__ = [
     "INFER_ENDPOINT",
-    "InferenceParams",
     "InferRequest",
     "LayoutParsingResult",
     "InferResult",
@@ -32,7 +31,19 @@ __all__ = [
 INFER_ENDPOINT: Final[str] = "/layout-parsing"
 
 
-class InferenceParams(BaseModel):
+class InferRequest(ocr.BaseInferRequest):
+    useDocOrientationClassify: Optional[bool] = None
+    useDocUnwarping: Optional[bool] = None
+    useGeneralOcr: Optional[bool] = None
+    useSealRecognition: Optional[bool] = None
+    useTableRecognition: Optional[bool] = None
+    useFormulaRecognition: Optional[bool] = None
+    layoutThreshold: Optional[float] = None
+    layoutNms: Optional[bool] = None
+    layoutUnclipRatio: Optional[
+        Union[float, Annotated[List[float], Field(min_length=2, max_length=2)]]
+    ] = None
+    layoutMergeBboxesMode: Optional[Literal["union", "large", "small"]] = None
     textDetLimitSideLen: Optional[int] = None
     textDetLimitType: Optional[Literal["min", "max"]] = None
     textDetThresh: Optional[float] = None
@@ -47,19 +58,14 @@ class InferenceParams(BaseModel):
     sealRecScoreThresh: Optional[float] = None
 
 
-class InferRequest(ocr.BaseInferRequest):
-    useDocOrientationClassify: Optional[bool] = None
-    useDocUnwarping: Optional[bool] = None
-    useGeneralOcr: Optional[bool] = None
-    useSealRecognition: Optional[bool] = None
-    useTableRecognition: Optional[bool] = None
-    useFormulaRecognition: Optional[bool] = None
-    inferenceParams: Optional[InferenceParams] = None
-
-
 class LayoutParsingResult(BaseModel):
     prunedResult: dict
-    outputImages: Optional[Dict[str, str]] = None
+    ocrImage: Optional[str] = None
+    sealRecImage: Optional[str] = None
+    tableRecImage: Optional[str] = None
+    formulaRecImage: Optional[str] = None
+    layoutDetImage: Optional[str] = None
+    docPreprocessingImage: Optional[str] = None
     inputImage: Optional[str] = None
 
 

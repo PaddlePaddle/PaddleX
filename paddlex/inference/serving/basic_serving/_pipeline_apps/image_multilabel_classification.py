@@ -41,17 +41,12 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
         pipeline = ctx.pipeline
         aiohttp_session = ctx.aiohttp_session
 
-        if request.inferenceParams is not None:
-            threshold = request.inferenceParams.threshold
-        else:
-            threshold = None
-
         file_bytes = await serving_utils.get_raw_bytes_async(
             request.image, aiohttp_session
         )
         image = serving_utils.image_bytes_to_array(file_bytes)
 
-        result = (await pipeline.infer(image, threshold=threshold))[0]
+        result = (await pipeline.infer(image, threshold=request.threshold))[0]
 
         if "label_names" in result:
             cat_names = result["label_names"]

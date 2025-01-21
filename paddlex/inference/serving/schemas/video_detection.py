@@ -21,7 +21,6 @@ from .shared import object_detection
 
 __all__ = [
     "INFER_ENDPOINT",
-    "InferenceParams",
     "InferRequest",
     "DetectedObject",
     "InferResult",
@@ -31,14 +30,10 @@ __all__ = [
 INFER_ENDPOINT: Final[str] = "/video-detection"
 
 
-class InferenceParams(BaseModel):
-    nmsThresh: Optional[float] = None
-    scoreThresh: Optional[float] = None
-
-
 class InferRequest(BaseModel):
     video: str
-    inferenceParams: Optional[InferenceParams] = None
+    nmsThresh: Optional[float] = None
+    scoreThresh: Optional[float] = None
 
 
 class DetectedObject(BaseModel):

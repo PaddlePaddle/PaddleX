@@ -22,7 +22,6 @@ from .shared import object_detection
 
 __all__ = [
     "INFER_ENDPOINT",
-    "InferenceParams",
     "InferRequest",
     "DetectedObject",
     "InferResult",
@@ -32,18 +31,14 @@ __all__ = [
 INFER_ENDPOINT: Final[str] = "/object-detection"
 
 
-class InferenceParams(BaseModel):
-    threshold: Optional[float] = None
+class InferRequest(BaseModel):
+    image: str
+    threshold: Optional[Union[float, dict]] = None
     layoutNms: Optional[bool] = None
     layoutUnclipRatio: Optional[
         Union[float, Annotated[List[float], Field(min_length=2, max_length=2)]]
     ] = None
     layoutMergeBboxesMode: Optional[Literal["union", "large", "small"]] = None
-
-
-class InferRequest(BaseModel):
-    image: str
-    inferenceParams: Optional[InferenceParams] = None
 
 
 class DetectedObject(BaseModel):

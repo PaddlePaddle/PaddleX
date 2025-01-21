@@ -45,11 +45,6 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
 
         log_id = serving_utils.generate_log_id()
 
-        if request.inferenceParams is not None:
-            max_long_side = request.inferenceParams.maxLongSide
-        else:
-            max_long_side = None
-
         images, data_info = await ocr_common.get_images(request, ctx)
 
         result = await pipeline.infer(

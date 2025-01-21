@@ -22,7 +22,6 @@ from .shared import ocr
 
 __all__ = [
     "ANALYZE_IMAGES_ENDPOINT",
-    "InferenceParams",
     "AnalyzeImagesRequest",
     "VisualResult",
     "AnalyzeImagesResult",
@@ -38,7 +37,12 @@ __all__ = [
 ANALYZE_IMAGES_ENDPOINT: Final[str] = "/chatocr-visual"
 
 
-class InferenceParams(BaseModel):
+class AnalyzeImagesRequest(ocr.BaseInferRequest):
+    useDocOrientationClassify: Optional[bool] = None
+    useDocUnwarping: Optional[bool] = None
+    useGeneralOcr: Optional[bool] = None
+    useSealRecognition: Optional[bool] = None
+    useTableRecognition: Optional[bool] = None
     textDetLimitSideLen: Optional[int] = None
     textDetLimitType: Optional[Literal["min", "max"]] = None
     textDetThresh: Optional[float] = None
@@ -51,15 +55,6 @@ class InferenceParams(BaseModel):
     sealDetBoxThresh: Optional[float] = None
     sealDetUnclipRatio: Optional[float] = None
     sealRecScoreThresh: Optional[float] = None
-
-
-class AnalyzeImagesRequest(ocr.BaseInferRequest):
-    useDocOrientationClassify: Optional[bool] = None
-    useDocUnwarping: Optional[bool] = None
-    useGeneralOcr: Optional[bool] = None
-    useSealRecognition: Optional[bool] = None
-    useTableRecognition: Optional[bool] = None
-    inferenceParams: Optional[InferenceParams] = None
 
 
 class VisualResult(BaseModel):

@@ -52,17 +52,12 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             suffix=ext,
         )
 
-        if request.inferenceParams is not None:
-            nms_thresh = request.inferenceParams.nmsThresh
-            score_thresh = request.inferenceParams.scoreThresh
-        else:
-            nms_thresh = None
-            score_thresh = None
-
         try:
             result = (
                 await pipeline.infer(
-                    video_path, nms_thresh=nms_thresh, score_thresh=score_thresh
+                    video_path,
+                    nms_thresh=request.nmsThresh,
+                    score_thresh=request.scoreThresh,
                 )
             )[0]
         finally:

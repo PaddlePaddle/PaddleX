@@ -41,18 +41,14 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             request.image, aiohttp_session
         )
         image = serving_utils.image_bytes_to_array(file_bytes)
-        if request.inferenceParams is not None:
-            inference_params = request.inferenceParams.model_dump(exclude_unset=True)
-        else:
-            inference_params = {}
 
         result = (
             await pipeline.infer(
                 image,
-                threshold=inference_params.get("threshold"),
-                layout_nms=inference_params.get("layoutNms"),
-                layout_unclip_ratio=inference_params.get("layoutUnclipRatio"),
-                layout_merge_bboxes_mode=inference_params.get("layoutMergeBboxesMode"),
+                threshold=request.threshold,
+                layout_nms=request.layoutNms,
+                layout_unclip_ratio=request.layoutUnclipRatio,
+                layout_merge_bboxes_mode=request.layoutMergeBboxesMode,
             )
         )[0]
 

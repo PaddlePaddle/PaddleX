@@ -22,7 +22,6 @@ from .shared import classification
 
 __all__ = [
     "INFER_ENDPOINT",
-    "InferenceParams",
     "InferRequest",
     "InferResult",
     "PRIMARY_OPERATIONS",
@@ -31,13 +30,9 @@ __all__ = [
 INFER_ENDPOINT: Final[str] = "/video-classification"
 
 
-class InferenceParams(BaseModel):
-    topK: Optional[Annotated[int, Field(gt=0)]] = None
-
-
 class InferRequest(BaseModel):
     video: str
-    inferenceParams: Optional[InferenceParams] = None
+    topk: Optional[Annotated[int, Field(gt=0)]] = None
 
 
 class InferResult(BaseModel):

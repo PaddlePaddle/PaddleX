@@ -21,7 +21,6 @@ from .shared import classification
 
 __all__ = [
     "INFER_ENDPOINT",
-    "InferenceParams",
     "InferRequest",
     "InferResult",
     "PRIMARY_OPERATIONS",
@@ -30,13 +29,9 @@ __all__ = [
 INFER_ENDPOINT: Final[str] = "/multilabel-image-classification"
 
 
-class InferenceParams(BaseModel):
-    threshold: Optional[Union[float, Dict[Union[str, int], float], List[float]]] = None
-
-
 class InferRequest(BaseModel):
     image: str
-    inferenceParams: Optional[InferenceParams] = None
+    threshold: Optional[Union[float, Dict[Union[str, int], float], List[float]]] = None
 
 
 class InferResult(BaseModel):

@@ -41,12 +41,8 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             request.image, aiohttp_session
         )
         image = serving_utils.image_bytes_to_array(file_bytes)
-        if request.inferenceParams is not None:
-            top_k = request.inferenceParams.topK
-        else:
-            top_k = None
 
-        result = (await pipeline.infer(image, topk=top_k))[0]
+        result = (await pipeline.infer(image, topk=request.topk))[0]
 
         if "label_names" in result:
             cat_names = result["label_names"]

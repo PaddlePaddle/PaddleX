@@ -45,18 +45,12 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             request.image, aiohttp_session
         )
         image = serving_utils.image_bytes_to_array(file_bytes)
-        if request.inferenceParams is not None:
-            det_threshold = request.inferenceParams.detThreshold
-            cls_threshold = request.inferenceParams.clsThreshold
-        else:
-            det_threshold = None
-            cls_threshold = None
 
         result = (
             await pipeline.infer(
                 image,
-                det_threshold=det_threshold,
-                cls_threshold=cls_threshold,
+                det_threshold=request.detThreshold,
+                cls_threshold=request.clsThreshold,
             )
         )[0]
 

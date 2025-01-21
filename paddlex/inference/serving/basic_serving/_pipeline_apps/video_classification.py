@@ -52,13 +52,8 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             suffix=ext,
         )
 
-        if request.inferenceParams is not None:
-            top_k = request.inferenceParams.topK
-        else:
-            top_k = None
-
         try:
-            result = (await pipeline.infer(video_path, topk=top_k))[0]
+            result = (await pipeline.infer(video_path, topk=request.topk))[0]
         finally:
             await serving_utils.call_async(os.unlink, video_path)
 

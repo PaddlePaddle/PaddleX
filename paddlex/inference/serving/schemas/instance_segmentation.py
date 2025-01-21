@@ -33,6 +33,7 @@ INFER_ENDPOINT: Final[str] = "/instance-segmentation"
 
 class InferRequest(BaseModel):
     image: str
+    threshold: Optional[float] = None
 
 
 class Mask(BaseModel):
@@ -43,6 +44,7 @@ class Mask(BaseModel):
 class Instance(BaseModel):
     bbox: object_detection.BoundingBox
     categoryId: int
+    categoryName: str
     score: float
     mask: Mask
 

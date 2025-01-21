@@ -41,12 +41,8 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             request.image, aiohttp_session
         )
         image = serving_utils.image_bytes_to_array(file_bytes)
-        if request.inferenceParams is not None:
-            threshold = request.inferenceParams.threshold
-        else:
-            threshold = None
 
-        result = (await pipeline.infer(image, threshold=threshold))[0]
+        result = (await pipeline.infer(image, threshold=request.threshold))[0]
 
         objects: List[Dict[str, Any]] = []
         for obj in result["boxes"]:

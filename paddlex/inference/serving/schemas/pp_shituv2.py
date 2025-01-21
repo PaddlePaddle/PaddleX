@@ -31,7 +31,6 @@ __all__ = [
     "RemoveImagesFromIndexRequest",
     "RemoveImagesFromIndexResult",
     "INFER_ENDPOINT",
-    "InferenceParams",
     "InferRequest",
     "RecResult",
     "DetectedObject",
@@ -84,16 +83,13 @@ class RemoveImagesFromIndexResult(BaseModel):
 INFER_ENDPOINT: Final[str] = "/shitu-infer"
 
 
-class InferenceParams(BaseModel):
-    detThreshold: Optional[float] = None
-    recThreshold: Optional[float] = None
-    topK: Optional[int] = None
-
-
 class InferRequest(BaseModel):
     image: str
     indexKey: Optional[str] = None
-    inferenceParams: Optional[InferenceParams] = None
+    detThreshold: Optional[float] = None
+    recThreshold: Optional[float] = None
+    hammingRadius: Optional[float] = None
+    topk: Optional[int] = None
 
 
 class RecResult(BaseModel):

@@ -43,10 +43,6 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
         log_id = serving_utils.generate_log_id()
 
         images, data_info = await ocr_common.get_images(request, ctx)
-        if request.inferenceParams is not None:
-            inference_params = request.inferenceParams.model_dump(exclude_unset=True)
-        else:
-            inference_params = {}
 
         result = await pipeline.infer(
             images,
@@ -54,12 +50,16 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             use_doc_unwarping=request.useDocUnwarping,
             use_layout_detection=request.useLayoutDetection,
             use_ocr_model=request.useOcrModel,
-            text_det_limit_side_len=inference_params.get("textDetLimitSideLen"),
-            text_det_limit_type=inference_params.get("textDetLimitType"),
-            text_det_thresh=inference_params.get("textDetThresh"),
-            text_det_box_thresh=inference_params.get("textDetBoxThresh"),
-            text_det_unclip_ratio=inference_params.get("textDetUnclipRatio"),
-            text_rec_score_thresh=inference_params.get("textRecScoreThresh"),
+            layout_threshold=request.layoutThreshold,
+            layout_nms=request.layoutNms,
+            layout_unclip_ratio=request.layoutUnclipRatio,
+            layout_merge_bboxes_mode=request.layoutMergeBboxesMode,
+            text_det_limit_side_len=request.textDetLimitSideLen,
+            text_det_limit_type=request.textDetLimitType,
+            text_det_thresh=request.textDetThresh,
+            text_det_box_thresh=request.textDetBoxThresh,
+            text_det_unclip_ratio=request.textDetUnclipRatio,
+            text_rec_score_thresh=request.textRecScoreThresh,
         )
 
         table_rec_results: List[Dict[str, Any]] = []

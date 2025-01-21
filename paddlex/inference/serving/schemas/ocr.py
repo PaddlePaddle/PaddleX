@@ -22,7 +22,6 @@ from .shared import ocr
 
 __all__ = [
     "INFER_ENDPOINT",
-    "InferenceParams",
     "InferRequest",
     "OCRResult",
     "InferResult",
@@ -32,7 +31,10 @@ __all__ = [
 INFER_ENDPOINT: Final[str] = "/ocr"
 
 
-class InferenceParams(BaseModel):
+class InferRequest(ocr.BaseInferRequest):
+    useDocOrientationClassify: Optional[bool] = None
+    useDocUnwarping: Optional[bool] = None
+    useTextlineOrientation: Optional[bool] = False
     textDetLimitSideLen: Optional[int] = None
     textDetLimitType: Optional[Literal["min", "max"]] = None
     # Better to use "threshold"? Be consistent with the pipeline API though.
@@ -40,13 +42,6 @@ class InferenceParams(BaseModel):
     textDetBoxThresh: Optional[float] = None
     textDetUnclipRatio: Optional[float] = None
     textRecScoreThresh: Optional[float] = None
-
-
-class InferRequest(ocr.BaseInferRequest):
-    useDocOrientationClassify: Optional[bool] = None
-    useDocUnwarping: Optional[bool] = None
-    useTextLineOrientation: Optional[bool] = False
-    inferenceParams: Optional[InferenceParams] = None
 
 
 class OCRResult(BaseModel):

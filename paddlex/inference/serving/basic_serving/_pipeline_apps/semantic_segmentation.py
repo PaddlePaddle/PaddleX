@@ -41,12 +41,8 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             request.image, aiohttp_session
         )
         image = serving_utils.image_bytes_to_array(file_bytes)
-        if request.inferenceParams is not None:
-            target_size = request.inferenceParams.targetSize
-        else:
-            target_size = None
 
-        result = (await pipeline.infer(image, target_size=target_size))[0]
+        result = (await pipeline.infer(image, target_size=request.targetSize))[0]
 
         pred = result["pred"][0].tolist()
         size = [len(pred), len(pred[0])]

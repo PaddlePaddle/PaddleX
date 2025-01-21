@@ -180,23 +180,15 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
         else:
             index_data = None
 
-        if request.inferenceParams is not None:
-            det_threshold = request.inferenceParams.detThreshold
-            rec_threshold = request.inferenceParams.recThreshold
-            top_k = request.inferenceParams.topK
-        else:
-            det_threshold = None
-            rec_threshold = None
-            top_k = None
-
         result = list(
             await pipeline.call(
                 pipeline.pipeline.predict,
                 image,
                 index=index_data,
-                det_threshold=det_threshold,
-                rec_threshold=rec_threshold,
-                top_k=top_k,
+                det_threshold=request.detThreshold,
+                rec_threshold=request.recThreshold,
+                hamming_radius=request.hammingRadius,
+                topk=request.topk,
             )
         )[0]
 

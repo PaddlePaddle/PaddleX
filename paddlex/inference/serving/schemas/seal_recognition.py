@@ -12,17 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Final, List, Optional
+from typing import Final, List, Optional, Union
 
-from pydantic import BaseModel
-from typing_extensions import Literal
+from pydantic import BaseModel, Field
+from typing_extensions import Annotated, Literal
 
 from ..infra.models import DataInfo, PrimaryOperations
 from .shared import ocr
 
 __all__ = [
     "INFER_ENDPOINT",
-    "InferenceParams",
     "InferRequest",
     "SealRecResult",
     "InferResult",
@@ -32,20 +31,22 @@ __all__ = [
 INFER_ENDPOINT: Final[str] = "/seal-recognition"
 
 
-class InferenceParams(BaseModel):
+class InferRequest(ocr.BaseInferRequest):
+    useDocOrientationClassify: Optional[bool] = None
+    useDocUnwarping: Optional[bool] = None
+    useLayoutDetection: Optional[bool] = None
+    layoutThreshold: Optional[float] = None
+    layoutNms: Optional[bool] = None
+    layoutUnclipRatio: Optional[
+        Union[float, Annotated[List[float], Field(min_length=2, max_length=2)]]
+    ] = None
+    layoutMergeBboxesMode: Optional[Literal["union", "large", "small"]] = None
     sealDetLimitSideLen: Optional[int] = None
     sealDetLimitType: Optional[Literal["min", "max"]] = None
     sealDetThresh: Optional[float] = None
     sealDetBoxThresh: Optional[float] = None
     sealDetUnclipRatio: Optional[float] = None
     sealRecScoreThresh: Optional[float] = None
-
-
-class InferRequest(ocr.BaseInferRequest):
-    useDocOrientationClassify: Optional[bool] = None
-    useDocUnwarping: Optional[bool] = None
-    useLayoutDetection: Optional[bool] = None
-    inferenceParams: Optional[InferenceParams] = None
 
 
 class SealRecResult(BaseModel):
