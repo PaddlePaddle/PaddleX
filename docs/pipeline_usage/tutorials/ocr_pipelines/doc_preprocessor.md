@@ -617,7 +617,7 @@ for i, res in enumerate(result[&quot;docPreprocessorResult&quot;]):
   DocOrientationClassify:
     module_name: doc_text_orientation
     model_name: PP-LCNet_x1_0_doc_ori
-    model_dir: ./output/best_model/inference # # 替换为微调后的文档图像方向分类模型权重路径
+    model_dir: ./output/best_model/inference  # 替换为微调后的文档图像方向分类模型权重路径
 ......
 ```
 随后， 参考[2. 快速开始](#2-快速开始)中的命令行方式或Python脚本方式，加载修改后的产线配置文件即可。
