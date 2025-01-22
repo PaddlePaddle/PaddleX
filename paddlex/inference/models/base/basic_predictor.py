@@ -76,7 +76,15 @@ class BasicPredictor(
                         )
                         break
                 self.benchmark.warmup_stop(warmup_num)
-            output = list(super().__call__(input))
+                logging.info("Warmup Done!")
+            # TODO(gaotingquan): after supporting batcher to batch input
+            import batch
+            from tqdm import tqdm
+
+            batched_input = batch(input)
+            output = []
+            for res in tqdm(super(batched_input).__call__(), total=len(batched_input)):
+                output.append(res)
             self.benchmark.collect(len(output))
         else:
             yield from super().__call__(input)
