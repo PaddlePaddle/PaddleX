@@ -718,6 +718,12 @@ for res in output:
 <td>服务器可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
 <td>是</td>
 </tr>
+<tr>
+<td><code>threshold</code></td>
+<td><code>number</code> | <code>object</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>threshold</code> 参数说明。</td>
+<td>否</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -765,6 +771,11 @@ for res in output:
 <td>目标类别ID。</td>
 </tr>
 <tr>
+<td><code>categoryName</code></td>
+<td><code>string</code></td>
+<td>目标类别标签名。</td>
+</tr>
+<tr>
 <td><code>score</code></td>
 <td><code>number</code></td>
 <td>目标得分。</td>
@@ -782,6 +793,7 @@ for res in output:
 285.4187316894531
 ],
 "categoryId": 0,
+"categoryName": "oranage",
 "score": 0.7418514490127563
 },
 {
@@ -792,6 +804,7 @@ for res in output:
 167.4235382080078
 ],
 "categoryId": 1,
+"categoryName": "banana",
 "score": 0.7328268885612488
 }
 ],

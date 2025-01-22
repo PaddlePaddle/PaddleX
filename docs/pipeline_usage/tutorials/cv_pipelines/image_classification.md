@@ -1037,28 +1037,9 @@ for res in output:
 <td>是</td>
 </tr>
 <tr>
-<td><code>inferenceParams</code></td>
-<td><code>object</code></td>
-<td>推理参数。</td>
-<td>否</td>
-</tr>
-</tbody>
-</table>
-<p><code>inferenceParams</code>的属性如下：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-<th>是否必填</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>topK</code></td>
-<td><code>integer</code></td>
-<td>结果中将只保留得分最高的<code>topK</code>个类别。</td>
+<td><code>topk</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>topk</code> 参数说明。</td>
 <td>否</td>
 </tr>
 </tbody>

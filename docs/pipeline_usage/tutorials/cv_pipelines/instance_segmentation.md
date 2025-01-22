@@ -542,6 +542,12 @@ for res in output:
 <td>服务器可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
 <td>是</td>
 </tr>
+<tr>
+<td><code>threshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>threshold</code> 参数说明。</td>
+<td>否</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -587,6 +593,11 @@ for res in output:
 <td><code>categoryId</code></td>
 <td><code>integer</code></td>
 <td>实例类别ID。</td>
+</tr>
+<tr>
+<td><code>categoryName</code></td>
+<td><code>string</code></td>
+<td>实例类别标签名。</td>
 </tr>
 <tr>
 <td><code>score</code></td>
