@@ -198,7 +198,7 @@ tar -xf ./dataset/instance_seg_coco_examples.tar -C ./dataset/
 Data verification can be completed with a single command:
 
 ```bash
-python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
+python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-L.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/instance_seg_coco_examples
 ```
@@ -269,13 +269,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml\
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-L.yaml\
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/instance_seg_labelme_examples
 </code></pre>
 <p>After the data conversion is executed, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters also support being set by appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml\
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-L.yaml\
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/instance_seg_labelme_examples \
     -o CheckDataset.convert.enable=True \
@@ -300,13 +300,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-L.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/instance_seg_labelme_examples
 </code></pre>
 <p>After data splitting, the original annotation files will be renamed as <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters can also be set by appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-L.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/instance_seg_labelme_examples \
     -o CheckDataset.split.enable=True \
@@ -318,7 +318,7 @@ CheckDataset:
 A single command can complete model training. Taking the training of the instance segmentation model Mask-RT-DETR-L as an example:
 
 ```bash
-python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
+python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-L.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/instance_seg_coco_examples
 ```
@@ -350,7 +350,7 @@ After completing model training, you can evaluate the specified model weights fi
 
 
 ```bash
-python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
+python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-L.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/instance_seg_coco_examples
 ```
@@ -373,7 +373,7 @@ After completing model training and evaluation, you can use the trained model we
 To perform inference prediction via the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png) to your local machine.
 
 ```bash
-python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
+python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-L.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="general_instance_segmentation_004.png"

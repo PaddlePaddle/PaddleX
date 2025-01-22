@@ -228,7 +228,7 @@ tar -xf ./dataset/Inshop_examples.tar -C ./dataset/
 一行命令即可完成数据校验：
 
 ```bash
-python main.py -c paddlex/configs/image_feature/PP-ShiTuV2_rec.yaml \
+python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/Inshop_examples
 ```
@@ -328,13 +328,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>随后执行命令：</p>
-<pre><code class="language-bash">python main.py -c  paddlex/configs/image_feature/PP-ShiTuV2_rec.yaml  \
+<pre><code class="language-bash">python main.py -c  paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/image_classification_labelme_examples
 </code></pre>
 <p>数据转换执行之后，原有标注文件会被在原路径下重命名为 <code>xxx.bak</code>。</p>
 <p>以上参数同样支持通过追加命令行参数的方式进行设置：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_feature/PP-ShiTuV2_rec.yaml  \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/image_classification_labelme_examples \
     -o CheckDataset.convert.enable=True \
@@ -360,13 +360,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>随后执行命令：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_feature/PP-ShiTuV2_rec.yaml  \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/Inshop_examples
 </code></pre>
 <p>数据划分执行之后，原有标注文件会被在原路径下重命名为 <code>xxx.bak</code>。</p>
 <p>以上参数同样支持通过追加命令行参数的方式进行设置：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_feature/PP-ShiTuV2_rec.yaml  \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/Inshop_examples \
     -o CheckDataset.split.enable=True \
@@ -382,7 +382,7 @@ CheckDataset:
 一条命令即可完成模型的训练，以此处图像特征模型 PP-ShiTuV2_rec 的训练为例：
 
 ```
-python main.py -c paddlex/configs/image_feature/PP-ShiTuV2_rec.yaml \
+python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/Inshop_examples
 ```
@@ -413,7 +413,7 @@ python main.py -c paddlex/configs/image_feature/PP-ShiTuV2_rec.yaml \
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ```bash
-python main.py -c paddlex/configs/image_feature/PP-ShiTuV2_rec.yaml \
+python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/Inshop_examples
 ```
@@ -436,7 +436,7 @@ python main.py -c paddlex/configs/image_feature/PP-ShiTuV2_rec.yaml \
 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_recognition_001.jpg)到本地。
 
 ```bash
-python main.py -c paddlex/configs/image_feature/PP-ShiTuV2_rec.yaml  \
+python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="general_image_recognition_001.jpg"

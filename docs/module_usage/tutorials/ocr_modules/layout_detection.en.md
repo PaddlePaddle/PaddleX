@@ -131,7 +131,7 @@ tar -xf ./dataset/det_layout_examples.tar -C ./dataset/
 A single command can complete data validation:
 
 ```bash
-python main.py -c paddlex/configs/layout_detection/PicoDet-L_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_layout_examples
 ```
@@ -205,13 +205,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/layout_detection/PicoDet-L_layout_3cls.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_layout_examples
 </code></pre>
 <p>After dataset splitting, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters can also be set by appending command-line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/layout_detection/PicoDet-L_layout_3cls.yaml  \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_layout_examples \
     -o CheckDataset.split.enable=True \
@@ -224,7 +224,7 @@ CheckDataset:
 A single command is sufficient to complete model training, taking the training of PicoDet-L_layout_3cls as an example:
 
 ```bash
-python main.py -c paddlex/configs/layout_detection/PicoDet-L_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/det_layout_examples
 ```
@@ -256,7 +256,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation, you can complete the evaluation with a single command:
 
 ```bash
-python main.py -c paddlex/configs/layout_detection/PicoDet-L_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/det_layout_examples
 ```
@@ -278,7 +278,7 @@ After completing model training and evaluation, you can use the trained model we
 #### 4.4.1 Model Inference
 * To perform inference predictions through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg) to your local machine.
 ```bash
-python main.py -c paddlex/configs/layout_detection/PicoDet-L_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="layout.jpg"

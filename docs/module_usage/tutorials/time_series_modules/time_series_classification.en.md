@@ -62,7 +62,7 @@ tar -xf ./dataset/ts_classify_examples.tar -C ./dataset/
 You can complete data validation with a single command:
 
 ```bash
-python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_classify_examples
 ```
@@ -163,12 +163,12 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_classify_examples
 </code></pre>
 <p>The above parameters can also be set by appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_classify_examples \
     -o CheckDataset.convert.enable=True
@@ -196,13 +196,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_classify_examples
 </code></pre>
 <p>After dataset splitting, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters can also be set by appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_classify_examples \
     -o CheckDataset.split.enable=True \
@@ -216,7 +216,7 @@ CheckDataset:
 Model training can be completed with just one command. Here, we use the Time Series Forecasting model (TimesNet_cls) as an example:
 
 ```bash
-python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/ts_classify_examples
 ```
@@ -250,7 +250,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 After completing model training, you can evaluate the specified model weights file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation can be done with a single command:
 
 ```bash
-python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ts_classify_examples
 ```
@@ -276,7 +276,7 @@ To perform inference prediction via the command line, simply use the following c
 Before running the following code, please download the [demo csv](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv) to your local machine.
 
 ```bash
-python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/inference" \
     -o Predict.input="ts_cls.csv"

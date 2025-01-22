@@ -714,7 +714,7 @@ tar -xf ./dataset/cls_flowers_examples.tar -C ./dataset/
 One command is all you need to complete data validation:
 
 ```bash
-python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
+python main.py -c paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/cls_flowers_examples
 ```
@@ -784,13 +784,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/cls_flowers_examples
 </code></pre>
 <p>After the data splitting is executed, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>These parameters also support being set through appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/cls_flowers_examples \
     -o CheckDataset.split.enable=True \
@@ -801,7 +801,7 @@ CheckDataset:
 ### 4.2 Model Training
 A single command can complete the model training. Taking the training of the image classification model PP-LCNet_x1_0 as an example:
 ```
-python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml  \
+python main.py -c paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml  \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/cls_flowers_examples
 ```
@@ -832,7 +832,7 @@ the following steps are required:
 ## <b>4.3 Model Evaluation</b>
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model accuracy. Using PaddleX for model evaluation, a single command can complete the model evaluation:
 ```bash
-python main.py -c  paddlex/configs/image_classification/PP-LCNet_x1_0.yaml  \
+python main.py -c  paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml  \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/cls_flowers_examples
 ```
@@ -854,7 +854,7 @@ After completing model training and evaluation, you can use the trained model we
 To perform inference prediction through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg) to your local machine.
 
 ```bash
-python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
+python main.py -c paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="general_image_classification_001.jpg"

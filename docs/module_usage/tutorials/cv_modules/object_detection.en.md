@@ -391,7 +391,7 @@ tar -xf ./dataset/det_coco_examples.tar -C ./dataset/
 Validate your dataset with a single command:
 
 ```bash
-python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
+python main.py -c paddlex/configs/modules/object_detection/PicoDet-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_coco_examples
 ```
@@ -480,12 +480,12 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/object_detection/PicoDet-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_labelme_examples
 </code></pre>
 <p>Of course, the above parameters also support being set by appending command line arguments. Taking a <code>LabelMe</code> format dataset as an example:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/object_detection/PicoDet-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_labelme_examples \
     -o CheckDataset.convert.enable=True \
@@ -511,13 +511,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/object_detection/PicoDet-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_coco_examples
 </code></pre>
 <p>After dataset splitting is executed, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters also support being set by appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/object_detection/PicoDet-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_coco_examples \
     -o CheckDataset.split.enable=True \
@@ -530,7 +530,7 @@ CheckDataset:
 Model training can be completed with a single command, taking the training of the object detection model PicoDet-S as an example:
 
 ```bash
-python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
+python main.py -c paddlex/configs/modules/object_detection/PicoDet-S.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/det_coco_examples
 ```
@@ -561,7 +561,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 After completing model training, you can evaluate the specified model weights file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation can be done with a single command:
 
 ```bash
-python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml \
+python main.py -c paddlex/configs/modules/object_detection/PicoDet-S.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/det_coco_examples
 ```
@@ -583,7 +583,7 @@ After completing model training and evaluation, you can use the trained model we
 
 * To perform inference predictions through the command line, use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png) to your local machine.
 ```bash
-python main.py -c paddlex/configs/object_detection/PicoDet-S.yaml  \
+python main.py -c paddlex/configs/modules/object_detection/PicoDet-S.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="general_object_detection_002.png"

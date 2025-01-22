@@ -98,7 +98,7 @@ tar -xf ./dataset/ts_dataset_examples.tar -C ./dataset/
 Data validation can be completed with a single command:
 
 ```bash
-python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
+python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_dataset_examples
 ```
@@ -211,7 +211,7 @@ The verification results above indicate that `check_pass` being `True` means the
 <li><code>enable</code>: Whether to enable dataset format conversion, supporting <code>xlsx</code> and <code>xls</code> format conversion, default is <code>False</code>;</li>
 <li><code>src_dataset_type</code>: If dataset format conversion is enabled, the source dataset format needs to be set, default is <code>null</code>.</li>
 </ul>
-<p>Modify the <code>paddlex/configs/ts_forecast/DLinear.yaml</code> configuration as follows:</p>
+<p>Modify the <code>paddlex/configs/modules/ts_forecast/DLinear.yaml</code> configuration as follows:</p>
 <pre><code class="language-bash">......
 CheckDataset:
   ......
@@ -221,12 +221,12 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_forecast_to_convert
 </code></pre>
 <p>Of course, the above parameters also support being set by appending command-line arguments. For a <code>LabelMe</code> format dataset, the command is:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_forecast_to_convert \
     -o CheckDataset.convert.enable=True \
@@ -250,13 +250,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_dataset_examples
 </code></pre>
 <p>After dataset splitting, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters also support setting through appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/ts_forecast/DLinear.yaml  \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_dataset_examples \
     -o CheckDataset.split.enable=True \
@@ -269,7 +269,7 @@ CheckDataset:
 Model training can be completed with just one command. Here, we use the Time Series Forecasting model (DLinear) as an example:
 
 ```bash
-python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
+python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/ts_dataset_examples
 ```
@@ -302,7 +302,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 After model training, you can evaluate the specified model weights on the validation set to verify model accuracy. Using PaddleX for model evaluation requires just one command:
 
 ```bash
-python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
+python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ts_dataset_examples
 ```
@@ -332,7 +332,7 @@ To perform inference predictions via the command line, use the following command
 Before running the following code, please download the [demo csv](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv) to your local machine.
 
 ```bash
-python main.py -c paddlex/configs/ts_forecast/DLinear.yaml \
+python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/inference" \
     -o Predict.input="ts_fc.csv"
