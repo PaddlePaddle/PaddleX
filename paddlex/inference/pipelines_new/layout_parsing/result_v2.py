@@ -310,7 +310,11 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         Returns:
             Dict
         """
-        save_path = Path(self.save_path)
+        if self.save_path == None:
+            is_save_mk_img = False
+        else:
+            is_save_mk_img = True
+            save_path = Path(self.save_path)
 
         parsing_result = self["parsing_res_list"]
 
@@ -329,11 +333,13 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     already_sorted=self.already_sorted,
                 )
         self.already_sorted == True
-        recursive_img_array2path(
-            self["parsing_res_list"],
-            save_path.parent,
-            labels=["img"],
-        )
+
+        if is_save_mk_img:
+            recursive_img_array2path(
+                self["parsing_res_list"],
+                save_path.parent,
+                labels=["img"],
+            )
 
         def _format_data(obj):
 
@@ -362,6 +368,9 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 )
 
             def format_image():
+                if is_save_mk_img is False:
+                    return ""
+
                 img_tags = []
                 if "img" in sub_block["image"]:
                     img_tags.append(
