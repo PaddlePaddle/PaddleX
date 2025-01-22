@@ -248,13 +248,15 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         Returns:
             None
         """
-        input_name = self["input_path"]
+        input_name = Path(self["input_path"]).stem
         save_path = Path(save_path)
         if save_path.suffix.lower() not in (".jpg", ".png"):
             save_path = save_path / f"{input_name}.jpg"
         else:
             save_path = save_path.with_suffix("")
-        ordering_image_path = save_path.parent / f"{save_path.stem}_ordering.jpg"
+        ordering_image_path = (
+            save_path.parent / f"{save_path.stem}_layout_order_res.jpg"
+        )
 
         try:
             image = Image.fromarray(self["doc_preprocessor_res"]["output_img"])

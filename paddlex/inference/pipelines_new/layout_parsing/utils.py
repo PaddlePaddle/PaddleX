@@ -222,9 +222,9 @@ def _sort_box_by_y_projection(layout_bbox, ocr_res, line_height_iou_threshold=0.
         first_span = line[0]
         end_span = line[-1]
 
-        if first_span[0][0] - x_min > 15:
+        if first_span[0][0] - x_min > 10:
             first_span[1] = "\n" + first_span[1]
-        if x_max - end_span[0][2] > 15:
+        if x_max - end_span[0][2] > 10:
             end_span[1] = end_span[1] + "\n"
 
     # Flatten lines back into a single list for boxes and texts
@@ -305,9 +305,9 @@ def get_structure_res(
                 rec_res = _sort_box_by_y_projection(layout_bbox, rec_res, 0.7)
                 rec_res_first_bbox = rec_res["boxes"][0]
                 rec_res_end_bbox = rec_res["boxes"][-1]
-                if rec_res_first_bbox[0] - layout_bbox[0] < 20:
+                if rec_res_first_bbox[0] - layout_bbox[0] < 10:
                     seg_start_flag = False
-                if layout_bbox[2] - rec_res_end_bbox[2] < 20:
+                if layout_bbox[2] - rec_res_end_bbox[2] < 10:
                     seg_end_flag = False
                 if label == "formula":
                     rec_res["rec_texts"] = [
