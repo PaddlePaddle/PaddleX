@@ -75,7 +75,7 @@ tar -xf ./dataset/k400_examples.tar -C ./dataset/
 One command is all you need to complete data validation:
 
 ```bash
-python main.py -c paddlex/configs/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml \
+python main.py -c paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/k400_examples
 ```
@@ -160,13 +160,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/k400_examples
 </code></pre>
 <p>After the data splitting is executed, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>These parameters also support being set through appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/k400_examples \
     -o CheckDataset.split.enable=True \
@@ -177,7 +177,7 @@ CheckDataset:
 ### 4.2 Model Training
 A single command can complete the model training. Taking the training of the video classification model PP-TSMv2-LCNetV2_8frames_uniform as an example:
 ```
-python main.py -c paddlex/configs/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml  \
+python main.py -c paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml  \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/k400_examples
 ```
@@ -208,7 +208,7 @@ the following steps are required:
 ## <b>4.3 Model Evaluation</b>
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model accuracy. Using PaddleX for model evaluation, a single command can complete the model evaluation:
 ```bash
-python main.py -c  paddlex/configs/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml  \
+python main.py -c  paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml  \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/k400_examples
 ```
@@ -230,7 +230,7 @@ After completing model training and evaluation, you can use the trained model we
 To perform inference prediction through the command line, simply use the following command. Before running the following code, please download the [demo video](https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/general_video_classification_001.mp4) to your local machine.
 
 ```bash
-python main.py -c paddlex/configs/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml \
+python main.py -c paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="general_video_classification_001.mp4"

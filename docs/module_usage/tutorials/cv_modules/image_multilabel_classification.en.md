@@ -86,7 +86,7 @@ tar -xf ./dataset/mlcls_nus_examples.tar -C ./dataset/
 A single command can complete data validation:
 
 ```bash
-python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/mlcls_nus_examples
 ```
@@ -175,13 +175,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_coco_examples
 </code></pre>
 <p>After the data conversion is executed, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters also support being set by appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_coco_examples \
     -o CheckDataset.convert.enable=True \
@@ -207,13 +207,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_coco_examples
 </code></pre>
 <p>After the data splitting is executed, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>These parameters can also be set by appending command-line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_coco_examples \
     -o CheckDataset.split.enable=True \
@@ -224,7 +224,7 @@ CheckDataset:
 ### 4.2 Model Training
 A single command can complete the model training. Taking the training of the image multi-label classification model PP-LCNet_x1_0_ML as an example:
 ```bash
-python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/mlcls_nus_examples
 ```
@@ -257,7 +257,7 @@ the following steps are required:
 After completing model training, you can evaluate the specified model weights file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation can be done with a single command:
 
 ```bash
-python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/mlcls_nus_examples
 ```
@@ -280,7 +280,7 @@ After completing model training and evaluation, you can use the trained model we
 * Inference predictions can be performed through the command line with just one command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png) to your local machine.
 
 ```bash
-python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml  \
+python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="multilabel_classification_005.png"

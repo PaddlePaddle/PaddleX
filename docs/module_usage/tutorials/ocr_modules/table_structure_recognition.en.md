@@ -77,7 +77,7 @@ tar -xf ./dataset/table_rec_dataset_examples.tar -C ./dataset/
 Run a single command to complete data validation:
 
 ```bash
-python main.py -c paddlex/configs/table_recognition/SLANet.yaml \
+python main.py -c paddlex/configs/modules/table_recognition/SLANet.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/table_rec_dataset_examples
 ```
@@ -157,13 +157,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/table_recognition/SLANet.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/table_recognition/SLANet.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/table_rec_dataset_examples
 </code></pre>
 <p>After the data splitting is executed, the original annotation files will be renamed to <code>xxx.bak</code> in their original paths.</p>
 <p>The above parameters also support setting through appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/table_recognition/SLANet.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/table_recognition/SLANet.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/table_rec_dataset_examples \
     -o CheckDataset.split.enable=True \
@@ -176,7 +176,7 @@ CheckDataset:
 A single command can complete the model training. Taking the training of the table structure recognition model SLANet as an example:
 
 ```bash
-python main.py -c paddlex/configs/table_recognition/SLANet.yaml \
+python main.py -c paddlex/configs/modules/table_recognition/SLANet.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/table_rec_dataset_examples
 ```
@@ -206,7 +206,7 @@ the following steps are required:
 ## <b>4.3 Model Evaluation</b>
 After completing model training, you can evaluate the specified model weights file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation can be done with a single command:
 ```bash
-python main.py -c paddlex/configs/table_recognition/SLANet.yaml \
+python main.py -c paddlex/configs/modules/table_recognition/SLANet.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/table_rec_dataset_examples
 ```
@@ -228,7 +228,7 @@ After completing model training and evaluation, you can use the trained model we
 #### 4.4.1 Model Inference
 * Inference predictions can be performed through the command line with just one command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg) to your local machine.
 ```bash
-python main.py -c paddlex/configs/table_recognition/SLANet.yaml  \
+python main.py -c paddlex/configs/modules/table_recognition/SLANet.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_accuracy/inference" \
     -o Predict.input="table_recognition.jpg"

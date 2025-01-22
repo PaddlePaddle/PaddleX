@@ -392,7 +392,7 @@ tar -xf ./dataset/ocr_curve_det_dataset_examples.tar -C ./dataset/
 一行命令即可完成数据校验：
 
 ```bash
-python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
+python main.py -c paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_curve_det_dataset_examples
 ```
@@ -477,13 +477,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>随后执行命令：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_curve_det_dataset_examples
 </code></pre>
 <p>数据划分执行之后，原有标注文件会被在原路径下重命名为 <code>xxx.bak</code>。</p>
 <p>以上参数同样支持通过追加命令行参数的方式进行设置：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.yaml  \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_seal_det.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_curve_det_dataset_examples \
     -o CheckDataset.split.enable=True \
@@ -495,7 +495,7 @@ CheckDataset:
 一条命令即可完成模型的训练，以此处PP-OCRv4服务端印章文本检测模型（PP-OCRv4_server_seal_det）的训练为例：
 
 ```bash
-python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
+python main.py -c paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/ocr_curve_det_dataset_examples
 ```
@@ -526,7 +526,7 @@ python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.y
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ```bash
-python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
+python main.py -c paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ocr_curve_det_dataset_examples
 ```
@@ -550,7 +550,7 @@ python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.y
 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png)到本地。
 
 ```bash
-python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
+python main.py -c paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_accuracy/inference" \
     -o Predict.input="seal_text_det.png"

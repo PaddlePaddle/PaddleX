@@ -88,7 +88,7 @@ tar -xf ./dataset/small_det_examples.tar -C ./dataset/
 You can complete data validation with a single command:
 
 ```bash
-python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
+python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/small_det_examples
 ```
@@ -158,12 +158,12 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./path/to/your_smallobject_labelme_dataset
 </code></pre>
 <p>Of course, the above parameters also support being set by appending command line arguments. Taking a <code>LabelMe</code> format dataset as an example:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./path/to/your_smallobject_labelme_dataset \
     -o CheckDataset.convert.enable=True \
@@ -188,13 +188,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/small_det_examples
 </code></pre>
 <p>After dataset splitting, the original annotation files will be renamed to <code>xxx.bak</code> in their original paths.</p>
 <p>The above parameters can also be set by appending command-line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml  \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-S.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/small_det_examples \
     -o CheckDataset.split.enable=True \
@@ -206,7 +206,7 @@ CheckDataset:
 Model training can be completed with a single command, taking the training of `PP-YOLOE_plus_SOD-S` as an example:
 
 ```bash
-python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
+python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/small_det_examples \
     -o Train.num_classes=10
@@ -238,7 +238,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation, you can complete the evaluation with a single command:
 
 ```bash
-python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
+python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/small_det_examples
 ```
@@ -260,7 +260,7 @@ After completing model training and evaluation, you can use the trained model we
 #### 4.4.1 Model Inference
 * To perform inference predictions through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg) to your local machine.
 ```bash
-python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
+python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="small_object_detection.jpg"

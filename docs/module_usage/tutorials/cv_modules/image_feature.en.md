@@ -76,7 +76,7 @@ tar -xf ./dataset/Inshop_examples.tar -C ./dataset/
 #### 4.1.2 Data Validation
 A single command can complete data validation:
 ```bash
-python main.py -c paddlex/configs/image_feature/PP-ShiTuV2_rec.yaml \
+python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/Inshop_examples
 ```
@@ -174,13 +174,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_feature/PP-ShiTuV2_rec.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/image_classification_labelme_examples
 </code></pre>
 <p>After the data conversion is executed, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters also support being set by appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_feature/PP-ShiTuV2_rec.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/image_classification_labelme_examples \
     -o CheckDataset.convert.enable=True \
@@ -206,13 +206,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_feature/PP-ShiTuV2_rec.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/Inshop_examples
 </code></pre>
 <p>After the data splitting is executed, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters also support being set by appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_feature/PP-ShiTuV2_rec.yaml  \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/Inshop_examples \
     -o CheckDataset.split.enable=True \
@@ -228,7 +228,7 @@ CheckDataset:
 Model training can be completed with a single command, taking the training of the image feature model PP-ShiTuV2_rec as an example:
 
 ```bash
-python main.py -c paddlex/configs/image_feature/PP-ShiTuV2_rec.yaml \
+python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/Inshop_examples
 ```
@@ -259,7 +259,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation can be done with a single command:
 
 ```bash
-python main.py -c paddlex/configs/image_feature/PP-ShiTuV2_rec.yaml \
+python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/Inshop_examples
 ```
@@ -283,7 +283,7 @@ After completing model training and evaluation, you can use the trained model we
 To perform inference prediction through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_recognition_001.jpg) to your local machine.
 
 ```bash
-python main.py -c paddlex/configs/image_feature/PP-ShiTuV2_rec.yaml  \
+python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="general_image_recognition_001.jpg"
