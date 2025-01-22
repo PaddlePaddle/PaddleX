@@ -18,8 +18,7 @@ import pandas as pd
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 
-# [TODO] 待更新models_new到models
-from ...models_new.ts_forecasting.result import TSFcResult
+from ...models.ts_forecasting.result import TSFcResult
 
 
 class TSFcPipeline(BasePipeline):

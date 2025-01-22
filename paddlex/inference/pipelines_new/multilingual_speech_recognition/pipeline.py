@@ -17,7 +17,7 @@ import numpy as np
 
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
-from ...models_new.multilingual_speech_recognition.result import WhisperResult
+from ...models.multilingual_speech_recognition.result import WhisperResult
 
 
 class MultilingualSpeechRecognitionPipeline(BasePipeline):

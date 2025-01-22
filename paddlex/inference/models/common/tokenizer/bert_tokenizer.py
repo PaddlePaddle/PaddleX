@@ -50,7 +50,13 @@ class BasicTokenizer(object):
             value for `lowercase` (as in the original BERT).
     """
 
-    def __init__(self, do_lower_case=True, never_split=None, tokenize_chinese_chars=True, strip_accents=None):
+    def __init__(
+        self,
+        do_lower_case=True,
+        never_split=None,
+        tokenize_chinese_chars=True,
+        strip_accents=None,
+    ):
         """Constructs a BasicTokenizer."""
         if never_split is None:
             never_split = []
@@ -81,7 +87,11 @@ class BasicTokenizer(object):
                 '''
         """
         text = convert_to_unicode(text)
-        never_split = self.never_split.union(set(never_split)) if never_split else self.never_split
+        never_split = (
+            self.never_split.union(set(never_split))
+            if never_split
+            else self.never_split
+        )
         text = self._clean_text(text)
 
         if self.tokenize_chinese_chars:
@@ -423,7 +433,9 @@ class BertTokenizer(PretrainedTokenizer):
             raise ValueError(
                 "Can't find a vocabulary file at path '{}'. To load the "
                 "vocabulary from a pretrained model please use "
-                "`tokenizer = BertTokenizer.from_pretrained(PRETRAINED_MODEL_NAME)`".format(vocab_file)
+                "`tokenizer = BertTokenizer.from_pretrained(PRETRAINED_MODEL_NAME)`".format(
+                    vocab_file
+                )
             )
         self.do_lower_case = do_lower_case
         self.vocab = self.load_vocabulary(vocab_file, unk_token=unk_token)
@@ -435,7 +447,9 @@ class BertTokenizer(PretrainedTokenizer):
                 tokenize_chinese_chars=tokenize_chinese_chars,
                 strip_accents=strip_accents,
             )
-        self.wordpiece_tokenizer = WordpieceTokenizer(vocab=self.vocab, unk_token=unk_token)
+        self.wordpiece_tokenizer = WordpieceTokenizer(
+            vocab=self.vocab, unk_token=unk_token
+        )
 
     @property
     def vocab_size(self):
@@ -463,7 +477,9 @@ class BertTokenizer(PretrainedTokenizer):
         """
         split_tokens = []
         if self.do_basic_tokenize:
-            for token in self.basic_tokenizer.tokenize(text, never_split=self.all_special_tokens):
+            for token in self.basic_tokenizer.tokenize(
+                text, never_split=self.all_special_tokens
+            ):
                 # If the token is part of the never_split set
                 if token in self.basic_tokenizer.never_split:
                     split_tokens.append(token)
@@ -518,7 +534,11 @@ class BertTokenizer(PretrainedTokenizer):
         """
         token_ids_0 = []
         token_ids_1 = []
-        return len(self.build_inputs_with_special_tokens(token_ids_0, token_ids_1 if pair else None))
+        return len(
+            self.build_inputs_with_special_tokens(
+                token_ids_0, token_ids_1 if pair else None
+            )
+        )
 
     def build_inputs_with_special_tokens(self, token_ids_0, token_ids_1=None):
         """
@@ -545,7 +565,9 @@ class BertTokenizer(PretrainedTokenizer):
         _sep = [self.sep_token_id]
         return _cls + token_ids_0 + _sep + token_ids_1 + _sep
 
-    def build_offset_mapping_with_special_tokens(self, offset_mapping_0, offset_mapping_1=None):
+    def build_offset_mapping_with_special_tokens(
+        self, offset_mapping_0, offset_mapping_1=None
+    ):
         """
         Build offset map from a pair of offset map by concatenating and adding offsets of special tokens.
 
@@ -595,7 +617,9 @@ class BertTokenizer(PretrainedTokenizer):
             return len(_cls + token_ids_0 + _sep) * [0]
         return len(_cls + token_ids_0 + _sep) * [0] + len(token_ids_1 + _sep) * [1]
 
-    def get_special_tokens_mask(self, token_ids_0, token_ids_1=None, already_has_special_tokens=False):
+    def get_special_tokens_mask(
+        self, token_ids_0, token_ids_1=None, already_has_special_tokens=False
+    ):
         """
         Retrieves sequence ids from a token list that has no special tokens added. This method is called when adding
         special tokens using the tokenizer ``encode`` methods.
@@ -618,7 +642,9 @@ class BertTokenizer(PretrainedTokenizer):
                     "You should not supply a second sequence if the provided sequence of "
                     "ids is already formatted with special tokens for the model."
                 )
-            return list(map(lambda x: 1 if x in self.all_special_ids else 0, token_ids_0))
+            return list(
+                map(lambda x: 1 if x in self.all_special_ids else 0, token_ids_0)
+            )
 
         if token_ids_1 is not None:
             return [1] + ([0] * len(token_ids_0)) + [1] + ([0] * len(token_ids_1)) + [1]

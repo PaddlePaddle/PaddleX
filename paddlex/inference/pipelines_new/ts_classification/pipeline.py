@@ -18,8 +18,7 @@ import pandas as pd
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 
-# [TODO] 待更新models_new到models
-from ...models_new.ts_classification.result import TSClsResult
+from ...models.ts_classification.result import TSClsResult
 
 
 class TSClsPipeline(BasePipeline):

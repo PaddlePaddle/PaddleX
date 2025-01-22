@@ -17,8 +17,7 @@ import numpy as np
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 
-# [TODO] 待更新models_new到models
-from ...models_new.semantic_segmentation.result import SegResult
+from ...models.semantic_segmentation.result import SegResult
 
 
 class SemanticSegmentationPipeline(BasePipeline):

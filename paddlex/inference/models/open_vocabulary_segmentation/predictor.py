@@ -12,54 +12,47 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 from typing import Any, Union, Dict, List, Tuple, Optional, Callable
 import numpy as np
 import inspect
 
 from ....utils.func_register import FuncRegister
-from ....modules.open_vocabulary_detection.model_list import MODELS
+from ....modules.open_vocabulary_segmentation.model_list import MODELS
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from .processors import (
-    GroundingDINOProcessor,
-    GroundingDINOPostProcessor
-)
+from .processors import SAMProcessor
 from ..common import StaticInfer
 from ..base import BasicPredictor
-from ..object_detection.result import DetResult
+from .results import SAMSegResult
 
 
-class OVDetPredictor(BasicPredictor):
+class OVSegPredictor(BasicPredictor):
 
     entities = MODELS
 
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
-    def __init__(self, *args, thresholds: Optional[Union[Dict, float]] = None, **kwargs):
+    def __init__(self, *args, **kwargs):
         """Initializes DetPredictor.
         Args:
             *args: Arbitrary positional arguments passed to the superclass.
-            thresholds (Optional[Union[Dict, float]], optional): The thresholds for filtering out low-confidence predictions, using a dict to record multiple thresholds
-                Defaults to None.
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         super().__init__(*args, **kwargs)
-        if isinstance(thresholds, float):
-            thresholds = {"threshold": thresholds}
-        self.thresholds = thresholds
-        self.pre_ops, self.infer, self.post_op = self._build()
+        self.pre_ops, self.infer, self.processor = self._build()
 
     def _build_batch_sampler(self):
         return ImageBatchSampler()
 
     def _get_result_class(self):
-        return DetResult
+        return SAMSegResult
 
     def _build(self):
         # build model preprocess ops
         pre_ops = [ReadImage(format="RGB")]
-        for cfg in self.config["Preprocess"]:
+        for cfg in self.config.get("Preprocess", []):
             tf_key = cfg["type"]
             func = self._FUNC_MAP[tf_key]
             cfg.pop("type")
@@ -75,19 +68,23 @@ class OVDetPredictor(BasicPredictor):
             option=self.pp_option,
         )
 
-        # build postprocess op
-        post_op = self.build_postprocess(pre_ops = pre_ops)
+        # build model specific processor, it's required for a OV model.
+        processor_cfg = self.config["Processor"]
+        tf_key = processor_cfg["type"]
+        func = self._FUNC_MAP[tf_key]
+        processor_cfg.pop("type")
+        args = processor_cfg
+        processor = func(self, **args) if args else func(self)
 
-        return pre_ops, infer, post_op
+        return pre_ops, infer, processor
 
-    def process(self, batch_data: List[Any], prompt: str, thresholds: Optional[dict] = None):
+    def process(self, batch_data: List[Any], prompts: Dict[str, Any]):
         """
         Process a batch of data through the preprocessing, inference, and postprocessing.
 
         Args:
             batch_data (List[str]): A batch of input data (e.g., image file paths).
-            prompt (str): Text prompt for open vocabulary detection.
-            thresholds (Optional[dict]): thresholds used for postprocess.
+            prompt (Dict[str, Any]): Prompt for open vocabulary segmentation.
 
         Returns:
             dict: A dictionary containing the input path, raw image, class IDs, scores, and label names
@@ -101,52 +98,23 @@ class OVDetPredictor(BasicPredictor):
             datas = pre_op(datas)
 
         # use Model-specific preprocessor to format batch inputs
-        batch_inputs = self.pre_ops[-1](datas, prompt)
+        batch_inputs = self.processor.preprocess(datas, **prompts)
 
         # do infer
         batch_preds = self.infer(batch_inputs)
 
         # postprocess
-        current_thresholds = self._parse_current_thresholds(
-            self.post_op, self.thresholds, thresholds
-        )
-        boxes = self.post_op(
-            *batch_preds, prompt=prompt, src_images=src_images, **current_thresholds
-        )
+        masks = self.processor.postprocess(batch_preds)
 
         return {
             "input_path": image_paths,
             "input_img": src_images,
-            "boxes": boxes,
+            "prompts": [prompts] * len(image_paths),
+            "masks": masks,
         }
 
-    def _parse_current_thresholds(self, func, init_thresholds, process_thresholds):
-        assert isinstance(func, Callable)
-        thr2val = {}
-        for name, param in inspect.signature(func).parameters.items():
-            if "threshold" in name:
-                thr2val[name] = None
-        if init_thresholds is not None:
-            thr2val.update(init_thresholds)
-        if process_thresholds is not None:
-            thr2val.update(process_thresholds)
-        return thr2val
-
-    def build_postprocess(self, **kwargs):
-        if "GroundingDINO" in self.model_name:
-            pre_ops = kwargs.get("pre_ops")
-            return GroundingDINOPostProcessor(
-                tokenizer=pre_ops[-1].tokenizer,
-                box_threshold=self.config["box_threshold"],
-                text_threshold=self.config["text_threshold"],
-            )
-        else:
-            raise NotImplementedError
-
-    @register("GroundingDINOProcessor")
-    def build_grounding_dino_preprocessor(self, text_max_words=256, target_size=(800, 1333)):
-        return GroundingDINOProcessor(
-            model_dir=self.model_dir,
-            text_max_words=text_max_words,
-            target_size=target_size
-        )
+    @register("SAMProcessor")
+    def build_sam_preprocessor(
+        self, size=1024, mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375]
+    ):
+        return SAMProcessor(size=size, img_mean=mean, img_std=std)

@@ -28,8 +28,7 @@ from ...common.batch_sampler import ImageBatchSampler
 from ..ocr.result import OCRResult
 from ..doc_preprocessor.result import DocPreprocessorResult
 
-# [TODO] 待更新models_new到models
-from ...models_new.object_detection.result import DetResult
+from ...models.object_detection.result import DetResult
 
 
 class TableRecognitionPipeline(BasePipeline):

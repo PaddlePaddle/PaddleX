@@ -18,8 +18,7 @@ import numpy as np
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 
-# [TODO] 待更新models_new到models
-from ...models_new.object_detection.result import DetResult
+from ...models.object_detection.result import DetResult
 
 
 class ObjectDetectionPipeline(BasePipeline):

@@ -20,7 +20,7 @@ from ..base import BasePipeline
 from ..components import CropByBoxes, convert_points_to_boxes
 
 from .result import FormulaRecognitionResult
-from ...models_new.formula_recognition.result import (
+from ...models.formula_recognition.result import (
     FormulaRecResult as SingleFormulaRecognitionResult,
 )
 from ....utils import logging
@@ -30,8 +30,7 @@ from ...common.batch_sampler import ImageBatchSampler
 from ..ocr.result import OCRResult
 from ..doc_preprocessor.result import DocPreprocessorResult
 
-# [TODO] 待更新models_new到models
-from ...models_new.object_detection.result import DetResult
+from ...models.object_detection.result import DetResult
 
 
 class FormulaRecognitionPipeline(BasePipeline):

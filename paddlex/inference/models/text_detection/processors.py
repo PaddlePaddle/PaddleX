@@ -256,7 +256,7 @@ class DBPostProcess:
             (bitmap * 255).astype(np.uint8), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE
         )
 
-        for contour in contours[:self.max_candidates]:
+        for contour in contours[: self.max_candidates]:
             epsilon = 0.002 * cv2.arcLength(contour, True)
             approx = cv2.approxPolyDP(contour, epsilon, True)
             points = approx.reshape((-1, 2))

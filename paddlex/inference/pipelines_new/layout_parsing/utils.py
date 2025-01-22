@@ -28,8 +28,7 @@ import uuid
 from pathlib import Path
 from typing import List
 from ..ocr.result import OCRResult
-from ...models_new.object_detection.result import DetResult
-from ..components import convert_points_to_boxes
+from ...models.object_detection.result import DetResult
 
 
 def get_overlap_boxes_idx(src_boxes: np.ndarray, ref_boxes: np.ndarray) -> List:

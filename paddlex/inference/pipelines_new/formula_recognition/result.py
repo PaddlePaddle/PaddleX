@@ -29,7 +29,7 @@ from PIL import Image, ImageDraw, ImageFont
 from ...common.result import BaseCVResult, JsonMixin, ImgMixin, StrMixin
 from ....utils import logging
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH
-from ...models_new.formula_recognition.result import (
+from ...models.formula_recognition.result import (
     get_align_equation,
     generate_tex_file,
     generate_pdf_file,

@@ -17,8 +17,7 @@ import numpy as np
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 
-# [TODO] 待更新models_new到models
-from ...models_new.keypoint_detection.result import KptResult
+from ...models.keypoint_detection.result import KptResult
 
 Number = Union[int, float]
 

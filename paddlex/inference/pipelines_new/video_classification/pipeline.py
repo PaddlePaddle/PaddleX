@@ -17,8 +17,7 @@ import numpy as np
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 
-# [TODO] 待更新models_new到models
-from ...models_new.video_classification.result import TopkVideoResult
+from ...models.video_classification.result import TopkVideoResult
 
 
 class VideoClassificationPipeline(BasePipeline):

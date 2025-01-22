@@ -424,6 +424,7 @@ class WarpAffine:
 
         return datas
 
+
 def restructured_boxes(
     boxes: ndarray, labels: List[str], img_size: Tuple[int, int]
 ) -> Boxes:
@@ -498,20 +499,21 @@ def restructured_rotated_boxes(
 
     return box_list
 
+
 def unclip_boxes(boxes, unclip_ratio=None):
     """
     Expand bounding boxes from (x1, y1, x2, y2) format using an unclipping ratio.
-    
+
     Parameters:
     - boxes: np.ndarray of shape (N, 4), where each row is (x1, y1, x2, y2).
     - unclip_ratio: tuple of (width_ratio, height_ratio), optional.
-    
+
     Returns:
     - expanded_boxes: np.ndarray of shape (N, 4), where each row is (x1, y1, x2, y2).
     """
     if unclip_ratio is None:
         return boxes
-    
+
     widths = boxes[:, 4] - boxes[:, 2]
     heights = boxes[:, 5] - boxes[:, 3]
 
@@ -524,7 +526,9 @@ def unclip_boxes(boxes, unclip_ratio=None):
     new_y1 = center_y - new_h / 2
     new_x2 = center_x + new_w / 2
     new_y2 = center_y + new_h / 2
-    expanded_boxes = np.column_stack((boxes[:, 0], boxes[:, 1], new_x1, new_y1, new_x2, new_y2))
+    expanded_boxes = np.column_stack(
+        (boxes[:, 0], boxes[:, 1], new_x1, new_y1, new_x2, new_y2)
+    )
 
     return expanded_boxes
 
@@ -551,6 +555,7 @@ def iou(box1, box2):
     iou_value = inter_area / float(box1_area + box2_area - inter_area)
 
     return iou_value
+
 
 def nms(boxes, iou_same=0.6, iou_diff=0.95):
     """Perform Non-Maximum Suppression (NMS) with different IoU thresholds for same and different classes."""
@@ -585,6 +590,7 @@ def nms(boxes, iou_same=0.6, iou_diff=0.95):
         indices = filtered_indices
     return selected_boxes
 
+
 def is_contained(box1, box2):
     """Check if box1 is contained within box2."""
     _, _, x1, y1, x2, y2 = box1
@@ -599,6 +605,7 @@ def is_contained(box1, box2):
     intersect_area = inter_width * inter_height
     iou = intersect_area / box1_area if box1_area > 0 else 0
     return iou >= 0.9
+
 
 def check_containment(boxes, formula_index=None):
     """Check containment relationships among boxes."""
@@ -627,10 +634,7 @@ class DetPostProcess:
     based on the input type (normal or rotated object detection).
     """
 
-    def __init__(
-        self,
-        labels: Optional[List[str]] = None
-    ) -> None:
+    def __init__(self, labels: Optional[List[str]] = None) -> None:
         """Initialize the DetPostProcess class.
 
         Args:
@@ -641,14 +645,15 @@ class DetPostProcess:
         super().__init__()
         self.labels = labels
 
-    def apply(self, 
-            boxes: ndarray, 
-            img_size: Tuple[int, int],
-            threshold: Union[float, dict], 
-            layout_nms: Optional[bool],
-            layout_unclip_ratio: Optional[Union[float, Tuple[float, float]]], 
-            layout_merge_bboxes_mode: Optional[str]
-        ) -> Boxes:
+    def apply(
+        self,
+        boxes: ndarray,
+        img_size: Tuple[int, int],
+        threshold: Union[float, dict],
+        layout_nms: Optional[bool],
+        layout_unclip_ratio: Optional[Union[float, Tuple[float, float]]],
+        layout_merge_bboxes_mode: Optional[str],
+    ) -> Boxes:
         """Apply post-processing to the detection boxes.
 
         Args:
@@ -666,7 +671,9 @@ class DetPostProcess:
             for cat_id in np.unique(boxes[:, 0]):
                 category_boxes = boxes[boxes[:, 0] == cat_id]
                 category_threshold = threshold.get(int(cat_id), 0.5)
-                selected_indices = (category_boxes[:, 1] > category_threshold) & (category_boxes[:, 0] > -1)
+                selected_indices = (category_boxes[:, 1] > category_threshold) & (
+                    category_boxes[:, 0] > -1
+                )
                 category_filtered_boxes.append(category_boxes[selected_indices])
             boxes = (
                 np.vstack(category_filtered_boxes)
@@ -681,30 +688,39 @@ class DetPostProcess:
             boxes = np.array(boxes[selected_indices])
 
         if layout_merge_bboxes_mode:
-            assert layout_merge_bboxes_mode in ["union", "large", "small"], \
-                f"The value of `layout_merge_bboxes_mode` must be one of ['union', 'large', 'small'], but got {layout_merge_bboxes_mode}"
+            assert layout_merge_bboxes_mode in [
+                "union",
+                "large",
+                "small",
+            ], f"The value of `layout_merge_bboxes_mode` must be one of ['union', 'large', 'small'], but got {layout_merge_bboxes_mode}"
 
             if layout_merge_bboxes_mode == "union":
                 pass
             else:
-                formula_index = self.labels.index("formula") if "formula" in self.labels else None
-                contains_other, contained_by_other = check_containment(boxes, formula_index)
+                formula_index = (
+                    self.labels.index("formula") if "formula" in self.labels else None
+                )
+                contains_other, contained_by_other = check_containment(
+                    boxes, formula_index
+                )
                 if layout_merge_bboxes_mode == "large":
                     boxes = boxes[contained_by_other == 0]
                 elif layout_merge_bboxes_mode == "small":
-                    boxes = boxes[(contains_other == 0) | (contained_by_other == 1)] 
+                    boxes = boxes[(contains_other == 0) | (contained_by_other == 1)]
 
         if layout_unclip_ratio:
             if isinstance(layout_unclip_ratio, float):
                 layout_unclip_ratio = (layout_unclip_ratio, layout_unclip_ratio)
             elif isinstance(layout_unclip_ratio, (tuple, list)):
-                assert len(layout_unclip_ratio) == 2, f"The length of `layout_unclip_ratio` should be 2."
+                assert (
+                    len(layout_unclip_ratio) == 2
+                ), f"The length of `layout_unclip_ratio` should be 2."
             else:
                 raise ValueError(
                     f"The type of `layout_unclip_ratio` must be float or Tuple[float, float], but got {type(layout_unclip_ratio)}."
                 )
             boxes = unclip_boxes(boxes, layout_unclip_ratio)
-        
+
         if boxes.shape[1] == 6:
             """For Normal Object Detection"""
             boxes = restructured_boxes(boxes, self.labels, img_size)
@@ -744,7 +760,7 @@ class DetPostProcess:
                 threshold,
                 layout_nms,
                 layout_unclip_ratio,
-                layout_merge_bboxes_mode
+                layout_merge_bboxes_mode,
             )
             outputs.append(boxes)
         return outputs

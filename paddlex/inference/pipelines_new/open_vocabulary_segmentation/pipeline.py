@@ -17,8 +17,7 @@ import numpy as np
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 
-# [TODO] 待更新models_new到models
-from ...models_new.open_vocabulary_segmentation.results import SAMSegResult
+from ...models.open_vocabulary_segmentation.results import SAMSegResult
 
 Number = Union[int, float]
 

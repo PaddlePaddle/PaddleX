@@ -17,8 +17,7 @@ import numpy as np
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 
-# [TODO] 待更新models_new到models
-from ...models_new.instance_segmentation.result import InstanceSegResult
+from ...models.instance_segmentation.result import InstanceSegResult
 
 
 class InstanceSegmentationPipeline(BasePipeline):

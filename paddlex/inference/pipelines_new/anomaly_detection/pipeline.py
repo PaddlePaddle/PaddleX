@@ -18,8 +18,7 @@ import numpy as np
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 
-# [TODO] 待更新models_new到models
-from ...models_new.anomaly_detection.result import UadResult
+from ...models.anomaly_detection.result import UadResult
 
 
 class AnomalyDetectionPipeline(BasePipeline):

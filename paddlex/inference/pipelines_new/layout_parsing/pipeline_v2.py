@@ -19,15 +19,13 @@ import numpy as np
 from ....utils import logging
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ...models_new.object_detection.result import DetResult
+from ...models.object_detection.result import DetResult
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 from ..ocr.result import OCRResult
 from .result_v2 import LayoutParsingResultV2
 from .utils import get_single_block_parsing_res
 from .utils import get_sub_regions_ocr_res
-
-# [TODO] 待更新models_new到models
 
 
 class LayoutParsingPipelineV2(BasePipeline):

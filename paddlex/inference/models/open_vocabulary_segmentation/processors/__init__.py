@@ -12,4 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .groundingdino_processors import GroundingDINOProcessor, GroundingDINOPostProcessor
+from .sam_processer import SAMProcessor
