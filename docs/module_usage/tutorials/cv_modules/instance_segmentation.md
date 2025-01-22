@@ -178,8 +178,6 @@ for res in output:
     res.save_to_json("./output/res.json")
 ```
 
-关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
-
 运行后，得到的结果为：
 ```bash
 {'res': {'input_path': 'general_instance_segmentation_004.png', 'boxes': [{'cls_id': 0, 'label': 'person', 'score': 0.897335946559906, 'coordinate': [0, 0.46382904052734375, 195.22256469726562, 572.8294067382812]}, {'cls_id': 0, 'label': 'person', 'score': 0.8606418967247009, 'coordinate': [341.30389404296875, 0, 640.4802856445312, 575.7348022460938]}, {'cls_id': 0, 'label': 'person', 'score': 0.6397128105163574, 'coordinate': [520.0907592773438, 23.334789276123047, 767.5140380859375, 574.5650634765625]}, {'cls_id': 0, 'label': 'person', 'score': 0.6008261442184448, 'coordinate': [91.02522277832031, 112.34088897705078, 405.4962158203125, 574.1039428710938]}, {'cls_id': 0, 'label': 'person', 'score': 0.5031726360321045, 'coordinate': [200.81265258789062, 58.161617279052734, 272.8892517089844, 140.88356018066406]}], 'masks': '...'}}
@@ -389,7 +387,7 @@ tar -xf ./dataset/instance_seg_coco_examples.tar -C ./dataset/
 一行命令即可完成数据校验：
 
 ```bash
-python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
+python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-L.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/instance_seg_coco_examples
 ```
@@ -460,13 +458,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>随后执行命令：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml\
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-L.yaml\
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/instance_seg_labelme_examples
 </code></pre>
 <p>数据转换执行之后，原有标注文件会被在原路径下重命名为 <code>xxx.bak</code>。</p>
 <p>以上参数同样支持通过追加命令行参数的方式进行设置:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml\
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-L.yaml\
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/instance_seg_labelme_examples \
     -o CheckDataset.convert.enable=True \
@@ -491,13 +489,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>随后执行命令：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-L.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/instance_seg_labelme_examples
 </code></pre>
 <p>数据划分执行之后，原有标注文件会被在原路径下重命名为 <code>xxx.bak</code>。</p>
 <p>以上参数同样支持通过追加命令行参数的方式进行设置：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-L.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/instance_seg_labelme_examples \
     -o CheckDataset.split.enable=True \
@@ -509,7 +507,7 @@ CheckDataset:
 一条命令即可完成模型的训练，以此处实例分割模型 Mask-RT-DETR-L 的训练为例：
 
 ```bash
-python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
+python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-L.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/instance_seg_coco_examples
 ```
@@ -540,7 +538,7 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ```bash
-python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
+python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-L.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/instance_seg_coco_examples
 ```
@@ -563,7 +561,7 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png)到本地。
 
 ```bash
-python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-L.yaml \
+python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-L.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="general_instance_segmentation_004.png"

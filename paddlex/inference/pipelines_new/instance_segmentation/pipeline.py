@@ -54,8 +54,8 @@ class InstanceSegmentationPipeline(BasePipeline):
 
     def predict(
         self,
-        input: str | list[str] | np.ndarray | list[np.ndarray],
-        threshold: float | None = None,
+        input: Union[str, List[str], np.ndarray, List[np.ndarray]],
+        threshold: Union[float, None] = None,
         **kwargs
     ) -> InstanceSegResult:
         """Predicts instance segmentation results for the given input.

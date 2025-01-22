@@ -174,7 +174,9 @@ class KptResult(BaseCVResult):
             keypoints = [
                 obj["keypoints"] for obj in self["boxes"]
             ]  # for top-down pipeline result
-        image = draw_keypoints(self["input_img"], dict(keypoints=np.stack(keypoints)))
+        image = self["input_img"]
+        if keypoints:
+            image = draw_keypoints(image, dict(keypoints=np.stack(keypoints)))
         return {"res": image}
 
     def _to_str(self, *args, **kwargs):

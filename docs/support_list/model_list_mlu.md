@@ -203,6 +203,45 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 </table>
 <b>注：以上精度指标为</b>[Cityscapes](https://www.cityscapes-dataset.com/)<b>数据集 mloU。</b>
 
+## [异常检测模块](../module_usage/tutorials/cv_modules/anomaly_detection.md)
+<table>
+<thead>
+<tr>
+<th>模型名称</th>
+<th>Avg（%）</th>
+<th>模型存储大小</th>
+<th>模型下载链接</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>STFPM</td>
+<td>96.2</td>
+<td>21.5 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/STFPM_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/STFPM_pretrained.pdparams">训练模型</a></td></tr>
+</tbody>
+</table>
+<b>注：以上精度指标为 </b>[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)<b> 验证集 平均异常分数。</b>
+
+## [人脸检测模块](../module_usage/tutorials/cv_modules/face_detection.md)
+<table>
+<thead>
+<tr>
+<th>模型名称</th>
+<th style="text-align: center;">AP (%)<br/>Easy/Medium/Hard</th>
+<th>模型存储大小</th>
+<th>模型下载链接</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>PicoDet_LCNet_x2_5_face</td>
+<td style="text-align: center;">93.7/90.7/68.1</td>
+<td>28.9 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet_LCNet_x2_5_face_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_LCNet_x2_5_face_pretrained.pdparams">训练模型</a></td></tr>
+</tbody>
+</table>
+**注：以上精度指标是在WIDER-FACE验证集上，以640
+\*640作为输入尺寸评估得到的。**
+
 ## 文本检测模块
 <table>
 <thead>

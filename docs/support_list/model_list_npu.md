@@ -167,6 +167,16 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>14.7 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MobileNetV4_conv_small_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileNetV4_conv_small_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
+<td>MobileNetV4_hybrid_large</td>
+<td>83.8</td>
+<td>145.1 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MobileNetV4_hybrid_large_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileNetV4_hybrid_large_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>MobileNetV4_hybrid_medium</td>
+<td>80.5</td>
+<td>42.9 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MobileNetV4_hybrid_medium_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileNetV4_hybrid_medium_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
 <td>PP-HGNet_base</td>
 <td>85.0</td>
 <td>249.4 M</td>
@@ -356,6 +366,56 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>81.10</td>
 <td>100.1 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SwinTransformer_tiny_patch4_window7_224_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SwinTransformer_tiny_patch4_window7_224_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>StarNet-S1</td>
+<td>73.6</td>
+<td>11.2 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/StarNet-S1_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/StarNet-S1_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>StarNet-S2</td>
+<td>74.8</td>
+<td>14.3 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/StarNet-S2_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/StarNet-S2_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>StarNet-S3</td>
+<td>77.0</td>
+<td>22.2 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/StarNet-S3_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/StarNet-S3_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>StarNet-S4</td>
+<td>79.0</td>
+<td>28.9 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/StarNet-S4_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/StarNet-S4_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>FasterNet-L</td>
+<td>83.5</td>
+<td>357.1 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterNet-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterNet-L_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>FasterNet-M</td>
+<td>83.0</td>
+<td>204.6 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterNet-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterNet-M_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>FasterNet-S</td>
+<td>81.3</td>
+<td>119.3 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterNet-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterNet-S_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>FasterNet-T0</td>
+<td>71.9</td>
+<td>15.1 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterNet-T0_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterNet-T0_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>FasterNet-T1</td>
+<td>75.9</td>
+<td>29.2 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterNet-T1_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterNet-T1_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>FasterNet-T2</td>
+<td>79.1</td>
+<td>57.4 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterNet-T2_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterNet-T2_pretrained.pdparams">训练模型</a></td></tr>
 </tbody>
 </table>
 <b>注：以上精度指标为</b>[ImageNet-1k](https://www.image-net.org/index.php)<b>验证集 Top1 Acc。</b>
@@ -390,9 +450,57 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>91.06</td>
 <td>286.5 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-HGNetV2-B6_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B6_ML_pretrained.pdparams">训练模型</a></td></tr>
-</tr></tbody>
+<tr>
+<td>PP-LCNet_x1_0_ML</td>
+<td>77.96</td>
+<td>29.4 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LCNet_x1_0_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_ML_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>ResNet50_ML</td>
+<td>83.42</td>
+<td>108.9 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/ResNet50_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_ML_pretrained.pdparams">训练模型</a></td></tr>
+</tbody>
 </table>
 <b>注：以上精度指标为 [COCO2017](https://cocodataset.org/#home) 的多标签分类任务mAP。</b>
+
+## [行人属性模块](../module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.md)
+<table>
+<thead>
+<tr>
+<th>模型名称</th>
+<th>mA（%）</th>
+<th>模型存储大小</th>
+<th>模型下载链接</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-LCNet_x1_0_pedestrian_attribute</td>
+<td>92.2</td>
+<td>6.7 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LCNet_x1_0_pedestrian_attribute_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_pedestrian_attribute_pretrained.pdparams">训练模型</a></td></tr>
+</tbody>
+</table>
+<b>注：以上精度指标为 PaddleX 内部自建数据集mA。</b>
+
+## [车辆属性模块](../module_usage/tutorials/cv_modules/vehicle_attribute_recognition.md)
+<table>
+<thead>
+<tr>
+<th>模型名称</th>
+<th>mA（%）</th>
+<th>模型存储大小</th>
+<th>模型下载链接</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-LCNet_x1_0_vehicle_attribute</td>
+<td>91.7</td>
+<td>6.7 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LCNet_x1_0_vehicle_attribute_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_vehicle_attribute_pretrained.pdparams">训练模型</a></td></tr>
+</tbody>
+</table>
+<b>注：以上精度指标为 VeRi 数据集 mA。</b>
 
 ## 目标检测模块
 <table>
@@ -588,6 +696,21 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>42.7</td>
 <td>340.5 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-YOLOE_plus_SOD-largesize-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-largesize-L_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>YOLOX-S</td>
+<td>40.4</td>
+<td>32.0 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/YOLOX-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-S_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>YOLOX-T</td>
+<td>32.9</td>
+<td>18.1 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/YOLOX-T_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-T_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>YOLOX-M</td>
+<td>46.9</td>
+<td>90.0 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/YOLOX-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-M_pretrained.pdparams">训练模型</a></td></tr>
 </tbody>
 </table>
 <b>注：以上精度指标为 </b>[VisDrone-DET](https://github.com/VisDrone/VisDrone-Dataset)<b> 验证集 mAP(0.5:0.95)。</b>
@@ -647,6 +770,11 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>205.9 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Deeplabv3-R101_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3-R101_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
+<td>OCRNet_HRNet-W18</td>
+<td>80.67</td>
+<td>43.1 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/OCRNet_HRNet-W18_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W18_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
 <td>OCRNet_HRNet-W48</td>
 <td>82.15</td>
 <td>249.8 M</td>
@@ -656,9 +784,71 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>73.10</td>
 <td>28.5 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LiteSeg-T_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-T_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>SegFormer-B0 (slice)</td>
+<td>76.73</td>
+<td>13.2 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B0 (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B0 (slice)_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>SegFormer-B1 (slice)</td>
+<td>78.35</td>
+<td>48.5 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B1 (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B1 (slice)_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>SegFormer-B2 (slice)</td>
+<td>81.60</td>
+<td>96.9 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B2 (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B2 (slice)_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>SegFormer-B3 (slice)</td>
+<td>82.47</td>
+<td>167.3 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B3 (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B3 (slice)_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>SegFormer-B4 (slice)</td>
+<td>82.38</td>
+<td>226.7 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B4 (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B4 (slice)_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>SegFormer-B5 (slice)</td>
+<td>82.58</td>
+<td>229.7 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B5 (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B5 (slice)_pretrained.pdparams">训练模型</a></td></tr>
 </tbody>
 </table>
 <b>注：以上精度指标为</b>[Cityscapes](https://www.cityscapes-dataset.com/)<b>数据集 mloU。</b>
+<table>
+<thead>
+<tr>
+<th>模型名称</th>
+<th>mloU（%）</th>
+<th>模型存储大小</th>
+<th>模型下载链接</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>SeaFormer_base(slice)</td>
+<td>40.92</td>
+<td>30.8 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SeaFormer_base(slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_base(slice)_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>SeaFormer_large (slice)</td>
+<td>43.66</td>
+<td>49.8 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SeaFormer_large (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_large (slice)_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>SeaFormer_small (slice)</td>
+<td>38.73</td>
+<td>14.3 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SeaFormer_small (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_small (slice)_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>SeaFormer_tiny (slice)</td>
+<td>34.58</td>
+<td>6.1M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SeaFormer_tiny (slice)_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_tiny (slice)_pretrained.pdparams">训练模型</a></td></tr>
+</tbody>
+</table>
+<b>注：以上精度指标为 </b>[ADE20k](https://groups.csail.mit.edu/vision/datasets/ADE20K/)<b> 数据集, slice 表示对输入图像进行了切图操作。</b>
 
 ## 实例分割模块
 <table>
@@ -755,6 +945,11 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 </thead>
 <tbody>
 <tr>
+<td>PP-ShiTuV2_rec</td>
+<td>84.2</td>
+<td>16.3 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-ShiTuV2_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-ShiTuV2_rec_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
 <td>PP-ShiTuV2_rec_CLIP_vit_base</td>
 <td>88.69</td>
 <td>306.6 M</td>
@@ -810,6 +1005,26 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 </tbody>
 </table>
 <b>注：以上精度指标为 </b>[PPVehicle](https://github.com/PaddlePaddle/PaddleDetection/tree/develop/configs/ppvehicle)<b> 验证集 mAP(0.5:0.95)。</b>
+
+## [人脸检测模块](../module_usage/tutorials/cv_modules/face_detection.md)
+<table>
+<thead>
+<tr>
+<th>模型名称</th>
+<th style="text-align: center;">AP (%)<br/>Easy/Medium/Hard</th>
+<th>模型存储大小</th>
+<th>模型下载链接</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>PicoDet_LCNet_x2_5_face</td>
+<td style="text-align: center;">93.7/90.7/68.1</td>
+<td>28.9 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet_LCNet_x2_5_face_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_LCNet_x2_5_face_pretrained.pdparams">训练模型</a></td></tr>
+</tbody>
+</table>
+**注：以上精度指标是在WIDER-FACE验证集上，以640
+\*640作为输入尺寸评估得到的。**
 
 ## [异常检测模块](../module_usage/tutorials/cv_modules/anomaly_detection.md)
 <table>
@@ -927,9 +1142,76 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>76.31</td>
 <td>6.9 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SLANet_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>SLANet_plus</td>
+<td>63.69</td>
+<td>6.9 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SLANet_plus_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">训练模型</a></td></tr>
 </tbody>
 </table>
 <b>注：以上精度指标测量自PubtabNet英文表格识别数据集。</b>
+
+## [图像矫正模块](../module_usage/tutorials/ocr_modules/text_image_unwarping.md)
+<table>
+<thead>
+<tr>
+<th>模型名称</th>
+<th>MS-SSIM （%）</th>
+<th>模型存储大小</th>
+<th>模型下载链接</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>UVDoc</td>
+<td>54.40</td>
+<td>30.3 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/UVDoc_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">训练模型</a></td></tr>
+</tbody>
+</table>
+<b>注：以上精度指标测量自 </b><b>PaddleX自建的图像矫正数据集</b><b>。</b>
+
+## [印章文本检测模块](../module_usage/tutorials/ocr_modules/seal_text_detection.md)
+<table>
+<thead>
+<tr>
+<th>模型名称</th>
+<th>检测Hmean（%）</th>
+<th>模型存储大小</th>
+<th>模型下载链接</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-OCRv4_mobile_seal_det</td>
+<td>96.47</td>
+<td>4.7M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-OCRv4_mobile_seal_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_seal_det_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>PP-OCRv4_server_seal_det</td>
+<td>98.21</td>
+<td>108.3 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-OCRv4_server_seal_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_seal_det_pretrained.pdparams">训练模型</a></td></tr>
+</tbody>
+</table>
+<b>注：以上精度指标的评估集是 PaddleX 自建的印章数据集，包含500印章图像。</b>
+
+## [文档方向分类模块](../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.md)
+<table>
+<thead>
+<tr>
+<th>模型名称</th>
+<th>Top-1 Acc（%）</th>
+<th>模型存储大小</th>
+<th>模型下载链接</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-LCNet_x1_0_doc_ori</td>
+<td>99.26</td>
+<td>7.1 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LCNet_x1_0_doc_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">训练模型</a></td></tr>
+</tbody>
+</table>
+<b>注：以上精度指标为 PaddleX 内部自建数据集 Top-1 Acc 。</b>
 
 ## 版面区域分析模块
 <table>

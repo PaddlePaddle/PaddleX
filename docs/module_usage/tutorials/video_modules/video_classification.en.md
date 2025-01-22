@@ -49,13 +49,186 @@ After installing the wheel package, you can complete video classification module
 
 ```python
 from paddlex import create_model
-model = create_model("PP-TSMv2-LCNetV2_8frames_uniform")
-output = model.predict("general_video_classification_001.mp4", batch_size=1)
+model = create_model(model_name="PP-TSMv2-LCNetV2_8frames_uniform")
+output = model.predict(input="general_video_classification_001.mp4", batch_size=1)
 for res in output:
-    res.print(json_format=False)
-    res.save_to_video("./output/")
-    res.save_to_json("./output/res.json")
+    res.print()
+    res.save_to_video(save_path="./output/")
+    res.save_to_json(save_path="./output/res.json")
 ```
+
+The result obtained after running is:
+
+```bash
+{'res': "{'input_path': 'general_video_classification_001.mp4', 'class_ids': array([0], dtype=int32), 'scores': array([0.91997], dtype=float32), 'label_names': ['abseiling']}"}
+```
+
+The meanings of the parameters are as follows:
+- `input_path`: Indicates the path of the input video to be predicted.
+- `class_ids`: Indicates the classification IDs of the video.
+- `scores`: Indicates the classification scores of the video.
+- `label_names`: Indicates the classification label names of the video.
+
+The visualization video is as follows:
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/video_classification/general_video_classification_001.jpg" alt="Visualization Image">
+
+Note: Due to network issues, the above URL may not be accessible. If you need to access the content of this link, please check the validity of the link and try again. If you encounter any problems, it might be related to the link itself or the network connection.
+
+The Python script above performs the following steps:
+* `create_model` instantiates a video classification model (here using `PP-TSMv2-LCNetV2_8frames_uniform` as an example), with specific explanations as follows:
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>model_name</code></td>
+<td>The name of the model</td>
+<td><code>str</code></td>
+<td>All model names supported by PaddleX</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>model_dir</code></td>
+<td>The storage path of the model</td>
+<td><code>str</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+</table>
+
+* The `predict` method of the video classification model is called for inference and prediction. The parameter of the `predict` method is `input`, which is used to input the data to be predicted and supports multiple input types, with specific explanations as follows:
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>Data to be predicted, supporting multiple input types</td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
+<td>
+<ul>
+  <li><b>Python Variable</b>, such as the local path of a video file represented by <code>str</code></li>
+  <li><b>File Path</b>, such as the local path of a video file: <code>/root/data/video.mp4</code></li>
+  <li><b>URL Link</b>, such as the network URL of a video file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/general_video_classification_001.mp4">Example</a></li>
+  <li><b>Local Directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
+  <li><b>List</b>, elements of the list should be data of the above types, such as <code>[\"/root/data/video1.mp4\", \"/root/data/video2.mp4\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td>Batch size</td>
+<td><code>int</code></td>
+<td>None</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>topk</code></td>
+<td>The top `topk` categories and corresponding classification probabilities of the prediction result</td>
+<td><code>int</code></td>
+<td>None</td>
+<td><code>1</code></td>
+</tr>
+</table>
+
+* The prediction results are processed as `dict` type for each sample and support operations such as printing, saving as an image, and saving as a `json` file:
+
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+<th>Parameter</th>
+<th>Parameter Type</th>
+<th>Parameter Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print the result to the terminal</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>Whether to format the output content with <code>json</code> indentation</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>JSON formatting setting, only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>JSON formatting setting, only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save the result as a file in <code>json</code> format</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving. When it is a directory, the saved file name will match the input file name</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>JSON formatting setting</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>JSON formatting setting</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_video()</code></td>
+<td>Save the result as a file in video format</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving. When it is a directory, the saved file name will match the input file name</td>
+<td>None</td>
+</tr>
+</table>
+
+* Additionally, the prediction results can also be obtained through attributes, as follows:
+
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format</td>
+</tr>
+<tr>
+<td rowspan="1"><code>video</code></td>
+<td rowspan="1">Get the visualization video and frame rate in <code>dict</code> format</td>
+</tr>
+</table>
+
 For more information on using PaddleX's single-model inference APIs, please refer to the [PaddleX Single-Model Python Script Usage Instructions](../../instructions/model_python_API.en.md).
 
 ## IV. Custom Development
@@ -75,7 +248,7 @@ tar -xf ./dataset/k400_examples.tar -C ./dataset/
 One command is all you need to complete data validation:
 
 ```bash
-python main.py -c paddlex/configs/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml \
+python main.py -c paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/k400_examples
 ```
@@ -160,13 +333,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/k400_examples
 </code></pre>
 <p>After the data splitting is executed, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>These parameters also support being set through appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/k400_examples \
     -o CheckDataset.split.enable=True \
@@ -177,7 +350,7 @@ CheckDataset:
 ### 4.2 Model Training
 A single command can complete the model training. Taking the training of the video classification model PP-TSMv2-LCNetV2_8frames_uniform as an example:
 ```
-python main.py -c paddlex/configs/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml  \
+python main.py -c paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml  \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/k400_examples
 ```
@@ -208,7 +381,7 @@ the following steps are required:
 ## <b>4.3 Model Evaluation</b>
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model accuracy. Using PaddleX for model evaluation, a single command can complete the model evaluation:
 ```bash
-python main.py -c  paddlex/configs/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml  \
+python main.py -c  paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml  \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/k400_examples
 ```
@@ -230,7 +403,7 @@ After completing model training and evaluation, you can use the trained model we
 To perform inference prediction through the command line, simply use the following command. Before running the following code, please download the [demo video](https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/general_video_classification_001.mp4) to your local machine.
 
 ```bash
-python main.py -c paddlex/configs/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml \
+python main.py -c paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="general_video_classification_001.mp4"
