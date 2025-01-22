@@ -145,11 +145,28 @@ for res in output:
 <td>1</td>
 </tr>
 <tr>
-<td><code> topk</code></td>
-<td>预测结果的前 <code>topk</code> 个类别和对应的分类概率；如果不指定，将默认使用 creat_model 指定的 <code>topk</code> 参数，如果creat_model 也没有指定， 则默认使用PaddleX官方模型配置</td>
-<td><code>int</code></td>
-<td>无</td>
-<td><code>1</code></td>
+<td><code>nms_thresh</code></td>
+<td>非极大值抑制（Non-Maximum Suppression, NMS）过程中的IoU阈值参数</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+  <li><b>float</b>：大于0的浮点数；</li>
+  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为0.4；</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>score_thresh</code></td>
+<td>预测置信度阈值</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+  <li><b>float</b>：大于0的浮点数；</li>
+  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为0.8；</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 </table>
 
@@ -327,6 +344,8 @@ python main.py -c paddlex/configs/modules/video_detection/YOWO.yaml \
 <p>视频检测暂不支持数据转换。</p>
 <p><b>（2）数据集划分</b></p>
 <p>视频检测暂不支持数据划分。</p>
+
+</details>
 
 ### 4.2 模型训练
 一条命令即可完成模型的训练，以此处视频检测模型 YOWO 的训练为例：
