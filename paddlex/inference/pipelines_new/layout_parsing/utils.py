@@ -17,6 +17,7 @@ __all__ = [
     "get_layout_ordering",
     "recursive_img_array2path",
     "get_show_color",
+    "sorted_layout_boxes",
 ]
 
 import numpy as np
@@ -27,6 +28,7 @@ from pathlib import Path
 from typing import List
 from ..ocr.result import OCRResult
 from ...models_new.object_detection.result import DetResult
+from ..components import convert_points_to_boxes
 
 
 def get_overlap_boxes_idx(src_boxes: np.ndarray, ref_boxes: np.ndarray) -> List:
@@ -36,9 +38,8 @@ def get_overlap_boxes_idx(src_boxes: np.ndarray, ref_boxes: np.ndarray) -> List:
     Args:
         src_boxes (np.ndarray): A 2D numpy array of source bounding boxes.
         ref_boxes (np.ndarray): A 2D numpy array of reference bounding boxes.
-
     Returns:
-        list: A list of indices of source boxes that overlap with any reference box.
+        match_idx_list (list): A list of indices of source boxes that overlap with reference boxes.
     """
     match_idx_list = []
     src_boxes_num = len(src_boxes)
@@ -57,7 +58,10 @@ def get_overlap_boxes_idx(src_boxes: np.ndarray, ref_boxes: np.ndarray) -> List:
 
 
 def get_sub_regions_ocr_res(
-    overall_ocr_res: OCRResult, object_boxes: List, flag_within: bool = True
+    overall_ocr_res: OCRResult,
+    object_boxes: List,
+    flag_within: bool = True,
+    return_match_idx: bool = False,
 ) -> OCRResult:
     """
     Filters OCR results to only include text boxes within specified object boxes based on a flag.
@@ -66,6 +70,7 @@ def get_sub_regions_ocr_res(
         overall_ocr_res (OCRResult): The original OCR result containing all text boxes.
         object_boxes (list): A list of bounding boxes for the objects of interest.
         flag_within (bool): If True, only include text boxes within the object boxes. If False, exclude text boxes within the object boxes.
+        return_match_idx (bool): If True, return the list of matching indices.
 
     Returns:
         OCRResult: A filtered OCR result containing only the relevant text boxes.
@@ -103,7 +108,70 @@ def get_sub_regions_ocr_res(
             sub_regions_ocr_res["rec_boxes"].append(
                 overall_ocr_res["rec_boxes"][box_no]
             )
-    return sub_regions_ocr_res
+    return (
+        (sub_regions_ocr_res, match_idx_list)
+        if return_match_idx
+        else sub_regions_ocr_res
+    )
+
+
+def sorted_layout_boxes(res, w):
+    """
+    Sort text boxes in order from top to bottom, left to right
+    Args:
+        res: List of dictionaries containing layout information.
+        w: Width of image.
+
+    Returns:
+        List of dictionaries containing sorted layout information.
+    """
+    num_boxes = len(res)
+    if num_boxes == 1:
+        res[0]["layout"] = "single"
+        return res
+
+    # Sort on the y axis first or sort it on the x axis
+    sorted_boxes = sorted(res, key=lambda x: (x["layout_bbox"][1], x["layout_bbox"][0]))
+    _boxes = list(sorted_boxes)
+
+    new_res = []
+    res_left = []
+    res_right = []
+    i = 0
+
+    while True:
+        if i >= num_boxes:
+            break
+        # Check that the bbox is on the left
+        elif (
+            _boxes[i]["layout_bbox"][0] < w / 4
+            and _boxes[i]["layout_bbox"][2] < 3 * w / 5
+        ):
+            _boxes[i]["layout"] = "double"
+            res_left.append(_boxes[i])
+            i += 1
+        elif _boxes[i]["layout_bbox"][0] > 2 * w / 5:
+            _boxes[i]["layout"] = "double"
+            res_right.append(_boxes[i])
+            i += 1
+        else:
+            new_res += res_left
+            new_res += res_right
+            _boxes[i]["layout"] = "single"
+            new_res.append(_boxes[i])
+            res_left = []
+            res_right = []
+            i += 1
+
+    res_left = sorted(res_left, key=lambda x: (x["layout_bbox"][1]))
+    res_right = sorted(res_right, key=lambda x: (x["layout_bbox"][1]))
+
+    if res_left:
+        new_res += res_left
+    if res_right:
+        new_res += res_right
+
+    return new_res
 
 
 def _calculate_iou(box1, box2):
