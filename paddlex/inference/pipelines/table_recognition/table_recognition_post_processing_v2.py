@@ -136,12 +136,12 @@ def match_table_and_ocr(cell_box_list: list, ocr_dt_boxes: list) -> dict:
         distances = []
         for j, table_box in enumerate(cell_box_list):
             if len(table_box) == 8:
-                    table_box = [
-                        np.min(table_box[0::2]),
-                        np.min(table_box[1::2]),
-                        np.max(table_box[0::2]),
-                        np.max(table_box[1::2]),
-                    ]
+                table_box = [
+                    np.min(table_box[0::2]),
+                    np.min(table_box[1::2]),
+                    np.max(table_box[0::2]),
+                    np.max(table_box[1::2]),
+                ]
             distances.append(
                 (distance(table_box, ocr_box), 1.0 - compute_iou(table_box, ocr_box))
             )  # compute iou and l1 distance
@@ -218,7 +218,7 @@ def get_html_result(
 
 
 def sort_table_cells_boxes(boxes):
-    '''
+    """
     Sort the input list of bounding boxes by using the DBSCAN algorithm to cluster based on the top-left y-coordinate (y1), and then sort within each line from left to right based on the top-left x-coordinate (x1).
 
     Args:
@@ -226,7 +226,7 @@ def sort_table_cells_boxes(boxes):
 
     Returns:
         sorted_boxes (list of lists): The list of bounding boxes sorted.
-    '''
+    """
     import numpy as np
     from sklearn.cluster import DBSCAN
 
@@ -251,7 +251,9 @@ def sort_table_cells_boxes(boxes):
 
     # Sort rows based on y-coordinates
     # Compute the average y1 value for each row and sort from top to bottom
-    sorted_rows = sorted(clusters.items(), key=lambda item: np.mean([box[1] for box in item[1]]))
+    sorted_rows = sorted(
+        clusters.items(), key=lambda item: np.mean([box[1] for box in item[1]])
+    )
 
     # Within each row, sort by x1 coordinate
     sorted_boxes = []
@@ -263,7 +265,10 @@ def sort_table_cells_boxes(boxes):
 
 
 def get_table_recognition_res(
-    table_box: list, table_structure_result: list, table_cells_result: list, overall_ocr_res: OCRResult
+    table_box: list,
+    table_structure_result: list,
+    table_cells_result: list,
+    overall_ocr_res: OCRResult,
 ) -> SingleTableRecognitionResult:
     """
     Retrieve table recognition result from cropped image info, table structure prediction, and overall OCR result.
@@ -283,7 +288,9 @@ def get_table_recognition_res(
     crop_start_point = [table_box[0][0], table_box[0][1]]
     img_shape = overall_ocr_res["doc_preprocessor_res"]["output_img"].shape[0:2]
 
-    ori_table_cells = convert_table_structure_pred_bbox(table_cells_result, crop_start_point, img_shape)
+    ori_table_cells = convert_table_structure_pred_bbox(
+        table_cells_result, crop_start_point, img_shape
+    )
 
     ocr_dt_boxes = table_ocr_pred["rec_boxes"]
     ocr_texts_res = table_ocr_pred["rec_texts"]

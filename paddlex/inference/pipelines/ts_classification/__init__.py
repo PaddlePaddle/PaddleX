@@ -12,4 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .ppchatocrv3 import PPChatOCRPipeline
+from .pipeline import TSClsPipeline

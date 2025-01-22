@@ -437,15 +437,13 @@ def main():
             interactive_get_pipeline(args.get_pipeline_config, args.save_path)
         else:
             pipeline_args_dict = {}
-            from .utils.flags import USE_NEW_INFERENCE
 
-            if USE_NEW_INFERENCE:
-                for arg in pipeline_args:
-                    arg_name = arg["name"].lstrip("-")
-                    if hasattr(args, arg_name):
-                        pipeline_args_dict[arg_name] = getattr(args, arg_name)
-                    else:
-                        logging.warning(f"Argument {arg_name} is missing in args")
+            for arg in pipeline_args:
+                arg_name = arg["name"].lstrip("-")
+                if hasattr(args, arg_name):
+                    pipeline_args_dict[arg_name] = getattr(args, arg_name)
+                else:
+                    logging.warning(f"Argument {arg_name} is missing in args")
             return pipeline_predict(
                 args.pipeline,
                 args.input,

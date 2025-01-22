@@ -13,12 +13,7 @@
 # limitations under the License.
 
 from ..utils import logging
-from ..utils.flags import USE_NEW_INFERENCE
 
-if USE_NEW_INFERENCE:
-    logging.warning("=" * 20 + " Using pipelines_new " + "=" * 20)
-    from .pipelines_new import create_pipeline, load_pipeline_config
-else:
-    from .pipelines import create_pipeline, load_pipeline_config
+from .pipelines import create_pipeline, load_pipeline_config
 from .models import create_predictor
 from .utils.pp_option import PaddlePredictorOption

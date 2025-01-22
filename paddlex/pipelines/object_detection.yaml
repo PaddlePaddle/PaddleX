@@ -1,7 +1,0 @@
-Global:
-  pipeline_name: object_detection
-  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png
-  
-Pipeline:
-  model: PicoDet-S
-  batch_size: 1

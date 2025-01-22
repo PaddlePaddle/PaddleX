@@ -18,7 +18,7 @@ from typing import Any, Dict, List
 
 from fastapi import FastAPI
 
-from ....pipelines_new.components import IndexData
+from ....pipelines.components import IndexData
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
 from ...infra.models import ResultResponse
