@@ -56,7 +56,7 @@ class OpenVocabularyDetectionPipeline(BasePipeline):
         self,
         input: Union[str, List[str], np.ndarray, List[np.ndarray]],
         prompt: str,
-        thresholds: dict[str, float] | None = None,
+        thresholds: Union[Dict[str, float], None] = None,
         **kwargs
     ) -> DetResult:
         """Predicts open vocabulary detection results for the given input.

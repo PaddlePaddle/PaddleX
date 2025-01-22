@@ -249,5 +249,4 @@ PIPELINE_ARGUMENTS = {
             "help": "Determines whether to use document unwarping.",
         },
     ],
-    ]
 }
