@@ -1113,14 +1113,14 @@ for res in output:
         - `use_layout_detection`: `(bool)` 控制是否启用版面检测子模块
     - `layout_det_res`: `(Dict[str, Union[List[numpy.ndarray], List[float]]])` 版面检测子模块的输出结果。仅当`use_layout_detection=True`时存在
         - `input_path`: `(Union[str, None])` 版面检测区域模块接受的图像路径，当输入为`numpy.ndarray`时，保存为`None`
-        - `page_index`: `Union[int|None]` 版面印章区域在图像中的索引，从0开始计数
+        - `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
         - `boxes`: `(List[Dict])` 版面印章区域的检测框列表，每个列表中的元素，包含以下字段
             - `cls_id`: `(int)` 检测框的印章类别id
             - `score`: `(float)` 检测框的置信度
             - `coordinate`: `(List[float])` 检测框的四个顶点坐标，顺序为x1,y1,x2,y2表示左上角的x坐标，左上角的y坐标，右下角x坐标，右下角的y坐标
     - `seal_res_list`: `List[Dict]` 印章文本识别的结果列表，每个元素包含以下字段
         - `input_path`: `(Union[str, None])` 印章文本识别产线接受的图像路径，当输入为`numpy.ndarray`时，保存为`None`
-        - `page_index`: `Union[int|None]` 版面印章区域在图像中的索引，从0开始计数
+        - `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
         - `model_settings`: `(Dict[str, bool])` 印章文本识别产线的模型配置参数
           - `use_doc_preprocessor`: `(bool)` 控制是否启用文档预处理子产线
           - `use_textline_orientation`: `(bool)` 控制是否启用文本行方向分类子模块
