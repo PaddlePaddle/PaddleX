@@ -98,8 +98,8 @@ class KeypointDetectionPipeline(BasePipeline):
 
     def predict(
         self,
-        input: str | list[str] | np.ndarray | list[np.ndarray],
-        det_threshold: float = None,
+        input: Union[str, list[str], np.ndarray, list[np.ndarray]],
+        det_threshold: Optional[float] = None,
         **kwargs,
     ) -> KptResult:
         """Predicts image classification results for the given input.

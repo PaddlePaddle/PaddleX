@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Literal
+from typing import Any, Dict, Optional, Literal, Union
 import numpy as np
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
@@ -54,8 +54,8 @@ class SemanticSegmentationPipeline(BasePipeline):
 
     def predict(
         self,
-        input: str | list[str] | np.ndarray | list[np.ndarray],
-        target_size: Literal[-1] | None | int | tuple[int] = None,
+        input: Union[str, list[str], np.ndarray, list[np.ndarray]],
+        target_size: Union[Literal[-1], None, int, tuple[int]] = None,
         **kwargs
     ) -> SegResult:
         """Predicts semantic segmentation results for the given input.
