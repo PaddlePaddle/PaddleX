@@ -67,13 +67,14 @@ class TextRecPredictor(BasicPredictor):
         return pre_tfs, infer, post_op
 
     def process(self, batch_data):
-        batch_raw_imgs = self.pre_tfs["Read"](imgs=batch_data)
+        batch_raw_imgs = self.pre_tfs["Read"](imgs=batch_data.instances)
         batch_imgs = self.pre_tfs["ReisizeNorm"](imgs=batch_raw_imgs)
         x = self.pre_tfs["ToBatch"](imgs=batch_imgs)
         batch_preds = self.infer(x=x)
         texts, scores = self.post_op(batch_preds)
         return {
-            "input_path": batch_data,
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
             "input_img": batch_raw_imgs,
             "rec_text": texts,
             "rec_score": scores,

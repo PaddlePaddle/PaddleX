@@ -200,13 +200,13 @@ def create_pipeline_app(pipeline: PPChatOCRPipeline, app_config: AppConfig) -> F
                     Table(bbox=r["layout_bbox"], html=r["html"])
                     for r in item["table_result"]
                 ]
-                input_img, ocr_img, layout_img = await ocr_common.postprocess_images(
+                input_img, layout_img, ocr_img = await ocr_common.postprocess_images(
                     log_id=log_id,
                     index=i,
                     app_context=ctx,
                     input_image=img,
-                    ocr_image=item["ocr_result"].img,
                     layout_image=item["layout_result"].img,
+                    ocr_image=item["ocr_result"].img,
                 )
                 vision_result = VisionResult(
                     texts=texts,

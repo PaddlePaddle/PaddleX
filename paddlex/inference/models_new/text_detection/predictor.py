@@ -95,7 +95,7 @@ class TextDetPredictor(BasicPredictor):
         unclip_ratio: Union[float, None] = None,
     ):
 
-        batch_raw_imgs = self.pre_tfs["Read"](imgs=batch_data)
+        batch_raw_imgs = self.pre_tfs["Read"](imgs=batch_data.instances)
         batch_imgs, batch_shapes = self.pre_tfs["Resize"](
             imgs=batch_raw_imgs,
             limit_side_len=limit_side_len or self.limit_side_len,
@@ -113,7 +113,8 @@ class TextDetPredictor(BasicPredictor):
             unclip_ratio=unclip_ratio or self.unclip_ratio,
         )
         return {
-            "input_path": batch_data,
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
             "input_img": batch_raw_imgs,
             "dt_polys": polys,
             "dt_scores": scores,

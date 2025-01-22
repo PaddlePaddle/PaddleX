@@ -1,4 +1,5 @@
 prettytable # only for benchmark
+py-cpuinfo # LaTeX_OCR_rec only support MKLDNN on CPU
 imagesize
 colorlog
 PyYAML

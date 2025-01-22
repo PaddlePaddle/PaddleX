@@ -117,7 +117,7 @@ class InstanceSegPredictor(DetPredictor):
             dict: A dictionary containing the input path, raw image, box and mask
                 for every instance of the batch. Keys include 'input_path', 'input_img', 'boxes' and 'masks'.
         """
-        datas = batch_data
+        datas = batch_data.instances
         # preprocess
         for pre_op in self.pre_ops[:-1]:
             datas = pre_op(datas)
@@ -146,7 +146,8 @@ class InstanceSegPredictor(DetPredictor):
         )
 
         return {
-            "input_path": [data.get("img_path", None) for data in datas],
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
             "input_img": [data["ori_img"] for data in datas],
             "boxes": [result["boxes"] for result in boxes_masks],
             "masks": [result["masks"] for result in boxes_masks],

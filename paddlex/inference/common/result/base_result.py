@@ -13,6 +13,11 @@
 # limitations under the License.
 
 import inspect
+from pathlib import Path
+import time
+import random
+
+from ....utils import logging
 from .mixin import StrMixin, JsonMixin, ImgMixin
 
 
@@ -45,3 +50,13 @@ class BaseResult(dict, JsonMixin, StrMixin):
                 func(save_path=save_path)
             else:
                 func()
+
+    def _get_input_fn(self):
+        if (fp := self["input_path"]) is None:
+            timestamp = int(time.time())
+            random_number = random.randint(1000, 9999)
+            fp = f"{timestamp}_{random_number}"
+            logging.warning(
+                f"There is not input file name as reference for name of saved result file. So the saved result file would be named with timestamp and random number: `{fp}`."
+            )
+        return Path(fp).name

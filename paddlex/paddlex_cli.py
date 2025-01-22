@@ -264,12 +264,10 @@ def pipeline_predict(
 
 
 def serve(pipeline, *, device, use_hpip, host, port):
-    from .inference.pipelines.serving import create_pipeline_app, run_server
+    from .inference.serving.basic_serving import create_pipeline_app, run_server
 
     pipeline_config = load_pipeline_config(pipeline)
-    pipeline = create_pipeline_from_config(
-        pipeline_config, device=device, use_hpip=use_hpip
-    )
+    pipeline = create_pipeline(config=pipeline_config, device=device, use_hpip=use_hpip)
     app = create_pipeline_app(pipeline, pipeline_config)
     run_server(app, host=host, port=port, debug=False)
 
