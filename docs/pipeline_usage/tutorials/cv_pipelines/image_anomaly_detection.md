@@ -5,33 +5,32 @@ comments: true
 # 图像异常检测产线使用教程
 
 ## 1. 图像异常检测产线介绍
-图像异常检测是一种通过分析图像中的内容，来识别与众不同或不符合正常模式的图像处理技术。它广泛应用于工业质量检测、医疗影像分析和安全监控等领域。通过使用机器学习和深度学习算法，图像异常检测能够自动识别出图像中潜在的缺陷、异常或异常行为，从而帮助我们及时发现问题并采取相应措施。图像异常检测系统被设计用于自动检测和标记图像中的异常情况，以提高工作效率和准确性。
+图像异常检测是一种通过分析图像中的内容，来识别与众不同或不符合正常模式的图像处理技术。它广泛应用于工业质量检测、医疗影像分析和安全监控等领域。通过使用机器学习和深度学习算法，图像异常检测能够自动识别出图像中潜在的缺陷、异常或异常行为，从而帮助我们及时发现问题并采取相应措施。图像异常检测系统被设计用于自动检测和标记图像中的异常情况，以提高工作效率和准确性。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_anomaly_detection/01.png">
 
-
-<b>图像异常检测产线中包含了无监督异常检测模块，模型的benchmark如下</b>：
+<b>图像异常检测</b><b>产线中包含图像异常检测模块</b>，包含的模型如下。
 
 <table>
 <thead>
 <tr>
 <th>模型</th><th>模型下载链接</th>
-<th>Avg（%）</th>
+<th>mIoU（%）</th>
 <th>模型存储大小（M)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>STFPM</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/STFPM_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/STFPM_pretrained.pdparams">训练模型</a></td>
-<td>96.2</td>
+<td>99.01</td>
 <td>21.5 M</td>
 </tr>
 </tbody>
 </table>
-<b>注：以上精度指标为 </b>[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)<b> 验证集 平均异常分数。以上所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b>
+<b>注：以上精度指标为 </b><a href="https://www.mvtec.com/company/research/datasets/mvtec-ad">MVTec AD</a><b> 验证集 grid 数据的mIoU结果。以上所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b>
 
 ## 2. 快速开始
-PaddleX 所提供的预训练的模型产线均可以快速体验效果，您可以在本地使用命令行或 Python 体验图像异常检测产线的效果。
+PaddleX 所提供的模型产线均可以快速体验效果，您可以在本地使用命令行或 Python 体验图像异常检测产线的效果。
 
 在本地使用图像异常检测产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
@@ -39,58 +38,42 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，您可
 一行命令即可快速体验图像异常检测产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png)，并将 `--input` 替换为本地路径，进行预测
 
 ```bash
-paddlex --pipeline anomaly_detection --input uad_grid.png --device gpu:0
-```
-参数说明：
-
-```
---pipeline：产线名称，此处为图像异常检测产线
---input：待处理的输入图片的本地路径或URL
---device 使用的GPU序号（例如gpu:0表示使用第0块GPU，gpu:1,2表示使用第1、2块GPU），也可选择使用CPU（--device cpu）
+paddlex --pipeline anomaly_detection --input uad_grid.png --device gpu:0  --save_path ./output
 ```
 
-在执行上述 Python 脚本时，加载的是默认的图像异常检测产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
+相关的参数说明可以参考[2.1.2 Python脚本方式集成](#212-python脚本方式集成)中的参数说明。
 
-<details><summary> 👉点击展开</summary>
+运行后，会将结果打印到终端上，结果如下：
 
-<pre><code>paddlex --get_pipeline_config anomaly_detection
-</code></pre>
-<p>执行后，图像异常检测产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为 <code>./my_path</code> ）：</p>
-<pre><code>paddlex --get_pipeline_config anomaly_detection --save_path ./my_path
-</code></pre>
-<p>获取产线配置文件后，可将 --pipeline 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 <code>./anomaly_detection.yaml</code>，只需执行：</p>
-<pre><code class="language-bash">paddlex --pipeline ./anomaly_detection.yaml --input uad_grid.png --device gpu:0
-</code></pre>
-<p>其中，<code>--model</code>、<code>--device</code> 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。</p></details>
 
-运行后，得到的结果为：
+<pre><code>{'input_path': 'uad_grid.png', 'pred': '...'}</code></pre>
 
-```bash
-{'input_path': 'uad_grid.png', 'pred': '...'}
-```
+
+运行结果参数说明可以参考[2.1.2 Python脚本方式集成](#212-python脚本方式集成)中的结果解释。
+
+可视化结果保存在`save_path`下，可视化结果如下：
+
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_anomaly_detection/02.png">
 
-可视化图片默认不进行保存，您可以通过 `--save_path` 自定义保存路径，随后所有结果将被保存在指定路径下。
 
 ### 2.2 Python脚本方式集成
-几行代码即可完成产线的快速推理，以图像异常检测产线为例：
+
+上述命令行是为了快速体验查看效果，一般来说，在项目中，往往需要通过代码集成，您可以通过几行代码即可完成产线的快速推理，推理代码如下：
 
 ```python
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="anomaly_detection")
-
-output = pipeline.predict("uad_grid.png")
+output = pipeline.predict(input="uad_grid.png")
 for res in output:
     res.print() ## 打印预测的结构化输出
-    res.save_to_img("./output/") ## 保存结果可视化图像
-    res.save_to_json("./output/") ## 保存预测的结构化输出
+    res.save_to_img(save_path="./output/") ## 保存结果可视化图像
+    res.save_to_json(save_path="./output/") ## 保存预测的结构化输出
 ```
-得到的结果与命令行方式相同。
 
 在上述 Python 脚本中，执行了如下几个步骤：
 
-（1）实例化 `create_pipeline` 实例化产线对象：具体参数说明如下：
+（1）通过 `create_pipeline()` 实例化产线对象：具体参数说明如下：
 
 <table>
 <thead>
@@ -110,9 +93,9 @@ for res in output:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>产线模型推理设备。支持：“gpu”，“cpu”。</td>
+<td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
 <td><code>str</code></td>
-<td><code>gpu</code></td>
+<td><code>gpu:0</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
@@ -122,72 +105,152 @@ for res in output:
 </tr>
 </tbody>
 </table>
-（2）调用产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`x`，用于输入待预测数据，支持多种输入方式，具体示例如下：
+
+（2）调用 anomaly_detection 产线对象的 `predict()` 方法进行推理预测。该方法将返回一个 `generator`。以下是 `predict()` 方法的参数及其说明：
 
 <table>
 <thead>
 <tr>
-<th>参数类型</th>
+<th>参数</th>
 <th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>Python Var</td>
-<td>支持直接传入Python变量，如numpy.ndarray表示的图像数据。</td>
+<td><code>input</code></td>
+<td>待预测数据，支持多种输入类型，必填</td>
+<td><code>Python Var|str|list</code></td>
+<td>
+<ul>
+  <li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
+  <li><b>str</b>：如图像文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code></li>
+  <li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td>str</td>
-<td>支持传入待预测数据文件路径，如图像文件的本地路径：<code>/root/data/img.jpg</code>。</td>
+<td><code>device</code></td>
+<td>产线推理设备</td>
+<td><code>str|None</code></td>
+<td>
+<ul>
+  <li><b>CPU</b>：如 <code>cpu</code> 表示使用 CPU 进行推理；</li>
+  <li><b>GPU</b>：如 <code>gpu:0</code> 表示使用第 1 块 GPU 进行推理；</li>
+  <li><b>NPU</b>：如 <code>npu:0</code> 表示使用第 1 块 NPU 进行推理；</li>
+  <li><b>XPU</b>：如 <code>xpu:0</code> 表示使用第 1 块 XPU 进行推理；</li>
+  <li><b>MLU</b>：如 <code>mlu:0</code> 表示使用第 1 块 MLU 进行推理；</li>
+  <li><b>DCU</b>：如 <code>dcu:0</code> 表示使用第 1 块 DCU 进行推理；</li>
+  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化时，会优先使用本地的 GPU 0号设备，如果没有，则使用 CPU 设备；</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
-<tr>
-<td>str</td>
-<td>支持传入待预测数据文件URL，如图像文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png">示例</a>。</td>
-</tr>
-<tr>
-<td>str</td>
-<td>支持传入本地目录，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code>。</td>
-</tr>
-<tr>
-<td>dict</td>
-<td>支持传入字典类型，字典的key需与具体任务对应，如图像分类任务对应\"img\"，字典的val支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code>。</td>
-</tr>
-<tr>
-<td>list</td>
-<td>支持传入列表，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]，[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code>。</td>
-</tr>
-</tbody>
 </table>
-（3）调用`predict`方法获取预测结果：`predict` 方法为`generator`，因此需要通过调用获得预测结果，`predict`方法以batch为单位对数据进行预测，因此预测结果为list形式表示的一组预测结果
 
-（4）对预测结果进行处理：每个样本的预测结果均为`dict`类型，且支持打印，或保存为文件，支持保存的类型与具体产线相关，如：
+（3）对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为图片、保存为`json`文件的操作:
 
 <table>
 <thead>
 <tr>
 <th>方法</th>
-<th>说明</th>
-<th>方法参数</th>
+<th>方法说明</th>
+<th>参数</th>
+<th>参数类型</th>
+<th>参数说明</th>
+<th>默认值</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>print</td>
-<td>打印结果到终端</td>
-<td><code>- format_json</code>：bool类型，是否对输出内容进行使用json缩进格式化，默认为True；<br/><code>- indent</code>：int类型，json格式化设置，仅当format_json为True时有效，默认为4；<br/><code>- ensure_ascii</code>：bool类型，json格式化设置，仅当format_json为True时有效，默认为False；</td>
+<td rowspan = "3"><code>print()</code></td>
+<td rowspan = "3">打印结果到终端</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
+<td><code>True</code></td>
 </tr>
 <tr>
-<td>save_to_json</td>
-<td>将结果保存为json格式的文件</td>
-<td><code>- save_path</code>：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；<br/><code>- indent</code>：int类型，json格式化设置，默认为4；<br/><code>- ensure_ascii</code>：bool类型，json格式化设置，默认为False；</td>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
 </tr>
 <tr>
-<td>save_to_img</td>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan = "3"><code>save_to_json()</code></td>
+<td rowspan = "3">将结果保存为json格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
 <td>将结果保存为图像格式的文件</td>
-<td><code>- save_path</code>：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，支持目录或文件路径</td>
+<td>无</td>
 </tr>
-</tbody>
 </table>
+
+- 调用`print()` 方法会将结果打印到终端，打印到终端的内容解释如下：
+
+    - `input_path`: `(str)` 待预测图像的输入路径
+
+    - `pred`: `(str)` 预测结果，由于像素值较多，此处用`...`代替，不进行打印。
+
+- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
+- 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.{your_img_extension}`，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)
+
+* 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>属性说明</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "1"><code>json</code></td>
+<td rowspan = "1">获取预测的 <code>json</code> 格式的结果</td>
+</tr>
+<tr>
+<td rowspan = "2"><code>img</code></td>
+<td rowspan = "2">获取格式为 <code>dict</code> 的可视化图像</td>
+</tr>
+</table>
+
+
+- `json` 属性获取的预测结果为dict类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
+- `img` 属性返回的预测结果是一个字典类型的数据。其中，键为 `res`，对应的值是 `Image.Image` 对象：用于显示 anomaly_detection 结果的可视化图像。
+
+此外，您可以获取 anomaly_detection 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+
+```
+paddlex --get_pipeline_config anomaly_detection --save_path ./my_path
+```
+
 若您获取了配置文件，即可对图像异常检测产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
 
 例如，若您的配置文件保存在 `./my_path/*anomaly_detection.yaml` ，则只需执行：
@@ -717,29 +780,28 @@ echo &quot;Output image saved at &quot; . $output_image_path . &quot;\n&quot;;
 ### 4.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。
 
-若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径替换至产线配置文件中的对应位置即可：
+若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径填写至产线配置文件中的 `model_dir` 即可：
 
 ```python
-......
-Pipeline:
-  model: STFPM   #可修改为微调后模型的本地路径
-  batch_size: 1
-  device: "gpu:0"
-......
+pipeline_name: anomaly_detection
+
+SubModules:
+  AnomalyDetection:
+    module_name: anomaly_detection
+    model_name: STFPM
+    model_dir: null  # 替换为微调后的文档图像方向分类模型权重路径
+    batch_size: 1   
 ```
-随后， 参考本地体验中的命令行方式或 Python 脚本方式，加载修改后的产线配置文件即可。
+
+随后， 参考[2. 快速开始](#2-快速开始)中的命令行方式或Python脚本方式，加载修改后的产线配置文件即可。
+
 
 ##  5. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device`</b> 参数即可完成不同硬件之间的无缝切换。
 
-例如，您使用英伟达 GPU 进行图像异常检测产线的推理，使用的 Python 命令为：
+例如，您使用昇腾 NPU 进行图像异常检测产线的推理，使用的 Python 命令为：
 
-```
-paddlex --pipeline anomaly_detection --input uad_grid.png --device gpu:0
-```
-此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的 `--device` 修改为 npu:0 即可：
-
-```
+```bash
 paddlex --pipeline anomaly_detection --input uad_grid.png --device npu:0
 ```
 若您想在更多种类的硬件上使用图像异常检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

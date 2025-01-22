@@ -37,6 +37,7 @@ class BaseResult(dict, JsonMixin, StrMixin):
         self._save_funcs = []
         StrMixin.__init__(self)
         JsonMixin.__init__(self)
+        self._rand_fn = None
 
     def save_all(self, save_path: str) -> None:
         """Calls all registered save methods with the given save path.
@@ -53,10 +54,15 @@ class BaseResult(dict, JsonMixin, StrMixin):
 
     def _get_input_fn(self):
         if (fp := self["input_path"]) is None:
+            if self._rand_fn:
+                return self._rand_fn
+
             timestamp = int(time.time())
             random_number = random.randint(1000, 9999)
             fp = f"{timestamp}_{random_number}"
             logging.warning(
                 f"There is not input file name as reference for name of saved result file. So the saved result file would be named with timestamp and random number: `{fp}`."
             )
+            self._rand_fn = Path(fp).name
+            return self._rand_fn
         return Path(fp).name

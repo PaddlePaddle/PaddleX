@@ -65,7 +65,7 @@ tar -xf ./dataset/video_det_examples.tar -C ./dataset/
 One command is all you need to complete data validation:
 
 ```bash
-python main.py -c paddlex/configs/video_detection/YOWO.yaml \
+python main.py -c paddlex/configs/modules/video_detection/YOWO.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/video_det_examples
 ```
@@ -139,7 +139,7 @@ After completing data validation, you can convert the dataset format or re-split
 ### 4.2 Model Training
 A single command can complete the model training. Taking the training of the video Detection model YOWO as an example:
 ```
-python main.py -c paddlex/configs/video_det_examples/YOWO.yaml  \
+python main.py -c paddlex/configs/modules/video_det_examples/YOWO.yaml  \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/video_det_examples
 ```
@@ -170,7 +170,7 @@ the following steps are required:
 ## <b>4.3 Model Evaluation</b>
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model accuracy. Using PaddleX for model evaluation, a single command can complete the model evaluation:
 ```bash
-python main.py -c  paddlex/configs/video_detection/YOWO.yaml  \
+python main.py -c  paddlex/configs/modules/video_detection/YOWO.yaml  \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/video_det_examples
 ```
@@ -192,7 +192,7 @@ After completing model training and evaluation, you can use the trained model we
 To perform inference prediction through the command line, simply use the following command. Before running the following code, please download the [demo video](https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/HorseRiding.avi) to your local machine.
 
 ```bash
-python main.py -c paddlex/configs/video_detection/YOWO.yaml \
+python main.py -c paddlex/configs/modules/video_detection/YOWO.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="HorseRiding.avi"

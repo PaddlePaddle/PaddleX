@@ -45,7 +45,12 @@ class VideoDetectionPipeline(BasePipeline):
         super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
 
         video_detection_model_config = config["SubModules"]["VideoDetection"]
-        self.video_detection_model = self.create_model(video_detection_model_config)
+        model_kwargs = {}
+        if "nms_thresh" in video_detection_model_config:
+            model_kwargs["nms_thresh"] = video_detection_model_config["nms_thresh"]
+        if "score_thresh" in video_detection_model_config:
+            model_kwargs["score_thresh"] = video_detection_model_config["score_thresh"]
+        self.video_detection_model = self.create_model(video_detection_model_config, **model_kwargs)
 
     def predict(
         self,
