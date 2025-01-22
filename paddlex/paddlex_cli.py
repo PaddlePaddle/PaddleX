@@ -219,7 +219,7 @@ def install(args):
                 support_device_type,
                 device_type,
             )
-            return
+            sys.exit(2)
 
         if device_type == "cpu":
             packages = ["ultra_infer_python", "paddlex_hpi"]
