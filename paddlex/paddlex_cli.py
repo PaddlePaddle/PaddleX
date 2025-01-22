@@ -22,7 +22,7 @@ from pathlib import Path
 from importlib_resources import files, as_file
 
 from . import create_pipeline
-from .inference.pipelines import create_pipeline_from_config, load_pipeline_config
+from .inference.pipelines import load_pipeline_config
 from .repo_manager import setup, get_all_supported_repo_names
 from .utils.flags import FLAGS_json_format_model
 from .utils import logging

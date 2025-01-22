@@ -54,8 +54,8 @@ class SmallObjectDetectionPipeline(BasePipeline):
 
     def predict(
         self,
-        input: str | list[str] | np.ndarray | list[np.ndarray],
-        threshold: None | dict[int, float] | float = None,
+        input: Union[str, List[str], np.ndarray, List[np.ndarray]],
+        threshold: Union[None, Dict[int, float], float] = None,
         **kwargs
     ) -> DetResult:
         """Predicts small object detection results for the given input.

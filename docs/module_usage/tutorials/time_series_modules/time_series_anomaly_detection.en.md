@@ -13,57 +13,50 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
 <thead>
 <tr>
 <th>Model Name</th><th>Model Download Link</th>
-<th>Precision</th>
-<th>Recall</th>
-<th>F1-Score</th>
-<th>Model Size (M)</th>
-<th>Description</th>
+<th>precision</th>
+<th>recall</th>
+<th>f1_score</th>
+<th>Model Storage Size (M)</th>
+<th>Introduction</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>AutoEncoder_ad_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/AutoEncoder_ad_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/AutoEncoder_ad_ad_pretrained.pdparams">Trained Model</a></td>
+<td>DLinear_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/DLinear_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_ad_pretrained.pdparams">Training Model</a></td>
 <td>0.9898</td>
 <td>0.9396</td>
-<td>0.9641</td>
+<td>0.9640</td>
 <td>72.8K</td>
-<td>AutoEncoder_ad_ad is a simple, efficient, and easy-to-use time series anomaly detection model</td>
+<td>DLinear_ad is a simple, efficient, and easy-to-use model for time-series anomaly detection.</td>
 </tr>
 <tr>
-<td>Nonstationary_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Nonstationary_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_ad_pretrained.pdparams">Trained Model</a></td>
+<td>Nonstationary_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Nonstationary_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_ad_pretrained.pdparams">Training Model</a></td>
 <td>0.9855</td>
 <td>0.8895</td>
-<td>0.9351</td>
+<td>0.9257</td>
 <td>1.5MB</td>
-<td>Based on the transformer structure, optimized for anomaly detection in non-stationary time series</td>
+<td>Based on the transformer structure, this model is optimized for anomaly detection in non-stationary time series.</td>
 </tr>
 <tr>
-<td>AutoEncoder_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/AutoEncoder_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/AutoEncoder_ad_pretrained.pdparams">Trained Model</a></td>
+<td>AutoEncoder_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/AutoEncoder_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/AutoEncoder_ad_pretrained.pdparams">Training Model</a></td>
 <td>0.9936</td>
 <td>0.8436</td>
-<td>0.9125</td>
+<td>0.9127</td>
 <td>32K</td>
-<td>AutoEncoder_ad is a classic autoencoder-based, efficient, and easy-to-use time series anomaly detection model</td>
+<td>AutoEncoder_ad is a classic autoencoder-based model for efficient and easy-to-use time-series anomaly detection.</td>
 </tr>
 <tr>
-<td>PatchTST_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PatchTST_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_ad_pretrained.pdparams">Trained Model</a></td>
+<td>PatchTST_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PatchTST_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_ad_pretrained.pdparams">Training Model</a></td>
 <td>0.9878</td>
 <td>0.9070</td>
-<td>0.9457</td>
+<td>0.9459</td>
 <td>164K</td>
-<td>PatchTST is a high-precision time series anomaly detection model that balances local patterns and global dependencies</td>
-</tr>
-<tr>
-<td>TimesNet_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/TimesNet_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_ad_pretrained.pdparams">Trained Model</a></td>
-<td>0.9837</td>
-<td>0.9480</td>
-<td>0.9656</td>
-<td>732K</td>
-<td>Through multi-period analysis, TimesNet is an adaptive and high-precision time series anomaly detection model</td>
+<td>PatchTST is a high-precision time-series anomaly detection model that balances local patterns and global dependencies.</td>
 </tr>
 </tbody>
 </table>
-<b>Note: The above accuracy metrics are measured on the PSM dataset with a time series length of 100.</b>
+
+<b>Note: The above precision metrics are measured on the</b>PSM<b>dataset with a time-series input length of 100.</b>
 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For details, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
@@ -72,12 +65,187 @@ After installing the wheel package, a few lines of code can complete the inferen
 
 ```bash
 from paddlex import create_model
-model = create_model("AutoEncoder_ad")
+model = create_model(model_name="AutoEncoder_ad")
 output = model.predict("ts_ad.csv", batch_size=1)
 for res in output:
-    res.print(json_format=False)
-    res.save_to_csv("./output/")
+    res.print()
+    res.save_to_csv(save_path="./output/")
+    res.save_to_json(save_path="./output/res.json")
 ```
+
+After running, the result obtained is:
+
+```bash
+{'res': {'input_path': 'ts_ad.csv', 'anomaly':            label
+timestamp
+220226         1
+220227         1
+220228         0
+220229         1
+220230         1
+...          ...
+220317         1
+220318         1
+220319         1
+220320         1
+220321         1
+
+[96 rows x 1 columns]}}
+```
+
+The meanings of the parameters in the running result are as follows:
+- `input_path`: Indicates the path to the input time-series file for anomaly prediction.
+- `anomaly`: Indicates the result of time-series anomaly detection. A value of 1 indicates a predicted anomaly, while 0 indicates a normal prediction. The prediction results can be saved as a CSV file using `res.save_to_csv()` and as a JSON file using `res.save_to_json()`.
+
+Relevant methods, parameters, and explanations are as follows:
+
+* `create_model` instantiates a time-series anomaly detection model (here, `TimesNet_cls` is used as an example). The detailed explanation is as follows:
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>model_name</code></td>
+<td>Name of the model</td>
+<td><code>str</code></td>
+<td>All model names supported by PaddleX</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>model_dir</code></td>
+<td>Path to store the model</td>
+<td><code>str</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+</table>
+
+* Note that `model_name` must be specified. After specifying `model_name`, the default PaddleX built-in model parameters will be used. If `model_dir` is specified, the user-defined model will be used.
+
+* The `predict()` method of the time-series anomaly detection model is called for inference prediction. The parameters of the `predict()` method are `input` and `batch_size`, which are explained as follows:
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>Data for prediction, supporting multiple input types</td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
+<td>
+<ul>
+  <li><b>Python Variable</b>, such as time-series data represented by <code>pandas.DataFrame</code></li>
+  <li><b>File Path</b>, such as the local path of a time-series file: <code>/root/data/ts.csv</code></li>
+  <li><b>URL Link</b>, such as the network URL of a time-series file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv">Example</a></li>
+  <li><b>Local Directory</b>, the directory should contain data files for prediction, such as the local path: <code>/root/data/</code></li>
+  <li><b>List</b>, elements of the list must be of the above types of data, such as <code>[pandas.DataFrame, pandas.DataFrame]</code>, <code>["/root/data/ts1.csv", "/root/data/ts2.csv"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"ts": "/root/data1"}, {"ts": "/root/data2/ts.csv"}]</code></li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td>Batch size</td>
+<td><code>int</code></td>
+<td>Any integer greater than 0</td>
+<td>1</td>
+</tr>
+</table>
+
+* Process the prediction results. The prediction result for each sample is of type `dict`, and supports operations such as printing, saving as a `csv` file, and saving as a `json` file:
+
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+<th>Parameter</th>
+<th>Parameter Type</th>
+<th>Parameter Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print the result to the terminal</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>Whether to format the output content using <code>JSON</code> indentation</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether non-<code>ASCII</code> characters are escaped to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save the result as a JSON file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving. When a directory is specified, the saved file name will match the input file name</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether non-<code>ASCII</code> characters are escaped to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_csv()</code></td>
+<td>Save the result as a CSV file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving. When a directory is specified, the saved file name will match the input file name</td>
+<td>None</td>
+</tr>
+</table>
+
+* Additionally, it also supports obtaining the visualization of the time-series results and the prediction results through attributes, as follows:
+
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction results in <code>json</code> format</td>
+</tr>
+<tr>
+<td rowspan="1"><code>csv</code></td>
+<td rowspan="1">Get the time-series anomaly detection prediction results in <code>csv</code> format</td>
+</tr>
+</table>
+
 For more information on using PaddleX's single model inference API, refer to the [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.en.md).
 
 ## IV. Custom Development

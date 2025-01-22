@@ -108,9 +108,9 @@ PIPELINE_ARGUMENTS = {
     "table_recognition": None,
     "layout_parsing": None,
     "seal_recognition": None,
-    "ts_cls": None,
-    "ts_fc": None,
-    "ts_ad": None,
+    "ts_forecast": None,
+    "ts_anomaly_detection": None,
+    "ts_classification": None,
     "formula_recognition": [
         {
             "name": "--use_layout_detection",
@@ -157,6 +157,30 @@ PIPELINE_ARGUMENTS = {
             "name": "--topk",
             "type": int,
             "help": "Sets the Top-K value for video classification.",
+        },
+    ],
+    "video_detection": [
+        {
+            "name": "--nms_thresh",
+            "type": float,
+            "help": "Sets the NMS threshold for video detection.",
+        },
+        {
+            "name": "--score_thresh",
+            "type": float,
+            "help": "Sets the confidence threshold for video detection.",
+        },
+    ],
+    "doc_preprocessor": [
+        {
+            "name": "--use_doc_orientation_classify",
+            "type": bool,
+            "help": "Determines whether to use document orientation classification.",
+        },
+        {
+            "name": "--use_doc_unwarping",
+            "type": bool,
+            "help": "Determines whether to use document unwarping.",
         },
     ],
 }
