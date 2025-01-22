@@ -15,8 +15,8 @@
 import os
 from typing import Dict
 import numpy as np
+from PIL import Image, ImageDraw
 import copy
-import cv2
 from ...common.result import BaseCVResult, HtmlMixin, XlsxMixin, StrMixin, JsonMixin
 
 
@@ -50,14 +50,19 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
             res_img_dict["text_paragraphs_ocr_res"] = general_ocr_res.img["ocr_res_img"]
 
         if model_settings["use_table_recognition"] and len(self["table_res_list"]) > 0:
-            table_cell_img = copy.deepcopy(self["doc_preprocessor_res"]["output_img"])
+            table_cell_img = Image.fromarray(
+                copy.deepcopy(self["doc_preprocessor_res"]["output_img"])
+            )
+            table_draw = ImageDraw.Draw(table_cell_img)
+            rectangle_color = (255, 0, 0)
             for sno in range(len(self["table_res_list"])):
                 table_res = self["table_res_list"][sno]
                 cell_box_list = table_res["cell_box_list"]
                 for box in cell_box_list:
                     x1, y1, x2, y2 = [int(pos) for pos in box]
-                    cv2.rectangle(table_cell_img, (x1, y1), (x2, y2), (255, 0, 0), 2)
-            res_img_dict["table_cell_img"] = table_cell_img
+                    table_draw.rectangle(
+                        [x1, y1, x2, y2], outline=rectangle_color, width=2
+                    )
 
         if model_settings["use_seal_recognition"] and len(self["seal_res_list"]) > 0:
             for sno in range(len(self["seal_res_list"])):
@@ -93,6 +98,7 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
         data["input_path"] = self["input_path"]
         model_settings = self["model_settings"]
         data["model_settings"] = model_settings
+        data["parsing_res_list"] = self["parsing_res_list"]
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].str["res"]
         data["layout_det_res"] = self["layout_det_res"].str["res"]
@@ -143,6 +149,7 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
         data["input_path"] = self["input_path"]
         model_settings = self["model_settings"]
         data["model_settings"] = model_settings
+        data["parsing_res_list"] = self["parsing_res_list"]
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].json["res"]
         data["layout_det_res"] = self["layout_det_res"].json["res"]

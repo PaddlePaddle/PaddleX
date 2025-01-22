@@ -17,6 +17,7 @@ __all__ = [
     "get_layout_ordering",
     "recursive_img_array2path",
     "get_show_color",
+    "sorted_layout_boxes",
 ]
 
 import numpy as np
@@ -27,6 +28,7 @@ from pathlib import Path
 from typing import List
 from ..ocr.result import OCRResult
 from ...models_new.object_detection.result import DetResult
+from ..components import convert_points_to_boxes
 
 
 def get_overlap_boxes_idx(src_boxes: np.ndarray, ref_boxes: np.ndarray) -> List:
@@ -36,9 +38,8 @@ def get_overlap_boxes_idx(src_boxes: np.ndarray, ref_boxes: np.ndarray) -> List:
     Args:
         src_boxes (np.ndarray): A 2D numpy array of source bounding boxes.
         ref_boxes (np.ndarray): A 2D numpy array of reference bounding boxes.
-
     Returns:
-        list: A list of indices of source boxes that overlap with any reference box.
+        match_idx_list (list): A list of indices of source boxes that overlap with reference boxes.
     """
     match_idx_list = []
     src_boxes_num = len(src_boxes)
@@ -57,7 +58,10 @@ def get_overlap_boxes_idx(src_boxes: np.ndarray, ref_boxes: np.ndarray) -> List:
 
 
 def get_sub_regions_ocr_res(
-    overall_ocr_res: OCRResult, object_boxes: List, flag_within: bool = True
+    overall_ocr_res: OCRResult,
+    object_boxes: List,
+    flag_within: bool = True,
+    return_match_idx: bool = False,
 ) -> OCRResult:
     """
     Filters OCR results to only include text boxes within specified object boxes based on a flag.
@@ -66,6 +70,7 @@ def get_sub_regions_ocr_res(
         overall_ocr_res (OCRResult): The original OCR result containing all text boxes.
         object_boxes (list): A list of bounding boxes for the objects of interest.
         flag_within (bool): If True, only include text boxes within the object boxes. If False, exclude text boxes within the object boxes.
+        return_match_idx (bool): If True, return the list of matching indices.
 
     Returns:
         OCRResult: A filtered OCR result containing only the relevant text boxes.
@@ -103,10 +108,73 @@ def get_sub_regions_ocr_res(
             sub_regions_ocr_res["rec_boxes"].append(
                 overall_ocr_res["rec_boxes"][box_no]
             )
-    return sub_regions_ocr_res
+    return (
+        (sub_regions_ocr_res, match_idx_list)
+        if return_match_idx
+        else sub_regions_ocr_res
+    )
 
 
-def calculate_iou(box1, box2):
+def sorted_layout_boxes(res, w):
+    """
+    Sort text boxes in order from top to bottom, left to right
+    Args:
+        res: List of dictionaries containing layout information.
+        w: Width of image.
+
+    Returns:
+        List of dictionaries containing sorted layout information.
+    """
+    num_boxes = len(res)
+    if num_boxes == 1:
+        res[0]["layout"] = "single"
+        return res
+
+    # Sort on the y axis first or sort it on the x axis
+    sorted_boxes = sorted(res, key=lambda x: (x["layout_bbox"][1], x["layout_bbox"][0]))
+    _boxes = list(sorted_boxes)
+
+    new_res = []
+    res_left = []
+    res_right = []
+    i = 0
+
+    while True:
+        if i >= num_boxes:
+            break
+        # Check that the bbox is on the left
+        elif (
+            _boxes[i]["layout_bbox"][0] < w / 4
+            and _boxes[i]["layout_bbox"][2] < 3 * w / 5
+        ):
+            _boxes[i]["layout"] = "double"
+            res_left.append(_boxes[i])
+            i += 1
+        elif _boxes[i]["layout_bbox"][0] > 2 * w / 5:
+            _boxes[i]["layout"] = "double"
+            res_right.append(_boxes[i])
+            i += 1
+        else:
+            new_res += res_left
+            new_res += res_right
+            _boxes[i]["layout"] = "single"
+            new_res.append(_boxes[i])
+            res_left = []
+            res_right = []
+            i += 1
+
+    res_left = sorted(res_left, key=lambda x: (x["layout_bbox"][1]))
+    res_right = sorted(res_right, key=lambda x: (x["layout_bbox"][1]))
+
+    if res_left:
+        new_res += res_left
+    if res_right:
+        new_res += res_right
+
+    return new_res
+
+
+def _calculate_iou(box1, box2):
     """
     Calculate Intersection over Union (IoU) between two bounding boxes.
 
@@ -142,39 +210,69 @@ def calculate_iou(box1, box2):
     return iou
 
 
-def _whether_overlaps_y_exceeds_threshold(bbox1, bbox2, overlap_ratio_threshold=0.6):
-    _, y0_1, _, y1_1 = bbox1
-    _, y0_2, _, y1_2 = bbox2
+def _whether_y_overlap_exceeds_threshold(bbox1, bbox2, overlap_ratio_threshold=0.6):
+    """
+    Determines whether the vertical overlap between two bounding boxes exceeds a given threshold.
 
-    overlap = max(0, min(y1_1, y1_2) - max(y0_1, y0_2))
-    min_height = min(y1_1 - y0_1, y1_2 - y0_2)
+    Args:
+        bbox1 (tuple): The first bounding box defined as (left, top, right, bottom).
+        bbox2 (tuple): The second bounding box defined as (left, top, right, bottom).
+        overlap_ratio_threshold (float): The threshold ratio to determine if the overlap is significant.
+                                         Defaults to 0.6.
+
+    Returns:
+        bool: True if the vertical overlap divided by the minimum height of the two bounding boxes
+              exceeds the overlap_ratio_threshold, otherwise False.
+    """
+    _, y1_0, _, y1_1 = bbox1
+    _, y2_0, _, y2_1 = bbox2
+
+    overlap = max(0, min(y1_1, y2_1) - max(y1_0, y2_0))
+    min_height = min(y1_1 - y1_0, y2_1 - y2_0)
 
     return (overlap / min_height) > overlap_ratio_threshold
 
 
-def _sort_box_by_y_projection(layout_bbox, ocr_res, line_height_threshold=0.7):
-    assert ocr_res["boxes"] and ocr_res["rec_texts"]
+def _sort_box_by_y_projection(layout_bbox, ocr_res, line_height_iou_threshold=0.7):
+    """
+    Sorts OCR results based on their spatial arrangement, grouping them into lines and blocks.
 
-    # span->line->block
+    Args:
+        layout_bbox (tuple): A tuple representing the layout bounding box, defined as (left, top, right, bottom).
+        ocr_res (dict): A dictionary containing OCR results with the following keys:
+                        - "boxes": A list of bounding boxes, each defined as [left, top, right, bottom].
+                        - "rec_texts": A corresponding list of recognized text strings for each box.
+        line_height_iou_threshold (float): The threshold for determining whether two boxes belong to
+                                           the same line based on their vertical overlap. Defaults to 0.7.
+
+    Returns:
+        dict: A dictionary with the same structure as `ocr_res`, but with boxes and texts sorted
+              and grouped into lines and blocks.
+    """
+    assert (
+        ocr_res["boxes"] and ocr_res["rec_texts"]
+    ), "OCR results must contain 'boxes' and 'rec_texts'"
+
     boxes = ocr_res["boxes"]
-    rec_text = ocr_res["rec_texts"]
-    x_min, x_max = layout_bbox[0], layout_bbox[2]
+    rec_texts = ocr_res["rec_texts"]
 
-    spans = list(zip(boxes, rec_text))
+    x_min, _, x_max, _ = layout_bbox
+
+    spans = list(zip(boxes, rec_texts))
+
     spans.sort(key=lambda span: span[0][1])
     spans = [list(span) for span in spans]
 
     lines = []
-    first_span = spans[0]
-    current_line = [first_span]
-    current_y0, current_y1 = first_span[0][1], first_span[0][3]
+    current_line = [spans[0]]
+    current_y0, current_y1 = spans[0][0][1], spans[0][0][3]
 
     for span in spans[1:]:
         y0, y1 = span[0][1], span[0][3]
-        if _whether_overlaps_y_exceeds_threshold(
+        if _whether_y_overlap_exceeds_threshold(
             (0, current_y0, 0, current_y1),
             (0, y0, 0, y1),
-            line_height_threshold,
+            line_height_iou_threshold,
         ):
             current_line.append(span)
             current_y0 = min(current_y0, y0)
@@ -191,13 +289,16 @@ def _sort_box_by_y_projection(layout_bbox, ocr_res, line_height_threshold=0.7):
         line.sort(key=lambda span: span[0][0])
         first_span = line[0]
         end_span = line[-1]
-        if first_span[0][0] - x_min > 20:
+
+        if first_span[0][0] - x_min > 15:
             first_span[1] = "\n" + first_span[1]
-        if x_max - end_span[0][2] > 20:
+        if x_max - end_span[0][2] > 15:
             end_span[1] = end_span[1] + "\n"
 
+    # Flatten lines back into a single list for boxes and texts
     ocr_res["boxes"] = [span[0] for line in lines for span in line]
     ocr_res["rec_texts"] = [span[1] + " " for line in lines for span in line]
+
     return ocr_res
 
 
@@ -241,7 +342,12 @@ def get_structure_res(
 
         if label == "table":
             for i, table_res in enumerate(table_res_list):
-                if calculate_iou(layout_bbox, table_res["cell_box_list"][0]) > 0.5:
+                if (
+                    _calculate_iou(
+                        layout_bbox, table_res["table_ocr_pred"]["rec_boxes"][0]
+                    )
+                    > 0.5
+                ):
                     structure_boxes.append(
                         {
                             "label": label,
@@ -256,7 +362,7 @@ def get_structure_res(
         else:
             overall_text_boxes = overall_ocr_res["rec_boxes"]
             for box_no in range(len(overall_text_boxes)):
-                if calculate_iou(layout_bbox, overall_text_boxes[box_no]) > 0.5:
+                if _calculate_iou(layout_bbox, overall_text_boxes[box_no]) > 0.5:
                     rec_res["boxes"].append(overall_text_boxes[box_no])
                     rec_res["rec_texts"].append(
                         overall_ocr_res["rec_texts"][box_no],
@@ -306,7 +412,7 @@ def get_structure_res(
     return structure_boxes
 
 
-def projection_by_bboxes(boxes: np.ndarray, axis: int) -> np.ndarray:
+def _projection_by_bboxes(boxes: np.ndarray, axis: int) -> np.ndarray:
     """
     Generate a 1D projection histogram from bounding boxes along a specified axis.
 
@@ -328,7 +434,7 @@ def projection_by_bboxes(boxes: np.ndarray, axis: int) -> np.ndarray:
     return projection
 
 
-def split_projection_profile(arr_values: np.ndarray, min_value: float, min_gap: float):
+def _split_projection_profile(arr_values: np.ndarray, min_value: float, min_gap: float):
     """
     Split the projection profile into segments based on specified thresholds.
 
@@ -363,7 +469,7 @@ def split_projection_profile(arr_values: np.ndarray, min_value: float, min_gap: 
     return segment_starts, segment_ends
 
 
-def recursive_yx_cut(boxes: np.ndarray, indices: List[int], res: List[int], min_gap=1):
+def _recursive_yx_cut(boxes: np.ndarray, indices: List[int], res: List[int], min_gap=1):
     """
     Recursively project and segment bounding boxes, starting with Y-axis and followed by X-axis.
 
@@ -380,8 +486,8 @@ def recursive_yx_cut(boxes: np.ndarray, indices: List[int], res: List[int], min_
     y_sorted_indices = np.array(indices)[y_sorted_indices]
 
     # Perform Y-axis projection
-    y_projection = projection_by_bboxes(boxes=y_sorted_boxes, axis=1)
-    y_intervals = split_projection_profile(y_projection, 0, 1)
+    y_projection = _projection_by_bboxes(boxes=y_sorted_boxes, axis=1)
+    y_intervals = _split_projection_profile(y_projection, 0, 1)
 
     if not y_intervals:
         return
@@ -401,8 +507,8 @@ def recursive_yx_cut(boxes: np.ndarray, indices: List[int], res: List[int], min_
         x_sorted_indices_chunk = y_indices_chunk[x_sorted_indices]
 
         # Perform X-axis projection
-        x_projection = projection_by_bboxes(boxes=x_sorted_boxes_chunk, axis=0)
-        x_intervals = split_projection_profile(x_projection, 0, min_gap)
+        x_projection = _projection_by_bboxes(boxes=x_sorted_boxes_chunk, axis=0)
+        x_intervals = _split_projection_profile(x_projection, 0, min_gap)
 
         if not x_intervals:
             continue
@@ -417,14 +523,14 @@ def recursive_yx_cut(boxes: np.ndarray, indices: List[int], res: List[int], min_
             x_interval_indices = (x_start <= x_sorted_boxes_chunk[:, 0]) & (
                 x_sorted_boxes_chunk[:, 0] < x_end
             )
-            recursive_yx_cut(
+            _recursive_yx_cut(
                 x_sorted_boxes_chunk[x_interval_indices],
                 x_sorted_indices_chunk[x_interval_indices],
                 res,
             )
 
 
-def recursive_xy_cut(boxes: np.ndarray, indices: List[int], res: List[int], min_gap=1):
+def _recursive_xy_cut(boxes: np.ndarray, indices: List[int], res: List[int], min_gap=1):
     """
     Recursively performs X-axis projection followed by Y-axis projection to segment bounding boxes.
 
@@ -442,8 +548,8 @@ def recursive_xy_cut(boxes: np.ndarray, indices: List[int], res: List[int], min_
     x_sorted_indices = np.array(indices)[x_sorted_indices]
 
     # Perform X-axis projection
-    x_projection = projection_by_bboxes(boxes=x_sorted_boxes, axis=0)
-    x_intervals = split_projection_profile(x_projection, 0, 1)
+    x_projection = _projection_by_bboxes(boxes=x_sorted_boxes, axis=0)
+    x_intervals = _split_projection_profile(x_projection, 0, 1)
 
     if not x_intervals:
         return
@@ -463,8 +569,8 @@ def recursive_xy_cut(boxes: np.ndarray, indices: List[int], res: List[int], min_
         y_sorted_indices_chunk = x_indices_chunk[y_sorted_indices]
 
         # Perform Y-axis projection
-        y_projection = projection_by_bboxes(boxes=y_sorted_boxes_chunk, axis=1)
-        y_intervals = split_projection_profile(y_projection, 0, min_gap)
+        y_projection = _projection_by_bboxes(boxes=y_sorted_boxes_chunk, axis=1)
+        y_intervals = _split_projection_profile(y_projection, 0, min_gap)
 
         if not y_intervals:
             continue
@@ -479,7 +585,7 @@ def recursive_xy_cut(boxes: np.ndarray, indices: List[int], res: List[int], min_
             y_interval_indices = (y_start <= y_sorted_boxes_chunk[:, 1]) & (
                 y_sorted_boxes_chunk[:, 1] < y_end
             )
-            recursive_xy_cut(
+            _recursive_xy_cut(
                 y_sorted_boxes_chunk[y_interval_indices],
                 y_sorted_indices_chunk[y_interval_indices],
                 res,
@@ -490,7 +596,7 @@ def sort_by_xycut(block_bboxes, direction=0, min_gap=1):
     block_bboxes = np.asarray(block_bboxes).astype(int)
     res = []
     if direction == 1:
-        recursive_yx_cut(
+        _recursive_yx_cut(
             block_bboxes,
             np.arange(
                 len(block_bboxes),
@@ -499,7 +605,7 @@ def sort_by_xycut(block_bboxes, direction=0, min_gap=1):
             min_gap,
         )
     else:
-        recursive_xy_cut(
+        _recursive_xy_cut(
             block_bboxes,
             np.arange(
                 len(block_bboxes),
@@ -1125,7 +1231,6 @@ def get_layout_ordering(data, no_mask_labels=[], already_sorted=False):
                 ),
             )
             block_bboxes = np.array(block_bboxes)
-            print("sort by yxcut...")
             sorted_indices = sort_by_xycut(
                 block_bboxes,
                 direction=1,

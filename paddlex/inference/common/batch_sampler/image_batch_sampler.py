@@ -24,6 +24,26 @@ from ...utils.io import PDFReader
 from .base_batch_sampler import BaseBatchSampler
 
 
+class ImgInstance:
+    def __init__(self):
+        self.instances = []
+        self.input_paths = []
+        self.page_indexes = []
+
+    def append(self, instance, input_path, page_index):
+        self.instances.append(instance)
+        self.input_paths.append(input_path)
+        self.page_indexes.append(page_index)
+
+    def reset(self):
+        self.instances = []
+        self.input_paths = []
+        self.page_indexes = []
+
+    def __len__(self):
+        return len(self.instances)
+
+
 class ImageBatchSampler(BaseBatchSampler):
 
     SUFFIX = ["jpg", "png", "jpeg", "JPEG", "JPG", "bmp"]
@@ -60,24 +80,25 @@ class ImageBatchSampler(BaseBatchSampler):
         if not isinstance(inputs, list):
             inputs = [inputs]
 
-        batch = []
+        batch = {"instances": [], "input_paths": [], "page_indexes": []}
+        batch = ImgInstance()
         for input in inputs:
             if isinstance(input, np.ndarray):
-                batch.append(input)
+                batch.append(input, None, None)
                 if len(batch) == self.batch_size:
                     yield batch
-                    batch = []
+                    batch.reset()
             elif isinstance(input, str) and input.split(".")[-1] in ("PDF", "pdf"):
                 file_path = (
                     self._download_from_url(input)
                     if input.startswith("http")
                     else input
                 )
-                for page_img in self.pdf_reader.read(file_path):
-                    batch.append(page_img)
+                for page_idx, page_img in enumerate(self.pdf_reader.read(file_path)):
+                    batch.append(page_img, file_path, page_idx)
                     if len(batch) == self.batch_size:
                         yield batch
-                        batch = []
+                        batch.reset()
             elif isinstance(input, str):
                 file_path = (
                     self._download_from_url(input)
@@ -86,10 +107,10 @@ class ImageBatchSampler(BaseBatchSampler):
                 )
                 file_list = self._get_files_list(file_path)
                 for file_path in file_list:
-                    batch.append(file_path)
+                    batch.append(file_path, file_path, None)
                     if len(batch) == self.batch_size:
                         yield batch
-                        batch = []
+                        batch.reset()
             else:
                 logging.warning(
                     f"Not supported input data type! Only `numpy.ndarray` and `str` are supported! So has been ignored: {input}."

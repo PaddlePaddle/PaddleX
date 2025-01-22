@@ -822,13 +822,15 @@ In addition, PaddleX also provides three other deployment methods, which are det
 
 🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have strict performance requirements for deployment strategies, especially response speed, to ensure efficient system operation and smooth user experience. To this end, PaddleX provides a high-performance inference plugin, which aims to deeply optimize the performance of model inference and pre/post-processing, significantly speeding up the end-to-end process. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service Deployment</b>: Service deployment is a common form of deployment in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users to achieve service deployment of the production line at a low cost. For detailed service deployment procedures, please refer to the [PaddleX Service Deployment Guide](../../../pipeline_deploy/service_deploy.en.md).
+  
+ ☁️ <b>Serving</b>: Serving is a common deployment strategy in real-world production environments. By encapsulating inference functions into services, clients can access these services via network requests to obtain inference results. PaddleX supports various solutions for serving pipelines. For detailed pipeline serving procedures, please refer to the [PaddleX Pipeline Serving Guide](../../../pipeline_deploy/serving.en.md).
 
-Below are the API references and multi-language service call examples:
+Below are the API reference and multi-language service invocation examples for the basic serving solution:
 
 <details><summary>API Reference</summary>
 
-<p>For the main operations provided by the service:</p>
+<p>For primary operations provided by the service:</p>
+  
 <ul>
 <li>The HTTP request method is POST.</li>
 <li>Both the request body and response body are JSON data (JSON objects).</li>
@@ -894,7 +896,9 @@ Below are the API references and multi-language service call examples:
 </tr>
 </tbody>
 </table>
-<p>The main operations provided by the service are as follows:</p>
+
+<p>Primary operations provided by the service:</p>
+
 <ul>
 <li><b><code>infer</code></b></li>
 </ul>
@@ -914,10 +918,18 @@ Below are the API references and multi-language service call examples:
 </thead>
 <tbody>
 <tr>
-<td><code>image</code></td>
+<td><code>file</code></td>
 <td><code>string</code></td>
-<td>The URL of an image file accessible by the service or the Base64-encoded content of the image file.</td>
+
+<td>The URL of an image file or PDF file accessible by the server, or the Base64 encoded result of the content of the above-mentioned file types. For PDF files with more than 10 pages, only the content of the first 10 pages will be used.</td>
+
 <td>Yes</td>
+</tr>
+<tr>
+<td><code>fileType</code></td>
+<td><code>integer</code></td>
+<td>File type. <code>0</code> indicates a PDF file, and <code>1</code> indicates an image file. If this property is not present in the request body, the file type will be inferred based on the URL.</td>
+<td>No</td>
 </tr>
 <tr>
 <td><code>inferenceParams</code></td>
@@ -955,6 +967,27 @@ Below are the API references and multi-language service call examples:
 <th>Name</th>
 <th>Type</th>
 <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<td><code>ocrResults</code></td>
+<td><code>array</code></td>
+<td>OCR results. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
+</tr>
+<tr>
+<td><code>dataInfo</code></td>
+<td><code>object</code></td>
+<td>Information about the input data.</td>
+</tr>
+</tbody>
+</table>
+<p>Each element in <code>ocrResults</code> is an <code>object</code> with the following properties:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
@@ -997,57 +1030,8 @@ Below are the API references and multi-language service call examples:
 </tr>
 </tbody>
 </table>
-<p>An example of <code>result</code> is as follows:</p>
-<pre><code class="language-json">{
-"texts": [
-{
-"poly": [
-[
-444,
-244
-],
-[
-705,
-244
-],
-[
-705,
-311
-],
-[
-444,
-311
-]
-],
-"text": "Beijing South Station",
-"score": 0.9
-},
-{
-"poly": [
-[
-992,
-248
-],
-[
-1263,
-251
-],
-[
-1263,
-318
-],
-[
-992,
-315
-]
-],
-"text": "Tianjin Station",
-"score": 0.5
-}
-],
-"image": "xxxxxx"
-}
-</code></pre></details>
+
+
 
 <details><summary>Multi-language Service Call Examples</summary>
 
@@ -1057,357 +1041,31 @@ Below are the API references and multi-language service call examples:
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = "http://localhost:8080/ocr"  # Service URL
-image_path = "./demo.jpg"
-output_image_path = "./out.jpg"
+API_URL = &quot;http://localhost:8080/ocr&quot;
+file_path = &quot;./demo.jpg&quot;
 
-# Encode a local image with Base64
-with open(image_path, "rb") as file:
-    image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode("ascii")
+with open(file_path, &quot;rb&quot;) as file:
+    file_bytes = file.read()
+    file_data = base64.b64encode(file_bytes).decode(&quot;ascii&quot;)
 
-payload = {"image": image_data}  # Base64-encoded file content or image URL
+payload = {&quot;file&quot;: file_data, &quot;fileType&quot;: 1}
+
 
 # Call the API
 response = requests.post(API_URL, json=payload)
 
 # Process the response data
 assert response.status_code == 200
-result = response.json()["result"]
-with open(output_image_path, "wb") as file:
-    file.write(base64.b64decode(result["image"]))
-print(f"Output image saved at {output_image_path}")
-print("\nDetected texts:")
-print(result["texts"])
-</code></pre></details>
 
-<details><summary>C++</summary>
+result = response.json()[&quot;result&quot;]
+for i, res in enumerate(result[&quot;ocrResults&quot;]):
+    print(&quot;Detected texts:&quot;)
+    print(res[&quot;texts&quot;])
+    output_img_path = f&quot;out_{i}.jpg&quot;
+    with open(output_img_path, &quot;wb&quot;) as f:
+        f.write(base64.b64decode(res[&quot;image&quot;]))
+    print(f&quot;Output image saved at {output_img_path}&quot;)
 
-<pre><code class="language-cpp">#include <iostream>
-#include "cpp-httplib/httplib.h" // https://github.com/Huiyicc/cpp-httplib
-#include "nlohmann/json.hpp" // https://github.com/nlohmann/json
-#include "base64.hpp" // https://github.com/tobiaslocker/base64
-
-int main() {
-    httplib::Client client("localhost:8080");
-    const std::string imagePath = "./demo.jpg";
-    const std::string outputImagePath = "./out.jpg";
-
-    httplib::Headers headers = {
-        {"Content-Type", "application/json"}
-    };
-
-    // Encode a local image with Base64
-    std::ifstream file(imagePath, std::ios::binary | std::ios::ate);
-    std::streamsize size = file.tellg();
-    file.seekg(0, std::ios::beg);
-
-    std::vector<char> buffer(size);
-    if (!file.read(buffer.data(), size)) {
-        std::cerr << "Error reading file." << std::endl;
-        return 1;
-    }
-    std::string bufferStr(reinterpret_cast<const char*>(buffer.data()), buffer.size());
-    std::string encodedImage = base64::to_base64(bufferStr);
-
-    nlohmann::json jsonObj;
-    jsonObj["image"] = encodedImage;
-    std::string body = jsonObj.dump();
-
-    // Call the API
-    auto response = client.Post("/ocr", headers, body, "application/json");
-    // Process the response data
-    if (response && response->status == 200) {
-        nlohmann::json jsonResponse = nlohmann::json::parse(response->body);
-        auto result = jsonResponse["result"];
-
-        encodedImage = result["image"];
-        std::string decodedString = base64::from_base64(encodedImage);
-        std::vector<unsigned char> decodedImage(decodedString.begin(), decodedString.end());
-        std::ofstream outputImage(outputImagePath, std::ios::binary | std::ios::out);
-        if (outputImage.is_open()) {
-            outputImage.write(reinterpret_cast<char*>(decodedImage.data()), decodedImage.size());
-            outputImage.close();
-            std::cout << "Output image saved at " << outputImagePath << std::endl;
-        } else {
-            std::cerr << "Unable to open file for writing: " << outputImagePath << std::endl;
-        }
-
-        auto texts = result["texts"];
-        std::cout << "\nDetected texts:" << std::endl;
-        for (const auto& text : texts) {
-            std::cout << text << std::endl;
-        }
-    } else {
-        std::cout << "Failed to send HTTP request." << std::endl;
-        return 1;
-    }
-
-    return 0;
-}
-</code></pre></details>
-
-<details><summary>Java</summary>
-
-<pre><code class="language-java">import okhttp3.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Base64;
-
-public class Main {
-    public static void main(String[] args) throws IOException {
-        String API_URL = "http://localhost:8080/ocr"; // Service URL
-        String imagePath = "./demo.jpg"; // Local image
-        String outputImagePath = "./out.jpg"; // Output image
-
-        // Encode the local image in Base64
-        File file = new File(imagePath);
-        byte[] fileContent = java.nio.file.Files.readAllBytes(file.toPath());
-        String imageData = Base64.getEncoder().encodeToString(fileContent);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        ObjectNode params = objectMapper.createObjectNode();
-        params.put("image", imageData); // Base64-encoded file content or image URL
-
-        // Create an OkHttpClient instance
-        OkHttpClient client = new OkHttpClient();
-        MediaType JSON = MediaType.Companion.get("application/json; charset=utf-8");
-        RequestBody body = RequestBody.Companion.create(params.toString(), JSON);
-        Request request = new Request.Builder()
-                .url(API_URL)
-                .post(body)
-                .build();
-
-        // Call the API and process the response data
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                String responseBody = response.body().string();
-                JsonNode resultNode = objectMapper.readTree(responseBody);
-                JsonNode result = resultNode.get("result");
-                String base64Image = result.get("image").asText();
-                JsonNode texts = result.get("texts");
-
-                byte[] imageBytes = Base64.getDecoder().decode(base64Image);
-                try (FileOutputStream fos = new FileOutputStream(outputImagePath)) {
-                    fos.write(imageBytes);
-                }
-                System.out.println("Output image saved at " + outputImagePath);
-                System.out.println("\nDetected texts: " + texts.toString());
-            } else {
-                System.err.println("Request failed with code: " + response.code());
-            }
-        }
-    }
-}
-</code></pre></details>
-
-<details><summary>Go</summary>
-
-<pre><code class="language-go">package main
-
-import (
-    "bytes"
-    "encoding/base64"
-    "encoding/json"
-    "fmt"
-    "io/ioutil"
-    "net/http"
-)
-
-func main() {
-    API_URL := "http://localhost:8080/ocr"
-    imagePath := "./demo.jpg"
-    outputImagePath := "./out.jpg"
-
-    // Encode the local image in Base64
-    imageBytes, err := ioutil.ReadFile(imagePath)
-    if err != nil {
-        fmt.Println("Error reading image file:", err)
-        return
-    }
-    imageData := base64.StdEncoding.EncodeToString(imageBytes)
-
-    payload := map[string]string{"image": imageData} // Base64-encoded file content or image URL
-    payloadBytes, err := json.Marshal(payload)
-    if err != nil {
-        fmt.Println("Error marshaling payload:", err)
-        return
-    }
-
-    // Call the API
-    client := &http.Client{}
-    req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
-    if err != nil {
-        fmt.Println("Error creating request:", err)
-        return
-    }
-
-    res, err := client.Do(req)
-    if err != nil {
-        fmt.Println("Error sending request:", err)
-        return
-    }
-    defer res.Body.Close()
-
-    // Process the response data
-    body, err := ioutil.ReadAll(res.Body)
-    if err != nil {
-        fmt.Println("Error reading response body:", err)
-        return
-    }
-    type Response struct {
-        Result struct {
-            Image  string   `json:"image"`
-            Texts  []map[string]interface{} `json:"texts"`
-        } `json:"result"`
-    }
-    var respData Response
-    err = json.Unmarshal([]byte(string(body)), &respData)
-    if err != nil {
-        fmt.Println("Error unmarshaling response body:", err)
-        return
-    }
-
-    outputImageData, err := base64.StdEncoding.DecodeString(respData.Result.Image)
-    if err != nil {
-        fmt.Println("Error decoding base64 image data:", err)
-        return
-    }
-    err = ioutil.WriteFile(outputImagePath, outputImageData, 0644)
-    if err != nil {
-        fmt.Println("Error writing image to file:", err)
-        return
-    }
-    fmt.Printf("Image saved at %s.jpg\n", outputImagePath)
-    fmt.Println("\nDetected texts:")
-    for _, text := range respData.Result.Texts {
-        fmt.Println(text)
-    }
-}
-</code></pre></details>
-
-<details><summary>C#</summary>
-
-<pre><code class="language-csharp">using System;
-using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-
-class Program
-{
-    static readonly string API_URL = "http://localhost:8080/ocr";
-    static readonly string imagePath = "./demo.jpg";
-    static readonly string outputImagePath = "./out.jpg";
-
-    static async Task Main(string[] args)
-    {
-        var httpClient = new HttpClient();
-
-        // Encode a local image with Base64
-        byte[] imageBytes = File.ReadAllBytes(imagePath);
-        string image_data = Convert.ToBase64String(imageBytes);
-
-        var payload = new JObject{ { "image", image_data } }; // Base64-encoded file content or image URL
-        var content = new StringContent(payload.ToString(), Encoding.UTF8, "application/json");
-
-        // Call the API
-        HttpResponseMessage response = await httpClient.PostAsync(API_URL, content);
-        response.EnsureSuccessStatusCode();
-
-        // Process the response data
-        string responseBody = await response.Content.ReadAsStringAsync();
-        JObject jsonResponse = JObject.Parse(responseBody);
-
-        string base64Image = jsonResponse["result"]["image"].ToString();
-        byte[] outputImageBytes = Convert.FromBase64String(base64Image);
-
-        File.WriteAllBytes(outputImagePath, outputImageBytes);
-        Console.WriteLine($"Output image saved at {outputImagePath}");
-        Console.WriteLine("\nDetected texts:");
-        Console.WriteLine(jsonResponse["result"]["texts"].ToString());
-    }
-}
-</code></pre></details>
-
-<details><summary>Node.js</summary>
-
-<pre><code class="language-js">const axios = require('axios');
-const fs = require('fs');
-
-const API_URL = 'http://localhost:8080/ocr';
-const imagePath = './demo.jpg';
-const outputImagePath = "./out.jpg";
-
-let config = {
-   method: 'POST',
-   maxBodyLength: Infinity,
-   url: API_URL,
-   data: JSON.stringify({
-    'image': encodeImageToBase64(imagePath)  // Base64-encoded file content or image URL
-  })
-};
-
-// Encode a local image with Base64
-function encodeImageToBase64(filePath) {
-  const bitmap = fs.readFileSync(filePath);
-  return Buffer.from(bitmap).toString('base64');
-}
-
-// Call the API
-axios.request(config)
-.then((response) =&gt; {
-    // Process the response data
-    const result = response.data["result"];
-    const imageBuffer = Buffer.from(result["image"], 'base64');
-    fs.writeFile(outputImagePath, imageBuffer, (err) =&gt; {
-      if (err) throw err;
-      console.log(`Output image saved at ${outputImagePath}`);
-    });
-    console.log("\nDetected texts:");
-    console.log(result["texts"]);
-})
-.catch((error) =&gt; {
-  console.log(error);
-});
-</code></pre></details>
-
-<details><summary>PHP</summary>
-
-<pre><code class="language-php">&lt;?php
-
-$API_URL = "http://localhost:8080/ocr"; // Service URL
-$image_path = "./demo.jpg";
-$output_image_path = "./out.jpg";
-
-// Encode the local image in Base64
-$image_data = base64_encode(file_get_contents($image_path));
-$payload = array("image" =&gt; $image_data); // Base64-encoded file content or image URL
-
-// Call the API
-$ch = curl_init($API_URL);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$response = curl_exec($ch);
-curl_close($ch);
-
-// Process the response data
-$result = json_decode($response, true)["result"];
-file_put_contents($output_image_path, base64_decode($result["image"]));
-echo "Output image saved at " . $output_image_path . "\n";
-echo "\nDetected texts:\n";
-print_r($result["texts"]);
-
-?&gt;
 </code></pre></details>
 </details>
 <br/>

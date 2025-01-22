@@ -1,0 +1,333 @@
+---
+comments: true
+---
+
+# PaddleX 服务化部署指南
+
+服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。
+
+PaddleX 产线服务化部署示意图：
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/serving.png"  width="300" />
+
+针对用户的不同需求，PaddleX 提供多种产线服务化部署方案：
+
+- 基础服务化部署：简单易用的服务化部署方案，开发成本低。
+- 高稳定性服务化部署：基于 [NVIDIA Triton Inference Server](https://developer.nvidia.com/triton-inference-server) 打造。与基础服务化部署相比，该方案提供更高的稳定性，并允许用户调整配置以优化性能。
+
+**建议首先使用基础服务化部署方案进行快速验证**，然后根据实际需要，评估是否尝试更复杂的方案。
+
+**注意**
+
+- PaddleX 对产线而不是模块进行服务化部署。
+
+## 1. 基础服务化部署
+
+### 1.1 安装服务化部署插件
+
+执行如下命令，安装服务化部署插件：
+
+```bash
+paddlex --install serving
+```
+
+### 1.2 运行服务器
+
+通过 PaddleX CLI 运行服务器：
+
+```bash
+paddlex --serve --pipeline {产线名称或产线配置文件路径} [{其他命令行选项}]
+```
+
+以通用图像分类产线为例：
+
+```bash
+paddlex --serve --pipeline image_classification
+```
+
+可以看到类似以下展示的信息：
+
+```text
+INFO:     Started server process [63108]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+```
+
+`--pipeline` 可指定为官方产线名称或本地产线配置文件路径。PaddleX 以此构建产线并部署为服务。如需调整配置（如模型路径、batch size、部署设备等），请参考 [通用图像分类产线使用教程](../pipeline_usage/tutorials/cv_pipelines/image_classification.md) 中的 <b>”模型应用“</b> 部分。
+
+与服务化部署相关的命令行选项如下：
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--pipeline</code></td>
+<td>产线名称或产线配置文件路径。</td>
+</tr>
+<tr>
+<td><code>--device</code></td>
+<td>产线部署设备。默认为 <code>cpu</code>（如 GPU 不可用）或 <code>gpu</code>（如 GPU 可用）。</td>
+</tr>
+<tr>
+<td><code>--host</code></td>
+<td>服务器绑定的主机名或 IP 地址。默认为 `0.0.0.0`。</td>
+</tr>
+<tr>
+<td><code>--port</code></td>
+<td>服务器监听的端口号。默认为 `8080`。</td>
+</tr>
+<tr>
+<td><code>--use_hpip</code></td>
+<td>如果指定，则启用高性能推理插件。</td>
+</tr>
+</tbody>
+</table>
+</table>
+
+在对于服务响应时间要求较严格的应用场景中，可以使用 PaddleX 高性能推理插件对模型推理及前后处理进行加速，从而降低响应时间、提升吞吐量。
+
+使用 PaddleX 高性能推理插件，请参考 [PaddleX 高性能推理指南](./high_performance_inference.md) 中安装高性能推理插件、获取序列号与激活部分完成插件的安装与序列号的申请。同时，不是所有的产线、模型和环境都支持使用高性能推理插件，支持的详细情况请参考支持使用高性能推理插件的产线与模型部分。
+
+可以通过指定 `--use_hpip` 以使用高性能推理插件。示例如下：
+
+```bash
+paddlex --serve --pipeline image_classification --use_hpip
+```
+
+### 1.3 调用服务
+
+各产线使用教程中的 <b>“开发集成/部署”</b> 部分提供了服务的 API 参考与多语言调用示例。在 [此处](../pipeline_usage/pipeline_develop_guide.md) 可以找到各产线的使用教程。
+
+## 2. 高稳定性服务化部署
+
+**请注意，当前高稳定性服务化部署方案仅支持 Linux 系统。**
+
+### 2.1 下载高稳定性服务化部署 SDK
+
+在下表中找到产线对应的高稳定性服务化部署 SDK 并下载：
+
+<details>
+<summary> 👉点击查看</summary>
+<table>
+<thead>
+<tr>
+<th>产线</th>
+<th>SDK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文档场景信息抽取v3</td>
+<td><a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_PP-ChatOCRv3-doc_sdk.tar.gz>paddlex_hps_PP-ChatOCRv3-doc_sdk.tar.gz</a></td>
+</tr>
+<tr>
+<td>通用图像分类</td>
+<td><a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_image_classification.tar.gz>paddlex_hps_image_classification.tar.gz</a></td>
+</tr>
+<tr>
+<td>通用目标检测</td>
+<td><a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_object_detection_sdk.tar.gz>paddlex_hps_object_detection_sdk.tar.gz</a></td>
+</tr>
+<tr>
+<td>通用实例分割</td>
+<td><a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_instance_segmentation_sdk.tar.gz>paddlex_hps_instance_segmentation_sdk.tar.gz</a></td>
+</tr>
+<tr>
+<td>通用语义分割</td>
+<td><a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_semantic_segmentation_sdk.tar.gz>paddlex_hps_semantic_segmentation_sdk.tar.gz</a></td>
+</tr>
+<tr>
+<td>通用图像多标签分类</td>
+<td><a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_image_multi_label_classification_sdk.tar.gz>paddlex_hps_image_multi_label_classification_sdk.tar.gz</a></td>
+</tr>
+<tr>
+<td>通用图像识别</td>
+<td><a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_general_image_recognition_sdk.tar.gz>paddlex_hps_general_image_recognition_sdk.tar.gz</a></td>
+</tr>
+<tr>
+<td>行人属性识别</td>
+<td><a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_pedestrian_attribute_recognition_sdk.tar.gz>paddlex_hps_pedestrian_attribute_recognition_sdk.tar.gz</a></td>
+</tr>
+<tr>
+<td>车辆属性识别</td>
+<td><a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_vehicle_attribute_recognition_sdk.tar.gz>paddlex_hps_vehicle_attribute_recognition_sdk.tar.gz</a></td>
+</tr>
+<tr>
+<td>人脸识别</td>
+<td><a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_face_recognition_sdk.tar.gz>paddlex_hps_face_recognition_sdk.tar.gz</a></td>
+</tr>
+<tr>
+<td>小目标检测</td>
+<td><a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_small_object_detection_sdk.tar.gz>paddlex_hps_small_object_detection_sdk.tar.gz</a></td>
+</tr>
+<tr>
+<td>图像异常检测</td>
+<td><a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_image_anomaly_detection_sdk.tar.gz>paddlex_hps_image_anomaly_detection_sdk.tar.gz</a></td>
+</tr>
+<tr>
+<td>通用OCR</td>
+<td><a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_OCR_sdk.tar.gz>paddlex_hps_OCR_sdk.tar.gz</a></td>
+</tr>
+<tr>
+<td>通用表格识别</td>
+<td><a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_table_recognition_sdk.tar.gz>paddlex_hps_table_recognition_sdk.tar.gz</a></td>
+</tr>
+<tr>
+<td>通用版面解析</td>
+<td><a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_layout_parsing_sdk.tar.gz>paddlex_hps_layout_parsing_sdk.tar.gz</a></td>
+</tr>
+<tr>
+<td>公式识别</td>
+<td><a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_formula_recognition_sdk.tar.gz>paddlex_hps_formula_recognition_sdk.tar.gz</a></td>
+</tr>
+<tr>
+<td>印章文本识别</td>
+<td><a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_seal_recognition_sdk.tar.gz>paddlex_hps_seal_recognition_sdk.tar.gz</a></td>
+</tr>
+<tr>
+<td>时序预测</td>
+<td><a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_time_series_forecasting_sdk.tar.gz>paddlex_hps_time_series_forecasting_sdk.tar.gz</a></td>
+</tr>
+<tr>
+<td>时序异常检测</td>
+<td><a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_time_series_anomaly_detection_sdk.tar.gz>paddlex_hps_time_series_anomaly_detection_sdk.tar.gz</a></td>
+</tr>
+<tr>
+<td>时序分类</td>
+<td><a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_time_series_classification_sdk.tar.gz>paddlex_hps_time_series_classification_sdk.tar.gz</a></td>
+</tr>
+</tbody>
+</table>
+</details>
+
+
+### 2.2 获取序列号
+
+使用高稳定性服务化部署方案需要获取序列号，并在用于部署的机器上完成激活。获取序列号的方式如下：
+
+在 [飞桨 AI Studio 星河社区-人工智能学习与实训社区](https://aistudio.baidu.com/paddlex/commercialization) 的“开源模型产线部署序列号咨询与获取”部分选择“立即获取”，如下图所示：
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-1.png">
+
+选择需要部署的产线，并点击“获取”。之后，可以在页面下方的“开源产线部署SDK序列号管理”部分找到获取到的序列号：
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-2.png">
+
+**请注意**：每个序列号只能绑定到唯一的设备指纹，且只能绑定一次。这意味着用户如果使用不同的机器部署产线，则必须为每台机器准备单独的序列号。
+
+### 2.3 调整配置
+
+PaddleX 高稳定性服务化部署方案基于 NVIDIA Triton Inference Server 打造，支持用户修改 Triton Inference Server 的配置文件。
+
+在高稳定性服务化部署 SDK 的 `model_repo/{端点名称}` 目录中，可以找到一个或多个 `config*.pbtxt` 文件。如果目录中存在 `config_{设备类型}.pbtxt` 文件，请修改期望使用的设备类型对应的配置文件；否则，请修改 `config.pbtxt`。
+
+一个常见的需求是调整执行实例数量，以进行水平扩展。为了实现这一点，需要修改配置文件中的 `instance_group` 配置，使用 `count` 指定每一设备上放置的实例数量，使用 `kind` 指定设备类型，使用 `gpus` 指定 GPU 编号。示例如下：
+
+- 在 GPU 0 上放置 4 个实例：
+
+    ```text
+    instance_group [
+    {
+        count: 4
+        kind: KIND_GPU
+        gpus: [ 0 ]
+    }
+    ]
+    ```
+
+- 在 GPU 1 上放置 2 个实例，在 GPU 2 和 3 上分别放置 1 个实例：
+
+    ```text
+    instance_group [
+    {
+        count: 2
+        kind: KIND_GPU
+        gpus: [ 1 ]
+    },
+    {
+        count: 1
+        kind: KIND_GPU
+        gpus: [ 2, 3 ]
+    }
+    ]
+    ```
+
+关于更多配置细节，请参阅 [Triton Inference Server 文档](https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/user_guide/model_configuration.html)。
+
+### 2.4 运行服务器
+
+用于部署的机器上需要安装有 19.03 或更高版本的 Docker Engine。
+
+首先，根据需要拉取 Docker 镜像：
+
+- 支持使用 NVIDIA GPU 部署的镜像（机器上需要安装有支持 CUDA 11.8 的 NVIDIA 驱动）：
+
+    ```bash
+    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0b2-gpu
+    ```
+
+- CPU-only 镜像：
+
+    ```bash
+    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0b2-cpu
+    ```
+
+准备好镜像后，执行如下命令运行服务器：
+
+```bash
+docker run \
+    -it \
+    -v "$(pwd)":/workspace \
+    -v "${HOME}/.baidu/paddlex/licenses":/root/.baidu/paddlex/licenses \
+    -v /dev/disk/by-uuid:/dev/disk/by-uuid \
+    -w /workspace \
+    -e PADDLEX_HPS_DEVICE_TYPE={部署设备类型} \
+    -e PADDLEX_HPS_SERIAL_NUMBER={序列号} \
+    --rm \
+    --gpus all \
+    --network host \
+    --shm-size 8g \
+    {镜像名称} \
+    ./server.sh
+```
+
+- 部署设备类型可以为 `cpu` 或 `gpu`，CPU-only 镜像仅支持 `cpu`。
+- 如果希望使用 CPU 部署，则不需要指定 `--gpus`。
+- 以上命令必须在激活成功后才可以正常执行。PaddleX 提供两种激活方式：离线激活和在线激活。具体说明如下：
+
+    - 联网激活：在命令中添加 `-e PADDLEX_HPS_UPDATE_LICENSE=1`，使程序自动完成激活。
+    - 离线激活：按照序列号管理部分中的指引，获取机器的设备指纹，并将序列号与设备指纹绑定以获取证书，完成激活。使用这种激活方式，需要手动将证书存放在机器的 `${HOME}/.baidu/paddlex/licenses` 目录中（如果目录不存在，需要创建目录）。
+
+- 必须确保宿主机的 `/dev/disk/by-uuid` 存在且非空，并正确挂载该目录，才能正常执行激活。
+- 如果需要进入容器内部调试，可以将命令中的 `./server.sh` 替换为 `/bin/bash`，在容器中执行 `./server.sh`。
+- 如果希望服务器在后台运行，可以将命令中的 `-it` 替换为 `-d`。容器启动后，可通过 `docker logs -f {容器 ID}` 查看容器日志。
+
+可观察到类似下面的输出信息：
+
+```text
+I1216 11:37:21.601943 35 grpc_server.cc:4117] Started GRPCInferenceService at 0.0.0.0:8001
+I1216 11:37:21.602333 35 http_server.cc:2815] Started HTTPService at 0.0.0.0:8000
+I1216 11:37:21.643494 35 http_server.cc:167] Started Metrics Service at 0.0.0.0:8002
+```
+
+### 2.5 调用服务
+
+目前，仅支持使用 Python 客户端调用服务。支持的 Python 版本为 3.8、3.9 和 3.10。
+
+切换到高稳定性服务化部署 SDK 的 `client` 目录，执行如下命令安装依赖：
+
+```bash
+# 建议在虚拟环境中安装
+python -m pip install paddlex_hps_client-*.whl
+python -m pip install -r requirements.txt
+```
+
+`client` 目录的 `client.py` 脚本包含服务的调用示例，并提供命令行接口。
+
+使用高稳定性服务化部署方案部署的服务，提供与基础服务化部署方案相匹配的主要操作。对于每个主要操作，端点名称以及请求和响应的数据字段都与基础服务化部署方案保持一致。请参阅各产线使用教程中的 <b>“开发集成/部署”</b> 部分。在 [此处](../pipeline_usage/pipeline_develop_guide.md) 可以找到各产线的使用教程。

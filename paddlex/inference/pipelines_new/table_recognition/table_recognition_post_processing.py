@@ -118,13 +118,91 @@ def compute_iou(rec1: list, rec2: list) -> float:
         return (intersect / (sum_area - intersect)) * 1.0
 
 
-def match_table_and_ocr(cell_box_list: list, ocr_dt_boxes: list) -> dict:
+def _whether_y_overlap_exceeds_threshold(bbox1, bbox2, overlap_ratio_threshold=0.6):
+    """
+    Determines whether the vertical overlap between two bounding boxes exceeds a given threshold.
+
+    Args:
+        bbox1 (tuple): The first bounding box defined as (left, top, right, bottom).
+        bbox2 (tuple): The second bounding box defined as (left, top, right, bottom).
+        overlap_ratio_threshold (float): The threshold ratio to determine if the overlap is significant.
+                                         Defaults to 0.6.
+
+    Returns:
+        bool: True if the vertical overlap divided by the minimum height of the two bounding boxes
+              exceeds the overlap_ratio_threshold, otherwise False.
+    """
+    _, y1_0, _, y1_1 = bbox1
+    _, y2_0, _, y2_1 = bbox2
+
+    overlap = max(0, min(y1_1, y2_1) - max(y1_0, y2_0))
+    min_height = min(y1_1 - y1_0, y2_1 - y2_0)
+
+    return (overlap / min_height) > overlap_ratio_threshold
+
+
+def _sort_box_by_y_projection(boxes, line_height_iou_threshold=0.6):
+    """
+    Sorts a list of bounding boxes based on their spatial arrangement.
+
+    The function first sorts the boxes by their top y-coordinate to group them into lines.
+    Within each line, the boxes are then sorted by their x-coordinate.
+
+    Args:
+        boxes (list): A list of bounding boxes, where each box is defined as [left, top, right, bottom].
+        line_height_iou_threshold (float): The Intersection over Union (IoU) threshold for grouping boxes into the same line.
+
+    Returns:
+        list: A list of indices representing the order of the boxes after sorting by their spatial arrangement.
+    """
+
+    if not boxes:
+        return []
+
+    indexed_boxes = list(enumerate(boxes))
+    indexed_boxes.sort(key=lambda item: item[1][1])
+
+    lines = []
+    first_index, first_box = indexed_boxes[0]
+    current_line = [(first_index, first_box)]
+    current_y0, current_y1 = first_box[1], first_box[3]
+
+    for index, box in indexed_boxes[1:]:
+        y0, y1 = box[1], box[3]
+        if _whether_y_overlap_exceeds_threshold(
+            (0, current_y0, 0, current_y1),
+            (0, y0, 0, y1),
+            line_height_iou_threshold,
+        ):
+            current_line.append((index, box))
+            current_y0 = min(current_y0, y0)
+            current_y1 = max(current_y1, y1)
+        else:
+            lines.append(current_line)
+            current_line = [(index, box)]
+            current_y0, current_y1 = y0, y1
+
+    if current_line:
+        lines.append(current_line)
+
+    for line in lines:
+        line.sort(key=lambda item: item[1][0])
+
+    sorted_indices = [index for line in lines for index, _ in line]
+
+    return sorted_indices
+
+
+def match_table_and_ocr(
+    cell_box_list: list, ocr_dt_boxes: list, cell_sort_by_y_projection: bool = False
+) -> dict:
     """
     match table and ocr
 
     Args:
         cell_box_list (list): bbox for table cell, 2 points, [left, top, right, bottom]
         ocr_dt_boxes (list): bbox for ocr, 2 points, [left, top, right, bottom]
+        cell_sort_by_y_projection (bool): Whether to sort the matched OCR boxes by y-projection.
 
     Returns:
         dict: matched dict, key is table index, value is ocr index
@@ -144,6 +222,14 @@ def match_table_and_ocr(cell_box_list: list, ocr_dt_boxes: list) -> dict:
             matched[distances.index(sorted_distances[0])] = [i]
         else:
             matched[distances.index(sorted_distances[0])].append(i)
+
+    if cell_sort_by_y_projection:
+        for cell_index in matched:
+            input_boxes = [ocr_dt_boxes[i] for i in matched[cell_index]]
+            sorted_indices = _sort_box_by_y_projection(input_boxes, 0.7)
+            sorted_indices = [matched[cell_index][i] for i in sorted_indices]
+            matched[cell_index] = sorted_indices
+
     return matched
 
 
@@ -210,7 +296,10 @@ def get_html_result(
 
 
 def get_table_recognition_res(
-    table_box: list, table_structure_pred: dict, overall_ocr_res: OCRResult
+    table_box: list,
+    table_structure_pred: dict,
+    overall_ocr_res: OCRResult,
+    cell_sort_by_y_projection: bool = False,
 ) -> SingleTableRecognitionResult:
     """
     Retrieve table recognition result from cropped image info, table structure prediction, and overall OCR result.
@@ -219,6 +308,7 @@ def get_table_recognition_res(
         table_box (list): Information about the location of cropped image, including the bounding box.
         table_structure_pred (dict): Predicted table structure.
         overall_ocr_res (OCRResult): Overall OCR result from the input image.
+        cell_sort_by_y_projection (bool): Whether to sort the matched OCR boxes by y-projection.
 
     Returns:
         SingleTableRecognitionResult: An object containing the single table recognition result.
@@ -237,7 +327,9 @@ def get_table_recognition_res(
     ocr_dt_boxes = table_ocr_pred["rec_boxes"]
     ocr_texts_res = table_ocr_pred["rec_texts"]
 
-    matched_index = match_table_and_ocr(cell_box_list, ocr_dt_boxes)
+    matched_index = match_table_and_ocr(
+        cell_box_list, ocr_dt_boxes, cell_sort_by_y_projection=cell_sort_by_y_projection
+    )
     pred_html = get_html_result(matched_index, ocr_texts_res, structures)
 
     single_img_res = {

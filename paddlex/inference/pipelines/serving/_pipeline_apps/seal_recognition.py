@@ -89,13 +89,13 @@ def create_pipeline_app(pipeline: SealOCRPipeline, app_config: AppConfig) -> Fas
                     item["ocr_result"]["rec_score"],
                 ):
                     texts.append(Text(poly=poly, text=text, score=score))
-                input_img, ocr_img, layout_img = await ocr_common.postprocess_images(
+                input_img, layout_img, ocr_img = await ocr_common.postprocess_images(
                     log_id=log_id,
                     index=i,
                     app_context=ctx,
                     input_image=img,
-                    ocr_image=item["ocr_result"].img,
                     layout_image=item["layout_result"].img,
+                    ocr_image=item["ocr_result"].img,
                 )
                 seal_rec_results.append(
                     SealRecResult(

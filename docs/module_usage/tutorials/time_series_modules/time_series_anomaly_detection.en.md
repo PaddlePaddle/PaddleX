@@ -265,7 +265,7 @@ tar -xf ./dataset/ts_anomaly_examples.tar -C ./dataset/
 #### 4.1.2 Data Validation
 You can complete data validation with a single command:
 ```bash
-python main.py -c paddlex/configs/ts_anomaly_detection/AutoEncoder_ad.yaml \
+python main.py -c paddlex/configs/modules/ts_anomaly_detection/AutoEncoder_ad.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_anomaly_examples
 ```
@@ -356,12 +356,12 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/ts_anomaly_detection/AutoEncoder_ad.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/ts_anomaly_detection/AutoEncoder_ad.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_anomaly_examples
 </code></pre>
 <p>The above parameters also support setting through appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/ts_anomaly_detection/AutoEncoder_ad.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/ts_anomaly_detection/AutoEncoder_ad.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_anomaly_examples \
     -o CheckDataset.convert.enable=True
@@ -389,13 +389,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/ts_anomaly_detection/AutoEncoder_ad.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/ts_anomaly_detection/AutoEncoder_ad.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_anomaly_examples
 </code></pre>
 <p>After dataset splitting, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters also support setting through appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/ts_anomaly_detection/AutoEncoder_ad.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/ts_anomaly_detection/AutoEncoder_ad.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_anomaly_examples \
     -o CheckDataset.split.enable=True \
@@ -407,7 +407,7 @@ CheckDataset:
 Model training can be completed with just one command. Here, we use the Time Series Forecasting model (AutoEncoder_ad) as an example:
 
 ```bash
-python main.py -c paddlex/configs/ts_anomaly_detection/AutoEncoder_ad.yaml \
+python main.py -c paddlex/configs/modules/ts_anomaly_detection/AutoEncoder_ad.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/ts_anomaly_examples
 ```
@@ -441,7 +441,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 After completing model training, you can evaluate the specified model weights file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation can be done with a single command:
 
 ```bash
-python main.py -c paddlex/configs/ts_anomaly_detection/AutoEncoder_ad.yaml \
+python main.py -c paddlex/configs/modules/ts_anomaly_detection/AutoEncoder_ad.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ts_anomaly_examples
 ```
@@ -467,7 +467,7 @@ To perform inference predictions through the command line, simply use the follow
 Before running the following code, please download the [demo csv](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.csv) to your local machine.
 
 ```bash
-python main.py -c paddlex/configs/ts_anomaly_detection/AutoEncoder_ad.yaml \
+python main.py -c paddlex/configs/modules/ts_anomaly_detection/AutoEncoder_ad.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/inference" \
     -o Predict.input="ts_ad.csv"

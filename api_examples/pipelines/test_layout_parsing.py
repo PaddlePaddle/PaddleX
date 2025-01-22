@@ -14,7 +14,7 @@
 
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="layout_parsing")
+pipeline = create_pipeline(pipeline_name="layout_parsing")
 
 output = pipeline.predict(
     "./test_samples/demo_paper.png",
@@ -53,7 +53,6 @@ output = pipeline.predict(
 # )
 
 for res in output:
-    print(res)
     res.print()
     res.save_to_img("./output")
     res.save_to_json("./output")

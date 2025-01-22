@@ -707,7 +707,7 @@ for res in output:
 
 相关方法、参数等说明如下：
 
-* `create_model`实例化文本识别模型（此处以`PP-LCNet_x1_0`为例），具体说明如下：
+* `create_model`实例化图像分类模型（此处以`PP-LCNet_x1_0`为例），具体说明如下：
 <table>
 <thead>
 <tr>
@@ -723,7 +723,7 @@ for res in output:
 <td>模型名称</td>
 <td><code>str</code></td>
 <td>无</td>
-<td><code>PP-LCNet_x1_0</code></td>
+<td><code>无</code></td>
 </tr>
 <tr>
 <td><code>model_dir</code></td>
@@ -732,11 +732,22 @@ for res in output:
 <td>无</td>
 <td>无</td>
 </tr>
+<tr>
+<td><code>topk</code></td>
+<td>预测结果的前<code>topk</code>值，如果不指定，将默认使用PaddleX官方模型配置</td>
+<td><code>int</code></td>
+<td>
+<ul>
+  <li><b>int</b>，如 5 ，表示打印（返回）预测结果的前<code>5</code>个类别和对应的分类概率</li>
+</ul>
+</td>
+<td>5</td>
+</tr>
 </table>
 
 * 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
 
-* 调用文本识别模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` 和 `batch_size`，具体说明如下：
+* 调用图像分类模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` 和 `batch_size`，具体说明如下：
 
 <table>
 <thead>
@@ -770,6 +781,17 @@ for res in output:
 <td><code>int</code></td>
 <td>任意整数</td>
 <td>1</td>
+</tr>
+<tr>
+<td><code>topk</code></td>
+<td>预测结果的前<code>topk</code>值；如果不指定，将默认使用 <code>creat_model</code> 指定的 <code>topk</code> 参数，如果 <code>creat_model</code> 也没有指定，则默认使用PaddleX官方模型配置</td>
+<td><code>int</code></td>
+<td>
+<ul>
+  <li><b>int</b>，如 5 ，表示打印（返回）预测结果的前<code>5</code>个类别和对应的分类概率</li>
+</ul>
+</td>
+<td>5</td>
 </tr>
 </table>
 
@@ -877,7 +899,7 @@ tar -xf ./dataset/cls_flowers_examples.tar -C ./dataset/
 一行命令即可完成数据校验：
 
 ```bash
-python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
+python main.py -c paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/cls_flowers_examples
 ```
@@ -947,13 +969,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>随后执行命令：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/cls_flowers_examples
 </code></pre>
 <p>数据划分执行之后，原有标注文件会被在原路径下重命名为 <code>xxx.bak</code>。</p>
 <p>以上参数同样支持通过追加命令行参数的方式进行设置：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/cls_flowers_examples \
     -o CheckDataset.split.enable=True \
@@ -965,7 +987,7 @@ CheckDataset:
 一条命令即可完成模型的训练，以此处图像分类模型 PP-LCNet_x1_0 的训练为例：
 
 ```
-python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml  \
+python main.py -c paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml  \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/cls_flowers_examples
 ```
@@ -996,7 +1018,7 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml  \
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ```bash
-python main.py -c  paddlex/configs/image_classification/PP-LCNet_x1_0.yaml  \
+python main.py -c  paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml  \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/cls_flowers_examples
 ```
@@ -1020,7 +1042,7 @@ python main.py -c  paddlex/configs/image_classification/PP-LCNet_x1_0.yaml  \
 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg)到本地。
 
 ```bash
-python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
+python main.py -c paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="general_image_classification_001.jpg"

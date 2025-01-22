@@ -58,17 +58,17 @@ for res in output:
 
 运行结果参数含义如下：
 - `input_path`：表示输入图片的路径。
-- `class_ids`：表示预测结果的类别id。
+- `class_ids`：表示预测结果的类别 id，含有两个类别，即0度和180度。
 - `scores`：表示预测结果的置信度。
 - `label_names`：表示预测结果的类别名。
 
 可视化图片如下：
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/image_classification/general_image_classification_001_res.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/textline_ori_classification/textline_rot180_demo_res.jpg">
 
 相关方法、参数等说明如下：
 
-* `create_model`实例化文本识别模型（此处以`PP-LCNet_x0_25_textline_ori`为例），具体说明如下：
+* `create_model`实例化文本行方向分类模型（此处以`PP-LCNet_x0_25_textline_ori`为例），具体说明如下：
 <table>
 <thead>
 <tr>
@@ -84,7 +84,7 @@ for res in output:
 <td>模型名称</td>
 <td><code>str</code></td>
 <td>无</td>
-<td><code>PP-LCNet_x0_25_textline_ori</code></td>
+<td><code>无</code></td>
 </tr>
 <tr>
 <td><code>model_dir</code></td>
@@ -97,7 +97,7 @@ for res in output:
 
 * 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
 
-* 调用文本识别模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` 和 `batch_size`，具体说明如下：
+* 调用文本行方向分类模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` 和 `batch_size`，具体说明如下：
 
 <table>
 <thead>
@@ -236,7 +236,7 @@ tar -xf ./dataset/textline_orientation_example_data.tar -C ./dataset/
 一行命令即可完成数据校验：
 
 ```bash
-python main.py -c paddlex/configs/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
+python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/textline_orientation_example_data
 ```
@@ -323,13 +323,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>随后执行命令：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/textline_orientation_example_data
 </code></pre>
 <p>数据划分执行之后，原有标注文件会被在原路径下重命名为 <code>xxx.bak</code>。</p>
 <p>以上参数同样支持通过追加命令行参数的方式进行设置：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/textline_orientation_example_data \
     -o CheckDataset.split.enable=True \
@@ -341,7 +341,7 @@ CheckDataset:
 一条命令即可完成模型的训练，此处以文本行方向分类模型（PP-LCNet_x1_0_textline_ori）的训练为例：
 
 ```bash
-python main.py -c paddlex/configs/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
+python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/textline_orientation_example_data
 ```
@@ -372,7 +372,7 @@ python main.py -c paddlex/configs/textline_orientation/PP-LCNet_x0_25_textline_o
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ``` bash
-python main.py -c paddlex/configs/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
+python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/textline_orientation_example_data
 ```
@@ -396,7 +396,7 @@ python main.py -c paddlex/configs/textline_orientation/PP-LCNet_x0_25_textline_o
 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/textline_rot180_demo.jpg)到本地。
 
 ```bash
-python main.py -c paddlex/configs/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
+python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="textline_rot180_demo.jpg"

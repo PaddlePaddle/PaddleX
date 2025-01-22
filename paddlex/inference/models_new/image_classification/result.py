@@ -24,6 +24,7 @@ from ...common.result import BaseCVResult, StrMixin, JsonMixin
 
 
 class TopkResult(BaseCVResult):
+
     def _to_str(self, *args, **kwargs):
         data = copy.deepcopy(self)
         data.pop("input_img")

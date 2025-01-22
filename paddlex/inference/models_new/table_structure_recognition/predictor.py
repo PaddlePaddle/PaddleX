@@ -84,7 +84,7 @@ class TablePredictor(BasicPredictor):
         Returns:
             dict: A dictionary containing the input path, raw image, class IDs, scores, and label names for every instance of the batch. Keys include 'input_path', 'input_img', 'class_ids', 'scores', and 'label_names'.
         """
-        batch_raw_imgs = self.preprocessors[0](imgs=batch_data)  # ReadImage
+        batch_raw_imgs = self.preprocessors[0](imgs=batch_data.instances)  # ReadImage
         ori_shapes = []
         for s in range(len(batch_raw_imgs)):
             ori_shapes.append([batch_raw_imgs[s].shape[1], batch_raw_imgs[s].shape[0]])
@@ -116,7 +116,8 @@ class TablePredictor(BasicPredictor):
             table_result_structure_score.append(table_result[i]["structure_score"])
 
         final_result = {
-            "input_path": batch_data,
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
             "input_img": batch_raw_imgs,
             "bbox": table_result_bbox,
             "structure": table_result_structure,

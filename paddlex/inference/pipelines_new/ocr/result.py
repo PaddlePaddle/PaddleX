@@ -29,6 +29,15 @@ from ...common.result import BaseCVResult, StrMixin, JsonMixin
 class OCRResult(BaseCVResult):
     """OCR result"""
 
+    def _get_input_fn(self):
+        fn = super()._get_input_fn()
+        if (page_idx := self["page_index"]) is not None:
+            fp = Path(fn)
+            stem, suffix = fp.stem, fp.suffix
+            return f"{stem}_{page_idx}{suffix}"
+        else:
+            return fn
+
     def get_minarea_rect(self, points: np.ndarray) -> np.ndarray:
         """
         Get the minimum area rectangle for the given points using OpenCV.
@@ -127,13 +136,15 @@ class OCRResult(BaseCVResult):
         """
         data = {}
         data["input_path"] = self["input_path"]
+        data["page_index"] = self["page_index"]
         data["model_settings"] = self["model_settings"]
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].str["res"]
         data["dt_polys"] = self["dt_polys"]
         data["text_det_params"] = self["text_det_params"]
         data["text_type"] = self["text_type"]
-        data["textline_orientation_angles"] = self["textline_orientation_angles"]
+        if "textline_orientation_angles" in self:
+            data["textline_orientation_angles"] = self["textline_orientation_angles"]
         data["text_rec_score_thresh"] = self["text_rec_score_thresh"]
         data["rec_texts"] = self["rec_texts"]
         data["rec_scores"] = self["rec_scores"]
@@ -155,13 +166,15 @@ class OCRResult(BaseCVResult):
         """
         data = {}
         data["input_path"] = self["input_path"]
+        data["page_index"] = self["page_index"]
         data["model_settings"] = self["model_settings"]
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].json["res"]
         data["dt_polys"] = self["dt_polys"]
         data["text_det_params"] = self["text_det_params"]
         data["text_type"] = self["text_type"]
-        data["textline_orientation_angles"] = self["textline_orientation_angles"]
+        if "textline_orientation_angles" in self:
+            data["textline_orientation_angles"] = self["textline_orientation_angles"]
         data["text_rec_score_thresh"] = self["text_rec_score_thresh"]
         data["rec_texts"] = self["rec_texts"]
         data["rec_scores"] = self["rec_scores"]

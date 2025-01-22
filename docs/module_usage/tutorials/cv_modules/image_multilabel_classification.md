@@ -84,7 +84,7 @@ for res in output:
 
 可视化图片如下：
 
-<img src="https://github.com/user-attachments/assets/4bdd6999-637d-4c9b-aa47-8dd6f587f5a1">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/image_multilabel_classification/multilabel_classification_005_result.png">
 
 相关方法、参数等说明如下：
 
@@ -113,11 +113,24 @@ for res in output:
 <td>无</td>
 <td>无</td>
 </tr>
+<tr>
+<td><code>threshold</code></td>
+<td>多标签分类阈值</td>
+<td><code>float/list/dict</code></td>
+<td><li><b>float类型变量</b>，任意[0-1]之间浮点数：<code>0.5</code></li>
+<li><b>list类型变量</b>，由多个[0-1]之间浮点数组成的列表：<code>[0.5,0.5,...]</code></li>
+<li><b>dict类型变量</b>,指定不同类别使用不同的阈值，其中"default"为必须包含的键:<code>{"default":0.5,1:0.1,...}</code>
+</li>
+</td>
+<td>0.5</td>
+</tr>
 </table>
 
 * 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
 
-* 调用文本识别模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` 和 `batch_size`，具体说明如下：
+* 其中，`threshold` 参数用于设置多标签分类的阈值，默认为0.5。当设置为浮点数时，表示所有类别均使用该阈值；当设置为列表时，表示不同类别使用不同的阈值,此时需保持列表长度与类别数量一致；当设置为字典时，`default` 为必须包含的键， 表示所有类别的默认阈值，其它类别使用各自的阈值。例如：{"default":0.5,1:0.1}。
+
+* 调用多标签分类模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` , `batch_size` 和  `threshold`，具体说明如下：
 
 <table>
 <thead>
@@ -151,6 +164,17 @@ for res in output:
 <td><code>int</code></td>
 <td>任意整数</td>
 <td>1</td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td>多标签分类阈值</td>
+<td><code>float/list/dict</code></td>
+<td><li><b>float类型变量</b>，任意[0-1]之间浮点数：<code>0.5</code></li>
+<li><b>list类型变量</b>，由多个[0-1]之间浮点数组成的列表：<code>[0.5,0.5,...]</code></li>
+<li><b>dict类型变量</b>,指定不同类别使用不同的阈值，其中"default"为必须包含的键:<code>{"default":0.5,1:0.1,...}</code>
+</li>
+</td>
+<td>0.5</td>
 </tr>
 </table>
 
@@ -257,7 +281,7 @@ tar -xf ./dataset/mlcls_nus_examples.tar -C ./dataset/
 一行命令即可完成数据校验：
 
 ```bash
-python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/mlcls_nus_examples
 ```
@@ -345,13 +369,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>随后执行命令：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_coco_examples
 </code></pre>
 <p>数据转换执行之后，原有标注文件会被在原路径下重命名为 <code>xxx.bak</code>。</p>
 <p>以上参数同样支持通过追加命令行参数的方式进行设置：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_coco_examples \
     -o CheckDataset.convert.enable=True \
@@ -377,13 +401,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>随后执行命令：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_coco_examples
 </code></pre>
 <p>数据划分执行之后，原有标注文件会被在原路径下重命名为 <code>xxx.bak</code>。</p>
 <p>以上参数同样支持通过追加命令行参数的方式进行设置：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_coco_examples \
     -o CheckDataset.split.enable=True \
@@ -395,7 +419,7 @@ CheckDataset:
 一条命令即可完成模型的训练，以此处图像多标签分类模型 PP-LCNet_x1_0_ML 的训练为例：
 
 ```bash
-python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/mlcls_nus_examples
 ```
@@ -426,7 +450,7 @@ python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ```bash
-python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/mlcls_nus_examples
 ```
@@ -449,7 +473,7 @@ python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_
 
 * 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png)到本地。
 ```bash
-python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml  \
+python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="multilabel_classification_005.png"

@@ -100,7 +100,7 @@ class UadPredictor(BasicPredictor):
         Returns:
             dict: A dictionary containing the input path, raw image, and predicted segmentation maps for every instance of the batch. Keys include 'input_path', 'input_img', and 'pred'.
         """
-        batch_raw_imgs = self.preprocessors["Read"](imgs=batch_data)
+        batch_raw_imgs = self.preprocessors["Read"](imgs=batch_data.instances)
         batch_imgs = self.preprocessors["Resize"](imgs=batch_raw_imgs)
         batch_imgs = self.preprocessors["Normalize"](imgs=batch_imgs)
         batch_imgs = self.preprocessors["ToCHW"](imgs=batch_imgs)
@@ -111,7 +111,8 @@ class UadPredictor(BasicPredictor):
             batch_preds = np.split(batch_preds[0], len(batch_data), axis=0)
 
         return {
-            "input_path": batch_data,
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
             "input_img": batch_raw_imgs,
             "pred": batch_preds,
         }

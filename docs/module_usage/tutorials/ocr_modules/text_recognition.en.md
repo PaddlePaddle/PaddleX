@@ -446,7 +446,7 @@ tar -xf ./dataset/ocr_rec_dataset_examples.tar -C ./dataset/
 A single command can complete data validation:
 
 ```bash
-python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
+python main.py -c paddlex/configs/modules/text_recognition/PP-OCRv4_mobile_rec.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_rec_dataset_examples
 ```
@@ -516,13 +516,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/text_recognition/PP-OCRv4_mobile_rec.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_rec_dataset_examples
 </code></pre>
 <p>After data splitting, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters also support setting through appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/text_recognition/PP-OCRv4_mobile_rec.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_rec_dataset_examples \
     -o CheckDataset.split.enable=True \
@@ -534,7 +534,7 @@ CheckDataset:
 Model training can be completed with a single command. Here's an example of training the PP-OCRv4 mobile text recognition model (PP-OCRv4_mobile_rec):
 
 ```bash
-python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
+python main.py -c paddlex/configs/modules/text_recognition/PP-OCRv4_mobile_rec.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/ocr_rec_dataset_examples
 ```
@@ -568,7 +568,7 @@ After completing model training, you can evaluate the specified model weights fi
 ```bash
 
 ```bash
-python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
+python main.py -c paddlex/configs/modules/text_recognition/PP-OCRv4_mobile_rec.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ocr_rec_dataset_examples
 
@@ -596,7 +596,7 @@ Before running the following code, please download the [demo image](https://padd
 
 
 ```bash
-python main.py -c paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml \
+python main.py -c paddlex/configs/modules/text_recognition/PP-OCRv4_mobile_rec.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_accuracy/inference" \
     -o Predict.input="general_ocr_rec_001.png"

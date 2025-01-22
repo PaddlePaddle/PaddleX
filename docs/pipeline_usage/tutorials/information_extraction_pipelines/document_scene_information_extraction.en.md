@@ -619,13 +619,13 @@ Additionally, PaddleX provides three other deployment methods, detailed as follo
 
 🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have stringent standards for the performance metrics (especially response speed) of deployment strategies to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy.en.md).
+☁️ <b>Serving</b>: Serving is a common deployment strategy in real-world production environments. By encapsulating inference functions into services, clients can access these services via network requests to obtain inference results. PaddleX supports various solutions for serving pipelines. For detailed pipeline serving procedures, please refer to the [PaddleX Pipeline Serving Guide](../../../pipeline_deploy/serving.md).
 
-Below are the API references and multi-language service invocation examples:
+Below are the API reference and multi-language service invocation examples for the basic serving solution:
 
 <details><summary>API Reference</summary>
 
-<p>For main operations provided by the service:</p>
+<p>For primary operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
 <li>The request body and the response body are both JSON data (JSON objects).</li>
@@ -691,12 +691,12 @@ Below are the API references and multi-language service invocation examples:
 </tr>
 </tbody>
 </table>
-<p>Main operations provided by the service are as follows:</p>
+<p>Primary operations provided by the service are as follows:</p>
 <ul>
 <li><b><code>analyzeImages</code></b></li>
 </ul>
 <p>Analyze images using computer vision models to obtain OCR, table recognition results, and extract key information from the images.</p>
-<p><code>POST /chatocr-vision</code></p>
+<p><code>POST /chatocr-visual</code></p>
 <ul>
 <li>Request body properties:</li>
 </ul>
@@ -719,7 +719,7 @@ Below are the API references and multi-language service invocation examples:
 <tr>
 <td><code>fileType</code></td>
 <td><code>integer</code></td>
-<td>File type. <code>0</code> represents PDF files, <code>1</code> represents image files. If this property is not present in the request body, the service will attempt to infer the file type automatically based on the URL.</td>
+<td>File type. <code>0</code> represents PDF files, <code>1</code> represents image files. If this property is not present in the request body, the file type will be inferred based on the URL.</td>
 <td>No</td>
 </tr>
 <tr>
@@ -780,12 +780,12 @@ Below are the API references and multi-language service invocation examples:
 </thead>
 <tbody>
 <tr>
-<td><code>visionResults</code></td>
+<td><code>visualResults</code></td>
 <td><code>array</code></td>
 <td>Analysis results obtained using the computer vision model. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file in sequence.</td>
 </tr>
 <tr>
-<td><code>visionInfo</code></td>
+<td><code>visualInfo</code></td>
 <td><code>object</code></td>
 <td>Key information in the image, which can be used as input for other operations.</td>
 </tr>
@@ -796,7 +796,7 @@ Below are the API references and multi-language service invocation examples:
 </tr>
 </tbody>
 </table>
-<p>Each element in <code>visionResults</code> is an <code>object</code> with the following properties:</p>
+<p>Each element in <code>visualResults</code> is an <code>object</code> with the following properties:</p>
 <table>
 <thead>
 <tr>
@@ -901,7 +901,7 @@ Below are the API references and multi-language service invocation examples:
 </thead>
 <tbody>
 <tr>
-<td><code>visionInfo</code></td>
+<td><code>visualInfo</code></td>
 <td><code>object</code></td>
 <td>Key information from the image. Provided by the <code>analyzeImages</code> operation.</td>
 <td>Yes</td>
@@ -1063,7 +1063,7 @@ Below are the API references and multi-language service invocation examples:
 <td>Yes</td>
 </tr>
 <tr>
-<td><code>visionInfo</code></td>
+<td><code>visualInfo</code></td>
 <td><code>object</code></td>
 <td>Key information from images. Provided by the <code>analyzeImages</code> operation.</td>
 <td>Yes</td>
@@ -1218,30 +1218,31 @@ payload = {
     &quot;useImgUnwarping&quot;: True,
     &quot;useSealTextDet&quot;: True,
 }
-resp_vision = requests.post(url=f&quot;{API_BASE_URL}/chatocr-vision&quot;, json=payload)
-if resp_vision.status_code != 200:
+resp_visual = requests.post(url=f&quot;{API_BASE_URL}/chatocr-visual&quot;, json=payload)
+if resp_visual.status_code != 200:
     print(
-        f&quot;Request to chatocr-vision failed with status code {resp_vision.status_code}.&quot;
+        f&quot;Request to chatocr-visual failed with status code {resp_visual.status_code}.&quot;,
+        file=sys.stderr,
     )
-    pprint.pp(resp_vision.json())
+    pprint.pp(resp_visual.json())
     sys.exit(1)
-result_vision = resp_vision.json()[&quot;result&quot;]
+result_visual = resp_visual.json()[&quot;result&quot;]
 
-for i, res in enumerate(result_vision[&quot;visionResults&quot;]):
+for i, res in enumerate(result_visual[&quot;visualResults&quot;]):
     print(&quot;Texts:&quot;)
     pprint.pp(res[&quot;texts&quot;])
     print(&quot;Tables:&quot;)
     pprint.pp(res[&quot;tables&quot;])
-    ocr_img_path = f&quot;ocr_{i}.jpg&quot;
-    with open(ocr_img_path, &quot;wb&quot;) as f:
-        f.write(base64.b64decode(res[&quot;ocrImage&quot;]))
     layout_img_path = f&quot;layout_{i}.jpg&quot;
     with open(layout_img_path, &quot;wb&quot;) as f:
         f.write(base64.b64decode(res[&quot;layoutImage&quot;]))
-    print(f&quot;Output images saved at {ocr_img_path} and {layout_img_path}&quot;)
+    ocr_img_path = f&quot;ocr_{i}.jpg&quot;
+    with open(ocr_img_path, &quot;wb&quot;) as f:
+        f.write(base64.b64decode(res[&quot;ocrImage&quot;]))
+    print(f&quot;Output images saved at {layout_img_path} and {ocr_img_path}&quot;)
 
 payload = {
-    &quot;visionInfo&quot;: result_vision[&quot;visionInfo&quot;],
+    &quot;visualInfo&quot;: result_visual[&quot;visualInfo&quot;],
     &quot;minChars&quot;: 200,
     &quot;llmRequestInterval&quot;: 1000,
     &quot;llmName&quot;: LLM_NAME,
@@ -1250,7 +1251,8 @@ payload = {
 resp_vector = requests.post(url=f&quot;{API_BASE_URL}/chatocr-vector&quot;, json=payload)
 if resp_vector.status_code != 200:
     print(
-        f&quot;Request to chatocr-vector failed with status code {resp_vector.status_code}.&quot;
+        f&quot;Request to chatocr-vector failed with status code {resp_vector.status_code}.&quot;,
+        file=sys.stderr,
     )
     pprint.pp(resp_vector.json())
     sys.exit(1)
@@ -1265,7 +1267,8 @@ payload = {
 resp_retrieval = requests.post(url=f&quot;{API_BASE_URL}/chatocr-retrieval&quot;, json=payload)
 if resp_retrieval.status_code != 200:
     print(
-        f&quot;Request to chatocr-retrieval failed with status code {resp_retrieval.status_code}.&quot;
+        f&quot;Request to chatocr-retrieval failed with status code {resp_retrieval.status_code}.&quot;,
+        file=sys.stderr,
     )
     pprint.pp(resp_retrieval.json())
     sys.exit(1)
@@ -1273,7 +1276,7 @@ result_retrieval = resp_retrieval.json()[&quot;result&quot;]
 
 payload = {
     &quot;keys&quot;: keys,
-    &quot;visionInfo&quot;: result_vision[&quot;visionInfo&quot;],
+    &quot;visualInfo&quot;: result_visual[&quot;visualInfo&quot;],
     &quot;vectorStore&quot;: result_vector[&quot;vectorStore&quot;],
     &quot;retrievalResult&quot;: result_retrieval[&quot;retrievalResult&quot;],
     &quot;taskDescription&quot;: &quot;&quot;,
@@ -1286,7 +1289,8 @@ payload = {
 resp_chat = requests.post(url=f&quot;{API_BASE_URL}/chatocr-chat&quot;, json=payload)
 if resp_chat.status_code != 200:
     print(
-        f&quot;Request to chatocr-chat failed with status code {resp_chat.status_code}.&quot;
+        f&quot;Request to chatocr-chat failed with status code {resp_chat.status_code}.&quot;,
+        file=sys.stderr,
     )
     pprint.pp(resp_chat.json())
     sys.exit(1)

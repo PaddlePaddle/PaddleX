@@ -30,6 +30,15 @@ class SingleTableRecognitionResult(BaseCVResult, HtmlMixin, XlsxMixin):
         HtmlMixin.__init__(self)
         XlsxMixin.__init__(self)
 
+    def _get_input_fn(self):
+        fn = super()._get_input_fn()
+        if (page_idx := self["page_index"]) is not None:
+            fp = Path(fn)
+            stem, suffix = fp.stem, fp.suffix
+            return f"{stem}_{page_idx}{suffix}"
+        else:
+            return fn
+
     def _to_html(self) -> Dict[str, str]:
         """Converts the prediction to its corresponding HTML representation.
 
@@ -101,7 +110,9 @@ class TableRecognitionResult(BaseCVResult, HtmlMixin, XlsxMixin):
         res_img_dict.update(**self["overall_ocr_res"].img)
 
         if len(self["table_res_list"]) > 0:
-            table_cell_img = Image.fromarray(copy.deepcopy(self["doc_preprocessor_res"]["output_img"]))
+            table_cell_img = Image.fromarray(
+                copy.deepcopy(self["doc_preprocessor_res"]["output_img"])
+            )
             table_draw = ImageDraw.Draw(table_cell_img)
             rectangle_color = (255, 0, 0)
             for sno in range(len(self["table_res_list"])):
@@ -109,7 +120,9 @@ class TableRecognitionResult(BaseCVResult, HtmlMixin, XlsxMixin):
                 cell_box_list = table_res["cell_box_list"]
                 for box in cell_box_list:
                     x1, y1, x2, y2 = [int(pos) for pos in box]
-                    table_draw.rectangle([x1, y1, x2, y2], outline=rectangle_color, width=2)
+                    table_draw.rectangle(
+                        [x1, y1, x2, y2], outline=rectangle_color, width=2
+                    )
             res_img_dict["table_cell_img"] = table_cell_img
         return res_img_dict
 

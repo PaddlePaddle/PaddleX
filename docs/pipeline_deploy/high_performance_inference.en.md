@@ -87,7 +87,7 @@ paddlex \
     --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
     --device gpu:0 \
     --use_hpip \
-    --serial_number {serial_number}
+    --serial_number {serial number}
 
 # If you wish to perform online activation
 paddlex \
@@ -95,7 +95,7 @@ paddlex \
     --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
     --device gpu:0 \
     --use_hpip \
-    --serial_number {serial_number} \
+    --serial_number {serial number} \
     --update_license
 ```
 
@@ -107,7 +107,7 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(
     pipeline="image_classification",
     use_hpip=True,
-    hpi_params={"serial_number": "{serial_number}"},
+    hpi_params={"serial_number": "{serial number}"},
 )
 
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg")

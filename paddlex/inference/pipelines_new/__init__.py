@@ -17,6 +17,7 @@ from typing import Any, Dict, Optional
 from .base import BasePipeline
 from ..utils.pp_option import PaddlePredictorOption
 from .components import BaseChat, BaseRetriever, BaseGeneratePrompt
+from ...utils import logging
 from ...utils.config import parse_config
 from .ocr import OCRPipeline
 from .doc_preprocessor import DocPreprocessorPipeline
@@ -98,37 +99,51 @@ def load_pipeline_config(pipeline_name: str) -> Dict[str, Any]:
 
 
 def create_pipeline(
-    pipeline: str,
-    config: Dict = None,
-    device: str = None,
-    pp_option: PaddlePredictorOption = None,
+    pipeline_name: Optional[str] = None,
+    config: Optional[Dict[str, Any]] = None,
+    device: Optional[str] = None,
+    pp_option: Optional[PaddlePredictorOption] = None,
     use_hpip: bool = False,
-    *args,
-    **kwargs,
+    *args: Any,
+    **kwargs: Any,
 ) -> BasePipeline:
     """
     Create a pipeline instance based on the provided parameters.
-    If the input parameter config is not provided,
-    it is obtained from the default config corresponding to the pipeline name.
+
+    If the input parameter config is not provided, it is obtained from the
+    default config corresponding to the pipeline name.
 
     Args:
-        pipeline (str): The name of the pipeline to create.
-        config (Dict, optional): The path to the pipeline configuration file. Defaults to None.
-        device (str, optional): The device to run the pipeline on. Defaults to None.
-        pp_option (PaddlePredictorOption, optional): The options for the PaddlePredictor. Defaults to None.
-        use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
+        pipeline_name (Optional[str], optional): The name of the pipeline to
+            create, or the path to the config file. Defaults to None.
+        config (Optional[Dict[str, Any]], optional): The pipeline configuration.
+            Defaults to None.
+        device (Optional[str], optional): The device to run the pipeline on.
+            Defaults to None.
+        pp_option (Optional[PaddlePredictorOption], optional): The options for
+            the PaddlePredictor. Defaults to None.
+        use_hpip (bool, optional): Whether to use high-performance inference
+            plugin (HPIP) for prediction. Defaults to False.
         *args: Additional positional arguments.
         **kwargs: Additional keyword arguments.
 
     Returns:
         BasePipeline: The created pipeline instance.
     """
-
+    if pipeline_name is None and config is None:
+        raise ValueError(
+            "Both `pipeline_name` and `config` cannot be None at the same time."
+        )
     if config is None:
-        config = load_pipeline_config(pipeline)
-        pipeline_name = config["pipeline_name"]
-    else:
-        pipeline_name = pipeline
+        config = load_pipeline_config(pipeline_name)
+    if pipeline_name is not None and config["pipeline_name"] != pipeline_name:
+        logging.warning(
+            "The pipeline name in the config (%r) is different from the specified pipeline name (%r). %r will be used.",
+            config["pipeline_name"],
+            pipeline_name,
+            config["pipeline_name"],
+        )
+    pipeline_name = config["pipeline_name"]
 
     pipeline = BasePipeline.get(pipeline_name)(
         config=config,

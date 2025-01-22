@@ -89,7 +89,7 @@ tar -xf ./dataset/pedestrian_attribute_examples.tar -C ./dataset/
 Run a single command to complete data validation:
 
 ```bash
-python main.py -c paddlex/configs/pedestrian_attribute_recognition/PP-LCNet_x1_0_pedestrian_attribute.yaml \
+python main.py -c paddlex/configs/modules/pedestrian_attribute_recognition/PP-LCNet_x1_0_pedestrian_attribute.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/pedestrian_attribute_examples
 ```
@@ -176,13 +176,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/pedestrian_attribute_recognition/PP-LCNet_x1_0_pedestrian_attribute.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/pedestrian_attribute_recognition/PP-LCNet_x1_0_pedestrian_attribute.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/pedestrian_attribute_examples
 </code></pre>
 <p>After the data splitting is executed, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters also support being set by appending command-line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/pedestrian_attribute_recognition/PP-LCNet_x1_0_pedestrian_attribute.yaml  \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/pedestrian_attribute_recognition/PP-LCNet_x1_0_pedestrian_attribute.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/pedestrian_attribute_examples \
     -o CheckDataset.split.enable=True \
@@ -195,7 +195,7 @@ CheckDataset:
 Model training can be completed with a single command. Taking the training of the PP-LCNet pedestrian attribute recognition model (PP-LCNet_x1_0_pedestrian_attribute) as an example:
 
 ```bash
-python main.py -c paddlex/configs/pedestrian_attribute_recognition/PP-LCNet_x1_0_pedestrian_attribute.yaml \
+python main.py -c paddlex/configs/modules/pedestrian_attribute_recognition/PP-LCNet_x1_0_pedestrian_attribute.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/pedestrian_attribute_examples
 ```
@@ -226,7 +226,7 @@ the following steps are required:
 After completing model training, you can evaluate the specified model weights file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation can be done with a single command:
 
 ```bash
-python main.py -c paddlex/configs/pedestrian_attribute_recognition/PP-LCNet_x1_0_pedestrian_attribute.yaml \
+python main.py -c paddlex/configs/modules/pedestrian_attribute_recognition/PP-LCNet_x1_0_pedestrian_attribute.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/pedestrian_attribute_examples
 ```
@@ -249,7 +249,7 @@ After completing model training and evaluation, you can use the trained model we
 To perform inference prediction through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pedestrian_attribute_006.jpg) to your local machine.
 
 ```bash
-python main.py -c paddlex/configs/pedestrian_attribute_recognition/PP-LCNet_x1_0_pedestrian_attribute.yaml \
+python main.py -c paddlex/configs/modules/pedestrian_attribute_recognition/PP-LCNet_x1_0_pedestrian_attribute.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="pedestrian_attribute_006.jpg"
