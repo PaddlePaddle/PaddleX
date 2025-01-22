@@ -84,7 +84,7 @@ tar -xf ./dataset/face_rec_examples.tar -C ./dataset/
 A single command can complete data validation:
 
 ```bash
-python main.py -c paddlex/configs/face_feature/MobileFaceNet.yaml \
+python main.py -c paddlex/configs/modules/face_feature/MobileFaceNet.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/face_rec_examples
 ```
@@ -186,7 +186,7 @@ images/Miyako_Miyazaki_0002.jpg images/Munir_Akram_0002.jpg 0
 Model training can be completed with a single command. Here is an example of training MobileFaceNet:
 
 ```bash
-python main.py -c paddlex/configs/face_feature/MobileFaceNet.yaml \
+python main.py -c paddlex/configs/modules/face_feature/MobileFaceNet.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/face_rec_examples
 ```
@@ -215,7 +215,7 @@ After completing model training, all outputs are saved in the specified output d
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation, you can complete the evaluation with a single command:
 
 
-<pre><code class="language-bash">python main.py -c paddlex/configs/face_detection/MobileFaceNet.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/face_detection/MobileFaceNet.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/face_rec_examples
 </code></pre>
@@ -240,7 +240,7 @@ After completing model training and evaluation, you can use the trained model we
 #### 4.4.1 Model Inference
 * To perform inference predictions through the command line, you only need the following command. Before running the following code, please download the [example image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/face_recognition_001.jpg) to your local machine.
 ```bash
-python main.py -c paddlex/configs/face_feature/MobileFaceNet.yaml \
+python main.py -c paddlex/configs/modules/face_feature/MobileFaceNet.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="face_recognition_001.jpg"

@@ -20,4 +20,4 @@ from .utils.mixin import HtmlMixin, XlsxMixin
 from .chat_server.base import BaseChat
 from .retriever.base import BaseRetriever
 from .prompt_engeering.base import BaseGeneratePrompt
-from .faisser import FaissBuilder, FaissIndexer
+from .faisser import FaissBuilder, FaissIndexer, IndexData

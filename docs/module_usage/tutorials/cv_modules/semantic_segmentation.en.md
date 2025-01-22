@@ -233,7 +233,7 @@ tar -xf ./dataset/seg_optic_examples.tar -C ./dataset/
 Data validation can be completed with a single command:
 
 ```bash
-python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
+python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/seg_optic_examples
 ```
@@ -295,7 +295,7 @@ After executing the above command, PaddleX will verify the dataset and collect b
 <pre><code class="language-bash">wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/seg_dataset_to_convert.tar -P ./dataset
 tar -xf ./dataset/seg_dataset_to_convert.tar -C ./dataset/
 </code></pre>
-<p>After downloading, modify the <code>paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml</code> configuration as follows:</p>
+<p>After downloading, modify the <code>paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml</code> configuration as follows:</p>
 <pre><code class="language-bash">......
 CheckDataset:
   ......
@@ -305,12 +305,12 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/seg_dataset_to_convert
 </code></pre>
 <p>Of course, the above parameters also support being set by appending command-line arguments. For a <code>LabelMe</code> format dataset, the command is:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/seg_dataset_to_convert \
     -o CheckDataset.convert.enable=True \
@@ -335,13 +335,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/seg_optic_examples
 </code></pre>
 <p>After dataset splitting, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters also support setting through appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml  \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/seg_optic_examples \
     -o CheckDataset.split.enable=True \
@@ -354,7 +354,7 @@ CheckDataset:
 Model training can be completed with just one command. Here, we use the semantic segmentation model (PP-LiteSeg-T) as an example:
 
 ```bash
-python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
+python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/seg_optic_examples
 ```
@@ -387,7 +387,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 After model training, you can evaluate the specified model weights on the validation set to verify model accuracy. Using PaddleX for model evaluation requires just one command:
 
 ```bash
-python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
+python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/seg_optic_examples
 ```
@@ -416,7 +416,7 @@ To perform inference predictions via the command line, use the following command
 
 
 ```bash
-python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
+python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model" \
     -o Predict.input="general_semantic_segmentation_002.png"

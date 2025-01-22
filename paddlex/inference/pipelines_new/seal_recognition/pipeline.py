@@ -75,11 +75,21 @@ class SealRecognitionPipeline(BasePipeline):
                 layout_kwargs["threshold"] = threshold
             if (layout_nms := layout_det_config.get("layout_nms", None)) is not None:
                 layout_kwargs["layout_nms"] = layout_nms
-            if (layout_unclip_ratio := layout_det_config.get("layout_unclip_ratio", None)) is not None:
+            if (
+                layout_unclip_ratio := layout_det_config.get(
+                    "layout_unclip_ratio", None
+                )
+            ) is not None:
                 layout_kwargs["layout_unclip_ratio"] = layout_unclip_ratio
-            if (layout_merge_bboxes_mode := layout_det_config.get("layout_merge_bboxes_mode", None)) is not None:
+            if (
+                layout_merge_bboxes_mode := layout_det_config.get(
+                    "layout_merge_bboxes_mode", None
+                )
+            ) is not None:
                 layout_kwargs["layout_merge_bboxes_mode"] = layout_merge_bboxes_mode
-            self.layout_det_model = self.create_model(layout_det_config, **layout_kwargs)
+            self.layout_det_model = self.create_model(
+                layout_det_config, **layout_kwargs
+            )
         seal_ocr_config = config.get("SubPipelines", {}).get(
             "SealOCR", {"pipeline_config_error": "config error for seal_ocr_pipeline!"}
         )
@@ -185,13 +195,7 @@ class SealRecognitionPipeline(BasePipeline):
             yield {"error": "the input params for model settings are invalid!"}
 
         for img_id, batch_data in enumerate(self.batch_sampler(input)):
-            if not isinstance(batch_data[0], str):
-                # TODO: add support input_pth for ndarray and pdf
-                input_path = f"{img_id}.jpg"
-            else:
-                input_path = batch_data[0]
-
-            image_array = self.img_reader(batch_data)[0]
+            image_array = self.img_reader(batch_data.instances)[0]
 
             if model_settings["use_doc_preprocessor"]:
                 doc_preprocessor_res = next(
@@ -226,14 +230,15 @@ class SealRecognitionPipeline(BasePipeline):
                 seal_region_id += 1
             else:
                 if model_settings["use_layout_detection"]:
-                    layout_det_res = next(self.layout_det_model(
-                        doc_preprocessor_image,
-                        threshold=layout_threshold,
-                        layout_nms=layout_nms,
-                        layout_unclip_ratio=layout_unclip_ratio,
-                        layout_merge_bboxes_mode=layout_merge_bboxes_mode
+                    layout_det_res = next(
+                        self.layout_det_model(
+                            doc_preprocessor_image,
+                            threshold=layout_threshold,
+                            layout_nms=layout_nms,
+                            layout_unclip_ratio=layout_unclip_ratio,
+                            layout_merge_bboxes_mode=layout_merge_bboxes_mode,
+                        )
                     )
-                )
 
                 for box_info in layout_det_res["boxes"]:
                     if box_info["label"].lower() in ["seal"]:
@@ -257,7 +262,8 @@ class SealRecognitionPipeline(BasePipeline):
                         seal_region_id += 1
 
             single_img_res = {
-                "input_path": input_path,
+                "input_path": batch_data.input_paths[0],
+                "page_index": batch_data.page_indexes[0],
                 "doc_preprocessor_res": doc_preprocessor_res,
                 "layout_det_res": layout_det_res,
                 "seal_res_list": seal_res_list,

@@ -63,6 +63,16 @@ class IndexData:
             "id_map": self._convert_int(self.id_map),
         }
 
+    @classmethod
+    def from_bytes(cls, bytes):
+        tup = pickle.loads(bytes)
+        index = faiss.deserialize_index(tup[0])
+        return cls(index, tup[1])
+
+    def to_bytes(self):
+        tup = (faiss.serialize_index(self._index), self.index_info)
+        return pickle.dumps(tup)
+
     def _convert_int(self, id_map):
         return {int(k): str(v) for k, v in id_map.items()}
 

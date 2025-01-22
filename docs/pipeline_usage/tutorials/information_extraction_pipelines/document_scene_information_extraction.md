@@ -588,9 +588,9 @@ chat_result.print()
 
 🚀 <b>高性能推理</b>：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能推理流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_inference.md)。
 
-☁️ <b>服务化部署</b>：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/service_deploy.md)。
+☁️ <b>服务化部署</b>：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持多种产线服务化部署方案，详细的产线服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/serving.md)。
 
-下面是API参考和多语言服务调用示例：
+以下是基础服务化部署的API参考与多语言服务调用示例：
 
 <details><summary>API参考</summary>
 
@@ -665,7 +665,7 @@ chat_result.print()
 <li><b><code>analyzeImages</code></b></li>
 </ul>
 <p>使用计算机视觉模型对图像进行分析，获得OCR、表格识别结果等，并提取图像中的关键信息。</p>
-<p><code>POST /chatocr-vision</code></p>
+<p><code>POST /chatocr-visual</code></p>
 <ul>
 <li>请求体的属性如下：</li>
 </ul>
@@ -682,13 +682,13 @@ chat_result.print()
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>服务可访问的图像文件或PDF文件的URL，或上述类型文件内容的Base64编码结果。对于超过10页的PDF文件，只有前10页的内容会被使用。</td>
+<td>服务器可访问的图像文件或PDF文件的URL，或上述类型文件内容的Base64编码结果。对于超过10页的PDF文件，只有前10页的内容会被使用。</td>
 <td>是</td>
 </tr>
 <tr>
 <td><code>fileType</code></td>
 <td><code>integer</code></td>
-<td>文件类型。<code>0</code>表示PDF文件，<code>1</code>表示图像文件。若请求体无此属性，则服务将尝试根据URL自动推断文件类型。</td>
+<td>文件类型。<code>0</code>表示PDF文件，<code>1</code>表示图像文件。若请求体无此属性，则将根据URL推断文件类型。</td>
 <td>否</td>
 </tr>
 <tr>
@@ -749,12 +749,12 @@ chat_result.print()
 </thead>
 <tbody>
 <tr>
-<td><code>visionResults</code></td>
+<td><code>visualResults</code></td>
 <td><code>array</code></td>
 <td>使用计算机视觉模型得到的分析结果。数组长度为1（对于图像输入）或文档页数与10中的较小者（对于PDF输入）。对于PDF输入，数组中的每个元素依次表示PDF文件中每一页的处理结果。</td>
 </tr>
 <tr>
-<td><code>visionInfo</code></td>
+<td><code>visualInfo</code></td>
 <td><code>object</code></td>
 <td>图像中的关键信息，可用作其他操作的输入。</td>
 </tr>
@@ -765,7 +765,7 @@ chat_result.print()
 </tr>
 </tbody>
 </table>
-<p><code>visionResults</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
+<p><code>visualResults</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
 <table>
 <thead>
 <tr>
@@ -791,14 +791,14 @@ chat_result.print()
 <td>输入图像。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 <tr>
-<td><code>ocrImage</code></td>
-<td><code>string</code></td>
-<td>OCR结果图。图像为JPEG格式，使用Base64编码。</td>
-</tr>
-<tr>
 <td><code>layoutImage</code></td>
 <td><code>string</code></td>
 <td>版面区域检测结果图。图像为JPEG格式，使用Base64编码。</td>
+</tr>
+<tr>
+<td><code>ocrImage</code></td>
+<td><code>string</code></td>
+<td>OCR结果图。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 </tbody>
 </table>
@@ -870,7 +870,7 @@ chat_result.print()
 </thead>
 <tbody>
 <tr>
-<td><code>visionInfo</code></td>
+<td><code>visualInfo</code></td>
 <td><code>object</code></td>
 <td>图像中的关键信息。由<code>analyzeImages</code>操作提供。</td>
 <td>是</td>
@@ -1032,7 +1032,7 @@ chat_result.print()
 <td>是</td>
 </tr>
 <tr>
-<td><code>visionInfo</code></td>
+<td><code>visualInfo</code></td>
 <td><code>object</code></td>
 <td>图像中的关键信息。由<code>analyzeImages</code>操作提供。</td>
 <td>是</td>
@@ -1188,30 +1188,31 @@ payload = {
     &quot;useImgUnwarping&quot;: True,
     &quot;useSealTextDet&quot;: True,
 }
-resp_vision = requests.post(url=f&quot;{API_BASE_URL}/chatocr-vision&quot;, json=payload)
-if resp_vision.status_code != 200:
+resp_visual = requests.post(url=f&quot;{API_BASE_URL}/chatocr-visual&quot;, json=payload)
+if resp_visual.status_code != 200:
     print(
-        f&quot;Request to chatocr-vision failed with status code {resp_vision.status_code}.&quot;
+        f&quot;Request to chatocr-visual failed with status code {resp_visual.status_code}.&quot;,
+        file=sys.stderr,
     )
-    pprint.pp(resp_vision.json())
+    pprint.pp(resp_visual.json())
     sys.exit(1)
-result_vision = resp_vision.json()[&quot;result&quot;]
+result_visual = resp_visual.json()[&quot;result&quot;]
 
-for i, res in enumerate(result_vision[&quot;visionResults&quot;]):
+for i, res in enumerate(result_visual[&quot;visualResults&quot;]):
     print(&quot;Texts:&quot;)
     pprint.pp(res[&quot;texts&quot;])
     print(&quot;Tables:&quot;)
     pprint.pp(res[&quot;tables&quot;])
-    ocr_img_path = f&quot;ocr_{i}.jpg&quot;
-    with open(ocr_img_path, &quot;wb&quot;) as f:
-        f.write(base64.b64decode(res[&quot;ocrImage&quot;]))
     layout_img_path = f&quot;layout_{i}.jpg&quot;
     with open(layout_img_path, &quot;wb&quot;) as f:
         f.write(base64.b64decode(res[&quot;layoutImage&quot;]))
-    print(f&quot;Output images saved at {ocr_img_path} and {layout_img_path}&quot;)
+    ocr_img_path = f&quot;ocr_{i}.jpg&quot;
+    with open(ocr_img_path, &quot;wb&quot;) as f:
+        f.write(base64.b64decode(res[&quot;ocrImage&quot;]))
+    print(f&quot;Output images saved at {layout_img_path} and {ocr_img_path}&quot;)
 
 payload = {
-    &quot;visionInfo&quot;: result_vision[&quot;visionInfo&quot;],
+    &quot;visualInfo&quot;: result_visual[&quot;visualInfo&quot;],
     &quot;minChars&quot;: 200,
     &quot;llmRequestInterval&quot;: 1000,
     &quot;llmName&quot;: LLM_NAME,
@@ -1220,7 +1221,8 @@ payload = {
 resp_vector = requests.post(url=f&quot;{API_BASE_URL}/chatocr-vector&quot;, json=payload)
 if resp_vector.status_code != 200:
     print(
-        f&quot;Request to chatocr-vector failed with status code {resp_vector.status_code}.&quot;
+        f&quot;Request to chatocr-vector failed with status code {resp_vector.status_code}.&quot;,
+        file=sys.stderr,
     )
     pprint.pp(resp_vector.json())
     sys.exit(1)
@@ -1235,7 +1237,8 @@ payload = {
 resp_retrieval = requests.post(url=f&quot;{API_BASE_URL}/chatocr-retrieval&quot;, json=payload)
 if resp_retrieval.status_code != 200:
     print(
-        f&quot;Request to chatocr-retrieval failed with status code {resp_retrieval.status_code}.&quot;
+        f&quot;Request to chatocr-retrieval failed with status code {resp_retrieval.status_code}.&quot;,
+        file=sys.stderr,
     )
     pprint.pp(resp_retrieval.json())
     sys.exit(1)
@@ -1243,7 +1246,7 @@ result_retrieval = resp_retrieval.json()[&quot;result&quot;]
 
 payload = {
     &quot;keys&quot;: keys,
-    &quot;visionInfo&quot;: result_vision[&quot;visionInfo&quot;],
+    &quot;visualInfo&quot;: result_visual[&quot;visualInfo&quot;],
     &quot;vectorStore&quot;: result_vector[&quot;vectorStore&quot;],
     &quot;retrievalResult&quot;: result_retrieval[&quot;retrievalResult&quot;],
     &quot;taskDescription&quot;: &quot;&quot;,
@@ -1256,7 +1259,8 @@ payload = {
 resp_chat = requests.post(url=f&quot;{API_BASE_URL}/chatocr-chat&quot;, json=payload)
 if resp_chat.status_code != 200:
     print(
-        f&quot;Request to chatocr-chat failed with status code {resp_chat.status_code}.&quot;
+        f&quot;Request to chatocr-chat failed with status code {resp_chat.status_code}.&quot;,
+        file=sys.stderr,
     )
     pprint.pp(resp_chat.json())
     sys.exit(1)

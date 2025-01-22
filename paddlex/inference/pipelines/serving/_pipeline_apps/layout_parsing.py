@@ -109,6 +109,7 @@ def create_pipeline_app(
                             log_id=log_id,
                             filename=f"image_{i}_{j}.jpg",
                             file_storage=ctx.extra["file_storage"],
+                            return_url=ctx.extra["return_img_urls"],
                             max_img_size=ctx.extra["max_output_img_size"],
                         )
                         text = subitem[label]["image_text"]

@@ -144,9 +144,8 @@ class JsonMixin:
             return mime_type is not None and mime_type == "application/json"
 
         if not _is_json_file(save_path):
-            fp = Path(self["input_path"])
-            stem = fp.stem
-            suffix = fp.suffix
+            fn = Path(self._get_input_fn())
+            stem = fn.stem
             base_save_path = Path(save_path)
             for key in self.json:
                 save_path = base_save_path / f"{stem}_{key}.json"
@@ -247,9 +246,8 @@ class Base64Mixin:
             **kwargs: Additional keyword arguments that will be passed to the base64 writer.
         """
         if not str(save_path).lower().endswith((".b64")):
-            fp = Path(self["input_path"])
-            stem = fp.stem
-            suffix = fp.suffix
+            fn = Path(self._get_input_fn())
+            stem = fn.stem
             base_save_path = Path(save_path)
             for key in self.base64:
                 save_path = base_save_path / f"{stem}_{key}.b64"
@@ -312,9 +310,9 @@ class ImgMixin:
             return mime_type is not None and mime_type.startswith("image/")
 
         if not _is_image_file(save_path):
-            fp = Path(self["input_path"])
-            stem = fp.stem
-            suffix = fp.suffix
+            fn = Path(self._get_input_fn())
+            suffix = fn.suffix if _is_image_file(fn) else ".png"
+            stem = fn.stem
             base_save_path = Path(save_path)
             for key in self.img:
                 save_path = base_save_path / f"{stem}_{key}{suffix}"
@@ -380,8 +378,9 @@ class CSVMixin:
             return mime_type is not None and mime_type == "text/csv"
 
         if not _is_csv_file(save_path):
-            fp = Path(self["input_path"])
-            stem = fp.stem
+            fn = Path(self._get_input_fn())
+            fn = Path(self._get_input_fn())
+            stem = fn.stem
             base_save_path = Path(save_path)
             for key in self.csv:
                 save_path = base_save_path / f"{stem}_{key}.csv"
@@ -444,8 +443,8 @@ class HtmlMixin:
             return mime_type is not None and mime_type == "text/html"
 
         if not _is_html_file(save_path):
-            fp = Path(self["input_path"])
-            stem = fp.stem
+            fn = Path(self._get_input_fn())
+            stem = fn.stem
             base_save_path = Path(save_path)
             for key in self.html:
                 save_path = base_save_path / f"{stem}_{key}.html"
@@ -512,8 +511,8 @@ class XlsxMixin:
             )
 
         if not _is_xlsx_file(save_path):
-            fp = Path(self["input_path"])
-            stem = fp.stem
+            fn = Path(self._get_input_fn())
+            stem = fn.stem
             base_save_path = Path(save_path)
             for key in self.xlsx:
                 save_path = base_save_path / f"{stem}_{key}.xlsx"
@@ -578,9 +577,9 @@ class VideoMixin:
         video_writer = VideoWriter(backend=self._backend, *args, **kwargs)
 
         if not _is_video_file(save_path):
-            fp = Path(self["input_path"])
-            stem = fp.stem
-            suffix = fp.suffix
+            fn = Path(self._get_input_fn())
+            stem = fn.stem
+            suffix = fn.suffix if _is_video_file(fn) else ".mp4"
             base_save_path = Path(save_path)
             for key in self.video:
                 save_path = base_save_path / f"{stem}_{key}{suffix}"

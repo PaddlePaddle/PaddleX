@@ -63,9 +63,11 @@ class AttributeRecPipeline(BasePipeline):
         det_threshold = self.det_threshold if det_threshold is None else det_threshold
         cls_threshold = self.cls_threshold if cls_threshold is None else cls_threshold
         for img_id, batch_data in enumerate(self.batch_sampler(input)):
-            raw_imgs = self.img_reader(batch_data)
+            raw_imgs = self.img_reader(batch_data.instances)
             all_det_res = list(self.det_model(raw_imgs, threshold=det_threshold))
-            for input_data, raw_img, det_res in zip(batch_data, raw_imgs, all_det_res):
+            for input_data, raw_img, det_res in zip(
+                batch_data.instances, raw_imgs, all_det_res
+            ):
                 cls_res = self.get_cls_result(raw_img, det_res, cls_threshold)
                 yield self.get_final_result(input_data, raw_img, det_res, cls_res)
 

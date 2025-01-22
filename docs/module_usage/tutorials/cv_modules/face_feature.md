@@ -241,7 +241,7 @@ tar -xf ./dataset/face_rec_examples.tar -C ./dataset/
 一行命令即可完成数据校验：
 
 ```bash
-python main.py -c paddlex/configs/face_feature/MobileFaceNet.yaml \
+python main.py -c paddlex/configs/modules/face_feature/MobileFaceNet.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/face_rec_examples
 ```
@@ -342,7 +342,7 @@ images/Miyako_Miyazaki_0002.jpg images/Munir_Akram_0002.jpg 0
 一条命令即可完成模型的训练，以此处MobileFaceNet的训练为例：
 
 ```bash
-python main.py -c paddlex/configs/face_feature/MobileFaceNet.yaml \
+python main.py -c paddlex/configs/modules/face_feature/MobileFaceNet.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/face_rec_examples
 ```
@@ -374,7 +374,7 @@ python main.py -c paddlex/configs/face_feature/MobileFaceNet.yaml \
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ```bash
-python main.py -c paddlex/configs/face_feature/MobileFaceNet.yaml \
+python main.py -c paddlex/configs/modules/face_feature/MobileFaceNet.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/face_rec_examples
 ```
@@ -396,7 +396,7 @@ python main.py -c paddlex/configs/face_feature/MobileFaceNet.yaml \
 #### 4.4.1 模型推理
 * 通过命令行的方式进行推理预测，只需如下一条命令，运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/face_recognition_001.jpg)到本地。
 ```bash
-python main.py -c paddlex/configs/face_feature/MobileFaceNet.yaml \
+python main.py -c paddlex/configs/modules/face_feature/MobileFaceNet.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="face_recognition_001.jpg"

@@ -423,9 +423,9 @@ data_root             # 数据集根目录，目录名称可以改变
 
 🚀 <b>高性能推理</b>：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能推理流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_inference.md)。
 
-☁️ <b>服务化部署</b>：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/service_deploy.md)。
+☁️ <b>服务化部署</b>：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持多种产线服务化部署方案，详细的产线服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/serving.md)。
 
-下面是API参考和多语言服务调用示例：
+以下是基础服务化部署的API参考与多语言服务调用示例：
 
 <details><summary>API参考</summary>
 
@@ -535,7 +535,7 @@ data_root             # 数据集根目录，目录名称可以改变
 <tr>
 <td><code>image</code></td>
 <td><code>string</code></td>
-<td>服务可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
+<td>服务器可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
 </tr>
 <tr>
 <td><code>label</code></td>
@@ -596,7 +596,7 @@ data_root             # 数据集根目录，目录名称可以改变
 <td><code>indexKey</code></td>
 <td><code>string</code></td>
 <td>索引对应的键。由<code>buildIndex</code>操作提供。</td>
-<td>是</td>
+<td>否</td>
 </tr>
 </tbody>
 </table>
@@ -613,7 +613,7 @@ data_root             # 数据集根目录，目录名称可以改变
 <tr>
 <td><code>image</code></td>
 <td><code>string</code></td>
-<td>服务可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
+<td>服务器可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
 </tr>
 <tr>
 <td><code>label</code></td>
@@ -669,7 +669,7 @@ data_root             # 数据集根目录，目录名称可以改变
 <td><code>indexKey</code></td>
 <td><code>string</code></td>
 <td>索引对应的键。由<code>buildIndex</code>操作提供。</td>
-<td>是</td>
+<td>否</td>
 </tr>
 </tbody>
 </table>
@@ -713,7 +713,7 @@ data_root             # 数据集根目录，目录名称可以改变
 <tr>
 <td><code>image</code></td>
 <td><code>string</code></td>
-<td>服务可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
+<td>服务器可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
 <td>是</td>
 </tr>
 <tr>

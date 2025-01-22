@@ -20,6 +20,7 @@ from typing import (
     AsyncGenerator,
     Callable,
     Dict,
+    Final,
     Generic,
     List,
     Mapping,
@@ -35,7 +36,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from starlette.exceptions import HTTPException
-from typing_extensions import Final, ParamSpec
+from typing_extensions import ParamSpec
 
 from ..base import BasePipeline
 from .models import NoResultResponse

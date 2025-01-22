@@ -368,13 +368,7 @@ class TableRecognitionPipelineV2(BasePipeline):
             yield {"error": "the input params for model settings are invalid!"}
 
         for img_id, batch_data in enumerate(self.batch_sampler(input)):
-            if not isinstance(batch_data[0], str):
-                # TODO: add support input_pth for ndarray and pdf
-                input_path = f"{img_id}"
-            else:
-                input_path = batch_data[0]
-
-            image_array = self.img_reader(batch_data)[0]
+            image_array = self.img_reader(batch_data.instances)[0]
 
             if model_settings["use_doc_preprocessor"]:
                 doc_preprocessor_res = next(
@@ -436,7 +430,8 @@ class TableRecognitionPipelineV2(BasePipeline):
                         table_region_id += 1
 
             single_img_res = {
-                "input_path": input_path,
+                "input_path": batch_data.input_paths[0],
+                "page_index": batch_data.page_indexes[0],
                 "doc_preprocessor_res": doc_preprocessor_res,
                 "layout_det_res": layout_det_res,
                 "overall_ocr_res": overall_ocr_res,

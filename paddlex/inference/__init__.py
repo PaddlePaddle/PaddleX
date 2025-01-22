@@ -17,9 +17,9 @@ from ..utils.flags import USE_NEW_INFERENCE, NEW_PREDICTOR
 
 if USE_NEW_INFERENCE:
     logging.warning("=" * 20 + " Using pipelines_new " + "=" * 20)
-    from .pipelines_new import create_pipeline
+    from .pipelines_new import create_pipeline, load_pipeline_config
 else:
-    from .pipelines import create_pipeline
+    from .pipelines import create_pipeline, load_pipeline_config
 if NEW_PREDICTOR:
     logging.warning("=" * 20 + " Using models_new " + "=" * 20)
     from .models_new import create_predictor

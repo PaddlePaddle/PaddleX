@@ -69,7 +69,7 @@ tar -xf ./dataset/text_image_orientation.tar  -C ./dataset/
 Data validation can be completed with a single command:
 
 ```bash
-python main.py -c paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
+python main.py -c paddlex/configs/modules/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/text_image_orientation
 ```
@@ -158,13 +158,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/text_image_orientation
 </code></pre>
 <p>After dataset splitting, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters also support setting through appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/text_image_orientation \
     -o CheckDataset.split.enable=True \
@@ -178,7 +178,7 @@ CheckDataset:
 Model training can be completed with just one command. Here, we use the document image orientation classification model (PP-LCNet_x1_0_doc_ori) as an example:
 
 ```bash
-python main.py -c paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
+python main.py -c paddlex/configs/modules/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/text_image_orientation
 ```
@@ -212,7 +212,7 @@ Other relevant parameters can be set by modifying fields under `Global` and `Tra
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model's accuracy. With PaddleX, model evaluation can be done with just one command:
 
 ```bash
-python main.py -c paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
+python main.py -c paddlex/configs/modules/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/text_image_orientation
 ```
@@ -247,7 +247,7 @@ After completing model training and evaluation, you can use the trained model we
 To perform inference predictions via the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg) to your local machine.
 
 ```bash
-python main.py -c paddlex/configs/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
+python main.py -c paddlex/configs/modules/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="img_rot180_demo.jpg"

@@ -27,10 +27,19 @@ def postprocess_image(
     image: ArrayLike,
     log_id: str,
     filename: str,
-    file_storage: Optional[Storage],
     *,
+    file_storage: Optional[Storage] = None,
+    return_url: bool = False,
     max_img_size: Optional[Tuple[int, int]] = None,
 ) -> str:
+    if return_url:
+        if not file_storage:
+            raise ValueError(
+                "`file_storage` must not be None when URLs need to be returned."
+            )
+        if not isinstance(file_storage, SupportsGetURL):
+            raise TypeError("The provided storage does not support getting URLs.")
+
     key = f"{log_id}/{filename}"
     ext = os.path.splitext(filename)[1]
     image = np.asarray(image)
@@ -44,6 +53,7 @@ def postprocess_image(
     img_bytes = serving_utils.image_array_to_bytes(image, ext=ext)
     if file_storage is not None:
         file_storage.set(key, img_bytes)
-        if isinstance(file_storage, SupportsGetURL):
+        if return_url:
+            assert isinstance(file_storage, SupportsGetURL)
             return file_storage.get_url(key)
     return serving_utils.base64_encode(img_bytes)
