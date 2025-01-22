@@ -77,7 +77,7 @@ paddlex --pipeline video_detection --input HorseRiding.avi --device gpu:0 --save
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline_name="video_detection")
+pipeline = create_pipeline(pipeline="video_detection")
 output = pipeline.predict(input="HorseRiding.avi")
 for res in output:
     res.print() ## 打印预测的结构化输出

@@ -5,7 +5,7 @@ comments: true
 # 时序分类产线使用教程
 
 ## 1. 通用时序分类产线介绍
-时序分类是一种将时间序列数据归类到预定义类别的技术，广泛应用于行为识别、金融趋势分析等领域。它通过分析随时间变化的特征，识别出不同的模式或事件，例如将一段语音信号分类为“问候”或“请求”，或将股票价格走势划分为“上涨”或“下跌”。时序分类通常使用机器学习和深度学习模型，能够有效捕捉时间依赖性和变化规律，以便为数据提供准确的分类标签。这项技术在智能监控、市场预测等应用中起着关键作用。
+时序分类是一种将时间序列数据归类到预定义类别的技术，广泛应用于行为识别、金融趋势分析等领域。它通过分析随时间变化的特征，识别出不同的模式或事件，例如将一段语音信号分类为“问候”或“请求”，或将股票价格走势划分为“上涨”或“下跌”。时序分类通常使用机器学习和深度学习模型，能够有效捕捉时间依赖性和变化规律，以便为数据提供准确的分类标签。这项技术在智能监控、市场预测等应用中起着关键作用。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/time_series/01.png">
 
@@ -31,14 +31,14 @@ comments: true
 <p><b>注：以上精度指标测量自 <a href="https://paddlets.bj.bcebos.com/classification/UWaveGestureLibrary_TEST.csv">UWaveGestureLibrary</a> 数据集。以上所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
 
 ## 2. 快速开始
-PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可以在线体验通用时序分类产线的效果，也可以在本地使用命令行或 Python 体验通用时序分类产线的效果。
+PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可以在星河社区体验通用时序分类产线的效果，也可以在本地使用命令行或 Python 体验时序分类产线的效果。
 
 ### 2.1 在线体验
 您可以[在线体验](https://aistudio.baidu.com/community/app/105707/webUI?source=appCenter)通用时序分类产线的效果，用官方提供的 demo 进行识别，例如：
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/time_series/02.png">
 
-如果您对产线运行的效果满意，可以直接对产线进行集成部署，如果不满意，您也可以利用私有数据<b>对产线中的模型进行在线微调</b>。
+如果您对产线运行的效果满意，可以直接进行集成部署。您可以选择从云端下载部署包，也可以参考[2.2节本地体验](#22-本地体验)中的方法进行本地部署。如果对效果不满意，您可以利用私有数据<b>对产线中的模型进行微调训练</b>。如果您具备本地训练的硬件资源，可以直接在本地开展训练；如果没有，星河零代码平台提供了一键式训练服务，无需编写代码，只需上传数据后，即可一键启动训练任务。
 
 注：由于时序数据和场景紧密相关，时序任务的在线体验官方内置模型仅是在一个特定场景下的模型方案，并非通用方案，不适用其他场景，因此体验方式不支持使用任意的文件来体验官方模型方案效果。但是，在完成自己场景数据下的模型训练之后，可以选择自己训练的模型方案，并使用对应场景的数据进行在线体验。
 
@@ -49,31 +49,12 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 一行命令即可快速体验时序分类产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv)，并将 `--input` 替换为本地路径，进行预测
 
 ```bash
-paddlex --pipeline ts_cls --input ts_cls.csv --device gpu:0
-```
-参数说明：
-
-```
---pipeline：产线名称，此处为时序分类产线
---input：待处理的输入序列的本地路径或URL
---device 使用的GPU序号（例如gpu:0表示使用第0块GPU，gpu:1,2表示使用第1、2块GPU），也可选择使用CPU（--device cpu）
+paddlex --pipeline ts_classification --input ts_cls.csv --device gpu:0 --save_path ./output
 ```
 
-在执行上述 Python 脚本时，加载的是默认的时序分类产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
+相关的参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的参数说明。
 
-<details><summary> 👉点击展开</summary>
-
-<pre><code>paddlex --get_pipeline_yaml ts_cls
-</code></pre>
-<p>执行后，时序分类产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为<em> ./my_path</em>）：</p>
-<pre><code>paddlex --get_pipeline_config ts_cls --save_path ./my_path
-</code></pre>
-<p>获取产线配置文件后，可将 <code>--pipeline</code> 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 <code>./ts_cls.yaml</code>，只需执行：</p>
-<pre><code class="language-bash">paddlex --pipeline ./ts_cls.yaml --input ts_cls.csv --device gpu:0
-</code></pre>
-<p>其中，<code>--model</code>、<code>--device</code> 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。</p></details>
-
-运行后，得到的结果为：
+运行后，会将结果打印到终端上，结果如下：
 
 ```
 {'input_path': 'ts_cls.csv', 'classification':         classid     score
@@ -81,24 +62,27 @@ sample
 0             0  0.617688}
 ```
 
+运行结果参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的结果解释。
+
+时序文件结果保存在`save_path`下。
+
 #### 2.2.2 Python脚本方式集成
-几行代码即可完成产线的快速推理，以通用时序分类产线为例：
+上述命令行是为了快速体验查看效果，一般来说，在项目中，往往需要通过代码集成，您可以通过几行代码即可完成产线的快速推理，推理代码如下：
 
 ```python
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="ts_cls")
-
 output = pipeline.predict("ts_cls.csv")
 for res in output:
     res.print() ## 打印预测的结构化输出
-    res.save_to_csv("./output/") ## 保存csv格式结果
+    res.save_to_csv(save_path="./output/") ## 保存csv格式结果
+    res.save_to_json(save_path="./output/") ## 保存json格式结果
 ```
-得到的结果与命令行方式相同。
 
 在上述 Python 脚本中，执行了如下几个步骤：
 
-（1）实例化 `create_pipeline` 实例化产线对象：具体参数说明如下：
+（1）通过 `create_pipeline()` 实例化产线对象：具体参数说明如下：
 
 <table>
 <thead>
@@ -114,13 +98,13 @@ for res in output:
 <td><code>pipeline</code></td>
 <td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
 <td><code>str</code></td>
-<td>无</td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>产线模型推理设备。支持：“gpu”，“cpu”。</td>
+<td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
 <td><code>str</code></td>
-<td><code>gpu</code></td>
+<td><code>gpu:0</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
@@ -130,83 +114,164 @@ for res in output:
 </tr>
 </tbody>
 </table>
-（2）调用产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`x`，用于输入待预测数据，支持多种输入方式，具体示例如下：
+
+（2）调用 ts_classification 产线对象的 `predict()` 方法进行推理预测。该方法将返回一个 `generator`。以下是 `predict()` 方法的参数及其说明：
 
 <table>
 <thead>
 <tr>
-<th>参数类型</th>
+<th>参数</th>
 <th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>Python Var</td>
-<td>支持直接传入Python变量，如numpy.ndarray表示的图像数据。</td>
+<td><code>input</code></td>
+<td>待预测数据，支持多种输入类型，必填</td>
+<td><code>Python Var|str|list</code></td>
+<td>
+<ul>
+  <li><b>Python Var</b>：如 <code>pandas.DataFrame</code> 表示的时序数据</li>
+  <li><b>str</b>：如时序文件的本地路径：<code>/root/data/ts.csv</code>；<b>如URL链接</b>，如时序文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv">示例</a>；<b>如本地目录</b>，该目录下需包含待预测时序，如本地路径：<code>/root/data/</code></li>
+  <li><b>List</b>：列表元素需为上述类型数据，如<code>[pandas.DataFrame, pandas.DataFrame]</code>，<code>[\"/root/data/ts1.csv\", \"/root/data/ts2.csv\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td>str</td>
-<td>支持传入待预测数据文件路径，如图像文件的本地路径：<code>/root/data/img.jpg</code>。</td>
-</tr>
-<tr>
-<td>str</td>
-<td>支持传入待预测数据文件URL，如图像文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv">示例</a>。</td>
-</tr>
-<tr>
-<td>str</td>
-<td>支持传入本地目录，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code>。</td>
-</tr>
-<tr>
-<td>dict</td>
-<td>支持传入字典类型，字典的key需与具体任务对应，如图像分类任务对应\"img\"，字典的val支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code>。</td>
-</tr>
-<tr>
-<td>list</td>
-<td>支持传入列表，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]，[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code>。</td>
+<td><code>device</code></td>
+<td>产线推理设备</td>
+<td><code>str|None</code></td>
+<td>
+<ul>
+  <li><b>CPU</b>：如 <code>cpu</code> 表示使用 CPU 进行推理；</li>
+  <li><b>GPU</b>：如 <code>gpu:0</code> 表示使用第 1 块 GPU 进行推理；</li>
+  <li><b>NPU</b>：如 <code>npu:0</code> 表示使用第 1 块 NPU 进行推理；</li>
+  <li><b>XPU</b>：如 <code>xpu:0</code> 表示使用第 1 块 XPU 进行推理；</li>
+  <li><b>MLU</b>：如 <code>mlu:0</code> 表示使用第 1 块 MLU 进行推理；</li>
+  <li><b>DCU</b>：如 <code>dcu:0</code> 表示使用第 1 块 DCU 进行推理；</li>
+  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化时，会优先使用本地的 GPU 0号设备，如果没有，则使用 CPU 设备；</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
-（3）调用`predict`方法获取预测结果：`predict` 方法为`generator`，因此需要通过调用获得预测结果，`predict`方法以batch为单位对数据进行预测，因此预测结果为list形式表示的一组预测结果。
 
-（4）对预测结果进行处理：每个样本的预测结果均为`dict`类型，且支持打印，或保存为文件，支持保存的类型与具体产线相关，如：
+（3）对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为`csv`文件、保存为`json`文件的操作:
+
 
 <table>
 <thead>
 <tr>
 <th>方法</th>
-<th>说明</th>
-<th>方法参数</th>
+<th>方法说明</th>
+<th>参数</th>
+<th>参数类型</th>
+<th>参数说明</th>
+<th>默认值</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>save_to_csv</td>
-<td>将结果保存为csv格式的文件</td>
-<td><code>- save_path</code>：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；</td>
+<td rowspan = "3"><code>print()</code></td>
+<td rowspan = "3">打印结果到终端</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
+<td><code>True</code></td>
 </tr>
 <tr>
-<td>save_to_html</td>
-<td>将结果保存为html格式的文件</td>
-<td><code>- save_path</code>：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；</td>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
 </tr>
 <tr>
-<td>save_to_xlsx</td>
-<td>将结果保存为表格格式的文件</td>
-<td><code>- save_path</code>：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；</td>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
 </tr>
-</tbody>
+<tr>
+<td rowspan = "3"><code>save_to_json()</code></td>
+<td rowspan = "3">将结果保存为json格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_csv()</code></td>
+<td>将结果保存为时序文件格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，支持目录或文件路径</td>
+<td>无</td>
+</tr>
 </table>
+
+- 调用`print()` 方法会将结果打印到终端，打印到终端的内容解释如下：
+    - `input_path`: `(str)` 待预测时序文件的输入路径
+    - `classification`: `(Pandas.DataFrame)` 时序分类结果，包含样本id和对应的分类类别以及置信度得分。
+
+- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_ts_basename}_res.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
+- 调用`save_to_csv()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_ts_basename}_res.csv`，如果指定为文件，则直接保存到该文件中。
+
+* 此外，也支持通过属性获取不同格式的预测结果，具体如下：
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>属性说明</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "1"><code>json</code></td>
+<td rowspan = "1">获取预测的 <code>json</code> 格式的结果</td>
+</tr>
+<tr>
+<td rowspan = "2"><code>csv</code></td>
+<td rowspan = "2">获取格式为 <code>csv</code> 格式的结果</td>
+</tr>
+</table>
+
+
+- `json` 属性获取的预测结果为dict类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
+- `csv` 属性返回的是一个`Pandas.DataFrame`类型数据，保存了时序分类结果。
+
+此外，您可以获取 ts_classification 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+
+```
+paddlex --get_pipeline_config ts_classification --save_path ./my_path
+```
+
 若您获取了配置文件，即可对时序分类产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
 
 例如，若您的配置文件保存在 `./my_path/ts_cls.yaml` ，则只需执行：
 
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="./my_path/ts_forecast.yaml")
+pipeline = create_pipeline(pipeline="./my_path/ts_classification.yaml")
 output = pipeline.predict("ts_cls.csv")
 for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_csv("./output/") ## 保存csv格式结果
+    res.save_to_json("./output/") ## 保存json格式结果
 ```
 
 ## 3. 开发集成/部署
@@ -653,37 +718,37 @@ echo &quot;label: &quot; . $result[&quot;label&quot;] . &quot;, score: &quot; . 
 
 
 ## 4. 二次开发
-如果通用时序分类产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升通用时序分类产线的在您的场景中的识别效果。
+如果时序分类产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升时序分类产线的在您的场景中的识别效果。
+
 
 ### 4.1 模型微调
-由于通用时序分类产线包含时序分类模块，如果模型产线的效果不及预期，那么您需要参考[时序分类模块开发教程](../../../module_usage/tutorials/time_series_modules/time_series_classification.md)中的[二次开发](../../../module_usage/tutorials/time_series_modules/time_series_classification.md#四二次开发)章节，使用您的私有数据集对时序分类模型进行微调。
+由于时序分类产线包含时序分类模块，如果模型产线的效果不及预期，那么您需要参考[时序分类模块开发教程](../../../module_usage/tutorials/time_series_modules/time_series_classification.md)中的[二次开发](../../../module_usage/tutorials/time_series_modules/time_series_classification.md#四二次开发)章节，使用您的私有数据集对时序分类模型进行微调。
 
 ### 4.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。
 
-若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径替换至产线配置文件中的对应位置即可：
+若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径填写至产线配置文件中的 `model_dir` 即可：
 
-```python
-......
-Pipeline:
-  model: TimesNet_cls  #可修改为微调后模型的本地路径
-  device: "gpu"
-  batch_size: 1
-......
+```yaml
+pipeline_name: ts_classification
+
+SubModules:
+  TSClassification:
+    module_name: ts_classification
+    model_name: TimesNet_cls
+    model_dir: null  # 此处替换为您训练后得到的模型权重本地路径
+    batch_size: 1   
 ```
+
 随后， 参考本地体验中的命令行方式或 Python 脚本方式，加载修改后的产线配置文件即可。
 
 ##  5. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device` 参数</b>即可完成不同硬件之间的无缝切换。
 
-例如，您使用英伟达 GPU 进行时序分类产线的推理，使用的 Python 命令为：
+例如，您使用昇腾 NPU 进行时序分类产线的推理，使用的 Python 命令为：
 
 ```bash
-paddlex --pipeline ts_cls --input ts_cls.csv --device gpu:0
+paddlex --pipeline ts_classification --input ts_cls.csv --device npu:0
 ```
-此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的 `--device` 进行修改即可：
 
-```bash
-paddlex --pipeline ts_cls --input ts_cls.csv --device npu:0
-```
 若您想在更多种类的硬件上使用通用时序分类产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。
