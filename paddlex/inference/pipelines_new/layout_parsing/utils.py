@@ -15,6 +15,7 @@
 __all__ = [
     "get_sub_regions_ocr_res",
     "get_layout_ordering",
+    "get_single_block_parsing_res",
     "recursive_img_array2path",
     "get_show_color",
     "sorted_layout_boxes",
@@ -233,7 +234,55 @@ def _whether_y_overlap_exceeds_threshold(bbox1, bbox2, overlap_ratio_threshold=0
     return (overlap / min_height) > overlap_ratio_threshold
 
 
-def _sort_box_by_y_projection(layout_bbox, ocr_res, line_height_iou_threshold=0.7):
+def _adjust_span_text(span, prepend=False, append=False):
+    """
+    Adjust the text of a span by prepending or appending a newline.
+
+    Args:
+        span (list): A list where the second element is the text of the span.
+        prepend (bool): If True, prepend a newline to the text.
+        append (bool): If True, append a newline to the text.
+
+    Returns:
+        None: The function modifies the span in place.
+    """
+    if prepend:
+        span[1] = "\n" + span[1]
+    if append:
+        span[1] = span[1] + "\n"
+
+
+def _format_line(line, layout_min, layout_max, is_reference=False):
+    """
+    Format a line of text spans based on layout constraints.
+
+    Args:
+        line (list): A list of spans, where each span is a list containing a bounding box and text.
+        layout_min (int): The minimum x-coordinate of the layout bounding box.
+        layout_max (int): The maximum x-coordinate of the layout bounding box.
+        is_reference (bool): A flag indicating whether the line is a reference line, which affects formatting rules.
+
+    Returns:
+        None: The function modifies the line in place.
+    """
+    first_span = line[0]
+    end_span = line[-1]
+
+    if not is_reference:
+        if first_span[0][0] - layout_min > 10:
+            _adjust_span_text(first_span, prepend=True)
+        if layout_max - end_span[0][2] > 10:
+            _adjust_span_text(end_span, append=True)
+    else:
+        if first_span[0][0] - layout_min < 5:
+            _adjust_span_text(first_span, prepend=True)
+        if layout_max - end_span[0][2] > 20:
+            _adjust_span_text(end_span, append=True)
+
+
+def _sort_ocr_res_by_y_projection(
+    label, layout_bbox, ocr_res, line_height_iou_threshold=0.7
+):
     """
     Sorts OCR results based on their spatial arrangement, grouping them into lines and blocks.
 
@@ -257,6 +306,8 @@ def _sort_box_by_y_projection(layout_bbox, ocr_res, line_height_iou_threshold=0.
     rec_texts = ocr_res["rec_texts"]
 
     x_min, _, x_max, _ = layout_bbox
+    inline_x_min = min([box[0] for box in boxes])
+    inline_x_max = max([box[2] for box in boxes])
 
     spans = list(zip(boxes, rec_texts))
 
@@ -287,12 +338,10 @@ def _sort_box_by_y_projection(layout_bbox, ocr_res, line_height_iou_threshold=0.
 
     for line in lines:
         line.sort(key=lambda span: span[0][0])
-        first_span = line[0]
-        end_span = line[-1]
-        if first_span[0][0] - x_min > 20:
-            first_span[1] = "\n" + first_span[1]
-        if x_max - end_span[0][2] > 20:
-            end_span[1] = end_span[1] + "\n"
+        if label == "reference":
+            line = _format_line(line, inline_x_min, inline_x_max, is_reference=True)
+        else:
+            line = _format_line(line, x_min, x_max)
 
     # Flatten lines back into a single list for boxes and texts
     ocr_res["boxes"] = [span[0] for line in lines for span in line]
@@ -301,10 +350,11 @@ def _sort_box_by_y_projection(layout_bbox, ocr_res, line_height_iou_threshold=0.
     return ocr_res
 
 
-def get_structure_res(
+def get_single_block_parsing_res(
     overall_ocr_res: OCRResult,
     layout_det_res: DetResult,
-    table_res_list,
+    table_res_list: list,
+    seal_res_list: list,
 ) -> OCRResult:
     """
     Extract structured information from OCR and layout detection results.
@@ -329,7 +379,7 @@ def get_structure_res(
             - "layout_bbox": The coordinates of the layout box.
     """
 
-    structure_boxes = []
+    single_block_layout_parsing_res = []
     input_img = overall_ocr_res["doc_preprocessor_res"]["output_img"]
 
     for box_info in layout_det_res["boxes"]:
@@ -347,7 +397,7 @@ def get_structure_res(
                     )
                     > 0.5
                 ):
-                    structure_boxes.append(
+                    single_block_layout_parsing_res.append(
                         {
                             "label": label,
                             f"{label}": table_res["pred_html"],
@@ -369,7 +419,9 @@ def get_structure_res(
                     rec_res["flag"] = True
 
             if rec_res["flag"]:
-                rec_res = _sort_box_by_y_projection(layout_bbox, rec_res, 0.7)
+                rec_res = _sort_ocr_res_by_y_projection(
+                    label, layout_bbox, rec_res, 0.7
+                )
                 rec_res_first_bbox = rec_res["boxes"][0]
                 rec_res_end_bbox = rec_res["boxes"][-1]
                 if rec_res_first_bbox[0] - layout_bbox[0] < 10:
@@ -383,7 +435,7 @@ def get_structure_res(
                     ]
 
             if label in ["chart", "image"]:
-                structure_boxes.append(
+                single_block_layout_parsing_res.append(
                     {
                         "label": label,
                         f"{label}": {
@@ -398,7 +450,7 @@ def get_structure_res(
                     },
                 )
             else:
-                structure_boxes.append(
+                single_block_layout_parsing_res.append(
                     {
                         "label": label,
                         f"{label}": "".join(rec_res["rec_texts"]),
@@ -408,7 +460,7 @@ def get_structure_res(
                     },
                 )
 
-    return structure_boxes
+    return single_block_layout_parsing_res
 
 
 def _projection_by_bboxes(boxes: np.ndarray, axis: int) -> np.ndarray:
@@ -1144,7 +1196,7 @@ def get_layout_ordering(data, no_mask_labels=[], already_sorted=False):
     and assign an ordering index based on their positions.
 
     Modifies:
-        The 'parsing_result' list in 'layout_parsing_result' by adding an 'index' to each block.
+        The 'parsing_result' list in 'parsing_res_list' by adding an 'index' to each block.
 
     """
     if already_sorted:
