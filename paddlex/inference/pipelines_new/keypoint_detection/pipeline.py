@@ -98,7 +98,7 @@ class KeypointDetectionPipeline(BasePipeline):
 
     def predict(
         self,
-        input: Union[str, list[str], np.ndarray, list[np.ndarray]],
+        input: Union[str, List[str], np.ndarray, List[np.ndarray]],
         det_threshold: Optional[float] = None,
         **kwargs,
     ) -> KptResult:
