@@ -123,5 +123,17 @@ PIPELINE_ARGUMENTS = {
             "help": "Sets the Top-K value for video classification.",
         },
     ],
+    "doc_preprocessor":[
+        {
+            "name": "--use_doc_orientation_classify",
+            "type": bool,
+            "help": "Determines whether to use document orientation classification.",
+        },  
+        {
+            "name": "--use_doc_unwarping",
+            "type": bool,
+            "help": "Determines whether to use document unwarping.",
+        },
+    ]
 
 }
