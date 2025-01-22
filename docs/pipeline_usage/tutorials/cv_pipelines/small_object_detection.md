@@ -472,7 +472,7 @@ for res in output:
 <tr>
 <td><code>categoryName</code></td>
 <td><code>string</code></td>
-<td>目标类别标签名。</td>
+<td>目标类别名称。</td>
 </tr>
 <tr>
 <td><code>score</code></td>

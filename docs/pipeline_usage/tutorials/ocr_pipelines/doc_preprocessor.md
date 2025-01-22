@@ -447,39 +447,20 @@ for res in output:
 </tr>
 <tr>
 <td><code>fileType</code></td>
-<td><code>integer</code></td>
+<td><code>integer</code> | <code>null</code></td>
 <td>文件类型。<code>0</code>表示PDF文件，<code>1</code>表示图像文件。若请求体无此属性，则将根据URL推断文件类型。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>inferenceParams</code></td>
-<td><code>object</code></td>
-<td>推理参数。</td>
-<td>否</td>
-</tr>
-</tbody>
-</table>
-<p><code>inferenceParams</code>的属性如下：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-<th>是否必填</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>use_doc_orientation_classify</code></td>
-<td><code>bool</code></td>
-<td>推理时，是否使用方向分类模块<code>use_doc_orientation_classify</code>为True，则将对图像进行方向调整，使其转为正常的文字阅读方向。</td>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>use_doc_orientation_classify</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>use_doc_unwarping</code></td>
-<td><code>bool</code></td>
-<td>推理时，是否使用矫正模块<code>use_doc_unwarping</code>为True，则将对图像进行矫正。</td>
+<td><code>useDocUnwarping</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>use_doc_unwarping</code> 参数说明。</td>
 <td>否</td>
 </tr>
 </tbody>
@@ -497,7 +478,7 @@ for res in output:
 </thead>
 <tbody>
 <tr>
-<td><code>docPreprocessorResult</code></td>
+<td><code>docPreprocessingResults</code></td>
 <td><code>object</code></td>
 <td>文档图像预处理结果。数组长度为1（对于图像输入）或文档页数与10中的较小者（对于PDF输入）。对于PDF输入，数组中的每个元素依次表示PDF文件中每一页的处理结果。</td>
 </tr>
@@ -508,7 +489,7 @@ for res in output:
 </tr>
 </tbody>
 </table>
-<p><code>docPreprocessorResult</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
+<p><code>docPreprocessingResults</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
 <table>
 <thead>
 <tr>
@@ -524,14 +505,14 @@ for res in output:
 <td>输入图像。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 <tr>
-<td><code>warpImage</code></td>
+<td><code>docPreprocessingImage</code></td>
 <td><code>string</code></td>
 <td>矫正结果图。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 <tr>
-<td><code>angle</code></td>
-<td><code>int</code></td>
-<td>角度分类结果。</td>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>是产线 <code>predict</code> 方法生成的 JSON 结果中 <code>res</code> 字段的简化版本，其中去除了 <code>input_path</code> 字段</td>
 </tr>
 </tbody>
 </table>
@@ -542,7 +523,7 @@ for res in output:
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = "http://localhost:8080/doc-preprocessor"
+API_URL = "http://localhost:8080/document-preprocessing"
 file_path = "./demo.jpg"
 
 with open(file_path, "rb") as file:
@@ -555,13 +536,13 @@ response = requests.post(API_URL, json=payload)
 
 assert response.status_code == 200
 result = response.json()["result"]
-for i, res in enumerate(result["docPreprocessorResult"]):
+for i, res in enumerate(result["docPreprocessingResults"]):
     print("Detected docwarps:")
-    print(res["docwarps"])
-    layout_img_path = f"layout_{i}.jpg"
-    with open(layout_img_path, "wb") as f:
-        f.write(base64.b64decode(res["layoutImage"]))
-    print(f"Output image saved at {layout_img_path}")
+    print(res["prunedResult"])
+    doc_preprocessing_img_path = f"doc_preprocessing_img_{i}.jpg"
+    with open(doc_preprocessing_img_path, "wb") as f:
+        f.write(base64.b64decode(res["docPreprocessingImage"]))
+    print(f"Output image saved at {doc_preprocessing_img_path}")
 </code></pre></details>
 </details>
 <br/>
