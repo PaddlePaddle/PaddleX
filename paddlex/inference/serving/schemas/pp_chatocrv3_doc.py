@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Final, List, Optional
+from typing import Dict, Final, List, Optional, Union
 
-from pydantic import BaseModel
-from typing_extensions import Literal
+from pydantic import BaseModel, Field
+from typing_extensions import Annotated, Literal
 
 from ..infra.models import DataInfo, PrimaryOperations
 from .shared import ocr
@@ -43,6 +43,7 @@ class AnalyzeImagesRequest(ocr.BaseInferRequest):
     useGeneralOcr: Optional[bool] = None
     useSealRecognition: Optional[bool] = None
     useTableRecognition: Optional[bool] = None
+    useFormulaRecognition: Optional[bool] = None
     textDetLimitSideLen: Optional[int] = None
     textDetLimitType: Optional[Literal["min", "max"]] = None
     textDetThresh: Optional[float] = None
@@ -55,13 +56,17 @@ class AnalyzeImagesRequest(ocr.BaseInferRequest):
     sealDetBoxThresh: Optional[float] = None
     sealDetUnclipRatio: Optional[float] = None
     sealRecScoreThresh: Optional[float] = None
+    layoutThreshold: Optional[float] = None
+    layoutNms: Optional[bool] = None
+    layoutUnclipRatio: Optional[
+        Union[float, Annotated[List[float], Field(min_length=2, max_length=2)]]
+    ] = None
+    layoutMergeBboxesMode: Optional[Literal["union", "large", "small"]] = None
 
 
 class VisualResult(BaseModel):
     prunedResult: dict
-    ocrImage: Optional[str] = None
-    layoutDetImage: Optional[str] = None
-    docPreprocessingImage: Optional[str] = None
+    outputImages: Optional[Dict[str, str]] = None
     inputImage: Optional[str] = None
 
 

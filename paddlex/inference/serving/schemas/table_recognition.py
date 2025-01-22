@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Final, List, Optional, Union
+from typing import Dict, Final, List, Optional, Union
 
 from pydantic import BaseModel, Field
 from typing_extensions import Annotated, Literal
@@ -52,9 +52,7 @@ class InferRequest(ocr.BaseInferRequest):
 
 class TableRecResult(BaseModel):
     prunedResult: dict
-    tableRecImage: Optional[str] = None
-    layoutDetImage: Optional[str] = None
-    docPreprocessingImage: Optional[str] = None
+    outputImages: Optional[Dict[str, str]] = None
     inputImage: Optional[str] = None
 
 
