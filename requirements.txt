@@ -9,7 +9,9 @@ ruamel.yaml
 chardet
 numpy==1.24.4
 matplotlib==3.5.2
+albumentations==1.4.10
 opencv-python==4.5.5.64
+opencv-python-headless==4.11.0.86
 chinese_calendar
 scikit-learn
 pycocotools
