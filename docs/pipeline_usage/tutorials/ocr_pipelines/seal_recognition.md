@@ -778,7 +778,7 @@ paddlex --pipeline seal_recognition \
 
 可视化结果保存在`save_path`下，其中印章OCR的可视化结果如下：
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/03.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/seal_recognition/03.png">
 
 
 ### 2.1.2 Python脚本方式集成
@@ -803,6 +803,7 @@ for res in output:
 
 
 在上述 Python 脚本中，执行了如下几个步骤：
+
 （1）通过 `create_pipeline()` 实例化 OCR 产线对象，具体参数说明如下：
 
 <table>
@@ -1463,7 +1464,7 @@ for i, res in enumerate(result[&quot;sealRecResults&quot;]):
       <td><a href="../../../module_usage/tutorials/ocr_modules/seal_text_detection.md">链接</a></td>
     </tr>
     <tr>
-      <td>文本内容都不准</td>
+      <td>文本内容不准</td>
       <td>文本识别模块</td>
       <td><a href="../../../module_usage/tutorials/ocr_modules/text_recognition.md">链接</a></td>
     </tr>
