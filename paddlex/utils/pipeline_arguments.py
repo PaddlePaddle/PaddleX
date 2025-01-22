@@ -123,6 +123,18 @@ PIPELINE_ARGUMENTS = {
             "help": "Sets the Top-K value for video classification.",
         },
     ],
+    "video_detection": [
+        {
+            "name": "--nms_thresh",
+            "type": float,
+            "help": "Sets the NMS threshold for video detection.",
+        },
+        {
+            "name": "--score_thresh",
+            "type": float,
+            "help": "Sets the confidence threshold for video detection.",
+        },
+    ],
     "doc_preprocessor":[
         {
             "name": "--use_doc_orientation_classify",
