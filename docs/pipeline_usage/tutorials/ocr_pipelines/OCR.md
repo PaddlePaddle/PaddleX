@@ -470,7 +470,7 @@ paddlex --pipeline OCR \
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline_name="OCR")
+pipeline = create_pipeline(pipeline="OCR")
 
 output = pipeline.predict(
     input="./general_ocr_002.png",
@@ -500,7 +500,7 @@ for res in output:
 </thead>
 <tbody>
 <tr>
-<td><code>pipeline_name</code></td>
+<td><code>pipeline</code></td>
 <td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
 <td><code>str</code></td>
 <td><code>None</code></td>
