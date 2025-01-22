@@ -159,7 +159,7 @@ def generate_tex_file(tex_file_path: str, equation: str) -> None:
         start_template = (
             r"\documentclass{article}" + "\n"
             r"\usepackage{cite}" + "\n"
-            r"\usepackage{amsmath,amssymb,amsfonts}" + "\n"
+            r"\usepackage{amsmath,amssymb,amsfonts,upgreek}" + "\n"
             r"\usepackage{graphicx}" + "\n"
             r"\usepackage{textcomp}" + "\n"
             r"\DeclareMathSizes{14}{14}{9.8}{7}" + "\n"
@@ -193,7 +193,7 @@ def generate_pdf_file(
                         and None if an error occurred during the pdflatex execution.
     """
     if os.path.exists(tex_path):
-        command = "pdflatex -halt-on-error -output-directory={} {}".format(
+        command = "pdflatex -interaction=nonstopmode -halt-on-error -output-directory={} {}".format(
             pdf_dir, tex_path
         )
         if is_debug:
