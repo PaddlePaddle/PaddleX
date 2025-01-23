@@ -407,10 +407,10 @@ python -m pip install ../../python/dist/ultra_infer*.whl
     <td><b>34</b> / 37</td>
     <td>
       <details>
-            <summary>查看详情</summary>
-            FasterRCNN-Swin-Tiny-FPN<br>
-            CenterNet-DLA-34<br>
-            CenterNet-ResNet50
+        <summary>查看详情</summary>
+        FasterRCNN-Swin-Tiny-FPN<br>
+        CenterNet-DLA-34<br>
+        CenterNet-ResNet50
       </details>
     </td>
   </tr>
@@ -421,10 +421,10 @@ python -m pip install ../../python/dist/ultra_infer*.whl
     <td><b>12</b> / 15</td>
     <td>
       <details>
-            <summary>查看详情</summary>
-            Mask-RT-DETR-S</br>
-            PP-YOLOE_seg-S</br>
-            SOLOv2
+        <summary>查看详情</summary>
+        Mask-RT-DETR-S</br>
+        PP-YOLOE_seg-S</br>
+        SOLOv2
       </details>
     </td>
   </tr>
@@ -456,8 +456,8 @@ python -m pip install ../../python/dist/ultra_infer*.whl
     <td><b>4</b> / 5</td>
     <td>
       <details>
-            <summary>查看详情</summary>
-            TimesNet_ad</br>
+        <summary>查看详情</summary>
+        TimesNet_ad</br>
       </details>
     </td>
   </tr>
@@ -548,8 +548,15 @@ python -m pip install ../../python/dist/ultra_infer*.whl
 
   <tr>
     <td>公式识别</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
+    <td><b>1</b> / 4 </td>
+    <td>
+      <details>
+        <summary>查看详情</summary>
+        UnimerNet</br>
+        PP-FormulaNet-L</br>
+        PP-FormulaNet-S</br>
+      </details>
+    </td>
   </tr>
 
   <tr>
