@@ -65,11 +65,11 @@ class AttributeRecPipeline(BasePipeline):
         for img_id, batch_data in enumerate(self.batch_sampler(input)):
             raw_imgs = self.img_reader(batch_data.instances)
             all_det_res = list(self.det_model(raw_imgs, threshold=det_threshold))
-            for input_data, raw_img, det_res in zip(
-                batch_data.instances, raw_imgs, all_det_res
+            for input_path, input_data, raw_img, det_res in zip(
+                batch_data.input_paths, batch_data.instances, raw_imgs, all_det_res
             ):
                 cls_res = self.get_cls_result(raw_img, det_res, cls_threshold)
-                yield self.get_final_result(input_data, raw_img, det_res, cls_res)
+                yield self.get_final_result(input_path, raw_img, det_res, cls_res)
 
     def get_cls_result(self, raw_img, det_res, cls_threshold):
         subs_of_img = list(self._crop_by_boxes(raw_img, det_res["boxes"]))
@@ -81,8 +81,8 @@ class AttributeRecPipeline(BasePipeline):
             output["score"].append(res["scores"])
         return output
 
-    def get_final_result(self, input_data, raw_img, det_res, rec_res):
-        single_img_res = {"input_path": input_data, "input_img": raw_img, "boxes": []}
+    def get_final_result(self, input_path, raw_img, det_res, rec_res):
+        single_img_res = {"input_path": input_path, "input_img": raw_img, "boxes": []}
         for i, obj in enumerate(det_res["boxes"]):
             cls_scores = rec_res["score"][i]
             labels = rec_res["label"][i]
