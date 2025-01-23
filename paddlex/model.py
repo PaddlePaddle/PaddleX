@@ -22,7 +22,6 @@ from .modules import (
     build_evaluater,
     build_exportor,
 )
-from .utils.flags import NEW_PREDICTOR
 
 
 # TODO(gaotingquan): support _ModelBasedConfig
@@ -89,13 +88,7 @@ class _ModelBasedConfig(_BaseModel):
         kernel_option.update({"device": device})
 
         pp_option = PaddlePredictorOption(self._model_name, **kernel_option)
-        if NEW_PREDICTOR:
-            predictor = create_predictor(
-                self._model_name, model_dir, pp_option=pp_option
-            )
-        else:
-            model = self._model_name if model_dir is None else model_dir
-            predictor = create_predictor(model, pp_option=pp_option)
+        predictor = create_predictor(self._model_name, model_dir, pp_option=pp_option)
         assert "input" in predict_kwargs
         return predict_kwargs, predictor
 

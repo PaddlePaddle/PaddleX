@@ -36,7 +36,7 @@ from starlette.exceptions import HTTPException
 from typing_extensions import ParamSpec
 
 from ....utils import logging
-from ...pipelines_new import BasePipeline
+from ...pipelines import BasePipeline
 from ..infra.config import AppConfig
 from ..infra.models import NoResultResponse
 from ..infra.utils import call_async, generate_log_id

@@ -1,8 +1,0 @@
-Global:
-  pipeline_name: OCR
-  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_001.png
-  
-Pipeline:
-  text_det_model: PP-OCRv4_mobile_det
-  text_rec_model: PP-OCRv4_mobile_rec
-  text_rec_batch_size: 1
