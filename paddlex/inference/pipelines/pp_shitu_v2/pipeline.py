@@ -62,9 +62,11 @@ class ShiTuV2Pipeline(BasePipeline):
         hamming_radius = kwargs.get("hamming_radius", self._hamming_radius)
         det_threshold = kwargs.get("det_threshold", self._det_threshold)
         for img_id, batch_data in enumerate(self.batch_sampler(input)):
-            raw_imgs = self.img_reader(batch_data)
+            raw_imgs = self.img_reader(batch_data.instances)
             all_det_res = list(self.det_model(raw_imgs, threshold=det_threshold))
-            for input_data, raw_img, det_res in zip(batch_data, raw_imgs, all_det_res):
+            for input_data, raw_img, det_res in zip(
+                batch_data.instances, raw_imgs, all_det_res
+            ):
                 rec_res = self.get_rec_result(
                     raw_img, det_res, indexer, rec_threshold, hamming_radius, topk
                 )
