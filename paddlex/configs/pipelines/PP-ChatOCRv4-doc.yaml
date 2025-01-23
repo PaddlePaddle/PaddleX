@@ -10,15 +10,15 @@ SubModules:
     module_name: chat_bot
     model_name: ernie-3.5
     api_type: qianfan
-    ak: "api_key" # Set this to a real API key
-    sk: "secret_key"  # Set this to a real secret key
+    ak: 4iiqB0QfvXTAENgzUwNeDjQ7 # Set this to a real API key
+    sk: sHQCw4l5A6jnzbHMa0ZvDi05GT9Qz8tZ  # Set this to a real secret key
 
   LLM_Retriever:
     module_name: retriever
     model_name: ernie-3.5
     api_type: qianfan
-    ak: "api_key" # Set this to a real API key
-    sk: "secret_key"  # Set this to a real secret key
+    ak: 4iiqB0QfvXTAENgzUwNeDjQ7 # Set this to a real API key
+    sk: sHQCw4l5A6jnzbHMa0ZvDi05GT9Qz8tZ  # Set this to a real secret key
 
   MLLM_Chat:
     module_name: chat_bot
