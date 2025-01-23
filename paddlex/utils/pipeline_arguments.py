@@ -107,7 +107,73 @@ PIPELINE_ARGUMENTS = {
     ],
     "table_recognition": None,
     "layout_parsing": None,
-    "seal_recognition": None,
+    "seal_recognition": [
+        {
+            "name": "--use_doc_orientation_classify",
+            "type": bool,
+            "help": "Determines whether to use document preprocessing",
+        },
+        {
+            "name": "--use_doc_unwarping",
+            "type": bool,
+            "help": "Determines whether to use document unwarping",
+        },
+        {
+            "name": "--use_layout_detection",
+            "type": bool,
+            "help": "Determines whether to use document layout detection",
+        },
+        {
+            "name": "--layout_threshold",
+            "type": float,
+            "help": "Determines confidence threshold for layout detection",
+        },
+        {
+            "name": "--layout_nms",
+            "type": bool,
+            "help": "Determines whether to use non maximum suppression",
+        },
+        {
+            "name": "--layout_unclip_ratio",
+            "type": float,
+            "help": "Determines unclip ratio for layout detection boxes",
+        },
+        {
+            "name": "--layout_merge_bboxes_mode",
+            "type": str,
+            "help": "Determines merge mode for layout detection bboxes, 'union', 'large' or 'small'",
+        },
+        {
+            "name": "--seal_det_limit_side_len",
+            "type": int,
+            "help": "Sets the side length limit for text detection.",
+        },
+        {
+            "name": "--seal_det_limit_type",
+            "type": str,
+            "help": "Sets the limit type for text detection, 'min', 'max'.",
+        },
+        {
+            "name": "--seal_det_thresh",
+            "type": float,
+            "help": "Sets the threshold for text detection.",
+        },
+        {
+            "name": "--seal_det_box_thresh",
+            "type": float,
+            "help": "Sets the box threshold for text detection.",
+        },
+        {
+            "name": "--seal_det_unclip_ratio",
+            "type": float,
+            "help": "Sets the unclip ratio for text detection.",
+        },
+        {
+            "name": "--seal_rec_score_thresh",
+            "type": float,
+            "help": "Sets the score threshold for text recognition.",
+        },
+    ],
     "ts_forecast": None,
     "ts_anomaly_detection": None,
     "ts_classification": None,
