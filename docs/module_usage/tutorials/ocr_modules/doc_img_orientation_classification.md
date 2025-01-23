@@ -51,8 +51,8 @@ for res in output:
 ```
 
 运行后，得到的结果为：
-```josn
-{'res': {'input_path': 'test_imgs/img_rot180_demo.jpg', 'class_ids': [2], 'scores': [0.8816400170326233], 'label_names': ['180']}}
+```bash
+{'res': {'input_path': 'test_imgs/img_rot180_demo.jpg', 'page_index': None, 'class_ids': array([2], dtype=int32), 'scores': array([0.88164], dtype=float32), 'label_names': ['180']}}
 ```
 
 运行结果参数含义如下：
