@@ -9,8 +9,6 @@ Face feature models typically take standardized face images processed through de
 
 ## II. Supported Model List
 
-<details><summary> 👉Details of Model List</summary>
-
 <table>
 <thead>
 <tr>
@@ -44,7 +42,7 @@ Face feature models typically take standardized face images processed through de
 </tr>
 </tbody>
 </table>
-<p>Note: The above accuracy metrics are Accuracy scores measured on the AgeDB-30, CFP-FP, and LFW datasets, respectively. All model GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</p></details>
+<p>Note: The above accuracy metrics are Accuracy scores measured on the AgeDB-30, CFP-FP, and LFW datasets, respectively. All model GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</p>
 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For details, refer to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md)
@@ -63,6 +61,162 @@ for res in output:
     res.print(json_format=False)
     res.save_to_json("./output/res.json")
 ```
+<details><summary>👉 <b>The result obtained after running is: (Click to expand)</b></summary>
+
+```bash
+{'res': {'input_path': 'face_recognition_001.jpg', 'feature': [0.04121152311563492, 0.0010890548583120108, -0.03561094403266907, 0.05722084641456604, 0.05919725075364113, -0.007132374215871096, -0.061298906803131104, -0.10843975096940994, -0.02871585637331009, 0.03347175195813179, 0.13309064507484436, 0.05309445410966873, 0.004820522852241993, -0.11700531840324402, 0.03240801766514778, 0.0639009103178978, 0.17841649055480957, 0.006999856326729059, -0.052513156086206436, 0.14528249204158783, 0.013314608484506607, -0.04820159450173378, -0.04795005917549133, 0.184268519282341, -0.15508289635181427, -0.01048946287482977, -0.103487029671669, 0.020606128498911858, 0.11970002949237823, 0.07393684983253479, -0.05581602826714516, -0.10253427177667618, -0.015256273560225964, 0.06347685307264328, 0.0893929973244667, -0.01050905603915453, -0.025690989568829536, -0.10570172965526581, -0.11608698219060898, -0.04072513058781624, 0.05093423277139664, 0.044215817004442215, 0.1629297435283661, -0.06339056044816971, -0.07671815156936646, 0.09480706602334976, -0.15456975996494293, -0.021657753735780716, 0.12482058256864548, -0.1267298310995102, 0.002465370809659362, -0.05374367907643318, -0.07079283148050308, 0.1325870305299759, -0.006946612149477005, 0.047657083719968796, 0.06102422997355461, -0.18113569915294647, -0.15677541494369507, -0.05817852169275284, -0.007711497135460377, -0.03407919406890869, 0.04798268899321556, -0.036309171468019485, 0.10679583996534348, -0.1858624368906021, -0.06799137592315674, 0.008694482035934925, 0.026530278846621513, -0.06917411088943481, 0.13533912599086761, -0.08762945234775543, -0.17223820090293884, -0.024798616766929626, -0.03390877693891525, -0.17003266513347626, -0.08045653998851776, -0.21928688883781433, -0.08328460901975632, 0.0745469480752945, -0.05523530766367912, -0.08471746742725372, -0.06595447659492493, 0.11475134640932083, 0.12401033192873001, 0.09317877888679504, -0.08352484554052353, 0.0247682835906744, 0.0008310621487908065, -0.09977596998214722, -0.002699024509638548, -0.23338164389133453, -0.1783595234155655, -0.08259879052639008, 0.14328709244728088, 0.024862702935934067, 0.008164866827428341, 0.06340813636779785, 0.1028614193201065, -0.038397643715143204, -0.05210508778691292, 0.0389365553855896, 0.12757952511310577, 0.05326246842741966, 0.06695418804883957, -0.0052042435854673386, 0.035264499485492706, 0.00990584772080183, -0.05249840393662453, 0.06972697377204895, -0.06477969884872437, -0.003332878928631544, 0.0449349470436573, 0.020609190687537193, 0.074540875852108, -0.03608720749616623, 0.04876900464296341, -0.06063542515039444, -0.07829384505748749, -0.1220116913318634, 0.05064597725868225, 0.07839702069759369, 0.06130668520927429, -0.13095220923423767, 0.0888662114739418, -0.029464716091752052, 0.030264943838119507, 0.04124804586172104]}}
+```
+
+Parameter meanings are as follows:
+- `input_path`: The path of the input image to be predicted.
+- `feature`: The feature vector extracted by the model.
+
+</details>
+
+The explanations for the methods, parameters, etc., are as follows:
+
+* `create_model` instantiates a face feature model (here, `MobileFaceNet` is used as an example), and the specific explanations are as follows:
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Parameter Description</th>
+<th>Parameter Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>model_name</code></td>
+<td>Name of the model</td>
+<td><code>str</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>model_dir</code></td>
+<td>Path to store the model</td>
+<td><code>str</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>flip</code></td>
+<td>Whether to perform flipped inference; if True, the model will infer the horizontally flipped input image and fuse the results of both inferences to improve the accuracy of face features</td>
+<td><code>bool</code></td>
+<td>None</td>
+<td><code>False</code></td>
+</tr>
+</table>
+
+* The `model_name` must be specified. After specifying `model_name`, the default model parameters built into PaddleX are used. If `model_dir` is specified, the user-defined model is used.
+
+* The `predict()` method of the face feature model is called for inference prediction. The `predict()` method has parameters `input` and `batch_size`, which are explained as follows:
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Parameter Description</th>
+<th>Parameter Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>Data to be predicted, supporting multiple input types</td>
+<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td>
+<ul>
+  <li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
+  <li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
+  <li><b>URL link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">Example</a></li>
+  <li><b>Local directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
+  <li><b>Dictionary</b>, the <code>key</code> of the dictionary must correspond to the specific task, such as <code>"img"</code> for image classification tasks. The <code>value</code> of the dictionary supports the above types of data, for example: <code>{"img": "/root/data1"}</code></li>
+  <li><b>List</b>, elements of the list must be of the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code></li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td>Batch size</td>
+<td><code>int</code></td>
+<td>Any integer</td>
+<td>1</td>
+</tr>
+</table>
+
+* The prediction results are processed, and the prediction result for each sample is of type `dict`. It supports operations such as printing, saving as an image, and saving as a `json` file:
+
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Method Description</th>
+<th>Parameter</th>
+<th>Parameter Type</th>
+<th>Parameter Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print the results to the terminal</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>Whether to format the output content using <code>JSON</code> indentation</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable, only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. If set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters, only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save the results as a JSON file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The path to save the file. If it is a directory, the saved file name will be consistent with the input file name</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable, only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. If set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters, only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+</table>
+
+* Additionally, it supports obtaining the prediction results through attributes, as follows:
+
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Attribute Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format</td>
+</tr>
+</table>
 
 For more information on using the PaddleX single-model inference API, refer to the [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.en.md).
 

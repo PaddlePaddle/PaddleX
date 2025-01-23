@@ -1,7 +1,0 @@
-Global:
-  pipeline_name: image_classification
-  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg
-  
-Pipeline:
-  model: PP-LCNet_x0_5
-  batch_size: 1

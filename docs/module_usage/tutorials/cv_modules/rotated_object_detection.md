@@ -19,7 +19,7 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>PP-YOLOE-R-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b1_v2/PP-YOLOE-R-L_infer.tar">推理模型</a>/<a href="https://paddledet.bj.bcebos.com/models/ppyoloe_r_crn_l_3x_dota.pdparams">训练模型</a></td>
+<td>PP-YOLOE-R-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE-R-L_infer.tar">推理模型</a>/<a href="https://paddledet.bj.bcebos.com/models/ppyoloe_r_crn_l_3x_dota.pdparams">训练模型</a></td>
 <td>78.14</td>
 <td>20.7039</td>
 <td>157.942</td>
@@ -27,8 +27,9 @@ comments: true
 <td rowspan="1">PP-YOLOE-R是一个高效的单阶段Anchor-free旋转框检测模型。基于PP-YOLOE, PP-YOLOE-R以极少的参数量和计算量为代价，引入了一系列有用的设计来提升检测精度。</td>
 </tr>
 </table>
+
 <p><b>注：以上精度指标为<a href="https://captain-whu.github.io/DOTA/">DOTA</a>验证集 mAP(0.5:0.95)。所有模型 GPU 推理耗时基于 NVIDIA TRX2080 Ti 机器，精度类型为 F16， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
-> ❗ 以上列出的是paddleX当前支持的旋转目标检测模型</b>，实际的PaddleDetection套件支持<b>10</b>个旋转目标检测模型，详细模型列表请参考<a href="https://github.com/PaddlePaddle/PaddleDetection/tree/release/2.8/configs/rotate">PaddleDetection</a>
+
 
 
 ## 三、快速集成
@@ -47,7 +48,7 @@ for res in output:
 
 运行后，得到的结果为：
 ```bash
-{'res': "{'input_path': 'rotated_object_detection_001.png', 'boxes': [{'cls_id': 4, 'label': 'small-vehicle', 'score': 0.7513620853424072, 'coordinate': [92.72234, 763.36676, 84.7699, 749.9725, 116.207375, 731.8547, 124.15982, 745.2489]}, {'cls_id': 4, 'label': 'small-vehicle', 'score': 0.7284387350082397, 'coordinate': [348.60703, 177.85127, 332.80432, 149.83975, 345.37347, 142.95677, 361.17618, 170.96828]}, {'cls_id': 11, 'label': 'roundabout', 'score': 0.7909174561500549, 'coordinate': [535.02216, 697.095, 201.49803, 608.4738, 292.2446, 276.9634, 625.76874, 365.5845]}]}"}
+{'res': {'input_path': 'rotated_object_detection_001.png', 'page_index': None, 'boxes': [{'cls_id': 4, 'label': 'small-vehicle', 'score': 0.7409099340438843, 'coordinate': [92.88687, 763.1569, 85.163124, 749.5868, 116.07975, 731.99414, 123.8035, 745.5643]}, {'cls_id': 4, 'label': 'small-vehicle', 'score': 0.7393015623092651, 'coordinate': [348.2332, 177.55974, 332.77704, 150.24973, 345.2183, 143.21028, 360.67444, 170.5203]}, {'cls_id': 11, 'label': 'roundabout', 'score': 0.8101699948310852, 'coordinate': [537.1732, 695.5475, 204.4297, 612.9735, 286.71338, 281.48022, 619.4569, 364.05426]}]}}
 ```
 运行结果参数含义如下：
 - `input_path`: 表示输入待预测图像的路径
@@ -262,7 +263,7 @@ tar -xf ./dataset/rdet_dota_examples.tar -C ./dataset/
 ```
 解压后，数据集目录结构如下：
 ```bash
-- dataset/DOTA-sampled200_crop1024_data
+- dataset/rdet_dota_examples
   - annotations
     - instance_train.json
     - instance_val.json
@@ -278,7 +279,7 @@ tar -xf ./dataset/rdet_dota_examples.tar -C ./dataset/
 ```bash
 python main.py -c paddlex/configs/modules/rotated_object_detection/PP-YOLOE-R-L.yaml \
     -o Global.mode=check_dataset \
-    -o Global.dataset_dir=./dataset/DOTA-sampled200_crop1024_data
+    -o Global.dataset_dir=./dataset/rdet_dota_examples
 ```
 执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息，命令运行成功后会在log中打印出`Check dataset passed !`信息。校验结果文件保存在`./output/check_dataset_result.json`，同时相关产出会保存在当前目录的`./output/check_dataset`目录下，产出目录中包括可视化的示例样本图片和样本分布直方图。
 
@@ -290,37 +291,37 @@ python main.py -c paddlex/configs/modules/rotated_object_detection/PP-YOLOE-R-L.
   &quot;check_pass&quot;: true,
   &quot;attributes&quot;: {
     &quot;num_classes&quot;: 15,
-    &quot;train_samples&quot;: 1892,
+    &quot;train_samples&quot;: 194,
     &quot;train_sample_paths&quot;: [
-      &quot;check_dataset\/demo_img\/P2610__1.0__0___0.png&quot;,
-      &quot;check_dataset\/demo_img\/P1137__1.0__0___0.png&quot;,
-      &quot;check_dataset\/demo_img\/P1122__1.0__5888___1648.png&quot;,
-      &quot;check_dataset\/demo_img\/P0543__1.0__0___0.png&quot;,
-      &quot;check_dataset\/demo_img\/P0518__1.0__0___91.png&quot;,
-      &quot;check_dataset\/demo_img\/P0961__1.0__1648___87.png&quot;,
-      &quot;check_dataset\/demo_img\/P1732__1.0__0___824.png&quot;,
+      &quot;check_dataset\/demo_img\/P0457__1.0__379___0.png&quot;,
+      &quot;check_dataset\/demo_img\/P1560__1.0__0___0.png&quot;,
+      &quot;check_dataset\/demo_img\/P2722__1.0__0___1422.png&quot;,
+      &quot;check_dataset\/demo_img\/P1750__1.0__824___1648.png&quot;,
+      &quot;check_dataset\/demo_img\/P1560__1.0__1648___824.png&quot;,
+      &quot;check_dataset\/demo_img\/P1751__1.0__2472___1648.png&quot;,
+      &quot;check_dataset\/demo_img\/P1560__1.0__2976___2976.png&quot;,
       &quot;check_dataset\/demo_img\/P2766__1.0__4421___0.png&quot;,
-      &quot;check_dataset\/demo_img\/P2582__1.0__674___725.png&quot;,
-      &quot;check_dataset\/demo_img\/P1529__1.0__2976___1648.png&quot;
+      &quot;check_dataset\/demo_img\/P2365__1.0__1807___0.png&quot;,
+      &quot;check_dataset\/demo_img\/P0117__1.0__0___138.png&quot;
     ],
-    &quot;val_samples&quot;: 473,
+    &quot;val_samples&quot;: 21,
     &quot;val_sample_paths&quot;: [
-      &quot;check_dataset\/demo_img\/P2342__1.0__890___0.png&quot;,
-      &quot;check_dataset\/demo_img\/P1386__1.0__2472___1648.png&quot;,
-      &quot;check_dataset\/demo_img\/P0961__1.0__824___87.png&quot;,
+      &quot;check_dataset\/demo_img\/P0844__1.0__0___0.png&quot;,
+      &quot;check_dataset\/demo_img\/P0457__1.0__0___0.png&quot;,
+      &quot;check_dataset\/demo_img\/P2645__1.0__0___0.png&quot;,
       &quot;check_dataset\/demo_img\/P1651__1.0__824___824.png&quot;,
       &quot;check_dataset\/demo_img\/P1529__1.0__824___2976.png&quot;,
-      &quot;check_dataset\/demo_img\/P0961__1.0__4944___87.png&quot;,
+      &quot;check_dataset\/demo_img\/P1750__1.0__3260___824.png&quot;,
       &quot;check_dataset\/demo_img\/P0725__1.0__634___0.png&quot;,
-      &quot;check_dataset\/demo_img\/P1679__1.0__1648___1648.png&quot;,
-      &quot;check_dataset\/demo_img\/P2726__1.0__824___1578.png&quot;,
-      &quot;check_dataset\/demo_img\/P0457__1.0__379___0.png&quot;,
+      &quot;check_dataset\/demo_img\/P2722__1.0__2472___0.png&quot;,
+      &quot;check_dataset\/demo_img\/P0262__1.0__0___1414.png&quot;,
+      &quot;check_dataset\/demo_img\/P1750__1.0__0___2472.png&quot;,
     ]
   },
   &quot;analysis&quot;: {
     &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
   },
-  &quot;dataset_path&quot;: &quot;./dataset/DOTA-sampled200_crop1024_data&quot;,
+  &quot;dataset_path&quot;: &quot;./dataset/rdet_dota_examples&quot;,
   &quot;show_type&quot;: &quot;image&quot;,
   &quot;dataset_type&quot;: &quot;COCODetDataset&quot;
 }
@@ -328,8 +329,8 @@ python main.py -c paddlex/configs/modules/rotated_object_detection/PP-YOLOE-R-L.
 <p>上述校验结果中，check_pass 为 true 表示数据集格式符合要求，其他部分指标的说明如下：</p>
 <ul>
 <li><code>attributes.num_classes</code>：该数据集类别数为 15；</li>
-<li><code>attributes.train_samples</code>：该数据集训练集样本数量为 1892；</li>
-<li><code>attributes.val_samples</code>：该数据集验证集样本数量为 473；</li>
+<li><code>attributes.train_samples</code>：该数据集训练集样本数量为 194</li>
+<li><code>attributes.val_samples</code>：该数据集验证集样本数量为 21</li>
 <li><code>attributes.train_sample_paths</code>：该数据集训练集样本可视化图片相对路径列表；</li>
 <li><code>attributes.val_sample_paths</code>：该数据集验证集样本可视化图片相对路径列表；</li>
 </ul>
@@ -343,7 +344,7 @@ python main.py -c paddlex/configs/modules/rotated_object_detection/PP-YOLOE-R-L.
 
 <p><b>（1）数据集格式转换</b></p>
 
-旋转目标检测赞不支持数据格式转换，只支持标准DOTA的COCO数据格式。
+旋转目标检测暂不支持数据格式转换，只支持标准DOTA的COCO数据格式。
 
 <p><b>（2）数据集划分</b></p>
 <p>数据集划分的参数可以通过修改配置文件中 <code>CheckDataset</code> 下的字段进行设置，配置文件中部分参数的示例说明如下：</p>
@@ -367,13 +368,13 @@ CheckDataset:
 <p>随后执行命令：</p>
 <pre><code class="language-bash">python main.py -c paddlex/configs/modules/rotated_object_detection/PP-YOLOE-R-L.yaml \
     -o Global.mode=check_dataset \
-    -o Global.dataset_dir=./dataset/DOTA-sampled200_crop1024_data
+    -o Global.dataset_dir=./dataset/rdet_dota_examples
 </code></pre>
 <p>数据划分执行之后，原有标注文件会被在原路径下重命名为 <code>xxx.bak</code>。</p>
 <p>以上参数同样支持通过追加命令行参数的方式进行设置：</p>
 <pre><code class="language-bash">python main.py -c paddlex/configs/modules/rotated_object_detection/PP-YOLOE-R-L.yaml \
     -o Global.mode=check_dataset \
-    -o Global.dataset_dir=./dataset/DOTA-sampled200_crop1024_data \
+    -o Global.dataset_dir=./dataset/rdet_dota_examples \
     -o CheckDataset.split.enable=True \
     -o CheckDataset.split.train_percent=90 \
     -o CheckDataset.split.val_percent=10
@@ -385,7 +386,7 @@ CheckDataset:
 ```bash
 python main.py -c paddlex/configs/modules/rotated_object_detection/PP-YOLOE-R-L.yaml \
     -o Global.mode=train \
-    -o Global.dataset_dir=./dataset/DOTA-sampled200_crop1024_data
+    -o Global.dataset_dir=./dataset/rdet_dota_examples
 ```
 需要如下几步：
 
@@ -416,7 +417,7 @@ python main.py -c paddlex/configs/modules/rotated_object_detection/PP-YOLOE-R-L.
 ```bash
 python main.py -c paddlex/configs/modules/rotated_object_detection/PP-YOLOE-R-L.yaml \
     -o Global.mode=evaluate \
-    -o Global.dataset_dir=./dataset/DOTA-sampled200_crop1024_data
+    -o Global.dataset_dir=./dataset/rdet_dota_examples
 ```
 与模型训练类似，需要如下几步：
 

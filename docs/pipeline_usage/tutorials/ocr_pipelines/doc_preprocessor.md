@@ -12,6 +12,8 @@ comments: true
 
 <b>通用文档图像预处理</b><b>产线中包含可选用的文档图像方向分类模块和文档图像矫正模块</b>包含的模型如下。
 
+<p><b>文档图像方向分类模块（可选）：</b></p>
+
 <table>
 <thead>
 <tr>
@@ -36,6 +38,7 @@ comments: true
 </table>
 <b>注：以上精度指标的评估集是自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
 
+<p><b>文本图像矫正模块（可选）：</b></p>
 
 <table>
 <thead>
@@ -282,8 +285,8 @@ for res in output:
 
     - `model_settings`: `(Dict[str, bool])` 配置产线所需的模型参数
 
-        - `use_doc_preprocessor`: `(bool)` 控制是否启用文档预处理子产线
-        - `use_textline_orientation`: `(bool)` 控制是否启用文本行方向分类功能
+        - `use_doc_orientation_classify`: `(bool)` 控制是否启用文档方向分类模块
+        - `use_doc_unwarping`: `(bool)` 控制是否启用文档扭曲矫正模块
 
     - `angle`: `(int)` 文档方向分类的预测结果。启用时取值为[0,90,180,270]；未启用时为-1
 
@@ -311,9 +314,9 @@ for res in output:
 
 
 - `json` 属性获取的预测结果为dict类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
-- `img` 属性返回的预测结果是一个字典类型的数据。其中，键分别为 `doc_preprocessor_res_img` 和 `preprocessed_img`，对应的值是两个 `Image.Image` 对象：一个用于显示 doc_preprocessor 结果的可视化图像，另一个用于展示图像预处理的可视化图像。如果没有使用图像预处理子模块，则字典中只包含 `doc_preprocessor_res_img`。
+- `img` 属性返回的预测结果是一个字典类型的数据。其中，键为 `preprocessed_img`，对应的值是 `Image.Image` 对象：用于显示 doc_preprocessor 结果的可视化图像。
 
-此外，您可以获取doc_preprocessor产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+此外，您可以获取 doc_preprocessor 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
 
 ```
 paddlex --get_pipeline_config doc_preprocessor --save_path ./my_path
@@ -614,7 +617,7 @@ for i, res in enumerate(result[&quot;docPreprocessorResult&quot;]):
   DocOrientationClassify:
     module_name: doc_text_orientation
     model_name: PP-LCNet_x1_0_doc_ori
-    model_dir: ./output/best_model/inference # # 替换为微调后的文档图像方向分类模型权重路径
+    model_dir: ./output/best_model/inference  # 替换为微调后的文档图像方向分类模型权重路径
 ......
 ```
 随后， 参考[2. 快速开始](#2-快速开始)中的命令行方式或Python脚本方式，加载修改后的产线配置文件即可。

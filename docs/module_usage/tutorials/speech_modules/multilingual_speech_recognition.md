@@ -10,9 +10,52 @@ comments: true
 ## 二、支持模型列表
 
 ### Whisper Model
-模型 | 模型下载链接 | 训练数据 | 模型大小 | 介绍 | 词错率 |
-:-----------: | :-----:| :-------: | :-----: | :-----: |:---------:|
-Whisper | [whisper_large](https://paddlespeech.bj.bcebos.com/whisper/whisper_model_20221122/whisper-large-model.tar.gz) </br>[whisper_medium](https://paddlespeech.bj.bcebos.com/whisper/whisper_model_20221122/whisper-medium-model.tar.gz) </br>[whisper_small](https://paddlespeech.bj.bcebos.com/whisper/whisper_model_20221122/whisper-small-model.tar.gz) </br>[whisper_base](https://paddlespeech.bj.bcebos.com/whisper/whisper_model_20221122/whisper-base-model.tar.gz) </br>[whisper_tiny](https://paddlespeech.bj.bcebos.com/whisper/whisper_model_20221122/whisper-tiny-model.tar.gz) </br> | 680kh from internet | large: 5.8G,</br>medium: 2.9G,</br>small: 923M,</br>base: 277M,</br>tiny: 145M | Encoder:Transformer,</br> Decoder:Transformer, </br>Decoding method: </br>Greedy search | 2.7 </br>(large, Librispeech) |
+<table>
+  <tr>
+    <th >模型</th>
+    <th >模型下载链接</th>
+    <th >训练数据</th>
+    <th >模型大小</th>
+    <th >词错率</th>
+    <th >介绍</th>
+  </tr>
+  <tr>
+    <td>whisper_large</td>
+    <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/whisper_large.tar">whisper_large</a></td>
+    <td >680kh</td>
+    <td>5.8G</td>
+    <td>2.7 (Librispeech)</td>
+    <td rowspan="5">Whisper 是 OpenAI 开发的多语言自动语音识别模型，具备高精度和鲁棒性。它采用端到端架构，能处理嘈杂环境音频，适用于语音助理、实时字幕等多种应用。</td>
+  </tr>
+  <tr>
+    <td>whisper_medium</td>
+    <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/whisper_medium.tar">whisper_medium</a></td>
+    <td>680kh</td>
+    <td>2.9G</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>whisper_small</td>
+    <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/whisper_small.tar">whisper_small</a></td>
+    <td>680kh</td>
+    <td>923M</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>whisper_base</td>
+    <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/whisper_base.tar">whisper_base</a></td>
+    <td>680kh</td>
+    <td>277M</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>whisper_small</td>
+    <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/whisper_tiny.tar">whisper_tiny</a></td>
+    <td>680kh</td>
+    <td>145M</td>
+    <td>-</td>
+  </tr>
+</table>
 
 ## 三、快速集成
 在快速集成前，首先需要安装 PaddleX 的 wheel 包，wheel的安装方式请参考[PaddleX本地安装教程](../../../installation/installation.md)。完成 wheel 包的安装后，几行代码即可完成文本识别模块的推理，可以任意切换该模块下的模型，您也可以将文本识别的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例语音](https://paddlespeech.bj.bcebos.com/PaddleAudio/zh.wav)到本地。
@@ -31,9 +74,20 @@ for res in output:
 ```
 运行结果参数含义如下：
 - `input_path`: 输入音频存放路径
-- `text`: 语音识别结果文本
-- `segments`: 带时间戳的结果文本
-- `language`: 识别语种
+- `result`: 识别结果
+    -  `text`: 语音识别结果文本
+    -  `segments`: 带时间戳的结果文本
+        * `id`: ID
+        * `seek`: 语音片段指针
+        * `start`: 片段开始时间
+        * `end`: 片段结束时间
+        * `text`: 片段识别文本
+        * `tokens`: 片段文本的 token id
+        * `temperature`: 变速比例
+        * `avg_logprob`: 平均 log 概率
+        * `compression_ratio`: 压缩比
+        * `no_speech_prob`: 非语音概率
+    - `language`: 识别语种
 
 相关方法、参数等说明如下：
 * `create_model`多语种识别模型（此处以`whisper_large`为例），具体说明如下：

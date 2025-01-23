@@ -12,75 +12,120 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from pathlib import Path
+from typing import Any, Dict, Optional
 from abc import ABC, abstractmethod
-from contextvars import ContextVar, copy_context
-from typing import TypedDict, Type
-
+import yaml
+import codecs
 from ...utils.subclass_register import AutoRegisterABCMetaClass
-from ..models import create_predictor
-
-pipeline_info_list_var = ContextVar("pipeline_info_list", default=None)
-
-
-class _PipelineInfo(TypedDict):
-    cls: Type["BasePipeline"]
+from ..utils.pp_option import PaddlePredictorOption
+from ..models import BasePredictor
 
 
-class _PipelineMetaClass(AutoRegisterABCMetaClass):
-    def __new__(mcs, name, bases, attrs):
-        def _patch_init_func(init_func):
-            def _patched___init__(self, *args, **kwargs):
-                ctx = copy_context()
-                pipeline_info_list = [
-                    *ctx.get(pipeline_info_list_var, []),
-                    _PipelineInfo(cls=type(self)),
-                ]
-                ctx.run(pipeline_info_list_var.set, pipeline_info_list)
-                ret = ctx.run(init_func, self, *args, **kwargs)
-                return ret
+class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
+    """Base class for all pipelines.
 
-            return _patched___init__
-
-        cls = super().__new__(mcs, name, bases, attrs)
-        cls.__init__ = _patch_init_func(cls.__init__)
-        return cls
-
-
-class BasePipeline(ABC, metaclass=_PipelineMetaClass):
-    """Base Pipeline"""
+    This class serves as a foundation for creating various pipelines.
+    It includes common attributes and methods that are shared among all
+    pipeline implementations.
+    """
 
     __is_base = True
 
-    def __init__(self, device, predictor_kwargs={}) -> None:
+    def __init__(
+        self,
+        device: str = None,
+        pp_option: PaddlePredictorOption = None,
+        use_hpip: bool = False,
+        *args,
+        **kwargs,
+    ) -> None:
+        """
+        Initializes the class with specified parameters.
+
+        Args:
+            device (str, optional): The device to use for prediction. Defaults to None.
+            pp_option (PaddlePredictorOption, optional): The options for PaddlePredictor. Defaults to None.
+            use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
+        """
         super().__init__()
-        self._predictor_kwargs = predictor_kwargs
-        self._device = device
+        self.device = device
+        self.pp_option = pp_option
+        self.use_hpip = use_hpip
 
     @abstractmethod
-    def set_predictor():
-        raise NotImplementedError(
-            "The method `set_predictor` has not been implemented yet."
+    def predict(self, input, **kwargs):
+        """
+        Declaration of an abstract method. Subclasses are expected to
+        provide a concrete implementation of predict.
+        Args:
+            input: The input data to predict.
+            **kwargs: Additional keyword arguments.
+        """
+        raise NotImplementedError("The method `predict` has not been implemented yet.")
+
+    def create_model(self, config: Dict, **kwargs) -> BasePredictor:
+        """
+        Create a model instance based on the given configuration.
+
+        Args:
+            config (Dict): A dictionary containing configuration settings.
+            **kwargs: The model arguments that needed to be pass.
+
+        Returns:
+            BasePredictor: An instance of the model.
+        """
+        if "model_config_error" in config:
+            raise ValueError(config["model_config_error"])
+
+        model_dir = config.get("model_dir", None)
+        hpi_params = config.get("hpi_params", None)
+
+        from .. import create_predictor
+
+        model = create_predictor(
+            model_name=config["model_name"],
+            model_dir=model_dir,
+            device=self.device,
+            batch_size=config.get("batch_size", 1),
+            pp_option=self.pp_option,
+            use_hpip=self.use_hpip,
+            **kwargs,
         )
+        return model
 
-    # alias the __call__() to predict()
-    def __call__(self, *args, **kwargs):
-        yield from self.predict(*args, **kwargs)
+    def create_pipeline(self, config: Dict):
+        """
+        Creates a pipeline based on the provided configuration.
 
-    def _create(self, model=None, pipeline=None, *args, **kwargs):
-        if model:
-            return create_predictor(
-                *args,
-                model=model,
-                device=self._device,
-                **kwargs,
-                **self._predictor_kwargs
-            )
-        elif pipeline:
-            return pipeline(
-                *args,
-                device=self._device,
-                predictor_kwargs=self._predictor_kwargs,
-                **kwargs
-            )
-        else:
-            raise Exception()
+        Args:
+            config (Dict): A dictionary containing the pipeline configuration.
+
+        Returns:
+            BasePipeline: An instance of the created pipeline.
+        """
+        if "pipeline_config_error" in config:
+            raise ValueError(config["pipeline_config_error"])
+
+        from . import create_pipeline
+
+        pipeline = create_pipeline(
+            config=config,
+            device=self.device,
+            pp_option=self.pp_option,
+            use_hpip=self.use_hpip,
+        )
+        return pipeline
+
+    def __call__(self, input, **kwargs):
+        """
+        Calls the predict method with the given input and keyword arguments.
+
+        Args:
+            input: The input data to be predicted.
+            **kwargs: Additional keyword arguments to be passed to the predict method.
+
+        Returns:
+            The prediction result from the predict method.
+        """
+        return self.predict(input, **kwargs)

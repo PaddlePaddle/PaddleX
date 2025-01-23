@@ -9,7 +9,6 @@ comments: true
 
 ## 二、支持模型列表
 
-
 <table>
 <thead>
 <tr>
@@ -26,54 +25,54 @@ comments: true
 <td>0.382</td>
 <td>0.394</td>
 <td>72k</td>
-<td>DLinear结构简单，效率高且易用的时序预测模型</td>
+<td>DLinear 是一个简单、高效且易于使用的时间序列预测模型。</td>
 </tr>
 <tr>
 <td>NLinear</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/NLinear_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/NLinear_pretrained.pdparams">训练模型</a></td>
 <td>0.386</td>
 <td>0.392</td>
 <td>40k</td>
-<td>NLinear结构简单，效率高且易用的时序预测模型</td>
+<td>NLinear 是一个简单、高效且易于使用的时间序列预测模型。</td>
 </tr>
 <tr>
 <td>RLinear</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/RLinear_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RLinear_pretrained.pdparams">训练模型</a></td>
 <td>0.385</td>
 <td>0.392</td>
 <td>40k</td>
-<td>RLinear结构简单，效率高且易用的时序预测模型</td>
+<td>RLinear 是一个简单、高效且易于使用的时间序列预测模型。</td>
 </tr>
 <tr>
 <td>Nonstationary</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Nonstationary_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_pretrained.pdparams">训练模型</a></td>
 <td>0.600</td>
 <td>0.515</td>
 <td>60.3M</td>
-<td>基于transformer结构，针对性优化非平稳时间序列的长时序预测模型</td>
+<td>基于 Transformer 结构，该模型针对非平稳时间序列的长期预测进行了优化。</td>
 </tr>
 <tr>
 <td>PatchTST</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PatchTST_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_pretrained.pdparams">训练模型</a></td>
 <td>0.379</td>
 <td>0.391</td>
 <td>2.0M</td>
-<td>PatchTST是兼顾局部模式和全局依赖关系的高精度长时序预测模型</td>
+<td>PatchTST 是一个高精度的长期预测模型，能够平衡局部模式和全局依赖关系。</td>
 </tr>
 <tr>
 <td>TiDE</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/TiDE_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TiDE_pretrained.pdparams">训练模型</a></td>
 <td>0.407</td>
 <td>0.414</td>
 <td>31.7M</td>
-<td>TiDE是适用于处理多变量、长期的时间序列预测问题的高精度模型</td>
+<td>TiDE 是一个适合多变量、长期时间序列预测问题的高精度模型。</td>
 </tr>
 <tr>
 <td>TimesNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/TimesNet_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_pretrained.pdparams">训练模型</a></td>
 <td>0.416</td>
 <td>0.429</td>
 <td>4.9M</td>
-<td>通过多周期分析，TimesNet是适应性强的高精度时间序列分析模型</td>
+<td>通过多周期分析，TimesNet 是一个稳健且高精度的时间序列分析模型。</td>
 </tr>
 </tbody>
 </table>
 
-<b>注：以上精度指标测量自</b>[ETTH1](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/Etth1.tar)<b>测试数据集，输入序列长度为96，预测序列长度除 TiDE 外为96，TiDE为720 。</b>
+<b>注意：上述准确性指标是在</b>[ETTH1](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/Etth1.tar)<b>测试数据集上测量的，所有模型的输入序列长度为96，预测序列长度也为96，除了TiDE模型，其预测序列长度为720。</b>
 
 
 ## 三、快速集成
@@ -92,6 +91,7 @@ for res in output:
 ```
 
 运行后，得到的结果为：
+
 ```bash
 {'res': {'input_path': 'ts_fc.csv', 'forecast':                            OT
 date

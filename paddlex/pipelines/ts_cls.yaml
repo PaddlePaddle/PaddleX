@@ -1,7 +1,0 @@
-Global:
-  pipeline_name: ts_cls
-  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv
-  
-Pipeline:
-  model: TimesNet_cls
-  batch_size: 1

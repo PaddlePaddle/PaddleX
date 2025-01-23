@@ -601,6 +601,7 @@ class MarkdownMixin:
     def __init__(self, *args: list, **kwargs: dict):
         self._markdown_writer = MarkdownWriter(*args, **kwargs)
         self._save_funcs.append(self.save_to_markdown)
+        self.save_path = None
 
     @abstractmethod
     def _to_markdown(self):

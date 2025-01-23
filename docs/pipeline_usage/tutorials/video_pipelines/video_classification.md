@@ -7,10 +7,11 @@ comments: true
 ## 1. 通用视频分类产线介绍
 视频分类是一种将视频片段分配到预定义类别的技术。它广泛应用于动作识别、事件检测和内容推荐等领域。视频分类可以识别各种动态事件和场景，如体育活动、自然现象、交通状况等，并根据其特征将其归类。通过使用深度学习模型，尤其是卷积神经网络（CNN）和循环神经网络（RNN）的结合，视频分类能够自动提取视频中的时空特征并进行准确分类。这种技术在视频监控、媒体检索和个性化推荐系统中具有重要应用.
 
+通用视频分类产线用于解决视频分类任务，提取视频中的主题和类别信息以标签形式输出，本产线是一个集成了业界知名的 PP-TSM 和 PP-TSMv2的视频分类系统，支持400种视频类别的识别。基于本产线，可实现视频内容的精准分类，使用场景覆盖媒体、安防、教育、交通等各个领域。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
+
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/video_classification/01.jpg">
 <b>通用视频分类产线中包含了视频分类模块，如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型</b>。
 
-<details><summary> 👉模型列表详情</summary>
 
 
 <table>
@@ -21,7 +22,7 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>PPTSM_ResNet50_k400_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PPTSM_ResNet50_k400_8frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PPTSM_ResNet50_k400_8frames_uniform_pretrained.pdparams">训练模型</a></td>
+<td>PP-TSM-R50_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSM-R50_8frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSM-R50_8frames_uniform_pretrained.pdparams">训练模型</a></td>
 <td>74.36</td>
 <td>93.4 M</td>
 <td rowspan="1">
@@ -30,13 +31,13 @@ PP-TSM是一种百度飞桨视觉团队自研的视频分类模型。该模型�
 </tr>
 
 <tr>
-<td>PPTSMv2_LCNet_k400_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PPTSMv2_LCNet_k400_8frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PPTSMv2_LCNet_k400_8frames_uniform_pretrained.pdparams">训练模型</a></td>
+<td>PP-TSMv2-LCNetV2_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_8frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_8frames_uniform_pretrained.pdparams">训练模型</a></td>
 <td>71.71</td>
 <td>22.5 M</td>
 <td rowspan="2">PP-TSMv2是轻量化的视频分类模型，基于CPU端模型PP-LCNetV2进行优化，从骨干网络与预训练模型选择、数据增强、tsm模块调优、输入帧数优化、解码速度优化、DML蒸馏、LTA模块等7个方面进行模型调优，在中心采样评估方式下，精度达到75.16%，输入10s视频在CPU端的推理速度仅需456ms。</td>
 </tr>
 <tr>
-<td>PPTSMv2_LCNet_k400_16frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PPTSMv2_LCNet_k400_16frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PPTSMv2_LCNet_k400_16frames_uniform_pretrained.pdparams">训练模型</a></td>
+<td>PP-TSMv2-LCNetV2_16frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_16frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_16frames_uniform_pretrained.pdparams">训练模型</a></td>
 <td>73.11</td>
 <td>22.5 M</td>
 </tr>
@@ -55,59 +56,44 @@ PaddleX 支持在本地使用命令行或 Python 体验产线的效果。
 一行命令即可快速体验视频分类产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/general_video_classification_001.mp4)，并将 `--input` 替换为本地路径，进行预测
 
 ```bash
-paddlex --pipeline video_classification --input general_video_classification_001.mp4 --device gpu:0
+paddlex --pipeline video_classification \
+    --input general_video_classification_001.mp4 \
+    --topk 5 \
+    --save_path ./output \
+    --device gpu:0
 ```
-参数说明：
+相关的参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的参数说明。
 
+运行后，会将结果打印到终端上，结果如下：
+```bash
+{'res': {'input_path': 'general_video_classification_001.mp4', 'class_ids': array([  0, 278,  68, 272, 162], dtype=int32), 'scores': [0.91996, 0.07055, 0.00235, 0.00215, 0.00158], 'label_names': ['abseiling', 'rock_climbing', 'climbing_tree', 'riding_mule', 'ice_climbing']}}
 ```
---pipeline：产线名称，此处为视频分类产线
---input：待处理的输入视频的本地路径或URL
---device 使用的GPU序号（例如gpu:0表示使用第0块GPU，gpu:1,2表示使用第1、2块GPU），也可选择使用CPU（--device cpu）
-```
+运行结果参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的结果解释。
 
-在执行上述 Python 脚本时，加载的是默认的视频分类产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
 
-<details><summary> 👉点击展开</summary>
+可视化结果保存在`save_path`下，其中视频分类的可视化结果如下：
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/video_classification/02.jpg" style="width: 70%">
 
-<pre><code>paddlex --get_pipeline_config video_classification
-</code></pre>
-<p>执行后，视频分类产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为 <code>./my_path</code> ）：</p>
-<pre><code>paddlex --get_pipeline_config video_classification --save_path ./my_path
-</code></pre>
-<p>获取产线配置文件后，可将 <code>--pipeline</code> 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 <code>./video_classification.yaml</code>，只需执行：</p>
-<pre><code class="language-bash">paddlex --pipeline ./video_classification.yaml --input general_video_classification_001.mp4 --device gpu:0
-</code></pre>
-<p>其中，<code>--model</code>、<code>--device</code> 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。</p></details>
-
-运行后，得到的结果为：
-
-```
-{'input_path': 'general_video_classification_001.mp4', 'class_ids': [0], 'scores': array([0.91996]), 'label_names': ['abseiling']}
-```
-
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/video_classification/02.jpg">
-
-可视化视频默认不进行保存，您可以通过 `--save_path` 自定义保存路径，随后所有结果将被保存在指定路径下。
 
 #### 2.2 Python脚本方式集成
-几行代码即可完成产线的快速推理，以通用视频分类产线为例：
+* 上述命令行是为了快速体验查看效果，一般来说，在项目中，往往需要通过代码集成，您可以通过几行代码即可完成产线的快速推理，推理代码如下：
 
 ```
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="video_classification")
 
-output = pipeline.predict("general_video_classification_001.mp4")
+output = pipeline.predict("general_video_classification_001.mp4", topk=5)
 for res in output:
-    res.print() ## 打印预测的结构化输出
-    res.save_to_video("./output/") ## 保存结果可视化视频
-    res.save_to_json("./output/") ## 保存预测的结构化输出
+    res.print()
+    res.save_to_video(save_path="./output/")
+    res.save_to_json(save_path="./output/")
 ```
-得到的结果与命令行方式相同。
+
 
 在上述 Python 脚本中，执行了如下几个步骤：
 
-（1）实例化 `create_pipeline` 实例化产线对象：具体参数说明如下：
+（1）通过 `create_pipeline()` 实例化 视频分类产线对象，具体参数说明如下：
 
 <table>
 <thead>
@@ -123,13 +109,13 @@ for res in output:
 <td><code>pipeline</code></td>
 <td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
 <td><code>str</code></td>
-<td>无</td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>产线模型推理设备。支持：“gpu”，“cpu”。</td>
+<td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
 <td><code>str</code></td>
-<td><code>gpu</code></td>
+<td><code>gpu:0</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
@@ -139,85 +125,183 @@ for res in output:
 </tr>
 </tbody>
 </table>
-（2）调用视频分类产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`x`，用于输入待预测数据，支持多种输入方式，具体示例如下：
+
+（2）调用 通用视频分类产线对象的 `predict()` 方法进行推理预测。该方法将返回一个 `generator`。以下是 `predict()` 方法的参数及其说明：
 
 <table>
 <thead>
 <tr>
-<th>参数类型</th>
+<th>参数</th>
 <th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Python Var</td>
-<td>支持直接传入Python变量，如numpy.ndarray表示的视频数据。</td>
+<td><code>input</code></td>
+<td>待预测数据，支持多种输入类型，必填</td>
+<td><code>str|list</code></td>
+<td>
+<ul>
+  <li><b>str</b>：如视频文件的本地路径：<code>/root/data/video.mp4</code>；<b>如URL链接</b>，如视频文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/general_video_classification_001.mp4">示例</a>；<b>如本地目录</b>，该目录下需包含待预测视频，如本地路径：<code>/root/data/</code></li>
+  <li><b>List</b>：列表元素需为上述类型数据，如 <code>[\"/root/data/video1.mp4\", \"/root/data/video2.mp4\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td>str</td>
-<td>支持传入待预测数据文件路径，如视频文件的本地路径：<code>/root/data/video.mp4</code>。</td>
+<td><code>device</code></td>
+<td>产线推理设备</td>
+<td><code>str|None</code></td>
+<td>
+<ul>
+  <li><b>CPU</b>：如 <code>cpu</code> 表示使用 CPU 进行推理；</li>
+  <li><b>GPU</b>：如 <code>gpu:0</code> 表示使用第 1 块 GPU 进行推理；</li>
+  <li><b>NPU</b>：如 <code>npu:0</code> 表示使用第 1 块 NPU 进行推理；</li>
+  <li><b>XPU</b>：如 <code>xpu:0</code> 表示使用第 1 块 XPU 进行推理；</li>
+  <li><b>MLU</b>：如 <code>mlu:0</code> 表示使用第 1 块 MLU 进行推理；</li>
+  <li><b>DCU</b>：如 <code>dcu:0</code> 表示使用第 1 块 DCU 进行推理；</li>
+  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化时，会优先使用本地的 GPU 0号设备，如果没有，则使用 CPU 设备；</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td>str</td>
-<td>支持传入待预测数据文件URL，如视频文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/general_video_classification_001.mp4">示例</a>。</td>
+<td><code> topk</code></td>
+<td>预测结果的前 <code>topk</code> 个类别和对应的分类概率</td>
+<td><code>int|None</code></td>
+<td>
+<ul>
+    <li><b>int</b>：大于 <code>0</code> 的任意整数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>1</code>。</td>
+</ul>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
-<tr>
-<td>str</td>
-<td>支持传入本地目录，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code>。</td>
-</tr>
-<tr>
-<td>dict</td>
-<td>支持传入字典类型，字典的key需与具体任务对应，如视频分类任务对应\"video\"，字典的val支持上述类型数据，例如：<code>{\"video\": \"/root/data1\"}</code>。</td>
-</tr>
-<tr>
-<td>list</td>
-<td>支持传入列表，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]，[\"/root/data/video1.mp4\", \"/root/data/video2.mp4\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"video\": \"/root/data1\"}, {\"video\": \"/root/data2/video.mp4\"}]</code>。</td>
-</tr>
+
 </tbody>
 </table>
-（3）调用`predict`方法获取预测结果：`predict` 方法为`generator`，因此需要通过调用获得预测结果，`predict`方法以batch为单位对数据进行预测，因此预测结果为list形式表示的一组预测结果。
-
-（4）对预测结果进行处理：每个样本的预测结果均为`dict`类型，且支持打印，或保存为文件，支持保存的类型与具体产线相关，如：
+（3）对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为图片、保存为`json`文件的操作:
 
 <table>
 <thead>
 <tr>
 <th>方法</th>
-<th>说明</th>
-<th>方法参数</th>
+<th>方法说明</th>
+<th>参数</th>
+<th>参数类型</th>
+<th>参数说明</th>
+<th>默认值</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>print</td>
-<td>打印结果到终端</td>
-<td><code>- format_json</code>：bool类型，是否对输出内容进行使用json缩进格式化，默认为True；<br/><code>- indent</code>：int类型，json格式化设置，仅当format_json为True时有效，默认为4；<br/><code>- ensure_ascii</code>：bool类型，json格式化设置，仅当format_json为True时有效，默认为False；</td>
+<td rowspan = "3"><code>print()</code></td>
+<td rowspan = "3">打印结果到终端</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
+<td><code>True</code></td>
 </tr>
 <tr>
-<td>save_to_json</td>
-<td>将结果保存为json格式的文件</td>
-<td><code>- save_path</code>：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；<br/><code>- indent</code>：int类型，json格式化设置，默认为4；<br/><code>- ensure_ascii</code>：bool类型，json格式化设置，默认为False；</td>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
 </tr>
 <tr>
-<td>save_to_video</td>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan = "3"><code>save_to_json()</code></td>
+<td rowspan = "3">将结果保存为json格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_video()</code></td>
 <td>将结果保存为视频格式的文件</td>
-<td><code>- save_path</code>：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，支持目录或文件路径</td>
+<td>无</td>
 </tr>
-</tbody>
 </table>
-若您获取了配置文件，即可对视频分类产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
 
-例如，若您的配置文件保存在 `./my_path/video_classification*.yaml` ，则只需执行：
+- 调用`print()` 方法会将结果打印到终端，打印到终端的内容解释如下：
+
+    - `input_path`: `(str)` 待预测视频的输入路径
+    - `class_ids`: `(numpy.ndarray)` 视频分类的id 列表
+    - `scores`: `(List[float])` 视频分类的置信度分数列表
+    - `label_names`: `(List[str])` 视频分类的类别列表
+
+
+- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_video_basename}.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
+- 调用`save_to_video()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_video_basename}_res.{your_video_extension}`，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果视频，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一个视频)
+
+* 此外，也支持通过属性获取带结果的可视化视频和预测结果，具体如下：
+
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>属性说明</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "1"><code>json</code></td>
+<td rowspan = "1">获取预测的 <code>json</code> 格式的结果</td>
+</tr>
+<tr>
+<td rowspan = "2"><code>video</code></td>
+<td rowspan = "2">获取格式为 <code>dict</code> 的可视化视频</td>
+</tr>
+</table>
+
+- `json` 属性获取的预测结果为dict类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
+- `video` 属性返回的预测结果是一个字典类型的数据。其中，键为 `res`，对应的值是一个元组，元组的第一个值是可视化视频数组，维度是（视频帧数，视频高度，视频宽度，视频通道数）；第二个值是帧率。
+
+此外，您可以获取视频分类产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
 
 ```
+paddlex --get_pipeline_config video_classification --save_path ./my_path
+```
+
+若您获取了配置文件，即可对视频分类产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。示例如下：
+
+```python
 from paddlex import create_pipeline
+
 pipeline = create_pipeline(pipeline="./my_path/video_classification.yaml")
-output = pipeline.predict("general_video_classification_001.mp4")
+
+output = pipeline.predict("general_video_classification_001.mp4", topk=5)
 for res in output:
-    res.print() ## 打印预测的结构化输出
-    res.save_to_video("./output/") ## 保存结果可视化视频
-    res.save_to_json("./output/") ## 保存预测的结构化输出
+    res.print()
+    res.save_to_video(save_path="./output/")
+    res.save_to_json(save_path="./output/")
 ```
+<b>注：</b> 配置文件中的参数为产线初始化参数，如果希望更改通用视频分类产线初始化参数，可以直接修改配置文件中的参数，并加载配置文件进行预测。同时，CLI 预测也支持传入配置文件，`--pipeline` 指定配置文件的路径即可。
+
 ## 3. 开发集成/部署
 如果产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
 
@@ -768,34 +852,57 @@ print_r($result[&quot;categories&quot;]);
 如果通用视频分类产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升通用视频分类产线的在您的场景中的识别效果。
 
 ### 4.1 模型微调
-由于通用视频分类产线包含视频分类模块，如果模型产线的效果不及预期，那么您需要参考[视频分类模块开发教程](../../../module_usage/tutorials/video_modules/video_classification.md)中的[二次开发](../../../module_usage/tutorials/video_modules/video_classification.md#四二次开发)章节，使用您的私有数据集对视频分类模型进行微调。
+
+由于通用视频分类产线仅包含视频分类模块，模型产线的效果如果不及预期。您可以对识别效果差的视频进行分析，并参考以下表格中对应的微调教程链接进行模型微调。
+
+
+<table>
+  <thead>
+    <tr>
+      <th>情形</th>
+      <th>微调模块</th>
+      <th>微调参考链接</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>视频分类都不准</td>
+      <td>视频分类模块</td>
+      <td><a href="../../../module_usage/tutorials/video_modules/video_classification.md">链接</a></td>
+    </tr>
+
+  </tbody>
+</table>
 
 ### 4.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。
 
 若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径替换至产线配置文件中的对应位置即可：
 
-```
-......
-Pipeline:
-  model: PPTSMv2_LCNet_k400_8frames_uniform #可修改为微调后模型的本地路径
-  device: "gpu"
-  batch_size: 1
-......
+```yaml
+...
+SubModules:
+  VideoClassification:
+    module_name: video_classification
+    model_name: PP-TSMv2-LCNetV2_8frames_uniform
+    model_dir: null # 替换为微调后的视频分类模型权重路径
+    batch_size: 1
+    topk: 1
+
+...
 ```
 随后， 参考本地体验中的命令行方式或 Python 脚本方式，加载修改后的产线配置文件即可。
 
 ##  5. 多硬件支持
-PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device` 参数</b>即可完成不同硬件之间的无缝切换。
+PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device`参数</b>即可完成不同硬件之间的无缝切换。
 
-例如，您使用英伟达 GPU 进行视频分类产线的推理，使用的命令为：
-
-```bash
-paddlex --pipeline video_classification --input general_video_classification_001.mp4 --device gpu:0
-```
-此时，若您想将硬件切换为昇腾 NPU，仅需将 `--device` 修改为 npu:0 即可：
+例如，您使用昇腾 NPU 进行 视频分类产线的推理，使用的 Python 命令为：
 
 ```bash
-paddlex --pipeline video_classification --input general_video_classification_001.mp4 --device npu:0
+paddlex --pipeline video_classification \
+    --input general_video_classification_001.mp4 \
+    --topk 5 \
+    --save_path ./output \
+    --device npu:0
 ```
 若您想在更多种类的硬件上使用通用视频分类产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

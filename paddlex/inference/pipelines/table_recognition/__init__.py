@@ -12,4 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .table_recognition import _TableRecPipeline, TableRecPipeline
+from .pipeline import TableRecognitionPipeline
+from .pipeline_v2 import TableRecognitionPipelineV2

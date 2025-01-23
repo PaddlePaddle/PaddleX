@@ -1,4 +1,6 @@
-简体中文 | [English](human_keypoint_detection.en.md)
+---
+comments: true
+---
 
 # 人体关键点检测模块使用教程
 
