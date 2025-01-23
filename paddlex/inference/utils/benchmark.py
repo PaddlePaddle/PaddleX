@@ -61,12 +61,7 @@ class Benchmark(metaclass=Singleton):
 
     def gather(self, e2e_num):
         # lazy import for avoiding circular import
-        from ...utils.flags import NEW_PREDICTOR
-
-        if NEW_PREDICTOR:
-            from ..new_models.base import BasePaddlePredictor
-        else:
-            from ..models.common_components.paddle_predictor import BasePaddlePredictor
+        from ..new_models.base import BasePaddlePredictor
 
         detail = []
         summary = {"preprocess": 0, "inference": 0, "postprocess": 0}

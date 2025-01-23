@@ -73,7 +73,7 @@ tar -xf ./dataset/vehicle_attribute_examples.tar -C ./dataset/
 A single command can complete data validation:
 
 ```bash
-python main.py -c paddlex/configs/vehicle_attribute_recognition/PP-LCNet_x1_0_vehicle_attribute.yaml \
+python main.py -c paddlex/configs/modules/vehicle_attribute_recognition/PP-LCNet_x1_0_vehicle_attribute.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/vehicle_attribute_examples
 ```
@@ -161,13 +161,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/vehicle_attribute_recognition/PP-LCNet_x1_0_vehicle_attribute.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/vehicle_attribute_recognition/PP-LCNet_x1_0_vehicle_attribute.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/vehicle_attribute_examples
 </code></pre>
 <p>After dataset splitting, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters can also be set by appending command-line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/vehicle_attribute_recognition/PP-LCNet_x1_0_vehicle_attribute.yaml  \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/vehicle_attribute_recognition/PP-LCNet_x1_0_vehicle_attribute.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/vehicle_attribute_examples \
     -o CheckDataset.split.enable=True \
@@ -179,7 +179,7 @@ CheckDataset:
 Training a model can be done with a single command, taking the training of the PP-LCNet vehicle attribute recognition model (`PP-LCNet_x1_0_vehicle_attribute`) as an example:
 
 ```bash
-python main.py -c paddlex/configs/vehicle_attribute_recognition/PP-LCNet_x1_0_vehicle_attribute.yaml \
+python main.py -c paddlex/configs/modules/vehicle_attribute_recognition/PP-LCNet_x1_0_vehicle_attribute.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/vehicle_attribute_examples
 ```
@@ -210,7 +210,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 After completing model training, you can evaluate the specified model weights file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation can be done with a single command:
 
 ```bash
-python main.py -c paddlex/configs/vehicle_attribute_recognition/PP-LCNet_x1_0_vehicle_attribute.yaml  \
+python main.py -c paddlex/configs/modules/vehicle_attribute_recognition/PP-LCNet_x1_0_vehicle_attribute.yaml  \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/vehicle_attribute_examples
 ```
@@ -235,7 +235,7 @@ After completing model training and evaluation, you can use the trained model we
 To perform inference prediction through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_attribute_007.jpg) to your local machine.
 
 ```bash
-python main.py -c paddlex/configs/vehicle_attribute_recognition/PP-LCNet_x1_0_vehicle_attribute.yaml \
+python main.py -c paddlex/configs/modules/vehicle_attribute_recognition/PP-LCNet_x1_0_vehicle_attribute.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="vehicle_attribute_007.jpg"

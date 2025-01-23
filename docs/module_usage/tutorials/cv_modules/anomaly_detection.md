@@ -217,7 +217,6 @@ for res in output:
 
 关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 
-关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 
 ## 四、二次开发
 如果你追求更高精度的现有模型，可以使用PaddleX的二次开发能力，开发更好的图像异常检测模型。在使用PaddleX开发图像异常检测模型之前，请务必安装PaddleSeg插件，安装过程可以参考[PaddleX本地安装教程](../../../installation/installation.md)。
@@ -237,7 +236,7 @@ tar -xf ./dataset/mvtec_examples.tar -C ./dataset/
 一行命令即可完成数据校验：
 
 ```bash
-python main.py -c paddlex/configs/image_anomaly_detection/STFPM.yaml \
+python main.py -c paddlex/configs/modules/image_anomaly_detection/STFPM.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/mvtec_examples
 ```
@@ -284,7 +283,7 @@ python main.py -c paddlex/configs/image_anomaly_detection/STFPM.yaml \
 一条命令即可完成模型的训练，以此处STFPM的训练为例：
 
 ```bash
-python main.py -c paddlex/configs/image_anomaly_detection/STFPM.yaml \
+python main.py -c paddlex/configs/modules/image_anomaly_detection/STFPM.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/mvtec_examples
 ```
@@ -315,7 +314,7 @@ python main.py -c paddlex/configs/image_anomaly_detection/STFPM.yaml \
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ```bash
-python main.py -c paddlex/configs/image_anomaly_detection/STFPM.yaml \
+python main.py -c paddlex/configs/modules/image_anomaly_detection/STFPM.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/mvtec_examples
 ```
@@ -337,7 +336,7 @@ python main.py -c paddlex/configs/image_anomaly_detection/STFPM.yaml \
 #### 4.4.1 模型推理
 * 通过命令行的方式进行推理预测，只需如下一条命令，运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png)到本地。
 ```bash
-python main.py -c paddlex/configs/image_anomaly_detection/STFPM.yaml \
+python main.py -c paddlex/configs/modules/image_anomaly_detection/STFPM.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="uad_grid.png"

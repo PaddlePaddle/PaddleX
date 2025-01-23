@@ -56,17 +56,104 @@ After installing the wheel package, you can complete the inference of the small 
 
 ```python
 from paddlex import create_model
-
 model_name = "PP-YOLOE_plus_SOD-S"
-
 model = create_model(model_name)
 output = model.predict("small_object_detection.jpg", batch_size=1)
-
 for res in output:
-    res.print(json_format=False)
+    res.print()
     res.save_to_img("./output/")
     res.save_to_json("./output/res.json")
 ```
+
+After running, the result obtained is:
+
+```bash
+{'res': "{'input_path': 'small_object_detection.jpg', 'boxes': [{'cls_id': 0, 'label': 'pedestrian', 'score': 0.8025697469711304, 'coordinate': [184.14276, 709.97455, 203.60669, 745.6286]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.7245782017707825, 'coordinate': [203.48488, 700.377, 223.07726, 742.5181]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.7014670968055725, 'coordinate': [851.23553, 435.81937, 862.94385, 466.81384]}, ... ]}"}
+```
+
+* The prediction results are processed as `dict` type for each sample, and support operations such as printing, saving as an image, and saving as a `json` file:
+
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+<th>Parameter</th>
+<th>Parameter Type</th>
+<th>Parameter Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print the result to the terminal</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>Whether to format the output content with <code>JSON</code> indentation</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save the result as a file in <code>json</code> format</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving. When it is a directory, the saved file name will match the input file name</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>Save the result as a file in image format</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving. When it is a directory, the saved file name will match the input file name</td>
+<td>None</td>
+</tr>
+</table>
+
+* Additionally, it also supports obtaining the visualization image with results and the prediction results through attributes, as follows:
+
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format</td>
+</tr>
+<tr>
+<td rowspan="1"><code>img</code></td>
+<td rowspan="1">Get the visualization image in <code>dict</code> format</td>
+</tr>
+</table>
+
+
 For more information on using PaddleX's single-model inference API, refer to the [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.en.md).
 
 ## IV. Custom Development
@@ -88,7 +175,7 @@ tar -xf ./dataset/small_det_examples.tar -C ./dataset/
 You can complete data validation with a single command:
 
 ```bash
-python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
+python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/small_det_examples
 ```
@@ -158,12 +245,12 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./path/to/your_smallobject_labelme_dataset
 </code></pre>
 <p>Of course, the above parameters also support being set by appending command line arguments. Taking a <code>LabelMe</code> format dataset as an example:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./path/to/your_smallobject_labelme_dataset \
     -o CheckDataset.convert.enable=True \
@@ -188,13 +275,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/small_det_examples
 </code></pre>
 <p>After dataset splitting, the original annotation files will be renamed to <code>xxx.bak</code> in their original paths.</p>
 <p>The above parameters can also be set by appending command-line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml  \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-S.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/small_det_examples \
     -o CheckDataset.split.enable=True \
@@ -206,7 +293,7 @@ CheckDataset:
 Model training can be completed with a single command, taking the training of `PP-YOLOE_plus_SOD-S` as an example:
 
 ```bash
-python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
+python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/small_det_examples \
     -o Train.num_classes=10
@@ -238,7 +325,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation, you can complete the evaluation with a single command:
 
 ```bash
-python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
+python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/small_det_examples
 ```
@@ -260,7 +347,7 @@ After completing model training and evaluation, you can use the trained model we
 #### 4.4.1 Model Inference
 * To perform inference predictions through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg) to your local machine.
 ```bash
-python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
+python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-S.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="small_object_detection.jpg"

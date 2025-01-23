@@ -283,13 +283,13 @@ Additionally, PaddleX provides three other deployment methods, detailed as follo
 
 🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end speedups. For detailed high-performance inference procedures, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy.en.md).
+☁️ <b>Serving</b>: Serving is a common deployment strategy in real-world production environments. By encapsulating inference functions into services, clients can access these services via network requests to obtain inference results. PaddleX supports various solutions for serving pipelines. For detailed pipeline serving procedures, please refer to the [PaddleX Pipeline Serving Guide](../../../pipeline_deploy/serving.md).
 
-Below are the API references and multi-language service invocation examples:
+Below are the API reference and multi-language service invocation examples for the basic serving solution:
 
 <details><summary>API Reference</summary>
 
-<p>For main operations provided by the service:</p>
+<p>For primary operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
 <li>The request body and the response body are both JSON data (JSON objects).</li>
@@ -355,7 +355,7 @@ Below are the API references and multi-language service invocation examples:
 </tr>
 </tbody>
 </table>
-<p>Main operations provided by the service:</p>
+<p>Primary operations provided by the service:</p>
 <ul>
 <li><b><code>infer</code></b></li>
 </ul>
@@ -377,38 +377,13 @@ Below are the API references and multi-language service invocation examples:
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>The URL of an image file or PDF file accessible by the service, or the Base64 encoded result of the content of the above-mentioned file types. For PDF files with more than 10 pages, only the content of the first 10 pages will be used.</td>
+<td>The URL of an image file or PDF file accessible by the server, or the Base64 encoded result of the content of the above-mentioned file types. For PDF files with more than 10 pages, only the content of the first 10 pages will be used.</td>
 <td>Yes</td>
 </tr>
 <tr>
 <td><code>fileType</code></td>
 <td><code>integer</code></td>
-<td>File type. <code>0</code> indicates a PDF file, and <code>1</code> indicates an image file. If this property is not present in the request body, the service will attempt to infer the file type automatically based on the URL.</td>
-<td>No</td>
-</tr>
-<tr>
-<td><code>inferenceParams</code></td>
-<td><code>object</code></td>
-<td>Inference parameters.</td>
-<td>No</td>
-</tr>
-</tbody>
-</table>
-<p>Properties of <code>inferenceParams</code>:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Required</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>maxLongSide</code></td>
-<td><code>integer</code></td>
-<td>During inference, if the length of the longer side of the input image for the layout detection model is greater than <code>maxLongSide</code>, the image will be scaled so that the length of the longer side equals <code>maxLongSide</code>.</td>
+<td>File type. <code>0</code> indicates a PDF file, and <code>1</code> indicates an image file. If this property is not present in the request body, the file type will be inferred based on the URL.</td>
 <td>No</td>
 </tr>
 </tbody>
@@ -461,11 +436,6 @@ Below are the API references and multi-language service invocation examples:
 <td><code>layoutImage</code></td>
 <td><code>string</code></td>
 <td>Layout area detection result image. The image is in JPEG format and encoded using Base64.</td>
-</tr>
-<tr>
-<td><code>ocrImage</code></td>
-<td><code>string</code></td>
-<td>OCR result image. The image is in JPEG format and encoded using Base64.</td>
 </tr>
 </tbody>
 </table>

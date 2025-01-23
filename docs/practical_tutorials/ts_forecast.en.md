@@ -489,5 +489,5 @@ For more parameters, please refer to the [Time Series forecast Pipeline Usage Tu
 
 2. Additionally, PaddleX's time series forecast pipeline also offers a service-oriented deployment method, detailed as follows:
 
-Service-Oriented Deployment: This is a common deployment form in actual production environments. By encapsulating the inference functionality as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving service-oriented deployment of pipelines at low cost. For detailed instructions on service-oriented deployment, please refer to the [PPaddleX Service-Oriented Deployment Guide](../pipeline_deploy/service_deploy.en.md).
+Service-Oriented Deployment: This is a common deployment form in actual production environments. By encapsulating the inference functionality as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving service-oriented deployment of pipelines at low cost. For detailed instructions on service-oriented deployment, please refer to the [PPaddleX Service-Oriented Deployment Guide](../pipeline_deploy/serving.en.md).
 You can choose the appropriate method to deploy your model pipeline based on your needs, and proceed with subsequent AI application integration.

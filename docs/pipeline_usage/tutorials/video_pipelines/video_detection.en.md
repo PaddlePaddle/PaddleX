@@ -217,13 +217,13 @@ Additionally, PaddleX provides three other deployment methods, detailed as follo
 
 🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end speedups. For detailed high-performance inference procedures, refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving low-cost service-oriented deployment of pipelines. For detailed service-oriented deployment procedures, refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/service_deploy.en.md).
+☁️ <b>Serving</b>: Serving is a common deployment strategy in real-world production environments. By encapsulating inference functions into services, clients can access these services via network requests to obtain inference results. PaddleX supports various solutions for serving pipelines. For detailed pipeline serving procedures, please refer to the [PaddleX Pipeline Serving Guide](../../../pipeline_deploy/serving.md).
 
-Below are the API references and multi-language service invocation examples:
+Below are the API reference and multi-language service invocation examples for the basic serving solution:
 
 <details><summary>API Reference</summary>
 
-<p>For main operations provided by the service:</p>
+<p>For primary operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
 <li>The request body and the response body are both JSON data (JSON objects).</li>
@@ -239,6 +239,11 @@ Below are the API references and multi-language service invocation examples:
 </thead>
 <tbody>
 <tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>UUID for the request.</td>
+</tr>
+<tr>
 <td><code>errorCode</code></td>
 <td><code>integer</code></td>
 <td>Error code. Fixed as <code>0</code>.</td>
@@ -246,11 +251,15 @@ Below are the API references and multi-language service invocation examples:
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error message. Fixed as <code>"Success"</code>.</td>
+<td>Error description. Fixed as <code>"Success"</code>.</td>
+</tr>
+<tr>
+<td><code>result</code></td>
+<td><code>object</code></td>
+<td>Operation result.</td>
 </tr>
 </tbody>
 </table>
-<p>The response body may also have a <code>result</code> property of type <code>object</code>, which stores the operation result information.</p>
 <ul>
 <li>When the request is not processed successfully, the response body properties are as follows:</li>
 </ul>
@@ -264,6 +273,11 @@ Below are the API references and multi-language service invocation examples:
 </thead>
 <tbody>
 <tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>UUID for the request.</td>
+</tr>
+<tr>
 <td><code>errorCode</code></td>
 <td><code>integer</code></td>
 <td>Error code. Same as the response status code.</td>
@@ -271,11 +285,11 @@ Below are the API references and multi-language service invocation examples:
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error message.</td>
+<td>Error description.</td>
 </tr>
 </tbody>
 </table>
-<p>Main operations provided by the service are as follows:</p>
+<p>Primary operations provided by the service are as follows:</p>
 <ul>
 <li><b><code>infer</code></b></li>
 </ul>
@@ -297,7 +311,7 @@ Below are the API references and multi-language service invocation examples:
 <tr>
 <td><code>video</code></td>
 <td><code>string</code></td>
-<td>The URL of an video file accessible by the service or the Base64 encoded result of the video file content.</td>
+<td>The URL of an video file accessible by the server or the Base64 encoded result of the video file content.</td>
 <td>Yes</td>
 </tr>
 <tr>

@@ -9,7 +9,6 @@ comments: true
 
 ## 二、支持模型列表
 
-<details><summary> 👉模型列表详情</summary>
 
 <table>
 <thead>
@@ -44,7 +43,7 @@ comments: true
 </tr>
 </tbody>
 </table>
-<p>注：以上精度指标是分别在AgeDB-30、CFP-FP和LFW数据集上测得的Accuracy。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</p></details>
+<p>注：以上精度指标是分别在AgeDB-30、CFP-FP和LFW数据集上测得的Accuracy。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</p>
 
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
@@ -241,7 +240,7 @@ tar -xf ./dataset/face_rec_examples.tar -C ./dataset/
 一行命令即可完成数据校验：
 
 ```bash
-python main.py -c paddlex/configs/face_feature/MobileFaceNet.yaml \
+python main.py -c paddlex/configs/modules/face_feature/MobileFaceNet.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/face_rec_examples
 ```
@@ -342,7 +341,7 @@ images/Miyako_Miyazaki_0002.jpg images/Munir_Akram_0002.jpg 0
 一条命令即可完成模型的训练，以此处MobileFaceNet的训练为例：
 
 ```bash
-python main.py -c paddlex/configs/face_feature/MobileFaceNet.yaml \
+python main.py -c paddlex/configs/modules/face_feature/MobileFaceNet.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/face_rec_examples
 ```
@@ -374,7 +373,7 @@ python main.py -c paddlex/configs/face_feature/MobileFaceNet.yaml \
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ```bash
-python main.py -c paddlex/configs/face_feature/MobileFaceNet.yaml \
+python main.py -c paddlex/configs/modules/face_feature/MobileFaceNet.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/face_rec_examples
 ```
@@ -396,7 +395,7 @@ python main.py -c paddlex/configs/face_feature/MobileFaceNet.yaml \
 #### 4.4.1 模型推理
 * 通过命令行的方式进行推理预测，只需如下一条命令，运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/face_recognition_001.jpg)到本地。
 ```bash
-python main.py -c paddlex/configs/face_feature/MobileFaceNet.yaml \
+python main.py -c paddlex/configs/modules/face_feature/MobileFaceNet.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="face_recognition_001.jpg"
