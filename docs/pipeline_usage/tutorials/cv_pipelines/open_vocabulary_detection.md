@@ -2,215 +2,77 @@
 comments: true
 ---
 
-# 通用实例分割产线使用教程
+# 开放词汇检测产线使用教程
 
-## 1. 通用实例分割产线介绍
-实例分割是一种计算机视觉任务，它不仅要识别图像中的物体类别，还要区分同一类别中不同实例的像素，从而实现对每个物体的精确分割。实例分割可以在同一图像中分别标记出每一辆车、每一个人或每一只动物，确保它们在像素级别上被独立处理。例如，在一幅包含多辆车和行人的街景图像中，实例分割能够将每辆车和每个人的轮廓清晰地分开，形成多个独立的区域标签。这项技术广泛应用于自动驾驶、视频监控和机器人视觉等领域，通常依赖于深度学习模型（如Mask R-CNN等），通过卷积神经网络来实现高效的像素分类和实例区分，为复杂场景的理解提供了强大的支持。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
+## 1. 开放词汇检测产线介绍
+开放词汇目标检测是当前一种先进的目标检测技术，旨在突破传统目标检测的局限性。传统方法仅能识别预定义类别的物体，而开放词汇目标检测允许模型识别未在训练中出现的物体。通过结合自然语言处理技术，利用文本描述来定义新的类别，模型能够识别和定位这些新物体。这使得目标检测更具灵活性和泛化能力，具有重要的应用前景。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。本产线目前不支持对模型的二次开发，计划在后续支持。
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/instance_segmentation/01.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/open_vocabulary_detection/open_vocabulary_detection_res.jpg">
 
-<b>通用实例分割产线中包含了实例分割模块，该模块都包含多个模型，您可以根据下方的基准测试数据选择使用的模型</b>。
+<b>通用开放词汇检测产线中包含了开放词汇检测模块，您可以根据下方的基准测试数据选择使用的模型</b>。
 
 <b>如果您更注重模型的精度，请选择精度较高的模型；如果您更在意模型的推理速度，请选择推理速度较快的模型；如果您关注模型的存储大小，请选择存储体积较小的模型。</b>
 
-<p><b>通用图像实例分割模块（可选）：</b></p>
+<p><b>通用图像开放词汇检测模块（可选）：</b></p>
+
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
-<th>Mask AP</th>
+<th>mAP(0.5:0.95)</th>
+<th>mAP(0.5)</th>
 <th>GPU推理耗时（ms）</th>
 <th>CPU推理耗时 (ms)</th>
 <th>模型存储大小（M）</th>
 <th>介绍</th>
 </tr>
 <tr>
-<td>Mask-RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-H_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-H_pretrained.pdparams">训练模型</a></td>
-<td>50.6</td>
-<td>132.693</td>
-<td>4896.17</td>
-<td>449.9 M</td>
-<td rowspan="5">Mask-RT-DETR 是一种基于RT-DETR的实例分割模型，通过采用最优性能的更好的PP-HGNetV2作为骨干网络，构建了MaskHybridEncoder编码器，引入了IOU-aware Query Selection 技术，使其在相同推理耗时上取得了SOTA实例分割精度。</td>
-</tr>
-<tr>
-<td>Mask-RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-L_pretrained.pdparams">训练模型</a></td>
-<td>45.7</td>
-<td>46.5059</td>
-<td>2575.92</td>
-<td>113.6 M</td>
-</tr>
-</table>
-<p><b>注：以上精度指标为<a href="https://cocodataset.org/#home">COCO2017</a>验证集 Mask AP。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p></details>
-
-> ❗ 以上列出的是实例分割模块重点支持的<b>2个核心模型</b>，该模块总共支持<b>15个模型</b>，完整的模型列表如下：
-
-<details><summary> 👉模型列表详情</summary>
-
-<table>
-<tr>
-<th>模型</th><th>模型下载链接</th>
-<th>Mask AP</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
-<th>模型存储大小（M）</th>
-<th>介绍</th>
-</tr>
-<tr>
-<td>Cascade-MaskRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Cascade-MaskRCNN-ResNet50-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-MaskRCNN-ResNet50-FPN_pretrained.pdparams">训练模型</a></td>
-<td>36.3</td>
-<td>-</td>
-<td>-</td>
-<td>254.8 M</td>
-<td rowspan="2">Cascade-MaskRCNN 是一种改进的Mask RCNN实例分割模型，通过级联多个检测器，利用不同IOU阈值优化分割结果，解决检测与推理阶段的mismatch问题，提高了实例分割的准确性。</td>
-</tr>
-<tr>
-<td>Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">训练模型</a></td>
-<td>39.1</td>
-<td>-</td>
-<td>-</td>
-<td>254.7 M</td>
-</tr>
-<tr>
-<td>Mask-RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-H_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-H_pretrained.pdparams">训练模型</a></td>
-<td>50.6</td>
-<td>132.693</td>
-<td>4896.17</td>
-<td>449.9 M</td>
-<td rowspan="5">Mask-RT-DETR 是一种基于RT-DETR的实例分割模型，通过采用最优性能的更好的PP-HGNetV2作为骨干网络，构建了MaskHybridEncoder编码器，引入了IOU-aware Query Selection 技术，使其在相同推理耗时上取得了SOTA实例分割精度。</td>
-</tr>
-<tr>
-<td>Mask-RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-L_pretrained.pdparams">训练模型</a></td>
-<td>45.7</td>
-<td>46.5059</td>
-<td>2575.92</td>
-<td>113.6 M</td>
-</tr>
-<tr>
-<td>Mask-RT-DETR-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-M_pretrained.pdparams">训练模型</a></td>
-<td>42.7</td>
-<td>36.8329</td>
-<td>-</td>
-<td>66.6 M</td>
-</tr>
-<tr>
-<td>Mask-RT-DETR-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-S_pretrained.pdparams">训练模型</a></td>
-<td>41.0</td>
-<td>33.5007</td>
-<td>-</td>
-<td>51.8 M</td>
-</tr>
-<tr>
-<td>Mask-RT-DETR-X</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-X_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-X_pretrained.pdparams">训练模型</a></td>
-<td>47.5</td>
-<td>75.755</td>
-<td>3358.04</td>
-<td>237.5 M</td>
-</tr>
-<tr>
-<td>MaskRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MaskRCNN-ResNet50-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50-FPN_pretrained.pdparams">训练模型</a></td>
-<td>35.6</td>
-<td>-</td>
-<td>-</td>
-<td>157.5 M</td>
-<td rowspan="6">Mask R-CNN是由华盛顿首例即现投影卡的一个全任务深度学习模型，能够在一个模型中完成图片实例的分类和定位，并结合图像级的遮罩（Mask）来完成分割任务。</td>
-</tr>
-<tr>
-<td>MaskRCNN-ResNet50-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MaskRCNN-ResNet50-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50-vd-FPN_pretrained.pdparams">训练模型</a></td>
-<td>36.4</td>
-<td>-</td>
-<td>-</td>
-<td>157.5 M</td>
-</tr>
-<tr>
-<td>MaskRCNN-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MaskRCNN-ResNet50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50_pretrained.pdparams">训练模型</a></td>
-<td>32.8</td>
-<td>-</td>
-<td>-</td>
-<td>128.7 M</td>
-</tr>
-<tr>
-<td>MaskRCNN-ResNet101-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MaskRCNN-ResNet101-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet101-FPN_pretrained.pdparams">训练模型</a></td>
-<td>36.6</td>
-<td>-</td>
-<td>-</td>
-<td>225.4 M</td>
-</tr>
-<tr>
-<td>MaskRCNN-ResNet101-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MaskRCNN-ResNet101-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet101-vd-FPN_pretrained.pdparams">训练模型</a></td>
-<td>38.1</td>
-<td>-</td>
-<td>-</td>
-<td>225.1 M</td>
-</tr>
-<tr>
-<td>MaskRCNN-ResNeXt101-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MaskRCNN-ResNeXt101-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNeXt101-vd-FPN_pretrained.pdparams">训练模型</a></td>
-<td>39.5</td>
-<td>-</td>
-<td>-</td>
-<td>370.0 M</td>
-<td></td>
-</tr>
-<tr>
-<td>PP-YOLOE_seg-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-YOLOE_seg-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_seg-S_pretrained.pdparams">训练模型</a></td>
-<td>32.5</td>
-<td>-</td>
-<td>-</td>
-<td>31.5 M</td>
-<td>PP-YOLOE_seg 是一种基于PP-YOLOE的实例分割模型。该模型沿用了PP-YOLOE的backbone和head，通过设计PP-YOLOE实例分割头，大幅提升了实例分割的性能和推理速度。</td>
-</tr>
-<tr>
-<td>SOLOv2</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SOLOv2_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SOLOv2_pretrained.pdparams">训练模型</a></td>
-<td>35.5</td>
-<td>-</td>
-<td>-</td>
-<td>179.1 M</td>
-<td> SOLOv2 是一种按位置分割物体的实时实例分割算法。该模型是SOLO的改进版本，通过引入掩码学习和掩码NMS，实现了精度和速度上取得良好平衡。</td>
+<td>GroundingDINO-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/GroundingDINO-T_infer.tar">推理模型</a></td>
+<td>49.4</td>
+<td>64.4</td>
+<td>253.72</td>
+<td>1807.4</td>
+<td>658.3</td>
+<td rowspan="3">基于O365,GoldG,Cap4M三个数据集训练的开放词汇目标目标检测模型。文本编码器采用Bert，视觉模型部份整体采用DINO，额外设计了一些跨模态融合模块，在开放词汇目标检测领域取得了较好的效果。</td>
 </tr>
 </table>
 
-<p><b>注：以上精度指标为<a href="https://cocodataset.org/#home">COCO2017</a>验证集 Mask AP。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p></details>
+<b>注：以上精度指标为 COCO val2017 验证集 mAP(0.5:0.95)。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32</b>。
 
 ## 2. 快速开始
-PaddleX 所提供的模型产线均可以快速体验效果，你可以在星河社区线体验通用 实例分割 产线的效果，也可以在本地使用命令行或 Python 体验通用 实例分割 产线的效果。
 
-### 2.1 在线体验
-您可以[在线体验](https://aistudio.baidu.com/community/app/100063/webUI)通用实例分割产线的效果，用官方提供的 demo 图片进行识别，例如：
+### 2.1 本地体验
+> ❗ 在本地使用通用开放词汇检测产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/instance_segmentation/02.png">
-
-如果您对产线运行的效果满意，可以直接进行集成部署。您可以选择从云端下载部署包，也可以参考[2.2节本地体验](#22-本地体验)中的方法进行本地部署。如果对效果不满意，您可以利用私有数据<b>对产线中的模型进行微调训练</b>。如果您具备本地训练的硬件资源，可以直接在本地开展训练；如果没有，星河零代码平台提供了一键式训练服务，无需编写代码，只需上传数据后，即可一键启动训练任务。
-
-### 2.2 本地体验
-> ❗ 在本地使用通用实例分割产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
-
-#### 2.2.1 命令行方式体验
-* 一行命令即可快速体验实例分割产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png)，并将 `--input` 替换为本地路径，进行预测
+#### 2.1.1 命令行方式体验
+* 一行命令即可快速体验开放词汇检测产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/open_vocabulary_detection.jpg)，并将 `--input` 替换为本地路径，进行预测
 
 ```bash
-paddlex --pipeline instance_segmentation \
-        --input general_instance_segmentation_004.png \
-        --threshold 0.5 \
+paddlex --pipeline open_vocabulary_detection \
+        --input open_vocabulary_detection.jpg \
+        --prompt "bus . walking man . rearview mirror ." \
+        --thresholds "{'text_threshold': 0.25, 'box_threshold': 0.3}" \
         --save_path ./output \
-        --device gpu:0 \
+        --device gpu:0
 ```
-相关的参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的参数说明。
+相关的参数说明可以参考[2.1.2 Python脚本方式集成](#212-python脚本方式集成)中的参数说明。
 
 运行后，会将结果打印到终端上，结果如下：
 ```bash
-{'res': {'input_path': 'general_instance_segmentation_004.png', 'page_index': None, 'boxes': [{'cls_id': 0, 'label': 'person', 'score': 0.8695873022079468, 'coordinate': [339.83426, 0, 639.8651, 575.22003]}, {'cls_id': 0, 'label': 'person', 'score': 0.8572642803192139, 'coordinate': [0.09976959, 0, 195.07274, 575.358]}, {'cls_id': 0, 'label': 'person', 'score': 0.8201770186424255, 'coordinate': [88.24664, 113.422424, 401.23077, 574.70197]}, {'cls_id': 0, 'label': 'person', 'score': 0.7110118269920349, 'coordinate': [522.54065, 21.457964, 767.5007, 574.2464]}, {'cls_id': 27, 'label': 'tie', 'score': 0.5543721914291382, 'coordinate': [247.38776, 312.4094, 355.2685, 574.1264]}], 'masks': '...'}}
+{'res': {'input_path': 'open_vocabulary_detection.jpg', 'page_index': None, 'boxes': [{'coordinate': [112.10542297363281, 117.93667602539062, 514.35693359375, 382.10150146484375], 'label': 'bus', 'score': 0.9348853230476379}, {'coordinate': [264.1828918457031, 162.6674346923828, 286.8844909667969, 201.86187744140625], 'label': 'rearview mirror', 'score': 0.6022508144378662}, {'coordinate': [606.1133422851562, 254.4973907470703, 622.56982421875, 293.7867126464844], 'label': 'walking man', 'score': 0.4384709894657135}, {'coordinate': [591.8192138671875, 260.2451171875, 607.3953247070312, 294.2210388183594], 'label': 'man', 'score': 0.3573091924190521}]}}
 ```
-运行结果参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的结果解释。
+运行结果参数说明可以参考[2.1.2 Python脚本方式集成](#212-python脚本方式集成)中的结果解释。
 
-可视化结果保存在`save_path`下，其中实例分割的可视化结果如下：
+可视化结果保存在`save_path`下，其中开放词汇检测的可视化结果如下：
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/instance_segmentation/03.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/open_vocabulary_detection/open_vocabulary_detection_res.jpg">
 
-#### 2.2.2 Python脚本方式集成
+#### 2.1.2 Python脚本方式集成
 * 上述命令行是为了快速体验查看效果，一般来说，在项目中，往往需要通过代码集成，您可以通过几行代码即可完成产线的快速推理，推理代码如下：
 
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline_name="instance_segmentation")
-output = pipeline.predict(input="general_instance_segmentation_004.png", threshold=0.5)
+pipeline = create_pipeline(pipeline_name="open_vocabulary_detection")
+output = pipeline.predict(input="open_vocabulary_detection.jpg", prompt="bus . walking man . rearview mirror .")
 for res in output:
     res.print()
     res.save_to_img(save_path="./output/")
@@ -219,7 +81,7 @@ for res in output:
 
 在上述 Python 脚本中，执行了如下几个步骤：
 
-（1）通过 `create_pipeline()` 实例化 实例分割 产线对象，具体参数说明如下：
+（1）通过 `create_pipeline()` 实例化 开放词汇检测 产线对象，具体参数说明如下：
 
 <table>
 <thead>
@@ -258,7 +120,7 @@ for res in output:
 </tbody>
 </table>
 
-（2）调用 实例分割 产线对象的 `predict()` 方法进行推理预测。该方法将返回一个 `generator`。以下是 `predict()` 方法的参数及其说明：
+（2）调用 开放词汇检测 产线对象的 `predict()` 方法进行推理预测。该方法将返回一个 `generator`。以下是 `predict()` 方法的参数及其说明：
 
 <table>
 <thead>
@@ -277,7 +139,7 @@ for res in output:
 <td>
 <ul>
   <li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
-  <li><b>str</b>：如图像文件或者PDF文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件或PDF文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code>(当前不支持目录中包含PDF文件的预测，PDF文件需要指定到具体文件路径)</li>
+  <li><b>str</b>：如图像文件或者PDF文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件或PDF文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/open_vocabulary_detection.jpg">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code>(当前不支持目录中包含PDF文件的预测，PDF文件需要指定到具体文件路径)</li>
   <li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
@@ -300,17 +162,27 @@ for res in output:
 </td>
 <td><code>None</code></td>
 </tr>
-<td><code>threshold</code></td>
-<td>模型的低分object过滤阈值</td>
-<td><code>float|None</code></td>
+<td><code>thresholds</code></td>
+<td>模型推理时使用的阈值</td>
+<td><code>dict[str, float]</code></td>
 <td>
 <ul>
-    <li><b>float</b>：大于 <code>0</code> 且小于 <code>1</code> 的任意浮点数
-    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线默认的参数<code>0.5</code>作为阈值
+    <li><b>dict[str, float]</b>：key为str, 代表阈值名, value为0到1之间的浮点数，代表阈值大小。如GroundingDINO对应的设置为<code>{"text_threshold": 0.25, "box_threshold": 0.3}</code>, 表示GroundingDINO的文本阈值设置为0.25，物体检测框阈值设置为0.3</li>
 </ul>
 </ul>
 </td>
-<td><code>None</code></td>
+<td><code>无</code></td>
+</tr>
+<td><code>prompt</code></td>
+<td>模型推理时使用的提示词</td>
+<td><code>str</code></td>
+<td>
+<ul>
+    <li><b>str</b>：需要结合具体的模型设定。如GroundingDINO对应的提示词为<code>"{类别1} . {类别2} . {类别3} ."</code>
+</ul>
+</ul>
+</td>
+<td><code>无</code></td>
 </tr>
 
 </table>
@@ -384,13 +256,10 @@ for res in output:
 
     - `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
 
-    - `boxes`: `(list)` 检测框信息，每个元素为一个字典，包含以下字段：
-      - `cls_id`: `(int)` 类别ID
+    - `boxes`: `(list)` 检测框信息，每个元素为一个字典，包含以下字段
       - `label`: `(str)` 类别名称
-      - `score`: `(float)` 检测框的置信度
-      - `coordinate`: `(list)` 检测框的坐标，格式为[xmin, ymin, xmax, ymax]
-
-    - `masks`: `...` 实例分割模型实际预测的mask，由于数据过大不便于直接print，因此用`...`替换，可以通过res.save_to_img将预测结果保存为图片，通过res.save_to_json将预测结果保存为json文件。
+      - `score`: `(float)` 置信度
+      - `coordinates`: `(list)` 检测框坐标，格式为`[xmin, ymin, xmax, ymax]`
 
 - 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
 
@@ -416,24 +285,25 @@ for res in output:
 </table>
 
 - `json` 属性获取的预测结果为dict类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
-- `img` 属性返回的预测结果是一个字典类型的数据。其中，键为 `res`, 对应的值是一个 `Image.Image` 对象：一个用于显示 实例分割 的预测结果。
+- `img` 属性返回的预测结果是一个字典类型的数据。其中，键为 `res`, 对应的值是一个 `Image.Image` 对象：一个用于显示 开放词汇检测 的预测结果。
 
-此外，您可以获取 实例分割 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+此外，您可以获取 开放词汇检测 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
 
 ```
-paddlex --get_pipeline_config instance_segmentation --save_path ./my_path
+paddlex --get_pipeline_config open_vocabulary_detection --save_path ./my_path
 ```
 
-若您获取了配置文件，即可对实例分割产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。示例如下：
+若您获取了配置文件，即可对开放词汇检测产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。示例如下：
 
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/instance_segmentation.yaml")
+pipeline = create_pipeline(pipeline="./my_path/open_vocabulary_detection.yaml")
 
 output = pipeline.predict(
-    input="./general_instance_segmentation_004.png",
-    threshold=0.5,
+    input="./open_vocabulary_detection.jpg",
+    thresholds={"text_threshold": 0.25, "box_threshold": 0.3},
+    prompt="cat . dog . bird ."
 )
 for res in output:
     res.print()
@@ -442,12 +312,12 @@ for res in output:
 
 ```
 
-<b>注：</b> 配置文件中的参数为产线初始化参数，如果希望更改通用实例分割产线初始化参数，可以直接修改配置文件中的参数，并加载配置文件进行预测。同时，CLI 预测也支持传入配置文件，`--pipeline` 指定配置文件的路径即可。
+<b>注：</b> 配置文件中的参数为产线初始化参数，如果希望更改通用开放词汇检测产线初始化参数，可以直接修改配置文件中的参数，并加载配置文件进行预测。同时，CLI 预测也支持传入配置文件，`--pipeline` 指定配置文件的路径即可。
 
 ## 3. 开发集成/部署
 如果产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
 
-若您需要将产线直接应用在您的Python项目中，可以参考 [2.2.2 Python脚本方式](#222-python脚本方式集成)中的示例代码。
+若您需要将产线直接应用在您的Python项目中，可以参考 [2.1.2 Python脚本方式](#212-python脚本方式集成)中的示例代码。
 
 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
 
@@ -529,8 +399,8 @@ for res in output:
 <ul>
 <li><b><code>infer</code></b></li>
 </ul>
-<p>对图像进行实例分割。</p>
-<p><code>POST /instance-segmentation</code></p>
+<p>对图像进行目标检测。</p>
+<p><code>POST /open-vocabulary-detection</code></p>
 <ul>
 <li>请求体的属性如下：</li>
 </ul>
@@ -550,6 +420,18 @@ for res in output:
 <td>服务器可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
 <td>是</td>
 </tr>
+<tr>
+<td><code>prompt</code></td>
+<td><code>string</code></td>
+<td>预测使用的文本提示词。</td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>thresholds</code></td>
+<td><code>dict[str, float]</code></td>
+<td>模型预测使用的阈值。</td>
+<td>否</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -565,18 +447,18 @@ for res in output:
 </thead>
 <tbody>
 <tr>
-<td><code>instances</code></td>
+<td><code>detectedObjects</code></td>
 <td><code>array</code></td>
-<td>实例的位置、类别等信息。</td>
+<td>目标的位置、类别等信息。</td>
 </tr>
 <tr>
 <td><code>image</code></td>
 <td><code>string</code></td>
-<td>实例分割结果图。图像为JPEG格式，使用Base64编码。</td>
+<td>目标检测结果图。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 </tbody>
 </table>
-<p><code>instances</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
+<p><code>detectedObjects</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
 <table>
 <thead>
 <tr>
@@ -589,66 +471,42 @@ for res in output:
 <tr>
 <td><code>bbox</code></td>
 <td><code>array</code></td>
-<td>实例位置。数组中元素依次为边界框左上角x坐标、左上角y坐标、右下角x坐标以及右下角y坐标。</td>
+<td>目标位置。数组中元素依次为边界框左上角x坐标、左上角y坐标、右下角x坐标以及右下角y坐标。</td>
 </tr>
 <tr>
-<td><code>categoryId</code></td>
-<td><code>integer</code></td>
-<td>实例类别ID。</td>
+<td><code>categoryName</code></td>
+<td><code>string</code></td>
+<td>目标类别名。</td>
 </tr>
 <tr>
 <td><code>score</code></td>
 <td><code>number</code></td>
-<td>实例得分。</td>
-</tr>
-<tr>
-<td><code>mask</code></td>
-<td><code>object</code></td>
-<td>实例的分割掩膜。</td>
-</tr>
-</tbody>
-</table>
-<p><code>mask</code>的属性如下：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>rleResult</code></td>
-<td><code>str</code></td>
-<td>掩膜的游程编码结果。</td>
-</tr>
-<tr>
-<td><code>size</code></td>
-<td><code>array</code></td>
-<td>掩膜的形状。数组中元素依次为掩膜的高度和宽度。</td>
+<td>目标得分。</td>
 </tr>
 </tbody>
 </table>
 <p><code>result</code>示例如下：</p>
 <pre><code class="language-json">{
-&quot;instances&quot;: [
+&quot;detectedObjects&quot;: [
 {
 &quot;bbox&quot;: [
-162.39381408691406,
-83.88176727294922,
-624.0797119140625,
-343.4986877441406
+404.4967956542969,
+90.15770721435547,
+506.2465515136719,
+285.4187316894531
 ],
-&quot;categoryId&quot;: 33,
-&quot;score&quot;: 0.8691174983978271,
-&quot;mask&quot;: {
-&quot;rleResult&quot;: &quot;xxxxxx&quot;,
-&quot;size&quot;: [
-259,
-462
-]
-}
+&quot;categoryName&quot;: "bird",
+&quot;score&quot;: 0.7418514490127563
+},
+{
+&quot;bbox&quot;: [
+155.33145141601562,
+81.10954284667969,
+199.71136474609375,
+167.4235382080078
+],
+&quot;categoryName&quot;: "dog",
+&quot;score&quot;: 0.7328268885612488
 }
 ],
 &quot;image&quot;: &quot;xxxxxx&quot;
@@ -664,28 +522,28 @@ for res in output:
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/instance-segmentation&quot; # 服务URL
-image_path = &quot;./demo.jpg&quot;
-output_image_path = &quot;./out.jpg&quot;
+API_URL = "http://localhost:8080/open-vocabulary-detection" # 服务URL
+image_path = "./open_vocabulary_detection.jpg"
+output_image_path = "./out.jpg"
 
 # 对本地图像进行Base64编码
-with open(image_path, &quot;rb&quot;) as file:
+with open(image_path, "rb") as file:
     image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
-payload = {&quot;image&quot;: image_data}  # Base64编码的文件内容或者图像URL
+payload = {"image": image_data, "prompt": "walking man . bus ."}  # Base64编码的文件内容或者图像URL
 
 # 调用API
 response = requests.post(API_URL, json=payload)
 
 # 处理接口返回数据
-assert response.status_code == 200
-result = response.json()[&quot;result&quot;]
-with open(output_image_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result[&quot;image&quot;]))
-print(f&quot;Output image saved at {output_image_path}&quot;)
-print(&quot;\nInstances:&quot;)
-print(result[&quot;instances&quot;])
+assert response.status_code == 200, f"{response.status_code}"
+result = response.json()["result"]
+with open(output_image_path, "wb") as file:
+    file.write(base64.b64decode(result["image"]))
+print(f"Output image saved at {output_image_path}")
+print("\nDetected objects:")
+print(result["detectedObjects"])
 </code></pre></details>
 
 <details><summary>C++</summary>
@@ -722,7 +580,7 @@ int main() {
     std::string body = jsonObj.dump();
 
     // 调用API
-    auto response = client.Post(&quot;/instance-segmentation&quot;, headers, body, &quot;application/json&quot;);
+    auto response = client.Post(&quot;/small-object-detection&quot;, headers, body, &quot;application/json&quot;);
     // 处理接口返回数据
     if (response &amp;&amp; response-&gt;status == 200) {
         nlohmann::json jsonResponse = nlohmann::json::parse(response-&gt;body);
@@ -740,10 +598,10 @@ int main() {
             std::cerr &lt;&lt; &quot;Unable to open file for writing: &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
         }
 
-        auto instances = result[&quot;instances&quot;];
-        std::cout &lt;&lt; &quot;\nInstances:&quot; &lt;&lt; std::endl;
-        for (const auto&amp; inst : instances) {
-            std::cout &lt;&lt; inst &lt;&lt; std::endl;
+        auto detectedObjects = result[&quot;detectedObjects&quot;];
+        std::cout &lt;&lt; &quot;\nDetected objects:&quot; &lt;&lt; std::endl;
+        for (const auto&amp; category : detectedObjects) {
+            std::cout &lt;&lt; category &lt;&lt; std::endl;
         }
     } else {
         std::cout &lt;&lt; &quot;Failed to send HTTP request.&quot; &lt;&lt; std::endl;
@@ -768,7 +626,7 @@ import java.util.Base64;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String API_URL = &quot;http://localhost:8080/instance-segmentation&quot;; // 服务URL
+        String API_URL = &quot;http://localhost:8080/small-object-detection&quot;; // 服务URL
         String imagePath = &quot;./demo.jpg&quot;; // 本地图像
         String outputImagePath = &quot;./out.jpg&quot;; // 输出图像
 
@@ -797,14 +655,14 @@ public class Main {
                 JsonNode resultNode = objectMapper.readTree(responseBody);
                 JsonNode result = resultNode.get(&quot;result&quot;);
                 String base64Image = result.get(&quot;image&quot;).asText();
-                JsonNode instances = result.get(&quot;instances&quot;);
+                JsonNode detectedObjects = result.get(&quot;detectedObjects&quot;);
 
                 byte[] imageBytes = Base64.getDecoder().decode(base64Image);
                 try (FileOutputStream fos = new FileOutputStream(outputImagePath)) {
                     fos.write(imageBytes);
                 }
                 System.out.println(&quot;Output image saved at &quot; + outputImagePath);
-                System.out.println(&quot;\nInstances: &quot; + instances.toString());
+                System.out.println(&quot;\nDetected objects: &quot; + detectedObjects.toString());
             } else {
                 System.err.println(&quot;Request failed with code: &quot; + response.code());
             }
@@ -827,7 +685,7 @@ import (
 )
 
 func main() {
-    API_URL := &quot;http://localhost:8080/instance-segmentation&quot;
+    API_URL := &quot;http://localhost:8080/small-object-detection&quot;
     imagePath := &quot;./demo.jpg&quot;
     outputImagePath := &quot;./out.jpg&quot;
 
@@ -870,7 +728,7 @@ func main() {
     type Response struct {
         Result struct {
             Image      string   `json:&quot;image&quot;`
-            Instances []map[string]interface{} `json:&quot;instances&quot;`
+            DetectedObjects []map[string]interface{} `json:&quot;detectedObjects&quot;`
         } `json:&quot;result&quot;`
     }
     var respData Response
@@ -891,9 +749,9 @@ func main() {
         return
     }
     fmt.Printf(&quot;Image saved at %s.jpg\n&quot;, outputImagePath)
-    fmt.Println(&quot;\nInstances:&quot;)
-    for _, inst := range respData.Result.Instances {
-        fmt.Println(inst)
+    fmt.Println(&quot;\nDetected objects:&quot;)
+    for _, category := range respData.Result.DetectedObjects {
+        fmt.Println(category)
     }
 }
 </code></pre></details>
@@ -910,7 +768,7 @@ using Newtonsoft.Json.Linq;
 
 class Program
 {
-    static readonly string API_URL = &quot;http://localhost:8080/instance-segmentation&quot;;
+    static readonly string API_URL = &quot;http://localhost:8080/small-object-detection&quot;;
     static readonly string imagePath = &quot;./demo.jpg&quot;;
     static readonly string outputImagePath = &quot;./out.jpg&quot;;
 
@@ -938,8 +796,8 @@ class Program
 
         File.WriteAllBytes(outputImagePath, outputImageBytes);
         Console.WriteLine($&quot;Output image saved at {outputImagePath}&quot;);
-        Console.WriteLine(&quot;\nInstances:&quot;);
-        Console.WriteLine(jsonResponse[&quot;result&quot;][&quot;instances&quot;].ToString());
+        Console.WriteLine(&quot;\nDetected objects:&quot;);
+        Console.WriteLine(jsonResponse[&quot;result&quot;][&quot;detectedObjects&quot;].ToString());
     }
 }
 </code></pre></details>
@@ -949,7 +807,7 @@ class Program
 <pre><code class="language-js">const axios = require('axios');
 const fs = require('fs');
 
-const API_URL = 'http://localhost:8080/instance-segmentation'
+const API_URL = 'http://localhost:8080/small-object-detection'
 const imagePath = './demo.jpg'
 const outputImagePath = &quot;./out.jpg&quot;;
 
@@ -978,8 +836,8 @@ axios.request(config)
       if (err) throw err;
       console.log(`Output image saved at ${outputImagePath}`);
     });
-    console.log(&quot;\nInstances:&quot;);
-    console.log(result[&quot;instances&quot;]);
+    console.log(&quot;\nDetected objects:&quot;);
+    console.log(result[&quot;detectedObjects&quot;]);
 })
 .catch((error) =&gt; {
   console.log(error);
@@ -990,7 +848,7 @@ axios.request(config)
 
 <pre><code class="language-php">&lt;?php
 
-$API_URL = &quot;http://localhost:8080/instance-segmentation&quot;; // 服务URL
+$API_URL = &quot;http://localhost:8080/small-object-detection&quot;; // 服务URL
 $image_path = &quot;./demo.jpg&quot;;
 $output_image_path = &quot;./out.jpg&quot;;
 
@@ -1011,8 +869,8 @@ curl_close($ch);
 $result = json_decode($response, true)[&quot;result&quot;];
 file_put_contents($output_image_path, base64_decode($result[&quot;image&quot;]));
 echo &quot;Output image saved at &quot; . $output_image_path . &quot;\n&quot;;
-echo &quot;\nInstances:\n&quot;;
-print_r($result[&quot;instances&quot;]);
+echo &quot;\nDetected objects:\n&quot;;
+print_r($result[&quot;detectedObjects&quot;]);
 
 ?&gt;
 </code></pre></details>
@@ -1022,57 +880,9 @@ print_r($result[&quot;instances&quot;]);
 📱 <b>端侧部署</b>：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/edge_deploy.md)。
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
 
+
 ## 4. 二次开发
-如果通用实例分割产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升通用实例分割产线的在您的场景中的识别效果。
-
-### 4.1 模型微调
-由于通用实例分割产线包含实例分割模块，如果模型产线的效果不及预期，您可以对分割效果差的图片进行分析，并参考以下表格中对应的微调教程链接进行模型微调。
-
-
-<table>
-  <thead>
-    <tr>
-      <th>情形</th>
-      <th>微调模块</th>
-      <th>微调参考链接</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>预测结果不达预期</td>
-      <td>实例分割模块</td>
-      <td><a href="../../../module_usage/tutorials/cv_modules/instance_segmentation.md">链接</a></td>
-    </tr>
-  </tbody>
-</table>
-
-
-### 4.2 模型应用
-当您使用私有数据集完成微调训练后，可获得本地模型权重文件。
-
-若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径替换至产线配置文件中的对应位置即可：
-
-```yaml
-SubModules:
-  InstanceSegmentation:
-    module_name: instance_segmentation
-    model_name: Mask-RT-DETR-S
-    model_dir: null # 替换为微调后的实例分割模型权重路径
-    batch_size: 1
-    threshold: 0.5
-```
-随后， 参考本地体验中的命令行方式或 Python 脚本方式，加载修改后的产线配置文件即可。
+当前产线暂时不支持微调训练，仅支持推理集成。关于该产线的微调训练，计划在未来支持。
 
 ## 5. 多硬件支持
-PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device`参数</b>即可完成不同硬件之间的无缝切换。
-
-例如，您使用昇腾 NPU 进行 实例分割 产线的推理，使用的 Python 命令为：
-
-```bash
-paddlex --pipeline instance_segmentation \
-        --input general_instance_segmentation_004.png \
-        --threshold 0.5 \
-        --save_path ./output \
-        --device npu:0
-```
-若您想在更多种类的硬件上使用通用实例分割产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。
+当前产线暂时仅支持GPU和CPU推理。关于该产线对于更多硬件的适配，计划在未来支持。

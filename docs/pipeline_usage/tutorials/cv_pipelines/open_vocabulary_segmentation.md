@@ -2,247 +2,79 @@
 comments: true
 ---
 
-# 通用语义分割产线使用教程
+# 开放词汇分割产线使用教程
 
-## 1. 通用语义分割产线介绍
-语义分割是一种计算机视觉技术，旨在将图像中的每个像素分配到特定的类别，从而实现对图像内容的精细化理解。语义分割不仅要识别出图像中的物体类型，还要对每个像素进行分类，这样使得同一类别的区域能够被完整标记。例如，在一幅街景图像中，语义分割可以将行人、汽车、天空和道路等不同类别的部分逐像素区分开来，形成一个详细的标签图。这项技术广泛应用于自动驾驶、医学影像分析和人机交互等领域，通常依赖于深度学习模型（如SegFormer等），通过卷积神经网络（CNN）或视觉变换器（Transformer）来提取特征并实现高精度的像素级分类，从而为进一步的智能分析提供基础。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
+## 1. 开放词汇分割产线介绍
+开放词汇分割是一项图像分割任务，旨在根据文本描述、边框、关键点等除图像以外的信息作为提示，分割图像中对应的物体。它允许模型处理广泛的对象类别，而无需预定义的类别列表。这项技术结合了视觉和多模态技术，极大地提高了图像处理的灵活性和精度。开放词汇分割在计算机视觉领域具有重要应用价值，尤其在复杂场景下的对象分割任务中表现突出。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。本产线目前不支持对模型的二次开发，计划在后续支持。
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/semantic_segmentation/01.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/open_vocabulary_segmentation/open_vocabulary_segmentation_res.jpg">
 
-
-<b>通用语义分割产线中包含了语义分割模块，该模块都包含多个模型，您可以根据下方的基准测试数据选择使用的模型</b>。
+<b>通用开放词汇分割产线中包含了开放词汇分割模块，您可以根据下方的基准测试数据选择使用的模型</b>。
 
 <b>如果您更注重模型的精度，请选择精度较高的模型；如果您更在意模型的推理速度，请选择推理速度较快的模型；如果您关注模型的存储大小，请选择存储体积较小的模型。</b>
 
-<p><b>通用图像语义分割模块（可选）：</b></p>
-<table>
-<thead>
-<tr>
-<th>模型名称</th><th>Model Download Link</th>
-<th>mloU（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
-<th>模型存储大小（M)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>OCRNet_HRNet-W48</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/OCRNet_HRNet-W48_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W48_pretrained.pdparams">Trained Model</a></td>
-<td>82.15</td>
-<td>78.9976</td>
-<td>2226.95</td>
-<td>249.8 M</td>
-</tr>
-<tr>
-<td>PP-LiteSeg-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LiteSeg-T_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-T_pretrained.pdparams">Trained Model</a></td>
-<td>73.10</td>
-<td>7.6827</td>
-<td>138.683</td>
-<td>28.5 M</td>
-</tr>
-</tbody>
-</table>
-<p><b>注：以上模型精度指标测量自<a href="https://www.cityscapes-dataset.com/">Cityscapes</a>数据集。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p>
-> ❗ 以上列出的是语义分割模块重点支持的<b>2个核心模型</b>，该模块总共支持<b>18个模型</b>，完整的模型列表如下：
-
-<details><summary> 👉模型列表详情</summary>
+<p><b>通用图像开放词汇分割模块（可选）：</b></p>
 
 <table>
-<thead>
 <tr>
-<th>模型名称</th><th>Model Download Link</th>
-<th>mloU（%）</th>
+<th>模型</th><th>模型下载链接</th>
 <th>GPU推理耗时（ms）</th>
 <th>CPU推理耗时 (ms)</th>
-<th>模型存储大小（M)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Deeplabv3_Plus-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Deeplabv3_Plus-R50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3_Plus-R50_pretrained.pdparams">Trained Model</a></td>
-<td>80.36</td>
-<td>61.0531</td>
-<td>1513.58</td>
-<td>94.9 M</td>
+<th>模型存储大小（M）</th>
+<th>介绍</th>
 </tr>
 <tr>
-<td>Deeplabv3_Plus-R101</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Deeplabv3_Plus-R101_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3_Plus-R101_pretrained.pdparams">Trained Model</a></td>
-<td>81.10</td>
-<td>100.026</td>
-<td>2460.71</td>
-<td>162.5 M</td>
+<td>SAM-H_box</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SAM-H_box_infer.tar">推理模型</a></td>
+<td>144.9</td>
+<td>33920.7</td>
+<td>2433.7</td>
+<td rowspan="2">SAM（Segment Anything Model）是一种先进的图像分割模型，能够根据用户提供的简单提示（如点、框或文本）对图像中的任意对象进行分割。基于SA-1B数据集训练，有一千万的图像数据和十一亿掩码标注，在大部分场景均有较好的效果。其中SAM-H_box表示使用框作为分割提示输入，SAM会分割被框包裹主的主体；SAM-H_point表示使用点作为分割提示输入，SAM会分割点所在的主体。</td>
 </tr>
 <tr>
-<td>Deeplabv3-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Deeplabv3-R50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3-R50_pretrained.pdparams">Trained Model</a></td>
-<td>79.90</td>
-<td>82.2631</td>
-<td>1735.83</td>
-<td>138.3 M</td>
+<td>SAM-H_point</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SAM-H_point_infer.tar">推理模型</a></td>
+<td>144.9</td>
+<td>33920.7</td>
+<td>2433.7</td>
 </tr>
-<tr>
-<td>Deeplabv3-R101</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Deeplabv3-R101_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3-R101_pretrained.pdparams">Trained Model</a></td>
-<td>80.85</td>
-<td>121.492</td>
-<td>2685.51</td>
-<td>205.9 M</td>
-</tr>
-<tr>
-<td>OCRNet_HRNet-W18</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/OCRNet_HRNet-W18_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W18_pretrained.pdparams">Trained Model</a></td>
-<td>80.67</td>
-<td>48.2335</td>
-<td>906.385</td>
-<td>43.1 M</td>
-</tr>
-<tr>
-<td>OCRNet_HRNet-W48</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/OCRNet_HRNet-W48_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W48_pretrained.pdparams">Trained Model</a></td>
-<td>82.15</td>
-<td>78.9976</td>
-<td>2226.95</td>
-<td>249.8 M</td>
-</tr>
-<tr>
-<td>PP-LiteSeg-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LiteSeg-T_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-T_pretrained.pdparams">Trained Model</a></td>
-<td>73.10</td>
-<td>7.6827</td>
-<td>138.683</td>
-<td>28.5 M</td>
-</tr>
-<tr>
-<td>PP-LiteSeg-B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LiteSeg-B_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-B_pretrained.pdparams">Trained Model</a></td>
-<td>75.25</td>
-<td>10.9935</td>
-<td>194.727</td>
-<td>47.0 M</td>
-</tr>
-<tr>
-<td>SegFormer-B0 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B0 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B0 (slice)_pretrained.pdparams">Trained Model</a></td>
-<td>76.73</td>
-<td>11.1946</td>
-<td>268.929</td>
-<td>13.2 M</td>
-</tr>
-<tr>
-<td>SegFormer-B1 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B1 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B1 (slice)_pretrained.pdparams">Trained Model</a></td>
-<td>78.35</td>
-<td>17.9998</td>
-<td>403.393</td>
-<td>48.5 M</td>
-</tr>
-<tr>
-<td>SegFormer-B2 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B2 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B2 (slice)_pretrained.pdparams">Trained Model</a></td>
-<td>81.60</td>
-<td>48.0371</td>
-<td>1248.52</td>
-<td>96.9 M</td>
-</tr>
-<tr>
-<td>SegFormer-B3 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B3 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B3 (slice)_pretrained.pdparams">Trained Model</a></td>
-<td>82.47</td>
-<td>64.341</td>
-<td>1666.35</td>
-<td>167.3 M</td>
-</tr>
-<tr>
-<td>SegFormer-B4 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B4 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B4 (slice)_pretrained.pdparams">Trained Model</a></td>
-<td>82.38</td>
-<td>82.4336</td>
-<td>1995.42</td>
-<td>226.7 M</td>
-</tr>
-<tr>
-<td>SegFormer-B5 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B5 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B5 (slice)_pretrained.pdparams">Trained Model</a></td>
-<td>82.58</td>
-<td>97.3717</td>
-<td>2420.19</td>
-<td>229.7 M</td>
-</tr>
-</tbody>
 </table>
-<p><b>注：以上模型精度指标测量自<a href="https://www.cityscapes-dataset.com/">Cityscapes</a>数据集。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p>
-<table>
-<thead>
-<tr>
-<th>模型名称</th><th>Model Download Link</th>
-<th>mloU（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时</th>
-<th>模型存储大小（M)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SeaFormer_base</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SeaFormer_base(slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_base(slice)_pretrained.pdparams">Trained Model</a></td>
-<td>40.92</td>
-<td>24.4073</td>
-<td>397.574</td>
-<td>30.8 M</td>
-</tr>
-<tr>
-<td>SeaFormer_large</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SeaFormer_large (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_large (slice)_pretrained.pdparams">Trained Model</a></td>
-<td>43.66</td>
-<td>27.8123</td>
-<td>550.464</td>
-<td>49.8 M</td>
-</tr>
-<tr>
-<td>SeaFormer_small</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SeaFormer_small (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_small (slice)_pretrained.pdparams">Trained Model</a></td>
-<td>38.73</td>
-<td>19.2295</td>
-<td>358.343</td>
-<td>14.3 M</td>
-</tr>
-<tr>
-<td>SeaFormer_tiny</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SeaFormer_tiny (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_tiny (slice)_pretrained.pdparams">Trained Model</a></td>
-<td>34.58</td>
-<td>13.9496</td>
-<td>330.132</td>
-<td>6.1M</td>
-</tr>
-</tbody>
-</table>
-<p><b>注：SeaFormer系列模型的精度指标测量自<a href="https://groups.csail.mit.edu/vision/datasets/ADE20K/">ADE20k</a>数据集。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p></details>
+
+<b>注：所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32</b>。
 
 ## 2. 快速开始
-PaddleX 所提供的模型产线均可以快速体验效果，你可以在星河社区线体验通用 语义分割 产线的效果，也可以在本地使用命令行或 Python 体验通用 语义分割 产线的效果。
 
-### 2.1 在线体验
-您可以[在线体验](https://aistudio.baidu.com/community/app/100062/webUI?source=appCenter)通用语义分割产线的效果，用官方提供的 Demo 图片进行识别，例如：
+### 2.1 本地体验
+> ❗ 在本地使用通用开放词汇分割产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/semantic_segmentation/02.png">
-
-如果您对产线运行的效果满意，可以直接进行集成部署。您可以选择从云端下载部署包，也可以参考[2.2节本地体验](#22-本地体验)中的方法进行本地部署。如果对效果不满意，您可以利用私有数据<b>对产线中的模型进行微调训练</b>。如果您具备本地训练的硬件资源，可以直接在本地开展训练；如果没有，星河零代码平台提供了一键式训练服务，无需编写代码，只需上传数据后，即可一键启动训练任务。
-
-### 2.2 本地体验
-> ❗ 在本地使用通用语义分割产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
-
-#### 2.2.1 命令行方式体验
-* 一行命令即可快速体验语义分割产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png)，并将 `--input` 替换为本地路径，进行预测
+#### 2.1.1 命令行方式体验
+* 一行命令即可快速体验开放词汇分割产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/open_vocabulary_segmentation.jpg)，并将 `--input` 替换为本地路径，进行预测
 
 ```bash
-paddlex --pipeline semantic_segmentation \
-        --input makassaridn-road_demo.png \
-        --target_size -1 \
+paddlex --pipeline open_vocabulary_segmentation \
+        --input open_vocabulary_segmentation.jpg \
+        --prompt_type box \
+        --prompt "[[112.9,118.4,513.8,382.1],[4.6,263.6,92.2,336.6],[592.4,260.9,607.2,294.2]]" \
         --save_path ./output \
-        --device gpu:0 \
+        --device gpu:0
 ```
-相关的参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的参数说明。
+相关的参数说明可以参考[2.1.2 Python脚本方式集成](#212-python脚本方式集成)中的参数说明。
 
 运行后，会将结果打印到终端上，结果如下：
 ```bash
-{'res': {'input_path': 'makassaridn-road_demo.png', 'page_index': None, 'pred': '...'}}
+{'res': {'input_path': 'open_vocabulary_segmentation.jpg', 'prompts': {'box_prompt': [[112.9, 118.4, 513.8, 382.1], [4.6, 263.6, 92.2, 336.6], [592.4, 260.9, 607.2, 294.2]]}, 'masks': '...', 'mask_infos': [{'label': 'box_prompt', 'prompt': [112.9, 118.4, 513.8, 382.1]}, {'label': 'box_prompt', 'prompt': [4.6, 263.6, 92.2, 336.6]}, {'label': 'box_prompt', 'prompt': [592.4, 260.9, 607.2, 294.2]}]}}
 ```
-运行结果参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的结果解释。
+运行结果参数说明可以参考[2.1.2 Python脚本方式集成](#212-python脚本方式集成)中的结果解释。
 
-可视化结果保存在`save_path`下，其中语义分割的可视化结果如下：
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/semantic_segmentation/03.png">
+可视化结果保存在`save_path`下，其中开放词汇分割的可视化结果如下：
 
-#### 2.2.2 Python脚本方式集成
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/open_vocabulary_segmentation/open_vocabulary_segmentation_res.jpg">
+
+#### 2.1.2 Python脚本方式集成
 * 上述命令行是为了快速体验查看效果，一般来说，在项目中，往往需要通过代码集成，您可以通过几行代码即可完成产线的快速推理，推理代码如下：
 
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline_name="semantic_segmentation")
-output = pipeline.predict(input="general_semantic_segmentation_002.png", target_size = -1)
+pipeline = create_pipeline(pipeline_name="open_vocabulary_segmentation")
+output = pipeline.predict(input="open_vocabulary_segmentation.jpg", prompt_type="box", prompt=[[112.9,118.4,513.8,382.1],[4.6,263.6,92.2,336.6],[592.4,260.9,607.2,294.2]])
 for res in output:
     res.print()
     res.save_to_img(save_path="./output/")
@@ -251,7 +83,7 @@ for res in output:
 
 在上述 Python 脚本中，执行了如下几个步骤：
 
-（1）通过 `create_pipeline()` 实例化 语义分割 产线对象，具体参数说明如下：
+（1）通过 `create_pipeline()` 实例化 开放词汇分割 产线对象，具体参数说明如下：
 
 <table>
 <thead>
@@ -290,7 +122,7 @@ for res in output:
 </tbody>
 </table>
 
-（2）调用 语义分割 产线对象的 `predict()` 方法进行推理预测。该方法将返回一个 `generator`。以下是 `predict()` 方法的参数及其说明：
+（2）调用 开放词汇分割 产线对象的 `predict()` 方法进行推理预测。该方法将返回一个 `generator`。以下是 `predict()` 方法的参数及其说明：
 
 <table>
 <thead>
@@ -309,7 +141,7 @@ for res in output:
 <td>
 <ul>
   <li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
-  <li><b>str</b>：如图像文件或者PDF文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件或PDF文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code>(当前不支持目录中包含PDF文件的预测，PDF文件需要指定到具体文件路径)</li>
+  <li><b>str</b>：如图像文件或者PDF文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件或PDF文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/open_vocabulary_segmentation.jpg">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code>(当前不支持目录中包含PDF文件的预测，PDF文件需要指定到具体文件路径)</li>
   <li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
@@ -332,19 +164,28 @@ for res in output:
 </td>
 <td><code>None</code></td>
 </tr>
-<td><code>target_size</code></td>
-<td>模型推理时实际使用的图像分辨率</td>
-<td><code>int|-1|None|tuple[int,int]</code></td>
+<td><code>prompt_type</code></td>
+<td>模型推理时使用的提示类型</td>
+<td><code>str</code></td>
 <td>
 <ul>
-    <li><b>int</b>：大于 <code>0</code> 的任意整数
-    <li><b>-1</b>：如果设置为<code>-1</code>, 即不进行任何rescale操作, 直接用图像原始分辨率预测
-    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的参数。即直接原图分辨率预测
-    <li><b>tuple[int,int]</b>: 图像实际预测分辨率会被rescale到这个尺寸</td>
+    <li><b>box</b>：使用边界框作为提示词输入, 如果设置为<code>box</code>, 输入的prompt需要是<code>list[list[float, float, float, float]]</code>的形式</li>
+    <li><b>point</b>：使用点作为提示词输入, 如果设置为<code>point</code>, 输入的prompt需要是<code>list[list[float, float]]</code>的形式</li>
 </ul>
 </ul>
 </td>
-<td><code>None</code></td>
+<td><code>无</code></td>
+</tr>
+<td><code>prompt</code></td>
+<td>模型推理时具体使用的提示</td>
+<td><code>list[list[float]]</code></td>
+<td>
+<ul>
+    <li><b>list[list[float]]</b>：需要根据<code>prompt_type</code>的具体类型设置
+</ul>
+</ul>
+</td>
+<td><code>无</code></td>
 </tr>
 
 </table>
@@ -418,7 +259,13 @@ for res in output:
 
     - `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
 
-    - `pred`: `...` 语义分割模型实际预测的mask，由于数据过大不便于直接print，因此用`...`替换，可以通过res.save_to_img将预测结果保存为图片，通过res.save_to_json将预测结果保存为json文件。
+    - `prompts`: `(dict)` 该图片预测时使用的原始提示信息
+
+    - `masks`: `...` 分割模型实际预测的mask，由于数据过大不便于直接print，因此用`...`替换，可以通过res.save_to_img将预测结果保存为图片，通过res.save_to_json将预测结果保存为json文件。
+
+    - `mask_infos`: `(list)` 分割结果信息，对应`masks`中的元素，长度和`masks`相等，每个元素为一个字典，包含以下字段
+      - `label`: `(str)` 对应的`masks`中元素由哪种类型的prompt预测获得, 如`box_prompt`表示对应的mask由边界框作为提示词获得
+      - `prompt`: `list` 对应的`masks`中元素预测时具体使用的提示信息
 
 - 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
 
@@ -444,25 +291,27 @@ for res in output:
 </table>
 
 - `json` 属性获取的预测结果为dict类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
-- `img` 属性返回的预测结果是一个字典类型的数据。其中，键为 `res`, 对应的值是一个 `Image.Image` 对象：一个用于显示 语义分割 的预测结果。
+- `img` 属性返回的预测结果是一个字典类型的数据。其中，键为 `res`, 对应的值是一个 `Image.Image` 对象：一个用于显示 开放词汇分割 的预测结果。
 
-此外，您可以获取 语义分割 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+此外，您可以获取 开放词汇分割 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
 
 ```
-paddlex --get_pipeline_config semantic_segmentation --save_path ./my_path
+paddlex --get_pipeline_config open_vocabulary_segmentation --save_path ./my_path
 ```
 
-若您获取了配置文件，即可对语义分割产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。示例如下：
+若您获取了配置文件，即可对开放词汇分割产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。示例如下：
 
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/semantic_segmentation.yaml")
+pipeline = create_pipeline(pipeline="./my_path/open_vocabulary_segmentation.yaml")
 
 output = pipeline.predict(
-    input="./makassaridn-road_demo.png",
-    target_size=-1,
+    input="./open_vocabulary_segmentation.jpg",
+    prompt_type="box",
+    prompt=[[112.9,118.4,513.8,382.1],[4.6,263.6,92.2,336.6],[592.4,260.9,607.2,294.2]]
 )
+
 for res in output:
     res.print()
     res.save_to_img("./output/")
@@ -470,12 +319,12 @@ for res in output:
 
 ```
 
-<b>注：</b> 配置文件中的参数为产线初始化参数，如果希望更改通用语义分割产线初始化参数，可以直接修改配置文件中的参数，并加载配置文件进行预测。同时，CLI 预测也支持传入配置文件，`--pipeline` 指定配置文件的路径即可。
+<b>注：</b> 配置文件中的参数为产线初始化参数，如果希望更改通用开放词汇分割产线初始化参数，可以直接修改配置文件中的参数，并加载配置文件进行预测。同时，CLI 预测也支持传入配置文件，`--pipeline` 指定配置文件的路径即可。
 
 ## 3. 开发集成/部署
 如果产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
 
-若您需要将产线直接应用在您的Python项目中，可以参考 [2.2.2 Python脚本方式](#222-python脚本方式集成)中的示例代码。
+若您需要将产线直接应用在您的Python项目中，可以参考 [2.1.2 Python脚本方式](#212-python脚本方式集成)中的示例代码。
 
 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
 
@@ -557,8 +406,8 @@ for res in output:
 <ul>
 <li><b><code>infer</code></b></li>
 </ul>
-<p>对图像进行语义分割。</p>
-<p><code>POST /semantic-segmentation</code></p>
+<p>对图像进行目标分割。</p>
+<p><code>POST /open-vocabulary-segmentation</code></p>
 <ul>
 <li>请求体的属性如下：</li>
 </ul>
@@ -578,6 +427,18 @@ for res in output:
 <td>服务器可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
 <td>是</td>
 </tr>
+<tr>
+<td><code>prompt</code></td>
+<td><code>list[list[float]]</code></td>
+<td>预测使用的提示。</td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>prompt_type</code></td>
+<td><code>str</code></td>
+<td>预测使用的提示类型。</td>
+<td>是</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -593,37 +454,37 @@ for res in output:
 </thead>
 <tbody>
 <tr>
-<td><code>labelMap</code></td>
+<td><code>masks</code></td>
 <td><code>array</code></td>
-<td>记录图像中每个像素的类别标签（按照行优先顺序排列）。</td>
+<td>分割的预测结果。</td>
 </tr>
 <tr>
-<td><code>size</code></td>
+<td><code>mask_infos</code></td>
 <td><code>array</code></td>
-<td>图像形状。数组中元素依次为图像的高度和宽度。</td>
+<td>和masks字段中的元素一一对应，记录masks中对应分割结果所使用的对应prompt。</td>
 </tr>
 <tr>
 <td><code>image</code></td>
 <td><code>string</code></td>
-<td>语义分割结果图。图像为JPEG格式，使用Base64编码。</td>
+<td>分割结果图。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 </tbody>
 </table>
+<b>注意</b>：考虑到网络传输, masks字段中记录的分割结果经过<code>rle</code>编码结果, 实际使用时需要使用<code>pycocotools.mask.decode</code>做对应的解码即可获得原始的分割结果。
+
+
 <p><code>result</code>示例如下：</p>
-<pre><code class="language-json">{
-&quot;labelMap&quot;: [
-0,
-0,
-1,
-2
-],
-&quot;size&quot;: [
-2,
-2
-],
-&quot;image&quot;: &quot;xxxxxx&quot;
+<pre><code class="language-python">
+{
+    'masks': [rle_mask1, rle_mask2, rle_mask3]
+    'mask_infos': [
+        {'label': 'box_prompt', 'prompt': [112.9, 118.4, 513.8, 382.1]},
+        {'label': 'box_prompt', 'prompt': [4.6, 263.6, 92.2, 336.6]},
+        {'label': 'box_prompt', 'prompt': [592.4, 260.9, 607.2, 294.2]}
+    ]
 }
-</code></pre></details>
+</code>
+</details>
 
 <details><summary>多语言调用服务示例</summary>
 
@@ -634,27 +495,34 @@ for res in output:
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/semantic-segmentation&quot; # 服务URL
-image_path = &quot;./demo.jpg&quot;
-output_image_path = &quot;./out.jpg&quot;
+API_URL = "http://localhost:8080/open-vocabulary-segmentation" # 服务URL
+image_path = "./open_vocabulary_segmentation.jpg"
+output_image_path = "./out.jpg"
 
 # 对本地图像进行Base64编码
-with open(image_path, &quot;rb&quot;) as file:
+with open(image_path, "rb") as file:
     image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
-payload = {&quot;image&quot;: image_data}  # Base64编码的文件内容或者图像URL
+payload = {
+    "image": image_data, # Base64编码的文件内容或者图像URL
+    "prompt_type": "box",
+    "prompt": [[112.9,118.4,513.8,382.1],[4.6,263.6,92.2,336.6],[592.4,260.9,607.2,294.2]]
+}
 
 # 调用API
 response = requests.post(API_URL, json=payload)
 
 # 处理接口返回数据
 assert response.status_code == 200
-result = response.json()[&quot;result&quot;]
-with open(output_image_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result[&quot;image&quot;]))
-print(f&quot;Output image saved at {output_image_path}&quot;)
-# result.labelMap 记录图像中每个像素的类别标签（按照行优先顺序排列）详见API参考文档
+result = response.json()["result"]
+image_base64 = result["image"]
+image = base64.b64decode(image_base64)
+with open(output_image_path, "wb") as file:
+    file.write(base64.b64decode(result["image"]))
+print(f"Output image saved at {output_image_path}")
+print("\nresult(with rle encoded binary mask):")
+print(result)
 </code></pre></details>
 
 <details><summary>C++</summary>
@@ -691,7 +559,7 @@ int main() {
     std::string body = jsonObj.dump();
 
     // 调用API
-    auto response = client.Post(&quot;/semantic-segmentation&quot;, headers, body, &quot;application/json&quot;);
+    auto response = client.Post(&quot;/small-object-segmentation&quot;, headers, body, &quot;application/json&quot;);
     // 处理接口返回数据
     if (response &amp;&amp; response-&gt;status == 200) {
         nlohmann::json jsonResponse = nlohmann::json::parse(response-&gt;body);
@@ -705,9 +573,14 @@ int main() {
             outputImage.write(reinterpret_cast&lt;char*&gt;(decodedImage.data()), decodedImage.size());
             outputImage.close();
             std::cout &lt;&lt; &quot;Output image saved at &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
-            // result.labelMap 记录图像中每个像素的类别标签（按照行优先顺序排列）详见API参考文档
         } else {
             std::cerr &lt;&lt; &quot;Unable to open file for writing: &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
+        }
+
+        auto detectedObjects = result[&quot;detectedObjects&quot;];
+        std::cout &lt;&lt; &quot;\nDetected objects:&quot; &lt;&lt; std::endl;
+        for (const auto&amp; category : detectedObjects) {
+            std::cout &lt;&lt; category &lt;&lt; std::endl;
         }
     } else {
         std::cout &lt;&lt; &quot;Failed to send HTTP request.&quot; &lt;&lt; std::endl;
@@ -732,7 +605,7 @@ import java.util.Base64;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String API_URL = &quot;http://localhost:8080/semantic-segmentation&quot;; // 服务URL
+        String API_URL = &quot;http://localhost:8080/small-object-segmentation&quot;; // 服务URL
         String imagePath = &quot;./demo.jpg&quot;; // 本地图像
         String outputImagePath = &quot;./out.jpg&quot;; // 输出图像
 
@@ -761,14 +634,14 @@ public class Main {
                 JsonNode resultNode = objectMapper.readTree(responseBody);
                 JsonNode result = resultNode.get(&quot;result&quot;);
                 String base64Image = result.get(&quot;image&quot;).asText();
-                JsonNode labelMap = result.get(&quot;labelMap&quot;);
+                JsonNode detectedObjects = result.get(&quot;detectedObjects&quot;);
 
                 byte[] imageBytes = Base64.getDecoder().decode(base64Image);
                 try (FileOutputStream fos = new FileOutputStream(outputImagePath)) {
                     fos.write(imageBytes);
                 }
                 System.out.println(&quot;Output image saved at &quot; + outputImagePath);
-                // result.labelMap 记录图像中每个像素的类别标签（按照行优先顺序排列）详见API参考文档
+                System.out.println(&quot;\nDetected objects: &quot; + detectedObjects.toString());
             } else {
                 System.err.println(&quot;Request failed with code: &quot; + response.code());
             }
@@ -791,7 +664,7 @@ import (
 )
 
 func main() {
-    API_URL := &quot;http://localhost:8080/semantic-segmentation&quot;
+    API_URL := &quot;http://localhost:8080/small-object-segmentation&quot;
     imagePath := &quot;./demo.jpg&quot;
     outputImagePath := &quot;./out.jpg&quot;
 
@@ -834,7 +707,7 @@ func main() {
     type Response struct {
         Result struct {
             Image      string   `json:&quot;image&quot;`
-            Labelmap []map[string]interface{} `json:&quot;labelMap&quot;`
+            DetectedObjects []map[string]interface{} `json:&quot;detectedObjects&quot;`
         } `json:&quot;result&quot;`
     }
     var respData Response
@@ -855,7 +728,10 @@ func main() {
         return
     }
     fmt.Printf(&quot;Image saved at %s.jpg\n&quot;, outputImagePath)
-    // result.labelMap 记录图像中每个像素的类别标签（按照行优先顺序排列）详见API参考文档
+    fmt.Println(&quot;\nDetected objects:&quot;)
+    for _, category := range respData.Result.DetectedObjects {
+        fmt.Println(category)
+    }
 }
 </code></pre></details>
 
@@ -871,7 +747,7 @@ using Newtonsoft.Json.Linq;
 
 class Program
 {
-    static readonly string API_URL = &quot;http://localhost:8080/semantic-segmentation&quot;;
+    static readonly string API_URL = &quot;http://localhost:8080/small-object-segmentation&quot;;
     static readonly string imagePath = &quot;./demo.jpg&quot;;
     static readonly string outputImagePath = &quot;./out.jpg&quot;;
 
@@ -899,7 +775,8 @@ class Program
 
         File.WriteAllBytes(outputImagePath, outputImageBytes);
         Console.WriteLine($&quot;Output image saved at {outputImagePath}&quot;);
-        // result.labelMap 记录图像中每个像素的类别标签（按照行优先顺序排列）详见API参考文档
+        Console.WriteLine(&quot;\nDetected objects:&quot;);
+        Console.WriteLine(jsonResponse[&quot;result&quot;][&quot;detectedObjects&quot;].ToString());
     }
 }
 </code></pre></details>
@@ -909,7 +786,7 @@ class Program
 <pre><code class="language-js">const axios = require('axios');
 const fs = require('fs');
 
-const API_URL = 'http://localhost:8080/semantic-segmentation'
+const API_URL = 'http://localhost:8080/small-object-segmentation'
 const imagePath = './demo.jpg'
 const outputImagePath = &quot;./out.jpg&quot;;
 
@@ -938,7 +815,8 @@ axios.request(config)
       if (err) throw err;
       console.log(`Output image saved at ${outputImagePath}`);
     });
-    // result.labelMap 记录图像中每个像素的类别标签（按照行优先顺序排列）详见API参考文档
+    console.log(&quot;\nDetected objects:&quot;);
+    console.log(result[&quot;detectedObjects&quot;]);
 })
 .catch((error) =&gt; {
   console.log(error);
@@ -949,7 +827,7 @@ axios.request(config)
 
 <pre><code class="language-php">&lt;?php
 
-$API_URL = &quot;http://localhost:8080/semantic-segmentation&quot;; // 服务URL
+$API_URL = &quot;http://localhost:8080/small-object-segmentation&quot;; // 服务URL
 $image_path = &quot;./demo.jpg&quot;;
 $output_image_path = &quot;./out.jpg&quot;;
 
@@ -970,7 +848,9 @@ curl_close($ch);
 $result = json_decode($response, true)[&quot;result&quot;];
 file_put_contents($output_image_path, base64_decode($result[&quot;image&quot;]));
 echo &quot;Output image saved at &quot; . $output_image_path . &quot;\n&quot;;
-// result.labelMap 记录图像中每个像素的类别标签（按照行优先顺序排列）详见API参考文档
+echo &quot;\nDetected objects:\n&quot;;
+print_r($result[&quot;detectedObjects&quot;]);
+
 ?&gt;
 </code></pre></details>
 </details>
@@ -979,56 +859,9 @@ echo &quot;Output image saved at &quot; . $output_image_path . &quot;\n&quot;;
 📱 <b>端侧部署</b>：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/edge_deploy.md)。
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
 
+
 ## 4. 二次开发
-如果通用语义分割产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升通用语义分割产线的在您的场景中的识别效果。
-
-### 4.1 模型微调
-由于通用语义分割产线包含语义分割模块，如果模型产线的效果不及预期，您可以对分割效果差的图片进行分析，并参考以下表格中对应的微调教程链接进行模型微调。
-
-
-<table>
-  <thead>
-    <tr>
-      <th>情形</th>
-      <th>微调模块</th>
-      <th>微调参考链接</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>预测结果不达预期</td>
-      <td>语义分割模块</td>
-      <td><a href="../../../module_usage/tutorials/cv_modules/semantic_segmentation.md">链接</a></td>
-    </tr>
-  </tbody>
-</table>
-
-### 4.2 模型应用
-当您使用私有数据集完成微调训练后，可获得本地模型权重文件。
-
-若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径替换至产线配置文件中的对应位置即可：
-
-```yaml
-SubModules:
-  SemanticSegmentation:
-    module_name: semantic_segmentation
-    model_name: PP-LiteSeg-T
-    model_dir: null # 替换为微调后的语义分割模型权重路径
-    batch_size: 1
-    target_size: None
-```
-随后， 参考本地体验中的命令行方式或 Python 脚本方式，加载修改后的产线配置文件即可。
+当前产线暂时不支持微调训练，仅支持推理集成。关于该产线的微调训练，计划在未来支持。
 
 ## 5. 多硬件支持
-PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device`参数</b>即可完成不同硬件之间的无缝切换。
-
-例如，您使用昇腾 NPU 进行 语义分割 产线的推理，使用的 Python 命令为：
-
-```bash
-paddlex --pipeline semantic_segmentation \
-        --input makassaridn-road_demo.png \
-        --target_size -1 \
-        --save_path ./output \
-        --device npu:0
-```
-若您想在更多种类的硬件上使用通用语义分割产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。
+当前产线暂时仅支持GPU和CPU推理。关于该产线对于更多硬件的适配，计划在未来支持。
