@@ -372,6 +372,8 @@ class RepositoryGroupInstaller(object):
             if n in repo_pkgs:
                 # Skip repo packages
                 continue
+            elif check_installation_using_pip(n):
+                continue
             else:
                 line_n = [n]
                 fe = f"[{','.join(e)}]" if e else ""

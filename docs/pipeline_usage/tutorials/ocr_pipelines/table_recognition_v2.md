@@ -2,16 +2,16 @@
 comments: true
 ---
 
-# 通用表格识别产线使用教程
+# 通用表格识别产线v2使用教程
 
-## 1. 通用表格识别产线介绍
+## 1. 通用表格识别产线v2介绍
 表格识别是一种自动从文档或图像中识别和提取表格内容及其结构的技术，广泛应用于数据录入、信息检索和文档分析等领域。通过使用计算机视觉和机器学习算法，表格识别能够将复杂的表格信息转换为可编辑的格式，方便用户进一步处理和分析数据。
 
-通用表格识别产线用于解决表格识别任务，对图片中的表格进行识别，并以HTML格式输出。本产线集成了业界知名的 SLANet 和 SLANet_plus 表格识别模型。基于本产线，可实现对表格的精准预测，使用场景覆盖通用、制造、金融、交通等各个领域。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
+通用表格识别产线v2用于解决表格识别任务，对图片中的表格进行识别，并以HTML格式输出。与通用表格识别产线不同，本产线引入了表格分类和表格单元格检测两个模块，并将其与表格结构识别模块串联以完成表格识别任务。基于本产线，可实现对表格的精准预测，使用场景覆盖通用、制造、金融、交通等各个领域。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/01.png">
 
-<b>通用</b><b>表格识别</b><b>产线中包含必选的表格结构识别模块、文本检测模块和文本识别模块，以及可选的版面区域检测模块、文档图像方向分类模块和文本图像矫正模块</b>。
+<b>通用</b><b>表格识别</b><b>产线v2中包含必选的表格结构识别模块、表格分类模块、表格单元格定位模块、文本检测模块和文本识别模块，以及可选的版面区域检测模块、文档图像方向分类模块和文本图像矫正模块</b>。
 
 <b>如果您更注重模型的精度，请选择精度较高的模型；如果您更在意模型的推理速度，请选择推理速度较快的模型；如果您关注模型的存储大小，请选择存储体积较小的模型。</b>
 
@@ -27,7 +27,7 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>SLANet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_pretrained.pdparams">训练模型</a></td>
+<td>SLANet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SLANet_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_pretrained.pdparams">训练模型</a></td>
 <td>59.52</td>
 <td>522.536</td>
 <td>1845.37</td>
@@ -35,7 +35,7 @@ comments: true
 <td rowspan="2">SLANet 是百度飞桨视觉团队自研的表格结构识别模型。该模型通过采用CPU 友好型轻量级骨干网络PP-LCNet、高低层特征融合模块CSP-PAN、结构与位置信息对齐的特征解码模块SLA Head，大幅提升了表格结构识别的精度和推理速度。</td>
 </tr>
 <tr>
-<td>SLANet_plus</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_plus_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">训练模型</a></td>
+<td>SLANet_plus</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SLANet_plus_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">训练模型</a></td>
 <td>63.69</td>
 <td>522.536</td>
 <td>1845.37</td>
@@ -43,6 +43,54 @@ comments: true
 </tr>
 </table>
 <p><b>注：以上精度指标测量PaddleX 内部自建英文表格识别数据集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
+
+
+<p><b>表格分类模块模型：</b></p>
+<table>
+<tr>
+<th>模型</th><th>模型下载链接</th>
+<th>Top1 Acc(%)</th>
+<th>GPU推理耗时 (ms)</th>
+<th>CPU推理耗时 (ms)</th>
+<th>模型存储大小 (M)</th>
+</tr>
+<tr>
+<td>PP-LCNet_x1_0_table_cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/CLIP_vit_base_patch16_224_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_table_cls_pretrained.pdparams">训练模型</a></td>
+<td>--</td>
+<td>--</td>
+<td>--</td>
+<td>--</td>
+</tr>
+</table>
+<p><b>注：以上精度指标测量自 PaddleX 内部自建表格分类数据集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p></details>
+
+
+<p><b>表格单元格检测模块模型：</b></p>
+<table>
+<tr>
+<th>模型</th><th>模型下载链接</th>
+<th>mAP(%)</th>
+<th>GPU推理耗时 (ms)</th>
+<th>CPU推理耗时 (ms)</th>
+<th>模型存储大小 (M)</th>
+<th>介绍</th>
+</tr>
+<tr>
+<td>RT-DETR-L_wired_table_cell_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_wired_table_cell_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wired_table_cell_det_pretrained.pdparams">训练模型</a></td>
+<td rowspan="2">--</td>
+<td rowspan="2">--</td>
+<td rowspan="2">--</td>
+<td rowspan="2">--</td>
+<td rowspan="2">RT-DETR 是第一个实时的端到端目标检测模型。百度飞桨视觉团队基于 RT-DETR-L 作为基础模型，在自建表格单元格检测数据集上完成预训练，实现了对有线表格、无线表格均有较好性能的表格单元格检测。
+</td>
+</tr>
+<tr>
+<td>RT-DETR-L_wireless_table_cell_det</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_wireless_table_cell_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wired_table_cell_det_pretrained.pdparams">训练模型</a></td>
+</tr>
+</table>
+<p><b>注：以上精度指标测量自 PaddleX 内部自建表格单元格检测数据集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p></details>
 
 
 <p><b>文本检测模块模型：</b></p>
@@ -162,7 +210,7 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 </thead>
 <tbody>
 <tr>
-<td>PicoDet_layout_1x</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet_layout_1x</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet_layout_1x_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">训练模型</a></td>
 <td>86.8</td>
 <td>13.0</td>
 <td>91.3</td>
@@ -170,7 +218,7 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <td>基于PicoDet-1x在PubLayNet数据集训练的高效率版面区域定位模型，可定位包含文字、标题、表格、图片以及列表这5类区域</td>
 </tr>
 <tr>
-<td>PicoDet_layout_1x_table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_table_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet_layout_1x_table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet_layout_1x_table_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">训练模型</a></td>
 <td>95.7</td>
 <td>12.623</td>
 <td>90.8934</td>
@@ -178,7 +226,7 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <td>基于PicoDet-1x在自建数据集训练的高效率版面区域定位模型，可定位包含表格这1类区域</td>
 </tr>
 <tr>
-<td>PicoDet-S_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet-S_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet-S_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">训练模型</a></td>
 <td>87.1</td>
 <td>13.5</td>
 <td>45.8</td>
@@ -186,7 +234,7 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含3个类别：表格，图像和印章</td>
 </tr>
 <tr>
-<td>PicoDet-S_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet-S_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet-S_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">训练模型</a></td>
 <td>70.3</td>
 <td>13.6</td>
 <td>46.2</td>
@@ -194,7 +242,7 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</td>
 </tr>
 <tr>
-<td>PicoDet-L_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet-L_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet-L_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">训练模型</a></td>
 <td>89.3</td>
 <td>15.7</td>
 <td>159.8</td>
@@ -202,7 +250,7 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含3个类别：表格，图像和印章</td>
 </tr>
 <tr>
-<td>PicoDet-L_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet-L_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet-L_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">训练模型</a></td>
 <td>79.9</td>
 <td>17.2</td>
 <td>160.2</td>
@@ -210,7 +258,7 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</td>
 </tr>
 <tr>
-<td>RT-DETR-H_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">训练模型</a></td>
+<td>RT-DETR-H_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/RT-DETR-H_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">训练模型</a></td>
 <td>95.9</td>
 <td>114.6</td>
 <td>3832.6</td>
@@ -218,7 +266,7 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <td>基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型，包含3个类别：表格，图像和印章</td>
 </tr>
 <tr>
-<td>RT-DETR-H_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">训练模型</a></td>
+<td>RT-DETR-H_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/RT-DETR-H_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">训练模型</a></td>
 <td>92.6</td>
 <td>115.1</td>
 <td>3827.2</td>
@@ -242,7 +290,7 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 </thead>
 <tbody>
 <tr>
-<td>UVDoc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/UVDoc_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">训练模型</a></td>
+<td>UVDoc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/UVDoc_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">训练模型</a></td>
 <td>54.40</td>
 <td>30.3 M</td>
 <td>高精度文本图像矫正模型</td>
@@ -266,7 +314,7 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 </thead>
 <tbody>
 <tr>
-<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">训练模型</a></td>
+<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LCNet_x1_0_doc_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">训练模型</a></td>
 <td>99.06</td>
 <td>3.84845</td>
 <td>9.23735</td>
@@ -279,23 +327,19 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 
 
 ## 2. 快速开始
-PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可以在星河社区在线体验通用表格识别产线的效果，也可以在本地使用命令行或 Python 体验通用表格识别产线的效果。
+PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可以在本地使用命令行或 Python 体验通用表格识别产线v2的效果。
 
 ### 2.1 在线体验
-您可以[在线体验](https://aistudio.baidu.com/community/app/91661/webUI)通用表格识别产线的效果，用官方提供的 demo 图片进行识别，例如：
-
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/02.png">
-
-如果您对产线运行的效果满意，可以直接进行集成部署。您可以选择从云端下载部署包，也可以参考[2.2节本地体验](#22-本地体验)中的方法进行本地部署。如果对效果不满意，您可以利用私有数据<b>对产线中的模型进行微调训练</b>。如果您具备本地训练的硬件资源，可以直接在本地开展训练；如果没有，星河零代码平台提供了一键式训练服务，无需编写代码，只需上传数据后，即可一键启动训练任务。
+暂不支持在线体验。
 
 ### 2.2 本地体验
-在本地使用通用表格识别产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+在本地使用通用表格识别产线v2前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
 ### 2.1 命令行方式体验
 一行命令即可快速体验表格识别产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg)，并将 `--input` 替换为本地路径，进行预测
 
 ```bash
-paddlex --pipeline table_recognition \
+paddlex --pipeline table_recognition_v2 \
         --input table_recognition.jpg \
         --save_path ./output \
         --device gpu:0
@@ -306,143 +350,141 @@ paddlex --pipeline table_recognition \
 运行后，会将结果打印到终端上，结果如下：
 
 ```bash
-{'res': {'input_path': 'table_recognition.jpg', 'model_settings': {'use_doc_preprocessor': True, 'use_layout_detection': True, 'use_ocr_model': True}, 'doc_preprocessor_res': {'input_path': '0.jpg', 'model_settings': {'use_doc_orientation_classify': True, 'use_doc_unwarping': True}, 'angle': 0}, 'layout_det_res': {'input_path': None, 'boxes': [{'cls_id': 0, 'label': 'Table', 'score': 0.9196816086769104, 'coordinate': [0, 8.614925, 550.9877, 132]}]}, 'overall_ocr_res': {'input_path': '0.jpg', 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': [array([[232,   0],
-       [318,   1],
-       [318,  24],
-       [232,  21]], dtype=int16), array([[32, 38],
-       [67, 38],
-       [67, 55],
-       [32, 55]], dtype=int16), array([[119,  34],
-       [196,  34],
-       [196,  57],
-       [119,  57]], dtype=int16), array([[222,  29],
-       [396,  31],
-       [396,  60],
-       [222,  58]], dtype=int16), array([[420,  30],
-       [542,  32],
-       [542,  61],
-       [419,  59]], dtype=int16), array([[29, 71],
-       [72, 71],
-       [72, 92],
-       [29, 92]], dtype=int16), array([[287,  72],
-       [329,  72],
-       [329,  93],
-       [287,  93]], dtype=int16), array([[458,  68],
-       [501,  71],
-       [499,  94],
-       [456,  91]], dtype=int16), array([[  9, 101],
-       [ 89, 103],
-       [ 89, 130],
-       [  8, 128]], dtype=int16), array([[139, 105],
-       [172, 105],
-       [172, 126],
-       [139, 126]], dtype=int16), array([[274, 103],
-       [339, 101],
-       [340, 128],
-       [275, 130]], dtype=int16), array([[451, 103],
-       [508, 103],
-       [508, 126],
-       [451, 126]], dtype=int16)], 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], 'text_rec_score_thresh': 0, 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上，没想', '江、江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': [0.9943075180053711, 0.9951075315475464, 0.9907732009887695, 0.9975494146347046, 0.9974043369293213, 0.9983242750167847, 0.991967499256134, 0.9898287653923035, 0.9961177110671997, 0.9975040555000305, 0.9986456632614136, 0.9987970590591431], 'rec_polys': [array([[232,   0],
-       [318,   1],
-       [318,  24],
-       [232,  21]], dtype=int16), array([[32, 38],
-       [67, 38],
-       [67, 55],
-       [32, 55]], dtype=int16), array([[119,  34],
-       [196,  34],
-       [196,  57],
-       [119,  57]], dtype=int16), array([[222,  29],
-       [396,  31],
-       [396,  60],
-       [222,  58]], dtype=int16), array([[420,  30],
-       [542,  32],
-       [542,  61],
-       [419,  59]], dtype=int16), array([[29, 71],
-       [72, 71],
-       [72, 92],
-       [29, 92]], dtype=int16), array([[287,  72],
-       [329,  72],
-       [329,  93],
-       [287,  93]], dtype=int16), array([[458,  68],
-       [501,  71],
-       [499,  94],
-       [456,  91]], dtype=int16), array([[  9, 101],
-       [ 89, 103],
-       [ 89, 130],
-       [  8, 128]], dtype=int16), array([[139, 105],
-       [172, 105],
-       [172, 126],
-       [139, 126]], dtype=int16), array([[274, 103],
-       [339, 101],
-       [340, 128],
-       [275, 130]], dtype=int16), array([[451, 103],
-       [508, 103],
-       [508, 126],
-       [451, 126]], dtype=int16)], 'rec_boxes': array([[232,   0, 318,  24],
-       [ 32,  38,  67,  55],
-       [119,  34, 196,  57],
-       [222,  29, 396,  60],
-       [419,  30, 542,  61],
-       [ 29,  71,  72,  92],
-       [287,  72, 329,  93],
-       [456,  68, 501,  94],
-       [  8, 101,  89, 130],
-       [139, 105, 172, 126],
-       [274, 101, 340, 130],
-       [451, 103, 508, 126]], dtype=int16)}, 'table_res_list': [{'cell_box_list': array([[  8.        ,   9.61492538, 532.        ,  26.61492538],
-       [  3.        ,  27.61492538, 104.        ,  65.61492538],
-       [109.        ,  28.61492538, 215.        ,  66.61492538],
-       [219.        ,  28.61492538, 396.        ,  64.61492538],
-       [396.        ,  29.61492538, 546.        ,  66.61492538],
-       [  1.        ,  65.61492538, 110.        ,  93.61492538],
-       [111.        ,  65.61492538, 215.        ,  94.61492538],
-       [220.        ,  66.61492538, 397.        ,  94.61492538],
-       [398.        ,  67.61492538, 544.        ,  94.61492538],
-       [  2.        ,  98.61492538, 111.        , 131.61492538],
-       [113.        ,  98.61492538, 216.        , 131.61492538],
-       [219.        ,  98.61492538, 400.        , 131.61492538],
-       [403.        ,  99.61492538, 545.        , 130.61492538]]), 'pred_html': '<html><body><table><tr><td colspan="4">CRuncover</td></tr><tr><td>Dres</td><td>连续工作3</td><td>取出来放在网上，没想</td><td>江、江等八大</td></tr><tr><td>Abstr</td><td></td><td>rSrivi</td><td>$709.</td></tr><tr><td>cludingGiv</td><td>2.72</td><td>Ingcubic</td><td>$744.78</td></tr></table></body></html>', 'table_ocr_pred': {'rec_polys': [array([[232,   0],
-       [318,   1],
-       [318,  24],
-       [232,  21]], dtype=int16), array([[32, 38],
-       [67, 38],
-       [67, 55],
-       [32, 55]], dtype=int16), array([[119,  34],
-       [196,  34],
-       [196,  57],
-       [119,  57]], dtype=int16), array([[222,  29],
-       [396,  31],
-       [396,  60],
-       [222,  58]], dtype=int16), array([[420,  30],
-       [542,  32],
-       [542,  61],
-       [419,  59]], dtype=int16), array([[29, 71],
-       [72, 71],
-       [72, 92],
-       [29, 92]], dtype=int16), array([[287,  72],
-       [329,  72],
-       [329,  93],
-       [287,  93]], dtype=int16), array([[458,  68],
-       [501,  71],
-       [499,  94],
-       [456,  91]], dtype=int16), array([[  9, 101],
-       [ 89, 103],
-       [ 89, 130],
-       [  8, 128]], dtype=int16), array([[139, 105],
-       [172, 105],
-       [172, 126],
-       [139, 126]], dtype=int16), array([[274, 103],
-       [339, 101],
-       [340, 128],
-       [275, 130]], dtype=int16), array([[451, 103],
-       [508, 103],
-       [508, 126],
-       [451, 126]], dtype=int16)], 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上，没想', '江、江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': [0.9943075180053711, 0.9951075315475464, 0.9907732009887695, 0.9975494146347046, 0.9974043369293213, 0.9983242750167847, 0.991967499256134, 0.9898287653923035, 0.9961177110671997, 0.9975040555000305, 0.9986456632614136, 0.9987970590591431], 'rec_boxes': [array([232,   0, 318,  24], dtype=int16), array([32, 38, 67, 55], dtype=int16), array([119,  34, 196,  57], dtype=int16), array([222,  29, 396,  60], dtype=int16), array([419,  30, 542,  61], dtype=int16), array([29, 71, 72, 92], dtype=int16), array([287,  72, 329,  93], dtype=int16), array([456,  68, 501,  94], dtype=int16), array([  8, 101,  89, 130], dtype=int16), array([139, 105, 172, 126], dtype=int16), array([274, 101, 340, 130], dtype=int16), array([451, 103, 508, 126], dtype=int16)]}}]}}
+{'res': {'input_path': 'table_recognition.jpg', 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True, 'use_ocr_model': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 0, 'label': 'Table', 'score': 0.9922188520431519, 'coordinate': [3.0127392, 0.14648987, 547.5102, 127.72023]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': [array([[234,   6],
+       [316,   6],
+       [316,  25],
+       [234,  25]], dtype=int16), array([[38, 39],
+       [73, 39],
+       [73, 57],
+       [38, 57]], dtype=int16), array([[122,  32],
+       [201,  32],
+       [201,  58],
+       [122,  58]], dtype=int16), array([[227,  34],
+       [346,  34],
+       [346,  57],
+       [227,  57]], dtype=int16), array([[351,  34],
+       [391,  34],
+       [391,  58],
+       [351,  58]], dtype=int16), array([[417,  35],
+       [534,  35],
+       [534,  58],
+       [417,  58]], dtype=int16), array([[34, 70],
+       [78, 70],
+       [78, 90],
+       [34, 90]], dtype=int16), array([[287,  70],
+       [328,  70],
+       [328,  90],
+       [287,  90]], dtype=int16), array([[454,  69],
+       [496,  69],
+       [496,  90],
+       [454,  90]], dtype=int16), array([[ 17, 101],
+       [ 95, 101],
+       [ 95, 124],
+       [ 17, 124]], dtype=int16), array([[144, 101],
+       [178, 101],
+       [178, 122],
+       [144, 122]], dtype=int16), array([[278, 101],
+       [338, 101],
+       [338, 124],
+       [278, 124]], dtype=int16), array([[448, 101],
+       [503, 101],
+       [503, 121],
+       [448, 121]], dtype=int16)], 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], 'text_rec_score_thresh': 0, 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': [0.9951260685920715, 0.9943379759788513, 0.9968608021736145, 0.9978817105293274, 0.9985721111297607, 0.9616036415100098, 0.9977153539657593, 0.987593948841095, 0.9906861186027527, 0.9959743618965149, 0.9970152378082275, 0.9977849721908569, 0.9984450936317444], 'rec_polys': [array([[234,   6],
+       [316,   6],
+       [316,  25],
+       [234,  25]], dtype=int16), array([[38, 39],
+       [73, 39],
+       [73, 57],
+       [38, 57]], dtype=int16), array([[122,  32],
+       [201,  32],
+       [201,  58],
+       [122,  58]], dtype=int16), array([[227,  34],
+       [346,  34],
+       [346,  57],
+       [227,  57]], dtype=int16), array([[351,  34],
+       [391,  34],
+       [391,  58],
+       [351,  58]], dtype=int16), array([[417,  35],
+       [534,  35],
+       [534,  58],
+       [417,  58]], dtype=int16), array([[34, 70],
+       [78, 70],
+       [78, 90],
+       [34, 90]], dtype=int16), array([[287,  70],
+       [328,  70],
+       [328,  90],
+       [287,  90]], dtype=int16), array([[454,  69],
+       [496,  69],
+       [496,  90],
+       [454,  90]], dtype=int16), array([[ 17, 101],
+       [ 95, 101],
+       [ 95, 124],
+       [ 17, 124]], dtype=int16), array([[144, 101],
+       [178, 101],
+       [178, 122],
+       [144, 122]], dtype=int16), array([[278, 101],
+       [338, 101],
+       [338, 124],
+       [278, 124]], dtype=int16), array([[448, 101],
+       [503, 101],
+       [503, 121],
+       [448, 121]], dtype=int16)], 'rec_boxes': array([[234,   6, 316,  25],
+       [ 38,  39,  73,  57],
+       [122,  32, 201,  58],
+       [227,  34, 346,  57],
+       [351,  34, 391,  58],
+       [417,  35, 534,  58],
+       [ 34,  70,  78,  90],
+       [287,  70, 328,  90],
+       [454,  69, 496,  90],
+       [ 17, 101,  95, 124],
+       [144, 101, 178, 122],
+       [278, 101, 338, 124],
+       [448, 101, 503, 121]], dtype=int16)}, 'table_res_list': [{'cell_box_list': [array([3.18822289e+00, 1.46489874e-01, 5.46996138e+02, 3.08782365e+01]), array([  3.21032453,  31.1510637 , 110.20750237,  65.14108063]), array([110.18174553,  31.13076188, 213.00813103,  65.02860047]), array([212.96108818,  31.09959008, 404.19618034,  64.99535157]), array([404.08112907,  31.18304802, 547.00864983,  65.0847223 ]), array([  3.21772957,  65.0738733 , 110.33685875,  96.07921387]), array([110.23703575,  65.02486207, 213.08839226,  96.01378419]), array([213.06095695,  64.96230103, 404.28425407,  95.97141816]), array([404.23704338,  65.04879548, 547.01273918,  96.03654267]), array([  3.22793937,  96.08334137, 110.38572502, 127.08698823]), array([110.40586662,  96.10539795, 213.19943047, 127.07002045]), array([213.12627983,  96.0539148 , 404.42686272, 127.02842499]), array([404.33042717,  96.07251526, 547.01273918, 126.45088746])], 'pred_html': '<html><body><table><tr><td colspan="4">CRuncover</td></tr><tr><td>Dres</td><td>连续工作3</td><td>取出来放在网上 没想</td><td>江、整江等八大</td></tr><tr><td>Abstr</td><td></td><td>rSrivi</td><td>$709.</td></tr><tr><td>cludingGiv</td><td>2.72</td><td>Ingcubic</td><td>$744.78</td></tr></table></body></html>', 'table_ocr_pred': {'rec_polys': [array([[234,   6],
+       [316,   6],
+       [316,  25],
+       [234,  25]], dtype=int16), array([[38, 39],
+       [73, 39],
+       [73, 57],
+       [38, 57]], dtype=int16), array([[122,  32],
+       [201,  32],
+       [201,  58],
+       [122,  58]], dtype=int16), array([[227,  34],
+       [346,  34],
+       [346,  57],
+       [227,  57]], dtype=int16), array([[351,  34],
+       [391,  34],
+       [391,  58],
+       [351,  58]], dtype=int16), array([[417,  35],
+       [534,  35],
+       [534,  58],
+       [417,  58]], dtype=int16), array([[34, 70],
+       [78, 70],
+       [78, 90],
+       [34, 90]], dtype=int16), array([[287,  70],
+       [328,  70],
+       [328,  90],
+       [287,  90]], dtype=int16), array([[454,  69],
+       [496,  69],
+       [496,  90],
+       [454,  90]], dtype=int16), array([[ 17, 101],
+       [ 95, 101],
+       [ 95, 124],
+       [ 17, 124]], dtype=int16), array([[144, 101],
+       [178, 101],
+       [178, 122],
+       [144, 122]], dtype=int16), array([[278, 101],
+       [338, 101],
+       [338, 124],
+       [278, 124]], dtype=int16), array([[448, 101],
+       [503, 101],
+       [503, 121],
+       [448, 121]], dtype=int16)], 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': [0.9951260685920715, 0.9943379759788513, 0.9968608021736145, 0.9978817105293274, 0.9985721111297607, 0.9616036415100098, 0.9977153539657593, 0.987593948841095, 0.9906861186027527, 0.9959743618965149, 0.9970152378082275, 0.9977849721908569, 0.9984450936317444], 'rec_boxes': [array([234,   6, 316,  25], dtype=int16), array([38, 39, 73, 57], dtype=int16), array([122,  32, 201,  58], dtype=int16), array([227,  34, 346,  57], dtype=int16), array([351,  34, 391,  58], dtype=int16), array([417,  35, 534,  58], dtype=int16), array([34, 70, 78, 90], dtype=int16), array([287,  70, 328,  90], dtype=int16), array([454,  69, 496,  90], dtype=int16), array([ 17, 101,  95, 124], dtype=int16), array([144, 101, 178, 122], dtype=int16), array([278, 101, 338, 124], dtype=int16), array([448, 101, 503, 121], dtype=int16)]}}]}}
 ```
 运行结果参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的结果解释。
 
 可视化结果保存在`save_path`下，其中表格识别的可视化结果如下：
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/03.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/03.png">
 
 
 ### 2.2 Python脚本方式集成
@@ -451,7 +493,7 @@ paddlex --pipeline table_recognition \
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline_name="table_recognition")
+pipeline = create_pipeline(pipeline_name="table_recognition_v2")
 
 output = pipeline.predict(
     input="table_recognition.jpg",
@@ -469,7 +511,7 @@ for res in output:
 
 在上述 Python 脚本中，执行了如下几个步骤：
 
-（1）通过 `create_pipeline()` 实例化通用表格识别产线对象，具体参数说明如下：
+（1）通过 `create_pipeline()` 实例化通用表格识别产线v2对象，具体参数说明如下：
 
 <table>
 <thead>
@@ -502,7 +544,7 @@ for res in output:
 </tbody>
 </table>
 
-（2）调用通用表格识别产线对象的 `predict()` 方法进行推理预测。该方法将返回一个 `generator`。以下是 `predict()` 方法的参数及其说明：
+（2）调用通用表格识别产线v2对象的 `predict()` 方法进行推理预测。该方法将返回一个 `generator`。以下是 `predict()` 方法的参数及其说明：
 
 <table>
 <thead>
@@ -759,8 +801,8 @@ for res in output:
 
 - 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
 - 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_ocr_res_img.{your_img_extension}`，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)
-- 调用`save_to_html()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}.html`，如果指定为文件，则直接保存到该文件中。在通用表格识别产线中，将会把图像中表格的HTML形式写入到指定的html文件中。
-- 调用`save_to_xlsx()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}.xlsx`，如果指定为文件，则直接保存到该文件中。在通用表格识别产线中，将会把图像中表格的Excel表格形式写入到指定的xlsx文件中。
+- 调用`save_to_html()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}.html`，如果指定为文件，则直接保存到该文件中。在通用表格识别产线v2中，将会把图像中表格的HTML形式写入到指定的html文件中。
+- 调用`save_to_xlsx()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}.xlsx`，如果指定为文件，则直接保存到该文件中。在通用表格识别产线v2中，将会把图像中表格的Excel表格形式写入到指定的xlsx文件中。
 
 * 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
 
@@ -784,18 +826,18 @@ for res in output:
 - `json` 属性获取的预测结果为dict类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
 - `img` 属性返回的预测结果是一个字典类型的数据。其中，键分别为 `table_res_img`、`ocr_res_img` 、`layout_res_img` 和 `preprocessed_img`，对应的值是四个 `Image.Image` 对象，按顺序分别为：表格识别结果的可视化图像、OCR 结果的可视化图像、版面区域检测结果的可视化图像、图像预处理的可视化图像。如果没有使用某个子模块，则字典中不包含对应的结果图像。
 
-此外，您可以获取通用表格识别产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+此外，您可以获取通用表格识别产线v2配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
 
 ```
-paddlex --get_pipeline_config table_recognition --save_path ./my_path
+paddlex --get_pipeline_config table_recognition_v2 --save_path ./my_path
 ```
 
-若您获取了配置文件，即可对通用表格识别产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。示例如下：
+若您获取了配置文件，即可对通用表格识别产线v2各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。示例如下：
 
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline_name="./my_path/table_recognition.yaml")
+pipeline = create_pipeline(pipeline_name="./my_path/table_recognition_v2.yaml")
 
 output = pipeline.predict(
     input="table_recognition.jpg",
@@ -812,7 +854,7 @@ for res in output:
 
 ```
 
-<b>注：</b> 配置文件中的参数为产线初始化参数，如果希望更改通用通用表格识别产线初始化参数，可以直接修改配置文件中的参数，并加载配置文件进行预测。同时，CLI 预测也支持传入配置文件，`--pipeline` 指定配置文件的路径即可。
+<b>注：</b> 配置文件中的参数为产线初始化参数，如果希望更改通用通用表格识别产线v2初始化参数，可以直接修改配置文件中的参数，并加载配置文件进行预测。同时，CLI 预测也支持传入配置文件，`--pipeline` 指定配置文件的路径即可。
 
 
 ## 3. 开发集成/部署
@@ -1043,10 +1085,10 @@ for i, res in enumerate(result[&quot;tableRecResults&quot;]):
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
 
 ## 4. 二次开发
-如果通用表格识别产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升通用表格识别产线的在您的场景中的识别效果。
+如果通用表格识别产线v2提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升通用表格识别产线v2的在您的场景中的识别效果。
 
 ### 4.1 模型微调
-由于通用表格识别产线包含若干模块，模型产线的效果如果不及预期，可能来自于其中任何一个模块。您可以对识别效果差的图片进行分析，进而确定是哪个模块存在问题，并参考以下表格中对应的微调教程链接进行模型微调。
+由于通用表格识别产线v2包含若干模块，模型产线的效果如果不及预期，可能来自于其中任何一个模块。您可以对识别效果差的图片进行分析，进而确定是哪个模块存在问题，并参考以下表格中对应的微调教程链接进行模型微调。
 
 <table>
   <thead>
@@ -1058,7 +1100,17 @@ for i, res in enumerate(result[&quot;tableRecResults&quot;]):
   </thead>
   <tbody>
     <tr>
-      <td>表格结构识别错误或单元格定位错误</td>
+      <td>表格结分类错误</td>
+      <td>表格分类模块</td>
+      <td><a href="../../../module_usage/tutorials/ocr_modules/table_classification.md">链接</a></td>
+    </tr>
+    <tr>
+      <td>表格单元格定位错误</td>
+      <td>表格单元格检测模块</td>
+      <td><a href="../../../module_usage/tutorials/ocr_modules/table_cells_detection.md">链接</a></td>
+    </tr>
+    <tr>
+      <td>表格结构识别错误</td>
       <td>表格结构识别模块</td>
       <td><a href="../../../module_usage/tutorials/ocr_modules/table_structure_recognition.md">链接</a></td>
     </tr>
@@ -1102,10 +1154,30 @@ SubModules:
     model_name: PicoDet_layout_1x_table
     model_dir: null # 替换为微调后的版面区域检测模型权重路径
 
-  TableStructureRecognition:
+  TableClassification:
+    module_name: table_classification
+    model_name: PP-LCNet_x1_0_table_cls
+    model_dir: null # 替换为微调后的表格分类模型权重路径
+
+  WiredTableStructureRecognition:
     module_name: table_structure_recognition
-    model_name: SLANet_plus
-    model_dir: null # 替换为微调后的表格结构识别模型权重路径
+    model_name: SLANeXt_wired
+    model_dir: null # 替换为微调后的有线表格结构识别模型权重路径
+  
+  WirelessTableStructureRecognition:
+    module_name: table_structure_recognition
+    model_name: SLANeXt_wireless
+    model_dir: null # 替换为微调后的无线表格结构识别模型权重路径
+  
+  WiredTableCellsDetection:
+    module_name: table_cells_detection
+    model_name: RT-DETR-L_wired_table_cell_det
+    model_dir: null # 替换为微调后的有线表格单元格检测模型权重路径
+  
+  WirelessTableCellsDetection:
+    module_name: table_cells_detection
+    model_name: RT-DETR-L_wireless_table_cell_det
+    model_dir: null # 替换为微调后的无线表格单元格检测模型权重路径
 
 SubPipelines:
   DocPreprocessor:
@@ -1154,9 +1226,9 @@ PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多�
 例如，您使用昇腾 NPU 进行 OCR 产线的推理，使用的 Python 命令为：
 
 ```bash
-paddlex --pipeline table_recognition \
+paddlex --pipeline table_recognition_v2 \
         --input table_recognition.jpg \
         --save_path ./output \
         --device npu:0
 ```
-若您想在更多种类的硬件上使用通用表格识别产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。
+若您想在更多种类的硬件上使用通用表格识别产线v2，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

@@ -12,6 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ast import literal_eval
+from pydantic import TypeAdapter, ValidationError
+from functools import wraps
+from typing import Dict, List, Tuple, Union, Literal, Optional
+
+
+def custom_type(cli_expected_type):
+    """Create validator for CLI input conversion and type checking"""
+
+    def validator(cli_input: str) -> cli_expected_type:
+        try:
+            parsed = literal_eval(cli_input)
+        except (ValueError, SyntaxError, TypeError, MemoryError, RecursionError) as exc:
+            err = f"""Malformed input:
+            - Input: {cli_input!r}
+            - Error: {exc}"""
+            raise ValueError(err) from exc
+
+        try:
+            return TypeAdapter(cli_expected_type).validate_python(parsed)
+        except ValidationError as exc:
+            err = f"""Invalid input type:
+            - Expected: {cli_expected_type}
+            - Received: {cli_input!r}
+            """
+            raise ValueError(err) from exc
+
+    return validator
+
+
 PIPELINE_ARGUMENTS = {
     "OCR": [
         {
@@ -214,9 +244,27 @@ PIPELINE_ARGUMENTS = {
             "help": "Sets the layout merge bboxes mode for layout detection.",
         },
     ],
-    "instance_segmentation": None,
-    "semantic_segmentation": None,
-    "small_object_detection": None,
+    "instance_segmentation": [
+        {
+            "name": "--threshold",
+            "type": custom_type(Optional[float]),
+            "help": "Sets the threshold for instance segmentation.",
+        },
+    ],
+    "semantic_segmentation": [
+        {
+            "name": "--target_size",
+            "type": custom_type(Optional[Union[int, Tuple[int, int], Literal[-1]]]),
+            "help": "Sets the inference image resolution for semantic segmentation.",
+        },
+    ],
+    "small_object_detection": [
+        {
+            "name": "--threshold",
+            "type": custom_type(Optional[Union[float, dict[int, float]]]),
+            "help": "Sets the threshold for small object detection.",
+        },
+    ],
     "anomaly_detection": None,
     "video_classification": [
         {
@@ -247,6 +295,37 @@ PIPELINE_ARGUMENTS = {
             "name": "--use_doc_unwarping",
             "type": bool,
             "help": "Determines whether to use document unwarping.",
+        },
+    ],
+    "rotated_object_detection": [
+        {
+            "name": "--threshold",
+            "type": custom_type(Optional[Union[float, dict[int, float]]]),
+            "help": "Sets the threshold for rotated object detection.",
+        },
+    ],
+    "open_vocabulary_detection": [
+        {
+            "name": "--thresholds",
+            "type": custom_type(dict[str, float]),
+            "help": "Sets the thresholds for open vocabulary detection.",
+        },
+        {
+            "name": "--prompt",
+            "type": str,
+            "help": "Sets the prompt for open vocabulary detection.",
+        },
+    ],
+    "open_vocabulary_segmentation": [
+        {
+            "name": "--prompt_type",
+            "type": str,
+            "help": "Sets the prompt type for open vocabulary segmentation.",
+        },
+        {
+            "name": "--prompt",
+            "type": custom_type(list[list[float]]),
+            "help": "Sets the prompt for open vocabulary segmentation.",
         },
     ],
 }
