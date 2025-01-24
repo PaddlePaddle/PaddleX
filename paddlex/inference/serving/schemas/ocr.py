@@ -34,7 +34,7 @@ INFER_ENDPOINT: Final[str] = "/ocr"
 class InferRequest(ocr.BaseInferRequest):
     useDocOrientationClassify: Optional[bool] = None
     useDocUnwarping: Optional[bool] = None
-    useTextlineOrientation: Optional[bool] = False
+    useTextlineOrientation: Optional[bool] = None
     textDetLimitSideLen: Optional[int] = None
     textDetLimitType: Optional[Literal["min", "max"]] = None
     # Better to use "threshold"? Be consistent with the pipeline API though.
