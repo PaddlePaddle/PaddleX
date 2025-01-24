@@ -451,7 +451,7 @@ paddlex --pipeline table_recognition \
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="table_recognition")
+pipeline = create_pipeline(pipeline_name="table_recognition")
 
 output = pipeline.predict(
     input="table_recognition.jpg",
@@ -795,7 +795,7 @@ paddlex --get_pipeline_config table_recognition --save_path ./my_path
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/table_recognition.yaml")
+pipeline = create_pipeline(pipeline_name="./my_path/table_recognition.yaml")
 
 output = pipeline.predict(
     input="table_recognition.jpg",

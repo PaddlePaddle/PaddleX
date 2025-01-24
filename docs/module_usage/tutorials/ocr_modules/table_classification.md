@@ -199,7 +199,7 @@ for res in output:
 如果你追求更高精度的现有模型，可以使用 PaddleX 的二次开发能力，开发更好的表格分类模型。在使用 PaddleX 开发表格分类模型之前，请务必安装 PaddleX 的 表格分类  [PaddleX本地安装教程](../../../installation/installation.md)中的二次开发部分。
 
 ### 4.1 数据准备
-在进行模型训练前，需要准备相应任务模块的数据集。PaddleX 针对每一个模块提供了数据校验功能，<b>只有通过数据校验的数据才可以进行模型训练</b>。此外，PaddleX 为每一个模块都提供了 Demo 数据集，您可以基于官方提供的 Demo 数据完成后续的开发。若您希望用私有数据集进行后续的模型训练，可以参考[PaddleX表格分类任务模块数据标注教程](../../../data_annotations/cv_modules/table_classification.md)
+在进行模型训练前，需要准备相应任务模块的数据集。PaddleX 针对每一个模块提供了数据校验功能，<b>只有通过数据校验的数据才可以进行模型训练</b>。此外，PaddleX 为每一个模块都提供了 Demo 数据集，您可以基于官方提供的 Demo 数据完成后续的开发。若您希望用私有数据集进行后续的模型训练，可以参考[PaddleX图像分类任务模块数据标注教程](../../../data_annotations/cv_modules/image_classification.md)
 
 #### 4.1.1 Demo 数据下载
 您可以参考下面的命令将 Demo 数据集下载到指定文件夹：
@@ -391,7 +391,7 @@ python main.py -c paddlex/configs/modules/table_classification/PP-LCNet_x1_0_tab
 
 1.<b>产线集成</b>
 
-表格分类模块可以集成的 PaddleX 产线有[通用表格分类产线v2](../../../pipeline_usage/tutorials/cv_pipelines/table_classification_v2.md)，只需要替换模型路径即可完成相关产线的表格分类模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
+表格分类模块可以集成的 PaddleX 产线有[通用表格分类产线v2](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.md)，只需要替换模型路径即可完成相关产线的表格分类模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
 
 2.<b>模块集成</b>
 

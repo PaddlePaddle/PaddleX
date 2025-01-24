@@ -327,14 +327,10 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 
 
 ## 2. 快速开始
-PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可以在星河社区在线体验通用表格识别产线v2的效果，也可以在本地使用命令行或 Python 体验通用表格识别产线v2的效果。
+PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可以在本地使用命令行或 Python 体验通用表格识别产线v2的效果。
 
 ### 2.1 在线体验
-您可以[在线体验](https://aistudio.baidu.com/community/app/91661/webUI)通用表格识别产线v2的效果，用官方提供的 demo 图片进行识别，例如：
-
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/02.png">
-
-如果您对产线运行的效果满意，可以直接进行集成部署。您可以选择从云端下载部署包，也可以参考[2.2节本地体验](#22-本地体验)中的方法进行本地部署。如果对效果不满意，您可以利用私有数据<b>对产线中的模型进行微调训练</b>。如果您具备本地训练的硬件资源，可以直接在本地开展训练；如果没有，星河零代码平台提供了一键式训练服务，无需编写代码，只需上传数据后，即可一键启动训练任务。
+暂不支持在线体验。
 
 ### 2.2 本地体验
 在本地使用通用表格识别产线v2前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
@@ -354,7 +350,136 @@ paddlex --pipeline table_recognition_v2 \
 运行后，会将结果打印到终端上，结果如下：
 
 ```bash
-
+{'res': {'input_path': 'table_recognition.jpg', 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True, 'use_ocr_model': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 0, 'label': 'Table', 'score': 0.9922188520431519, 'coordinate': [3.0127392, 0.14648987, 547.5102, 127.72023]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': [array([[234,   6],
+       [316,   6],
+       [316,  25],
+       [234,  25]], dtype=int16), array([[38, 39],
+       [73, 39],
+       [73, 57],
+       [38, 57]], dtype=int16), array([[122,  32],
+       [201,  32],
+       [201,  58],
+       [122,  58]], dtype=int16), array([[227,  34],
+       [346,  34],
+       [346,  57],
+       [227,  57]], dtype=int16), array([[351,  34],
+       [391,  34],
+       [391,  58],
+       [351,  58]], dtype=int16), array([[417,  35],
+       [534,  35],
+       [534,  58],
+       [417,  58]], dtype=int16), array([[34, 70],
+       [78, 70],
+       [78, 90],
+       [34, 90]], dtype=int16), array([[287,  70],
+       [328,  70],
+       [328,  90],
+       [287,  90]], dtype=int16), array([[454,  69],
+       [496,  69],
+       [496,  90],
+       [454,  90]], dtype=int16), array([[ 17, 101],
+       [ 95, 101],
+       [ 95, 124],
+       [ 17, 124]], dtype=int16), array([[144, 101],
+       [178, 101],
+       [178, 122],
+       [144, 122]], dtype=int16), array([[278, 101],
+       [338, 101],
+       [338, 124],
+       [278, 124]], dtype=int16), array([[448, 101],
+       [503, 101],
+       [503, 121],
+       [448, 121]], dtype=int16)], 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], 'text_rec_score_thresh': 0, 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': [0.9951260685920715, 0.9943379759788513, 0.9968608021736145, 0.9978817105293274, 0.9985721111297607, 0.9616036415100098, 0.9977153539657593, 0.987593948841095, 0.9906861186027527, 0.9959743618965149, 0.9970152378082275, 0.9977849721908569, 0.9984450936317444], 'rec_polys': [array([[234,   6],
+       [316,   6],
+       [316,  25],
+       [234,  25]], dtype=int16), array([[38, 39],
+       [73, 39],
+       [73, 57],
+       [38, 57]], dtype=int16), array([[122,  32],
+       [201,  32],
+       [201,  58],
+       [122,  58]], dtype=int16), array([[227,  34],
+       [346,  34],
+       [346,  57],
+       [227,  57]], dtype=int16), array([[351,  34],
+       [391,  34],
+       [391,  58],
+       [351,  58]], dtype=int16), array([[417,  35],
+       [534,  35],
+       [534,  58],
+       [417,  58]], dtype=int16), array([[34, 70],
+       [78, 70],
+       [78, 90],
+       [34, 90]], dtype=int16), array([[287,  70],
+       [328,  70],
+       [328,  90],
+       [287,  90]], dtype=int16), array([[454,  69],
+       [496,  69],
+       [496,  90],
+       [454,  90]], dtype=int16), array([[ 17, 101],
+       [ 95, 101],
+       [ 95, 124],
+       [ 17, 124]], dtype=int16), array([[144, 101],
+       [178, 101],
+       [178, 122],
+       [144, 122]], dtype=int16), array([[278, 101],
+       [338, 101],
+       [338, 124],
+       [278, 124]], dtype=int16), array([[448, 101],
+       [503, 101],
+       [503, 121],
+       [448, 121]], dtype=int16)], 'rec_boxes': array([[234,   6, 316,  25],
+       [ 38,  39,  73,  57],
+       [122,  32, 201,  58],
+       [227,  34, 346,  57],
+       [351,  34, 391,  58],
+       [417,  35, 534,  58],
+       [ 34,  70,  78,  90],
+       [287,  70, 328,  90],
+       [454,  69, 496,  90],
+       [ 17, 101,  95, 124],
+       [144, 101, 178, 122],
+       [278, 101, 338, 124],
+       [448, 101, 503, 121]], dtype=int16)}, 'table_res_list': [{'cell_box_list': [array([3.18822289e+00, 1.46489874e-01, 5.46996138e+02, 3.08782365e+01]), array([  3.21032453,  31.1510637 , 110.20750237,  65.14108063]), array([110.18174553,  31.13076188, 213.00813103,  65.02860047]), array([212.96108818,  31.09959008, 404.19618034,  64.99535157]), array([404.08112907,  31.18304802, 547.00864983,  65.0847223 ]), array([  3.21772957,  65.0738733 , 110.33685875,  96.07921387]), array([110.23703575,  65.02486207, 213.08839226,  96.01378419]), array([213.06095695,  64.96230103, 404.28425407,  95.97141816]), array([404.23704338,  65.04879548, 547.01273918,  96.03654267]), array([  3.22793937,  96.08334137, 110.38572502, 127.08698823]), array([110.40586662,  96.10539795, 213.19943047, 127.07002045]), array([213.12627983,  96.0539148 , 404.42686272, 127.02842499]), array([404.33042717,  96.07251526, 547.01273918, 126.45088746])], 'pred_html': '<html><body><table><tr><td colspan="4">CRuncover</td></tr><tr><td>Dres</td><td>连续工作3</td><td>取出来放在网上 没想</td><td>江、整江等八大</td></tr><tr><td>Abstr</td><td></td><td>rSrivi</td><td>$709.</td></tr><tr><td>cludingGiv</td><td>2.72</td><td>Ingcubic</td><td>$744.78</td></tr></table></body></html>', 'table_ocr_pred': {'rec_polys': [array([[234,   6],
+       [316,   6],
+       [316,  25],
+       [234,  25]], dtype=int16), array([[38, 39],
+       [73, 39],
+       [73, 57],
+       [38, 57]], dtype=int16), array([[122,  32],
+       [201,  32],
+       [201,  58],
+       [122,  58]], dtype=int16), array([[227,  34],
+       [346,  34],
+       [346,  57],
+       [227,  57]], dtype=int16), array([[351,  34],
+       [391,  34],
+       [391,  58],
+       [351,  58]], dtype=int16), array([[417,  35],
+       [534,  35],
+       [534,  58],
+       [417,  58]], dtype=int16), array([[34, 70],
+       [78, 70],
+       [78, 90],
+       [34, 90]], dtype=int16), array([[287,  70],
+       [328,  70],
+       [328,  90],
+       [287,  90]], dtype=int16), array([[454,  69],
+       [496,  69],
+       [496,  90],
+       [454,  90]], dtype=int16), array([[ 17, 101],
+       [ 95, 101],
+       [ 95, 124],
+       [ 17, 124]], dtype=int16), array([[144, 101],
+       [178, 101],
+       [178, 122],
+       [144, 122]], dtype=int16), array([[278, 101],
+       [338, 101],
+       [338, 124],
+       [278, 124]], dtype=int16), array([[448, 101],
+       [503, 101],
+       [503, 121],
+       [448, 121]], dtype=int16)], 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': [0.9951260685920715, 0.9943379759788513, 0.9968608021736145, 0.9978817105293274, 0.9985721111297607, 0.9616036415100098, 0.9977153539657593, 0.987593948841095, 0.9906861186027527, 0.9959743618965149, 0.9970152378082275, 0.9977849721908569, 0.9984450936317444], 'rec_boxes': [array([234,   6, 316,  25], dtype=int16), array([38, 39, 73, 57], dtype=int16), array([122,  32, 201,  58], dtype=int16), array([227,  34, 346,  57], dtype=int16), array([351,  34, 391,  58], dtype=int16), array([417,  35, 534,  58], dtype=int16), array([34, 70, 78, 90], dtype=int16), array([287,  70, 328,  90], dtype=int16), array([454,  69, 496,  90], dtype=int16), array([ 17, 101,  95, 124], dtype=int16), array([144, 101, 178, 122], dtype=int16), array([278, 101, 338, 124], dtype=int16), array([448, 101, 503, 121], dtype=int16)]}}]}}
 ```
 运行结果参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的结果解释。
 
@@ -368,7 +493,7 @@ paddlex --pipeline table_recognition_v2 \
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="table_recognition_v2")
+pipeline = create_pipeline(pipeline_name="table_recognition_v2")
 
 output = pipeline.predict(
     input="table_recognition.jpg",
@@ -712,7 +837,7 @@ paddlex --get_pipeline_config table_recognition_v2 --save_path ./my_path
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/table_recognition_v2.yaml")
+pipeline = create_pipeline(pipeline_name="./my_path/table_recognition_v2.yaml")
 
 output = pipeline.predict(
     input="table_recognition.jpg",
