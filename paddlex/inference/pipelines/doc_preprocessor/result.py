@@ -79,6 +79,7 @@ class DocPreprocessorResult(BaseCVResult):
         """
         data = {}
         data["input_path"] = self["input_path"]
+        data["page_index"] = self["page_index"]
         data["model_settings"] = self["model_settings"]
         data["angle"] = self["angle"]
         return JsonMixin._to_str(data, *args, **kwargs)
@@ -96,6 +97,7 @@ class DocPreprocessorResult(BaseCVResult):
         """
         data = {}
         data["input_path"] = self["input_path"]
+        data["page_index"] = self["page_index"]
         data["model_settings"] = self["model_settings"]
         data["angle"] = self["angle"]
         return JsonMixin._to_json(data, *args, **kwargs)

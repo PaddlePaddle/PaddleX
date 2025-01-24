@@ -108,6 +108,8 @@ def get_sub_regions_ocr_res(
             sub_regions_ocr_res["rec_boxes"].append(
                 overall_ocr_res["rec_boxes"][box_no]
             )
+    for key in ["rec_polys", "rec_scores", "rec_boxes"]:
+        sub_regions_ocr_res[key] = np.array(sub_regions_ocr_res[key])
     return (
         (sub_regions_ocr_res, match_idx_list)
         if return_match_idx
