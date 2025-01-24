@@ -108,7 +108,7 @@ class ShiTuResult(BaseCVResult):
             for box in self["boxes"]
             if box["rec_scores"] is not None
         ]
-        image = draw_box(self["input_img"], boxes)
+        image = draw_box(self["input_img"][..., ::-1], boxes)
         return {"res": image}
 
     def _to_str(self, *args, **kwargs):
