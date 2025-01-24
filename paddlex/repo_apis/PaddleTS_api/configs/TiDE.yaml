@@ -25,15 +25,15 @@ info_params:
 model: 
   name: TiDE
   model_cfg:
-    c_in: 1
+    c_in: 7
     num_encoder_layers: 2
-    use_revin: False
+    use_revin: True
     drop_prob: 0.5
-    hidden_size: 1024
-    decoder_output_dim: 8
-    temporal_decoder_hidden: 64
+    hidden_size: 512
+    decoder_output_dim: 32
+    temporal_decoder_hidden: 16
     optimizer_params:
-      learning_rate: 0.00099
+      learning_rate: 0.00098
       gamma: 0.5
     patience: 10
 
