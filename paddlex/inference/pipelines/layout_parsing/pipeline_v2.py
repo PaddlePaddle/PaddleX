@@ -227,20 +227,15 @@ class LayoutParsingPipelineV2(BasePipeline):
         seal_res_list: list,
     ) -> list:
         """
-        Retrieves the layout parsing result based on the layout detection result, OCR result, and other recognition results.
+        Get the layout parsing result based on the layout detection result, OCR result, and other recognition results.
+
         Args:
             image (list): The input image.
-            overall_ocr_res (OCRResult): An object containing the overall OCR results, including detected text boxes and recognized text. The structure is expected to have:
-            - "input_img": The image on which OCR was performed.
-            - "dt_boxes": A list of detected text box coordinates.
-            - "rec_texts": A list of recognized text corresponding to the detected boxes.
+            layout_det_res (DetResult): The layout detection results.
+            overall_ocr_res (OCRResult): The overall OCR results.
+            table_res_list (list): A list of table detection results.
+            seal_res_list (list): A list of seal detection results.
 
-            layout_det_res (DetResult): An object containing the layout detection results, including detected layout boxes and their labels. The structure is expected to have:
-                - "boxes": A list of dictionaries with keys "coordinate" for box coordinates and "label" for the type of content.
-
-            table_res_list (list): A list of table detection results, where each item is a dictionary containing:
-                - "layout_bbox": The bounding box of the table layout.
-                - "pred_html": The predicted HTML representation of the table.
         Returns:
             list: A list of dictionaries representing the layout parsing result.
         """
@@ -274,14 +269,16 @@ class LayoutParsingPipelineV2(BasePipeline):
         Get the model settings based on the provided parameters or default values.
 
         Args:
-            use_doc_orientation_classify (Optional[bool]): Whether to use document orientation classification.
-            use_doc_unwarping (Optional[bool]): Whether to use document unwarping.
-            use_general_ocr (Optional[bool]): Whether to use general OCR.
-            use_seal_recognition (Optional[bool]): Whether to use seal recognition.
-            use_table_recognition (Optional[bool]): Whether to use table recognition.
+            use_doc_orientation_classify (Union[bool, None]): Enables document orientation classification if True. Defaults to system setting if None.
+            use_doc_unwarping (Union[bool, None]): Enables document unwarping if True. Defaults to system setting if None.
+            use_general_ocr (Union[bool, None]): Enables general OCR if True. Defaults to system setting if None.
+            use_seal_recognition (Union[bool, None]): Enables seal recognition if True. Defaults to system setting if None.
+            use_table_recognition (Union[bool, None]): Enables table recognition if True. Defaults to system setting if None.
+            use_formula_recognition (Union[bool, None]): Enables formula recognition if True. Defaults to system setting if None.
 
         Returns:
             dict: A dictionary containing the model settings.
+
         """
         if use_doc_orientation_classify is None and use_doc_unwarping is None:
             use_doc_preprocessor = self.use_doc_preprocessor
@@ -316,10 +313,15 @@ class LayoutParsingPipelineV2(BasePipeline):
         input: Union[str, list[str], np.ndarray, list[np.ndarray]],
         use_doc_orientation_classify: Union[bool, None] = None,
         use_doc_unwarping: Union[bool, None] = None,
+        use_textline_orientation: Optional[bool] = None,
         use_general_ocr: Union[bool, None] = None,
         use_seal_recognition: Union[bool, None] = None,
         use_table_recognition: Union[bool, None] = None,
         use_formula_recognition: Union[bool, None] = None,
+        layout_threshold: Optional[Union[float, dict]] = None,
+        layout_nms: Optional[bool] = None,
+        layout_unclip_ratio: Optional[Union[float, Tuple[float, float]]] = None,
+        layout_merge_bboxes_mode: Optional[str] = None,
         text_det_limit_side_len: Union[int, None] = None,
         text_det_limit_type: Union[str, None] = None,
         text_det_thresh: Union[float, None] = None,
@@ -332,23 +334,40 @@ class LayoutParsingPipelineV2(BasePipeline):
         seal_det_box_thresh: Union[float, None] = None,
         seal_det_unclip_ratio: Union[float, None] = None,
         seal_rec_score_thresh: Union[float, None] = None,
-        layout_threshold: Optional[Union[float, dict]] = None,
-        layout_nms: Optional[bool] = None,
-        layout_unclip_ratio: Optional[Union[float, Tuple[float, float]]] = None,
-        layout_merge_bboxes_mode: Optional[str] = None,
         **kwargs,
     ) -> LayoutParsingResultV2:
         """
-        This function predicts the layout parsing result for the given input.
+        Predicts the layout parsing result for the given input.
 
         Args:
-            input (Union[str, list[str], np.ndarray, list[np.ndarray]]): The input image(s) or pdf(s) to be processed.
-            use_doc_orientation_classify (bool): Whether to use document orientation classification.
-            use_doc_unwarping (bool): Whether to use document unwarping.
-            use_general_ocr (bool): Whether to use general OCR.
-            use_seal_recognition (bool): Whether to use seal recognition.
-            use_table_recognition (bool): Whether to use table recognition.
-            **kwargs: Additional keyword arguments.
+            use_doc_orientation_classify (Optional[bool]): Whether to use document orientation classification.
+            use_doc_unwarping (Optional[bool]): Whether to use document unwarping.
+            use_textline_orientation (Optional[bool]): Whether to use textline orientation prediction.
+            use_general_ocr (Optional[bool]): Whether to use general OCR.
+            use_seal_recognition (Optional[bool]): Whether to use seal recognition.
+            use_table_recognition (Optional[bool]): Whether to use table recognition.
+            use_formula_recognition (Optional[bool]): Whether to use formula recognition.
+            layout_threshold (Optional[float]): The threshold value to filter out low-confidence predictions. Default is None.
+            layout_nms (bool, optional): Whether to use layout-aware NMS. Defaults to False.
+            layout_unclip_ratio (Optional[Union[float, Tuple[float, float]]], optional): The ratio of unclipping the bounding box.
+                Defaults to None.
+                If it's a single number, then both width and height are used.
+                If it's a tuple of two numbers, then they are used separately for width and height respectively.
+                If it's None, then no unclipping will be performed.
+            layout_merge_bboxes_mode (Optional[str], optional): The mode for merging bounding boxes. Defaults to None.
+            text_det_limit_side_len (Optional[int]): Maximum side length for text detection.
+            text_det_limit_type (Optional[str]): Type of limit to apply for text detection.
+            text_det_thresh (Optional[float]): Threshold for text detection.
+            text_det_box_thresh (Optional[float]): Threshold for text detection boxes.
+            text_det_unclip_ratio (Optional[float]): Ratio for unclipping text detection boxes.
+            text_rec_score_thresh (Optional[float]): Score threshold for text recognition.
+            seal_det_limit_side_len (Optional[int]): Maximum side length for seal detection.
+            seal_det_limit_type (Optional[str]): Type of limit to apply for seal detection.
+            seal_det_thresh (Optional[float]): Threshold for seal detection.
+            seal_det_box_thresh (Optional[float]): Threshold for seal detection boxes.
+            seal_det_unclip_ratio (Optional[float]): Ratio for unclipping seal detection boxes.
+            seal_rec_score_thresh (Optional[float]): Score threshold for seal recognition.
+            **kwargs (Any): Additional settings to extend functionality.
 
         Returns:
             LayoutParsingResultV2: The predicted layout parsing result.
@@ -417,6 +436,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                 overall_ocr_res = next(
                     self.general_ocr_pipeline(
                         doc_preprocessor_image,
+                        use_textline_orientation=use_textline_orientation,
                         text_det_limit_side_len=text_det_limit_side_len,
                         text_det_limit_type=text_det_limit_type,
                         text_det_thresh=text_det_thresh,
