@@ -53,15 +53,22 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
         doc_pp_results: List[Dict[str, Any]] = []
         for i, (img, item) in enumerate(zip(images, result)):
             pruned_res = common.prune_result(item.json["res"])
+            output_img = common.postprocess_image(
+                item["output_img"],
+                log_id,
+                "output_img.png",
+                file_storage=ctx.extra["file_storage"],
+                return_url=ctx.extra["return_img_urls"],
+                max_img_size=ctx.extra["max_output_img_size"],
+            )
             if ctx.config.visualize:
-                output_imgs = item.img
-                imgs = {
+                vis_imgs = {
                     "input_img": img,
-                    "doc_preprocessing_img": output_imgs["preprocessed_img"],
+                    "doc_preprocessing_img": item.img["preprocessed_img"],
                 }
-                imgs = await serving_utils.call_async(
+                vis_imgs = await serving_utils.call_async(
                     common.postprocess_images,
-                    imgs,
+                    vis_imgs,
                     log_id,
                     filename_template=f"{{key}}_{i}.jpg",
                     file_storage=ctx.extra["file_storage"],
@@ -69,12 +76,13 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
                     max_img_size=ctx.extra["max_output_img_size"],
                 )
             else:
-                imgs = {}
+                vis_imgs = {}
             doc_pp_results.append(
                 dict(
+                    outputImage=output_img,
                     prunedResult=pruned_res,
-                    docPreprocessingImage=imgs.get("doc_preprocessing_img"),
-                    inputImage=imgs.get("input_img"),
+                    docPreprocessingImage=vis_imgs.get("doc_preprocessing_img"),
+                    inputImage=vis_imgs.get("input_img"),
                 )
             )
 

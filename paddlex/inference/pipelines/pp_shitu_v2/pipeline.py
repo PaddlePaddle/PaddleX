@@ -37,7 +37,7 @@ class ShiTuV2Pipeline(BasePipeline):
         super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
 
         self._topk, self._rec_threshold, self._hamming_radius, self._det_threshold = (
-            config.get("topk", 5),
+            config.get("rec_topk", 5),
             config.get("rec_threshold", 0.5),
             config.get("hamming_radius", None),
             config.get("det_threshold", 0.5),
@@ -57,14 +57,16 @@ class ShiTuV2Pipeline(BasePipeline):
         indexer = FaissIndexer(index) if index is not None else self.indexer
         assert indexer
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
-        topk = kwargs.get("topk", self._topk)
+        topk = kwargs.get("rec_topk", self._topk)
         rec_threshold = kwargs.get("rec_threshold", self._rec_threshold)
         hamming_radius = kwargs.get("hamming_radius", self._hamming_radius)
         det_threshold = kwargs.get("det_threshold", self._det_threshold)
         for img_id, batch_data in enumerate(self.batch_sampler(input)):
-            raw_imgs = self.img_reader(batch_data)
+            raw_imgs = self.img_reader(batch_data.instances)
             all_det_res = list(self.det_model(raw_imgs, threshold=det_threshold))
-            for input_data, raw_img, det_res in zip(batch_data, raw_imgs, all_det_res):
+            for input_data, raw_img, det_res in zip(
+                batch_data.instances, raw_imgs, all_det_res
+            ):
                 rec_res = self.get_rec_result(
                     raw_img, det_res, indexer, rec_threshold, hamming_radius, topk
                 )
@@ -101,7 +103,7 @@ class ShiTuV2Pipeline(BasePipeline):
     def get_final_result(self, input_data, raw_img, det_res, rec_res):
         single_img_res = {"input_path": input_data, "input_img": raw_img, "boxes": []}
         for i, obj in enumerate(det_res["boxes"]):
-            rec_scores = rec_res["score"][i]
+            rec_scores = rec_res["score"][i].tolist()
             labels = rec_res["label"][i]
             single_img_res["boxes"].append(
                 {

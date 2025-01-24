@@ -52,8 +52,8 @@ for res in output:
 ```
 
 运行后，得到的结果为：
-```josn
-{'res': {'input_path': 'test_imgs/textline_rot180_demo.jpg', 'class_ids': [1], 'scores': [1.0], 'label_names': ['180_degree']}}
+```bash
+{'res': {'input_path': 'textline_rot180_demo.jpg', 'page_index': None, 'class_ids': array([1], dtype=int32), 'scores': array([1.], dtype=float32), 'label_names': ['180_degree']}}
 ```
 
 运行结果参数含义如下：
@@ -251,7 +251,7 @@ python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_te
   &quot;attributes&quot;: {
     &quot;label_file&quot;: &quot;..\/..\/dataset\/textline_orientation_example_data\/label.txt&quot;,
     &quot;num_classes&quot;: 2,
-    &quot;train_samples&quot;: 1000,
+    &quot;train_samples&quot;: 1760,
     &quot;train_sample_paths&quot;: [
       &quot;check_dataset\/demo_img\/ILSVRC2012_val_00019234_4284.jpg&quot;,
       &quot;check_dataset\/demo_img\/lsvt_train_images_4655.jpg&quot;,
@@ -264,7 +264,7 @@ python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_te
       &quot;check_dataset\/demo_img\/25959328_518853598.jpg&quot;,
       &quot;check_dataset\/demo_img\/ILSVRC2012_val_00018420_14077.jpg&quot;
     ],
-    &quot;val_samples&quot;: 200,
+    &quot;val_samples&quot;: 440,
     &quot;val_sample_paths&quot;: [
       &quot;check_dataset\/demo_img\/lsvt_train_images_79109.jpg&quot;,
       &quot;check_dataset\/demo_img\/lsvt_train_images_131133.jpg&quot;,
@@ -281,16 +281,16 @@ python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_te
   &quot;analysis&quot;: {
     &quot;histogram&quot;: &quot;check_dataset\/histogram.png&quot;
   },
-  &quot;dataset_path&quot;: &quot;.\/dataset\/textline_orientation_example_data&quot;,
+  &quot;dataset_path&quot;: &quot;textline_orientation_example_data&quot;,
   &quot;show_type&quot;: &quot;image&quot;,
   &quot;dataset_type&quot;: &quot;ClsDataset&quot;
 }
 </code></pre>
 <p>上述校验结果中，check_pass 为 True 表示数据集格式符合要求，其他部分指标的说明如下：</p>
 <ul>
-<li><code>attributes.num_classes</code>：该数据集类别数为 4；</li>
-<li><code>attributes.train_samples</code>：该数据集训练集样本数量为 1552；</li>
-<li><code>attributes.val_samples</code>：该数据集验证集样本数量为 2593；</li>
+<li><code>attributes.num_classes</code>：该数据集类别数为 2；</li>
+<li><code>attributes.train_samples</code>：该数据集训练集样本数量为 1760；</li>
+<li><code>attributes.val_samples</code>：该数据集验证集样本数量为 440；</li>
 <li><code>attributes.train_sample_paths</code>：该数据集训练集样本可视化图片相对路径列表；</li>
 <li><code>attributes.val_sample_paths</code>：该数据集验证集样本可视化图片相对路径列表；</li>
 </ul>
@@ -414,7 +414,7 @@ python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_te
 
 1.<b>产线集成</b>
 
-文本行方向分类模块可以集成的PaddleX产线有[文档场景信息抽取v3产线（PP-ChatOCRv3）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md)，只需要替换模型路径即可完成文本行方向分类模块的模型更新。
+文本行方向分类模块可以集成的PaddleX产线有[通用OCR产线](../../../pipeline_usage/tutorials/ocr_pipelines/OCR.md)和[文档场景信息抽取v3产线（PP-ChatOCRv3）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md)，只需要替换模型路径即可完成文本行方向分类模块的模型更新。
 
 2.<b>模块集成</b>
 

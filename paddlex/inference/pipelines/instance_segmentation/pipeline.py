@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Union, Any, Dict, Optional, Union, List
+from typing import Any, Dict, Optional, Union, List
 import numpy as np
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
@@ -61,7 +61,7 @@ class InstanceSegmentationPipeline(BasePipeline):
 
         Args:
             input (str | list[str] | np.ndarray | list[np.ndarray]): The input image(s) or path(s) to the images.
-            threshold (float | None): The threshold value to filter out low-confidence predictions. Default is None.
+            threshold (Union[float, None]): The threshold value to filter out low-confidence predictions. Default is None.
             **kwargs: Additional keyword arguments that can be passed to the function.
 
         Returns:

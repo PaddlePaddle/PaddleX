@@ -24,6 +24,7 @@ from typing import (
     List,
     Optional,
     Tuple,
+    TypedDict,
     TypeVar,
 )
 
@@ -33,7 +34,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException
-from typing_extensions import ParamSpec
+from typing_extensions import ParamSpec, TypeGuard
 
 from ....utils import logging
 from ...pipelines import BasePipeline
@@ -44,6 +45,18 @@ from ..infra.utils import call_async, generate_log_id
 _PipelineT = TypeVar("_PipelineT", bound=BasePipeline)
 _P = ParamSpec("_P")
 _R = TypeVar("_R")
+
+
+class _Error(TypedDict):
+    error: str
+
+
+def _is_error(obj: object) -> TypeGuard[_Error]:
+    return (
+        isinstance(obj, dict)
+        and obj.keys() == {"error"}
+        and isinstance(obj["error"], str)
+    )
 
 
 # XXX: Since typing info (e.g., the pipeline class) cannot be easily obtained
@@ -63,13 +76,15 @@ class PipelineWrapper(Generic[_PipelineT]):
 
     async def infer(self, *args: Any, **kwargs: Any) -> List[Any]:
         def _infer() -> List[Any]:
-            output = list(self._pipeline(*args, **kwargs))
-            if (
-                len(output) == 1
-                and isinstance(output[0], dict)
-                and output[0].keys() == {"error"}
-            ):
-                raise fastapi.HTTPException(status_code=500, detail=output[0]["error"])
+            output: list = []
+            with contextlib.closing(self._pipeline(*args, **kwargs)) as it:
+                for item in it:
+                    if _is_error(item):
+                        raise fastapi.HTTPException(
+                            status_code=500, detail=item["error"]
+                        )
+                    output.append(item)
+
             return output
 
         return await self.call(_infer)

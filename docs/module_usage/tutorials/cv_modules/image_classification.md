@@ -691,8 +691,8 @@ for res in output:
 ```
 
 运行后，得到的结果为：
-```josn
-{'res': {'input_path': 'test_imgs/general_image_classification_001.jpg', 'class_ids': [296, 279, 270, 537, 356], 'scores': [0.7915499806404114, 0.0173799991607666, 0.014279999770224094, 0.013009999878704548, 0.01221999991685152], 'label_names': ['ice bear, polar bear, Ursus Maritimus, Thalarctos maritimus', 'Arctic fox, white fox, Alopex lagopus', 'white wolf, Arctic wolf, Canis lupus tundrarum', 'dogsled, dog sled, dog sleigh', 'weasel']}}
+```bash
+{'res': {'input_path': 'general_image_classification_001.jpg', 'page_index': None, 'class_ids': array([296, 279, 270, 537, 356], dtype=int32), 'scores': array([0.79155, 0.01738, 0.01428, 0.01301, 0.01222], dtype=float32), 'label_names': ['ice bear, polar bear, Ursus Maritimus, Thalarctos maritimus', 'Arctic fox, white fox, Alopex lagopus', 'white wolf, Arctic wolf, Canis lupus tundrarum', 'dogsled, dog sled, dog sleigh', 'weasel']}}
 ```
 
 运行结果参数含义如下：
