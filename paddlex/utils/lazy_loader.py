@@ -16,6 +16,7 @@
 import importlib
 import types
 import os
+import inspect
 
 from . import logging
 from .flags import FLAGS_json_format_model
@@ -52,6 +53,7 @@ class LazyLoader(types.ModuleType):
         self._module = module
 
     def __getattr__(self, item):
+        logging.debug("lazy load in : %s", inspect.currentframe().f_back)
         if not self.loaded:
             # HACK: For circumventing shared library symbol conflicts when
             # importing paddlex_hpi

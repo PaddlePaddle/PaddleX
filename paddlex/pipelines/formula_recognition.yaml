@@ -1,8 +1,0 @@
-Global:
-  pipeline_name: formula_recognition
-  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/general_formula_recognition.png
-  
-Pipeline:
-  layout_model: RT-DETR-H_layout_17cls
-  formula_rec_model: LaTeX_OCR_rec
-  formula_rec_batch_size: 5

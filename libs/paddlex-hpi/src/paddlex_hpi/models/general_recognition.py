@@ -17,7 +17,7 @@ from typing import Any, Dict, List
 import ultra_infer as ui
 import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.results import BaseResult
+from paddlex.inference.models_new.image_feature.result import IdentityResult
 from paddlex.modules.general_recognition.model_list import MODELS
 
 from paddlex_hpi.models.base import CVPredictor
@@ -41,7 +41,7 @@ class ShiTuRecPredictor(CVPredictor):
         return ImageBatchSampler()
 
     def _get_result_class(self) -> type:
-        return BaseResult
+        return IdentityResult
 
     def process(self, batch_data: List[Any]) -> Dict[str, List[Any]]:
         batch_raw_imgs = self._data_reader(imgs=batch_data)

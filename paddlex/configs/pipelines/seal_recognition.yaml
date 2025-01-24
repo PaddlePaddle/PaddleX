@@ -7,8 +7,12 @@ use_layout_detection: True
 SubModules:
   LayoutDetection:
     module_name: layout_detection
-    model_name: RT-DETR-H_layout_3cls
+    model_name: PP-DocLayout-L
     model_dir: null
+    threshold: 0.5
+    layout_nms: True
+    layout_unclip_ratio: 1.0
+    layout_merge_bboxes_mode: "large"
 
 SubPipelines:
   DocPreprocessor:

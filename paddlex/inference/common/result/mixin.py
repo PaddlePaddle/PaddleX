@@ -18,6 +18,7 @@ from pathlib import Path
 import mimetypes
 import json
 import copy
+import re
 import numpy as np
 from PIL import Image
 import pandas as pd
@@ -32,6 +33,7 @@ from ...utils.io import (
     XlsxWriter,
     TextWriter,
     VideoWriter,
+    MarkdownWriter,
 )
 
 
@@ -61,11 +63,36 @@ class StrMixin:
         Returns:
             Dict[str, str]: The string representation of the result.
         """
-        return {"res": str(self)}
+        return {"res": self}
 
     def print(self) -> None:
         """Print the string representation of the result."""
         logging.info(self.str)
+
+
+def _format_data(obj):
+    """Helper function to format data into a JSON-serializable format.
+
+    Args:
+        obj: The object to be formatted.
+
+    Returns:
+        Any: The formatted object.
+    """
+    if isinstance(obj, np.float32):
+        return float(obj)
+    elif isinstance(obj, np.ndarray):
+        return [_format_data(item) for item in obj.tolist()]
+    elif isinstance(obj, pd.DataFrame):
+        return json.loads(obj.to_json(orient="records", force_ascii=False))
+    elif isinstance(obj, Path):
+        return obj.as_posix()
+    elif isinstance(obj, dict):
+        return dict({k: _format_data(v) for k, v in obj.items()})
+    elif isinstance(obj, (list, tuple)):
+        return [_format_data(i) for i in obj]
+    else:
+        return obj
 
 
 class JsonMixin:
@@ -81,30 +108,6 @@ class JsonMixin:
         Returns:
             Dict[str, Dict[str, Any]]: A dictionary representation of the object that is JSON-serializable.
         """
-
-        def _format_data(obj):
-            """Helper function to format data into a JSON-serializable format.
-
-            Args:
-                obj: The object to be formatted.
-
-            Returns:
-                Any: The formatted object.
-            """
-            if isinstance(obj, np.float32):
-                return float(obj)
-            elif isinstance(obj, np.ndarray):
-                return [_format_data(item) for item in obj.tolist()]
-            elif isinstance(obj, pd.DataFrame):
-                return obj.to_json(orient="records", force_ascii=False)
-            elif isinstance(obj, Path):
-                return obj.as_posix()
-            elif isinstance(obj, dict):
-                return dict({k: _format_data(v) for k, v in obj.items()})
-            elif isinstance(obj, (list, tuple)):
-                return [_format_data(i) for i in obj]
-            else:
-                return obj
 
         return {"res": _format_data(copy.deepcopy(self))}
 
@@ -141,9 +144,8 @@ class JsonMixin:
             return mime_type is not None and mime_type == "application/json"
 
         if not _is_json_file(save_path):
-            fp = Path(self["input_path"])
-            stem = fp.stem
-            suffix = fp.suffix
+            fn = Path(self._get_input_fn())
+            stem = fn.stem
             base_save_path = Path(save_path)
             for key in self.json:
                 save_path = base_save_path / f"{stem}_{key}.json"
@@ -163,6 +165,43 @@ class JsonMixin:
                 *args,
                 **kwargs,
             )
+
+    def _to_str(
+        self,
+        json_format: bool = False,
+        indent: int = 4,
+        ensure_ascii: bool = False,
+    ):
+        """Convert the given result data to a string representation.
+        Args:
+            data (dict): The data would be converted to str.
+            json_format (bool): If True, return a JSON formatted string. Default is False.
+            indent (int): Number of spaces to indent for JSON formatting. Default is 4.
+            ensure_ascii (bool): If True, ensure all characters are ASCII. Default is False.
+        Returns:
+            Dict[str, str]: The string representation of the result.
+        """
+        if json_format:
+            return json.dumps(
+                _format_data({"res": self}), indent=indent, ensure_ascii=ensure_ascii
+            )
+        else:
+            return {"res": self}
+
+    def print(
+        self, json_format: bool = False, indent: int = 4, ensure_ascii: bool = False
+    ) -> None:
+        """Print the string representation of the result.
+
+        Args:
+            json_format (bool): If True, print a JSON formatted string. Default is False.
+            indent (int): Number of spaces to indent for JSON formatting. Default is 4.
+            ensure_ascii (bool): If True, ensure all characters are ASCII. Default is False.
+        """
+        str_ = self._to_str(
+            json_format=json_format, indent=indent, ensure_ascii=ensure_ascii
+        )
+        logging.info(str_)
 
 
 class Base64Mixin:
@@ -207,9 +246,8 @@ class Base64Mixin:
             **kwargs: Additional keyword arguments that will be passed to the base64 writer.
         """
         if not str(save_path).lower().endswith((".b64")):
-            fp = Path(self["input_path"])
-            stem = fp.stem
-            suffix = fp.suffix
+            fn = Path(self._get_input_fn())
+            stem = fn.stem
             base_save_path = Path(save_path)
             for key in self.base64:
                 save_path = base_save_path / f"{stem}_{key}.b64"
@@ -272,9 +310,9 @@ class ImgMixin:
             return mime_type is not None and mime_type.startswith("image/")
 
         if not _is_image_file(save_path):
-            fp = Path(self["input_path"])
-            stem = fp.stem
-            suffix = fp.suffix
+            fn = Path(self._get_input_fn())
+            suffix = fn.suffix if _is_image_file(fn) else ".png"
+            stem = fn.stem
             base_save_path = Path(save_path)
             for key in self.img:
                 save_path = base_save_path / f"{stem}_{key}{suffix}"
@@ -340,8 +378,9 @@ class CSVMixin:
             return mime_type is not None and mime_type == "text/csv"
 
         if not _is_csv_file(save_path):
-            fp = Path(self["input_path"])
-            stem = fp.stem
+            fn = Path(self._get_input_fn())
+            fn = Path(self._get_input_fn())
+            stem = fn.stem
             base_save_path = Path(save_path)
             for key in self.csv:
                 save_path = base_save_path / f"{stem}_{key}.csv"
@@ -404,8 +443,8 @@ class HtmlMixin:
             return mime_type is not None and mime_type == "text/html"
 
         if not _is_html_file(save_path):
-            fp = Path(self["input_path"])
-            stem = fp.stem
+            fn = Path(self._get_input_fn())
+            stem = fn.stem
             base_save_path = Path(save_path)
             for key in self.html:
                 save_path = base_save_path / f"{stem}_{key}.html"
@@ -472,8 +511,8 @@ class XlsxMixin:
             )
 
         if not _is_xlsx_file(save_path):
-            fp = Path(self["input_path"])
-            stem = fp.stem
+            fn = Path(self._get_input_fn())
+            stem = fn.stem
             base_save_path = Path(save_path)
             for key in self.xlsx:
                 save_path = base_save_path / f"{stem}_{key}.xlsx"
@@ -538,9 +577,9 @@ class VideoMixin:
         video_writer = VideoWriter(backend=self._backend, *args, **kwargs)
 
         if not _is_video_file(save_path):
-            fp = Path(self["input_path"])
-            stem = fp.stem
-            suffix = fp.suffix
+            fn = Path(self._get_input_fn())
+            stem = fn.stem
+            suffix = fn.suffix if _is_video_file(fn) else ".mp4"
             base_save_path = Path(save_path)
             for key in self.video:
                 save_path = base_save_path / f"{stem}_{key}{suffix}"
@@ -555,3 +594,56 @@ class VideoMixin:
             video_writer.write(
                 save_path, self.video[list(self.video.keys())[0]], *args, **kwargs
             )
+
+
+class MarkdownMixin:
+
+    def __init__(self, *args: list, **kwargs: dict):
+        self._markdown_writer = MarkdownWriter(*args, **kwargs)
+        self._save_funcs.append(self.save_to_markdown)
+        self.save_path = None
+
+    @abstractmethod
+    def _to_markdown(self):
+        """
+        Convert the result to markdown format.
+        Returns:
+            Dict
+        """
+        raise NotImplementedError
+
+    @property
+    def markdown(self):
+        return self._to_markdown()
+
+    def save_to_markdown(self, save_path, *args, **kwargs):
+        save_path = Path(save_path)
+        if not save_path.suffix.lower() == ".md":
+            save_path = save_path / f"layout_parsing_result.md"
+
+        self.save_path = save_path
+
+        self._save_list_data(
+            self._markdown_writer.write,
+            save_path,
+            self.markdown,
+            *args,
+            **kwargs,
+        )
+
+    def _save_list_data(self, save_func, save_path, data, *args, **kwargs):
+        save_path = Path(save_path)
+        if data is None:
+            return
+        if isinstance(data, list):
+            for idx, single in enumerate(data):
+                save_func(
+                    (
+                        save_path.parent / f"{save_path.stem}_{idx}{save_path.suffix}"
+                    ).as_posix(),
+                    single,
+                    *args,
+                    **kwargs,
+                )
+        save_func(save_path.as_posix(), data, *args, **kwargs)
+        logging.info(f"The result has been saved in {save_path}.")

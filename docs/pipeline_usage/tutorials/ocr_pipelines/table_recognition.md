@@ -433,9 +433,9 @@ for res in output:
 
 🚀 <b>高性能推理</b>：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能推理流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_inference.md)。
 
-☁️ <b>服务化部署</b>：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/service_deploy.md)。
+☁️ <b>服务化部署</b>：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持多种产线服务化部署方案，详细的产线服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/serving.md)。
 
-下面是API参考和多语言服务调用示例：
+以下是基础服务化部署的API参考与多语言服务调用示例：
 
 <details><summary>API参考</summary>
 
@@ -525,34 +525,15 @@ for res in output:
 </thead>
 <tbody>
 <tr>
-<td><code>image</code></td>
+<td><code>file</code></td>
 <td><code>string</code></td>
-<td>服务可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
+<td>服务器可访问的图像文件或PDF文件的URL，或上述类型文件内容的Base64编码结果。对于超过10页的PDF文件，只有前10页的内容会被使用。</td>
 <td>是</td>
 </tr>
 <tr>
-<td><code>inferenceParams</code></td>
-<td><code>object</code></td>
-<td>推理参数。</td>
-<td>否</td>
-</tr>
-</tbody>
-</table>
-<p><code>inferenceParams</code>的属性如下：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-<th>是否必填</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>maxLongSide</code></td>
+<td><code>fileType</code></td>
 <td><code>integer</code></td>
-<td>推理时，若文本检测模型的输入图像较长边的长度大于<code>maxLongSide</code>，则将对图像进行缩放，使其较长边的长度等于<code>maxLongSide</code>。</td>
+<td>文件类型。<code>0</code>表示PDF文件，<code>1</code>表示图像文件。若请求体无此属性，则将根据URL推断文件类型。</td>
 <td>否</td>
 </tr>
 </tbody>
@@ -560,6 +541,28 @@ for res in output:
 <ul>
 <li>请求处理成功时，响应体的<code>result</code>具有如下属性：</li>
 </ul>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tableRecResults</code></td>
+<td><code>object</code></td>
+<td>表格识别结果。数组长度为1（对于图像输入）或文档页数与10中的较小者（对于PDF输入）。对于PDF输入，数组中的每个元素依次表示PDF文件中每一页的处理结果。</td>
+</tr>
+<tr>
+<td><code>dataInfo</code></td>
+<td><code>object</code></td>
+<td>输入数据信息。</td>
+</tr>
+</tbody>
+</table>
+<p><code>tableRecResults</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
 <table>
 <thead>
 <tr>
@@ -618,418 +621,29 @@ for res in output:
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/table-recognition&quot; # 服务URL
-image_path = &quot;./demo.jpg&quot;
-ocr_image_path = &quot;./ocr.jpg&quot;
-layout_image_path = &quot;./layout.jpg&quot;
+API_URL = &quot;http://localhost:8080/table-recognition&quot;
+file_path = &quot;./demo.jpg&quot;
 
-# 对本地图像进行Base64编码
-with open(image_path, &quot;rb&quot;) as file:
-    image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
+with open(file_path, &quot;rb&quot;) as file:
+    file_bytes = file.read()
+    file_data = base64.b64encode(file_bytes).decode(&quot;ascii&quot;)
 
-payload = {&quot;image&quot;: image_data}  # Base64编码的文件内容或者图像URL
+payload = {&quot;file&quot;: file_data, &quot;fileType&quot;: 1}
 
-# 调用API
 response = requests.post(API_URL, json=payload)
 
-# 处理接口返回数据
 assert response.status_code == 200
 result = response.json()[&quot;result&quot;]
-with open(ocr_image_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result[&quot;ocrImage&quot;]))
-print(f&quot;Output image saved at {ocr_image_path}&quot;)
-with open(layout_image_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result[&quot;layoutImage&quot;]))
-print(f&quot;Output image saved at {layout_image_path}&quot;)
-print(&quot;\nDetected tables:&quot;)
-print(result[&quot;tables&quot;])
-</code></pre></details>
-
-<details><summary>C++</summary>
-
-<pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &quot;cpp-httplib/httplib.h&quot; // https://github.com/Huiyicc/cpp-httplib
-#include &quot;nlohmann/json.hpp&quot; // https://github.com/nlohmann/json
-#include &quot;base64.hpp&quot; // https://github.com/tobiaslocker/base64
-
-int main() {
-    httplib::Client client(&quot;localhost:8080&quot;);
-    const std::string imagePath = &quot;./demo.jpg&quot;;
-    const std::string ocrImagePath = &quot;./ocr.jpg&quot;;
-    const std::string layoutImagePath = &quot;./layout.jpg&quot;;
-
-    httplib::Headers headers = {
-        {&quot;Content-Type&quot;, &quot;application/json&quot;}
-    };
-
-    // 对本地图像进行Base64编码
-    std::ifstream file(imagePath, std::ios::binary | std::ios::ate);
-    std::streamsize size = file.tellg();
-    file.seekg(0, std::ios::beg);
-
-    std::vector&lt;char&gt; buffer(size);
-    if (!file.read(buffer.data(), size)) {
-        std::cerr &lt;&lt; &quot;Error reading file.&quot; &lt;&lt; std::endl;
-        return 1;
-    }
-    std::string bufferStr(reinterpret_cast&lt;const char*&gt;(buffer.data()), buffer.size());
-    std::string encodedImage = base64::to_base64(bufferStr);
-
-    nlohmann::json jsonObj;
-    jsonObj[&quot;image&quot;] = encodedImage;
-    std::string body = jsonObj.dump();
-
-    // 调用API
-    auto response = client.Post(&quot;/table-recognition&quot;, headers, body, &quot;application/json&quot;);
-    // 处理接口返回数据
-    if (response &amp;&amp; response-&gt;status == 200) {
-        nlohmann::json jsonResponse = nlohmann::json::parse(response-&gt;body);
-        auto result = jsonResponse[&quot;result&quot;];
-
-        encodedImage = result[&quot;ocrImage&quot;];
-        std::string decoded_string = base64::from_base64(encodedImage);
-        std::vector&lt;unsigned char&gt; decodedOcrImage(decoded_string.begin(), decoded_string.end());
-        std::ofstream outputOcrFile(ocrImagePath, std::ios::binary | std::ios::out);
-        if (outputOcrFile.is_open()) {
-            outputOcrFile.write(reinterpret_cast&lt;char*&gt;(decodedOcrImage.data()), decodedOcrImage.size());
-            outputOcrFile.close();
-            std::cout &lt;&lt; &quot;Output image saved at &quot; &lt;&lt; ocrImagePath &lt;&lt; std::endl;
-        } else {
-            std::cerr &lt;&lt; &quot;Unable to open file for writing: &quot; &lt;&lt; ocrImagePath &lt;&lt; std::endl;
-        }
-
-        encodedImage = result[&quot;layoutImage&quot;];
-        decodedString = base64::from_base64(encodedImage);
-        std::vector&lt;unsigned char&gt; decodedLayoutImage(decodedString.begin(), decodedString.end());
-        std::ofstream outputLayoutFile(layoutImagePath, std::ios::binary | std::ios::out);
-        if (outputLayoutFile.is_open()) {
-            outputLayoutFile.write(reinterpret_cast&lt;char*&gt;(decodedLayoutImage.data()), decodedLayoutImage.size());
-            outputLayoutFile.close();
-            std::cout &lt;&lt; &quot;Output image saved at &quot; &lt;&lt; layoutImagePath &lt;&lt; std::endl;
-        } else {
-            std::cerr &lt;&lt; &quot;Unable to open file for writing: &quot; &lt;&lt; layoutImagePath &lt;&lt; std::endl;
-        }
-
-        auto tables = result[&quot;tables&quot;];
-        std::cout &lt;&lt; &quot;\nDetected tables:&quot; &lt;&lt; std::endl;
-        for (const auto&amp; table : tables) {
-            std::cout &lt;&lt; table &lt;&lt; std::endl;
-        }
-    } else {
-        std::cout &lt;&lt; &quot;Failed to send HTTP request.&quot; &lt;&lt; std::endl;
-        return 1;
-    }
-
-    return 0;
-}
-</code></pre></details>
-
-<details><summary>Java</summary>
-
-<pre><code class="language-java">import okhttp3.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Base64;
-
-public class Main {
-    public static void main(String[] args) throws IOException {
-        String API_URL = &quot;http://localhost:8080/table-recognition&quot;; // 服务URL
-        String imagePath = &quot;./demo.jpg&quot;; // 本地图像
-        String ocrImagePath = &quot;./ocr.jpg&quot;;
-        String layoutImagePath = &quot;./layout.jpg&quot;;
-
-        // 对本地图像进行Base64编码
-        File file = new File(imagePath);
-        byte[] fileContent = java.nio.file.Files.readAllBytes(file.toPath());
-        String imageData = Base64.getEncoder().encodeToString(fileContent);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        ObjectNode params = objectMapper.createObjectNode();
-        params.put(&quot;image&quot;, imageData); // Base64编码的文件内容或者图像URL
-
-        // 创建 OkHttpClient 实例
-        OkHttpClient client = new OkHttpClient();
-        MediaType JSON = MediaType.Companion.get(&quot;application/json; charset=utf-8&quot;);
-        RequestBody body = RequestBody.Companion.create(params.toString(), JSON);
-        Request request = new Request.Builder()
-                .url(API_URL)
-                .post(body)
-                .build();
-
-        // 调用API并处理接口返回数据
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                String responseBody = response.body().string();
-                JsonNode resultNode = objectMapper.readTree(responseBody);
-                JsonNode result = resultNode.get(&quot;result&quot;);
-                String ocrBase64Image = result.get(&quot;ocrImage&quot;).asText();
-                String layoutBase64Image = result.get(&quot;layoutImage&quot;).asText();
-                JsonNode tables = result.get(&quot;tables&quot;);
-
-                byte[] imageBytes = Base64.getDecoder().decode(ocrBase64Image);
-                try (FileOutputStream fos = new FileOutputStream(ocrImagePath)) {
-                    fos.write(imageBytes);
-                }
-                System.out.println(&quot;Output image saved at &quot; + ocrBase64Image);
-
-                imageBytes = Base64.getDecoder().decode(layoutBase64Image);
-                try (FileOutputStream fos = new FileOutputStream(layoutImagePath)) {
-                    fos.write(imageBytes);
-                }
-                System.out.println(&quot;Output image saved at &quot; + layoutImagePath);
-
-                System.out.println(&quot;\nDetected tables: &quot; + tables.toString());
-            } else {
-                System.err.println(&quot;Request failed with code: &quot; + response.code());
-            }
-        }
-    }
-}
-</code></pre></details>
-
-<details><summary>Go</summary>
-
-<pre><code class="language-go">package main
-
-import (
-    &quot;bytes&quot;
-    &quot;encoding/base64&quot;
-    &quot;encoding/json&quot;
-    &quot;fmt&quot;
-    &quot;io/ioutil&quot;
-    &quot;net/http&quot;
-)
-
-func main() {
-    API_URL := &quot;http://localhost:8080/table-recognition&quot;
-    imagePath := &quot;./demo.jpg&quot;
-    ocrImagePath := &quot;./ocr.jpg&quot;
-    layoutImagePath := &quot;./layout.jpg&quot;
-
-    // 对本地图像进行Base64编码
-    imageBytes, err := ioutil.ReadFile(imagePath)
-    if err != nil {
-        fmt.Println(&quot;Error reading image file:&quot;, err)
-        return
-    }
-    imageData := base64.StdEncoding.EncodeToString(imageBytes)
-
-    payload := map[string]string{&quot;image&quot;: imageData} // Base64编码的文件内容或者图像URL
-    payloadBytes, err := json.Marshal(payload)
-    if err != nil {
-        fmt.Println(&quot;Error marshaling payload:&quot;, err)
-        return
-    }
-
-    // 调用API
-    client := &amp;http.Client{}
-    req, err := http.NewRequest(&quot;POST&quot;, API_URL, bytes.NewBuffer(payloadBytes))
-    if err != nil {
-        fmt.Println(&quot;Error creating request:&quot;, err)
-        return
-    }
-
-    res, err := client.Do(req)
-    if err != nil {
-        fmt.Println(&quot;Error sending request:&quot;, err)
-        return
-    }
-    defer res.Body.Close()
-
-    // 处理接口返回数据
-    body, err := ioutil.ReadAll(res.Body)
-    if err != nil {
-        fmt.Println(&quot;Error reading response body:&quot;, err)
-        return
-    }
-    type Response struct {
-        Result struct {
-            OcrImage      string   `json:&quot;ocrImage&quot;`
-            LayoutImage      string   `json:&quot;layoutImage&quot;`
-            Tables []map[string]interface{} `json:&quot;tables&quot;`
-        } `json:&quot;result&quot;`
-    }
-    var respData Response
-    err = json.Unmarshal([]byte(string(body)), &amp;respData)
-    if err != nil {
-        fmt.Println(&quot;Error unmarshaling response body:&quot;, err)
-        return
-    }
-
-    ocrImageData, err := base64.StdEncoding.DecodeString(respData.Result.OcrImage)
-    if err != nil {
-        fmt.Println(&quot;Error decoding base64 image data:&quot;, err)
-        return
-    }
-    err = ioutil.WriteFile(ocrImagePath, ocrImageData, 0644)
-    if err != nil {
-        fmt.Println(&quot;Error writing image to file:&quot;, err)
-        return
-    }
-    fmt.Printf(&quot;Image saved at %s.jpg\n&quot;, ocrImagePath)
-
-    layoutImageData, err := base64.StdEncoding.DecodeString(respData.Result.LayoutImage)
-    if err != nil {
-        fmt.Println(&quot;Error decoding base64 image data:&quot;, err)
-        return
-    }
-    err = ioutil.WriteFile(layoutImagePath, layoutImageData, 0644)
-    if err != nil {
-        fmt.Println(&quot;Error writing image to file:&quot;, err)
-        return
-    }
-    fmt.Printf(&quot;Image saved at %s.jpg\n&quot;, layoutImagePath)
-
-    fmt.Println(&quot;\nDetected tables:&quot;)
-    for _, table := range respData.Result.Tables {
-        fmt.Println(table)
-    }
-}
-</code></pre></details>
-
-<details><summary>C#</summary>
-
-<pre><code class="language-csharp">using System;
-using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-
-class Program
-{
-    static readonly string API_URL = &quot;http://localhost:8080/table-recognition&quot;;
-    static readonly string imagePath = &quot;./demo.jpg&quot;;
-    static readonly string ocrImagePath = &quot;./ocr.jpg&quot;;
-    static readonly string layoutImagePath = &quot;./layout.jpg&quot;;
-
-    static async Task Main(string[] args)
-    {
-        var httpClient = new HttpClient();
-
-        // 对本地图像进行Base64编码
-        byte[] imageBytes = File.ReadAllBytes(imagePath);
-        string image_data = Convert.ToBase64String(imageBytes);
-
-        var payload = new JObject{ { &quot;image&quot;, image_data } }; // Base64编码的文件内容或者图像URL
-        var content = new StringContent(payload.ToString(), Encoding.UTF8, &quot;application/json&quot;);
-
-        // 调用API
-        HttpResponseMessage response = await httpClient.PostAsync(API_URL, content);
-        response.EnsureSuccessStatusCode();
-
-        // 处理接口返回数据
-        string responseBody = await response.Content.ReadAsStringAsync();
-        JObject jsonResponse = JObject.Parse(responseBody);
-
-        string ocrBase64Image = jsonResponse[&quot;result&quot;][&quot;ocrImage&quot;].ToString();
-        byte[] ocrImageBytes = Convert.FromBase64String(ocrBase64Image);
-        File.WriteAllBytes(ocrImagePath, ocrImageBytes);
-        Console.WriteLine($&quot;Output image saved at {ocrImagePath}&quot;);
-
-        string layoutBase64Image = jsonResponse[&quot;result&quot;][&quot;layoutImage&quot;].ToString();
-        byte[] layoutImageBytes = Convert.FromBase64String(layoutBase64Image);
-        File.WriteAllBytes(layoutImagePath, layoutImageBytes);
-        Console.WriteLine($&quot;Output image saved at {layoutImagePath}&quot;);
-
-        Console.WriteLine(&quot;\nDetected tables:&quot;);
-        Console.WriteLine(jsonResponse[&quot;result&quot;][&quot;tables&quot;].ToString());
-    }
-}
-</code></pre></details>
-
-<details><summary>Node.js</summary>
-
-<pre><code class="language-js">const axios = require('axios');
-const fs = require('fs');
-
-const API_URL = 'http://localhost:8080/table-recognition'
-const imagePath = './demo.jpg'
-const ocrImagePath = &quot;./ocr.jpg&quot;;
-const layoutImagePath = &quot;./layout.jpg&quot;;
-
-let config = {
-   method: 'POST',
-   maxBodyLength: Infinity,
-   url: API_URL,
-   data: JSON.stringify({
-    'image': encodeImageToBase64(imagePath)  // Base64编码的文件内容或者图像URL
-  })
-};
-
-// 对本地图像进行Base64编码
-function encodeImageToBase64(filePath) {
-  const bitmap = fs.readFileSync(filePath);
-  return Buffer.from(bitmap).toString('base64');
-}
-
-// 调用API
-axios.request(config)
-.then((response) =&gt; {
-    // 处理接口返回数据
-    const result = response.data[&quot;result&quot;];
-
-    const imageBuffer = Buffer.from(result[&quot;ocrImage&quot;], 'base64');
-    fs.writeFile(ocrImagePath, imageBuffer, (err) =&gt; {
-      if (err) throw err;
-      console.log(`Output image saved at ${ocrImagePath}`);
-    });
-
-    imageBuffer = Buffer.from(result[&quot;layoutImage&quot;], 'base64');
-    fs.writeFile(layoutImagePath, imageBuffer, (err) =&gt; {
-      if (err) throw err;
-      console.log(`Output image saved at ${layoutImagePath}`);
-    });
-
-    console.log(&quot;\nDetected tables:&quot;);
-    console.log(result[&quot;tables&quot;]);
-})
-.catch((error) =&gt; {
-  console.log(error);
-});
-</code></pre></details>
-
-<details><summary>PHP</summary>
-
-<pre><code class="language-php">&lt;?php
-
-$API_URL = &quot;http://localhost:8080/table-recognition&quot;; // 服务URL
-$image_path = &quot;./demo.jpg&quot;;
-$ocr_image_path = &quot;./ocr.jpg&quot;;
-$layout_image_path = &quot;./layout.jpg&quot;;
-
-// 对本地图像进行Base64编码
-$image_data = base64_encode(file_get_contents($image_path));
-$payload = array(&quot;image&quot; =&gt; $image_data); // Base64编码的文件内容或者图像URL
-
-// 调用API
-$ch = curl_init($API_URL);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$response = curl_exec($ch);
-curl_close($ch);
-
-// 处理接口返回数据
-$result = json_decode($response, true)[&quot;result&quot;];
-file_put_contents($ocr_image_path, base64_decode($result[&quot;ocrImage&quot;]));
-echo &quot;Output image saved at &quot; . $ocr_image_path . &quot;\n&quot;;
-
-file_put_contents($layout_image_path, base64_decode($result[&quot;layoutImage&quot;]));
-echo &quot;Output image saved at &quot; . $layout_image_path . &quot;\n&quot;;
-
-echo &quot;\nDetected tables:\n&quot;;
-print_r($result[&quot;tables&quot;]);
-
-?&gt;
+for i, res in enumerate(result[&quot;tableRecResults&quot;]):
+    print(&quot;Detected tables:&quot;)
+    print(res[&quot;tables&quot;])
+    layout_img_path = f&quot;layout_{i}.jpg&quot;
+    with open(layout_img_path, &quot;wb&quot;) as f:
+        f.write(base64.b64decode(res[&quot;layoutImage&quot;]))
+    ocr_img_path = f&quot;ocr_{i}.jpg&quot;
+    with open(ocr_img_path, &quot;wb&quot;) as f:
+        f.write(base64.b64decode(res[&quot;ocrImage&quot;]))
+    print(f&quot;Output images saved at {layout_img_path} and {ocr_img_path}&quot;)
 </code></pre></details>
 </details>
 <br/>

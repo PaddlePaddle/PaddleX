@@ -30,7 +30,7 @@ PaddleX provides the following quick experience methods, which can be directly e
   The quick experience produces the following inference result example:
   <center>
 
-  <img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/small_obj_det/01.png" width=600>
+  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/smallobj_det/02.png" width=600>
 
   </center>
 
@@ -154,7 +154,7 @@ In the above validation result, `check_pass` being `True` indicates that the dat
 In addition, the dataset validation also analyzed the sample number distribution of all categories in the dataset and plotted the distribution histogram (`histogram.png`):
 <center>
 
-<img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/small_obj_det/02.png" width=600>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/smallobj_det/03.png" width=600>
 
 </center>
 
@@ -276,7 +276,7 @@ python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-large
 Through the above, the prediction results can be generated under `./output`, as follows:
 <center>
 
-<img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/small_obj_det/03.png" width="600"/>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/smallobj_det/04.png" width="600"/>
 
 </center>
 
@@ -296,8 +296,8 @@ For more parameters, please refer to [Small Object Detection Pipeline Usage Tuto
 
 2. In addition, PaddleX also provides three other deployment methods, detailed explanations are as follows:
 
-* High-performance deployment: In actual production environments, many applications have strict standards for the performance indicators of deployment strategies (especially response speed) to ensure the efficient operation of the system and the smooth user experience. For this reason, PaddleX provides a high-performance inference plugin, aiming to deeply optimize the performance of model inference and pre/post-processing, achieving significant acceleration of the end-to-end process. For detailed high-performance deployment processes, please refer to [PaddleX High-Performance Inference Guide](../pipeline_deploy/high_performance_inference.md).
-* Service deployment: Service deployment is a common deployment form in actual production environments. By encapsulating inference functions into services, clients can access these services through network requests to obtain inference results. PaddleX supports users to achieve service deployment of the pipeline at a low cost. For detailed service deployment processes, please refer to [PaddleX Service Deployment Guide](../pipeline_deploy/service_deploy.md).
-* Edge deployment: Edge deployment is a way of placing computing and data processing functions on user devices themselves, where devices can directly process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment processes, please refer to [PaddleX Edge Deployment Guide](../pipeline_deploy/edge_deploy.md).
+* High-performance deployment: In actual production environments, many applications have strict standards for the performance indicators of deployment strategies (especially response speed) to ensure the efficient operation of the system and the smooth user experience. For this reason, PaddleX provides a high-performance inference plugin, aiming to deeply optimize the performance of model inference and pre/post-processing, achieving significant acceleration of the end-to-end process. For detailed high-performance deployment processes, please refer to [PaddleX High-Performance Inference Guide](../pipeline_deploy/high_performance_inference.en.md).
+* Service deployment: Service deployment is a common deployment form in actual production environments. By encapsulating inference functions into services, clients can access these services through network requests to obtain inference results. PaddleX supports users to achieve service deployment of the pipeline at a low cost. For detailed service deployment processes, please refer to [PaddleX Service Deployment Guide](../pipeline_deploy/serving.en.md).
+* Edge deployment: Edge deployment is a way of placing computing and data processing functions on user devices themselves, where devices can directly process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment processes, please refer to [PaddleX Edge Deployment Guide](../pipeline_deploy/edge_deploy.en.md).
 
 You can choose an appropriate method to deploy the model pipeline according to your needs and proceed with subsequent AI application integration.

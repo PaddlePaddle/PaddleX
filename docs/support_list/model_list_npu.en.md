@@ -6,7 +6,7 @@ comments: true
 
 PaddleX incorporates multiple pipelines, each containing several modules, and each module encompasses various models. You can select the appropriate models based on the benchmark data below. If you prioritize model accuracy, choose models with higher accuracy. If you prioritize model size, select models with smaller storage requirements.
 
-## Image Classification Module
+## [Image Classification Module](../module_usage/tutorials/cv_modules/image_classification.en.md)
 <table>
 <thead>
 <tr>
@@ -166,6 +166,16 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td>74.6</td>
 <td>14.7 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MobileNetV4_conv_small_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileNetV4_conv_small_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>MobileNetV4_hybrid_large</td>
+<td>83.8</td>
+<td>145.1 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MobileNetV4_hybrid_large_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileNetV4_hybrid_large_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>MobileNetV4_hybrid_medium</td>
+<td>80.5</td>
+<td>42.9 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MobileNetV4_hybrid_medium_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileNetV4_hybrid_medium_pretrained.pdparams">Trained Model</a></td></tr>
 <tr>
 <td>PP-HGNet_base</td>
 <td>85.0</td>
@@ -356,6 +366,56 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td>81.10</td>
 <td>100.1 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SwinTransformer_tiny_patch4_window7_224_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SwinTransformer_tiny_patch4_window7_224_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>StarNet-S1</td>
+<td>73.6</td>
+<td>11.2 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/StarNet-S1_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/StarNet-S1_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>StarNet-S2</td>
+<td>74.8</td>
+<td>14.3 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/StarNet-S2_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/StarNet-S2_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>StarNet-S3</td>
+<td>77.0</td>
+<td>22.2 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/StarNet-S3_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/StarNet-S3_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>StarNet-S4</td>
+<td>79.0</td>
+<td>28.9 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/StarNet-S4_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/StarNet-S4_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>FasterNet-L</td>
+<td>83.5</td>
+<td>357.1 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterNet-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterNet-L_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>FasterNet-M</td>
+<td>83.0</td>
+<td>204.6 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterNet-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterNet-M_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>FasterNet-S</td>
+<td>81.3</td>
+<td>119.3 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterNet-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterNet-S_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>FasterNet-T0</td>
+<td>71.9</td>
+<td>15.1 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterNet-T0_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterNet-T0_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>FasterNet-T1</td>
+<td>75.9</td>
+<td>29.2 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterNet-T1_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterNet-T1_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>FasterNet-T2</td>
+<td>79.1</td>
+<td>57.4 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterNet-T2_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterNet-T2_pretrained.pdparams">Trained Model</a></td></tr>
 </tbody>
 </table>
 <b>Note: The above accuracy metrics refer to Top-1 Accuracy on the [ImageNet-1k](https://www.image-net.org/index.php) validation set.</b>
@@ -390,12 +450,59 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td>91.06</td>
 <td>286.5 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-HGNetV2-B6_ML_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B6_ML_pretrained.pdparams">Training Model</a></td></tr>
-</tr></tbody>
+<tr>
+<td>PP-LCNet_x1_0_ML</td>
+<td>77.96</td>
+<td>29.4 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LCNet_x1_0_ML_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_ML_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>ResNet50_ML</td>
+<td>83.42</td>
+<td>108.9 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/ResNet50_ML_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_ML_pretrained.pdparams">Trained Model</a></td></tr>
+</tbody>
 </table>
 <b>Note: The above accuracy metrics are for the multi-label classification task mAP of [COCO2017](https://cocodataset.org/#home).</b>
 
+## [Pedestrian Attribute Module](../module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.en.md)
+<table>
+<thead>
+<tr>
+<th>Model Name</th>
+<th>mA (%)</th>
+<th>Model Size</th>
+<th>Model Download Link</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-LCNet_x1_0_pedestrian_attribute</td>
+<td>92.2</td>
+<td>6.7 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LCNet_x1_0_pedestrian_attribute_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_pedestrian_attribute_pretrained.pdparams">Trained Model</a></td></tr>
+</tbody>
+</table>
+<b>Note: The above accuracy metrics are mA on PaddleX's internal self-built dataset.</b>
 
-## Object Detection Module
+## [Vehicle Attribute Module](../module_usage/tutorials/cv_modules/vehicle_attribute_recognition.en.md)
+<table>
+<thead>
+<tr>
+<th>Model Name</th>
+<th>mA (%)</th>
+<th>Model Size</th>
+<th>Model Download Link</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-LCNet_x1_0_vehicle_attribute</td>
+<td>91.7</td>
+<td>6.7 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LCNet_x1_0_vehicle_attribute_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_vehicle_attribute_pretrained.pdparams">Trained Model</a></td></tr>
+</tbody>
+</table>
+<b>Note: The above accuracy metrics are mA on the VeRi dataset.</b>
+
+## [Object Detection Module](../module_usage/tutorials/cv_modules/object_detection.en.md)
 <table>
 <thead>
 <tr>
@@ -564,13 +671,13 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 </table>
 <b>Note: The above accuracy metrics are for</b> [COCO2017](https://cocodataset.org/#home) <b>validation set mAP(0.5:0.95).</b>
 
-## [小目标检测模块](../module_usage/tutorials/cv_modules/small_object_detection.md)
+## [Small Object Detection Module](../module_usage/tutorials/cv_modules/small_object_detection.en.md)
 <table>
 <thead>
 <tr>
-<th>模型名称</th>
+<th>Model Name</th>
 <th>mAP（%）</th>
-<th>模型存储大小</th>
+<th>Model Size</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -589,17 +696,32 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td>42.7</td>
 <td>340.5 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-YOLOE_plus_SOD-largesize-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-largesize-L_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>YOLOX-S</td>
+<td>40.4</td>
+<td>32.0 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/YOLOX-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-S_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>YOLOX-T</td>
+<td>32.9</td>
+<td>18.1 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/YOLOX-T_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-T_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>YOLOX-M</td>
+<td>46.9</td>
+<td>90.0 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/YOLOX-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-M_pretrained.pdparams">Trained Model</a></td></tr>
 </tbody>
 </table>
-<b>注：以上精度指标为 </b>[VisDrone-DET](https://github.com/VisDrone/VisDrone-Dataset)<b> 验证集 mAP(0.5:0.95)。</b>
+<b>Note: The above accuracy metrics are for </b>[VisDrone-DET](https://github.com/VisDrone/VisDrone-Dataset)<b> validation set mAP(0.5:0.95)。</b>
 
-## [行人检测模块](../module_usage/tutorials/cv_modules/human_detection.md)
+## [Pedestrian Detection Module](../module_usage/tutorials/cv_modules/human_detection.en.md)
 <table>
 <thead>
 <tr>
-<th>模型名称</th>
+<th>Model Name</th>
 <th>mAP（%）</th>
-<th>模型存储大小</th>
+<th>Model Size</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -615,9 +737,9 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-YOLOE-S_human_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-S_human_pretrained.pdparams">Trained Model</a></td></tr>
 </tbody>
 </table>
-<b>注：以上精度指标为 </b>[CrowdHuman](https://bj.bcebos.com/v1/paddledet/data/crowdhuman.zip)<b> 验证集 mAP(0.5:0.95)。</b>
+<b>Note: The above accuracy metrics are for </b>[CrowdHuman](https://bj.bcebos.com/v1/paddledet/data/crowdhuman.zip)<b> validation set mAP(0.5:0.95)。</b>
 
-## Semantic Segmentation Module
+## [Semantic Segmentation Module](../module_usage/tutorials/cv_modules/semantic_segmentation.en.md)
 <table>
 <thead>
 <tr>
@@ -648,6 +770,11 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td>205.9 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Deeplabv3-R101_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3-R101_pretrained.pdparams">Trained Model</a></td></tr>
 <tr>
+<td>OCRNet_HRNet-W18</td>
+<td>80.67</td>
+<td>43.1 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/OCRNet_HRNet-W18_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W18_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
 <td>OCRNet_HRNet-W48</td>
 <td>82.15</td>
 <td>249.8 M</td>
@@ -657,11 +784,73 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td>73.10</td>
 <td>28.5 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LiteSeg-T_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-T_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>SegFormer-B0 (slice)</td>
+<td>76.73</td>
+<td>13.2 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B0 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B0 (slice)_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>SegFormer-B1 (slice)</td>
+<td>78.35</td>
+<td>48.5 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B1 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B1 (slice)_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>SegFormer-B2 (slice)</td>
+<td>81.60</td>
+<td>96.9 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B2 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B2 (slice)_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>SegFormer-B3 (slice)</td>
+<td>82.47</td>
+<td>167.3 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B3 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B3 (slice)_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>SegFormer-B4 (slice)</td>
+<td>82.38</td>
+<td>226.7 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B4 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B4 (slice)_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>SegFormer-B5 (slice)</td>
+<td>82.58</td>
+<td>229.7 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B5 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B5 (slice)_pretrained.pdparams">Trained Model</a></td></tr>
 </tbody>
 </table>
 <b>Note: The above accuracy metrics are for</b> [Cityscapes](https://www.cityscapes-dataset.com/) <b>dataset mIoU.</b>
+<table>
+<thead>
+<tr>
+<th>Model Name</th>
+<th>mIoU (%)</th>
+<th>Model Size</th>
+<th>Model Download Link</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>SeaFormer_base(slice)</td>
+<td>40.92</td>
+<td>30.8 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SeaFormer_base(slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_base(slice)_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>SeaFormer_large (slice)</td>
+<td>43.66</td>
+<td>49.8 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SeaFormer_large (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_large (slice)_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>SeaFormer_small (slice)</td>
+<td>38.73</td>
+<td>14.3 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SeaFormer_small (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_small (slice)_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>SeaFormer_tiny (slice)</td>
+<td>34.58</td>
+<td>6.1 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SeaFormer_tiny (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_tiny (slice)_pretrained.pdparams">Trained Model</a></td></tr>
+</tbody>
+</table>
+<b>Note: The above accuracy metrics are evaluated on the </b>[ADE20k](https://groups.csail.mit.edu/vision/datasets/ADE20K/)<b> dataset. "slice" indicates that the input image has been cropped.</b>
 
-## Instance Segmentation Module
+## [Instance Segmentation Module](../module_usage/tutorials/cv_modules/instance_segmentation.en.md)
 <table>
 <thead>
 <tr>
@@ -745,16 +934,21 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 </table>
 <b>Note: The above accuracy metrics are for</b> [COCO2017](https://cocodataset.org/#home) <b>validation set Mask AP(0.5:0.95).</b>
 
-## [图像特征模块](../module_usage/tutorials/cv_modules/image_feature.md)
+## [Image Feature Module](../module_usage/tutorials/cv_modules/image_feature.en.md)
 <table>
 <thead>
 <tr>
-<th>模型名称</th>
+<th>Model Name</th>
 <th>recall@1（%）</th>
-<th>模型存储大小</th>
+<th>Model Size</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
+<tr>
+<td>PP-ShiTuV2_rec</td>
+<td>84.2</td>
+<td>16.3 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-ShiTuV2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-ShiTuV2_rec_pretrained.pdparams">Trained Model</a></td></tr>
 <tr>
 <td>PP-ShiTuV2_rec_CLIP_vit_base</td>
 <td>88.69</td>
@@ -767,15 +961,15 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-ShiTuV2_rec_CLIP_vit_large_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-ShiTuV2_rec_CLIP_vit_large_pretrained.pdparams">Trained Model</a></td></tr>
 </tbody>
 </table>
-<b>注：以上精度指标为 AliProducts recall@1。</b>
+<b>Note: The above accuracy metrics are for AliProducts recall@1。</b>
 
-## [主体检测模块](../module_usage/tutorials/cv_modules/mainbody_detection.md)
+## [Main Body Detection Module](../module_usage/tutorials/cv_modules/mainbody_detection.en.md)
 <table>
 <thead>
 <tr>
-<th>模型名称</th>
+<th>Model Name</th>
 <th>mAP（%）</th>
-<th>模型存储大小</th>
+<th>Model Size</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -786,15 +980,15 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-ShiTuV2_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-ShiTuV2_det_pretrained.pdparams">Trained Model</a></td></tr>
 </tbody>
 </table>
-<b>注：以上精度指标为 [PaddleClas主体检测数据集](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/docs/zh_CN/training/PP-ShiTu/mainbody_detection.md) mAP(0.5:0.95)。</b>
+<b>Note: The above accuracy metrics are for [PaddleClas主体检测数据集](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/docs/zh_CN/training/PP-ShiTu/mainbody_detection.md) mAP(0.5:0.95)。</b>
 
-## [车辆检测模块](../module_usage/tutorials/cv_modules/vehicle_detection.md)
+## [Vehicle Detection Module](../module_usage/tutorials/cv_modules/vehicle_detection.en.md)
 <table>
 <thead>
 <tr>
-<th>模型名称</th>
+<th>Model Name</th>
 <th>mAP（%）</th>
-<th>模型存储大小</th>
+<th>Model Size</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -810,15 +1004,34 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-YOLOE-S_vehicle_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-S_vehicle_pretrained.pdparams">Trained Model</a></td></tr>
 </tbody>
 </table>
-<b>注：以上精度指标为 </b>[PPVehicle](https://github.com/PaddlePaddle/PaddleDetection/tree/develop/configs/ppvehicle)<b> 验证集 mAP(0.5:0.95)。</b>
+<b>Note: The above accuracy metrics are for </b>[PPVehicle](https://github.com/PaddlePaddle/PaddleDetection/tree/develop/configs/ppvehicle)<b> validation set mAP(0.5:0.95)。</b>
 
-## [异常检测模块](../module_usage/tutorials/cv_modules/anomaly_detection.md)
+## [Face Detection Module](../module_usage/tutorials/cv_modules/face_detection.en.md)
 <table>
 <thead>
 <tr>
-<th>模型名称</th>
+<th>Model Name</th>
+<th style="text-align: center;">AP (%)<br/>Easy/Medium/Hard</th>
+<th>Model Size</th>
+<th>Model Download Link</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>PicoDet_LCNet_x2_5_face</td>
+<td style="text-align: center;">93.7/90.7/68.1</td>
+<td>28.9 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet_LCNet_x2_5_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_LCNet_x2_5_face_pretrained.pdparams">Trained Model</a></td></tr>
+</tbody>
+</table>
+<b>Note: The above accuracy metrics are evaluated on the WIDER-FACE validation set with an input size of 640*640.</b>
+
+## [Abnormality Detection Module](../module_usage/tutorials/cv_modules/anomaly_detection.en.md)
+<table>
+<thead>
+<tr>
+<th>Model Name</th>
 <th>Avg（%）</th>
-<th>模型存储大小</th>
+<th>Model Size</th>
 <th>Model Download Link</th></tr>
 </thead>
 <tbody>
@@ -829,9 +1042,9 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/STFPM_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/STFPM_pretrained.pdparams">Trained Model</a></td></tr>
 </tbody>
 </table>
-<b>注：以上精度指标为 </b>[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)<b> 验证集 平均异常分数。</b>
+<b>Note: The above accuracy metrics are evaluated on the </b>[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)<b> dataset using the average anomaly score.</b>
 
-## Text Detection Module
+## [Text Detection Module](../module_usage/tutorials/ocr_modules/text_detection.en.md)
 <table>
 <thead>
 <tr>
@@ -855,7 +1068,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 </table>
 <b>Note: The above accuracy metrics are evaluated on PaddleOCR's self-built Chinese dataset, covering street scenes, web images, documents, and handwritten scenarios, with 500 images for detection.</b>
 
-## Text Recognition Module
+## [Text Recognition Module](../module_usage/tutorials/ocr_modules/text_recognition.en.md)
 <table>
 <thead>
 <tr>
@@ -913,7 +1126,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 </table>
 <b>Note: The above accuracy metrics are evaluated on the [PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition](https://aistudio.baidu.com/competition/detail/1131/0/introduction) B-Rank.</b>
 
-## Table Structure Recognition Module
+## [Table Structure Recognition Module](../module_usage/tutorials/ocr_modules/table_structure_recognition.en.md)
 <table>
 <thead>
 <tr>
@@ -928,11 +1141,78 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td>76.31</td>
 <td>6.9 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SLANet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>SLANet_plus</td>
+<td>63.69</td>
+<td>6.9 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SLANet_plus_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">Trained Model</a></td></tr>
 </tbody>
 </table>
 <b>Note: The above accuracy metrics are measured on the PubtabNet English table recognition dataset.</b>
 
-## Layout Analysis Module
+## [Image Rectification Module](../module_usage/tutorials/ocr_modules/text_image_unwarping.en.md)
+<table>
+<thead>
+<tr>
+<th>Model Name</th>
+<th>MS-SSIM (%)</th>
+<th>Model Size</th>
+<th>Model Download Link</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>UVDoc</td>
+<td>54.40</td>
+<td>30.3 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/UVDoc_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">Trained Model</a></td></tr>
+</tbody>
+</table>
+<b>Note: The above accuracy metrics are measured on a self-built image rectification dataset by PaddleX.</b>
+
+## [Seal Text Detection Module](../module_usage/tutorials/ocr_modules/seal_text_detection.en.md)
+<table>
+<thead>
+<tr>
+<th>Model Name</th>
+<th>Detection Hmean (%)</th>
+<th>Model Size</th>
+<th>Model Download Link</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-OCRv4_mobile_seal_det</td>
+<td>96.47</td>
+<td>4.7 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-OCRv4_mobile_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_seal_det_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>PP-OCRv4_server_seal_det</td>
+<td>98.21</td>
+<td>108.3 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-OCRv4_server_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_seal_det_pretrained.pdparams">Trained Model</a></td></tr>
+</tbody>
+</table>
+<b>Note: The above accuracy metrics are evaluated on a self-built seal dataset by PaddleX, containing 500 seal images.</b>
+
+## [Document Orientation Classification Module](../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md)
+<table>
+<thead>
+<tr>
+<th>Model Name</th>
+<th>Top-1 Acc (%)</th>
+<th>Model Size</th>
+<th>Model Download Link</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-LCNet_x1_0_doc_ori</td>
+<td>99.26</td>
+<td>7.1 M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LCNet_x1_0_doc_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Trained Model</a></td></tr>
+</tbody>
+</table>
+<b>Note: The above accuracy metrics are Top-1 Acc on PaddleX's internal self-built dataset.</b>
+
+## [Layout Detection Module](../module_usage/tutorials/ocr_modules/layout_detection.en.md)
 <table>
 <thead>
 <tr>
@@ -966,7 +1246,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 </table>
 <b>Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built layout analysis dataset, containing 10,000 images.</b>
 
-## Time Series Forecasting Module
+## [Time Series Forecasting Module](../module_usage/tutorials/time_series_modules/time_series_forecasting.en.md)
 <table>
 <thead>
 <tr>
@@ -1023,7 +1303,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 </table>
 <b>Note: The above accuracy metrics are measured on the [ETTH1](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/Etth1.tar) dataset (evaluation results on the test set test.csv).</b>
 
-## Time Series Anomaly Detection Module
+## [Time Series Anomaly Detection Module](../module_usage/tutorials/time_series_modules/time_series_anomaly_detection.en.md)
 <table>
 <thead>
 <tr>
@@ -1074,7 +1354,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 </table>
 <b>Note: The above accuracy metrics are measured on the [PSM](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_anomaly_examples.tar) dataset.</b>
 
-## Time Series Classification Module
+## [Time Series Classification Module](../module_usage/tutorials/time_series_modules/time_series_classification.en.md)
 <table>
 <thead>
 <tr>

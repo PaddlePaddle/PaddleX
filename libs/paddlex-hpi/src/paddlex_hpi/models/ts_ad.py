@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Union
 import ultra_infer as ui
 import pandas as pd
 from paddlex.inference.common.batch_sampler import TSBatchSampler
-from paddlex.inference.results import TSAdResult
+from paddlex.inference.models_new.ts_anomaly_detection.result import TSAdResult
 from paddlex.modules.ts_anomaly_detection.model_list import MODELS
 
 from paddlex_hpi.models.base import TSPredictor

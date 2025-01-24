@@ -82,7 +82,7 @@ tar -xf ./dataset/ocr_curve_det_dataset_examples.tar -C ./dataset/
 Data validation can be completed with a single command:
 
 ```bash
-python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
+python main.py -c paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_curve_det_dataset_examples
 ```
@@ -167,13 +167,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_curve_det_dataset_examples
 </code></pre>
 <p>After dataset splitting, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters also support setting through appending command line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.yaml  \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_seal_det.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ocr_curve_det_dataset_examples \
     -o CheckDataset.split.enable=True \
@@ -186,7 +186,7 @@ CheckDataset:
 Model training can be completed with just one command. Here, we use the Seal Text Detection model (PP-OCRv4_server_seal_det) as an example:
 
 ```bash
-python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
+python main.py -c paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/ocr_curve_det_dataset_examples
 ```
@@ -220,7 +220,7 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 After model training, you can evaluate the specified model weights on the validation set to verify model accuracy. Using PaddleX for model evaluation requires just one command:
 
 ```bash
-python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
+python main.py -c paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ocr_curve_det_dataset_examples
 ```
@@ -249,7 +249,7 @@ To perform inference predictions via the command line, use the following command
 
 
 ```bash
-python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
+python main.py -c paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_accuracy/inference" \
     -o Predict.input="seal_text_det.png"

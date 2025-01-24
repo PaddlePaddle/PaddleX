@@ -1,22 +1,33 @@
 #!/bin/bash
 
 # input
-CONTAINER_NAME="${CONTAINER_NAME:-build_fd}"
+CONTAINER_NAME="${CONTAINER_NAME:-build}"
 WITH_GPU="${WITH_GPU:-ON}"
 ENABLE_BENCHMARK="${ENABLE_BENCHMARK:-OFF}"
 DEBUG="${DEBUG:-OFF}"
+ENABLE_PADDLE_BACKEND="${ENABLE_PADDLE_BACKEND:-ON}"
+ENABLE_ORT_BACKEND="${ENABLE_ORT_BACKEND:-ON}"
+ENABLE_OPENVINO_BACKEND="${ENABLE_OPENVINO_BACKEND:-ON}"
+ENABLE_TRT_BACKEND="${ENABLE_TRT_BACKEND:-ON}"
+TRT_DIRECTORY="${TRT_DIRECTORY:-Default}"
+ENABLE_VISION="${ENABLE_VISION:-ON}"
+ENABLE_TEXT="${ENABLE_TEXT:-ON}"
+
+if [ "$WITH_GPU" = "OFF" ]; then
+    ENABLE_TRT_BACKEND="OFF"
+fi
+
+if [ "$ENABLE_PADDLE_BACKEND" = "ON" ] && [ -z "$PADDLEINFERENCE_URL" ]; then
+    if [ "$WITH_GPU" = "ON" ]; then
+        PADDLEINFERENCE_URL=https://paddle-qa.bj.bcebos.com/paddle-pipeline/GITHUB_Docker_Compile_Test_Cuda118_cudnn860_Trt8522_R1/791e99fc54c36151b9e5f1245e0fc8ae5d8a282b/paddle_inference.tgz
+        PADDLEINFERENCE_VERSION="3.0.0-rc"
+    else
+        PADDLEINFERENCE_URL=https://paddle-qa.bj.bcebos.com/paddle-pipeline/GITHUB_Docker_Compile_Test_CPU_R1/791e99fc54c36151b9e5f1245e0fc8ae5d8a282b/paddle_inference.tgz
+        PADDLEINFERENCE_VERSION="3.0.0-rc"
+    fi
+fi
 
 DOCKER_IMAGE="ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle_manylinux_devel:cuda11.8-cudnn8.6-trt8.5-gcc8.2"
-
-if [[ -z "$PADDLEINFERENCE_URL" ]]; then
-    echo "Error: PADDLEINFERENCE_URL is not set."
-    exit 1
-fi
-
-if [[ -z "$PADDLEINFERENCE_VERSION" ]]; then
-    echo "Error: PADDLEINFERENCE_VERSION is not set."
-    exit 1
-fi
 
 # Set variables
 CMAKE_CXX_COMPILER="/usr/local/gcc-8.2/bin/g++"
@@ -36,7 +47,7 @@ docker run --gpus all -it --name="${CONTAINER_NAME}" --shm-size=128g --net=host 
 "${DOCKER_IMAGE}" /bin/bash -c "
 ldconfig && \
 cd /workspace && \
-./ultra-infer/scripts/linux/_build_cpp.sh --with-gpu "${WITH_GPU}" --enable-benchmark "${ENABLE_BENCHMARK}" --paddleinference-url "${PADDLEINFERENCE_URL}" --paddleinference-version "${PADDLEINFERENCE_VERSION}" && \
+./ultra-infer/scripts/linux/_build_cpp.sh --with-gpu "${WITH_GPU}" --enable-benchmark "${ENABLE_BENCHMARK}" --paddleinference-url "${PADDLEINFERENCE_URL}" --paddleinference-version "${PADDLEINFERENCE_VERSION}" --enable-paddle-backend "${ENABLE_PADDLE_BACKEND}" --enable-ort-backend "${ENABLE_ORT_BACKEND}" --enable-openvino-backend "${ENABLE_OPENVINO_BACKEND}" --enable-trt-backend "${ENABLE_TRT_BACKEND}" --trt-directory "${TRT_DIRECTORY}" --enable-vision "${ENABLE_VISION}" --enable-text "${ENABLE_TEXT}" && \
 tail -f /dev/null"
 EOF
 )
@@ -49,7 +60,7 @@ docker run -it --name="${CONTAINER_NAME}" --shm-size=128g --net=host \
 -e "https_proxy=${https_proxy}" \
 "${DOCKER_IMAGE}" /bin/bash -c "
 cd /workspace && \
-./ultra-infer/scripts/linux/_build_cpp.sh --with-gpu "${WITH_GPU}" --enable-benchmark "${ENABLE_BENCHMARK}" --paddleinference-url "${PADDLEINFERENCE_URL}" --paddleinference-version "${PADDLEINFERENCE_VERSION}" && \
+./ultra-infer/scripts/linux/_build_cpp.sh --with-gpu "${WITH_GPU}" --enable-benchmark "${ENABLE_BENCHMARK}" --paddleinference-url "${PADDLEINFERENCE_URL}" --paddleinference-version "${PADDLEINFERENCE_VERSION}" --enable-paddle-backend "${ENABLE_PADDLE_BACKEND}" --enable-ort-backend "${ENABLE_ORT_BACKEND}" --enable-openvino-backend "${ENABLE_OPENVINO_BACKEND}" --enable-trt-backend "${ENABLE_TRT_BACKEND}" --trt-directory "${TRT_DIRECTORY}" --enable-vision "${ENABLE_VISION}" --enable-text "${ENABLE_TEXT}" && \
 tail -f /dev/null"
 EOF
 )

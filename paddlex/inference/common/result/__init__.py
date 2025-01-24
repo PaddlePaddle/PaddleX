@@ -25,4 +25,5 @@ from .mixin import (
     HtmlMixin,
     XlsxMixin,
     VideoMixin,
+    MarkdownMixin,
 )

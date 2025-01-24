@@ -61,15 +61,207 @@ comments: true
 
 wheel 包的安装后，几行代码即可完成图像多标签分类模块的推理，可以任意切换该模块下的模型，您也可以将图像多标签分类的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png)到本地。
 
-```bash
+```python
 from paddlex import create_model
-model = create_model("PP-LCNet_x1_0_ML")
-output = model.predict("multilabel_classification_005.png", batch_size=1)
+model = create_model(model_name="PP-LCNet_x1_0_ML")
+output = model.predict(input="multilabel_classification_005.png", batch_size=1)
 for res in output:
-    res.print(json_format=False)
+    res.print()
     res.save_to_img("./output/")
     res.save_to_json("./output/res.json")
 ```
+运行后，得到的结果为：
+```bash
+{'res': {'input_path': 'multilabel_classification_005.png', 'class_ids': [46, 49, 47, 45, 60, 43, 39], 'scores': [0.99972, 0.99601, 0.99277, 0.65718, 0.56914, 0.56436, 0.52865], 'label_names': ['banana', 'orange', 'apple', 'bowl', 'dining table', 'knife', 'bottle']}}
+```
+
+运行结果参数含义如下：
+- `input_path`：表示输入待预测多类别图像的路径
+- `class_ids`：表示多类别图像的预测标签ID
+- `scores`：表示多类别图像的预测标签置信度
+- `label_names`：表示多类别图像的预测标签名称
+
+
+可视化图片如下：
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/image_multilabel_classification/multilabel_classification_005_result.png">
+
+相关方法、参数等说明如下：
+
+* `create_model`实例化多标签分类模型（此处以`PP-LCNet_x1_0_ML`为例），具体说明如下：
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td><code>model_name</code></td>
+<td>模型名称</td>
+<td><code>str</code></td>
+<td>无</td>
+<td><code>PP-LCNet_x1_0_ML</code></td>
+</tr>
+<tr>
+<td><code>model_dir</code></td>
+<td>模型存储路径</td>
+<td><code>str</code></td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td>多标签分类阈值</td>
+<td><code>float/list/dict</code></td>
+<td><li><b>float类型变量</b>，任意[0-1]之间浮点数：<code>0.5</code></li>
+<li><b>list类型变量</b>，由多个[0-1]之间浮点数组成的列表：<code>[0.5,0.5,...]</code></li>
+<li><b>dict类型变量</b>,指定不同类别使用不同的阈值，其中"default"为必须包含的键:<code>{"default":0.5,1:0.1,...}</code>
+</li>
+</td>
+<td>0.5</td>
+</tr>
+</table>
+
+* 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
+
+* 其中，`threshold` 参数用于设置多标签分类的阈值，默认为0.5。当设置为浮点数时，表示所有类别均使用该阈值；当设置为列表时，表示不同类别使用不同的阈值,此时需保持列表长度与类别数量一致；当设置为字典时，`default` 为必须包含的键， 表示所有类别的默认阈值，其它类别使用各自的阈值。例如：{"default":0.5,1:0.1}。
+
+* 调用多标签分类模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` , `batch_size` 和  `threshold`，具体说明如下：
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>待预测数据，支持多种输入类型</td>
+<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td>
+<ul>
+  <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
+  <li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
+  <li><b>URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png">示例</a></li>
+  <li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
+  <li><b>字典</b>，字典的<code>key</code>需与具体任务对应，如图像分类任务对应<code>\"img\"</code>，字典的<code>val</code>支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code></li>
+  <li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code></li>
+</ul>
+</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td>批大小</td>
+<td><code>int</code></td>
+<td>任意整数</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td>多标签分类阈值</td>
+<td><code>float/list/dict</code></td>
+<td><li><b>float类型变量</b>，任意[0-1]之间浮点数：<code>0.5</code></li>
+<li><b>list类型变量</b>，由多个[0-1]之间浮点数组成的列表：<code>[0.5,0.5,...]</code></li>
+<li><b>dict类型变量</b>,指定不同类别使用不同的阈值，其中"default"为必须包含的键:<code>{"default":0.5,1:0.1,...}</code>
+</li>
+</td>
+<td>0.5</td>
+</tr>
+</table>
+
+* 对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为图片、保存为`json`文件的操作:
+
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>方法说明</th>
+<th>参数</th>
+<th>参数类型</th>
+<th>参数说明</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "3"><code>print()</code></td>
+<td rowspan = "3">打印结果到终端</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan = "3"><code>save_to_json()</code></td>
+<td rowspan = "3">将结果保存为json格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>将结果保存为图像格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+</table>
+
+* 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>属性说明</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "1"><code>json</code></td>
+<td rowspan = "1">获取预测的<code>json</code>格式的结果</td>
+</tr>
+<tr>
+<td rowspan = "1"><code>img</code></td>
+<td rowspan = "1">获取格式为<code>dict</code>的可视化图像</td>
+</tr>
+
+</table>
+
+
 关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 
 ## 四、二次开发
@@ -89,7 +281,7 @@ tar -xf ./dataset/mlcls_nus_examples.tar -C ./dataset/
 一行命令即可完成数据校验：
 
 ```bash
-python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/mlcls_nus_examples
 ```
@@ -177,13 +369,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>随后执行命令：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_coco_examples
 </code></pre>
 <p>数据转换执行之后，原有标注文件会被在原路径下重命名为 <code>xxx.bak</code>。</p>
 <p>以上参数同样支持通过追加命令行参数的方式进行设置：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_coco_examples \
     -o CheckDataset.convert.enable=True \
@@ -209,13 +401,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>随后执行命令：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_coco_examples
 </code></pre>
 <p>数据划分执行之后，原有标注文件会被在原路径下重命名为 <code>xxx.bak</code>。</p>
 <p>以上参数同样支持通过追加命令行参数的方式进行设置：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_coco_examples \
     -o CheckDataset.split.enable=True \
@@ -227,7 +419,7 @@ CheckDataset:
 一条命令即可完成模型的训练，以此处图像多标签分类模型 PP-LCNet_x1_0_ML 的训练为例：
 
 ```bash
-python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/mlcls_nus_examples
 ```
@@ -258,7 +450,7 @@ python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ```bash
-python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
+python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/mlcls_nus_examples
 ```
@@ -281,7 +473,7 @@ python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_
 
 * 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png)到本地。
 ```bash
-python main.py -c paddlex/configs/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml  \
+python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCNet_x1_0_ML.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="multilabel_classification_005.png"

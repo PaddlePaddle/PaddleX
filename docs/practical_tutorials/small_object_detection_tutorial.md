@@ -35,7 +35,7 @@ PaddleX 提供了以下快速体验的方式，可以直接通过 PaddleX wheel 
   快速体验产出推理结果示例：
   <center>
 
-  <img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/small_obj_det/01.png" width=600>
+  <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/smallobj_det/02.png" width=600>
 
   </center>
 
@@ -160,7 +160,7 @@ python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-large
 另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：
 <center>
 
-<img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/small_obj_det/02.png" width=600>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/smallobj_det/03.png" width=600>
 
 </center>
 
@@ -283,7 +283,7 @@ python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-large
 通过上述可在`./output`下生成预测结果，预测结果如下：
 <center>
 
-<img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/small_obj_det/03.png" width="600"/>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/smallobj_det/04.png" width="600"/>
 
 </center>
 
@@ -304,7 +304,7 @@ for res in output:
 1. 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
 
 * 高性能部署：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能部署流程请参考 [PaddleX 高性能推理指南](../pipeline_deploy/high_performance_inference.md)。
-* 服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考 [PaddleX 服务化部署指南](../pipeline_deploy/service_deploy.md)。
+* 服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考 [PaddleX 服务化部署指南](../pipeline_deploy/serving.md)。
 * 端侧部署：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考 [PaddleX端侧部署指南](../pipeline_deploy/edge_deploy.md)。
 
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。

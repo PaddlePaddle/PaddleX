@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Union
 import ultra_infer as ui
 import pandas as pd
 from paddlex.inference.common.batch_sampler import TSBatchSampler
-from paddlex.inference.results import TSFcResult
+from paddlex.inference.models_new.ts_forecasting.result import TSFcResult
 from paddlex.modules.ts_forecast.model_list import MODELS
 
 from paddlex_hpi.models.base import TSPredictor

@@ -14,8 +14,8 @@
 
 import os
 import GPUtil
-import lazy_paddle as paddle
 
+import lazy_paddle as paddle
 from . import logging
 from .errors import raise_unsupported_device_error
 
@@ -32,6 +32,13 @@ def _constr_device(device_type, device_ids):
 
 def get_default_device():
     avail_gpus = GPUtil.getAvailable()
+    if not avail_gpus:
+        # maybe edge devices like Jetson
+        if os.path.exists("/etc/nv_tegra_release"):
+            avail_gpus = [0]
+            logging.info(
+                "Detected that the current device is a Jetson edge device. The default behavior will be to use GPU: 0"
+            )
     if not avail_gpus:
         return "cpu"
     else:

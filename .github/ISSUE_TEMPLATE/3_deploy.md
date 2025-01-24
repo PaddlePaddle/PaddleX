@@ -26,7 +26,7 @@ assignees: ''
 
 2. 服务化部署
 
-    * 您是否完全按照[服务化部署文档教程](https://paddlepaddle.github.io/PaddleX/main/pipeline_deploy/service_deploy.html)跑通了流程？
+    * 您是否完全按照[服务化部署文档教程](https://paddlepaddle.github.io/PaddleX/main/pipeline_deploy/serving.html)跑通了流程？
 
     * 您在服务化部署中是否有使用高性能推理插件，如果是，您使用的是离线激活方式还是在线激活方式？
 

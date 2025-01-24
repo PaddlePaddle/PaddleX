@@ -463,5 +463,5 @@ for res in output:
 更多参数请参考[时序预测产线使用教程](../pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.md)。
 
 2. 此外，PaddleX 时序预测产线也提供了服务化部署方式，详细说明如下：
-* 服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考 [PaddleX 服务化部署指南](../pipeline_deploy/service_deploy.md)。
+* 服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考 [PaddleX 服务化部署指南](../pipeline_deploy/serving.md)。
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。

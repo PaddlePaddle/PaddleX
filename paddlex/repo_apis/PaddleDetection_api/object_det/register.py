@@ -925,9 +925,9 @@ register_model_info(
 
 register_model_info(
     {
-        "model_name": "PP-YOLOE-R_L",
+        "model_name": "PP-YOLOE-R-L",
         "suite": "Det",
-        "config_path": osp.join(PDX_CONFIG_DIR, "PP-YOLOE-R_L.yaml"),
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-YOLOE-R-L.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "supported_dataset_types": ["COCODetDataset"],
         "supported_train_opts": {
@@ -1052,6 +1052,51 @@ register_model_info(
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-TinyPose_256x192.yaml"),
         "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
         "supported_dataset_types": ["KeypointTopDownCocoDetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-DocLayout-L",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-DocLayout-L.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-DocLayout-M",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-DocLayout-M.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)
+
+register_model_info(
+    {
+        "model_name": "PP-DocLayout-S",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "PP-DocLayout-S.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["COCODetDataset"],
         "supported_train_opts": {
             "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
             "dy2st": False,
