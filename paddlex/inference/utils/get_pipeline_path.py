@@ -18,12 +18,7 @@ from pathlib import Path
 
 def get_pipeline_path(pipeline_name):
     # XXX: using dict class to handle all pipeline configs
-    from ...utils.flags import USE_NEW_INFERENCE
-
-    if USE_NEW_INFERENCE:
-        config_subdir = "configs/pipelines"
-    else:
-        config_subdir = "pipelines"
+    config_subdir = "configs/pipelines"
     pipeline_path = (
         Path(__file__).parent.parent.parent / config_subdir / f"{pipeline_name}.yaml"
     ).resolve()

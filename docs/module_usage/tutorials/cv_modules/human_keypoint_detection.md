@@ -13,7 +13,7 @@ comments: true
 
 <table>
   <tr>
-    <th >模型</th>
+    <th >模型</th><th>模型下载链接</th>
     <th >方案</th>
     <th >输入尺寸</th>
     <th >AP(0.5:0.95)</th>
@@ -23,7 +23,7 @@ comments: true
     <th >介绍</th>
   </tr>
   <tr>
-    <td>PP-TinyPose_128x96</td>
+    <td>PP-TinyPose_128x96</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-TinyPose_128x96_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TinyPose_128x96_pretrained.pdparams">训练模型</a></td>
     <td>Top-Down</td>
     <td>128*96</td>
     <td>58.4</td>
@@ -33,9 +33,9 @@ comments: true
     <td rowspan="2">PP-TinyPose 是百度飞桨视觉团队自研的针对移动端设备优化的实时关键点检测模型，可流畅地在移动端设备上执行多人姿态估计任务</td>
   </tr>
   <tr>
-    <td>PP-TinyPose_256x192</td>
+    <td>PP-TinyPose_256x192</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-TinyPose_256x192_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TinyPose_256x192_pretrained.pdparams">训练模型</a></td>
     <td>Top-Down</td>
-    <td>128*96</td>
+    <td>256*192</td>
     <td>68.3</td>
     <td></td>
     <td></td>
@@ -54,9 +54,7 @@ comments: true
 ```python
 from paddlex import create_model
 
-model_name = "PP-TinyPose_128x96"
-
-model = create_model(model_name)
+model = create_model(model_name="PP-TinyPose_128x96")
 output = model.predict("keypoint_detection_002.jpg", batch_size=1)
 
 for res in output:
@@ -113,7 +111,7 @@ for res in output:
 </tr>
 <tr>
 <td><code>flip</code></td>
-<td>是否进行反转推理； 如果为True，模型会对输入图像水平翻转后再次推理，并融合两次推理结果以增加关键点预测的准确性</td>
+<td>是否进行图像水平反转推理结果融合； 如果为True，模型会对输入图像水平翻转后再次推理，并融合两次推理结果以增加关键点预测的准确性</td>
 <td><code>bool</code></td>
 <td>无</td>
 <td><code>False</code></td>

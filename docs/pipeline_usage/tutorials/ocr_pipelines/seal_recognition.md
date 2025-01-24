@@ -65,6 +65,7 @@ comments: true
 
 > ❗ 以上列出的是版面检测模块重点支持的<b>3个核心模型</b>，该模块总共支持<b>11个全量模型</b>，包含多个预定义了不同类别的模型，其中包含印章类别的模型有9个，除上述3个核心模型外，其余模型列表如下：
 
+
 <details><summary> 👉模型列表详情</summary>
 
 * <b>3类版面检测模型，包含表格、图像、印章</b>
@@ -1131,7 +1132,7 @@ for res in output:
             - `use_doc_orientation_classify`: `(bool)` 控制是否启用文档方向分类
             - `use_doc_unwarping`: `(bool)` 控制是否启用文档扭曲矫正
         - `angle`: `(int)` 文档方向分类的预测结果。启用时取值为[0,1,2,3]，分别对应[0°,90°,180°,270°]；未启用时为-1
-
+       
     - `dt_polys`: `(List[numpy.ndarray])` 印章文本检测的多边形框列表。每个检测框由多个顶点坐标构成的numpy数组表示，数组shape为(n, 2)
 
     - `dt_scores`: `(List[float])` 文本检测框的置信度列表

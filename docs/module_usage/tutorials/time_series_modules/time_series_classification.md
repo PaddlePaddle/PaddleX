@@ -41,7 +41,7 @@ from paddlex import create_model
 model = create_model(model_name="TimesNet_cls")
 output = model.predict("ts_cls.csv", batch_size=1)
 for res in output:
-    res.print()
+    res.print(json_format=True)
     res.save_to_csv(save_path="./output/")
     res.save_to_json(save_path="./output/res.json")
 ```
