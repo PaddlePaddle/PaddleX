@@ -460,11 +460,11 @@ output = pipeline.predict(
 )
 
 for res in output:
-    res.print() 
-    res.save_to_img("./output/") 
-    res.save_to_xlsx("./output/") 
-    res.save_to_html("./output/") 
-    res.save_to_json("./output/") 
+    res.print()
+    res.save_to_img("./output/")
+    res.save_to_xlsx("./output/")
+    res.save_to_html("./output/")
+    res.save_to_json("./output/")
 ```
 
 在上述 Python 脚本中，执行了如下几个步骤：
@@ -724,6 +724,8 @@ for res in output:
 
     - `input_path`: `(str)` 待预测图像的输入路径
 
+    - `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
+
     - `model_settings`: `(Dict[str, bool])` 配置产线所需的模型参数
 
         - `use_doc_preprocessor`: `(bool)` 控制是否启用文档预处理子产线
@@ -804,11 +806,11 @@ output = pipeline.predict(
 )
 
 for res in output:
-    res.print() 
-    res.save_to_img("./output/") 
-    res.save_to_xlsx("./output/") 
-    res.save_to_html("./output/") 
-    res.save_to_json("./output/") 
+    res.print()
+    res.save_to_img("./output/")
+    res.save_to_xlsx("./output/")
+    res.save_to_html("./output/")
+    res.save_to_json("./output/")
 
 ```
 
@@ -1138,7 +1140,7 @@ SubPipelines:
         thresh: 0.3
         box_thresh: 0.6
         unclip_ratio: 2.0
-        
+
       TextRecognition:
         module_name: text_recognition
         model_name: PP-OCRv4_server_rec
