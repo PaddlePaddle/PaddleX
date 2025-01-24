@@ -867,7 +867,7 @@ data_root             # 数据集根目录，目录名称可以改变
 </tr>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></td>
+<td><code>string</code> | <code>null</code></td>
 <td>识别结果图。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 </tbody>

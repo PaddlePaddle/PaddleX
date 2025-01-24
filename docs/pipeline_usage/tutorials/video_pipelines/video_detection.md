@@ -464,14 +464,14 @@ for res in output:
 </tr>
 </thead>
 <tr>
-<td><code>detectedObjects</code></td>
-<td><code>array</code></td>
-<td>目标的位置、类别等信息。</td>
-</tr>
-<tr>
 <td><code>index</code></td>
 <td><code>integer</code></td>
 <td>从 0 开始的帧编号</td>
+</tr>
+<tr>
+<td><code>detectedObjects</code></td>
+<td><code>array</code></td>
+<td>目标的位置、类别等信息。</td>
 </tr>
 </tbody>
 </table>
@@ -529,7 +529,7 @@ response = requests.post(API_URL, json=payload)
 # 处理接口返回数据
 assert response.status_code == 200
 result = response.json()[&quot;result&quot;]
-print(&quot;\nDetected frames:&quot;)
+print(&quot;\nFrames:&quot;)
 print(result[&quot;frames&quot;])
 </code></pre></details>
 </details>

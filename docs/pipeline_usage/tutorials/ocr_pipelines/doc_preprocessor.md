@@ -500,19 +500,24 @@ for res in output:
 </thead>
 <tbody>
 <tr>
-<td><code>inputImage</code></td>
+<td><code>outputImage</code></td>
 <td><code>string</code></td>
-<td>输入图像。图像为JPEG格式，使用Base64编码。</td>
-</tr>
-<tr>
-<td><code>docPreprocessingImage</code></td>
-<td><code>string</code></td>
-<td>矫正结果图。图像为JPEG格式，使用Base64编码。</td>
+<td>经过预处理的图像。图像为PNG格式，使用Base64编码。</td>
 </tr>
 <tr>
 <td><code>prunedResult</code></td>
 <td><code>object</code></td>
 <td>是产线 <code>predict</code> 方法生成的 JSON 结果中 <code>res</code> 字段的简化版本，其中去除了 <code>input_path</code> 字段</td>
+</tr>
+<tr>
+<td><code>docPreprocessingImage</code></td>
+<td><code>string</code> ｜ <code>null</code></td>
+<td>可视化结果图。图像为JPEG格式，使用Base64编码。</td>
+</tr>
+<tr>
+<td><code>inputImage</code></td>
+<td><code>string</code> ｜ <code>null</code></td>
+<td>输入图像。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 </tbody>
 </table>
@@ -537,12 +542,11 @@ response = requests.post(API_URL, json=payload)
 assert response.status_code == 200
 result = response.json()["result"]
 for i, res in enumerate(result["docPreprocessingResults"]):
-    print("Detected docwarps:")
     print(res["prunedResult"])
-    doc_preprocessing_img_path = f"doc_preprocessing_img_{i}.jpg"
-    with open(doc_preprocessing_img_path, "wb") as f:
-        f.write(base64.b64decode(res["docPreprocessingImage"]))
-    print(f"Output image saved at {doc_preprocessing_img_path}")
+    output_img_path = f"out_{i}.png"
+    with open(output_img_path, "wb") as f:
+        f.write(base64.b64decode(res["outputImage"]))
+    print(f"Output image saved at {output_img_path}")
 </code></pre></details>
 </details>
 <br/>

@@ -1022,14 +1022,14 @@ for res in output:
 <td>是产线 <code>predict</code> 方法生成的 JSON 结果中 <code>res</code> 字段的简化版本，其中去除了 <code>input_path</code> 字段</td>
 </tr>
 <tr>
-<td><code>inputImage</code></td>
-<td><code>string</code></td>
-<td>输入图像。图像为JPEG格式，使用Base64编码。</td>
+<td><code>outputImages</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>输入图像和预测结果图像的键值对。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 <tr>
-<td><code>outputImages</code></td>
-<td><code>object</code></td>
-<td>输入图像和预测结果图像的键值对。图像为JPEG格式，使用Base64编码。</td>
+<td><code>inputImage</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>输入图像。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 </tbody>
 </table></details>

@@ -569,7 +569,7 @@ for res in output:
 </tr>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></td>
+<td><code>string</code> | <code>null</code></td>
 <td>实例分割结果图。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 </tbody>
