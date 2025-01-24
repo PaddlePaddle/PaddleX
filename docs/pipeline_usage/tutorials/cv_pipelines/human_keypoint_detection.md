@@ -100,83 +100,388 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 一行命令即可快速体验人体关键点检测产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/keypoint_detection_001.jpg)，并将 `--input` 替换为本地路径，进行预测
 
 ```bash
-paddlex --pipeline object_detection --input keypoint_detection_001.jpg --device gpu:0
+paddlex --pipeline human_keypoint_detection \
+        --input keypoint_detection_001.jpg \
+        --det_threshold 0.5 \
+        --save_path ./output/ \
+        --device gpu:0
 ```
-参数说明：
+相关参数和运行结果说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的参数说明和结果解释。
 
-```
---pipeline：产线名称，此处为人体关键点检测产线
---input：待处理的输入图片的本地路径或URL
---device 使用的GPU序号（例如gpu:0表示使用第0块GPU，gpu:1,2表示使用第1、2块GPU），也可选择使用CPU（--device cpu）
-```
+可视化结果保存至`save_path`，如下所示：
 
-在执行上述命令时，加载的是默认的人体关键点检测产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
-
-<details><summary> 👉点击展开</summary>
-
-<pre><code class="language-bash">paddlex --get_pipeline_config human_keypoint_detection
-</code></pre>
-<p>执行后，人体关键点检测产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为<code>./my_path</code>）：</p>
-<pre><code class="language-bash">paddlex --get_pipeline_config human_keypoint_detection --save_path ./my_path
-</code></pre></details>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/human_keypoint_detection/01.jpg">
 
 #### 2.2.2 Python脚本方式集成
-几行代码即可完成人体关键点检测产线的快速推理。
+通过上述命令行方式可快速体验查看效果，在项目中往往需要代码集成，您可以通过如下几行代码完成产线的快速推理：
 
 ```python
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="human_keypoint_detection")
 
-output = pipeline.predict("keypoint_detection_001.jpg")
+output = pipeline.predict("keypoint_detection_001.jpg"， det_threshold=0.5)
 for res in output:
     res.print()
     res.save_to_img("./output/")
+    res.save_to_json("./output/")
 ```
 
 在上述 Python 脚本中，执行了如下几个步骤：
 
-（1）实例化 `create_pipeline` 实例化产线对象：具体参数说明如下：
+（1）调用 `create_pipeline` 实例化产线对象：具体参数说明如下：
 
-|参数|参数说明|参数类型|默认值|
-|-|-|-|-|
-|`pipeline`|产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。|`str`|无|
-|`device`|产线模型推理设备。支持：“gpu”，“cpu”。|`str`|`gpu`|
-|`enable_hpi`|是否启用高性能推理，仅当该产线支持高性能推理时可用。|`bool`|`False`|
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+<th>参数类型</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pipeline</code></td>
+<td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
+<td><code>str</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>device</code></td>
+<td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
+<td><code>str</code></td>
+<td><code>gpu:0</code></td>
+</tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理，仅当该产线支持高性能推理时可用。</td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
 
-（2）调用产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`x`，用于输入待预测数据，支持多种输入方式，具体示例如下：
+（2）调用人体关键点检测产线对象的 `predict()` 方法进行推理预测。该方法将返回一个 `generator`。以下是 `predict()` 方法的参数及其说明：
 
-| 参数类型      | 参数说明                                                                                                  |
-|---------------|-----------------------------------------------------------------------------------------------------------|
-| Python Var    | 支持直接传入Python变量，如numpy.ndarray表示的图像数据。                                               |
-| str         | 支持传入待预测数据文件路径，如图像文件的本地路径：`/root/data/img.jpg`。                                   |
-| str           | 支持传入待预测数据文件URL，如图像文件的网络URL：[示例](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png)。|
-| str           | 支持传入本地目录，该目录下需包含待预测数据文件，如本地路径：`/root/data/`。                               |
-| dict          | 支持传入字典类型，字典的key需与具体任务对应，如图像分类任务对应\"img\"，字典的val支持上述类型数据，例如：`{\"img\": \"/root/data1\"}`。|
-| list          | 支持传入列表，列表元素需为上述类型数据，如`[numpy.ndarray, numpy.ndarray]，[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]`，`[\"/root/data1\", \"/root/data2\"]`，`[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]`。|
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>待预测数据，支持多种输入类型，必需参数</td>
+<td><code>Python Var|str|list</code></td>
+<td>
+<ul>
+  <li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
+  <li><b>str</b>：如图像文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code></li>
+  <li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
+</ul>
+</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td>人体检测模型阈值</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+  <li><b>float</b>：如<code>0.5</code>， 表示过滤掉所有阈值小于<code>0.5</code>的目标框；</li>
+  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>0.5</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+</table>
 
-（3）调用`predict`方法获取预测结果：`predict` 方法为`generator`，因此需要通过调用获得预测结果，`predict`方法以batch为单位对数据进行预测，因此预测结果为list形式表示的一组预测结果。
+（3）对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为图片、保存为`json`文件的操作:
 
-（4）对预测结果进行处理：每个样本的预测结果均为`dict`类型，且支持打印，或保存为文件，支持保存的类型与具体产线相关，如：
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>方法说明</th>
+<th>参数</th>
+<th>参数类型</th>
+<th>参数说明</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "3"><code>print()</code></td>
+<td rowspan = "3">打印结果到终端</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan = "3"><code>save_to_json()</code></td>
+<td rowspan = "3">将结果保存为json格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>将结果保存为图像格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，支持目录或文件路径</td>
+<td>无</td>
+</tr>
+</table>
 
-| 方法         | 说明                        | 方法参数                                                                                               |
-|--------------|-----------------------------|--------------------------------------------------------------------------------------------------------|
-| print        | 打印结果到终端              | `- format_json`：bool类型，是否对输出内容进行使用json缩进格式化，默认为True；<br>`- indent`：int类型，json格式化设置，仅当format_json为True时有效，默认为4；<br>`- ensure_ascii`：bool类型，json格式化设置，仅当format_json为True时有效，默认为False； |
-| save_to_json | 将结果保存为json格式的文件   | `- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；<br>`- indent`：int类型，json格式化设置，默认为4；<br>`- ensure_ascii`：bool类型，json格式化设置，默认为False； |
-| save_to_img  | 将结果保存为图像格式的文件  | `- save_path`：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致； |
+<ul><li><details><summary>👉 调用 <code>print()</code> 方法会将如下结果打印到终端（点击展开）：</summary>
 
-若您获取了配置文件，即可对目标检测产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
+```bash
+{'res': {'input_path': 'keypoint_detection_001.jpg', 'boxes': [{'coordinate': [325.65088, 74.46718, 391.5512, 209.46529], 'det_score': 0.9316536784172058, 'keypoints': array([[3.52227936e+02, 8.88497543e+01, 5.41676700e-01],
+       [3.51974579e+02, 8.66366196e+01, 6.21515572e-01],
+       [3.52865662e+02, 8.64902344e+01, 5.60755610e-01],
+       [3.50862457e+02, 8.75393066e+01, 5.66961825e-01],
+       [3.57415802e+02, 8.63235092e+01, 5.54250121e-01],
+       [3.39434937e+02, 9.99389191e+01, 6.28665030e-01],
+       [3.69297821e+02, 1.01169853e+02, 6.00828469e-01],
+       [3.36788544e+02, 1.18020966e+02, 5.31029820e-01],
+       [3.71721039e+02, 1.22033646e+02, 6.07613802e-01],
+       [3.66371948e+02, 1.40476746e+02, 1.52681962e-01],
+       [3.67885651e+02, 1.39969559e+02, 3.90044987e-01],
+       [3.47553253e+02, 1.42274353e+02, 5.21435857e-01],
+       [3.60833710e+02, 1.42503479e+02, 4.64817137e-01],
+       [3.40133362e+02, 1.67570465e+02, 5.92474759e-01],
+       [3.74433594e+02, 1.69982712e+02, 5.48423827e-01],
+       [3.37616333e+02, 1.92737564e+02, 5.85887253e-01],
+       [3.82684723e+02, 1.96479385e+02, 6.19615853e-01]], dtype=float32), 'kpt_score': 0.53462815}, {'coordinate': [271.96713, 69.02892, 336.77832, 217.54662], 'det_score': 0.9304604530334473, 'keypoints': array([[2.96400787e+02, 8.58611679e+01, 7.14319646e-01],
+       [2.97301758e+02, 8.28755493e+01, 7.04051554e-01],
+       [2.94497406e+02, 8.29398193e+01, 6.89844370e-01],
+       [3.00162109e+02, 8.35247955e+01, 5.55446565e-01],
+       [2.93188751e+02, 8.33744202e+01, 6.51386738e-01],
+       [3.12854675e+02, 9.81457520e+01, 7.32430100e-01],
+       [2.86463226e+02, 1.01262375e+02, 6.10454917e-01],
+       [3.19350311e+02, 1.18383713e+02, 5.93547344e-01],
+       [2.82401520e+02, 1.21164886e+02, 5.71586847e-01],
+       [3.23966248e+02, 1.39364532e+02, 5.18607676e-01],
+       [2.82263916e+02, 1.44509521e+02, 2.59432912e-01],
+       [3.09791840e+02, 1.43603912e+02, 6.89817309e-01],
+       [2.94868561e+02, 1.44677597e+02, 5.97069323e-01],
+       [3.14365845e+02, 1.74088943e+02, 6.36058152e-01],
+       [2.92653442e+02, 1.75070770e+02, 5.97140312e-01],
+       [3.19849792e+02, 2.02162598e+02, 6.80035114e-01],
+       [2.94255920e+02, 2.03049500e+02, 6.08293772e-01]], dtype=float32), 'kpt_score': 0.6123249}, {'coordinate': [293.55933, 188.65804, 419.47382, 305.4712], 'det_score': 0.9179267883300781, 'keypoints': array([[3.33173096e+02, 2.05474487e+02, 5.18341482e-01],
+       [3.36098663e+02, 2.03492996e+02, 5.60671568e-01],
+       [3.37248505e+02, 2.03364868e+02, 5.00729203e-01],
+       [3.40604095e+02, 2.02393539e+02, 4.98033434e-01],
+       [3.43625671e+02, 2.01539536e+02, 6.13991261e-01],
+       [3.24516022e+02, 2.18521667e+02, 3.14208776e-01],
+       [3.52951965e+02, 2.12051971e+02, 4.42923039e-01],
+       [3.14448853e+02, 2.22776672e+02, 2.55664617e-01],
+       [3.65774384e+02, 2.25498718e+02, 8.26140717e-02],
+       [3.06869843e+02, 2.34243729e+02, 1.35185301e-01],
+       [3.08855865e+02, 2.36824249e+02, 1.00039296e-01],
+       [3.82195679e+02, 2.42062302e+02, 5.45506418e-01],
+       [3.88757233e+02, 2.42933960e+02, 5.79574823e-01],
+       [3.50280792e+02, 2.56009766e+02, 7.92343557e-01],
+       [3.70955750e+02, 2.74127930e+02, 5.06902397e-01],
+       [3.61553833e+02, 2.83896454e+02, 6.03924632e-01],
+       [3.94064087e+02, 2.88825836e+02, 3.72752368e-01]], dtype=float32), 'kpt_score': 0.43667096}, {'coordinate': [238.98825, 182.67476, 372.81628, 307.61395], 'det_score': 0.914400041103363, 'keypoints': array([[281.63354   , 197.61014   ,   0.76263565],
+       [283.38297   , 195.05458   ,   0.8535259 ],
+       [277.73865   , 192.96712   ,   0.7486459 ],
+       [282.2258    , 197.37396   ,   0.5293759 ],
+       [267.41278   , 193.56656   ,   0.6177453 ],
+       [269.7986    , 215.17424   ,   0.6587688 ],
+       [259.27332   , 214.76183   ,   0.7745857 ],
+       [277.53683   , 237.42062   ,   0.48790172],
+       [260.1237    , 240.18477   ,   0.44012186],
+       [293.51572   , 250.89894   ,   0.49827316],
+       [290.2274    , 252.19504   ,   0.58322966],
+       [279.096     , 260.06042   ,   0.6834831 ],
+       [269.9528    , 265.9034    ,   0.74632865],
+       [313.1393    , 260.79523   ,   0.6337413 ],
+       [310.01425   , 262.5001    ,   0.7376388 ],
+       [348.17996   , 283.56802   ,   0.6096815 ],
+       [334.12622   , 292.06284   ,   0.805234  ]], dtype=float32), 'kpt_score': 0.6571127}, {'coordinate': [66.23172, 93.531204, 124.48463, 217.99655], 'det_score': 0.9086756110191345, 'keypoints': array([[ 91.31993   , 108.413284  ,   0.615049  ],
+       [ 92.08924   , 106.03603   ,   0.63400346],
+       [ 88.434235  , 105.775925  ,   0.6342117 ],
+       [ 94.41964   , 106.27531   ,   0.5885308 ],
+       [ 84.07658   , 105.80367   ,   0.6773151 ],
+       [100.38561   , 118.80038   ,   0.74734527],
+       [ 79.46563   , 119.58027   ,   0.7821885 ],
+       [102.27228   , 136.0127    ,   0.5907435 ],
+       [ 73.76375   , 135.51848   ,   0.7132327 ],
+       [101.763245  , 148.3819    ,   0.35871926],
+       [ 72.33199   , 148.83861   ,   0.5405212 ],
+       [ 99.1199    , 151.6756    ,   0.83278877],
+       [ 86.4599    , 152.03287   ,   0.78065455],
+       [106.40269   , 176.46979   ,   0.75466657],
+       [ 84.909454  , 178.44617   ,   0.76010597],
+       [110.97942   , 201.19633   ,   0.7917331 ],
+       [ 79.87372   , 202.87093   ,   0.79150075]], dtype=float32), 'kpt_score': 0.68195945}, {'coordinate': [160.1294, 78.35935, 212.01868, 153.2241], 'det_score': 0.8295672535896301, 'keypoints': array([[1.8115924e+02, 1.0371443e+02, 2.5303254e-01],
+       [1.8318883e+02, 9.6959526e+01, 1.5748371e-01],
+       [1.8303551e+02, 9.8071350e+01, 2.1673845e-01],
+       [1.8769695e+02, 9.1113632e+01, 1.4220884e-01],
+       [1.8665227e+02, 9.1424126e+01, 1.2998220e-01],
+       [1.9881558e+02, 9.9527107e+01, 2.6830634e-01],
+       [1.8619264e+02, 9.9051491e+01, 1.8842754e-01],
+       [1.9972902e+02, 1.2386106e+02, 4.7812667e-01],
+       [1.8038458e+02, 1.2146417e+02, 1.7550260e-01],
+       [1.8155409e+02, 1.3735040e+02, 3.2514629e-01],
+       [1.7971712e+02, 1.3371999e+02, 1.1313542e-01],
+       [1.9606516e+02, 1.4140919e+02, 2.3604973e-01],
+       [1.8650092e+02, 1.4260675e+02, 1.3515554e-01],
+       [1.9617020e+02, 1.2273723e+02, 9.6943676e-02],
+       [1.6671684e+02, 1.2564886e+02, 1.2711491e-01],
+       [1.8317670e+02, 1.3923177e+02, 1.0834377e-01],
+       [1.7997801e+02, 1.3850316e+02, 9.3360245e-02]], dtype=float32), 'kpt_score': 0.19088578}, {'coordinate': [52.482475, 59.36664, 96.47121, 135.45993], 'det_score': 0.7726763486862183, 'keypoints': array([[7.38075943e+01, 7.33277664e+01, 1.63257480e-01],
+       [7.37732239e+01, 7.15934525e+01, 1.55248597e-01],
+       [7.20166702e+01, 7.13588028e+01, 1.96659654e-01],
+       [6.95982971e+01, 7.10932083e+01, 1.26999229e-01],
+       [6.98693237e+01, 7.16391983e+01, 1.35578454e-01],
+       [8.22228088e+01, 7.77278976e+01, 2.35379949e-01],
+       [6.47475586e+01, 7.88423233e+01, 2.10787609e-01],
+       [8.33889618e+01, 9.05893707e+01, 2.98420697e-01],
+       [8.30510330e+01, 9.10888824e+01, 1.13309503e-01],
+       [8.09216843e+01, 9.85093231e+01, 1.84670463e-01],
+       [7.77405396e+01, 1.01128220e+02, 1.49517819e-01],
+       [7.58817215e+01, 1.02311646e+02, 7.63842911e-02],
+       [6.97640839e+01, 1.01978600e+02, 9.00617689e-02],
+       [8.89746017e+01, 9.87928925e+01, 2.00097740e-01],
+       [6.45541153e+01, 1.04130150e+02, 1.00787796e-01],
+       [8.81069489e+01, 1.19858818e+02, 1.84717909e-01],
+       [7.08108673e+01, 1.38108154e+02, 9.07213315e-02]], dtype=float32), 'kpt_score': 0.15956473}, {'coordinate': [7.081953, 80.3705, 46.81927, 161.72012], 'det_score': 0.6587498784065247, 'keypoints': array([[2.68747215e+01, 9.24635468e+01, 3.17601502e-01],
+       [2.71188889e+01, 9.08834305e+01, 2.46545449e-01],
+       [2.69905357e+01, 9.03851013e+01, 3.27626228e-01],
+       [2.34424419e+01, 8.87997513e+01, 2.75899678e-01],
+       [3.25261230e+01, 8.93143845e+01, 3.42958122e-01],
+       [1.98818531e+01, 9.67693405e+01, 2.83849210e-01],
+       [3.82729301e+01, 9.91002884e+01, 3.19851965e-01],
+       [1.63669338e+01, 1.10157967e+02, 1.96907550e-01],
+       [4.11151352e+01, 1.10147133e+02, 2.70823181e-01],
+       [1.86983719e+01, 1.17376358e+02, 1.15746662e-01],
+       [1.98090267e+01, 1.16526924e+02, 1.02475688e-01],
+       [2.51145611e+01, 1.23519379e+02, 3.24807376e-01],
+       [3.34709854e+01, 1.24678688e+02, 2.65269905e-01],
+       [2.82129307e+01, 1.42196121e+02, 2.98054874e-01],
+       [2.94088726e+01, 1.42497360e+02, 3.57838601e-01],
+       [2.95637341e+01, 1.57201065e+02, 2.14882523e-01],
+       [3.03766575e+01, 1.57535706e+02, 2.10423440e-01]], dtype=float32), 'kpt_score': 0.26303306}, {'coordinate': [126.131096, 30.263107, 168.5759, 134.09885], 'det_score': 0.6441988348960876, 'keypoints': array([[148.10135   ,  40.584896  ,   0.44685563],
+       [150.00848   ,  38.423157  ,   0.5721373 ],
+       [146.84933   ,  38.88104   ,   0.5450204 ],
+       [153.57166   ,  38.53051   ,   0.58872294],
+       [144.609     ,  38.854267  ,   0.54383296],
+       [158.78825   ,  51.609245  ,   0.6847385 ],
+       [141.20293   ,  49.92705   ,   0.52605945],
+       [157.85371   ,  70.32525   ,   0.7879656 ],
+       [136.42497   ,  68.15052   ,   0.4752547 ],
+       [144.46915   ,  79.161385  ,   0.5807479 ],
+       [135.84734   ,  75.86984   ,   0.32583416],
+       [155.16513   ,  78.74157   ,   0.56849873],
+       [141.66093   ,  77.88423   ,   0.45576522],
+       [152.68689   , 100.64953   ,   0.5331878 ],
+       [130.97485   ,  87.03784   ,   0.73304355],
+       [153.57033   , 123.742294  ,   0.39946193],
+       [132.91501   , 114.52923   ,   0.36085486]], dtype=float32), 'kpt_score': 0.5369401}, {'coordinate': [112.50212, 64.127, 150.35353, 125.85529], 'det_score': 0.5013833045959473, 'keypoints': array([[1.34417511e+02, 7.67317352e+01, 8.11196864e-02],
+       [1.33561203e+02, 7.61824722e+01, 5.88811524e-02],
+       [1.33302322e+02, 7.54709702e+01, 3.77583615e-02],
+       [1.33238602e+02, 7.65276260e+01, 8.76586884e-02],
+       [1.27832169e+02, 7.29993439e+01, 5.68802767e-02],
+       [1.32234711e+02, 8.55900650e+01, 6.25893995e-02],
+       [1.29263702e+02, 8.66081772e+01, 7.35298842e-02],
+       [1.17821297e+02, 6.38808823e+01, 1.47604376e-01],
+       [1.17373665e+02, 6.40265808e+01, 1.84295043e-01],
+       [1.39441742e+02, 9.73589020e+01, 6.45915419e-02],
+       [1.24748589e+02, 1.04544739e+02, 5.86665794e-02],
+       [1.35098206e+02, 7.81749954e+01, 8.30232948e-02],
+       [1.34638489e+02, 7.91068802e+01, 8.16871747e-02],
+       [1.36119888e+02, 8.93165436e+01, 1.34096310e-01],
+       [1.30067749e+02, 9.34937820e+01, 8.98712277e-02],
+       [1.36004654e+02, 1.16780487e+02, 1.60800099e-01],
+       [1.28087891e+02, 1.15956802e+02, 1.99588016e-01]], dtype=float32), 'kpt_score': 0.097802415}]}}
+```
+</details></li></ul>
 
-例如，若您的配置文件保存在 `./my_path/human_keypoint_detection.yaml` ，则只需执行：
+- 输出结果参数含义如下：
+    - `input_path`：表示输入图像的路径
+    - `boxes`：检测到人体信息，一个字典列表，每个字典包含以下信息：
+        - `coordinate`：人体目标框坐标，格式为[xmin, ymin, xmax, ymax]
+        - `det_score`：人体目标框置信度
+        - `keypoints`：关键点坐标信息，一个numpy数组，形状为[num_keypoints, 3]，其中每个关键点由[x, y, score]组成，score为该关键点的置信度
+        - `kpt_score`：关键点整体的置信度，即关键点的平均置信度
+
+- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
+- 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.{your_img_extension}`，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)
+
+* 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>属性说明</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "1"><code>json</code></td>
+<td rowspan = "1">获取预测的 <code>json</code> 格式的结果</td>
+</tr>
+<tr>
+<td rowspan = "2"><code>img</code></td>
+<td rowspan = "2">获取格式为 <code>dict</code> 的可视化图像</td>
+</tr>
+</table>
+
+- `json` 属性获取的预测结果为dict类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
+- `img` 属性返回的预测结果是一个字典类型的数据。键为 `res` ，对应的值是一个用于可视化人体关键点检测结果的 `Image.Image` 对象。
+
+上述Python脚本集成方式默认使用 PaddleX 官方配置文件中的参数设置，若您需要自定义配置文件，可先执行如下命令获取官方配置文件，并保存在 `my_path` 中：
+
+```bash
+paddlex --get_pipeline_config human_keypoint_detection --save_path ./my_path
+```
+
+若您获取了配置文件，即可对人体关键点检测产线各项配置进行自定义。只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为自定义产线配置文件路径即可。
+
+例如，若您的自定义配置文件保存在 `./my_path/human_keypoint_detection.yaml` ，则只需执行：
 
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/human_keypoint_detection.yaml")
 output = pipeline.predict("keypoint_detection_001.jpg")
 for res in output:
-    res.print() ## 打印预测的结构化输出
-    res.save_to_img("./output/") ## 保存结果可视化图像
-    res.save_to_json("./output/") ## 保存预测的结构化输出
+    res.print()
+    res.save_to_img("./output/")
+    res.save_to_json("./output/")
 ```
 
 ## 3. 开发集成/部署
@@ -195,211 +500,7 @@ for res in output:
 
 <details><summary>API参考</summary>
 
-<p>对于服务提供的主要操作：</p>
-<ul>
-<li>响应体以及POST请求的请求体均为JSON数据（JSON对象）。</li>
-<li>当请求处理成功时，响应状态码为<code>200</code>，响应体的属性如下：</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>errorCode</code></td>
-<td><code>integer</code></td>
-<td>错误码。固定为<code>0</code>。</td>
-</tr>
-<tr>
-<td><code>errorMsg</code></td>
-<td><code>string</code></td>
-<td>错误说明。固定为<code>"Success"</code>。</td>
-</tr>
-</tbody>
-</table>
-<p>响应体还可能有<code>result</code>属性，类型为<code>object</code>，其中存储操作结果信息。</p>
-<ul>
-<li>当请求处理未成功时，响应体的属性如下：</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>errorCode</code></td>
-<td><code>integer</code></td>
-<td>错误码。与响应状态码相同。</td>
-</tr>
-<tr>
-<td><code>errorMsg</code></td>
-<td><code>string</code></td>
-<td>错误说明。</td>
-</tr>
-</tbody>
-</table>
-<p>服务提供的操作如下：</p>
-<ul>
-<li><b><code>infer</code></b></li>
-</ul>
-<p>获取图像OCR结果。</p>
-<p><code>POST /ocr</code></p>
-<ul>
-<li>请求体的属性如下：</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-<th>是否必填</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>image</code></td>
-<td><code>string</code></td>
-<td>服务器可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
-<td>是</td>
-</tr>
-<tr>
-<td><code>inferenceParams</code></td>
-<td><code>object</code></td>
-<td>推理参数。</td>
-<td>否</td>
-</tr>
-</tbody>
-</table>
-<p><code>inferenceParams</code>的属性如下：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-<th>是否必填</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>maxLongSide</code></td>
-<td><code>integer</code></td>
-<td>推理时，若文本检测模型的输入图像较长边的长度大于<code>maxLongSide</code>，则将对图像进行缩放，使其较长边的长度等于<code>maxLongSide</code>。</td>
-<td>否</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>请求处理成功时，响应体的<code>result</code>具有如下属性：</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>texts</code></td>
-<td><code>array</code></td>
-<td>文本位置、内容和得分。</td>
-</tr>
-<tr>
-<td><code>image</code></td>
-<td><code>string</code></td>
-<td>OCR结果图，其中标注检测到的文本位置。图像为JPEG格式，使用Base64编码。</td>
-</tr>
-</tbody>
-</table>
-<p><code>texts</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>poly</code></td>
-<td><code>array</code></td>
-<td>文本位置。数组中元素依次为包围文本的多边形的顶点坐标。</td>
-</tr>
-<tr>
-<td><code>text</code></td>
-<td><code>string</code></td>
-<td>文本内容。</td>
-</tr>
-<tr>
-<td><code>score</code></td>
-<td><code>number</code></td>
-<td>文本识别得分。</td>
-</tr>
-</tbody>
-</table>
-<p><code>result</code>示例如下：</p>
-<pre><code class="language-json">{
-&quot;texts&quot;: [
-{
-&quot;poly&quot;: [
-[
-444,
-244
-],
-[
-705,
-244
-],
-[
-705,
-311
-],
-[
-444,
-311
-]
-],
-&quot;text&quot;: &quot;北京南站&quot;,
-&quot;score&quot;: 0.9
-},
-{
-&quot;poly&quot;: [
-[
-992,
-248
-],
-[
-1263,
-251
-],
-[
-1263,
-318
-],
-[
-992,
-315
-]
-],
-&quot;text&quot;: &quot;天津站&quot;,
-&quot;score&quot;: 0.5
-}
-],
-&quot;image&quot;: &quot;xxxxxx&quot;
-}
-</code></pre></details>
+</details>
 
 <details><summary>多语言调用服务示例</summary>
 
@@ -432,337 +533,10 @@ with open(output_image_path, &quot;wb&quot;) as file:
 print(f&quot;Output image saved at {output_image_path}&quot;)
 print(&quot;\nDetected texts:&quot;)
 print(result[&quot;texts&quot;])
-</code></pre></details>
-
-<details><summary>C++</summary>
-
-<pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &quot;cpp-httplib/httplib.h&quot; // https://github.com/Huiyicc/cpp-httplib
-#include &quot;nlohmann/json.hpp&quot; // https://github.com/nlohmann/json
-#include &quot;base64.hpp&quot; // https://github.com/tobiaslocker/base64
-
-int main() {
-    httplib::Client client(&quot;localhost:8080&quot;);
-    const std::string imagePath = &quot;./demo.jpg&quot;;
-    const std::string outputImagePath = &quot;./out.jpg&quot;;
-
-    httplib::Headers headers = {
-        {&quot;Content-Type&quot;, &quot;application/json&quot;}
-    };
-
-    // 对本地图像进行Base64编码
-    std::ifstream file(imagePath, std::ios::binary | std::ios::ate);
-    std::streamsize size = file.tellg();
-    file.seekg(0, std::ios::beg);
-
-    std::vector&lt;char&gt; buffer(size);
-    if (!file.read(buffer.data(), size)) {
-        std::cerr &lt;&lt; &quot;Error reading file.&quot; &lt;&lt; std::endl;
-        return 1;
-    }
-    std::string bufferStr(reinterpret_cast&lt;const char*&gt;(buffer.data()), buffer.size());
-    std::string encodedImage = base64::to_base64(bufferStr);
-
-    nlohmann::json jsonObj;
-    jsonObj[&quot;image&quot;] = encodedImage;
-    std::string body = jsonObj.dump();
-
-    // 调用API
-    auto response = client.Post(&quot;/ocr&quot;, headers, body, &quot;application/json&quot;);
-    // 处理接口返回数据
-    if (response &amp;&amp; response-&gt;status == 200) {
-        nlohmann::json jsonResponse = nlohmann::json::parse(response-&gt;body);
-        auto result = jsonResponse[&quot;result&quot;];
-
-        encodedImage = result[&quot;image&quot;];
-        std::string decodedString = base64::from_base64(encodedImage);
-        std::vector&lt;unsigned char&gt; decodedImage(decodedString.begin(), decodedString.end());
-        std::ofstream outputImage(outPutImagePath, std::ios::binary | std::ios::out);
-        if (outputImage.is_open()) {
-            outputImage.write(reinterpret_cast&lt;char*&gt;(decodedImage.data()), decodedImage.size());
-            outputImage.close();
-            std::cout &lt;&lt; &quot;Output image saved at &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
-        } else {
-            std::cerr &lt;&lt; &quot;Unable to open file for writing: &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
-        }
-
-        auto texts = result[&quot;texts&quot;];
-        std::cout &lt;&lt; &quot;\nDetected texts:&quot; &lt;&lt; std::endl;
-        for (const auto&amp; text : texts) {
-            std::cout &lt;&lt; text &lt;&lt; std::endl;
-        }
-    } else {
-        std::cout &lt;&lt; &quot;Failed to send HTTP request.&quot; &lt;&lt; std::endl;
-        return 1;
-    }
-
-    return 0;
-}
-</code></pre></details>
-
-<details><summary>Java</summary>
-
-<pre><code class="language-java">import okhttp3.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Base64;
-
-public class Main {
-    public static void main(String[] args) throws IOException {
-        String API_URL = &quot;http://localhost:8080/ocr&quot;; // 服务URL
-        String imagePath = &quot;./demo.jpg&quot;; // 本地图像
-        String outputImagePath = &quot;./out.jpg&quot;; // 输出图像
-
-        // 对本地图像进行Base64编码
-        File file = new File(imagePath);
-        byte[] fileContent = java.nio.file.Files.readAllBytes(file.toPath());
-        String imageData = Base64.getEncoder().encodeToString(fileContent);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        ObjectNode params = objectMapper.createObjectNode();
-        params.put(&quot;image&quot;, imageData); // Base64编码的文件内容或者图像URL
-
-        // 创建 OkHttpClient 实例
-        OkHttpClient client = new OkHttpClient();
-        MediaType JSON = MediaType.Companion.get(&quot;application/json; charset=utf-8&quot;);
-        RequestBody body = RequestBody.Companion.create(params.toString(), JSON);
-        Request request = new Request.Builder()
-                .url(API_URL)
-                .post(body)
-                .build();
-
-        // 调用API并处理接口返回数据
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                String responseBody = response.body().string();
-                JsonNode resultNode = objectMapper.readTree(responseBody);
-                JsonNode result = resultNode.get(&quot;result&quot;);
-                String base64Image = result.get(&quot;image&quot;).asText();
-                JsonNode texts = result.get(&quot;texts&quot;);
-
-                byte[] imageBytes = Base64.getDecoder().decode(base64Image);
-                try (FileOutputStream fos = new FileOutputStream(outputImagePath)) {
-                    fos.write(imageBytes);
-                }
-                System.out.println(&quot;Output image saved at &quot; + outputImagePath);
-                System.out.println(&quot;\nDetected texts: &quot; + texts.toString());
-            } else {
-                System.err.println(&quot;Request failed with code: &quot; + response.code());
-            }
-        }
-    }
-}
-</code></pre></details>
-
-<details><summary>Go</summary>
-
-<pre><code class="language-go">package main
-
-import (
-    &quot;bytes&quot;
-    &quot;encoding/base64&quot;
-    &quot;encoding/json&quot;
-    &quot;fmt&quot;
-    &quot;io/ioutil&quot;
-    &quot;net/http&quot;
-)
-
-func main() {
-    API_URL := &quot;http://localhost:8080/ocr&quot;
-    imagePath := &quot;./demo.jpg&quot;
-    outputImagePath := &quot;./out.jpg&quot;
-
-    // 对本地图像进行Base64编码
-    imageBytes, err := ioutil.ReadFile(imagePath)
-    if err != nil {
-        fmt.Println(&quot;Error reading image file:&quot;, err)
-        return
-    }
-    imageData := base64.StdEncoding.EncodeToString(imageBytes)
-
-    payload := map[string]string{&quot;image&quot;: imageData} // Base64编码的文件内容或者图像URL
-    payloadBytes, err := json.Marshal(payload)
-    if err != nil {
-        fmt.Println(&quot;Error marshaling payload:&quot;, err)
-        return
-    }
-
-    // 调用API
-    client := &amp;http.Client{}
-    req, err := http.NewRequest(&quot;POST&quot;, API_URL, bytes.NewBuffer(payloadBytes))
-    if err != nil {
-        fmt.Println(&quot;Error creating request:&quot;, err)
-        return
-    }
-
-    res, err := client.Do(req)
-    if err != nil {
-        fmt.Println(&quot;Error sending request:&quot;, err)
-        return
-    }
-    defer res.Body.Close()
-
-    // 处理接口返回数据
-    body, err := ioutil.ReadAll(res.Body)
-    if err != nil {
-        fmt.Println(&quot;Error reading response body:&quot;, err)
-        return
-    }
-    type Response struct {
-        Result struct {
-            Image      string   `json:&quot;image&quot;`
-            Texts []map[string]interface{} `json:&quot;texts&quot;`
-        } `json:&quot;result&quot;`
-    }
-    var respData Response
-    err = json.Unmarshal([]byte(string(body)), &amp;respData)
-    if err != nil {
-        fmt.Println(&quot;Error unmarshaling response body:&quot;, err)
-        return
-    }
-
-    outputImageData, err := base64.StdEncoding.DecodeString(respData.Result.Image)
-    if err != nil {
-        fmt.Println(&quot;Error decoding base64 image data:&quot;, err)
-        return
-    }
-    err = ioutil.WriteFile(outputImagePath, outputImageData, 0644)
-    if err != nil {
-        fmt.Println(&quot;Error writing image to file:&quot;, err)
-        return
-    }
-    fmt.Printf(&quot;Image saved at %s.jpg\n&quot;, outputImagePath)
-    fmt.Println(&quot;\nDetected texts:&quot;)
-    for _, text := range respData.Result.Texts {
-        fmt.Println(text)
-    }
-}
-</code></pre></details>
-
-<details><summary>C#</summary>
-
-<pre><code class="language-csharp">using System;
-using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-
-class Program
-{
-    static readonly string API_URL = &quot;http://localhost:8080/ocr&quot;;
-    static readonly string imagePath = &quot;./demo.jpg&quot;;
-    static readonly string outputImagePath = &quot;./out.jpg&quot;;
-
-    static async Task Main(string[] args)
-    {
-        var httpClient = new HttpClient();
-
-        // 对本地图像进行Base64编码
-        byte[] imageBytes = File.ReadAllBytes(imagePath);
-        string image_data = Convert.ToBase64String(imageBytes);
-
-        var payload = new JObject{ { &quot;image&quot;, image_data } }; // Base64编码的文件内容或者图像URL
-        var content = new StringContent(payload.ToString(), Encoding.UTF8, &quot;application/json&quot;);
-
-        // 调用API
-        HttpResponseMessage response = await httpClient.PostAsync(API_URL, content);
-        response.EnsureSuccessStatusCode();
-
-        // 处理接口返回数据
-        string responseBody = await response.Content.ReadAsStringAsync();
-        JObject jsonResponse = JObject.Parse(responseBody);
-
-        string base64Image = jsonResponse[&quot;result&quot;][&quot;image&quot;].ToString();
-        byte[] outputImageBytes = Convert.FromBase64String(base64Image);
-
-        File.WriteAllBytes(outputImagePath, outputImageBytes);
-        Console.WriteLine($&quot;Output image saved at {outputImagePath}&quot;);
-        Console.WriteLine(&quot;\nDetected texts:&quot;);
-        Console.WriteLine(jsonResponse[&quot;result&quot;][&quot;texts&quot;].ToString());
-    }
-}
-</code></pre></details>
-
-<details><summary>Node.js</summary>
-
-<pre><code class="language-js">const axios = require('axios');
-const fs = require('fs');
-
-const API_URL = 'http://localhost:8080/ocr'
-const imagePath = './demo.jpg'
-const outputImagePath = &quot;./out.jpg&quot;;
-
-let config = {
-   method: 'POST',
-   maxBodyLength: Infinity,
-   url: API_URL,
-   data: JSON.stringify({
-    'image': encodeImageToBase64(imagePath)  // Base64编码的文件内容或者图像URL
-  })
-};
-
-// 对本地图像进行Base64编码
-function encodeImageToBase64(filePath) {
-  const bitmap = fs.readFileSync(filePath);
-  return Buffer.from(bitmap).toString('base64');
-}
-
-// 调用API
-axios.request(config)
-.then((response) =&gt; {
-    // 处理接口返回数据
-    const result = response.data[&quot;result&quot;];
-    const imageBuffer = Buffer.from(result[&quot;image&quot;], 'base64');
-    fs.writeFile(outputImagePath, imageBuffer, (err) =&gt; {
-      if (err) throw err;
-      console.log(`Output image saved at ${outputImagePath}`);
-    });
-    console.log(&quot;\nDetected texts:&quot;);
-    console.log(result[&quot;texts&quot;]);
-})
-.catch((error) =&gt; {
-  console.log(error);
-});
-</code></pre></details>
-
-<details><summary>PHP</summary>
-
-<pre><code class="language-php">&lt;?php
-
-$API_URL = &quot;http://localhost:8080/ocr&quot;; // 服务URL
-$image_path = &quot;./demo.jpg&quot;;
-$output_image_path = &quot;./out.jpg&quot;;
-
-// 对本地图像进行Base64编码
-$image_data = base64_encode(file_get_contents($image_path));
-$payload = array(&quot;image&quot; =&gt; $image_data); // Base64编码的文件内容或者图像URL
-
-// 调用API
-$ch = curl_init($API_URL);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$response = curl_exec($ch);
-curl_close($ch);
-
-// 处理接口返回数据
-$result = json_decode($response, true)[&quot;result&quot;];
-file_put_contents($output_image_path, base64_decode($result[&quot;image&quot;]));
-echo &quot;Output image saved at &quot; . $output_image_path . &quot;\n&quot;;
-echo &quot;\nDetected texts:\n&quot;;
-print_r($result[&quot;texts&quot;]);
-
-?&gt;
-</code></pre></details>
+</code></pre>
 </details>
-<br/>
+</details>
+
 
 📱 <b>端侧部署</b>：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/edge_deploy.md)。
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
@@ -785,28 +559,38 @@ print_r($result[&quot;texts&quot;]);
 若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径替换至产线配置文件中的对应位置即可：
 
 ```yaml
-Pipeline:
-  human_det_model: PP-YOLOE-S_human       #可修改为微调后行人检测模型的本地路径
-  keypoint_det_model: PP-TinyPose_128x96  #可修改为微调后关键点检测模型的本地路径
-  human_det_batch_size: 1
-  keypoint_det_batch_size: 1
-  device: gpu
+pipeline_name: human_keypoint_detection
+
+SubModules:
+  ObjectDetection:
+    module_name: object_detection
+    model_name: PP-YOLOE-S_human
+    model_dir: null #可修改为微调后行人检测模型的本地路径
+    batch_size: 1
+    threshold: null
+    img_size: null
+  KeypointDetection:
+    module_name: keypoint_detection
+    model_name: PP-TinyPose_128x96
+    model_dir: #可修改为微调后关键点检测模型的本地路径
+    batch_size: 1
+    flip: False
+    use_udp: null
 ```
 随后， 参考[2.2 本地体验](#22-本地体验)中的命令行方式或Python脚本方式，加载修改后的产线配置文件即可。
 
 ##  5. 多硬件支持
 
-PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device`参数</b>即可完成不同硬件之间的无缝切换。
+PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU 和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device`参数</b>即可完成不同硬件之间的无缝切换。
 
-例如，使用Python运行通用图像识别产线时，将运行设备从英伟达 GPU 更改为昇腾 NPU，仅需将脚本中的 `device` 修改为 npu 即可：
+例如，使用昇腾 NPU 进行人体关键点检测产线快速推理：
 
-```python
-from paddlex import create_pipeline
-
-pipeline = create_pipeline(
-    pipeline="human_keypoint_detection",
-    device="npu:0" # gpu:0 --> npu:0
-    )
+```bash
+paddlex --pipeline human_keypoint_detection \
+        --input keypoint_detection_001.jpg \
+        --det_threshold 0.5 \
+        --save_path ./output/ \
+        --device npu:0
 ```
 
 若您想在更多种类的硬件上使用通用图像识别产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

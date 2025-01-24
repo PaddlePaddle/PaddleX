@@ -135,6 +135,13 @@ PIPELINE_ARGUMENTS = {
             "help": "Sets the threshold for vehicle attribute recognition.",
         },
     ],
+    "human_keypoint_detection": [
+        {
+            "name": "--det_threshold",
+            "type": float,
+            "help": "Sets the threshold for human detection.",
+        },
+    ],
     "table_recognition": None,
     "layout_parsing": None,
     "seal_recognition": [

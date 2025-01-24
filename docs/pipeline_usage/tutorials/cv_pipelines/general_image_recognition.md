@@ -94,16 +94,6 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 
 该产线暂不支持命令行体验。
 
-默认使用内置的的通用图像识别产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
-
-<details><summary> 👉点击展开</summary>
-
-<pre><code class="language-bash">paddlex --get_pipeline_config PP-ShiTuV2
-</code></pre>
-<p>执行后，通用图像识别产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为<code>./my_path</code>）：</p>
-<pre><code class="language-bash">paddlex --get_pipeline_config PP-ShiTuV2 --save_path ./my_path
-</code></pre></details>
-
 #### 2.2.2 Python脚本方式集成
 
 * 在该产线的运行示例中需要预先构建索引库，您可以下载官方提供的饮料识别测试数据集[drink_dataset_v2.0](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/drink_dataset_v2.0.tar) 构建索引库。若您希望用私有数据集，可以参考[2.3节 构建索引库的数据组织方式](#23-构建索引库的数据组织方式)。之后通过几行代码即可完成建立索引库和通用图像识别产线的快速推理。
@@ -116,15 +106,16 @@ pipeline = create_pipeline(pipeline="PP-ShiTuV2")
 index_data = pipeline.build_index(gallery_imgs="drink_dataset_v2.0/", gallery_label="drink_dataset_v2.0/gallery.txt")
 index_data.save("drink_index")
 
-output = pipeline.predict("./drink_dataset_v2.0/test_images/", index=index_data)
+output = pipeline.predict("./drink_dataset_v2.0/test_images/001.jpeg", index=index_data)
 for res in output:
     res.print()
     res.save_to_img("./output/")
+    res.save_to_json("./output/")
 ```
 
 在上述 Python 脚本中，执行了如下几个步骤：
 
-（1）实例化 `create_pipeline` 实例化 通用图像识别 产线对象。具体参数说明如下：
+（1）调用 `create_pipeline` 实例化通用图像识别产线对象。具体参数说明如下：
 
 <table>
 <thead>
@@ -143,16 +134,10 @@ for res in output:
 <td>无</td>
 </tr>
 <tr>
-<td><code>index</code></td>
-<td>产线推理预测所用的索引库，支持：1. <code>str</code>类型表示的目录（该目录下需要包含索引库文件，包括<code>vector.index</code>和<code>index_info.yaml</code>）；2. <code>IndexData</code>对象。如不传入该参数，则需要在<code>predict()</code>中指定<code>index</code>。</td>
-<td><code>str</code></td>
-<td>None</td>
-</tr>
-<tr>
 <td><code>device</code></td>
-<td>产线模型推理设备。支持：“gpu”，“cpu”。</td>
+<td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
 <td><code>str</code></td>
-<td><code>gpu</code></td>
+<td><code>gpu:0</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
@@ -162,6 +147,7 @@ for res in output:
 </tr>
 </tbody>
 </table>
+
 （2）调用通用图像识别产线对象的 `build_index` 方法，构建索引库。具体参数为说明如下：
 
 <table>
@@ -170,21 +156,59 @@ for res in output:
 <th>参数</th>
 <th>参数说明</th>
 <th>参数类型</th>
+<th>可选项</th>
 <th>默认值</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>gallery_imgs</code></td>
-<td>数据集的根目录，数据组织方式参考<a href="#2.3-构建索引库的数据组织方式">2.3节 构建索引库的数据组织方式</a></td>
-<td><code>str</code></td>
+<td>要添加的底库图片，必需参数</td>
+<td><code>str</code>|<code>list</code></td>
+<td>
+<ul>
+  <li><b>str</b>：数据集的根目录，数据组织方式参考<a href="#2.3-构建索引库的数据组织方式">2.3节 构建索引库的数据组织方式</a></li>
+  <li><b>List[numpy.ndarray]</b>：numpy.array列表类型的底库图片数据</li>
+</ul>
+</td>
 <td>无</td>
 </tr>
 <tr>
 <td><code>gallery_label</code></td>
-<td>数据标注文件路径，数据组织方式参考<a href="#2.3-构建索引库的数据组织方式">2.3节 构建索引库的数据组织方式</a></td>
-<td><code>str</code></td>
+<td>底库图片的标注信息，必需参数</td>
+<td><code>str|list</code></td>
+<td>
+<ul>
+  <li><b>str</b>：数据标注文件路径，数据组织方式参考<a href="#2.3-构建索引库的数据组织方式">2.3节 构建索引库的数据组织方式</a></li>
+  <li><b>List[str]</b>：str列表类型的底库图片标注</li>
+</ul>
+</td>
 <td>无</td>
+</tr>
+<tr>
+<td><code>metric_type</code></td>
+<td>特征度量方式，可选参数</td>
+<td><code>str</code></td>
+<td>
+<ul>
+  <li><code>"IP"</code>：内积（Inner Product）</li>
+  <li><code>"L2"</code>：欧几里得距离（Euclidean Distance）</li>
+</ul>
+</td>
+<td><code>"IP"</code></td>
+</tr>
+<tr>
+<td><code>index_type</code></td>
+<td>索引类型，可选参数</td>
+<td><code>str</code></td>
+<td>
+<ul>
+  <li><code>"HNSW32"</code>：检索速度较快且精度较高，但不支持 <code>remove_index()</code> 操作</li>
+  <li><code>"IVF"</code>：检索速度较快但精度相对较低，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
+  <li><code>"Flat"</code>：检索速度较低精度较高，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
+</ul>
+</td>
+<td><code>"HNSW32"</code></td>
 </tr>
 </tbody>
 </table>
@@ -215,96 +239,165 @@ for res in output:
 <table>
 <thead>
 <tr>
-<th>参数类型</th>
+<th>参数</th>
 <th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>Python Var</td>
-<td>支持直接传入Python变量，如<code>numpy.ndarray</code>表示的图像数据。</td>
+<td><code>input</code></td>
+<td>待预测数据，支持多种输入类型，必需参数</td>
+<td><code>Python Var|str|list</code></td>
+<td>
+<ul>
+  <li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
+  <li><b>str</b>：如图像文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code></li>
+  <li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
+</ul>
+</td>
+<td>无</td>
 </tr>
-<tr>
-<td>str</td>
-<td>支持传入待预测数据文件路径，如图像文件的本地路径：<code>/root/data/img.jpg</code>。</td>
-</tr>
-<tr>
-<td>str</td>
-<td>支持传入待预测数据文件URL，如图像文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/yuanqisenlin.jpeg">示例</a>。</td>
-</tr>
-<tr>
-<td>str</td>
-<td>支持传入本地目录，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code>。</td>
-</tr>
-<tr>
-<td>dict</td>
-<td>支持传入字典类型，字典的key需与具体任务对应，如图像分类任务对应\"img\"，字典的val支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code>。</td>
-</tr>
-<tr>
-<td>list</td>
-<td>支持传入列表，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]，[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code>。</td>
-</tr>
-</tbody>
-</table>
-另外，`predict`方法支持参数`index`用于设置索引库：
-<table>
-<thead>
-<tr>
-<th>参数类型</th>
-<th>参数说明</th>
-</tr>
-</thead>
-<tbody>
 <tr>
 <td><code>index</code></td>
-<td>产线推理预测所用的索引库，支持：1. <code>str</code>类型表示的目录（该目录下需要包含索引库文件，包括<code>vector.index</code>和<code>index_info.yaml</code>）；2. <code>IndexData</code>对象。如不传入该参数，则默认使用在<code>create_pipeline()</code>中通过参数<code>index</code>指定的索引库。</td>
+<td>产线推理预测所用的特征库，可选参数。如不传入该参数，则默认使用产线配置文件中指定的索引库。</td>
+<td><code>str|paddlex.inference.components.retrieval.faiss.IndexData|None</code></td>
+<td>
+<ul>
+    <li><b>str</b>类型表示的目录（该目录下需要包含特征库文件，包括<code>vector.index</code>和<code>index_info.yaml</code>）</li>
+    <li><code>build_index</code>方法创建的<b>IndexData</b>对象</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
-</tbody>
 </table>
-（4）调用 `predict` 方法获取预测结果：`predict` 方法为 `generator`，因此需要通过调用获得预测结果，`predict` 将方法以 batch 为单位对数据进行预测。
 
-（5）对预测结果进行处理：每个样本的预测结果均为 `dict` 类型，且支持打印，或保存为文件，支持保存的类型与具体产线相关，如：
+（4）对预测结果进行处理：每个样本的预测结果均为`dict`类型，且支持打印，或保存为文件，支持保存的类型与具体产线相关，如：
 
 <table>
 <thead>
 <tr>
 <th>方法</th>
-<th>说明</th>
-<th>方法参数</th>
+<th>方法说明</th>
+<th>参数</th>
+<th>参数类型</th>
+<th>参数说明</th>
+<th>默认值</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>print</td>
-<td>打印结果到终端</td>
-<td><code>- format_json</code>：bool类型，是否对输出内容进行使用json缩进格式化，默认为True；<br/><code>- indent</code>：int类型，json格式化设置，仅当format_json为True时有效，默认为4；<br/><code>- ensure_ascii</code>：bool类型，json格式化设置，仅当format_json为True时有效，默认为False；</td>
+<td rowspan = "3"><code>print()</code></td>
+<td rowspan = "3">打印结果到终端</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
+<td><code>True</code></td>
 </tr>
 <tr>
-<td>save_to_json</td>
-<td>将结果保存为json格式的文件</td>
-<td><code>- save_path</code>：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；<br/><code>- indent</code>：int类型，json格式化设置，默认为4；<br/><code>- ensure_ascii</code>：bool类型，json格式化设置，默认为False；</td>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
 </tr>
 <tr>
-<td>save_to_img</td>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan = "3"><code>save_to_json()</code></td>
+<td rowspan = "3">将结果保存为json格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
 <td>将结果保存为图像格式的文件</td>
-<td><code>- save_path</code>：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，支持目录或文件路径</td>
+<td>无</td>
 </tr>
-</tbody>
 </table>
-若您获取了配置文件，即可对通用图像识别产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
 
-例如，若您的配置文件保存在 `./my_path/PP-ShiTuV2.yaml` ，则只需执行：
+- 调用 `print()` 方法会将如下结果打印到终端：
+```bash
+{'res': {'input_path': './drink_dataset_v2.0/test_images/001.jpeg', 'boxes': [{'labels': ['红牛-强化型', '红牛-强化型', '红牛-强化型', '红牛-强化型', '红牛-强化型'], 'rec_scores': [0.720183789730072, 0.7044230699539185, 0.6812724471092224, 0.6583285927772522, 0.6578206419944763], 'det_score': 0.6135568618774414, 'coordinate': [343.8184, 98.96374, 528.0366, 593.3813]}]}}
+```
+
+- 输出结果参数含义如下：
+    - `input_path`：表示输入图像的路径
+    - `boxes`：检测到的物体信息，一个字典列表，每个字典包含以下信息：
+        - `labels`：识别标签列表，按照分数从高到低排序
+        - `rec_scores`：识别分数列表，其中元素与`labels`一一对应
+        - `det_score`：检测得分
+        - `coordinate`：目标框坐标，格式为[xmin, ymin, xmax, ymax]
+
+- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}.json`，如果指定为文件，则直接保存到该文件中。
+- 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.{your_img_extension}`，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)，上述示例中，可视化结果如下所示：
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/general_image_recognition/01.jpg">
+
+* 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>属性说明</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "1"><code>json</code></td>
+<td rowspan = "1">获取预测的 <code>json</code> 格式的结果</td>
+</tr>
+<tr>
+<td rowspan = "2"><code>img</code></td>
+<td rowspan = "2">获取格式为 <code>dict</code> 的可视化图像</td>
+</tr>
+</table>
+
+- `json` 属性获取的预测结果为dict类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
+- `img` 属性返回的预测结果是一个字典类型的数据。键为 `res` ，对应的值是一个用于可视化通用图像识别结果的 `Image.Image` 对象。
+
+上述Python脚本集成方式默认使用 PaddleX 官方配置文件中的参数设置，若您需要自定义配置文件，可先执行如下命令获取官方配置文件，并保存在 `my_path` 中：
+
+```bash
+paddlex --get_pipeline_config PP-ShiTuV2 --save_path ./my_path
+```
+
+若您获取了配置文件，即可对通用图像识别产线各项配置进行自定义。只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为自定义产线配置文件路径即可。
+
+例如，若您的自定义配置文件保存在 `./my_path/PP-ShiTuV2.yaml` ，则只需执行：
 
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="./my_path/PP-ShiTuV2.yaml", index="drink_index")
+pipeline = create_pipeline(pipeline="./my_path/PP-ShiTuV2.yaml")
 
-output = pipeline.predict("./drink_dataset_v2.0/test_images/")
+output = pipeline.predict("./drink_dataset_v2.0/test_images/001.jpeg", index="drink_index")
 for res in output:
     res.print()
+    res.save_to_json("./output/")
     res.save_to_img("./output/")
 ```
 
+<b>注：</b> 配置文件中的参数为产线初始化参数，如果希望更改通用图像识别产线初始化参数，可以直接修改配置文件中的参数，并加载配置文件进行预测。
 
 #### 2.2.3 索引库的添加和删除操作
 
@@ -327,45 +420,82 @@ index_data.save("drink_index")
 <th>参数</th>
 <th>参数说明</th>
 <th>参数类型</th>
+<th>可选项</th>
 <th>默认值</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>gallery_imgs</code></td>
-<td>要添加的底库图片，支持：1. <code>str</code>类型表示的图片根目录，数据组织方式与构建索引库时相同，参考<a href="#2.3-构建索引库的数据组织方式">2.3节 构建索引库的数据组织方式</a>；2. <code>[numpy.ndarray, numpy.ndarray, ..]</code>类型的底库图片数据。</td>
+<td>要添加的底库图片，必需参数</td>
 <td><code>str</code>|<code>list</code></td>
+<td>
+<ul>
+  <li><b>str</b>：图片根目录，数据组织方式参考<a href="#2.3-构建索引库的数据组织方式">2.3节 构建索引库的数据组织方式</a></li>
+  <li><b>List[numpy.ndarray]</b>：numpy.array列表类型的底库图片数据</li>
+</ul>
+</td>
 <td>无</td>
 </tr>
 <tr>
 <td><code>gallery_label</code></td>
-<td>底库图片的标注信息，支持：1. <code>str</code>类型表示的标注文件的路径，数据组织方式与构建索引库时相同，参考<a href="#2.3-构建索引库的数据组织方式">2.3节 构建索引库的数据组织方式</a>；2. <code>[str, str, ..]</code>类型表示的底库图片标注。</td>
-<td><code>str</code>|<code>list</code></td>
+<td>底库图片的标注信息，必需参数</td>
+<td><code>str|list</code></td>
+<td>
+<ul>
+  <li><b>str</b>：标注文件的路径，数据组织方式与构建特征库时相同，参考<a href="#2.3-构建索引库的数据组织方式">2.3节 构建索引库的数据组织方式</a></li>
+  <li><b>List[str]</b>：str列表类型的底库图片标注</li>
+</ul>
+</td>
 <td>无</td>
 </tr>
 <tr>
+<td><code>metric_type</code></td>
+<td>特征度量方式，可选参数</td>
+<td><code>str</code></td>
+<td>
+<ul>
+  <li><code>"IP"</code>：内积（Inner Product）</li>
+  <li><code>"L2"</code>：欧几里得距离（Euclidean Distance）</li>
+</ul>
+</td>
+<td><code>"IP"</code></td>
+</tr>
+<tr>
+<td><code>index_type</code></td>
+<td>索引类型，可选参数</td>
+<td><code>str</code></td>
+<td>
+<ul>
+  <li><code>"HNSW32"</code>：检索速度较快且精度较高，但不支持 <code>remove_index()</code> 操作</li>
+  <li><code>"IVF"</code>：检索速度较快但精度相对较低，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
+  <li><code>"Flat"</code>：检索速度较低精度较高，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
+</ul>
+</td>
+<td><code>"HNSW32"</code></td>
+</tr>
+<tr>
 <td><code>remove_ids</code></td>
-<td>待删除的索引序号，支持：1. <code>str</code>类型表示的txt文件的路径，内容为待删除的索引id，每行一个“id”；2. <code>[int, int, ..]</code>类型表示的待删除的索引序号。仅在 <code>remove_index</code> 中有效。</td>
+<td>待删除的索引序号，</td>
 <td><code>str</code>|<code>list</code></td>
+<td>
+<ul>
+<li><b>str</b>：表示的txt文件的路径，内容为待删除的索引id，每行一个“id”；</li>
+<li><b>List[int]</b>：表示的待删除的索引序号。仅在 <code>remove_index</code> 中有效。</li></ul>
+</td>
 <td>无</td>
 </tr>
 <tr>
 <td><code>index</code></td>
-<td>索引库，支持：1. 索引库文件（<code>vector.index</code>和<code>index_info.yaml</code>）所在目录的路径；2. <code>IndexData</code>类型的索引库对象，仅在 <code>append_index</code> 和 <code>remove_index</code> 中有效，表示待修改的索引库。</td>
-<td><code>str</code>|<code>IndexData</code></td>
+<td>产线推理预测所用的特征库</td>
+<td><code>str|paddlex.inference.components.retrieval.faiss.IndexData</code></td>
+<td>
+<ul>
+    <li><b>str</b>类型表示的目录（该目录下需要包含特征库文件，包括<code>vector.index</code>和<code>index_info.yaml</code>）</li>
+    <li><code>build_index</code>方法创建的<b>IndexData</b>对象</li>
+</ul>
+</td>
 <td>无</td>
-</tr>
-<tr>
-<td><code>index_type</code></td>
-<td>支持 <code>HNSW32</code>、<code>IVF</code>、<code>Flat</code>。其中，<code>HNSW32</code> 检索速度较快且精度较高，但不支持 <code>remove_index()</code> 操作；<code>IVF</code> 检索速度较快但精度相对较低，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作；<code>Flat</code> 检索速度较低精度较高，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作。</td>
-<td><code>str</code></td>
-<td><code>HNSW32</code></td>
-</tr>
-<tr>
-<td><code>metric_type</code></td>
-<td>支持：<code>IP</code>，内积（Inner Product）；<code>L2</code>，欧几里得距离（Euclidean Distance）。</td>
-<td><code>str</code></td>
-<td><code>IP</code></td>
 </tr>
 </tbody>
 </table>
@@ -876,19 +1006,26 @@ pprint.pp(result_infer[&quot;detectedObjects&quot;])
 若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径替换至产线配置文件中的对应位置即可：
 
 ```yaml
-Pipeline:
-  device: "gpu:0"
-  det_model: "./PP-ShiTuV2_det_infer/"        #可修改为微调后主体检测模型的本地路径
-  rec_model: "./PP-ShiTuV2_rec_infer/"        #可修改为微调后图像特征模型的本地路径
-  det_batch_size: 1
-  rec_batch_size: 1
-  device: gpu
+
+...
+
+SubModules:
+  Detection:
+    module_name: text_detection
+    model_name: PP-ShiTuV2_det
+    model_dir: null #可修改为微调后主体检测模型的本地路径
+    batch_size: 1
+  Recognition:
+    module_name: text_recognition
+    model_name: PP-ShiTuV2_rec
+    model_dir: null #可修改为微调后图像特征模型的本地路径
+    batch_size: 1
 ```
 随后， 参考[2.2 本地体验](#22-本地体验)中的命令行方式或Python脚本方式，加载修改后的产线配置文件即可。
 
 ##  5. 多硬件支持
 
-PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device`参数</b>即可完成不同硬件之间的无缝切换。
+PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU 和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device`参数</b>即可完成不同硬件之间的无缝切换。
 
 例如，使用Python运行通用图像识别产线时，将运行设备从英伟达 GPU 更改为昇腾 NPU，仅需将脚本中的 `device` 修改为 npu 即可：
 
