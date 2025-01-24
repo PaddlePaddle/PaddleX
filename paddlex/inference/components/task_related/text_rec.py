@@ -318,7 +318,7 @@ class LaTeXOCRDecode(BaseComponent):
     def post_process(self, s):
         text_reg = r"(\\(operatorname|mathrm|text|mathbf)\s?\*? {.*?})"
         letter = "[a-zA-Z]"
-        noletter = "[\W_^\d]"
+        noletter = r"[\W_^\d]"
         names = [x[0].replace(" ", "") for x in re.findall(text_reg, s)]
         s = re.sub(text_reg, lambda match: str(names.pop(0)), s)
         news = s

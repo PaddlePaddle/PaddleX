@@ -318,9 +318,9 @@ class OpenCVVideoReaderBackend(_VideoReaderBackend):
         self._cap_release()
 
     def _cap_open(self, video_path):
-        self.cap_init_args.pop("num_seg")
-        self.cap_init_args.pop("seg_len")
-        self.cap_init_args.pop("sample_type")
+        self.cap_init_args.pop("num_seg", None)
+        self.cap_init_args.pop("seg_len", None)
+        self.cap_init_args.pop("sample_type", None)
         self._cap = cv2.VideoCapture(video_path, **self.cap_init_args)
         if not self._cap.isOpened():
             raise RuntimeError(f"Failed to open {video_path}")

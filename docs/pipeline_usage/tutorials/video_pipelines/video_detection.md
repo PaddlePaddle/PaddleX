@@ -23,7 +23,7 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>YOWO</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/YOWO_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOWO_pretrained.pdparams">训练模型</a></td>
+<td>YOWO</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOWO_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOWO_pretrained.pdparams">训练模型</a></td>
 <td>80.94</td>
 <td>462.891M</td>
 <td rowspan="1">
@@ -47,7 +47,7 @@ PaddleX 支持在本地使用命令行或 Python 体验产线的效果。
 一行命令即可快速体验视频检测产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/HorseRiding.avi)，并将 `--input` 替换为本地路径，进行预测
 
 ```bash
-paddlex --pipeline video_detection --input HorseRiding.avi --device gpu:0 --save_path output 
+paddlex --pipeline video_detection --input HorseRiding.avi --device gpu:0 --save_path output
 ```
 
 相关的参数说明可以参考[2.1.2 Python脚本方式集成](#212-python脚本方式集成)中的参数说明。
