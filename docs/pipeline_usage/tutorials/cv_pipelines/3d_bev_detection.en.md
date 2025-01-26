@@ -71,6 +71,62 @@ Parameter description:
 --device: The GPU index to be used (e.g., gpu:0 means using the 0th GPU, gpu:1,2 means using the 1st and 2nd GPUs), or you can choose to use CPU (--device cpu).
 ```
 
+After running, the results will be printed on the terminal as follows:
+
+```bash
+{"res":
+  {
+    'input_path': 'samples/LIDAR_TOP/n015-2018-10-08-15-36-50+0800__LIDAR_TOP__1538984253447765.pcd.bin',
+    'sample_id': 'b4ff30109dd14c89b24789dc5713cf8c',
+    'input_img_paths': [
+      'samples/CAM_FRONT_LEFT/n015-2018-10-08-15-36-50+0800__CAM_FRONT_LEFT__1538984253404844.jpg',
+      'samples/CAM_FRONT/n015-2018-10-08-15-36-50+0800__CAM_FRONT__1538984253412460.jpg',
+      'samples/CAM_FRONT_RIGHT/n015-2018-10-08-15-36-50+0800__CAM_FRONT_RIGHT__1538984253420339.jpg',
+      'samples/CAM_BACK_RIGHT/n015-2018-10-08-15-36-50+0800__CAM_BACK_RIGHT__1538984253427893.jpg',
+      'samples/CAM_BACK/n015-2018-10-08-15-36-50+0800__CAM_BACK__1538984253437525.jpg',
+      'samples/CAM_BACK_LEFT/n015-2018-10-08-15-36-50+0800__CAM_BACK_LEFT__1538984253447423.jpg'
+    ]
+    "boxes_3d": [
+        [
+            14.5425386428833,
+            22.142045974731445,
+            -1.2903141975402832,
+            1.8441576957702637,
+            4.433370113372803,
+            1.7367216348648071,
+            6.367165565490723,
+            0.0036598597653210163,
+            -0.013568558730185032
+        ]
+    ],
+    "labels_3d": [
+        0
+    ],
+    "scores_3d": [
+        0.9920279383659363
+    ]
+  }
+}
+```
+
+The meanings of the result parameters are as follows:
+
+- `input_path`: Indicates the path to the input point cloud data of the sample to be predicted.
+- `sample_id`: Indicates the unique identifier of the input sample to be predicted.
+- `input_img_paths`: Indicates the paths to the input image data of the sample to be predicted.
+- `boxes_3d`: Represents all the predicted bounding box information for the 3D sample. Each bounding box information is a list of length 9, with each element representing:
+  - 0: x-coordinate of the center point
+  - 1: y-coordinate of the center point
+  - 2: z-coordinate of the center point
+  - 3: Width of the detection box
+  - 4: Length of the detection box
+  - 5: Height of the detection box
+  - 6: Rotation angle
+  - 7: Velocity in the x-direction of the coordinate system
+  - 8: Velocity in the y-direction of the coordinate system
+- `labels_3d`: Represents the predicted categories corresponding to all the predicted bounding boxes of the 3D sample.
+- `scores_3d`: Represents the confidence levels corresponding to all the predicted bounding boxes of the 3D sample.
+
 #### 2.2.2 Python Script Integration
 * The above command line is for quick experience. Generally, in projects, integration through code is often required. You can complete quick inference of the pipeline with a few lines of code as follows:
 
