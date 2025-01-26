@@ -144,12 +144,14 @@ class OCRResult(BaseCVResult):
         data["text_det_params"] = self["text_det_params"]
         data["text_type"] = self["text_type"]
         if "textline_orientation_angles" in self:
-            data["textline_orientation_angles"] = self["textline_orientation_angles"]
+            data["textline_orientation_angles"] = np.array(
+                self["textline_orientation_angles"]
+            )
         data["text_rec_score_thresh"] = self["text_rec_score_thresh"]
         data["rec_texts"] = self["rec_texts"]
-        data["rec_scores"] = self["rec_scores"]
+        data["rec_scores"] = np.array(self["rec_scores"])
         data["rec_polys"] = self["rec_polys"]
-        data["rec_boxes"] = self["rec_boxes"]
+        data["rec_boxes"] = np.array(self["rec_boxes"])
 
         return JsonMixin._to_str(data, *args, **kwargs)
 
