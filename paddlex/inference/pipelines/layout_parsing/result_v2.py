@@ -15,7 +15,6 @@ from __future__ import annotations
 
 import copy
 from pathlib import Path
-from PIL import Image, ImageDraw
 from typing import Dict
 
 import cv2
@@ -236,13 +235,12 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 res_xlsx_dict[key] = table_res.xlsx["pred"]
         return res_xlsx_dict
 
-    def save_to_pdf_order(self, save_path):
+    def save_to_pdf_order(self, save_path: str) -> None:
         """
         Save the layout ordering to an image file.
 
         Args:
-            save_path (str or Path): The path where the image should be saved.
-            font_path (str): Path to the font file used for drawing text.
+            save_path (str): The path where the image should be saved.
 
         Returns:
             None
@@ -257,6 +255,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 save_path = save_path / f"{input_path.stem}.jpg"
         else:
             save_path = save_path.with_suffix("")
+
         ordering_image_path = (
             save_path.parent / f"{save_path.stem}_layout_order_res.jpg"
         )
@@ -268,8 +267,8 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             return
 
         draw = ImageDraw.Draw(image, "RGBA")
-
         parsing_result = self["parsing_res_list"]
+
         for block in parsing_result:
             if self.already_sorted == False:
                 block = get_layout_ordering(
@@ -295,14 +294,15 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 if index is not None:
                     text_position = (bbox[2] + 2, bbox[1] - 10)
                     draw.text(text_position, str(index), fill="red")
-        self.already_sorted == True
+
+        self.already_sorted = True
 
         # Ensure the directory exists and save the image
         ordering_image_path.parent.mkdir(parents=True, exist_ok=True)
         print(f"Saving ordering image to {ordering_image_path}")
         image.save(str(ordering_image_path))
 
-    def _to_markdown(self):
+    def _to_markdown(self) -> dict:
         """
         Save the parsing result to a Markdown file.
 
@@ -366,43 +366,23 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     + "\n"
                 )
 
-            def format_image():
+            def format_image(label):
                 if is_save_mk_img is False:
                     return ""
 
                 img_tags = []
-                if "img" in sub_block["image"]:
+                if "img" in sub_block[label]:
                     img_tags.append(
                         '<div style="text-align: center;"><img src="{}" alt="Image" /></div>'.format(
-                            sub_block["image"]["img"]
+                            sub_block[label]["img"]
                             .replace("-\n", "")
                             .replace("\n", " "),
                         ),
                     )
-                if "image_text" in sub_block["image"]:
+                if "image_text" in sub_block[label]:
                     img_tags.append(
                         '<div style="text-align: center;">{}</div>'.format(
-                            sub_block["image"]["image_text"]
-                            .replace("-\n", "")
-                            .replace("\n", " "),
-                        ),
-                    )
-                return "\n".join(img_tags)
-
-            def format_chart():
-                img_tags = []
-                if "img" in sub_block["chart"]:
-                    img_tags.append(
-                        '<div style="text-align: center;"><img src="{}" alt="Image" /></div>'.format(
-                            sub_block["chart"]["img"]
-                            .replace("-\n", "")
-                            .replace("\n", " "),
-                        ),
-                    )
-                if "image_text" in sub_block["chart"]:
-                    img_tags.append(
-                        '<div style="text-align: center;">{}</div>'.format(
-                            sub_block["chart"]["image_text"]
+                            sub_block[label]["image_text"]
                             .replace("-\n", "")
                             .replace("\n", " "),
                         ),
@@ -440,14 +420,14 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 "content": lambda: sub_block["content"]
                 .replace("-\n", " ")
                 .replace("\n", " "),
-                "image": format_image,
-                "chart": format_chart,
+                "image": lambda: format_image("image"),
+                "chart": lambda: format_image("chart"),
                 "formula": lambda: f"$${sub_block['formula']}$$",
                 "table": format_table,
                 # "reference": format_reference,
                 "reference": lambda: sub_block["reference"],
                 "algorithm": lambda: sub_block["algorithm"].strip("\n"),
-                "seal": lambda: sub_block["seal"].strip("\n"),
+                "seal": lambda: format_image("seal"),
             }
             parsing_result = obj["parsing_res_list"]
             markdown_content = ""

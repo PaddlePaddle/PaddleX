@@ -15,7 +15,7 @@
 
 from pathlib import Path
 from typing import Any, Dict, Optional
-
+from importlib import import_module
 from ...utils import errors
 from ..utils.official_models import official_models
 from .base import BasePredictor, BasicPredictor
@@ -48,6 +48,9 @@ from .anomaly_detection import UadPredictor
 from .multilingual_speech_recognition import WhisperPredictor
 from .video_classification import VideoClasPredictor
 from .video_detection import VideoDetPredictor
+
+module_3d_bev_detection = import_module(".3d_bev_detection", "paddlex.inference.models")
+BEVDet3DPredictor = getattr(module_3d_bev_detection, "BEVDet3DPredictor")
 
 
 def _create_hp_predictor(

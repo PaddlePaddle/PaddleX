@@ -12,9 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .base_batch_sampler import BaseBatchSampler
-from .image_batch_sampler import ImageBatchSampler
-from .video_batch_sampler import VideoBatchSampler
-from .ts_batch_sampler import TSBatchSampler
-from .det_3d_batch_sampler import Det3DBatchSampler
-from .audio_batch_sampler import AudioBatchSampler
+from ...common.result import BaseResult, StrMixin, JsonMixin
+
+
+class BEV3DDetResult(BaseResult):
+    """Base class for computer vision results."""
+
+    def __init__(self, data: dict) -> None:
+        """
+        Initialize the BaseCVResult.
+
+        Args:
+            data (dict): The initial data.
+
+        Raises:
+            AssertionError: If the required key (`BaseCVResult.INPUT_IMG_KEY`) are not found in the data.
+        """
+
+        super().__init__(data)

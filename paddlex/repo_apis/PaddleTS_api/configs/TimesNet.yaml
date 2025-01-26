@@ -26,8 +26,8 @@ info_params:
 model: 
   name: TimesNetModel
   model_cfg:
-    c_in: 1 #
-    c_out: 1 #
+    c_in: 321 #
+    c_out: 321 #
     e_layers: 2 #
     num_kernels: 6 #
     d_model: 32 #

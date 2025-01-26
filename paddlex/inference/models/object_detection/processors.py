@@ -55,15 +55,41 @@ class ReadImage(CommonReadImage):
                     )
                 data.update(raw_img)
                 raw_img = src_img
-            img = self.read(raw_img)
+            img, ori_img = self.read(raw_img)
             data["img"] = img
-            data["ori_img"] = img
+            data["ori_img"] = ori_img
             data["img_size"] = [img.shape[1], img.shape[0]]  # [size_w, size_h]
             data["ori_img_size"] = [img.shape[1], img.shape[0]]  # [size_w, size_h]
 
             out_datas.append(data)
 
         return out_datas
+
+    def read(self, img):
+        if isinstance(img, np.ndarray):
+            ori_img = img
+            if self.format == "RGB":
+                img = img[:, :, ::-1]
+            return img, ori_img
+        elif isinstance(img, str):
+            blob = self._img_reader.read(img)
+            if blob is None:
+                raise Exception(f"Image read Error: {img}")
+
+            ori_img = blob
+            if self.format == "RGB":
+                if blob.ndim != 3:
+                    raise RuntimeError("Array is not 3-dimensional.")
+                # BGR to RGB
+                blob = blob[..., ::-1]
+            return blob, ori_img
+        else:
+            raise TypeError(
+                f"ReadImage only supports the following types:\n"
+                f"1. str, indicating a image file path or a directory containing image files.\n"
+                f"2. numpy.ndarray.\n"
+                f"However, got type: {type(img).__name__}."
+            )
 
 
 class Resize(CommonResize):

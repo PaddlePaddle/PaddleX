@@ -25,10 +25,12 @@ info_params:
 model: 
   name: TimesNet_AD
   model_cfg:
-    c_in: 2
-    e_layers: 1
+    e_layers: 2
     num_kernels: 6
-    d_model: 8
+    d_model: 32
+    d_ff: 64
+    top_k: 3 
+    window_sampling_limit: Null
     optimizer_params:
-      learning_rate: 0.001
-      gamma: 0.5
+      learning_rate: 0.0005
+      gamma: 0.9

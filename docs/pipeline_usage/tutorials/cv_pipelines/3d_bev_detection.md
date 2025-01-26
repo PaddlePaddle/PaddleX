@@ -1,0 +1,244 @@
+---
+comments: true
+---
+
+# 3D多模态融合检测产线使用教程
+
+## 1. 3D多模态融合检测产线介绍
+
+3D多模态融合检测产线支持输入多种传感器（激光雷达、环视RGB相机等）数据，通过深度学习等方法对数据进行处理，输出三维空间中物体的位置、形状、朝向、类别等信息。在自动驾驶、机器人导航、工业自动化等领域具有广泛应用。
+
+BEVFusion 是一种多模态 3D 目标检测模型，通过将环视摄像头图像和 LiDAR 点云数据融合到统一的鸟瞰图（Bird's Eye View，BEV）表示中，实现不同传感器的特征对齐并融合，克服了单一传感器的局限性，显著提升了检测精度和鲁棒性，适用于自动驾驶等复杂场景。
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/3d_bev_detection/01.png">
+
+<b>3D多模态融合检测产线中包含了3D多模态融合检测模块</b>，模块中包含了一个<b>BEVFusion模型</b>，我们提供了该模型的 benchmark 数据：
+
+<p><b>3D多模态融合检测模块：</b></p>
+<table>
+<tr>
+<th>模型</th><th>模型下载链接</th>
+<th>mAP(%)</th>
+<th>NDS</th>
+<th>介绍</th>
+</tr>
+<tr>
+<td>BEVFusion</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/BEVFusion_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BEVFusion_pretrained.pdparams">训练模型</a></td>
+<td>53.9</td>
+<td>60.9</td>
+<td rowspan="2">BEVFusion是一种在BEV视角下的多模态融合检测模型，采用两个分支处理不同模态的数据，得到lidar和camera在BEV视角下的特征，camera分支采用LSS这种自底向上的方式来显式的生成图像BEV特征，lidar分支采用经典的点云检测网络，最后对两种模态的BEV特征进行对齐和融合，应用于检测head或分割head。
+</td>
+</tr>
+<tr>
+</table>
+
+<p>注：以上精度指标为<a href="https://www.nuscenes.org/nuscenes">nuscenes</a>验证集 mAP(0.5:0.95), NDS 60.9, 精度类型为 FP32。</p></details>
+
+## 2. 快速开始
+
+PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可以在线体验3D多模态融合检测产线的效果，也可以在本地使用命令行或 Python 体验3D多模态融合检测产线的效果。
+
+### 2.1 在线体验
+
+暂不支持在线体验。
+
+### 2.2 本地体验
+> ❗ 在本地使用3D多模态融合检测产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+
+Demo数据集下载：您可以参考下面的命令将 Demo 数据集下载到指定文件夹：
+
+```bash
+wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/nuscenes_demo.tar -P ./data
+
+tar -xf ./data/nuscenes_demo.tar -C ./data/
+```
+
+#### 2.2.1 命令行方式体验
+
+一行命令即可快速体验3D多模态融合检测产线效果，并将 `--input` 替换为本地pkl文件路径，进行预测。
+
+```bash
+paddlex --pipeline 3d_bev_detection --input ./data/nuscenes_demo/nuscenes_infos_val.pkl --device gpu:0
+```
+
+参数说明：
+
+```
+--pipeline：产线名称，此处为3D多模态融合检测产线
+--input：待处理的pkl文件的本地路径
+--device 使用的GPU序号（例如gpu:0表示使用第0块GPU，gpu:1,2表示使用第1、2块GPU），也可选择使用CPU（--device cpu）
+```
+
+#### 2.2.2 Python脚本方式集成
+* 上述命令行是为了快速体验查看效果，一般来说，在项目中，往往需要通过代码集成，您可以通过几行代码即可完成产线的快速推理，推理代码如下：
+
+```python
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(pipeline="3d_bev_detection")
+output = pipeline.predict("./data/nuscenes_demo/nuscenes_infos_val.pkl")
+
+for res in output:
+    res.print()  ## 打印预测的结构化输出
+    res.save_to_json("./output/")  ## 保存结果到json文件
+```
+
+在上述 Python 脚本中，执行了如下几个步骤：
+
+（1）调用 `create_pipeline` 实例化 3D多模态融合检测 产线对象：具体参数说明如下：
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+<th>参数类型</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pipeline</code></td>
+<td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
+<td><code>str</code></td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>device</code></td>
+<td>产线模型推理设备。支持：“gpu”，“cpu”。</td>
+<td><code>str</code></td>
+<td><code>gpu</code></td>
+</tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理，仅当该产线支持高性能推理时可用。</td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+
+（2）调用3D多模态融合检测产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`input`，用于输入待预测数据，支持多种输入方式，具体示例如下：
+
+<table>
+<thead>
+<tr>
+<th>参数类型</th>
+<th>参数说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>str</td>
+<td><b>pkl文件路径</b>，例如：<code>/root/data/anno_file.pkl</code></td>
+</tr>
+<tr>
+<td>list</td>
+<td><b>列表</b>，列表元素需为上述类型数据，如<code>["/root/data/anno_file1.pkl", "/root/data/anno_file2.pkl"]</td>
+</tr>
+</tbody>
+</table>
+
+<p><b>注：pkl文件可以按照<a href="https://github.com/ADLab-AutoDrive/BEVFusion/blob/main/tools/create_data.py">脚本</a>进行制作。</b></p></details>
+
+（3）调用`predict`方法获取预测结果：`predict` 方法为 `generator`，因此需要通过调用获得预测结果，`predict` 方法以batch为单位对数据进行预测，因此预测结果为list形式表示的一组预测结果。
+
+（4）对预测结果进行处理：每个样本的预测结果均为 `dict` 类型，且支持打印，或保存为json文件，如：
+
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+<th>方法参数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>print</td>
+<td>打印结果到终端</td>
+<td><code>- format_json</code>：bool类型，是否对输出内容进行使用json缩进格式化，默认为True；<br/><code>- indent</code>：int类型，json格式化设置，仅当format_json为True时有效，默认为4；<br/><code>- ensure_ascii</code>：bool类型，json格式化设置，仅当format_json为True时有效，默认为False；</td>
+</tr>
+<tr>
+<td>save_to_json</td>
+<td>将结果保存为json格式的文件</td>
+<td><code>- save_path</code>：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；<br/><code>- indent</code>：int类型，json格式化设置，默认为4；<br/><code>- ensure_ascii</code>：bool类型，json格式化设置，默认为False；</td>
+</tr>
+</tbody>
+</table>
+
+此外，您可以获取3D多模态融合检测产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+
+```
+paddlex --get_pipeline_config 3d_bev_detection --save_path ./my_path
+```
+
+若您获取了配置文件，即可对3D多模态融合检测产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。示例如下：
+
+```python
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(pipeline="./my_path/3d_bev_detection.yaml")
+
+output = pipeline.predict("./data/nuscenes_demo/nuscenes_infos_val.pkl")
+
+for res in output:
+    res.print()  ## 打印预测的结构化输出
+    res.save_to_json("./output/")  ## 保存结果到json文件
+```
+
+<b>注：</b> 配置文件中的参数为产线初始化参数，如果希望更改3D多模态融合检测产线初始化参数，可以直接修改配置文件中的参数，并加载配置文件进行预测。同时，CLI 预测也支持传入配置文件，`--pipeline` 指定配置文件的路径即可。
+
+## 3. 开发集成/部署
+如果 3D多模态融合检测 产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
+
+若您需要将通用 3D多模态融合检测 产线直接应用在您的Python项目中，可以参考 [2.2.2 Python脚本方式](#222-python脚本方式集成)中的示例代码。
+
+此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
+
+🚀 <b>高性能推理</b>：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能推理流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_inference.md)。
+
+☁️ <b>服务化部署</b>：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持多种产线服务化部署方案，详细的产线服务化部署流程请参考[PaddleX服务化部署指南](../../../pipeline_deploy/serving.md)。
+
+📱 <b>端侧部署</b>：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/edge_deploy.md)。
+
+您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
+
+## 4. 二次开发
+如果 3D多模态融合检测 产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升 3D多模态融合检测 产线的在您的场景中的识别效果。
+
+### 4.1 模型微调
+
+参考[3D多模态融合检测模块开发教程](../../../module_usage/tutorials/cv_modules/3d_bev_detection.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/3d_bev_detection.md#四二次开发)章节，使用您的私有数据集模型进行微调。
+
+### 4.2 模型应用
+当您使用私有数据集完成微调训练后，可获得本地模型权重文件。
+
+若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径替换至产线配置文件中的对应位置即可：
+
+```bash
+......
+Pipeline:
+  device: "gpu:0"
+  det_model: "BEVFusion"        #可修改为微调后3D目标检测模型的本地路径
+  det_batch_size: 1
+  device: gpu
+......
+```
+随后， 参考[2.2 本地体验](#22-本地体验)中的命令行方式或Python脚本方式，加载修改后的产线配置文件即可。
+
+
+##  5. 多硬件支持
+PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device`参数</b>即可完成不同硬件之间的无缝切换。
+
+例如，使用Python运行3D多模态融合检测产线时，将运行设备从英伟达 GPU 更改为昇腾 NPU，仅需将脚本中的 `device` 修改为 npu 即可：
+
+```python
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(
+    pipeline="3d_bev_detection",
+    device="npu:0" # gpu:0 --> npu:0
+    )
+```
+若您想在更多种类的硬件上使用3D多模态融合检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

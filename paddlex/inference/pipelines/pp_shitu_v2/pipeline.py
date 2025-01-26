@@ -14,6 +14,8 @@
 
 from typing import Any, Dict, Optional
 
+import numpy as np
+
 from ...utils.pp_option import PaddlePredictorOption
 from ...common.reader import ReadImage
 from ...common.batch_sampler import ImageBatchSampler
@@ -103,7 +105,9 @@ class ShiTuV2Pipeline(BasePipeline):
     def get_final_result(self, input_data, raw_img, det_res, rec_res):
         single_img_res = {"input_path": input_data, "input_img": raw_img, "boxes": []}
         for i, obj in enumerate(det_res["boxes"]):
-            rec_scores = rec_res["score"][i].tolist()
+            rec_scores = rec_res["score"][i]
+            if isinstance(rec_scores, np.ndarray):
+                rec_scores = rec_scores.tolist()
             labels = rec_res["label"][i]
             single_img_res["boxes"].append(
                 {

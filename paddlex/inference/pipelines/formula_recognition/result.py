@@ -163,6 +163,7 @@ class FormulaRecognitionResult(BaseCVResult):
         """
         data = {}
         data["input_path"] = self["input_path"]
+        data["page_index"] = self["page_index"]
         data["model_settings"] = self["model_settings"]
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].str["res"]
@@ -195,6 +196,7 @@ class FormulaRecognitionResult(BaseCVResult):
         """
         data = {}
         data["input_path"] = self["input_path"]
+        data["page_index"] = str(self["page_index"])
         data["model_settings"] = self["model_settings"]
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].str["res"]

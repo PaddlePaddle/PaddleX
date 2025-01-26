@@ -1109,6 +1109,8 @@ for res in output:
 
     - `input_path`: `(str)` 待预测图像的输入路径
 
+    - `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
+
     - `model_settings`: `(Dict[str, bool])` 配置产线所需的模型参数
 
         - `use_doc_preprocessor`: `(bool)` 控制是否启用文档预处理子产线
@@ -1132,7 +1134,7 @@ for res in output:
             - `use_doc_orientation_classify`: `(bool)` 控制是否启用文档方向分类
             - `use_doc_unwarping`: `(bool)` 控制是否启用文档扭曲矫正
         - `angle`: `(int)` 文档方向分类的预测结果。启用时取值为[0,1,2,3]，分别对应[0°,90°,180°,270°]；未启用时为-1
-       
+
     - `dt_polys`: `(List[numpy.ndarray])` 印章文本检测的多边形框列表。每个检测框由多个顶点坐标构成的numpy数组表示，数组shape为(n, 2)
 
     - `dt_scores`: `(List[float])` 文本检测框的置信度列表
