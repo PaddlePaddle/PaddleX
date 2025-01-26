@@ -1132,7 +1132,7 @@ for res in output:
             - `use_doc_orientation_classify`: `(bool)` 控制是否启用文档方向分类
             - `use_doc_unwarping`: `(bool)` 控制是否启用文档扭曲矫正
         - `angle`: `(int)` 文档方向分类的预测结果。启用时取值为[0,1,2,3]，分别对应[0°,90°,180°,270°]；未启用时为-1
-       
+
     - `dt_polys`: `(List[numpy.ndarray])` 印章文本检测的多边形框列表。每个检测框由多个顶点坐标构成的numpy数组表示，数组shape为(n, 2)
 
     - `dt_scores`: `(List[float])` 文本检测框的置信度列表
@@ -1460,8 +1460,8 @@ for i, res in enumerate(result[&quot;sealRecResults&quot;]):
       <td><a href="../../../module_usage/tutorials/ocr_modules/layout_detection.md">链接</a></td>
     </tr>
     <tr>
-      <td>文本存在漏检</td>
-      <td>文本检测模块</td>
+      <td>印章文本存在漏检</td>
+      <td>印章文本检测模块</td>
       <td><a href="../../../module_usage/tutorials/ocr_modules/seal_text_detection.md">链接</a></td>
     </tr>
     <tr>
@@ -1508,7 +1508,7 @@ for i, res in enumerate(result[&quot;sealRecResults&quot;]):
 
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device` 参数</b>即可完成不同硬件之间的无缝切换。
 
-例如，您使用昇腾 NPU 进行印章文本识别产线的推理，使用的 Python 命令为：
+例如，您使用昇腾 NPU 进行印章文本识别产线的推理，使用的 CLI 命令为：
 
 ```bash
 paddlex --pipeline seal_recognition \
@@ -1518,4 +1518,6 @@ paddlex --pipeline seal_recognition \
     --device npu:0 \
     --save_path ./output
 ```
+当然，您也可以在 Python 脚本中 `create_pipeline()` 时或者 `predict()` 时指定硬件设备。
+
 若您想在更多种类的硬件上使用印章文本识别产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

@@ -5,11 +5,11 @@ comments: true
 # 文档场景信息抽取v3产线使用教程
 
 ## 1. 文档场景信息抽取v3产线介绍
-文档场景信息抽取v3（PP-ChatOCRv3）是飞桨特色的文档和图像智能分析解决方案，结合了 LLM 和 OCR 技术，一站式解决版面分析、生僻字、多页 pdf、表格、印章识别等常见的复杂文档信息抽取难点问题，结合文心大模型将海量数据和知识相融合，准确率高且应用广泛。
+文档场景信息抽取v3（PP-ChatOCRv3）是飞桨特色的文档和图像智能分析解决方案，结合了 LLM 和 OCR 技术，一站式解决版面分析、生僻字、多页 pdf、表格、印章识别等常见的复杂文档信息抽取难点问题，结合文心大模型将海量数据和知识相融合，准确率高且应用广泛。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上部署。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
 
 <img src="https://github.com/user-attachments/assets/90cb740b-7741-4383-bc4c-663f9d042d02">
 
-文档场景信息抽取v3产线中包含<b>表格结构识别模块</b>、<b>版面区域检测模块</b>、<b>文本检测模块</b>、<b>文本识别模块</b>、<b>印章文本检测模块</b>、<b>文本图像矫正模块</b>、<b>文档图像方向分类模块</b>。
+文档场景信息抽取v3产线中包含<b>表格结构识别模块</b>、<b>版面区域检测模块</b>、<b>文本检测模块</b>、<b>文本识别模块</b>、<b>印章文本检测模块</b>、<b>文本图像矫正模块</b>、<b>文档图像方向分类模块</b>。其中相关的模型是以子产线的方式集成，您可以通过[产线配置](../../../../paddlex/configs/pipelines/PP-ChatOCRv3-doc.yaml)来查看不同模块的模型配置。
 
 <b>如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型</b>。其中部分模型的 benchmark 如下：
 
@@ -318,266 +318,790 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 ### 2.2 本地体验
 在本地使用文档场景信息抽取v3产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
-几行代码即可完成产线的快速推理，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf)，以通用文档场景信息抽取v3产线为例：
+首先需要配置获取 `PP-ChatOCRv3-doc` 产线的配置文件，可以通过以下命令获取：
+```bash
+python -m paddlex --get_pipeline_config PP-ChatOCRv3-doc ./
+```
+
+执行上述命令后，配置文件会存储在当前路径下，打开配置文件，填写大语言模型的 ak/sk(access_token)，如下所示：
+
+```yaml
+......
+SubModules:
+  LLM_Chat:
+    module_name: chat_bot
+    model_name: ernie-3.5
+    api_type: qianfan
+    ak: "" # Your LLM API key
+    sk: ""  # Your LLM secret key
+
+  LLM_Retriever:
+    module_name: retriever
+    model_name: ernie-3.5
+    api_type: qianfan
+    ak: "" # Your LLM API key
+    sk: ""  # Your LLM secret key
+......
+```
+
+PP-ChatOCRv3 仅支持文心大模型，支持在[百度云千帆平台](https://console.bce.baidu.com/qianfan/ais/console/onlineService)或者[星河社区 AIStudio](https://aistudio.baidu.com/)上获取相关的 ak/sk(access_token)。如果使用百度云千帆平台，可以参考[AK和SK鉴权调用API流程](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8) 获取ak/sk，如果使用星河社区 AIStudio，可以在[星河社区 AIStudio 访问令牌](https://aistudio.baidu.com/account/accessToken)中获取 access_token。
+
+更新配置文件后，即可使用几行Python代码完成快速推理，可以使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_certificate-1.png)测试：
 
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(
-    pipeline="PP-ChatOCRv3-doc",
-    llm_name="ernie-3.5",
-    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # 请填入您的ak与sk，否则无法调用大模型
-    # llm_params={"api_type": "aistudio", "access_token": ""} # 请填入您的access_token，否则无法调用大模型
-    )
+pipeline = create_pipeline(pipeline="./PP-ChatOCRv3-doc.yaml")
 
-visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf")
+visual_predict_res = pipeline.visual_predict(input="vehicle_certificate-1.png",
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+    use_common_ocr=True,
+    use_seal_recognition=True,
+    use_table_recognition=True)
 
-for res in visual_result:
-    res.save_to_img("./output")
-    res.save_to_html('./output')
-    res.save_to_xlsx('./output')
+visual_info_list = []
+for res in visual_predict_res:
+    visual_info_list.append(res["visual_info"])
+    layout_parsing_result = res["layout_parsing_result"]
 
-vector = pipeline.build_vector(visual_info=visual_info)
+vector_info = pipeline.build_vector(visual_info_list, flag_save_bytes_vector=True)
+chat_result = pipeline.chat(key_list=["驾驶室准乘人数"], visual_info_list, vector_info=vector_info)
+print(chat_result)
 
-chat_result = pipeline.chat(
-    key_list=["乙方", "手机号"],
-    visual_info=visual_info,
-    vector=vector,
-    )
-chat_result.print()
 ```
-<b>注</b>：目前仅支持文心大模型，支持在[百度云千帆平台](https://console.bce.baidu.com/qianfan/ais/console/onlineService)或者[星河社区 AIStudio](https://aistudio.baidu.com/)上获取相关的 ak/sk(access_token)。如果使用百度云千帆平台，可以参考[AK和SK鉴权调用API流程](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8) 获取ak/sk，如果使用星河社区 AIStudio，可以在[星河社区 AIStudio 访问令牌](https://aistudio.baidu.com/account/accessToken)中获取 access_token。
 
 运行后，输出结果如下：
 
 ```
-{'chat_res': {'乙方': '股份测试有限公司', '手机号': '19331729920'}, 'prompt': ''}
+{'chat_res': {'驾驶室准乘人数': '2'}}
 ```
 
-在上述 Python 脚本中，执行了如下四个步骤：
+PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 
-（1）调用 `create_pipeline` 方法实例化文档场景信息抽取v3产线对象，相关参数说明如下：
+<details><summary>（1）调用 <code>create_pipeline</code> 方法实例化PP-ChatOCRv3产线对象。</summary>
+
+相关参数说明如下：
 
 <table>
 <thead>
 <tr>
 <th>参数</th>
+<th>参数说明</th>
 <th>参数类型</th>
 <th>默认值</th>
-<th>参数说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>pipeline</code></td>
-<td>str</td>
+<td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
+<td><code>str</code></td>
 <td>无</td>
-<td>产线名称或是产线配置文件路径，如为产线名称，则必须为 PaddleX 所支持的产线；</td>
-</tr>
-<tr>
-<td><code>llm_name</code></td>
-<td>str</td>
-<td>"ernie-3.5"</td>
-<td>大语言模型名称，目前支持<code>ernie-4.0</code>，<code>ernie-3.5</code>，更多模型支持中;</td>
-</tr>
-<tr>
-<td><code>llm_params</code></td>
-<td>dict</td>
-<td><code>{}</code></td>
-<td>LLM相关API配置；</td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>str、None</td>
-<td><code>None</code></td>
-<td>运行设备（<code>None</code>为自动适配）,支持传入'cpu'，'gpu'或'gpu:0'等；</td>
+<td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
+<td><code>str</code></td>
+<td><code>gpu</code></td>
+</tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理，仅当该产线支持高性能推理时可用。</td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
 </tr>
 </tbody>
 </table>
-（2）调用文档场景信息抽取v3产线对象的 `visual_predict` 方法进行视觉推理预测，相关参数说明如下：
+</details>
+
+<details><summary>（2）调用 PP-ChatOCRv3 产线对象的 <code>visual_predict()</code> 方法获取视觉预测结果。 该方法将返回一个 generator。</summary>
+
+以下是 `visual_predict()` 方法的参数及其说明：
 
 <table>
 <thead>
 <tr>
 <th>参数</th>
-<th>参数类型</th>
-<th>默认值</th>
 <th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
 </tr>
 </thead>
-<tbody>
 <tr>
 <td><code>input</code></td>
-<td>Python Var</td>
-<td>无</td>
-<td>用于输入待预测数据，支持直接传入Python变量，如<code>numpy.ndarray</code>表示的图像数据；</td>
+<td>待预测数据，支持多种输入类型，必填</td>
+<td><code>Python Var|str|list</code></td>
+<td>
+<ul>
+  <li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
+  <li><b>str</b>：如图像文件或者PDF文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件或PDF文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/demo_paper.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code>(当前不支持目录中包含PDF文件的预测，PDF文件需要指定到具体文件路径)</li>
+  <li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>input</code></td>
-<td>str</td>
-<td>无</td>
-<td>用于输入待预测数据，支持传入待预测数据文件路径，如图像文件的本地路径：<code>/root/data/img.jpg</code>；</td>
+<td><code>device</code></td>
+<td>产线推理设备</td>
+<td><code>str|None</code></td>
+<td>
+<ul>
+  <li><b>CPU</b>：如 <code>cpu</code> 表示使用 CPU 进行推理；</li>
+  <li><b>GPU</b>：如 <code>gpu:0</code> 表示使用第 1 块 GPU 进行推理；</li>
+  <li><b>NPU</b>：如 <code>npu:0</code> 表示使用第 1 块 NPU 进行推理；</li>
+  <li><b>XPU</b>：如 <code>xpu:0</code> 表示使用第 1 块 XPU 进行推理；</li>
+  <li><b>MLU</b>：如 <code>mlu:0</code> 表示使用第 1 块 MLU 进行推理；</li>
+  <li><b>DCU</b>：如 <code>dcu:0</code> 表示使用第 1 块 DCU 进行推理；</li>
+  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化时，会优先使用本地的 GPU 0号设备，如果没有，则使用 CPU 设备；</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>input</code></td>
-<td>str</td>
-<td>无</td>
-<td>用于输入待预测数据，支持传入待预测数据文件url，如<code>https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf</code>；</td>
+<td><code>use_doc_orientation_classify</code></td>
+<td>是否使用文档方向分类模块</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+  <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>input</code></td>
-<td>str</td>
-<td>无</td>
-<td>用于输入待预测数据，支持传入本地目录，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code>；</td>
+<td><code>use_doc_unwarping</code></td>
+<td>是否使用文档扭曲矫正模块</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+  <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>input</code></td>
-<td>dict</td>
-<td>无</td>
-<td>用于输入待预测数据，支持传入字典类型，字典的key需要与具体产线对应，如文档场景信息抽取v3产线为"img"，字典的val支持上述类型数据，如：<code>{"img": "/root/data1"}</code>；</td>
+<td><code>use_textline_orientation</code></td>
+<td>是否使用文本行方向分类模块</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+  <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>input</code></td>
-<td>list</td>
-<td>无</td>
-<td>用于输入待预测数据，支持传入列表，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>，<code>["/root/data1", "/root/data2"]</code>，<code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code>；</td>
+<td><code>use_general_ocr</code></td>
+<td>是否使用 OCR 子产线</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+  <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>use_doc_image_ori_cls_model</code></td>
-<td>bool</td>
-<td><code>True</code></td>
-<td>是否使用方向分类模型；</td>
+<td><code>use_seal_recognition</code></td>
+<td>是否使用印章识别子产线</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+  <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>use_doc_image_unwarp_model</code></td>
-<td>bool</td>
-<td><code>True</code></td>
-<td>是否使用版面矫正产线；</td>
+<td><code>use_table_recognition</code></td>
+<td>是否使用表格识别子产线</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+  <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>use_seal_text_det_model</code></td>
-<td>bool</td>
-<td><code>True</code></td>
-<td>是否使用弯曲文本检测产线；</td>
+<td><code>layout_threshold</code></td>
+<td>版面模型得分阈值</td>
+<td><code>float|dict|None</code></td>
+<td>
+<ul>
+  <li><b>float</b>：<code>0-1</code> 之间的任意浮点数；</li>
+  <li><b>dict</b>： <code>{0:0.1}</code> key为类别ID，value为该类别的阈值；</li>
+  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>0.5</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
-</tbody>
+<tr>
+<td><code>layout_nms</code></td>
+<td>是否使用NMS</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+  <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>layout_unclip_ratio</code></td>
+<td>版面检测扩张系数</td>
+<td><code>float|Tuple[float,float]|None</code></td>
+<td>
+<ul>
+  <li><b>float</b>：任意大于 <code>0</code>  浮点数；</li>
+  <li><b>Tuple[float,float]</b>：在横纵两个方向各自的扩张系数；</li>
+  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>1.0</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>layout_merge_bboxes_mode</code></td>
+<td>重叠框过滤方式</td>
+<td><code>str|None</code></td>
+<td>
+<ul>
+  <li><b>str</b>：large，small, union.分别表示重叠框过滤时选择保留大框，小框还是同时保留</li>
+  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>large</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_det_limit_side_len</code></td>
+<td>文本检测的图像边长限制</td>
+<td><code>int|None</code></td>
+<td>
+<ul>
+  <li><b>int</b>：大于 <code>0</code> 的任意整数；</li>
+  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>960</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_det_limit_type</code></td>
+<td>文本检测的图像边长限制类型</td>
+<td><code>str|None</code></td>
+<td>
+<ul>
+  <li><b>str</b>：支持 <code>min</code> 和 <code>max</code>，<code>min</code> 表示保证图像最短边不小于 <code>det_limit_side_len</code>，<code>max</code> 表示保证图像最长边不大于 <code>limit_side_len</code></li>
+  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>max</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_det_thresh</code></td>
+<td>检测像素阈值，输出的概率图中，得分大于该阈值的像素点才会被认为是文字像素点</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.3</code></td>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_det_box_thresh</code></td>
+<td>检测框阈值，检测结果边框内，所有像素点的平均得分大于该阈值时，该结果会被认为是文字区域</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.6</code></td>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_det_unclip_ratio</code></td>
+<td>文本检测扩张系数，使用该方法对文字区域进行扩张，该值越大，扩张的面积越大</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>2.0</code></td>
+</ul>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_rec_score_thresh</code></td>
+<td>文本识别阈值，得分大于该阈值的文本结果会被保留</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.0</code>。即不设阈值</td>
+</ul>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_det_limit_side_len</code></td>
+<td>印章检测的图像边长限制</td>
+<td><code>int|None</code></td>
+<td>
+<ul>
+  <li><b>int</b>：大于 <code>0</code> 的任意整数；</li>
+  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>960</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_det_limit_type</code></td>
+<td>印章检测的图像边长限制类型</td>
+<td><code>str|None</code></td>
+<td>
+<ul>
+  <li><b>str</b>：支持 <code>min</code> 和 <code>max</code>，<code>min</code> 表示保证图像最短边不小于 <code>det_limit_side_len</code>，<code>max</code> 表示保证图像最长边不大于 <code>limit_side_len</code></li>
+  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>max</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_det_thresh</code></td>
+<td>检测像素阈值，输出的概率图中，得分大于该阈值的像素点才会被认为是印章像素点</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.3</code></td>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_det_box_thresh</code></td>
+<td>检测框阈值，检测结果边框内，所有像素点的平均得分大于该阈值时，该结果会被认为是印章区域</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.6</code></td>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_det_unclip_ratio</code></td>
+<td>印章检测扩张系数，使用该方法对文字区域进行扩张，该值越大，扩张的面积越大</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>2.0</code></td>
+</ul>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_rec_score_thresh</code></td>
+<td>印章识别阈值，得分大于该阈值的文本结果会被保留</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.0</code>。即不设阈值</td>
+</ul>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
 </table>
-（3）调用视觉推理预测结果对象的相关方法对视觉推理预测结果进行保存，具体方法如下：
+</details>
+
+<details><summary>（3）对视觉预测结果进行处理。</summary>
+
+每个样本的预测结果均为 `dict` 类型，包含 `visual_info` 和 `layout_parsing_result` 两个字段。通过 `visual_info` 得到视觉信息（包含 `normal_text_dict`、`table_text_list`、`table_html_list` 等信息），并将每个样本的信息放到 `visual_info_list` 列表中，该列表的内容会在之后送入大语言模型中。
+
+当然，您也可以通过 `layout_parsing_result` 获取版面解析的结果，该结果包含文件或图片中包含的表格、文字、图片等内容，且支持打印、保存为图片、保存为`json`文件的操作:
+
+```python
+......
+for res in visual_predict_res:
+    visual_info_list.append(res["visual_info"])
+    layout_parsing_result = res["layout_parsing_result"]
+    layout_parsing_result.print()
+    layout_parsing_result.save_to_img("./output")
+    layout_parsing_result.save_to_json("./output")
+    layout_parsing_result.save_to_xlsx("./output")
+    layout_parsing_result.save_to_html("./output")
+......
+```
 
 <table>
 <thead>
 <tr>
 <th>方法</th>
-<th>参数</th>
 <th>方法说明</th>
+<th>参数</th>
+<th>参数类型</th>
+<th>参数说明</th>
+<th>默认值</th>
 </tr>
 </thead>
-<tbody>
+
 <tr>
-<td><code>save_to_img</code></td>
-<td><code>save_path</code></td>
-<td>将OCR预测结果、版面分析结果、表格识别结果保存为图片文件，参数<code>save_path</code>用于指定保存的路径；</td>
+<td rowspan = "3"><code>print()</code></td>
+<td rowspan = "3">打印结果到终端</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
+<td><code>True</code></td>
 </tr>
 <tr>
-<td><code>save_to_html</code></td>
-<td><code>save_path</code></td>
-<td>将表格识别结果保存为html文件，参数<code>save_path</code>用于指定保存的路径；</td>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
 </tr>
 <tr>
-<td><code>save_to_xlsx</code></td>
-<td><code>save_path</code></td>
-<td>将表格识别结果保存为xlsx文件，参数<code>save_path</code>用于指定保存的路径；</td>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
 </tr>
-</tbody>
+<tr>
+<td rowspan = "3"><code>save_to_json()</code></td>
+<td rowspan = "3">将结果保存为json格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>将中间各个模块的可视化图像保存在png格式的图像</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，支持目录或文件路径</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>save_to_html()</code></td>
+<td>将文件中的表格保存为html格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，支持目录或文件路径</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>save_to_xlsx()</code></td>
+<td>将文件中的表格保存为xlsx格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，支持目录或文件路径</td>
+<td>无</td>
+</tr>
 </table>
-（4）调用文档场景信息抽取v3产线对象的 `chat` 方法与大模型进行交互，相关参数说明如下：
+
+- 调用`print()` 方法会将结果打印到终端，打印到终端的内容解释如下：
+    - `input_path`: `(str)` 待预测图像的输入路径
+
+    - `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
+
+    - `model_settings`: `(Dict[str, bool])` 配置产线所需的模型参数
+
+        - `use_doc_preprocessor`: `(bool)` 控制是否启用文档预处理子产线
+        - `use_general_ocr`: `(bool)` 控制是否启用 OCR 子产线
+        - `use_seal_recognition`: `(bool)` 控制是否启用印章识别子产线
+        - `use_table_recognition`: `(bool)` 控制是否启用表格识别子产线
+        - `use_formula_recognition`: `(bool)` 控制是否启用公式识别子产线
+
+    - `parsing_res_list`: `(List[Dict])` 解析结果的列表，每个元素为一个字典，列表顺序为解析后的阅读顺序。
+        - `layout_bbox`: `(np.ndarray)` 版面区域的边界框。
+        - `{label}`: `(str)` key 为版面区域的标签，例如`text`, `table`等，内容为版面区域内的内容。
+        - `layout`: `(str)` 版面排版类型，例如 `double`, `single` 等。
+
+    - `overall_ocr_res`: `(Dict[str, Union[List[str], List[float], numpy.ndarray]])` 全局 OCR 结果的字典
+      -  `input_path`: `(Union[str, None])` 图像OCR子产线接受的图像路径，当输入为`numpy.ndarray`时，保存为`None`
+      - `model_settings`: `(Dict)` OCR子产线的模型配置参数
+      - `dt_polys`: `(List[numpy.ndarray])` 文本检测的多边形框列表。每个检测框由4个顶点坐标构成的numpy数组表示，数组shape为(4, 2)，数据类型为int16
+      - `dt_scores`: `(List[float])` 文本检测框的置信度列表
+      - `text_det_params`: `(Dict[str, Dict[str, int, float]])` 文本检测模块的配置参数
+        - `limit_side_len`: `(int)` 图像预处理时的边长限制值
+        - `limit_type`: `(str)` 边长限制的处理方式
+        - `thresh`: `(float)` 文本像素分类的置信度阈值
+        - `box_thresh`: `(float)` 文本检测框的置信度阈值
+        - `unclip_ratio`: `(float)` 文本检测框的膨胀系数
+        - `text_type`: `(str)` 文本检测的类型，当前固定为"general"
+
+      - `text_type`: `(str)` 文本检测的类型，当前固定为"general"
+      - `textline_orientation_angles`: `(List[int])` 文本行方向分类的预测结果。启用时返回实际角度值（如[0,0,1]
+      - `text_rec_score_thresh`: `(float)` 文本识别结果的过滤阈值
+      - `rec_texts`: `(List[str])` 文本识别结果列表，仅包含置信度超过`text_rec_score_thresh`的文本
+      - `rec_scores`: `(List[float])` 文本识别的置信度列表，已按`text_rec_score_thresh`过滤
+      - `rec_polys`: `(List[numpy.ndarray])` 经过置信度过滤的文本检测框列表，格式同`dt_polys`
+
+    - `text_paragraphs_ocr_res`: `(Dict[str, Union[List[str], List[float], numpy.ndarray]])` 段落OCR结果，版面类型非表格、印章和公式类型的段落OCR结果
+        - `rec_polys`: `(List[numpy.ndarray])` 文本检测框列表，格式同`dt_polys`
+        - `rec_texts`: `(List[str])` 文本识别结果列表
+        - `rec_scores`: `(List[float])` 文本识别结果的置信度列表
+        - `rec_boxes`: `(numpy.ndarray)` 检测框的矩形边界框数组，shape为(n, 4)，dtype为int16。每一行表示一个
+
+    - `formula_res_list`: `(List[Dict[str, Union[numpy.ndarray, List[float], str]]])` 公式识别结果列表，每个元素为一个字典
+        - `rec_formula`: `(str)` 公式识别结果
+        - `rec_polys`: `(numpy.ndarray)` 公式检测框，shape为(4, 2)，dtype为int16
+        - `formula_region_id`: `(int)` 公式所在的区域编号
+
+    - `seal_res_list`: `(List[Dict[str, Union[numpy.ndarray, List[float], str]]])` 印章识别结果列表，每个元素为一个字典
+        - `input_path`: `(str)` 印章图像的输入路径
+        - `model_settings`: `(Dict)` 印章识别子产线的模型配置参数
+        - `dt_polys`: `(List[numpy.ndarray])` 印章检测框列表，格式同`dt_polys`
+        - `text_det_params`: `(Dict[str, Dict[str, int, float]])` 印章检测模块的配置参数, 具体参数含义同上
+        - `text_type`: `(str)` 印章检测的类型，当前固定为"seal"
+        - `text_rec_score_thresh`: `(float)` 印章识别结果的过滤阈值
+        - `rec_texts`: `(List[str])` 印章识别结果列表，仅包含置信度超过`text_rec_score_thresh`的文本
+        - `rec_scores`: `(List[float])` 印章识别的置信度列表，已按`text_rec_score_thresh`过滤
+        - `rec_polys`: `(List[numpy.ndarray])` 经过置信度过滤的印章检测框列表，格式同`dt_polys`
+        - `rec_boxes`: `(numpy.ndarray)` 检测框的矩形边界框数组，shape为(n, 4)，dtype为int16。每一行表示一个矩形
+
+    - `table_res_list`: `(List[Dict[str, Union[numpy.ndarray, List[float], str]]])` 表格识别结果列表，每个元素为一个字典
+        - `cell_box_list`: `(List[numpy.ndarray])` 表格单元格的边界框列表
+        - `pred_html`: `(str)` 表格的HTML格式字符串
+        - `table_ocr_pred`: `(dict)` 表格的OCR识别结果
+            - `rec_polys`: `(List[numpy.ndarray])` 单元格的检测框列表
+            - `rec_texts`: `(List[str])` 单元格的识别结果
+            - `rec_scores`: `(List[float])` 单元格的识别置信度
+            - `rec_boxes`: `(numpy.ndarray)` 检测框的矩形边界框数组，shape为(n, 4)，dtype为int16。每一行表示一个矩形
+
+- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
+- 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_ocr_res_img.{your_img_extension}`，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)
+
+此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>属性说明</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "1"><code>json</code></td>
+<td rowspan = "1">获取预测的 <code>json</code> 格式的结果</td>
+</tr>
+<tr>
+<td rowspan = "2"><code>img</code></td>
+<td rowspan = "2">获取格式为 <code>dict</code> 的可视化图像</td>
+</tr>
+</table>
+
+- `json` 属性获取的预测结果为dict类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
+- `img` 属性返回的预测结果是一个字典类型的数据。其中，键分别为 `layout_det_res`、`overall_ocr_res`、`text_paragraphs_ocr_res`、`formula_res_region1`、`table_cell_img` 和 `seal_res_region1`，对应的值是 `Image.Image` 对象：分别用于显示版面区域检测、OCR、OCR文本段落、公式、表格和印章结果的可视化图像。如果没有使用可选模块，则字典中只包含 `layout_det_res`。
+</details>
+
+<details><summary>（4）调用PP-ChatOCRv3的产线对象的 <code>build_vector()</code> 方法，对文本内容进行向量构建。</summary>
+
+以下是 `build_vector()` 方法的参数及其说明：
+
 
 <table>
 <thead>
 <tr>
 <th>参数</th>
-<th>参数类型</th>
-<th>默认值</th>
 <th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td><code>visual_info</code></td>
+<td>视觉信息，可以是包含视觉信息的字典，或者由这些字典组成的列表</td>
+<td><code>list|dict</code></td>
+<td>
+<code>None</code>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>min_characters</code></td>
+<td>最小字符数量</td>
+<td><code>int</code></td>
+<td>
+大于0的正整数，可以根据大语言模型支持的token长度来决定
+</td>
+<td><code>3500</code></td>
+</tr>
+<tr>
+<tr>
+<td><code>flag_save_bytes_vector</code></td>
+<td>文字是否保存为二进制文件</td>
+<td><code>bool</code></td>
+<td>
+<code>True|False</code>
+</td>
+<td><code>False</code></td>
+</tr>
+</table>
+该方法会返回一个包含视觉文本信息的字典，字典的内容如下：
+
+- `flag_save_bytes_vector`：`(bool)`是否将结果保存为二进制文件
+- `flag_too_short_text`：`(bool)`是否文本长度小于最小字符数量
+- `vector`: `(str|list)` 文本的二进制内容或者文本内容，取决于`flag_save_bytes_vector`和`min_characters`的值，如果`flag_save_bytes_vector=True`且文本长度大于等于最小字符数量，则返回二进制内容；否则返回原始的文本。
+</details>
+
+<details><summary>（5）调用PP-ChatOCRv3的产线对象的 <code>chat()</code> 方法，对关键信息进行抽取。</summary>
+
+以下是 `chat()` 方法的参数及其说明：
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>key_list</code></td>
-<td>str</td>
-<td>无</td>
-<td>用于查询的关键字（query）；支持“，”或“,”作为分隔符的多个关键字组成的字符串，如“乙方，手机号”；</td>
+<td>用于提取信息的单个键或键列表</td>
+<td><code>Union[str, List[str]]</code></td>
+<td><code>None</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>key_list</code></td>
-<td>list</td>
-<td>无</td>
-<td>用于查询的关键字（query），支持<code>list</code>形式表示的一组关键字，其元素为<code>str</code>类型；</td>
+<td><code>visual_info</code></td>
+<td>视觉信息结果</td>
+<td><code>List[dict]</code></td>
+<td><code>None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>use_vector_retrieval</code></td>
+<td>是否使用向量检索</td>
+<td><code>bool</code></td>
+<td><code>True|False</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>vector_info</code></td>
+<td>用于检索的向量信息</td>
+<td><code>dict</code></td>
+<td><code>None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>min_characters</code></td>
+<td>所需的最小字符数</td>
+<td><code>int</code></td>
+<td>大于0的正整数</td>
+<td><code>3500</code></td>
+</tr>
+<tr>
+<td><code>text_task_description</code></td>
+<td>文本任务的描述</td>
+<td><code>str</code></td>
+<td><code>None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_output_format</code></td>
+<td>文本结果的输出格式</td>
+<td><code>str</code></td>
+<td><code>None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_rules_str</code></td>
+<td>生成文本结果的规则</td>
+<td><code>str</code></td>
+<td><code>None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_few_shot_demo_text_content</code></td>
+<td>用于少样本演示的文本内容</td>
+<td><code>str</code></td>
+<td><code>None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_few_shot_demo_key_value_list</code></td>
+<td>用于少样本演示的键值列表</td>
+<td><code>str</code></td>
+<td><code>None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>table_task_description</code></td>
+<td>表任务的描述</td>
+<td><code>str</code></td>
+<td><code>None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>table_output_format</code></td>
+<td>表结果的输出格式</td>
+<td><code>str</code></td>
+<td><code>None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>table_rules_str</code></td>
+<td>生成表结果的规则</td>
+<td><code>str</code></td>
+<td><code>None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>table_few_shot_demo_text_content</code></td>
+<td>表少样本演示的文本内容</td>
+<td><code>str</code></td>
+<td><code>None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>table_few_shot_demo_key_value_list</code></td>
+<td>表少样本演示的键值列表</td>
+<td><code>str</code></td>
+<td><code>None</code></td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
-在执行上述 Python 脚本时，加载的是默认的文档场景信息抽取v3产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
 
-```
-paddlex --get_pipeline_config PP-ChatOCRv3-doc
-```
+该方法会将结果打印到终端，打印到终端的内容解释如下：
+  - `chat_res`: `(dict)` 提取信息的结果，是一个字典，包含了待抽取的键和对应的值。
 
-执行后，文档场景信息抽取v3产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为 `./my_path` ）：
-
-```
-paddlex --get_pipeline_config PP-ChatOCRv3-doc --save_path ./my_path
-```
-
-获取配置文件后，您即可对文档场景信息抽取v3产线各项配置进行自定义：
-
-```yaml
-Pipeline:
-  layout_model: RT-DETR-H_layout_3cls
-  table_model: SLANet_plus
-  text_det_model: PP-OCRv4_server_det
-  text_rec_model: PP-OCRv4_server_rec
-  seal_text_det_model: PP-OCRv4_server_seal_det
-  doc_image_ori_cls_model: null
-  doc_image_unwarp_model: null
-  llm_name: "ernie-3.5"
-  llm_params:
-    api_type: qianfan
-    ak:
-    sk:
-```
-
-在上述配置中，您可以修改产线各模块加载的模型，也可以修改使用的大模型。各模块支持模型列表请参考模块文档，大模型支持列表为：ernie-4.0、ernie-3.5、ernie-3.5-8k、ernie-lite、ernie-tiny-8k、ernie-speed、ernie-speed-128k、ernie-char-8k。
-
-修改后，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可应用配置。
-
-例如，若您的配置文件保存在 `./my_path/PP-ChatOCRv3-doc.yaml` ，则只需执行：
-
-```python
-from paddlex import create_pipeline
-
-pipeline = create_pipeline(
-    pipeline="./my_path/PP-ChatOCRv3-doc.yaml",
-    llm_name="ernie-3.5",
-    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # 请填入您的ak与sk，否则无法调用大模型
-    # llm_params={"api_type": "aistudio", "access_token": ""} # 请填入您的access_token，否则无法调用大模型
-    )
-
-visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf")
-
-for res in visual_result:
-    res.save_to_img("./output")
-    res.save_to_html('./output')
-    res.save_to_xlsx('./output')
-
-vector = pipeline.build_vector(visual_info=visual_info)
-
-chat_result = pipeline.chat(
-    key_list=["乙方", "手机号"],
-    visual_info=visual_info,
-    vector=vector,
-    )
-chat_result.print()
-```
+</details>
 
 ## 3. 开发集成/部署
 如果产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
@@ -1280,39 +1804,93 @@ print(result_chat[&quot;chatResult&quot;])
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
 
 ## 4. 二次开发
-如果通用文档场景信息抽取v3产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升通用表格识别产线的在您的场景中的识别效果。
+如果文档场景信息抽取v3产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升通用表格识别产线的在您的场景中的识别效果。
 
 ### 4.1 模型微调
-由于通用文档场景信息抽取v3产线包含六个模块，模型产线的效果不及预期可能来自于其中任何一个模块（文本图像矫正模块暂不支持二次开发）。
+由于文档场景信息抽取v3产线包含若干模块，模型产线的效果如果不及预期，可能来自于其中任何一个模块。您可以对提取效果差的 case 进行分析，通过可视化图像，确定是哪个模块存在问题，并参考以下表格中对应的微调教程链接进行模型微调。
 
-您可以对识别效果差的图片进行分析，参考如下规则进行分析和模型微调：
 
-* 检测到的表格结构错误（如行列识别错误、单元格位置错误），那么可能是表格结构识别模块存在不足，您需要参考[表格结构识别模块开发教程](../../../module_usage/tutorials/ocr_modules/table_structure_recognition.md)中的<b>二次开发</b>章节，使用您的私有数据集对表格结构识别模型进行微调。
-* 版面中存在定位错误（例如对表格、印章的位置识别错误），那么可能是版面区域定位模块存在不足，您需要参考[版面区域检测模块开发教程](../../../module_usage/tutorials/ocr_modules/layout_detection.md)中的<b>二次开发</b>章节，使用您的私有数据集对版面区域定位模型进行微调。
-* 有较多的文本未被检测出来（即文本漏检现象），那么可能是文本检测模型存在不足，您需要参考[文本检测模块开发教程](../../../module_usage/tutorials/ocr_modules/text_detection.md)中的<b>二次开发</b>章节，使用您的私有数据集对文本检测模型进行微调。
-* 已检测到的文本中出现较多的识别错误（即识别出的文本内容与实际文本内容不符），这表明文本识别模型需要进一步改进，您需要参考[文本识别模块开发教程](../../../module_usage/tutorials/ocr_modules/text_recognition.md)中的<b>二次开发</b>章节对文本识别模型进行微调。
-* 已检测到的印章文本出现较多的识别错误，这表明印章文本检测模块模型需要进一步改进，您需要参考[印章文本检测模块开发教程](../../../module_usage/tutorials/ocr_modules/)中的<b>二次开发</b>章节对印章文本检测模型进行微调。
-* 含文字区域的文档或证件的方向存在较多的识别错误，这表明文档图像方向分类模型需要进一步改进，您需要参考[文档图像方向分类模块开发教程](../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.md)中的<b>二次开发</b>章节对文档图像方向分类模型进行微调。
+<table>
+  <thead>
+    <tr>
+      <th>情形</th>
+      <th>微调模块</th>
+      <th>微调参考链接</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>版面区域检测不准，如印章、表格未检出等</td>
+      <td>版面区域检测模块</td>
+      <td><a href="../../../module_usage/tutorials/ocr_modules/layout_detection.md">链接</a></td>
+    </tr>
+    <tr>
+      <td>表格结构识别不准</td>
+      <td>表格结构识别</td>
+      <td><a href="../../../module_usage/tutorials/ocr_modules/table_structure_recognition.md">链接</a></td>
+    </tr>
+    <tr>
+      <td>印章文本存在漏检</td>
+      <td>印章文本检测模块</td>
+      <td><a href="../../../module_usage/tutorials/ocr_modules/seal_text_detection.md">链接</a></td>
+    </tr>
+    <tr>
+      <td>文本存在漏检</td>
+      <td>文本检测模块</td>
+      <td><a href="../../../module_usage/tutorials/ocr_modules/text_detection.md">链接</a></td>
+    </tr>
+    <tr>
+      <td>文本内容都不准</td>
+      <td>文本识别模块</td>
+      <td><a href="../../../module_usage/tutorials/ocr_modules/text_recognition.md">链接</a></td>
+    </tr>
+    <tr>
+      <td>垂直或者旋转文本行矫正不准</td>
+      <td>文本行方向分类模块</td>
+      <td><a href="../../../module_usage/tutorials/ocr_modules/textline_orientation_classification.md">链接</a></td>
+    </tr>
+    <tr>
+      <td>整图旋转矫正不准</td>
+      <td>文档图像方向分类模块</td>
+      <td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.md">链接</a></td>
+    </tr>
+    <tr>
+      <td>图像扭曲矫正不准</td>
+      <td>文本图像矫正模块</td>
+      <td>暂不支持微调</td>
+    </tr>
+  </tbody>
+</table>
+
 
 ### 4.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。
 
 若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径替换至产线配置文件中的对应位置即可：
 
-```
+```yaml
 ......
-Pipeline:
-  layout_model: RT-DETR-H_layout_3cls  #可修改为微调后模型的本地路径
-  table_model: SLANet_plus  #可修改为微调后模型的本地路径
-  text_det_model: PP-OCRv4_server_det  #可修改为微调后模型的本地路径
-  text_rec_model: PP-OCRv4_server_rec  #可修改为微调后模型的本地路径
-  seal_text_det_model: PP-OCRv4_server_seal_det  #可修改为微调后模型的本地路径
-  doc_image_ori_cls_model: null   #可修改为微调后模型的本地路径
-  doc_image_unwarp_model: null   #可修改为微调后模型的本地路径
+SubModules:
+    TextDetection:
+    module_name: text_detection
+    model_name: PP-OCRv4_server_det
+    model_dir: null # 替换为微调后的文本检测模型权重路径
+    limit_side_len: 960
+    limit_type: max
+    thresh: 0.3
+    box_thresh: 0.6
+    unclip_ratio: 2.0
+
+    TextRecognition:
+    module_name: text_recognition
+    model_name: PP-OCRv4_server_rec
+    model_dir: null # 替换为微调后的文本检测模型权重路径
+    batch_size: 1
+            score_thresh: 0
 ......
 ```
 
-随后， 参考本地体验中的命令行方式或 Python 脚本方式，加载修改后的产线配置文件即可。
+随后， 参考[2.2 本地体验](#22-本地体验)中的命令行方式或Python脚本方式，加载修改后的产线配置文件即可。
 
 ##  5. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU 和寒武纪 MLU 等多种主流硬件设备，<b>仅需设置 `device` 参数</b>即可完成不同硬件之间的无缝切换。
@@ -1323,9 +1901,7 @@ PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU 和寒武纪 MLU 等多
 from paddlex import create_pipeline
 pipeline = create_pipeline(
     pipeline="PP-ChatOCRv3-doc",
-    llm_name="ernie-3.5",
-    llm_params={"api_type": "qianfan", "ak": "", "sk": ""},
     device="npu:0" # gpu:0 --> npu:0
     )
 ```
-若您想在更多种类的硬件上使用通用文档场景信息抽取产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。
+若您想在更多种类的硬件上使用通用文档场景信息抽取v3产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

@@ -799,9 +799,12 @@ SubModules:
 ##  5. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device`</b> 参数即可完成不同硬件之间的无缝切换。
 
-例如，您使用昇腾 NPU 进行图像异常检测产线的推理，使用的 Python 命令为：
+例如，您使用昇腾 NPU 进行图像异常检测产线的推理，使用的 CLI 命令为：
 
 ```bash
 paddlex --pipeline anomaly_detection --input uad_grid.png --device npu:0
 ```
+
+当然，您也可以在 Python 脚本中 `create_pipeline()` 时或者 `predict()` 时指定硬件设备。
+
 若您想在更多种类的硬件上使用图像异常检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。
