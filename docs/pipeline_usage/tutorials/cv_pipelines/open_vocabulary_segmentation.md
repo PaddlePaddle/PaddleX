@@ -73,7 +73,7 @@ paddlex --pipeline open_vocabulary_segmentation \
 
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline_name="open_vocabulary_segmentation")
+pipeline = create_pipeline(pipeline="open_vocabulary_segmentation")
 output = pipeline.predict(input="open_vocabulary_segmentation.jpg", prompt_type="box", prompt=[[112.9,118.4,513.8,382.1],[4.6,263.6,92.2,336.6],[592.4,260.9,607.2,294.2]])
 for res in output:
     res.print()

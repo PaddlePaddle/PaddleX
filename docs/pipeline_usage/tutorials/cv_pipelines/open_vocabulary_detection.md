@@ -71,7 +71,7 @@ paddlex --pipeline open_vocabulary_detection \
 
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline_name="open_vocabulary_detection")
+pipeline = create_pipeline(pipeline="open_vocabulary_detection")
 output = pipeline.predict(input="open_vocabulary_detection.jpg", prompt="bus . walking man . rearview mirror .")
 for res in output:
     res.print()
