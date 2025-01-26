@@ -60,7 +60,7 @@ PaddleX supports experiencing the effects of the General Image Multi-Label Class
 Before using the General Image Multi-Label Classification Pipeline locally, please ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
 
 ### 2.1 Command Line Experience
-You can quickly experience the image multi-label classification pipeline effect with a single command. Use the [test file](<url id="cu9o8m7ahd8a6jjtstl0" type="url" status="failed" title="" wc="0">https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg</url>), and replace `--input` with the local path for prediction.
+You can quickly experience the image multi-label classification pipeline effect with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg), and replace `--input` with the local path for prediction.
 
 ```bash
 paddlex --pipeline image_multilabel_classification --input general_image_classification_001.jpg --device gpu:0
@@ -542,9 +542,9 @@ print(result[&quot;categories&quot;])
 <details><summary>C++</summary>
 
 <pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &quot;cpp-httplib/httplib.h&quot; // <url id="cu9obus7fff0font9thg" type="url" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" wc="15064">https://github.com/Huiyicc/cpp-httplib</url>
-#include &quot;nlohmann/json.hpp&quot; // <url id="cu9obus7fff0font9ti0" type="url" status="parsed" title="GitHub - nlohmann/json: JSON for Modern C++" wc="80311">https://github.com/nlohmann/json</url>
-#include &quot;base64.hpp&quot; // <url id="cu9obus7fff0font9tig" type="url" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" wc="2293">https://github.com/tobiaslocker/base64</url>
+#include &quot;cpp-httplib/httplib.h&quot; // <url>https://github.com/Huiyicc/cpp-httplib</url>
+#include &quot;nlohmann/json.hpp&quot; // <url>https://github.com/nlohmann/json</url>
+#include &quot;base64.hpp&quot; // <url>https://github.com/tobiaslocker/base64</url>
 
 int main() {
     httplib::Client client(&quot;localhost:8080&quot;);

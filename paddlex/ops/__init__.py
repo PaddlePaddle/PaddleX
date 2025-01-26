@@ -20,7 +20,7 @@ from types import ModuleType
 
 import filelock
 from paddle.utils.cpp_extension import load as paddle_jit_load
-from paddlex.utils import logging
+from ..utils import logging
 
 
 def get_user_home() -> str:

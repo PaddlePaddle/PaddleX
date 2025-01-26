@@ -35,7 +35,7 @@ PaddleX provides pre-trained models for the anomaly detection pipeline, allowing
 Before using the image anomaly detection pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
 
 ### 2.1 Command-Line Experience
-You can quickly experience the image anomaly detection production line with just one command. Use the [test file](<url id="cu9orbbmv21hlpgorej0" type="url" status="failed" title="" wc="0">https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png</url>), and replace `--input` with the local path for prediction.
+You can quickly experience the image anomaly detection production line with just one command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png), and replace `--input` with the local path for prediction.
 
 Note: Due to network issues, the above URL could not be successfully parsed. If you need the content of this webpage, please check the validity of the URL and try again later. If you do not need the content of this link, you can proceed with the other instructions.
 

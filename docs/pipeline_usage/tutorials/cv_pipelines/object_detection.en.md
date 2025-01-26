@@ -367,7 +367,7 @@ If you are satisfied with the pipeline's performance, you can directly integrate
 Before using the general object detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 
 #### 2.2.1 Command Line Experience
-You can quickly experience the effect of the object detection pipeline with a single command. Use the [test file](<url id="cu9mm72vqs85kespmd30" type="url" status="failed" title="" wc="0">https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png)，并将</url>  `--input` replace with the local path for prediction.
+You can quickly experience the effect of the object detection pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png)，并将  `--input` replace with the local path for prediction.
 
 ```bash
 paddlex --pipeline object_detection \

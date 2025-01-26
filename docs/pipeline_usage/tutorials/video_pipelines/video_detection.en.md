@@ -65,7 +65,7 @@ The explanation of the result parameters can refer to the result explanation in 
 
 The visualization results are saved under `save_path`, and the visualization results are as follows:
 
-<img src="<url id="cu9qgju1bb2lt0bebvo0" type="url" status="failed" title="" wc="0">https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/video_detection/HorseRiding_res.jpg&#34;&gt;</url>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/video_detection/HorseRiding_res.jpg">
 
 
 #### 2.1.2 Integration with Python Script
@@ -136,7 +136,7 @@ In the above Python script, the following steps are executed:
 <td><code>Python str|list</code></td>
 <td>
 <ul>
-  <li><b>str</b>: Local path of the video file: <code>/root/data/video.avi</code>; <b>URL link</b>, such as the network URL of the video file: <a href = "<url id="" type="url" status="" title="" wc="">https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/HorseRiding.avi">Example</a>; <b>Local directory</b>, the directory must contain the videos to be predicted, such as the local path: <code>/root/data/</code></li></url>
+  <li><b>str</b>: Local path of the video file: <code>/root/data/video.avi</code>; <b>URL link</b>, such as the network URL of the video file: <a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/HorseRiding.avi">Example</a>; <b>Local directory</b>, the directory must contain the videos to be predicted, such as the local path: <code>/root/data/</code></li>
   <li><b>List</b>: The elements of the list must be of the above types, such as <code>[str, str]</code>, <code>[\"/root/data/video1.mp4\", \"/root/data/video2.avi\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>

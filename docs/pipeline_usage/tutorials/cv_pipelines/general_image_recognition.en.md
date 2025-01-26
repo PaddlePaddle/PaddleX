@@ -95,7 +95,7 @@ The pipeline currently does not support command line experience.
 
 #### 2.2.2 Python Script Integration
 
-* To run the pipeline, you need to build an index library in advance. You can download the official beverage recognition test dataset [drink_dataset_v2.0](<url id="cu9ni9ou8ld6i5vubup0" type="url" status="failed" title="" wc="0">https://paddle-model-ecology.bj.bcebos.com/paddlex/data/drink_dataset_v2.0.tar</url>) to build the index library. If you wish to use your private dataset, please refer to [Section 2.3 Data Organization for Building the Index Library](#23-data-organization-for-building-the-index-library). After that, you can quickly build the index library and perform fast inference with the general image recognition pipeline using just a few lines of code.
+* To run the pipeline, you need to build an index library in advance. You can download the official beverage recognition test dataset [drink_dataset_v2.0]( https://paddle-model-ecology.bj.bcebos.com/paddlex/data/drink_dataset_v2.0.tar) to build the index library. If you wish to use your private dataset, please refer to [Section 2.3 Data Organization for Building the Index Library](#23-data-organization-for-building-the-index-library). After that, you can quickly build the index library and perform fast inference with the general image recognition pipeline using just a few lines of code.
 
 ```python
 from paddlex import create_pipeline
@@ -912,7 +912,7 @@ import sys
 
 import requests
 
-API_BASE_URL = &quot;<url id="cu9nmqnpfah5ip4suf50" type="url" status="failed" title="" wc="0">http://0.0.0.0:8080&quot;</url>
+API_BASE_URL = &quot;http://0.0.0.0:8080&quot;
 
 base_image_label_pairs = [
     {&quot;image&quot;: &quot;./demo0.jpg&quot;, &quot;label&quot;: &quot;Rabbit&quot;},

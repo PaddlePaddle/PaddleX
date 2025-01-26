@@ -113,7 +113,7 @@ Oneline Experience is not supported at the moment.
 Command line experience is not supported yet.
 
 #### 2.2.2 Python Script Integration
-Please download the [test image](<url id="cu9np1909tpduespktm0" type="url" status="failed" title="" wc="0">https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/friends1.jpg) for testing.</url>
+Please download the [test image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/friends1.jpg) for testing.</url>
 In the example run of this pipeline, you need to pre-build a face feature library. You can refer to the following instructions to download the official demo data for subsequent construction of the face feature library.
 You can refer to the following command to download the Demo dataset to the specified folder:
 

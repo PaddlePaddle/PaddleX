@@ -143,7 +143,7 @@ In the above Python script, the following steps are executed:
 <td><code>str|list</code></td>
 <td>
 <ul>
-  <li><b>str</b>: The local path of the video file, such as <code>/root/data/video.mp4</code>; <b>URL link</b>, such as the network URL of the video file: <a href = "<url id="" type="url" status="" title="" wc="">https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/general_video_classification_001.mp4">Example</a>; <b>Local directory</b>, the directory must contain the videos to be predicted, such as the local path: <code>/root/data/</code></li></url>
+  <li><b>str</b>: The local path of the video file, such as <code>/root/data/video.mp4</code>; <b>URL link</b>, such as the network URL of the video file: <a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/general_video_classification_001.mp4">Example</a>; <b>Local directory</b>, the directory must contain the videos to be predicted, such as the local path: <code>/root/data/</code></li></url>
   <li><b>List</b>: The elements of the list must be of the above types, such as <code>[\"/root/data/video1.mp4\", \"/root/data/video2.mp4\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
@@ -516,10 +516,9 @@ print(result[&quot;categories&quot;])
 </code></pre></details>
 <details><summary>C++</summary>
 
-<pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &quot;cpp-httplib/httplib.h&quot; // <url id="cu9qjr7f2ena5466v3o0" type="url" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" wc="15064">https://github.com/Huiyicc/cpp-httplib</url>
-#include &quot;nlohmann/json.hpp&quot; // <url id="cu9qjr7f2ena5466v3og" type="url" status="parsed" title="GitHub - nlohmann/json: JSON for Modern C++" wc="80311">https://github.com/nlohmann/json</url>
-#include &quot;base64.hpp&quot; // <url id="cu9qjr7f2ena5466v3p0" type="url" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" wc="2293">https://github.com/tobiaslocker/base64</url>
+#include &quot;cpp-httplib/httplib.h&quot; // https://github.com/Huiyicc/cpp-httplib
+#include &quot;nlohmann/json.hpp&quot; // https://github.com/nlohmann/json
+#include &quot;base64.hpp&quot; // https://github.com/tobiaslocker/base64
 
 int main() {
     httplib::Client client(&quot;localhost:8080&quot;);

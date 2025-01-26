@@ -32,30 +32,6 @@ The seal text recognition pipeline is used to recognize the text content of seal
 </thead>
 <tbody>
 <tr>
-<<<<<<< HEAD
-<td>PP-DocLayout-L</td><td><a href="<url id="" type="url" status="" title="" wc="">https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-L_infer.tar">Inference Model</a>/<a</url>  href="<url id="" type="url" status="" title="" wc="">https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">Pre-trained Model</a></td></url>
-<td>90.4</td>
-<td>34.5252</td>
-<td>1454.27</td>
-<td>123.76 M</td>
-<td>High-accuracy layout region localization model trained on a self-built dataset based on RT-DETR-L in scenarios including Chinese and English papers, magazines, contracts, books, test papers, and research reports</td>
-</tr>
-<tr>
-<td>PP-DocLayout-M</td><td><a href="<url id="" type="url" status="" title="" wc="">https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-M_infer.tar">Inference Model</a>/<a</url>  href="<url id="" type="url" status="" title="" wc="">https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">Pre-trained Model</a></td></url>
-<td>75.2</td>
-<td>15.9</td>
-<td>160.1</td>
-<td>22.578</td>
-<td>Accuracy-efficiency balanced layout region localization model trained on a self-built dataset based on PicoDet-L in scenarios including Chinese and English papers, magazines, contracts, books, test papers, and research reports</td>
-</tr>
-<tr>
-<td>PP-DocLayout-S</td><td><a href="<url id="" type="url" status="" title="" wc="">https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-S_infer.tar">Inference Model</a>/<a</url>  href="<url id="" type="url" status="" title="" wc="">https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">Pre-trained Model</a></td></url>
-<td>70.9</td>
-<td>13.8</td>
-<td>46.7</td>
-<td>4.834</td>
-<td>High-efficiency layout region localization model trained on a self-built dataset based on PicoDet-S in scenarios including Chinese and English papers, magazines, contracts, books, test papers, and research reports</td>
-=======
 <td>PicoDet_layout_1x</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">Trained Model</a></td>
 <td>86.8</td>
 <td>13.0</td>
@@ -118,7 +94,6 @@ The seal text recognition pipeline is used to recognize the text content of seal
 <td>3827.2</td>
 <td>470.2</td>
 <td>A high-precision layout area localization model trained on a self-constructed dataset based on RT-DETR-H for scenarios such as Chinese and English papers, magazines, and research reports includes 17 common layout categories, namely: paragraph titles, images, text, numbers, abstracts, content, chart titles, formulas, tables, table titles, references, document titles, footnotes, headers, algorithms, footers, and seals.</td>
->>>>>>> remotes/upstream/develop
 </tr>
 </tbody>
 </table>
@@ -231,7 +206,7 @@ The seal text recognition pipeline is used to recognize the text content of seal
 </thead>
 <tbody>
 <tr>
-<td>PP-LCNet_x1_0_doc_ori</td><td><a href="<url id="" type="url" status="" title="" wc="">https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">Inference Model</a>/<a</url>  href="<url id="" type="url" status="" title="" wc="">https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Training Model</a></td></url>
+<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">Inference Model</a>/<a  href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Training Model</a></td>
 <td>99.06</td>
 <td>3.84845</td>
 <td>9.23735</td>
@@ -255,7 +230,7 @@ The seal text recognition pipeline is used to recognize the text content of seal
 </thead>
 <tbody>
 <tr>
-<td>UVDoc</td><td><a href="<url id="" type="url" status="" title="" wc="">https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/UVDoc_infer.tar">Inference Model</a>/<a</url>  href="<url id="" type="url" status="" title="" wc="">https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">Training Model</a></td></url>
+<td>UVDoc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/UVDoc_infer.tar">Inference Model</a>/<a  href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">Training Model</a></td>
 <td>0.179</td>
 <td>30.3 M</td>
 <td>High-precision text image correction model</td>
@@ -279,26 +254,16 @@ The seal text recognition pipeline is used to recognize the text content of seal
 </thead>
 <tbody>
 <tr>
-<<<<<<< HEAD
-<td>PP-OCRv4_server_seal_det</td><td><a href="<url id="" type="url" status="" title="" wc="">https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_seal_det_infer.tar">Inference Model</a>/<a</url>  href="<url id="" type="url" status="" title="" wc="">https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_seal_det_pretrained.pdparams">Training Model</a></td></url>
-<td>98.40</td>
-=======
 <td>PP-OCRv4_server_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_seal_det_pretrained.pdparams">Trained Model</a></td>
 <td>98.21</td>
->>>>>>> remotes/upstream/develop
 <td>84.341</td>
 <td>2425.06</td>
 <td>109</td>
 <td>PP-OCRv4 server-side seal text detection model, with higher accuracy, suitable for deployment on better servers</td>
 </tr>
 <tr>
-<<<<<<< HEAD
-<td>PP-OCRv4_mobile_seal_det</td><td><a href="<url id="" type="url" status="" title="" wc="">https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_seal_det_infer.tar">Inference Model</a>/<a</url>  href="<url id="" type="url" status="" title="" wc="">https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_seal_det_pretrained.pdparams">Training Model</a></td></url>
-<td>96.36</td>
-=======
 <td>PP-OCRv4_mobile_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_seal_det_pretrained.pdparams">Trained Model</a></td>
 <td>96.47</td>
->>>>>>> remotes/upstream/develop
 <td>10.5878</td>
 <td>131.813</td>
 <td>4.6</td>
@@ -319,70 +284,7 @@ The seal text recognition pipeline is used to recognize the text content of seal
 <th>Description</th>
 </tr>
 <tr>
-<<<<<<< HEAD
-<td>PP-OCRv4_server_rec_doc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_doc_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td>81.53</td>
-<td></td>
-<td></td>
-<td>74.7 M</td>
-<td>PP-OCRv4_server_rec_doc is trained on a mixture of more Chinese document data and PP-OCR training data based on PP-OCRv4_server_rec. It enhances the recognition capability of some traditional Chinese characters, Japanese, and special characters, supporting the recognition of over 15,000 characters. In addition to improving document-related text recognition capabilities, it also enhances general text recognition capabilities.</td>
-</tr>
-<tr>
-<td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Training Model</a></td>
-<td>78.74</td>
-<td>7.95018</td>
-<td>46.7868</td>
-<td>10.6 M</td>
-<td>PP-OCRv4 lightweight recognition model, with high inference efficiency, can be deployed on various hardware devices including edge devices.</td>
-</tr>
-<tr>
-<td>PP-OCRv4_server_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Training Model</a></td>
-<td>80.61</td>
-<td>7.19439</td>
-<td>140.179</td>
-<td>71.2 M</td>
-<td>PP-OCRv4 server-side model, with high inference accuracy, can be deployed on various servers.</td>
-</tr>
-<tr>
-<td>en_PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/en_PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td>70.39</td>
-<td></td>
-<td></td>
-<td>6.8 M</td>
-<td>Ultra-lightweight English recognition model trained based on PP-OCRv4 recognition model, supporting English and numeric recognition.</td>
-</tr>
-</table>
-
-<b>Note: The accuracy metrics above are evaluated on a Chinese dataset built by PaddleOCR, covering multiple scenarios such as street view, web images, documents, and handwriting, including 11,000 images for text recognition. All model GPU inference times are based on NVIDIA Tesla T4 machines, with FP32 precision, and CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads, and FP32 precision.</b>
-
-> ❗ The above list features the <b>4 core models</b> that the text recognition module primarily supports. In total, this module supports <b>18 models</b>. The complete list of models is as follows:
-
-<details><summary> 👉Model List Details</summary>
-
-* <b>Chinese Recognition Model</b>
-
-<table>
-<tr>
-<th>Model</th><th>Model Download Link</th>
-<th>Recognition Avg Accuracy(%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
-<th>Model Storage Size (M)</th>
-<th>Introduction</th>
-</tr>
-<tr>
-<td>PP-OCRv4_server_rec_doc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_doc_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>PP-OCRv4_server_rec_doc is trained on a mixed dataset of more Chinese document data and PP-OCR training data based on PP-OCRv4_server_rec. It has added the recognition capabilities for some traditional Chinese characters, Japanese, and special characters. The number of recognizable characters is over 15,000. In addition to the improvement in document-related text recognition, it also enhances the general text recognition capability.</td>
-</tr>
-<tr>
-<td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Training Model</a></td>
-=======
 <td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Trained Model</a></td>
->>>>>>> remotes/upstream/develop
 <td>78.20</td>
 <td>7.95018</td>
 <td>46.7868</td>
@@ -390,11 +292,7 @@ The seal text recognition pipeline is used to recognize the text content of seal
 <td>The PP-OCRv4 recognition model is an upgrade from PP-OCRv3. Under comparable speed conditions, the effect in Chinese and English scenarios is further improved. The average recognition accuracy of the 80 multilingual models is increased by more than 8%.</td>
 </tr>
 <tr>
-<<<<<<< HEAD
-<td>PP-OCRv4_server_rec </td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Trained Model</a></td>
-=======
 <td>PP-OCRv4_server_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Trained Model</a></td>
->>>>>>> remotes/upstream/develop
 <td>79.20</td>
 <td>7.19439</td>
 <td>140.179</td>

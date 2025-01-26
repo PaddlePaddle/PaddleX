@@ -209,7 +209,7 @@ If you are satisfied with the pipeline's performance, you can directly integrate
 > ❗ Before using the general semantic segmentation pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 
 #### 2.2.1 Command Line Experience
-* You can quickly experience the semantic segmentation pipeline effect with a single command. Use the [test file](<url id="cu9najrduqb6toal6sd0" type="url" status="failed" title="" wc="0">https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png</url>), and replace `--input` with the local path for prediction.
+* You can quickly experience the semantic segmentation pipeline effect with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png), and replace `--input` with the local path for prediction.
 
 ```bash
 paddlex --pipeline semantic_segmentation \
@@ -305,7 +305,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
   <li><b>Python Var</b>: For example, image data represented by <code>numpy.ndarray</code></li>
-  <li><b>str</b>: For example, the local path of an image file or PDF file: <code>/root/data/img.jpg</code>; <b>For URL links</b>, such as the network URL of an image file or PDF file: <a href = "<url id="" type="url" status="" title="" wc="">https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png">Example</a>; <b>For local directories</b>, the directory should contain images to be predicted, such as the local path: <code>/root/data/</code> (currently does not support prediction of directories containing PDF files, PDF files need to be specified to a specific file path)</li>
+  <li><b>str</b>: For example, the local path of an image file or PDF file: <code>/root/data/img.jpg</code>; <b>For URL links</b>, such as the network URL of an image file or PDF file: <a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png">Example</a>; <b>For local directories</b>, the directory should contain images to be predicted, such as the local path: <code>/root/data/</code> (currently does not support prediction of directories containing PDF files, PDF files need to be specified to a specific file path)</li>
   <li><b>List</b>: List elements need to be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
 </ul>
 </td>
@@ -655,9 +655,9 @@ print(f&quot;Output image saved at {output_image_path}&quot;)
 <details><summary>C++</summary>
 
 <pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &quot;cpp-httplib/httplib.h&quot; // <url id="cu9ne0s432e0gk1ab130" type="url" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" wc="15064">https://github.com/Huiyicc/cpp-httplib</url>
-#include &quot;nlohmann/json.hpp&quot; // <url id="cu9ne0s432e0gk1ab13g" type="url" status="parsed" title="GitHub - nlohmann/json: JSON for Modern C++" wc="80311">https://github.com/nlohmann/json</url>
-#include &quot;base64.hpp&quot; // <url id="cu9ne0s432e0gk1ab140" type="url" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" wc="2293">https://github.com/tobiaslocker/base64</url>
+#include &quot;cpp-httplib/httplib.h&quot; // https://github.com/Huiyicc/cpp-httplib
+#include &quot;nlohmann/json.hpp&quot; // https://github.com/nlohmann/json
+#include &quot;base64.hpp&quot; // https://github.com/tobiaslocker/base64
 
 int main() {
     httplib::Client client(&quot;localhost:8080&quot;);
