@@ -106,15 +106,15 @@ PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了�
 
 === "CPU"
     ```bash
-    python -m pip install paddlepaddle==3.0.0b2 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
+    python -m pip install paddlepaddle==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
     ```
 === "CUDA 11.8"
     ```bash
-    python -m pip install paddlepaddle-gpu==3.0.0b2 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
+    python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
     ```
 === "CUDA 12.3"
     ```bash
-    python -m pip install paddlepaddle-gpu==3.0.0b2 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
+    python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
     ```
 
 > ❗ 更多飞桨 Wheel 版本请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation./docs/zh/install/pip/linux-pip.html)。
@@ -123,7 +123,7 @@ PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了�
 ### 安装PaddleX
 
 ```bash
-pip install paddlex==3.0.0b2
+pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0rc0-py3-none-any.whl
 ```
 
 > ❗ 更多安装方式参考 [PaddleX 安装教程](https://paddlepaddle.github.io/PaddleX/latest/installation/installation.html)
@@ -1450,7 +1450,7 @@ for res in output:
             res.save_to_xlsx(save_path="./output/") ## 保存表格格式结果
             res.save_to_html(save_path="./output/") ## 保存html结果
         ```
-                   
+
     === "公式识别"
 
         ```python
@@ -1508,7 +1508,7 @@ for res in output:
             res.save_to_img(save_path="./output/")
             res.save_to_json(save_path="./output/")
         ```
-        
+
 !!! example "计算机视觉相关产线命令行使用"
 
     === "通用图像分类"
