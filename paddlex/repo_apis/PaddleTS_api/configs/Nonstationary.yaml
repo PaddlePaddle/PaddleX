@@ -24,10 +24,10 @@ info_params:
 model: 
   name: Nonstationary_Transformer
   model_cfg:
-    c_in: 1
-    factor: 3
+    c_in: 7
+    factor: 1
     p_hidden_dims: [256, 256]
     optimizer_params:
       learning_rate: 0.0001
       gamma: 0.5
-    patience: 5
+    patience: 3

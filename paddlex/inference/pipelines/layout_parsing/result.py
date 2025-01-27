@@ -12,12 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 from typing import Dict
 import numpy as np
 from PIL import Image, ImageDraw
 import copy
-from ...common.result import BaseCVResult, HtmlMixin, XlsxMixin, StrMixin, JsonMixin
+from ...common.result import BaseCVResult, HtmlMixin, XlsxMixin, JsonMixin
 
 
 class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
@@ -63,6 +62,7 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
                     table_draw.rectangle(
                         [x1, y1, x2, y2], outline=rectangle_color, width=2
                     )
+            res_img_dict["table_cell_img"] = table_cell_img
 
         if model_settings["use_seal_recognition"] and len(self["seal_res_list"]) > 0:
             for sno in range(len(self["seal_res_list"])):
@@ -82,6 +82,16 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
                 sub_formula_res_dict = formula_res.img
                 key = f"formula_res_region{formula_region_id}"
                 res_img_dict[key] = sub_formula_res_dict["res"]
+
+        if len(self["sub_image_list"]) > 0:
+            for sno in range(len(self["sub_image_list"])):
+                sub_region_image = Image.fromarray(
+                    copy.deepcopy(self["sub_image_list"][sno])
+                )
+                sub_region_image_id = sno + 1
+                key = f"sub_region_image{sub_region_image_id}"
+                res_img_dict[key] = sub_region_image
+
         return res_img_dict
 
     def _to_str(self, *args, **kwargs) -> Dict[str, str]:
@@ -96,6 +106,7 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
         """
         data = {}
         data["input_path"] = self["input_path"]
+        data["page_index"] = self["page_index"]
         model_settings = self["model_settings"]
         data["model_settings"] = model_settings
         data["parsing_res_list"] = self["parsing_res_list"]
@@ -147,6 +158,7 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
         """
         data = {}
         data["input_path"] = self["input_path"]
+        data["page_index"] = self["page_index"]
         model_settings = self["model_settings"]
         data["model_settings"] = model_settings
         data["parsing_res_list"] = self["parsing_res_list"]

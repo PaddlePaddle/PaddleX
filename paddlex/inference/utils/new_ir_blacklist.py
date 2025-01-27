@@ -23,5 +23,6 @@ NEWIR_BLOCKLIST = [
     "Co-DINO-R50",
     "Co-DINO-Swin-L",
     "LaTeX_OCR_rec",
+    "BEVFusion",
     "GroundingDINO-T",
 ]

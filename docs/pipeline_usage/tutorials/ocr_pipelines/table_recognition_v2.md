@@ -502,11 +502,11 @@ output = pipeline.predict(
 )
 
 for res in output:
-    res.print() 
-    res.save_to_img("./output/") 
-    res.save_to_xlsx("./output/") 
-    res.save_to_html("./output/") 
-    res.save_to_json("./output/") 
+    res.print()
+    res.save_to_img("./output/")
+    res.save_to_xlsx("./output/")
+    res.save_to_html("./output/")
+    res.save_to_json("./output/")
 ```
 
 在上述 Python 脚本中，执行了如下几个步骤：
@@ -766,6 +766,8 @@ for res in output:
 
     - `input_path`: `(str)` 待预测图像的输入路径
 
+    - `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
+
     - `model_settings`: `(Dict[str, bool])` 配置产线所需的模型参数
 
         - `use_doc_preprocessor`: `(bool)` 控制是否启用文档预处理子产线
@@ -846,11 +848,11 @@ output = pipeline.predict(
 )
 
 for res in output:
-    res.print() 
-    res.save_to_img("./output/") 
-    res.save_to_xlsx("./output/") 
-    res.save_to_html("./output/") 
-    res.save_to_json("./output/") 
+    res.print()
+    res.save_to_img("./output/")
+    res.save_to_xlsx("./output/")
+    res.save_to_html("./output/")
+    res.save_to_json("./output/")
 
 ```
 
@@ -1163,17 +1165,17 @@ SubModules:
     module_name: table_structure_recognition
     model_name: SLANeXt_wired
     model_dir: null # 替换为微调后的有线表格结构识别模型权重路径
-  
+
   WirelessTableStructureRecognition:
     module_name: table_structure_recognition
     model_name: SLANeXt_wireless
     model_dir: null # 替换为微调后的无线表格结构识别模型权重路径
-  
+
   WiredTableCellsDetection:
     module_name: table_cells_detection
     model_name: RT-DETR-L_wired_table_cell_det
     model_dir: null # 替换为微调后的有线表格单元格检测模型权重路径
-  
+
   WirelessTableCellsDetection:
     module_name: table_cells_detection
     model_name: RT-DETR-L_wireless_table_cell_det
@@ -1210,7 +1212,7 @@ SubPipelines:
         thresh: 0.3
         box_thresh: 0.6
         unclip_ratio: 2.0
-        
+
       TextRecognition:
         module_name: text_recognition
         model_name: PP-OCRv4_server_rec
@@ -1223,7 +1225,7 @@ SubPipelines:
 ##  5. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device` 参数</b>即可完成不同硬件之间的无缝切换。
 
-例如，您使用昇腾 NPU 进行 OCR 产线的推理，使用的 Python 命令为：
+例如，您使用昇腾 NPU 进行 OCR 产线的推理，使用的 CLI 命令为：
 
 ```bash
 paddlex --pipeline table_recognition_v2 \
@@ -1231,4 +1233,7 @@ paddlex --pipeline table_recognition_v2 \
         --save_path ./output \
         --device npu:0
 ```
+
+当然，您也可以在 Python 脚本中 `create_pipeline()` 时或者 `predict()` 时指定硬件设备。
+
 若您想在更多种类的硬件上使用通用表格识别产线v2，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

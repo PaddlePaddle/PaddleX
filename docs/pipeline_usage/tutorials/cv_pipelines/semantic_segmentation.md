@@ -5,12 +5,16 @@ comments: true
 # 通用语义分割产线使用教程
 
 ## 1. 通用语义分割产线介绍
-语义分割是一种计算机视觉技术，旨在将图像中的每个像素分配到特定的类别，从而实现对图像内容的精细化理解。语义分割不仅要识别出图像中的物体类型，还要对每个像素进行分类，这样使得同一类别的区域能够被完整标记。例如，在一幅街景图像中，语义分割可以将行人、汽车、天空和道路等不同类别的部分逐像素区分开来，形成一个详细的标签图。这项技术广泛应用于自动驾驶、医学影像分析和人机交互等领域，通常依赖于深度学习模型（如SegFormer等），通过卷积神经网络（CNN）或视觉变换器（Transformer）来提取特征并实现高精度的像素级分类，从而为进一步的智能分析提供基础。
+语义分割是一种计算机视觉技术，旨在将图像中的每个像素分配到特定的类别，从而实现对图像内容的精细化理解。语义分割不仅要识别出图像中的物体类型，还要对每个像素进行分类，这样使得同一类别的区域能够被完整标记。例如，在一幅街景图像中，语义分割可以将行人、汽车、天空和道路等不同类别的部分逐像素区分开来，形成一个详细的标签图。这项技术广泛应用于自动驾驶、医学影像分析和人机交互等领域，通常依赖于深度学习模型（如SegFormer等），通过卷积神经网络（CNN）或视觉变换器（Transformer）来提取特征并实现高精度的像素级分类，从而为进一步的智能分析提供基础。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/semantic_segmentation/01.png">
 
-<b>通用</b><b>语义分割</b><b>产线中包含了</b><b>语义分割</b><b>模块，如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型</b>。
 
+<b>通用语义分割产线中包含了语义分割模块，该模块都包含多个模型，您可以根据下方的基准测试数据选择使用的模型</b>。
+
+<b>如果您更注重模型的精度，请选择精度较高的模型；如果您更在意模型的推理速度，请选择推理速度较快的模型；如果您关注模型的存储大小，请选择存储体积较小的模型。</b>
+
+<p><b>通用图像语义分割模块（可选）：</b></p>
 <table>
 <thead>
 <tr>
@@ -23,14 +27,14 @@ comments: true
 </thead>
 <tbody>
 <tr>
-<td>OCRNet_HRNet-W48</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/OCRNet_HRNet-W48_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W48_pretrained.pdparams">Trained Model</a></td>
+<td>OCRNet_HRNet-W48</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/OCRNet_HRNet-W48_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W48_pretrained.pdparams">Trained Model</a></td>
 <td>82.15</td>
 <td>78.9976</td>
 <td>2226.95</td>
 <td>249.8 M</td>
 </tr>
 <tr>
-<td>PP-LiteSeg-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LiteSeg-T_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-T_pretrained.pdparams">Trained Model</a></td>
+<td>PP-LiteSeg-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LiteSeg-T_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-T_pretrained.pdparams">Trained Model</a></td>
 <td>73.10</td>
 <td>7.6827</td>
 <td>138.683</td>
@@ -38,7 +42,7 @@ comments: true
 </tr>
 </tbody>
 </table>
-
+<p><b>注：以上模型精度指标测量自<a href="https://www.cityscapes-dataset.com/">Cityscapes</a>数据集。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p>
 > ❗ 以上列出的是语义分割模块重点支持的<b>2个核心模型</b>，该模块总共支持<b>18个模型</b>，完整的模型列表如下：
 
 <details><summary> 👉模型列表详情</summary>
@@ -55,98 +59,98 @@ comments: true
 </thead>
 <tbody>
 <tr>
-<td>Deeplabv3_Plus-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Deeplabv3_Plus-R50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3_Plus-R50_pretrained.pdparams">Trained Model</a></td>
+<td>Deeplabv3_Plus-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Deeplabv3_Plus-R50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3_Plus-R50_pretrained.pdparams">Trained Model</a></td>
 <td>80.36</td>
 <td>61.0531</td>
 <td>1513.58</td>
 <td>94.9 M</td>
 </tr>
 <tr>
-<td>Deeplabv3_Plus-R101</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Deeplabv3_Plus-R101_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3_Plus-R101_pretrained.pdparams">Trained Model</a></td>
+<td>Deeplabv3_Plus-R101</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Deeplabv3_Plus-R101_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3_Plus-R101_pretrained.pdparams">Trained Model</a></td>
 <td>81.10</td>
 <td>100.026</td>
 <td>2460.71</td>
 <td>162.5 M</td>
 </tr>
 <tr>
-<td>Deeplabv3-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Deeplabv3-R50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3-R50_pretrained.pdparams">Trained Model</a></td>
+<td>Deeplabv3-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Deeplabv3-R50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3-R50_pretrained.pdparams">Trained Model</a></td>
 <td>79.90</td>
 <td>82.2631</td>
 <td>1735.83</td>
 <td>138.3 M</td>
 </tr>
 <tr>
-<td>Deeplabv3-R101</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Deeplabv3-R101_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3-R101_pretrained.pdparams">Trained Model</a></td>
+<td>Deeplabv3-R101</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Deeplabv3-R101_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3-R101_pretrained.pdparams">Trained Model</a></td>
 <td>80.85</td>
 <td>121.492</td>
 <td>2685.51</td>
 <td>205.9 M</td>
 </tr>
 <tr>
-<td>OCRNet_HRNet-W18</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/OCRNet_HRNet-W18_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W18_pretrained.pdparams">Trained Model</a></td>
+<td>OCRNet_HRNet-W18</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/OCRNet_HRNet-W18_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W18_pretrained.pdparams">Trained Model</a></td>
 <td>80.67</td>
 <td>48.2335</td>
 <td>906.385</td>
 <td>43.1 M</td>
 </tr>
 <tr>
-<td>OCRNet_HRNet-W48</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/OCRNet_HRNet-W48_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W48_pretrained.pdparams">Trained Model</a></td>
+<td>OCRNet_HRNet-W48</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/OCRNet_HRNet-W48_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W48_pretrained.pdparams">Trained Model</a></td>
 <td>82.15</td>
 <td>78.9976</td>
 <td>2226.95</td>
 <td>249.8 M</td>
 </tr>
 <tr>
-<td>PP-LiteSeg-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LiteSeg-T_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-T_pretrained.pdparams">Trained Model</a></td>
+<td>PP-LiteSeg-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LiteSeg-T_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-T_pretrained.pdparams">Trained Model</a></td>
 <td>73.10</td>
 <td>7.6827</td>
 <td>138.683</td>
 <td>28.5 M</td>
 </tr>
 <tr>
-<td>PP-LiteSeg-B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LiteSeg-B_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-B_pretrained.pdparams">Trained Model</a></td>
+<td>PP-LiteSeg-B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LiteSeg-B_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-B_pretrained.pdparams">Trained Model</a></td>
 <td>75.25</td>
 <td>10.9935</td>
 <td>194.727</td>
 <td>47.0 M</td>
 </tr>
 <tr>
-<td>SegFormer-B0 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B0 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B0 (slice)_pretrained.pdparams">Trained Model</a></td>
+<td>SegFormer-B0 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SegFormer-B0 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B0 (slice)_pretrained.pdparams">Trained Model</a></td>
 <td>76.73</td>
 <td>11.1946</td>
 <td>268.929</td>
 <td>13.2 M</td>
 </tr>
 <tr>
-<td>SegFormer-B1 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B1 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B1 (slice)_pretrained.pdparams">Trained Model</a></td>
+<td>SegFormer-B1 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SegFormer-B1 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B1 (slice)_pretrained.pdparams">Trained Model</a></td>
 <td>78.35</td>
 <td>17.9998</td>
 <td>403.393</td>
 <td>48.5 M</td>
 </tr>
 <tr>
-<td>SegFormer-B2 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B2 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B2 (slice)_pretrained.pdparams">Trained Model</a></td>
+<td>SegFormer-B2 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SegFormer-B2 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B2 (slice)_pretrained.pdparams">Trained Model</a></td>
 <td>81.60</td>
 <td>48.0371</td>
 <td>1248.52</td>
 <td>96.9 M</td>
 </tr>
 <tr>
-<td>SegFormer-B3 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B3 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B3 (slice)_pretrained.pdparams">Trained Model</a></td>
+<td>SegFormer-B3 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SegFormer-B3 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B3 (slice)_pretrained.pdparams">Trained Model</a></td>
 <td>82.47</td>
 <td>64.341</td>
 <td>1666.35</td>
 <td>167.3 M</td>
 </tr>
 <tr>
-<td>SegFormer-B4 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B4 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B4 (slice)_pretrained.pdparams">Trained Model</a></td>
+<td>SegFormer-B4 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SegFormer-B4 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B4 (slice)_pretrained.pdparams">Trained Model</a></td>
 <td>82.38</td>
 <td>82.4336</td>
 <td>1995.42</td>
 <td>226.7 M</td>
 </tr>
 <tr>
-<td>SegFormer-B5 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SegFormer-B5 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B5 (slice)_pretrained.pdparams">Trained Model</a></td>
+<td>SegFormer-B5 (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SegFormer-B5 (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SegFormer-B5 (slice)_pretrained.pdparams">Trained Model</a></td>
 <td>82.58</td>
 <td>97.3717</td>
 <td>2420.19</td>
@@ -154,7 +158,7 @@ comments: true
 </tr>
 </tbody>
 </table>
-<p><b>以上模型精度指标测量自<a href="https://www.cityscapes-dataset.com/">Cityscapes</a>数据集。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p>
+<p><b>注：以上模型精度指标测量自<a href="https://www.cityscapes-dataset.com/">Cityscapes</a>数据集。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p>
 <table>
 <thead>
 <tr>
@@ -167,28 +171,28 @@ comments: true
 </thead>
 <tbody>
 <tr>
-<td>SeaFormer_base(slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SeaFormer_base(slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_base(slice)_pretrained.pdparams">Trained Model</a></td>
+<td>SeaFormer_base(slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SeaFormer_base(slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_base(slice)_pretrained.pdparams">Trained Model</a></td>
 <td>40.92</td>
 <td>24.4073</td>
 <td>397.574</td>
 <td>30.8 M</td>
 </tr>
 <tr>
-<td>SeaFormer_large (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SeaFormer_large (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_large (slice)_pretrained.pdparams">Trained Model</a></td>
+<td>SeaFormer_large (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SeaFormer_large (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_large (slice)_pretrained.pdparams">Trained Model</a></td>
 <td>43.66</td>
 <td>27.8123</td>
 <td>550.464</td>
 <td>49.8 M</td>
 </tr>
 <tr>
-<td>SeaFormer_small (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SeaFormer_small (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_small (slice)_pretrained.pdparams">Trained Model</a></td>
+<td>SeaFormer_small (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SeaFormer_small (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_small (slice)_pretrained.pdparams">Trained Model</a></td>
 <td>38.73</td>
 <td>19.2295</td>
 <td>358.343</td>
 <td>14.3 M</td>
 </tr>
 <tr>
-<td>SeaFormer_tiny (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SeaFormer_tiny (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_tiny (slice)_pretrained.pdparams">Trained Model</a></td>
+<td>SeaFormer_tiny (slice)</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SeaFormer_tiny (slice)_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_tiny (slice)_pretrained.pdparams">Trained Model</a></td>
 <td>34.58</td>
 <td>13.9496</td>
 <td>330.132</td>
@@ -196,74 +200,58 @@ comments: true
 </tr>
 </tbody>
 </table>
-<p><b>SeaFormer系列模型的精度指标测量自<a href="https://groups.csail.mit.edu/vision/datasets/ADE20K/">ADE20k</a>数据集。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p></details>
+<p><b>注：SeaFormer系列模型的精度指标测量自<a href="https://groups.csail.mit.edu/vision/datasets/ADE20K/">ADE20k</a>数据集。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p></details>
 
 ## 2. 快速开始
-PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可以在线体验通用语义分割产线的效果，也可以在本地使用命令行或 Python 体验通用语义分割产线的效果。
+PaddleX 所提供的模型产线均可以快速体验效果，你可以在星河社区线体验通用 语义分割 产线的效果，也可以在本地使用命令行或 Python 体验通用 语义分割 产线的效果。
 
 ### 2.1 在线体验
 您可以[在线体验](https://aistudio.baidu.com/community/app/100062/webUI?source=appCenter)通用语义分割产线的效果，用官方提供的 Demo 图片进行识别，例如：
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/semantic_segmentation/02.png">
 
-如果您对产线运行的效果满意，可以直接对产线进行集成部署，如果不满意，您也可以利用私有数据<b>对产线中的模型进行在线微调</b>。
+如果您对产线运行的效果满意，可以直接进行集成部署。您可以选择从云端下载部署包，也可以参考[2.2节本地体验](#22-本地体验)中的方法进行本地部署。如果对效果不满意，您可以利用私有数据<b>对产线中的模型进行微调训练</b>。如果您具备本地训练的硬件资源，可以直接在本地开展训练；如果没有，星河零代码平台提供了一键式训练服务，无需编写代码，只需上传数据后，即可一键启动训练任务。
 
 ### 2.2 本地体验
-在本地使用通用语义分割产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+> ❗ 在本地使用通用语义分割产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
 #### 2.2.1 命令行方式体验
-一行命令即可快速体验语义分割产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png)，并将 `--input` 替换为本地路径，进行预测
+* 一行命令即可快速体验语义分割产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png)，并将 `--input` 替换为本地路径，进行预测
 
 ```bash
-paddlex --pipeline semantic_segmentation --input makassaridn-road_demo.png --device gpu:0
+paddlex --pipeline semantic_segmentation \
+        --input makassaridn-road_demo.png \
+        --target_size -1 \
+        --save_path ./output \
+        --device gpu:0 \
 ```
-参数说明：
+相关的参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的参数说明。
 
+运行后，会将结果打印到终端上，结果如下：
+```bash
+{'res': {'input_path': 'makassaridn-road_demo.png', 'page_index': None, 'pred': '...'}}
 ```
---pipeline：产线名称，此处为目标检测产线
---input：待处理的输入图片的本地路径或URL
---device 使用的GPU序号（例如gpu:0表示使用第0块GPU，gpu:1,2表示使用第1、2块GPU），也可选择使用CPU（--device cpu）
-```
+运行结果参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的结果解释。
 
-在执行上述 Python 脚本时，加载的是默认的语义分割产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
-
-<details><summary> 👉点击展开</summary>
-
-<pre><code>paddlex --get_pipeline_config semantic_segmentation
-</code></pre>
-<p>执行后，语义分割产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为 <code>./my_path</code> ）：</p>
-<pre><code>paddlex --get_pipeline_config semantic_segmentation --save_path ./my_path
-</code></pre>
-<p>获取产线配置文件后，可将 <code>--pipeline</code> 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 <code>./semantic_segmentation.yaml</code>，只需执行：</p>
-<pre><code class="language-bash">paddlex --pipeline ./semantic_segmentation.yaml --input makassaridn-road_demo.png --device gpu:0
-</code></pre>
-<p>其中，<code>--model</code>、<code>--device</code> 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。</p></details>
-
-运行后，得到的结果为：
-
-{'input_path': 'makassaridn-road_demo.png', 'pred': '...'}
+可视化结果保存在`save_path`下，其中语义分割的可视化结果如下：
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/semantic_segmentation/03.png">
-可视化图片默认不进行保存，您可以通过 `--save_path` 自定义保存路径，随后所有结果将被保存在指定路径下。
 
 #### 2.2.2 Python脚本方式集成
-几行代码即可完成产线的快速推理，以通用语义分割产线为例：
+* 上述命令行是为了快速体验查看效果，一般来说，在项目中，往往需要通过代码集成，您可以通过几行代码即可完成产线的快速推理，推理代码如下：
 
 ```python
 from paddlex import create_pipeline
-
 pipeline = create_pipeline(pipeline="semantic_segmentation")
-
-output = pipeline.predict("makassaridn-road_demo.png")
+output = pipeline.predict(input="general_semantic_segmentation_002.png", target_size = -1)
 for res in output:
-    res.print() ## 打印预测的结构化输出
-    res.save_to_img("./output/") ## 保存结果可视化图像
-    res.save_to_json("./output/") ## 保存预测的结构化输出
+    res.print()
+    res.save_to_img(save_path="./output/")
+    res.save_to_json(save_path="./output/")
 ```
-得到的结果与命令行方式相同。
 
 在上述 Python 脚本中，执行了如下几个步骤：
 
-（1）实例化 `create_pipeline` 实例化产线对象：具体参数说明如下：
+（1）通过 `create_pipeline()` 实例化 语义分割 产线对象，具体参数说明如下：
 
 <table>
 <thead>
@@ -279,101 +267,211 @@ for res in output:
 <td><code>pipeline</code></td>
 <td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
 <td><code>str</code></td>
-<td>无</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>产线具体的配置信息（如果和<code>pipeline</code>同时设置，优先级高于<code>pipeline</code>，且要求产线名和<code>pipeline</code>一致）。</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>产线模型推理设备。支持：“gpu”，“cpu”。</td>
+<td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
 <td><code>str</code></td>
-<td><code>gpu</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>enable_hpi</code></td>
+<td><code>use_hpip</code></td>
 <td>是否启用高性能推理，仅当该产线支持高性能推理时可用。</td>
 <td><code>bool</code></td>
 <td><code>False</code></td>
 </tr>
 </tbody>
 </table>
-（2）调用产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`x`，用于输入待预测数据，支持多种输入方式，具体示例如下：
+
+（2）调用 语义分割 产线对象的 `predict()` 方法进行推理预测。该方法将返回一个 `generator`。以下是 `predict()` 方法的参数及其说明：
 
 <table>
 <thead>
 <tr>
-<th>参数类型</th>
+<th>参数</th>
 <th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>Python Var</td>
-<td>支持直接传入Python变量，如numpy.ndarray表示的图像数据。</td>
+<td><code>input</code></td>
+<td>待预测数据，支持多种输入类型，必填</td>
+<td><code>Python Var|str|list</code></td>
+<td>
+<ul>
+  <li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
+  <li><b>str</b>：如图像文件或者PDF文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件或PDF文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code>(当前不支持目录中包含PDF文件的预测，PDF文件需要指定到具体文件路径)</li>
+  <li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td>str</td>
-<td>支持传入待预测数据文件路径，如图像文件的本地路径：<code>/root/data/img.jpg</code>。</td>
+<td><code>device</code></td>
+<td>产线推理设备</td>
+<td><code>str|None</code></td>
+<td>
+<ul>
+  <li><b>CPU</b>：如 <code>cpu</code> 表示使用 CPU 进行推理；</li>
+  <li><b>GPU</b>：如 <code>gpu:0</code> 表示使用第 1 块 GPU 进行推理；</li>
+  <li><b>NPU</b>：如 <code>npu:0</code> 表示使用第 1 块 NPU 进行推理；</li>
+  <li><b>XPU</b>：如 <code>xpu:0</code> 表示使用第 1 块 XPU 进行推理；</li>
+  <li><b>MLU</b>：如 <code>mlu:0</code> 表示使用第 1 块 MLU 进行推理；</li>
+  <li><b>DCU</b>：如 <code>dcu:0</code> 表示使用第 1 块 DCU 进行推理；</li>
+  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化时，会优先使用本地的 GPU 0号设备，如果没有，则使用 CPU 设备；</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
-<tr>
-<td>str</td>
-<td>支持传入待预测数据文件URL，如图像文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png">示例</a>。</td>
+<td><code>target_size</code></td>
+<td>模型推理时实际使用的图像分辨率</td>
+<td><code>int|-1|None|tuple[int,int]</code></td>
+<td>
+<ul>
+    <li><b>int</b>：大于 <code>0</code> 的任意整数
+    <li><b>-1</b>：如果设置为<code>-1</code>, 即不进行任何rescale操作, 直接用图像原始分辨率预测
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的参数。即直接原图分辨率预测
+    <li><b>tuple[int,int]</b>: 图像实际预测分辨率会被rescale到这个尺寸</td>
+</ul>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
-<tr>
-<td>str</td>
-<td>支持传入本地目录，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code>。</td>
-</tr>
-<tr>
-<td>dict</td>
-<td>支持传入字典类型，字典的key需与具体任务对应，如图像分类任务对应\"img\"，字典的val支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code>。</td>
-</tr>
-<tr>
-<td>list</td>
-<td>支持传入列表，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]，[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code>。</td>
-</tr>
-</tbody>
-</table>
-（3）调用`predict`方法获取预测结果：`predict` 方法为`generator`，因此需要通过调用获得预测结果，`predict`方法以batch为单位对数据进行预测，因此预测结果为list形式表示的一组预测结果。
 
-（4）对预测结果进行处理：每个样本的预测结果均为`dict`类型，且支持打印，或保存为文件，支持保存的类型与具体产线相关，如：
+</table>
+
+（3）对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为图片、保存为`json`文件的操作:
 
 <table>
 <thead>
 <tr>
 <th>方法</th>
-<th>说明</th>
-<th>方法参数</th>
+<th>方法说明</th>
+<th>参数</th>
+<th>参数类型</th>
+<th>参数说明</th>
+<th>默认值</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>print</td>
-<td>打印结果到终端</td>
-<td><code>- format_json</code>：bool类型，是否对输出内容进行使用json缩进格式化，默认为True；<br/><code>- indent</code>：int类型，json格式化设置，仅当format_json为True时有效，默认为4；<br/><code>- ensure_ascii</code>：bool类型，json格式化设置，仅当format_json为True时有效，默认为False；</td>
+<td rowspan = "3"><code>print()</code></td>
+<td rowspan = "3">打印结果到终端</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
+<td><code>True</code></td>
 </tr>
 <tr>
-<td>save_to_json</td>
-<td>将结果保存为json格式的文件</td>
-<td><code>- save_path</code>：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；<br/><code>- indent</code>：int类型，json格式化设置，默认为4；<br/><code>- ensure_ascii</code>：bool类型，json格式化设置，默认为False；</td>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
 </tr>
 <tr>
-<td>save_to_img</td>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan = "3"><code>save_to_json()</code></td>
+<td rowspan = "3">将结果保存为json格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
 <td>将结果保存为图像格式的文件</td>
-<td><code>- save_path</code>：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，支持目录或文件路径</td>
+<td>无</td>
 </tr>
-</tbody>
 </table>
-若您获取了配置文件，即可对语义分割产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
 
-例如，若您的配置文件保存在 `./my_path/semantic_segmentation.yaml` ，则只需执行：
+- 调用`print()` 方法会将结果打印到终端，打印到终端的内容解释如下：
+
+    - `input_path`: `(str)` 待预测图像的输入路径
+
+    - `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
+
+    - `pred`: `...` 语义分割模型实际预测的mask，由于数据过大不便于直接print，因此用`...`替换，可以通过res.save_to_img将预测结果保存为图片，通过res.save_to_json将预测结果保存为json文件。
+
+- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
+
+- 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.{your_img_extension}`，如果指定为文件，则直接保存到该文件中。
+
+* 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>属性说明</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "1"><code>json</code></td>
+<td rowspan = "1">获取预测的 <code>json</code> 格式的结果</td>
+</tr>
+<tr>
+<td rowspan = "2"><code>img</code></td>
+<td rowspan = "2">获取格式为 <code>dict</code> 的可视化图像</td>
+</tr>
+</table>
+
+- `json` 属性获取的预测结果为dict类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
+- `img` 属性返回的预测结果是一个字典类型的数据。其中，键为 `res`, 对应的值是一个 `Image.Image` 对象：一个用于显示 语义分割 的预测结果。
+
+此外，您可以获取 语义分割 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+
+```
+paddlex --get_pipeline_config semantic_segmentation --save_path ./my_path
+```
+
+若您获取了配置文件，即可对语义分割产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。示例如下：
 
 ```python
 from paddlex import create_pipeline
+
 pipeline = create_pipeline(pipeline="./my_path/semantic_segmentation.yaml")
-output = pipeline.predict("makassaridn-road_demo.png")
+
+output = pipeline.predict(
+    input="./makassaridn-road_demo.png",
+    target_size=-1,
+)
 for res in output:
-    res.print() ## 打印预测的结构化输出
-    res.save_to_img("./output/") ## 保存结果可视化图像
-    res.save_to_json("./output/") ## 保存预测的结构化输出
+    res.print()
+    res.save_to_img("./output/")
+    res.save_to_json("./output/")
+
 ```
+
+<b>注：</b> 配置文件中的参数为产线初始化参数，如果希望更改通用语义分割产线初始化参数，可以直接修改配置文件中的参数，并加载配置文件进行预测。同时，CLI 预测也支持传入配置文件，`--pipeline` 指定配置文件的路径即可。
+
 ## 3. 开发集成/部署
 如果产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
 
@@ -885,34 +983,55 @@ echo &quot;Output image saved at &quot; . $output_image_path . &quot;\n&quot;;
 如果通用语义分割产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升通用语义分割产线的在您的场景中的识别效果。
 
 ### 4.1 模型微调
-由于通用语义分割产线包含语义分割模块，如果模型产线的效果不及预期，那么您需要参考[语义分割模块开发教程](../../../module_usage/tutorials/cv_modules/semantic_segmentation.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/semantic_segmentation.md#四二次开发)章节（github可以直接链接标题），使用您的私有数据集对语义分割模型进行微调。
+由于通用语义分割产线包含语义分割模块，如果模型产线的效果不及预期，您可以对分割效果差的图片进行分析，并参考以下表格中对应的微调教程链接进行模型微调。
+
+
+<table>
+  <thead>
+    <tr>
+      <th>情形</th>
+      <th>微调模块</th>
+      <th>微调参考链接</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>预测结果不达预期</td>
+      <td>语义分割模块</td>
+      <td><a href="../../../module_usage/tutorials/cv_modules/semantic_segmentation.md">链接</a></td>
+    </tr>
+  </tbody>
+</table>
 
 ### 4.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。
 
 若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径替换至产线配置文件中的对应位置即可：
 
-```python
-......
-Pipeline:
-  model: PP-LiteSeg-T  #可修改为微调后模型的本地路径
-  device: "gpu"
-  batch_size: 1
-......
+```yaml
+SubModules:
+  SemanticSegmentation:
+    module_name: semantic_segmentation
+    model_name: PP-LiteSeg-T
+    model_dir: null # 替换为微调后的语义分割模型权重路径
+    batch_size: 1
+    target_size: None
 ```
 随后， 参考本地体验中的命令行方式或 Python 脚本方式，加载修改后的产线配置文件即可。
 
-##  多硬件支持
-PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device` 参数</b>即可完成不同硬件之间的无缝切换。
+## 5. 多硬件支持
+PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device`参数</b>即可完成不同硬件之间的无缝切换。
 
-例如，您使用英伟达 GPU 进行语义分割产线的推理，使用的 Python 命令为：
-
-```bash
-paddlex --pipeline semantic_segmentation --input semantic_segmentation/makassaridn-road_demo.png --device gpu:0
-```
-此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的 `--device` 修改为 npu:0 即可：
+例如，您使用昇腾 NPU 进行 语义分割 产线的推理，使用的 CLI 命令为：
 
 ```bash
-paddlex --pipeline semantic_segmentation --input semantic_segmentation/makassaridn-road_demo.png --device npu:0
+paddlex --pipeline semantic_segmentation \
+        --input makassaridn-road_demo.png \
+        --target_size -1 \
+        --save_path ./output \
+        --device npu:0
 ```
+
+当然，您也可以在 Python 脚本中 `create_pipeline()` 时或者 `predict()` 时指定硬件设备。
+
 若您想在更多种类的硬件上使用通用语义分割产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

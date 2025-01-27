@@ -20,7 +20,7 @@ Open-vocabulary object detection is an advanced object detection technology aime
 <th>Introduction</th>
 </tr>
 <tr>
-<td>GroundingDINO-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/GroundingDINO-T_infer.tar">Inference Model</a></td>
+<td>GroundingDINO-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/GroundingDINO-T_infer.tar">Inference Model</a></td>
 <td>49.4</td>
 <td>64.4</td>
 <td>253.72</td>

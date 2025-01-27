@@ -17,6 +17,9 @@ from typing import List
 from pydantic import Field
 from typing_extensions import Annotated, TypeAlias
 
-__all__ = ["BoundingBox"]
+__all__ = ["BoundingBox", "RotatedBoundingBox"]
 
 BoundingBox: TypeAlias = Annotated[List[float], Field(min_length=4, max_length=4)]
+RotatedBoundingBox: TypeAlias = Annotated[
+    List[float], Field(min_length=8, max_length=8)
+]

@@ -93,7 +93,7 @@ PIPELINE_ARGUMENTS = {
     "object_detection": [
         {
             "name": "--threshold",
-            "type": float,
+            "type": custom_type(Optional[Union[float, dict[int, float]]]),
             "help": "Sets the threshold for object detection.",
         },
     ],
@@ -133,6 +133,13 @@ PIPELINE_ARGUMENTS = {
             "name": "--cls_threshold",
             "type": float,
             "help": "Sets the threshold for vehicle attribute recognition.",
+        },
+    ],
+    "human_keypoint_detection": [
+        {
+            "name": "--det_threshold",
+            "type": custom_type(Optional[float]),
+            "help": "Sets the threshold for human detection.",
         },
     ],
     "table_recognition": None,
@@ -328,4 +335,5 @@ PIPELINE_ARGUMENTS = {
             "help": "Sets the prompt for open vocabulary segmentation.",
         },
     ],
+    "3d_bev_detection": None,
 }
