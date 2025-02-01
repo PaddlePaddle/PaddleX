@@ -1,7 +1,8 @@
 tomark~=0.1.4
 psutil~=5.9.2
 wget
-grpcio==1.51.3
+grpcio==1.51.3; python_version<"3.12"
+grpcio==1.59.0; python_version>="3.12"
 pydantic>=2
 editdistance
 openpyxl
@@ -15,4 +16,5 @@ erniebot == 0.5.9
 erniebot-agent == 0.5.2
 unstructured
 networkx
-numpy==1.24.4
+numpy==1.24.4; python_version<"3.12"
+numpy==1.26.4; python_version>="3.12"

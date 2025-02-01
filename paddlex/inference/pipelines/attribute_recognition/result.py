@@ -87,8 +87,7 @@ class AttributeRecResult(BaseCVResult):
 
     def _to_img(self):
         """apply"""
-        img_reader = ImageReader(backend="pillow")
-        image = img_reader.read(self["input_path"])
+        image = Image.fromarray(cv2.cvtColor(self["input_img"], cv2.COLOR_BGR2RGB))
         boxes = [
             {
                 "coordinate": box["coordinate"],

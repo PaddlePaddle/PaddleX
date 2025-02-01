@@ -94,8 +94,8 @@ class OVDetPredictor(BasicPredictor):
             dict: A dictionary containing the input path, raw image, class IDs, scores, and label names
                 for every instance of the batch. Keys include 'input_path', 'input_img', 'class_ids', 'scores', and 'label_names'.
         """
-        image_paths = batch_data
-        src_images = self.pre_ops[0](batch_data)
+        image_paths = batch_data.input_paths
+        src_images = self.pre_ops[0](batch_data.instances)
         datas = src_images
         # preprocess
         for pre_op in self.pre_ops[1:-1]:

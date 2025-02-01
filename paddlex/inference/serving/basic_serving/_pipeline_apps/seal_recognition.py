@@ -65,15 +65,10 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
         for i, (img, item) in enumerate(zip(images, result)):
             pruned_res = common.prune_result(item.json["res"])
             if ctx.config.visualize:
-                output_imgs = item.img
                 imgs = {
                     "input_img": img,
-                    "seal_rec_img": output_imgs["seal_res_region1"],
+                    **item.img,
                 }
-                if "layout_det_res" in output_imgs:
-                    imgs["layout_det_img"] = output_imgs["layout_det_res"]
-                if "preprocessed_img" in output_imgs:
-                    imgs["doc_preprocessing_img"] = output_imgs["preprocessed_img"]
                 imgs = await serving_utils.call_async(
                     common.postprocess_images,
                     imgs,
@@ -88,9 +83,11 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             seal_rec_results.append(
                 dict(
                     prunedResult=pruned_res,
-                    sealRecImage=imgs.get("seal_rec_img"),
-                    layoutDetImage=imgs.get("layout_det_img"),
-                    docPreprocessingImage=imgs.get("doc_preprocessing_img"),
+                    outputImages=(
+                        {k: v for k, v in imgs.items() if k != "input_img"}
+                        if imgs
+                        else None
+                    ),
                     inputImage=imgs.get("input_img"),
                 )
             )

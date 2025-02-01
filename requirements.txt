@@ -7,9 +7,13 @@ filelock
 ftfy
 ruamel.yaml
 chardet
-numpy==1.24.4
+numpy==1.24.4; python_version<"3.12"
+numpy==1.26.4; python_version>="3.12"
 matplotlib==3.5.2
+albumentations==1.4.10
 opencv-python==4.5.5.64
+opencv-python-headless==4.10.0.84
+opencv-contrib-python==4.10.0.84
 chinese_calendar
 scikit-learn
 pycocotools
@@ -38,6 +42,7 @@ erniebot-agent == 0.5.2
 unstructured
 networkx
 faiss-cpu
+######## For Vidio #######
 decord==0.6.0; platform_machine == 'x86_64'
 ######## For NLP Tokenizer #######
 jieba
@@ -46,3 +51,6 @@ jinja2
 regex
 ######## For Speech #######
 soundfile
+######## For 3D BEVFusion #######
+nuscenes-devkit
+pyquaternion

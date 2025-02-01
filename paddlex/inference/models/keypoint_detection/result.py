@@ -15,11 +15,12 @@
 import cv2
 import copy
 import math
+from PIL import Image
 
 import matplotlib.pyplot as plt
 import numpy as np
 
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
+from ...common.result import BaseCVResult, JsonMixin
 
 
 def get_color(idx):
@@ -177,6 +178,7 @@ class KptResult(BaseCVResult):
         image = self["input_img"]
         if keypoints:
             image = draw_keypoints(image, dict(keypoints=np.stack(keypoints)))
+        image = Image.fromarray(image[..., ::-1])
         return {"res": image}
 
     def _to_str(self, *args, **kwargs):

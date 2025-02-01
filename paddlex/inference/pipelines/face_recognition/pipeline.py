@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import numpy as np
+
 from ..pp_shitu_v2 import ShiTuV2Pipeline
 from .result import FaceRecResult
 
@@ -45,6 +47,8 @@ class FaceRecPipeline(ShiTuV2Pipeline):
         single_img_res = {"input_path": input_data, "input_img": raw_img, "boxes": []}
         for i, obj in enumerate(det_res["boxes"]):
             rec_scores = rec_res["score"][i]
+            if isinstance(rec_scores, np.ndarray):
+                rec_scores = rec_scores.tolist()
             labels = rec_res["label"][i]
             single_img_res["boxes"].append(
                 {

@@ -18,8 +18,7 @@ import uvicorn
 from fastapi import FastAPI
 
 
-def run_server(app: FastAPI, *, host: str, port: int, debug: bool) -> None:
-    # XXX: Currently, `debug` is not used.
+def run_server(app: FastAPI, *, host: str, port: int) -> None:
     # HACK: Fix duplicate logs
     uvicorn_version = tuple(int(x) for x in uvicorn.__version__.split("."))
     if uvicorn_version < (0, 19, 0):

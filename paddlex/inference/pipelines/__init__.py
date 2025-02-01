@@ -14,6 +14,7 @@
 
 from pathlib import Path
 from typing import Any, Dict, Optional
+from importlib import import_module
 from .base import BasePipeline
 from ..utils.pp_option import PaddlePredictorOption
 from .components import BaseChat, BaseRetriever, BaseGeneratePrompt
@@ -52,6 +53,11 @@ from .keypoint_detection import KeypointDetectionPipeline
 from .open_vocabulary_detection import OpenVocabularyDetectionPipeline
 from .open_vocabulary_segmentation import OpenVocabularySegmentationPipeline
 
+module_3d_bev_detection = import_module(
+    ".3d_bev_detection", "paddlex.inference.pipelines"
+)
+BEVDet3DPipeline = getattr(module_3d_bev_detection, "BEVDet3DPipeline")
+
 
 def get_pipeline_path(pipeline_name: str) -> str:
     """
@@ -73,12 +79,12 @@ def get_pipeline_path(pipeline_name: str) -> str:
     return pipeline_path
 
 
-def load_pipeline_config(pipeline_name: str) -> Dict[str, Any]:
+def load_pipeline_config(pipeline: str) -> Dict[str, Any]:
     """
     Load the pipeline configuration.
 
     Args:
-        pipeline_name (str): The name of the pipeline or the path to the config file.
+        pipeline (str): The name of the pipeline or the path to the config file.
 
     Returns:
         Dict[str, Any]: The parsed pipeline configuration.
@@ -86,20 +92,20 @@ def load_pipeline_config(pipeline_name: str) -> Dict[str, Any]:
     Raises:
         Exception: If the config file of pipeline does not exist.
     """
-    if not (pipeline_name.endswith(".yml") or pipeline_name.endswith(".yaml")):
-        pipeline_path = get_pipeline_path(pipeline_name)
+    if not (pipeline.endswith(".yml") or pipeline.endswith(".yaml")):
+        pipeline_path = get_pipeline_path(pipeline)
         if pipeline_path is None:
             raise Exception(
-                f"The pipeline ({pipeline_name}) does not exist! Please use a pipeline name or a config file path!"
+                f"The pipeline ({pipeline}) does not exist! Please use a pipeline name or a config file path!"
             )
     else:
-        pipeline_path = pipeline_name
+        pipeline_path = pipeline
     config = parse_config(pipeline_path)
     return config
 
 
 def create_pipeline(
-    pipeline_name: Optional[str] = None,
+    pipeline: Optional[str] = None,
     config: Optional[Dict[str, Any]] = None,
     device: Optional[str] = None,
     pp_option: Optional[PaddlePredictorOption] = None,
@@ -114,7 +120,7 @@ def create_pipeline(
     default config corresponding to the pipeline name.
 
     Args:
-        pipeline_name (Optional[str], optional): The name of the pipeline to
+        pipeline (Optional[str], optional): The name of the pipeline to
             create, or the path to the config file. Defaults to None.
         config (Optional[Dict[str, Any]], optional): The pipeline configuration.
             Defaults to None.
@@ -130,19 +136,20 @@ def create_pipeline(
     Returns:
         BasePipeline: The created pipeline instance.
     """
-    if pipeline_name is None and config is None:
+    if pipeline is None and config is None:
         raise ValueError(
-            "Both `pipeline_name` and `config` cannot be None at the same time."
+            "Both `pipeline` and `config` cannot be None at the same time."
         )
     if config is None:
-        config = load_pipeline_config(pipeline_name)
-    if pipeline_name is not None and config["pipeline_name"] != pipeline_name:
-        logging.warning(
-            "The pipeline name in the config (%r) is different from the specified pipeline name (%r). %r will be used.",
-            config["pipeline_name"],
-            pipeline_name,
-            config["pipeline_name"],
-        )
+        config = load_pipeline_config(pipeline)
+    else:
+        if pipeline is not None and config["pipeline_name"] != pipeline:
+            logging.warning(
+                "The pipeline name in the config (%r) is different from the specified pipeline name (%r). %r will be used.",
+                config["pipeline_name"],
+                pipeline,
+                config["pipeline_name"],
+            )
     pipeline_name = config["pipeline_name"]
 
     pipeline = BasePipeline.get(pipeline_name)(

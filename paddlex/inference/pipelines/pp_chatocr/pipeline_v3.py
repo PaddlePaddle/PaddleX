@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from typing import Any, Dict, Optional, Union, List, Tuple
+import os
 import re
 import json
 import numpy as np
@@ -21,6 +22,7 @@ from .pipeline_base import PP_ChatOCR_Pipeline
 from ...common.reader import ReadImage
 from ...common.batch_sampler import ImageBatchSampler
 from ....utils import logging
+from ....utils.file_interface import custom_open
 from ...utils.pp_option import PaddlePredictorOption
 from ..layout_parsing.result import LayoutParsingResult
 
@@ -250,7 +252,11 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         else:
             visual_info_list = visual_info
 
-        with open(save_path, "w") as fout:
+        directory = os.path.dirname(save_path)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        with custom_open(save_path, "w") as fout:
             fout.write(json.dumps(visual_info_list, ensure_ascii=False) + "\n")
         return
 
@@ -264,7 +270,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         Returns:
             list[dict]: A list of dict objects parsed from the JSON file.
         """
-        with open(data_path, "r") as fin:
+        with custom_open(data_path, "r") as fin:
             data = fin.readline()
             visual_info_list = json.loads(data)
         return visual_info_list
@@ -356,13 +362,17 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         return vector_info
 
     def save_vector(self, vector_info: dict, save_path: str) -> None:
-        with open(save_path, "w") as fout:
+        directory = os.path.dirname(save_path)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        with custom_open(save_path, "w") as fout:
             fout.write(json.dumps(vector_info, ensure_ascii=False) + "\n")
         return
 
     def load_vector(self, data_path: str) -> dict:
         vector_info = None
-        with open(data_path, "r") as fin:
+        with custom_open(data_path, "r") as fin:
             data = fin.readline()
             vector_info = json.loads(data)
             if (

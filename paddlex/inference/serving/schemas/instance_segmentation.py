@@ -22,7 +22,6 @@ from .shared import image_segmentation, object_detection
 __all__ = [
     "INFER_ENDPOINT",
     "InferRequest",
-    "Mask",
     "Instance",
     "InferResult",
     "PRIMARY_OPERATIONS",
@@ -36,17 +35,12 @@ class InferRequest(BaseModel):
     threshold: Optional[float] = None
 
 
-class Mask(BaseModel):
-    rleResult: str
-    size: image_segmentation.Size
-
-
 class Instance(BaseModel):
     bbox: object_detection.BoundingBox
     categoryId: int
     categoryName: str
     score: float
-    mask: Mask
+    mask: image_segmentation.Mask
 
 
 class InferResult(BaseModel):
