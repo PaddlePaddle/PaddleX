@@ -259,6 +259,7 @@ class TableRecognitionPipelineV2(BasePipeline):
         elif task == "det":
             threshold = 0.0
             result = []
+            cell_score = []
             if "boxes" in pred and isinstance(pred["boxes"], list):
                 for box in pred["boxes"]:
                     if isinstance(box, dict) and "score" in box and "coordinate" in box:
@@ -266,11 +267,101 @@ class TableRecognitionPipelineV2(BasePipeline):
                         coordinate = box["coordinate"]
                         if isinstance(score, float) and score > threshold:
                             result.append(coordinate)
-            return result
+                            cell_score.append(score)
+            return result, cell_score
         elif task == "table_stru":
             return pred["structure"]
         else:
             return None
+    
+    def cells_det_results_nms(self, cells_det_results, cells_det_threshold=0.5):
+        """
+        Perform Non-Maximum Suppression (NMS) on a list of rectangles to eliminate overlapping rectangles.
+
+        Args:
+            cells_det_results : list of list of int or float
+                Input list of rectangles, each represented as [x1, y1, x2, y2].
+                x1, y1 are the coordinates of the top-left corner,
+                x2, y2 are the coordinates of the bottom-right corner.
+
+            cells_det_threshold : float, optional
+                Overlapping threshold for suppression. If the Intersection over Union (IoU)
+                between two rectangles is greater than this threshold, one of them will be suppressed.
+
+        Returns
+            list of list of int or float
+                Output list of rectangles after NMS, in the same format as the input.
+        """
+
+        # Import necessary packages at the beginning of the function
+        import numpy as np
+        # If there are no rectangles, return an empty list
+        if not cells_det_results:
+            return []
+        # Convert the list to a numpy array for efficient computation
+        boxes = np.array(cells_det_results)
+        # Initialize a list to keep indices of boxes we are going to keep
+        pick = []
+        # Extract coordinates of the bounding boxes
+        x1 = boxes[:, 0]  # Top-left x-coordinate
+        y1 = boxes[:, 1]  # Top-left y-coordinate
+        x2 = boxes[:, 2]  # Bottom-right x-coordinate
+        y2 = boxes[:, 3]  # Bottom-right y-coordinate
+        # Compute the area of the bounding boxes
+        # Using vectorized operations for efficiency
+        areas = (x2 - x1 + 1) * (y2 - y1 + 1)
+        # Sort the bounding boxes by the top-left y-coordinate
+        # This helps in grouping overlapping boxes and reduces comparisons
+        idxs = np.argsort(y1)
+        # Iterate while there are indexes remaining in idxs
+        while len(idxs) > 0:
+            # Get the last index in idxs and add it to the pick list
+            i = idxs[-1]
+            pick.append(i)
+            # Find the largest (top-left) coordinates for the start of the intersection rectangle
+            xx1 = np.maximum(x1[i], x1[idxs[:-1]])
+            yy1 = np.maximum(y1[i], y1[idxs[:-1]])
+            # Find the smallest (bottom-right) coordinates for the end of the intersection rectangle
+            xx2 = np.minimum(x2[i], x2[idxs[:-1]])
+            yy2 = np.minimum(y2[i], y2[idxs[:-1]])
+            # Compute the width and height of the intersection rectangle
+            w = np.maximum(0, xx2 - xx1 + 1)
+            h = np.maximum(0, yy2 - yy1 + 1)
+            # Compute the area of the intersection rectangle
+            inter = w * h
+            # Compute the Intersection over Union (IoU)
+            union = areas[i] + areas[idxs[:-1]] - inter
+            iou = inter / union
+            # Identify indexes where IoU is greater than the threshold
+            idxs_to_delete = np.concatenate(([len(idxs) - 1], np.where(iou > cells_det_threshold)[0]))
+            # Delete indexes with IoU greater than the threshold
+            idxs = np.delete(idxs, idxs_to_delete)
+        # Return the boxes that were picked
+        return boxes[pick].tolist()
+
+    def cells_det_results_reprocessing(self, cells_det_results, cells_det_scores, ocr_det_results, html_pred_results):
+        """
+        Reprocess cell detection results based on OCR detections and HTML predictions.
+
+        Args:
+            cells_det_results : list of list of int or float
+                List of bounding boxes from cell detection results.
+                Each bounding box is represented as [x1, y1, x2, y2].
+            cells_det_scores : list of float
+                Confidence scores corresponding to each bounding box in cells_det_results.
+            ocr_det_results : list of list of int or float
+                List of bounding boxes from OCR detection results.
+                Each bounding box is represented as [x1, y1, x2, y2].
+            html_pred_results : list of str
+                List of HTML keywords representing a table.
+                When concatenated, they form the HTML definition of a table.
+
+        Returns
+            list of list of int or float
+                The reprocessed list of bounding boxes, which is a subset of cells_det_results
+                possibly augmented with combined bounding boxes from ocr_det_results.
+        """
+        pass 
 
     def predict_single_table_recognition_res(
         self,
@@ -295,16 +386,22 @@ class TableRecognitionPipelineV2(BasePipeline):
         table_cls_result = self.extract_results(table_cls_pred, "cls")
         if table_cls_result == "wired_table":
             table_structure_pred = next(self.wired_table_rec_model(image_array))
-            table_cells_pred = next(self.wired_table_cells_detection_model(image_array))
+            table_cells_pred = next(
+                self.wired_table_cells_detection_model(image_array, threshold=0.3)
+            )
         elif table_cls_result == "wireless_table":
             table_structure_pred = next(self.wireless_table_rec_model(image_array))
             table_cells_pred = next(
-                self.wireless_table_cells_detection_model(image_array)
+                self.wireless_table_cells_detection_model(image_array, threshold=0.1)
             )
         table_structure_result = self.extract_results(
             table_structure_pred, "table_stru"
         )
-        table_cells_result = self.extract_results(table_cells_pred, "det")
+        table_cells_result, table_cells_score = self.extract_results(table_cells_pred, "det")
+        table_cells_result = self.cells_det_results_nms(table_cells_result)
+        # table_cells_result = self.cells_det_results_reprocessing(
+        #     table_cells_result, table_cells_score, overall_ocr_res["rec_boxes"].tolist(), table_structure_result
+        # )
         single_table_recognition_res = get_table_recognition_res(
             table_box, table_structure_result, table_cells_result, overall_ocr_res
         )
