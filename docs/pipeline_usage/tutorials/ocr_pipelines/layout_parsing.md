@@ -1348,6 +1348,12 @@ for res in output:
 <td>否</td>
 </tr>
 <tr>
+<td><code>useTextlineOrientation</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>use_textline_orientation</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
 <td><code>useGeneralOcr</code></td>
 <td><code>boolean</code> | <code>null</code></td>
 <td>参见产线 <code>predict</code> 方法中的 <code>use_general_ocr</code> 参数说明。</td>
