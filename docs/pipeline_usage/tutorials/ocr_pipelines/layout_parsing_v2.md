@@ -2,12 +2,12 @@
 comments: true
 ---
 
-# 通用版面解析产线使用教程
+# 通用版面解析v2产线使用教程
 
-## 1. 通用版面解析产线介绍
-版面解析是一种从文档图像中提取结构化信息的技术，主要用于将复杂的文档版面转换为机器可读的数据格式。这项技术在文档管理、信息提取和数据数字化等领域具有广泛的应用。版面解析通过结合光学字符识别（OCR）、图像处理和机器学习算法，能够识别和提取文档中的文本块、标题、段落、图片、表格以及其他版面元素。此过程通常包括版面分析、元素分析和数据格式化三个主要步骤，最终生成结构化的文档数据，提升数据处理的效率和准确性。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
+## 1. 通用版面解析v2产线介绍
+版面解析是一种从文档图像中提取结构化信息的技术，主要用于将复杂的文档版面转换为机器可读的数据格式。这项技术在文档管理、信息提取和数据数字化等领域具有广泛的应用。版面解析通过结合光学字符识别（OCR）、图像处理和机器学习算法，能够识别和提取文档中的文本块、标题、段落、图片、表格以及其他版面元素。此过程通常包括版面分析、元素分析和数据格式化三个主要步骤，最终生成结构化的文档数据，提升数据处理的效率和准确性。<b>通用版面解析v2产线在通用版面解析v1产线的基础上，强化了版面区域检测、表格识别、公式识别的能力，增加了多栏阅读顺序的恢复能力、结果转换 Markdown 文件的能力，在多种文档数据中，表现优异，可以处理较复杂的文档数据。</b>本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
 
-<b>通用版面解析产线中包含必选的版面区域分析模块、通用OCR子产线，</b>以及可选的文档图像预处理子产线、表格识别子产线、印章识别子产线和公式识别子产线。
+<b>通用版面解析v2产线中包含必选的版面区域分析模块、通用OCR子产线，</b>以及可选的文档图像预处理子产线、表格识别子产线、印章识别子产线和公式识别子产线。
 
 <b>如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型</b>。
 
@@ -605,16 +605,16 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <b></b>
 
 ## 2. 快速开始
-PaddleX 所提供的模型产线均可以快速体验效果，你可以在本地使用命令行或 Python 体验通用通用版面解析产线的效果。
+PaddleX 所提供的模型产线均可以快速体验效果，你可以在本地使用命令行或 Python 体验通用通用版面解析v2产线的效果。
 
-在本地使用通用版面解析产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+在本地使用通用版面解析v2产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
 ### 2.1 命令行方式体验
-一行命令即可快速体验版面解析产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/demo_paper.png)，并将 `--input` 替换为本地路径，进行预测
+一行命令即可快速体验版面解析产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout_parsing_v2_demo.png)，并将 `--input` 替换为本地路径，进行预测
 
 ```
-paddlex --pipeline layout_parsing \
-        --input demo_paper.png \
+paddlex --pipeline layout_parsing_v2 \
+        --input layout_parsing_v2_demo.png \
         --use_doc_orientation_classify False \
         --use_doc_unwarping False \
         --use_textline_orientation False \
@@ -627,67 +627,23 @@ paddlex --pipeline layout_parsing \
 
 <details><summary> 👉点击展开</summary>
 
-<pre><code>{'res': {'input_path': 'demo_paper.png', 'model_settings': {'use_doc_preprocessor': True, 'use_general_ocr': True, 'use_seal_recognition': True, 'use_table_recognition': True, 'use_formula_recognition': True}, 'parsing_res_list': [{'layout_bbox': [46.905365, 44.05746, 565.6911, 217.74211], 'image': array([[[255, ..., 255],
-        ...,
-        [188, ..., 175]],
-
-       ...,
-
-       [[255, ..., 255],
-        ...,
-        [255, ..., 255]]], dtype=uint8), 'image_text': 'Efficient Hybrid Encoder\nCaevIst s1\nCaaveJs2\nCCFF\n\nFusion\n00□0□000000', 'layout': 'single'}, {'layout_bbox': [42.178703, 227.34215, 570.1248, 284.377], 'text': 'Figure 4, Overview of RT-DETR. We feed the features from the last three stages of the backbone into the encoder. The eficient hybrid\nencoder transforms multi-scale features into a sequence of image features through the Attention-based Intra-scale Feature Interaction (AIFI)\nfeatures to serve as initial object queries for the decoder, Finaly, the decoder with auxiliary prediction heads iteratively optimizes object\nand the CNN-based Cross-scale Feature Fusion (CCFF), Then, the uncertainty-minimal query selection selects a fixed number of encoder\nqueries to generate categories and boxes.', 'layout': 'single'}, {'layout_bbox': [53.227856, 294.16644, 283.854, 396.24164], 'image': array([[[255, ..., 255],
-        ...,
-        [255, ..., 255]],
-
-       ...,
-
-       [[255, ..., 255],
-        ...,
-        [255, ..., 255]]], dtype=uint8), 'image_text': '1x1Conv\nFusion\nC\nNX\n1x1Conv\nRepBlock\nCConcatenate\nElement-wise add\nFlatten', 'layout': 'double'}, {'layout_bbox': [99.52045, 401.63477, 240.27536, 411.01334], 'text': 'Figure 5. The fusion block in CCFF', 'layout': 'double'}, {'layout_bbox': [41.776196, 418.61166, 296.82672, 554.4149], 'text': 'D, Ds, not only significantly reduces latency (35% faster),\nbut also improves accuracy (0.4% AP higher). CCFF is opti-\nmized based on the cross-scale fusion module, which inserts\nseveral fusion blocks consisting of convolutional layers into\nthe fusion path. The role of the fusion block is to fuse two\nadjacent scale features into a new feature, and its structure is\nillustrated in Figure 5. The fusion block contains two 1 × 1\nconvolutions to adjust the number of channels, N RepBlocks\ncomposed of RepConv [8] are used for feature fusion, and\nthe two-path outputs are fused by element-wise add. We\nformulate the calculation of the hybrid encoder as:', 'layout': 'double'}, {'layout_bbox': [92.092064, 563.1221, 297.57217, 607.2598], 'formula': '\\begin{array}{r l}{\\mathcal{Q}}&{=\\mathcal{K}=\\mathcal{V}=\\mathtt{F l a t t e r n}(\\mathcal{S}_{5}),}\\\\ {\\mathcal{F}_{5}}&{=\\mathtt{R e s h a p e}(\\mathtt{A I F I}(\\mathcal{Q},\\mathcal{K},\\mathcal{V})),\\qquad\\quad(1)}\\\\ {\\mathcal{O}}&{=\\mathtt{C C F F}(\\{\\mathcal{S}_{3},\\mathcal{S}_{4},\\mathcal{F}_{5}\\}),}\\end{array}', 'layout': 'double'}, {'layout_bbox': [41.275124, 613.64154, 298.0696, 636.9947], 'text': 'where Reshape represents restoring the shape of the flat-\ntened feature to the same shape as S5', 'layout': 'double'}, {'layout_bbox': [41.01993, 645.3085, 253.87302, 656.61505], 'text': '4.3.Uncertainty-minimal Ouery Selection', 'layout': 'double'}, {'layout_bbox': [39.780045, 664.1547, 296.5302, 724.974], 'text': 'To reduce the difficulty of optimizing object queries in\nDETR, several subsequent works [42, 44, 45] propose query\nselection schemes, which have in common that they use the\nconfidence score to select the top K features from the en-\ncoder to initialize object queries (or just position queries).', 'layout': 'double'}, {'layout_bbox': [316.3008, 289.54156, 573.4635, 415.4659], 'text': 'The confidence score represents the likelihood that the fea-\nture includes foreground objects. Nevertheless, the detector\nare required to simultaneously model the category and loca-\ntion of objects, both of which determine the quality of the\nfeatures. Hence, the performance score of the feature is a la-\ntent variable that is jointly correlated with both classification\nand localization. Based on the analysis, the current query\nselection lead to a considerable level of uncertainty in the\nselected features, resulting in sub-optimal initialization for\nthe decoder and hindering the performance of the detector.', 'layout': 'double'}, {'layout_bbox': [316.1587, 417.67807, 575.0031, 541.93054], 'text': 'To address this problem, we propose the uncertainty mini-\nmal query selection scheme, which explicitly constructs and\noptimizes the epistemic uncertainty to model the joint latent\nvariable of encoder features, thereby providing high-quality\nqueries for the decoder. Specifically, the feature uncertainty\nL/ is defined as the discrepancy between the predicted dis-\ntributions of localization P and classification C in Eq. (2).\nTo minimize the uncertainty of the queries, we integrate\nthe uncertainty into the loss function for the gradient-based\noptimization in Eq. (3).', 'layout': 'double'}, {'layout_bbox': [343.82712, 551.06995, 573.45465, 589.9438], 'formula': '\\begin{array}{r l r}{\\mathcal{U}(\\hat{\\mathcal{X}})=\\|\\mathcal{P}(\\hat{\\mathcal{X}})-\\mathcal{C}(\\hat{\\mathcal{X}})\\|,\\hat{\\mathcal{X}}\\in\\mathbb{R}^{D}}&{{}(2)}&{}\\\\ {\\mathcal{L}(\\hat{\\mathcal{X}},\\hat{\\mathcal{Y}},\\mathcal{Y})=\\mathcal{L}_{t o x}(\\hat{\\mathbf{b}},\\mathbf{b})+\\mathcal{L}_{c l s}(\\mathcal{U}(\\hat{\\mathcal{X}}),\\hat{\\mathbf{c}},\\mathbf{c})}&{{}(3)}\\end{array}', 'layout': 'double'}, {'layout_bbox': [316.74704, 598.45776, 573.39526, 636.35236], 'text': 'where  and y denote the prediction and ground truth.\n= (e, b), C and b represent the category and bounding\nbox respectively, X represent the encoder feature.', 'layout': 'double'}, {'layout_bbox': [315.35437, 638.09393, 572.0008, 724.53687], 'text': 'Effectiveness analysis. To analyze the effectiveness of thc\nuncertainty-minimal query selection, we visualize the clas-\nsification scores and IoU scores of the selected features on\nCOCO va1.2017, Figure 6. We draw the scatterplot with\nclassification scores greater than 0.5. The purple and green\nwith uncertainty-minimal query selection and vanilla query\ndots represent the selected features from the model trained', 'layout': 'double'}], 'doc_preprocessor_res': {'input_path': None, 'model_settings': {'use_doc_orientation_classify': True, 'use_doc_unwarping': True}, 'angle': 0}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 1, 'label': 'image', 'score': 0.9874590635299683, 'coordinate': [46.905365, 44.05746, 565.6911, 217.74211]}, {'cls_id': 2, 'label': 'text', 'score': 0.9869957566261292, 'coordinate': [41.776196, 418.61166, 296.82672, 554.4149]}, {'cls_id': 2, 'label': 'text', 'score': 0.9792540073394775, 'coordinate': [39.780045, 664.1547, 296.5302, 724.974]}, {'cls_id': 2, 'label': 'text', 'score': 0.9792136549949646, 'coordinate': [316.3008, 289.54156, 573.4635, 415.4659]}, {'cls_id': 2, 'label': 'text', 'score': 0.9789648652076721, 'coordinate': [316.1587, 417.67807, 575.0031, 541.93054]}, {'cls_id': 1, 'label': 'image', 'score': 0.9786934852600098, 'coordinate': [53.227856, 294.16644, 283.854, 396.24164]}, {'cls_id': 2, 'label': 'text', 'score': 0.9765349626541138, 'coordinate': [315.35437, 638.09393, 572.0008, 724.53687]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.9575827717781067, 'coordinate': [42.178703, 227.34215, 570.1248, 284.377]}, {'cls_id': 2, 'label': 'text', 'score': 0.9554654359817505, 'coordinate': [41.275124, 613.64154, 298.0696, 636.9947]}, {'cls_id': 7, 'label': 'formula', 'score': 0.951255738735199, 'coordinate': [92.092064, 563.1221, 297.57217, 607.2598]}, {'cls_id': 7, 'label': 'formula', 'score': 0.9501133561134338, 'coordinate': [343.82712, 551.06995, 573.45465, 589.9438]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.9381633400917053, 'coordinate': [99.52045, 401.63477, 240.27536, 411.01334]}, {'cls_id': 2, 'label': 'text', 'score': 0.9283379316329956, 'coordinate': [316.74704, 598.45776, 573.39526, 636.35236]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9257320761680603, 'coordinate': [41.01993, 645.3085, 253.87302, 656.61505]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[169,  50],
-        ...,
-        [169,  62]],
-
-       ...,
-
-       [[ 39, 711],
-        ...,
-        [ 39, 726]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['Efficient Hybrid Encoder', 'CaevIst s1', 'CaaveJs2', 'CCFF', '', 'Fusion', '00□0□000000', 'Figure 4, Overview of RT-DETR. We feed the features from the last three stages of the backbone into the encoder. The eficient hybrid', 'encoder transforms multi-scale features into a sequence of image features through the Attention-based Intra-scale Feature Interaction (AIFI)', 'features to serve as initial object queries for the decoder, Finaly, the decoder with auxiliary prediction heads iteratively optimizes object', 'and the CNN-based Cross-scale Feature Fusion (CCFF), Then, the uncertainty-minimal query selection selects a fixed number of encoder', 'queries to generate categories and boxes.', '1x1Conv', 'Fusion', 'The confidence score represents the likelihood that the fea-', 'C', 'ture includes foreground objects. Nevertheless, the detector', 'are required to simultaneously model the category and loca-', 'NX', 'tion of objects, both of which determine the quality of the', '1x1Conv', 'features. Hence, the performance score of the feature is a la-', 'RepBlock', 'tent variable that is jointly correlated with both classification', 'and localization. Based on the analysis, the current query', 'CConcatenate', 'Element-wise add', 'Flatten', 'selection lead to a considerable level of uncertainty in the', 'selected features, resulting in sub-optimal initialization for', 'Figure 5. The fusion block in CCFF', 'the decoder and hindering the performance of the detector.', 'D, Ds, not only significantly reduces latency (35% faster),', 'To address this problem, we propose the uncertainty mini-', 'but also improves accuracy (0.4% AP higher). CCFF is opti-', 'mal query selection scheme, which explicitly constructs and', 'mized based on the cross-scale fusion module, which inserts', 'optimizes the epistemic uncertainty to model the joint latent', 'several fusion blocks consisting of convolutional layers into', 'variable of encoder features, thereby providing high-quality', 'the fusion path. The role of the fusion block is to fuse two', 'queries for the decoder. Specifically, the feature uncertainty', 'adjacent scale features into a new feature, and its structure is', 'L/ is defined as the discrepancy between the predicted dis-', 'illustrated in Figure 5. The fusion block contains two 1 × 1', 'tributions of localization P and classification C in Eq. (2).', 'convolutions to adjust the number of channels, N RepBlocks', 'To minimize the uncertainty of the queries, we integrate', 'composed of RepConv [8] are used for feature fusion, and', 'the uncertainty into the loss function for the gradient-based', 'the two-path outputs are fused by element-wise add. We', 'optimization in Eq. (3).', 'formulate the calculation of the hybrid encoder as:', 'u(x)=P(x）-C(x）,x∈RD', '(2)', '=K =V =F1atten(Ss),', 'F = Reshape(AIFI(Q,K,V)),', '(1)', 'C(x.y)= Lo（b,b）+Cc(u(x）,e,c)（3)', 'O=CCFF（{S,S,F}）', 'where  and y denote the prediction and ground truth.', 'where Reshape represents restoring the shape of the flat-', '= (e, b), C and b represent the category and bounding', 'tened feature to the same shape as S5', 'box respectively, X represent the encoder feature.', '4.3.Uncertainty-minimal Ouery Selection', 'Effectiveness analysis. To analyze the effectiveness of thc', 'uncertainty-minimal query selection, we visualize the clas-', 'To reduce the difficulty of optimizing object queries in', 'sification scores and IoU scores of the selected features on', 'DETR, several subsequent works [42, 44, 45] propose query', 'COCO va1.2017, Figure 6. We draw the scatterplot with', 'selection schemes, which have in common that they use the', 'classification scores greater than 0.5. The purple and green', 'confidence score to select the top K features from the en-', 'with uncertainty-minimal query selection and vanilla query', 'dots represent the selected features from the model trained', 'coder to initialize object queries (or just position queries).'], 'rec_scores': array([0.95921248, ..., 0.99757016]), 'rec_polys': array([[[169,  50],
-        ...,
-        [169,  62]],
-
-       ...,
-
-       [[ 39, 711],
-        ...,
-        [ 39, 726]]], dtype=int16), 'rec_boxes': array([[169, ...,  62],
-       ...,
-       [ 39, ..., 726]], dtype=int16)}, 'text_paragraphs_ocr_res': {'rec_polys': array([[[169,  50],
-        ...,
-        [169,  62]],
-
-       ...,
-
-       [[ 39, 711],
-        ...,
-        [ 39, 726]]], dtype=int16), 'rec_texts': ['Efficient Hybrid Encoder', 'CaevIst s1', 'CaaveJs2', 'CCFF', '', 'Fusion', '00□0□000000', 'Figure 4, Overview of RT-DETR. We feed the features from the last three stages of the backbone into the encoder. The eficient hybrid', 'encoder transforms multi-scale features into a sequence of image features through the Attention-based Intra-scale Feature Interaction (AIFI)', 'features to serve as initial object queries for the decoder, Finaly, the decoder with auxiliary prediction heads iteratively optimizes object', 'and the CNN-based Cross-scale Feature Fusion (CCFF), Then, the uncertainty-minimal query selection selects a fixed number of encoder', 'queries to generate categories and boxes.', '1x1Conv', 'Fusion', 'The confidence score represents the likelihood that the fea-', 'C', 'ture includes foreground objects. Nevertheless, the detector', 'are required to simultaneously model the category and loca-', 'NX', 'tion of objects, both of which determine the quality of the', '1x1Conv', 'features. Hence, the performance score of the feature is a la-', 'RepBlock', 'tent variable that is jointly correlated with both classification', 'and localization. Based on the analysis, the current query', 'CConcatenate', 'Element-wise add', 'Flatten', 'selection lead to a considerable level of uncertainty in the', 'selected features, resulting in sub-optimal initialization for', 'Figure 5. The fusion block in CCFF', 'the decoder and hindering the performance of the detector.', 'D, Ds, not only significantly reduces latency (35% faster),', 'To address this problem, we propose the uncertainty mini-', 'but also improves accuracy (0.4% AP higher). CCFF is opti-', 'mal query selection scheme, which explicitly constructs and', 'mized based on the cross-scale fusion module, which inserts', 'optimizes the epistemic uncertainty to model the joint latent', 'several fusion blocks consisting of convolutional layers into', 'variable of encoder features, thereby providing high-quality', 'the fusion path. The role of the fusion block is to fuse two', 'queries for the decoder. Specifically, the feature uncertainty', 'adjacent scale features into a new feature, and its structure is', 'L/ is defined as the discrepancy between the predicted dis-', 'illustrated in Figure 5. The fusion block contains two 1 × 1', 'tributions of localization P and classification C in Eq. (2).', 'convolutions to adjust the number of channels, N RepBlocks', 'To minimize the uncertainty of the queries, we integrate', 'composed of RepConv [8] are used for feature fusion, and', 'the uncertainty into the loss function for the gradient-based', 'the two-path outputs are fused by element-wise add. We', 'optimization in Eq. (3).', 'formulate the calculation of the hybrid encoder as:', 'where  and y denote the prediction and ground truth.', 'where Reshape represents restoring the shape of the flat-', '= (e, b), C and b represent the category and bounding', 'tened feature to the same shape as S5', 'box respectively, X represent the encoder feature.', '4.3.Uncertainty-minimal Ouery Selection', 'Effectiveness analysis. To analyze the effectiveness of thc', 'uncertainty-minimal query selection, we visualize the clas-', 'To reduce the difficulty of optimizing object queries in', 'sification scores and IoU scores of the selected features on', 'DETR, several subsequent works [42, 44, 45] propose query', 'COCO va1.2017, Figure 6. We draw the scatterplot with', 'selection schemes, which have in common that they use the', 'classification scores greater than 0.5. The purple and green', 'confidence score to select the top K features from the en-', 'with uncertainty-minimal query selection and vanilla query', 'dots represent the selected features from the model trained', 'coder to initialize object queries (or just position queries).'], 'rec_scores': array([0.95921248, ..., 0.99757016]), 'rec_boxes': array([[169, ...,  62],
-       ...,
-       [ 39, ..., 726]], dtype=int16)}, 'formula_res_list': [{'input_path': None, 'page_index': None, 'rec_formula': '\\begin{array}{r l}{\\mathcal{Q}}&{=\\mathcal{K}=\\mathcal{V}=\\mathtt{F l a t t e r n}(\\mathcal{S}_{5}),}\\\\ {\\mathcal{F}_{5}}&{=\\mathtt{R e s h a p e}(\\mathtt{A I F I}(\\mathcal{Q},\\mathcal{K},\\mathcal{V})),\\qquad\\quad(1)}\\\\ {\\mathcal{O}}&{=\\mathtt{C C F F}(\\{\\mathcal{S}_{3},\\mathcal{S}_{4},\\mathcal{F}_{5}\\}),}\\end{array}', 'formula_region_id': 1, 'dt_polys': [92.092064, 563.1221, 297.57217, 607.2598]}, {'input_path': None, 'page_index': None, 'rec_formula': '\\begin{array}{r l r}{\\mathcal{U}(\\hat{\\mathcal{X}})=\\|\\mathcal{P}(\\hat{\\mathcal{X}})-\\mathcal{C}(\\hat{\\mathcal{X}})\\|,\\hat{\\mathcal{X}}\\in\\mathbb{R}^{D}}&{{}(2)}&{}\\\\ {\\mathcal{L}(\\hat{\\mathcal{X}},\\hat{\\mathcal{Y}},\\mathcal{Y})=\\mathcal{L}_{t o x}(\\hat{\\mathbf{b}},\\mathbf{b})+\\mathcal{L}_{c l s}(\\mathcal{U}(\\hat{\\mathcal{X}}),\\hat{\\mathbf{c}},\\mathbf{c})}&{{}(3)}\\end{array}', 'formula_region_id': 2, 'dt_polys': [343.82712, 551.06995, 573.45465, 589.9438]}]}}
+<pre><code>
 </code></pre></details>
 
 运行结果参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的结果解释。
 
-您可以通过 `--save_path` 自定义保存路径，随后结构化的json结果将被保存在指定路径下。
+<b>注：</b>由于产线的默认模型较大，推理速度可能较慢，您可以参考第一节的模型列表，替换推理速度更快的模型。
 
 ### 2.2 Python脚本方式集成
-几行代码即可完成产线的快速推理，以通用版面解析产线为例：
+几行代码即可完成产线的快速推理，以通用版面解析v2产线为例：
 
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="layout_parsing")
+pipeline = create_pipeline(pipeline="layout_parsing_v2")
 
 output = pipeline.predict(
-    input="./demo_paper.png",
+    input="./layout_parsing_v2_demo.png",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
     use_textline_orientation=False,
@@ -696,8 +652,9 @@ for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_img(save_path="./output/") ## 保存当前图像的所有子模块预测的可视化图像结果
     res.save_to_json(save_path="./output/") ## 保存当前图像的结构化json结果
-    res.save_to_xlsx(save_path="./output/") ## 保存当前图像的子表格xlsx格式的结果
     res.save_to_html(save_path="./output/") ## 保存当前图像的子表格html格式的结果
+    res.save_to_markdown(save_path="./output/") ## 保存当前图像的markdown格式的结果
+    res.save_to_pdf_order(save_path="./output/") ## 保存当前图像的阅读顺序
 ```
 
 在上述 Python 脚本中，执行了如下几个步骤：
@@ -1219,7 +1176,7 @@ for res in output:
             - `rec_boxes`: `(numpy.ndarray)` 检测框的矩形边界框数组，shape为(n, 4)，dtype为int16。每一行表示一个矩形
 
 - 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
-- 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_ocr_res_img.{your_img_extension}`，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)
+- 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则会将版面区域检测可视化图像、全局OCR可视化图像等内容保存，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)
 
 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
 <table>
@@ -1244,12 +1201,12 @@ for res in output:
 
 此外，您可以获取版面解析产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
 ```
-paddlex --get_pipeline_config layout_parsing --save_path ./my_path
+paddlex --get_pipeline_config layout_parsing_v2 --save_path ./my_path
 ```
 若您获取了配置文件，即可对版面解析产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。示例如下：
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="./my_path/layout_parsing.yaml")
+pipeline = create_pipeline(pipeline="./my_path/layout_parsing_v2.yaml")
 output = pipeline.predict(
     input="./demo_paper.png",
     use_doc_orientation_classify=False,
@@ -1261,7 +1218,7 @@ for res in output:
     res.save_to_img("./output/")
     res.save_to_json("./output/")
 ```
-<b>注：</b> 配置文件中的参数为产线初始化参数，如果希望更改通用版面解析产线初始化参数，可以直接修改配置文件中的参数，并加载配置文件进行预测。同时，CLI 预测也支持传入配置文件，`--pipeline` 指定配置文件的路径即可。
+<b>注：</b> 配置文件中的参数为产线初始化参数，如果希望更改通用版面解析v2产线初始化参数，可以直接修改配置文件中的参数，并加载配置文件进行预测。同时，CLI 预测也支持传入配置文件，`--pipeline` 指定配置文件的路径即可。
 
 ## 3. 开发集成/部署
 如果产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
@@ -1521,12 +1478,12 @@ for res in result[&quot;layoutParsingResults&quot;]:
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
 
 ## 4. 二次开发
-如果通用版面解析产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升通用版面解析产线的在您的场景中的识别效果。
+如果通用版面解析v2产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升通用版面解析v2产线的在您的场景中的识别效果。
 
 ### 4.1 模型微调
-由于通用版面解析产线包含7个模块，模型产线的效果不及预期可能来自于其中任何一个模块。
+由于通用版面解析v2产线包含7个模块，模型产线的效果不及预期可能来自于其中任何一个模块。
 
-由于通用版面解析产线包含若干模块，模型产线的效果不及预期可能来自于其中任何一个模块。。您可以对提取效果差的 case 进行分析，通过可视化图像，确定是哪个模块存在问题，并参考以下表格中对应的微调教程链接进行模型微调。
+由于通用版面解析v2产线包含若干模块，模型产线的效果不及预期可能来自于其中任何一个模块。。您可以对提取效果差的 case 进行分析，通过可视化图像，确定是哪个模块存在问题，并参考以下表格中对应的微调教程链接进行模型微调。
 
 
 <table>
@@ -1632,7 +1589,7 @@ PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多�
 例如，您使用昇腾 NPU 进行版面解析产线的推理，使用的 CLI 命令为：
 
 ```bash
-paddlex --pipeline layout_parsing \
+paddlex --pipeline layout_parsing_v2 \
         --input demo_paper.png  \
         --use_doc_orientation_classify False \
         --use_doc_unwarping False \
@@ -1643,4 +1600,4 @@ paddlex --pipeline layout_parsing \
 
 当然，您也可以在 Python 脚本中 `create_pipeline()` 时或者 `predict()` 时指定硬件设备。
 
-若您想在更多种类的硬件上使用通用版面解析产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。
+若您想在更多种类的硬件上使用通用版面解析v2产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。
