@@ -17,7 +17,7 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>BEVFusion</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/BEVFusion_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BEVFusion_pretrained.pdparams">训练模型</a></td>
+<td>BEVFusion</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BEVFusion_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BEVFusion_pretrained.pdparams">训练模型</a></td>
 <td>53.9</td>
 <td>60.9</td>
 
@@ -139,7 +139,7 @@ for res in output:
 </tr>
 </table>
 
-* 对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为`json`文件的操作:
+* 对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为`json`文件的操作:
 
 <table>
 <thead>
@@ -349,12 +349,12 @@ python main.py -c paddlex/configs/modules/3d_bev_detection/BEVFusion.yaml \
 
 #### 4.4.1 模型推理
 
-* 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例输入](https://paddle-model-ecology.bj.bcebos.com/paddlex/det_3d/demo_det_3d/nuscenes_infos_val.pkl)到本地。
+* 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例数据] (https://paddle-model-ecology.bj.bcebos.com/paddlex/det_3d/demo_det_3d/nuscenes_demo_infer.tar)到本地。
 ```bash
 python main.py -c paddlex/configs/modules/3d_bev_detection/BEVFusion.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
-    -o Predict.input="nuscenes_infos_val.pkl"
+    -o Predict.input="nuscenes_demo_infer.tar"
 ```
 与模型训练和评估类似，需要如下几步：
 

@@ -23,7 +23,7 @@ BEVFusion 是一种多模态 3D 目标检测模型，通过将环视摄像头图
 <th>介绍</th>
 </tr>
 <tr>
-<td>BEVFusion</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/BEVFusion_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BEVFusion_pretrained.pdparams">训练模型</a></td>
+<td>BEVFusion</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BEVFusion_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BEVFusion_pretrained.pdparams">训练模型</a></td>
 <td>53.9</td>
 <td>60.9</td>
 <td rowspan="2">BEVFusion是一种在BEV视角下的多模态融合检测模型，采用两个分支处理不同模态的数据，得到lidar和camera在BEV视角下的特征，camera分支采用LSS这种自底向上的方式来显式的生成图像BEV特征，lidar分支采用经典的点云检测网络，最后对两种模态的BEV特征进行对齐和融合，应用于检测head或分割head。
@@ -45,29 +45,79 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 ### 2.2 本地体验
 > ❗ 在本地使用3D多模态融合检测产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
-Demo数据集下载：您可以参考下面的命令将 Demo 数据集下载到指定文件夹：
-
-```bash
-wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/nuscenes_demo.tar -P ./data
-
-tar -xf ./data/nuscenes_demo.tar -C ./data/
-```
-
 #### 2.2.1 命令行方式体验
 
-一行命令即可快速体验3D多模态融合检测产线效果，并将 `--input` 替换为本地pkl文件路径，进行预测。
+一行命令即可快速体验3D多模态融合检测产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/det_3d/demo_det_3d/nuscenes_demo_infer.tar)，并将 `--input` 替换为本地路径，进行预测
 
 ```bash
-paddlex --pipeline 3d_bev_detection --input ./data/nuscenes_demo/nuscenes_infos_val.pkl --device gpu:0
+paddlex --pipeline 3d_bev_detection \
+        --input nuscenes_demo_infer.tar \
+        --device gpu:0
 ```
 
 参数说明：
 
 ```
 --pipeline：产线名称，此处为3D多模态融合检测产线
---input：待处理的pkl文件的本地路径
+--input：输入的包含点云图像文件的.tar压缩文件的本地路径。3D多模态融合检测为为多输入模型，输入依赖点云、图像以及转换矩阵等其他信息。tar解压文件包含samples路径，sweeps路径和nuscnes_infos_val.pkl文件，其中samples包含当前输入的所有图像和点云数据，sweeps包含关联帧点云数据，nuscnes_infos_val.pkl文件包含所有点云和图像在samples和sweeps下的相对路径以及转换矩阵等相关信息。
 --device 使用的GPU序号（例如gpu:0表示使用第0块GPU，gpu:1,2表示使用第1、2块GPU），也可选择使用CPU（--device cpu）
 ```
+
+运行后，会将结果打印在终端上，结果如下：
+
+```bash
+{"res":
+  {
+    'input_path': 'samples/LIDAR_TOP/n015-2018-10-08-15-36-50+0800__LIDAR_TOP__1538984253447765.pcd.bin',
+    'sample_id': 'b4ff30109dd14c89b24789dc5713cf8c',
+    'input_img_paths': [
+      'samples/CAM_FRONT_LEFT/n015-2018-10-08-15-36-50+0800__CAM_FRONT_LEFT__1538984253404844.jpg',
+      'samples/CAM_FRONT/n015-2018-10-08-15-36-50+0800__CAM_FRONT__1538984253412460.jpg',
+      'samples/CAM_FRONT_RIGHT/n015-2018-10-08-15-36-50+0800__CAM_FRONT_RIGHT__1538984253420339.jpg',
+      'samples/CAM_BACK_RIGHT/n015-2018-10-08-15-36-50+0800__CAM_BACK_RIGHT__1538984253427893.jpg',
+      'samples/CAM_BACK/n015-2018-10-08-15-36-50+0800__CAM_BACK__1538984253437525.jpg',
+      'samples/CAM_BACK_LEFT/n015-2018-10-08-15-36-50+0800__CAM_BACK_LEFT__1538984253447423.jpg'
+    ]
+    "boxes_3d": [
+        [
+            14.5425386428833,
+            22.142045974731445,
+            -1.2903141975402832,
+            1.8441576957702637,
+            4.433370113372803,
+            1.7367216348648071,
+            6.367165565490723,
+            0.0036598597653210163,
+            -0.013568558730185032
+        ]
+    ],
+    "labels_3d": [
+        0
+    ],
+    "scores_3d": [
+        0.9920279383659363
+    ]
+  }
+}
+```
+
+运行结果参数含义如下：
+- `input_path`：表示输入待预测样本的输入点云数据路径
+- `sample_id`：表示输入待预测样本的输入样本的唯一标识符
+- `input_img_paths`：表示输入待预测样本的输入图像数据路径
+- `boxes_3d`：表示该3D样本的所有预测框信息, 每个预测框信息为一个长度为9的列表, 各元素分别表示：
+  - 0: 中心点x坐标
+  - 1: 中心点y坐标
+  - 2: 中心点z坐标
+  - 3: 检测框宽度
+  - 4: 检测框长度
+  - 5: 检测框高度
+  - 6: 旋转角度
+  - 7: 坐标系x方向速度
+  - 8: 坐标系y方向速度
+- `labels_3d`：表示该3D样本的所有预测框对应的预测类别
+- `scores_3d`：表示该3D样本的所有预测框对应的置信度
+
 
 #### 2.2.2 Python脚本方式集成
 * 上述命令行是为了快速体验查看效果，一般来说，在项目中，往往需要通过代码集成，您可以通过几行代码即可完成产线的快速推理，推理代码如下：
@@ -76,7 +126,7 @@ paddlex --pipeline 3d_bev_detection --input ./data/nuscenes_demo/nuscenes_infos_
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="3d_bev_detection")
-output = pipeline.predict("./data/nuscenes_demo/nuscenes_infos_val.pkl")
+output = pipeline.predict("nuscenes_demo_infer.tar")
 
 for res in output:
     res.print()  ## 打印预测的结构化输出
@@ -130,11 +180,11 @@ for res in output:
 <tbody>
 <tr>
 <td>str</td>
-<td><b>pkl文件路径</b>，例如：<code>/root/data/anno_file.pkl</code></td>
+<td><b>tar文件路径</b>，例如：<code>/root/data/nuscenes_demo_infer.tar</code></td>
 </tr>
 <tr>
 <td>list</td>
-<td><b>列表</b>，列表元素需为上述类型数据，如<code>["/root/data/anno_file1.pkl", "/root/data/anno_file2.pkl"]</td>
+<td><b>列表</b>，列表元素需为上述类型数据，如<code>["/root/data/nuscenes_demo_infer1.tar", "/root/data/nuscenes_demo_infer2.tar"]</td>
 </tr>
 </tbody>
 </table>
@@ -180,7 +230,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="./my_path/3d_bev_detection.yaml")
 
-output = pipeline.predict("./data/nuscenes_demo/nuscenes_infos_val.pkl")
+output = pipeline.predict("nuscenes_demo_infer.tar")
 
 for res in output:
     res.print()  ## 打印预测的结构化输出

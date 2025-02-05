@@ -209,7 +209,7 @@ paddlex --pipeline instance_segmentation \
 
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline_name="instance_segmentation")
+pipeline = create_pipeline(pipeline="instance_segmentation")
 output = pipeline.predict(input="general_instance_segmentation_004.png", threshold=0.5)
 for res in output:
     res.print()
@@ -232,15 +232,15 @@ for res in output:
 </thead>
 <tbody>
 <tr>
-<td><code>pipeline_name</code></td>
-<td>产线名称, 必须为 PaddleX 所支持的产线。</td>
+<td><code>pipeline</code></td>
+<td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
 <td><code>str</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
 <td><code>config</code></td>
-<td>产线配置文件路径</td>
-<td><code>str</code></td>
+<td>产线具体的配置信息（如果和<code>pipeline</code>同时设置，优先级高于<code>pipeline</code>，且要求产线名和<code>pipeline</code>一致）。</td>
+<td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -315,7 +315,7 @@ for res in output:
 
 </table>
 
-（3）对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为图片、保存为`json`文件的操作:
+（3）对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`json`文件的操作:
 
 <table>
 <thead>
@@ -1066,7 +1066,7 @@ SubModules:
 ## 5. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device`参数</b>即可完成不同硬件之间的无缝切换。
 
-例如，您使用昇腾 NPU 进行 实例分割 产线的推理，使用的 Python 命令为：
+例如，您使用昇腾 NPU 进行 实例分割 产线的推理，使用的 CLI 命令为：
 
 ```bash
 paddlex --pipeline instance_segmentation \
@@ -1075,4 +1075,7 @@ paddlex --pipeline instance_segmentation \
         --save_path ./output \
         --device npu:0
 ```
+
+当然，您也可以在 Python 脚本中 `create_pipeline()` 时或者 `predict()` 时指定硬件设备。
+
 若您想在更多种类的硬件上使用通用实例分割产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

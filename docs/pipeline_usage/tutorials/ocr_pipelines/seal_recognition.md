@@ -1042,7 +1042,7 @@ for res in output:
 </tr>
 </table>
 
-（3）对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为图片、保存为`json`文件的操作:
+（3）对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`json`文件的操作:
 
 <table>
 <thead>
@@ -1462,8 +1462,8 @@ for i, res in enumerate(result[&quot;sealRecResults&quot;]):
       <td><a href="../../../module_usage/tutorials/ocr_modules/layout_detection.md">链接</a></td>
     </tr>
     <tr>
-      <td>文本存在漏检</td>
-      <td>文本检测模块</td>
+      <td>印章文本存在漏检</td>
+      <td>印章文本检测模块</td>
       <td><a href="../../../module_usage/tutorials/ocr_modules/seal_text_detection.md">链接</a></td>
     </tr>
     <tr>
@@ -1510,7 +1510,7 @@ for i, res in enumerate(result[&quot;sealRecResults&quot;]):
 
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device` 参数</b>即可完成不同硬件之间的无缝切换。
 
-例如，您使用昇腾 NPU 进行印章文本识别产线的推理，使用的 Python 命令为：
+例如，您使用昇腾 NPU 进行印章文本识别产线的推理，使用的 CLI 命令为：
 
 ```bash
 paddlex --pipeline seal_recognition \
@@ -1520,4 +1520,6 @@ paddlex --pipeline seal_recognition \
     --device npu:0 \
     --save_path ./output
 ```
+当然，您也可以在 Python 脚本中 `create_pipeline()` 时或者 `predict()` 时指定硬件设备。
+
 若您想在更多种类的硬件上使用印章文本识别产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

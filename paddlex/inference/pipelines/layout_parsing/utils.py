@@ -192,6 +192,9 @@ def _calculate_overlap_area_div_minbox_area_ratio(
     Returns:
         float: The ratio of the overlap area to the area of the smaller bounding box.
     """
+    bbox1 = list(map(int, bbox1))
+    bbox2 = list(map(int, bbox2))
+
     x_left = max(bbox1[0], bbox2[0])
     y_top = max(bbox1[1], bbox2[1])
     x_right = min(bbox1[2], bbox2[2])

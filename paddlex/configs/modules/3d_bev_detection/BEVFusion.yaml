@@ -33,6 +33,6 @@ Export:
 Predict:
   batch_size: 1
   model_dir: "output/best_model/inference"
-  input: "https://paddle-model-ecology.bj.bcebos.com/paddlex/det_3d/demo_det_3d/nuscenes_infos_val.pkl"
+  input: "https://paddle-model-ecology.bj.bcebos.com/paddlex/det_3d/demo_det_3d/nuscenes_demo_infer.tar"
   kernel_option:
     run_mode: paddle

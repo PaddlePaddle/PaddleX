@@ -2,19 +2,23 @@
 comments: true
 ---
 
-# Seal Recognition Pipeline Tutorial
+# Seal Text Recognition Pipeline Tutorial
 
-## 1. Introduction to the Seal Recognition Pipeline
-Seal recognition is a technology that automatically extracts and recognizes seal content from documents or images. The recognition of seal is part of document processing and has various applications in many scenarios, such as contract comparison, inventory access approval, and invoice reimbursement approval.
+## 1. Introduction to Seal Text Recognition Pipeline
+Seal text recognition is a technology that automatically extracts and recognizes the content of seals from documents or images. The recognition of seal text is part of document processing and has many applications in various scenarios, such as contract comparison, warehouse entry and exit review, and invoice reimbursement review.
 
-<img src="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/01.png">
+The seal text recognition pipeline is used to recognize the text content of seals, extracting the text information from seal images and outputting it in text form. This pipeline integrates the industry-renowned end-to-end OCR system PP-OCRv4, supporting the detection and recognition of curved seal text. Additionally, this pipeline integrates an optional layout region localization module, which can accurately locate the layout position of the seal within the entire document. It also includes optional document image orientation correction and distortion correction functions. Based on this pipeline, millisecond-level accurate text content prediction can be achieved on a CPU. This pipeline also provides flexible service deployment methods, supporting the use of multiple programming languages on various hardware. Moreover, it offers secondary development capabilities, allowing you to train and fine-tune on your own dataset based on this pipeline, and the trained model can be seamlessly integrated.
 
-The <b>Seal Recognition</b> pipeline includes a layout area analysis module, a seal detection module, and a text recognition module.
+<img src="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/01.png" style="width: 70%">
 
-<b>If you prioritize model accuracy, please choose a model with higher accuracy. If you prioritize inference speed, please choose a model with faster inference. If you prioritize model storage size, please choose a model with a smaller storage footprint.</b>
+<b>The seal text recognition</b> pipeline includes a seal text detection module and a text recognition module, as well as optional layout detection module, document image orientation classification module, and text image correction module.
 
+<b>If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, choose a model with faster inference speed. If you prioritize model storage size, choose a model with smaller storage size.</b>
 
-<p><b>Layout Analysis Module Models:</b></p>
+<p><b>Layout Region Detection Module (Optional):</b></p>
+
+* <b>Layout detection model, including 23 common categories: document title, paragraph title, text, page number, abstract, table of contents, references, footnotes, header, footer, algorithm, formula, formula number, image, chart title, table, table title, seal, chart title, chart, header image, footer image, sidebar text</b>
+
 <table>
 <thead>
 <tr>
@@ -22,7 +26,7 @@ The <b>Seal Recognition</b> pipeline includes a layout area analysis module, a s
 <th>mAP(0.5) (%)</th>
 <th>GPU Inference Time (ms)</th>
 <th>CPU Inference Time (ms)</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (M)</th>
 <th>Description</th>
 </tr>
 </thead>
@@ -93,8 +97,150 @@ The <b>Seal Recognition</b> pipeline includes a layout area analysis module, a s
 </tr>
 </tbody>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built layout region analysis dataset, containing 10,000 images of common document types, including English and Chinese papers, magazines, research reports, etc. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
-<p><b>Seal Detection Module Models</b>:</p>
+
+<b>Note: The evaluation dataset for the above accuracy metrics is the self-built layout region detection dataset of PaddleOCR, which includes 500 common document images of Chinese and English papers, magazines, contracts, books, test papers, and research reports. GPU inference time is based on NVIDIA Tesla T4 machine, precision type is FP32, and CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads, precision type is FP32.</b>
+
+> ❗ The above listed are the <b>3 core models</b> that the layout detection module mainly supports. This module supports a total of <b>11 full models</b>, including multiple models predefined with different categories. Among them, there are 9 models that include the seal category. In addition to the above 3 core models, the remaining model list is as follows:
+
+<details><summary> 👉Model List Details</summary>
+
+* <b>3-category Layout Detection Models, including table, image, and seal</b>
+
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>mAP(0.5) (%)</th>
+<th>GPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)</th>
+<th>Model Storage Size (M)</th>
+<th>Introduction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PicoDet-S_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">Training Model</a></td>
+<td>88.2</td>
+<td>13.5</td>
+<td>45.8</td>
+<td>4.8</td>
+<td>A high-efficiency layout area localization model trained on a self-built dataset for Chinese and English papers, magazines, and research reports based on the lightweight PicoDet-S model</td>
+</tr>
+<tr>
+<td>PicoDet-L_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">Training Model</a></td>
+<td>89.0</td>
+<td>15.7</td>
+<td>159.8</td>
+<td>22.6</td>
+<td>A layout area localization model with balanced efficiency and accuracy, trained on a self-built dataset for Chinese and English papers, magazines, and research reports based on PicoDet-L</td>
+</tr>
+<tr>
+<td>RT-DETR-H_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">Training Model</a></td>
+<td>95.8</td>
+<td>114.6</td>
+<td>3832.6</td>
+<td>470.1</td>
+<td>A high-precision layout area localization model trained on a self-built dataset for Chinese and English papers, magazines, and research reports based on RT-DETR-H</td>
+</tr>
+</table>
+
+<b>Note: The evaluation set for the above accuracy metrics is the layout area detection dataset self-built by PaddleOCR, which includes 1,154 images of common document types such as Chinese and English papers, magazines, and research reports. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+
+* <b>17-category Layout Detection Models, including 17 common layout categories: paragraph title, image, text, number, abstract, content, figure title, formula, table, table title, reference, document title, footnote, header, algorithm, footer, seal</b>
+
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>mAP(0.5) (%)</th>
+<th>GPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)</th>
+<th>Model Storage Size (M)</th>
+<th>Introduction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PicoDet-S_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">Training Model</a></td>
+<td>87.4</td>
+<td>13.6</td>
+<td>46.2</td>
+<td>4.8</td>
+<td>A high-efficiency layout area localization model trained on a self-built dataset for Chinese and English papers, magazines, and research reports based on the lightweight PicoDet-S model</td>
+</tr>
+<tr>
+<td>PicoDet-L_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">Training Model</a></td>
+<td>89.0</td>
+<td>17.2</td>
+<td>160.2</td>
+<td>22.6</td>
+<td>A layout area localization model with balanced efficiency and accuracy, trained on a self-built dataset for Chinese and English papers, magazines, and research reports based on PicoDet-L</td>
+</tr>
+<tr>
+<td>RT-DETR-H_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">Training Model</a></td>
+<td>98.3</td>
+<td>115.1</td>
+<td>3827.2</td>
+<td>470.2</td>
+<td>A high-precision layout area localization model trained on a self-built dataset for Chinese and English papers, magazines, and research reports based on RT-DETR-H</td>
+</tr>
+</tbody>
+</table>
+
+<b>Note: The evaluation set for the above accuracy metrics is the layout area detection dataset self-built by PaddleOCR, which includes 892 images of common document types such as Chinese and English papers, magazines, and research reports. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+
+</details>
+
+<p><b>Document Image Orientation Classification Module (Optional):</b></p>
+
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>Top-1 Acc (%)</th>
+<th>GPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)</th>
+<th>Model Storage Size (M)</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">Inference Model</a>/<a  href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Training Model</a></td>
+<td>99.06</td>
+<td>3.84845</td>
+<td>9.23735</td>
+<td>7</td>
+<td>A document image classification model based on PP-LCNet_x1_0, containing four categories: 0 degrees, 90 degrees, 180 degrees, and 270 degrees</td>
+</tr>
+</tbody>
+</table>
+<p><b>Note: The above accuracy metrics are evaluated on a self-built dataset covering multiple scenarios such as certificates and documents, containing 1000 images. GPU inference time is based on NVIDIA Tesla T4 machine, precision type is FP32, CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads, precision type is FP32.</b></p>
+
+
+<p><b>Text Image Correction Module (Optional):</b></p>
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>CER</th>
+<th>Model Storage Size (M)</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UVDoc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/UVDoc_infer.tar">Inference Model</a>/<a  href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">Training Model</a></td>
+<td>0.179</td>
+<td>30.3 M</td>
+<td>High-precision text image correction model</td>
+</tr>
+</tbody>
+</table>
+<b>Note: The accuracy metrics of the model are measured from the <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet benchmark</a>.</b>
+
+
+<p><b>Text Detection Module:</b></p>
 <table>
 <thead>
 <tr>
@@ -102,7 +248,7 @@ The <b>Seal Recognition</b> pipeline includes a layout area analysis module, a s
 <th>Detection Hmean (%)</th>
 <th>GPU Inference Time (ms)</th>
 <th>CPU Inference Time (ms)</th>
-<th>Model Size (M)</th>
+<th>Model Storage Size (M)</th>
 <th>Description</th>
 </tr>
 </thead>
@@ -113,7 +259,7 @@ The <b>Seal Recognition</b> pipeline includes a layout area analysis module, a s
 <td>84.341</td>
 <td>2425.06</td>
 <td>109</td>
-<td>PP-OCRv4's server-side seal detection model, featuring higher accuracy, suitable for deployment on better-equipped servers</td>
+<td>PP-OCRv4 server-side seal text detection model, with higher accuracy, suitable for deployment on better servers</td>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_seal_det_pretrained.pdparams">Trained Model</a></td>
@@ -121,29 +267,29 @@ The <b>Seal Recognition</b> pipeline includes a layout area analysis module, a s
 <td>10.5878</td>
 <td>131.813</td>
 <td>4.6</td>
-<td>PP-OCRv4's mobile seal detection model, offering higher efficiency, suitable for deployment on edge devices</td>
+<td>PP-OCRv4 mobile-side seal text detection model, with higher efficiency, suitable for deployment on the edge</td>
 </tr>
 </tbody>
 </table>
-<p><b>Note: The above accuracy metrics are evaluated on a self-built dataset containing 500 circular seal images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
-<p><b>Text Recognition Module Models</b>:</p>
+<b>Note: The above accuracy metrics are evaluated on a self-built dataset containing 500 circular seal images. GPU inference time is based on NVIDIA Tesla T4 machine, precision type is FP32, CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads, precision type is FP32.</b>
+
+<p><b>Text Recognition Module:</b></p>
 <table>
-<thead>
 <tr>
-<th>Model Name</th><th>Model Download Link</th>
-<th>Average Recognition Accuracy (%)</th>
+<th>Model</th><th>Model Download Link</th>
+<th>Recognition Avg Accuracy(%)</th>
 <th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time</th>
-<th>Model Size (M)</th>
+<th>CPU Inference Time (ms)</th>
+<th>Model Storage Size (M)</th>
+<th>Description</th>
 </tr>
-</thead>
-<tbody>
 <tr>
 <td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Trained Model</a></td>
 <td>78.20</td>
 <td>7.95018</td>
 <td>46.7868</td>
 <td>10.6 M</td>
+<td>The PP-OCRv4 recognition model is an upgrade from PP-OCRv3. Under comparable speed conditions, the effect in Chinese and English scenarios is further improved. The average recognition accuracy of the 80 multilingual models is increased by more than 8%.</td>
 </tr>
 <tr>
 <td>PP-OCRv4_server_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Trained Model</a></td>
@@ -151,205 +297,473 @@ The <b>Seal Recognition</b> pipeline includes a layout area analysis module, a s
 <td>7.19439</td>
 <td>140.179</td>
 <td>71.2 M</td>
+<td>A high-precision server text recognition model, featuring high accuracy, fast speed, and multilingual support. It is suitable for text recognition tasks in various scenarios.</td>
 </tr>
-</tbody>
+<tr>
+<td>PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>An ultra-lightweight OCR model suitable for mobile applications. It adopts an encoder-decoder structure based on Transformer and enhances recognition accuracy and efficiency through techniques such as data augmentation and mixed precision training. The model size is 10.6M, making it suitable for deployment on resource-constrained devices. It can be used in scenarios such as mobile photo translation and business card recognition.</td>
+</tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy indicators is a self-built Chinese dataset from PaddleOCR, covering various scenarios such as street scenes, web images, documents, and handwriting. The text recognition subset includes 11,000 images. The GPU inference time for all models above is based on an NVIDIA Tesla T4 machine with a precision type of FP32. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads, and the precision type is also FP32.</b></p>
 
-## 2.  Quick Start
-The pre trained model production line provided by PaddleX can quickly experience the effect. You can experience the effect of the seal recognition production line online, or use the command line or Python locally to experience the effect of the seal recognition production line.
+<p><b>Note: The evaluation set for the above accuracy indicators is the Chinese dataset built by PaddleOCR, covering multiple scenarios such as street view, web images, documents, and handwriting. The text recognition includes 11,000 images. The GPU inference time for all models is based on NVIDIA Tesla T4 machines with FP32 precision type. The CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
 
+<table>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>Recognition Avg Accuracy(%)</th>
+<th>GPU Inference Time (ms)</th>
+<th>CPU Inference Time</th>
+<th>Model Storage Size (M)</th>
+<th>Introduction</th>
+</tr>
+<tr>
+<td>ch_SVTRv2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_SVTRv2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">Training Model</a></td>
+<td>68.81</td>
+<td>8.36801</td>
+<td>165.706</td>
+<td>73.9 M</td>
+<td rowspan="1">
+SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan University's Visual and Learning Laboratory (FVL). It won the first prize in the PaddleOCR Algorithm Model Challenge - Task One: OCR End-to-End Recognition Task. The end-to-end recognition accuracy on the A list is 6% higher than that of PP-OCRv4.
+</td>
+</tr>
+</table>
 
-Before using the seal recognition production line locally, please ensure that you have completed the wheel package installation of PaddleX according to the  [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+<p><b>Note: The evaluation set for the above accuracy indicators is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a> - Task One: OCR End-to-End Recognition Task A list. The GPU inference time for all models is based on NVIDIA Tesla T4 machines with FP32 precision type. The CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+<table>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>Recognition Avg Accuracy(%)</th>
+<th>GPU Inference Time (ms)</th>
+<th>CPU Inference Time</th>
+<th>Model Storage Size (M)</th>
+<th>Introduction</th>
+</tr>
+<tr>
+<td>ch_RepSVTR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_RepSVTR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">Training Model</a></td>
+<td>65.07</td>
+<td>10.5047</td>
+<td>51.5647</td>
+<td>22.1 M</td>
+<td rowspan="1">    The RepSVTR text recognition model is a mobile text recognition model based on SVTRv2. It won the first prize in the PaddleOCR Algorithm Model Challenge - Task One: OCR End-to-End Recognition Task. The end-to-end recognition accuracy on the B list is 2.5% higher than that of PP-OCRv4, with the same inference speed.</td>
+</tr>
+</table>
 
-### 2.1 Command line experience
-One command can quickly experience the effect of seal recognition production line, use [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png), and replace ` --input ` with the local path for prediction
+<p><b>Note: The evaluation set for the above accuracy indicators is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a> - Task One: OCR End-to-End Recognition Task B list. The GPU inference time for all models is based on NVIDIA Tesla T4 machines with FP32 precision type. The CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
 
+* <b>English Recognition Model</b>
+
+<table>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>Recognition Avg Accuracy(%)</th>
+<th>GPU Inference Time (ms)</th>
+<th>CPU Inference Time</th>
+<th>Model Storage Size (M)</th>
+<th>Introduction</th>
+</tr>
+<tr>
+<td>en_PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/en_PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>[Latest] Further upgraded based on PP-OCRv3, with improved accuracy under comparable speed conditions.</td>
+</tr>
+<tr>
+<td>en_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/en_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Ultra-lightweight model, supporting English and numeric recognition.</td>
+</tr>
+</table>
+
+* <b>Multilingual Recognition Model</b>
+
+<table>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>Recognition Avg Accuracy(%)</th>
+<th>GPU Inference Time (ms)</th>
+<th>CPU Inference Time</th>
+<th>Model Storage Size (M)</th>
+<th>Introduction</th>
+</tr>
+<tr>
+<td>korean_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/korean_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Korean Recognition</td>
+</tr>
+<tr>
+<td>japan_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/japan_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Japanese Recognition</td>
+</tr>
+<tr>
+<td>chinese_cht_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/chinese_cht_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Traditional Chinese Recognition</td>
+</tr>
+<tr>
+<td>te_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/te_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Telugu Recognition</td>
+</tr>
+<tr>
+<td>ka_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ka_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Kannada Recognition</td>
+</tr>
+<tr>
+<td>ta_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ta_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Tamil Recognition</td>
+</tr>
+<tr>
+<td>latin_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/latin_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Latin Recognition</td>
+</tr>
+<tr>
+<td>arabic_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/arabic_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Arabic Script Recognition</td>
+</tr>
+<tr>
+<td>cyrillic_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/cyrillic_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Cyrillic Script Recognition</td>
+</tr>
+<tr>
+<td>devanagari_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/devanagari_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Devanagari Script Recognition</td>
+</tr>
+</table>
+
+</details>
+
+## 2. Quick Start
+The pre-trained model pipelines provided by PaddleX can be quickly experienced. You can experience the seal text recognition pipeline locally using the command line or Python.
+
+Before using the seal text recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
+
+### 2.1 Command Line Experience
+You can quickly experience the seal text recognition pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png), and replace `--input` with the local path for prediction.
+
+```bash
+paddlex --pipeline seal_recognition \
+    --input seal_text_det.png \
+    --use_doc_orientation_classify False \
+    --use_doc_unwarping False \
+    --device gpu:0 \
+    --save_path ./output
 ```
-paddlex --pipeline seal_recognition --input seal_text_det.png --device gpu:0 --save_path output
+
+The relevant parameter descriptions can be referred to in the parameter explanations of [2.1.2 Integration via Python Script](#212-integration-via-python-script).
+
+After running, the results will be printed to the terminal, as follows:
+
+<details><summary> 👉Click to Expand</summary>
+
+```bash
+{'res': {'input_path': 'seal_text_det.png', 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 16, 'label': 'seal', 'score': 0.975529670715332, 'coordinate': [6.191284, 0.16680908, 634.39325, 628.85345]}]}, 'seal_res_list': [{'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': [array([[320,  38],
+       [479,  92],
+       [483,  94],
+       [486,  97],
+       [579, 226],
+       [582, 230],
+       [582, 235],
+       [584, 383],
+       [584, 388],
+       [582, 392],
+       [578, 396],
+       [573, 398],
+       [566, 398],
+       [502, 380],
+       [497, 377],
+       [494, 374],
+       [491, 369],
+       [491, 366],
+       [488, 259],
+       [424, 172],
+       [318, 136],
+       [251, 154],
+       [200, 174],
+       [137, 260],
+       [133, 366],
+       [132, 370],
+       [130, 375],
+       [126, 378],
+       [123, 380],
+       [ 60, 398],
+       [ 55, 398],
+       [ 49, 397],
+       [ 45, 394],
+       [ 43, 390],
+       [ 41, 383],
+       [ 43, 236],
+       [ 44, 230],
+       [ 45, 227],
+       [141,  96],
+       [144,  93],
+       [148,  90],
+       [311,  38],
+       [315,  38]]), array([[461, 347],
+       [465, 350],
+       [468, 354],
+       [470, 360],
+       [470, 425],
+       [469, 429],
+       [467, 433],
+       [462, 437],
+       [456, 439],
+       [169, 439],
+       [165, 439],
+       [160, 436],
+       [157, 432],
+       [155, 426],
+       [154, 360],
+       [155, 356],
+       [158, 352],
+       [161, 348],
+       [168, 346],
+       [456, 346]]), array([[439, 445],
+       [441, 447],
+       [443, 451],
+       [444, 453],
+       [444, 497],
+       [443, 502],
+       [440, 504],
+       [437, 506],
+       [434, 507],
+       [189, 505],
+       [184, 504],
+       [182, 502],
+       [180, 498],
+       [179, 496],
+       [181, 453],
+       [182, 449],
+       [184, 446],
+       [188, 444],
+       [434, 444]]), array([[158, 468],
+       [199, 502],
+       [242, 522],
+       [299, 534],
+       [339, 532],
+       [373, 526],
+       [417, 508],
+       [459, 475],
+       [462, 474],
+       [467, 474],
+       [472, 476],
+       [502, 507],
+       [503, 510],
+       [504, 515],
+       [503, 518],
+       [501, 521],
+       [452, 559],
+       [450, 560],
+       [391, 584],
+       [390, 584],
+       [372, 590],
+       [370, 590],
+       [305, 596],
+       [302, 596],
+       [224, 581],
+       [221, 580],
+       [164, 553],
+       [162, 551],
+       [114, 509],
+       [112, 507],
+       [111, 503],
+       [112, 498],
+       [114, 496],
+       [146, 468],
+       [149, 466],
+       [154, 466]])], 'text_det_params': {'limit_side_len': 736, 'limit_type': 'min', 'thresh': 0.2, 'box_thresh': 0.6, 'unclip_ratio': 0.5}, 'text_type': 'seal', 'textline_orientation_angles': [-1, -1, -1, -1], 'text_rec_score_thresh': 0, 'rec_texts': ['天津君和缘商贸有限公司', '发票专用章', '吗繁物', '5263647368706'], 'rec_scores': [0.9934046268463135, 0.9999403953552246, 0.998250424861908, 0.9913849234580994], 'rec_polys': [array([[320,  38],
+       [479,  92],
+       [483,  94],
+       [486,  97],
+       [579, 226],
+       [582, 230],
+       [582, 235],
+       [584, 383],
+       [584, 388],
+       [582, 392],
+       [578, 396],
+       [573, 398],
+       [566, 398],
+       [502, 380],
+       [497, 377],
+       [494, 374],
+       [491, 369],
+       [491, 366],
+       [488, 259],
+       [424, 172],
+       [318, 136],
+       [251, 154],
+       [200, 174],
+       [137, 260],
+       [133, 366],
+       [132, 370],
+       [130, 375],
+       [126, 378],
+       [123, 380],
+       [ 60, 398],
+       [ 55, 398],
+       [ 49, 397],
+       [ 45, 394],
+       [ 43, 390],
+       [ 41, 383],
+       [ 43, 236],
+       [ 44, 230],
+       [ 45, 227],
+       [141,  96],
+       [144,  93],
+       [148,  90],
+       [311,  38],
+       [315,  38]]), array([[461, 347],
+       [465, 350],
+       [468, 354],
+       [470, 360],
+       [470, 425],
+       [469, 429],
+       [467, 433],
+       [462, 437],
+       [456, 439],
+       [169, 439],
+       [165, 439],
+       [160, 436],
+       [157, 432],
+       [155, 426],
+       [154, 360],
+       [155, 356],
+       [158, 352],
+       [161, 348],
+       [168, 346],
+       [456, 346]]), array([[439, 445],
+       [441, 447],
+       [443, 451],
+       [444, 453],
+       [444, 497],
+       [443, 502],
+       [440, 504],
+       [437, 506],
+       [434, 507],
+       [189, 505],
+       [184, 504],
+       [182, 502],
+       [180, 498],
+       [179, 496],
+       [181, 453],
+       [182, 449],
+       [184, 446],
+       [188, 444],
+       [434, 444]]), array([[158, 468],
+       [199, 502],
+       [242, 522],
+       [299, 534],
+       [339, 532],
+       [373, 526],
+       [417, 508],
+       [459, 475],
+       [462, 474],
+       [467, 474],
+       [472, 476],
+       [502, 507],
+       [503, 510],
+       [504, 515],
+       [503, 518],
+       [501, 521],
+       [452, 559],
+       [450, 560],
+       [391, 584],
+       [390, 584],
+       [372, 590],
+       [370, 590],
+       [305, 596],
+       [302, 596],
+       [224, 581],
+       [221, 580],
+       [164, 553],
+       [162, 551],
+       [114, 509],
+       [112, 507],
+       [111, 503],
+       [112, 498],
+       [114, 496],
+       [146, 468],
+       [149, 466],
+       [154, 466]])], 'rec_boxes': array([], dtype=float64)}]}}
 ```
 
-Parameter description:
+</details>
 
-```
---Pipeline: Production line name, here is the seal recognition production line
---Input: The local path or URL of the input image to be processed
---The GPU serial number used by the device (e.g. GPU: 0 indicates the use of the 0th GPU, GPU: 1,2 indicates the use of the 1st and 2nd GPUs), or the CPU (-- device CPU) can be selected for use
-```
+The explanation of the result parameters can be found in [2.1.2 Python Script Integration](#212-python-script-integration).
 
-When executing the above Python script, the default seal recognition production line configuration file is loaded. If you need to customize the configuration file, you can execute the following command to obtain it:
-
-<details><summary>  👉 Click to expand</summary>
-
-<pre><code class="language-bash">paddlex --get_pipeline_config seal_recognition
-</code></pre>
-<p>After execution, the seal recognition production line configuration file will be saved in the current path. If you want to customize the save location, you can execute the following command (assuming the custom save location is <code>./my_path</code>):</p>
-<pre><code class="language-bash">paddlex --get_pipeline_config seal_recognition --save_path ./my_path --save_path output
-</code></pre>
-<p>After obtaining the production line configuration file, you can replace '-- pipeline' with the configuration file save path to make the configuration file effective. For example, if the configuration file save path is <code>/ seal_recognition.yaml</code>， Just need to execute:</p>
-<pre><code class="language-bash">paddlex --pipeline ./seal_recognition.yaml --input seal_text_det.png --save_path output
-</code></pre>
-<p>Among them, parameters such as <code>--model</code> and <code>--device</code> do not need to be specified and will use the parameters in the configuration file. If the parameters are still specified, the specified parameters will prevail.</p></details>
-
-After running, the result obtained is:
-
-<details><summary>  👉 Click to expand</summary>
-
-<pre><code>
-{'input_path': PosixPath('/root/.paddlex/temp/tmpa8eqnpus.png'), 'layout_result': {'input_path': PosixPath('/root/.paddlex/temp/tmpa8eqnpus.png'), 'boxes': [{'cls_id': 2, 'label': 'seal', 'score': 0.9813321828842163, 'coordinate': [0, 5.1820183, 639.59314, 637.7533]}]}, 'ocr_result': {'dt_polys': [array([[166, 468],
-                        [206, 503],
-                    [249, 523],
-                    [312, 535],
-                    [364, 529],
-                    [390, 521],
-                    [428, 505],
-                    [465, 476],
-                    [468, 474],
-                    [473, 474],
-                    [476, 475],
-                    [478, 477],
-                    [508, 507],
-                    [510, 510],
-                    [511, 514],
-                    [509, 518],
-                    [507, 521],
-                    [458, 559],
-                    [455, 560],
-                    [399, 584],
-                    [399, 584],
-                    [369, 591],
-                    [367, 592],
-                    [308, 597],
-                    [305, 596],
-                    [240, 584],
-                    [239, 584],
-                    [220, 577],
-                    [169, 552],
-                    [166, 551],
-                    [120, 510],
-                    [117, 507],
-                    [116, 503],
-                    [117, 499],
-                    [121, 495],
-                    [153, 468],
-                    [156, 467],
-                    [161, 467]]), array([[439, 444],
-                    [443, 444],
-                    [446, 446],
-                    [448, 448],
-                    [450, 451],
-                    [450, 454],
-                    [448, 498],
-                    [448, 502],
-                    [445, 505],
-                    [442, 507],
-                    [439, 507],
-                    [399, 505],
-                    [196, 506],
-                    [192, 505],
-                    [189, 503],
-                    [187, 500],
-                    [187, 497],
-                    [186, 458],
-                    [186, 456],
-                    [187, 451],
-                    [188, 448],
-                    [192, 444],
-                    [194, 444],
-                    [198, 443]]), array([[463, 347],
-                    [468, 347],
-                    [472, 350],
-                    [474, 353],
-                    [476, 360],
-                    [477, 425],
-                    [476, 429],
-                    [474, 433],
-                    [470, 436],
-                    [466, 438],
-                    [463, 438],
-                    [175, 439],
-                    [170, 438],
-                    [166, 435],
-                    [163, 432],
-                    [161, 426],
-                    [161, 361],
-                    [161, 356],
-                    [163, 352],
-                    [167, 349],
-                    [172, 347],
-                    [184, 346],
-                    [186, 346]]), array([[325,  38],
-                    [485,  91],
-                    [489,  94],
-                    [493,  96],
-                    [587, 225],
-                    [588, 230],
-                    [589, 234],
-                    [592, 384],
-                    [591, 389],
-                    [588, 393],
-                    [585, 397],
-                    [581, 399],
-                    [576, 399],
-                    [572, 398],
-                    [508, 380],
-                    [503, 379],
-                    [499, 375],
-                    [498, 370],
-                    [497, 367],
-                    [493, 258],
-                    [428, 171],
-                    [421, 165],
-                    [323, 136],
-                    [225, 165],
-                    [207, 175],
-                    [144, 260],
-                    [141, 365],
-                    [141, 370],
-                    [138, 374],
-                    [134, 378],
-                    [131, 379],
-                    [ 66, 398],
-                    [ 61, 398],
-                    [ 56, 398],
-                    [ 52, 395],
-                    [ 48, 391],
-                    [ 47, 386],
-                    [ 47, 384],
-                    [ 47, 235],
-                    [ 48, 230],
-                    [ 50, 226],
-                    [146,  96],
-                    [151,  92],
-                    [154,  91],
-                    [315,  38],
-                    [320,  37]])], 'dt_scores': [0.99375725701319, 0.9871711582010613, 0.9937523531067023, 0.9911629231838204], 'rec_text': ['5263647368706', '吗繁物', '发票专天津君和缘商贸有限公司'], 'rec_score': [0.9933745265007019, 0.998288631439209, 0.9999362230300903, 0.9923253655433655], 'input_path': PosixPath('/Users/chenghong0temp/tmpa8eqnpus.png')}, 'src_file_name': 'https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png', 'page_id': 0}
-</code></pre></details>
+The visualized results are saved under `save_path`, and the visualized result of seal OCR is as follows:
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/seal_recognition/03.png">
 
-The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path.
+### 2.1.2 Python Script Integration
 
-
-###  2.2 Python Script Integration
-A few lines of code can complete the fast inference of the production line. Taking the seal recognition production line as an example:
+* The above command line is for quickly experiencing and viewing the effect. Generally, in a project, you often need to integrate through code. You can complete the quick inference of the pipeline with just a few lines of code. The inference code is as follows:
 
 ```python
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="seal_recognition")
 
-output = pipeline.predict("seal_text_det.png")
+output = pipeline.predict(
+    "seal_text_det.png",
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+)
 for res in output:
-    res.print()
-    res.save_to_img("./output/") # Save the results in img
+    res.print() ## 打印预测的结构化输出
+    res.save_to_img("./output/") ## 保存可视化结果
+    res.save_to_json("./output/") ## 保存可视化结果
 ```
-
-The result obtained is the same as the command line method.
 
 In the above Python script, the following steps were executed:
 
-（1）Instantiate the  production line object using `create_pipeline`: Specific parameter descriptions are as follows:
+(1) The OCR production line object was instantiated via `create_pipeline()`, with the specific parameters described as follows:
 
 <table>
 <thead>
@@ -357,92 +771,338 @@ In the above Python script, the following steps were executed:
 <th>Parameter</th>
 <th>Description</th>
 <th>Type</th>
-<th>Default</th>
+<th>Default Value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>pipeline</code></td>
-<td>The name of the production line or the path to the production line configuration file. If it is the name of the production line, it must be supported by PaddleX.</td>
+<td>The name of the production line or the path to the production line configuration file. If it is a production line name, it must be supported by PaddleX.</td>
 <td><code>str</code></td>
-<td>None</td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The device for production line model inference. Supports: "gpu", "cpu".</td>
+<td>The device used for production line inference. It supports specifying the specific card number of the GPU, such as "gpu:0", other hardware card numbers, such as "npu:0", or CPU, such as "cpu".</td>
 <td><code>str</code></td>
-<td><code>gpu</code></td>
+<td><code>gpu:0</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference, only available if the production line supports it.</td>
+<td>Whether to enable high-performance inference. This is only available if the production line supports high-performance inference.</td>
 <td><code>bool</code></td>
 <td><code>False</code></td>
 </tr>
 </tbody>
 </table>
-（2）Invoke the `predict` method of the  production line object for inference prediction: The `predict` method parameter is `x`, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
+
+(2) Call the `predict()` method of the Seal Text Recognition pipeline object for inference prediction. This method will return a `generator`. Below are the parameters and their descriptions for the `predict()` method:
 
 <table>
 <thead>
 <tr>
-<th>Parameter Type</th>
-<th>Parameter Description</th>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Options</th>
+<th>Default Value</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>Python Var</td>
-<td>Supports directly passing in Python variables, such as numpy.ndarray representing image data.</td>
+<td><code>input</code></td>
+<td>Data to be predicted, supports multiple input types (required)</td>
+<td><code>Python Var|str|list</code></td>
+<td>
+<ul>
+  <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
+  <li><b>str</b>: Local path of an image or PDF file, e.g., <code>/root/data/img.jpg</code>; <b>URL link</b>, e.g., the network URL of an image or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png">Example</a>; <b>Local directory</b>, containing images to be predicted, e.g., <code>/root/data/</code> (currently does not support prediction of PDF files in directories; PDF files must be specified with an exact file path)</li>
+  <li><b>List</b>: Elements of the list must be of the above types, e.g., <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td>str</td>
-<td>Supports passing in the path of the file to be predicted, such as the local path of an image file: <code>/root/data/img.jpg</code>.</td>
+<td><code>device</code></td>
+<td>Inference device for the pipeline</td>
+<td><code>str|None</code></td>
+<td>
+<ul>
+  <li><b>CPU</b>: e.g., <code>cpu</code> for CPU inference;</li>
+  <li><b>GPU</b>: e.g., <code>gpu:0</code> for inference using the first GPU;</li>
+  <li><b>NPU</b>: e.g., <code>npu:0</code> for inference using the first NPU;</li>
+  <li><b>XPU</b>: e.g., <code>xpu:0</code> for inference using the first XPU;</li>
+  <li><b>MLU</b>: e.g., <code>mlu:0</code> for inference using the first MLU;</li>
+  <li><b>DCU</b>: e.g., <code>dcu:0</code> for inference using the first DCU;</li>
+  <li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used. During initialization, the local GPU device 0 will be prioritized; if unavailable, the CPU device will be used.</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td>str</td>
-<td>Supports passing in the URL of the file to be predicted, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png">Example</a>.</td>
+<td><code>use_doc_orientation_classify</code></td>
+<td>Whether to use the document orientation classification module</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+  <li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>True</code>.</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td>str</td>
-<td>Supports passing in a local directory, which should contain files to be predicted, such as the local path: <code>/root/data/</code>.</td>
+<td><code>use_doc_unwarping</code></td>
+<td>Whether to use the document unwarping module</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+  <li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>True</code>.</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td>dict</td>
-<td>Supports passing in a dictionary type, where the key needs to correspond to a specific task, such as "img" for image classification tasks. The value of the dictionary supports the above types of data, for example: <code>{"img": "/root/data1"}</code>.</td>
+<td><code>use_layout_detection</code></td>
+<td>Whether to use the layout detection module</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+  <li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>True</code>.</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td>list</td>
-<td>Supports passing in a list, where the list elements need to be of the above types of data, such as <code>[numpy.ndarray, numpy.ndarray], ["/root/data/img1.jpg", "/root/data/img2.jpg"], ["/root/data1", "/root/data2"], [{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code>.</td>
+<td><code>layout_threshold</code></td>
+<td>Confidence threshold for layout detection; only scores above this threshold will be output</td>
+<td><code>float|dict|None</code></td>
+<td>
+<ul>
+    <li><b>float</b>: Any float greater than <code>0</code></li>
+    <li><b>dict</b>: Key is the int category ID, value is any float greater than <code>0</code></li>
+    <li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>0.5</code></li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
-</tbody>
+<tr>
+<td><code>layout_nms</code></td>
+<td>Whether to use Non-Maximum Suppression (NMS) for layout detection post-processing</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+  <li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>True</code>.</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>layout_unclip_ratio</code></td>
+<td>Expansion ratio of detection box edges; if not specified, the default value from the PaddleX official model configuration will be used</td>
+<td><code>float|list|None</code></td>
+<td>
+<ul>
+  <li><b>float</b>: Any float greater than 0, e.g., 1.1, which means expanding the width and height of the detection box by 1.1 times while keeping the center unchanged</li>
+  <li><b>list</b>: e.g., [1.2, 1.5], which means expanding the width of the detection box by 1.2 times and the height by 1.5 times while keeping the center unchanged</li>
+  <li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as 1.0</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td><code>layout_merge_bboxes_mode</code></td>
+<td>Merging mode for detection boxes in layout detection output; if not specified, the default value from the PaddleX official model configuration will be used</td>
+<td><code>string|None</code></td>
+<td>
+<ul>
+  <li><b>large</b>: When set to <code>large</code>, only the largest external box will be retained for overlapping detection boxes, and the internal overlapping boxes will be removed.</li>
+  <li><b>small</b>: When set to <code>small</code>, only the smallest internal box will be retained for overlapping detection boxes, and the external overlapping boxes will be removed.</li>
+  <li><b>union</b>: No filtering of boxes will be performed; both internal and external boxes will be retained.</li>
+  <li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>large</code>.</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>seal_det_limit_side_len</code></td>
+<td>Side length limit for seal text detection</td>
+<td><code>int|None</code></td>
+<td>
+<ul>
+  <li><b>int</b>: Any integer greater than <code>0</code></li>
+  <li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>736</code></li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_rec_score_thresh</code></td>
+<td>Text recognition threshold; text results with scores above this threshold will be retained</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+    <li><b>float</b>: Any float greater than <code>0</code></li>
+    <li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>0.0</code>. This means no threshold is applied.</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
 </table>
-（3）Obtain the prediction results by calling the `predict` method: The `predict` method is a `generator`, so prediction results need to be obtained through iteration. The `predict` method predicts data in batches, so the prediction results are in the form of a list.
 
-（4）Process the prediction results: The prediction result for each sample is of `dict` type and supports printing or saving to files, with the supported file types depending on the specific pipeline. For example:
+(3) Process the prediction results. The prediction result for each sample is of `dict` type and supports operations such as printing, saving as an image, and saving as a `json` file:
 
 <table>
 <thead>
 <tr>
 <th>Method</th>
 <th>Description</th>
-<th>Method Parameters</th>
+<th>Parameter</th>
+<th>Parameter Type</th>
+<th>Parameter Description</th>
+<th>Default Value</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>save_to_img</td>
-<td>Save the results as an img format file</td>
-<td><code>- save_path</code>: str, the path to save the file. When it's a directory, the saved file name will be consistent with the input file type;</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print results to the terminal</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>Whether to format the output content using <code>JSON</code> indentation</td>
+<td><code>True</code></td>
 </tr>
-</tbody>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data for better readability, effective only when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> will retain the original characters, effective only when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save results as a json file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path to save the results. When it is a directory, the saved file name will be consistent with the input file type</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data for better readability, effective only when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> will retain the original characters, effective only when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>Save results as an image file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path to save the results, supports directory or file path</td>
+<td>None</td>
+</tr>
 </table>
-Where `save_to_img` can save visualization results (including OCR result images, layout analysis result images).
 
-If you have a configuration file, you can customize the configurations of the seal recognition  pipeline by simply modifying the `pipeline` parameter in the `create_pipeline` method to the path of the pipeline configuration file.
+- Calling the `print()` method will print the results to the terminal, and the explanations of the printed content are as follows:
 
-For example, if your configuration file is saved in `/ my_path/seal_recognition.yaml` ， Then only need to execute:
+    - `input_path`: `(str)` The input path of the image to be predicted.
 
+    - `model_settings`: `(Dict[str, bool])` The model parameters required for pipeline configuration.
+
+        - `use_doc_preprocessor`: `(bool)` Controls whether to enable the document preprocessing sub-pipeline.
+        - `use_layout_detection`: `(bool)` Controls whether to enable the layout detection sub-module.
+
+    - `layout_det_res`: `(Dict[str, Union[List[numpy.ndarray], List[float]]])` The output result of the layout detection sub-module. Only exists when `use_layout_detection=True`.
+
+        - `input_path`: `(Union[str, None])` The image path accepted by the layout detection module. Saved as `None` when the input is a `numpy.ndarray`.
+        - `page_index`: `(Union[int, None])` Indicates the current page number of the PDF if the input is a PDF file; otherwise, it is `None`.
+        - `boxes`: `(List[Dict])` A list of detected layout seal regions, with each element containing the following fields:
+            - `cls_id`: `(int)` The class ID of the detected seal region.
+            - `score`: `(float)` The confidence score of the detected region.
+            - `coordinate`: `(List[float])` The coordinates of the four corners of the detection box, in the order of x1, y1, x2, y2, representing the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner.
+
+    - `seal_res_list`: `List[Dict]` A list of seal text recognition results, with each element containing the following fields:
+
+        - `input_path`: `(Union[str, None])` The image path accepted by the seal text recognition pipeline. Saved as `None` when the input is a `numpy.ndarray`.
+        - `page_index`: `(Union[int, None])` Indicates the current page number of the PDF if the input is a PDF file; otherwise, it is `None`.
+        - `model_settings`: `(Dict[str, bool])` The model configuration parameters for the seal text recognition pipeline.
+          - `use_doc_preprocessor`: `(bool)` Controls whether to enable the document preprocessing sub-pipeline.
+          - `use_textline_orientation`: `(bool)` Controls whether to enable the text line orientation classification sub-module.
+
+    - `doc_preprocessor_res`: `(Dict[str, Union[str, Dict[str, bool], int]])` The output result of the document preprocessing sub-pipeline. Only exists when `use_doc_preprocessor=True`.
+
+        - `input_path`: `(Union[str, None])` The image path accepted by the document preprocessing sub-pipeline. Saved as `None` when the input is a `numpy.ndarray`.
+        - `model_settings`: `(Dict)` The model configuration parameters for the preprocessing sub-pipeline.
+            - `use_doc_orientation_classify`: `(bool)` Controls whether to enable document orientation classification.
+            - `use_doc_unwarping`: `(bool)` Controls whether to enable document unwarping.
+        - `angle`: `(int)` The predicted result of document orientation classification. When enabled, it takes values [0, 1, 2, 3], corresponding to [0°, 90°, 180°, 270°]; when disabled, it is -1.
+
+    - `dt_polys`: `(List[numpy.ndarray])` A list of polygon boxes for seal text detection. Each detection box is represented by a numpy array of multiple vertex coordinates, with the array shape being (n, 2).
+
+    - `dt_scores`: `(List[float])` A list of confidence scores for text detection boxes.
+
+    - `text_det_params`: `(Dict[str, Dict[str, int, float]])` Configuration parameters for the text detection module.
+        - `limit_side_len`: `(int)` The side length limit value during image preprocessing.
+        - `limit_type`: `(str)` The handling method for side length limits.
+        - `thresh`: `(float)` The confidence threshold for text pixel classification.
+        - `box_thresh`: `(float)` The confidence threshold for text detection boxes.
+        - `unclip_ratio`: `(float)` The expansion ratio for text detection boxes.
+        - `text_type`: `(str)` The type of seal text detection, currently fixed as "seal".
+
+    - `text_rec_score_thresh`: `(float)` The filtering threshold for text recognition results.
+
+    - `rec_texts`: `(List[str])` A list of text recognition results, containing only texts with confidence scores above `text_rec_score_thresh`.
+
+    - `rec_scores`: `(List[float])` A list of confidence scores for text recognition, filtered by `text_rec_score_thresh`.
+
+    - `rec_polys`: `(List[numpy.ndarray])` A list of text detection boxes filtered by confidence score, in the same format as `dt_polys`.
+
+    - `rec_boxes`: `(numpy.ndarray)` An array of rectangular bounding boxes for detection boxes; the seal recognition pipeline returns an empty array.
+
+- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.json`. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, `numpy.array` types will be converted to list format.
+
+- Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_seal_res_region1.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (The pipeline usually contains multiple result images, so it is not recommended to specify a specific file path directly, as multiple images will be overwritten, and only the last image will be retained.)
+
+* Additionally, you can obtain visualized images with results and prediction results through attributes, as follows:
+
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "1"><code>json</code></td>
+<td rowspan = "1">Get the prediction results in <code>json</code> format.</td>
+</tr>
+<tr>
+<td rowspan = "2"><code>img</code></td>
+<td rowspan = "2">Get the visualization results in <code>dict</code> format.</td>
+</tr>
+</table>
+
+- The prediction results obtained through the `json` attribute are of dict type, with content consistent with what is saved by calling the `save_to_json()` method.
+- The prediction results returned by the `img` attribute are of dict type. The keys are `layout_det_res`, `seal_res_region1`, and `preprocessed_img`, corresponding to three `Image.Image` objects: one for visualizing layout detection, one for visualizing seal text recognition results, and one for visualizing image preprocessing. If the image preprocessing sub-module is not used, `preprocessed_img` will not be included in the dictionary. If the layout region detection module is not used, `layout_det_res` will not be included.
+
+Additionally, you can obtain the configuration file for the seal text recognition pipeline and load the configuration file for prediction. You can execute the following command to save the results in `my_path`:
+
+```
+paddlex --get_pipeline_config seal_recognition --save_path ./my_path
+```
+
+If you have obtained the configuration file, you can customize the settings for the seal text recognition production line by simply modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the production line configuration file. The example is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -451,28 +1111,31 @@ output = pipeline.predict("seal_text_det.png")
 for res in output:
     res.print() ## 打印预测的结构化输出
     res.save_to_img("./output/") ## 保存可视化结果
+    res.save_to_json("./output/") ## 保存预测结果的json文件
 ```
 
-## 3. Development integration/deployment
-If the production line can meet your requirements for inference speed and accuracy, you can directly develop integration/deployment.
+<b>Note:</b> The parameters in the configuration file are the pipeline initialization parameters. If you wish to change the initialization parameters of the seal text recognition pipeline, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in a configuration file. Simply specify the path of the configuration file with `--pipeline`.
 
-If you need to directly apply the production line to your Python project, you can refer to the example code in [2.2.2 Python scripting] (# 222 python scripting integration).
+## 3. Development Integration/Deployment
+If the pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
-In addition, PaddleX also offers three other deployment methods, detailed as follows:
+If you need to integrate the pipeline into your Python project, you can refer to the example code in [2.2.2 Python Script Method](#222-python脚本方式集成).
 
-🚀 ** High performance deployment: In actual production environments, many applications have strict standards for the performance indicators of deployment strategies, especially response speed, to ensure efficient system operation and smooth user experience. To this end, PaddleX provides a high-performance inference plugin aimed at deep performance optimization of model inference and pre-processing, achieving significant acceleration of end-to-end processes. For a detailed high-performance deployment process, please refer to the [PaddleX High Performance Deployment Guide] (../../../pipelin_deploy/high_performance_deploy. md).
+In addition, PaddleX also provides three other deployment methods, which are detailed as follows:
 
-☁️ <b>Serving</b>: Serving is a common deployment strategy in real-world production environments. By encapsulating inference functions into services, clients can access these services via network requests to obtain inference results. PaddleX supports various solutions for serving pipelines. For detailed pipeline serving procedures, please refer to the [PaddleX Pipeline Serving Guide](../../../pipeline_deploy/serving.md).
+🚀 <b>High-Performance Deployment</b>: In practical production environments, many applications have strict performance requirements (especially response speed) for deployment strategies to ensure efficient system operation and smooth user experience. To this end, PaddleX provides a high-performance inference plugin that aims to deeply optimize the performance of model inference and pre/post-processing, significantly speeding up the end-to-end process. For detailed high-performance deployment procedures, please refer to the [PaddleX High-Performance Deployment Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-Below are the API reference and multi-language service invocation examples for the basic serving solution:
+☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common form of deployment in practical production environments. By encapsulating inference capabilities as services, clients can access these services via network requests to obtain inference results. PaddleX supports various pipeline service-oriented deployment solutions. For detailed pipeline service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving.en.md).
+
+Below are the API references for basic service-oriented deployment and multi-language service invocation examples:
 
 <details><summary>API Reference</summary>
 
-<p>For primary operations provided by the service:</p>
+<p>For the main operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
-<li>The request body and the response body are both JSON data (JSON objects).</li>
-<li>When the request is processed successfully, the response status code is <code>200</code>, and the response body properties are as follows:</li>
+<li>Both the request body and response body are JSON data (JSON objects).</li>
+<li>When the request is processed successfully, the response status code is <code>200</code>, and the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -486,17 +1149,17 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>logId</code></td>
 <td><code>string</code></td>
-<td>UUID for the request.</td>
+<td>The UUID of the request.</td>
 </tr>
 <tr>
 <td><code>errorCode</code></td>
 <td><code>integer</code></td>
-<td>Error code. Fixed as <code>0</code>.</td>
+<td>Error code. Fixed to <code>0</code>.</td>
 </tr>
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error message. Fixed as <code>"Success"</code>.</td>
+<td>Error message. Fixed to <code>"Success"</code>.</td>
 </tr>
 <tr>
 <td><code>result</code></td>
@@ -506,7 +1169,7 @@ Below are the API reference and multi-language service invocation examples for t
 </tbody>
 </table>
 <ul>
-<li>When the request is not processed successfully, the response body properties are as follows:</li>
+<li>When the request is not processed successfully, the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -520,7 +1183,7 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>logId</code></td>
 <td><code>string</code></td>
-<td>UUID for the request.</td>
+<td>The UUID of the request.</td>
 </tr>
 <tr>
 <td><code>errorCode</code></td>
@@ -534,14 +1197,14 @@ Below are the API reference and multi-language service invocation examples for t
 </tr>
 </tbody>
 </table>
-<p>Primary operations provided by the service:</p>
+<p>The main operations provided by the service are as follows:</p>
 <ul>
 <li><b><code>infer</code></b></li>
 </ul>
-<p>Obtain seal recognition results from an image.</p>
+<p>Get seal text recognition results.</p>
 <p><code>POST /seal-recognition</code></p>
 <ul>
-<li>Request body properties:</li>
+<li>The request body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -556,19 +1219,19 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>The URL of an image file or PDF file accessible by the server, or the Base64 encoded result of the content of the above-mentioned file types. For PDF files with more than 10 pages, only the content of the first 10 pages will be used.</td>
+<td>The URL of an image or PDF file accessible to the server, or the Base64 encoded result of the content of the above file types. For PDF files exceeding 10 pages, only the content of the first 10 pages will be used.</td>
 <td>Yes</td>
 </tr>
 <tr>
 <td><code>fileType</code></td>
 <td><code>integer</code></td>
-<td>File type. <code>0</code> indicates a PDF file, and <code>1</code> indicates an image file. If this property is not present in the request body, the file type will be inferred based on the URL.</td>
+<td>File type. <code>0</code> indicates a PDF file, <code>1</code> indicates an image file. If this property is not present in the request body, the file type will be inferred from the URL.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>When the request is processed successfully, the <code>result</code> in the response body has the following properties:</li>
+<li>When the request is processed successfully, the <code>result</code> property of the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -581,13 +1244,13 @@ Below are the API reference and multi-language service invocation examples for t
 <tbody>
 <tr>
 <td><code>sealRecResults</code></td>
-<td><code>array</code></td>
-<td>Seal recognition results. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
+<td><code>object</code></td>
+<td>Seal text recognition results. The array length is 1 (for image input) or the smaller of the document page count and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file in order.</td>
 </tr>
 <tr>
 <td><code>dataInfo</code></td>
 <td><code>object</code></td>
-<td>Information about the input data.</td>
+<td>Input data information.</td>
 </tr>
 </tbody>
 </table>
@@ -604,7 +1267,7 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>texts</code></td>
 <td><code>array</code></td>
-<td>Positions, contents, and scores of texts.</td>
+<td>Text position, content, and score.</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
@@ -636,7 +1299,7 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>poly</code></td>
 <td><code>array</code></td>
-<td>Text position. Elements in the array are the vertex coordinates of the polygon enclosing the text.</td>
+<td>Text position. The elements in the array are the vertex coordinates of the polygon surrounding the text.</td>
 </tr>
 <tr>
 <td><code>text</code></td>
@@ -651,11 +1314,10 @@ Below are the API reference and multi-language service invocation examples for t
 </tbody>
 </table></details>
 
-<details><summary>Multi-Language Service Invocation Examples</summary>
+<details><summary>Multi-language Service Call Examples</summary>
 
 <details>
 <summary>Python</summary>
-
 
 <pre><code class="language-python">import base64
 import requests
@@ -687,51 +1349,87 @@ for i, res in enumerate(result[&quot;sealRecResults&quot;]):
 </details>
 <br/>
 
-## 4.  Secondary development
-If the default model weights provided by the seal recognition production line are not satisfactory in terms of accuracy or speed in your scenario, you can try using your own specific domain or application scenario data to further fine tune the existing model to improve the recognition performance of the seal recognition production line in your scenario.
+📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
+You can choose the appropriate deployment method based on your needs to integrate the model pipeline into subsequent AI applications.
 
-### 4.1 Model fine-tuning
-Due to the fact that the seal recognition production line consists of three modules, the performance of the model production line may not be as expected due to any of these modules.
+## 4. Custom Development
+If the default model weights provided by the seal text recognition pipeline do not meet your requirements in terms of accuracy or speed, you can try to <b>fine-tune</b> the existing models using <b>your own domain-specific or application data</b> to improve the recognition performance of the seal text recognition pipeline in your scenario.
 
-You can analyze images with poor recognition performance and refer to the following rules for analysis and model fine-tuning:
+### 4.1 Model Fine-Tuning
+Since the seal text recognition pipeline consists of several modules, if the pipeline's performance does not meet expectations, the issue may arise from any one of these modules. You can analyze images with poor recognition results to identify which module is problematic and refer to the corresponding fine-tuning tutorial links in the table below for model fine-tuning.
 
-* If the seal area is incorrectly located within the overall layout, the layout detection module may be insufficient. You need to refer to the [Customization](../../../module_usage/tutorials/ocr_modules/layout_detection.en.md#customization) section in the [Layout Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/layout_detection.en.md) and use your private dataset to fine-tune the layout detection model.
-* If there is a significant amount of text that has not been detected (i.e. text miss detection phenomenon), it may be due to the shortcomings of the text detection model. You need to refer to the [Secondary Development](../../../module_usage/tutorials/ocr_modules/seal_text_detection.en.md#customization) section in the [Seal Text Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/seal_text_detection.en.md) to fine tune the text detection model using your private dataset.
-* If seal texts are undetected (i.e., text miss detection), the text detection model may be insufficient. You need to refer to the [Customization](../../../module_usage/tutorials/ocr_modules/text_recognition.en.md#customization) section in the [Text Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_recognition.en.md) and use your private dataset to fine-tune the text detection model.
-
-* If many detected texts contain recognition errors (i.e., the recognized text content does not match the actual text content), the text recognition model requires further improvement. You need to refer to the [Customization](../../../module_usage/tutorials/ocr_modules/text_recognition.en.md#customization) section.
+<table>
+  <thead>
+    <tr>
+      <th>Scenario</th>
+      <th>Fine-Tuning Module</th>
+      <th>Fine-Tuning Reference Link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Inaccurate or missing seal position detection</td>
+      <td>Layout Detection Module</td>
+      <td><a href="../../../module_usage/tutorials/ocr_modules/layout_detection.en.md">Link</a></td>
+    </tr>
+    <tr>
+      <td>Missing text detection</td>
+      <td>Text Detection Module</td>
+      <td><a href="../../../module_usage/tutorials/ocr_modules/seal_text_detection.en.md">Link</a></td>
+    </tr>
+    <tr>
+      <td>Inaccurate text content</td>
+      <td>Text Recognition Module</td>
+      <td><a href="../../../module_usage/tutorials/ocr_modules/text_recognition.en.md">Link</a></td>
+    </tr>
+    <tr>
+      <td>Inaccurate full-image rotation correction</td>
+      <td>Document Image Orientation Classification Module</td>
+      <td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md">Link</a></td>
+    </tr>
+    <tr>
+      <td>Inaccurate image distortion correction</td>
+      <td>Text Image Correction Module</td>
+      <td>Not supported for fine-tuning</td>
+    </tr>
+  </tbody>
+</table>
 
 ### 4.2 Model Application
-After completing fine-tuning training using a private dataset, you can obtain a local model weight file.
+After fine-tuning with your private dataset, you will obtain the local model weight files.
 
-If you need to use the fine tuned model weights, simply modify the production line configuration file and replace the local path of the fine tuned model weights with the corresponding position in the production line configuration file
+If you need to use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local path of the fine-tuned model weights in the corresponding position of the pipeline configuration file:
 
 ```python
 ......
- Pipeline:
-  layout_model: RT-DETR-H_layout_3cls #can be modified to the local path of the fine tuned model
-  text_det_model: PP-OCRv4_server_seal_det  #can be modified to the local path of the fine tuned model
-  text_rec_model: PP-OCRv4_server_rec #can be modified to the local path of the fine tuned model
-  layout_batch_size: 1
-  text_rec_batch_size: 1
-  device: "gpu:0"
+    SubModules:
+      TextDetection:
+        module_name: seal_text_detection
+        model_name: PP-OCRv4_server_seal_det
+        model_dir: null # 修改此处为微调后模型权重的本地路径
+        limit_side_len: 736
+        limit_type: min
+        thresh: 0.2
+        box_thresh: 0.6
+        unclip_ratio: 0.5
 ......
 ```
-Subsequently, refer to the command line or Python script in the local experience to load the modified production line configuration file.
 
-##  5.  Multiple hardware support
-PaddleX supports various mainstream hardware devices such as Nvidia GPU, Kunlun Core XPU, Ascend NPU, and Cambrian MLU, and can seamlessly switch between different hardware devices by simply modifying the <b>`--device`</b> parameter.
+Then, refer to the command-line or Python script methods in [2.2 Local Experience](#22-local-experience) to load the modified production line configuration file.
 
-For example, if you use Nvidia GPU for inference on a seal recognition production line, the Python command you use is:
+## 5. Multi-Hardware Support
 
+PaddleX supports a variety of mainstream hardware devices, including NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware devices.
+
+For example, if you use Ascend NPU for inference on the seal text recognition production line, the Python command would be:
+
+```bash
+paddlex --pipeline seal_recognition \
+    --input seal_text_det.png \
+    --use_doc_orientation_classify False \
+    --use_doc_unwarping False \
+    --device npu:0 \
+    --save_path ./output
 ```
-paddlex --pipeline seal_recognition --input seal_text_det.png --device gpu:0 --save_path output
-```
 
-At this point, if you want to switch the hardware to Ascend NPU, simply modify the ` --device ` in the Python command to NPU:
-
-```
-paddlex --pipeline seal_recognition --input seal_text_det.png --device npu:0 --save_path output
-```
-
-If you want to use the seal recognition production line on a wider range of hardware, please refer to the [PaddleX Multi Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md)。
+If you wish to use the seal text recognition pipeline on a wider variety of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).

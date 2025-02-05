@@ -23,7 +23,7 @@ BEVFusion is a multi-modal 3D object detection model that fuses surround camera 
 <th>Description</th>
 </tr>
 <tr>
-<td>BEVFusion</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/BEVFusion_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BEVFusion_pretrained.pdparams">Training Model</a></td>
+<td>BEVFusion</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BEVFusion_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BEVFusion_pretrained.pdparams">Training Model</a></td>
 <td>53.9</td>
 <td>60.9</td>
 <td rowspan="2">BEVFusion is a multi-modal fusion detection model from a BEV perspective. It uses two branches to process data from different modalities, obtaining features for LiDAR and camera in the BEV perspective. The camera branch uses the LSS bottom-up approach to explicitly generate image BEV features, while the LiDAR branch uses a classic point cloud detection network. Finally, the BEV features from both modalities are aligned and fused, applied to the detection head or segmentation head.
@@ -55,21 +55,77 @@ tar -xf ./data/nuscenes_demo.tar -C ./data/
 
 #### 2.2.1 Command Line Experience
 
-You can quickly experience the 3D multi-modal fusion detection pipeline with a single command, replacing `--input` with the local path to the pkl file for prediction.
-
+You can quickly experience the 3D multi-modal fusion detection pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/det_3d/demo_det_3d/nuscenes_demo_infer.tar)，and  `--input` replace with the local path for prediction.
 ```bash
-paddlex --pipeline 3d_bev_detection --input ./data/nuscenes_demo/nuscenes_infos_val.pkl --device gpu:0
+paddlex --pipeline 3d_bev_detection \
+        --input nuscenes_demo_infer.tar \
+        --device gpu:0
 ```
-
 Parameter description:
 
 ```
 --pipeline: The name of the pipeline, here it is the 3D multi-modal fusion detection pipeline.
 
---input: The local path to the pkl file to be processed.
+--input: The input path to the .tar file containing image and lidar data to be processed. 3D multi-modal fusion detection pipeline is a multi-input pipeline depending on images, pointclouds and transition matrix information. Tar file contains "samples" directory with all images and pointclouds data, "sweeps" directories with pointclouds data of relative frames and nuscnes_infos_val.pkl file containing relataive data path from "samples" and "sweeps" directories and transition matrix infomation.
 
 --device: The GPU index to be used (e.g., gpu:0 means using the 0th GPU, gpu:1,2 means using the 1st and 2nd GPUs), or you can choose to use CPU (--device cpu).
 ```
+
+After running, the results will be printed on the terminal as follows:
+
+```bash
+{"res":
+  {
+    'input_path': 'samples/LIDAR_TOP/n015-2018-10-08-15-36-50+0800__LIDAR_TOP__1538984253447765.pcd.bin',
+    'sample_id': 'b4ff30109dd14c89b24789dc5713cf8c',
+    'input_img_paths': [
+      'samples/CAM_FRONT_LEFT/n015-2018-10-08-15-36-50+0800__CAM_FRONT_LEFT__1538984253404844.jpg',
+      'samples/CAM_FRONT/n015-2018-10-08-15-36-50+0800__CAM_FRONT__1538984253412460.jpg',
+      'samples/CAM_FRONT_RIGHT/n015-2018-10-08-15-36-50+0800__CAM_FRONT_RIGHT__1538984253420339.jpg',
+      'samples/CAM_BACK_RIGHT/n015-2018-10-08-15-36-50+0800__CAM_BACK_RIGHT__1538984253427893.jpg',
+      'samples/CAM_BACK/n015-2018-10-08-15-36-50+0800__CAM_BACK__1538984253437525.jpg',
+      'samples/CAM_BACK_LEFT/n015-2018-10-08-15-36-50+0800__CAM_BACK_LEFT__1538984253447423.jpg'
+    ]
+    "boxes_3d": [
+        [
+            14.5425386428833,
+            22.142045974731445,
+            -1.2903141975402832,
+            1.8441576957702637,
+            4.433370113372803,
+            1.7367216348648071,
+            6.367165565490723,
+            0.0036598597653210163,
+            -0.013568558730185032
+        ]
+    ],
+    "labels_3d": [
+        0
+    ],
+    "scores_3d": [
+        0.9920279383659363
+    ]
+  }
+}
+```
+
+The meanings of the result parameters are as follows:
+
+- `input_path`: Indicates the path to the input point cloud data of the sample to be predicted.
+- `sample_id`: Indicates the unique identifier of the input sample to be predicted.
+- `input_img_paths`: Indicates the paths to the input image data of the sample to be predicted.
+- `boxes_3d`: Represents all the predicted bounding box information for the 3D sample. Each bounding box information is a list of length 9, with each element representing:
+  - 0: x-coordinate of the center point
+  - 1: y-coordinate of the center point
+  - 2: z-coordinate of the center point
+  - 3: Width of the detection box
+  - 4: Length of the detection box
+  - 5: Height of the detection box
+  - 6: Rotation angle
+  - 7: Velocity in the x-direction of the coordinate system
+  - 8: Velocity in the y-direction of the coordinate system
+- `labels_3d`: Represents the predicted categories corresponding to all the predicted bounding boxes of the 3D sample.
+- `scores_3d`: Represents the confidence levels corresponding to all the predicted bounding boxes of the 3D sample.
 
 #### 2.2.2 Python Script Integration
 * The above command line is for quick experience. Generally, in projects, integration through code is often required. You can complete quick inference of the pipeline with a few lines of code as follows:
@@ -78,7 +134,7 @@ Parameter description:
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="3d_bev_detection")
-output = pipeline.predict("./data/nuscenes_demo/nuscenes_infos_val.pkl")
+output = pipeline.predict("nuscenes_demo_infer.tar")
 
 for res in output:
     res.print()  ## Print the structured output of the prediction
@@ -132,11 +188,11 @@ In the above Python script, the following steps are executed:
 <tbody>
 <tr>
 <td>str</td>
-<td><b>pkl file path</b>，e.g., <code>/root/data/anno_file.pkl</code></td>
+<td><b>tar file path</b>，e.g., <code>/root/data/nuscenes_demo_infer.tar</code></td>
 </tr>
 <tr>
 <td>list</td>
-<td><b>List</b>，list elements need to be data of the above type, e.g., <code>["/root/data/anno_file1.pkl", "/root/data/anno_file2.pkl"]</td>
+<td><b>List</b>，list elements need to be data of the above type, e.g., <code>["/root/data/nuscenes_demo_infer1.tar", "/root/data/nuscenes_demo_infer2.tar"]</td>
 </tr>
 </tbody>
 </table>
@@ -182,7 +238,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="./my_path/3d_bev_detection.yaml")
 
-output = pipeline.predict("./data/nuscenes_demo/nuscenes_infos_val.pkl")
+output = pipeline.predict("nuscenes_demo_infer.tar")
 
 for res in output:
     res.print()  ## Print the structured output of the prediction

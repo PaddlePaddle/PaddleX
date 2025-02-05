@@ -24,14 +24,14 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>SAM-H_box</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SAM-H_box_infer.tar">推理模型</a></td>
+<td>SAM-H_box</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SAM-H_box_infer.tar">推理模型</a></td>
 <td>144.9</td>
 <td>33920.7</td>
 <td>2433.7</td>
 <td rowspan="2">SAM（Segment Anything Model）是一种先进的图像分割模型，能够根据用户提供的简单提示（如点、框或文本）对图像中的任意对象进行分割。基于SA-1B数据集训练，有一千万的图像数据和十一亿掩码标注，在大部分场景均有较好的效果。其中SAM-H_box表示使用框作为分割提示输入，SAM会分割被框包裹主的主体；SAM-H_point表示使用点作为分割提示输入，SAM会分割点所在的主体。</td>
 </tr>
 <tr>
-<td>SAM-H_point</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SAM-H_point_infer.tar">推理模型</a></td>
+<td>SAM-H_point</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SAM-H_point_infer.tar">推理模型</a></td>
 <td>144.9</td>
 <td>33920.7</td>
 <td>2433.7</td>
@@ -73,7 +73,7 @@ paddlex --pipeline open_vocabulary_segmentation \
 
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline_name="open_vocabulary_segmentation")
+pipeline = create_pipeline(pipeline="open_vocabulary_segmentation")
 output = pipeline.predict(input="open_vocabulary_segmentation.jpg", prompt_type="box", prompt=[[112.9,118.4,513.8,382.1],[4.6,263.6,92.2,336.6],[592.4,260.9,607.2,294.2]])
 for res in output:
     res.print()
@@ -96,15 +96,15 @@ for res in output:
 </thead>
 <tbody>
 <tr>
-<td><code>pipeline_name</code></td>
-<td>产线名称, 必须为 PaddleX 所支持的产线。</td>
+<td><code>pipeline</code></td>
+<td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
 <td><code>str</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
 <td><code>config</code></td>
-<td>产线配置文件路径</td>
-<td><code>str</code></td>
+<td>产线具体的配置信息（如果和<code>pipeline</code>同时设置，优先级高于<code>pipeline</code>，且要求产线名和<code>pipeline</code>一致）。</td>
+<td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -190,7 +190,7 @@ for res in output:
 
 </table>
 
-（3）对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为图片、保存为`json`文件的操作:
+（3）对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`json`文件的操作:
 
 <table>
 <thead>
