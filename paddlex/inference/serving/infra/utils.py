@@ -59,8 +59,8 @@ __all__ = [
 
 FileType: TypeAlias = Literal["IMAGE", "PDF", "VIDEO", "AUDIO"]
 
-_P = ParamSpec("_P")
-_R = TypeVar("_R")
+P = ParamSpec("P")
+R = TypeVar("R")
 
 
 def generate_log_id() -> str:
@@ -252,8 +252,8 @@ async def get_raw_bytes_async(file: str, session: aiohttp.ClientSession) -> byte
 
 
 def call_async(
-    func: Callable[_P, _R], /, *args: _P.args, **kwargs: _P.kwargs
-) -> Awaitable[_R]:
+    func: Callable[P, R], /, *args: P.args, **kwargs: P.kwargs
+) -> Awaitable[R]:
     return asyncio.get_running_loop().run_in_executor(
         None, partial(func, *args, **kwargs)
     )
