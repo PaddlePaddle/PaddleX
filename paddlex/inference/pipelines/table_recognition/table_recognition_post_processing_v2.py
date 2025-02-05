@@ -156,7 +156,6 @@ def match_table_and_ocr(cell_box_list: list, ocr_dt_boxes: list) -> dict:
             matched[distances.index(sorted_distances[0])].append(i)
     return matched
 
-
 def get_html_result(
     matched_index: dict, ocr_contents: dict, pred_structures: list
 ) -> str:
@@ -181,6 +180,8 @@ def get_html_result(
             if "<td></td>" == tag:
                 pred_html.extend("<td>")
             if td_index in matched_index.keys():
+                if len(matched_index[td_index])==0:
+                    continue
                 b_with = False
                 if (
                     "<b>" in ocr_contents[matched_index[td_index][0]]
@@ -230,12 +231,10 @@ def sort_table_cells_boxes(boxes):
     """
 
     boxes_sorted_by_y = sorted(boxes, key=lambda box: box[1])
-    
     rows = []
     current_row = []
     current_y = None
     tolerance = 10
-    
     for box in boxes_sorted_by_y:
         x1, y1, x2, y2 = box
         if current_y is None:
