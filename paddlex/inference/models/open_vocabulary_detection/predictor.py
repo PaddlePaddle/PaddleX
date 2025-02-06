@@ -117,7 +117,7 @@ class OVDetPredictor(BasicPredictor):
 
         return {
             "input_path": image_paths,
-            "input_img": src_images,
+            "input_img": [img[..., ::-1] for img in src_images],
             "boxes": boxes,
         }
 
