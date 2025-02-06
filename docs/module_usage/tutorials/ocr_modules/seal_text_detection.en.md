@@ -49,15 +49,329 @@ The seal text detection module typically outputs multi-point bounding boxes arou
 
 Just a few lines of code can complete the inference of the Seal Text Detection module, allowing you to easily switch between models under this module. You can also integrate the model inference of the the Seal Text Detection module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png) to your local machine.
 
-```bash
+```python
 from paddlex import create_model
-model = create_model("PP-OCRv4_server_seal_det")
+model = create_model(model_name="PP-OCRv4_server_seal_det")
 output = model.predict("seal_text_det.png", batch_size=1)
 for res in output:
-    res.print(json_format=False)
-    res.save_to_img("./output/")
-    res.save_to_json("./output/res.json")
+    res.print()
+    res.save_to_img(save_path="./output/")
+    res.save_to_json(save_path="./output/res.json")
 ```
+
+After running, the result is:
+
+```bash
+{'res': {'input_path': 'seal_text_det.png', 'dt_polys': [[[165, 469], [202, 500], [251, 523], [309, 535], [374, 527], [425, 506], [465, 475], [469, 473], [473, 473], [478, 476], [508, 506], [510, 510], [510, 514], [507, 521], [455, 561], [452, 562], [391, 586], [389, 587], [310, 597], [308, 597], [235, 583], [232, 583], [171, 554], [170, 552], [121, 510], [118, 506], [117, 503], [118, 498], [121, 496], [153, 469], [157, 466], [161, 466]], [[444, 444], [448, 447], [450, 450], [450, 453], [450, 497], [449, 501], [446, 503], [443, 505], [440, 506], [197, 506], [194, 505], [190, 503], [189, 499], [187, 493], [186, 490], [187, 453], [188, 449], [190, 446], [194, 444], [197, 443], [441, 443]], [[466, 346], [471, 350], [473, 351], [476, 356], [477, 361], [477, 425], [477, 430], [474, 434], [470, 437], [463, 439], [175, 440], [170, 439], [166, 437], [163, 432], [161, 426], [160, 361], [161, 357], [163, 352], [168, 349], [171, 347], [177, 345], [462, 345]], [[324, 38], [484, 92], [490, 95], [492, 97], [586, 227], [588, 231], [589, 236], [590, 384], [590, 390], [587, 394], [583, 397], [579, 399], [571, 398], [508, 379], [503, 377], [500, 374], [497, 369], [497, 366], [494, 260], [429, 170], [324, 136], [207, 173], [143, 261], [139, 366], [138, 370], [136, 375], [131, 378], [129, 379], [66, 397], [61, 397], [56, 397], [51, 393], [49, 390], [47, 383], [49, 236], [50, 230], [51, 227], [148, 96], [151, 92], [156, 90], [316, 38], [320, 37]]], 'dt_scores': [0.9929380286534535, 0.9980056201238314, 0.9936831226022099, 0.9884004535508197]}}
+```
+
+The meanings of the parameters are as follows:
+- `input_path`: represents the path of the input image to be predicted
+- `dt_polys`: represents the predicted text detection boxes, where each text detection box contains multiple vertices of a polygon. Each vertex is a tuple of two elements, representing the x and y coordinates of the vertex respectively
+- `dt_scores`: represents the confidence scores of the predicted text detection boxes
+
+The visualization image is as follows:
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/seal_text_det/seal_text_det_res.png" alt="Visualization Image">
+
+The explanations of related methods and parameters are as follows:
+
+* `create_model` instantiates a text detection model (here we take `PP-OCRv4_server_seal_det` as an example), and the specific explanations are as follows:
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Parameter Description</th>
+<th>Parameter Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>model_name</code></td>
+<td>Name of the model</td>
+<td><code>str</code></td>
+<td>All model names supported by PaddleX for seal text detection</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>model_dir</code></td>
+<td>Path to store the model</td>
+<td><code>str</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>limit_side_len</code></td>
+<td>Limit on the side length of the image for detection</td>
+<td><code>int/None</code></td>
+<td>
+<ul>
+<li><b>int</b>: Any integer greater than 0
+<li><b>None</b>: If set to None, the default value from the official PaddleX model configuration will be used</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>limit_type</code></td>
+<td>Type of side length limit for detection</td>
+<td><code>str/None</code></td>
+<td>
+<ul>
+<li><b>str</b>: Supports min and max. min ensures the shortest side of the image is not less than det_limit_side_len, max ensures the longest side is not greater than limit_side_len
+<li><b>None</b>: If set to None, the default value from the official PaddleX model configuration will be used</td>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>thresh</code></td>
+<td>In the output probability map, pixels with scores greater than this threshold will be considered as text pixels</td>
+<td><code>float/None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any float greater than 0
+<li><b>None</b>: If set to None, the default value from the official PaddleX model configuration will be used</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>box_thresh</code></td>
+<td>If the average score of all pixels within a detection result box is greater than this threshold, the result will be considered as a text region</td>
+<td><code>float/None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any float greater than 0
+<li><b>None</b>: If set to None, the default value from the official PaddleX model configuration will be used</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>max_candidates</code></td>
+<td>Maximum number of text boxes to output</td>
+<td><code>int/None</code></td>
+<td>
+<ul>
+<li><b>int</b>: Any integer greater than 0
+<li><b>None</b>: If set to None, the default value from the official PaddleX model configuration will be used</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>unclip_ratio</code></td>
+<td>Expansion ratio for the Vatti clipping algorithm, used to expand the text region</td>
+<td><code>float/None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any float greater than 0
+<li><b>None</b>: If set to None, the default value from the official PaddleX model configuration will be used</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>use_dilation</code></td>
+<td>Whether to dilate the segmentation result</td>
+<td><code>bool/None</code></td>
+<td>True/False/None</td>
+<td>None</td>
+</tr>
+</table>
+
+* The `model_name` must be specified. After specifying `model_name`, the built-in model parameters of PaddleX will be used by default. On this basis, if `model_dir` is specified, the user-defined model will be used.
+
+* The `predict()` method of the seal text detection model is called for inference prediction. The parameters of the `predict()` method include `input`, `batch_size`, `limit_side_len`, `limit_type`, `thresh`, `box_thresh`, `max_candidates`, `unclip_ratio`, and `use_dilation`. The specific descriptions are as follows:
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Parameter Description</th>
+<th>Parameter Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>Data to be predicted, supporting multiple input types</td>
+<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td>
+<ul>
+  <li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
+  <li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
+  <li><b>URL link</b>, such as the network URL of an image file: <a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">Example</a></li></url> 
+  <li><b>Local directory</b>, the directory must contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
+  <li><b>Dictionary</b>, the <code>key</code> of the dictionary must correspond to the specific task, such as <code>"img"</code> for image classification tasks, and the <code>val</code> of the dictionary supports the above types of data, for example: <code>{"img": "/root/data1"}</code></li>
+  <li><b>List</b>, the elements of the list must be the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code></li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td>Batch size</td>
+<td><code>int</code></td>
+<td>Any integer greater than 0</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>limit_side_len</code></td>
+<td>Side length limit for detection</td>
+<td><code>int/None</code></td>
+<td>
+<ul>
+<li><b>int</b>: Any integer greater than 0
+<li><b>None</b>: If set to None, the parameter value initialized by the model will be used by default</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>limit_type</code></td>
+<td>Type of side length limit for detection</td>
+<td><code>str/None</code></td>
+<td>
+<ul>
+<li><b>str</b>: Supports min and max. min indicates that the shortest side of the image is not less than det_limit_side_len, max indicates that the longest side of the image is not greater than limit_side_len
+<li><b>None</b>: If set to None, the parameter value initialized by the model will be used by default</td>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>thresh</code></td>
+<td>In the output probability map, pixels with scores greater than this threshold will be considered as text pixels</td>
+<td><code>float/None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any float greater than 0
+<li><b>None</b>: If set to None, the parameter value initialized by the model will be used by default</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>box_thresh</code></td>
+<td>If the average score of all pixels within the detection result box is greater than this threshold, the result will be considered as a text area</td>
+<td><code>float/None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any float greater than 0
+<li><b>None</b>: If set to None, the parameter value initialized by the model will be used by default</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>max_candidates</code></td>
+<td>Maximum number of text boxes to be output</td>
+<td><code>int/None</code></td>
+<td>
+<ul>
+<li><b>int</b>: Any integer greater than 0
+<li><b>None</b>: If set to None, the parameter value initialized by the model will be used by default</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>unclip_ratio</code></td>
+<td>Expansion coefficient of the Vatti clipping algorithm, used to expand the text area</td>
+<td><code>float/None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any float greater than 0
+<li><b>None</b>: If set to None, the parameter value initialized by the model will be used by default</td>
+</ul>
+<td>None</td>
+</tr>
+<tr>
+<td><code>use_dilation</code></td>
+<td>Whether to dilate the segmentation result</td>
+<td><code>bool/None</code></td>
+<td>True/False/None</td>
+<td>None</td>
+</tr>
+</table>
+
+* Process the prediction results. Each sample's prediction result is a corresponding Result object, and it supports operations such as printing, saving as an image, and saving as a `json` file:
+
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Method Description</th>
+<th>Parameter</th>
+<th>Parameter Type</th>
+<th>Parameter Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "3"><code>print()</code></td>
+<td rowspan = "3">Print the result to the terminal</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>Whether to format the output content using <code>JSON</code> indentation</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan = "3"><code>save_to_json()</code></td>
+<td rowspan = "3">Save the result as a file in JSON format</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving. When it is a directory, the saved file name will be consistent with the input file name</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. This is only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>Save the result as a file in image format</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving. When it is a directory, the saved file name will be consistent with the input file name</td>
+<td>None</td>
+</tr>
+</table>
+
+* In addition, it also supports obtaining visual images with results and prediction results through attributes, as follows:
+
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Attribute Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "1"><code>json</code></td>
+<td rowspan = "1">Get the prediction result in <code>json</code> format</td>
+</tr>
+<tr>
+<td rowspan = "1"><code>img</code></td>
+<td rowspan = "1">Get the visual image in <code>dict</code> format</td>
+</tr>
+</table>
+
 For more information on using PaddleX's single-model inference API, refer to the [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.en.md).
 
 ## IV. Custom Development

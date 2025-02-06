@@ -317,7 +317,7 @@ CheckDataset:
 ### 4.2 模型训练
 一条命令即可完成模型的训练，以此处表格分类模型 PP-LCNet_x1_0_table_cls 的训练为例：
 
-```
+```bash
 python main.py -c paddlex/configs/modules/table_classification/PP-LCNet_x1_0_table_cls.yaml  \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/table_cls_examples

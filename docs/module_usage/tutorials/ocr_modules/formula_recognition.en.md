@@ -60,7 +60,7 @@ The formula recognition module is a crucial component of OCR (Optical Character 
 <b>Note: The above accuracy metrics are measured from the LaTeX-OCR formula recognition test set.</b>
 
 ## III. Quick Integration
-> ❗ Before quick integration, please install the PaddleX wheel package. For details, please refer to the [PaddleX Local Installation Guide](../../../installation/installation.md)
+> ❗ Before quick integration, please install the PaddleX wheel package. For details, please refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 After installing the wheel package, you can complete the inference of the formula recognition module with just a few lines of code. You can switch models under this module at will, and you can also integrate the model inference of the formula recognition module into your project. Before running the following code, please download the [example image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png) to your local machine.
 

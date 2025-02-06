@@ -61,7 +61,7 @@ Face detection is a fundamental task in object detection, aiming to automaticall
 
 ## III. Quick Integration  <a id="quick"> </a>
 
-> ❗ Before quick integration, please install the PaddleX wheel package first. For details, please refer to the [PaddleX Local Installation Guide](../../../installation/installation.md)
+> ❗ Before quick integration, please install the PaddleX wheel package first. For details, please refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 After completing the installation of the wheel package, you can perform inference for the face detection module with just a few lines of code. You can switch models under this module at will, and you can also integrate the model inference of the face detection module into your project. Before running the following code, please download the [example image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/face_detection.png) to your local machine.
 

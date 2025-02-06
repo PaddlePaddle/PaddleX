@@ -38,6 +38,7 @@ The text detection module is a crucial component in OCR (Optical Character Recog
 </tr>
 </tbody>
 </table>
+
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 

@@ -48,7 +48,7 @@ comments: true
 
 完成 wheel 包的安装后，几行代码即可完成印章文本检测模块的推理，可以任意切换该模块下的模型，您也可以将印章文本检测的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png)到本地。
 
-```bash
+```python
 from paddlex import create_model
 model = create_model(model_name="PP-OCRv4_server_seal_det")
 output = model.predict("seal_text_det.png", batch_size=1)
