@@ -16,13 +16,6 @@ from typing import Any, Union, Dict, List, Tuple
 from importlib import import_module
 import lazy_paddle
 
-if lazy_paddle.is_compiled_with_cuda() and not lazy_paddle.is_compiled_with_rocm():
-    from ....ops.voxelize import hard_voxelize
-    from ....ops.iou3d_nms import nms_gpu
-else:
-    from ....utils import logging
-
-    logging.error("3D BEVFusion custom ops only support GPU platform!")
 from ....utils.func_register import FuncRegister
 
 module_3d_bev_detection = import_module(".3d_bev_detection", "paddlex.modules")
@@ -85,6 +78,13 @@ class BEVDet3DPredictor(BasicPredictor):
         Returns:
             tuple: A tuple containing the preprocessors and inference engine.
         """
+        if lazy_paddle.is_compiled_with_cuda() and not lazy_paddle.is_compiled_with_rocm():
+            from ....ops.voxelize import hard_voxelize
+            from ....ops.iou3d_nms import nms_gpu
+        else:
+            from ....utils import logging
+            logging.error("3D BEVFusion custom ops only support GPU platform!")
+
         pre_tfs = {"Read": ReadNuscenesData()}
         for cfg in self.config["PreProcess"]["transform_ops"]:
             tf_key = list(cfg.keys())[0]
