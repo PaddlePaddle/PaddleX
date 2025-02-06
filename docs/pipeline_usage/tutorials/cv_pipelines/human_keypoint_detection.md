@@ -496,6 +496,161 @@ for res in output:
 以下是基础服务化部署的API参考与多语言服务调用示例：
 
 <details><summary>API参考</summary>
+<p>对于服务提供的主要操作：</p>
+<ul>
+<li>HTTP请求方法为POST。</li>
+<li>请求体和响应体均为JSON数据（JSON对象）。</li>
+<li>当请求处理成功时，响应状态码为<code>200</code>，响应体的属性如下：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>请求的UUID。</td>
+</tr>
+<tr>
+<td><code>errorCode</code></td>
+<td><code>integer</code></td>
+<td>错误码。固定为<code>0</code>。</td>
+</tr>
+<tr>
+<td><code>errorMsg</code></td>
+<td><code>string</code></td>
+<td>错误说明。固定为<code>"Success"</code>。</td>
+</tr>
+<tr>
+<td><code>result</code></td>
+<td><code>object</code></td>
+<td>操作结果。</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>当请求处理未成功时，响应体的属性如下：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>请求的UUID。</td>
+</tr>
+<tr>
+<td><code>errorCode</code></td>
+<td><code>integer</code></td>
+<td>错误码。与响应状态码相同。</td>
+</tr>
+<tr>
+<td><code>errorMsg</code></td>
+<td><code>string</code></td>
+<td>错误说明。</td>
+</tr>
+</tbody>
+</table>
+<p>服务提供的主要操作如下：</p>
+<ul>
+<li><b><code>infer</code></b></li>
+</ul>
+<p>对图像进行人体关键点检测。</p>
+<p><code>POST /human-keypoint-detection</code></p>
+<ul>
+<li>请求体的属性如下：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+<th>是否必填</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>image</code></td>
+<td><code>string</code></td>
+<td>服务器可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>detThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>人体检测模型阈值</td>
+<td>否</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>请求处理成功时，响应体的<code>result</code>具有如下属性：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>image</code></td>
+<td><code>string</code></td>
+<td>服务器可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
+</tr>
+<tr>
+<td><code>persons</code></td>
+<td><code>array</code></td>
+<td>人体关键点检测结果。</td>
+</tr>
+</tbody>
+</table>
+<p><code>persons</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bbox</code></td>
+<td><code>array</code></td>
+<td>目标位置。数组中元素依次为边界框左上角x坐标、左上角y坐标、右下角x坐标以及右下角y坐标。</td>
+</tr>
+<tr>
+<td><code>kpts</code></td>
+<td><code>array</code></td>
+<td>关键点坐标。</td>
+</tr>
+<tr>
+<td><code>detScore</code></td>
+<td><code>number</code></td>
+<td>检测得分。</td>
+</tr>
+<tr>
+<td><code>kptScore</code></td>
+<td><code>number</code></td>
+<td>关键点得分。</td>
+</tr>
+</tbody>
+</table>
 </details>
 <details><summary>多语言调用服务示例</summary>
 <details>
@@ -503,7 +658,7 @@ for res in output:
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = "http://localhost:8080/ocr" # 服务URL
+API_URL = "http://localhost:8080/human-keypoint-detection" # 服务URL
 image_path = "./demo.jpg"
 output_image_path = "./out.jpg"
 
@@ -523,12 +678,12 @@ result = response.json()["result"]
 with open(output_image_path, "wb") as file:
     file.write(base64.b64decode(result["image"]))
 print(f"Output image saved at {output_image_path}")
-print("\nDetected texts:")
-print(result["texts"])
+print("\nDetected persons:")
+print(result["persons"])
 </code></pre>
 </details>
 </details>
-
+<br />
 
 📱 <b>端侧部署</b>：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../../../pipeline_deploy/edge_deploy.md)。
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。

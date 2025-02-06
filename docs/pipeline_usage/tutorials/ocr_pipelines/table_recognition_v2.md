@@ -1096,33 +1096,93 @@ for res in output:
 </tr>
 <tr>
 <td><code>fileType</code></td>
-<td><code>integer</code></td>
+<td><code>integer</code> | <code>null</code></td>
 <td>文件类型。<code>0</code>表示PDF文件，<code>1</code>表示图像文件。若请求体无此属性，则将根据URL推断文件类型。</td>
 <td>否</td>
 </tr>
-</tbody>
-</table>
-<ul>
-<li>请求处理成功时，响应体的<code>result</code>具有如下属性：</li>
-</ul>
-<table>
-<thead>
 <tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>tableRecResults</code></td>
-<td><code>object</code></td>
-<td>表格识别结果。数组长度为1（对于图像输入）或文档页数与10中的较小者（对于PDF输入）。对于PDF输入，数组中的每个元素依次表示PDF文件中每一页的处理结果。</td>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>use_doc_orientation_classify</code> 参数说明。</td>
+<td>否</td>
 </tr>
 <tr>
-<td><code>dataInfo</code></td>
-<td><code>object</code></td>
-<td>输入数据信息。</td>
+<td><code>useDocUnwarping</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>use_doc_unwarping</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useLayoutDetection</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>use_layout_detection</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useOcrModel</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>use_ocr_model</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>layoutThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>layout_threshold</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>layoutNms</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>layout_nms</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>layoutUnclipRatio</code></td>
+<td><code>number</code> | <code>array</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>layout_unclip_ratio</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>layoutMergeBboxesMode</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>layout_merge_bboxes_mode</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_det_limit_side_len</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_det_limit_type</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_det_thresh</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_det_box_thresh</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_det_unclip_ratio</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_rec_score_thresh</code> 参数说明。</td>
+<td>否</td>
 </tr>
 </tbody>
 </table>
@@ -1137,41 +1197,19 @@ for res in output:
 </thead>
 <tbody>
 <tr>
-<td><code>tables</code></td>
-<td><code>array</code></td>
-<td>表格位置和内容。</td>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>是产线 <code>predict</code> 方法生成的 JSON 结果中 <code>res</code> 字段的简化版本，其中去除了 <code>input_path</code> 字段</td>
 </tr>
 <tr>
-<td><code>layoutImage</code></td>
-<td><code>string</code></td>
-<td>版面区域检测结果图。图像为JPEG格式，使用Base64编码。</td>
+<td><code>outputImages</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>输入图像和预测结果图像的键值对。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 <tr>
-<td><code>ocrImage</code></td>
-<td><code>string</code></td>
-<td>OCR结果图。图像为JPEG格式，使用Base64编码。</td>
-</tr>
-</tbody>
-</table>
-<p><code>tables</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>bbox</code></td>
-<td><code>array</code></td>
-<td>表格位置。数组中元素依次为边界框左上角x坐标、左上角y坐标、右下角x坐标以及右下角y坐标。</td>
-</tr>
-<tr>
-<td><code>html</code></td>
-<td><code>string</code></td>
-<td>HTML格式的表格识别结果。</td>
+<td><code>inputImage</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>输入图像。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 </tbody>
 </table></details>
