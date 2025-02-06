@@ -106,15 +106,15 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 
 === "CPU"
     ```bash
-    python -m pip install paddlepaddle==3.0.0b2 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
+    python -m pip install paddlepaddle==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
     ```
 === "CUDA 11.8"
     ```bash
-    python -m pip install paddlepaddle-gpu==3.0.0b2 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
+    python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
     ```
 === "CUDA 12.3"
     ```bash
-    python -m pip install paddlepaddle-gpu==3.0.0b2 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
+    python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
     ```
 
 > ❗ For more PaddlePaddle Wheel versions, please refer to the [PaddlePaddle official website](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation./docs/zh/install/pip/linux-pip.html).
@@ -123,7 +123,7 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 ### Installing PaddleX
 
 ```bash
-pip install paddlex==3.0.0b2
+pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0rc0-py3-none-any.whl
 ```
 
 > ❗ For more installation methods, please refer to the [PaddleX Installation Guide](https://paddlepaddle.github.io/PaddleX/latest/installation/installation.html)
@@ -524,7 +524,7 @@ You only need to specify three parameters:
                     ...,
                     [ 39, ..., 726]], dtype=int16)}, 'formula_res_list': [{'input_path': None, 'page_index': None, 'rec_formula': '\\begin{array}{r l}{\\mathcal{Q}}&{=\\mathcal{K}=\\mathcal{V}=\\mathtt{F l a t t e r n}(\\mathcal{S}_{5}),}\\\\ {\\mathcal{F}_{5}}&{=\\mathtt{R e s h a p e}(\\mathtt{A I F I}(\\mathcal{Q},\\mathcal{K},\\mathcal{V})),\\qquad\\quad(1)}\\\\ {\\mathcal{O}}&{=\\mathtt{C C F F}(\\{\\mathcal{S}_{3},\\mathcal{S}_{4},\\mathcal{F}_{5}\\}),}\\end{array}', 'formula_region_id': 1, 'dt_polys': [92.092064, 563.1221, 297.57217, 607.2598]}, {'input_path': None, 'page_index': None, 'rec_formula': '\\begin{array}{r l r}{\\mathcal{U}(\\hat{\\mathcal{X}})=\\|\\mathcal{P}(\\hat{\\mathcal{X}})-\\mathcal{C}(\\hat{\\mathcal{X}})\\|,\\hat{\\mathcal{X}}\\in\\mathbb{R}^{D}}&{{}(2)}&{}\\\\ {\\mathcal{L}(\\hat{\\mathcal{X}},\\hat{\\mathcal{Y}},\\mathcal{Y})=\\mathcal{L}_{t o x}(\\hat{\\mathbf{b}},\\mathbf{b})+\\mathcal{L}_{c l s}(\\mathcal{U}(\\hat{\\mathcal{X}}),\\hat{\\mathbf{c}},\\mathbf{c})}&{{}(3)}\\end{array}', 'formula_region_id': 2, 'dt_polys': [343.82712, 551.06995, 573.45465, 589.9438]}]}}
                 ```
- 
+
     === "Formula Recognition"
 
         ```bash
@@ -1779,7 +1779,7 @@ The following steps were executed:
             res.save_to_video(save_path="./output/") ## Save the visualized video results
             res.save_to_json(save_path="./output/") ## Save the structured prediction output
         ```
-        
+
 ## 🚀 Detailed Tutorials
 
 <div class="grid cards" markdown>
