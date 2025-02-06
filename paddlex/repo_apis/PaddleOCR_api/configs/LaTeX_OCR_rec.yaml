@@ -9,7 +9,7 @@ Global:
   # evaluation is run every 60000 iterations (22 epoch)(batch_size = 56)
   eval_batch_step: [0, 60000]
   cal_metric_during_train: True
-  pretrained_model: https://paddle-model-ecology.bj.bcebos.com/pretrained/rec_latex_ocr_trained.pdparams
+  pretrained_model: 
   checkpoints:
   save_inference_dir:
   use_visualdl: False
@@ -66,7 +66,7 @@ PostProcess:
 Metric:
   name: LaTeXOCRMetric
   main_indicator:  exp_rate
-  cal_blue_score: False
+  cal_bleu_score: True
 
 Train:
   dataset:

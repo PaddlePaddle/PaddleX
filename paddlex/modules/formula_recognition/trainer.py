@@ -70,25 +70,35 @@ class FormulaRecTrainer(BaseTrainer):
                 self.train_config.pretrain_weight_path
             )
 
-        if self.global_config["model"] == "LaTeX_OCR_rec":
-            if (
-                self.train_config.batch_size_train is not None
-                and self.train_config.batch_size_val is not None
-            ):
+        if self.train_config.batch_size is not None:
+            if self.global_config["model"] == "LaTeX_OCR_rec":
                 self.pdx_config.update_batch_size_pair(
-                    self.train_config.batch_size_train, self.train_config.batch_size_val
+                    self.train_config.batch_size, mode="train"
                 )
-        else:
-            if (
-                self.train_config.batch_size_train is not None
-                and self.train_config.batch_size_val is not None
-            ):
+            else:
                 self.pdx_config.update_batch_size(
-                    self.train_config.batch_size_train, self.train_config.batch_size_val
+                    self.train_config.batch_size, mode="train"
+                )
+
+        if self.eval_config.batch_size is not None:
+            if self.global_config["model"] == "LaTeX_OCR_rec":
+                self.pdx_config.update_batch_size_pair(
+                    self.eval_config.batch_size, mode="eval"
+                )
+            else:
+                self.pdx_config.update_batch_size(
+                    self.eval_config.batch_size, mode="eval"
                 )
 
         if self.train_config.learning_rate is not None:
             self.pdx_config.update_learning_rate(self.train_config.learning_rate)
+
+        if self.train_config.get("delimiter", None) is not None:
+            self.pdx_config.update_delimiter(self.train_config.delimiter, mode="train")
+
+        if self.eval_config.get("delimiter", None) is not None:
+            self.pdx_config.update_delimiter(self.eval_config.delimiter, mode="eval")
+
         if self.train_config.epochs_iters is not None:
             self.pdx_config._update_epochs(self.train_config.epochs_iters)
         if (
