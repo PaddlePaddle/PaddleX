@@ -187,7 +187,7 @@ paddlex --pipeline instance_segmentation \
         --input general_instance_segmentation_004.png \
         --threshold 0.5 \
         --save_path ./output \
-        --device gpu:0 \
+        --device gpu:0
 ```
 
 The relevant parameter descriptions can be referred to in the parameter explanations in [2.2.2 Python Script Integration]().
