@@ -25,28 +25,28 @@ comments: true
 </thead>
 <tbody>
 <tr>
-<td>AutoEncoder_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/AutoEncoder_ad_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/AutoEncoder_ad_pretrained.pdparams">训练模型</a></td>
+<td>AutoEncoder_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/AutoEncoder_ad_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/AutoEncoder_ad_pretrained.pdparams">训练模型</a></td>
 <td>99.36</td>
 <td>84.36</td>
 <td>91.25</td>
 <td>52K</td>
 </tr>
 <tr>
-<td>DLinear_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/DLinear_ad_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_ad_pretrained.pdparams">训练模型</a></td>
+<td>DLinear_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/DLinear_ad_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_ad_pretrained.pdparams">训练模型</a></td>
 <td>98.98</td>
 <td>93.96</td>
 <td>96.41</td>
 <td>112K</td>
 </tr>
 <tr>
-<td>Nonstationary_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Nonstationary_ad_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_ad_pretrained.pdparams">训练模型</a></td>
+<td>Nonstationary_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Nonstationary_ad_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_ad_pretrained.pdparams">训练模型</a></td>
 <td>98.55</td>
 <td>88.95</td>
 <td>93.51</td>
 <td>1.8M</td>
 </tr>
 <tr>
-<td>PatchTST_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PatchTST_ad_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_ad_pretrained.pdparams">训练模型</a></td>
+<td>PatchTST_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PatchTST_ad_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_ad_pretrained.pdparams">训练模型</a></td>
 <td>98.78</td>
 <td>90.70</td>
 <td>94.57</td>
@@ -140,6 +140,12 @@ for res in output:
 <td><code>None</code></td>
 </tr>
 <tr>
+<td><code>config</code></td>
+<td>产线具体的配置信息（如果和<code>pipeline</code>同时设置，优先级高于<code>pipeline</code>，且要求产线名和<code>pipeline</code>一致）。</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>device</code></td>
 <td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
 <td><code>str</code></td>
@@ -199,7 +205,7 @@ for res in output:
 </tbody>
 </table>
 
-（3）对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为`csv`文件、保存为`json`文件的操作:
+（3）对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为`csv`文件、保存为`json`文件的操作:
 
 
 <table>
@@ -816,7 +822,7 @@ SubModules:
     module_name: ts_anomaly_detection
     model_name: DLinear_ad
     model_dir: null  # 此处替换为您训练后得到的模型权重本地路径
-    batch_size: 1  
+    batch_size: 1
 ```
 
 随后， 参考本地体验中的命令行方式或 Python 脚本方式，加载修改后的产线配置文件即可。
@@ -824,10 +830,12 @@ SubModules:
 ##  5. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device` 参数</b>即可完成不同硬件之间的无缝切换。
 
-例如，您使用昇腾 NPU 进行时序异常检测产线的推理，使用的 Python 命令为：
+例如，您使用昇腾 NPU 进行时序异常检测产线的推理，使用的 CLI 命令为：
 
 ```bash
 paddlex --pipeline ts_anomaly_detection --input ts_ad.csv --device npu:0
 ```
+
+当然，您也可以在 Python 脚本中 `create_pipeline()` 时或者 `predict()` 时指定硬件设备。
 
 若您想在更多种类的硬件上使用通用时序异常检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

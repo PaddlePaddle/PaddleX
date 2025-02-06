@@ -9,7 +9,7 @@ comments: true
 
 人脸识别产线是专注于解决人脸定位和识别任务的端到端串联系统，可以从图像中快速准确地定位人脸区域、提取人脸特征，并与特征库中预先建立的特征做检索比对，从而确认身份信息。
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/face_recognition/01.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/face_recognition/02.jpg">
 
 <b>人脸识别产线中包含了人脸检测模块和人脸特征模块</b>，每个模块中包含了若干模型，具体使用哪些模型，您可以根据下边的 benchmark 数据来选择。<b>如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型</b>。
 
@@ -18,7 +18,7 @@ comments: true
 <thead>
 <tr>
 <th>模型</th><th>模型下载链接</th>
-<th>AP (%)<br/>Easy/Medium/Hard</th>
+<th>AP(%)</th>
 <th>GPU推理耗时 (ms)</th>
 <th>CPU推理耗时 (ms)</th>
 <th>模型存储大小 (M)</th>
@@ -27,32 +27,33 @@ comments: true
 </thead>
 <tbody>
 <tr>
-<td>BlazeFace</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/BlazeFace_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace_pretrained.pdparams">训练模型</a></td>
-<td>77.7/73.4/49.5</td>
+<td>BlazeFace</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace_pretrained.pdparams">训练模型</a></td>
+<td>15.4</td>
 <td>49.9</td>
 <td>68.2</td>
 <td>0.447</td>
 <td>轻量高效的人脸检测模型</td>
 </tr>
 <tr>
-<td>BlazeFace-FPN-SSH</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/BlazeFace-FPN-SSH_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace-FPN-SSH_pretrained.pdparams">训练模型</a></td>
-<td>83.2/80.5/60.5</td>
+<tr>
+<td>BlazeFace-FPN-SSH</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace-FPN-SSH_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace-FPN-SSH_pretrained.pdparams">训练模型</a></td>
+<td>18.7</td>
 <td>52.4</td>
 <td>73.2</td>
 <td>0.606</td>
 <td>BlazeFace的改进模型，增加FPN和SSH结构</td>
 </tr>
 <tr>
-<td>PicoDet_LCNet_x2_5_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet_LCNet_x2_5_face_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_LCNet_x2_5_face_pretrained.pdparams">训练模型</a></td>
-<td>93.7/90.7/68.1</td>
+<td>PicoDet_LCNet_x2_5_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_LCNet_x2_5_face_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_LCNet_x2_5_face_pretrained.pdparams">训练模型</a></td>
+<td>31.4</td>
 <td>33.7</td>
 <td>185.1</td>
 <td>28.9</td>
 <td>基于PicoDet_LCNet_x2_5的人脸检测模型</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus-S_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-YOLOE_plus-S_face_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_face_pretrained.pdparams">训练模型</a></td>
-<td>93.9/91.8/79.8</td>
+<td>PP-YOLOE_plus-S_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-S_face_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_face_pretrained.pdparams">训练模型</a></td>
+<td>36.1</td>
 <td>25.8</td>
 <td>159.9</td>
 <td>26.5</td>
@@ -60,7 +61,7 @@ comments: true
 </tr>
 </tbody>
 </table>
-<p>注：以上精度指标是在WIDER-FACE验证集上，以640
+<p>注：以上精度指标是在 COCO 格式的 WIDER-FACE 验证集上，以640
 *640作为输入尺寸评估得到的。所有模型 GPU 推理耗时基于 NVIDIA V100 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 6271C CPU @ 2.60GHz，精度类型为 FP32。</p>
 <p><b>人脸特征模块：</b></p>
 <table>
@@ -77,7 +78,7 @@ comments: true
 </thead>
 <tbody>
 <tr>
-<td>MobileFaceNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MobileFaceNet_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileFaceNet_pretrained.pdparams">训练模型</a></td>
+<td>MobileFaceNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MobileFaceNet_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileFaceNet_pretrained.pdparams">训练模型</a></td>
 <td>128</td>
 <td>96.28/96.71/99.58</td>
 <td>5.7</td>
@@ -86,7 +87,7 @@ comments: true
 <td>基于MobileFaceNet在MS1Mv3数据集上训练的人脸特征提取模型</td>
 </tr>
 <tr>
-<td>ResNet50_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/ResNet50_face_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_face_pretrained.pdparams">训练模型</a></td>
+<td>ResNet50_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ResNet50_face_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_face_pretrained.pdparams">训练模型</a></td>
 <td>512</td>
 <td>98.12/98.56/99.77</td>
 <td>8.7</td>
@@ -99,7 +100,7 @@ comments: true
 <p>注：以上精度指标是分别在 AgeDB-30、CFP-FP 和 LFW 数据集上测得的 Accuracy。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</p>
 
 ## 2. 快速开始
-PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可以在线体验人脸识别产线的效果，也可以在本地使用命令行或 Python 体验人脸识别产线的效果。
+PaddleX 所提供的模型产线均可以快速体验效果，你可以在线体验人脸识别产线的效果，也可以在本地使用命令行或 Python 体验人脸识别产线的效果。
 
 ### 2.1 在线体验
 
@@ -111,16 +112,6 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 #### 2.2.1 命令行方式体验
 
 暂不支持命令行体验
-
-默认使用内置的的通用图像识别产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
-
-<details><summary> 👉点击展开</summary>
-
-<pre><code class="language-bash">paddlex --get_pipeline_config face_recognition
-</code></pre>
-<p>执行后，通用图像识别产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为<code>./my_path</code>）：</p>
-<pre><code class="language-bash">paddlex --get_pipeline_config face_recognition --save_path ./my_path
-</code></pre></details>
 
 #### 2.2.2 Python脚本方式集成
 请下载[测试图像](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/friends1.jpg)进行测试。
@@ -147,11 +138,12 @@ output = pipeline.predict("friends1.jpg", index=index_data)
 for res in output:
     res.print()
     res.save_to_img("./output/")
+    res.save_to_json("./output/")
 ```
 
 在上述 Python 脚本中，执行了如下几个步骤：
 
-（1）实例化 `create_pipeline` 实例化 人脸识别 产线对象。具体参数说明如下：
+（1）调用 `create_pipeline` 实例化人脸识别产线对象。具体参数说明如下：
 
 <table>
 <thead>
@@ -170,16 +162,16 @@ for res in output:
 <td>无</td>
 </tr>
 <tr>
-<td><code>index</code></td>
-<td>产线推理预测所用的特征库，支持：1. <code>str</code>类型表示的目录（该目录下需要包含索引库文件，包括<code>vector.index</code>和<code>index_info.yaml</code>）；2. <code>IndexData</code>对象。如不传入该参数，则需要在<code>predict()</code>中指定<code>index</code>。</td>
-<td><code>str</code></td>
-<td>None</td>
+<td><code>config</code></td>
+<td>产线具体的配置信息（如果和<code>pipeline</code>同时设置，优先级高于<code>pipeline</code>，且要求产线名和<code>pipeline</code>一致）。</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>产线模型推理设备。支持：“gpu”，“cpu”。</td>
+<td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
 <td><code>str</code></td>
-<td><code>gpu</code></td>
+<td><code>gpu:0</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
@@ -189,7 +181,8 @@ for res in output:
 </tr>
 </tbody>
 </table>
-（2）调用人脸识别产线对象的 `build_index` 方法，构建人脸特征库。具体参数为说明如下：
+
+（2）调用人脸识别产线对象的 `build_index` 方法，构建人脸特征库。具体参数说明如下：
 
 <table>
 <thead>
@@ -197,26 +190,64 @@ for res in output:
 <th>参数</th>
 <th>参数说明</th>
 <th>参数类型</th>
+<th>可选项</th>
 <th>默认值</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>gallery_imgs</code></td>
-<td>要添加的底库图片，支持：1. <code>str</code>类型表示的图片根目录，数据组织方式与构建索引库时相同，参考<a href="#2.3-构建特征库的数据组织方式">2.3节 构建特征库的数据组织方式</a>；2. <code>[numpy.ndarray, numpy.ndarray, ..]</code>类型的底库图片数据。</td>
+<td>要添加的底库图片，必需参数</td>
 <td><code>str</code>|<code>list</code></td>
+<td>
+<ul>
+  <li><b>str</b>：图片根目录，数据组织方式参考<a href="#2.3-构建特征库的数据组织方式">2.3节 构建特征库的数据组织方式</a></li>
+  <li><b>List[numpy.ndarray]</b>：numpy.array列表类型的底库图片数据</li>
+</ul>
+</td>
 <td>无</td>
 </tr>
 <tr>
 <td><code>gallery_label</code></td>
-<td>底库图片的标注信息，支持：1. <code>str</code>类型表示的标注文件的路径，数据组织方式与构建特征库时相同，参考<a href="#2.3-构建特征库的数据组织方式">2.3节 构建特征库的数据组织方式</a>；2. <code>[str, str, ..]</code>类型表示的底库图片标注。</td>
-<td><code>str</code></td>
+<td>底库图片的标注信息，必需参数</td>
+<td><code>str|list</code></td>
+<td>
+<ul>
+  <li><b>str</b>：标注文件的路径，数据组织方式与构建特征库时相同，参考<a href="#2.3-构建特征库的数据组织方式">2.3节 构建特征库的数据组织方式</a></li>
+  <li><b>List[str]</b>：str列表类型的底库图片标注</li>
+</ul>
+</td>
 <td>无</td>
+</tr>
+<tr>
+<td><code>metric_type</code></td>
+<td>特征度量方式，可选参数</td>
+<td><code>str</code></td>
+<td>
+<ul>
+  <li><code>"IP"</code>：内积（Inner Product）</li>
+  <li><code>"L2"</code>：欧几里得距离（Euclidean Distance）</li>
+</ul>
+</td>
+<td><code>"IP"</code></td>
+</tr>
+<tr>
+<td><code>index_type</code></td>
+<td>索引类型，可选参数</td>
+<td><code>str</code></td>
+<td>
+<ul>
+  <li><code>"HNSW32"</code>：检索速度较快且精度较高，但不支持 <code>remove_index()</code> 操作</li>
+  <li><code>"IVF"</code>：检索速度较快但精度相对较低，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
+  <li><code>"Flat"</code>：检索速度较低精度较高，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
+</ul>
+</td>
+<td><code>"HNSW32"</code></td>
 </tr>
 </tbody>
 </table>
 
-特征库对象 `index` 支持 `save` 方法，用于将特征库保存到磁盘：
+- 特征库对象 `index` 支持 `save` 方法，用于将特征库保存到磁盘：
 
 <table>
 <thead>
@@ -238,99 +269,168 @@ for res in output:
 </table>
 
 （3）调用人脸识别产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`input`，用于输入待预测数据，支持多种输入方式，具体示例如下：
-
 <table>
 <thead>
 <tr>
-<th>参数类型</th>
+<th>参数</th>
 <th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>Python Var</td>
-<td>支持直接传入Python变量，如numpy.ndarray表示的图像数据。</td>
+<td><code>input</code></td>
+<td>待预测数据，支持多种输入类型，必需参数</td>
+<td><code>Python Var|str|list</code></td>
+<td>
+<ul>
+  <li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
+  <li><b>str</b>：如图像文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code></li>
+  <li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
+</ul>
+</td>
+<td>无</td>
 </tr>
-<tr>
-<td>str</td>
-<td>支持传入待预测数据文件路径，如图像文件的本地路径：<code>/root/data/img.jpg</code>。</td>
-</tr>
-<tr>
-<td>str</td>
-<td>支持传入待预测数据文件URL，如图像文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/friends1.jpg">示例</a>。</td>
-</tr>
-<tr>
-<td>str</td>
-<td>支持传入本地目录，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code>。</td>
-</tr>
-<tr>
-<td>dict</td>
-<td>支持传入字典类型，字典的key需与具体任务对应，如图像分类任务对应\"img\"，字典的val支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code>。</td>
-</tr>
-<tr>
-<td>list</td>
-<td>支持传入列表，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]，[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code>。</td>
-</tr>
-</tbody>
-</table>
-另外，`predict`方法支持参数`index`用于设置索引库：
-<table>
-<thead>
-<tr>
-<th>参数类型</th>
-<th>参数说明</th>
-</tr>
-</thead>
-<tbody>
 <tr>
 <td><code>index</code></td>
-<td>产线推理预测所用的特征库，支持：1. <code>str</code>类型表示的目录（该目录下需要包含特征库文件，包括<code>vector.index</code>和<code>index_info.yaml</code>）；2. <code>IndexData</code>对象。如不传入该参数，则默认使用在<code>create_pipeline()</code>中通过参数<code>index</code>指定的特征库。</td>
+<td>产线推理预测所用的特征库，可选参数。如不传入该参数，则默认使用产线配置文件中指定的索引库。</td>
+<td><code>str|paddlex.inference.components.retrieval.faiss.IndexData|None</code></td>
+<td>
+<ul>
+    <li><b>str</b>类型表示的目录（该目录下需要包含特征库文件，包括<code>vector.index</code>和<code>index_info.yaml</code>）</li>
+    <li><code>build_index</code>方法创建的<b>IndexData</b>对象</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
-</tbody>
 </table>
-（4）调用`predict`方法获取预测结果：`predict` 方法为`generator`，因此需要通过调用获得预测结果，`predict`方法以batch为单位对数据进行预测。
 
-（5）对预测结果进行处理：每个样本的预测结果均为`dict`类型，且支持打印，或保存为文件，支持保存的类型与具体产线相关，如：
+（4）对预测结果进行处理：每个样本的预测结果均为对应的Result对象，且支持打印，或保存为文件，支持保存的类型与具体产线相关，如：
 
 <table>
 <thead>
 <tr>
 <th>方法</th>
-<th>说明</th>
-<th>方法参数</th>
+<th>方法说明</th>
+<th>参数</th>
+<th>参数类型</th>
+<th>参数说明</th>
+<th>默认值</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>print</td>
-<td>打印结果到终端</td>
-<td><code>- format_json</code>：bool类型，是否对输出内容进行使用json缩进格式化，默认为True；<br/><code>- indent</code>：int类型，json格式化设置，仅当format_json为True时有效，默认为4；<br/><code>- ensure_ascii</code>：bool类型，json格式化设置，仅当format_json为True时有效，默认为False；</td>
+<td rowspan = "3"><code>print()</code></td>
+<td rowspan = "3">打印结果到终端</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
+<td><code>True</code></td>
 </tr>
 <tr>
-<td>save_to_json</td>
-<td>将结果保存为json格式的文件</td>
-<td><code>- save_path</code>：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；<br/><code>- indent</code>：int类型，json格式化设置，默认为4；<br/><code>- ensure_ascii</code>：bool类型，json格式化设置，默认为False；</td>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
 </tr>
 <tr>
-<td>save_to_img</td>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan = "3"><code>save_to_json()</code></td>
+<td rowspan = "3">将结果保存为json格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
 <td>将结果保存为图像格式的文件</td>
-<td><code>- save_path</code>：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，支持目录或文件路径</td>
+<td>无</td>
 </tr>
-</tbody>
 </table>
-若您获取了配置文件，即可对人脸识别产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
 
-例如，若您的配置文件保存在 `./my_path/face_recognition.yaml` ，则只需执行：
+- 调用 `print()` 方法会将如下结果打印到终端：
+```bash
+{'res': {'input_path': 'friends1.jpg', 'boxes': [{'labels': ['Chandler', 'Chandler', 'Chandler', 'Chandler', 'Chandler'], 'rec_scores': [0.5884832143783569, 0.5777347087860107, 0.5082703828811646, 0.48792028427124023, 0.4842316806316376], 'det_score': 0.9119220972061157, 'coordinate': [790.40015, 170.34453, 868.47626, 279.54446]}, {'labels': ['Joey', 'Joey', 'Joey', 'Joey', 'Joey'], 'rec_scores': [0.5654032826423645, 0.5601680278778076, 0.5382657051086426, 0.5320160984992981, 0.5209866762161255], 'det_score': 0.9052104353904724, 'coordinate': [1274.6246, 184.58124, 1353.4016, 300.0643]}, {'labels': ['Phoebe', 'Phoebe', 'Phoebe', 'Phoebe', 'Phoebe'], 'rec_scores': [0.6462339162826538, 0.6003466844558716, 0.5999515652656555, 0.583031415939331, 0.5640993118286133], 'det_score': 0.9041699171066284, 'coordinate': [1052.4514, 192.52296, 1129.5226, 292.84177]}, {'labels': ['Ross', 'Ross', 'Ross', 'Ross', 'Ross'], 'rec_scores': [0.5012176036834717, 0.49081552028656006, 0.48970693349838257, 0.4808862805366516, 0.4794950783252716], 'det_score': 0.9031845331192017, 'coordinate': [162.41049, 156.96768, 242.07184, 266.13004]}, {'labels': ['Monica', 'Monica', 'Monica', 'Monica', 'Monica'], 'rec_scores': [0.5704089403152466, 0.5037636756896973, 0.4877302646636963, 0.46702104806900024, 0.4376206696033478], 'det_score': 0.8862134218215942, 'coordinate': [572.18176, 216.25815, 639.2387, 311.08417]}, {'labels': ['Rachel', 'Rachel', 'Rachel', 'Rachel', 'Rachel'], 'rec_scores': [0.6107711791992188, 0.5915063619613647, 0.5776835083961487, 0.569993257522583, 0.5594189167022705], 'det_score': 0.8822972774505615, 'coordinate': [303.12866, 231.94759, 374.5314, 330.2883]}]}}
+```
+
+- 输出结果参数含义如下：
+    - `input_path`：表示输入图像的路径
+    - `boxes`：检测到的人脸信息，一个字典列表，每个字典包含以下信息：
+        - `labels`：识别标签列表，按照分数从高到低排序
+        - `rec_scores`：识别分数列表，其中元素与`labels`一一对应
+        - `det_score`：检测得分
+        - `coordinate`：人脸框坐标，格式为[xmin, ymin, xmax, ymax]
+
+- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.json`，如果指定为文件，则直接保存到该文件中。
+- 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.{your_img_extension}`，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)，上述示例中，可视化结果如下所示：
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/face_recognition/02.jpg">
+
+* 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>属性说明</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "1"><code>json</code></td>
+<td rowspan = "1">获取预测的 <code>json</code> 格式的结果</td>
+</tr>
+<tr>
+<td rowspan = "2"><code>img</code></td>
+<td rowspan = "2">获取格式为 <code>dict</code> 的可视化图像</td>
+</tr>
+</table>
+
+- `json` 属性获取的预测结果为dict类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
+- `img` 属性返回的预测结果是一个字典类型的数据。键为 `res` ，对应的值是一个用于可视化人脸识别结果的 `Image.Image` 对象。
+
+上述Python脚本集成方式默认使用 PaddleX 官方配置文件中的参数设置，若您需要自定义配置文件，可先执行如下命令获取官方配置文件，并保存在 `my_path` 中：
+
+```bash
+paddlex --get_pipeline_config face_recognition --save_path ./my_path
+```
+
+若您获取了配置文件，即可对人脸识别产线各项配置进行自定义。只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为自定义产线配置文件路径即可。
+
+例如，若您的自定义配置文件保存在 `./my_path/face_recognition.yaml` ，则只需执行：
 
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="./my_path/face_recognition.yaml", index="face_index")
+pipeline = create_pipeline(pipeline="./my_path/face_recognition.yaml")
 
-output = pipeline.predict("friends1.jpg")
+output = pipeline.predict("friends1.jpg", index="face_index")
 for res in output:
     res.print()
+    res.save_to_json("./output/")
     res.save_to_img("./output/")
 ```
+
+<b>注：</b> 配置文件中的参数为产线初始化参数，如果希望更改人脸识别产线初始化参数，可以直接修改配置文件中的参数，并加载配置文件进行预测。
 
 #### 2.2.3 人脸特征库的添加和删除操作
 
@@ -354,50 +454,89 @@ index_data.save("face_index")
 <th>参数</th>
 <th>参数说明</th>
 <th>参数类型</th>
+<th>可选项</th>
 <th>默认值</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>gallery_imgs</code></td>
-<td>要添加的底库图片，支持：1. <code>str</code>类型表示的图片根目录，数据组织方式与构建索引库时相同，参考<a href="#2.3-构建特征库的数据组织方式">2.3节 构建特征库的数据组织方式</a>；2. <code>[numpy.ndarray, numpy.ndarray, ..]</code>类型的底库图片数据。</td>
+<td>要添加的底库图片，必需参数</td>
 <td><code>str</code>|<code>list</code></td>
+<td>
+<ul>
+  <li><b>str</b>：图片根目录，数据组织方式参考<a href="#2.3-构建特征库的数据组织方式">2.3节 构建特征库的数据组织方式</a></li>
+  <li><b>List[numpy.ndarray]</b>：numpy.array列表类型的底库图片数据</li>
+</ul>
+</td>
 <td>无</td>
 </tr>
 <tr>
 <td><code>gallery_label</code></td>
-<td>底库图片的标注信息，支持：1. <code>str</code>类型表示的标注文件的路径，数据组织方式与构建特征库时相同，参考<a href="#2.3-构建特征库的数据组织方式">2.3节 构建特征库的数据组织方式</a>；2. <code>[str, str, ..]</code>类型表示的底库图片标注。</td>
-<td><code>str</code>|<code>list</code></td>
+<td>底库图片的标注信息，必需参数</td>
+<td><code>str|list</code></td>
+<td>
+<ul>
+  <li><b>str</b>：标注文件的路径，数据组织方式与构建特征库时相同，参考<a href="#2.3-构建特征库的数据组织方式">2.3节 构建特征库的数据组织方式</a></li>
+  <li><b>List[str]</b>：str列表类型的底库图片标注</li>
+</ul>
+</td>
 <td>无</td>
 </tr>
 <tr>
+<td><code>metric_type</code></td>
+<td>特征度量方式，可选参数</td>
+<td><code>str</code></td>
+<td>
+<ul>
+  <li><code>"IP"</code>：内积（Inner Product）</li>
+  <li><code>"L2"</code>：欧几里得距离（Euclidean Distance）</li>
+</ul>
+</td>
+<td><code>"IP"</code></td>
+</tr>
+<tr>
+<td><code>index_type</code></td>
+<td>索引类型，可选参数</td>
+<td><code>str</code></td>
+<td>
+<ul>
+  <li><code>"HNSW32"</code>：检索速度较快且精度较高，但不支持 <code>remove_index()</code> 操作</li>
+  <li><code>"IVF"</code>：检索速度较快但精度相对较低，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
+  <li><code>"Flat"</code>：检索速度较低精度较高，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
+</ul>
+</td>
+<td><code>"HNSW32"</code></td>
+</tr>
+<tr>
 <td><code>remove_ids</code></td>
-<td>待删除的索引序号，支持：1. <code>str</code>类型表示的txt文件的路径，内容为待删除的索引id，每行一个“id”；2. <code>[int, int, ..]</code>类型表示的待删除的索引序号。仅在 <code>remove_index</code> 中有效。</td>
+<td>待删除的索引序号，</td>
 <td><code>str</code>|<code>list</code></td>
+<td>
+<ul>
+<li><b>str</b>：表示的txt文件的路径，内容为待删除的索引id，每行一个“id”；</li>
+<li><b>List[int]</b>：表示的待删除的索引序号。仅在 <code>remove_index</code> 中有效。</li></ul>
+</td>
 <td>无</td>
 </tr>
 <tr>
 <td><code>index</code></td>
-<td>特征库，支持：1. 特征库文件（<code>vector.index</code>和<code>index_info.yaml</code>）所在目录的路径；2. <code>IndexData</code>类型的特征库对象，仅在 <code>append_index</code> 和 <code>remove_index</code> 中有效，表示待修改的特征库。</td>
-<td><code>str</code>|<code>IndexData</code></td>
+<td>产线推理预测所用的特征库</td>
+<td><code>str|paddlex.inference.components.retrieval.faiss.IndexData</code></td>
+<td>
+<ul>
+    <li><b>str</b>类型表示的目录（该目录下需要包含特征库文件，包括<code>vector.index</code>和<code>index_info.yaml</code>）</li>
+    <li><code>build_index</code>方法创建的<b>IndexData</b>对象</li>
+</ul>
+</td>
 <td>无</td>
-</tr>
-<tr>
-<td><code>index_type</code></td>
-<td>支持 <code>HNSW32</code>、<code>IVF</code>、<code>Flat</code>。其中，<code>HNSW32</code> 检索速度较快且精度较高，但不支持 <code>remove_index()</code> 操作；<code>IVF</code> 检索速度较快但精度相对较低，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作；<code>Flat</code> 检索速度较低精度较高，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作。</td>
-<td><code>str</code></td>
-<td><code>HNSW32</code></td>
-</tr>
-<tr>
-<td><code>metric_type</code></td>
-<td>支持：<code>IP</code>，内积（Inner Product）；<code>L2</code>，欧几里得距离（Euclidean Distance）。</td>
-<td><code>str</code></td>
-<td><code>IP</code></td>
 </tr>
 </tbody>
 </table>
-### 2.3 构建特征库的数据组织方式
 
+<b>注意</b>：<code>HNSW32</code>在windows平台存在兼容性问题，可能导致索引库无法构建、加载。
+
+### 2.3 构建特征库的数据组织方式
 PaddleX的人脸识别产线示例需要使用预先构建好的特征库进行人脸特征检索。如果您希望用私有数据构建人脸特征库，则需要按照如下方式组织数据：
 
 ```bash
@@ -896,27 +1035,31 @@ pprint.pp(result_infer[&quot;faces&quot;])
 ### 4.1 模型微调
 由于人脸识别产线包含两个模块（人脸检测和人脸特征），模型产线的效果不及预期可能来自于其中任何一个模块。
 
-您可以对识别效果差的图片进行分析，如果在分析过程中发现有较多的人脸未被检测出来，那么可能是人脸检测模型存在不足，您需要参考[人脸检测模块开发教程](../../../module_usage/tutorials/cv_modules/face_detection.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/face_detection.md#四二次开发)章节，使用您的私有数据集对人脸检测模型进行微调；如果在已检测到的人脸出现匹配错误，这表明人脸特征模块需要进一步改进，您需要参考[人脸特征模块开发教程](../../../module_usage/tutorials/cv_modules/face_feature.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/face_feature.md#四二次开发)章节,对人脸特征模块进行微调。
+您可以对识别效果差的图片进行分析，如果在分析过程中发现有较多的人脸未被检测出来，那么可能是人脸检测模型存在不足，您需要参考[人脸检测模块开发教程](../../../module_usage/tutorials/cv_modules/face_detection.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/face_detection.md#四二次开发)章节，使用您的私有数据集对人脸检测模型进行微调；如果在已检测到的人脸出现匹配错误，这表明人脸特征模块需要进一步改进，您需要参考[人脸特征模块开发教程](../../../module_usage/tutorials/cv_modules/face_feature.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/face_feature.md#四二次开发)章节，对人脸特征模块进行微调。
 
 ### 4.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。
 
 若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径替换至产线配置文件中的对应位置即可：
 
-```bash
+```yaml
 
-......
-Pipeline:
-  device: "gpu:0"
-  det_model: "BlazeFace"        #可修改为微调后人脸检测模型的本地路径
-  rec_model: "MobileFaceNet"    #可修改为微调后人脸特征模型的本地路径
-  det_batch_size: 1
-  rec_batch_size: 1
-  device: gpu
-......
+...
+
+SubModules:
+  Detection:
+    module_name: face_detection
+    model_name: PP-YOLOE_plus-S_face
+    model_dir: null #可修改为微调后人脸检测模型的本地路径
+    batch_size: 1
+  Recognition:
+    module_name: face_feature
+    model_name: ResNet50_face
+    model_dir: null #可修改为微调后人脸特征模型的本地路径
+    batch_size: 1
 ```
+
 随后， 参考[2.2 本地体验](#22-本地体验)中的命令行方式或Python脚本方式，加载修改后的产线配置文件即可。
-注：目前暂不支持为人脸检测和人脸特征模型设置单独的batch_size。
 
 ##  5. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device`参数</b>即可完成不同硬件之间的无缝切换。

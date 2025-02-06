@@ -21,7 +21,7 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>PicoDet-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_pretrained.pdparams">训练模型</a></td>
 <td>42.6</td>
 <td>16.6715</td>
 <td>169.904</td>
@@ -29,14 +29,14 @@ comments: true
 <td rowspan="2">PP-PicoDet是一种全尺寸、棱视宽目标的轻量级目标检测算法，它考虑移动端设备运算量。与传统目标检测算法相比，PP-PicoDet具有更小的模型尺寸和更低的计算复杂度，并在保证检测精度的同时更高的速度和更低的延迟。</td>
 </tr>
 <tr>
-<td>PicoDet-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_pretrained.pdparams">训练模型</a></td>
 <td>29.1</td>
 <td>14.097</td>
 <td>37.6563</td>
 <td>4.4 M</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-YOLOE_plus-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-L_pretrained.pdparams">训练模型</a></td>
+<td>PP-YOLOE_plus-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-L_pretrained.pdparams">训练模型</a></td>
 <td>52.9</td>
 <td>33.5644</td>
 <td>814.825</td>
@@ -44,14 +44,14 @@ comments: true
 <td rowspan="2">PP-YOLOE_plus 是一种是百度飞桨视觉团队自研的云边一体高精度模型PP-YOLOE迭代优化升级的版本，通过使用Objects365大规模数据集、优化预处理，大幅提升了模型端到端推理速度。</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-YOLOE_plus-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_pretrained.pdparams">训练模型</a></td>
+<td>PP-YOLOE_plus-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_pretrained.pdparams">训练模型</a></td>
 <td>43.7</td>
 <td>16.8884</td>
 <td>223.059</td>
 <td>28.3 M</td>
 </tr>
 <tr>
-<td>RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/RT-DETR-H_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_pretrained.pdparams">训练模型</a></td>
+<td>RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_pretrained.pdparams">训练模型</a></td>
 <td>56.3</td>
 <td>114.814</td>
 <td>3933.39</td>
@@ -59,7 +59,7 @@ comments: true
 <td rowspan="2">RT-DETR是第一个实时端到端目标检测器。该模型设计了一个高效的混合编码器，满足模型效果与吞吐率的双需求，高效处理多尺度特征，并提出了加速和优化的查询选择机制，以优化解码器查询的动态化。RT-DETR支持通过使用不同的解码器来实现灵活端到端推理速度。</td>
 </tr>
 <tr>
-<td>RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/RT-DETR-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_pretrained.pdparams">训练模型</a></td>
+<td>RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_pretrained.pdparams">训练模型</a></td>
 <td>53.0</td>
 <td>34.5252</td>
 <td>1454.27</td>
@@ -81,7 +81,7 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>Cascade-FasterRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Cascade-FasterRCNN-ResNet50-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-FasterRCNN-ResNet50-FPN_pretrained.pdparams">训练模型</a></td>
+<td>Cascade-FasterRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Cascade-FasterRCNN-ResNet50-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-FasterRCNN-ResNet50-FPN_pretrained.pdparams">训练模型</a></td>
 <td>41.1</td>
 <td>-</td>
 <td>-</td>
@@ -89,14 +89,14 @@ comments: true
 <td rowspan="2">Cascade-FasterRCNN 是一种改进的Faster R-CNN目标检测模型，通过耦联多个检测器，利用不同IoU阈值优化检测结果，解决训练和预测阶段的mismatch问题，提高目标检测的准确性。</td>
 </tr>
 <tr>
-<td>Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">训练模型</a></td>
+<td>Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">训练模型</a></td>
 <td>45.0</td>
 <td>-</td>
 <td>-</td>
 <td>246.2 M</td>
 </tr>
 <tr>
-<td>CenterNet-DLA-34</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/CenterNet-DLA-34_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CenterNet-DLA-34_pretrained.pdparams">训练模型</a></td>
+<td>CenterNet-DLA-34</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/CenterNet-DLA-34_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CenterNet-DLA-34_pretrained.pdparams">训练模型</a></td>
 <td>37.6</td>
 <td>-</td>
 <td>-</td>
@@ -104,14 +104,14 @@ comments: true
 <td rowspan="2">CenterNet是一种anchor-free目标检测模型，把待检测物体的关键点视为单一点-即其边界框的中心点，并通过关键点进行回归。</td>
 </tr>
 <tr>
-<td>CenterNet-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/CenterNet-ResNet50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CenterNet-ResNet50_pretrained.pdparams">训练模型</a></td>
+<td>CenterNet-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/CenterNet-ResNet50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CenterNet-ResNet50_pretrained.pdparams">训练模型</a></td>
 <td>38.9</td>
 <td>-</td>
 <td>-</td>
 <td>319.7 M</td>
 </tr>
 <tr>
-<td>DETR-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/DETR-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DETR-R50_pretrained.pdparams">训练模型</a></td>
+<td>DETR-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/DETR-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DETR-R50_pretrained.pdparams">训练模型</a></td>
 <td>42.3</td>
 <td>59.2132</td>
 <td>5334.52</td>
@@ -119,7 +119,7 @@ comments: true
 <td>DETR 是Facebook提出的一种transformer目标检测模型，该模型在不需要预定义的先验框anchor和NMS的后处理策略的情况下，就可以实现端到端的目标检测。</td>
 </tr>
 <tr>
-<td>FasterRCNN-ResNet34-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterRCNN-ResNet34-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet34-FPN_pretrained.pdparams">训练模型</a></td>
+<td>FasterRCNN-ResNet34-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet34-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet34-FPN_pretrained.pdparams">训练模型</a></td>
 <td>37.8</td>
 <td>-</td>
 <td>-</td>
@@ -127,63 +127,63 @@ comments: true
 <td rowspan="9">Faster R-CNN是典型的two-stage目标检测模型，即先生成区域建议（Region Proposal），然后在生成的Region Proposal上做分类和回归。相较于前代R-CNN和Fast R-CNN，Faster R-CNN的改进主要在于区域建议方面，使用区域建议网络（Region Proposal Network, RPN）提供区域建议，以取代传统选择性搜索。RPN是卷积神经网络，并与检测网络共享图像的卷积特征，减少了区域建议的计算开销。</td>
 </tr>
 <tr>
-<td>FasterRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterRCNN-ResNet50-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-FPN_pretrained.pdparams">训练模型</a></td>
+<td>FasterRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet50-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-FPN_pretrained.pdparams">训练模型</a></td>
 <td>38.4</td>
 <td>-</td>
 <td>-</td>
 <td>148.1 M</td>
 </tr>
 <tr>
-<td>FasterRCNN-ResNet50-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterRCNN-ResNet50-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-vd-FPN_pretrained.pdparams">训练模型</a></td>
+<td>FasterRCNN-ResNet50-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet50-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-vd-FPN_pretrained.pdparams">训练模型</a></td>
 <td>39.5</td>
 <td>-</td>
 <td>-</td>
 <td>148.1 M</td>
 </tr>
 <tr>
-<td>FasterRCNN-ResNet50-vd-SSLDv2-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">训练模型</a></td>
+<td>FasterRCNN-ResNet50-vd-SSLDv2-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">训练模型</a></td>
 <td>41.4</td>
 <td>-</td>
 <td>-</td>
 <td>148.1 M</td>
 </tr>
 <tr>
-<td>FasterRCNN-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterRCNN-ResNet50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50_pretrained.pdparams">训练模型</a></td>
+<td>FasterRCNN-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50_pretrained.pdparams">训练模型</a></td>
 <td>36.7</td>
 <td>-</td>
 <td>-</td>
 <td>120.2 M</td>
 </tr>
 <tr>
-<td>FasterRCNN-ResNet101-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterRCNN-ResNet101-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet101-FPN_pretrained.pdparams">训练模型</a></td>
+<td>FasterRCNN-ResNet101-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet101-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet101-FPN_pretrained.pdparams">训练模型</a></td>
 <td>41.4</td>
 <td>-</td>
 <td>-</td>
 <td>216.3 M</td>
 </tr>
 <tr>
-<td>FasterRCNN-ResNet101</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterRCNN-ResNet101_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet101_pretrained.pdparams">训练模型</a></td>
+<td>FasterRCNN-ResNet101</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet101_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet101_pretrained.pdparams">训练模型</a></td>
 <td>39.0</td>
 <td>-</td>
 <td>-</td>
 <td>188.1 M</td>
 </tr>
 <tr>
-<td>FasterRCNN-ResNeXt101-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterRCNN-ResNeXt101-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNeXt101-vd-FPN_pretrained.pdparams">训练模型</a></td>
+<td>FasterRCNN-ResNeXt101-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNeXt101-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNeXt101-vd-FPN_pretrained.pdparams">训练模型</a></td>
 <td>43.4</td>
 <td>-</td>
 <td>-</td>
 <td>360.6 M</td>
 </tr>
 <tr>
-<td>FasterRCNN-Swin-Tiny-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FasterRCNN-Swin-Tiny-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-Swin-Tiny-FPN_pretrained.pdparams">训练模型</a></td>
+<td>FasterRCNN-Swin-Tiny-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-Swin-Tiny-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-Swin-Tiny-FPN_pretrained.pdparams">训练模型</a></td>
 <td>42.6</td>
 <td>-</td>
 <td>-</td>
 <td>159.8 M</td>
 </tr>
 <tr>
-<td>FCOS-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/FCOS-ResNet50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FCOS-ResNet50_pretrained.pdparams">训练模型</a></td>
+<td>FCOS-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FCOS-ResNet50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FCOS-ResNet50_pretrained.pdparams">训练模型</a></td>
 <td>39.6</td>
 <td>103.367</td>
 <td>3424.91</td>
@@ -191,7 +191,7 @@ comments: true
 <td>FCOS是一种密集预测的anchor-free目标检测模型，使用RetinaNet的骨架，直接在feature map上回归目标物体的长宽，并预测物体的类别以及centerness（feature map上像素点离物体中心的偏移程度），centerness最终会作为权重来调整物体得分。</td>
 </tr>
 <tr>
-<td>PicoDet-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_pretrained.pdparams">训练模型</a></td>
 <td>42.6</td>
 <td>16.6715</td>
 <td>169.904</td>
@@ -199,28 +199,28 @@ comments: true
 <td rowspan="4">PP-PicoDet是一种全尺寸、棱视宽目标的轻量级目标检测算法，它考虑移动端设备运算量。与传统目标检测算法相比，PP-PicoDet具有更小的模型尺寸和更低的计算复杂度，并在保证检测精度的同时更高的速度和更低的延迟。</td>
 </tr>
 <tr>
-<td>PicoDet-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-M_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-M_pretrained.pdparams">训练模型</a></td>
 <td>37.5</td>
 <td>16.2311</td>
 <td>71.7257</td>
 <td>16.8 M</td>
 </tr>
 <tr>
-<td>PicoDet-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_pretrained.pdparams">训练模型</a></td>
 <td>29.1</td>
 <td>14.097</td>
 <td>37.6563</td>
 <td>4.4 M</td>
 </tr>
 <tr>
-<td>PicoDet-XS</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet-XS_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-XS_pretrained.pdparams">训练模型</a></td>
+<td>PicoDet-XS</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-XS_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-XS_pretrained.pdparams">训练模型</a></td>
 <td>26.2</td>
 <td>13.8102</td>
 <td>48.3139</td>
 <td>5.7 M</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-YOLOE_plus-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-L_pretrained.pdparams">训练模型</a></td>
+<td>PP-YOLOE_plus-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-L_pretrained.pdparams">训练模型</a></td>
 <td>52.9</td>
 <td>33.5644</td>
 <td>814.825</td>
@@ -228,28 +228,28 @@ comments: true
 <td rowspan="4">PP-YOLOE_plus 是一种是百度飞桨视觉团队自研的云边一体高精度模型PP-YOLOE迭代优化升级的版本，通过使用Objects365大规模数据集、优化预处理，大幅提升了模型端到端推理速度。</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-YOLOE_plus-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-M_pretrained.pdparams">训练模型</a></td>
+<td>PP-YOLOE_plus-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-M_pretrained.pdparams">训练模型</a></td>
 <td>49.8</td>
 <td>19.843</td>
 <td>449.261</td>
 <td>82.3 M</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-YOLOE_plus-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_pretrained.pdparams">训练模型</a></td>
+<td>PP-YOLOE_plus-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_pretrained.pdparams">训练模型</a></td>
 <td>43.7</td>
 <td>16.8884</td>
 <td>223.059</td>
 <td>28.3 M</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus-X</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-YOLOE_plus-X_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-X_pretrained.pdparams">训练模型</a></td>
+<td>PP-YOLOE_plus-X</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-X_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-X_pretrained.pdparams">训练模型</a></td>
 <td>54.7</td>
 <td>57.8995</td>
 <td>1439.93</td>
 <td>349.4 M</td>
 </tr>
 <tr>
-<td>RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/RT-DETR-H_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_pretrained.pdparams">训练模型</a></td>
+<td>RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_pretrained.pdparams">训练模型</a></td>
 <td>56.3</td>
 <td>114.814</td>
 <td>3933.39</td>
@@ -257,35 +257,35 @@ comments: true
 <td rowspan="5">RT-DETR是第一个实时端到端目标检测器。该模型设计了一个高效的混合编码器，满足模型效果与吞吐率的双需求，高效处理多尺度特征，并提出了加速和优化的查询选择机制，以优化解码器查询的动态化。RT-DETR支持通过使用不同的解码器来实现灵活端到端推理速度。</td>
 </tr>
 <tr>
-<td>RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/RT-DETR-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_pretrained.pdparams">训练模型</a></td>
+<td>RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_pretrained.pdparams">训练模型</a></td>
 <td>53.0</td>
 <td>34.5252</td>
 <td>1454.27</td>
 <td>113.7 M</td>
 </tr>
 <tr>
-<td>RT-DETR-R18</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/RT-DETR-R18_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-R18_pretrained.pdparams">训练模型</a></td>
+<td>RT-DETR-R18</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-R18_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-R18_pretrained.pdparams">训练模型</a></td>
 <td>46.5</td>
 <td>19.89</td>
 <td>784.824</td>
 <td>70.7 M</td>
 </tr>
 <tr>
-<td>RT-DETR-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/RT-DETR-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-R50_pretrained.pdparams">训练模型</a></td>
+<td>RT-DETR-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-R50_pretrained.pdparams">训练模型</a></td>
 <td>53.1</td>
 <td>41.9327</td>
 <td>1625.95</td>
 <td>149.1 M</td>
 </tr>
 <tr>
-<td>RT-DETR-X</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/RT-DETR-X_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-X_pretrained.pdparams">训练模型</a></td>
+<td>RT-DETR-X</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-X_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-X_pretrained.pdparams">训练模型</a></td>
 <td>54.8</td>
 <td>61.8042</td>
 <td>2246.64</td>
 <td>232.9 M</td>
 </tr>
 <tr>
-<td>YOLOv3-DarkNet53</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/YOLOv3-DarkNet53_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOv3-DarkNet53_pretrained.pdparams">训练模型</a></td>
+<td>YOLOv3-DarkNet53</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOv3-DarkNet53_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOv3-DarkNet53_pretrained.pdparams">训练模型</a></td>
 <td>39.1</td>
 <td>40.1055</td>
 <td>883.041</td>
@@ -293,21 +293,21 @@ comments: true
 <td rowspan="3">YOLOv3是一种实时的端到端目标检测器。它使用一个独特的单个卷积神经网络，将目标检测问题分解为一个回归问题，从而实现实时的检测。该模型采用了多个尺度的检测，提高了不同尺度目标物体的检测性能。</td>
 </tr>
 <tr>
-<td>YOLOv3-MobileNetV3</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/YOLOv3-MobileNetV3_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOv3-MobileNetV3_pretrained.pdparams">训练模型</a></td>
+<td>YOLOv3-MobileNetV3</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOv3-MobileNetV3_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOv3-MobileNetV3_pretrained.pdparams">训练模型</a></td>
 <td>31.4</td>
 <td>18.6692</td>
 <td>267.214</td>
 <td>83.8 M</td>
 </tr>
 <tr>
-<td>YOLOv3-ResNet50_vd_DCN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/YOLOv3-ResNet50_vd_DCN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOv3-ResNet50_vd_DCN_pretrained.pdparams">训练模型</a></td>
+<td>YOLOv3-ResNet50_vd_DCN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOv3-ResNet50_vd_DCN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOv3-ResNet50_vd_DCN_pretrained.pdparams">训练模型</a></td>
 <td>40.6</td>
 <td>31.6276</td>
 <td>856.047</td>
 <td>163.0 M</td>
 </tr>
 <tr>
-<td>YOLOX-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/YOLOX-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-L_pretrained.pdparams">训练模型</a></td>
+<td>YOLOX-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOX-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-L_pretrained.pdparams">训练模型</a></td>
 <td>50.1</td>
 <td>185.691</td>
 <td>1250.58</td>
@@ -315,39 +315,54 @@ comments: true
 <td rowspan="6">YOLOX模型以YOLOv3作为目标检测网络的框架，通过设计Decoupled Head、Data Aug、Anchor Free以及SimOTA组件，显著提升了模型在各种复杂场景下的检测性能。</td>
 </tr>
 <tr>
-<td>YOLOX-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/YOLOX-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-M_pretrained.pdparams">训练模型</a></td>
+<td>YOLOX-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOX-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-M_pretrained.pdparams">训练模型</a></td>
 <td>46.9</td>
 <td>123.324</td>
 <td>688.071</td>
 <td>90.0 M</td>
 </tr>
 <tr>
-<td>YOLOX-N</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/YOLOX-N_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-N_pretrained.pdparams">训练模型</a></td>
+<td>YOLOX-N</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOX-N_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-N_pretrained.pdparams">训练模型</a></td>
 <td>26.1</td>
 <td>79.1665</td>
 <td>155.59</td>
 <td>3.4 M</td>
 </tr>
 <tr>
-<td>YOLOX-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/YOLOX-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-S_pretrained.pdparams">训练模型</a></td>
+<td>YOLOX-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOX-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-S_pretrained.pdparams">训练模型</a></td>
 <td>40.4</td>
 <td>184.828</td>
 <td>474.446</td>
 <td>32.0 M</td>
 </tr>
 <tr>
-<td>YOLOX-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/YOLOX-T_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-T_pretrained.pdparams">训练模型</a></td>
+<td>YOLOX-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOX-T_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-T_pretrained.pdparams">训练模型</a></td>
 <td>32.9</td>
 <td>102.748</td>
 <td>212.52</td>
 <td>18.1 M</td>
 </tr>
 <tr>
-<td>YOLOX-X</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/YOLOX-X_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-X_pretrained.pdparams">训练模型</a></td>
+<td>YOLOX-X</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOX-X_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-X_pretrained.pdparams">训练模型</a></td>
 <td>51.8</td>
 <td>227.361</td>
 <td>2067.84</td>
 <td>351.5 M</td>
+</tr>
+<tr>
+<td>Co-Deformable-DETR-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Co-Deformable-DETR-R50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-R50_pretrained.pdparams">训练模型</a></td>
+<td>49.7</td>
+<td></td>
+<td></td>
+<td>184 M</td>
+<td rowspan="2">Co-DETR是一种先进的端到端目标检测器。它基于DETR架构，通过引入协同混合分配训练策略，将目标检测任务中的传统一对多标签分配与一对一匹配相结合，从而显著提高了检测性能和训练效率</td>
+</tr>
+<tr>
+<td>Co-Deformable-DETR-Swin-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Co-Deformable-DETR-Swin-T_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-Swin-T_pretrained.pdparams">训练模型</a></td>
+<td>48.0</td>
+<td></td>
+<td></td>
+<td>187 M</td>
 </tr>
 </table>
 
@@ -370,60 +385,36 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 一行命令即可快速体验目标检测产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png)，并将 `--input` 替换为本地路径，进行预测
 
 ```bash
-paddlex --pipeline object_detection --input general_object_detection_002.png --device gpu:0
+paddlex --pipeline object_detection \
+        --input general_object_detection_002.png \
+        --threshold 0.5 \
+        --save_path ./output/ \
+        --device gpu:0
 ```
-参数说明：
+相关参数和运行结果说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的参数说明和结果解释。
 
-```
---pipeline：产线名称，此处为目标检测产线
---input：待处理的输入图片的本地路径或URL
---device 使用的GPU序号（例如gpu:0表示使用第0块GPU，gpu:1,2表示使用第1、2块GPU），也可选择使用CPU（--device cpu）
-```
-
-在执行上述 Python 脚本时，加载的是默认的目标检测产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
-
-<details><summary> 👉点击展开</summary>
-
-<pre><code>paddlex --get_pipeline_config object_detection
-</code></pre>
-<p>执行后，目标检测产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为 <code>./my_path</code> ）：</p>
-<pre><code>paddlex --get_pipeline_config object_detection --save_path ./my_path
-</code></pre>
-<p>获取产线配置文件后，可将 <code>--pipeline</code> 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 <code>./object_detection.yaml</code>，只需执行：</p>
-<pre><code class="language-bash">paddlex --pipeline ./object_detection.yaml --input general_object_detection_002.png --device gpu:0
-</code></pre>
-<p>其中，<code>--model</code>、<code>--device</code> 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。</p></details>
-
-运行后，得到的结果为：
-
-```
-{'input_path': 'general_object_detection_002.png', 'boxes': [{'cls_id': 49, 'label': 'orange', 'score': 0.8188097476959229, 'coordinate': [661, 93, 870, 305]}, {'cls_id': 47, 'label': 'apple', 'score': 0.7743489146232605, 'coordinate': [76, 274, 330, 520]}, {'cls_id': 47, 'label': 'apple', 'score': 0.7270504236221313, 'coordinate': [285, 94, 469, 297]}, {'cls_id': 46, 'label': 'banana', 'score': 0.5570532083511353, 'coordinate': [310, 361, 685, 712]}, {'cls_id': 47, 'label': 'apple', 'score': 0.5484835505485535, 'coordinate': [764, 285, 924, 440]}, {'cls_id': 47, 'label': 'apple', 'score': 0.5160726308822632, 'coordinate': [853, 169, 987, 303]}, {'cls_id': 60, 'label': 'dining table', 'score': 0.5142655968666077, 'coordinate': [0, 0, 1072, 720]}, {'cls_id': 47, 'label': 'apple', 'score': 0.5101479291915894, 'coordinate': [57, 23, 213, 176]}]}
-```
+可视化结果保存至`save_path`，如下所示：
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/object_detection/03.png">
 
-可视化图片默认不进行保存，您可以通过 `--save_path` 自定义保存路径，随后所有结果将被保存在指定路径下。
-
 #### 2.2.2 Python脚本方式集成
-几行代码即可完成产线的快速推理，以通用目标检测产线为例：
+通过上述命令行方式可快速体验查看效果，在项目中往往需要代码集成，您可以通过如下几行代码完成产线的快速推理：
 
 ```python
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="object_detection")
 
-output = pipeline.predict("general_object_detection_002.png")
+output = pipeline.predict("general_object_detection_002.png", threshold=0.5)
 for res in output:
-    res.print() ## 打印预测的结构化输出
-    res.save_to_img("./output/") ## 保存结果可视化图像
-    res.save_to_json("./output/") ## 保存预测的结构化输出
+    res.print()
+    res.save_to_img("./output/")
+    res.save_to_json("./output/")
 ```
-得到的结果与命令行方式相同。
 
 在上述 Python 脚本中，执行了如下几个步骤：
 
-（1）实例化 `create_pipeline` 实例化产线对象：具体参数说明如下：
-
+（1）调用 `create_pipeline` 实例化产线对象：具体参数说明如下：
 <table>
 <thead>
 <tr>
@@ -438,101 +429,192 @@ for res in output:
 <td><code>pipeline</code></td>
 <td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
 <td><code>str</code></td>
-<td>无</td>
+<td><code>None</code></td>
 </tr>
 <tr>
+<tr>
+<td><code>config</code></td>
+<td>产线具体的配置信息（如果和<code>pipeline</code>同时设置，优先级高于<code>pipeline</code>，且要求产线名和<code>pipeline</code>一致）。</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
+</tr>
 <td><code>device</code></td>
-<td>产线模型推理设备。支持：“gpu”，“cpu”。</td>
+<td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
 <td><code>str</code></td>
-<td><code>gpu</code></td>
+<td><code>gpu:0</code></td>
 </tr>
 <tr>
-<td><code>enable_hpi</code></td>
+<td><code>use_hpip</code></td>
 <td>是否启用高性能推理，仅当该产线支持高性能推理时可用。</td>
 <td><code>bool</code></td>
 <td><code>False</code></td>
 </tr>
 </tbody>
 </table>
-（2）调用产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`x`，用于输入待预测数据，支持多种输入方式，具体示例如下：
+
+2）调用通用目标检测产线对象的 `predict()` 方法进行推理预测。该方法将返回一个 `generator`。以下是 `predict()` 方法的参数及其说明：
 
 <table>
 <thead>
 <tr>
-<th>参数类型</th>
+<th>参数</th>
 <th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>Python Var</td>
-<td>支持直接传入Python变量，如numpy.ndarray表示的图像数据。</td>
+<td><code>input</code></td>
+<td>待预测数据，支持多种输入类型，必填</td>
+<td><code>Python Var|str|list</code></td>
+<td>
+<ul>
+  <li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
+  <li><b>str</b>：如图像文件或者PDF文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件或PDF文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code>(当前不支持目录中包含PDF文件的预测，PDF文件需要指定到具体文件路径)</li>
+  <li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
+</ul>
+</td>
+<td>无</td>
 </tr>
 <tr>
-<td>str</td>
-<td>支持传入待预测数据文件路径，如图像文件的本地路径：<code>/root/data/img.jpg</code>。</td>
+<td><code>threshold</code></td>
+<td>用于过滤掉低置信度预测结果的阈值；如果不指定，则默认使用PaddleX官方模型配置</td>
+<td><code>float/dict/None</code></td>
+<td>
+<ul>
+  <li><b>float</b>，如 0.2， 表示过滤掉所有阈值小于0.2的目标框</li>
+  <li><b>字典</b>，字典的key为<b>int</b>类型，代表<code>cls_id</code>，val为<b>float</b>类型阈值。如 <code>{0: 0.45, 2: 0.48, 7: 0.4}</code>，表示对cls_id为0的类别应用阈值0.45、cls_id为1的类别应用阈值0.48、cls_id为7的类别应用阈值0.4</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
-<tr>
-<td>str</td>
-<td>支持传入待预测数据文件URL，如图像文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png">示例</a>。</td>
-</tr>
-<tr>
-<td>str</td>
-<td>支持传入本地目录，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code>。</td>
-</tr>
-<tr>
-<td>dict</td>
-<td>支持传入字典类型，字典的key需与具体任务对应，如图像分类任务对应\"img\"，字典的val支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code>。</td>
-</tr>
-<tr>
-<td>list</td>
-<td>支持传入列表，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]，[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code>。</td>
-</tr>
-</tbody>
 </table>
-（3）调用`predict`方法获取预测结果：`predict` 方法为`generator`，因此需要通过调用获得预测结果，`predict`方法以batch为单位对数据进行预测，因此预测结果为list形式表示的一组预测结果。
 
-（4）对预测结果进行处理：每个样本的预测结果均为`dict`类型，且支持打印，或保存为文件，支持保存的类型与具体产线相关，如：
+（3）对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`json`文件的操作:
 
 <table>
 <thead>
 <tr>
 <th>方法</th>
-<th>说明</th>
-<th>方法参数</th>
+<th>方法说明</th>
+<th>参数</th>
+<th>参数类型</th>
+<th>参数说明</th>
+<th>默认值</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>print</td>
-<td>打印结果到终端</td>
-<td><code>- format_json</code>：bool类型，是否对输出内容进行使用json缩进格式化，默认为True；<br/><code>- indent</code>：int类型，json格式化设置，仅当format_json为True时有效，默认为4；<br/><code>- ensure_ascii</code>：bool类型，json格式化设置，仅当format_json为True时有效，默认为False；</td>
+<td rowspan = "3"><code>print()</code></td>
+<td rowspan = "3">打印结果到终端</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
+<td><code>True</code></td>
 </tr>
 <tr>
-<td>save_to_json</td>
-<td>将结果保存为json格式的文件</td>
-<td><code>- save_path</code>：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；<br/><code>- indent</code>：int类型，json格式化设置，默认为4；<br/><code>- ensure_ascii</code>：bool类型，json格式化设置，默认为False；</td>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
 </tr>
 <tr>
-<td>save_to_img</td>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan = "3"><code>save_to_json()</code></td>
+<td rowspan = "3">将结果保存为json格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
 <td>将结果保存为图像格式的文件</td>
-<td><code>- save_path</code>：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，支持目录或文件路径</td>
+<td>无</td>
 </tr>
-</tbody>
 </table>
-若您获取了配置文件，即可对目标检测产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
 
-例如，若您的配置文件保存在 `./my_path/object_detection.yaml` ，则只需执行：
+- 调用 <code>print()</code> 方法会将如下结果打印到终端：
+
+```bash
+{'res': {'input_path': 'general_object_detection_002.png', 'page_index': None, 'boxes': [{'cls_id': 49, 'label': 'orange', 'score': 0.8188614249229431, 'coordinate': [661.3518, 93.05823, 870.75903, 305.93713]}, {'cls_id': 47, 'label': 'apple', 'score': 0.7745078206062317, 'coordinate': [76.80911, 274.74905, 330.5422, 520.0428]}, {'cls_id': 47, 'label': 'apple', 'score': 0.7271787524223328, 'coordinate': [285.32645, 94.3175, 469.73645, 297.40344]}, {'cls_id': 46, 'label': 'banana', 'score': 0.5576589703559875, 'coordinate': [310.8041, 361.43625, 685.1869, 712.59155]}, {'cls_id': 47, 'label': 'apple', 'score': 0.5490103363990784, 'coordinate': [764.6252, 285.76096, 924.8153, 440.92892]}, {'cls_id': 47, 'label': 'apple', 'score': 0.515821635723114, 'coordinate': [853.9831, 169.41423, 987.803, 303.58615]}, {'cls_id': 60, 'label': 'dining table', 'score': 0.514293372631073, 'coordinate': [0.53089714, 0.32445717, 1072.9534, 720]}, {'cls_id': 47, 'label': 'apple', 'score': 0.510750949382782, 'coordinate': [57.368027, 23.455347, 213.39601, 176.45612]}]}}
+```
+
+- 输出结果参数含义如下：
+    - `input_path`：表示输入图像的路径
+    - `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
+    - `boxes`：预测的目标框信息，一个字典列表。每个字典代表一个检出的目标，包含以下信息：
+        - `cls_id`：类别ID，一个整数
+        - `label`：类别标签，一个字符串
+        - `score`：目标框置信度，一个浮点数
+        - `coordinate`：目标框坐标，一个浮点数列表，格式为<code>[xmin, ymin, xmax, ymax]</code>
+
+- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
+- 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.{your_img_extension}`，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)
+
+* 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>属性说明</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "1"><code>json</code></td>
+<td rowspan = "1">获取预测的 <code>json</code> 格式的结果</td>
+</tr>
+<tr>
+<td rowspan = "2"><code>img</code></td>
+<td rowspan = "2">获取格式为 <code>dict</code> 的可视化图像</td>
+</tr>
+</table>
+
+- `json` 属性获取的预测结果为dict类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
+- `img` 属性返回的预测结果是一个字典类型的数据。键为 `res` ，对应的值是一个用于可视化目标检测结果的 `Image.Image` 对象。
+
+上述Python脚本集成方式默认使用 PaddleX 官方配置文件中的参数设置，若您需要自定义配置文件，可先执行如下命令获取官方配置文件，并保存在 `my_path` 中：
+
+```bash
+paddlex --get_pipeline_config object_detection --save_path ./my_path
+```
+
+若您获取了配置文件，即可对目标检测产线各项配置进行自定义。只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为自定义产线配置文件路径即可。
+
+例如，若您的自定义配置文件保存在 `./my_path/object_detection.yaml` ，则只需执行：
 
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 output = pipeline.predict("general_object_detection_002.png")
 for res in output:
-    res.print() ## 打印预测的结构化输出
-    res.save_to_img("./output/") ## 保存结果可视化图像
-    res.save_to_json("./output/") ## 保存预测的结构化输出
+    res.print()
+    res.save_to_img("./output/")
+    res.save_to_json("./output/")
 ```
+<b>注：</b> 配置文件中的参数为产线初始化参数，如果希望更改通用目标检测产线初始化参数，可以直接修改配置文件中的参数，并加载配置文件进行预测。
+
 ## 3. 开发集成/部署
 
 如果产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
@@ -1099,27 +1181,33 @@ print_r($result[&quot;detectedObjects&quot;]);
 
 若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径替换至产线配置文件中的对应位置即可：
 
-```python
-......
-Pipeline:
-  model: PicoDet-S  #可修改为微调后模型的本地路径
-  device: "gpu"
-  batch_size: 1
-......
+```yaml
+pipeline_name: object_detection
+
+SubModules:
+  ObjectDetection:
+    module_name: object_detection
+    model_name: PicoDet-S
+    model_dir: null #可修改为微调后模型的本地路径
+    batch_size: 1
+    img_size: null
+    threshold: null
 ```
 随后， 参考本地体验中的命令行方式或 Python 脚本方式，加载修改后的产线配置文件即可。
 
 ## 5. 多硬件支持
-PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改  `--device` 参数</b>即可完成不同硬件之间的无缝切换。
+PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU 和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改  `--device` 参数</b>即可完成不同硬件之间的无缝切换。
 
-例如，您使用英伟达 GPU 进行目标检测产线的推理，使用的 Python 命令为：
-
-```bash
-paddlex --pipeline object_detection --input general_object_detection_002.png --device gpu:0
-```
-此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的 `--device` 修改为 npu:0 即可：
+例如，使用昇腾 NPU 进行目标检测产线快速推理：
 
 ```bash
-paddlex --pipeline object_detection --input general_object_detection_002.png --device npu:0
+paddlex --pipeline object_detection \
+        --input general_object_detection_002.png \
+        --threshold 0.5 \
+        --save_path ./output/ \
+        --device npu:0
 ```
+
+当然，您也可以在 Python 脚本中 `create_pipeline()` 时或者 `predict()` 时指定硬件设备。
+
 若您想在更多种类的硬件上使用通用目标检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

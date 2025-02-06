@@ -14,10 +14,15 @@
 
 from typing import List
 
-from pydantic import Field
+from pydantic import Field, BaseModel
 from typing_extensions import Annotated, TypeAlias
 
-__all__ = ["Size"]
+__all__ = ["Size", "Mask"]
 
 
 Size: TypeAlias = Annotated[List[int], Field(min_length=2, max_length=2)]
+
+
+class Mask(BaseModel):
+    rleResult: str
+    size: Size

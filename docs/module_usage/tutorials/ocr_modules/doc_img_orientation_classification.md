@@ -23,7 +23,7 @@ comments: true
 </thead>
 <tbody>
 <tr>
-<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LCNet_x1_0_doc_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">训练模型</a></td>
+<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">训练模型</a></td>
 <td>99.06</td>
 <td>3.84845</td>
 <td>9.23735</td>
@@ -40,8 +40,9 @@ comments: true
 
 完成wheel 包的安装后，几行代码即可完成文档图像方向分类模块的推理，可以任意切换该模块下的模型，您也可以将文档图像方向分类模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg)到本地。
 
-```bash
+```python
 from paddlex import create_model
+
 model = create_model(model_name="PP-LCNet_x1_0_doc_ori")
 output = model.predict("img_rot180_demo.jpg",  batch_size=1)
 for res in output:
@@ -51,8 +52,8 @@ for res in output:
 ```
 
 运行后，得到的结果为：
-```josn
-{'res': {'input_path': 'test_imgs/img_rot180_demo.jpg', 'class_ids': [2], 'scores': [0.8816400170326233], 'label_names': ['180']}}
+```bash
+{'res': {'input_path': 'test_imgs/img_rot180_demo.jpg', 'page_index': None, 'class_ids': array([2], dtype=int32), 'scores': array([0.88164], dtype=float32), 'label_names': ['180']}}
 ```
 
 运行结果参数含义如下：
@@ -133,7 +134,7 @@ for res in output:
 </tr>
 </table>
 
-* 对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为图片、保存为`json`文件的操作:
+* 对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`json`文件的操作:
 
 <table>
 <thead>

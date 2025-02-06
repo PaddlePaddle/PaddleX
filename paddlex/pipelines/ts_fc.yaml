@@ -1,7 +1,0 @@
-Global:
-  pipeline_name: ts_fc
-  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv
-  
-Pipeline:
-  model: DLinear
-  batch_size: 1

@@ -23,7 +23,7 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>YOWO</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/YOWO_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOWO_pretrained.pdparams">训练模型</a></td>
+<td>YOWO</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOWO_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOWO_pretrained.pdparams">训练模型</a></td>
 <td>80.94</td>
 <td>462.891M</td>
 <td rowspan="1">
@@ -47,7 +47,7 @@ PaddleX 支持在本地使用命令行或 Python 体验产线的效果。
 一行命令即可快速体验视频检测产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/HorseRiding.avi)，并将 `--input` 替换为本地路径，进行预测
 
 ```bash
-paddlex --pipeline video_detection --input HorseRiding.avi --device gpu:0 --save_path output 
+paddlex --pipeline video_detection --input HorseRiding.avi --device gpu:0 --save_path output
 ```
 
 相关的参数说明可以参考[2.1.2 Python脚本方式集成](#212-python脚本方式集成)中的参数说明。
@@ -104,6 +104,12 @@ for res in output:
 <td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
 <td><code>str</code></td>
 <td>None</td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>产线具体的配置信息（如果和<code>pipeline</code>同时设置，优先级高于<code>pipeline</code>，且要求产线名和<code>pipeline</code>一致）。</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
@@ -188,7 +194,7 @@ for res in output:
 </tbody>
 </table>
 
-（3）对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为视频、保存为`json`文件的操作:
+（3）对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为视频、保存为`json`文件的操作:
 
 <table>
 <thead>
@@ -263,10 +269,10 @@ for res in output:
 
     - `angle`: `(int)` 文档方向分类的预测结果。启用时取值为[0,90,180,270]；未启用时为-1
 
-- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
+- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
 - 调用`save_to_video()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.{your_img_extension}`，如果指定为文件，则直接保存到该文件中。
 
-* 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
+* 此外，也支持通过属性获取预测结果，具体如下：
 
 <table>
 <thead>
@@ -280,14 +286,11 @@ for res in output:
 <td rowspan = "1">获取预测的 <code>json</code> 格式的结果</td>
 </tr>
 <tr>
-<td rowspan = "2"><code>img</code></td>
-<td rowspan = "2">获取格式为 <code>dict</code> 的可视化图像</td>
 </tr>
 </table>
 
 
 - `json` 属性获取的预测结果为dict类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
-- `img` 属性返回的预测结果是一个字典类型的数据。其中，键为 `preprocessed_img`，对应的值是 `Image.Image` 对象：用于显示 doc_preprocessor 结果的可视化图像。
 
 
 此外，您可以获取 video_detection 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
@@ -896,9 +899,11 @@ Pipeline:
 ##  5. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device` 参数</b>即可完成不同硬件之间的无缝切换。
 
-例如，您使用昇腾 NPU 进行视频检测产线的推理，使用的命令为：
+例如，您使用昇腾 NPU 进行视频检测产线的推理，使用的 CLI 命令为：
 
 ```bash
 paddlex --pipeline video_detection --input HorseRiding.avi --device npu:0
 ```
+当然，您也可以在 Python 脚本中 `create_pipeline()` 时或者 `predict()` 时指定硬件设备。
+
 若您想在更多种类的硬件上使用通用视频检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

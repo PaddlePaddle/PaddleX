@@ -5,7 +5,9 @@ comments: true
 # 图像异常检测产线使用教程
 
 ## 1. 图像异常检测产线介绍
-图像异常检测是一种通过分析图像中的内容，来识别与众不同或不符合正常模式的图像处理技术。它广泛应用于工业质量检测、医疗影像分析和安全监控等领域。通过使用机器学习和深度学习算法，图像异常检测能够自动识别出图像中潜在的缺陷、异常或异常行为，从而帮助我们及时发现问题并采取相应措施。图像异常检测系统被设计用于自动检测和标记图像中的异常情况，以提高工作效率和准确性。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
+图像异常检测是一种通过分析图像中的内容，来识别与众不同或不符合正常模式的图像处理技术。图像异常检测能够自动识别出图像中潜在的缺陷、异常或异常行为，从而帮助我们及时发现问题并采取相应措施。
+
+本产线集成了高精度的异常检测模型 STFPM，提取图像中的异常或缺陷区域，使用场景覆盖工业制造、食品外观质检以及医疗影像分析等各个领域。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_anomaly_detection/01.png">
 
@@ -21,7 +23,7 @@ comments: true
 </thead>
 <tbody>
 <tr>
-<td>STFPM</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/STFPM_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/STFPM_pretrained.pdparams">训练模型</a></td>
+<td>STFPM</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/STFPM_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/STFPM_pretrained.pdparams">训练模型</a></td>
 <td>99.01</td>
 <td>21.5 M</td>
 </tr>
@@ -92,6 +94,12 @@ for res in output:
 <td>无</td>
 </tr>
 <tr>
+<td><code>config</code></td>
+<td>产线具体的配置信息（如果和<code>pipeline</code>同时设置，优先级高于<code>pipeline</code>，且要求产线名和<code>pipeline</code>一致）。</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>device</code></td>
 <td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
 <td><code>str</code></td>
@@ -150,7 +158,7 @@ for res in output:
 </tr>
 </table>
 
-（3）对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为图片、保存为`json`文件的操作:
+（3）对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`json`文件的操作:
 
 <table>
 <thead>
@@ -789,8 +797,8 @@ SubModules:
   AnomalyDetection:
     module_name: anomaly_detection
     model_name: STFPM
-    model_dir: null  # 替换为微调后的文档图像方向分类模型权重路径
-    batch_size: 1   
+    model_dir: null  # 替换为微调后的图像异常检测模型权重路径
+    batch_size: 1
 ```
 
 随后， 参考[2. 快速开始](#2-快速开始)中的命令行方式或Python脚本方式，加载修改后的产线配置文件即可。
@@ -799,9 +807,12 @@ SubModules:
 ##  5. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device`</b> 参数即可完成不同硬件之间的无缝切换。
 
-例如，您使用昇腾 NPU 进行图像异常检测产线的推理，使用的 Python 命令为：
+例如，您使用昇腾 NPU 进行图像异常检测产线的推理，使用的 CLI 命令为：
 
 ```bash
 paddlex --pipeline anomaly_detection --input uad_grid.png --device npu:0
 ```
+
+当然，您也可以在 Python 脚本中 `create_pipeline()` 时或者 `predict()` 时指定硬件设备。
+
 若您想在更多种类的硬件上使用图像异常检测产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

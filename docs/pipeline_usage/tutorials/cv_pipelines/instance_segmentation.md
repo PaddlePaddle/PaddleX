@@ -5,12 +5,15 @@ comments: true
 # 通用实例分割产线使用教程
 
 ## 1. 通用实例分割产线介绍
-实例分割是一种计算机视觉任务，它不仅要识别图像中的物体类别，还要区分同一类别中不同实例的像素，从而实现对每个物体的精确分割。实例分割可以在同一图像中分别标记出每一辆车、每一个人或每一只动物，确保它们在像素级别上被独立处理。例如，在一幅包含多辆车和行人的街景图像中，实例分割能够将每辆车和每个人的轮廓清晰地分开，形成多个独立的区域标签。这项技术广泛应用于自动驾驶、视频监控和机器人视觉等领域，通常依赖于深度学习模型（如Mask R-CNN等），通过卷积神经网络来实现高效的像素分类和实例区分，为复杂场景的理解提供了强大的支持。
+实例分割是一种计算机视觉任务，它不仅要识别图像中的物体类别，还要区分同一类别中不同实例的像素，从而实现对每个物体的精确分割。实例分割可以在同一图像中分别标记出每一辆车、每一个人或每一只动物，确保它们在像素级别上被独立处理。例如，在一幅包含多辆车和行人的街景图像中，实例分割能够将每辆车和每个人的轮廓清晰地分开，形成多个独立的区域标签。这项技术广泛应用于自动驾驶、视频监控和机器人视觉等领域，通常依赖于深度学习模型（如Mask R-CNN等），通过卷积神经网络来实现高效的像素分类和实例区分，为复杂场景的理解提供了强大的支持。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/instance_segmentation/01.png">
 
-<b>通用实例分割产线中包含了</b><b>实例分割</b><b>模块，如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型</b>。
+<b>通用实例分割产线中包含了实例分割模块，该模块都包含多个模型，您可以根据下方的基准测试数据选择使用的模型</b>。
 
+<b>如果您更注重模型的精度，请选择精度较高的模型；如果您更在意模型的推理速度，请选择推理速度较快的模型；如果您关注模型的存储大小，请选择存储体积较小的模型。</b>
+
+<p><b>通用图像实例分割模块（可选）：</b></p>
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
@@ -21,7 +24,7 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>Mask-RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-H_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-H_pretrained.pdparams">训练模型</a></td>
+<td>Mask-RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-H_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-H_pretrained.pdparams">训练模型</a></td>
 <td>50.6</td>
 <td>132.693</td>
 <td>4896.17</td>
@@ -29,13 +32,14 @@ comments: true
 <td rowspan="5">Mask-RT-DETR 是一种基于RT-DETR的实例分割模型，通过采用最优性能的更好的PP-HGNetV2作为骨干网络，构建了MaskHybridEncoder编码器，引入了IOU-aware Query Selection 技术，使其在相同推理耗时上取得了SOTA实例分割精度。</td>
 </tr>
 <tr>
-<td>Mask-RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-L_pretrained.pdparams">训练模型</a></td>
+<td>Mask-RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-L_pretrained.pdparams">训练模型</a></td>
 <td>45.7</td>
 <td>46.5059</td>
 <td>2575.92</td>
 <td>113.6 M</td>
 </tr>
 </table>
+<p><b>注：以上精度指标为<a href="https://cocodataset.org/#home">COCO2017</a>验证集 Mask AP。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p></details>
 
 > ❗ 以上列出的是实例分割模块重点支持的<b>2个核心模型</b>，该模块总共支持<b>15个模型</b>，完整的模型列表如下：
 
@@ -51,7 +55,7 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>Cascade-MaskRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Cascade-MaskRCNN-ResNet50-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-MaskRCNN-ResNet50-FPN_pretrained.pdparams">训练模型</a></td>
+<td>Cascade-MaskRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Cascade-MaskRCNN-ResNet50-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-MaskRCNN-ResNet50-FPN_pretrained.pdparams">训练模型</a></td>
 <td>36.3</td>
 <td>-</td>
 <td>-</td>
@@ -59,14 +63,14 @@ comments: true
 <td rowspan="2">Cascade-MaskRCNN 是一种改进的Mask RCNN实例分割模型，通过级联多个检测器，利用不同IOU阈值优化分割结果，解决检测与推理阶段的mismatch问题，提高了实例分割的准确性。</td>
 </tr>
 <tr>
-<td>Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">训练模型</a></td>
+<td>Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">训练模型</a></td>
 <td>39.1</td>
 <td>-</td>
 <td>-</td>
 <td>254.7 M</td>
 </tr>
 <tr>
-<td>Mask-RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-H_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-H_pretrained.pdparams">训练模型</a></td>
+<td>Mask-RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-H_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-H_pretrained.pdparams">训练模型</a></td>
 <td>50.6</td>
 <td>132.693</td>
 <td>4896.17</td>
@@ -74,35 +78,35 @@ comments: true
 <td rowspan="5">Mask-RT-DETR 是一种基于RT-DETR的实例分割模型，通过采用最优性能的更好的PP-HGNetV2作为骨干网络，构建了MaskHybridEncoder编码器，引入了IOU-aware Query Selection 技术，使其在相同推理耗时上取得了SOTA实例分割精度。</td>
 </tr>
 <tr>
-<td>Mask-RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-L_pretrained.pdparams">训练模型</a></td>
+<td>Mask-RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-L_pretrained.pdparams">训练模型</a></td>
 <td>45.7</td>
 <td>46.5059</td>
 <td>2575.92</td>
 <td>113.6 M</td>
 </tr>
 <tr>
-<td>Mask-RT-DETR-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-M_pretrained.pdparams">训练模型</a></td>
+<td>Mask-RT-DETR-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-M_pretrained.pdparams">训练模型</a></td>
 <td>42.7</td>
 <td>36.8329</td>
 <td>-</td>
 <td>66.6 M</td>
 </tr>
 <tr>
-<td>Mask-RT-DETR-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-S_pretrained.pdparams">训练模型</a></td>
+<td>Mask-RT-DETR-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-S_pretrained.pdparams">训练模型</a></td>
 <td>41.0</td>
 <td>33.5007</td>
 <td>-</td>
 <td>51.8 M</td>
 </tr>
 <tr>
-<td>Mask-RT-DETR-X</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-X_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-X_pretrained.pdparams">训练模型</a></td>
+<td>Mask-RT-DETR-X</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-X_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-X_pretrained.pdparams">训练模型</a></td>
 <td>47.5</td>
 <td>75.755</td>
 <td>3358.04</td>
 <td>237.5 M</td>
 </tr>
 <tr>
-<td>MaskRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MaskRCNN-ResNet50-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50-FPN_pretrained.pdparams">训练模型</a></td>
+<td>MaskRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MaskRCNN-ResNet50-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50-FPN_pretrained.pdparams">训练模型</a></td>
 <td>35.6</td>
 <td>-</td>
 <td>-</td>
@@ -110,35 +114,35 @@ comments: true
 <td rowspan="6">Mask R-CNN是由华盛顿首例即现投影卡的一个全任务深度学习模型，能够在一个模型中完成图片实例的分类和定位，并结合图像级的遮罩（Mask）来完成分割任务。</td>
 </tr>
 <tr>
-<td>MaskRCNN-ResNet50-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MaskRCNN-ResNet50-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50-vd-FPN_pretrained.pdparams">训练模型</a></td>
+<td>MaskRCNN-ResNet50-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MaskRCNN-ResNet50-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50-vd-FPN_pretrained.pdparams">训练模型</a></td>
 <td>36.4</td>
 <td>-</td>
 <td>-</td>
 <td>157.5 M</td>
 </tr>
 <tr>
-<td>MaskRCNN-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MaskRCNN-ResNet50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50_pretrained.pdparams">训练模型</a></td>
+<td>MaskRCNN-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MaskRCNN-ResNet50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50_pretrained.pdparams">训练模型</a></td>
 <td>32.8</td>
 <td>-</td>
 <td>-</td>
 <td>128.7 M</td>
 </tr>
 <tr>
-<td>MaskRCNN-ResNet101-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MaskRCNN-ResNet101-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet101-FPN_pretrained.pdparams">训练模型</a></td>
+<td>MaskRCNN-ResNet101-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MaskRCNN-ResNet101-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet101-FPN_pretrained.pdparams">训练模型</a></td>
 <td>36.6</td>
 <td>-</td>
 <td>-</td>
 <td>225.4 M</td>
 </tr>
 <tr>
-<td>MaskRCNN-ResNet101-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MaskRCNN-ResNet101-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet101-vd-FPN_pretrained.pdparams">训练模型</a></td>
+<td>MaskRCNN-ResNet101-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MaskRCNN-ResNet101-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet101-vd-FPN_pretrained.pdparams">训练模型</a></td>
 <td>38.1</td>
 <td>-</td>
 <td>-</td>
 <td>225.1 M</td>
 </tr>
 <tr>
-<td>MaskRCNN-ResNeXt101-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MaskRCNN-ResNeXt101-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNeXt101-vd-FPN_pretrained.pdparams">训练模型</a></td>
+<td>MaskRCNN-ResNeXt101-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MaskRCNN-ResNeXt101-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNeXt101-vd-FPN_pretrained.pdparams">训练模型</a></td>
 <td>39.5</td>
 <td>-</td>
 <td>-</td>
@@ -146,7 +150,7 @@ comments: true
 <td></td>
 </tr>
 <tr>
-<td>PP-YOLOE_seg-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-YOLOE_seg-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_seg-S_pretrained.pdparams">训练模型</a></td>
+<td>PP-YOLOE_seg-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_seg-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_seg-S_pretrained.pdparams">训练模型</a></td>
 <td>32.5</td>
 <td>-</td>
 <td>-</td>
@@ -154,7 +158,7 @@ comments: true
 <td>PP-YOLOE_seg 是一种基于PP-YOLOE的实例分割模型。该模型沿用了PP-YOLOE的backbone和head，通过设计PP-YOLOE实例分割头，大幅提升了实例分割的性能和推理速度。</td>
 </tr>
 <tr>
-<td>SOLOv2</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SOLOv2_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SOLOv2_pretrained.pdparams">训练模型</a></td>
+<td>SOLOv2</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SOLOv2_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SOLOv2_pretrained.pdparams">训练模型</a></td>
 <td>35.5</td>
 <td>-</td>
 <td>-</td>
@@ -166,74 +170,56 @@ comments: true
 <p><b>注：以上精度指标为<a href="https://cocodataset.org/#home">COCO2017</a>验证集 Mask AP。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p></details>
 
 ## 2. 快速开始
-PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可以在线体验通用实例分割产线的效果，也可以在本地使用命令行或 Python 体验通用实例分割产线的效果。
+PaddleX 所提供的模型产线均可以快速体验效果，你可以在星河社区线体验通用 实例分割 产线的效果，也可以在本地使用命令行或 Python 体验通用 实例分割 产线的效果。
 
 ### 2.1 在线体验
 您可以[在线体验](https://aistudio.baidu.com/community/app/100063/webUI)通用实例分割产线的效果，用官方提供的 demo 图片进行识别，例如：
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/instance_segmentation/02.png">
 
-如果您对产线运行的效果满意，可以直接对产线进行集成部署，如果不满意，您也可以利用私有数据<b>对产线中的模型进行在线微调</b>。
+如果您对产线运行的效果满意，可以直接进行集成部署。您可以选择从云端下载部署包，也可以参考[2.2节本地体验](#22-本地体验)中的方法进行本地部署。如果对效果不满意，您可以利用私有数据<b>对产线中的模型进行微调训练</b>。如果您具备本地训练的硬件资源，可以直接在本地开展训练；如果没有，星河零代码平台提供了一键式训练服务，无需编写代码，只需上传数据后，即可一键启动训练任务。
 
 ### 2.2 本地体验
-在本地使用通用实例分割产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了 PaddleX 的 wheel 包安装。
+> ❗ 在本地使用通用实例分割产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
 #### 2.2.1 命令行方式体验
-一行命令即可快速体验实例分割产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png)，并将 `--input` 替换为本地路径，进行预测
+* 一行命令即可快速体验实例分割产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png)，并将 `--input` 替换为本地路径，进行预测
 
 ```bash
-paddlex --pipeline instance_segmentation --input general_instance_segmentation_004.png --device gpu:0
+paddlex --pipeline instance_segmentation \
+        --input general_instance_segmentation_004.png \
+        --threshold 0.5 \
+        --save_path ./output \
+        --device gpu:0
 ```
-参数说明：
+相关的参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的参数说明。
 
+运行后，会将结果打印到终端上，结果如下：
+```bash
+{'res': {'input_path': 'general_instance_segmentation_004.png', 'page_index': None, 'boxes': [{'cls_id': 0, 'label': 'person', 'score': 0.8695873022079468, 'coordinate': [339.83426, 0, 639.8651, 575.22003]}, {'cls_id': 0, 'label': 'person', 'score': 0.8572642803192139, 'coordinate': [0.09976959, 0, 195.07274, 575.358]}, {'cls_id': 0, 'label': 'person', 'score': 0.8201770186424255, 'coordinate': [88.24664, 113.422424, 401.23077, 574.70197]}, {'cls_id': 0, 'label': 'person', 'score': 0.7110118269920349, 'coordinate': [522.54065, 21.457964, 767.5007, 574.2464]}, {'cls_id': 27, 'label': 'tie', 'score': 0.5543721914291382, 'coordinate': [247.38776, 312.4094, 355.2685, 574.1264]}], 'masks': '...'}}
 ```
---pipeline：产线名称，此处为目标检测产线
---input：待处理的输入图片的本地路径或URL
---device 使用的GPU序号（例如gpu:0表示使用第0块GPU，gpu:1,2表示使用第1、2块GPU），也可选择使用CPU（--device cpu）
-```
+运行结果参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的结果解释。
 
-在执行上述 Python 脚本时，加载的是默认的实例分割产线配置文件，若您需要自定义配置文件，可执行如下命令获取：
+可视化结果保存在`save_path`下，其中实例分割的可视化结果如下：
 
-<details><summary> 👉点击展开</summary>
-
-<pre><code>paddlex --get_pipeline_config instance_segmentation
-</code></pre>
-<p>执行后，实例分割产线配置文件将被保存在当前路径。若您希望自定义保存位置，可执行如下命令（假设自定义保存位置为 <code>./my_path</code> ）：</p>
-<pre><code>paddlex --get_pipeline_config instance_segmentation --save_path ./my_path
-</code></pre>
-<p>获取产线配置文件后，可将 <code>--pipeline</code> 替换为配置文件保存路径，即可使配置文件生效。例如，若配置文件保存路径为 ./instance_segmentation.yaml，只需执行：</p>
-<pre><code class="language-bash">paddlex --pipeline ./instance_segmentation.yaml --input general_instance_segmentation_004.png --device gpu:0
-</code></pre>
-<p>其中，<code>--model</code>、<code>--device</code> 等参数无需指定，将使用配置文件中的参数。若依然指定了参数，将以指定的参数为准。</p></details>
-
-运行后，得到的结果为：
-
-```
-{'input_path': 'general_instance_segmentation_004.png', 'boxes': [{'cls_id': 0, 'label': 'person', 'score': 0.8698326945304871, 'coordinate': [339, 0, 639, 575]}, {'cls_id': 0, 'label': 'person', 'score': 0.8571141362190247, 'coordinate': [0, 0, 195, 575]}, {'cls_id': 0, 'label': 'person', 'score': 0.8202633857727051, 'coordinate': [88, 113, 401, 574]}, {'cls_id': 0, 'label': 'person', 'score': 0.7108577489852905, 'coordinate': [522, 21, 767, 574]}, {'cls_id': 27, 'label': 'tie', 'score': 0.554280698299408, 'coordinate': [247, 311, 355, 574]}]}
-```
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/instance_segmentation/03.png">
 
-可视化图片默认不进行保存，您可以通过 `--save_path` 自定义保存路径，随后所有结果将被保存在指定路径下。
-
 #### 2.2.2 Python脚本方式集成
-几行代码即可完成产线的快速推理，以通用实例分割产线为例：
+* 上述命令行是为了快速体验查看效果，一般来说，在项目中，往往需要通过代码集成，您可以通过几行代码即可完成产线的快速推理，推理代码如下：
 
 ```python
 from paddlex import create_pipeline
-
 pipeline = create_pipeline(pipeline="instance_segmentation")
-
-output = pipeline.predict("general_instance_segmentation_004.png")
+output = pipeline.predict(input="general_instance_segmentation_004.png", threshold=0.5)
 for res in output:
-    res.print() # 打印预测的结构化输出
-    res.save_to_img("./output/") # 保存结果可视化图像
-    res.save_to_json("./output/") # 保存预测的结构化输出
+    res.print()
+    res.save_to_img(save_path="./output/")
+    res.save_to_json(save_path="./output/")
 ```
-得到的结果与命令行方式相同。
 
 在上述 Python 脚本中，执行了如下几个步骤：
 
-（1）实例化 `create_pipeline` 实例化产线对象：具体参数说明如下：
+（1）通过 `create_pipeline()` 实例化 实例分割 产线对象，具体参数说明如下：
 
 <table>
 <thead>
@@ -249,13 +235,19 @@ for res in output:
 <td><code>pipeline</code></td>
 <td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
 <td><code>str</code></td>
-<td>无</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>产线具体的配置信息（如果和<code>pipeline</code>同时设置，优先级高于<code>pipeline</code>，且要求产线名和<code>pipeline</code>一致）。</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>产线模型推理设备。支持：“gpu”，“cpu”。</td>
+<td>产线推理设备。支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
 <td><code>str</code></td>
-<td><code>gpu</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
@@ -265,85 +257,193 @@ for res in output:
 </tr>
 </tbody>
 </table>
-（2）调用实例分割产线对象的 `predict` 方法进行推理预测：`predict` 方法参数为`x`，用于输入待预测数据，支持多种输入方式，具体示例如下：
+
+（2）调用 实例分割 产线对象的 `predict()` 方法进行推理预测。该方法将返回一个 `generator`。以下是 `predict()` 方法的参数及其说明：
 
 <table>
 <thead>
 <tr>
-<th>参数类型</th>
+<th>参数</th>
 <th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>Python Var</td>
-<td>支持直接传入Python变量，如numpy.ndarray表示的图像数据。</td>
+<td><code>input</code></td>
+<td>待预测数据，支持多种输入类型，必填</td>
+<td><code>Python Var|str|list</code></td>
+<td>
+<ul>
+  <li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
+  <li><b>str</b>：如图像文件或者PDF文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件或PDF文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code>(当前不支持目录中包含PDF文件的预测，PDF文件需要指定到具体文件路径)</li>
+  <li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td>str</td>
-<td>支持传入待预测数据文件路径，如图像文件的本地路径：<code>/root/data/img.jpg</code>。</td>
+<td><code>device</code></td>
+<td>产线推理设备</td>
+<td><code>str|None</code></td>
+<td>
+<ul>
+  <li><b>CPU</b>：如 <code>cpu</code> 表示使用 CPU 进行推理；</li>
+  <li><b>GPU</b>：如 <code>gpu:0</code> 表示使用第 1 块 GPU 进行推理；</li>
+  <li><b>NPU</b>：如 <code>npu:0</code> 表示使用第 1 块 NPU 进行推理；</li>
+  <li><b>XPU</b>：如 <code>xpu:0</code> 表示使用第 1 块 XPU 进行推理；</li>
+  <li><b>MLU</b>：如 <code>mlu:0</code> 表示使用第 1 块 MLU 进行推理；</li>
+  <li><b>DCU</b>：如 <code>dcu:0</code> 表示使用第 1 块 DCU 进行推理；</li>
+  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化时，会优先使用本地的 GPU 0号设备，如果没有，则使用 CPU 设备；</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
-<tr>
-<td>str</td>
-<td>支持传入待预测数据文件URL，如图像文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png">示例</a>。</td>
+<td><code>threshold</code></td>
+<td>模型的低分object过滤阈值</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+    <li><b>float</b>：大于 <code>0</code> 且小于 <code>1</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线默认的参数<code>0.5</code>作为阈值
+</ul>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
-<tr>
-<td>str</td>
-<td>支持传入本地目录，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code>。</td>
-</tr>
-<tr>
-<td>dict</td>
-<td>支持传入字典类型，字典的key需与具体任务对应，如图像分类任务对应\"img\"，字典的val支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code>。</td>
-</tr>
-<tr>
-<td>list</td>
-<td>支持传入列表，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]，[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code>。</td>
-</tr>
-</tbody>
-</table>
-（3）调用`predict`方法获取预测结果：`predict` 方法为`generator`，因此需要通过调用获得预测结果，`predict`方法以batch为单位对数据进行预测，因此预测结果为list形式表示的一组预测结果。
 
-（4）对预测结果进行处理：每个样本的预测结果均为`dict`类型，且支持打印，或保存为文件，支持保存的类型与具体产线相关，如：
+</table>
+
+（3）对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`json`文件的操作:
 
 <table>
 <thead>
 <tr>
 <th>方法</th>
-<th>说明</th>
-<th>方法参数</th>
+<th>方法说明</th>
+<th>参数</th>
+<th>参数类型</th>
+<th>参数说明</th>
+<th>默认值</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>print</td>
-<td>打印结果到终端</td>
-<td><code>- format_json</code>：bool类型，是否对输出内容进行使用json缩进格式化，默认为True；<br/><code>- indent</code>：int类型，json格式化设置，仅当format_json为True时有效，默认为4；<br/><code>- ensure_ascii</code>：bool类型，json格式化设置，仅当format_json为True时有效，默认为False；</td>
+<td rowspan = "3"><code>print()</code></td>
+<td rowspan = "3">打印结果到终端</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
+<td><code>True</code></td>
 </tr>
 <tr>
-<td>save_to_json</td>
-<td>将结果保存为json格式的文件</td>
-<td><code>- save_path</code>：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；<br/><code>- indent</code>：int类型，json格式化设置，默认为4；<br/><code>- ensure_ascii</code>：bool类型，json格式化设置，默认为False；</td>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
 </tr>
 <tr>
-<td>save_to_img</td>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan = "3"><code>save_to_json()</code></td>
+<td rowspan = "3">将结果保存为json格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
 <td>将结果保存为图像格式的文件</td>
-<td><code>- save_path</code>：str类型，保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致；</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，支持目录或文件路径</td>
+<td>无</td>
 </tr>
-</tbody>
 </table>
-若您获取了配置文件，即可对实例分割产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。
 
-例如，若您的配置文件保存在 `./my_path/instance_segmentation.yaml` ，则只需执行：
+- 调用`print()` 方法会将结果打印到终端，打印到终端的内容解释如下：
+
+    - `input_path`: `(str)` 待预测图像的输入路径
+
+    - `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
+
+    - `boxes`: `(list)` 检测框信息，每个元素为一个字典，包含以下字段：
+      - `cls_id`: `(int)` 类别ID
+      - `label`: `(str)` 类别名称
+      - `score`: `(float)` 检测框的置信度
+      - `coordinate`: `(list)` 检测框的坐标，格式为[xmin, ymin, xmax, ymax]
+
+    - `masks`: `...` 实例分割模型实际预测的mask，由于数据过大不便于直接print，因此用`...`替换，可以通过res.save_to_img将预测结果保存为图片，通过res.save_to_json将预测结果保存为json文件。
+
+- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
+
+- 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.{your_img_extension}`，如果指定为文件，则直接保存到该文件中。
+
+* 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>属性说明</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "1"><code>json</code></td>
+<td rowspan = "1">获取预测的 <code>json</code> 格式的结果</td>
+</tr>
+<tr>
+<td rowspan = "2"><code>img</code></td>
+<td rowspan = "2">获取格式为 <code>dict</code> 的可视化图像</td>
+</tr>
+</table>
+
+- `json` 属性获取的预测结果为dict类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
+- `img` 属性返回的预测结果是一个字典类型的数据。其中，键为 `res`, 对应的值是一个 `Image.Image` 对象：一个用于显示 实例分割 的预测结果。
+
+此外，您可以获取 实例分割 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+
+```
+paddlex --get_pipeline_config instance_segmentation --save_path ./my_path
+```
+
+若您获取了配置文件，即可对实例分割产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。示例如下：
 
 ```python
 from paddlex import create_pipeline
+
 pipeline = create_pipeline(pipeline="./my_path/instance_segmentation.yaml")
-output = pipeline.predict("general_instance_segmentation_004.png")
+
+output = pipeline.predict(
+    input="./general_instance_segmentation_004.png",
+    threshold=0.5,
+)
 for res in output:
-    res.print() # 打印预测的结构化输出
-    res.save_to_img("./output/") # 保存结果可视化图像
-    res.save_to_json("./output/") # 保存预测的结构化输出
+    res.print()
+    res.save_to_img("./output/")
+    res.save_to_json("./output/")
+
 ```
+
+<b>注：</b> 配置文件中的参数为产线初始化参数，如果希望更改通用实例分割产线初始化参数，可以直接修改配置文件中的参数，并加载配置文件进行预测。同时，CLI 预测也支持传入配置文件，`--pipeline` 指定配置文件的路径即可。
+
 ## 3. 开发集成/部署
 如果产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
 
@@ -926,34 +1026,56 @@ print_r($result[&quot;instances&quot;]);
 如果通用实例分割产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升通用实例分割产线的在您的场景中的识别效果。
 
 ### 4.1 模型微调
-由于通用实例分割产线包含实例分割模块，如果模型产线的效果不及预期，那么您需要参考[实例分割模块开发教程](../../../module_usage/tutorials/cv_modules/instance_segmentation.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/instance_segmentation.md#四二次开发)章节。
+由于通用实例分割产线包含实例分割模块，如果模型产线的效果不及预期，您可以对分割效果差的图片进行分析，并参考以下表格中对应的微调教程链接进行模型微调。
+
+
+<table>
+  <thead>
+    <tr>
+      <th>情形</th>
+      <th>微调模块</th>
+      <th>微调参考链接</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>预测结果不达预期</td>
+      <td>实例分割模块</td>
+      <td><a href="../../../module_usage/tutorials/cv_modules/instance_segmentation.md">链接</a></td>
+    </tr>
+  </tbody>
+</table>
+
 
 ### 4.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。
 
 若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径替换至产线配置文件中的对应位置即可：
 
-```python
-......
-Pipeline:
-  model: Mask-RT-DETR-S  #可修改为微调后模型的本地路径
-  device: "gpu"
-  batch_size: 1
-......
+```yaml
+SubModules:
+  InstanceSegmentation:
+    module_name: instance_segmentation
+    model_name: Mask-RT-DETR-S
+    model_dir: null # 替换为微调后的实例分割模型权重路径
+    batch_size: 1
+    threshold: 0.5
 ```
 随后， 参考本地体验中的命令行方式或 Python 脚本方式，加载修改后的产线配置文件即可。
 
-##  5. 多硬件支持
-PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改  `--device` 参数</b>即可完成不同硬件之间的无缝切换。
+## 5. 多硬件支持
+PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device`参数</b>即可完成不同硬件之间的无缝切换。
 
-例如，您使用英伟达 GPU 进行实例分割产线的推理，使用的 Python 命令为：
-
-```bash
-paddlex --pipeline instance_segmentation --input general_instance_segmentation_004.png --device gpu:0
-```
-此时，若您想将硬件切换为昇腾 NPU，仅需对 Python 命令中的 `--device` 修改为 npu:0 即可：
+例如，您使用昇腾 NPU 进行 实例分割 产线的推理，使用的 CLI 命令为：
 
 ```bash
-paddlex --pipeline instance_segmentation --input general_instance_segmentation_004.png --device npu:0
+paddlex --pipeline instance_segmentation \
+        --input general_instance_segmentation_004.png \
+        --threshold 0.5 \
+        --save_path ./output \
+        --device npu:0
 ```
+
+当然，您也可以在 Python 脚本中 `create_pipeline()` 时或者 `predict()` 时指定硬件设备。
+
 若您想在更多种类的硬件上使用通用实例分割产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

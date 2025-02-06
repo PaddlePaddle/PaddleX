@@ -22,7 +22,7 @@ comments: true
 </thead>
 <tbody>
 <tr>
-<td>TimesNet_cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/TimesNet_cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_cls_pretrained.pdparams">训练模型</a></td>
+<td>TimesNet_cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/TimesNet_cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_cls_pretrained.pdparams">训练模型</a></td>
 <td>87.5</td>
 <td>792K</td>
 </tr>
@@ -72,7 +72,7 @@ sample
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="ts_cls")
+pipeline = create_pipeline(pipeline="ts_classification")
 output = pipeline.predict("ts_cls.csv")
 for res in output:
     res.print() ## 打印预测的结构化输出
@@ -98,6 +98,12 @@ for res in output:
 <td><code>pipeline</code></td>
 <td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
 <td><code>str</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>产线具体的配置信息（如果和<code>pipeline</code>同时设置，优先级高于<code>pipeline</code>，且要求产线名和<code>pipeline</code>一致）。</td>
+<td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -160,7 +166,7 @@ for res in output:
 </tbody>
 </table>
 
-（3）对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为`csv`文件、保存为`json`文件的操作:
+（3）对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为`csv`文件、保存为`json`文件的操作:
 
 
 <table>
@@ -737,7 +743,7 @@ SubModules:
     module_name: ts_classification
     model_name: TimesNet_cls
     model_dir: null  # 此处替换为您训练后得到的模型权重本地路径
-    batch_size: 1   
+    batch_size: 1
 ```
 
 随后， 参考本地体验中的命令行方式或 Python 脚本方式，加载修改后的产线配置文件即可。
@@ -745,10 +751,12 @@ SubModules:
 ##  5. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device` 参数</b>即可完成不同硬件之间的无缝切换。
 
-例如，您使用昇腾 NPU 进行时序分类产线的推理，使用的 Python 命令为：
+例如，您使用昇腾 NPU 进行时序分类产线的推理，使用的 CLI 命令为：
 
 ```bash
 paddlex --pipeline ts_classification --input ts_cls.csv --device npu:0
 ```
+
+当然，您也可以在 Python 脚本中 `create_pipeline()` 时或者 `predict()` 时指定硬件设备。
 
 若您想在更多种类的硬件上使用通用时序分类产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

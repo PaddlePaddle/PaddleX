@@ -22,7 +22,7 @@ Instance segmentation is a computer vision task that not only identifies the obj
 <th>Description</th>
 </tr>
 <tr>
-<td>Mask-RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-H_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-H_pretrained.pdparams">Trained Model</a></td>
+<td>Mask-RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-H_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-H_pretrained.pdparams">Trained Model</a></td>
 <td>50.6</td>
 <td>132.693</td>
 <td>4896.17</td>
@@ -30,7 +30,7 @@ Instance segmentation is a computer vision task that not only identifies the obj
 <td rowspan="5">Mask-RT-DETR is an instance segmentation model based on RT-DETR. By adopting the high-performance PP-HGNetV2 as the backbone network and constructing a MaskHybridEncoder encoder, along with introducing IOU-aware Query Selection technology, it achieves state-of-the-art (SOTA) instance segmentation accuracy with the same inference time.</td>
 </tr>
 <tr>
-<td>Mask-RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-L_pretrained.pdparams">Trained Model</a></td>
+<td>Mask-RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-L_pretrained.pdparams">Trained Model</a></td>
 <td>45.7</td>
 <td>46.5059</td>
 <td>2575.92</td>
@@ -52,7 +52,7 @@ Instance segmentation is a computer vision task that not only identifies the obj
 <th>Description</th>
 </tr>
 <tr>
-<td>Cascade-MaskRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Cascade-MaskRCNN-ResNet50-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-MaskRCNN-ResNet50-FPN_pretrained.pdparams">Trained Model</a></td>
+<td>Cascade-MaskRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Cascade-MaskRCNN-ResNet50-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-MaskRCNN-ResNet50-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>36.3</td>
 <td>-</td>
 <td>-</td>
@@ -60,14 +60,14 @@ Instance segmentation is a computer vision task that not only identifies the obj
 <td rowspan="2">Cascade-MaskRCNN is an improved Mask RCNN instance segmentation model that utilizes multiple detectors in a cascade, optimizing segmentation results by leveraging different IOU thresholds to address the mismatch between detection and inference stages, thereby enhancing instance segmentation accuracy.</td>
 </tr>
 <tr>
-<td>Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">Trained Model</a></td>
+<td>Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-MaskRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>39.1</td>
 <td>-</td>
 <td>-</td>
 <td>254.7 M</td>
 </tr>
 <tr>
-<td>Mask-RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-H_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-H_pretrained.pdparams">Trained Model</a></td>
+<td>Mask-RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-H_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-H_pretrained.pdparams">Trained Model</a></td>
 <td>50.6</td>
 <td>132.693</td>
 <td>4896.17</td>
@@ -75,35 +75,35 @@ Instance segmentation is a computer vision task that not only identifies the obj
 <td rowspan="5">Mask-RT-DETR is an instance segmentation model based on RT-DETR. By adopting the high-performance PP-HGNetV2 as the backbone network and constructing a MaskHybridEncoder encoder, along with introducing IOU-aware Query Selection technology, it achieves state-of-the-art (SOTA) instance segmentation accuracy with the same inference time.</td>
 </tr>
 <tr>
-<td>Mask-RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-L_pretrained.pdparams">Trained Model</a></td>
+<td>Mask-RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-L_pretrained.pdparams">Trained Model</a></td>
 <td>45.7</td>
 <td>46.5059</td>
 <td>2575.92</td>
 <td>113.6 M</td>
 </tr>
 <tr>
-<td>Mask-RT-DETR-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-M_pretrained.pdparams">Trained Model</a></td>
+<td>Mask-RT-DETR-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-M_pretrained.pdparams">Trained Model</a></td>
 <td>42.7</td>
 <td>36.8329</td>
 <td>-</td>
 <td>66.6 M</td>
 </tr>
 <tr>
-<td>Mask-RT-DETR-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-S_pretrained.pdparams">Trained Model</a></td>
+<td>Mask-RT-DETR-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-S_pretrained.pdparams">Trained Model</a></td>
 <td>41.0</td>
 <td>33.5007</td>
 <td>-</td>
 <td>51.8 M</td>
 </tr>
 <tr>
-<td>Mask-RT-DETR-X</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/Mask-RT-DETR-X_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-X_pretrained.pdparams">Trained Model</a></td>
+<td>Mask-RT-DETR-X</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-X_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-X_pretrained.pdparams">Trained Model</a></td>
 <td>47.5</td>
 <td>75.755</td>
 <td>3358.04</td>
 <td>237.5 M</td>
 </tr>
 <tr>
-<td>MaskRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MaskRCNN-ResNet50-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50-FPN_pretrained.pdparams">Trained Model</a></td>
+<td>MaskRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MaskRCNN-ResNet50-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>35.6</td>
 <td>-</td>
 <td>-</td>
@@ -111,35 +111,35 @@ Instance segmentation is a computer vision task that not only identifies the obj
 <td rowspan="6">Mask R-CNN is a full-task deep learning model from Facebook AI Research (FAIR) that can perform object classification and localization in a single model, combined with image-level masks to complete segmentation tasks.</td>
 </tr>
 <tr>
-<td>MaskRCNN-ResNet50-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MaskRCNN-ResNet50-vd-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50-vd-FPN_pretrained.pdparams">Trained Model</a></td>
+<td>MaskRCNN-ResNet50-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MaskRCNN-ResNet50-vd-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50-vd-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>36.4</td>
 <td>-</td>
 <td>-</td>
 <td>157.5 M</td>
 </tr>
 <tr>
-<td>MaskRCNN-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MaskRCNN-ResNet50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50_pretrained.pdparams">Trained Model</a></td>
+<td>MaskRCNN-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MaskRCNN-ResNet50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet50_pretrained.pdparams">Trained Model</a></td>
 <td>32.8</td>
 <td>-</td>
 <td>-</td>
 <td>128.7 M</td>
 </tr>
 <tr>
-<td>MaskRCNN-ResNet101-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MaskRCNN-ResNet101-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet101-FPN_pretrained.pdparams">Trained Model</a></td>
+<td>MaskRCNN-ResNet101-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MaskRCNN-ResNet101-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet101-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>36.6</td>
 <td>-</td>
 <td>-</td>
 <td>225.4 M</td>
 </tr>
 <tr>
-<td>MaskRCNN-ResNet101-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MaskRCNN-ResNet101-vd-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet101-vd-FPN_pretrained.pdparams">Trained Model</a></td>
+<td>MaskRCNN-ResNet101-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MaskRCNN-ResNet101-vd-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNet101-vd-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>38.1</td>
 <td>-</td>
 <td>-</td>
 <td>225.1 M</td>
 </tr>
 <tr>
-<td>MaskRCNN-ResNeXt101-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/MaskRCNN-ResNeXt101-vd-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNeXt101-vd-FPN_pretrained.pdparams">Trained Model</a></td>
+<td>MaskRCNN-ResNeXt101-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MaskRCNN-ResNeXt101-vd-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskRCNN-ResNeXt101-vd-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>39.5</td>
 <td>-</td>
 <td>-</td>
@@ -147,7 +147,7 @@ Instance segmentation is a computer vision task that not only identifies the obj
 <td></td>
 </tr>
 <tr>
-<td>PP-YOLOE_seg-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-YOLOE_seg-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_seg-S_pretrained.pdparams">Trained Model</a></td>
+<td>PP-YOLOE_seg-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_seg-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_seg-S_pretrained.pdparams">Trained Model</a></td>
 <td>32.5</td>
 <td>-</td>
 <td>-</td>
@@ -155,7 +155,7 @@ Instance segmentation is a computer vision task that not only identifies the obj
 <td>PP-YOLOE_seg is an instance segmentation model based on PP-YOLOE. This model inherits PP-YOLOE's backbone and head, significantly enhancing instance segmentation performance and inference speed through the design of a PP-YOLOE instance segmentation head.</td>
 </tr>
 <tr>
-<td>SOLOv2</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SOLOv2_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SOLOv2_pretrained.pdparams">Trained Model</a></td>
+<td>SOLOv2</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SOLOv2_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SOLOv2_pretrained.pdparams">Trained Model</a></td>
 <td>35.5</td>
 <td>-</td>
 <td>-</td>
@@ -177,67 +177,49 @@ You can [experience online](https://aistudio.baidu.com/community/app/100063/webU
 If you are satisfied with the pipeline's performance, you can directly integrate and deploy it. If not, you can also use your private data to <b>fine-tune the model within the pipeline</b>.
 
 ### 2.2 Local Experience
-Before using the General Image Classification Pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
+> ❗ Before using the general instance segmentation pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 
 #### 2.2.1 Command Line Experience
-A single command is all you need to quickly experience the image classification pipeline, Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png), and replace `--input` with the local path to perform prediction.
-
+* You can quickly experience the instance segmentation pipeline effect with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png), and replace `--input` with the local path for prediction.
 
 ```bash
-paddlex --pipeline instance_segmentation --input  general_instance_segmentation_004.png --device gpu:0
+paddlex --pipeline instance_segmentation \
+        --input general_instance_segmentation_004.png \
+        --threshold 0.5 \
+        --save_path ./output \
+        --device gpu:0
 ```
 
-Parameter Description:
+The relevant parameter descriptions can be referred to in the parameter explanations in [2.2.2 Python Script Integration]().
 
+After running, the result will be printed to the terminal as follows:
+
+```bash
+{'res': {'input_path': 'general_instance_segmentation_004.png', 'page_index': None, 'boxes': [{'cls_id': 0, 'label': 'person', 'score': 0.8695873022079468, 'coordinate': [339.83426, 0, 639.8651, 575.22003]}, {'cls_id': 0, 'label': 'person', 'score': 0.8572642803192139, 'coordinate': [0.09976959, 0, 195.07274, 575.358]}, {'cls_id': 0, 'label': 'person', 'score': 0.8201770186424255, 'coordinate': [88.24664, 113.422424, 401.23077, 574.70197]}, {'cls_id': 0, 'label': 'person', 'score': 0.7110118269920349, 'coordinate': [522.54065, 21.457964, 767.5007, 574.2464]}, {'cls_id': 27, 'label': 'tie', 'score': 0.5543721914291382, 'coordinate': [247.38776, 312.4094, 355.2685, 574.1264]}], 'masks': '...'}}
 ```
---pipeline: The name of the pipeline, here it refers to the object detection pipeline.
---input: The local path or URL of the input image to be processed.
---device: The GPU index to use (e.g., gpu:0 indicates using the first GPU, gpu:1,2 indicates using the second and third GPUs), or you can choose to use CPU (--device cpu).
-```
 
-When executing the above Python script, the default instance segmentation pipeline configuration file is loaded. If you need to customize the configuration file, you can execute the following command to obtain it:
+The explanation of the result parameters can be referred to in [2.2.2 Python Script Integration](#222-python脚本方式集成).
 
-<details><summary> 👉Click to expand</summary>
-
-<pre><code>paddlex --get_pipeline_config instance_segmentation
-</code></pre>
-<p>After execution, the instance segmentation pipeline configuration file will be saved in the current path. If you wish to customize the save location, you can execute the following command (assuming the custom save location is <code>./my_path</code>):</p>
-<pre><code>paddlex --get_pipeline_config instance_segmentation --save_path ./my_path
-</code></pre>
-<p>After obtaining the pipeline configuration file, you can replace <code>--pipeline</code> with the configuration file save path to make the configuration file take effect. For example, if the configuration file save path is <code>./instance_segmentation.yaml</code>, simply execute:</p>
-<pre><code class="language-bash">paddlex --pipeline ./instance_segmentation.yaml --input general_instance_segmentation_004.png --device gpu:0
-</code></pre>
-<p>Where <code>--model</code>, <code>--device</code>, and other parameters do not need to be specified, and the parameters in the configuration file will be used. If parameters are still specified, the specified parameters will take precedence.</p></details>
-
-After running, the result is:
-
-```
-{'input_path': 'general_instance_segmentation_004.png', 'boxes': [{'cls_id': 0, 'label': 'person', 'score': 0.8698326945304871, 'coordinate': [339, 0, 639, 575]}, {'cls_id': 0, 'label': 'person', 'score': 0.8571141362190247, 'coordinate': [0, 0, 195, 575]}, {'cls_id': 0, 'label': 'person', 'score': 0.8202633857727051, 'coordinate': [88, 113, 401, 574]}, {'cls_id': 0, 'label': 'person', 'score': 0.7108577489852905, 'coordinate': [522, 21, 767, 574]}, {'cls_id': 27, 'label': 'tie', 'score': 0.554280698299408, 'coordinate': [247, 311, 355, 574]}]}
-```
+The visualization results are saved under `save_path`, and the visualization results of instance segmentation are as follows:
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/instance_segmentation/03.png">
 
-The visualized image not saved by default. You can customize the save path through `--save_path`, and then all results will be saved in the specified path.
-
 #### 2.2.2 Python Script Integration
-A few lines of code can complete the quick inference of the pipeline. Taking the general instance segmentation pipeline as an example:
+* The above command line is for quickly experiencing and viewing the effect. Generally, in a project, it is often necessary to integrate through code. You can complete the quick inference of the production line with a few lines of code. The inference code is as follows:
 
 ```python
 from paddlex import create_pipeline
-
 pipeline = create_pipeline(pipeline="instance_segmentation")
-
-output = pipeline.predict("general_instance_segmentation_004.png")
+output = pipeline.predict(input="general_instance_segmentation_004.png", threshold=0.5)
 for res in output:
-    res.print() # Print the structured output of the prediction
-    res.save_to_img("./output/") # Save the visualization image of the result
-    res.save_to_json("./output/") # Save the structured output of the prediction
+    res.print()
+    res.save_to_img(save_path="./output/")
+    res.save_to_json(save_path="./output/")
 ```
-The results obtained are the same as those obtained through the command line method.
 
-In the above Python script, the following steps are executed:
+In the above Python script, the following steps are performed:
 
-(1) Instantiate the `create_pipeline` to create a pipeline object: The specific parameter descriptions are as follows:
+(1) Instantiate the instance segmentation pipeline object through `create_pipeline()`, with specific parameter descriptions as follows:
 
 <table>
 <thead>
@@ -251,148 +233,262 @@ In the above Python script, the following steps are executed:
 <tbody>
 <tr>
 <td><code>pipeline</code></td>
-<td>The name of the pipeline or the path to the pipeline configuration file. If it is the name of the pipeline, it must be a pipeline supported by PaddleX.</td>
+<td>Pipeline name or path to pipeline config file, if it's set as a pipeline name, it must be a pipeline supported by PaddleX.</td>
 <td><code>str</code></td>
-<td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the pipeline (if set simultaneously with the <code>pipeline</code>, it takes precedence over the <code>pipeline</code>, and the pipeline name must match the <code>pipeline</code>).
+</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The device for pipeline model inference. Supports: "gpu", "cpu".</td>
+<td>Pipeline inference device. Supports specifying the specific GPU card number, such as "gpu:0", other hardware specific card numbers, such as "npu:0", CPU such as "cpu".</td>
 <td><code>str</code></td>
-<td>"gpu"</td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference, which is only available when the pipeline supports it.</td>
+<td>Whether to enable high-performance inference, only available when the pipeline supports high-performance inference.</td>
 <td><code>bool</code></td>
 <td><code>False</code></td>
 </tr>
 </tbody>
 </table>
-(2) Call the `predict` method of the image classification pipeline object for inference prediction: The `predict` method parameter is `x`, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
+
+(2) Call the `predict()` method of the instance segmentation pipeline object for inference prediction. This method will return a `generator`. The parameters of the `predict()` method and their descriptions are as follows:
 
 <table>
 <thead>
 <tr>
-<th>Parameter Type</th>
+<th>Parameter</th>
 <th>Description</th>
+<th>Type</th>
+<th>Options</th>
+<th>Default</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>Python Var</td>
-<td>Supports directly passing Python variables, such as numpy.ndarray representing image data.</td>
+<td><code>input</code></td>
+<td>Data to be predicted, supports multiple input types, required</td>
+<td><code>Python Var|str|list</code></td>
+<td>
+<ul>
+  <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
+  <li><b>str</b>: Local path of an image file or PDF file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as a network URL of an image file or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png">Example</a>; <b>Local directory</b>, which should contain images to be predicted, such as <code>/root/data/</code> (currently does not support prediction of directories containing PDF files, PDF files need to be specified to specific file paths)</li>
+  <li><b>List</b>: Elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>str</code></td>
-<td>Supports passing the path of the file to be predicted, such as the local path of an image file: <code>/root/data/img.jpg</code>.</td>
+<td><code>device</code></td>
+<td>Pipeline inference device</td>
+<td><code>str|None</code></td>
+<td>
+<ul>
+  <li><b>CPU</b>: Such as <code>cpu</code> indicates using CPU for inference;</li>
+  <li><b>GPU</b>: Such as <code>gpu:0</code> indicates using the 1st GPU for inference;</li>
+  <li><b>NPU</b>: Such as <code>npu:0</code> indicates using the 1st NPU for inference;</li>
+  <li><b>XPU</b>: Such as <code>xpu:0</code> indicates using the 1st XPU for inference;</li>
+  <li><b>MLU</b>: Such as <code>mlu:0</code> indicates using the 1st MLU for inference;</li>
+  <li><b>DCU</b>: Such as <code>dcu:0</code> indicates using the 1st DCU for inference;</li>
+  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used. During initialization, it will preferentially use the local GPU 0 device, if not available, the CPU device will be used;</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
-<tr>
-<td><code>str</code></td>
-<td>Supports passing the URL of the file to be predicted, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png">Example</a>.</td>
+<td><code>threshold</code></td>
+<td>Low score object filtering threshold for the model</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+    <li><b>float</b>: Any floating-point number greater than <code>0</code> and less than <code>1</code>
+    <li><b>None</b>: If set to <code>None</code>, the default parameter <code>0.5</code> of the pipeline will be used as the threshold
+</ul>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
-<tr>
-<td><code>str</code></td>
-<td>Supports passing a local directory, which should contain files to be predicted, such as the local path: <code>/root/data/</code>.</td>
-</tr>
-<tr>
-<td><code>dict</code></td>
-<td>Supports passing a dictionary type, where the key needs to correspond to the specific task, such as "img" for the image classification task, and the value of the dictionary supports the above data types, e.g., <code>{"img": "/root/data1"}</code>.</td>
-</tr>
-<tr>
-<td><code>list</code></td>
-<td>Supports passing a list, where the list elements need to be the above data types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code>.</td>
-</tr>
-</tbody>
-</table>
-3）Obtain prediction results by calling the `predict` method: The `predict` method is a `generator`, so prediction results need to be obtained through iteration. The `predict` method predicts data in batches, so the prediction results are in the form of a list.
 
-（4）Process the prediction results: The prediction result for each sample is of `dict` type and supports printing or saving to files, with the supported file types depending on the specific pipeline. For example:
+</table>
+
+(3) Process the prediction results. The prediction result for each sample is of type `dict` and supports operations such as printing, saving as an image, and saving as a `json` file:
 
 <table>
 <thead>
 <tr>
 <th>Method</th>
 <th>Description</th>
-<th>Method Parameters</th>
+<th>Parameter</th>
+<th>Type</th>
+<th>Parameter Description</th>
+<th>Default Value</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>print</td>
-<td>Prints results to the terminal</td>
-<td><code>- format_json</code>: bool, whether to format the output content with json indentation, default is True;<br/><code>- indent</code>: int, json formatting setting, only valid when format_json is True, default is 4;<br/><code>- ensure_ascii</code>: bool, json formatting setting, only valid when format_json is True, default is False;</td>
+<td rowspan = "3"><code>print()</code></td>
+<td rowspan = "3">Print the result to the terminal</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>Whether to format the output content using <code>JSON</code> indentation</td>
+<td><code>True</code></td>
 </tr>
 <tr>
-<td>save_to_json</td>
-<td>Saves results as a json file</td>
-<td><code>- save_path</code>: str, the path to save the file, when it's a directory, the saved file name is consistent with the input file type;<br/><code>- indent</code>: int, json formatting setting, default is 4;<br/><code>- ensure_ascii</code>: bool, json formatting setting, default is False;</td>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. Effective only when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
 </tr>
 <tr>
-<td>save_to_img</td>
-<td>Saves results as an image file</td>
-<td><code>- save_path</code>: str, the path to save the file, when it's a directory, the saved file name is consistent with the input file type;</td>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether non-<code>ASCII</code> characters are escaped to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. Effective only when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
 </tr>
-</tbody>
+<tr>
+<td rowspan = "3"><code>save_to_json()</code></td>
+<td rowspan = "3">Save the result as a json file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>Path to save the file. If it is a directory, the saved file name will be consistent with the input file type</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. Effective only when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether non-<code>ASCII</code> characters are escaped to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. Effective only when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>Save the result as an image file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>Path to save the file. Supports directory or file path</td>
+<td>None</td>
+</tr>
 </table>
-If you have a configuration file, you can customize the configurations of the image anomaly detection pipeline by simply modifying the `pipeline` parameter in the `create_pipeline` method to the path of the pipeline configuration file.
 
-For example, if your configuration file is saved at `./my_path/instance_segmentation.yaml`, you only need to execute:
+- Calling the `print()` method will print the result to the terminal. The content printed to the terminal is explained as follows:
+
+    - `input_path`: `(str)` Input path of the image to be predicted
+
+    - `page_index`: `(Union[int, None])` If the input is a PDF file, it indicates the current page of the PDF; otherwise, it is `None`
+
+    - `boxes`: `(list)` Detection box information, each element is a dictionary containing the following fields:
+      - `cls_id`: `(int)` Class ID
+      - `label`: `(str)` Class name
+      - `score`: `(float)` Confidence of the detection box
+      - `coordinate`: `(list)` Coordinates of the detection box, in the format [xmin, ymin, xmax, ymax]
+
+    - `masks`: `...` The actual predicted mask of the instance segmentation model. Due to the large amount of data, it is not convenient to print directly, so it is replaced with `...`. You can save the prediction result as an image using `res.save_to_img` or save it as a json file using `res.save_to_json`.
+
+- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}_res.json`. If specified as a file, it will be saved directly to that file. Since json files do not support saving numpy arrays, `numpy.array` types will be converted to lists.
+
+- Calling the `save_to_img()` method will save the visualization result to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`. If specified as a file, it will be saved directly to that file.
+
+* In addition, you can also obtain the visualized image and prediction results through attributes, as follows:
+
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "1"><code>json</code></td>
+<td rowspan = "1">Get the prediction result in <code>json</code> format</td>
+</tr>
+<tr>
+<td rowspan = "2"><code>img</code></td>
+<td rowspan = "2">Get the visualized image in <code>dict</code> format</td>
+</tr>
+</table>
+
+- The prediction result obtained by the `json` attribute is a dictionary type, and the content is consistent with the content saved by calling the `save_to_json()` method.
+- The prediction result returned by the `img` attribute is a dictionary type. The key is `res`, and the corresponding value is an `Image.Image` object: an object used to display the prediction result of instance segmentation.
+
+In addition, you can obtain the instance segmentation pipeline configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
+
+```
+paddlex --get_pipeline_config instance_segmentation --save_path ./my_path
+```
+
+If you have obtained the configuration file, you can customize the settings for the instance segmentation production line by simply modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the configuration file. An example is as follows:
 
 ```python
 from paddlex import create_pipeline
+
 pipeline = create_pipeline(pipeline="./my_path/instance_segmentation.yaml")
-output = pipeline.predict("general_instance_segmentation_004.png")
+
+output = pipeline.predict(
+    input="./general_instance_segmentation_004.png",
+    threshold=0.5,
+)
 for res in output:
-    res.print() # Print the structured output of prediction
-    res.save_to_img("./output/") # Save the visualized image of the result
-    res.save_to_json("./output/") # Save the structured output of prediction
+    res.print()
+    res.save_to_img("./output/")
+    res.save_to_json("./output/")
+
 ```
 
+<b>Note:</b> The parameters in the configuration file are the pipeline initialization parameters. If you wish to change the initialization parameters of the general instance segmentation pipeline, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in a configuration file, simply specify the path of the configuration file with `--pipeline`.
+
 ## 3. Development Integration/Deployment
-If the pipeline meets your requirements for inference speed and accuracy, you can proceed with development integration/deployment.
+If the pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
-If you need to directly apply the pipeline in your Python project, you can refer to the example code in [2.2.2 Python Script Integration](#222-python-script-integration).
+If you need to integrate the pipeline into your Python project, you can refer to the example code in [2.2.2 Python Script Method](#222-python-script-method).
 
-Additionally, PaddleX provides three other deployment methods, detailed as follows:
+Moreover, PaddleX also provides three other deployment methods, as detailed below:
 
-🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins that aim to deeply optimize model inference and pre/post-processing for significant speedups in the end-to-end process. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
+🚀 <b>High-Performance Inference</b>: In practical production environments, many applications have stringent performance requirements for deployment strategies, especially in terms of response speed, to ensure efficient system operation and smooth user experience. To this end, PaddleX offers a high-performance inference plugin that deeply optimizes model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed information on high-performance inference, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Serving</b>: Serving is a common deployment strategy in real-world production environments. By encapsulating inference functions into services, clients can access these services via network requests to obtain inference results. PaddleX supports various solutions for serving pipelines. For detailed pipeline serving procedures, please refer to the [PaddleX Pipeline Serving Guide](../../../pipeline_deploy/serving.md).
+☁️ <b>Service Deployment</b>: Service deployment is a common form of deployment in practical production environments. By encapsulating inference functionality into services, clients can access these services via network requests to obtain inference results. PaddleX supports various pipeline service deployment solutions. For detailed information on pipeline service deployment, please refer to the [PaddleX Service Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
-Below are the API reference and multi-language service invocation examples for the basic serving solution:
+Below are the API references for basic service deployment and examples of multi-language service calls:
 
 <details><summary>API Reference</summary>
 
-<p>For primary operations provided by the service:</p>
+<p>For the main operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
-<li>The request body and the response body are both JSON data (JSON objects).</li>
-<li>When the request is processed successfully, the response status code is <code>200</code>, and the response body properties are as follows:</li>
+<li>Both the request body and response body are JSON data (JSON objects).</li>
+<li>When the request is successfully processed, the response status code is <code>200</code>, and the attributes of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>logId</code></td>
 <td><code>string</code></td>
-<td>UUID for the request.</td>
+<td>The UUID of the request.</td>
 </tr>
 <tr>
 <td><code>errorCode</code></td>
 <td><code>integer</code></td>
-<td>Error code. Fixed as <code>0</code>.</td>
+<td>Error code. Fixed at <code>0</code>.</td>
 </tr>
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error message. Fixed as <code>"Success"</code>.</td>
+<td>Error description. Fixed at <code>"Success"</code>.</td>
 </tr>
 <tr>
 <td><code>result</code></td>
@@ -402,21 +498,21 @@ Below are the API reference and multi-language service invocation examples for t
 </tbody>
 </table>
 <ul>
-<li>When the request is not processed successfully, the response body properties are as follows:</li>
+<li>When the request is not successfully processed, the attributes of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>logId</code></td>
 <td><code>string</code></td>
-<td>UUID for the request.</td>
+<td>The UUID of the request.</td>
 </tr>
 <tr>
 <td><code>errorCode</code></td>
@@ -426,25 +522,25 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error message.</td>
+<td>Error description.</td>
 </tr>
 </tbody>
 </table>
-<p>Primary operations provided by the service:</p>
+<p>The main operations provided by the service are as follows:</p>
 <ul>
 <li><b><code>infer</code></b></li>
 </ul>
-<p>Performs instance segmentation on an image.</p>
+<p>Perform instance segmentation on an image.</p>
 <p><code>POST /instance-segmentation</code></p>
 <ul>
-<li>The request body properties are as follows:</li>
+<li>The attributes of the request body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 <th>Required</th>
 </tr>
 </thead>
@@ -452,54 +548,54 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>image</code></td>
 <td><code>string</code></td>
-<td>The URL of an image file accessible by the server or the Base64 encoded result of the image file content.</td>
+<td>The URL of the image file accessible by the server or the Base64 encoded content of the image file.</td>
 <td>Yes</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>When the request is processed successfully, the <code>result</code> of the response body has the following properties:</li>
+<li>When the request is successfully processed, the <code>result</code> of the response body has the following attributes:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>instances</code></td>
 <td><code>array</code></td>
-<td>Information about the locations and categories of instances.</td>
+<td>Information about the location, category, and other details of instances.</td>
 </tr>
 <tr>
 <td><code>image</code></td>
 <td><code>string</code></td>
-<td>The result image of instance segmentation. The image is in JPEG format and encoded in Base64.</td>
+<td>The result image of instance segmentation. The image is in JPEG format and encoded using Base64.</td>
 </tr>
 </tbody>
 </table>
-<p>Each element in <code>instances</code> is an <code>object</code> with the following properties:</p>
+<p>Each element in <code>instances</code> is an <code>object</code> with the following attributes:</p>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>bbox</code></td>
 <td><code>array</code></td>
-<td>The location of the instance. The elements in the array are the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner of the bounding box, respectively.</td>
+<td>The location of the instance. The elements in the array are the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner.</td>
 </tr>
 <tr>
 <td><code>categoryId</code></td>
 <td><code>integer</code></td>
-<td>The ID of the instance category.</td>
+<td>The category ID of the instance.</td>
 </tr>
 <tr>
 <td><code>score</code></td>
@@ -513,13 +609,13 @@ Below are the API reference and multi-language service invocation examples for t
 </tr>
 </tbody>
 </table>
-<p>The properties of <code>mask</code> are as follows:</p>
+<p>The attributes of <code>mask</code> are as follows:</p>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
@@ -531,121 +627,127 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>size</code></td>
 <td><code>array</code></td>
-<td>The shape of the mask. The elements in the array are the height and width of the mask, respectively.</td>
+<td>The shape of the mask. The elements in the array are the height and width of the mask.</td>
 </tr>
 </tbody>
 </table>
-<p>An example of <code>result</code> is as follows:</p>
+
+<p><code>result</code> example is as follows:</p>
 <pre><code class="language-json">{
-&quot;instances&quot;: [
+"instances": [
 {
-&quot;bbox&quot;: [
+"bbox": [
 162.39381408691406,
 83.88176727294922,
 624.0797119140625,
 343.4986877441406
 ],
-&quot;categoryId&quot;: 33,
-&quot;score&quot;: 0.8691174983978271,
-&quot;mask&quot;: {
-&quot;rleResult&quot;: &quot;xxxxxx&quot;,
-&quot;size&quot;: [
+"categoryId": 33,
+"score": 0.8691174983978271,
+"mask": {
+"rleResult": "xxxxxx",
+"size": [
 259,
 462
 ]
 }
 }
 ],
-&quot;image&quot;: &quot;xxxxxx&quot;
+"image": "xxxxxx"
 }
 </code></pre></details>
 
-<details><summary>Multi-Language Service Invocation Examples</summary>
+<details><summary>Multi-Language Service Call Examples</summary>
 
 <details>
 <summary>Python</summary>
 
-
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/instance-segmentation&quot;
-image_path = &quot;./demo.jpg&quot;
-output_image_path = &quot;./out.jpg&quot;
+API_URL = "http://localhost:8080/instance-segmentation"  # Service URL
+image_path = "./demo.jpg"
+output_image_path = "./out.jpg"
 
-with open(image_path, &quot;rb&quot;) as file:
+# Encode the local image using Base64
+with open(image_path, "rb") as file:
     image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
-payload = {&quot;image&quot;: image_data}
+payload = {"image": image_data}  # Base64-encoded file content or image URL
 
+# Call the API
 response = requests.post(API_URL, json=payload)
 
+# Process the response data
 assert response.status_code == 200
-result = response.json()[&quot;result&quot;]
-with open(output_image_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result[&quot;image&quot;]))
-print(f&quot;Output image saved at {output_image_path}&quot;)
-print(&quot;\nInstances:&quot;)
-print(result[&quot;instances&quot;])
+result = response.json()["result"]
+with open(output_image_path, "wb") as file:
+    file.write(base64.b64decode(result["image"]))
+print(f"Output image saved at {output_image_path}")
+print("\nInstances:")
+print(result["instances"])
 </code></pre></details>
 
 <details><summary>C++</summary>
 
 <pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &quot;cpp-httplib/httplib.h&quot; // https://github.com/Huiyicc/cpp-httplib
-#include &quot;nlohmann/json.hpp&quot; // https://github.com/nlohmann/json
-#include &quot;base64.hpp&quot; // https://github.com/tobiaslocker/base64
+#include "cpp-httplib/httplib.h" // https://github.com/Huiyicc/cpp-httplib
+#include "nlohmann/json.hpp" // https://github.com/nlohmann/json
+#include "base64.hpp" // https://github.com/tobiaslocker/base64
 
 int main() {
-    httplib::Client client(&quot;localhost:8080&quot;);
-    const std::string imagePath = &quot;./demo.jpg&quot;;
-    const std::string outputImagePath = &quot;./out.jpg&quot;;
+    httplib::Client client("localhost:8080");
+    const std::string imagePath = "./demo.jpg";
+    const std::string outputImagePath = "./out.jpg";
 
     httplib::Headers headers = {
-        {&quot;Content-Type&quot;, &quot;application/json&quot;}
+        {"Content-Type", "application/json"}
     };
 
+    // Encode the local image using Base64
     std::ifstream file(imagePath, std::ios::binary | std::ios::ate);
     std::streamsize size = file.tellg();
     file.seekg(0, std::ios::beg);
 
     std::vector&lt;char&gt; buffer(size);
     if (!file.read(buffer.data(), size)) {
-        std::cerr &lt;&lt; &quot;Error reading file.&quot; &lt;&lt; std::endl;
+        std::cerr &lt;&lt; "Error reading file." &lt;&lt; std::endl;
         return 1;
     }
     std::string bufferStr(reinterpret_cast&lt;const char*&gt;(buffer.data()), buffer.size());
     std::string encodedImage = base64::to_base64(bufferStr);
 
     nlohmann::json jsonObj;
-    jsonObj[&quot;image&quot;] = encodedImage;
+    jsonObj["image"] = encodedImage;
     std::string body = jsonObj.dump();
 
-    auto response = client.Post(&quot;/instance-segmentation&quot;, headers, body, &quot;application/json&quot;);
+    // Call the API
+    auto response = client.Post("/instance-segmentation", headers, body, "application/json");
+    // Process the response data
     if (response &amp;&amp; response-&gt;status == 200) {
         nlohmann::json jsonResponse = nlohmann::json::parse(response-&gt;body);
-        auto result = jsonResponse[&quot;result&quot;];
+        auto result = jsonResponse["result"];
 
-        encodedImage = result[&quot;image&quot;];
+        encodedImage = result["image"];
         std::string decodedString = base64::from_base64(encodedImage);
         std::vector&lt;unsigned char&gt; decodedImage(decodedString.begin(), decodedString.end());
-        std::ofstream outputImage(outPutImagePath, std::ios::binary | std::ios::out);
+        std::ofstream outputImage(outputImagePath, std::ios::binary | std::ios::out);
         if (outputImage.is_open()) {
             outputImage.write(reinterpret_cast&lt;char*&gt;(decodedImage.data()), decodedImage.size());
             outputImage.close();
-            std::cout &lt;&lt; &quot;Output image saved at &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
+            std::cout &lt;&lt; "Output image saved at " &lt;&lt; outputImagePath &lt;&lt; std::endl;
         } else {
-            std::cerr &lt;&lt; &quot;Unable to open file for writing: &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
+            std::cerr &lt;&lt; "Unable to open file for writing: " &lt;&lt; outputImagePath &lt;&lt; std::endl;
         }
 
-        auto instances = result[&quot;instances&quot;];
-        std::cout &lt;&lt; &quot;\nInstances:&quot; &lt;&lt; std::endl;
+        auto instances = result["instances"];
+        std::cout &lt;&lt; "\nInstances:" &lt;&lt; std::endl;
         for (const auto&amp; inst : instances) {
             std::cout &lt;&lt; inst &lt;&lt; std::endl;
         }
     } else {
-        std::cout &lt;&lt; &quot;Failed to send HTTP request.&quot; &lt;&lt; std::endl;
+        std::cout &lt;&lt; "Failed to send HTTP request." &lt;&lt; std::endl;
         return 1;
     }
 
@@ -667,18 +769,20 @@ import java.util.Base64;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String API_URL = &quot;http://localhost:8080/instance-segmentation&quot;;
-        String imagePath = &quot;./demo.jpg&quot;;
-        String outputImagePath = &quot;./out.jpg&quot;;
+        String API_URL = &quot;http://localhost:8080/instance-segmentation&quot;; // Service URL
+        String imagePath = &quot;./demo.jpg&quot;; // Local image
+        String outputImagePath = &quot;./out.jpg&quot;; // Output image
 
+        // Encode the local image to Base64
         File file = new File(imagePath);
         byte[] fileContent = java.nio.file.Files.readAllBytes(file.toPath());
         String imageData = Base64.getEncoder().encodeToString(fileContent);
 
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode params = objectMapper.createObjectNode();
-        params.put(&quot;image&quot;, imageData);
+        params.put(&quot;image&quot;, imageData); // Base64-encoded file content or image URL
 
+        // Create an OkHttpClient instance
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.Companion.get(&quot;application/json; charset=utf-8&quot;);
         RequestBody body = RequestBody.Companion.create(params.toString(), JSON);
@@ -687,6 +791,7 @@ public class Main {
                 .post(body)
                 .build();
 
+        // Call the API and process the response data
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 String responseBody = response.body().string();
@@ -727,6 +832,7 @@ func main() {
     imagePath := &quot;./demo.jpg&quot;
     outputImagePath := &quot;./out.jpg&quot;
 
+    // Encode the local image in Base64
     imageBytes, err := ioutil.ReadFile(imagePath)
     if err != nil {
         fmt.Println(&quot;Error reading image file:&quot;, err)
@@ -734,13 +840,14 @@ func main() {
     }
     imageData := base64.StdEncoding.EncodeToString(imageBytes)
 
-    payload := map[string]string{&quot;image&quot;: imageData}
+    payload := map[string]string{&quot;image&quot;: imageData} // Base64 encoded file content or image URL
     payloadBytes, err := json.Marshal(payload)
     if err != nil {
         fmt.Println(&quot;Error marshaling payload:&quot;, err)
         return
     }
 
+    // Call the API
     client := &amp;http.Client{}
     req, err := http.NewRequest(&quot;POST&quot;, API_URL, bytes.NewBuffer(payloadBytes))
     if err != nil {
@@ -755,6 +862,7 @@ func main() {
     }
     defer res.Body.Close()
 
+    // Process the returned data
     body, err := ioutil.ReadAll(res.Body)
     if err != nil {
         fmt.Println(&quot;Error reading response body:&quot;, err)
@@ -803,33 +911,36 @@ using Newtonsoft.Json.Linq;
 
 class Program
 {
-    static readonly string API_URL = &quot;http://localhost:8080/instance-segmentation&quot;;
-    static readonly string imagePath = &quot;./demo.jpg&quot;;
-    static readonly string outputImagePath = &quot;./out.jpg&quot;;
+    static readonly string API_URL = "http://localhost:8080/instance-segmentation";
+    static readonly string imagePath = "./demo.jpg";
+    static readonly string outputImagePath = "./out.jpg";
 
     static async Task Main(string[] args)
     {
         var httpClient = new HttpClient();
 
+        // Encode the local image using Base64
         byte[] imageBytes = File.ReadAllBytes(imagePath);
         string image_data = Convert.ToBase64String(imageBytes);
 
-        var payload = new JObject{ { &quot;image&quot;, image_data } };
-        var content = new StringContent(payload.ToString(), Encoding.UTF8, &quot;application/json&quot;);
+        var payload = new JObject{ { "image", image_data } }; // Base64-encoded file content or image URL
+        var content = new StringContent(payload.ToString(), Encoding.UTF8, "application/json");
 
+        // Call the API
         HttpResponseMessage response = await httpClient.PostAsync(API_URL, content);
         response.EnsureSuccessStatusCode();
 
+        // Process the API response data
         string responseBody = await response.Content.ReadAsStringAsync();
         JObject jsonResponse = JObject.Parse(responseBody);
 
-        string base64Image = jsonResponse[&quot;result&quot;][&quot;image&quot;].ToString();
+        string base64Image = jsonResponse["result"]["image"].ToString();
         byte[] outputImageBytes = Convert.FromBase64String(base64Image);
 
         File.WriteAllBytes(outputImagePath, outputImageBytes);
-        Console.WriteLine($&quot;Output image saved at {outputImagePath}&quot;);
-        Console.WriteLine(&quot;\nInstances:&quot;);
-        Console.WriteLine(jsonResponse[&quot;result&quot;][&quot;instances&quot;].ToString());
+        Console.WriteLine($"Output image saved at {outputImagePath}");
+        Console.WriteLine("\nInstances:");
+        Console.WriteLine(jsonResponse["result"]["instances"].ToString());
     }
 }
 </code></pre></details>
@@ -839,36 +950,39 @@ class Program
 <pre><code class="language-js">const axios = require('axios');
 const fs = require('fs');
 
-const API_URL = 'http://localhost:8080/instance-segmentation'
-const imagePath = './demo.jpg'
-const outputImagePath = &quot;./out.jpg&quot;;
+const API_URL = 'http://localhost:8080/instance-segmentation';
+const imagePath = './demo.jpg';
+const outputImagePath = './out.jpg';
 
 let config = {
    method: 'POST',
    maxBodyLength: Infinity,
    url: API_URL,
    data: JSON.stringify({
-    'image': encodeImageToBase64(imagePath)
+    'image': encodeImageToBase64(imagePath)  // Base64-encoded file content or image URL
   })
 };
 
+// Encode the local image using Base64
 function encodeImageToBase64(filePath) {
   const bitmap = fs.readFileSync(filePath);
   return Buffer.from(bitmap).toString('base64');
 }
 
+// Call the API
 axios.request(config)
-.then((response) =&gt; {
-    const result = response.data[&quot;result&quot;];
-    const imageBuffer = Buffer.from(result[&quot;image&quot;], 'base64');
-    fs.writeFile(outputImagePath, imageBuffer, (err) =&gt; {
+.then((response) => {
+    // Process the response data
+    const result = response.data['result'];
+    const imageBuffer = Buffer.from(result['image'], 'base64');
+    fs.writeFile(outputImagePath, imageBuffer, (err) => {
       if (err) throw err;
       console.log(`Output image saved at ${outputImagePath}`);
     });
-    console.log(&quot;\nInstances:&quot;);
-    console.log(result[&quot;instances&quot;]);
+    console.log('\nInstances:');
+    console.log(result['instances']);
 })
-.catch((error) =&gt; {
+.catch((error) => {
   console.log(error);
 });
 </code></pre></details>
@@ -877,13 +991,15 @@ axios.request(config)
 
 <pre><code class="language-php">&lt;?php
 
-$API_URL = &quot;http://localhost:8080/instance-segmentation&quot;;
-$image_path = &quot;./demo.jpg&quot;;
-$output_image_path = &quot;./out.jpg&quot;;
+$API_URL = "http://localhost:8080/instance-segmentation"; // Service URL
+$image_path = "./demo.jpg";
+$output_image_path = "./out.jpg";
 
+// Encode the local image using Base64
 $image_data = base64_encode(file_get_contents($image_path));
-$payload = array(&quot;image&quot; =&gt; $image_data);
+$payload = array("image" => $image_data); // Base64-encoded file content or image URL
 
+// Call the API
 $ch = curl_init($API_URL);
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
@@ -892,54 +1008,73 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($ch);
 curl_close($ch);
 
-$result = json_decode($response, true)[&quot;result&quot;];
-file_put_contents($output_image_path, base64_decode($result[&quot;image&quot;]));
-echo &quot;Output image saved at &quot; . $output_image_path . &quot;\n&quot;;
-echo &quot;\nInstances:\n&quot;;
-print_r($result[&quot;instances&quot;]);
+// Process the response data
+$result = json_decode($response, true)['result'];
+file_put_contents($output_image_path, base64_decode($result['image']));
+echo "Output image saved at " . $output_image_path . "\n";
+echo "\nInstances:\n";
+print_r($result['instances']);
 
 ?&gt;
 </code></pre></details>
 </details>
 <br/>
 
-📱 <b>Edge Deployment</b>: Edge deployment is a method that places computing and data processing functions on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
-You can choose the appropriate deployment method for your model pipeline based on your needs and proceed with subsequent AI application integration.
+📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on user devices, allowing them to process data locally without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed instructions on edge deployment, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
+You can choose the appropriate deployment method based on your needs and proceed with the integration of AI applications.
 
-## 4. CCustom Development
-If the default model weights provided by the general instance segmentation pipeline do not meet your requirements for accuracy or speed in your scenario, you can try to further <b>fine-tune</b> the existing model using <b>data specific to your domain or application scenario</b> to improve the recognition effect of the general instance segmentation pipeline in your scenario.
+## 4. Custom Development
+If the default model weights provided by the general instance segmentation pipeline do not meet your requirements in terms of accuracy or speed, you can try to <b>further fine-tune the existing model using your own domain-specific or application-specific data</b> to improve the recognition performance of the general instance segmentation pipeline in your scenario.
 
-### 4.1 Model Fine-tuning
-Since the general instance segmentation pipeline includes an instance segmentation module, if the performance of the pipeline does not meet expectations, you need to refer to the [Custom Development](../../../module_usage/tutorials/cv_modules/instance_segmentation.en.md#iv-custom-development) section in the [Instance Segmentation Module Development Tutorial](../../../module_usage/tutorials/cv_modules/instance_segmentation.en.md).
+### 4.1 Model Fine-Tuning
+Since the general instance segmentation pipeline includes an instance segmentation module, if the pipeline's performance does not meet your expectations, you can analyze the images with poor segmentation results and refer to the corresponding fine-tuning tutorial links in the table below for model fine-tuning.
+
+<table>
+  <thead>
+    <tr>
+      <th>Situation</th>
+      <th>Fine-Tuning Module</th>
+      <th>Fine-Tuning Reference Link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Prediction results are not as expected</td>
+      <td>Instance Segmentation Module</td>
+      <td><a href="../../../module_usage/tutorials/cv_modules/instance_segmentation.en.md">Link</a></td>
+    </tr>
+  </tbody>
+</table>
+
 
 ### 4.2 Model Application
-After you complete fine-tuning training using your private dataset, you will obtain local model weight files.
+After completing the fine-tuning training with your private dataset, you will obtain the local model weight file.
 
-If you need to use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local path of the fine-tuned model weights to the corresponding location in the pipeline configuration file:
+If you need to use the fine-tuned model weights, you only need to modify the pipeline configuration file by replacing the local path of the fine-tuned model weights in the corresponding position of the pipeline configuration file:
 
-```python
-......
-Pipeline:
-  model: Mask-RT-DETR-S  # Can be modified to the local path of the fine-tuned model
-  device: "gpu"
-  batch_size: 1
-......
+```yaml
+SubModules:
+  InstanceSegmentation:
+    module_name: instance_segmentation
+    model_name: Mask-RT-DETR-S
+    model_dir: null # 替换为微调后的实例分割模型权重路径
+    batch_size: 1
+    threshold: 0.5
 ```
 
-Then, refer to the command line method or Python script method in the local experience to load the modified pipeline configuration file.
+Subsequently, refer to the command-line or Python script methods in the local experience section to load the modified production line configuration file.
 
 ## 5. Multi-Hardware Support
-PaddleX supports various mainstream hardware devices such as NVIDIA GPUs, Kunlun XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware.
+PaddleX supports a variety of mainstream hardware devices, including NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware devices.
 
-For example, if you use an NVIDIA GPU for instance segmentation pipeline inference, the Python command is:
-
-```bash
-paddlex --pipeline instance_segmentation --input general_instance_segmentation_004.png --device gpu:0
-``````
-At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the Python command to `npu:0`:
+For example, if you use Ascend NPU for instance segmentation inference, the Python command is:
 
 ```bash
-paddlex --pipeline instance_segmentation --input general_instance_segmentation_004.png --device npu:0
+paddlex --pipeline instance_segmentation \
+        --input general_instance_segmentation_004.png \
+        --threshold 0.5 \
+        --save_path ./output \
+        --device npu:0
 ```
 
-If you want to use the General Instance Segmentation Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+If you want to use the general instance segmentation production line on more types of hardware, please refer to [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).

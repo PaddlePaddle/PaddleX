@@ -167,7 +167,10 @@ def args_cfg():
     pipeline_name = args.pipeline
     pipeline_args = []
 
-    if not args.install and pipeline_name is not None:
+    if (
+        not (args.install or args.serve or args.paddle2onnx)
+        and pipeline_name is not None
+    ):
 
         if pipeline_name not in PIPELINE_ARGUMENTS:
             support_pipelines = ", ".join(PIPELINE_ARGUMENTS.keys())
@@ -313,7 +316,7 @@ def serve(pipeline, *, device, use_hpip, host, port):
     pipeline_config = load_pipeline_config(pipeline)
     pipeline = create_pipeline(config=pipeline_config, device=device, use_hpip=use_hpip)
     app = create_pipeline_app(pipeline, pipeline_config)
-    run_server(app, host=host, port=port, debug=False)
+    run_server(app, host=host, port=port)
 
 
 # TODO: Move to another module
@@ -437,15 +440,13 @@ def main():
             interactive_get_pipeline(args.get_pipeline_config, args.save_path)
         else:
             pipeline_args_dict = {}
-            from .utils.flags import USE_NEW_INFERENCE
 
-            if USE_NEW_INFERENCE:
-                for arg in pipeline_args:
-                    arg_name = arg["name"].lstrip("-")
-                    if hasattr(args, arg_name):
-                        pipeline_args_dict[arg_name] = getattr(args, arg_name)
-                    else:
-                        logging.warning(f"Argument {arg_name} is missing in args")
+            for arg in pipeline_args:
+                arg_name = arg["name"].lstrip("-")
+                if hasattr(args, arg_name):
+                    pipeline_args_dict[arg_name] = getattr(args, arg_name)
+                else:
+                    logging.warning(f"Argument {arg_name} is missing in args")
             return pipeline_predict(
                 args.pipeline,
                 args.input,

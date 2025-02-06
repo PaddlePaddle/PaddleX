@@ -1,7 +1,0 @@
-Global:
-  pipeline_name: semantic_segmentation
-  input: https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png
-  
-Pipeline:
-  model: PP-LiteSeg-T
-  batch_size: 1

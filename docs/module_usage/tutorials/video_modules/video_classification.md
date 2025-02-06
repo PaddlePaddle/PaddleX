@@ -18,7 +18,7 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>PPTSM_ResNet50_k400_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PPTSM_ResNet50_k400_8frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PPTSM_ResNet50_k400_8frames_uniform_pretrained.pdparams">训练模型</a></td>
+<td>PP-TSM-R50_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSM-R50_8frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSM-R50_8frames_uniform_pretrained.pdparams">训练模型</a></td>
 <td>74.36</td>
 <td>93.4 M</td>
 <td rowspan="1">
@@ -27,13 +27,13 @@ PP-TSM是一种百度飞桨视觉团队自研的视频分类模型。该模型�
 </tr>
 
 <tr>
-<td>PP-TSMv2-LCNetV2_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-TSMv2-LCNetV2_8frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_8frames_uniform_pretrained.pdparams">训练模型</a></td>
+<td>PP-TSMv2-LCNetV2_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_8frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_8frames_uniform_pretrained.pdparams">训练模型</a></td>
 <td>71.71</td>
 <td>22.5 M</td>
 <td rowspan="2">PP-TSMv2是轻量化的视频分类模型，基于CPU端模型PP-LCNetV2进行优化，从骨干网络与预训练模型选择、数据增强、tsm模块调优、输入帧数优化、解码速度优化、DML蒸馏、LTA模块等7个方面进行模型调优，在中心采样评估方式下，精度达到75.16%，输入10s视频在CPU端的推理速度仅需456ms。</td>
 </tr>
 <tr>
-<td>PPTSMv2_LCNet_k400_16frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PPTSMv2_LCNet_k400_16frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PPTSMv2_LCNet_k400_16frames_uniform_pretrained.pdparams">训练模型</a></td>
+<td>PP-TSMv2-LCNetV2_16frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_16frames_uniform_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_16frames_uniform_pretrained.pdparams">训练模型</a></td>
 <td>73.11</td>
 <td>22.5 M</td>
 </tr>
@@ -62,7 +62,7 @@ for res in output:
 
 运行后，得到的结果为：
 ```bash
-{'res': {'input_path': 'general_video_classification_001.mp4', 'class_ids': [0], 'scores': [0.9199600219726562], 'label_names': ['abseiling']}}
+{'res': {'input_path': 'general_video_classification_001.mp4', 'class_ids': array([0], dtype=int32), 'scores': [0.91996], 'label_names': ['abseiling']}}
 ```
 
 参数含义如下：
@@ -153,7 +153,7 @@ for res in output:
 </tr>
 </table>
 
-* 对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为图片、保存为`json`文件的操作:
+* 对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`json`文件的操作:
 
 <table>
 <thead>

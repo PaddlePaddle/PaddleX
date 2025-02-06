@@ -19,7 +19,7 @@ PaddleX为您提供了两种安装模式：<b>Wheel包安装</b>和<b>插件安�
 > ❗ 注：请务必保证 PaddlePaddle 安装成功，安装成功后，方可进行下一步。
 
 ```bash
-pip install paddlex==3.0.0b2
+pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0rc0-py3-none-any.whl
 ```
 ### 1.2 插件安装模式
 若您使用PaddleX的应用场景为<b>二次开发</b> （例如重新训练模型、微调模型、自定义模型结构、自定义推理代码等），那么推荐您使用<b>功能更加强大</b>的插件安装模式。
@@ -140,14 +140,14 @@ paddlex --install PaddleXXX  # 例如PaddleOCR
 
 ```bash
 # 对于 CPU 用户
-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0b2-paddlepaddle3.0.0b2-cpu /bin/bash
+docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-cpu /bin/bash
 
 # 对于 GPU 用户
 # 对于 CUDA11.8 用户
-docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0b2-paddlepaddle3.0.0b2-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
+docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
 
 # 对于 CUDA12.3 用户
-docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0b2-paddlepaddle3.0.0b2-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
+docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
 ```
 
 * 若您使用的 Docker 版本 <= 19.03 但 >= 17.06，请执行：
@@ -155,14 +155,14 @@ docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=hos
 <details><summary> 点击展开</summary>
 
 <pre><code class="language-bash"># 对于 CPU 用户
-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0b2-paddlepaddle3.0.0b2-cpu /bin/bash
+docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-cpu /bin/bash
 
 # 对于 GPU 用户
 # 对于 CUDA11.8 用户
-nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0b2-paddlepaddle3.0.0b2-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
+nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
 
 # 对于 CUDA12.3 用户
-nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0b2-paddlepaddle3.0.0b2-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
+nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
 </code></pre></details>
 
 * 若您使用的 Docker 版本 <= 17.06，请升级 Docker 版本。

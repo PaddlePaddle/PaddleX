@@ -27,7 +27,7 @@ comments: true
 </thead>
 <tbody>
 <tr>
-<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LCNet_x1_0_doc_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">训练模型</a></td>
+<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">训练模型</a></td>
 <td>99.06</td>
 <td>3.84845</td>
 <td>9.23735</td>
@@ -51,7 +51,7 @@ comments: true
 </thead>
 <tbody>
 <tr>
-<td>UVDoc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/UVDoc_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">训练模型</a></td>
+<td>UVDoc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/UVDoc_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">训练模型</a></td>
 <td>0.179</td>
 <td>30.3 M</td>
 <td>高精度文本图像矫正模型</td>
@@ -216,7 +216,7 @@ for res in output:
 </tbody>
 </table>
 
-（3）对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为图片、保存为`json`文件的操作:
+（3）对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`json`文件的操作:
 
 <table>
 <thead>
@@ -282,6 +282,8 @@ for res in output:
 - 调用`print()` 方法会将结果打印到终端，打印到终端的内容解释如下：
 
     - `input_path`: `(str)` 待预测图像的输入路径
+
+    - `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
 
     - `model_settings`: `(Dict[str, bool])` 配置产线所需的模型参数
 
@@ -625,7 +627,7 @@ for i, res in enumerate(result[&quot;docPreprocessorResult&quot;]):
 ##  5. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device`参数</b>即可完成不同硬件之间的无缝切换。
 
-例如，您使用昇腾 NPU 进行文档图像预处理产线的推理，使用的 Python 命令为：
+例如，您使用昇腾 NPU 进行文档图像预处理产线的推理，使用的 CLI 命令为：
 
 ```bash
 paddlex --pipeline doc_preprocessor \
@@ -635,4 +637,6 @@ paddlex --pipeline doc_preprocessor \
         --save_path ./output \
         --device npu:0
 ```
+当然，您也可以在 Python 脚本中 `create_pipeline()` 时或者 `predict()` 时指定硬件设备。
+
 若您想在更多种类的硬件上使用文档图像预处理产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

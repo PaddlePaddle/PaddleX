@@ -16,6 +16,7 @@ import inspect
 from pathlib import Path
 import time
 import random
+import numpy as np
 
 from ....utils import logging
 from .mixin import StrMixin, JsonMixin, ImgMixin
@@ -37,6 +38,7 @@ class BaseResult(dict, JsonMixin, StrMixin):
         self._save_funcs = []
         StrMixin.__init__(self)
         JsonMixin.__init__(self)
+        np.set_printoptions(threshold=1, edgeitems=1)
         self._rand_fn = None
 
     def save_all(self, save_path: str) -> None:

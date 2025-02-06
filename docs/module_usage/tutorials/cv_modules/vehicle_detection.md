@@ -20,7 +20,7 @@ comments: true
 <th>介绍</th>
 </tr>
 <tr>
-<td>PP-YOLOE-S_vehicle</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-YOLOE-S_vehicle_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-S_vehicle_pretrained.pdparams">训练模型</a></td>
+<td>PP-YOLOE-S_vehicle</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE-S_vehicle_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-S_vehicle_pretrained.pdparams">训练模型</a></td>
 <td>61.3</td>
 <td>15.4</td>
 <td>178.4</td>
@@ -28,7 +28,7 @@ comments: true
 <td rowspan="2">基于PP-YOLOE的行人检测模型</td>
 </tr>
 <tr>
-<td>PP-YOLOE-L_vehicle</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-YOLOE-L_vehicle_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-L_vehicle_pretrained.pdparams">训练模型</a></td>
+<td>PP-YOLOE-L_vehicle</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE-L_vehicle_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-L_vehicle_pretrained.pdparams">训练模型</a></td>
 <td>63.9</td>
 <td>32.6</td>
 <td>775.6</td>
@@ -160,7 +160,7 @@ for res in output:
 </tr>
 </table>
 
-* 对预测结果进行处理，每个样本的预测结果均为`dict`类型，且支持打印、保存为图片、保存为`json`文件的操作:
+* 对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`json`文件的操作:
 
 <table>
 <thead>
