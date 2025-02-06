@@ -190,7 +190,7 @@ paddlex --pipeline instance_segmentation \
         --input general_instance_segmentation_004.png \
         --threshold 0.5 \
         --save_path ./output \
-        --device gpu:0 \
+        --device gpu:0
 ```
 相关的参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的参数说明。
 
