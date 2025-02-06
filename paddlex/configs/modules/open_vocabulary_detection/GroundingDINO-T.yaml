@@ -1,0 +1,13 @@
+Global:
+  model: GroundingDINO-T
+  mode: predict # only support predict
+  device: gpu:0
+  output: "output"
+
+Predict:
+  batch_size: 1
+  model_dir: "/path/to/GroundingDINO-T"
+  input: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/open_vocabulary_detection.jpg"
+  prompt: "bus . walking man . rearview mirror ."
+  kernel_option:
+    run_mode: paddle
