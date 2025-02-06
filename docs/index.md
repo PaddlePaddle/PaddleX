@@ -1312,7 +1312,7 @@ paddlex --pipeline [产线名称] --input [输入图片] --device [运行设备]
 
 !!! example "视频相关产线命令行使用"
 
-    === 通用视频分类"
+    === "通用视频分类"
 
         ```bash
         paddlex --pipeline video_classification \
@@ -1331,7 +1331,7 @@ paddlex --pipeline [产线名称] --input [输入图片] --device [运行设备]
 
                 <p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/video_classification/02.jpg"></p>
 
-    === 通用视频检测"
+    === "通用视频检测"
 
         ```bash
         paddlex --pipeline video_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/HorseRiding.avi --device gpu:0 --save_path output
@@ -1752,7 +1752,7 @@ for res in output:
 
 !!! example "视频相关产线命令行使用"
 
-    === 通用视频分类"
+    === "通用视频分类"
 
         ```python
         from paddlex import create_pipeline
@@ -1766,7 +1766,7 @@ for res in output:
             res.save_to_json(save_path="./output/")
         ```
 
-    === 通用视频检测"
+    === "通用视频检测"
 
         ```python
         from paddlex import create_pipeline
