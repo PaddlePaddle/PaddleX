@@ -64,7 +64,7 @@ paddlex --pipeline small_object_detection \
         --input small_object_detection.jpg \
         --threshold 0.5 \
         --save_path ./output \
-        --device gpu:0 \
+        --device gpu:0
 ```
 相关的参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的参数说明。
 
@@ -319,7 +319,7 @@ for res in output:
 ## 3. 开发集成/部署
 如果产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
 
-若您需要将产线直接应用在您的Python项目中，可以参考 [2.2 Python脚本方式](#22-python脚本方式集成)中的示例代码。
+若您需要将产线直接应用在您的Python项目中，可以参考 [2.1.2 Python脚本方式](#212-python脚本方式集成)中的示例代码。
 
 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
 
@@ -909,7 +909,7 @@ SubModules:
     batch_size: 1
     threshold: 0.5
 ```
-随后， 参考本地体验中的命令行方式或 Python 脚本方式，加载修改后的产线配置文件即可。
+随后， 参考[本地体验](#21-本地体验)中的命令行方式或 Python 脚本方式，加载修改后的产线配置文件即可。
 
 ## 5. 多硬件支持
 PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多种主流硬件设备，<b>仅需修改 `--device`参数</b>即可完成不同硬件之间的无缝切换。

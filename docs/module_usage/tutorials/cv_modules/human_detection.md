@@ -58,10 +58,11 @@ for res in output:
 
 运行后，得到的结果为：
 ```bash
-{'res': "{'input_path': 'human_detection.jpg', 'boxes': [{'cls_id': 0, 'label': 'pedestrian', 'score': 0.9085694551467896, 'coordinate': [259.53326, 342.86493, 307.43408, 464.22394]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.8818504810333252, 'coordinate': [170.22249, 317.11432, 260.24777, 470.12704]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.8622929453849792, 'coordinate': [402.17957, 345.1815, 458.4271, 479.91724]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.8577917218208313, 'coordinate': [522.5973, 360.11118, 614.3201, 480]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.8485967516899109, 'coordinate': [25.010237, 338.83722, 57.340042, 426.11932]}, ... ]}"}
+{'res': "{'input_path': 'human_detection.jpg', 'page_index': None, 'boxes': [{'cls_id': 0, 'label': 'pedestrian', 'score': 0.9085694551467896, 'coordinate': [259.53326, 342.86493, 307.43408, 464.22394]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.8818504810333252, 'coordinate': [170.22249, 317.11432, 260.24777, 470.12704]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.8622929453849792, 'coordinate': [402.17957, 345.1815, 458.4271, 479.91724]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.8577917218208313, 'coordinate': [522.5973, 360.11118, 614.3201, 480]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.8485967516899109, 'coordinate': [25.010237, 338.83722, 57.340042, 426.11932]}, ... ]}"}
 ```
 运行结果参数含义如下：
 - `input_path`: 表示输入待预测图像的路径
+- `page_index`: 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
 - `boxes`: 每个预测出的object的信息
   - `cls_id`: 类别ID
   - `label`: 类别名称

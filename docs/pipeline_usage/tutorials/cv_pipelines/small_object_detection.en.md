@@ -63,7 +63,7 @@ paddlex --pipeline small_object_detection \
         --input small_object_detection.jpg \
         --threshold 0.5 \
         --save_path ./output \
-        --device gpu:0 \
+        --device gpu:0
 ```
 
 The relevant parameter descriptions can be referred to in the parameter explanations in [2.2.2 Python Script Integration](#222-python-script-integration).
@@ -321,7 +321,7 @@ for res in output:
 ## 3. Development Integration/Deployment
 If the pipeline meets your requirements for inference speed and accuracy, you can proceed with development integration/deployment.
 
-If you need to apply the pipeline directly in your Python project, you can refer to the example code in [2.2 Python Script Integration](#22-python-script-integration).
+If you need to apply the pipeline directly in your Python project, you can refer to the example code in [2.1.2 Python Script Integration](#212-python-script-integration).
 
 In addition, PaddleX also provides three other deployment methods, detailed as follows:
 
@@ -912,7 +912,7 @@ SubModules:
     threshold: 0.5
 ```
 
-Subsequently, refer to the command-line method or Python script method in the local experience to load the modified production line configuration file.
+Subsequently, refer to the command-line method or Python script method in the [local experience](#21-local-experience) to load the modified production line configuration file.
 
 ## 5. Multi-Hardware Support
 PaddleX supports a variety of mainstream hardware devices, including NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware devices.

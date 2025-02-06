@@ -238,7 +238,7 @@ The visualization results are saved under `save_path`, and the visualization res
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="semantic_segmentation")
-output = pipeline.predict(input="general_semantic_segmentation_002.png", target_size = -1)
+output = pipeline.predict(input="makassaridn-road_demo.png", target_size = -1)
 for res in output:
     res.print()
     res.save_to_img(save_path="./output/")

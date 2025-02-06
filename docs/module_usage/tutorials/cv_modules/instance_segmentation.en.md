@@ -181,11 +181,12 @@ for res in output:
 After running, the result obtained is:
 
 ```bash
-{'res': "{'input_path': 'general_instance_segmentation_004.png', 'boxes': [{'cls_id': 0, 'label': 'person', 'score': 0.8723232746124268, 'coordinate': [88.34339, 109.87673, 401.85236, 575.59576]}, {'cls_id': 0, 'label': 'person', 'score': 0.8711188435554504, 'coordinate': [325.114, 1.1152496, 644.10266, 575.359]}, {'cls_id': 0, 'label': 'person', 'score': 0.842758297920227, 'coordinate': [514.18964, 21.760618, 768, 576]}, {'cls_id': 0, 'label': 'person', 'score': 0.8332827091217041, 'coordinate': [0.105075076, 0, 189.23515, 575.9612]}], 'masks': '...'}"}
+{'res': "{'input_path': 'general_instance_segmentation_004.png', 'page_index': None, 'boxes': [{'cls_id': 0, 'label': 'person', 'score': 0.8723232746124268, 'coordinate': [88.34339, 109.87673, 401.85236, 575.59576]}, {'cls_id': 0, 'label': 'person', 'score': 0.8711188435554504, 'coordinate': [325.114, 1.1152496, 644.10266, 575.359]}, {'cls_id': 0, 'label': 'person', 'score': 0.842758297920227, 'coordinate': [514.18964, 21.760618, 768, 576]}, {'cls_id': 0, 'label': 'person', 'score': 0.8332827091217041, 'coordinate': [0.105075076, 0, 189.23515, 575.9612]}], 'masks': '...'}"}
 ```
 
 The meanings of the running results parameters are as follows:
 - `input_path`: Indicates the path of the input image to be predicted.
+- `page_index`: If the input is a PDF file, it represents the current page number of the PDF; otherwise, it is `None`.
 - `boxes`: Information of each detected object.
   - `cls_id`: Class ID.
   - `label`: Class name.
