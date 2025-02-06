@@ -1501,7 +1501,7 @@ SubModules:
   LayoutDetection:
     module_name: layout_detection
     model_name: PP-DocLayout-L
-    model_dir: null # 修改此处为微调后模型权重的本地路径
+    model_dir: null # 修改此处为微调后的版面检测模型权重的本地路径
     ...
 
 SubPipelines:
@@ -1511,18 +1511,18 @@ SubPipelines:
       DocOrientationClassify:
         module_name: doc_text_orientation
         model_name: PP-LCNet_x1_0_doc_ori
-        model_dir: null # 修改此处为微调后模型权重的本地路径
+        model_dir: null # 修改此处为微调后的文档图像方向分类模型权重的本地路径
     ...
     SubModules:
       TextDetection:
         module_name: seal_text_detection
         model_name: PP-OCRv4_server_seal_det
-        model_dir: null # 修改此处为微调后模型权重的本地路径
+        model_dir: null # 修改此处为微调后的文本检测模型权重的本地路径
         ...
       TextRecognition:
         module_name: text_recognition
         model_name: PP-OCRv4_server_rec
-        model_dir: null # 修改此处为微调后模型权重的本地路径
+        model_dir: null # 修改此处为微调后的文本识别模型权重的本地路径
         ...
 ```
 
