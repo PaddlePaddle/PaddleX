@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Union, Tuple, List, Dict, Any, Iterator
+from typing import Union, Tuple, List, Dict, Any, Iterator, Callable, Optional
 from abc import abstractmethod
 from pathlib import Path
 import os
@@ -611,25 +611,47 @@ class MarkdownMixin:
         self._save_funcs.append(self.save_to_markdown)
 
     @abstractmethod
-    def _to_markdown(self):
+    def _to_markdown(self) -> Dict[str, Union[str, Dict[str, Any]]]:
         """
         Convert the result to markdown format.
+
         Returns:
-            Dict
+            Dict[str, Union[str, Dict[str, Any]]]: A dictionary containing markdown text and image data.
         """
         raise NotImplementedError
 
     @property
-    def markdown(self):
+    def markdown(self) -> Dict[str, Union[str, Dict[str, Any]]]:
+        """Property to access the markdown data.
+
+        Returns:
+            Dict[str, Union[str, Dict[str, Any]]]: A dictionary containing markdown text and image data.
+        """
         return self._to_markdown()
 
-    def save_to_markdown(self, save_path, *args, **kwargs):
-        def _is_markdown_file(file_path):
+    def save_to_markdown(self, save_path, *args, **kwargs) -> None:
+        """Save the markdown data to a file.
+
+        Args:
+            save_path (Union[str, Path]): The path where the markdown file will be saved.
+            *args: Additional positional arguments for saving.
+            **kwargs: Additional keyword arguments for saving.
+        """
+
+        def _is_markdown_file(file_path) -> bool:
+            """Check if a file is a markdown file based on its extension or MIME type.
+
+            Args:
+                file_path (Union[str, Path]): The path to the file.
+
+            Returns:
+                bool: True if the file is a markdown file, False otherwise.
+            """
             markdown_extensions = {".md", ".markdown", ".mdown", ".mkd"}
-            _, ext = os.path.splitext(file_path)
+            _, ext = os.path.splitext(str(file_path))
             if ext.lower() in markdown_extensions:
                 return True
-            mime_type, _ = mimetypes.guess_type(file_path)
+            mime_type, _ = mimetypes.guess_type(str(file_path))
             return mime_type == "text/markdown"
 
         if not _is_markdown_file(save_path):
@@ -651,8 +673,24 @@ class MarkdownMixin:
         )
 
     def _save_data(
-        self, save_mkd_func, save_img_func, save_path, data, *args, **kwargs
-    ):
+        self,
+        save_mkd_func: Callable,
+        save_img_func: Callable,
+        save_path: Union[str, Path],
+        data: Optional[Dict[str, Union[str, Dict[str, Any]]]],
+        *args,
+        **kwargs,
+    ) -> None:
+        """Internal method to save markdown and image data.
+
+        Args:
+            save_mkd_func (Callable): Function to save markdown text.
+            save_img_func (Callable): Function to save image data.
+            save_path (Union[str, Path]): The base path where the data will be saved.
+            data (Optional[Dict[str, Union[str, Dict[str, Any]]]]): The markdown data to save.
+            *args: Additional positional arguments for saving.
+            **kwargs: Additional keyword arguments for saving.
+        """
         save_path = Path(save_path)
         if data is None:
             return
