@@ -290,8 +290,13 @@ For more information on using PaddleX's single-model inference APIs, please refe
 
 After running, the result obtained is:
 ```bash
-{'input_path': 'general_ocr_rec_001.png', 'rec_text': 'Oasis Shigewei Garden Apartment', 'rec_score': 0.9875298738479614}
+{'res': {'input_path': 'general_ocr_rec_001.png', 'page_index': None, 'rec_text': '绿洲仕格维花园公寓', 'rec_score': 0.9875497817993164}}
 ````
+The meanings of the running results parameters are as follows:
+- `input_path`：Represents the path to the image of the text line to be predicted.
+- `page_index`：If the input is a PDF file, this indicates the current page number of the PDF. Otherwise, it is `None`
+- `rec_text`：Represents the predicted text of the text line image.
+- `rec_score`：Represents the confidence score of the predicted text line image.
 
 The visualized image is as follows:
 

@@ -303,11 +303,12 @@ for res in output:
 
 运行后，得到的结果为：
 ```bash
-{'res': "{'input_path': 'general_ocr_rec_001.png', 'rec_text': '绿洲仕格维花园公寓', 'rec_score': 0.9875510334968567}"}
+{'res': {'input_path': 'general_ocr_rec_001.png', 'page_index': None, 'rec_text': '绿洲仕格维花园公寓', 'rec_score': 0.9875497817993164}}
 ```
 
 运行结果参数含义如下：
 - `input_path`：表示输入待预测文本行图像的路径
+- `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
 - `rec_text`：表示文本行图像的预测文本
 - `rec_score`：表示文本行图像的预测置信度
 

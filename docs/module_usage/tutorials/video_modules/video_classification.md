@@ -405,7 +405,7 @@ python main.py -c  paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
 
 <p>在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如<code>-o Evaluate.weight_path=./output/best_model/best_model.pdparams</code>。</p>
-<p>在完成模型评估后，会产出<code>evaluate_result.json，其记录了</code>评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标，包含 val.top1、val.top5；</p></details>
+<p>在完成模型评估后，会产出<code>evaluate_result.json</code>，其记录了评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标，包含 val.top1、val.top5；</p></details>
 
 ### <b>4.4 模型推理和模型集成</b>
 

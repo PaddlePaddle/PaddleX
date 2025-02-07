@@ -18,7 +18,7 @@ The Video Classification Module is a crucial component in a computer vision syst
 <th>Description</th>
 </tr>
 <tr>
-<td>PPTSM_ResNet50_k400_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PPTSM_ResNet50_k400_8frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PPTSM_ResNet50_k400_8frames_uniform_pretrained.pdparams">Trained Model</a></td>
+<td>PP-TSM-R50_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSM-R50_8frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSM-R50_8frames_uniform_pretrained.pdparams">Trained Model</a></td>
 <td>74.36</td>
 <td>93.4 M</td>
 <td rowspan="1">
@@ -33,21 +33,22 @@ PP-TSM is a video classification model developed by Baidu PaddlePaddle's Vision 
 <td rowspan="2">PP-TSMv2 is a lightweight video classification model optimized based on the CPU-oriented model PP-LCNetV2. It undergoes model tuning in seven aspects: backbone network and pre-trained model selection, data augmentation, TSM module tuning, input frame number optimization, decoding speed optimization, DML distillation, and LTA module. Under the center crop evaluation method, it achieves an accuracy of 75.16%, with an inference speed of only 456ms on the CPU for a 10-second video input.</td>
 </tr>
 <tr>
-<td>PPTSMv2_LCNet_k400_16frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PPTSMv2_LCNet_k400_16frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PPTSMv2_LCNet_k400_16frames_uniform_pretrained.pdparams">Trained Model</a></td>
+<td>PP-TSMv2-LCNetV2_16frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_16frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_16frames_uniform_pretrained.pdparams">Trained Model</a></td>
 <td>73.11</td>
 <td>22.5 M</td>
 </tr>
 
 </table>
 
-<p><b>Note: The above accuracy metrics refer to Top-1 Accuracy on the <a href="https://github.com/PaddlePaddle/PaddleVideo/blob/develop/docs/zh-CN/dataset/k400.md">K400</a> validation set. </b><b>All model GPU inference times are based on NVIDIA Tesla T4 machines, with precision type FP32. CPU inference speeds are based on Intel® Xeon® Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32.</b></p></details>
+<p><b>Note: The above accuracy metrics refer to Top-1 Accuracy on the <a href="https://github.com/PaddlePaddle/PaddleVideo/blob/develop/docs/zh-CN/dataset/k400.md">K400</a> validation set. </b></p></details>
 
-## <span id="lable">III. Quick Integration</span>
+## III. Quick Integration
+
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 
 After installing the wheel package, you can complete video classification module inference with just a few lines of code. You can switch between models in this module freely, and you can also integrate the model inference of the video classification module into your project. Before running the following code, please download the [demo video](https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/general_video_classification_001.mp4) to your local machine.
 
-```python
+```bash
 from paddlex import create_model
 model = create_model(model_name="PP-TSMv2-LCNetV2_8frames_uniform")
 output = model.predict(input="general_video_classification_001.mp4", batch_size=1)
@@ -73,7 +74,6 @@ The visualization video is as follows:
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/video_classification/general_video_classification_001.jpg" alt="Visualization Image">
 
-Note: Due to network issues, the above URL may not be accessible. If you need to access the content of this link, please check the validity of the link and try again. If you encounter any problems, it might be related to the link itself or the network connection.
 
 The Python script above performs the following steps:
 * `create_model` instantiates a video classification model (here using `PP-TSMv2-LCNetV2_8frames_uniform` as an example), with specific explanations as follows:
@@ -101,6 +101,13 @@ The Python script above performs the following steps:
 <td><code>str</code></td>
 <td>None</td>
 <td>None</td>
+</tr>
+<tr>
+<td><code> topk</code></td>
+<td>The top `topk` categories and corresponding classification probabilities of the prediction result；if not specified, the default configuration of the PaddleX official model will be used</td>
+<td><code>int</code></td>
+<td>None</td>
+<td><code>1</code></td>
 </tr>
 </table>
 
@@ -389,7 +396,7 @@ Similar to model training, the following steps are required:
 
 * Specify the path of the model's `.yaml` configuration file (here it is `PP-TSMv2-LCNetV2_8frames_uniform.yaml`)
 * Specify the mode as model evaluation: `-o Global.mode=evaluate`
-* Specify the path of the validation dataset: `-o Global.dataset_dir`. Other related parameters can be set by modifying the fields under `Global` and `Evaluate` in the `.yaml` configuration. Other related parameters can be set by modifying the fields under `Global` and `Evaluate` in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
+* Specify the path of the validation dataset: `-o Global.dataset_dir`.  Other related parameters can be set by modifying the fields under `Global` and `Evaluate` in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
 

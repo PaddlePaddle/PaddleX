@@ -51,9 +51,8 @@ comments: true
 
 wheel 包的安装后，几行代码即可完成公式识别模块的推理，可以任意切换该模块下的模型，您也可以将公式识别的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png)到本地。
 
-```python
+```bash
 from paddlex import create_model
-
 model = create_model(model_name="PP-FormulaNet-S")
 output = model.predict(input="general_formula_rec_001.png", batch_size=1)
 for res in output:
@@ -63,10 +62,11 @@ for res in output:
 ```
 运行后，得到的结果为：
 ```bash
-{'res': {'input_path': 'general_formula_rec_001.png', 'rec_formula': '\\zeta_{0}(\\nu)=-{\\frac{\\nu\\varrho^{-2\\nu}}{\\pi}}\\int_{\\mu}^{\\infty}d\\omega\\int_{C_{+}}d z{\\frac{2z^{2}}{(z^{2}+\\omega^{2})^{\\nu+1}}}\\ \\ {vec\\Psi}(\\omega;z)e^{i\\epsilon z}\\quad,'}}
+{'res': {'input_path': 'general_formula_rec_001.png', 'page_index': None, 'rec_formula': '\\zeta_{0}(\\nu)=-{\\frac{\\nu\\varrho^{-2\\nu}}{\\pi}}\\int_{\\mu}^{\\infty}d\\omega\\int_{C_{+}}d z{\\frac{2z^{2}}{(z^{2}+\\omega^{2})^{\\nu+1}}}\\ \\ {vec\\Psi}(\\omega;z)e^{i\\epsilon z}\\quad,'}}
 ```
 运行结果参数含义如下：
 - `input_path`：表示输入待预测公式图像的路径
+- `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
 - `rec_formula`：表示公式图像的预测LaTeX源码
 
 
@@ -111,7 +111,7 @@ sudo apt-get install texlive texlive-latex-base texlive-latex-extra -y
 
 * 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
 
-* 调用文本识别模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` 和 `batch_size`，具体说明如下：
+* 调用公式识别模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` 和 `batch_size`，具体说明如下：
 
 <table>
 <thead>
