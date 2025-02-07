@@ -133,6 +133,13 @@ In the above Python script, the following steps are executed:
 <td>None</td>
 </tr>
 <tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the pipeline (if set simultaneously with the <code>pipeline</code>, it takes precedence over the <code>pipeline</code>, and the pipeline name must match the <code>pipeline</code>).
+</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>device</code></td>
 <td>The inference device for the production line. Supports specifying specific GPU card numbers, such as "gpu:0", specific card numbers for other hardware, such as "npu:0", or CPU, such as "cpu".</td>
 <td><code>str</code></td>

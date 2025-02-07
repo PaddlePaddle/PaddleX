@@ -40,8 +40,9 @@ comments: true
 
 完成wheel 包的安装后，几行代码即可完成文档图像方向分类模块的推理，可以任意切换该模块下的模型，您也可以将文档图像方向分类模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg)到本地。
 
-```bash
+```python
 from paddlex import create_model
+
 model = create_model(model_name="PP-LCNet_x1_0_doc_ori")
 output = model.predict("img_rot180_demo.jpg",  batch_size=1)
 for res in output:

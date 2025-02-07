@@ -152,6 +152,13 @@ In the above Python script, the following steps are executed:
 <td><code>None</code></td>
 </tr>
 <tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the pipeline (if set simultaneously with the <code>pipeline</code>, it takes precedence over the <code>pipeline</code>, and the pipeline name must match the <code>pipeline</code>).
+</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>device</code></td>
 <td>The device used for pipeline inference. It supports specifying the specific card number of GPU, such as "gpu:0", other hardware card numbers, such as "npu:0", or CPU, such as "cpu".</td>
 <td><code>str</code></td>
@@ -446,7 +453,7 @@ In the above Python script, the following steps are executed:
         - `keypoints`: Keypoint coordinate information, a numpy array with shape [num_keypoints, 3], where each keypoint consists of [x, y, score], and score is the confidence score of the keypoint
         - `kpt_score`: Overall confidence score of the keypoints, which is the average confidence score of the keypoints
 
-- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}.json`; if specified as a file, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` types will be converted to lists.
+- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}_res.json`; if specified as a file, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` types will be converted to lists.
 - Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`; if specified as a file, it will be saved directly to that file. (The production line usually contains many result images, it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, leaving only the last image)
 
 * Additionally, it also supports obtaining visualized images and prediction results through attributes, as follows:

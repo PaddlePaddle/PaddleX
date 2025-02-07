@@ -48,11 +48,22 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         JsonMixin.__init__(self)
         self.already_sorted = False
 
+    def _get_input_fn(self):
+        fn = super()._get_input_fn()
+        if (page_idx := self["page_index"]) is not None:
+            fp = Path(fn)
+            stem, suffix = fp.stem, fp.suffix
+            return f"{stem}_{page_idx}{suffix}"
+        else:
+            return fn
+
     def _to_img(self) -> dict[str, np.ndarray]:
         res_img_dict = {}
         model_settings = self["model_settings"]
+        page_index = self["page_index"]
         if model_settings["use_doc_preprocessor"]:
-            res_img_dict.update(**self["doc_preprocessor_res"].img)
+            for key, value in self["doc_preprocessor_res"].img.items():
+                res_img_dict[key] = value
         res_img_dict["layout_det_res"] = self["layout_det_res"].img["res"]
 
         if model_settings["use_general_ocr"] or model_settings["use_table_recognition"]:
@@ -92,16 +103,39 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 key = f"seal_res_region{seal_region_id}"
                 res_img_dict[key] = sub_seal_res_dict["ocr_res_img"]
 
-        # if (
-        #     model_settings["use_formula_recognition"]
-        #     and len(self["formula_res_list"]) > 0
-        # ):
-        #     for sno in range(len(self["formula_res_list"])):
-        #         formula_res = self["formula_res_list"][sno]
-        #         formula_region_id = formula_res["formula_region_id"]
-        #         sub_formula_res_dict = formula_res.img
-        #         key = f"formula_res_region{formula_region_id}"
-        #         res_img_dict[key] = sub_formula_res_dict["res"]
+        # for layout ordering image
+        image = Image.fromarray(self["doc_preprocessor_res"]["output_img"])
+        draw = ImageDraw.Draw(image, "RGBA")
+        parsing_result = self["parsing_res_list"]
+
+        for block in parsing_result:
+            if self.already_sorted == False:
+                block = get_layout_ordering(
+                    block,
+                    no_mask_labels=[
+                        "text",
+                        "formula",
+                        "algorithm",
+                        "reference",
+                        "content",
+                        "abstract",
+                    ],
+                    already_sorted=self.already_sorted,
+                )
+
+            sub_blocks = block["sub_blocks"]
+            for sub_block in sub_blocks:
+                bbox = sub_block["layout_bbox"]
+                index = sub_block.get("index", None)
+                label = sub_block["sub_label"]
+                fill_color = get_show_color(label)
+                draw.rectangle(bbox, fill=fill_color)
+                if index is not None:
+                    text_position = (bbox[2] + 2, bbox[1] - 10)
+                    draw.text(text_position, str(index), fill="red")
+
+        self.already_sorted = True
+        res_img_dict["layout_order_res"] = image
 
         return res_img_dict
 
@@ -117,6 +151,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         """
         data = {}
         data["input_path"] = self["input_path"]
+        data["page_index"] = self["page_index"]
         model_settings = self["model_settings"]
         data["model_settings"] = model_settings
         if self["model_settings"]["use_doc_preprocessor"]:
@@ -167,6 +202,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         """
         data = {}
         data["input_path"] = self["input_path"]
+        data["page_index"] = self["page_index"]
         model_settings = self["model_settings"]
         data["model_settings"] = model_settings
         if self["model_settings"]["use_doc_preprocessor"]:
@@ -235,73 +271,6 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 res_xlsx_dict[key] = table_res.xlsx["pred"]
         return res_xlsx_dict
 
-    def save_to_pdf_order(self, save_path: str) -> None:
-        """
-        Save the layout ordering to an image file.
-
-        Args:
-            save_path (str): The path where the image should be saved.
-
-        Returns:
-            None
-        """
-        input_path = Path(self["input_path"])
-        page_index = self["page_index"]
-        save_path = Path(save_path)
-        if save_path.suffix.lower() not in (".jpg", ".png"):
-            if input_path.suffix.lower() == ".pdf":
-                save_path = save_path / f"page_{page_index}.jpg"
-            else:
-                save_path = save_path / f"{input_path.stem}.jpg"
-        else:
-            save_path = save_path.with_suffix("")
-
-        ordering_image_path = (
-            save_path.parent / f"{save_path.stem}_layout_order_res.jpg"
-        )
-
-        try:
-            image = Image.fromarray(self["doc_preprocessor_res"]["output_img"])
-        except OSError as e:
-            print(f"Error opening image: {e}")
-            return
-
-        draw = ImageDraw.Draw(image, "RGBA")
-        parsing_result = self["parsing_res_list"]
-
-        for block in parsing_result:
-            if self.already_sorted == False:
-                block = get_layout_ordering(
-                    block,
-                    no_mask_labels=[
-                        "text",
-                        "formula",
-                        "algorithm",
-                        "reference",
-                        "content",
-                        "abstract",
-                    ],
-                    already_sorted=self.already_sorted,
-                )
-
-            sub_blocks = block["sub_blocks"]
-            for sub_block in sub_blocks:
-                bbox = sub_block["layout_bbox"]
-                index = sub_block.get("index", None)
-                label = sub_block["sub_label"]
-                fill_color = get_show_color(label)
-                draw.rectangle(bbox, fill=fill_color)
-                if index is not None:
-                    text_position = (bbox[2] + 2, bbox[1] - 10)
-                    draw.text(text_position, str(index), fill="red")
-
-        self.already_sorted = True
-
-        # Ensure the directory exists and save the image
-        ordering_image_path.parent.mkdir(parents=True, exist_ok=True)
-        print(f"Saving ordering image to {ordering_image_path}")
-        image.save(str(ordering_image_path))
-
     def _to_markdown(self) -> dict:
         """
         Save the parsing result to a Markdown file.
@@ -309,14 +278,8 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         Returns:
             Dict
         """
-        if self.save_path == None:
-            is_save_mk_img = False
-        else:
-            is_save_mk_img = True
-            save_path = Path(self.save_path)
 
         parsing_result = self["parsing_res_list"]
-
         for block in parsing_result:
             if self.already_sorted == False:
                 block = get_layout_ordering(
@@ -333,12 +296,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 )
         self.already_sorted == True
 
-        if is_save_mk_img:
-            recursive_img_array2path(
-                self["parsing_res_list"],
-                save_path.parent,
-                labels=["img"],
-            )
+        recursive_img_array2path(self["parsing_res_list"], labels=["img"])
 
         def _format_data(obj):
 
@@ -367,16 +325,12 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 )
 
             def format_image(label):
-                if is_save_mk_img is False:
-                    return ""
-
                 img_tags = []
                 if "img" in sub_block[label]:
+                    image_path = "".join(sub_block[label]["img"].keys())
                     img_tags.append(
                         '<div style="text-align: center;"><img src="{}" alt="Image" /></div>'.format(
-                            sub_block[label]["img"]
-                            .replace("-\n", "")
-                            .replace("\n", " "),
+                            image_path.replace("-\n", "").replace("\n", " "),
                         ),
                     )
                 if "image_text" in sub_block[label]:
@@ -456,4 +410,16 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
             return markdown_content
 
-        return _format_data(self)
+        markdown_info = dict()
+        markdown_info["markdown_texts"] = _format_data(self)
+        markdown_info["markdown_images"] = dict()
+        for block in self["parsing_res_list"]:
+            sub_blocks = block["sub_blocks"]
+            for sub_block in sub_blocks:
+                if sub_block["label"] == "image":
+                    image_path, image_value = next(
+                        iter(sub_block["image"]["img"].items())
+                    )
+                    markdown_info["markdown_images"][image_path] = image_value
+
+        return markdown_info

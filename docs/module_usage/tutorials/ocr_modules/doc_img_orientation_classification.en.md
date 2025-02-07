@@ -40,8 +40,9 @@ The document image orientation classification module is aim to distinguish the o
 
 After completing the installation of the wheel package, you can perform inference on the document image orientation classification module with just a few lines of code. You can switch models under this module at will, and you can also integrate the model inference of the document image orientation classification module into your project. Before running the following code, please download the [example image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg) to your local machine.
 
-```bash
+```python
 from paddlex import create_model
+
 model = create_model(model_name="PP-LCNet_x1_0_doc_ori")
 output = model.predict("img_rot180_demo.jpg",  batch_size=1)
 for res in output:
