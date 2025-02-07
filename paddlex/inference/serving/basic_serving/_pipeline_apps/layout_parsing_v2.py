@@ -86,7 +86,6 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
                 return_urls=ctx.extra["return_img_urls"],
                 max_img_size=ctx.extra["max_output_img_size"],
             )
-            markdown = dict(text=md_text, images=md_imgs)
             if ctx.config.visualize:
                 imgs = {
                     "input_img": img,
@@ -106,7 +105,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             layout_parsing_results.append(
                 dict(
                     prunedResult=pruned_res,
-                    markdown=markdown,
+                    markdown=dict(text=md_text, images=md_imgs),
                     outputImages=(
                         {k: v for k, v in imgs.items() if k != "input_img"}
                         if imgs

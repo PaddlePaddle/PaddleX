@@ -35,7 +35,7 @@ class InferRequest(BaseModel):
 
 
 class DetectedObject(BaseModel):
-    bbox: Annotated[List[float], Field(min_length=8, max_length=8)]
+    bbox: Annotated[List[float], Field(min_length=9, max_length=9)]
     categoryId: int
     score: float
 
