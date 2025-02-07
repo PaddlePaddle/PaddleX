@@ -492,7 +492,7 @@ response = requests.post(API_URL, json=payload)
 # 处理接口返回数据
 assert response.status_code == 200
 result = response.json()[&quot;result&quot;]
-print(&quot;\nCategories:&quot;)
+print(&quot;Categories:&quot;)
 print(result[&quot;categories&quot;])
 </code></pre></details>
 <details><summary>C++</summary>

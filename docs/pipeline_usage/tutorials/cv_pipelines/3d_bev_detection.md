@@ -375,7 +375,7 @@ for res in output:
 <tr>
 <td><code>bbox</code></td>
 <td><code>array</code></td>
-<td>目标位置。数组中元素依次为边界框左上角x坐标、左上角y坐标、右下角x坐标以及右下角y坐标。</td>
+<td>长度为9的列表, 0: 中心点x坐标、1: 中心点y坐标、2: 中心点z坐标、3: 检测框宽度、4: 检测框长度、5: 检测框高度、6: 旋转角度、7: 坐标系x方向速度、8: 坐标系y方向速度</td>
 </tr>
 <tr>
 <td><code>categoryId</code></td>
@@ -414,7 +414,7 @@ result = response.json()[&quot;result&quot;]
 with open(output_image_path, &quot;wb&quot;) as file:
     file.write(base64.b64decode(result[&quot;image&quot;]))
 print(f&quot;Output image saved at {output_image_path}&quot;)
-print(&quot;\nDetected objects:&quot;)
+print(&quot;Detected objects:&quot;)
 print(result[&quot;detectedObjects&quot;])
 </code></pre></details>
 </details>

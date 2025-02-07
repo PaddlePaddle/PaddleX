@@ -1499,7 +1499,7 @@ for res in output:
 </tr>
 </tbody>
 </table>
-<p><code>LayoutParsingResult</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
+<p><code>layoutParsingResults</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
 <table>
 <thead>
 <tr>
