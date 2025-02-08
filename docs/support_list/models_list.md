@@ -1813,7 +1813,6 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/PP-OCRv4_server_rec_doc.yaml">PP-OCRv4_server_rec_doc.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_doc_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_doc_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
-<tr>
 <td>PP-OCRv4_mobile_rec</td>
 <td>78.74</td>
 <td>7.95018</td>
@@ -1915,7 +1914,6 @@ PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ec
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/en_PP-OCRv4_mobile_rec.yaml">en_PP-OCRv4_mobile_rec.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/\
 en_PP-OCRv4_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/en_PP-OCRv4_mobile_rec_pretrained.pdparams">训练模型</a></td>
-<tr>
 <tr>
 <td>en_PP-OCRv3_mobile_rec</td>
 <td>70.69</td>
