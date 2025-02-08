@@ -190,9 +190,23 @@ Semantic segmentation is a technique in computer vision that classifies each pix
 <td>330.132</td>
 <td>6.1M</td>
 </tr>
+<tr>
+<td>MaskFormer_small</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MaskFormer_small_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskFormer_small_pretrained.pdparams">Trained Model</a></td>
+<td>49.70</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>MaskFormer_tiny</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MaskFormer_tiny_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskFormer_tiny_pretrained.pdparams">Trained Model</a></td>
+<td>46.69</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
 </tbody>
 </table>
-<p><b>The accuracy metrics of the SeaFormer series models are measured on the <a href="https://groups.csail.mit.edu/vision/datasets/ADE20K/">ADE20k</a> dataset. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p></details>
+<p><b>The accuracy metrics of the above models are measured on the <a href="https://groups.csail.mit.edu/vision/datasets/ADE20K/">ADE20k</a> dataset. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p></details>
 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
@@ -213,11 +227,12 @@ for res in output:
 After running, the result obtained is:
 
 ```bash
-{'res': "{'input_path': 'general_semantic_segmentation_002.png', 'pred': '...'}"}
+{'res': "{'input_path': 'general_semantic_segmentation_002.png', 'page_index': None, 'pred': '...'}"}
 ```
 
 The meanings of the runtime parameters are as follows:
 - `input_path`: Indicates the path of the input image to be predicted.
+- `page_index`: If the input is a PDF file, it represents the current page number of the PDF; otherwise, it is `None`.
 - `pred`: The actual mask predicted by the semantic segmentation model. Since the data is too large to be printed directly, it is replaced with `...` here. The prediction result can be saved as an image through `res.save_to_img()` and as a JSON file through `res.save_to_json()`.
 
 The visualization image is as follows:

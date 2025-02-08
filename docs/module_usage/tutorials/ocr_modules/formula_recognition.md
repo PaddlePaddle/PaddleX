@@ -51,8 +51,9 @@ comments: true
 
 wheel 包的安装后，几行代码即可完成公式识别模块的推理，可以任意切换该模块下的模型，您也可以将公式识别的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png)到本地。
 
-```bash
+```python
 from paddlex import create_model
+
 model = create_model(model_name="PP-FormulaNet-S")
 output = model.predict(input="general_formula_rec_001.png", batch_size=1)
 for res in output:

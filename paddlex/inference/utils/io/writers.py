@@ -454,5 +454,5 @@ class MarkdownWriterBackend(_BaseWriterBackend):
 
     def _write_obj(self, out_path, obj):
         """write markdown obj"""
-        with open(out_path, mode="a", encoding="utf-8", errors="replace") as f:
+        with open(out_path, mode="w", encoding="utf-8", errors="replace") as f:
             f.write(obj)
