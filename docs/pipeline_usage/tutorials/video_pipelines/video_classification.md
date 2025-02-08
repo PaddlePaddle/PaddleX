@@ -78,7 +78,7 @@ paddlex --pipeline video_classification \
 #### 2.2 Python脚本方式集成
 * 上述命令行是为了快速体验查看效果，一般来说，在项目中，往往需要通过代码集成，您可以通过几行代码即可完成产线的快速推理，推理代码如下：
 
-```
+```python
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="video_classification")

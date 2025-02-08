@@ -55,10 +55,11 @@ for res in output:
 
 运行后，得到的结果为：
 ```bash
-{'res': "{'input_path': 'vehicle_detection.jpg', 'boxes': [{'cls_id': 0, 'label': 'vehicle', 'score': 0.9574093222618103, 'coordinate': [0.10725308, 323.01917, 272.72037, 472.75375]}, {'cls_id': 0, 'label': 'vehicle', 'score': 0.9449281096458435, 'coordinate': [270.3387, 310.36923, 489.8854, 398.07562]}, {'cls_id': 0, 'label': 'vehicle', 'score': 0.939127504825592, 'coordinate': [896.4249, 292.2338, 1051.9075, 370.41345]}, {'cls_id': 0, 'label': 'vehicle', 'score': 0.9388730525970459, 'coordinate': [1057.6327, 274.0139, 1639.8386, 535.54926]}, {'cls_id': 0, 'label': 'vehicle', 'score': 0.9239683747291565, 'coordinate': [482.28885, 307.33447, 574.6905, 357.82965]}, ... ]}"}
+{'res': "{'input_path': 'vehicle_detection.jpg', 'page_index': None, 'boxes': [{'cls_id': 0, 'label': 'vehicle', 'score': 0.9574093222618103, 'coordinate': [0.10725308, 323.01917, 272.72037, 472.75375]}, {'cls_id': 0, 'label': 'vehicle', 'score': 0.9449281096458435, 'coordinate': [270.3387, 310.36923, 489.8854, 398.07562]}, {'cls_id': 0, 'label': 'vehicle', 'score': 0.939127504825592, 'coordinate': [896.4249, 292.2338, 1051.9075, 370.41345]}, {'cls_id': 0, 'label': 'vehicle', 'score': 0.9388730525970459, 'coordinate': [1057.6327, 274.0139, 1639.8386, 535.54926]}, {'cls_id': 0, 'label': 'vehicle', 'score': 0.9239683747291565, 'coordinate': [482.28885, 307.33447, 574.6905, 357.82965]}, ... ]}"}
 ```
 运行结果参数含义如下：
 - `input_path`: 表示输入待预测图像的路径
+- `page_index`: 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
 - `boxes`: 每个预测出的object的信息
   - `cls_id`: 类别ID
   - `label`: 类别名称

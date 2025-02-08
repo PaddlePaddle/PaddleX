@@ -19,15 +19,15 @@ import PIL
 from PIL import ImageFont
 
 
-def get_pingfang_file_path() -> str:
+def get_font_file_path(file_name: str) -> str:
     """
-    Get the path of the PingFang font file.
+    Get the path of the font file.
 
     Returns:
-    str: The path to the PingFang font file.
+    str: The path to the font file.
     """
 
-    return (Path(__file__).parent / "PingFang-SC-Regular.ttf").resolve().as_posix()
+    return (Path(__file__).parent / file_name).resolve().as_posix()
 
 
 def create_font(txt: str, sz: tuple, font_path: str) -> ImageFont:
@@ -56,4 +56,5 @@ def create_font(txt: str, sz: tuple, font_path: str) -> ImageFont:
     return font
 
 
-PINGFANG_FONT_FILE_PATH = get_pingfang_file_path()
+PINGFANG_FONT_FILE_PATH = get_font_file_path("PingFang-SC-Regular.ttf")
+SIMFANG_FONT_FILE_PATH = get_font_file_path("simfang.ttf")

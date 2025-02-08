@@ -32,4 +32,3 @@ for res in output:
     res.save_to_xlsx("./output")
     res.save_to_html("./output")
     res.save_to_markdown("./output")
-    res.save_to_pdf_order("./output")
