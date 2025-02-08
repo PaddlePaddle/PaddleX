@@ -62,11 +62,12 @@ for res in output:
 
 After running, the result obtained is:
 ```bash
-{'res': "{'input_path': 'human_detection.jpg', 'boxes': [{'cls_id': 0, 'label': 'pedestrian', 'score': 0.9085694551467896, 'coordinate': [259.53326, 342.86493, 307.43408, 464.22394]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.8818504810333252, 'coordinate': [170.22249, 317.11432, 260.24777, 470.12704]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.8622929453849792, 'coordinate': [402.17957, 345.1815, 458.4271, 479.91724]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.8577917218208313, 'coordinate': [522.5973, 360.11118, 614.3201, 480]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.8485967516899109, 'coordinate': [25.010237, 338.83722, 57.340042, 426.11932]}, ... ]}"}
+{'res': "{'input_path': 'human_detection.jpg', 'page_index': None, 'boxes': [{'cls_id': 0, 'label': 'pedestrian', 'score': 0.9085694551467896, 'coordinate': [259.53326, 342.86493, 307.43408, 464.22394]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.8818504810333252, 'coordinate': [170.22249, 317.11432, 260.24777, 470.12704]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.8622929453849792, 'coordinate': [402.17957, 345.1815, 458.4271, 479.91724]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.8577917218208313, 'coordinate': [522.5973, 360.11118, 614.3201, 480]}, {'cls_id': 0, 'label': 'pedestrian', 'score': 0.8485967516899109, 'coordinate': [25.010237, 338.83722, 57.340042, 426.11932]}, ... ]}"}
 ```
 
 The meanings of the parameters in the running results are as follows:
 - `input_path`: The path of the input image to be predicted.
+- `page_index`: If the input is a PDF file, it represents the current page number of the PDF; otherwise, it is `None`.
 - `boxes`: Information of each detected object.
   - `cls_id`: Class ID.
   - `label`: Class name.

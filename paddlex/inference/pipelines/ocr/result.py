@@ -22,7 +22,7 @@ import numpy as np
 import cv2
 import PIL
 from PIL import Image, ImageDraw, ImageFont
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH, create_font
+from ....utils.fonts import SIMFANG_FONT_FILE_PATH, create_font
 from ...common.result import BaseCVResult, StrMixin, JsonMixin
 
 
@@ -105,7 +105,7 @@ class OCRResult(BaseCVResult):
                     box[2:, 1] = np.mean(box[:, 1]) + min(20, height)
                 draw_left.polygon(box, fill=color)
                 img_right_text = draw_box_txt_fine(
-                    (w, h), box, txt, PINGFANG_FONT_FILE_PATH
+                    (w, h), box, txt, SIMFANG_FONT_FILE_PATH
                 )
                 pts = np.array(box, np.int32).reshape((-1, 1, 2))
                 cv2.polylines(img_right_text, [pts], True, color, 1)

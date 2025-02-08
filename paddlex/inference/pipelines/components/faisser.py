@@ -149,11 +149,11 @@ class FaissIndexer:
         scores_list, ids_list = self._indexer.search(np.array(feature), topk)
         preds = []
         for scores, ids in zip(scores_list, ids_list):
-            labels = []
-            for id in ids:
-                if id > 0:
-                    labels.append(self.id_map[id])
-            preds.append({"score": scores, "label": labels})
+            preds.append({"score": [], "label": []})
+            for score, id in zip(scores, ids):
+                if id >= 0:
+                    preds[-1]["score"].append(score)
+                    preds[-1]["label"].append(self.id_map[id])
 
         if self.metric_type in FaissBuilder.BINARY_METRIC_TYPE:
             idxs = np.where(scores_list[:, 0] > hamming_radius)[0]
