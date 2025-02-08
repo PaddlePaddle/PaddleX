@@ -51,7 +51,7 @@ SubPipelines:
         
       TextRecognition:
         module_name: text_recognition
-        model_name: PP-OCRv4_server_rec
+        model_name: PP-OCRv4_server_rec_doc
         model_dir: null
         batch_size: 1
         score_thresh: 0.0
@@ -86,17 +86,6 @@ SubPipelines:
         module_name: table_cells_detection
         model_name: RT-DETR-L_wireless_table_cell_det
         model_dir: null
-
-  # TableRecognition:
-  #   pipeline_name: table_recognition
-  #   use_layout_detection: False
-  #   use_doc_preprocessor: False
-  #   use_ocr_model: False
-  #   SubModules:
-  #     TableStructureRecognition:
-  #       module_name: table_structure_recognition
-  #       model_name: SLANet_plus
-  #       model_dir: null
 
   SealRecognition:
     pipeline_name: seal_recognition
