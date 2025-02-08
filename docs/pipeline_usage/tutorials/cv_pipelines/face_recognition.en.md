@@ -161,6 +161,13 @@ In the above Python script, the following steps are performed:
 <td>None</td>
 </tr>
 <tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the pipeline (if set simultaneously with the <code>pipeline</code>, it takes precedence over the <code>pipeline</code>, and the pipeline name must match the <code>pipeline</code>).
+</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>device</code></td>
 <td>The inference device for the production line. Supports specifying the specific card number of the GPU, such as "gpu:0", the specific card number of other hardware, such as "npu:0", and CPU such as "cpu".</td>
 <td><code>str</code></td>
@@ -377,7 +384,7 @@ In the above Python script, the following steps are performed:
         - `det_score`: Detection score.
         - `coordinate`: Coordinates of the face bounding box, in the format [xmin, ymin, xmax, ymax].
 
-- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}.json`. If a file is specified, it will be saved directly to that file.
+- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.json`. If a file is specified, it will be saved directly to that file.
 - Calling the `save_to_img()` method will save the visualization result to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (The production line usually contains many result images; it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, leaving only the last one.) In the example above, the visualization result is as follows:
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/face_recognition/02.jpg">

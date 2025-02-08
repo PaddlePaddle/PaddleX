@@ -104,6 +104,13 @@ In the above Python script, the following steps are executed:
 <td>None</td>
 </tr>
 <tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the pipeline (if set simultaneously with the <code>pipeline</code>, it takes precedence over the <code>pipeline</code>, and the pipeline name must match the <code>pipeline</code>).
+</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>device</code></td>
 <td>The inference device for the pipeline. It supports specifying the specific card number of the GPU, such as "gpu:0", other hardware card numbers, such as "npu:0", and CPU as "cpu".</td>
 <td><code>str</code></td>
@@ -279,13 +286,10 @@ In the above Python script, the following steps are executed:
 <td rowspan = "1">Get the predicted <code>json</code> format result</td>
 </tr>
 <tr>
-<td rowspan = "2"><code>img</code></td>
-<td rowspan = "2">Get the visualized image in <code>dict</code> format</td>
 </tr>
 </table>
 
 - The prediction result obtained by the `json` attribute is a dict type of data, with content consistent with the content saved by calling the `save_to_json()` method.
-- The prediction result returned by the `img` attribute is a dictionary type of data. The key is `preprocessed_img`, and the corresponding value is an `Image.Image` object used for visualizing the doc_preprocessor result.
 
 In addition, you can obtain the video_detection production line configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
 

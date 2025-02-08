@@ -24,6 +24,7 @@ __all__ = [
 import numpy as np
 import copy
 import cv2
+from PIL import Image
 import uuid
 from pathlib import Path
 from typing import Optional, Union, List, Tuple, Dict, Any
@@ -724,16 +725,16 @@ def sort_by_xycut(
     return res
 
 
-def _img_array2path(data: np.ndarray, save_path: Union[str, Path]) -> str:
+def _img_array2path(data: np.ndarray) -> str:
     """
     Save an image array to disk and return the relative file path.
 
     Args:
         data (np.ndarray): An image represented as a numpy array with 3 dimensions (H, W, C).
-        save_path (Union[str, Path]): The base path where images should be saved.
 
     Returns:
-        str: The relative path of the saved image file.
+        dict: A dictionary with a single key-value pair formatted as:
+              {"imgs/image_{uuid4_hex}.png": PIL.Image.Image}
 
     Raises:
         ValueError: If the input data is not a valid image array.
@@ -741,17 +742,8 @@ def _img_array2path(data: np.ndarray, save_path: Union[str, Path]) -> str:
     if isinstance(data, np.ndarray) and data.ndim == 3:
         # Generate a unique filename using UUID
         img_name = f"image_{uuid.uuid4().hex}.png"
-        img_path = Path(save_path) / "imgs" / img_name
-        img_path.parent.mkdir(
-            parents=True, exist_ok=True
-        )  # Ensure the directory exists
 
-        # Save the image using OpenCV
-        success = cv2.imwrite(str(img_path), data)
-        if not success:
-            raise IOError(f"Failed to save image to {img_path}")
-
-        return f"imgs/{img_name}"
+        return {f"imgs/{img_name}": Image.fromarray(data[:, :, ::-1])}
     else:
         raise ValueError(
             "Input data must be a 3-dimensional numpy array representing an image."
@@ -760,7 +752,6 @@ def _img_array2path(data: np.ndarray, save_path: Union[str, Path]) -> str:
 
 def recursive_img_array2path(
     data: Union[Dict[str, Any], List[Any]],
-    save_path: Union[str, Path],
     labels: List[str] = [],
 ) -> None:
     """
@@ -778,12 +769,12 @@ def recursive_img_array2path(
     if isinstance(data, dict):
         for k, v in data.items():
             if k in labels and isinstance(v, np.ndarray) and v.ndim == 3:
-                data[k] = _img_array2path(v, save_path)
+                data[k] = _img_array2path(v)
             else:
-                recursive_img_array2path(v, save_path, labels)
+                recursive_img_array2path(v, labels)
     elif isinstance(data, list):
         for item in data:
-            recursive_img_array2path(item, save_path, labels)
+            recursive_img_array2path(item, labels)
 
 
 def _get_minbox_if_overlap_by_ratio(
