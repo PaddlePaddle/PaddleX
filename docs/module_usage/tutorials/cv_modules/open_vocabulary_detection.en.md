@@ -26,7 +26,16 @@ Open-vocabulary object detection is an advanced object detection technology aime
 <td>253.72</td>
 <td>1807.4</td>
 <td>658.3</td>
-<td rowspan="3">This is an open-vocabulary object detection model trained on the O365, GoldG, and Cap4M datasets. It uses Bert for text encoding and DINO for the visual model, with additional cross-modal fusion modules, achieving good performance in open-vocabulary object detection.</td>
+<td rowspan="1">This is an open-vocabulary object detection model trained on the O365, GoldG, and Cap4M datasets. It uses Bert for text encoding and DINO for the visual model, with additional cross-modal fusion modules, achieving good performance in open-vocabulary object detection.</td>
+</tr>
+<tr>
+<td>YOLO-Worldv2-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLO-Worldv2-L_infer.tar">Inference Model</a></td>
+<td>44.4</td>
+<td>59.8</td>
+<td>24.32</td>
+<td>374.89</td>
+<td>421.4</td>
+<td rowspan="1">This is an open-vocabulary object detection model trained on the O365 and GoldG datasets. It uses CLIP for text encoding and YOLOv8 for the visual model, with additional light-weight cross-modal fusion modules, achieving a good balance between speed and performance.</td>
 </tr>
 </table>
 

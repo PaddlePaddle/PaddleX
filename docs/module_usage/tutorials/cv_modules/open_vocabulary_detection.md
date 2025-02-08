@@ -27,7 +27,16 @@ comments: true
 <td>253.72</td>
 <td>1807.4</td>
 <td>658.3</td>
-<td rowspan="3">基于O365,GoldG,Cap4M三个数据集训练的开放词汇目标目标检测模型。文本编码器采用Bert，视觉模型部份整体采用DINO，额外设计了一些跨模态融合模块，在开放词汇目标检测领域取得了较好的效果。</td>
+<td rowspan="1">基于O365,GoldG,Cap4M三个数据集训练的开放词汇目标目标检测模型。文本编码器采用Bert，视觉模型部份整体采用DINO，额外设计了一些跨模态融合模块，在开放词汇目标检测领域取得了较好的效果。</td>
+</tr>
+<tr>
+<td>YOLO-Worldv2-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLO-Worldv2-L_infer.tar">推理模型</a></td>
+<td>44.4</td>
+<td>59.8</td>
+<td>24.32</td>
+<td>374.89</td>
+<td>421.4</td>
+<td rowspan="1">基于O365,GoldG两个数据集训练的开放词汇目标目标检测模型。文本编码器采用CLIP，视觉模型部份整体采用YOLOv8，额外设计了一些轻量化的跨模态融合模块，在精度和速度取得了较好的均衡。</td>
 </tr>
 </table>
 
