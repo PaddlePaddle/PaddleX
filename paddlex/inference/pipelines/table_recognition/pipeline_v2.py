@@ -16,6 +16,7 @@ import os, sys
 from typing import Any, Dict, Optional, Union, List, Tuple
 import numpy as np
 import cv2
+from sklearn.cluster import KMeans
 from ..base import BasePipeline
 from ..components import CropByBoxes
 from .utils import get_neighbor_boxes_idx
@@ -412,8 +413,6 @@ class TableRecognitionPipelineV2(BasePipeline):
             Returns:
             list of list of int: A list of N combined rectangles.
             """
-            # Import necessary third-party packages
-            from sklearn.cluster import KMeans
             # Number of input rectangles
             num_rects = len(rectangles)
             # If N is greater than or equal to the number of rectangles, return the original rectangles
@@ -484,11 +483,7 @@ class TableRecognitionPipelineV2(BasePipeline):
             else:
                 # Need to combine ocr_miss_boxes into N rectangles
                 N = html_pred_boxes_nums - len(cells_det_results)
-                # if N <= 0:
-                #     # If N <= 0, return cells_det_results
-                #     return cells_det_results.tolist()
                 if len(ocr_miss_boxes) == N:
-                    # If N <= 0, return cells_det_results
                     return cells_det_results.tolist() + ocr_miss_boxes
                 else:
                     # Combine ocr_miss_boxes into N rectangles
@@ -521,13 +516,15 @@ class TableRecognitionPipelineV2(BasePipeline):
         if table_cls_result == "wired_table":
             table_structure_pred = next(self.wired_table_rec_model(image_array))
             table_cells_pred = next(
-                self.wired_table_cells_detection_model(image_array, threshold=0.1)
-            )
+                self.wired_table_cells_detection_model(image_array, threshold=0.3)
+            ) # Setting the threshold to 0.3 can improve the accuracy of table cells detection. 
+              # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
         elif table_cls_result == "wireless_table":
             table_structure_pred = next(self.wireless_table_rec_model(image_array))
             table_cells_pred = next(
                 self.wireless_table_cells_detection_model(image_array, threshold=0.3)
-            )
+            ) # Setting the threshold to 0.3 can improve the accuracy of table cells detection. 
+              # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
         table_structure_result = self.extract_results(
             table_structure_pred, "table_stru"
         )
