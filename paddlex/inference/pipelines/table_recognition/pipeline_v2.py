@@ -274,7 +274,7 @@ class TableRecognitionPipelineV2(BasePipeline):
         else:
             return None
     
-    def cells_det_results_nms(self, cells_det_results, cells_det_scores, cells_det_threshold=0.5):
+    def cells_det_results_nms(self, cells_det_results, cells_det_scores, cells_det_threshold=0.3):
         """
         Apply Non-Maximum Suppression (NMS) on detection results to remove redundant overlapping bounding boxes.
 
@@ -359,7 +359,7 @@ class TableRecognitionPipelineV2(BasePipeline):
             # Discard boxes not fully inside table_box
         return adjusted_boxes
 
-    def cells_det_results_reprocessing(self, cells_det_results, cells_det_scores, ocr_det_results, html_pred_boxes_nums, mode):
+    def cells_det_results_reprocessing(self, cells_det_results, cells_det_scores, ocr_det_results, html_pred_boxes_nums):
         """
         Process and filter cells_det_results based on ocr_det_results and html_pred_boxes_nums.
 
@@ -454,18 +454,15 @@ class TableRecognitionPipelineV2(BasePipeline):
         cells_det_results = np.array(cells_det_results)
         cells_det_scores = np.array(cells_det_scores)
         ocr_det_results = np.array(ocr_det_results)
-        # Threshold for IoU
-        iou_threshold = 0.1
+        if len(cells_det_results) == html_pred_boxes_nums:
+            return cells_det_results
         # Step 1: If cells_det_results has more rectangles than html_pred_boxes_nums
-        if len(cells_det_results) > html_pred_boxes_nums:
-            if mode == 0:
-                # Select the indices of the top html_pred_boxes_nums scores
-                top_indices = np.argsort(-cells_det_scores)[:html_pred_boxes_nums]
-                # Return the corresponding rectangles
-                return cells_det_results[top_indices].tolist()
-            else:
+        elif len(cells_det_results) > html_pred_boxes_nums:
                 return combine_rectangles(cells_det_results, html_pred_boxes_nums)
         else:
+            # return cells_det_results
+            # Threshold for IoU
+            iou_threshold = 0.1
             # List to store ocr_miss_boxes
             ocr_miss_boxes = []
             # For each rectangle in ocr_det_results
@@ -487,9 +484,12 @@ class TableRecognitionPipelineV2(BasePipeline):
             else:
                 # Need to combine ocr_miss_boxes into N rectangles
                 N = html_pred_boxes_nums - len(cells_det_results)
-                if N <= 0:
+                # if N <= 0:
+                #     # If N <= 0, return cells_det_results
+                #     return cells_det_results.tolist()
+                if len(ocr_miss_boxes) == N:
                     # If N <= 0, return cells_det_results
-                    return cells_det_results.tolist()
+                    return cells_det_results.tolist() + ocr_miss_boxes
                 else:
                     # Combine ocr_miss_boxes into N rectangles
                     ocr_supp_boxes = combine_rectangles(ocr_miss_boxes, N)
@@ -521,7 +521,7 @@ class TableRecognitionPipelineV2(BasePipeline):
         if table_cls_result == "wired_table":
             table_structure_pred = next(self.wired_table_rec_model(image_array))
             table_cells_pred = next(
-                self.wired_table_cells_detection_model(image_array, threshold=0.3)
+                self.wired_table_cells_detection_model(image_array, threshold=0.1)
             )
         elif table_cls_result == "wireless_table":
             table_structure_pred = next(self.wireless_table_rec_model(image_array))
@@ -535,7 +535,7 @@ class TableRecognitionPipelineV2(BasePipeline):
         table_cells_result, table_cells_score = self.cells_det_results_nms(table_cells_result, table_cells_score)
         ocr_det_boxes = self.get_region_ocr_det_boxes(overall_ocr_res["rec_boxes"].tolist(), table_box)
         table_cells_result = self.cells_det_results_reprocessing(
-            table_cells_result, table_cells_score, ocr_det_boxes, len(table_structure_pred['bbox']), mode=1
+            table_cells_result, table_cells_score, ocr_det_boxes, len(table_structure_pred['bbox'])
         )
         single_table_recognition_res = get_table_recognition_res(
             table_box, table_structure_result, table_cells_result, overall_ocr_res
