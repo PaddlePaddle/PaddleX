@@ -139,6 +139,33 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
 
     @primary_operation(
         app,
+        schema.INVOKE_MLLM_ENDPOINT,
+        "invokeMllm",
+    )
+    async def _invoke_mllm(
+        request: schema.invokeMLLMRequest,
+    ) -> ResultResponse[schema.invokeMLLMResult]:
+        pipeline = ctx.pipeline
+        aiohttp_session = ctx.aiohttp_session
+
+        file_bytes = await serving_utils.get_raw_bytes_async(
+            request.image, aiohttp_session
+        )
+        image = serving_utils.image_bytes_to_array(file_bytes)
+
+        vector_info = await serving_utils.call_async(
+            pipeline.mllm_pred,
+            image,
+            request.keyList,
+        )
+
+        return ResultResponse[schema.invokeMLLMResult](
+            logId=serving_utils.generate_log_id(),
+            result=schema.invokeMLLMResult(vectorInfo=vector_info),
+        )
+
+    @primary_operation(
+        app,
         schema.CHAT_ENDPOINT,
         "chat",
     )

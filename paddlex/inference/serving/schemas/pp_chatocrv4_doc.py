@@ -28,6 +28,9 @@ __all__ = [
     "BUILD_VECTOR_STORE_ENDPOINT",
     "BuildVectorStoreRequest",
     "BuildVectorStoreResult",
+    "INVOKE_MLLM_ENDPOINT",
+    "InvokeMLLMRequest",
+    "InvokeMLLMResult",
     "CHAT_ENDPOINT",
     "ChatRequest",
     "ChatResult",
@@ -84,6 +87,18 @@ class BuildVectorStoreResult(BaseModel):
     vectorInfo: dict
 
 
+INVOKE_MLLM_ENDPOINT: Final[str] = "/chatocr-mllm"
+
+
+class InvokeMLLMRequest(BaseModel):
+    image: str
+    keyList: List[str]
+
+
+class InvokeMLLMResult(BaseModel):
+    mllmResult: dict
+
+
 CHAT_ENDPOINT: Final[str] = "/chatocr-chat"
 
 
@@ -123,6 +138,11 @@ PRIMARY_OPERATIONS: Final[PrimaryOperations] = {
         BUILD_VECTOR_STORE_ENDPOINT,
         BuildVectorStoreRequest,
         BuildVectorStoreResult,
+    ),
+    "invokeMllm": (
+        INVOKE_MLLM_ENDPOINT,
+        InvokeMLLMRequest,
+        InvokeMLLMResult,
     ),
     "chat": (CHAT_ENDPOINT, ChatRequest, ChatResult),
 }
