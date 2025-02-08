@@ -13,30 +13,30 @@ The formula recognition module is a crucial component of OCR (Optical Character 
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
-<th>Avg-BLEU</th>
+<th>Avg-BLEU(%)</th>
 <th>GPU Inference Time (ms)</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
 <td>UniMERNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/UniMERNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UniMERNet_pretrained.pdparams">Training Model</a></td>
-<td>0.8613</td>
+<td>86.13</td>
 <td>2266.96</td>
 <td>1.4 G</td>
 <td>UniMERNet is a formula recognition model developed by Shanghai AI Lab. It uses Donut Swin as the encoder and MBartDecoder as the decoder. The model is trained on a dataset of one million samples, including simple formulas, complex formulas, scanned formulas, and handwritten formulas, significantly improving the recognition accuracy of real-world formulas.</td>
 <tr>
 <td>PP-FormulaNet-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-FormulaNet-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-S_pretrained.pdparams">Training Model</a></td>
-<td>0.8712</td>
+<td>87.12</td>
 <td>202.25</td>
 <td>167.9 M</td>
 <td rowspan="2">PP-FormulaNet is an advanced formula recognition model developed by the Baidu PaddlePaddle Vision Team. The PP-FormulaNet-S version uses PP-HGNetV2-B4 as its backbone network. Through parallel masking and model distillation techniques, it significantly improves inference speed while maintaining high recognition accuracy, making it suitable for applications requiring fast inference. The PP-FormulaNet-L version, on the other hand, uses Vary_VIT_B as its backbone network and is trained on a large-scale formula dataset, showing significant improvements in recognizing complex formulas compared to PP-FormulaNet-S.</td>
 </tr>
 <td>PP-FormulaNet-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-FormulaNet-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-L_pretrained.pdparams">Training Model</a></td>
-<td>0.9213</td>
+<td>92.13</td>
 <td>1976.52</td>
 <td>535.2 M</td>
 <tr>
 <td>LaTeX_OCR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/LaTeX_OCR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">Training Model</a></td>
-<td>0.7163</td>
+<td>71.63</td>
 <td>-</td>
 <td>89.7 M</td>
 <td>LaTeX-OCR is a formula recognition algorithm based on an autoregressive large model. It uses Hybrid ViT as the backbone network and a transformer as the decoder, significantly improving the accuracy of formula recognition.</td>
@@ -129,14 +129,13 @@ The explanations for the methods, parameters, etc., are as follows:
 <tr>
 <td><code>input</code></td>
 <td>Data to be predicted, supporting multiple input types</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
   <li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
   <li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
   <li><b>URL link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png">Example</a></li>
   <li><b>Local directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
-  <li><b>Dictionary</b>, the <code>key</code> of the dictionary must correspond to the specific task, such as <code>"img"</code> for image classification tasks. The <code>value</code> of the dictionary supports the above types of data, for example: <code>{"img": "/root/data1"}</code></li>
   <li><b>List</b>, elements of the list must be of the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code></li>
 </ul>
 </td>
@@ -261,43 +260,45 @@ After executing the above command, PaddleX will validate the dataset and summari
 <details><summary>👉 <b>Details of Validation Results (Click to Expand)</b></summary>
 
 <p>The specific content of the validation result file is:</p>
-<pre><code class="language-bash">{
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;train_samples&quot;: 9452,
-    &quot;train_sample_paths&quot;: [
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0109284.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0217434.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0166758.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0022294.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/val_0071799.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0017043.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0026204.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0209202.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/val_0157332.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0232582.png&quot;
+
+<pre><code class="language-bash">
+{
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "train_samples": 10001,
+    "train_sample_paths": [
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0077809.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0161600.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0002077.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0178425.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0010959.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0079266.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0142495.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0196376.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0185513.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0217146.png"
     ],
-    &quot;val_samples&quot;: 1050,
-    &quot;val_sample_paths&quot;: [
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0070221.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0157901.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0085392.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0196480.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0096180.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0136149.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0143310.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0004560.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0115191.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0015323.png&quot;
+    "val_samples": 501,
+    "val_sample_paths": [
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0053264.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0100521.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0146333.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0072788.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0002022.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0203664.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0082217.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0208199.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0111236.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0204453.png"
     ]
   },
-  &quot;analysis&quot;: {
-    &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
+  "analysis": {
+    "histogram": "check_dataset\/histogram.png"
   },
-  &quot;dataset_path&quot;: &quot;./dataset/ocr_rec_latexocr_dataset_example&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;FormulaRecDataset&quot;
+  "dataset_path": "ocr_rec_latexocr_dataset_example",
+  "show_type": "image",
+  "dataset_type": "FormulaRecDataset"
 }
 </code></pre>
 <p>In the above validation results, <code>check_pass</code> being True indicates that the dataset format meets the requirements. Explanations for other indicators are as follows:

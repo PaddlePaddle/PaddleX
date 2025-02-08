@@ -1791,6 +1791,9 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <b>Note: The above accuracy metrics are evaluated on a self-built seal dataset by PaddleX, containing 500 seal images.</b>
 
 ## [Text Recognition Module](../module_usage/tutorials/ocr_modules/text_recognition.en.md)
+
+* <b>Chinese Recognition Model</b>
+
 <table>
 <thead>
 <tr>
@@ -1804,24 +1807,45 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 </thead>
 <tbody>
 <tr>
+<td>PP-OCRv4_server_rec_doc</td>
+<td>81.53</td>
+<td>-</td>
+<td>-</td>
+<td>74.7 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/PP-OCRv4_server_rec_doc.yaml">PP-OCRv4_server_rec_doc.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_doc_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_doc_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<tr>
 <td>PP-OCRv4_mobile_rec</td>
-<td>78.20</td>
+<td>78.74</td>
 <td>7.95018</td>
 <td>46.7868</td>
 <td>10.6 M</td>
-<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/text_recognition/PP-OCRv4_mobile_rec.yaml">PP-OCRv4_mobile_rec.yaml</a></td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/PP-OCRv4_mobile_rec.yaml">PP-OCRv4_mobile_rec.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Trained Model</a></td></tr>
 <tr>
 <td>PP-OCRv4_server_rec</td>
-<td>79.20</td>
+<td>80.61</td>
 <td>7.19439</td>
 <td>140.179</td>
 <td>71.2 M</td>
-<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/text_recognition/PP-OCRv4_server_rec.yaml">PP-OCRv4_server_rec.yaml</a></td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/PP-OCRv4_server_rec.yaml">PP-OCRv4_server_rec.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Trained Model</a></td></tr>
+
+<tr>
+<td>PP-OCRv3_mobile_rec</td>
+<td>72.96</td>
+<td>-</td>
+<td>-</td>
+<td>9.2 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/PP-OCRv3_mobile_rec.yaml">PP-OCRv3_mobile_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/\
+PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv3_mobile_rec_pretrained.pdparams">Trained Model</a></td></tr>
+
 </tbody>
 </table>
-<b>Note: The above accuracy metrics are evaluated on a self-built Chinese dataset by PaddleOCR, covering street scenes, web images, documents, and handwritten texts, with 11,000 images for text recognition.</b>
+<b>Note: The evaluation set for the above accuracy indicators is the Chinese dataset built by PaddleOCR, covering multiple scenarios such as street view, web images, documents, and handwriting. The text recognition includes 8367 images.</b>
+
 <table>
 <thead>
 <tr>
@@ -1840,7 +1864,7 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td>8.36801</td>
 <td>165.706</td>
 <td>73.9 M</td>
-<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/text_recognition/ch_SVTRv2_rec.yaml">ch_SVTRv2_rec.yaml</a></td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/ch_SVTRv2_rec.yaml">ch_SVTRv2_rec.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_SVTRv2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">Trained Model</a></td></tr>
 </tbody>
 </table>
@@ -1863,20 +1887,20 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td>10.5047</td>
 <td>51.5647</td>
 <td>22.1 M</td>
-<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/text_recognition/ch_RepSVTR_rec.yaml">ch_RepSVTR_rec.yaml</a></td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/ch_RepSVTR_rec.yaml">ch_RepSVTR_rec.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_RepSVTR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">Trained Model</a></td></tr>
 </tbody>
 </table>
 <b>Note: The above accuracy metrics are evaluated on [PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition](https://aistudio.baidu.com/competition/detail/1131/0/introduction) B-Rank.</b>
 
-## [Formula Recognition Module](../module_usage/tutorials/ocr_modules/formula_recognition.en.md)
+* <b>English Recognition Model</b>
+
+
 <table>
 <thead>
 <tr>
 <th>Model Name</th>
-<th>BLEU Score</th>
-<th>Normed Edit Distance</th>
-<th>ExpRate (%)</th>
+<th>Recognition Avg Accuracy (%)</th>
 <th>GPU Inference Time (ms)</th>
 <th>CPU Inference Time (ms)</th>
 <th>Model Size</th>
@@ -1885,18 +1909,218 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 </thead>
 <tbody>
 <tr>
+<td>en_PP-OCRv4_mobile_rec</td>
+<td> 70.39</td>
+<td>-</td>
+<td>-</td>
+<td>6.8 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/en_PP-OCRv4_mobile_rec.yaml">en_PP-OCRv4_mobile_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/\
+en_PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/en_PP-OCRv4_mobile_rec_pretrained.pdparams">Trained Model</a></td>
+<tr>
+<tr>
+<td>en_PP-OCRv3_mobile_rec</td>
+<td>70.69</td>
+<td>-</td>
+<td>-</td>
+<td>7.8 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/en_PP-OCRv3_mobile_rec.yaml">en_PP-OCRv3_mobile_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/\
+en_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/en_PP-OCRv3_mobile_rec_pretrained.pdparams">Trained Model</a></td></tr>
+
+</tbody>
+</table>
+<p><b>
+Note: The evaluation set for the above accuracy indicators is the English dataset built by PaddleX
+</b></p>
+
+* <b>Multilingual Recognition Model</b>
+
+<table>
+<thead>
+<tr>
+<th>模型名称</th>
+<th>识别Avg Accuracy(%)</th>
+<th>GPU推理耗时（ms）</th>
+<th>CPU推理耗时（ms）</th>
+<th>模型存储大小</th>
+<th>yaml 文件</th>
+<th>模型下载链接</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>korean_PP-OCRv3_mobile_rec</td>
+<td> 60.21</td>
+<td>-</td>
+<td>-</td>
+<td>8.6 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/korean_PP-OCRv3_mobile_rec.yaml">korean_PP-OCRv3_mobile_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/\
+korean_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/korean_PP-OCRv3_mobile_rec_pretrained.pdparams">Trained Model</a></td>
+</tr>
+<tr>
+<td>japan_PP-OCRv3_mobile_rec</td>
+<td>45.69</td>
+<td>-</td>
+<td>-</td>
+<td>8.8 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/japan_PP-OCRv3_mobile_rec.yaml">japan_PP-OCRv3_mobile_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/\
+japan_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/japan_PP-OCRv3_mobile_rec_pretrained.pdparams">Trained Model</a></td>
+</tr>
+
+<tr>
+<td>chinese_cht_PP-OCRv3_mobile_rec</td>
+<td>82.06</td>
+<td>-</td>
+<td>-</td>
+<td>9.7 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/chinese_cht_PP-OCRv3_mobile_rec.yaml">chinese_cht_PP-OCRv3_mobile_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/\
+chinese_cht_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/chinese_cht_PP-OCRv3_mobile_rec_pretrained.pdparams">Trained Model</a></td>
+</tr>
+
+<tr>
+<td>te_PP-OCRv3_mobile_rec</td>
+<td>95.88</td>
+<td>-</td>
+<td>-</td>
+<td>7.8 M </td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/te_PP-OCRv3_mobile_rec.yaml">te_PP-OCRv3_mobile_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/\
+te_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/te_PP-OCRv3_mobile_rec_pretrained.pdparams">Trained Model</a></td>
+</tr>
+
+<tr>
+<td>ka_PP-OCRv3_mobile_rec</td>
+<td>96.96</td>
+<td>-</td>
+<td>-</td>
+<td>8.0 M  </td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/ka_PP-OCRv3_mobile_rec.yaml">ka_PP-OCRv3_mobile_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/\
+ka_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ka_PP-OCRv3_mobile_rec_pretrained.pdparams">Trained Model</a></td>
+</tr>
+
+
+<tr>
+<td>ta_PP-OCRv3_mobile_rec</td>
+<td>76.83</td>
+<td>-</td>
+<td>-</td>
+<td>8.0 M </td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/ta_PP-OCRv3_mobile_rec.yaml">ta_PP-OCRv3_mobile_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/\
+ta_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ta_PP-OCRv3_mobile_rec_pretrained.pdparams">Trained Model</a></td>
+</tr>
+
+<tr>
+<td>latin_PP-OCRv3_mobile_rec</td>
+<td>76.93</td>
+<td>-</td>
+<td>-</td>
+<td>7.8 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/latin_PP-OCRv3_mobile_rec.yaml">latin_PP-OCRv3_mobile_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/\
+latin_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/latin_PP-OCRv3_mobile_rec_pretrained.pdparams">Trained Model</a></td>
+</tr>
+
+<tr>
+<td>arabic_PP-OCRv3_mobile_rec</td>
+<td>73.55</td>
+<td>-</td>
+<td>-</td>
+<td>7.8 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/arabic_PP-OCRv3_mobile_rec.yaml">arabic_PP-OCRv3_mobile_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/\
+arabic_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/arabic_PP-OCRv3_mobile_rec_pretrained.pdparams">Trained Model</a></td>
+</tr>
+
+<tr>
+<td>cyrillic_PP-OCRv3_mobile_rec</td>
+<td>94.28</td>
+<td>-</td>
+<td>-</td>
+<td>7.9 M </td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/cyrillic_PP-OCRv3_mobile_rec.yaml">cyrillic_PP-OCRv3_mobile_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/\
+cyrillic_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/cyrillic_PP-OCRv3_mobile_rec_pretrained.pdparams">Trained Model</a></td>
+</tr>
+
+<tr>
+<td>devanagari_PP-OCRv3_mobile_rec</td>
+<td>96.44</td>
+<td>-</td>
+<td>-</td>
+<td>7.9 M </td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/devanagari_PP-OCRv3_mobile_rec.yaml">devanagari_PP-OCRv3_mobile_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/\
+devanagari_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/devanagari_PP-OCRv3_mobile_rec_pretrained.pdparams">Trained Model</a></td>
+</tr>
+
+</tbody>
+</table>
+
+<p><b>
+Note: The evaluation set for the above accuracy indicators is the Multilingual dataset built by PaddleX
+</b></p>
+
+## [Formula Recognition Module](../module_usage/tutorials/ocr_modules/formula_recognition.en.md)
+
+<table>
+<thead>
+<tr>
+<th>Model Name</th>
+<th>Avg-BLEU(%)</th>
+<th>GPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)</th>
+<th>Model Size</th>
+<th>YAML File</th>
+<th>Model Download Link</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>UniMERNet</td>
+<td>86.13</td>
+<td>2266.96</td>
+<td>-</td>
+<td>1.4 G</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/formula_recognition/UniMERNet.yaml">UniMERNet.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/UniMERNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UniMERNet_pretrained.pdparams">Trained Model</a></td>
+</tr>
+<tr>
+<td>PP-FormulaNet-S</td>
+<td>87.12</td>
+<td>202.25</td>
+<td>-</td>
+<td>167.9 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.yaml">PP-FormulaNet-S.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-FormulaNet-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-S_pretrained.pdparams">Trained Model</a></td>
+</tr>
+
+<tr>
+<td>PP-FormulaNet-L</td>
+<td>92.13</td>
+<td>1976.52</td>
+<td>-</td>
+<td>535.2 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/formula_recognition/PP-FormulaNet-L.yaml">PP-FormulaNet-L.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-FormulaNet-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-L_pretrained.pdparams">Trained Model</a></td>
+</tr>
+
+<tr>
 <td>LaTeX_OCR_rec</td>
-<td>0.8821</td>
-<td>0.0823</td>
-<td>40.01</td>
+<td>71.63</td>
 <td>-</td>
 <td>-</td>
 <td>89.7 M</td>
-<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/formula_recognition/LaTeX_OCR_rec.yaml">LaTeX_OCR_rec.yaml</a></td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/LaTeX_OCR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">Trained Model</a></td></tr>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/formula_recognition/LaTeX_OCR_rec.yaml">LaTeX_OCR_rec.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/LaTeX_OCR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">Trained Model</a></td>
+</tr>
+
 </tbody>
 </table>
-<b>Note: The above accuracy metrics are measured on the [LaTeX-OCR formula recognition test set](https://drive.google.com/drive/folders/13CA4vAmOmD_I_dSbvLp-Lf0s6KiaNfuO).</b>
+<b>Note: The above accuracy metrics are measured using an internally built formula recognition test set within PaddleX.</b>
 
 ## [Table Structure Recognition Module](../module_usage/tutorials/ocr_modules/table_structure_recognition.en.md)
 <table>
@@ -2180,5 +2404,53 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 </tbody>
 </table>
 <b>Note: The above accuracy metrics are measured on the [UWaveGestureLibrary](https://paddlets.bj.bcebos.com/classification/UWaveGestureLibrary_TEST.csv) dataset.</b>
+
+## [Video Classification Module](../module_usage/tutorials/video_modules/video_classification.en.md)
+
+<table>
+<thead>
+<tr>
+<th>Model Name</th>
+<th>Top1 Acc(%)</th>
+<th>GPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)</th>
+<th>Model Size</th>
+<th>YAML File</th>
+<th>Model Download Link</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-TSM-R50_8frames_uniform</td>
+<td>74.36</td>
+<td>-</td>
+<td>-</td>
+<td>93.4 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/video_classification/PP-TSM-R50_8frames_uniform.yaml">PP-TSM-R50_8frames_uniform.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSM-R50_8frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSM-R50_8frames_uniform_pretrained.pdparams">Trained Model</a></td>
+</tr>
+<tr>
+<td>PP-TSMv2-LCNetV2_8frames_uniform</td>
+<td>71.71</td>
+<td>-</td>
+<td>-</td>
+<td>22.5 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_8frames_uniform.yaml">PP-TSMv2-LCNetV2_8frames_uniform.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_8frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_8frames_uniform_pretrained.pdparams">Trained Model</a></td>
+</tr>
+
+<tr>
+<td>PP-TSMv2-LCNetV2_16frames_uniform</td>
+<td>73.11</td>
+<td>-</td>
+<td>-</td>
+<td>22.5 M</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_16frames_uniform.yaml">PP-TSMv2-LCNetV2_16frames_uniform.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_16frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_16frames_uniform_pretrained.pdparams">Trained Model</a></td>
+</tr>
+
+</tbody>
+</table>
+<p><b>Note: The above accuracy metrics refer to Top-1 Accuracy on the <a href="https://github.com/PaddlePaddle/PaddleVideo/blob/develop/docs/zh-CN/dataset/k400.md">K400</a> validation set. </b></p>
+
 
 &gt;<b>Note: All GPU inference times for the above models are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
