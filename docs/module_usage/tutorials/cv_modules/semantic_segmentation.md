@@ -292,7 +292,7 @@ for res in output:
 <tr>
 <td><code>input</code></td>
 <td>待预测数据，支持多种输入类型</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
 <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
@@ -457,9 +457,9 @@ python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yam
   "analysis": {
     "histogram": "check_dataset/histogram.png"
   },
-  "dataset_path": "./dataset/seg_optic_examples",
-  "show_type": "image",
-  "dataset_type": "SegDataset"
+  &quot;dataset_path&quot;: &quot;seg_optic_examples&quot;,
+  &quot;show_type&quot;: &quot;image&quot;,
+  &quot;dataset_type&quot;: &quot;SegDataset&quot;
 }
 </code></pre>
 <p>上述校验结果中，check_pass 为 True 表示数据集格式符合要求，其他部分指标的说明如下：</p>

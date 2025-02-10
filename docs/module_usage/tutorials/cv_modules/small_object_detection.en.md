@@ -143,7 +143,7 @@ Related methods, parameters, and explanations are as follows:
 <tr>
 <td><code>input</code></td>
 <td>Data to be predicted, supporting multiple input types</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
 <li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
@@ -310,9 +310,9 @@ After executing the above command, PaddleX will validate the dataset and collect
   "analysis": {
     "histogram": "check_dataset/histogram.png"
   },
-  "dataset_path": "./dataset/example_data/small_det_examples",
-  "show_type": "image",
-  "dataset_type": "COCODetDataset"
+  &quot;dataset_path&quot;: &quot;small_det_examples&quot;,
+  &quot;show_type&quot;: &quot;image&quot;,
+  &quot;dataset_type&quot;: &quot;COCODetDataset&quot;
 }
 </code></pre>
 <p>In the above validation results, <code>check_pass</code> being <code>True</code> indicates that the dataset format meets the requirements. The explanations for other indicators are as follows:</p>
