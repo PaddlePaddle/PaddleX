@@ -366,7 +366,7 @@ for res in output:
 
 For more parameters, please refer to [General Semantic Segmentation Pipeline Usage Tutorial](../pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.en.md).
 
-1. Additionally, PaddleX offers three other deployment methods, detailed as follows:
+2. Additionally, PaddleX offers three other deployment methods, detailed as follows:
 
 * high-performance inference: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../pipeline_deploy/high_performance_inference.en.md).
 * Service-Oriented Deployment: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving cost-effective service-oriented deployment of production lines. For detailed service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../pipeline_deploy/serving.en.md).
