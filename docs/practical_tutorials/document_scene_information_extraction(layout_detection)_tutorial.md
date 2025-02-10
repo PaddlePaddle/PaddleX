@@ -23,51 +23,71 @@ PaddleX 提供了两种体验的方式，你可以在线体验文档场景信息
 
 ### 2.1 本地体验
 
-在本地使用文档场景信息抽取v3产线前，请确保您已经按照[PaddleX本地安装教程](../installation/installation.md)完成了PaddleX的wheel包安装。几行代码即可完成产线的快速推理：
+在本地使用文档场景信息抽取v3产线前，请确保您已经按照[PaddleX本地安装教程](../installation/installation.md)完成了PaddleX的wheel包安装。
+
+首先需要配置获取 `PP-ChatOCRv3-doc` 产线的配置文件，可以通过以下命令获取：
+```bash
+python -m paddlex --get_pipeline_config PP-ChatOCRv3-doc --save_path ./
+```
+
+执行上述命令后，配置文件会存储在当前路径下，打开配置文件，填写大语言模型的 ak/sk(access_token)，如下所示：
+
+```yaml
+......
+SubModules:
+  LLM_Chat:
+    module_name: chat_bot
+    model_name: ernie-3.5
+    api_type: qianfan
+    ak: "" # Your LLM API key
+    sk: ""  # Your LLM secret key
+
+  LLM_Retriever:
+    module_name: retriever
+    model_name: ernie-3.5
+    api_type: qianfan
+    ak: "" # Your LLM API key
+    sk: ""  # Your LLM secret key
+......
+```
+
+PP-ChatOCRv3 仅支持文心大模型，支持在[百度云千帆平台](https://console.bce.baidu.com/qianfan/ais/console/onlineService)或者[星河社区 AIStudio](https://aistudio.baidu.com/)上获取相关的 ak/sk(access_token)。如果使用百度云千帆平台，可以参考[AK和SK鉴权调用API流程](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8) 获取ak/sk，如果使用星河社区 AIStudio，可以在[星河社区 AIStudio 访问令牌](https://aistudio.baidu.com/account/accessToken)中获取 access_token。
+
+更新配置文件后，即可使用几行Python代码完成快速推理：
 
 
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(
-    pipeline="PP-ChatOCRv3-doc",
-    llm_name="ernie-3.5",
-    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # 使用千帆接口，请填入您的ak与sk，否则无法调用大模型
-    # llm_params={"api_type": "aistudio", "access_token": ""} # 或者使用AIStudio接口，请填入您的access_token，否则无法调用大模型
-    )
+pipeline = create_pipeline(pipeline="./PP-ChatOCRv3-doc.yaml")
 
-visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/test.jpg")
+visual_predict_res = pipeline.visual_predict(input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/test.jpg",
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+    use_common_ocr=True,
+    use_seal_recognition=True,
+    use_table_recognition=True)
 
-for res in visual_result:
-    res.save_to_img("./output")
-    res.save_to_html('./output')
-    res.save_to_xlsx('./output')
+visual_info_list = []
+for res in visual_predict_res:
+    visual_info_list.append(res["visual_info"])
+    layout_parsing_result = res["layout_parsing_result"]
+    layout_parsing_result.save_to_img("./output")
+    # layout_parsing_result.save_to_json("./output")
+    # layout_parsing_result.save_to_xlsx("./output")
+    # layout_parsing_result.save_to_html("./output")
 
-vector = pipeline.build_vector(visual_info=visual_info)
-chat_result = pipeline.chat(
-    key_list=["页眉", "表格标题"],
-    visual_info=visual_info,
-    vector=vector,
-    )
-chat_result.print()
+vector_info = pipeline.build_vector(visual_info_list, flag_save_bytes_vector=True)
+chat_result = pipeline.chat(key_list=["页眉", "表格标题"], visual_info=visual_info_list, vector_info=vector_info)
+print(chat_result)
+
 ```
-
-<b>注</b>：目前仅支持文心大模型，支持在[百度云千帆平台](https://console.bce.baidu.com/qianfan/ais/console/onlineService)或者[星河社区 AIStudio](https://aistudio.baidu.com/)上获取相关的 ak/sk(access_token)。如果使用百度云千帆平台，可以参考[AK和SK鉴权调用API流程](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8) 获取ak/sk，如果使用星河社区 AIStudio，可以在[星河社区 AIStudio 访问令牌](https://aistudio.baidu.com/account/accessToken)中获取 access_token。
 
 
 输出打印的结果如下：
 
 ```
-The result has been saved in output/tmpfnss9sq9_layout.jpg.
-The result has been saved in output/tmpfnss9sq9_ocr.jpg.
-The result has been saved in output/tmpfnss9sq9_table.jpg.
-The result has been saved in output/tmpfnss9sq9_table.jpg.
-The result has been saved in output/tmpfnss9sq9/tmpfnss9sq9.html.
-The result has been saved in output/tmpfnss9sq9/tmpfnss9sq9.html.
-The result has been saved in output/tmpfnss9sq9/tmpfnss9sq9.xlsx.
-The result has been saved in output/tmpfnss9sq9/tmpfnss9sq9.xlsx.
-
-{'chat_res': {'页眉': '未知', '表格标题': '未知'}, 'prompt': ''}
+{'chat_res': {'页眉': '未知', '表格标题': '未知'}}
 
 ```
 
@@ -91,7 +111,125 @@ The result has been saved in output/tmpfnss9sq9/tmpfnss9sq9.xlsx.
 
 ## 3. 选择模型
 
-PaddleX 提供了 4 个端到端的版面区域定位模型，具体可参考 [模型列表](../support_list/models_list.md)，其中版面区域检测模型的 benchmark 如下：
+PaddleX 提供了 11 个版面区域定位模型，具体可参考 [模型列表](../support_list/models_list.md)，其中版面区域检测模型的 benchmark 如下：
+
+* <b>版面检测模型，包含23个常见的类别：文档标题、段落标题、文本、页码、摘要、目录、参考文献、脚注、页眉、页脚、算法、公式、公式编号、图像、图表标题、表格、表格标题、印章、图表标题、图表、页眉图像、页脚图像、侧栏文本</b>
+
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>mAP(0.5)（%）</th>
+<th>GPU推理耗时（ms）</th>
+<th>CPU推理耗时 (ms)</th>
+<th>模型存储大小（M）</th>
+<th>介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-DocLayout-L</td>
+<td>90.4</td>
+<td>34.5252</td>
+<td>1454.27</td>
+<td>123.76 M</td>
+<td>基于RT-DETR-L在包含中英文论文、杂志、合同、书本、试卷和研报等场景的自建数据集训练的高精度版面区域定位模型</td>
+</tr>
+<tr>
+<td>PP-DocLayout-M</td>
+<td>75.2</td>
+<td>15.9</td>
+<td>160.1</td>
+<td>22.578</td>
+<td>基于PicoDet-L在包含中英文论文、杂志、合同、书本、试卷和研报等场景的自建数据集训练的精度效率平衡的版面区域定位模型</td>
+</tr>
+<tr>
+<td>PP-DocLayout-S</td>
+<td>70.9</td>
+<td>13.8</td>
+<td>46.7</td>
+<td>4.834</td>
+<td>基于PicoDet-S在中英文论文、杂志、合同、书本、试卷和研报等场景上自建数据集训练的高效率版面区域定位模型</td>
+</tr>
+</tbody>
+</table>
+
+<b>注：以上精度指标的评估集是 PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志、合同、书本、试卷和研报等常见的 500 张文档类型图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
+
+
+> ❗ 以上列出的是版面检测模块重点支持的<b>3个核心模型</b>，该模块总共支持<b>11个全量模型</b>，包含多个预定义了不同类别的模型，完整的模型列表如下：
+
+<details><summary> 👉模型列表详情</summary>
+
+* <b>表格版面检测模型</b>
+
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>mAP(0.5)（%）</th>
+<th>GPU推理耗时（ms）</th>
+<th>CPU推理耗时 (ms)</th>
+<th>模型存储大小（M）</th>
+<th>介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PicoDet_layout_1x_table</td>
+<td>97.5</td>
+<td>12.623</td>
+<td>90.8934</td>
+<td>7.4 M</td>
+<td>基于PicoDet-1x在自建数据集训练的高效率版面区域定位模型，可定位表格这1类区域</td>
+</tr>
+</table>
+
+<b>注：以上精度指标的评估集是 PaddleOCR 自建的版面表格区域检测数据集，包含中英文 7835 张带有表格的论文文档类型图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
+
+* <b>3类版面检测模型，包含表格、图像、印章</b>
+
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>mAP(0.5)（%）</th>
+<th>GPU推理耗时（ms）</th>
+<th>CPU推理耗时 (ms)</th>
+<th>模型存储大小（M）</th>
+<th>介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PicoDet-S_layout_3cls</td>
+<td>88.2</td>
+<td>13.5</td>
+<td>45.8</td>
+<td>4.8</td>
+<td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型</td>
+</tr>
+<tr>
+<td>PicoDet-L_layout_3cls</td>
+<td>89.0</td>
+<td>15.7</td>
+<td>159.8</td>
+<td>22.6</td>
+<td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的效率精度均衡版面区域定位模型</td>
+</tr>
+<tr>
+<td>RT-DETR-H_layout_3cls</td>
+<td>95.8</td>
+<td>114.6</td>
+<td>3832.6</td>
+<td>470.1</td>
+<td>基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型</td>
+</tr>
+</table>
+
+<b>注：以上精度指标的评估集是 PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志和研报等常见的 1154 张文档类型图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
+
+* <b>5类英文文档区域检测模型，包含文字、标题、表格、图片以及列表</b>
 
 <table>
 <thead>
@@ -107,72 +245,63 @@ PaddleX 提供了 4 个端到端的版面区域定位模型，具体可参考 [�
 <tbody>
 <tr>
 <td>PicoDet_layout_1x</td>
-<td>86.8</td>
+<td>97.8</td>
 <td>13.0</td>
 <td>91.3</td>
 <td>7.4</td>
-<td>基于PicoDet-1x在PubLayNet数据集训练的高效率版面区域定位模型，可定位包含文字、标题、表格、图片以及列表这5类区域</td>
+<td>基于PicoDet-1x在PubLayNet数据集训练的高效率英文文档版面区域定位模型</td>
 </tr>
+</table>
+
+<b>注：以上精度指标的评估集是 [PubLayNet](https://developer.ibm.com/exchanges/data/all/publaynet/) 的评估数据集，包含英文文档的 11245 张文图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
+
+* <b>17类区域检测模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</b>
+
+<table>
+<thead>
 <tr>
-<td>PicoDet_layout_1x_table</td>
-<td>95.7</td>
-<td>12.623</td>
-<td>90.8934</td>
-<td>7.4 M</td>
-<td>基于PicoDet-1x在自建数据集训练的高效率版面区域定位模型，可定位包含表格1个类别</td>
+<th>模型</th>
+<th>mAP(0.5)（%）</th>
+<th>GPU推理耗时（ms）</th>
+<th>CPU推理耗时 (ms)</th>
+<th>模型存储大小（M）</th>
+<th>介绍</th>
 </tr>
-<tr>
-<td>PicoDet-S_layout_3cls</td>
-<td>87.1</td>
-<td>13.5</td>
-<td>45.8</td>
-<td>4.8</td>
-<td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含3个类别：表格，图像和印章</td>
-</tr>
+</thead>
+<tbody>
 <tr>
 <td>PicoDet-S_layout_17cls</td>
-<td>70.3</td>
+<td>87.4</td>
 <td>13.6</td>
 <td>46.2</td>
 <td>4.8</td>
-<td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</td>
+<td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型</td>
 </tr>
-<tr>
-<td>PicoDet-L_layout_3cls</td>
-<td>89.3</td>
-<td>15.7</td>
-<td>159.8</td>
-<td>22.6</td>
-<td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含3个类别：表格，图像和印章</td>
-</tr>
+
 <tr>
 <td>PicoDet-L_layout_17cls</td>
-<td>79.9</td>
+<td>89.0</td>
 <td>17.2</td>
 <td>160.2</td>
 <td>22.6</td>
-<td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</td>
+<td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的效率精度均衡版面区域定位模型</td>
 </tr>
-<tr>
-<td>RT-DETR-H_layout_3cls</td>
-<td>95.9</td>
-<td>114.6</td>
-<td>3832.6</td>
-<td>470.1</td>
-<td>基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型，包含3个类别：表格，图像和印章</td>
-</tr>
+
 <tr>
 <td>RT-DETR-H_layout_17cls</td>
-<td>92.6</td>
+<td>98.3</td>
 <td>115.1</td>
 <td>3827.2</td>
 <td>470.2</td>
-<td>基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</td>
+<td>基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型</td>
 </tr>
 </tbody>
 </table>
-<b>注：以上精度指标的评估集是 PaddleOCR 自建的版面区域分析数据集，包含中英文论文、杂志和研报等常见的 1w 张文档类型图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
 
+
+<b>注：以上精度指标的评估集是 PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志和研报等常见的 892 张文档类型图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
+
+</details>
 
 ## 4. 数据准备和校验
 ### 4.1 数据准备
@@ -191,7 +320,7 @@ tar -xf ./dataset/paperlayout.tar -C ./dataset/
 在对数据集校验时，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/layout_detection/RT-DETR-H_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/RT-DETR-H_layout_3cls.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/paperlayout/
 ```
@@ -233,7 +362,7 @@ python main.py -c paddlex/configs/layout_detection/RT-DETR-H_layout_3cls.yaml \
   "analysis": {
     "histogram": "check_dataset\/histogram.png"
   },
-  "dataset_path": ".\/dataset\/paperlayout\/",
+  "dataset_path": "paperlayout",
   "show_type": "image",
   "dataset_type": "COCODetDataset"
 }
@@ -278,7 +407,7 @@ python main.py -c paddlex/configs/layout_detection/RT-DETR-H_layout_3cls.yaml \
 在训练之前，请确保您已经对数据集进行了校验。完成 PaddleX 模型的训练，只需如下一条命令：
 
 ```bash
-python main.py -c paddlex/configs/layout_detection/RT-DETR-H_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/RT-DETR-H_layout_3cls.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/paperlayout \
     -o Train.num_classes=4
@@ -317,7 +446,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/layout_detection/RT-DETR-H_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/RT-DETR-H_layout_3cls.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/paperlayout
 ```
@@ -412,7 +541,7 @@ python main.py -c paddlex/configs/layout_detection/RT-DETR-H_layout_3cls.yaml \
 调整不同参数执行训练的命令可以参考：
 
 ```bash
-python main.py -c paddlex/configs/layout_detection/RT-DETR-H_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/RT-DETR-H_layout_3cls.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/paperlayout \
     -o Train.num_classes=4 \
@@ -426,7 +555,7 @@ python main.py -c paddlex/configs/layout_detection/RT-DETR-H_layout_3cls.yaml \
 可以将微调后的单模型进行测试，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/test.jpg)，进行预测：
 
 ```bash
-python main.py -c paddlex/configs/layout_detection/RT-DETR-H_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/RT-DETR-H_layout_3cls.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="output/best_model/inference" \
     -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/test.jpg"
@@ -447,22 +576,16 @@ python main.py -c paddlex/configs/layout_detection/RT-DETR-H_layout_3cls.yaml \
 paddlex --get_pipeline_config PP-ChatOCRv3-doc --save_path ./my_path
 ```
 
-将`PP-ChatOCRv3-doc.yaml`中的`Pipeline.layout_model`字段修改为上面微调后的模型路径，修改后配置如下：
+参考2.1 填写大语言模型的 ak/sk(access_token)， 同时将`PP-ChatOCRv3-doc.yaml`中的`LayoutDetection.model_dir`字段修改为上面微调后的模型路径，修改后版面模型部分的配置如下：
 
 ```yaml
-Pipeline:
-  layout_model: ./output/best_model/inference
-  table_model: SLANet_plus
-  text_det_model: PP-OCRv4_server_det
-  text_rec_model: PP-OCRv4_server_rec
-  seal_text_det_model: PP-OCRv4_server_seal_det
-  doc_image_ori_cls_model: null
-  doc_image_unwarp_model: null
-  llm_name: "ernie-3.5"
-  llm_params:
-    api_type: qianfan
-    ak:
-    sk:
+......
+    SubModules:
+      LayoutDetection:
+        module_name: layout_detection
+        model_name: RT-DETR-H_layout_3cls
+        model_dir: output/best_model/inference
+......
 ```
 
 修改后，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可应用配置。
@@ -470,34 +593,31 @@ Pipeline:
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(
-    pipeline="./my_path/PP-ChatOCRv3-doc.yaml",
-    llm_name="ernie-3.5",
-    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # 请填入您的ak与sk，否则无法调用大模型
-    # llm_params={"api_type": "aistudio", "access_token": ""} # 或者使用AIStudio接口，请填入您的access_token，否则无法调用大模型
-    )
+pipeline = create_pipeline(pipeline="./my_path/PP-ChatOCRv3-doc.yaml")
 
-visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/test.jpg")
+visual_predict_res = pipeline.visual_predict(input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/test.jpg",
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+    use_common_ocr=True,
+    use_seal_recognition=True,
+    use_table_recognition=True)
 
-for res in visual_result:
-    res.save_to_img("./output_ft")
-    res.save_to_html('./output_ft')
-    res.save_to_xlsx('./output_ft')
+visual_info_list = []
+for res in visual_predict_res:
+    visual_info_list.append(res["visual_info"])
+    layout_parsing_result = res["layout_parsing_result"]
+    layout_parsing_result.save_to_img("./output_ft")
 
-vector = pipeline.build_vector(visual_info=visual_info)
-chat_result = pipeline.chat(
-    key_list=["页眉", "表格标题"],
-    visual_info=visual_info,
-    vector=vector,
-    )
-chat_result.print()
+vector_info = pipeline.build_vector(visual_info_list, flag_save_bytes_vector=True)
+chat_result = pipeline.chat(key_list=["页眉", "表格标题"], visual_info=visual_info_list, vector_info=vector_info)
+print(chat_result)
 ```
 
 通过上述可在`./output_ft`下生成预测结果，打印的关键信息抽取结果：
 
 
 ```
-{'chat_res': {'页眉': '第43卷\n 航空发动机\n 44', '表格标题': '表1模拟来流Ma=5飞行的空气加热器工作参数'}, 'prompt': ''}
+{'chat_res': {'页眉': '第43卷\n 航空发动机\n 44', '表格标题': '表1模拟来流Ma=5飞行的空气加热器工作参数'}}
 ```
 
 可以发现，在模型微调之后，关键信息已经被正确的提取出来。
@@ -516,27 +636,23 @@ chat_result.print()
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(
-    pipeline="./my_path/PP-ChatOCRv3-doc.yaml",
-    llm_name="ernie-3.5",
-    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # 请填入您的ak与sk，否则无法调用大模型
-    # llm_params={"api_type": "aistudio", "access_token": ""} # 或者使用AIStudio接口，请填入您的access_token，否则无法调用大模型
-    )
+pipeline = create_pipeline(pipeline="./my_path/PP-ChatOCRv3-doc.yaml")
 
-visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/test.jpg")
+visual_predict_res = pipeline.visual_predict(input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_layout/test.jpg",
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+    use_common_ocr=True,
+    use_seal_recognition=True,
+    use_table_recognition=True)
 
-for res in visual_result:
-    res.save_to_img("./output")
-    res.save_to_html('./output')
-    res.save_to_xlsx('./output')
+visual_info_list = []
+for res in visual_predict_res:
+    visual_info_list.append(res["visual_info"])
+    layout_parsing_result = res["layout_parsing_result"]
 
-vector = pipeline.build_vector(visual_info=visual_info)
-chat_result = pipeline.chat(
-    key_list=["页眉", "表格标题"],
-    visual_info=visual_info,
-    vector=vector,
-    )
-chat_result.print()
+vector_info = pipeline.build_vector(visual_info_list, flag_save_bytes_vector=True)
+chat_result = pipeline.chat(key_list=["页眉", "表格标题"], visual_info=visual_info_list, vector_info=vector_info)
+
 ```
 
 更多参数请参考 [文档场景信息抽取v3产线使用教程](../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md)。
