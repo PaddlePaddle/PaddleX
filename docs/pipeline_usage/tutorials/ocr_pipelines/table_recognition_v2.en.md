@@ -9,19 +9,16 @@ Table recognition is a technology that automatically identifies and extracts tab
 
 The General Table Recognition Pipeline v2 is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. Unlike the General Table Recognition Pipeline, this pipeline introduces two additional modules: table classification and table cell detection, which are linked with the table structure recognition module to complete the table recognition task. This pipeline can achieve accurate table predictions and is applicable in various fields such as general, manufacturing, finance, and transportation. It also provides flexible service deployment options, supporting multiple programming languages on various hardware. Additionally, it offers secondary development capabilities, allowing you to train and fine-tune models on your own dataset, with seamless integration of the trained models.
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/01.png">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/01.png"/>
 <b>The General Table Recognition Pipeline v2 includes mandatory modules such as table structure recognition, table classification, table cell localization, text detection, and text recognition, as well as optional modules like layout area detection, document image orientation classification, and text image correction.</b>
-
 <b>If you prioritize model accuracy, choose a model with higher accuracy; if you care more about inference speed, choose a model with faster inference speed; if you are concerned about model storage size, choose a model with a smaller storage size.</b>
-
 <p><b>Table Recognition Module Models:</b></p>
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Accuracy (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Description</th>
 </tr>
@@ -44,14 +41,13 @@ The General Table Recognition Pipeline v2 is designed to solve table recognition
 </tr>
 </table>
 <b>Note: The above accuracy metrics are measured from the high-difficulty Chinese table recognition dataset internally built by PaddleX. The GPU inference time for all models is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b>
-
 <p><b>Table Classification Module Models:</b></p>
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top1 Acc(%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 </tr>
 <tr>
@@ -63,14 +59,13 @@ The General Table Recognition Pipeline v2 is designed to solve table recognition
 </tr>
 </table>
 <p><b>Note: The above accuracy metrics are measured on PaddleX's internally built table classification dataset. All model GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision, and CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
-
 <p><b>Table Cell Detection Module Models:</b></p>
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Description</th>
 </tr>
@@ -89,15 +84,14 @@ The General Table Recognition Pipeline v2 is designed to solve table recognition
 </tr>
 </table>
 <p><b>Note: The above accuracy metrics are measured on PaddleX's internally built table cell detection dataset. All model GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision, and CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
-
 <p><b>Text Detection Module Models:</b></p>
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Detection Hmean (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -106,46 +100,45 @@ The General Table Recognition Pipeline v2 is designed to solve table recognition
 <tr>
 <td>PP-OCRv4_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-OCRv4_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">Training Model</a></td>
 <td>82.69</td>
-<td>83.3501</td>
-<td>2434.01</td>
+<td>83.34 / 80.91</td>
+<td>442.58 / 442.58</td>
 <td>109</td>
 <td>The server-side text detection model of PP-OCRv4, with higher accuracy, suitable for deployment on high-performance servers.</td>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-OCRv4_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">Training Model</a></td>
 <td>77.79</td>
-<td>10.6923</td>
-<td>120.177</td>
+<td>8.79 / 3.13</td>
+<td>51.00 / 28.58</td>
 <td>4.7</td>
 <td>The mobile text detection model of PP-OCRv4, with higher efficiency, suitable for deployment on edge devices.</td>
 </tr>
 </tbody>
 </table>
 <p><b>Note: The evaluation set for the above accuracy metrics is a self-built Chinese dataset by PaddleOCR, covering multiple scenarios such as street view, web images, documents, and handwriting, with 500 images for detection. All models' GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
-
 <p><b>Text Recognition Module Models:</b></p>
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy(%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Training Model</a></td>
 <td>78.20</td>
-<td>7.95018</td>
-<td>46.7868</td>
+<td>4.82 / 4.82</td>
+<td>16.74 / 4.64</td>
 <td>10.6 M</td>
 <td rowspan="2">PP-OCRv4 is the next version of the self-developed text recognition model PP-OCRv3 by Baidu PaddlePaddle Vision Team. By introducing data augmentation schemes and GTC-NRTR guidance branches, it further improves text recognition accuracy without changing the model inference speed. This model provides both server and mobile versions to meet industrial needs in different scenarios.</td>
 </tr>
 <tr>
 <td>PP-OCRv4_server_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Training Model</a></td>
 <td>79.20</td>
-<td>7.19439</td>
-<td>140.179</td>
+<td>6.58 / 6.58</td>
+<td>33.17 / 33.17</td>
 <td>71.2 M</td>
 </tr>
 </table>
@@ -154,16 +147,16 @@ The General Table Recognition Pipeline v2 is designed to solve table recognition
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy(%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
 <tr>
 <td>ch_SVTRv2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/ch_SVTRv2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">Training Model</a></td>
 <td>68.81</td>
-<td>8.36801</td>
-<td>165.706</td>
+<td>8.08 / 8.08</td>
+<td>50.17 / 42.50</td>
 <td>73.9 M</td>
 <td rowspan="1">
 SVTRv2 is a server-side text recognition model developed by the OpenOCR team from Fudan University's Vision and Learning Laboratory (FVL). It won the first prize in the PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task, with a 6% improvement in end-to-end recognition accuracy compared to PP-OCRv4.
@@ -175,30 +168,29 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy(%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
 <tr>
 <td>ch_RepSVTR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/ch_RepSVTR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">Training Model</a></td>
 <td>65.07</td>
-<td>10.5047</td>
-<td>51.5647</td>
+<td>5.93 / 5.93</td>
+<td>20.73 / 7.32</td>
 <td>22.1 M</td>
 <td rowspan="1">RepSVTR is a mobile text recognition model based on SVTRv2. It won the first prize in the PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task, with a 2.5% improvement in end-to-end recognition accuracy compared to PP-OCRv4 and comparable inference speed.</td>
 </tr>
 </table>
 <p><b>Note: The evaluation set for the above accuracy metrics is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a> leaderboard B. All models' GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
-
 <p><b>Layout Region Detection Module Models (Optional):</b></p>
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Description</th>
 </tr>
@@ -230,89 +222,83 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </tr>
 </tbody>
 </table>
-
 <b>Note: The evaluation dataset for the above accuracy metrics is the layout region detection dataset built by PaddleOCR, containing 500 common document-type images of Chinese and English papers, magazines, contracts, books, exams, and research reports. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b>
 
 > ❗ The above list includes the <b>3 core models</b> that are the focus of the layout detection module. The module supports a total of <b>11 full models</b>, including multiple predefined models with different categories. The complete list of models is as follows:
 
 * <b>Table Layout Detection Models</b>
-
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>PicoDet_layout_1x_table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet_layout_1x_table_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">Training Model</a></td> 
+<td>PicoDet_layout_1x_table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet_layout_1x_table_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">Training Model</a></td>
 <td>97.5</td>
-<td>12.623</td>
-<td>90.8934</td>
+<td>8.02 / 3.09</td>
+<td>23.70 / 20.41</td>
 <td>7.4 M</td>
 <td>A high-efficiency layout region localization model trained on a self-built dataset using PicoDet-1x, capable of locating 1 type of region: tables</td>
 </tr>
-</table>
-
+</tbody></table>
 <b>Note: The evaluation dataset for the above accuracy metrics is the layout table region detection dataset built by PaddleOCR, containing 7,835 document-type images of Chinese and English papers with tables. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b>
 
 * <b>3-category layout detection model, including tables, images, and seals</b>
-
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-</tr>
+
 <tr>
-<td>PicoDet-S_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet-S_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">Training Model</a></td> 
+<td>PicoDet-S_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet-S_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">Training Model</a></td>
 <td>88.2</td>
-<td>13.5</td>
-<td>45.8</td>
+<td>8.99 / 2.22</td>
+<td>16.11 / 8.73</td>
 <td>4.8</td>
 <td>A high-efficiency layout region localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using the lightweight PicoDet-S model</td>
 </tr>
 <tr>
-<td>PicoDet-L_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet-L_layout_3cls_infer.tar">Inference Model</a>/<a  href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">Training Model</a></td> 
+<td>PicoDet-L_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet-L_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">Training Model</a></td>
 <td>89.0</td>
-<td>15.7</td>
-<td>159.8</td>
+<td>13.05 / 4.50</td>
+<td>41.30 / 41.30</td>
 <td>22.6</td>
 <td>A layout region localization model with balanced efficiency and accuracy, trained on a self-built dataset of Chinese and English papers, magazines, and research reports using PicoDet-L</td>
 </tr>
 <tr>
-<td>RT-DETR-H_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/RT-DETR-H_layout_3cls_infer.tar">Inference Model</a>/<a  href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">Training Model</a></td> 
+<td>RT-DETR-H_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/RT-DETR-H_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">Training Model</a></td>
 <td>95.8</td>
-<td>114.6</td>
-<td>3832.6</td>
+<td>114.93 / 27.71</td>
+<td>947.56 / 947.56</td>
 <td>470.1</td>
 <td>A high-precision layout region localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using RT-DETR-H</td>
 </tr>
-</table>
-
+</tbody></table>
 <b>Note: The evaluation dataset for the above accuracy metrics is the layout region detection dataset built by PaddleOCR, containing 1,154 common document-type images of Chinese and English papers, magazines, and research reports. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b>
 
 * <b>5-category English document region detection model, including text, title, table, image, and list</b>
-
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
@@ -321,24 +307,22 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <tr>
 <td>PicoDet_layout_1x</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">Training Model</a></td>
 <td>97.8</td>
-<td>13.0</td>
-<td>91.3</td>
+<td>9.03 / 3.10</td>
+<td>25.82 / 20.70</td>
 <td>7.4</td>
 <td>A high-efficiency English document layout region localization model trained on the PubLayNet dataset using PicoDet-1x</td>
 </tr>
-</table>
-
+</tbody></table>
 <b>Note: The evaluation dataset for the above accuracy metrics is the [PubLayNet](https://developer.ibm.com/exchanges/data/all/publaynet/) evaluation dataset, containing 11,245 images of English documents. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b>
 
 * <b>17-category region detection model, including 17 common layout categories: paragraph title, image, text, number, abstract, content, figure title, formula, table, table title, reference, document title, footnote, header, algorithm, footer, seal</b>
-
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
@@ -347,32 +331,30 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <tr>
 <td>PicoDet-S_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">Training Model</a></td>
 <td>87.4</td>
-<td>13.6</td>
-<td>46.2</td>
+<td>9.11 / 2.12</td>
+<td>15.42 / 9.12</td>
 <td>4.8</td>
 <td>A high-efficiency layout region localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using the lightweight PicoDet-S model</td>
 </tr>
-
 <tr>
 <td>PicoDet-L_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">Training Model</a></td>
 <td>89.0</td>
-<td>17.2</td>
-<td>160.2</td>
+<td>13.50 / 4.69</td>
+<td>43.32 / 43.32</td>
 <td>22.6</td>
 <td>A layout region localization model with balanced efficiency and accuracy, trained on a self-built dataset of Chinese and English papers, magazines, and research reports using PicoDet-L</td>
 </tr>
 <tr>
-<td>RT-DETR-H_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/RT-DETR-H_layout_17cls_infer.tar">Inference Model</a>/<a  href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">Training Model</a></td> 
+<td>RT-DETR-H_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/RT-DETR-H_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">Training Model</a></td>
 <td>98.3</td>
-<td>115.1</td>
-<td>3827.2</td>
+<td>115.29 / 104.09</td>
+<td>995.27 / 995.27</td>
 <td>470.2</td>
 <td>A high-precision layout region localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using RT-DETR-H</td>
 </tr>
 </tbody>
 </table>
 <p><b>Note: The evaluation dataset for the above accuracy metrics is the layout region detection dataset built by PaddleOCR, containing 892 common document-type images of Chinese and English papers, magazines, and research reports. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
-
 <p><b>Text Image Correction Module Model (Optional):</b></p>
 <table>
 <thead>
@@ -393,15 +375,14 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </tbody>
 </table>
 <p><b>The accuracy metrics of the model are measured from the <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet benchmark</a>.</b></p>
-
 <p><b>Document Image Orientation Classification Module Model (Optional):</b></p>
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top-1 Acc (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Description</th>
 </tr>
@@ -410,8 +391,8 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <tr>
 <td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PP-LCNet_x1_0_doc_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Training Model</a></td>
 <td>99.06</td>
-<td>3.84845</td>
-<td>9.23735</td>
+<td>2.31 / 0.43</td>
+<td>3.37 / 1.27</td>
 <td>7</td>
 <td>Document image classification model based on PP-LCNet_x1_0, containing four categories: 0 degrees, 90 degrees, 180 degrees, 270 degrees</td>
 </tr>
@@ -419,7 +400,6 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </table>
 <p><b>Note: The accuracy metrics above are evaluated on a self-built dataset covering multiple scenarios such as documents and certificates, including 1000 images. GPU inference time is based on NVIDIA Tesla T4 machines with FP32 precision, and CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
 
-</details>
 
 ## 2. Quick Start
 All model production lines provided by PaddleX can be quickly experienced. You can use the command line or Python locally to experience the effect of the general table recognition production line v2.
@@ -582,7 +562,7 @@ The explanation of the running result parameters can refer to the result interpr
 </details>
 
 The visualization results are saved under `save_path`, where the visualization result of table recognition is as follows:
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/03.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/03.png"/>
 
 ### 2.2 Python Script Integration
 * The above command line is for a quick experience to view the effect. Generally, in a project, integration through code is often required. You can complete the pipeline's fast inference with just a few lines of code. The inference code is as follows:
@@ -665,9 +645,9 @@ In the above Python script, the following steps are executed:
 <td><code>Python Var|str|list</code></td>
 <td>
 <ul>
-  <li><b>Python Var</b>: Such as <code>numpy.ndarray</code> representing image data</li>
-  <li><b>str</b>: Such as the local path of an image file or PDF file: <code>/root/data/img.jpg</code>; <b>such as URL link</b>, such as the network URL of an image file or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">Example</a>; <b>such as local directory</b>, the directory must contain the images to be predicted, such as the local path: <code>/root/data/</code> (currently does not support prediction of PDF files in the directory, PDF files need to be specified to a specific file path)</li> 
-  <li><b>List</b>: The list elements must be the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
+<li><b>Python Var</b>: Such as <code>numpy.ndarray</code> representing image data</li>
+<li><b>str</b>: Such as the local path of an image file or PDF file: <code>/root/data/img.jpg</code>; <b>such as URL link</b>, such as the network URL of an image file or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">Example</a>; <b>such as local directory</b>, the directory must contain the images to be predicted, such as the local path: <code>/root/data/</code> (currently does not support prediction of PDF files in the directory, PDF files need to be specified to a specific file path)</li>
+<li><b>List</b>: The list elements must be the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -678,13 +658,13 @@ In the above Python script, the following steps are executed:
 <td><code>str|None</code></td>
 <td>
 <ul>
-  <li><b>CPU</b>: Such as <code>cpu</code> indicating using CPU for inference;</li>
-  <li><b>GPU</b>: Such as <code>gpu:0</code> indicating using the 1st GPU for inference;</li>
-  <li><b>NPU</b>: Such as <code>npu:0</code> indicating using the 1st NPU for inference;</li>
-  <li><b>XPU</b>: Such as <code>xpu:0</code> indicating using the 1st XPU for inference;</li>
-  <li><b>MLU</b>: Such as <code>mlu:0</code> indicating using the 1st MLU for inference;</li>
-  <li><b>DCU</b>: Such as <code>dcu:0</code> indicating using the 1st DCU for inference;</li>
-  <li><b>None</b>: If set to <code>None</code>, it will default to using the parameter value initialized by the pipeline. During initialization, it will preferentially use the local GPU 0 device, if not available, it will use the CPU device;</li>
+<li><b>CPU</b>: Such as <code>cpu</code> indicating using CPU for inference;</li>
+<li><b>GPU</b>: Such as <code>gpu:0</code> indicating using the 1st GPU for inference;</li>
+<li><b>NPU</b>: Such as <code>npu:0</code> indicating using the 1st NPU for inference;</li>
+<li><b>XPU</b>: Such as <code>xpu:0</code> indicating using the 1st XPU for inference;</li>
+<li><b>MLU</b>: Such as <code>mlu:0</code> indicating using the 1st MLU for inference;</li>
+<li><b>DCU</b>: Such as <code>dcu:0</code> indicating using the 1st DCU for inference;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to using the parameter value initialized by the pipeline. During initialization, it will preferentially use the local GPU 0 device, if not available, it will use the CPU device;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -695,8 +675,8 @@ In the above Python script, the following steps are executed:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-  <li><b>None</b>: If set to <code>None</code>, it will default to using the parameter value initialized by the pipeline, initialized to <code>True</code>;</li>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to using the parameter value initialized by the pipeline, initialized to <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -707,8 +687,8 @@ In the above Python script, the following steps are executed:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-  <li><b>None</b>: If set to <code>None</code>, it will default to using the parameter value initialized by the pipeline, initialized to <code>True</code>;</li>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to using the parameter value initialized by the pipeline, initialized to <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -718,69 +698,68 @@ In the above Python script, the following steps are executed:
 <td><code>int|None</code></td>
 <td>
 <ul>
-  <li><b>int</b>: Any integer greater than <code>0</code>;</li>
-  <li><b>None</b>: If set to <code>None</code>, it will default to using the parameter value initialized by the pipeline, initialized to <code>960</code>;</li>
+<li><b>int</b>: Any integer greater than <code>0</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to using the parameter value initialized by the pipeline, initialized to <code>960</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
-</tr>
+
 <td><code>text_det_limit_type</code></td>
 <td>Image side length limit type for text detection</td>
 <td><code>str|None</code></td>
 <td>
 <ul>
-  <li><b>str</b>: Supports <code>min</code> and <code>max</code>, <code>min</code> indicates ensuring the shortest side of the image is not less than <code>det_limit_side_len</code>, <code>max</code> indicates ensuring the longest side of the image is not greater than <code>limit_side_len</code></li>
-  <li><b>None</b>: If set to <code>None</code>, it will default to using the parameter value initialized by the pipeline, initialized to <code>max</code>;</li>
+<li><b>str</b>: Supports <code>min</code> and <code>max</code>, <code>min</code> indicates ensuring the shortest side of the image is not less than <code>det_limit_side_len</code>, <code>max</code> indicates ensuring the longest side of the image is not greater than <code>limit_side_len</code></li>
+<li><b>None</b>: If set to <code>None</code>, it will default to using the parameter value initialized by the pipeline, initialized to <code>max</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
-</tr>
+
 <td><code>text_det_thresh</code></td>
 <td>Detection pixel threshold, only pixels with scores greater than this threshold in the output probability map will be considered as text pixels</td>
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>: Any floating-point number greater than <code>0</code></li>
-    <li><b>None</b>: If set to <code>None</code>, it will default to using the parameter value initialized by the pipeline <code>0.3</code></li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, it will default to using the parameter value initialized by the pipeline <code>0.3</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
-</tr>
+
 <td><code>text_det_box_thresh</code></td>
 <td>Detection box threshold, the result will be considered as a text region if the average score of all pixels within the detection box is greater than this threshold</td>
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>: Any floating-point number greater than <code>0</code></li>
-    <li><b>None</b>: If set to <code>None</code>, it will default to using the parameter value initialized by the pipeline <code>0.6</code></li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, it will default to using the parameter value initialized by the pipeline <code>0.6</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
-</tr>
+
 <td><code>text_det_unclip_ratio</code></td>
 <td>Text detection expansion ratio, this method is used to expand the text region, the larger the value, the larger the expanded area</td>
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>: Any floating-point number greater than <code>0</code></li>
-    <li><b>None</b>: If set to <code>None</code>, it will default to using the parameter value initialized by the pipeline <code>2.0</code></li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, it will default to using the parameter value initialized by the pipeline <code>2.0</code></li>
 </ul>
-</ul>
+
 </td>
 <td><code>None</code></td>
-</tr>
+
 <td><code>text_rec_score_thresh</code></td>
 <td>Text recognition threshold, text results with scores greater than this threshold will be retained</td>
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>: Any floating-point number greater than <code>0</code></li>
-    <li><b>None</b>: If set to <code>None</code>, it will default to using the parameter value initialized by the pipeline <code>0.0</code>, meaning no threshold</li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, it will default to using the parameter value initialized by the pipeline <code>0.0</code>, meaning no threshold</li>
 </ul>
-</ul>
+
 </td>
 <td><code>None</code></td>
-</tr>
 
 <tr>
 <td><code>use_layout_detection</code></td>
@@ -788,8 +767,8 @@ In the above Python script, the following steps are executed:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>;</li>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -800,9 +779,9 @@ In the above Python script, the following steps are executed:
 <td><code>float|dict|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>: Any floating-point number greater than <code>0</code></li>
-    <li><b>dict</b>: Key is an integer category ID, value is any floating-point number greater than <code>0</code></li>
-    <li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>0.5</code></li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>dict</b>: Key is an integer category ID, value is any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>0.5</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -813,8 +792,8 @@ In the above Python script, the following steps are executed:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>;</li>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -825,9 +804,9 @@ In the above Python script, the following steps are executed:
 <td><code>float|list|None</code></td>
 <td>
 <ul>
-  <li><b>float</b>: A floating-point number greater than 0, e.g., 1.1, indicating that the center of the detection box remains unchanged, and both the width and height are scaled by 1.1 times</li>
-  <li><b>list</b>: e.g., [1.2, 1.5], indicating that the center of the detection box remains unchanged, the width is scaled by 1.2 times, and the height is scaled by 1.5 times</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as 1.0</li>
+<li><b>float</b>: A floating-point number greater than 0, e.g., 1.1, indicating that the center of the detection box remains unchanged, and both the width and height are scaled by 1.1 times</li>
+<li><b>list</b>: e.g., [1.2, 1.5], indicating that the center of the detection box remains unchanged, the width is scaled by 1.2 times, and the height is scaled by 1.5 times</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as 1.0</li>
 </ul>
 </td>
 <tr>
@@ -836,16 +815,15 @@ In the above Python script, the following steps are executed:
 <td><code>string|None</code></td>
 <td>
 <ul>
-  <li><b>large</b>: When set to large, only the outermost box will be retained for overlapping detection boxes, and the inner overlapping boxes will be removed.</li>
-  <li><b>small</b>: When set to small, only the innermost boxes will be retained for overlapping detection boxes, and the outer overlapping boxes will be removed.</li>
-  <li><b>union</b>: No filtering of boxes will be performed; both inner and outer boxes will be retained.</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>large</code></li>
+<li><b>large</b>: When set to large, only the outermost box will be retained for overlapping detection boxes, and the inner overlapping boxes will be removed.</li>
+<li><b>small</b>: When set to small, only the innermost boxes will be retained for overlapping detection boxes, and the outer overlapping boxes will be removed.</li>
+<li><b>union</b>: No filtering of boxes will be performed; both inner and outer boxes will be retained.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>large</code></li>
 </ul>
 </td>
 <td>None</td>
 </tr>
-
-</table>
+</tr></table>
 
 (3) Process the prediction results. The prediction result for each sample is of type `dict`, and supports operations such as printing, saving as an image, saving as an `xlsx` file, saving as an `HTML` file, and saving as a `json` file:
 
@@ -989,12 +967,12 @@ In the above Python script, the following steps are executed:
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">Get the predicted <code>json</code> format result</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the predicted <code>json</code> format result</td>
 </tr>
 <tr>
-<td rowspan = "2"><code>img</code></td>
-<td rowspan = "2">Get the visualized image in <code>dict</code> format</td>
+<td rowspan="2"><code>img</code></td>
+<td rowspan="2">Get the visualized image in <code>dict</code> format</td>
 </tr>
 </table>
 
@@ -1045,7 +1023,6 @@ In addition, PaddleX also provides three other deployment methods, detailed as f
 Below are the API references and multi-language service call examples for basic service deployment:
 
 <details><summary>API Reference</summary>
-
 <p>For the main operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
@@ -1218,12 +1195,9 @@ Below are the API references and multi-language service call examples for basic 
 </tr>
 </tbody>
 </table></details>
-
 <details><summary>Multi-Language Service Invocation Examples</summary>
-
 <details>
 <summary>Python</summary>
-
 <pre><code class="language-python">import base64
 import requests
 
@@ -1264,55 +1238,55 @@ If the default model weights provided by the General Table Recognition Productio
 Since the General Table Recognition Production Line v2 consists of several modules, if the overall performance is not satisfactory, the issue may lie in any one of these modules. You can analyze the images with poor recognition results to identify which module is problematic and refer to the corresponding fine-tuning tutorial links in the table below.
 
 <table>
-  <thead>
-    <tr>
-      <th>Scenario</th>
-      <th>Fine-Tuning Module</th>
-      <th>Fine-Tuning Reference Link</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Table classification errors</td>
-      <td>Table Classification Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/table_classification.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Table cell localization errors</td>
-      <td>Table Cell Detection Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/table_cells_detection.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Table structure recognition errors</td>
-      <td>Table Structure Recognition Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/table_structure_recognition.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Failure to detect table regions</td>
-      <td>Layout Region Detection Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/layout_detection.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Missing text detection</td>
-      <td>Text Detection Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/text_detection.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Inaccurate text content</td>
-      <td>Text Recognition Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/text_recognition.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Inaccurate whole-image rotation correction</td>
-      <td>Document Image Orientation Classification Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Inaccurate image distortion correction</td>
-      <td>Text Image Correction Module</td>
-      <td>Fine-tuning not supported</td>
-    </tr>
-  </tbody>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Fine-Tuning Module</th>
+<th>Fine-Tuning Reference Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Table classification errors</td>
+<td>Table Classification Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/table_classification.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Table cell localization errors</td>
+<td>Table Cell Detection Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/table_cells_detection.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Table structure recognition errors</td>
+<td>Table Structure Recognition Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/table_structure_recognition.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Failure to detect table regions</td>
+<td>Layout Region Detection Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/layout_detection.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Missing text detection</td>
+<td>Text Detection Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/text_detection.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Inaccurate text content</td>
+<td>Text Recognition Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/text_recognition.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Inaccurate whole-image rotation correction</td>
+<td>Document Image Orientation Classification Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Inaccurate image distortion correction</td>
+<td>Text Image Correction Module</td>
+<td>Fine-tuning not supported</td>
+</tr>
+</tbody>
 </table>
 
 ### 4.2 Model Application

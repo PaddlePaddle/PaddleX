@@ -7,42 +7,40 @@ comments: true
 ## 1. 文档场景信息抽取v3产线介绍
 文档场景信息抽取v3（PP-ChatOCRv3）是飞桨特色的文档和图像智能分析解决方案，结合了 LLM 和 OCR 技术，一站式解决版面分析、生僻字、多页 pdf、表格、印章识别等常见的复杂文档信息抽取难点问题，结合文心大模型将海量数据和知识相融合，准确率高且应用广泛。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上部署。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
 
-<img src="https://github.com/user-attachments/assets/90cb740b-7741-4383-bc4c-663f9d042d02">
+<img src="https://github.com/user-attachments/assets/90cb740b-7741-4383-bc4c-663f9d042d02"/>
 
 文档场景信息抽取v3产线中包含<b>表格结构识别模块</b>、<b>版面区域检测模块</b>、<b>文本检测模块</b>、<b>文本识别模块</b>、<b>印章文本检测模块</b>、<b>文本图像矫正模块</b>、<b>文档图像方向分类模块</b>。其中相关的模型是以子产线的方式集成，您可以通过[产线配置](../../../../paddlex/configs/pipelines/PP-ChatOCRv3-doc.yaml)来查看不同模块的模型配置。
 
 <b>如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型</b>。其中部分模型的 benchmark 如下：
 
 <details><summary> 👉模型列表详情</summary>
-
 <p><b>表格结构识别模块模型：</b></p>
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>精度（%）</th>
-<th>GPU推理耗时 (ms)</th>
-<th>CPU推理耗时（ms）</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小 (M)</th>
 <th>介绍</th>
 </tr>
 <tr>
 <td>SLANet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_pretrained.pdparams">训练模型</a></td>
 <td>59.52</td>
-<td>522.536</td>
-<td>1845.37</td>
+<td>103.08 / 103.08</td>
+<td>197.99 / 197.99</td>
 <td>6.9 M</td>
 <td>SLANet 是百度飞桨视觉团队自研的表格结构识别模型。该模型通过采用CPU 友好型轻量级骨干网络PP-LCNet、高低层特征融合模块CSP-PAN、结构与位置信息对齐的特征解码模块SLA Head，大幅提升了表格结构识别的精度和推理速度。</td>
 </tr>
 <tr>
 <td>SLANet_plus</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_plus_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">训练模型</a></td>
 <td>63.69</td>
-<td>522.536</td>
-<td>1845.37</td>
+<td>140.29 / 140.29</td>
+<td>195.39 / 195.39</td>
 <td>6.9 M</td>
 <td>SLANet_plus 是百度飞桨视觉团队自研的表格结构识别模型SLANet的增强版。相较于SLANet，SLANet_plus 对无线表、复杂表格的识别能力得到了大幅提升，并降低了模型对表格定位准确性的敏感度，即使表格定位出现偏移，也能够较准确地进行识别。</td>
 </tr>
 </table>
-
 <p><b>注：以上精度指标测量PaddleX 内部自建英文表格识别数据集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
 <p><b>版面区域检测模块模型：</b></p>
 <table>
@@ -50,8 +48,8 @@ comments: true
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>mAP(0.5)（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M）</th>
 <th>介绍</th>
 </tr>
@@ -60,64 +58,64 @@ comments: true
 <tr>
 <td>PicoDet_layout_1x</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">训练模型</a></td>
 <td>86.8</td>
-<td>13.0</td>
-<td>91.3</td>
+<td>9.03 / 3.10</td>
+<td>25.82 / 20.70</td>
 <td>7.4</td>
 <td>基于PicoDet-1x在PubLayNet数据集训练的高效率版面区域定位模型，可定位包含文字、标题、表格、图片以及列表这5类区域</td>
 </tr>
 <tr>
 <td>PicoDet_layout_1x_table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_table_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">训练模型</a></td>
 <td>95.7</td>
-<td>12.623</td>
-<td>90.8934</td>
+<td>8.02 / 3.09</td>
+<td>23.70 / 20.41</td>
 <td>7.4 M</td>
 <td>基于PicoDet-1x在自建数据集训练的高效率版面区域定位模型，可定位包含表格这1类区域</td>
 </tr>
 <tr>
 <td>PicoDet-S_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">训练模型</a></td>
 <td>87.1</td>
-<td>13.5</td>
-<td>45.8</td>
+<td>8.99 / 2.22</td>
+<td>16.11 / 8.73</td>
 <td>4.8</td>
 <td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含3个类别：表格，图像和印章</td>
 </tr>
 <tr>
 <td>PicoDet-S_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">训练模型</a></td>
 <td>70.3</td>
-<td>13.6</td>
-<td>46.2</td>
+<td>9.11 / 2.12</td>
+<td>15.42 / 9.12</td>
 <td>4.8</td>
 <td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</td>
 </tr>
 <tr>
 <td>PicoDet-L_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">训练模型</a></td>
 <td>89.3</td>
-<td>15.7</td>
-<td>159.8</td>
+<td>13.05 / 4.50</td>
+<td>41.30 / 41.30</td>
 <td>22.6</td>
 <td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含3个类别：表格，图像和印章</td>
 </tr>
 <tr>
 <td>PicoDet-L_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">训练模型</a></td>
 <td>79.9</td>
-<td>17.2</td>
-<td>160.2</td>
+<td>13.50 / 4.69</td>
+<td>43.32 / 43.32</td>
 <td>22.6</td>
 <td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</td>
 </tr>
 <tr>
 <td>RT-DETR-H_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">训练模型</a></td>
 <td>95.9</td>
-<td>114.6</td>
-<td>3832.6</td>
+<td>114.93 / 27.71</td>
+<td>947.56 / 947.56</td>
 <td>470.1</td>
 <td>基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型，包含3个类别：表格，图像和印章</td>
 </tr>
 <tr>
 <td>RT-DETR-H_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">训练模型</a></td>
 <td>92.6</td>
-<td>115.1</td>
-<td>3827.2</td>
+<td>115.29 / 104.09</td>
+<td>995.27 / 995.27</td>
 <td>470.2</td>
 <td>基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</td>
 </tr>
@@ -130,8 +128,8 @@ comments: true
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>检测Hmean（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M)</th>
 <th>介绍</th>
 </tr>
@@ -140,16 +138,16 @@ comments: true
 <tr>
 <td>PP-OCRv4_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">训练模型</a></td>
 <td>82.69</td>
-<td>83.3501</td>
-<td>2434.01</td>
+<td>83.34 / 80.91</td>
+<td>442.58 / 442.58</td>
 <td>109</td>
 <td>PP-OCRv4 的服务端文本检测模型，精度更高，适合在性能较好的服务器上部署</td>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">训练模型</a></td>
 <td>77.79</td>
-<td>10.6923</td>
-<td>120.177</td>
+<td>8.79 / 3.13</td>
+<td>51.00 / 28.58</td>
 <td>4.7</td>
 <td>PP-OCRv4 的移动端文本检测模型，效率更高，适合在端侧设备部署</td>
 </tr>
@@ -161,70 +159,67 @@ comments: true
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>识别 Avg Accuracy(%)</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M）</th>
 <th>介绍</th>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">训练模型</a></td>
 <td>78.20</td>
-<td>7.95018</td>
-<td>46.7868</td>
+<td>4.82 / 4.82</td>
+<td>16.74 / 4.64</td>
 <td>10.6 M</td>
 <td rowspan="2">PP-OCRv4是百度飞桨视觉团队自研的文本识别模型PP-OCRv3的下一个版本，通过引入数据增强方案、GTC-NRTR指导分支等策略，在模型推理速度不变的情况下，进一步提升了文本识别精度。该模型提供了服务端（server）和移动端（mobile）两个不同版本，来满足不同场景下的工业需求。</td>
 </tr>
 <tr>
 <td>PP-OCRv4_server_rec </td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">训练模型</a></td>
 <td>79.20</td>
-<td>7.19439</td>
-<td>140.179</td>
+<td>6.58 / 6.58</td>
+<td>33.17 / 33.17</td>
 <td>71.2 M</td>
 </tr>
 </table>
-
 <p><b>注：以上精度指标的评估集是 PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中文本识别包含 1.1w 张图片。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>识别 Avg Accuracy(%)</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时（ms）</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M）</th>
 <th>介绍</th>
 </tr>
 <tr>
 <td>ch_SVTRv2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_SVTRv2_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">训练模型</a></td>
 <td>68.81</td>
-<td>8.36801</td>
-<td>165.706</td>
+<td>8.08 / 8.08</td>
+<td>50.17 / 42.50</td>
 <td>73.9 M</td>
 <td rowspan="1">
 SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队研发的服务端文本识别模型，其在PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务中荣获一等奖，A榜端到端识别精度相比PP-OCRv4提升6%。
 </td>
 </tr>
 </table>
-
 <p><b>注：以上精度指标的评估集是 <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务</a>A榜。 所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>识别 Avg Accuracy(%)</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时（ms）</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M）</th>
 <th>介绍</th>
 </tr>
 <tr>
 <td>ch_RepSVTR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_RepSVTR_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">训练模型</a></td>
 <td>65.07</td>
-<td>10.5047</td>
-<td>51.5647</td>
+<td>5.93 / 5.93</td>
+<td>20.73 / 7.32</td>
 <td>22.1 M</td>
 <td rowspan="1">    RepSVTR 文本识别模型是一种基于SVTRv2 的移动端文本识别模型，其在PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务中荣获一等奖，B榜端到端识别精度相比PP-OCRv4提升2.5%，推理速度持平。</td>
 </tr>
 </table>
-
 <p><b>注：以上精度指标的评估集是 <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务</a>B榜。 所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
 <p><b>印章文本检测模块模型：</b></p>
 <table>
@@ -232,8 +227,8 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>检测Hmean（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M)</th>
 <th>介绍</th>
 </tr>
@@ -242,16 +237,16 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <tr>
 <td>PP-OCRv4_server_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_seal_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_seal_det_pretrained.pdparams">训练模型</a></td>
 <td>98.21</td>
-<td>84.341</td>
-<td>2425.06</td>
+<td>74.75 / 67.72</td>
+<td>382.55 / 382.55</td>
 <td>109</td>
 <td>PP-OCRv4的服务端印章文本检测模型，精度更高，适合在较好的服务器上部署</td>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_seal_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_seal_det_pretrained.pdparams">训练模型</a></td>
 <td>96.47</td>
-<td>10.5878</td>
-<td>131.813</td>
+<td>7.82 / 3.09</td>
+<td>48.28 / 23.97</td>
 <td>4.6</td>
 <td>PP-OCRv4的移动端印章文本检测模型，效率更高，适合在端侧部署</td>
 </tr>
@@ -284,8 +279,8 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>Top-1 Acc（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M)</th>
 <th>介绍</th>
 </tr>
@@ -294,15 +289,14 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <tr>
 <td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">训练模型</a></td>
 <td>99.06</td>
-<td>3.84845</td>
-<td>9.23735</td>
+<td>2.31 / 0.43</td>
+<td>3.37 / 1.27</td>
 <td>7</td>
 <td>基于PP-LCNet_x1_0的文档图像分类模型，含有四个类别，即0度，90度，180度，270度</td>
 </tr>
 </tbody>
 </table>
 <p><b>注：以上精度指标的评估集是自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p></details>
-
 <b></b>
 
 ## 2. 快速开始
@@ -311,7 +305,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 ### 2.1 在线体验
 您可以[在线体验](https://aistudio.baidu.com/community/app/182491/webUI)文档场景信息抽取v3产线的效果，用官方提供的 Demo 图片进行识别，例如：
 
-<img src="https://github.com/user-attachments/assets/aa261b2b-b79c-4487-9323-dfcc43c3d581">
+<img src="https://github.com/user-attachments/assets/aa261b2b-b79c-4487-9323-dfcc43c3d581"/>
 
 如果您对产线运行的效果满意，可以直接对产线进行集成部署，如果不满意，您也可以利用私有数据<b>对产线中的模型进行在线微调</b>。
 
@@ -414,7 +408,6 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 </tbody>
 </table>
 </details>
-
 <details><summary>（2）调用 PP-ChatOCRv3 产线对象的 <code>visual_predict()</code> 方法获取视觉预测结果。 该方法将返回一个 generator。</summary>
 
 以下是 `visual_predict()` 方法的参数及其说明：
@@ -435,9 +428,9 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>Python Var|str|list</code></td>
 <td>
 <ul>
-  <li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
-  <li><b>str</b>：如图像文件或者PDF文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件或PDF文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/demo_paper.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code>(当前不支持目录中包含PDF文件的预测，PDF文件需要指定到具体文件路径)</li>
-  <li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
+<li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
+<li><b>str</b>：如图像文件或者PDF文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件或PDF文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/demo_paper.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code>(当前不支持目录中包含PDF文件的预测，PDF文件需要指定到具体文件路径)</li>
+<li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -448,13 +441,13 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>str|None</code></td>
 <td>
 <ul>
-  <li><b>CPU</b>：如 <code>cpu</code> 表示使用 CPU 进行推理；</li>
-  <li><b>GPU</b>：如 <code>gpu:0</code> 表示使用第 1 块 GPU 进行推理；</li>
-  <li><b>NPU</b>：如 <code>npu:0</code> 表示使用第 1 块 NPU 进行推理；</li>
-  <li><b>XPU</b>：如 <code>xpu:0</code> 表示使用第 1 块 XPU 进行推理；</li>
-  <li><b>MLU</b>：如 <code>mlu:0</code> 表示使用第 1 块 MLU 进行推理；</li>
-  <li><b>DCU</b>：如 <code>dcu:0</code> 表示使用第 1 块 DCU 进行推理；</li>
-  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化时，会优先使用本地的 GPU 0号设备，如果没有，则使用 CPU 设备；</li>
+<li><b>CPU</b>：如 <code>cpu</code> 表示使用 CPU 进行推理；</li>
+<li><b>GPU</b>：如 <code>gpu:0</code> 表示使用第 1 块 GPU 进行推理；</li>
+<li><b>NPU</b>：如 <code>npu:0</code> 表示使用第 1 块 NPU 进行推理；</li>
+<li><b>XPU</b>：如 <code>xpu:0</code> 表示使用第 1 块 XPU 进行推理；</li>
+<li><b>MLU</b>：如 <code>mlu:0</code> 表示使用第 1 块 MLU 进行推理；</li>
+<li><b>DCU</b>：如 <code>dcu:0</code> 表示使用第 1 块 DCU 进行推理；</li>
+<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化时，会优先使用本地的 GPU 0号设备，如果没有，则使用 CPU 设备；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -465,8 +458,8 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
-  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -477,8 +470,8 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
-  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -489,8 +482,8 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
-  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -501,8 +494,8 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
-  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -513,8 +506,8 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
-  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -525,8 +518,8 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
-  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -537,9 +530,9 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>float|dict|None</code></td>
 <td>
 <ul>
-  <li><b>float</b>：<code>0-1</code> 之间的任意浮点数；</li>
-  <li><b>dict</b>： <code>{0:0.1}</code> key为类别ID，value为该类别的阈值；</li>
-  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>0.5</code>；</li>
+<li><b>float</b>：<code>0-1</code> 之间的任意浮点数；</li>
+<li><b>dict</b>： <code>{0:0.1}</code> key为类别ID，value为该类别的阈值；</li>
+<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>0.5</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -550,8 +543,8 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
-  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -562,9 +555,9 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>float|Tuple[float,float]|None</code></td>
 <td>
 <ul>
-  <li><b>float</b>：任意大于 <code>0</code>  浮点数；</li>
-  <li><b>Tuple[float,float]</b>：在横纵两个方向各自的扩张系数；</li>
-  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>1.0</code>；</li>
+<li><b>float</b>：任意大于 <code>0</code>  浮点数；</li>
+<li><b>Tuple[float,float]</b>：在横纵两个方向各自的扩张系数；</li>
+<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>1.0</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -575,8 +568,8 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>str|None</code></td>
 <td>
 <ul>
-  <li><b>str</b>：large，small, union.分别表示重叠框过滤时选择保留大框，小框还是同时保留</li>
-  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>large</code>；</li>
+<li><b>str</b>：large，small, union.分别表示重叠框过滤时选择保留大框，小框还是同时保留</li>
+<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>large</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -587,8 +580,8 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>int|None</code></td>
 <td>
 <ul>
-  <li><b>int</b>：大于 <code>0</code> 的任意整数；</li>
-  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>960</code>；</li>
+<li><b>int</b>：大于 <code>0</code> 的任意整数；</li>
+<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>960</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -599,8 +592,8 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>str|None</code></td>
 <td>
 <ul>
-  <li><b>str</b>：支持 <code>min</code> 和 <code>max</code>，<code>min</code> 表示保证图像最短边不小于 <code>det_limit_side_len</code>，<code>max</code> 表示保证图像最长边不大于 <code>limit_side_len</code></li>
-  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>max</code>；</li>
+<li><b>str</b>：支持 <code>min</code> 和 <code>max</code>，<code>min</code> 表示保证图像最短边不小于 <code>det_limit_side_len</code>，<code>max</code> 表示保证图像最长边不大于 <code>limit_side_len</code></li>
+<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>max</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -611,10 +604,8 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
-    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.3</code></td>
-</ul>
-</td>
+<li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.3</code></li></li></ul></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -623,10 +614,8 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
-    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.6</code></td>
-</ul>
-</td>
+<li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.6</code></li></li></ul></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -635,11 +624,8 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
-    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>2.0</code></td>
-</ul>
-</ul>
-</td>
+<li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>2.0</code></li></li></ul></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -648,11 +634,8 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
-    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.0</code>。即不设阈值</td>
-</ul>
-</ul>
-</td>
+<li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.0</code>。即不设阈值</li></li></ul></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -661,8 +644,8 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>int|None</code></td>
 <td>
 <ul>
-  <li><b>int</b>：大于 <code>0</code> 的任意整数；</li>
-  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>960</code>；</li>
+<li><b>int</b>：大于 <code>0</code> 的任意整数；</li>
+<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>960</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -673,8 +656,8 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>str|None</code></td>
 <td>
 <ul>
-  <li><b>str</b>：支持 <code>min</code> 和 <code>max</code>，<code>min</code> 表示保证图像最短边不小于 <code>det_limit_side_len</code>，<code>max</code> 表示保证图像最长边不大于 <code>limit_side_len</code></li>
-  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>max</code>；</li>
+<li><b>str</b>：支持 <code>min</code> 和 <code>max</code>，<code>min</code> 表示保证图像最短边不小于 <code>det_limit_side_len</code>，<code>max</code> 表示保证图像最长边不大于 <code>limit_side_len</code></li>
+<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>max</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -685,10 +668,8 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
-    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.3</code></td>
-</ul>
-</td>
+<li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.3</code></li></li></ul></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -697,10 +678,8 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
-    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.6</code></td>
-</ul>
-</td>
+<li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.6</code></li></li></ul></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -709,11 +688,8 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
-    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>2.0</code></td>
-</ul>
-</ul>
-</td>
+<li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>2.0</code></li></li></ul></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -722,16 +698,12 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
-    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.0</code>。即不设阈值</td>
-</ul>
-</ul>
-</td>
+<li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.0</code>。即不设阈值</li></li></ul></td>
 <td><code>None</code></td>
 </tr>
 </table>
 </details>
-
 <details><summary>（3）对视觉预测结果进行处理。</summary>
 
 每个样本的预测结果均为 `dict` 类型，包含 `visual_info` 和 `layout_parsing_result` 两个字段。通过 `visual_info` 得到视觉信息（包含 `normal_text_dict`、`table_text_list`、`table_html_list` 等信息），并将每个样本的信息放到 `visual_info_list` 列表中，该列表的内容会在之后送入大语言模型中。
@@ -762,10 +734,9 @@ for res in visual_predict_res:
 <th>默认值</th>
 </tr>
 </thead>
-
 <tr>
-<td rowspan = "3"><code>print()</code></td>
-<td rowspan = "3">打印结果到终端</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">打印结果到终端</td>
 <td><code>format_json</code></td>
 <td><code>bool</code></td>
 <td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
@@ -784,8 +755,8 @@ for res in visual_predict_res:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td rowspan = "3"><code>save_to_json()</code></td>
-<td rowspan = "3">将结果保存为json格式的文件</td>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">将结果保存为json格式的文件</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
 <td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
@@ -911,19 +882,18 @@ for res in visual_predict_res:
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">获取预测的 <code>json</code> 格式的结果</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">获取预测的 <code>json</code> 格式的结果</td>
 </tr>
 <tr>
-<td rowspan = "2"><code>img</code></td>
-<td rowspan = "2">获取格式为 <code>dict</code> 的可视化图像</td>
+<td rowspan="2"><code>img</code></td>
+<td rowspan="2">获取格式为 <code>dict</code> 的可视化图像</td>
 </tr>
 </table>
 
 - `json` 属性获取的预测结果为dict类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
 - `img` 属性返回的预测结果是一个字典类型的数据。其中，键分别为 `layout_det_res`、`overall_ocr_res`、`text_paragraphs_ocr_res`、`formula_res_region1`、`table_cell_img` 和 `seal_res_region1`，对应的值是 `Image.Image` 对象：分别用于显示版面区域检测、OCR、OCR文本段落、公式、表格和印章结果的可视化图像。如果没有使用可选模块，则字典中只包含 `layout_det_res`。
 </details>
-
 <details><summary>（4）调用PP-ChatOCRv3的产线对象的 <code>build_vector()</code> 方法，对文本内容进行向量构建。</summary>
 
 以下是 `build_vector()` 方法的参数及其说明：
@@ -967,14 +937,13 @@ for res in visual_predict_res:
 </td>
 <td><code>False</code></td>
 </tr>
-</table>
+</tr></table>
 该方法会返回一个包含视觉文本信息的字典，字典的内容如下：
 
 - `flag_save_bytes_vector`：`(bool)`是否将结果保存为二进制文件
 - `flag_too_short_text`：`(bool)`是否文本长度小于最小字符数量
 - `vector`: `(str|list)` 文本的二进制内容或者文本内容，取决于`flag_save_bytes_vector`和`min_characters`的值，如果`flag_save_bytes_vector=True`且文本长度大于等于最小字符数量，则返回二进制内容；否则返回原始的文本。
 </details>
-
 <details><summary>（5）调用PP-ChatOCRv3的产线对象的 <code>chat()</code> 方法，对关键信息进行抽取。</summary>
 
 以下是 `chat()` 方法的参数及其说明：
@@ -1117,7 +1086,6 @@ for res in visual_predict_res:
 以下是基础服务化部署的API参考与多语言服务调用示例：
 
 <details><summary>API参考</summary>
-
 <p>对于服务提供的主要操作：</p>
 <ul>
 <li>HTTP请求方法为POST。</li>
@@ -1427,14 +1395,14 @@ for res in visual_predict_res:
 </table>
 <p>当前，<code>llmParams</code> 可以采用如下形式之一：</p>
 <pre><code class="language-json">{
-&quot;apiType&quot;: &quot;qianfan&quot;,
-&quot;apiKey&quot;: &quot;{千帆平台API key}&quot;,
-&quot;secretKey&quot;: &quot;{千帆平台secret key}&quot;
+"apiType": "qianfan",
+"apiKey": "{千帆平台API key}",
+"secretKey": "{千帆平台secret key}"
 }
 </code></pre>
 <pre><code class="language-json">{
-&quot;apiType&quot;: &quot;aistudio&quot;,
-&quot;accessToken&quot;: &quot;{星河社区access token}&quot;
+"apiType": "aistudio",
+"accessToken": "{星河社区access token}"
 }
 </code></pre>
 <ul>
@@ -1502,14 +1470,14 @@ for res in visual_predict_res:
 </table>
 <p>当前，<code>llmParams</code> 可以采用如下形式之一：</p>
 <pre><code class="language-json">{
-&quot;apiType&quot;: &quot;qianfan&quot;,
-&quot;apiKey&quot;: &quot;{千帆平台API key}&quot;,
-&quot;secretKey&quot;: &quot;{千帆平台secret key}&quot;
+"apiType": "qianfan",
+"apiKey": "{千帆平台API key}",
+"secretKey": "{千帆平台secret key}"
 }
 </code></pre>
 <pre><code class="language-json">{
-&quot;apiType&quot;: &quot;aistudio&quot;,
-&quot;accessToken&quot;: &quot;{星河社区access token}&quot;
+"apiType": "aistudio",
+"accessToken": "{星河社区access token}"
 }
 </code></pre>
 <ul>
@@ -1613,14 +1581,14 @@ for res in visual_predict_res:
 </table>
 <p>当前，<code>llmParams</code> 可以采用如下形式之一：</p>
 <pre><code class="language-json">{
-&quot;apiType&quot;: &quot;qianfan&quot;,
-&quot;apiKey&quot;: &quot;{千帆平台API key}&quot;,
-&quot;secretKey&quot;: &quot;{千帆平台secret key}&quot;
+"apiType": "qianfan",
+"apiKey": "{千帆平台API key}",
+"secretKey": "{千帆平台secret key}"
 }
 </code></pre>
 <pre><code class="language-json">{
-&quot;apiType&quot;: &quot;aistudio&quot;,
-&quot;accessToken&quot;: &quot;{星河社区access token}&quot;
+"apiType": "aistudio",
+"accessToken": "{星河社区access token}"
 }
 </code></pre>
 <ul>
@@ -1674,13 +1642,9 @@ for res in visual_predict_res:
 </tr>
 </tbody>
 </table></details>
-
 <details><summary>多语言调用服务示例</summary>
-
 <details>
 <summary>Python</summary>
-
-
 <pre><code class="language-python">import base64
 import pprint
 import sys
@@ -1688,114 +1652,112 @@ import sys
 import requests
 
 
-API_BASE_URL = &quot;http://0.0.0.0:8080&quot;
-API_KEY = &quot;{千帆平台API key}&quot;
-SECRET_KEY = &quot;{千帆平台secret key}&quot;
-LLM_NAME = &quot;ernie-3.5&quot;
+API_BASE_URL = "http://0.0.0.0:8080"
+API_KEY = "{千帆平台API key}"
+SECRET_KEY = "{千帆平台secret key}"
+LLM_NAME = "ernie-3.5"
 LLM_PARAMS = {
-    &quot;apiType&quot;: &quot;qianfan&quot;,
-    &quot;apiKey&quot;: API_KEY,
-    &quot;secretKey&quot;: SECRET_KEY,
+    "apiType": "qianfan",
+    "apiKey": API_KEY,
+    "secretKey": SECRET_KEY,
 }
 
-file_path = &quot;./demo.jpg&quot;
-keys = [&quot;电话&quot;]
+file_path = "./demo.jpg"
+keys = ["电话"]
 
-with open(file_path, &quot;rb&quot;) as file:
+with open(file_path, "rb") as file:
     file_bytes = file.read()
-    file_data = base64.b64encode(file_bytes).decode(&quot;ascii&quot;)
+    file_data = base64.b64encode(file_bytes).decode("ascii")
 
 payload = {
-    &quot;file&quot;: file_data,
-    &quot;fileType&quot;: 1,
-    &quot;useImgOrientationCls&quot;: True,
-    &quot;useImgUnwarping&quot;: True,
-    &quot;useSealTextDet&quot;: True,
+    "file": file_data,
+    "fileType": 1,
+    "useImgOrientationCls": True,
+    "useImgUnwarping": True,
+    "useSealTextDet": True,
 }
-resp_visual = requests.post(url=f&quot;{API_BASE_URL}/chatocr-visual&quot;, json=payload)
+resp_visual = requests.post(url=f"{API_BASE_URL}/chatocr-visual", json=payload)
 if resp_visual.status_code != 200:
     print(
-        f&quot;Request to chatocr-visual failed with status code {resp_visual.status_code}.&quot;,
+        f"Request to chatocr-visual failed with status code {resp_visual.status_code}.",
         file=sys.stderr,
     )
     pprint.pp(resp_visual.json())
     sys.exit(1)
-result_visual = resp_visual.json()[&quot;result&quot;]
+result_visual = resp_visual.json()["result"]
 
-for i, res in enumerate(result_visual[&quot;visualResults&quot;]):
-    print(&quot;Texts:&quot;)
-    pprint.pp(res[&quot;texts&quot;])
-    print(&quot;Tables:&quot;)
-    pprint.pp(res[&quot;tables&quot;])
-    layout_img_path = f&quot;layout_{i}.jpg&quot;
-    with open(layout_img_path, &quot;wb&quot;) as f:
-        f.write(base64.b64decode(res[&quot;layoutImage&quot;]))
-    ocr_img_path = f&quot;ocr_{i}.jpg&quot;
-    with open(ocr_img_path, &quot;wb&quot;) as f:
-        f.write(base64.b64decode(res[&quot;ocrImage&quot;]))
-    print(f&quot;Output images saved at {layout_img_path} and {ocr_img_path}&quot;)
+for i, res in enumerate(result_visual["visualResults"]):
+    print("Texts:")
+    pprint.pp(res["texts"])
+    print("Tables:")
+    pprint.pp(res["tables"])
+    layout_img_path = f"layout_{i}.jpg"
+    with open(layout_img_path, "wb") as f:
+        f.write(base64.b64decode(res["layoutImage"]))
+    ocr_img_path = f"ocr_{i}.jpg"
+    with open(ocr_img_path, "wb") as f:
+        f.write(base64.b64decode(res["ocrImage"]))
+    print(f"Output images saved at {layout_img_path} and {ocr_img_path}")
 
 payload = {
-    &quot;visualInfo&quot;: result_visual[&quot;visualInfo&quot;],
-    &quot;minChars&quot;: 200,
-    &quot;llmRequestInterval&quot;: 1000,
-    &quot;llmName&quot;: LLM_NAME,
-    &quot;llmParams&quot;: LLM_PARAMS,
+    "visualInfo": result_visual["visualInfo"],
+    "minChars": 200,
+    "llmRequestInterval": 1000,
+    "llmName": LLM_NAME,
+    "llmParams": LLM_PARAMS,
 }
-resp_vector = requests.post(url=f&quot;{API_BASE_URL}/chatocr-vector&quot;, json=payload)
+resp_vector = requests.post(url=f"{API_BASE_URL}/chatocr-vector", json=payload)
 if resp_vector.status_code != 200:
     print(
-        f&quot;Request to chatocr-vector failed with status code {resp_vector.status_code}.&quot;,
+        f"Request to chatocr-vector failed with status code {resp_vector.status_code}.",
         file=sys.stderr,
     )
     pprint.pp(resp_vector.json())
     sys.exit(1)
-result_vector = resp_vector.json()[&quot;result&quot;]
+result_vector = resp_vector.json()["result"]
 
 payload = {
-    &quot;keys&quot;: keys,
-    &quot;vectorStore&quot;: result_vector[&quot;vectorStore&quot;],
-    &quot;llmName&quot;: LLM_NAME,
-    &quot;llmParams&quot;: LLM_PARAMS,
+    "keys": keys,
+    "vectorStore": result_vector["vectorStore"],
+    "llmName": LLM_NAME,
+    "llmParams": LLM_PARAMS,
 }
-resp_retrieval = requests.post(url=f&quot;{API_BASE_URL}/chatocr-retrieval&quot;, json=payload)
+resp_retrieval = requests.post(url=f"{API_BASE_URL}/chatocr-retrieval", json=payload)
 if resp_retrieval.status_code != 200:
     print(
-        f&quot;Request to chatocr-retrieval failed with status code {resp_retrieval.status_code}.&quot;,
+        f"Request to chatocr-retrieval failed with status code {resp_retrieval.status_code}.",
         file=sys.stderr,
     )
     pprint.pp(resp_retrieval.json())
     sys.exit(1)
-result_retrieval = resp_retrieval.json()[&quot;result&quot;]
+result_retrieval = resp_retrieval.json()["result"]
 
 payload = {
-    &quot;keys&quot;: keys,
-    &quot;visualInfo&quot;: result_visual[&quot;visualInfo&quot;],
-    &quot;vectorStore&quot;: result_vector[&quot;vectorStore&quot;],
-    &quot;retrievalResult&quot;: result_retrieval[&quot;retrievalResult&quot;],
-    &quot;taskDescription&quot;: &quot;&quot;,
-    &quot;rules&quot;: &quot;&quot;,
-    &quot;fewShot&quot;: &quot;&quot;,
-    &quot;llmName&quot;: LLM_NAME,
-    &quot;llmParams&quot;: LLM_PARAMS,
-    &quot;returnPrompts&quot;: True,
+    "keys": keys,
+    "visualInfo": result_visual["visualInfo"],
+    "vectorStore": result_vector["vectorStore"],
+    "retrievalResult": result_retrieval["retrievalResult"],
+    "taskDescription": "",
+    "rules": "",
+    "fewShot": "",
+    "llmName": LLM_NAME,
+    "llmParams": LLM_PARAMS,
+    "returnPrompts": True,
 }
-resp_chat = requests.post(url=f&quot;{API_BASE_URL}/chatocr-chat&quot;, json=payload)
+resp_chat = requests.post(url=f"{API_BASE_URL}/chatocr-chat", json=payload)
 if resp_chat.status_code != 200:
     print(
-        f&quot;Request to chatocr-chat failed with status code {resp_chat.status_code}.&quot;,
+        f"Request to chatocr-chat failed with status code {resp_chat.status_code}.",
         file=sys.stderr,
     )
     pprint.pp(resp_chat.json())
     sys.exit(1)
-result_chat = resp_chat.json()[&quot;result&quot;]
-print(&quot;\nPrompts:&quot;)
-pprint.pp(result_chat[&quot;prompts&quot;])
-print(&quot;Final result:&quot;)
-print(result_chat[&quot;chatResult&quot;])
+result_chat = resp_chat.json()["result"]
+print("\nPrompts:")
+pprint.pp(result_chat["prompts"])
+print("Final result:")
+print(result_chat["chatResult"])
 </code></pre>
-
-
 <b>注</b>：请在 `API_KEY`、`SECRET_KEY` 处填入您的 API key 和 secret key。</details>
 </details>
 <br/>
@@ -1811,55 +1773,55 @@ print(result_chat[&quot;chatResult&quot;])
 
 
 <table>
-  <thead>
-    <tr>
-      <th>情形</th>
-      <th>微调模块</th>
-      <th>微调参考链接</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>版面区域检测不准，如印章、表格未检出等</td>
-      <td>版面区域检测模块</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/layout_detection.md">链接</a></td>
-    </tr>
-    <tr>
-      <td>表格结构识别不准</td>
-      <td>表格结构识别</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/table_structure_recognition.md">链接</a></td>
-    </tr>
-    <tr>
-      <td>印章文本存在漏检</td>
-      <td>印章文本检测模块</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/seal_text_detection.md">链接</a></td>
-    </tr>
-    <tr>
-      <td>文本存在漏检</td>
-      <td>文本检测模块</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/text_detection.md">链接</a></td>
-    </tr>
-    <tr>
-      <td>文本内容都不准</td>
-      <td>文本识别模块</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/text_recognition.md">链接</a></td>
-    </tr>
-    <tr>
-      <td>垂直或者旋转文本行矫正不准</td>
-      <td>文本行方向分类模块</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/textline_orientation_classification.md">链接</a></td>
-    </tr>
-    <tr>
-      <td>整图旋转矫正不准</td>
-      <td>文档图像方向分类模块</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.md">链接</a></td>
-    </tr>
-    <tr>
-      <td>图像扭曲矫正不准</td>
-      <td>文本图像矫正模块</td>
-      <td>暂不支持微调</td>
-    </tr>
-  </tbody>
+<thead>
+<tr>
+<th>情形</th>
+<th>微调模块</th>
+<th>微调参考链接</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>版面区域检测不准，如印章、表格未检出等</td>
+<td>版面区域检测模块</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/layout_detection.md">链接</a></td>
+</tr>
+<tr>
+<td>表格结构识别不准</td>
+<td>表格结构识别</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/table_structure_recognition.md">链接</a></td>
+</tr>
+<tr>
+<td>印章文本存在漏检</td>
+<td>印章文本检测模块</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/seal_text_detection.md">链接</a></td>
+</tr>
+<tr>
+<td>文本存在漏检</td>
+<td>文本检测模块</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/text_detection.md">链接</a></td>
+</tr>
+<tr>
+<td>文本内容都不准</td>
+<td>文本识别模块</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/text_recognition.md">链接</a></td>
+</tr>
+<tr>
+<td>垂直或者旋转文本行矫正不准</td>
+<td>文本行方向分类模块</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/textline_orientation_classification.md">链接</a></td>
+</tr>
+<tr>
+<td>整图旋转矫正不准</td>
+<td>文档图像方向分类模块</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.md">链接</a></td>
+</tr>
+<tr>
+<td>图像扭曲矫正不准</td>
+<td>文本图像矫正模块</td>
+<td>暂不支持微调</td>
+</tr>
+</tbody>
 </table>
 
 
@@ -1901,7 +1863,7 @@ PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU 和寒武纪 MLU 等多
 from paddlex import create_pipeline
 pipeline = create_pipeline(
     pipeline="PP-ChatOCRv3-doc",
-    device="npu:0" # gpu:0 --> npu:0
+    device="npu:0" # gpu:0 -->npu:0
     )
 ```
 若您想在更多种类的硬件上使用通用文档场景信息抽取v3产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。

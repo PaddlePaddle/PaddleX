@@ -15,8 +15,8 @@ The document image orientation classification module is aim to distinguish the o
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top-1 Accuracy (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
@@ -25,8 +25,8 @@ The document image orientation classification module is aim to distinguish the o
 <tr>
 <td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Trained Model</a></td>
 <td>99.06</td>
-<td>3.84845</td>
-<td>9.23735</td>
+<td>2.31 / 0.43</td>
+<td>3.37 / 1.27</td>
 <td>7</td>
 <td>A document image classification model based on PP-LCNet_x1_0, with four categories: 0°, 90°, 180°, 270°</td>
 </tr>
@@ -36,7 +36,7 @@ The document image orientation classification module is aim to distinguish the o
 
 ## III. Quick Integration
 
-> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Tutorial](../../../installation/installation.en.md)
+&gt; ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Tutorial](../../../installation/installation.en.md)
 
 After completing the installation of the wheel package, you can perform inference on the document image orientation classification module with just a few lines of code. You can switch models under this module at will, and you can also integrate the model inference of the document image orientation classification module into your project. Before running the following code, please download the [example image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg) to your local machine.
 
@@ -65,7 +65,7 @@ The meanings of the result parameters are as follows:
 - `label_names`： Indicates the class name of the prediction result.
 The visualized image is as follows:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/doc_img_ori_classification/img_rot180_demo_res.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/doc_img_ori_classification/img_rot180_demo_res.jpg"/>
 
 Related methods, parameters, and other explanations are as follows:
 
@@ -116,12 +116,12 @@ Related methods, parameters, and other explanations are as follows:
 <td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
 <td>
 <ul>
-  <li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
-  <li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
-  <li><b>URL link</b>, such as the network URL of an image file: <a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg">Example</a></li></url>
-  <li><b>Local directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
-  <li><b>Dictionary</b>, the <code>key</code> of the dictionary must correspond to the specific task, such as <code>"img"</code> for image classification tasks. The <code>value</code> of the dictionary supports the above types of data, for example: <code>{"img": "/root/data1"}</code></li>
-  <li><b>List</b>, elements of the list must be the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code></li>
+<li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
+<li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
+<li><b>URL link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg">Example</a></li>
+<li><b>Local directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
+<li><b>Dictionary</b>, the <code>key</code> of the dictionary must correspond to the specific task, such as <code>"img"</code> for image classification tasks. The <code>value</code> of the dictionary supports the above types of data, for example: <code>{"img": "/root/data1"}</code></li>
+<li><b>List</b>, elements of the list must be the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code></li>
 </ul>
 </td>
 <td>None</td>
@@ -149,8 +149,8 @@ Related methods, parameters, and other explanations are as follows:
 </tr>
 </thead>
 <tr>
-<td rowspan = "3"><code>print()</code></td>
-<td rowspan = "3">Print the result to the terminal</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print the result to the terminal</td>
 <td><code>format_json</code></td>
 <td><code>bool</code></td>
 <td>Whether to format the output content using <code>JSON</code> indentation</td>
@@ -169,8 +169,8 @@ Related methods, parameters, and other explanations are as follows:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td rowspan = "3"><code>save_to_json()</code></td>
-<td rowspan = "3">Save the result as a JSON file</td>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save the result as a JSON file</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
 <td>The path to save the file. When it is a directory, the saved file name is consistent with the input file name</td>
@@ -208,12 +208,12 @@ Related methods, parameters, and other explanations are as follows:
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">Get the prediction result in <code>json</code> format</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format</td>
 </tr>
 <tr>
-<td rowspan = "1"><code>img</code></td>
-<td rowspan = "1">Get the visualized image in <code>dict</code> format</td>
+<td rowspan="1"><code>img</code></td>
+<td rowspan="1">Get the visualized image in <code>dict</code> format</td>
 </tr>
 </table>
 
@@ -245,47 +245,46 @@ python main.py -c paddlex/configs/modules/doc_text_orientation/PP-LCNet_x1_0_doc
 After executing the above command, PaddleX will verify the dataset and collect basic information about it. Once the command runs successfully, a message saying `Check dataset passed !` will be printed in the log. The verification results will be saved in `./output/check_dataset_result.json`, and related outputs will be stored in the `./output/check_dataset` directory, including visual examples of sample images and a histogram of sample distribution.
 
 <details><summary>👉 <b>Verification Result Details (click to expand)</b></summary>
-
 <p>The specific content of the verification result file is:</p>
 <pre><code class="language-bash">{
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;label_file&quot;: &quot;..\/..\/text_image_orientation\/label.txt&quot;,
-    &quot;num_classes&quot;: 4,
-    &quot;train_samples&quot;: 1553,
-    &quot;train_sample_paths&quot;: [
-      &quot;check_dataset\/demo_img\/img_rot270_10351.jpg&quot;,
-      &quot;check_dataset\/demo_img\/img_rot0_3908.jpg&quot;,
-      &quot;check_dataset\/demo_img\/img_rot180_7712.jpg&quot;,
-      &quot;check_dataset\/demo_img\/img_rot0_7480.jpg&quot;,
-      &quot;check_dataset\/demo_img\/img_rot270_9599.jpg&quot;,
-      &quot;check_dataset\/demo_img\/img_rot90_10323.jpg&quot;,
-      &quot;check_dataset\/demo_img\/img_rot90_4885.jpg&quot;,
-      &quot;check_dataset\/demo_img\/img_rot180_3939.jpg&quot;,
-      &quot;check_dataset\/demo_img\/img_rot90_7153.jpg&quot;,
-      &quot;check_dataset\/demo_img\/img_rot180_1747.jpg&quot;
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "label_file": "..\/..\/text_image_orientation\/label.txt",
+    "num_classes": 4,
+    "train_samples": 1553,
+    "train_sample_paths": [
+      "check_dataset\/demo_img\/img_rot270_10351.jpg",
+      "check_dataset\/demo_img\/img_rot0_3908.jpg",
+      "check_dataset\/demo_img\/img_rot180_7712.jpg",
+      "check_dataset\/demo_img\/img_rot0_7480.jpg",
+      "check_dataset\/demo_img\/img_rot270_9599.jpg",
+      "check_dataset\/demo_img\/img_rot90_10323.jpg",
+      "check_dataset\/demo_img\/img_rot90_4885.jpg",
+      "check_dataset\/demo_img\/img_rot180_3939.jpg",
+      "check_dataset\/demo_img\/img_rot90_7153.jpg",
+      "check_dataset\/demo_img\/img_rot180_1747.jpg"
     ],
-    &quot;val_samples&quot;: 2593,
-    &quot;val_sample_paths&quot;: [
-      &quot;check_dataset\/demo_img\/img_rot270_3190.jpg&quot;,
-      &quot;check_dataset\/demo_img\/img_rot0_10272.jpg&quot;,
-      &quot;check_dataset\/demo_img\/img_rot0_9930.jpg&quot;,
-      &quot;check_dataset\/demo_img\/img_rot90_918.jpg&quot;,
-      &quot;check_dataset\/demo_img\/img_rot180_2079.jpg&quot;,
-      &quot;check_dataset\/demo_img\/img_rot90_8574.jpg&quot;,
-      &quot;check_dataset\/demo_img\/img_rot90_7595.jpg&quot;,
-      &quot;check_dataset\/demo_img\/img_rot90_1751.jpg&quot;,
-      &quot;check_dataset\/demo_img\/img_rot180_1573.jpg&quot;,
-      &quot;check_dataset\/demo_img\/img_rot90_4401.jpg&quot;
+    "val_samples": 2593,
+    "val_sample_paths": [
+      "check_dataset\/demo_img\/img_rot270_3190.jpg",
+      "check_dataset\/demo_img\/img_rot0_10272.jpg",
+      "check_dataset\/demo_img\/img_rot0_9930.jpg",
+      "check_dataset\/demo_img\/img_rot90_918.jpg",
+      "check_dataset\/demo_img\/img_rot180_2079.jpg",
+      "check_dataset\/demo_img\/img_rot90_8574.jpg",
+      "check_dataset\/demo_img\/img_rot90_7595.jpg",
+      "check_dataset\/demo_img\/img_rot90_1751.jpg",
+      "check_dataset\/demo_img\/img_rot180_1573.jpg",
+      "check_dataset\/demo_img\/img_rot90_4401.jpg"
     ]
   },
-  &quot;analysis&quot;: {
-    &quot;histogram&quot;: &quot;check_dataset\/histogram.png&quot;
+  "analysis": {
+    "histogram": "check_dataset\/histogram.png"
   },
-  &quot;dataset_path&quot;: &quot;.\/text_image_orientation&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;ClsDataset&quot;
+  "dataset_path": ".\/text_image_orientation",
+  "show_type": "image",
+  "dataset_type": "ClsDataset"
 }
 </code></pre>
 <p>In the verification results above, <code>check_pass</code> being True indicates that the dataset format meets the requirements. Explanations of other indicators are as follows:</p>
@@ -297,14 +296,13 @@ After executing the above command, PaddleX will verify the dataset and collect b
 <li><code>attributes.val_sample_paths</code>: A list of relative paths to the visual samples in the validation set of this dataset;</li>
 </ul>
 <p>Additionally, the dataset validation analyzes the sample number distribution across all classes in the dataset and generates a distribution histogram (histogram.png):</p>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/doc_img_ori_classification/01.png"></p></details>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/doc_img_ori_classification/01.png"/></p></details>
 
 
 #### 4.1.3 Dataset Format Conversion / Dataset Splitting (Optional)
 After completing data validation, you can convert the dataset format and re-split the training/validation ratio by <b>modifying the configuration file</b> or <b>appending hyperparameters</b>.
 
 <details><summary>👉 <b>Details of Format Conversion / Dataset Splitting (Click to Expand)</b></summary>
-
 <p><b>(1) Dataset Format Conversion</b></p>
 <p>Document image orientation classification does not currently support dataset format conversion.</p>
 <p><b>(2) Dataset Splitting</b></p>
@@ -360,7 +358,6 @@ You need to follow these steps:
 Other relevant parameters can be set by modifying fields under `Global` and `Train` in the `.yaml` configuration file, or by appending arguments to the command line. For example, to specify the first two GPUs for training: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and detailed explanations, refer to the [PaddleX General Model Configuration File Parameters](../../instructions/config_parameters_common.en.md).
 
 <details><summary>👉 <b>More Information (click to expand)</b></summary>
-
 <ul>
 <li>During model training, PaddleX automatically saves the model weight files, defaulting to <code>output</code>. If you want to specify a different save path, you can set it using the <code>-o Global.output</code> field in the configuration file.</li>
 <li>PaddleX abstracts away the concept of dynamic graph weights and static graph weights. During model training, it produces both dynamic and static graph weights. For model inference, it defaults to using static graph weights.</li>
@@ -393,7 +390,6 @@ Similar to model training and evaluation, the following steps are required:
 Other relevant parameters can be set by modifying the fields under `Global` and `Predict` in the `.yaml` configuration file. For details, please refer to [PaddleX General Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
 
 <details><summary>👉 <b>More Information (click to expand)</b></summary>
-
 <ul>
 <li>
 <p>When conducting model evaluation, it is necessary to specify the model weight file path. Each configuration file has a built-in default path for saving weights. If you need to change this path, you can simply append a command line argument to set it, for example: <code>-o Evaluate.weight_path=./output/best_model/best_model.pdparams</code>.</p>

@@ -7,17 +7,15 @@ comments: true
 ## 1. Introduction to Small Object Detection Pipeline
 Small object detection is a specialized technique for identifying tiny objects within images, widely applied in fields such as surveillance, autonomous driving, and satellite image analysis. It can accurately locate and classify small-sized objects like pedestrians, traffic signs, or small animals within complex scenes. By leveraging deep learning algorithms and optimized Convolutional Neural Networks (CNNs), small object detection significantly enhances the recognition capabilities for small objects, ensuring no critical information is overlooked in practical applications. This technology plays a pivotal role in enhancing safety and automation levels.
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/small_object_detection/01.png">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/small_object_detection/01.png"/>
 <b>The small object detection pipeline includes a small object detection module. If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, select a model with faster inference. If you prioritize model storage size, opt for a model with a smaller storage size.</b>
-
 <table>
 <thead>
 <tr>
 <th>Model Name</th><th>Model Download Link</th>
 <th>mAP (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 </tr>
 </thead>
@@ -25,22 +23,22 @@ Small object detection is a specialized technique for identifying tiny objects w
 <tr>
 <td>PP-YOLOE_plus_SOD-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus_SOD-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-S_pretrained.pdparams">Trained Model</a></td>
 <td>25.1</td>
-<td>65.4608</td>
-<td>324.37</td>
+<td>135.68 / 122.94</td>
+<td>188.09 / 107.74</td>
 <td>77.3 M</td>
 </tr>
 <tr>
 <td>PP-YOLOE_plus_SOD-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus_SOD-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-L_pretrained.pdparams">Trained Model</a></td>
 <td>31.9</td>
-<td>57.1448</td>
-<td>1006.98</td>
+<td>114.24 / 93.98</td>
+<td>285.39 / 285.39</td>
 <td>325.0 M</td>
 </tr>
 <tr>
 <td>PP-YOLOE_plus_SOD-largesize-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus_SOD-largesize-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-largesize-L_pretrained.pdparams">Trained Model</a></td>
 <td>42.7</td>
-<td>458.521</td>
-<td>11172.7</td>
+<td>639.57 / 332.79</td>
+<td>2807.12 / 2807.12</td>
 <td>340.5 M</td>
 </tr>
 </tbody>
@@ -53,7 +51,7 @@ PaddleX supports experiencing the small object detection pipeline's effects thro
 Before using the small object detection pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
 
 ### 2.1 Local Experience
-> ❗ Before using the general small object detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+&gt; ❗ Before using the general small object detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 
 #### 2.1.1 Command Line Experience
 * You can quickly experience the small object detection pipeline effect with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg), and replace `--input` with the local path for prediction.
@@ -77,7 +75,7 @@ After running, the result will be printed to the terminal as follows:
 The explanation of the result parameters can be referred to in [2.2.2 Python Script Integration](#222-python脚本方式集成).
 
 The visualization results are saved under `save_path`, and the visualization result of small object detection is as follows:
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/small_object_detection/02.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/small_object_detection/02.png"/>
 
 #### 2.1.2 Python Script Integration
 * The above command line is for quickly experiencing and viewing the effect. Generally, in a project, it is often necessary to integrate through code. You can complete the quick inference of the production line with just a few lines of code. The inference code is as follows:
@@ -152,9 +150,9 @@ In the above Python script, the following steps are performed:
 <td><code>Python Var|str|list</code></td>
 <td>
 <ul>
-  <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
-  <li><b>str</b>: Local path of an image file or PDF file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as a network URL of an image file or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg">Example</a>; <b>Local directory</b>, which should contain images to be predicted, such as <code>/root/data/</code> (currently does not support prediction of directories containing PDF files, PDF files need to be specified to specific file paths)</li>
-  <li><b>List</b>: Elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
+<li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
+<li><b>str</b>: Local path of an image file or PDF file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as a network URL of an image file or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg">Example</a>; <b>Local directory</b>, which should contain images to be predicted, such as <code>/root/data/</code> (currently does not support prediction of directories containing PDF files, PDF files need to be specified to specific file paths)</li>
+<li><b>List</b>: Elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -165,13 +163,13 @@ In the above Python script, the following steps are performed:
 <td><code>str|None</code></td>
 <td>
 <ul>
-  <li><b>CPU</b>: Such as <code>cpu</code> indicates using CPU for inference;</li>
-  <li><b>GPU</b>: Such as <code>gpu:0</code> indicates using the 1st GPU for inference;</li>
-  <li><b>NPU</b>: Such as <code>npu:0</code> indicates using the 1st NPU for inference;</li>
-  <li><b>XPU</b>: Such as <code>xpu:0</code> indicates using the 1st XPU for inference;</li>
-  <li><b>MLU</b>: Such as <code>mlu:0</code> indicates using the 1st MLU for inference;</li>
-  <li><b>DCU</b>: Such as <code>dcu:0</code> indicates using the 1st DCU for inference;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used. During initialization, it will preferentially use the local GPU 0 device, if not available, the CPU device will be used;</li>
+<li><b>CPU</b>: Such as <code>cpu</code> indicates using CPU for inference;</li>
+<li><b>GPU</b>: Such as <code>gpu:0</code> indicates using the 1st GPU for inference;</li>
+<li><b>NPU</b>: Such as <code>npu:0</code> indicates using the 1st NPU for inference;</li>
+<li><b>XPU</b>: Such as <code>xpu:0</code> indicates using the 1st XPU for inference;</li>
+<li><b>MLU</b>: Such as <code>mlu:0</code> indicates using the 1st MLU for inference;</li>
+<li><b>DCU</b>: Such as <code>dcu:0</code> indicates using the 1st DCU for inference;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used. During initialization, it will preferentially use the local GPU 0 device, if not available, the CPU device will be used;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -181,13 +179,12 @@ In the above Python script, the following steps are performed:
 <td><code>None|float|dict[int, float]</code></td>
 <td>
 <ul>
-    <li><b>None</b>: If set to <code>None</code>, the default initialization parameter <code>0.5</code> will be used, i.e., 0.5 will be used as the low-score object filtering threshold for all categories</li>
-    <li><b>float</b>: Any floating-point number greater than 0 and less than 1</li>
-    <li><b>dict[int, float]</b>: The key represents the category ID, and the value represents the threshold corresponding to the category, indicating different low-score filtering thresholds for different categories, such as <code>{0:0.5, 1:0.35}</code> means using 0.5 and 0.35 as low-score filtering thresholds for category 0 and category 1 respectively</li>
+<li><b>None</b>: If set to <code>None</code>, the default initialization parameter <code>0.5</code> will be used, i.e., 0.5 will be used as the low-score object filtering threshold for all categories</li>
+<li><b>float</b>: Any floating-point number greater than 0 and less than 1</li>
+<li><b>dict[int, float]</b>: The key represents the category ID, and the value represents the threshold corresponding to the category, indicating different low-score filtering thresholds for different categories, such as <code>{0:0.5, 1:0.35}</code> means using 0.5 and 0.35 as low-score filtering thresholds for category 0 and category 1 respectively</li>
 </ul>
 </td>
 <td><code>None</code></td>
-</tr>
 
 </table>
 
@@ -205,8 +202,8 @@ In the above Python script, the following steps are performed:
 </tr>
 </thead>
 <tr>
-<td rowspan = "3"><code>print()</code></td>
-<td rowspan = "3">Print the result to the terminal</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print the result to the terminal</td>
 <td><code>format_json</code></td>
 <td><code>bool</code></td>
 <td>Whether to format the output content using <code>JSON</code> indentation</td>
@@ -225,8 +222,8 @@ In the above Python script, the following steps are performed:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td rowspan = "3"><code>save_to_json()</code></td>
-<td rowspan = "3">Save the result as a json file</td>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save the result as a json file</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
 <td>Path to save the file. If it is a directory, the saved file name will be consistent with the input file type</td>
@@ -280,12 +277,12 @@ In the above Python script, the following steps are performed:
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">Get the prediction result in <code>json</code> format</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format</td>
 </tr>
 <tr>
-<td rowspan = "2"><code>img</code></td>
-<td rowspan = "2">Get the visualized image in <code>dict</code> format</td>
+<td rowspan="2"><code>img</code></td>
+<td rowspan="2">Get the visualized image in <code>dict</code> format</td>
 </tr>
 </table>
 
@@ -332,7 +329,6 @@ In addition, PaddleX also provides three other deployment methods, detailed as f
 Below is the API reference for basic service deployment and multi-language service call examples:
 
 <details><summary>API Reference</summary>
-
 <p>For the main operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
@@ -477,41 +473,36 @@ Below is the API reference for basic service deployment and multi-language servi
 </tr>
 </tbody>
 </table>
-
 <p><code>result</code> example is as follows:</p>
 <pre><code class="language-json">{
-&quot;detectedObjects&quot;: [
+"detectedObjects": [
 {
-&quot;bbox&quot;: [
+"bbox": [
 404.4967956542969,
 90.15770721435547,
 506.2465515136719,
 285.4187316894531
 ],
-&quot;categoryId&quot;: 0,
-&quot;score&quot;: 0.7418514490127563
+"categoryId": 0,
+"score": 0.7418514490127563
 },
 {
-&quot;bbox&quot;: [
+"bbox": [
 155.33145141601562,
 81.10954284667969,
 199.71136474609375,
 167.4235382080078
 ],
-&quot;categoryId&quot;: 1,
-&quot;score&quot;: 0.7328268885612488
+"categoryId": 1,
+"score": 0.7328268885612488
 }
 ],
-&quot;image&quot;: &quot;xxxxxx&quot;
+"image": "xxxxxx"
 }
 </code></pre></details>
-
 <details><summary>Multi-language Service Call Examples</summary>
-
 <details>
 <summary>Python</summary>
-
-
 <pre><code class="language-python">import base64
 import requests
 
@@ -538,9 +529,7 @@ print(f"Output image saved at {output_image_path}")
 print("\nDetected objects:")
 print(result["detectedObjects"])
 </code></pre></details>
-
 <details><summary>C++</summary>
-
 <pre><code class="language-cpp">#include <iostream>
 #include "cpp-httplib/httplib.h" // [GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library](https://github.com/Huiyicc/cpp-httplib)
 #include "nlohmann/json.hpp" // [GitHub - nlohmann/json: JSON for Modern C++](https://github.com/nlohmann/json)
@@ -562,10 +551,10 @@ int main() {
 
     std::vector<char> buffer(size);
     if (!file.read(buffer.data(), size)) {
-        std::cerr << "Error reading file." << std::endl;
+        std::cerr &lt;&lt; "Error reading file." &lt;&lt; std::endl;
         return 1;
     }
-    std::string bufferStr(reinterpret_cast<const char*>(buffer.data()), buffer.size());
+    std::string bufferStr(reinterpret_cast<const char*="">(buffer.data()), buffer.size());
     std::string encodedImage = base64::to_base64(bufferStr);
 
     nlohmann::json jsonObj;
@@ -575,38 +564,36 @@ int main() {
     // Call the API
     auto response = client.Post("/small-object-detection", headers, body, "application/json");
     // Process the API response data
-    if (response && response->status == 200) {
-        nlohmann::json jsonResponse = nlohmann::json::parse(response->body);
+    if (response &amp;&amp; response-&gt;status == 200) {
+        nlohmann::json jsonResponse = nlohmann::json::parse(response-&gt;body);
         auto result = jsonResponse["result"];
 
         encodedImage = result["image"];
         std::string decodedString = base64::from_base64(encodedImage);
-        std::vector<unsigned char> decodedImage(decodedString.begin(), decodedString.end());
+        std::vector<unsigned char=""> decodedImage(decodedString.begin(), decodedString.end());
         std::ofstream outputImage(outputImagePath, std::ios::binary | std::ios::out);
         if (outputImage.is_open()) {
             outputImage.write(reinterpret_cast<char*>(decodedImage.data()), decodedImage.size());
             outputImage.close();
-            std::cout << "Output image saved at " << outputImagePath << std::endl;
+            std::cout &lt;&lt; "Output image saved at " &lt;&lt; outputImagePath &lt;&lt; std::endl;
         } else {
-            std::cerr << "Unable to open file for writing: " << outputImagePath << std::endl;
+            std::cerr &lt;&lt; "Unable to open file for writing: " &lt;&lt; outputImagePath &lt;&lt; std::endl;
         }
 
         auto detectedObjects = result["detectedObjects"];
-        std::cout << "\nDetected objects:" << std::endl;
-        for (const auto& category : detectedObjects) {
-            std::cout << category << std::endl;
+        std::cout &lt;&lt; "\nDetected objects:" &lt;&lt; std::endl;
+        for (const auto&amp; category : detectedObjects) {
+            std::cout &lt;&lt; category &lt;&lt; std::endl;
         }
     } else {
-        std::cout << "Failed to send HTTP request." << std::endl;
+        std::cout &lt;&lt; "Failed to send HTTP request." &lt;&lt; std::endl;
         return 1;
     }
 
     return 0;
 }
-</code></pre></details>
-
+</char*></unsigned></const></char></iostream></code></pre></details>
 <details><summary>Java</summary>
-
 <pre><code class="language-java">import okhttp3.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -663,51 +650,49 @@ public class Main {
     }
 }
 </code></pre></details>
-
 <details><summary>Go</summary>
-
 <pre><code class="language-go">package main
 
 import (
-    &quot;bytes&quot;
-    &quot;encoding/base64&quot;
-    &quot;encoding/json&quot;
-    &quot;fmt&quot;
-    &quot;io/ioutil&quot;
-    &quot;net/http&quot;
+    "bytes"
+    "encoding/base64"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
 )
 
 func main() {
-    API_URL := &quot;http://localhost:8080/small-object-detection&quot;
-    imagePath := &quot;./demo.jpg&quot;
-    outputImagePath := &quot;./out.jpg&quot;
+    API_URL := "http://localhost:8080/small-object-detection"
+    imagePath := "./demo.jpg"
+    outputImagePath := "./out.jpg"
 
     // Encode the local image to Base64
     imageBytes, err := ioutil.ReadFile(imagePath)
     if err != nil {
-        fmt.Println(&quot;Error reading image file:&quot;, err)
+        fmt.Println("Error reading image file:", err)
         return
     }
     imageData := base64.StdEncoding.EncodeToString(imageBytes)
 
-    payload := map[string]string{&quot;image&quot;: imageData} // Base64-encoded file content or image URL
+    payload := map[string]string{"image": imageData} // Base64-encoded file content or image URL
     payloadBytes, err := json.Marshal(payload)
     if err != nil {
-        fmt.Println(&quot;Error marshaling payload:&quot;, err)
+        fmt.Println("Error marshaling payload:", err)
         return
     }
 
     // Call the API
     client := &amp;http.Client{}
-    req, err := http.NewRequest(&quot;POST&quot;, API_URL, bytes.NewBuffer(payloadBytes))
+    req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
     if err != nil {
-        fmt.Println(&quot;Error creating request:&quot;, err)
+        fmt.Println("Error creating request:", err)
         return
     }
 
     res, err := client.Do(req)
     if err != nil {
-        fmt.Println(&quot;Error sending request:&quot;, err)
+        fmt.Println("Error sending request:", err)
         return
     }
     defer res.Body.Close()
@@ -715,42 +700,40 @@ func main() {
     // Process the response data
     body, err := ioutil.ReadAll(res.Body)
     if err != nil {
-        fmt.Println(&quot;Error reading response body:&quot;, err)
+        fmt.Println("Error reading response body:", err)
         return
     }
     type Response struct {
         Result struct {
-            Image            string   `json:&quot;image&quot;`
-            DetectedObjects  []map[string]interface{} `json:&quot;detectedObjects&quot;`
-        } `json:&quot;result&quot;`
+            Image            string   `json:"image"`
+            DetectedObjects  []map[string]interface{} `json:"detectedObjects"`
+        } `json:"result"`
     }
     var respData Response
     err = json.Unmarshal([]byte(string(body)), &amp;respData)
     if err != nil {
-        fmt.Println(&quot;Error unmarshaling response body:&quot;, err)
+        fmt.Println("Error unmarshaling response body:", err)
         return
     }
 
     outputImageData, err := base64.StdEncoding.DecodeString(respData.Result.Image)
     if err != nil {
-        fmt.Println(&quot;Error decoding base64 image data:&quot;, err)
+        fmt.Println("Error decoding base64 image data:", err)
         return
     }
     err = ioutil.WriteFile(outputImagePath, outputImageData, 0644)
     if err != nil {
-        fmt.Println(&quot;Error writing image to file:&quot;, err)
+        fmt.Println("Error writing image to file:", err)
         return
     }
-    fmt.Printf(&quot;Image saved at %s.jpg\n&quot;, outputImagePath)
-    fmt.Println(&quot;\nDetected objects:&quot;)
+    fmt.Printf("Image saved at %s.jpg\n", outputImagePath)
+    fmt.Println("\nDetected objects:")
     for _, category := range respData.Result.DetectedObjects {
         fmt.Println(category)
     }
 }
 </code></pre></details>
-
 <details><summary>C#</summary>
-
 <pre><code class="language-csharp">using System;
 using System.IO;
 using System.Net.Http;
@@ -761,9 +744,9 @@ using Newtonsoft.Json.Linq;
 
 class Program
 {
-    static readonly string API_URL = &quot;http://localhost:8080/small-object-detection&quot;;
-    static readonly string imagePath = &quot;./demo.jpg&quot;;
-    static readonly string outputImagePath = &quot;./out.jpg&quot;;
+    static readonly string API_URL = "http://localhost:8080/small-object-detection";
+    static readonly string imagePath = "./demo.jpg";
+    static readonly string outputImagePath = "./out.jpg";
 
     static async Task Main(string[] args)
     {
@@ -773,8 +756,8 @@ class Program
         byte[] imageBytes = File.ReadAllBytes(imagePath);
         string image_data = Convert.ToBase64String(imageBytes);
 
-        var payload = new JObject{ { &quot;image&quot;, image_data } }; // Base64-encoded file content or image URL
-        var content = new StringContent(payload.ToString(), Encoding.UTF8, &quot;application/json&quot;);
+        var payload = new JObject{ { "image", image_data } }; // Base64-encoded file content or image URL
+        var content = new StringContent(payload.ToString(), Encoding.UTF8, "application/json");
 
         // Call the API
         HttpResponseMessage response = await httpClient.PostAsync(API_URL, content);
@@ -784,19 +767,17 @@ class Program
         string responseBody = await response.Content.ReadAsStringAsync();
         JObject jsonResponse = JObject.Parse(responseBody);
 
-        string base64Image = jsonResponse[&quot;result&quot;][&quot;image&quot;].ToString();
+        string base64Image = jsonResponse["result"]["image"].ToString();
         byte[] outputImageBytes = Convert.FromBase64String(base64Image);
 
         File.WriteAllBytes(outputImagePath, outputImageBytes);
-        Console.WriteLine($&quot;Output image saved at {outputImagePath}&quot;);
-        Console.WriteLine(&quot;\nDetected objects:&quot;);
-        Console.WriteLine(jsonResponse[&quot;result&quot;][&quot;detectedObjects&quot;].ToString());
+        Console.WriteLine($"Output image saved at {outputImagePath}");
+        Console.WriteLine("\nDetected objects:");
+        Console.WriteLine(jsonResponse["result"]["detectedObjects"].ToString());
     }
 }
 </code></pre></details>
-
 <details><summary>Node.js</summary>
-
 <pre><code class="language-js">const axios = require('axios');
 const fs = require('fs');
 
@@ -821,33 +802,31 @@ function encodeImageToBase64(filePath) {
 
 // Call the API
 axios.request(config)
-.then((response) => {
+.then((response) =&gt; {
     // Process the API response data
     const result = response.data["result"];
     const imageBuffer = Buffer.from(result["image"], 'base64');
-    fs.writeFile(outputImagePath, imageBuffer, (err) => {
+    fs.writeFile(outputImagePath, imageBuffer, (err) =&gt; {
       if (err) throw err;
       console.log(`Output image saved at ${outputImagePath}`);
     });
     console.log("\nDetected objects:");
     console.log(result["detectedObjects"]);
 })
-.catch((error) => {
+.catch((error) =&gt; {
   console.log(error);
 });
 </code></pre></details>
-
 <details><summary>PHP</summary>
-
 <pre><code class="language-php">&lt;?php
 
-$API_URL = &quot;http://localhost:8080/small-object-detection&quot;; // Service URL
-$image_path = &quot;./demo.jpg&quot;;
-$output_image_path = &quot;./out.jpg&quot;;
+$API_URL = "http://localhost:8080/small-object-detection"; // Service URL
+$image_path = "./demo.jpg";
+$output_image_path = "./out.jpg";
 
 // Encode the local image with Base64
 $image_data = base64_encode(file_get_contents($image_path));
-$payload = array(&quot;image&quot; =&gt; $image_data); // Base64 encoded file content or image URL
+$payload = array("image" =&gt; $image_data); // Base64 encoded file content or image URL
 
 // Call the API
 $ch = curl_init($API_URL);
@@ -859,11 +838,11 @@ $response = curl_exec($ch);
 curl_close($ch);
 
 // Process the returned data from the interface
-$result = json_decode($response, true)[&quot;result&quot;];
-file_put_contents($output_image_path, base64_decode($result[&quot;image&quot;]));
-echo &quot;Output image saved at &quot; . $output_image_path . &quot;\n&quot;;
-echo &quot;\nDetected objects:\n&quot;;
-print_r($result[&quot;detectedObjects&quot;]);
+$result = json_decode($response, true)["result"];
+file_put_contents($output_image_path, base64_decode($result["image"]));
+echo "Output image saved at " . $output_image_path . "\n";
+echo "\nDetected objects:\n";
+print_r($result["detectedObjects"]);
 
 ?&gt;
 </code></pre></details>
@@ -881,20 +860,20 @@ Since the general small object detection pipeline includes a small object detect
 
 
 <table>
-  <thead>
-    <tr>
-      <th>Scenario</th>
-      <th>Fine-Tuning Module</th>
-      <th>Reference Link</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Prediction results are not as expected</td>
-      <td>Small Object Detection Module</td>
-      <td><a href="../../../module_usage/tutorials/cv_modules/small_object_detection.en.md">Link</a></td>
-    </tr>
-  </tbody>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Fine-Tuning Module</th>
+<th>Reference Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prediction results are not as expected</td>
+<td>Small Object Detection Module</td>
+<td><a href="../../../module_usage/tutorials/cv_modules/small_object_detection.en.md">Link</a></td>
+</tr>
+</tbody>
 </table>
 
 ### 4.2 Model Application

@@ -15,8 +15,8 @@ The seal text detection module typically outputs multi-point bounding boxes arou
 <tr>
 <th>Model Name</th><th>Model Download Link</th>
 <th>Hmean（%）</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
@@ -25,16 +25,16 @@ The seal text detection module typically outputs multi-point bounding boxes arou
 <tr>
 <td>PP-OCRv4_server_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_seal_det_pretrained.pdparams">Trained Model</a></td>
 <td>98.21</td>
-<td>84.341</td>
-<td>2425.06</td>
+<td>74.75 / 67.72</td>
+<td>382.55 / 382.55</td>
 <td>109 M</td>
 <td>The server-side seal text detection model of PP-OCRv4 boasts higher accuracy and is suitable for deployment on better-equipped servers.</td>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_seal_det_pretrained.pdparams">Trained Model</a></td>
 <td>96.47</td>
-<td>10.5878</td>
-<td>131.813</td>
+<td>7.82 / 3.09</td>
+<td>48.28 / 23.97</td>
 <td>4.6 M</td>
 <td>The mobile-side seal text detection model of PP-OCRv4, on the other hand, offers greater efficiency and is suitable for deployment on end devices.</td>
 </tr>
@@ -44,7 +44,7 @@ The seal text detection module typically outputs multi-point bounding boxes arou
 
 
 ## III. Quick Integration
-> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
+&gt; ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 
 Just a few lines of code can complete the inference of the Seal Text Detection module, allowing you to easily switch between models under this module. You can also integrate the model inference of the the Seal Text Detection module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png) to your local machine.
@@ -72,7 +72,7 @@ The meanings of the parameters are as follows:
 
 The visualization image is as follows:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/seal_text_det/seal_text_det_res.png" alt="Visualization Image">
+<img alt="Visualization Image" src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/seal_text_det/seal_text_det_res.png"/>
 
 The explanations of related methods and parameters are as follows:
 
@@ -108,8 +108,8 @@ The explanations of related methods and parameters are as follows:
 <td>
 <ul>
 <li><b>int</b>: Any integer greater than 0
-<li><b>None</b>: If set to None, the default value from the official PaddleX model configuration will be used</td>
-</ul>
+<li><b>None</b>: If set to None, the default value from the official PaddleX model configuration will be used</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -119,9 +119,9 @@ The explanations of related methods and parameters are as follows:
 <td>
 <ul>
 <li><b>str</b>: Supports min and max. min ensures the shortest side of the image is not less than det_limit_side_len, max ensures the longest side is not greater than limit_side_len
-<li><b>None</b>: If set to None, the default value from the official PaddleX model configuration will be used</td>
-</ul>
-</td>
+<li><b>None</b>: If set to None, the default value from the official PaddleX model configuration will be used</li></li></ul></td>
+
+
 <td>None</td>
 </tr>
 <tr>
@@ -131,8 +131,8 @@ The explanations of related methods and parameters are as follows:
 <td>
 <ul>
 <li><b>float</b>: Any float greater than 0
-<li><b>None</b>: If set to None, the default value from the official PaddleX model configuration will be used</td>
-</ul>
+<li><b>None</b>: If set to None, the default value from the official PaddleX model configuration will be used</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -142,8 +142,8 @@ The explanations of related methods and parameters are as follows:
 <td>
 <ul>
 <li><b>float</b>: Any float greater than 0
-<li><b>None</b>: If set to None, the default value from the official PaddleX model configuration will be used</td>
-</ul>
+<li><b>None</b>: If set to None, the default value from the official PaddleX model configuration will be used</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -153,8 +153,8 @@ The explanations of related methods and parameters are as follows:
 <td>
 <ul>
 <li><b>int</b>: Any integer greater than 0
-<li><b>None</b>: If set to None, the default value from the official PaddleX model configuration will be used</td>
-</ul>
+<li><b>None</b>: If set to None, the default value from the official PaddleX model configuration will be used</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -164,8 +164,8 @@ The explanations of related methods and parameters are as follows:
 <td>
 <ul>
 <li><b>float</b>: Any float greater than 0
-<li><b>None</b>: If set to None, the default value from the official PaddleX model configuration will be used</td>
-</ul>
+<li><b>None</b>: If set to None, the default value from the official PaddleX model configuration will be used</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -197,12 +197,12 @@ The explanations of related methods and parameters are as follows:
 <td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
 <td>
 <ul>
-  <li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
-  <li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
-  <li><b>URL link</b>, such as the network URL of an image file: <a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">Example</a></li></url> 
-  <li><b>Local directory</b>, the directory must contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
-  <li><b>Dictionary</b>, the <code>key</code> of the dictionary must correspond to the specific task, such as <code>"img"</code> for image classification tasks, and the <code>val</code> of the dictionary supports the above types of data, for example: <code>{"img": "/root/data1"}</code></li>
-  <li><b>List</b>, the elements of the list must be the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code></li>
+<li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
+<li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
+<li><b>URL link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">Example</a></li>
+<li><b>Local directory</b>, the directory must contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
+<li><b>Dictionary</b>, the <code>key</code> of the dictionary must correspond to the specific task, such as <code>"img"</code> for image classification tasks, and the <code>val</code> of the dictionary supports the above types of data, for example: <code>{"img": "/root/data1"}</code></li>
+<li><b>List</b>, the elements of the list must be the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code></li>
 </ul>
 </td>
 <td>None</td>
@@ -221,8 +221,8 @@ The explanations of related methods and parameters are as follows:
 <td>
 <ul>
 <li><b>int</b>: Any integer greater than 0
-<li><b>None</b>: If set to None, the parameter value initialized by the model will be used by default</td>
-</ul>
+<li><b>None</b>: If set to None, the parameter value initialized by the model will be used by default</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -232,9 +232,9 @@ The explanations of related methods and parameters are as follows:
 <td>
 <ul>
 <li><b>str</b>: Supports min and max. min indicates that the shortest side of the image is not less than det_limit_side_len, max indicates that the longest side of the image is not greater than limit_side_len
-<li><b>None</b>: If set to None, the parameter value initialized by the model will be used by default</td>
-</ul>
-</td>
+<li><b>None</b>: If set to None, the parameter value initialized by the model will be used by default</li></li></ul></td>
+
+
 <td>None</td>
 </tr>
 <tr>
@@ -244,8 +244,8 @@ The explanations of related methods and parameters are as follows:
 <td>
 <ul>
 <li><b>float</b>: Any float greater than 0
-<li><b>None</b>: If set to None, the parameter value initialized by the model will be used by default</td>
-</ul>
+<li><b>None</b>: If set to None, the parameter value initialized by the model will be used by default</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -255,8 +255,8 @@ The explanations of related methods and parameters are as follows:
 <td>
 <ul>
 <li><b>float</b>: Any float greater than 0
-<li><b>None</b>: If set to None, the parameter value initialized by the model will be used by default</td>
-</ul>
+<li><b>None</b>: If set to None, the parameter value initialized by the model will be used by default</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -266,8 +266,8 @@ The explanations of related methods and parameters are as follows:
 <td>
 <ul>
 <li><b>int</b>: Any integer greater than 0
-<li><b>None</b>: If set to None, the parameter value initialized by the model will be used by default</td>
-</ul>
+<li><b>None</b>: If set to None, the parameter value initialized by the model will be used by default</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -277,8 +277,8 @@ The explanations of related methods and parameters are as follows:
 <td>
 <ul>
 <li><b>float</b>: Any float greater than 0
-<li><b>None</b>: If set to None, the parameter value initialized by the model will be used by default</td>
-</ul>
+<li><b>None</b>: If set to None, the parameter value initialized by the model will be used by default</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -304,8 +304,8 @@ The explanations of related methods and parameters are as follows:
 </tr>
 </thead>
 <tr>
-<td rowspan = "3"><code>print()</code></td>
-<td rowspan = "3">Print the result to the terminal</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print the result to the terminal</td>
 <td><code>format_json</code></td>
 <td><code>bool</code></td>
 <td>Whether to format the output content using <code>JSON</code> indentation</td>
@@ -324,8 +324,8 @@ The explanations of related methods and parameters are as follows:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td rowspan = "3"><code>save_to_json()</code></td>
-<td rowspan = "3">Save the result as a file in JSON format</td>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save the result as a file in JSON format</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
 <td>The file path for saving. When it is a directory, the saved file name will be consistent with the input file name</td>
@@ -363,12 +363,12 @@ The explanations of related methods and parameters are as follows:
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">Get the prediction result in <code>json</code> format</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format</td>
 </tr>
 <tr>
-<td rowspan = "1"><code>img</code></td>
-<td rowspan = "1">Get the visual image in <code>dict</code> format</td>
+<td rowspan="1"><code>img</code></td>
+<td rowspan="1">Get the visual image in <code>dict</code> format</td>
 </tr>
 </table>
 
@@ -405,45 +405,44 @@ After executing the above command, PaddleX will verify the dataset and collect b
 
 
 <details><summary>👉 <b>Verification Result Details (click to expand)</b></summary>
-
 <p>The specific content of the verification result file is:</p>
 <pre><code class="language-bash">{
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;train_samples&quot;: 606,
-    &quot;train_sample_paths&quot;: [
-      &quot;..\/ocr_curve_det_dataset_examples\/images\/circle_Aug07834.png&quot;,
-      &quot;..\/ocr_curve_det_dataset_examples\/images\/circle_Aug09943.png&quot;,
-      &quot;..\/ocr_curve_det_dataset_examples\/images\/circle_Aug04079.png&quot;,
-      &quot;..\/ocr_curve_det_dataset_examples\/images\/circle_Aug05701.png&quot;,
-      &quot;..\/ocr_curve_det_dataset_examples\/images\/circle_Aug08324.png&quot;,
-      &quot;..\/ocr_curve_det_dataset_examples\/images\/circle_Aug07451.png&quot;,
-      &quot;..\/ocr_curve_det_dataset_examples\/images\/circle_Aug09562.png&quot;,
-      &quot;..\/ocr_curve_det_dataset_examples\/images\/circle_Aug08237.png&quot;,
-      &quot;..\/ocr_curve_det_dataset_examples\/images\/circle_Aug01788.png&quot;,
-      &quot;..\/ocr_curve_det_dataset_examples\/images\/circle_Aug06481.png&quot;
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "train_samples": 606,
+    "train_sample_paths": [
+      "..\/ocr_curve_det_dataset_examples\/images\/circle_Aug07834.png",
+      "..\/ocr_curve_det_dataset_examples\/images\/circle_Aug09943.png",
+      "..\/ocr_curve_det_dataset_examples\/images\/circle_Aug04079.png",
+      "..\/ocr_curve_det_dataset_examples\/images\/circle_Aug05701.png",
+      "..\/ocr_curve_det_dataset_examples\/images\/circle_Aug08324.png",
+      "..\/ocr_curve_det_dataset_examples\/images\/circle_Aug07451.png",
+      "..\/ocr_curve_det_dataset_examples\/images\/circle_Aug09562.png",
+      "..\/ocr_curve_det_dataset_examples\/images\/circle_Aug08237.png",
+      "..\/ocr_curve_det_dataset_examples\/images\/circle_Aug01788.png",
+      "..\/ocr_curve_det_dataset_examples\/images\/circle_Aug06481.png"
     ],
-    &quot;val_samples&quot;: 152,
-    &quot;val_sample_paths&quot;: [
-      &quot;..\/ocr_curve_det_dataset_examples\/images\/circle_Aug03724.png&quot;,
-      &quot;..\/ocr_curve_det_dataset_examples\/images\/circle_Aug06456.png&quot;,
-      &quot;..\/ocr_curve_det_dataset_examples\/images\/circle_Aug04029.png&quot;,
-      &quot;..\/ocr_curve_det_dataset_examples\/images\/circle_Aug03603.png&quot;,
-      &quot;..\/ocr_curve_det_dataset_examples\/images\/circle_Aug05454.png&quot;,
-      &quot;..\/ocr_curve_det_dataset_examples\/images\/circle_Aug06269.png&quot;,
-      &quot;..\/ocr_curve_det_dataset_examples\/images\/circle_Aug00624.png&quot;,
-      &quot;..\/ocr_curve_det_dataset_examples\/images\/circle_Aug02818.png&quot;,
-      &quot;..\/ocr_curve_det_dataset_examples\/images\/circle_Aug00538.png&quot;,
-      &quot;..\/ocr_curve_det_dataset_examples\/images\/circle_Aug04935.png&quot;
+    "val_samples": 152,
+    "val_sample_paths": [
+      "..\/ocr_curve_det_dataset_examples\/images\/circle_Aug03724.png",
+      "..\/ocr_curve_det_dataset_examples\/images\/circle_Aug06456.png",
+      "..\/ocr_curve_det_dataset_examples\/images\/circle_Aug04029.png",
+      "..\/ocr_curve_det_dataset_examples\/images\/circle_Aug03603.png",
+      "..\/ocr_curve_det_dataset_examples\/images\/circle_Aug05454.png",
+      "..\/ocr_curve_det_dataset_examples\/images\/circle_Aug06269.png",
+      "..\/ocr_curve_det_dataset_examples\/images\/circle_Aug00624.png",
+      "..\/ocr_curve_det_dataset_examples\/images\/circle_Aug02818.png",
+      "..\/ocr_curve_det_dataset_examples\/images\/circle_Aug00538.png",
+      "..\/ocr_curve_det_dataset_examples\/images\/circle_Aug04935.png"
     ]
   },
-  &quot;analysis&quot;: {
-    &quot;histogram&quot;: &quot;check_dataset\/histogram.png&quot;
+  "analysis": {
+    "histogram": "check_dataset\/histogram.png"
   },
-  &quot;dataset_path&quot;: &quot;.\/ocr_curve_det_dataset_examples&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;TextDetDataset&quot;
+  "dataset_path": ".\/ocr_curve_det_dataset_examples",
+  "show_type": "image",
+  "dataset_type": "TextDetDataset"
 }
 </code></pre>
 <p>The verification results above indicate that <code>check_pass</code> being <code>True</code> means the dataset format meets the requirements. Explanations for other indicators are as follows:</p>
@@ -454,11 +453,10 @@ After executing the above command, PaddleX will verify the dataset and collect b
 <li><code>attributes.val_sample_paths</code>: A list of relative paths to the visualization images of validation samples in this dataset;</li>
 </ul>
 <p>The dataset verification also analyzes the distribution of sample numbers across all classes and plots a histogram (histogram.png):</p>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/curved_text_dec/01.png"></p></details>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/curved_text_dec/01.png"/></p></details>
 
 #### 4.1.3 Dataset Format Conversion/Dataset Splitting (Optional)
 <details><summary>👉 <b>Details on Format Conversion/Dataset Splitting (Click to Expand)</b></summary>
-
 <p>After completing dataset verification, you can convert the dataset format or re-split the training/validation ratio by modifying the configuration file or appending hyperparameters.</p>
 <p><b>(1) Dataset Format Conversion</b></p>
 <p>Seal text detection does not support data format conversion.</p>
@@ -512,10 +510,8 @@ You need to follow these steps:
 * Specify the training dataset path: `-o Global.dataset_dir`
 
 Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to train using the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration Parameters Documentation](../../instructions/config_parameters_common.en.md).
-</details>
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <ul>
 <li>During model training, PaddleX automatically saves model weight files, with the default path being <code>output</code>. To specify a different save path, use the <code>-o Global.output</code> field in the configuration file.</li>
 <li>PaddleX abstracts the concepts of dynamic graph weights and static graph weights from you. During model training, both dynamic and static graph weights are produced, and static graph weights are used by default for model inference.</li>
@@ -548,7 +544,6 @@ Similar to model training, follow these steps:
 Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For more details, refer to the [PaddleX Common Configuration Parameters Documentation](../../instructions/config_parameters_common.en.md).
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <p>When evaluating the model, you need to specify the model weight file path. Each configuration file has a default weight save path. If you need to change it, simply append the command line parameter, e.g., <code>-o Evaluate.weight_path=./output/best_model/best_model.pdparams</code>.</p>
 <p>After model evaluation, the following outputs are typically produced:</p>
 <ul>

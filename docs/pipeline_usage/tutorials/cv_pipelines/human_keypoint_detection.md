@@ -1,5 +1,3 @@
-简体中文 | [English](human_keypoint_detection.en.md)
-
 # 人体关键点检测产线使用教程
 
 ## 1. 人体关键点检测产线介绍
@@ -8,80 +6,74 @@
 
 PaddleX 的人体关键点检测产线是一个 Top-Down 方案，由行人检测和关键点检测两个模块组成，针对移动端设备优化，可精确流畅地在移动端设备上执行多人姿态估计任务。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/human_keypoint_detection/01.jpg">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/human_keypoint_detection/01.jpg"/>
 <b>人体关键点检测产线中包含了行人检测模块和人体关键点检测模块</b>，有若干模型可供选择，您可以根据下边的 benchmark 数据来选择使用的模型。<b>如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型</b>。
 
-<summary> 👉模型列表详情</summary>
-
+<details><summary> 👉模型列表详情</summary>
 <b>行人检测模块：</b>
-
 <table>
-  <tr>
-    <th >模型</th>
-    <th >mAP(0.5:0.95)</th>
-    <th >mAP(0.5)</th>
-    <th >GPU推理耗时（ms）</th>
-    <th >CPU推理耗时 (ms)</th>
-    <th >模型存储大小（M）</th>
-    <th >介绍</th>
-  </tr>
-  <tr>
-    <td>PP-YOLOE-L_human</td>
-    <td>48.0</td>
-    <td>81.9</td>
-    <td>32.8</td>
-    <td>777.7</td>
-    <td>196.02</td>
-    <td rowspan="2">基于PP-YOLOE的行人检测模型</td>
-  </tr>
-  <tr>
-    <td>PP-YOLOE-S_human</td>
-    <td>42.5</td>
-    <td>77.9</td>
-    <td>15.0</td>
-    <td>179.3</td>
-    <td>28.79</td>
-  </tr>
+<tr>
+<th>模型</th>
+<th>mAP(0.5:0.95)</th>
+<th>mAP(0.5)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（M）</th>
+<th>介绍</th>
+</tr>
+<tr>
+<td>PP-YOLOE-L_human</td>
+<td>48.0</td>
+<td>81.9</td>
+<td>33.27 / 9.19</td>
+<td>173.72 / 173.72</td>
+<td>196.02</td>
+<td rowspan="2">基于PP-YOLOE的行人检测模型</td>
+</tr>
+<tr>
+<td>PP-YOLOE-S_human</td>
+<td>42.5</td>
+<td>77.9</td>
+<td>9.94 / 3.42</td>
+<td>54.48 / 46.52</td>
+<td>28.79</td>
+</tr>
 </table>
-
 <b>注：以上精度指标为CrowdHuman数据集 mAP(0.5:0.95)。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b>
-
 <b>人体关键点检测模块：</b>
-
 <table>
-  <tr>
-    <th >模型</th>
-    <th >方案</th>
-    <th >输入尺寸</th>
-    <th >AP(0.5:0.95)</th>
-    <th >GPU推理耗时（ms）</th>
-    <th >CPU推理耗时 (ms)</th>
-    <th >模型存储大小（M）</th>
-    <th >介绍</th>
-  </tr>
-  <tr>
-    <td>PP-TinyPose_128x96</td>
-    <td>Top-Down</td>
-    <td>128*96</td>
-    <td>58.4</td>
-    <td></td>
-    <td></td>
-    <td>4.9</td>
-    <td rowspan="2">PP-TinyPose 是百度飞桨视觉团队自研的针对移动端设备优化的实时关键点检测模型，可流畅地在移动端设备上执行多人姿态估计任务</td>
-  </tr>
-  <tr>
-    <td>PP-TinyPose_256x192</td>
-    <td>Top-Down</td>
-    <td>256*192</td>
-    <td>68.3</td>
-    <td></td>
-    <td></td>
-    <td>4.9</td>
-  </tr>
+<tr>
+<th>模型</th>
+<th>方案</th>
+<th>输入尺寸</th>
+<th>AP(0.5:0.95)</th>
+<th>GPU推理耗时（ms）</th>
+<th>CPU推理耗时 (ms)</th>
+<th>模型存储大小（M）</th>
+<th>介绍</th>
+</tr>
+<tr>
+<td>PP-TinyPose_128x96</td>
+<td>Top-Down</td>
+<td>128*96</td>
+<td>58.4</td>
+<td></td>
+<td></td>
+<td>4.9</td>
+<td rowspan="2">PP-TinyPose 是百度飞桨视觉团队自研的针对移动端设备优化的实时关键点检测模型，可流畅地在移动端设备上执行多人姿态估计任务</td>
+</tr>
+<tr>
+<td>PP-TinyPose_256x192</td>
+<td>Top-Down</td>
+<td>256*192</td>
+<td>68.3</td>
+<td></td>
+<td></td>
+<td>4.9</td>
+</tr>
 </table>
-
 <b>注：以上精度指标为COCO数据集 AP(0.5:0.95)，所依赖的检测框为ground truth标注得到。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b>
+</details>
 
 ## 2. 快速开始
 
@@ -110,7 +102,7 @@ paddlex --pipeline human_keypoint_detection \
 
 可视化结果保存至`save_path`，如下所示：
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/human_keypoint_detection/01.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/human_keypoint_detection/01.jpg"/>
 
 #### 2.2.2 Python脚本方式集成
 通过上述命令行方式可快速体验查看效果，在项目中往往需要代码集成，您可以通过如下几行代码完成产线的快速推理：
@@ -186,9 +178,9 @@ for res in output:
 <td><code>Python Var|str|list</code></td>
 <td>
 <ul>
-  <li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
-  <li><b>str</b>：如图像文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code></li>
-  <li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
+<li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
+<li><b>str</b>：如图像文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code></li>
+<li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td>无</td>
@@ -199,8 +191,8 @@ for res in output:
 <td><code>float|None</code></td>
 <td>
 <ul>
-  <li><b>float</b>：如<code>0.5</code>， 表示过滤掉所有阈值小于<code>0.5</code>的目标框；</li>
-  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>0.5</code>；</li>
+<li><b>float</b>：如<code>0.5</code>， 表示过滤掉所有阈值小于<code>0.5</code>的目标框；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>0.5</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -221,8 +213,8 @@ for res in output:
 </tr>
 </thead>
 <tr>
-<td rowspan = "3"><code>print()</code></td>
-<td rowspan = "3">打印结果到终端</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">打印结果到终端</td>
 <td><code>format_json</code></td>
 <td><code>bool</code></td>
 <td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
@@ -241,8 +233,8 @@ for res in output:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td rowspan = "3"><code>save_to_json()</code></td>
-<td rowspan = "3">将结果保存为json格式的文件</td>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">将结果保存为json格式的文件</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
 <td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
@@ -269,7 +261,6 @@ for res in output:
 <td>无</td>
 </tr>
 </table>
-
 <ul><li><details><summary>👉 调用 <code>print()</code> 方法会将如下结果打印到终端（点击展开）：</summary>
 
 ```bash
@@ -458,12 +449,12 @@ for res in output:
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">获取预测的 <code>json</code> 格式的结果</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">获取预测的 <code>json</code> 格式的结果</td>
 </tr>
 <tr>
-<td rowspan = "2"><code>img</code></td>
-<td rowspan = "2">获取格式为 <code>dict</code> 的可视化图像</td>
+<td rowspan="2"><code>img</code></td>
+<td rowspan="2">获取格式为 <code>dict</code> 的可视化图像</td>
 </tr>
 </table>
 
@@ -505,40 +496,35 @@ for res in output:
 以下是基础服务化部署的API参考与多语言服务调用示例：
 
 <details><summary>API参考</summary>
-
 </details>
-
 <details><summary>多语言调用服务示例</summary>
-
 <details>
 <summary>Python</summary>
-
-
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/ocr&quot; # 服务URL
-image_path = &quot;./demo.jpg&quot;
-output_image_path = &quot;./out.jpg&quot;
+API_URL = "http://localhost:8080/ocr" # 服务URL
+image_path = "./demo.jpg"
+output_image_path = "./out.jpg"
 
 # 对本地图像进行Base64编码
-with open(image_path, &quot;rb&quot;) as file:
+with open(image_path, "rb") as file:
     image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
-payload = {&quot;image&quot;: image_data}  # Base64编码的文件内容或者图像URL
+payload = {"image": image_data}  # Base64编码的文件内容或者图像URL
 
 # 调用API
 response = requests.post(API_URL, json=payload)
 
 # 处理接口返回数据
 assert response.status_code == 200
-result = response.json()[&quot;result&quot;]
-with open(output_image_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result[&quot;image&quot;]))
-print(f&quot;Output image saved at {output_image_path}&quot;)
-print(&quot;\nDetected texts:&quot;)
-print(result[&quot;texts&quot;])
+result = response.json()["result"]
+with open(output_image_path, "wb") as file:
+    file.write(base64.b64decode(result["image"]))
+print(f"Output image saved at {output_image_path}")
+print("\nDetected texts:")
+print(result["texts"])
 </code></pre>
 </details>
 </details>

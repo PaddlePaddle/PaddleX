@@ -14,36 +14,34 @@ comments: true
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>recall@1 (%)</th>
-<th>GPU推理耗时 (ms)</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小 (M)</th>
 <th>介绍</th>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-ShiTuV2_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-ShiTuV2_rec_pretrained.pdparams">训练模型</a></td>
 <td>84.2</td>
-<td>5.23428</td>
-<td>19.6005</td>
+<td>3.48 / 0.55</td>
+<td>8.04 / 4.04</td>
 <td>16.3 M</td>
 <td rowspan="3">PP-ShiTuV2是一个通用图像特征系统，由主体检测、特征提取、向量检索三个模块构成，这些模型是其中的特征提取模块的模型之一，可以根据系统的情况选择不同的模型。</td>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec_CLIP_vit_base</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-ShiTuV2_rec_CLIP_vit_base_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-ShiTuV2_rec_CLIP_vit_base_pretrained.pdparams">训练模型</a></td>
 <td>88.69</td>
-<td>13.1957</td>
-<td>285.493</td>
+<td>12.94 / 2.88</td>
+<td>58.36 / 58.36</td>
 <td>306.6 M</td>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec_CLIP_vit_large</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-ShiTuV2_rec_CLIP_vit_large_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-ShiTuV2_rec_CLIP_vit_large_pretrained.pdparams">训练模型</a></td>
 <td>91.03</td>
-<td>51.1284</td>
-<td>1131.28</td>
+<td>51.65 / 11.18</td>
+<td>255.78 / 255.78</td>
 <td>1.05 G</td>
 </tr>
 </table>
-
-
 <b>注：以上精度指标为 AliProducts recall@1。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b>
 
 ## 三、快速集成
@@ -120,12 +118,12 @@ for res in output:
 <td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
 <td>
 <ul>
-  <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
-  <li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
-  <li><b>URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">示例</a></li>
-  <li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
-  <li><b>字典</b>，字典的<code>key</code>需与具体任务对应，如图像分类任务对应<code>\"img\"</code>，字典的<code>val</code>支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code></li>
-  <li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code></li>
+<li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
+<li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
+<li><b>URL链接</b>，如图像文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">示例</a></li>
+<li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
+<li><b>字典</b>，字典的<code>key</code>需与具体任务对应，如图像分类任务对应<code>\"img\"</code>，字典的<code>val</code>支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code></li>
+<li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code></li>
 </ul>
 </td>
 <td>无</td>
@@ -153,8 +151,8 @@ for res in output:
 </tr>
 </thead>
 <tr>
-<td rowspan = "3"><code>print()</code></td>
-<td rowspan = "3">打印结果到终端</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">打印结果到终端</td>
 <td><code>format_json</code></td>
 <td><code>bool</code></td>
 <td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
@@ -173,8 +171,8 @@ for res in output:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td rowspan = "3"><code>save_to_json()</code></td>
-<td rowspan = "3">将结果保存为json格式的文件</td>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">将结果保存为json格式的文件</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
 <td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
@@ -204,8 +202,8 @@ for res in output:
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">获取预测的<code>json</code>格式的结果</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">获取预测的<code>json</code>格式的结果</td>
 </tr>
 </table>
 
@@ -233,58 +231,57 @@ python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml \
 执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息，命令运行成功后会在log中打印出`Check dataset passed !`信息。校验结果文件保存在`./output/check_dataset_result.json`，同时相关产出会保存在当前目录的`./output/check_dataset`目录下，产出目录中包括可视化的示例样本图片和样本分布直方图。
 
 <details><summary>👉 <b>校验结果详情（点击展开）</b></summary>
-
 <p>校验结果文件具体内容为：</p>
 <pre><code class="language-bash">
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;train_samples&quot;: 1000,
-    &quot;train_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/05_1_front.jpg&quot;,
-      &quot;check_dataset/demo_img/02_1_front.jpg&quot;,
-      &quot;check_dataset/demo_img/02_3_back.jpg&quot;,
-      &quot;check_dataset/demo_img/04_3_back.jpg&quot;,
-      &quot;check_dataset/demo_img/04_2_side.jpg&quot;,
-      &quot;check_dataset/demo_img/12_1_front.jpg&quot;,
-      &quot;check_dataset/demo_img/07_2_side.jpg&quot;,
-      &quot;check_dataset/demo_img/04_7_additional.jpg&quot;,
-      &quot;check_dataset/demo_img/04_4_full.jpg&quot;,
-      &quot;check_dataset/demo_img/01_1_front.jpg&quot;
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "train_samples": 1000,
+    "train_sample_paths": [
+      "check_dataset/demo_img/05_1_front.jpg",
+      "check_dataset/demo_img/02_1_front.jpg",
+      "check_dataset/demo_img/02_3_back.jpg",
+      "check_dataset/demo_img/04_3_back.jpg",
+      "check_dataset/demo_img/04_2_side.jpg",
+      "check_dataset/demo_img/12_1_front.jpg",
+      "check_dataset/demo_img/07_2_side.jpg",
+      "check_dataset/demo_img/04_7_additional.jpg",
+      "check_dataset/demo_img/04_4_full.jpg",
+      "check_dataset/demo_img/01_1_front.jpg"
     ],
-    &quot;gallery_samples&quot;: 110,
-    &quot;gallery_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/06_2_side.jpg&quot;,
-      &quot;check_dataset/demo_img/01_4_full.jpg&quot;,
-      &quot;check_dataset/demo_img/04_7_additional.jpg&quot;,
-      &quot;check_dataset/demo_img/02_1_front.jpg&quot;,
-      &quot;check_dataset/demo_img/02_3_back.jpg&quot;,
-      &quot;check_dataset/demo_img/02_3_back.jpg&quot;,
-      &quot;check_dataset/demo_img/02_4_full.jpg&quot;,
-      &quot;check_dataset/demo_img/03_4_full.jpg&quot;,
-      &quot;check_dataset/demo_img/02_2_side.jpg&quot;,
-      &quot;check_dataset/demo_img/03_2_side.jpg&quot;
+    "gallery_samples": 110,
+    "gallery_sample_paths": [
+      "check_dataset/demo_img/06_2_side.jpg",
+      "check_dataset/demo_img/01_4_full.jpg",
+      "check_dataset/demo_img/04_7_additional.jpg",
+      "check_dataset/demo_img/02_1_front.jpg",
+      "check_dataset/demo_img/02_3_back.jpg",
+      "check_dataset/demo_img/02_3_back.jpg",
+      "check_dataset/demo_img/02_4_full.jpg",
+      "check_dataset/demo_img/03_4_full.jpg",
+      "check_dataset/demo_img/02_2_side.jpg",
+      "check_dataset/demo_img/03_2_side.jpg"
     ],
-    &quot;query_samples&quot;: 125,
-    &quot;query_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/08_7_additional.jpg&quot;,
-      &quot;check_dataset/demo_img/01_7_additional.jpg&quot;,
-      &quot;check_dataset/demo_img/02_4_full.jpg&quot;,
-      &quot;check_dataset/demo_img/04_4_full.jpg&quot;,
-      &quot;check_dataset/demo_img/09_7_additional.jpg&quot;,
-      &quot;check_dataset/demo_img/04_3_back.jpg&quot;,
-      &quot;check_dataset/demo_img/02_1_front.jpg&quot;,
-      &quot;check_dataset/demo_img/06_2_side.jpg&quot;,
-      &quot;check_dataset/demo_img/02_7_additional.jpg&quot;,
-      &quot;check_dataset/demo_img/02_2_side.jpg&quot;
+    "query_samples": 125,
+    "query_sample_paths": [
+      "check_dataset/demo_img/08_7_additional.jpg",
+      "check_dataset/demo_img/01_7_additional.jpg",
+      "check_dataset/demo_img/02_4_full.jpg",
+      "check_dataset/demo_img/04_4_full.jpg",
+      "check_dataset/demo_img/09_7_additional.jpg",
+      "check_dataset/demo_img/04_3_back.jpg",
+      "check_dataset/demo_img/02_1_front.jpg",
+      "check_dataset/demo_img/06_2_side.jpg",
+      "check_dataset/demo_img/02_7_additional.jpg",
+      "check_dataset/demo_img/02_2_side.jpg"
     ]
   },
-  &quot;analysis&quot;: {
-    &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
+  "analysis": {
+    "histogram": "check_dataset/histogram.png"
   },
-  &quot;dataset_path&quot;: &quot;./dataset/Inshop_examples&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;ShiTuRecDataset&quot;
+  "dataset_path": "./dataset/Inshop_examples",
+  "show_type": "image",
+  "dataset_type": "ShiTuRecDataset"
 }
 </code></pre>
 <p>上述校验结果中，check_pass  为 true 表示数据集格式符合要求，其他部分指标的说明如下：</p>
@@ -297,13 +294,12 @@ python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml \
 <li><code>attributes.query_sample_paths</code>：该数据集查询样本可视化图片相对路径列表；
 另外，数据集校验还对数据集中图像数量和图像类别情况进行了分析，并绘制了分布直方图（histogram.png）：</li>
 </ul>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/img_recognition/01.png"></p></details>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/img_recognition/01.png"/></p></details>
 
 ### 4.1.3 数据集格式转换/数据集划分（可选）
 在您完成数据校验之后，可以通过<b>修改配置文件</b>或是<b>追加超参数</b>的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。
 
 <details><summary>👉 <b>格式转换/数据集划分详情（点击展开）</b></summary>
-
 <p><b>（1）数据集格式转换</b></p>
 <p>图像特征任务支持 <code>LabelMe</code>格式的数据集转换为 <code>ShiTuRecDataset</code>格式，数据集格式转换的参数可以通过修改配置文件中 <code>CheckDataset</code> 下的字段进行设置，配置文件中部分参数的示例说明如下：</p>
 <ul>
@@ -392,7 +388,6 @@ python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml \
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
-
 <ul>
 <li>模型训练过程中，PaddleX 会自动保存模型权重文件，默认为<code>output</code>，如需指定保存路径，可通过配置文件中 <code>-o Global.output</code> 字段进行设置。</li>
 <li>PaddleX 对您屏蔽了动态图权重和静态图权重的概念。在模型训练的过程中，会同时产出动态图和静态图的权重，在模型推理时，默认选择静态图权重推理。</li>
@@ -423,7 +418,6 @@ python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml \
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Evaluate`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
-
 <p>在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如<code>-o Evaluate.weight_path=./output/best_model/best_model.pdparams</code>。</p>
 <p>在完成模型评估后，会产出<code>evaluate_result.json，其记录了</code>评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标，包含 recall1、recall5、mAP；</p></details>
 

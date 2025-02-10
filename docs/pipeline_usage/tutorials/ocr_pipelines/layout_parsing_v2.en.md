@@ -10,18 +10,15 @@ Layout analysis is a technology that extracts structured information from docume
 <b>The Universal Layout Analysis v2 production line includes a mandatory layout region analysis module and a general OCR sub-production line,</b> as well as optional sub-production lines for document image preprocessing, table recognition, seal recognition, and formula recognition.
 
 <b>If you prioritize model accuracy, choose a high-accuracy model; if you prioritize model inference speed, choose a faster inference model; if you prioritize model storage size, choose a smaller storage model.</b>
-
 <details><summary>👉 Model List Details</summary>
-
 <p><b>Document Image Orientation Classification Module (Optional):</b></p>
-
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top-1 Acc (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -30,17 +27,15 @@ Layout analysis is a technology that extracts structured information from docume
 <tr>
 <td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Training Model</a></td>
 <td>99.06</td>
-<td>3.84845</td>
-<td>9.23735</td>
+<td>2.31 / 0.43</td>
+<td>3.37 / 1.27</td>
 <td>7</td>
 <td>A document image classification model based on PP-LCNet_x1_0, containing four categories: 0 degrees, 90 degrees, 180 degrees, and 270 degrees.</td>
 </tr>
 </tbody>
 </table>
 <b>Note: The evaluation set for the above accuracy metrics is a self-built dataset covering various scenarios including identification documents and documents, with 1000 images. The GPU inference time is based on an NVIDIA Tesla T4 machine, with a precision type of FP32. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and a precision type of FP32.</b>
-
 <p><b>Text Image Rectification Module (Optional):</b></p>
-
 <table>
 <thead>
 <tr>
@@ -60,15 +55,14 @@ Layout analysis is a technology that extracts structured information from docume
 </tbody>
 </table>
 <b>Note: The model's accuracy metrics are measured from the <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet benchmark</a>.</b>
-
 <p><b>Layout Detection Module Model (Required):</b></p>
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -101,110 +95,106 @@ Layout analysis is a technology that extracts structured information from docume
 <tr>
 <td>PicoDet_layout_1x</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">Training Model</a></td>
 <td>86.8</td>
-<td>13.0</td>
-<td>91.3</td>
+<td>9.03 / 3.10</td>
+<td>25.82 / 20.70</td>
 <td>7.4</td>
 <td>A high-efficiency layout region detection model trained on the PubLayNet dataset, based on PicoDet-1x, capable of locating five types of regions: text, title, table, image, and list.</td>
 </tr>
 <tr>
 <td>PicoDet_layout_1x_table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_table_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">Training Model</a></td>
 <td>95.7</td>
-<td>12.623</td>
-<td>90.8934</td>
+<td>8.02 / 3.09</td>
+<td>23.70 / 20.41</td>
 <td>7.4 M</td>
 <td>A high-efficiency layout region detection model trained on a self-built dataset, based on PicoDet-1x, capable of locating one type of region: table.</td>
 </tr>
 <tr>
 <td>PicoDet-S_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">Training Model</a></td>
 <td>87.1</td>
-<td>13.5</td>
-<td>45.8</td>
+<td>8.99 / 2.22</td>
+<td>16.11 / 8.73</td>
 <td>4.8</td>
 <td>A high-efficiency layout region detection model trained on a self-built dataset containing Chinese and English papers, magazines, and research reports, based on the lightweight PicoDet-S model, with three categories: table, image, and seal.</td>
 </tr>
 <tr>
 <td>PicoDet-S_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">Training Model</a></td>
 <td>70.3</td>
-<td>13.6</td>
-<td>46.2</td>
+<td>9.11 / 2.12</td>
+<td>15.42 / 9.12</td>
 <td>4.8</td>
 <td>A high-efficiency layout region detection model trained on a self-built dataset containing Chinese and English papers, magazines, and research reports, based on the lightweight PicoDet-S model, with 17 common layout categories: paragraph title, image, text, number, abstract, content, chart title, formula, table, table title, reference, document title, footnote, header, algorithm, footer, and seal.</td>
 </tr>
 <tr>
 <td>PicoDet-L_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">Training Model</a></td>
 <td>89.3</td>
-<td>15.7</td>
-<td>159.8</td>
+<td>13.05 / 4.50</td>
+<td>41.30 / 41.30</td>
 <td>22.6</td>
 <td>A high-efficiency layout region detection model trained on a self-built dataset containing Chinese and English papers, magazines, and research reports, based on PicoDet-L, with three categories: table, image, and seal.</td>
 </tr>
 <tr>
 <td>PicoDet-L_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">Training Model</a></td>
 <td>79.9</td>
-<td>17.2</td>
-<td>160.2</td>
+<td>13.50 / 4.69</td>
+<td>43.32 / 43.32</td>
 <td>22.6</td>
 <td>A high-efficiency layout region detection model trained on a self-built dataset containing Chinese and English papers, magazines, and research reports, based on PicoDet-L, with 17 common layout categories: paragraph title, image, text, number, abstract, content, chart title, formula, table, table title, reference, document title, footnote, header, algorithm, footer, and seal.</td>
 </tr>
 <tr>
 <td>RT-DETR-H_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">Training Model</a></td>
 <td>95.9</td>
-<td>114.6</td>
-<td>3832.6</td>
+<td>114.93 / 27.71</td>
+<td>947.56 / 947.56</td>
 <td>470.1</td>
 <td>A high-precision layout region localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using RT-DETR-H, with 3 categories: table, image, and seal.</td>
 </tr>
 <tr>
 <td>RT-DETR-H_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">Training Model</a></td>
 <td>92.6</td>
-<td>115.1</td>
-<td>3827.2</td>
+<td>115.29 / 104.09</td>
+<td>995.27 / 995.27</td>
 <td>470.2</td>
 <td>A high-precision layout region localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using RT-DETR-H, with 17 common layout categories: paragraph title, image, text, number, abstract, content, chart title, formula, table, table title, references, document title, footnote, header, algorithm, footer, and seal.</td>
 </tr>
 </tbody>
 </table>
 <p><b>Note: The evaluation set for the above accuracy metrics is a self-built layout region analysis dataset by PaddleOCR, containing 10,000 common document-type images of Chinese and English papers, magazines, and research reports. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
-
-
 <p><b>Table Structure Recognition Module (Optional):</b></p>
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Accuracy (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
 <tr>
 <td>SLANet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_pretrained.pdparams">Training Model</a></td>
 <td>59.52</td>
-<td>522.536</td>
-<td>1845.37</td>
+<td>103.08 / 103.08</td>
+<td>197.99 / 197.99</td>
 <td>6.9 M</td>
 <td>SLANet is a table structure recognition model independently developed by the Baidu PaddlePaddle Vision Team. This model significantly improves the accuracy and inference speed of table structure recognition by using a lightweight backbone network PP-LCNet that is friendly to CPUs, a high-low feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structure and position information.</td>
 </tr>
 <tr>
 <td>SLANet_plus</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_plus_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">Training Model</a></td>
 <td>63.69</td>
-<td>522.536</td>
-<td>1845.37</td>
+<td>140.29 / 140.29</td>
+<td>195.39 / 195.39</td>
 <td>6.9 M</td>
 <td>SLANet_plus is the enhanced version of the SLANet table structure recognition model independently developed by the Baidu PaddlePaddle Vision Team. Compared to SLANet, SLANet_plus has significantly improved the ability to recognize wireless and complex tables and reduced the model's sensitivity to table positioning accuracy. Even if there is a deviation in table positioning, it can still recognize accurately.</td>
 </tr>
 </table>
-
 <p><b>Note: The above accuracy metrics are measured on an internal English table recognition dataset built by PaddleX. All model GPU inference times are based on an NVIDIA Tesla T4 machine, with precision type FP32. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32.</b></p>
-
 <p><b>Text Detection Module (Required):</b></p>
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Detection Hmean (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -213,88 +203,84 @@ Layout analysis is a technology that extracts structured information from docume
 <tr>
 <td>PP-OCRv4_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">Training Model</a></td>
 <td>82.56</td>
-<td>83.3501</td>
-<td>2434.01</td>
+<td>83.34 / 80.91</td>
+<td>442.58 / 442.58</td>
 <td>109</td>
 <td>The server-side text detection model of PP-OCRv4, with higher accuracy, suitable for deployment on high-performance servers.</td>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">Training Model</a></td>
 <td>77.35</td>
-<td>10.6923</td>
-<td>120.177</td>
+<td>8.79 / 3.13</td>
+<td>51.00 / 28.58</td>
 <td>4.7</td>
 <td>The mobile text detection model of PP-OCRv4, with higher efficiency, suitable for deployment on edge devices.</td>
 </tr>
 <tr>
 <td>PP-OCRv3_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv3_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv3_mobile_det_pretrained.pdparams">Training Model</a></td>
 <td>78.68</td>
-<td></td>
-<td></td>
+<td>8.44 / 2.91</td>
+<td>27.87 / 27.87</td>
 <td>2.1</td>
 <td>The mobile text detection model of PP-OCRv3, with higher efficiency, suitable for deployment on edge devices.</td>
 </tr>
 <tr>
 <td>PP-OCRv3_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv3_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv3_server_det_pretrained.pdparams">Training Model</a></td>
 <td>80.11</td>
-<td></td>
-<td></td>
+<td>65.41 / 13.67</td>
+<td>305.07 / 305.07</td>
 <td>102.1</td>
 <td>The server-side text detection model of PP-OCRv3, with higher accuracy, suitable for deployment on high-performance servers.</td>
 </tr>
 </tbody>
 </table>
 <p><b>Note: The above accuracy metrics are evaluated on a Chinese dataset built by PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 500 images for detection. All model GPU inference times are based on an NVIDIA Tesla T4 machine, with precision type FP32. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32.</b></p>
-
 <p><b>Text Recognition Module Model (Required):</b></p>
 
 * <b>Chinese Text Recognition Model</b>
-
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy(%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
 <tr>
 <td>PP-OCRv4_server_rec_doc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_doc_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
 <td>81.53</td>
-<td></td>
-<td></td>
+<td>6.65 / 6.65</td>
+<td>32.92 / 32.92</td>
 <td>74.7 M</td>
 <td>PP-OCRv4_server_rec_doc is trained on a mixed dataset of more Chinese document data and PP-OCR training data, based on PP-OCRv4_server_rec. It enhances the recognition capability of traditional Chinese characters, Japanese characters, and special characters, supporting over 15,000 characters. In addition to improved document-related text recognition, it also enhances general text recognition capabilities.</td>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Training Model</a></td>
 <td>78.74</td>
-<td>7.95018</td>
-<td>46.7868</td>
+<td>4.82 / 4.82</td>
+<td>16.74 / 4.64</td>
 <td>10.6 M</td>
 <td>The lightweight recognition model of PP-OCRv4, with high inference efficiency, can be deployed on various hardware devices, including edge devices.</td>
 </tr>
 <tr>
 <td>PP-OCRv4_server_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Training Model</a></td>
 <td>80.61</td>
-<td>7.19439</td>
-<td>140.179</td>
+<td>6.58 / 6.58</td>
+<td>33.17 / 33.17</td>
 <td>71.2 M</td>
 <td>The server-side model of PP-OCRv4, with high inference accuracy, can be deployed on various servers.</td>
 </tr>
 <tr>
 <td>PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
 <td>72.96</td>
-<td></td>
-<td></td>
+<td>5.87 / 5.87</td>
+<td>9.07 / 4.28</td>
 <td>9.2 M</td>
 <td>The lightweight recognition model of PP-OCRv3, with high inference efficiency, can be deployed on various hardware devices, including edge devices.</td>
 </tr>
 </table>
-
 <p><b>Note: The evaluation dataset for the above accuracy metrics is the self-built Chinese dataset of PaddleOCR, covering multiple scenarios such as street views, web images, documents, and handwriting, with 8,367 images for text recognition. The GPU inference time for all models is based on an NVIDIA Tesla T4 machine, with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and FP32 precision type.</b></p>
-
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -315,9 +301,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </td>
 </tr>
 </table>
-
 <p><b>Note: The evaluation dataset for the above accuracy metrics is the leaderboard A of the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a> - Task 1: OCR End-to-End Recognition Task. The GPU inference time for all models is based on an NVIDIA Tesla T4 machine, with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and FP32 precision type.</b></p>
-
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -336,11 +320,9 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <td rowspan="1">RepSVTR is a mobile text recognition model based on SVTRv2. It won the first prize in the PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task, with a 2.5% improvement in end-to-end recognition accuracy compared to PP-OCRv4 and comparable inference speed.</td>
 </tr>
 </table>
-
 <p><b>Note: The evaluation dataset for the above accuracy metrics is the leaderboard B of the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a> - Task 1: OCR End-to-End Recognition Task. The GPU inference time for all models is based on an NVIDIA Tesla T4 machine, with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and FP32 precision type.</b></p>
 
 * <b>English Recognition Model</b>
-
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -367,9 +349,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <td>An ultra-lightweight English recognition model trained based on the PP-OCRv3 recognition model, supporting English and number recognition.</td>
 </tr>
 </table>
-
 <b>Multilingual Recognition Models</b>
-
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -461,7 +441,6 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </tr>
 </table>
 <p><b>Note: The evaluation datasets for the above accuracy metrics are multi-language datasets built by PaddleX. The GPU inference time for all models is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
-
 <p><b>Text Line Orientation Classification Module (Optional):</b></p>
 <table>
 <thead>
@@ -469,8 +448,8 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <th>Model</th>
 <th>Model Download Link</th>
 <th>Top-1 Acc (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -487,7 +466,6 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </tbody>
 </table>
 <p><b>Note: The evaluation set for the above accuracy metrics is a self-built dataset covering multiple scenarios such as certificates and documents, containing 1,000 images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
-
 <p><b>Formula Recognition Module (Optional):</b></p>
 <table>
 <thead>
@@ -496,8 +474,8 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <th>BLEU Score</th>
 <th>Normed Edit Distance</th>
 <th>ExpRate (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size</th>
 </tr>
 </thead>
@@ -507,22 +485,21 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <td>0.8821</td>
 <td>0.0823</td>
 <td>40.01</td>
-<td>-</td>
-<td>-</td>
+<td>2047.13 / 2047.13</td>
+<td>10582.73 / 10582.73</td>
 <td>89.7 M</td>
 </tr>
 </tbody>
 </table>
 <p><b>Note: The above accuracy metrics are measured from the <a href="https://drive.google.com/drive/folders/13CA4vAmOmD_I_dSbvLp-Lf0s6KiaNfuO">LaTeX-OCR Formula Recognition Test Set</a>. All models have GPU inference time based on an NVIDIA Tesla T4 machine with FP32 precision type. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
-
 <p><b>Seal Text Detection Module (Optional):</b></p>
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Detection Hmean (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -531,16 +508,16 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <tr>
 <td>PP-OCRv4_server_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_seal_det_pretrained.pdparams">Training Model</a></td>
 <td>98.21</td>
-<td>84.341</td>
-<td>2425.06</td>
+<td>74.75 / 67.72</td>
+<td>382.55 / 382.55</td>
 <td>109</td>
 <td>The PP-OCRv4 server seal text detection model offers higher precision and is suitable for deployment on high-performance servers.</td>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_seal_det_pretrained.pdparams">Training Model</a></td>
 <td>96.47</td>
-<td>10.5878</td>
-<td>131.813</td>
+<td>7.82 / 3.09</td>
+<td>48.28 / 23.97</td>
 <td>4.6</td>
 <td>The PP-OCRv4 mobile seal text detection model provides higher efficiency and is suitable for deployment on edge devices.</td>
 </tr>
@@ -573,8 +550,8 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top-1 Acc (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -583,15 +560,14 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <tr>
 <td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Training Model</a></td>
 <td>99.06</td>
-<td>3.84845</td>
-<td>9.23735</td>
+<td>2.31 / 0.43</td>
+<td>3.37 / 1.27</td>
 <td>7</td>
 <td>The document image classification model based on PP-LCNet_x1_0 includes four categories: 0 degrees, 90 degrees, 180 degrees, and 270 degrees.</td>
 </tr>
 </tbody>
 </table>
 <p><b>Note: The evaluation dataset for the above precision metrics is a self-built dataset covering various scenarios such as ID cards and documents, containing 1000 images. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
-
 </details>
 
 ## 2. Quick Start
@@ -618,7 +594,6 @@ The parameter description can be found in [2.2.2 Python Script Integration](#222
 After running, the result will be printed to the terminal, as follows:
 
 <details><summary>👉Click to Expand</summary>
-
 <pre><code>
 
 {'res': {'input_path': 'layout_parsing_v2_demo.png', 'model_settings': {'use_doc_preprocessor': False, 'use_general_ocr': True, 'use_seal_recognition': True, 'use_table_recognition': True, 'use_formula_recognition': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 2, 'label': 'text', 'score': 0.9853514432907104, 'coordinate': [770.9531, 776.6814, 1122.6057, 1058.7322]}, {'cls_id': 1, 'label': 'image', 'score': 0.9848673939704895, 'coordinate': [775.7434, 202.27979, 1502.8113, 686.02136]}, {'cls_id': 2, 'label': 'text', 'score': 0.983731746673584, 'coordinate': [1152.3197, 1113.3275, 1503.3029, 1346.586]}, {'cls_id': 2, 'label': 'text', 'score': 0.9832221865653992, 'coordinate': [1152.5602, 801.431, 1503.8436, 986.3563]}, {'cls_id': 2, 'label': 'text', 'score': 0.9829439520835876, 'coordinate': [9.549545, 849.5713, 359.1173, 1058.7488]}, {'cls_id': 2, 'label': 'text', 'score': 0.9811657667160034, 'coordinate': [389.58298, 1137.2659, 740.66235, 1346.7488]}, {'cls_id': 2, 'label': 'text', 'score': 0.9775941371917725, 'coordinate': [9.1302185, 201.85, 359.0409, 339.05692]}, {'cls_id': 2, 'label': 'text', 'score': 0.9750366806983948, 'coordinate': [389.71454, 752.96924, 740.544, 889.92456]}, {'cls_id': 2, 'label': 'text', 'score': 0.9738152027130127, 'coordinate': [389.94565, 298.55988, 740.5585, 435.5124]}, {'cls_id': 2, 'label': 'text', 'score': 0.9737328290939331, 'coordinate': [771.50256, 1065.4697, 1122.2582, 1178.7324]}, {'cls_id': 2, 'label': 'text', 'score': 0.9728517532348633, 'coordinate': [1152.5154, 993.3312, 1503.2349, 1106.327]}, {'cls_id': 2, 'label': 'text', 'score': 0.9725610017776489, 'coordinate': [9.372787, 1185.823, 359.31738, 1298.7227]}, {'cls_id': 2, 'label': 'text', 'score': 0.9724331498146057, 'coordinate': [389.62848, 610.7389, 740.83234, 746.2377]}, {'cls_id': 2, 'label': 'text', 'score': 0.9720287322998047, 'coordinate': [389.29898, 897.0936, 741.41516, 1034.6616]}, {'cls_id': 2, 'label': 'text', 'score': 0.9713053703308105, 'coordinate': [10.323685, 1065.4663, 359.6786, 1178.8872]}, {'cls_id': 2, 'label': 'text', 'score': 0.9689728021621704, 'coordinate': [9.336395, 537.6609, 359.2901, 652.1881]}, {'cls_id': 2, 'label': 'text', 'score': 0.9684857130050659, 'coordinate': [10.7608185, 345.95068, 358.93616, 434.64087]}, {'cls_id': 2, 'label': 'text', 'score': 0.9681928753852844, 'coordinate': [9.674866, 658.89075, 359.56528, 770.4319]}, {'cls_id': 2, 'label': 'text', 'score': 0.9634978175163269, 'coordinate': [770.9464, 1281.1785, 1122.6522, 1346.7156]}, {'cls_id': 2, 'label': 'text', 'score': 0.96304851770401, 'coordinate': [390.0113, 201.28055, 740.1684, 291.53073]}, {'cls_id': 2, 'label': 'text', 'score': 0.962053120136261, 'coordinate': [391.21393, 1040.952, 740.5046, 1130.32]}, {'cls_id': 2, 'label': 'text', 'score': 0.9565253853797913, 'coordinate': [10.113251, 777.1482, 359.439, 842.437]}, {'cls_id': 2, 'label': 'text', 'score': 0.9497362375259399, 'coordinate': [390.31357, 537.86285, 740.47595, 603.9285]}, {'cls_id': 2, 'label': 'text', 'score': 0.9371236562728882, 'coordinate': [10.2034, 1305.9753, 359.5958, 1346.7295]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9338151216506958, 'coordinate': [791.6062, 1200.8479, 1103.3257, 1259.9324]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9326773285865784, 'coordinate': [408.0737, 457.37024, 718.9509, 516.63464]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9274250864982605, 'coordinate': [29.448685, 456.6762, 340.99194, 515.6999]}, {'cls_id': 2, 'label': 'text', 'score': 0.8742568492889404, 'coordinate': [1154.7095, 777.3624, 1330.3086, 794.5853]}, {'cls_id': 2, 'label': 'text', 'score': 0.8442489504814148, 'coordinate': [586.49316, 160.15454, 927.468, 179.64203]}, {'cls_id': 11, 'label': 'doc_title', 'score': 0.8332607746124268, 'coordinate': [133.80017, 37.41908, 1380.8601, 124.1429]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.6770150661468506, 'coordinate': [812.1718, 705.1199, 1484.6973, 747.1692]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[ 133,   35],
@@ -772,9 +747,9 @@ In the above Python script, the following steps are executed:
 <td><code>Python Var|str|list</code></td>
 <td>
 <ul>
-  <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
-  <li><b>str</b>: Local path of an image file or PDF file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the web URL of an image file or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/demo_paper.png">example</a>; <b>Local directory</b>, the directory should contain images to be predicted, such as the local path: <code>/root/data/</code> (currently does not support prediction of PDF files in directories; PDF files must be specified with an exact file path)</li>
-  <li><b>List</b>: Elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
+<li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
+<li><b>str</b>: Local path of an image file or PDF file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the web URL of an image file or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/demo_paper.png">example</a>; <b>Local directory</b>, the directory should contain images to be predicted, such as the local path: <code>/root/data/</code> (currently does not support prediction of PDF files in directories; PDF files must be specified with an exact file path)</li>
+<li><b>List</b>: Elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -785,13 +760,13 @@ In the above Python script, the following steps are executed:
 <td><code>str|None</code></td>
 <td>
 <ul>
-  <li><b>CPU</b>: <code>cpu</code> indicates using CPU for inference;</li>
-  <li><b>GPU</b>: <code>gpu:0</code> indicates using the first GPU for inference;</li>
-  <li><b>NPU</b>: <code>npu:0</code> indicates using the first NPU for inference;</li>
-  <li><b>XPU</b>: <code>xpu:0</code> indicates using the first XPU for inference;</li>
-  <li><b>MLU</b>: <code>mlu:0</code> indicates using the first MLU for inference;</li>
-  <li><b>DCU</b>: <code>dcu:0</code> indicates using the first DCU for inference;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used. During initialization, the local GPU device 0 will be prioritized; if unavailable, the CPU device will be used;</li>
+<li><b>CPU</b>: <code>cpu</code> indicates using CPU for inference;</li>
+<li><b>GPU</b>: <code>gpu:0</code> indicates using the first GPU for inference;</li>
+<li><b>NPU</b>: <code>npu:0</code> indicates using the first NPU for inference;</li>
+<li><b>XPU</b>: <code>xpu:0</code> indicates using the first XPU for inference;</li>
+<li><b>MLU</b>: <code>mlu:0</code> indicates using the first MLU for inference;</li>
+<li><b>DCU</b>: <code>dcu:0</code> indicates using the first DCU for inference;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used. During initialization, the local GPU device 0 will be prioritized; if unavailable, the CPU device will be used;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -802,8 +777,8 @@ In the above Python script, the following steps are executed:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>True</code>;</li>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -814,8 +789,8 @@ In the above Python script, the following steps are executed:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>True</code>;</li>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -826,8 +801,8 @@ In the above Python script, the following steps are executed:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>True</code>;</li>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -838,8 +813,8 @@ In the above Python script, the following steps are executed:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>True</code>;</li>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -850,8 +825,8 @@ In the above Python script, the following steps are executed:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>True</code>;</li>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -862,8 +837,8 @@ In the above Python script, the following steps are executed:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>True</code>;</li>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -874,8 +849,8 @@ In the above Python script, the following steps are executed:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>True</code>;</li>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -886,9 +861,9 @@ In the above Python script, the following steps are executed:
 <td><code>float|dict|None</code></td>
 <td>
 <ul>
-  <li><b>float</b>: Any floating-point number between <code>0</code> and <code>1</code>;</li>
-  <li><b>dict</b>: <code>{0:0.1}</code> where the key is the category ID and the value is the threshold for that category;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>0.5</code>;</li>
+<li><b>float</b>: Any floating-point number between <code>0</code> and <code>1</code>;</li>
+<li><b>dict</b>: <code>{0:0.1}</code> where the key is the category ID and the value is the threshold for that category;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>0.5</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -899,8 +874,8 @@ In the above Python script, the following steps are executed:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>True</code>;</li>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -911,9 +886,9 @@ In the above Python script, the following steps are executed:
 <td><code>float|Tuple[float,float]|None</code></td>
 <td>
 <ul>
-  <li><b>float</b>: Any floating-point number greater than <code>0</code>;</li>
-  <li><b>Tuple[float,float]</b>: The expansion ratios in the horizontal and vertical directions, respectively;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>1.0</code>;</li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>;</li>
+<li><b>Tuple[float,float]</b>: The expansion ratios in the horizontal and vertical directions, respectively;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>1.0</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -924,8 +899,8 @@ In the above Python script, the following steps are executed:
 <td><code>str|None</code></td>
 <td>
 <ul>
-  <li><b>str</b>: <code>large</code>, <code>small</code>, <code>union</code>, representing whether to retain the larger box, the smaller box, or both during overlap box filtering;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>large</code>;</li>
+<li><b>str</b>: <code>large</code>, <code>small</code>, <code>union</code>, representing whether to retain the larger box, the smaller box, or both during overlap box filtering;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>large</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -936,8 +911,8 @@ In the above Python script, the following steps are executed:
 <td><code>int|None</code></td>
 <td>
 <ul>
-  <li><b>int</b>: Any integer greater than <code>0</code>;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>960</code>;</li>
+<li><b>int</b>: Any integer greater than <code>0</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>960</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -948,8 +923,8 @@ In the above Python script, the following steps are executed:
 <td><code>str|None</code></td>
 <td>
 <ul>
-  <li><b>str</b>: Supports <code>min</code> and <code>max</code>. <code>min</code> ensures that the shortest side of the image is not less than <code>det_limit_side_len</code>, and <code>max</code> ensures that the longest side of the image is not greater than <code>limit_side_len</code>.</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>max</code>.</li>
+<li><b>str</b>: Supports <code>min</code> and <code>max</code>. <code>min</code> ensures that the shortest side of the image is not less than <code>det_limit_side_len</code>, and <code>max</code> ensures that the longest side of the image is not greater than <code>limit_side_len</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>max</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -960,8 +935,8 @@ In the above Python script, the following steps are executed:
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>: Any floating-point number greater than <code>0</code>.</li>
-    <li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, which is <code>0.3</code>.</li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, which is <code>0.3</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -972,8 +947,8 @@ In the above Python script, the following steps are executed:
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>: Any floating-point number greater than <code>0</code>.</li>
-    <li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, which is <code>0.6</code>.</li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, which is <code>0.6</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -984,8 +959,8 @@ In the above Python script, the following steps are executed:
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>: Any floating-point number greater than <code>0</code>.</li>
-    <li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, which is <code>2.0</code>.</li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, which is <code>2.0</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -996,8 +971,8 @@ In the above Python script, the following steps are executed:
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>: Any floating-point number greater than <code>0</code></li>
-    <li><b>None</b>: If set to <code>None</code>, it will default to the production-initialized value of this parameter <code>0.0</code>. That is, no threshold is set</li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the production-initialized value of this parameter <code>0.0</code>. That is, no threshold is set</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -1008,8 +983,8 @@ In the above Python script, the following steps are executed:
 <td><code>int|None</code></td>
 <td>
 <ul>
-  <li><b>int</b>: Any integer greater than <code>0</code></li>
-  <li><b>None</b>: If set to <code>None</code>, it will default to the production-initialized value of this parameter, initialized as <code>960</code></li>
+<li><b>int</b>: Any integer greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the production-initialized value of this parameter, initialized as <code>960</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -1020,8 +995,8 @@ In the above Python script, the following steps are executed:
 <td><code>str|None</code></td>
 <td>
 <ul>
-  <li><b>str</b>: Supports <code>min</code> and <code>max</code>, <code>min</code> indicates that the shortest side of the image is not less than <code>det_limit_side_len</code>, <code>max</code> indicates that the longest side of the image is not greater than <code>limit_side_len</code></li>
-  <li><b>None</b>: If set to <code>None</code>, it will default to the production-initialized value of this parameter, initialized as <code>max</code></li>
+<li><b>str</b>: Supports <code>min</code> and <code>max</code>, <code>min</code> indicates that the shortest side of the image is not less than <code>det_limit_side_len</code>, <code>max</code> indicates that the longest side of the image is not greater than <code>limit_side_len</code></li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the production-initialized value of this parameter, initialized as <code>max</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -1032,8 +1007,8 @@ In the above Python script, the following steps are executed:
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>: Any floating-point number greater than <code>0</code></li>
-    <li><b>None</b>: If set to <code>None</code>, it will default to the production-initialized value of this parameter <code>0.3</code></li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the production-initialized value of this parameter <code>0.3</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -1044,8 +1019,8 @@ In the above Python script, the following steps are executed:
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>: Any floating-point number greater than <code>0</code></li>
-    <li><b>None</b>: If set to <code>None</code>, it will default to the production-initialized value of this parameter <code>0.6</code></li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the production-initialized value of this parameter <code>0.6</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -1056,8 +1031,8 @@ In the above Python script, the following steps are executed:
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>: Any floating-point number greater than <code>0</code></li>
-    <li><b>None</b>: If set to <code>None</code>, it will default to the production-initialized value of this parameter <code>2.0</code></li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the production-initialized value of this parameter <code>2.0</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -1068,8 +1043,8 @@ In the above Python script, the following steps are executed:
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>: Any floating-point number greater than <code>0</code></li>
-    <li><b>None</b>: If set to <code>None</code>, it will default to the production-initialized value of this parameter <code>0.0</code>. That is, no threshold is set</li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the production-initialized value of this parameter <code>0.0</code>. That is, no threshold is set</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -1089,10 +1064,9 @@ In the above Python script, the following steps are executed:
 <th>Default Value</th>
 </tr>
 </thead>
-
 <tr>
-<td rowspan = "3"><code>print()</code></td>
-<td rowspan = "3">Print the result to the terminal</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print the result to the terminal</td>
 <td><code>format_json</code></td>
 <td><code>bool</code></td>
 <td>Whether to format the output content using <code>JSON</code> indentation</td>
@@ -1111,8 +1085,8 @@ In the above Python script, the following steps are executed:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td rowspan = "3"><code>save_to_json()</code></td>
-<td rowspan = "3">Save the result as a JSON file</td>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save the result as a JSON file</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
 <td>The file path for saving. When it is a directory, the saved file will have the same name as the input file</td>
@@ -1247,39 +1221,39 @@ In addition, it also supports obtaining visualized images with results and predi
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">Get the prediction result in <code>json</code> format</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format</td>
 </tr>
 <tr>
-<td rowspan = "2"><code>img</code></td>
-<td rowspan = "2">Get the visualized image in <code>dict</code> format</td>
+<td rowspan="2"><code>img</code></td>
+<td rowspan="2">Get the visualized image in <code>dict</code> format</td>
 </tr>
 <thead>
-    <tr>
-      <th>Property</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>json</code></td>
-      <td>Get the prediction result in <code>json</code> format</td>
-    </tr>
-    <tr>
-      <td rowspan="2"><code>img</code></td>
-      <td rowspan="2">Get the visualization image in <code>dict</code> format</td>
-    </tr>
-    <tr>
-    </tr>
-    <tr>
-      <td rowspan="3"><code>markdown</code></td>
-      <td rowspan="3">Get the markdown result in <code>dict</code> format</td>
-    </tr>
-    <tr>
-    </tr>
-    <tr>
-    </tr>
-  </tbody>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>json</code></td>
+<td>Get the prediction result in <code>json</code> format</td>
+</tr>
+<tr>
+<td rowspan="2"><code>img</code></td>
+<td rowspan="2">Get the visualization image in <code>dict</code> format</td>
+</tr>
+<tr>
+</tr>
+<tr>
+<td rowspan="3"><code>markdown</code></td>
+<td rowspan="3">Get the markdown result in <code>dict</code> format</td>
+</tr>
+<tr>
+</tr>
+<tr>
+</tr>
+</tbody>
 </table>
 
 - The prediction result obtained through the `json` attribute is data of the dict type, and its content is consistent with the content saved by calling the `save_to_json()` method.
@@ -1326,7 +1300,6 @@ In addition, PaddleX also provides three other deployment methods, which are det
 Below is the API reference for basic service-oriented deployment and examples of service calls in multiple languages:
 
 <details><summary>API Reference</summary>
-
 <p>For the main operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
@@ -1522,30 +1495,27 @@ Below is the API reference for basic service-oriented deployment and examples of
 </tr>
 </tbody>
 </table></details>
-
 <details><summary>Multi-language Service Invocation Example</summary>
-
 <details>
 <summary>Python</summary>
-
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/layout-parsing&quot; # Service URL
+API_URL = "http://localhost:8080/layout-parsing" # Service URL
 
-image_path = &quot;./demo.jpg&quot;
+image_path = "./demo.jpg"
 
 # Encode the local image with Base64
-with open(image_path, &quot;rb&quot;) as file:
+with open(image_path, "rb") as file:
     image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
 payload = {
-    &quot;file&quot;: image_data, # Base64-encoded file content or file URL
-    &quot;fileType&quot;: 1,
-    &quot;useImgOrientationCls&quot;: True,
-    &quot;useImgUnwarping&quot;: True,
-    &quot;useSealTextDet&quot;: True,
+    "file": image_data, # Base64-encoded file content or file URL
+    "fileType": 1,
+    "useImgOrientationCls": True,
+    "useImgUnwarping": True,
+    "useSealTextDet": True,
 }
 
 # Call the API
@@ -1553,14 +1523,14 @@ response = requests.post(API_URL, json=payload)
 
 # Process the returned data from the API
 assert response.status_code == 200
-result = response.json()[&quot;result&quot;]
-print(&quot;\nDetected layout elements:&quot;)
-for res in result[&quot;layoutParsingResults&quot;]:
-    for ele in res[&quot;layoutElements&quot;]:
-        print(&quot;===============================&quot;)
-        print(&quot;bbox:&quot;, ele[&quot;bbox&quot;])
-        print(&quot;label:&quot;, ele[&quot;label&quot;])
-        print(&quot;text:&quot;, repr(ele[&quot;text&quot;]))
+result = response.json()["result"]
+print("\nDetected layout elements:")
+for res in result["layoutParsingResults"]:
+    for ele in res["layoutElements"]:
+        print("===============================")
+        print("bbox:", ele["bbox"])
+        print("label:", ele["label"])
+        print("text:", repr(ele["text"]))
 </code></pre></details>
 </details>
 <br/>
@@ -1577,60 +1547,60 @@ Since the General Layout Parsing v2 production line consists of 7 modules, the u
 Since the General Layout Parsing v2 production line includes several modules, the unsatisfactory performance of the production line may originate from any one of these modules. You can analyze the cases with poor extraction results, identify which module is problematic through visualizing the images, and refer to the corresponding fine-tuning tutorial links in the table below to fine-tune the model.
 
 <table>
-  <thead>
-    <tr>
-      <th>Scenario</th>
-      <th>Fine-tuning Module</th>
-      <th>Fine-tuning Reference Link</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Inaccurate layout region detection, such as missed detection of seals, tables, etc.</td>
-      <td>Layout Region Detection Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/layout_detection.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Inaccurate table structure recognition</td>
-      <td>Table Structure Recognition Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/table_structure_recognition.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Inaccurate formula recognition</td>
-      <td>Formula Recognition Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/formula_recognition.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Missed detection of seal text</td>
-      <td>Seal Text Detection Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/seal_text_detection.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Missed detection of text</td>
-      <td>Text Detection Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/text_detection.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Inaccurate text content</td>
-      <td>Text Recognition Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/text_recognition.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Inaccurate correction of vertical or rotated text lines</td>
-      <td>Text Line Orientation Classification Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/textline_orientation_classification.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Inaccurate correction of whole-image rotation</td>
-      <td>Document Image Orientation Classification Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Inaccurate correction of image distortion</td>
-      <td>Text Image Correction Module</td>
-      <td>Fine-tuning not supported</td>
-    </tr>
-  </tbody>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Fine-tuning Module</th>
+<th>Fine-tuning Reference Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inaccurate layout region detection, such as missed detection of seals, tables, etc.</td>
+<td>Layout Region Detection Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/layout_detection.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Inaccurate table structure recognition</td>
+<td>Table Structure Recognition Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/table_structure_recognition.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Inaccurate formula recognition</td>
+<td>Formula Recognition Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/formula_recognition.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Missed detection of seal text</td>
+<td>Seal Text Detection Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/seal_text_detection.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Missed detection of text</td>
+<td>Text Detection Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/text_detection.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Inaccurate text content</td>
+<td>Text Recognition Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/text_recognition.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Inaccurate correction of vertical or rotated text lines</td>
+<td>Text Line Orientation Classification Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/textline_orientation_classification.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Inaccurate correction of whole-image rotation</td>
+<td>Document Image Orientation Classification Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Inaccurate correction of image distortion</td>
+<td>Text Image Correction Module</td>
+<td>Fine-tuning not supported</td>
+</tr>
+</tbody>
 </table>
 
 ### 4.2 Model Application
