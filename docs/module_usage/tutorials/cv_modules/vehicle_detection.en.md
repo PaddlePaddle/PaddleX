@@ -130,7 +130,7 @@ Related methods, parameters, and explanations are as follows:
 <tr>
 <td><code>input</code></td>
 <td>Data to be predicted, supports multiple input types</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
   <li><b>Python Variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
@@ -297,7 +297,7 @@ After executing the above command, PaddleX will validate the dataset and collect
   &quot;analysis&quot;: {
     &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
   },
-  &quot;dataset_path&quot;: &quot;./dataset/example_data/vehicle_coco_examples&quot;,
+  &quot;dataset_path&quot;: &quot;vehicle_coco_examples&quot;,
   &quot;show_type&quot;: &quot;image&quot;,
   &quot;dataset_type&quot;: &quot;COCODetDataset&quot;
 }
