@@ -18,7 +18,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import ultra_infer as ui
 import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.models_new.semantic_segmentation.result import SegResult
+from paddlex.inference.models.semantic_segmentation.result import SegResult
 from paddlex.modules.semantic_segmentation.model_list import MODELS
 
 from paddlex_hpi.models.base import CVPredictor, HPIParams
@@ -32,6 +32,7 @@ class SegPredictor(CVPredictor):
         model_dir: Union[str, os.PathLike],
         config: Optional[Dict[str, Any]] = None,
         device: Optional[str] = None,
+        batch_size: int = 1,
         hpi_params: Optional[HPIParams] = None,
         target_size: Union[int, Tuple[int], None] = None,
     ) -> None:
@@ -41,6 +42,7 @@ class SegPredictor(CVPredictor):
             model_dir=model_dir,
             config=config,
             device=device,
+            batch_size=batch_size,
             hpi_params=hpi_params,
         )
 
@@ -67,7 +69,7 @@ class SegPredictor(CVPredictor):
         if target_size:
             raise TypeError("`target_size` is not supported in PaddleX HPI.")
 
-        batch_raw_imgs = self._data_reader(imgs=batch_data)
+        batch_raw_imgs = self._data_reader(imgs=batch_data.instances)
         imgs = [np.ascontiguousarray(img) for img in batch_raw_imgs]
         ui_results = self._ui_model.batch_predict(imgs)
 
@@ -80,7 +82,8 @@ class SegPredictor(CVPredictor):
             batch_preds.append(pred)
 
         return {
-            "input_path": batch_data,
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
             "input_img": batch_raw_imgs,
             "pred": batch_preds,
         }

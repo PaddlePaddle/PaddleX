@@ -18,7 +18,7 @@ from typing import Any, Dict, List, Optional, Union
 import ultra_infer as ui
 import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.models_new.object_detection.result import DetResult
+from paddlex.inference.models.object_detection.result import DetResult
 from paddlex.modules.object_detection.model_list import MODELS
 from pydantic import BaseModel
 
@@ -38,6 +38,7 @@ class DetPredictor(CVPredictor):
         model_dir: Union[str, os.PathLike],
         config: Optional[Dict[str, Any]] = None,
         device: Optional[str] = None,
+        batch_size: int = 1,
         hpi_params: Optional[HPIParams] = None,
         threshold: Optional[float] = None,
     ) -> None:
@@ -45,6 +46,7 @@ class DetPredictor(CVPredictor):
             model_dir=model_dir,
             config=config,
             device=device,
+            batch_size=batch_size,
             hpi_params=hpi_params,
         )
         self._pp_params = self._get_pp_params()
@@ -70,7 +72,7 @@ class DetPredictor(CVPredictor):
     def process(
         self, batch_data: List[Any], threshold: Optional[float] = None
     ) -> Dict[str, List[Any]]:
-        batch_raw_imgs = self._data_reader(imgs=batch_data)
+        batch_raw_imgs = self._data_reader(imgs=batch_data.instances)
         imgs = [np.ascontiguousarray(img) for img in batch_raw_imgs]
         threshold = threshold or self._threshold
         ui_results = self._ui_model.batch_predict(imgs)
@@ -99,7 +101,8 @@ class DetPredictor(CVPredictor):
             boxes_list.append(boxes)
 
         return {
-            "input_path": batch_data,
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
             "input_img": batch_raw_imgs,
             "boxes": boxes_list,
         }

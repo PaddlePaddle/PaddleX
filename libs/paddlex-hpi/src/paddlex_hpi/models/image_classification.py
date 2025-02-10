@@ -18,7 +18,7 @@ from typing import Any, Dict, List, Optional, Union
 import ultra_infer as ui
 import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.models_new.image_classification.result import TopkResult
+from paddlex.inference.models.image_classification.result import TopkResult
 from paddlex.modules.image_classification.model_list import MODELS
 from pydantic import BaseModel
 
@@ -38,6 +38,7 @@ class ClasPredictor(CVPredictor):
         model_dir: Union[str, os.PathLike],
         config: Optional[Dict[str, Any]] = None,
         device: Optional[str] = None,
+        batch_size: int = 1,
         use_onnx_model: Optional[bool] = None,
         hpi_params: Optional[HPIParams] = None,
         topk: Union[int, None] = None,
@@ -46,6 +47,7 @@ class ClasPredictor(CVPredictor):
             model_dir=model_dir,
             config=config,
             device=device,
+            batch_size=batch_size,
             use_onnx_model=use_onnx_model,
             hpi_params=hpi_params,
         )
@@ -81,7 +83,7 @@ class ClasPredictor(CVPredictor):
     def process(
         self, batch_data: List[Any], topk: Union[int, None] = None
     ) -> Dict[str, List[Any]]:
-        batch_raw_imgs = self._data_reader(imgs=batch_data)
+        batch_raw_imgs = self._data_reader(imgs=batch_data.instances)
         imgs = [np.ascontiguousarray(img) for img in batch_raw_imgs]
         self._ui_model.postprocessor.topk = topk or self._topk
         ui_results = self._ui_model.batch_predict(imgs)
@@ -98,7 +100,8 @@ class ClasPredictor(CVPredictor):
                 )
 
         return {
-            "input_path": batch_data,
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
             "input_img": batch_raw_imgs,
             "class_ids": class_ids_list,
             "scores": scores_list,

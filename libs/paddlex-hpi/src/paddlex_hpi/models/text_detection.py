@@ -18,7 +18,7 @@ from typing import Any, Dict, List, Optional, Union
 import ultra_infer as ui
 import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.models_new.text_detection.result import TextDetResult
+from paddlex.inference.models.text_detection.result import TextDetResult
 from paddlex.modules.text_detection.model_list import CURVE_MODELS, MODELS
 
 from paddlex_hpi._utils.misc import parse_scale
@@ -33,6 +33,7 @@ class TextDetPredictor(CVPredictor):
         model_dir: Union[str, os.PathLike],
         config: Optional[Dict[str, Any]] = None,
         device: Optional[str] = None,
+        batch_size: int = 1,
         hpi_params: Optional[HPIParams] = None,
         limit_side_len: Union[int, None] = None,
         limit_type: Union[str, None] = None,
@@ -54,6 +55,7 @@ class TextDetPredictor(CVPredictor):
             model_dir=model_dir,
             config=config,
             device=device,
+            batch_size=batch_size,
             hpi_params=hpi_params,
         )
         self._limit_side_len = limit_side_len or self._max_side_len
@@ -129,7 +131,7 @@ class TextDetPredictor(CVPredictor):
             else:
                 postprocessor.det_db_box_type = "poly"
 
-        batch_raw_imgs = self._data_reader(imgs=batch_data)
+        batch_raw_imgs = self._data_reader(imgs=batch_data.instances)
         imgs = [np.ascontiguousarray(img) for img in batch_raw_imgs]
         ui_results = self._ui_model.batch_predict(imgs)
 
@@ -144,7 +146,8 @@ class TextDetPredictor(CVPredictor):
             dt_scores_list.append(dummy_scores)
         # breakpoint()
         return {
-            "input_path": batch_data,
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
             "input_img": batch_raw_imgs,
             "dt_polys": dt_polys_list,
             "dt_scores": dt_scores_list,
