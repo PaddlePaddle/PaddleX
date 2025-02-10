@@ -1140,7 +1140,6 @@ SubPipelines:
         thresh: 0.3
         box_thresh: 0.6
         unclip_ratio: 2.0
-
       TextRecognition:
         module_name: text_recognition
         model_name: PP-OCRv4_server_rec
