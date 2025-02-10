@@ -16,8 +16,7 @@ CheckDataset:
 
 Train:
   epochs_iters: 20
-  batch_size_train: 7
-  batch_size_val: 20
+  batch_size: 7
   learning_rate: 0.0001
   pretrain_weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UniMERNet_pretrained.pdparams
   resume_path: null
@@ -26,6 +25,7 @@ Train:
   save_interval: 1
 
 Evaluate:
+  batch_size: 20
   weight_path: output/best_accuracy/best_accuracy.pdparams
   log_interval: 1
 
