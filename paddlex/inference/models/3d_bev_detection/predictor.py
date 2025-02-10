@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Union, Dict, List, Tuple
+from typing import Any, Union, Dict, List, Tuple, Iterator
+import shutil
+import tempfile
 from importlib import import_module
 import lazy_paddle
 
@@ -25,6 +27,7 @@ from ...common.batch_sampler import Det3DBatchSampler
 from ...common.reader import ReadNuscenesData
 from ..common import StaticInfer
 from ..base import BasicPredictor
+from ..base.predictor.base_predictor import PredictionWrap
 from .processors import (
     LoadPointsFromFile,
     LoadPointsFromMultiSweeps,
@@ -53,6 +56,10 @@ class BEVDet3DPredictor(BasicPredictor):
             *args: Arbitrary positional arguments passed to the superclass.
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
+        self.temp_dir = tempfile.mkdtemp()
+        logging.info(
+            f"infer data will be stored in temporary directory {self.temp_dir}"
+        )
         super().__init__(*args, **kwargs)
         self.pre_tfs, self.infer = self._build()
 
@@ -62,7 +69,7 @@ class BEVDet3DPredictor(BasicPredictor):
         Returns:
             Det3DBatchSampler: An instance of Det3DBatchSampler.
         """
-        return Det3DBatchSampler()
+        return Det3DBatchSampler(temp_dir=self.temp_dir)
 
     def _get_result_class(self) -> type:
         """Returns the result class, BEV3DDetResult.
@@ -279,3 +286,25 @@ class BEVDet3DPredictor(BasicPredictor):
     @register("GetInferInput")
     def build_get_infer_input(self):
         return "GetInferInput", GetInferInput()
+
+    def apply(self, input: Any, **kwargs) -> Iterator[Any]:
+        """
+        Do predicting with the input data and yields predictions.
+
+        Args:
+            input (Any): The input data to be predicted.
+
+        Yields:
+            Iterator[Any]: An iterator yielding prediction results.
+        """
+
+        try:
+            for batch_data in self.batch_sampler(input):
+                prediction = self.process(batch_data, **kwargs)
+                prediction = PredictionWrap(prediction, len(batch_data))
+                for idx in range(len(batch_data)):
+                    yield self.result_class(prediction.get_by_idx(idx))
+        except Exception as e:
+            raise e
+        finally:
+            shutil.rmtree(self.temp_dir)
