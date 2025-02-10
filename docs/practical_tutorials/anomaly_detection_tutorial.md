@@ -259,9 +259,16 @@ python main.py -c paddlex/configs/modules/image_anomaly_detection/STFPM.yaml \
 
 ## 7. 开发集成/部署
 如果通用异常检测产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
-1. 直接将训练好的模型应用在您的 Python 项目中，可以参考如下示例，将`paddlex/configs/pipelines/anomaly_detection.yaml`配置文件中的`SubModules.AnomalyDetection.model_dir`修改为自己的模型路径`output/best_model/inference`：
 
-```python
+1. 直接将训练好的模型应用在您的 Python 项目中，可以参考如下示例，若您需要使用微调后的模型权重，可以获取 anomaly_detection 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+
+```
+paddlex --get_pipeline_config anomaly_detection --save_path ./my_path
+```
+
+将`my_path/anomaly_detection.yaml`配置文件中的`SubModules.AnomalyDetection.model_dir`修改为自己的模型路径`output/best_model/inference`：
+
+```yaml
 pipeline_name: anomaly_detection
 
 SubModules:
@@ -276,7 +283,7 @@ SubModules:
 
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="paddlex/configs/pipelines/anomaly_detection.yaml")
+pipeline = create_pipeline(pipeline="my_path/anomaly_detection.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_hazelnut.png")
 for res in output:
     res.print() # 打印预测的结构化输出

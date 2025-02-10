@@ -451,7 +451,13 @@ python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml \
 ## 7. 开发集成/部署
 如果通用时序预测产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
 
-1. 若您需要使用微调后的模型权重，只需对产线配置`paddlex/configs/pipelines/ts_forecast.yaml`文件做修改，将微调后模型权重的本地路径填写至产线配置文件中的 `model_dir` 即可, 若您需要将通用时序分类产线直接应用在您的 Python 项目中，可以参考 如下示例：
+1. 若您需要使用微调后的模型权重，可以获取 ts_forecast 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+
+```
+paddlex --get_pipeline_config ts_forecast --save_path ./my_path
+```
+
+将微调后模型权重的本地路径填写至产线配置文件中的 `model_dir` 即可, 若您需要将通用时序分类产线直接应用在您的 Python 项目中，可以参考 如下示例：
 
 ```yaml
 pipeline_name: ts_forecast
@@ -463,10 +469,12 @@ SubModules:
     model_dir: null # 此处替换为您训练后得到的模型权重本地路径
     batch_size: 1
 ```
+
 随后，在您的 Python 代码中，您可以这样使用产线：
+
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="paddlex/configs/pipelines/ts_forecast.yaml")
+pipeline = create_pipeline(pipeline="my_path/ts_forecast.yaml")
 output = pipeline.predict("pre_ts.csv")
 for res in output:
     res.print() # 打印预测的结构化输出

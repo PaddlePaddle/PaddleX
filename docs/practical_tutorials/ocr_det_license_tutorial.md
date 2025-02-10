@@ -305,7 +305,13 @@ python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_server_det.yam
 
 ## 6. 产线测试
 
-产线中的模型替换为微调后的模型进行测试，将`paddlex/configs/pipelines/OCR.yaml`配置文件中的`SubModules.TextDetection.model_dir`修改为自己的模型路径：
+产线中的模型替换为微调后的模型进行测试，可以获取 OCR 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+
+```
+paddlex --get_pipeline_config OCR --save_path ./my_path
+```
+
+将配置文件中的`SubModules.TextDetection.model_dir`修改为自己的模型路径：
 
 ```yaml
 SubModules:
@@ -321,7 +327,7 @@ SubModules:
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="paddlex/configs/pipelines/OCR.yaml")
+pipeline = create_pipeline(pipeline="my_path/OCR.yaml")
 
 output = pipeline.predict(
     input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR/case1.jpg",
