@@ -227,11 +227,12 @@ for res in output:
 After running, the result obtained is:
 
 ```bash
-{'res': "{'input_path': 'general_semantic_segmentation_002.png', 'pred': '...'}"}
+{'res': "{'input_path': 'general_semantic_segmentation_002.png', 'page_index': None, 'pred': '...'}"}
 ```
 
 The meanings of the runtime parameters are as follows:
 - `input_path`: Indicates the path of the input image to be predicted.
+- `page_index`: If the input is a PDF file, it represents the current page number of the PDF; otherwise, it is `None`.
 - `pred`: The actual mask predicted by the semantic segmentation model. Since the data is too large to be printed directly, it is replaced with `...` here. The prediction result can be saved as an image through `res.save_to_img()` and as a JSON file through `res.save_to_json()`.
 
 The visualization image is as follows:

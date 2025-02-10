@@ -227,10 +227,11 @@ for res in output:
 
 运行后，得到的结果为：
 ```bash
-{'res': "{'input_path': 'general_semantic_segmentation_002.png', 'pred': '...'}"}
+{'res': "{'input_path': 'general_semantic_segmentation_002.png', 'page_index': None, 'pred': '...'}"}
 ```
 运行结果参数含义如下：
 - `input_path`: 表示输入待预测图像的路径
+- `page_index`: 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
 - `pred`: 语义分割模型实际预测的mask，由于数据过大不便于直接print，所以此处用`...`替换，可以通过`res.save_to_img()`将预测结果保存为图片，通过`res.save_to_json()`将预测结果保存为json文件。
 
 可视化图片如下：
@@ -609,7 +610,7 @@ python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yam
 ```bash
 python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=predict \
-    -o Predict.model_dir="./output/best_model" \
+    -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="general_semantic_segmentation_002.png"
 ```
 与模型训练和评估类似，需要如下几步：

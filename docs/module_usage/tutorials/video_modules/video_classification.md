@@ -265,42 +265,43 @@ python main.py -c paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2_
 <details><summary>👉 <b>校验结果详情（点击展开）</b></summary>
 <p>校验结果文件具体内容为：</p>
 <pre><code class="language-bash">
-{ "done_flag": true,
+{
+  "done_flag": true,
   "check_pass": true,
   "attributes": {
-    "label_file": "../../dataset/k400_examples/label.txt",
+    "label_file": "..\/..\/dataset\/k400_examples\/label.txt",
     "num_classes": 5,
     "train_samples": 250,
     "train_sample_paths": [
-      "check_dataset/../../dataset/k400_examples/videos/Wary2ON3aSo_000079_000089.mp4",
-      "check_dataset/../../dataset/k400_examples/videos/_LHpfh0rXjk_000012_000022.mp4",
-      "check_dataset/../../dataset/k400_examples/videos/dyoiNbn80q0_000039_000049.mp4",
-      "check_dataset/../../dataset/k400_examples/videos/brBw6cFwock_000049_000059.mp4",
-      "check_dataset/../../dataset/k400_examples/videos/-o4X5Z_Isyc_000085_000095.mp4",
-      "check_dataset/../../dataset/k400_examples/videos/e24p-4W3TiU_000011_000021.mp4",
-      "check_dataset/../../dataset/k400_examples/videos/2Grg_zwmYZE_000004_000014.mp4",
-      "check_dataset/../../dataset/k400_examples/videos/aZY_0UqRNgA_000098_000108.mp4",
-      "check_dataset/../../dataset/k400_examples/videos/WZlsi4nQHOo_000025_000035.mp4",
-      "check_dataset/../../dataset/k400_examples/videos/rRh-lkFj4Tw_000001_000011.mp4"
+      "check_dataset\/..\/..\/dataset\/k400_examples\/videos\/Wary2ON3aSo_000079_000089.mp4",
+      "check_dataset\/..\/..\/dataset\/k400_examples\/videos\/_LHpfh0rXjk_000012_000022.mp4",
+      "check_dataset\/..\/..\/dataset\/k400_examples\/videos\/dyoiNbn80q0_000039_000049.mp4",
+      "check_dataset\/..\/..\/dataset\/k400_examples\/videos\/brBw6cFwock_000049_000059.mp4",
+      "check_dataset\/..\/..\/dataset\/k400_examples\/videos\/-o4X5Z_Isyc_000085_000095.mp4",
+      "check_dataset\/..\/..\/dataset\/k400_examples\/videos\/e24p-4W3TiU_000011_000021.mp4",
+      "check_dataset\/..\/..\/dataset\/k400_examples\/videos\/2Grg_zwmYZE_000004_000014.mp4",
+      "check_dataset\/..\/..\/dataset\/k400_examples\/videos\/aZY_0UqRNgA_000098_000108.mp4",
+      "check_dataset\/..\/..\/dataset\/k400_examples\/videos\/WZlsi4nQHOo_000025_000035.mp4",
+      "check_dataset\/..\/..\/dataset\/k400_examples\/videos\/rRh-lkFj4Tw_000001_000011.mp4"
     ],
     "val_samples": 50,
     "val_sample_paths": [
-      "check_dataset/../../dataset/k400_examples/videos/7Mga5kywfU4.mp4",
-      "check_dataset/../../dataset/k400_examples/videos/w5UCdQ2NmfY.mp4",
-      "check_dataset/../../dataset/k400_examples/videos/Qbo_tnzfjOY.mp4",
-      "check_dataset/../../dataset/k400_examples/videos/LgW8pMDtylE.mkv",
-      "check_dataset/../../dataset/k400_examples/videos/BY0883Dvt1c.mp4",
-      "check_dataset/../../dataset/k400_examples/videos/PHQkMPu-KNo.mp4",
-      "check_dataset/../../dataset/k400_examples/videos/7LSJ2Ryv1a8.mp4",
-      "check_dataset/../../dataset/k400_examples/videos/oBYZWvlI8Uk.mp4",
-      "check_dataset/../../dataset/k400_examples/videos/dpn2eg9O3Rs.mkv",
-      "check_dataset/../../dataset/k400_examples/videos/hXtsZAaZ3yc.mkv"
+      "check_dataset\/..\/..\/dataset\/k400_examples\/videos\/7Mga5kywfU4.mp4",
+      "check_dataset\/..\/..\/dataset\/k400_examples\/videos\/w5UCdQ2NmfY.mp4",
+      "check_dataset\/..\/..\/dataset\/k400_examples\/videos\/Qbo_tnzfjOY.mp4",
+      "check_dataset\/..\/..\/dataset\/k400_examples\/videos\/LgW8pMDtylE.mkv",
+      "check_dataset\/..\/..\/dataset\/k400_examples\/videos\/BY0883Dvt1c.mp4",
+      "check_dataset\/..\/..\/dataset\/k400_examples\/videos\/PHQkMPu-KNo.mp4",
+      "check_dataset\/..\/..\/dataset\/k400_examples\/videos\/7LSJ2Ryv1a8.mp4",
+      "check_dataset\/..\/..\/dataset\/k400_examples\/videos\/oBYZWvlI8Uk.mp4",
+      "check_dataset\/..\/..\/dataset\/k400_examples\/videos\/dpn2eg9O3Rs.mkv",
+      "check_dataset\/..\/..\/dataset\/k400_examples\/videos\/hXtsZAaZ3yc.mkv"
     ]
   },
   "analysis": {
-    "histogram": "check_dataset/histogram.png"
+    "histogram": "check_dataset\/histogram.png"
   },
-  "dataset_path": "./dataset/k400_examples",
+  "dataset_path": "k400_examples",
   "show_type": "video",
   "dataset_type": "VideoClsDataset"
 }
@@ -405,7 +406,7 @@ python main.py -c  paddlex/configs/modules/video_classification/PP-TSMv2-LCNetV2
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
 
 <p>在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如<code>-o Evaluate.weight_path=./output/best_model/best_model.pdparams</code>。</p>
-<p>在完成模型评估后，会产出<code>evaluate_result.json，其记录了</code>评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标，包含 val.top1、val.top5；</p></details>
+<p>在完成模型评估后，会产出<code>evaluate_result.json</code>，其记录了评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标，包含 val.top1、val.top5；</p></details>
 
 ### <b>4.4 模型推理和模型集成</b>
 

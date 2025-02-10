@@ -143,6 +143,7 @@ PIPELINE_ARGUMENTS = {
         },
     ],
     "table_recognition": None,
+    "table_recognition_v2": None,
     "seal_recognition": [
         {
             "name": "--use_doc_orientation_classify",

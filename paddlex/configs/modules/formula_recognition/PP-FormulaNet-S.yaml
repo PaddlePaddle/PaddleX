@@ -16,8 +16,7 @@ CheckDataset:
 
 Train:
   epochs_iters: 20
-  batch_size_train: 30
-  batch_size_val: 10
+  batch_size: 14
   learning_rate: 0.0001
   pretrain_weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-S_pretrained.pdparams
   resume_path: null
@@ -26,6 +25,7 @@ Train:
   save_interval: 1
 
 Evaluate:
+  batch_size: 20
   weight_path: output/best_accuracy/best_accuracy.pdparams
   log_interval: 1
 
@@ -34,7 +34,7 @@ Export:
 
 Predict:
   batch_size: 1
-  model_dir: "output/best_accuracy/inference_pir"
+  model_dir: "output/best_accuracy/inference"
   input: "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png"
   kernel_option:
     run_mode: paddle

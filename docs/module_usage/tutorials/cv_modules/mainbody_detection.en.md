@@ -52,11 +52,12 @@ for res in output:
 After running, the result obtained is:
 
 ```bash
-{'res': "{'input_path': 'general_object_detection_002.png', 'boxes': [{'cls_id': 0, 'label': 'mainbody', 'score': 0.8161919713020325, 'coordinate': [76.07117, 272.83017, 329.5627, 519.48236]}, {'cls_id': 0, 'label': 'mainbody', 'score': 0.8071584701538086, 'coordinate': [662.7539, 92.804276, 874.7139, 308.21216]}, {'cls_id': 0, 'label': 'mainbody', 'score': 0.754974365234375, 'coordinate': [284.4833, 93.76895, 476.6789, 297.27588]}, {'cls_id': 0, 'label': 'mainbody', 'score': 0.6657832860946655, 'coordinate': [732.1591, 0, 1035.9547, 168.45923]}, {'cls_id': 0, 'label': 'mainbody', 'score': 0.614763081073761, 'coordinate': [763.9127, 280.74258, 925.48065, 439.444]}, ... ]}"}
+{'res': "{'input_path': 'general_object_detection_002.png', 'page_index': None, 'boxes': [{'cls_id': 0, 'label': 'mainbody', 'score': 0.8161919713020325, 'coordinate': [76.07117, 272.83017, 329.5627, 519.48236]}, {'cls_id': 0, 'label': 'mainbody', 'score': 0.8071584701538086, 'coordinate': [662.7539, 92.804276, 874.7139, 308.21216]}, {'cls_id': 0, 'label': 'mainbody', 'score': 0.754974365234375, 'coordinate': [284.4833, 93.76895, 476.6789, 297.27588]}, {'cls_id': 0, 'label': 'mainbody', 'score': 0.6657832860946655, 'coordinate': [732.1591, 0, 1035.9547, 168.45923]}, {'cls_id': 0, 'label': 'mainbody', 'score': 0.614763081073761, 'coordinate': [763.9127, 280.74258, 925.48065, 439.444]}, ... ]}"}
 ```
 
 The meanings of the running results parameters are as follows:
 - `input_path`: Indicates the path of the input image to be predicted.
+- `page_index`: If the input is a PDF file, it represents the current page number of the PDF; otherwise, it is `None`.
 - `boxes`: Information of each detected object.
   - `cls_id`: Class ID.
   - `label`: Class name.
