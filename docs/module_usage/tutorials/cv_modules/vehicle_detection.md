@@ -427,3 +427,5 @@ python main.py -c paddlex/configs/modules/vehicle_detection/PP-YOLOE-S_vehicle.y
 
 #### 4.4.2 模型集成
 您产出的权重可以直接集成到车辆检测模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
+
+您也可以利用 PaddleX 高性能推理插件来优化您模型的推理过程，进一步提升效率，详细的流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_inference.md)。

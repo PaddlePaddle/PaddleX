@@ -215,3 +215,5 @@ for res in output:
 
 ## 四、二次开发
 当前模块暂时不支持微调训练，仅支持推理集成。关于该模块的微调训练，计划在未来支持。
+
+您也可以利用 PaddleX 高性能推理插件来优化您模型的推理过程，进一步提升效率，详细的流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_inference.md)。

@@ -359,3 +359,5 @@ python main.py -c paddlex/configs/modules/image_anomaly_detection/STFPM.yaml \
 2.<b>模块集成</b>
 
 您产出的权重可以直接集成到图像异常检测模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
+
+您也可以利用 PaddleX 高性能推理插件来优化您模型的推理过程，进一步提升效率，详细的流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_inference.md)。
