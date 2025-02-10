@@ -650,7 +650,7 @@ python main.py -c paddlex/configs/modules/object_detection/PicoDet-S.yaml \
   "analysis": {
     "histogram": "check_dataset/histogram.png"
   },
-  "dataset_path": "./dataset/det_coco_examples",
+  "dataset_path": "det_coco_examples",
   "show_type": "image",
   "dataset_type": "COCODetDataset"
 }
