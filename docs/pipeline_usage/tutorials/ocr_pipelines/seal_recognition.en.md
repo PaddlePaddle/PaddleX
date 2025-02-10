@@ -756,14 +756,14 @@ output = pipeline.predict(
     use_doc_unwarping=False,
 )
 for res in output:
-    res.print() ## 打印预测的结构化输出
-    res.save_to_img("./output/") ## 保存可视化结果
-    res.save_to_json("./output/") ## 保存可视化结果
+    res.print() 
+    res.save_to_img("./output/") 
+    res.save_to_json("./output/") 
 ```
 
 In the above Python script, the following steps were executed:
 
-(1) The OCR production line object was instantiated via `create_pipeline()`, with the specific parameters described as follows:
+(1) The seal recognition production line object was instantiated via `create_pipeline()`, with the specific parameters described as follows:
 
 <table>
 <thead>
@@ -779,6 +779,12 @@ In the above Python script, the following steps were executed:
 <td><code>pipeline</code></td>
 <td>The name of the production line or the path to the production line configuration file. If it is a production line name, it must be supported by PaddleX.</td>
 <td><code>str</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -1402,20 +1408,36 @@ If you need to use the fine-tuned model weights, simply modify the pipeline conf
 
 ```python
 ......
+SubModules:
+  LayoutDetection:
+    module_name: layout_detection
+    model_name: PP-DocLayout-L
+    model_dir: null # 修改此处为微调后的版面检测模型权重的本地路径
+    ...
+
+SubPipelines:
+  DocPreprocessor:
+    ...
+    SubModules:
+      DocOrientationClassify:
+        module_name: doc_text_orientation
+        model_name: PP-LCNet_x1_0_doc_ori
+        model_dir: null # 修改此处为微调后的文档图像方向分类模型权重的本地路径
+    ...
     SubModules:
       TextDetection:
         module_name: seal_text_detection
         model_name: PP-OCRv4_server_seal_det
-        model_dir: null # 修改此处为微调后模型权重的本地路径
-        limit_side_len: 736
-        limit_type: min
-        thresh: 0.2
-        box_thresh: 0.6
-        unclip_ratio: 0.5
-......
+        model_dir: null # Modify this to the local path of the fine-tuned text detection model weights
+        ...
+        TextRecognition:
+          module_name: text_recognition
+          model_name: PP-OCRv4_server_rec
+          model_dir: null # Modify this to the local path of the fine-tuned text recognition model weights
+        ...
 ```
 
-Then, refer to the command-line or Python script methods in [2.2 Local Experience](#22-local-experience) to load the modified production line configuration file.
+Then, refer to the command-line or Python script methods in [2.2 Local Experience](#2-quick-start) to load the modified production line configuration file.
 
 ## 5. Multi-Hardware Support
 

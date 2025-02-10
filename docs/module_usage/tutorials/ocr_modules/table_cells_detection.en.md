@@ -24,13 +24,13 @@ The table cell detection module is a key component of table recognition tasks, r
 <td rowspan="2">--</td>
 <td rowspan="2">--</td>
 <td rowspan="2">--</td>
-<td rowspan="2">--</td>
+<td rowspan="2">124M</td>
 <td rowspan="2">RT-DETR is the first real-time end-to-end object detection model. The Baidu PaddlePaddle Vision Team, based on RT-DETR-L as the base model, has completed pretraining on a self-built table cell detection dataset, achieving good performance for both wired and wireless table cell detection.
 </td>
 </tr>
 <tr>
 <td>RT-DETR-L_wireless_table_cell_det</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_wireless_table_cell_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wired_table_cell_det_pretrained.pdparams">Training Model</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_wireless_table_cell_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wireless_table_cell_det_pretrained.pdparams">Training Model</a></td>
 </tr>
 </table>
 
@@ -283,7 +283,7 @@ Data validation can be completed with a single command:
 ```bash
 python main.py -c paddlex/configs/modules/table_cells_detection/RT-DETR-L_wired_table_cell_det.yaml \
     -o Global.mode=check_dataset \
-    -o Global.dataset_dir=./dataset/cells_det_coco_examples.tar
+    -o Global.dataset_dir=./dataset/cells_det_coco_examples
 ```
 
 After executing the above command, PaddleX will verify the dataset and collect basic information about the dataset. If the command runs successfully, it will print `Check dataset passed !` in the log. The verification result file is saved in `./output/check_dataset_result.json`, and the related outputs will be saved in the `./output/check_dataset` directory under the current directory. The output directory includes visualized example sample images and sample distribution histograms.

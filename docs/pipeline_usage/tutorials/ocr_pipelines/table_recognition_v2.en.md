@@ -26,22 +26,24 @@ The General Table Recognition Pipeline v2 is designed to solve table recognition
 <th>Description</th>
 </tr>
 <tr>
-<td>SLANet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SLANet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_pretrained.pdparams">Training Model</a></td>
-<td>59.52</td>
-<td>522.536</td>
-<td>1845.37</td>
-<td>6.9 M</td>
-<td rowspan="2">SLANet is a table structure recognition model developed by Baidu PaddlePaddle Vision Team. This model significantly improves the accuracy and inference speed of table structure recognition by using a CPU-friendly lightweight backbone network PP-LCNet, a high-low layer feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
+<td>SLANeXt_wired</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANeXt_wired_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANeXt_wired_pretrained.pdparams">Training Model</a></td>
+<td rowspan="2">69.65</td>
+<td rowspan="2">--</td>
+<td rowspan="2">--</td>
+<td rowspan="2">351M</td>
+<td rowspan="2">The SLANeXt series is a new generation of table structure recognition models developed by the Baidu PaddlePaddle Vision Team. Compared to SLANet and SLANet_plus, SLANeXt focuses on recognizing table structures and has trained dedicated weights for both wired and wireless tables, significantly improving the recognition capabilities for all types of tables, especially for wired tables.</td>
 </tr>
 <tr>
-<td>SLANet_plus</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/SLANet_plus_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">Training Model</a></td>
+<td>SLANeXt_wireless</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANeXt_wireless_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANeXt_wireless_pretrained.pdparams">Training Model</a></td>
 <td>63.69</td>
 <td>522.536</td>
 <td>1845.37</td>
 <td>6.9 M</td>
 </tr>
 </table>
-<p><b>Note: The above accuracy metrics are measured on PaddleX's internally built English table recognition dataset. All model GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision, and CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+<b>Note: The above accuracy metrics are measured from the high-difficulty Chinese table recognition dataset internally built by PaddleX. The GPU inference time for all models is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b>
 
 <p><b>Table Classification Module Models:</b></p>
 <table>
@@ -57,7 +59,7 @@ The General Table Recognition Pipeline v2 is designed to solve table recognition
 <td>--</td>
 <td>--</td>
 <td>--</td>
-<td>--</td>
+<td>6.6M</td>
 </tr>
 </table>
 <p><b>Note: The above accuracy metrics are measured on PaddleX's internally built table classification dataset. All model GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision, and CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
@@ -78,7 +80,7 @@ The General Table Recognition Pipeline v2 is designed to solve table recognition
 <td rowspan="2">--</td>
 <td rowspan="2">--</td>
 <td rowspan="2">--</td>
-<td rowspan="2">--</td>
+`<td rowspan="2">124M</td>
 <td rowspan="2">RT-DETR is the first real-time end-to-end object detection model. The Baidu PaddlePaddle Vision Team used RT-DETR-L as the base model and pre-trained it on a self-built table cell detection dataset, achieving good performance in detecting both wired and wireless tables.</td>
 </tr>
 <tr>
@@ -203,72 +205,173 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </thead>
 <tbody>
 <tr>
-<td>PicoDet_layout_1x</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet_layout_1x_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">Training Model</a></td> 
-<td>86.8</td>
-<td>13.0</td>
-<td>91.3</td>
-<td>7.4</td>
-<td>A high-efficiency layout region localization model based on PicoDet-1x, trained on the PubLayNet dataset, capable of locating five types of regions: text, title, table, image, and list.</td>
+<td>PP-DocLayout-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">Training Model</a></td>
+<td>90.4</td>
+<td>34.5252</td>
+<td>1454.27</td>
+<td>123.76 M</td>
+<td>A high-precision layout region localization model trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exams, and research reports, based on RT-DETR-L.</td>
 </tr>
 <tr>
-<td>PicoDet_layout_1x_table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet_layout_1x_table_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">Training Model</a></td> 
-<td>95.7</td>
-<td>12.623</td>
-<td>90.8934</td>
-<td>7.4 M</td>
-<td>A high-efficiency layout region localization model based on PicoDet-1x, trained on a self-built dataset, capable of locating one type of region: table.</td>
+<td>PP-DocLayout-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">Training Model</a></td>
+<td>75.2</td>
+<td>15.9</td>
+<td>160.1</td>
+<td>22.578</td>
+<td>A balanced precision and efficiency layout region localization model trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exams, and research reports, based on PicoDet-L.</td>
 </tr>
 <tr>
-<td>PicoDet-S_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet-S_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">Training Model</a></td> 
-<td>87.1</td>
-<td>13.5</td>
-<td>45.8</td>
-<td>4.8</td>
-<td>A high-efficiency layout region localization model based on the lightweight PicoDet-S model, trained on a self-built dataset for scenarios such as Chinese and English papers, magazines, and research reports, containing three categories: table, image, and seal.</td>
-</tr>
-<tr>
-<td>PicoDet-S_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet-S_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">Training Model</a></td> 
-<td>70.3</td>
-<td>13.6</td>
-<td>46.2</td>
-<td>4.8</td>
-<td>A high-efficiency layout region localization model based on the lightweight PicoDet-S model, trained on a self-built dataset for scenarios such as Chinese and English papers, magazines, and research reports, containing 17 common layout categories: paragraph title, image, text, number, abstract, content, chart title, formula, table, table title, references, document title, footnote, header, algorithm, footer, seal.</td>
-</tr>
-<tr>
-<td>PicoDet-L_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet-L_layout_3cls_infer.tar">Inference Model</a>/<a  href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">Training Model</a></td> 
-<td>89.3</td>
-<td>15.7</td>
-<td>159.8</td>
-<td>22.6</td>
-<td>A high-efficiency layout region localization model based on PicoDet-L, trained on a self-built dataset for scenarios such as Chinese and English papers, magazines, and research reports, containing three categories: table, image, and seal.</td>
-</tr>
-<tr>
-<td>PicoDet-L_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet-L_layout_17cls_infer.tar">Inference Model</a>/<a  href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">Training Model</a></td> 
-<td>79.9</td>
-<td>17.2</td>
-<td>160.2</td>
-<td>22.6</td>
-<td>A high-efficiency layout region localization model based on PicoDet-L, trained on a self-built dataset for scenarios such as Chinese and English papers, magazines, and research reports, containing 17 common layout categories: paragraph title, image, text, number, abstract, content, chart title, formula, table, table title, references, document title, footnote, header, algorithm, footer, seal.</td>
-</tr>
-<tr>
-<td>RT-DETR-H_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/RT-DETR-H_layout_3cls_infer.tar">Inference Model</a>/<a  href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">Training Model</a></td> 
-<td>95.9</td>
-<td>114.6</td>
-<td>3832.6</td>
-<td>470.1</td>
-<td>A high-accuracy layout region localization model based on RT-DETR-H, trained on a self-built dataset for scenarios such as Chinese and English papers, magazines, and research reports, containing three categories: table, image, and seal.</td>
-</tr>
-<tr>
-<td>RT-DETR-H_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/RT-DETR-H_layout_17cls_infer.tar">Inference Model</a>/<a  href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">Training Model</a></td> 
-<td>92.6</td>
-<td>115.1</td>
-<td>3827.2</td>
-<td>470.2</td>
-<td>A high-accuracy layout region localization model based on RT-DETR-H, trained on a self-built dataset for scenarios such as Chinese and English papers, magazines, and research reports, containing 17 common layout categories: paragraph title, image, text, number, abstract, content, chart title, formula, table, table title, references, document title, footnote, header, algorithm, footer, seal</td>
+<td>PP-DocLayout-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">Training Model</a></td>
+<td>70.9</td>
+<td>13.8</td>
+<td>46.7</td>
+<td>4.834</td>
+<td>A high-efficiency layout region localization model trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exams, and research reports, based on PicoDet-S.</td>
 </tr>
 </tbody>
 </table>
-<p><b>Note: The evaluation dataset for the above accuracy metrics is a layout region analysis dataset self-built by PaddleOCR, containing 10,000 common document-type images from Chinese and English papers, magazines, and research reports. GPU inference time is based on an NVIDIA Tesla T4 machine, with precision type FP32. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32.</b></p>
+
+<b>Note: The evaluation dataset for the above accuracy metrics is the layout region detection dataset built by PaddleOCR, containing 500 common document-type images of Chinese and English papers, magazines, contracts, books, exams, and research reports. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b>
+
+> ❗ The above list includes the <b>3 core models</b> that are the focus of the layout detection module. The module supports a total of <b>11 full models</b>, including multiple predefined models with different categories. The complete list of models is as follows:
+
+* <b>Table Layout Detection Models</b>
+
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>mAP(0.5) (%)</th>
+<th>GPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)</th>
+<th>Model Size (M)</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PicoDet_layout_1x_table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet_layout_1x_table_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">Training Model</a></td> 
+<td>97.5</td>
+<td>12.623</td>
+<td>90.8934</td>
+<td>7.4 M</td>
+<td>A high-efficiency layout region localization model trained on a self-built dataset using PicoDet-1x, capable of locating 1 type of region: tables</td>
+</tr>
+</table>
+
+<b>Note: The evaluation dataset for the above accuracy metrics is the layout table region detection dataset built by PaddleOCR, containing 7,835 document-type images of Chinese and English papers with tables. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b>
+
+* <b>3-category layout detection model, including tables, images, and seals</b>
+
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>mAP(0.5) (%)</th>
+<th>GPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)</th>
+<th>Model Size (M)</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+</tr>
+<tr>
+<td>PicoDet-S_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet-S_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">Training Model</a></td> 
+<td>88.2</td>
+<td>13.5</td>
+<td>45.8</td>
+<td>4.8</td>
+<td>A high-efficiency layout region localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using the lightweight PicoDet-S model</td>
+</tr>
+<tr>
+<td>PicoDet-L_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/PicoDet-L_layout_3cls_infer.tar">Inference Model</a>/<a  href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">Training Model</a></td> 
+<td>89.0</td>
+<td>15.7</td>
+<td>159.8</td>
+<td>22.6</td>
+<td>A layout region localization model with balanced efficiency and accuracy, trained on a self-built dataset of Chinese and English papers, magazines, and research reports using PicoDet-L</td>
+</tr>
+<tr>
+<td>RT-DETR-H_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/RT-DETR-H_layout_3cls_infer.tar">Inference Model</a>/<a  href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">Training Model</a></td> 
+<td>95.8</td>
+<td>114.6</td>
+<td>3832.6</td>
+<td>470.1</td>
+<td>A high-precision layout region localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using RT-DETR-H</td>
+</tr>
+</table>
+
+<b>Note: The evaluation dataset for the above accuracy metrics is the layout region detection dataset built by PaddleOCR, containing 1,154 common document-type images of Chinese and English papers, magazines, and research reports. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b>
+
+* <b>5-category English document region detection model, including text, title, table, image, and list</b>
+
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>mAP(0.5) (%)</th>
+<th>GPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)</th>
+<th>Model Size (M)</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PicoDet_layout_1x</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">Training Model</a></td>
+<td>97.8</td>
+<td>13.0</td>
+<td>91.3</td>
+<td>7.4</td>
+<td>A high-efficiency English document layout region localization model trained on the PubLayNet dataset using PicoDet-1x</td>
+</tr>
+</table>
+
+<b>Note: The evaluation dataset for the above accuracy metrics is the [PubLayNet](https://developer.ibm.com/exchanges/data/all/publaynet/) evaluation dataset, containing 11,245 images of English documents. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b>
+
+* <b>17-category region detection model, including 17 common layout categories: paragraph title, image, text, number, abstract, content, figure title, formula, table, table title, reference, document title, footnote, header, algorithm, footer, seal</b>
+
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>mAP(0.5) (%)</th>
+<th>GPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)</th>
+<th>Model Size (M)</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PicoDet-S_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">Training Model</a></td>
+<td>87.4</td>
+<td>13.6</td>
+<td>46.2</td>
+<td>4.8</td>
+<td>A high-efficiency layout region localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using the lightweight PicoDet-S model</td>
+</tr>
+
+<tr>
+<td>PicoDet-L_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">Training Model</a></td>
+<td>89.0</td>
+<td>17.2</td>
+<td>160.2</td>
+<td>22.6</td>
+<td>A layout region localization model with balanced efficiency and accuracy, trained on a self-built dataset of Chinese and English papers, magazines, and research reports using PicoDet-L</td>
+</tr>
+<tr>
+<td>RT-DETR-H_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0b2/RT-DETR-H_layout_17cls_infer.tar">Inference Model</a>/<a  href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">Training Model</a></td> 
+<td>98.3</td>
+<td>115.1</td>
+<td>3827.2</td>
+<td>470.2</td>
+<td>A high-precision layout region localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using RT-DETR-H</td>
+</tr>
+</tbody>
+</table>
+<p><b>Note: The evaluation dataset for the above accuracy metrics is the layout region detection dataset built by PaddleOCR, containing 892 common document-type images of Chinese and English papers, magazines, and research reports. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
 
 <p><b>Text Image Correction Module Model (Optional):</b></p>
 <table>
@@ -316,8 +419,10 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </table>
 <p><b>Note: The accuracy metrics above are evaluated on a self-built dataset covering multiple scenarios such as documents and certificates, including 1000 images. GPU inference time is based on NVIDIA Tesla T4 machines with FP32 precision, and CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
 
+</details>
+
 ## 2. Quick Start
-The pre-trained model production lines provided by PaddleX can be quickly experienced. You can use the command line or Python locally to experience the effect of the General Table Recognition Production Line v2.
+All model production lines provided by PaddleX can be quickly experienced. You can use the command line or Python locally to experience the effect of the general table recognition production line v2.
 
 ### 2.1 Online Experience
 Online experience is not supported at the moment.
@@ -337,7 +442,7 @@ paddlex --pipeline table_recognition_v2 \
 
 The relevant parameter descriptions can be referred to in the [2.2.2 Integration via Python Script](#222-python-script-integration) for parameter descriptions.
 
-After running, the result will be printed to the terminal, as follows:
+<details><summary>👉 <b>After running, the result is: (Click to expand)</b></summary>
 
 ```bash
 {'res': {'input_path': 'table_recognition.jpg', 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True, 'use_ocr_model': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 0, 'label': 'Table', 'score': 0.9922188520431519, 'coordinate': [3.0127392, 0.14648987, 547.5102, 127.72023]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': [array([[234,   6],
@@ -474,6 +579,8 @@ After running, the result will be printed to the terminal, as follows:
 
 The explanation of the running result parameters can refer to the result interpretation in [2.2.2 Python Script Integration](#222-python-script-integration).
 
+</details>
+
 The visualization results are saved under `save_path`, where the visualization result of table recognition is as follows:
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/03.png">
 
@@ -517,6 +624,12 @@ In the above Python script, the following steps are executed:
 <td><code>pipeline</code></td>
 <td>The name of the pipeline or the path to the pipeline configuration file. If it is a pipeline name, it must be a pipeline supported by PaddleX.</td>
 <td><code>str</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -669,6 +782,69 @@ In the above Python script, the following steps are executed:
 <td><code>None</code></td>
 </tr>
 
+<tr>
+<td><code>use_layout_detection</code></td>
+<td>Whether to use the layout detection module</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>layout_threshold</code></td>
+<td>Confidence threshold for layout detection; only scores above this threshold will be output</td>
+<td><code>float|dict|None</code></td>
+<td>
+<ul>
+    <li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+    <li><b>dict</b>: Key is an integer category ID, value is any floating-point number greater than <code>0</code></li>
+    <li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>0.5</code></li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>layout_nms</code></td>
+<td>Whether to use NMS post-processing for layout detection</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>layout_unclip_ratio</code></td>
+<td>Scale factor for the side length of detection boxes; if not specified, the default PaddleX official model configuration will be used</td>
+<td><code>float|list|None</code></td>
+<td>
+<ul>
+  <li><b>float</b>: A floating-point number greater than 0, e.g., 1.1, indicating that the center of the detection box remains unchanged, and both the width and height are scaled by 1.1 times</li>
+  <li><b>list</b>: e.g., [1.2, 1.5], indicating that the center of the detection box remains unchanged, the width is scaled by 1.2 times, and the height is scaled by 1.5 times</li>
+  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as 1.0</li>
+</ul>
+</td>
+<tr>
+<td><code>layout_merge_bboxes_mode</code></td>
+<td>Merging mode for detection boxes output by the model; if not specified, the default PaddleX official model configuration will be used</td>
+<td><code>string|None</code></td>
+<td>
+<ul>
+  <li><b>large</b>: When set to large, only the outermost box will be retained for overlapping detection boxes, and the inner overlapping boxes will be removed.</li>
+  <li><b>small</b>: When set to small, only the innermost boxes will be retained for overlapping detection boxes, and the outer overlapping boxes will be removed.</li>
+  <li><b>union</b>: No filtering of boxes will be performed; both inner and outer boxes will be retained.</li>
+  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>large</code></li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+
 </table>
 
 (3) Process the prediction results. The prediction result for each sample is of type `dict`, and supports operations such as printing, saving as an image, saving as an `xlsx` file, saving as an `HTML` file, and saving as a `json` file:
@@ -757,6 +933,15 @@ In the above Python script, the following steps are executed:
     - `model_settings`: `(Dict[str, bool])` Configuration parameters required for the production line model
 
         - `use_doc_preprocessor`: `(bool)` Controls whether to enable the document preprocessing sub-production line
+    - `use_layout_detection`: `(bool)` Controls whether to enable the layout detection sub-production line
+    - `use_ocr_model`: `(bool)` Controls whether to enable the OCR sub-production line
+    - `layout_det_res`: `(Dict[str, Union[List[numpy.ndarray], List[float]]])` Output result of the layout detection sub-module. Only exists when `use_layout_detection=True`
+        - `input_path`: `(Union[str, None])` The image path accepted by the layout detection module, saved as `None` when the input is a `numpy.ndarray`
+        - `page_index`: `(Union[int, None])` If the input is a PDF file, it indicates the current page number of the PDF, otherwise it is `None`
+        - `boxes`: `(List[Dict])` List of detection boxes for layout seal regions, each element in the list contains the following fields
+            - `cls_id`: `(int)` The class ID of the detection box
+            - `score`: `(float)` The confidence score of the detection box
+            - `coordinate`: `(List[float])` The coordinates of the four corners of the detection box, in the order of x1, y1, x2, y2, representing the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner  
     - `doc_preprocessor_res`: `(Dict[str, Union[str, Dict[str, bool], int]])` The output result of the document preprocessing sub-production line. Exists only when `use_doc_preprocessor=True`
         - `input_path`: `(Union[str, None])` The image path accepted by the image preprocessing sub-production line, saved as `None` when the input is `numpy.ndarray`
         - `model_settings`: `(Dict)` Model configuration parameters for the preprocessing sub-production line
