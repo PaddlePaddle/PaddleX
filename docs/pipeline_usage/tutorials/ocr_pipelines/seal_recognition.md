@@ -805,7 +805,7 @@ for res in output:
 
 在上述 Python 脚本中，执行了如下几个步骤：
 
-（1）通过 `create_pipeline()` 实例化 OCR 产线对象，具体参数说明如下：
+（1）通过 `create_pipeline()` 实例化 印章文本识别 产线对象，具体参数说明如下：
 
 <table>
 <thead>
@@ -821,6 +821,12 @@ for res in output:
 <td><code>pipeline</code></td>
 <td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
 <td><code>str</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>产线具体的配置信息（如果和<code>pipeline</code>同时设置，优先级高于<code>pipeline</code>，且要求产线名和<code>pipeline</code>一致）。</td>
+<td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -1491,20 +1497,36 @@ for i, res in enumerate(result[&quot;sealRecResults&quot;]):
 
 ```python
 ......
+SubModules:
+  LayoutDetection:
+    module_name: layout_detection
+    model_name: PP-DocLayout-L
+    model_dir: null # 修改此处为微调后的版面检测模型权重的本地路径
+    ...
+
+SubPipelines:
+  DocPreprocessor:
+    ...
+    SubModules:
+      DocOrientationClassify:
+        module_name: doc_text_orientation
+        model_name: PP-LCNet_x1_0_doc_ori
+        model_dir: null # 修改此处为微调后的文档图像方向分类模型权重的本地路径
+    ...
     SubModules:
       TextDetection:
         module_name: seal_text_detection
         model_name: PP-OCRv4_server_seal_det
-        model_dir: null # 修改此处为微调后模型权重的本地路径
-        limit_side_len: 736
-        limit_type: min
-        thresh: 0.2
-        box_thresh: 0.6
-        unclip_ratio: 0.5
-......
+        model_dir: null # 修改此处为微调后的文本检测模型权重的本地路径
+        ...
+      TextRecognition:
+        module_name: text_recognition
+        model_name: PP-OCRv4_server_rec
+        model_dir: null # 修改此处为微调后的文本识别模型权重的本地路径
+        ...
 ```
 
-随后， 参考[2.2 本地体验](#22-本地体验)中的命令行方式或Python脚本方式，加载修改后的产线配置文件即可。
+随后， 参考[2. 快速开始](#2-快速开始)中的命令行方式或Python脚本方式，加载修改后的产线配置文件即可。
 
 ##  5. 多硬件支持
 

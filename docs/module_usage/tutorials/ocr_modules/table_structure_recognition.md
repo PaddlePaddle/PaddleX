@@ -41,7 +41,7 @@ comments: true
 <td rowspan="2">69.65</td>
 <td rowspan="2">--</td>
 <td rowspan="2">--</td>
-<td rowspan="2">--</td>
+<td rowspan="2">351M</td>
 <td rowspan="2">SLANeXt 系列是百度飞桨视觉团队自研的新一代表格结构识别模型。相较于 SLANet 和 SLANet_plus，SLANeXt 专注于对表格结构进行识别，并且对有线表格(wired)和无线表格(wireless)的识别分别训练了专用的权重，对各类型表格的识别能力都得到了明显提高，特别是对有线表格的识别能力得到了大幅提升。</td>
 </tr>
 <tr>
@@ -238,7 +238,7 @@ tar -xf ./dataset/table_rec_dataset_examples.tar -C ./dataset/
 一行命令即可完成数据校验：
 
 ```bash
-python main.py -c paddlex/configs/modules/table_structure_recognitionSLANet.yaml \
+python main.py -c paddlex/configs/modules/table_structure_recognition/SLANet.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/table_rec_dataset_examples
 ```
@@ -319,13 +319,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>随后执行命令：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/modules/table_structure_recognitionSLANet.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/table_structure_recognition/SLANet.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/table_rec_dataset_examples
 </code></pre>
 <p>数据划分执行之后，原有标注文件会被在原路径下重命名为 <code>xxx.bak</code>。</p>
 <p>以上参数同样支持通过追加命令行参数的方式进行设置：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/modules/table_structure_recognitionSLANet.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/table_structure_recognition/SLANet.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/table_rec_dataset_examples \
     -o CheckDataset.split.enable=True \
@@ -337,7 +337,7 @@ CheckDataset:
 一条命令即可完成模型的训练，以此处表格结构识别模型 SLANet 的训练为例：
 
 ```bash
-python main.py -c paddlex/configs/modules/table_structure_recognitionSLANet.yaml \
+python main.py -c paddlex/configs/modules/table_structure_recognition/SLANet.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/table_rec_dataset_examples
 ```
@@ -369,7 +369,7 @@ python main.py -c paddlex/configs/modules/table_structure_recognitionSLANet.yaml
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ```bash
-python main.py -c paddlex/configs/modules/table_structure_recognitionSLANet.yaml \
+python main.py -c paddlex/configs/modules/table_structure_recognition/SLANet.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/table_rec_dataset_examples
 ```
@@ -392,7 +392,7 @@ python main.py -c paddlex/configs/modules/table_structure_recognitionSLANet.yaml
 
 * 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg)到本地。
 ```bash
-python main.py -c paddlex/configs/modules/table_structure_recognitionSLANet.yaml  \
+python main.py -c paddlex/configs/modules/table_structure_recognition/SLANet.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_accuracy/inference" \
     -o Predict.input="table_recognition.jpg"

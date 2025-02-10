@@ -263,31 +263,31 @@ comments: true
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
-<th>Avg-BLEU</th>
+<th>Avg-BLEU(%)</th>
 <th>GPU推理耗时 (ms)</th>
 <th>模型存储大小 (M)</th>
 <th>介绍</th>
 </tr>
 <td>UniMERNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/UniMERNet_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UniMERNet_pretrained.pdparams">训练模型</a></td>
-<td>0.8613</td>
+<td>86.13</td>
 <td>2266.96</td>
 <td>1.4 G</td>
 <td>UniMERNet是由上海AI Lab研发的一款公式识别模型。该模型采用Donut Swin作为编码器，MBartDecoder作为解码器，并通过在包含简单公式、复杂公式、扫描捕捉公式和手写公式在内的一百万数据集上进行训练，大幅提升了模型对真实场景公式的识别准确率</td>
 <tr>
 <td>PP-FormulaNet-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-FormulaNet-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-S_pretrained.pdparams">训练模型</a></td>
-<td>0.8712</td>
+<td>87.12</td>
 <td>202.25</td>
 <td>167.9 M</td>
 <td rowspan="2">PP-FormulaNet 是由百度飞桨视觉团队开发的一款先进的公式识别模型，支持5万个常见LateX源码词汇的识别。PP-FormulaNet-S 版本采用了 PP-HGNetV2-B4 作为其骨干网络，通过并行掩码和模型蒸馏等技术，大幅提升了模型的推理速度，同时保持了较高的识别精度，适用于简单印刷公式、跨行简单印刷公式等场景。而 PP-FormulaNet-L 版本则基于 Vary_VIT_B 作为骨干网络，并在大规模公式数据集上进行了深入训练，在复杂公式的识别方面，相较于PP-FormulaNet-S表现出显著的提升，适用于简单印刷公式、复杂印刷公式、手写公式等场景。 </td>
 
 </tr>
 <td>PP-FormulaNet-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-FormulaNet-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-L_pretrained.pdparams">训练模型</a></td>
-<td>0.9213</td>
+<td>92.13</td>
 <td>1976.52</td>
 <td>535.2 M</td>
 <tr>
 <td>LaTeX_OCR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/LaTeX_OCR_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">训练模型</a></td>
-<td>0.7163</td>
+<td>71.63</td>
 <td>-</td>
 <td>89.7 M</td>
 <td>LaTeX-OCR是一种基于自回归大模型的公式识别算法，通过采用 Hybrid ViT 作为骨干网络，transformer作为解码器，显著提升了公式识别的准确性。</td>
@@ -317,14 +317,14 @@ paddlex --pipeline formula_recognition \
         --save_path ./output \
         --device gpu:0
 ```
-相关的参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的参数说明。
+相关的参数说明可以参考[2.2 Python脚本方式集成](#22-python脚本方式集成)中的参数说明。
 
 运行后，会将结果打印到终端上，结果如下：
 
 ```bash
-{'res': {'input_path': 'general_formula_recognition.png', 'model_settings': {'use_doc_preprocessor': False,'use_layout_detection': True}, 'layout_det_res': {'input_path': None, 'boxes': [{'cls_id': 2, 'label': 'text', 'score': 0.9778407216072083, 'coordinate': [271.257, 648.50824, 1040.2291, 774.8482]}, ...]}, 'formula_res_list': [{'rec_formula': '\\small\\begin{aligned}{p(\\mathbf{x})=c(\\mathbf{u})\\prod_{i}p(x_{i}).}\\\\ \\end{aligned}', 'formula_region_id': 1, 'dt_polys': ([553.0718, 802.0996, 758.75635, 853.093],)}, ...]}}
+{'res': {'input_path': 'general_formula_recognition.png', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False,'use_layout_detection': True}, 'layout_det_res': {'input_path': None, 'boxes': [{'cls_id': 2, 'label': 'text', 'score': 0.9778407216072083, 'coordinate': [271.257, 648.50824, 1040.2291, 774.8482]}, ...]}, 'formula_res_list': [{'rec_formula': '\\small\\begin{aligned}{p(\\mathbf{x})=c(\\mathbf{u})\\prod_{i}p(x_{i}).}\\\\ \\end{aligned}', 'formula_region_id': 1, 'dt_polys': ([553.0718, 802.0996, 758.75635, 853.093],)}, ...]}}
 ```
-运行结果参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的结果解释。
+运行结果参数说明可以参考[2.2 Python脚本方式集成](#22-python脚本方式集成)中的结果解释。
 
 
 可视化结果保存在`save_path`下，其中公式识别的可视化结果如下：
@@ -365,7 +365,7 @@ for res in output:
 
 在上述 Python 脚本中，执行了如下几个步骤：
 
-（1）通过 `create_pipeline()` 实例化 公式识别 产线对象，具体参数说明如下：
+（1）通过 `create_pipeline()` 实例化公式识别产线对象，具体参数说明如下：
 
 <table>
 <thead>
@@ -423,7 +423,7 @@ for res in output:
 <td>
 <ul>
   <li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
-  <li><b>str</b>：如图像文件或者PDF文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件或PDF文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code>(当前不支持目录中包含PDF文件的预测，PDF文件需要指定到具体文件路径)</li>
+  <li><b>str</b>：如图像文件或者PDF文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件或PDF文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/pipelines/general_formula_recognition_001.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code>(当前不支持目录中包含PDF文件的预测，PDF文件需要指定到具体文件路径)</li>
   <li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
@@ -634,7 +634,7 @@ for res in output:
         - `formula_region_id`: `(int)` 公式识别预测的id编号
         - `dt_polys`:  `(List[float])` 公式识别预测的边界框坐标，格式为[x_min, y_min, x_max, y_max]，其中(x_min, y_min)为左上角坐标，(x_max, y_max) 为右上角坐标
 
-- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
+- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
 - 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_formula_res_img.{your_img_extension}`，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)
 
 * 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：

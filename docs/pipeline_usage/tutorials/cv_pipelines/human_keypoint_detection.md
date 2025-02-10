@@ -6,7 +6,7 @@
 
 人体关键点检测旨在通过识别和定位人体的特定关节和部位，来实现对人体姿态和动作的分析。该任务不仅需要在图像中检测出人体，还需要精确获取人体的关键点位置，如肩膀、肘部、膝盖等，从而进行姿态估计和行为识别。人体关键点检测广泛应用于运动分析、健康监测、动画制作和人机交互等场景。
 
-PaddleX 的人体关键点检测产线是一个 Top-Down 方案，由行人检测和关键点检测两个模块组成，针对移动端设备优化，可精确流畅地在移动端设备上执行多人姿态估计任务。
+PaddleX 的人体关键点检测产线是一个 Top-Down 方案，由行人检测和关键点检测两个模块组成，针对移动端设备优化，可精确流畅地在移动端设备上执行多人姿态估计任务。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/human_keypoint_detection/01.jpg">
 
@@ -120,7 +120,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="human_keypoint_detection")
 
-output = pipeline.predict("keypoint_detection_001.jpg"， det_threshold=0.5)
+output = pipeline.predict("keypoint_detection_001.jpg", det_threshold=0.5)
 for res in output:
     res.print()
     res.save_to_img("./output/")
@@ -145,6 +145,12 @@ for res in output:
 <td><code>pipeline</code></td>
 <td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
 <td><code>str</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>产线具体的配置信息（如果和<code>pipeline</code>同时设置，优先级高于<code>pipeline</code>，且要求产线名和<code>pipeline</code>一致）。</td>
+<td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -439,7 +445,7 @@ for res in output:
         - `keypoints`：关键点坐标信息，一个numpy数组，形状为[num_keypoints, 3]，其中每个关键点由[x, y, score]组成，score为该关键点的置信度
         - `kpt_score`：关键点整体的置信度，即关键点的平均置信度
 
-- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
+- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
 - 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.{your_img_extension}`，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)
 
 * 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：

@@ -72,7 +72,7 @@ sample
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="ts_cls")
+pipeline = create_pipeline(pipeline="ts_classification")
 output = pipeline.predict("ts_cls.csv")
 for res in output:
     res.print() ## 打印预测的结构化输出
@@ -98,6 +98,12 @@ for res in output:
 <td><code>pipeline</code></td>
 <td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
 <td><code>str</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>产线具体的配置信息（如果和<code>pipeline</code>同时设置，优先级高于<code>pipeline</code>，且要求产线名和<code>pipeline</code>一致）。</td>
+<td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
