@@ -77,11 +77,12 @@ for res in output:
 运行后，得到的结果为：
 
 ```bash
-{'res': {'input_path': 'general_ocr_001.png', 'dt_polys': [[[73, 553], [443, 541], [444, 574], [74, 585]], [[17, 507], [515, 489], [517, 534], [19, 552]], [[191, 458], [398, 449], [400, 481], [193, 490]], [[41, 413], [483, 390], [485, 431], [43, 453]]], 'dt_scores': [0.7555687038101032, 0.701620896397861, 0.8839516283528792, 0.8123399529333318]}}
+{'res': {'input_path': 'general_ocr_001.png', "page_index": None, 'dt_polys': [[[73, 552], [453, 542], [454, 575], [74, 585]], [[17, 506], [515, 486], [517, 535], [19, 555]], [[189, 457], [398, 449], [399, 482], [190, 490]], [[41, 412], [484, 387], [486, 433], [43, 457]]], 'dt_scores': [0.7555687038101032, 0.701620896397861, 0.8839516283528792, 0.8123399529333318]}}
 ```
 
 运行结果参数含义如下：
 - `input_path`：表示输入待预测图像的路径
+- `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
 - `dt_polys`：表示预测的文本检测框，其中每个文本检测框包含一个四边形的四个顶点。其中每个顶点都是一个二元组，分别表示该顶点的x坐标和y坐标
 - `dt_scores`：表示预测的文本检测框的置信度
 
@@ -198,7 +199,6 @@ for res in output:
   <li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
   <li><b>URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">示例</a></li>
   <li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
-  <li><b>字典</b>，字典的<code>key</code>需与具体任务对应，如图像分类任务对应<code>\"img\"</code>，字典的<code>val</code>支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code></li>
   <li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code></li>
 </ul>
 </td>
@@ -389,19 +389,19 @@ python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_mobile_det.yam
   &quot;attributes&quot;: {
     &quot;train_samples&quot;: 200,
     &quot;train_sample_paths&quot;: [
-      &quot;../dataset/ocr_det_dataset_examples/images/train_img_61.jpg&quot;,
-      &quot;../dataset/ocr_det_dataset_examples/images/train_img_289.jpg&quot;
+      &quot;/check_dataset/demo_img/train_img_61.jpg&quot;,
+      &quot;/check_dataset/demo_img/train_img_289.jpg&quot;
     ],
     &quot;val_samples&quot;: 50,
     &quot;val_sample_paths&quot;: [
-      &quot;../dataset/ocr_det_dataset_examples/images/val_img_61.jpg&quot;,
-      &quot;../dataset/ocr_det_dataset_examples/images/val_img_137.jpg&quot;
+      &quot;check_dataset/demo_img/val_img_61.jpg&quot;,
+      &quot;check_dataset/demo_img/val_img_137.jpg&quot;
     ]
   },
   &quot;analysis&quot;: {
     &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
   },
-  &quot;dataset_path&quot;: &quot;./dataset/ocr_det_dataset_examples&quot;,
+  &quot;dataset_path&quot;: &quot;./ocr_det_dataset_examples&quot;,
   &quot;show_type&quot;: &quot;image&quot;,
   &quot;dataset_type&quot;: &quot;TextDetDataset&quot;
 }
