@@ -271,6 +271,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 </tr>
 </tbody>
 </table>
+
 ## 6. 产线测试
 将模型目录设置为训练完成的模型进行测试，使用[测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_classification/test.csv)，进行预测：
 
@@ -310,6 +311,7 @@ SubModules:
     batch_size: 1
 ```
 随后，在您的 Python 代码中，您可以这样使用产线：
+
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="my_path/ts_classification.yaml")

@@ -241,26 +241,7 @@ python main.py -c paddlex/configs/modules/image_anomaly_detection/STFPM.yaml \
 
 ## 6. 产线测试
 
-将产线中的模型替换为微调后的模型进行测试，如：
-
-```bash
-python main.py -c paddlex/configs/modules/image_anomaly_detection/STFPM.yaml \
-    -o Global.mode=predict \
-    -o Predict.model_dir="output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_hazelnut.png"
-```
-
-通过上述可在`./output`下生成预测结果，其中`uad_hazelnut.png`的预测结果如下：
-<center>
-
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/anomaly_detection/03.png" width="600"/>
-
-</center>
-
-## 7. 开发集成/部署
-如果通用异常检测产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
-
-1. 直接将训练好的模型应用在您的 Python 项目中，可以参考如下示例，若您需要使用微调后的模型权重，可以获取 anomaly_detection 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+将产线中的模型替换为微调后的模型进行测试, 可以获取 anomaly_detection 产线配置文件，并加载配置文件进行预测。可执行如下命令将配置保存在 `my_path` 中：
 
 ```
 paddlex --get_pipeline_config anomaly_detection --save_path ./my_path
@@ -275,11 +256,33 @@ SubModules:
   AnomalyDetection:
     module_name: anomaly_detection
     model_name: STFPM
-    model_dir: null  # 替换为微调后的图像异常检测模型权重路径
+    model_dir: output/best_model/inference  # 替换为微调后的图像异常检测模型权重路径
     batch_size: 1
 ```
 
-然后在 Python 代码中，您可以这样调用产线：
+随后在 Python 代码中，您可以这样调用产线：
+
+```python
+from paddlex import create_pipeline
+pipeline = create_pipeline(pipeline="./my_path/anomaly_detection.yaml")
+output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_hazelnut.png")
+for res in output:
+    res.print() ## 打印预测的结构化输出
+    res.save_to_img("./output/") ## 保存结果可视化图像
+    res.save_to_json("./output/") ## 保存预测的结构化输出
+```
+
+通过上述可在`./output`下生成预测结果，其中`uad_hazelnut.png`的预测结果如下：
+<center>
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/anomaly_detection/03.png" width="600"/>
+
+</center>
+
+## 7. 开发集成/部署
+如果通用异常检测产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
+
+1. 直接将训练好的模型应用在您的 Python 项目中，可以参考如下示例:
 
 ```python
 from paddlex import create_pipeline
