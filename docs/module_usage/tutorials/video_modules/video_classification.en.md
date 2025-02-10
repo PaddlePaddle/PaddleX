@@ -48,7 +48,7 @@ PP-TSM is a video classification model developed by Baidu PaddlePaddle's Vision 
 
 After installing the wheel package, you can complete video classification module inference with just a few lines of code. You can switch between models in this module freely, and you can also integrate the model inference of the video classification module into your project. Before running the following code, please download the [demo video](https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/general_video_classification_001.mp4) to your local machine.
 
-```bash
+```python
 from paddlex import create_model
 model = create_model(model_name="PP-TSMv2-LCNetV2_8frames_uniform")
 output = model.predict(input="general_video_classification_001.mp4", batch_size=1)
