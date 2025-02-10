@@ -12,31 +12,31 @@ comments: true
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
-<th>Avg-BLEU</th>
+<th>Avg-BLEU(%)</th>
 <th>GPU推理耗时 (ms)</th>
 <th>模型存储大小 (M)</th>
 <th>介绍</th>
 </tr>
 <td>UniMERNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/UniMERNet_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UniMERNet_pretrained.pdparams">训练模型</a></td>
-<td>0.8613</td>
+<td>86.13</td>
 <td>2266.96</td>
 <td>1.4 G</td>
 <td>UniMERNet是由上海AI Lab研发的一款公式识别模型。该模型采用Donut Swin作为编码器，MBartDecoder作为解码器，并通过在包含简单公式、复杂公式、扫描捕捉公式和手写公式在内的一百万数据集上进行训练，大幅提升了模型对真实场景公式的识别准确率</td>
 <tr>
 <td>PP-FormulaNet-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-FormulaNet-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-S_pretrained.pdparams">训练模型</a></td>
-<td>0.8712</td>
+<td>87.12</td>
 <td>202.25</td>
 <td>167.9 M</td>
 <td rowspan="2">PP-FormulaNet 是由百度飞桨视觉团队开发的一款先进的公式识别模型，支持5万个常见LateX源码词汇的识别。PP-FormulaNet-S 版本采用了 PP-HGNetV2-B4 作为其骨干网络，通过并行掩码和模型蒸馏等技术，大幅提升了模型的推理速度，同时保持了较高的识别精度，适用于简单印刷公式、跨行简单印刷公式等场景。而 PP-FormulaNet-L 版本则基于 Vary_VIT_B 作为骨干网络，并在大规模公式数据集上进行了深入训练，在复杂公式的识别方面，相较于PP-FormulaNet-S表现出显著的提升，适用于简单印刷公式、复杂印刷公式、手写公式等场景。 </td>
 
 </tr>
 <td>PP-FormulaNet-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-FormulaNet-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-L_pretrained.pdparams">训练模型</a></td>
-<td>0.9213</td>
+<td>92.13</td>
 <td>1976.52</td>
 <td>535.2 M</td>
 <tr>
 <td>LaTeX_OCR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/LaTeX_OCR_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">训练模型</a></td>
-<td>0.7163</td>
+<td>71.63</td>
 <td>-</td>
 <td>89.7 M</td>
 <td>LaTeX-OCR是一种基于自回归大模型的公式识别算法，通过采用 Hybrid ViT 作为骨干网络，transformer作为解码器，显著提升了公式识别的准确性。</td>
@@ -53,7 +53,6 @@ wheel 包的安装后，几行代码即可完成公式识别模块的推理，�
 
 ```python
 from paddlex import create_model
-
 model = create_model(model_name="PP-FormulaNet-S")
 output = model.predict(input="general_formula_rec_001.png", batch_size=1)
 for res in output:
@@ -63,10 +62,11 @@ for res in output:
 ```
 运行后，得到的结果为：
 ```bash
-{'res': {'input_path': 'general_formula_rec_001.png', 'rec_formula': '\\zeta_{0}(\\nu)=-{\\frac{\\nu\\varrho^{-2\\nu}}{\\pi}}\\int_{\\mu}^{\\infty}d\\omega\\int_{C_{+}}d z{\\frac{2z^{2}}{(z^{2}+\\omega^{2})^{\\nu+1}}}\\ \\ {vec\\Psi}(\\omega;z)e^{i\\epsilon z}\\quad,'}}
+{'res': {'input_path': 'general_formula_rec_001.png', 'page_index': None, 'rec_formula': '\\zeta_{0}(\\nu)=-{\\frac{\\nu\\varrho^{-2\\nu}}{\\pi}}\\int_{\\mu}^{\\infty}d\\omega\\int_{C_{+}}d z{\\frac{2z^{2}}{(z^{2}+\\omega^{2})^{\\nu+1}}}\\ \\ {vec\\Psi}(\\omega;z)e^{i\\epsilon z}\\quad,'}}
 ```
 运行结果参数含义如下：
 - `input_path`：表示输入待预测公式图像的路径
+- `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
 - `rec_formula`：表示公式图像的预测LaTeX源码
 
 
@@ -111,7 +111,7 @@ sudo apt-get install texlive texlive-latex-base texlive-latex-extra -y
 
 * 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
 
-* 调用文本识别模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` 和 `batch_size`，具体说明如下：
+* 调用公式识别模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` 和 `batch_size`，具体说明如下：
 
 <table>
 <thead>
@@ -126,14 +126,13 @@ sudo apt-get install texlive texlive-latex-base texlive-latex-extra -y
 <tr>
 <td><code>input</code></td>
 <td>待预测数据，支持多种输入类型</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
   <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
   <li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
   <li><b>URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_formula_rec_001.png">示例</a></li>
   <li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
-  <li><b>字典</b>，字典的<code>key</code>需与具体任务对应，如图像分类任务对应<code>\"img\"</code>，字典的<code>val</code>支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code></li>
   <li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code></li>
 </ul>
 </td>
@@ -260,45 +259,48 @@ python main.py -c paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.ya
 <details><summary>👉 <b>校验结果详情（点击展开）</b></summary>
 
 <p>校验结果文件具体内容为：</p>
-<pre><code class="language-bash">{
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;train_samples&quot;: 9452,
-    &quot;train_sample_paths&quot;: [
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0109284.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0217434.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0166758.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0022294.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/val_0071799.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0017043.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0026204.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0209202.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/val_0157332.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0232582.png&quot;
+
+<pre><code class="language-bash">
+{
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "train_samples": 10001,
+    "train_sample_paths": [
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0077809.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0161600.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0002077.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0178425.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0010959.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0079266.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0142495.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0196376.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0185513.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/train_0217146.png"
     ],
-    &quot;val_samples&quot;: 1050,
-    &quot;val_sample_paths&quot;: [
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0070221.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0157901.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0085392.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0196480.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0096180.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0136149.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0143310.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0004560.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0115191.png&quot;,
-      &quot;../dataset/ocr_rec_latexocr_dataset_example/images/train_0015323.png&quot;
+    "val_samples": 501,
+    "val_sample_paths": [
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0053264.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0100521.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0146333.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0072788.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0002022.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0203664.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0082217.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0208199.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0111236.png",
+      "..\/dataset\/ocr_rec_latexocr_dataset_example\/images\/val_0204453.png"
     ]
   },
-  &quot;analysis&quot;: {
-    &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
+  "analysis": {
+    "histogram": "check_dataset\/histogram.png"
   },
-  &quot;dataset_path&quot;: &quot;./dataset/ocr_rec_latexocr_dataset_example&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;FormulaRecDataset&quot;
+  "dataset_path": "ocr_rec_latexocr_dataset_example",
+  "show_type": "image",
+  "dataset_type": "FormulaRecDataset"
 }
 </code></pre>
+
 <p>上述校验结果中，check_pass 为 True 表示数据集格式符合要求，其他部分指标的说明如下：</p>
 <ul>
 <li><code>attributes.train_samples</code>：该数据集训练集样本数量为 9452；</li>
