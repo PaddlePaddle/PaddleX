@@ -57,11 +57,12 @@ for res in output:
 After running, the result obtained is:
 
 ```bash
-{'res': "{'input_path': 'vehicle_detection.jpg', 'boxes': [{'cls_id': 0, 'label': 'vehicle', 'score': 0.9574093222618103, 'coordinate': [0.10725308, 323.01917, 272.72037, 472.75375]}, {'cls_id': 0, 'label': 'vehicle', 'score': 0.9449281096458435, 'coordinate': [270.3387, 310.36923, 489.8854, 398.07562]}, {'cls_id': 0, 'label': 'vehicle', 'score': 0.939127504825592, 'coordinate': [896.4249, 292.2338, 1051.9075, 370.41345]}, {'cls_id': 0, 'label': 'vehicle', 'score': 0.9388730525970459, 'coordinate': [1057.6327, 274.0139, 1639.8386, 535.54926]}, {'cls_id': 0, 'label': 'vehicle', 'score': 0.9239683747291565, 'coordinate': [482.28885, 307.33447, 574.6905, 357.82965]}, ... ]}"}
+{'res': "{'input_path': 'vehicle_detection.jpg', 'page_index': None, 'boxes': [{'cls_id': 0, 'label': 'vehicle', 'score': 0.9574093222618103, 'coordinate': [0.10725308, 323.01917, 272.72037, 472.75375]}, {'cls_id': 0, 'label': 'vehicle', 'score': 0.9449281096458435, 'coordinate': [270.3387, 310.36923, 489.8854, 398.07562]}, {'cls_id': 0, 'label': 'vehicle', 'score': 0.939127504825592, 'coordinate': [896.4249, 292.2338, 1051.9075, 370.41345]}, {'cls_id': 0, 'label': 'vehicle', 'score': 0.9388730525970459, 'coordinate': [1057.6327, 274.0139, 1639.8386, 535.54926]}, {'cls_id': 0, 'label': 'vehicle', 'score': 0.9239683747291565, 'coordinate': [482.28885, 307.33447, 574.6905, 357.82965]}, ... ]}"}
 ```
 
 The meanings of the runtime parameters are as follows:
 - `input_path`: Indicates the path of the input image to be predicted.
+- `page_index`: If the input is a PDF file, it represents the current page number of the PDF; otherwise, it is `None`.
 - `boxes`: Information of each predicted object.
   - `cls_id`: Class ID.
   - `label`: Class name.
@@ -129,7 +130,7 @@ Related methods, parameters, and explanations are as follows:
 <tr>
 <td><code>input</code></td>
 <td>Data to be predicted, supports multiple input types</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
   <li><b>Python Variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
@@ -296,7 +297,7 @@ After executing the above command, PaddleX will validate the dataset and collect
   &quot;analysis&quot;: {
     &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
   },
-  &quot;dataset_path&quot;: &quot;./dataset/example_data/vehicle_coco_examples&quot;,
+  &quot;dataset_path&quot;: &quot;vehicle_coco_examples&quot;,
   &quot;show_type&quot;: &quot;image&quot;,
   &quot;dataset_type&quot;: &quot;COCODetDataset&quot;
 }

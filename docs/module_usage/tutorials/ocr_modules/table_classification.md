@@ -23,7 +23,7 @@ comments: true
 <td>--</td>
 <td>--</td>
 <td>--</td>
-<td>--</td>
+<td>6.6M</td>
 </tr>
 </table>
 

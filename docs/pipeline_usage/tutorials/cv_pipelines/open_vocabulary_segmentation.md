@@ -257,8 +257,6 @@ for res in output:
 
     - `input_path`: `(str)` 待预测图像的输入路径
 
-    - `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
-
     - `prompts`: `(dict)` 该图片预测时使用的原始提示信息
 
     - `masks`: `...` 分割模型实际预测的mask，由于数据过大不便于直接print，因此用`...`替换，可以通过res.save_to_img将预测结果保存为图片，通过res.save_to_json将预测结果保存为json文件。

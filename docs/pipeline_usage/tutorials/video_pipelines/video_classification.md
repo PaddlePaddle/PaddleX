@@ -44,7 +44,7 @@ PP-TSM是一种百度飞桨视觉团队自研的视频分类模型。该模型�
 
 </table>
 
-<p><b>注：以上精度指标为 <a href="https://github.com/PaddlePaddle/PaddleVideo/blob/develop/docs/zh-CN/dataset/k400.md">K400</a> 验证集 Top1 Acc。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p></details>
+<p><b>注：以上精度指标为 <a href="https://github.com/PaddlePaddle/PaddleVideo/blob/develop/docs/zh-CN/dataset/k400.md">K400</a> 验证集 Top1 Acc。</b></p></details>
 
 ## 2. 快速开始
 
@@ -62,13 +62,13 @@ paddlex --pipeline video_classification \
     --save_path ./output \
     --device gpu:0
 ```
-相关的参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的参数说明。
+相关的参数说明可以参考[2.2 Python脚本方式集成](#22-python脚本方式集成)中的参数说明。
 
 运行后，会将结果打印到终端上，结果如下：
 ```bash
-{'res': {'input_path': 'general_video_classification_001.mp4', 'class_ids': array([  0, 278,  68, 272, 162], dtype=int32), 'scores': [0.91996, 0.07055, 0.00235, 0.00215, 0.00158], 'label_names': ['abseiling', 'rock_climbing', 'climbing_tree', 'riding_mule', 'ice_climbing']}}
+{'res': {'input_path': 'general_video_classification_001.mp4', 'class_ids': array([  0, ..., 162], dtype=int32), 'scores': [0.91997, 0.07052, 0.00237, 0.00214, 0.00158], 'label_names': ['abseiling', 'rock_climbing', 'climbing_tree', 'riding_mule', 'ice_climbing']}}
 ```
-运行结果参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的结果解释。
+运行结果参数说明可以参考[2.2 Python脚本方式集成](#22-python脚本方式集成)中的结果解释。
 
 
 可视化结果保存在`save_path`下，其中视频分类的可视化结果如下：
@@ -93,7 +93,7 @@ for res in output:
 
 在上述 Python 脚本中，执行了如下几个步骤：
 
-（1）通过 `create_pipeline()` 实例化 视频分类产线对象，具体参数说明如下：
+（1）通过 `create_pipeline()` 实例化视频分类产线对象，具体参数说明如下：
 
 <table>
 <thead>
@@ -109,6 +109,12 @@ for res in output:
 <td><code>pipeline</code></td>
 <td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
 <td><code>str</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>产线具体的配置信息（如果和<code>pipeline</code>同时设置，优先级高于<code>pipeline</code>，且要求产线名和<code>pipeline</code>一致）。</td>
+<td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -255,8 +261,8 @@ for res in output:
     - `label_names`: `(List[str])` 视频分类的类别列表
 
 
-- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_video_basename}.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
-- 调用`save_to_video()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_video_basename}_res.{your_video_extension}`，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果视频，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一个视频)
+- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_video_basename}_res.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
+- 调用`save_to_video()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_video_basename}_res.{your_video_extension}`，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果视频，不建议直接指定为具体的文件路径，否则多个视频会被覆盖，仅保留最后一个视频)
 
 * 此外，也支持通过属性获取带结果的可视化视频和预测结果，具体如下：
 
