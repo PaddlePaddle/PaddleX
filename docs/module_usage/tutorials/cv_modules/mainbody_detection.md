@@ -122,7 +122,7 @@ for res in output:
 <tr>
 <td><code>input</code></td>
 <td>待预测数据，支持多种输入类型</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
   <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
@@ -289,7 +289,7 @@ python main.py -c paddlex/configs/modules/mainbody_detection/PP-ShiTuV2_det.yaml
   &quot;analysis&quot;: {
     &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
   },
-  &quot;dataset_path&quot;: &quot;./dataset/example_data/mainbody_det_examples&quot;,
+  &quot;dataset_path&quot;: &quot;mainbody_det_examples&quot;,
   &quot;show_type&quot;: &quot;image&quot;,
   &quot;dataset_type&quot;: &quot;COCODetDataset&quot;
 }
