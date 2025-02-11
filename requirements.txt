@@ -14,7 +14,6 @@ albumentations==1.4.10
 opencv-python==4.5.5.64
 opencv-python-headless==4.10.0.84
 opencv-contrib-python==4.10.0.84
-open3d
 chinese_calendar
 scikit-learn
 pycocotools
