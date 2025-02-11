@@ -12,13 +12,14 @@ comments: true
 
 ```python
 from paddlex import create_model
-model = create_model("PP-LCNet_x1_0")
+model = create_model(model_name="PP-LCNet_x1_0")
 output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
     res.save_to_json("./output/res.json")
 ```
+
 简单来说，只需三步：
 
 * 调用`create_model()`方法实例化预测模型对象；
@@ -101,7 +102,7 @@ PaddleX 支持通过`PaddlePredictorOption`设置推理后端，相关API如下�
 #### 属性：
 
 * `deivce`：推理设备；
-  * 支持设置 `str` 类型表示的推理设备类型及卡号，设备类型支持可选 'gpu', 'cpu', 'npu', 'xpu', 'mlu'，当使用加速卡时，支持指定卡号，如使用 0 号 gpu：'gpu:0'，默认为 'gpu:0'；
+  * 支持设置 `str` 类型表示的推理设备类型及卡号，设备类型支持可选 “gpu”、“cpu”、“npu”、“xpu”、“mlu”、“dcu”，当使用加速卡时，支持指定卡号，如使用 0 号 GPU：`gpu:0`，默认情况下，如有 GPU 设置则使用 0 号 GPU，否则使用 CPU；
   * 返回值：`str`类型，当前设置的推理设备。
 * `run_mode`：推理后端；
   * 支持设置 `str` 类型的推理后端，支持可选 'paddle'，'trt_fp32'，'trt_fp16'，'trt_int8'，'mkldnn'，'mkldnn_bf16'，其中 'mkldnn' 仅当推理设备使用 cpu 时可选，默认为 'paddle'；
