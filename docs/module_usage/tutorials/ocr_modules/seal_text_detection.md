@@ -44,7 +44,7 @@ comments: true
 
 
 ## 三、快速集成
-&gt; ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
+> ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
 完成 wheel 包的安装后，几行代码即可完成印章文本检测模块的推理，可以任意切换该模块下的模型，您也可以将印章文本检测的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png)到本地。
 

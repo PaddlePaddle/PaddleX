@@ -45,7 +45,7 @@ The image feature module is one of the important tasks in computer vision, prima
 <b>Note: The above accuracy metrics are Recall@1 from AliProducts. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
 
 ## III. Quick Integration
-&gt; ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
+> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 After installing the wheel package, a few lines of code can complete the inference of the image feature module. You can switch between models under this module freely, and you can also integrate the model inference of the image feature module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_recognition_001.jpg) to your local machine.
 
@@ -442,7 +442,7 @@ Similar to model training and evaluation, the following steps are required:
 * Specify the input data path: `-o Predict.input="..."`.
 Other related parameters can be set by modifying the `Global` and `Predict` fields in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
 
-&gt; ❗ Note: The inference result of the recognition model is a set of vectors, which requires a retrieval module to complete image feature.
+> ❗ Note: The inference result of the recognition model is a set of vectors, which requires a retrieval module to complete image feature.
 
 #### 4.4.2 Model Integration
 The model can be directly integrated into the PaddleX pipeline or directly into your own project.

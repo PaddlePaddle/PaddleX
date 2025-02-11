@@ -37,7 +37,7 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 
 ## <span id="lable">III. Quick Integration</span>
 
-&gt; ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation.en.md)
+> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 After installing the wheel package, a few lines of code can complete the inference of the vehicle attribute recognition module. You can easily switch models under this module, and you can also integrate the model inference of the vehicle attribute recognition module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_attribute_007.jpg) to your local machine.
 

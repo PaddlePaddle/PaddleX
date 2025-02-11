@@ -163,7 +163,7 @@ for res in output:
 <td><code>float</code>/<code>dict[int, float]</code>/<code>None</code></td>
 <td>
 <ul>
-<li><b>None</b>，表示沿用上一层设置, 参数设置优先级从高到低为: <code>predict参数传入 &gt; create_model初始化传入 > yaml配置文件设置</code></li>
+<li><b>None</b>，表示沿用上一层设置, 参数设置优先级从高到低为: <code>predict参数传入 > create_model初始化传入 > yaml配置文件设置</code></li>
 <li><b>float</b>，对于所有的类别使用同一个阈值。如0.5，表示推理时使用0.5作为所有类别的低分object过滤阈值</li>
 <li><b>dict[int, float]</b>，如<code>{0: 0.5, 1: 0.35}</code>，表示推理时对类别0使用0.5低分过滤阈值，对类别1使用0.35低分过滤阈值。</li>
 </ul>

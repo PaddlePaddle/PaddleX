@@ -1351,7 +1351,7 @@ pipeline = create_pipeline(
     pipeline="PP-ChatOCRv3-doc",
     llm_name="ernie-3.5",
     llm_params={"api_type": "qianfan", "ak": "", "sk": ""},
-    device="npu:0" # gpu:0 --&gt; npu:0
+    device="npu:0" # gpu:0 --> npu:0
     )
 ```
 

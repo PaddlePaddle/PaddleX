@@ -42,7 +42,7 @@ Human detection is a subtask of object detection, which utilizes computer vision
 
 
 ## III. Quick Integration
-&gt; ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation.en.md)
+> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 After installing the wheel package, you can perform human detection with just a few lines of code. You can easily switch between models in this module and integrate the human detection model inference into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/human_detection.jpg) to your local machine.
 
@@ -114,7 +114,7 @@ The explanations for the methods, parameters, etc., are as follows:
 </table>
 
 * The `model_name` must be specified. After specifying `model_name`, the default model parameters built into PaddleX are used. If `model_dir` is specified, the user-defined model is used.
-* `threshold` is the threshold for filtering low-confidence objects. The default is `None`, which means using the settings from the previous layer. The priority of parameter settings from highest to lowest is: `predict parameter &gt; create_model initialization &gt; yaml configuration file`. Currently, two types of threshold settings are supported:
+* `threshold` is the threshold for filtering low-confidence objects. The default is `None`, which means using the settings from the previous layer. The priority of parameter settings from highest to lowest is: `predict parameter > create_model initialization > yaml configuration file`. Currently, two types of threshold settings are supported:
   * `float`, using the same threshold for all classes.
   * `dict`, where the key is the class ID and the value is the threshold, allowing different thresholds for different classes. Since pedestrian detection is a single-class detection, this setting is not required.
 
@@ -158,7 +158,7 @@ The explanations for the methods, parameters, etc., are as follows:
 <td><code>float</code>/<code>dict</code>/<code>None</code></td>
 <td>
 <ul>
-<li><b>None</b>, indicating the use of settings from the previous layer. The priority of parameter settings from highest to lowest is: <code>predict parameter &gt; create_model initialization &gt; yaml configuration file</code></li>
+<li><b>None</b>, indicating the use of settings from the previous layer. The priority of parameter settings from highest to lowest is: <code>predict parameter > create_model initialization > yaml configuration file</code></li>
 <li><b>float</b>, such as 0.5, indicating the use of 0.5 as the threshold for filtering low-confidence objects during inference</li>
 <li><b>dict</b>, such as <code>{0: 0.5, 1: 0.35}</code>, indicating the use of 0.5 as the threshold for class 0 and 0.35 for class 1 during inference. Since pedestrian detection is a single-class detection, this setting is not required.</li>
 </ul>

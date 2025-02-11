@@ -83,7 +83,7 @@ The image classification module is a crucial component in computer vision system
 </tr>
 </table>
 
-&gt; ❗ The above list features the <b>9 core models</b> that the image classification module primarily supports. In total, this module supports <b>80 models</b>. The complete list of models is as follows:
+> ❗ The above list features the <b>9 core models</b> that the image classification module primarily supports. In total, this module supports <b>80 models</b>. The complete list of models is as follows:
 
 <details><summary> 👉Details of Model List</summary>
 <table>
@@ -680,7 +680,7 @@ The image classification module is a crucial component in computer vision system
 <p><b>Note: The above accuracy metrics refer to Top-1 Accuracy on the <a href="https://www.image-net.org/index.php">ImageNet-1k</a> validation set. </b><b>All model GPU inference times are based on NVIDIA Tesla T4 machines, with precision type FP32. CPU inference speeds are based on Intel® Xeon® Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32.</b></p></details>
 
 ## <span id="lable">III. Quick Integration</span>
-&gt; ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 
 After installing the wheel package, you can complete image classification module inference with just a few lines of code. You can switch between models in this module freely, and you can also integrate the model inference of the image classification module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg) to your local machine.
 

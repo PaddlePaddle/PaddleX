@@ -36,7 +36,7 @@ The document image orientation classification module is aim to distinguish the o
 
 ## III. Quick Integration
 
-&gt; ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Tutorial](../../../installation/installation.en.md)
+> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Tutorial](../../../installation/installation.en.md)
 
 After completing the installation of the wheel package, you can perform inference on the document image orientation classification module with just a few lines of code. You can switch models under this module at will, and you can also integrate the model inference of the document image orientation classification module into your project. Before running the following code, please download the [example image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/img_rot180_demo.jpg) to your local machine.
 

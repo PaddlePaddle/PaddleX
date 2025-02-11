@@ -44,7 +44,7 @@ The seal text detection module typically outputs multi-point bounding boxes arou
 
 
 ## III. Quick Integration
-&gt; ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
+> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 
 Just a few lines of code can complete the inference of the Seal Text Detection module, allowing you to easily switch between models under this module. You can also integrate the model inference of the the Seal Text Detection module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png) to your local machine.
