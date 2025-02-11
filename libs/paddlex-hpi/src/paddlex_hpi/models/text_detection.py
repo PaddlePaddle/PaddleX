@@ -139,7 +139,7 @@ class TextDetPredictor(CVPredictor):
         dt_polys_list = []
         dt_scores_list = []
         for ui_result in ui_results:
-            polys = [list(zip(*([iter(box)] * 2))) for box in ui_result.boxes]
+            polys = [np.array(list(zip(*([iter(box)] * 2)))) for box in ui_result.boxes]
             dt_polys_list.append(polys)
             # XXX: Currently, we cannot get scores from `ui_result`, so we
             # temporarily use dummy scores here.
