@@ -2,6 +2,78 @@
   "x86_64": {
     "linux": {
       "cpu": {
+        "PP-DocLayout-L": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-DocLayout-M": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-DocLayout-S": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "RT-DETR-L_wired_table_cell_det": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "RT-DETR-L_wireless_table_cell_det": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNet_x1_0_table_cls": {
+          "backend_config_pairs": [
+            [
+              "openvino",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
         "STFPM": {
           "backend_config_pairs": [
             [
@@ -2764,6 +2836,174 @@
         }
       },
       "gpu_cuda118_cudnn86": {
+        "PP-DocLayout-L": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-DocLayout-M": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ]
+          ]
+        },
+        "PP-DocLayout-S": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "RT-DETR-L_wired_table_cell_det": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "RT-DETR-L_wireless_table_cell_det": {
+          "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
+        "PP-LCNet_x1_0_table_cls": {
+          "backend_config_pairs": [
+            [
+              "tensorrt",
+              {
+                "precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "tensorrt",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "onnx_runtime",
+              {}
+            ],
+            [
+              "paddle_infer",
+              {}
+            ]
+          ]
+        },
         "STFPM": {
           "backend_config_pairs": [
             [

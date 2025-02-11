@@ -350,15 +350,8 @@ python -m pip install ../../python/dist/ultra_infer*.whl
 
   <tr>
     <td>版面区域检测</td>
-    <td><b>8</b> / 11 </td>
-    <td>
-      <details>
-        <summary>查看详情</summary>
-        PP-DocLayout-L</br>
-        PP-DocLayout-M</br>
-        PP-DocLayout-S</br>
-      </details>
-    </td>
+    <td><b>11</b> / 11 </td>
+    <td>无</td>
   </tr>
 
   <tr>
@@ -394,15 +387,8 @@ python -m pip install ../../python/dist/ultra_infer*.whl
   <tr>
     <td rowspan="4">通用表格识别</td>
     <td>版面区域检测</td>
-    <td><b>8</b> / 11 </td>
-    <td>
-      <details>
-        <summary>查看详情</summary>
-        PP-DocLayout-L</br>
-        PP-DocLayout-M</br>
-        PP-DocLayout-S</br>
-      </details>
-    </td>
+    <td><b>11</b> / 11 </td>
+    <td>无</td>
   </tr>
 
   <tr>
@@ -537,15 +523,8 @@ python -m pip install ../../python/dist/ultra_infer*.whl
 
   <tr>
     <td>版面区域检测</td>
-    <td><b>8</b> / 11 </td>
-    <td>
-      <details>
-        <summary>查看详情</summary>
-        PP-DocLayout-L</br>
-        PP-DocLayout-M</br>
-        PP-DocLayout-S</br>
-      </details>
-    </td>
+    <td><b>11</b> / 11 </td>
+    <td>无</td>
   </tr>
 
   <tr>
@@ -587,15 +566,8 @@ python -m pip install ../../python/dist/ultra_infer*.whl
   <tr>
     <td rowspan="2">公式识别</td>
     <td>版面区域检测</td>
-    <td><b>8</b> / 11 </td>
-    <td>
-      <details>
-        <summary>查看详情</summary>
-        PP-DocLayout-L</br>
-        PP-DocLayout-M</br>
-        PP-DocLayout-S</br>
-      </details>
-    </td>
+    <td><b>11</b> / 11 </td>
+    <td>无</td>
   </tr>
 
   <tr>
@@ -614,15 +586,8 @@ python -m pip install ../../python/dist/ultra_infer*.whl
   <tr>
     <td rowspan="3">印章文本识别</td>
     <td>版面区域检测</td>
-    <td><b>8</b> / 11 </td>
-    <td>
-      <details>
-        <summary>查看详情</summary>
-        PP-DocLayout-L</br>
-        PP-DocLayout-M</br>
-        PP-DocLayout-S</br>
-      </details>
-    </td>
+    <td><b>11</b> / 11 </td>
+    <td>无</td>
   </tr>
 
   <tr>
