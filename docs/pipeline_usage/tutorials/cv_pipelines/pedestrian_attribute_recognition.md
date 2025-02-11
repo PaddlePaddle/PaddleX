@@ -7,8 +7,7 @@ comments: true
 ## 1. 行人属性识别产线介绍
 行人属性识别是计算机视觉系统中的关键功能，用于在图像或视频中定位并标记行人的特定特征，如性别、年龄、衣物颜色和款式等。该任务不仅要求准确检测出行人，还需识别每个行人的详细属性信息。行人属性识别产线是定位并识别行人属性的端到端串联系统，广泛应用于智慧城市和安防监控等领域，可显著提升系统的智能化水平和管理效率。
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/pedestrian_attribute_recognition/pedestrian_attribute.png">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/pedestrian_attribute_recognition/pedestrian_attribute.png"/>
 <b>行人属性识别产线中包含了行人检测模块和行人属性识别模块</b>，每个模块中包含了若干模型，具体使用哪些模型，您可以根据下边的 benchmark 数据来选择。<b>如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型</b>。
 
 
@@ -18,8 +17,8 @@ comments: true
 <th>模型</th><th>模型下载链接</th>
 <th>mAP(0.5:0.95)</th>
 <th>mAP(0.5)</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M）</th>
 <th>介绍</th>
 </tr>
@@ -27,8 +26,8 @@ comments: true
 <td>PP-YOLOE-L_human</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE-L_human_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-L_human_pretrained.pdparams">训练模型</a></td>
 <td>48.0</td>
 <td>81.9</td>
-<td>32.8</td>
-<td>777.7</td>
+<td>33.27 / 9.19</td>
+<td>173.72 / 173.72</td>
 <td>196.02</td>
 <td rowspan="2">基于PP-YOLOE的行人检测模型</td>
 </tr>
@@ -36,12 +35,11 @@ comments: true
 <td>PP-YOLOE-S_human</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE-S_human_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-S_human_pretrained.pdparams">训练模型</a></td>
 <td>42.5</td>
 <td>77.9</td>
-<td>15.0</td>
-<td>179.3</td>
+<td>9.94 / 3.42</td>
+<td>54.48 / 46.52</td>
 <td>28.79</td>
 </tr>
 </table>
-
 <p><b>注：以上精度指标为CrowdHuman数据集 mAP(0.5:0.95)。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
 <p><b>行人属性识别模块：</b></p>
 <table>
@@ -49,8 +47,8 @@ comments: true
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>mAP（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M)</th>
 <th>介绍</th>
 </tr>
@@ -59,8 +57,8 @@ comments: true
 <tr>
 <td>PP-LCNet_x1_0_pedestrian_attribute</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_pedestrian_attribute_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_pedestrian_attribute_pretrained.pdparams">训练模型</a></td>
 <td>92.2</td>
-<td>3.84845</td>
-<td>9.23735</td>
+<td>2.35 / 0.49</td>
+<td>3.17 / 1.25</td>
 <td>6.7 M</td>
 <td>PP-LCNet_x1_0_pedestrian_attribute 是一种基于PP-LCNet的轻量级行人属性识别模型，包含26个类别</td>
 </tr>
@@ -95,7 +93,7 @@ paddlex --pipeline pedestrian_attribute_recognition --input pedestrian_attribute
 
 可视化结果保存在`save_path`下，可视化结果如下：
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/pedestrian_attribute_recognition/01.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/pedestrian_attribute_recognition/01.jpg"/>
 
 #### 2.2.2 Python脚本方式集成
 * 上述命令行是为了快速体验查看效果，一般来说，在项目中，往往需要通过代码集成，您可以通过几行代码即可完成产线的快速推理，推理代码如下：
@@ -165,9 +163,9 @@ for res in output:
 <td><code>Python Var|str|list</code></td>
 <td>
 <ul>
-  <li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
-  <li><b>str</b>：如图像文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pedestrian_attribute_002.jpg">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code></li>
-  <li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
+<li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
+<li><b>str</b>：如图像文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pedestrian_attribute_002.jpg">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code></li>
+<li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -178,13 +176,13 @@ for res in output:
 <td><code>str|None</code></td>
 <td>
 <ul>
-  <li><b>CPU</b>：如 <code>cpu</code> 表示使用 CPU 进行推理；</li>
-  <li><b>GPU</b>：如 <code>gpu:0</code> 表示使用第 1 块 GPU 进行推理；</li>
-  <li><b>NPU</b>：如 <code>npu:0</code> 表示使用第 1 块 NPU 进行推理；</li>
-  <li><b>XPU</b>：如 <code>xpu:0</code> 表示使用第 1 块 XPU 进行推理；</li>
-  <li><b>MLU</b>：如 <code>mlu:0</code> 表示使用第 1 块 MLU 进行推理；</li>
-  <li><b>DCU</b>：如 <code>dcu:0</code> 表示使用第 1 块 DCU 进行推理；</li>
-  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化时，会优先使用本地的 GPU 0号设备，如果没有，则使用 CPU 设备；</li>
+<li><b>CPU</b>：如 <code>cpu</code> 表示使用 CPU 进行推理；</li>
+<li><b>GPU</b>：如 <code>gpu:0</code> 表示使用第 1 块 GPU 进行推理；</li>
+<li><b>NPU</b>：如 <code>npu:0</code> 表示使用第 1 块 NPU 进行推理；</li>
+<li><b>XPU</b>：如 <code>xpu:0</code> 表示使用第 1 块 XPU 进行推理；</li>
+<li><b>MLU</b>：如 <code>mlu:0</code> 表示使用第 1 块 MLU 进行推理；</li>
+<li><b>DCU</b>：如 <code>dcu:0</code> 表示使用第 1 块 DCU 进行推理；</li>
+<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化时，会优先使用本地的 GPU 0号设备，如果没有，则使用 CPU 设备；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -195,8 +193,8 @@ for res in output:
 <td><code>float | None</code></td>
 <td>
 <ul>
-  <li><b>float</b>：如<code>0.5</code>， 表示过滤掉所有阈值小于<code>0.5</code>的目标框；</li>
-  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>0.5</code>；</li>
+<li><b>float</b>：如<code>0.5</code>， 表示过滤掉所有阈值小于<code>0.5</code>的目标框；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>0.5</code>；</li>
 </ul>
 </td>
 <td><code>0.5</code></td>
@@ -207,10 +205,10 @@ for res in output:
 <td><code>float | dict | list｜ None</code></td>
 <td>
 <ul>
-  <li><b>float</b>：表示属性识别的统一阈值；</li>
-  <li><b>list</b>：如<code>[0.5, 0.45, 0.48, 0.4]</code>，表示按照<code>label list</code>顺序的不同类别阈值；</code>；</li>
-  <li><b>dict</b>：字典的key 为 <code>default</code> 和 <code>int</code> 类型，val 为 <code>float</code> 类型阈值，如<code>{"default": 0.5, 0: 0.45, 2: 0.48, 7: 0.4}</code>，<code>default</code> 表示多标签分类的统一阈值，其他 <code>int</code> 类型表示对 cls_id 为0的类别应用阈值 0.45、cls_id 为 1 的类别应用阈值 0.48、cls_id 为 7 的类别应用阈值 0.4；</li>
-  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>0.7</code>；</li>
+<li><b>float</b>：表示属性识别的统一阈值；</li>
+<li><b>list</b>：如<code>[0.5, 0.45, 0.48, 0.4]</code>，表示按照<code>label list</code>顺序的不同类别阈值；；</li>
+<li><b>dict</b>：字典的key 为 <code>default</code> 和 <code>int</code> 类型，val 为 <code>float</code> 类型阈值，如<code>{"default": 0.5, 0: 0.45, 2: 0.48, 7: 0.4}</code>，<code>default</code> 表示多标签分类的统一阈值，其他 <code>int</code> 类型表示对 cls_id 为0的类别应用阈值 0.45、cls_id 为 1 的类别应用阈值 0.48、cls_id 为 7 的类别应用阈值 0.4；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>0.7</code>；</li>
 </ul>
 </td>
 <td><code>0.7</code></td>
@@ -230,8 +228,8 @@ for res in output:
 </tr>
 </thead>
 <tr>
-<td rowspan = "3"><code>print()</code></td>
-<td rowspan = "3">打印结果到终端</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">打印结果到终端</td>
 <td><code>format_json</code></td>
 <td><code>bool</code></td>
 <td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
@@ -250,8 +248,8 @@ for res in output:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td rowspan = "3"><code>save_to_json()</code></td>
-<td rowspan = "3">将结果保存为json格式的文件</td>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">将结果保存为json格式的文件</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
 <td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
@@ -300,12 +298,12 @@ for res in output:
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">获取预测的 <code>json</code> 格式的结果</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">获取预测的 <code>json</code> 格式的结果</td>
 </tr>
 <tr>
-<td rowspan = "2"><code>img</code></td>
-<td rowspan = "2">获取格式为 <code>dict</code> 的可视化图像</td>
+<td rowspan="2"><code>img</code></td>
+<td rowspan="2">获取格式为 <code>dict</code> 的可视化图像</td>
 </tr>
 </table>
 
@@ -352,7 +350,6 @@ for res in output:
 以下是基础服务化部署的API参考与多语言服务调用示例：
 
 <details><summary>API参考</summary>
-
 <p>对于服务提供的主要操作：</p>
 <ul>
 <li>HTTP请求方法为POST。</li>
@@ -444,6 +441,18 @@ for res in output:
 <td>服务器可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
 <td>是</td>
 </tr>
+<tr>
+<td><code>detThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>det_threshold</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>clsThreshold</code></td>
+<td><code>number</code> | <code>array</code> | <code>object</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>cls_threshold</code> 参数说明。</td>
+<td>否</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -465,7 +474,7 @@ for res in output:
 </tr>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></td>
+<td><code>string</code> | <code>null</code></td>
 <td>行人属性识别结果图。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 </tbody>
@@ -520,38 +529,34 @@ for res in output:
 </tbody>
 </table>
 </details>
-
 <details><summary>多语言调用服务示例</summary>
-
 <details>
 <summary>Python</summary>
-
-
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/pedestrian-attribute-recognition&quot; # 服务URL
-image_path = &quot;./demo.jpg&quot;
-output_image_path = &quot;./out.jpg&quot;
+API_URL = "http://localhost:8080/pedestrian-attribute-recognition" # 服务URL
+image_path = "./demo.jpg"
+output_image_path = "./out.jpg"
 
 # 对本地图像进行Base64编码
-with open(image_path, &quot;rb&quot;) as file:
+with open(image_path, "rb") as file:
     image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
-payload = {&quot;image&quot;: image_data}  # Base64编码的文件内容或者图像URL
+payload = {"image": image_data}  # Base64编码的文件内容或者图像URL
 
 # 调用API
 response = requests.post(API_URL, json=payload)
 
 # 处理接口返回数据
 assert response.status_code == 200
-result = response.json()[&quot;result&quot;]
-with open(output_image_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result[&quot;image&quot;]))
-print(f&quot;Output image saved at {output_image_path}&quot;)
-print(&quot;\nDetected pedestrians:&quot;)
-print(result[&quot;pedestrians&quot;])
+result = response.json()["result"]
+with open(output_image_path, "wb") as file:
+    file.write(base64.b64decode(result["image"]))
+print(f"Output image saved at {output_image_path}")
+print("\nDetected pedestrians:")
+print(result["pedestrians"])
 </code></pre></details>
 </details>
 <br/>
@@ -566,25 +571,25 @@ print(result[&quot;pedestrians&quot;])
 由于行人属性识别产线包含行人属性识别模块和行人检测模块，如果模型产线的效果不及预期，可能来自于其中任何一个模块。您可以对识别效果差的图片进行分析，进而确定是哪个模块存在问题，并参考以下表格中对应的微调教程链接进行模型微调。
 
 <table>
-  <thead>
-    <tr>
-      <th>情形</th>
-      <th>微调模块</th>
-      <th>微调参考链接</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>行人检测不准</td>
-      <td>行人检测模块</td>
-      <td><a href="../../../module_usage/tutorials/cv_modules/human_detection.md">链接</a></td>
-    </tr>
-    <tr>
-      <td>属性识别不准</td>
-      <td>行人属性识别模块</td>
-      <td><a href="../../../module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.md">链接</a></td>
-    </tr>
-  </tbody>
+<thead>
+<tr>
+<th>情形</th>
+<th>微调模块</th>
+<th>微调参考链接</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>行人检测不准</td>
+<td>行人检测模块</td>
+<td><a href="../../../module_usage/tutorials/cv_modules/human_detection.md">链接</a></td>
+</tr>
+<tr>
+<td>属性识别不准</td>
+<td>行人属性识别模块</td>
+<td><a href="../../../module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.md">链接</a></td>
+</tr>
+</tbody>
 </table>
 
 ### 4.2 模型应用

@@ -428,7 +428,7 @@ for res in output:
 </tr>
 <tr>
 <td><code>thresholds</code></td>
-<td><code>dict[str, float]</code></td>
+<td><code>object</code> | <code>null</code></td>
 <td>模型预测使用的阈值。</td>
 <td>否</td>
 </tr>

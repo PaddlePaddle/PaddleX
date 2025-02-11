@@ -74,7 +74,7 @@ SubModules:
     
     Ensemble:
       module_name: prompt_engneering
-      
+
       task_type: ensemble_prompt
 
       task_description: '你现在的任务是，对于一个问题，对比方法A和方法B的结果，选择更准确的一个回答。
@@ -93,7 +93,7 @@ SubModules:
 
 SubPipelines:
   LayoutParser:
-    pipeline_name: layout_parsing
+    pipeline_name: layout_parsing_v2
 
     use_doc_preprocessor: True
     use_general_ocr: True
@@ -104,8 +104,13 @@ SubPipelines:
     SubModules:
       LayoutDetection:
         module_name: layout_detection
-        model_name: RT-DETR-H_layout_3cls
+        model_name: PP-DocLayout-L
         model_dir: null
+        threshold: 
+          7: 0.3
+        layout_nms: True
+        layout_unclip_ratio: 1.0
+        layout_merge_bboxes_mode: "large"
 
     SubPipelines:
       DocPreprocessor:
@@ -140,20 +145,40 @@ SubPipelines:
             
           TextRecognition:
             module_name: text_recognition
-            model_name: PP-OCRv4_server_rec
+            model_name: PP-OCRv4_server_rec_doc
             model_dir: null
             batch_size: 1
-            score_thresh: 0
+            score_thresh: 0.0
 
       TableRecognition:
-        pipeline_name: table_recognition
+        pipeline_name: table_recognition_v2
         use_layout_detection: False
         use_doc_preprocessor: False
         use_ocr_model: False
-        SubModules:
-          TableStructureRecognition:
+        SubModules:  
+          TableClassification:
+            module_name: table_classification
+            model_name: PP-LCNet_x1_0_table_cls
+            model_dir: null
+
+          WiredTableStructureRecognition:
             module_name: table_structure_recognition
-            model_name: SLANet_plus
+            model_name: SLANeXt_wired
+            model_dir: null
+          
+          WirelessTableStructureRecognition:
+            module_name: table_structure_recognition
+            model_name: SLANeXt_wireless
+            model_dir: null
+          
+          WiredTableCellsDetection:
+            module_name: table_cells_detection
+            model_name: RT-DETR-L_wired_table_cell_det
+            model_dir: null
+          
+          WirelessTableCellsDetection:
+            module_name: table_cells_detection
+            model_name: RT-DETR-L_wireless_table_cell_det
             model_dir: null
 
       SealRecognition:
@@ -178,7 +203,7 @@ SubPipelines:
                 unclip_ratio: 0.5
               TextRecognition:
                 module_name: text_recognition
-                model_name: PP-OCRv4_server_rec
+                model_name: PP-OCRv4_server_rec_doc
                 model_dir: null
                 batch_size: 1
                 score_thresh: 0

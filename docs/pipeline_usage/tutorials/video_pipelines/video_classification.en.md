@@ -15,33 +15,35 @@ The general video classification pipeline is used to solve video classification 
 
 <table>
 <tr>
-<th>Model</th><th>Model Download Link</th><th>Top1 Acc(%)</th><th>Model Storage Size (M)</th><th>Description</th>
+<th>Model</th><th>Model Download Link</th>
+<th>Top1 Acc(%)</th>
+<th>Model Storage Size (M)</th>
+<th>Description</th>
 </tr>
 <tr>
-<td>PPTSM_ResNet50_k400_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PPTSM_ResNet50_k400_8frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PPTSM_ResNet50_k400_8frames_uniform_pretrained.pdparams">Trained Model</a></td>
+<td>PP-TSM-R50_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSM-R50_8frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSM-R50_8frames_uniform_pretrained.pdparams">Trained Model</a></td>
 <td>74.36</td>
 <td>93.4 M</td>
 <td rowspan="1">
-PP-TSM is a video classification model developed by Baidu PaddlePaddle Vision Team. The model is optimized based on the ResNet-50 backbone network, with model tuning in six aspects: data augmentation, network structure fine-tuning, training strategy, BN layer optimization, pretrained model selection, and model distillation. Under the center sampling evaluation method, the accuracy on Kinetics-400 is improved by 3.95 points compared to the original paper.
+PP-TSM is a video classification model developed by Baidu PaddlePaddle's Vision Team. This model is optimized based on the ResNet-50 backbone network and undergoes model tuning in six aspects: data augmentation, network structure fine-tuning, training strategies, Batch Normalization (BN) layer optimization, pre-trained model selection, and model distillation. Under the center crop evaluation method, its accuracy on Kinetics-400 is improved by 3.95 points compared to the original paper's implementation.
 </td>
 </tr>
 
 <tr>
-<td>PPTSMv2_LCNet_k400_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PPTSMv2_LCNet_k400_8frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PPTSMv2_LCNet_k400_8frames_uniform_pretrained.pdparams">Trained Model</a></td>
+<td>PP-TSMv2-LCNetV2_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_8frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_8frames_uniform_pretrained.pdparams">Trained Model</a></td>
 <td>71.71</td>
 <td>22.5 M</td>
-<td rowspan="2">PP-TSMv2 is a lightweight video classification model optimized based on the CPU-side model PP-LCNetV2. The model tuning includes seven aspects: backbone network and pretrained model selection, data augmentation, TSM module tuning, input frame number optimization, decoding speed optimization, DML distillation, and LTA module. Under the center sampling evaluation method, the accuracy reaches 75.16%, and the inference speed for a 10s video on the CPU side is only 456ms.
-</td>
+<td rowspan="2">PP-TSMv2 is a lightweight video classification model optimized based on the CPU-oriented model PP-LCNetV2. It undergoes model tuning in seven aspects: backbone network and pre-trained model selection, data augmentation, TSM module tuning, input frame number optimization, decoding speed optimization, DML distillation, and LTA module. Under the center crop evaluation method, it achieves an accuracy of 75.16%, with an inference speed of only 456ms on the CPU for a 10-second video input.</td>
 </tr>
 <tr>
-<td>PPTSMv2_LCNet_k400_16frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PPTSMv2_LCNet_k400_16frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PPTSMv2_LCNet_k400_16frames_uniform_pretrained.pdparams">Trained Model</a></td>
+<td>PP-TSMv2-LCNetV2_16frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_16frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_16frames_uniform_pretrained.pdparams">Trained Model</a></td>
 <td>73.11</td>
 <td>22.5 M</td>
 </tr>
 
 </table>
 
-<p><b>Note: The above accuracy metrics are Top1 Acc on the <a href="https://github.com/PaddlePaddle/PaddleVideo/blob/develop/docs/zh-CN/dataset/k400.en.md">K400</a> validation set. All model GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision, and CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p></details>
+<p><b>Note: The above accuracy metrics refer to Top-1 Accuracy on the <a href="https://github.com/PaddlePaddle/PaddleVideo/blob/develop/docs/en/dataset/k400.md">K400</a> validation set. </b></p></details>
 
 ## 2. Quick Start
 
@@ -60,15 +62,16 @@ paddlex --pipeline video_classification \
     --device gpu:0
 ```
 
-The relevant parameter descriptions can be found in the parameter descriptions in [2.2.2 Integration via Python Script]().
+The relevant parameter descriptions can be found in the parameter descriptions in [2.2 Integration via Python Script](#22-integration-with-python-script).
 
 After running, the result will be printed to the terminal, as follows:
 
 ```bash
-{'res': {'input_path': 'general_video_classification_001.mp4', 'class_ids': array([  0, 278,  68, 272, 162], dtype=int32), 'scores': [0.91996, 0.07055, 0.00235, 0.00215, 0.00158], 'label_names': ['abseiling', 'rock_climbing', 'climbing_tree', 'riding_mule', 'ice_climbing']}}
+{'res': {'input_path': 'general_video_classification_001.mp4', 'class_ids': array([  0, ..., 162], dtype=int32), 'scores': [0.91997, 0.07052, 0.00237, 0.00214, 0.00158], 'label_names': ['abseiling', 'rock_climbing', 'climbing_tree', 'riding_mule', 'ice_climbing']}}
 ```
 
-The explanation of the result parameters can refer to the result explanation in [2.2.2 Integration with Python Script](#222-integration-with-python-script).
+The explanation of the result parameters can refer to the result explanation in [2.2 Integration with Python Script](#22-integration-with-python-script).
+
 
 The visualization results are saved under `save_path`, and the visualization result for video classification is as follows:
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/video_classification/02.jpg" style="width: 70%">
@@ -107,6 +110,13 @@ In the above Python script, the following steps are executed:
 <td><code>pipeline</code></td>
 <td>The name of the pipeline or the path to the pipeline configuration file. If it is a pipeline name, it must be supported by PaddleX.</td>
 <td><code>str</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the pipeline (if set simultaneously with the <code>pipeline</code>, it takes precedence over the <code>pipeline</code>, and the pipeline name must match the <code>pipeline</code>).
+</td>
+<td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -251,7 +261,7 @@ In the above Python script, the following steps are executed:
     - `scores`: `(List[float])` List of confidence scores for video classification
     - `label_names`: `(List[str])` List of categories for video classification
 
-- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_video_basename}.json`; if specified as a file, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` types will be converted to lists.
+- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_video_basename}_res.json`; if specified as a file, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` types will be converted to lists.
 
 - Calling the `save_to_video()` method will save the visualization results to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_video_basename}_res.{your_video_extension}`; if specified as a file, it will be saved directly to that file. (The production line usually contains multiple result videos, so it is not recommended to specify a specific file path directly, as multiple videos will be overwritten and only the last video will be retained)
 
@@ -302,7 +312,7 @@ for res in output:
 ## 3. Development Integration/Deployment
 If the pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
-If you need to apply the pipeline directly to your Python project, you can refer to the example code in [2.2 Python Script Integration](#22-python-script-integration).
+If you need to apply the pipeline directly to your Python project, you can refer to the example code in [2.2 Integration with Python Script](#22-integration-with-python-script).
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
@@ -881,7 +891,7 @@ SubModules:
   VideoClassification:
     module_name: video_classification
     model_name: PP-TSMv2-LCNetV2_8frames_uniform
-    model_dir: null # 替换为微调后的视频分类模型权重路径
+    model_dir: null # Replace with the fine-tuned video classification model weights path
     batch_size: 1
     topk: 1
 
@@ -902,5 +912,7 @@ paddlex --pipeline video_classification \
     --save_path ./output \
     --device npu:0
 ```
+
+Of course, you can also specify the hardware device when calling `create_pipeline()` or `predict()` in a Python script.
 
 If you want to use the General Video Classification Production Line on a wider variety of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).

@@ -14,49 +14,200 @@ Table structure recognition is a crucial component in table recognition systems,
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Accuracy (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
 <tr>
 <td>SLANet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_pretrained.pdparams">Trained Model</a></td>
 <td>59.52</td>
-<td>522.536</td>
-<td>1845.37</td>
+<td>103.08 / 103.08</td>
+<td>197.99 / 197.99</td>
 <td>6.9 M</td>
 <td rowspan="1">SLANet is a table structure recognition model developed by Baidu PaddlePaddle Vision Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
 </tr>
-
 <tr>
 <td>SLANet_plus</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_plus_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">Trained Model</a></td>
 <td>63.69</td>
-<td>522.536</td>
-<td>1845.37</td>
+<td>140.29 / 140.29</td>
+<td>195.39 / 195.39</td>
 <td>6.9 M</td>
 <td rowspan="1">
 SLANet_plus is an enhanced version of SLANet, a table structure recognition model developed by Baidu PaddlePaddle's Vision Team. Compared to SLANet, SLANet_plus significantly improves its recognition capabilities for wireless and complex tables, while reducing the model's sensitivity to the accuracy of table localization. Even when there are offsets in table localization, it can still perform relatively accurate recognition.
 </td>
 </tr>
 </table>
-
 <b>Note: The above accuracy metrics are evaluated on a self-built English table recognition dataset by PaddleX. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
 
 
 ## III. Quick Integration
-> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation.en.md)
+&gt; ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 After installing the wheel package, a few lines of code can complete the inference of the table structure recognition module. You can easily switch models within this module and integrate the model inference into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg) to your local machine.
 
-```bash
+```python
 from paddlex import create_model
-model = create_model("SLANet")
-output = model.predict("table_recognition.jpg", batch_size=1)
+model = create_model(model_name="SLANet")
+output = model.predict(input="table_recognition.jpg", batch_size=1)
 for res in output:
     res.print(json_format=False)
-    res.save_to_img("./output/")
     res.save_to_json("./output/res.json")
 ```
+
+<details><summary>👉 <b>After running, the result is: (Click to expand)</b></summary>
+
+```json
+{'res': {'input_path': 'table_recognition.jpg', 'bbox': [array([ 42,   2, 390,   2, 388,  27,  40,  26]), array([11, 35, 89, 35, 87, 63, 11, 63]), array([113,  34, 192,  34, 186,  64, 109,  64]), array([219,  33, 399,  33, 393,  62, 212,  62]), array([413,  33, 544,  33, 544,  64, 407,  64]), array([12, 67, 98, 68, 96, 93, 12, 93]), array([115,  66, 205,  66, 200,  91, 111,  91]), array([234,  65, 390,  65, 385,  92, 227,  92]), array([414,  66, 537,  67, 537,  95, 409,  95]), array([  7,  97, 106,  97, 104, 128,   7, 128]), array([113,  96, 206,  95, 201, 127, 109, 127]), array([236,  96, 386,  96, 381, 128, 230, 128]), array([413,  96, 534,  95, 533, 127, 408, 127])], 'structure': ['<html>', '<body>', '<table>', '<tr>', '<td', '="" ',="" colspan="4">', '', '</td',></tr>', '<tr>', '<td></td>', '<td></td>', '<td></td>', '<td></td>', '</tr>', '<tr>', '<td></td>', '<td></td>', '<td></td>', '<td></td>', '</tr>', '<tr>', '<td></td>', '<td></td>', '<td></td>', '<td></td>', '</tr>', '</table>', '</body>', '</html>'], 'structure_score': 0.99948007}}
+```
+
+Parameter meanings are as follows:
+<ul>
+<li><code>input_path</code>: The path of the input image to be predicted</li>
+<li><code>boxes</code>: Predicted table cell information, a list composed of several predicted table cell coordinates. Note that the table cell predictions from the SLANeXt series models are invalid</li>
+<li><code>structure</code>: Predicted table structure in HTML expressions, a list composed of several predicted HTML keywords in order</li>
+<li><code>structure_score</code>: Confidence score of the predicted table structure</li>
+</ul>
+</details>
+
+Relevant methods, parameters, and explanations are as follows:
+
+* <code>create_model</code> instantiates a table structure recognition model (here, <code>SLANet</code> is used as an example), with specific details as follows:
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Parameter Description</th>
+<th>Parameter Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>model_name</code></td>
+<td>Name of the model</td>
+<td><code>str</code></td>
+<td>All model names supported by PaddleX</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>model_dir</code></td>
+<td>Path to store the model</td>
+<td><code>str</code></td>
+<td>None</td>
+<td>None</td>
+</tr>
+</table>
+
+* <code>model_name</code> must be specified. After specifying <code>model_name</code>, the default model parameters from PaddleX will be used. If <code>model_dir</code> is specified, the user-defined model will be used.
+
+* The <code>predict()</code> method of the table structure recognition model is called for inference and prediction. The <code>predict()</code> method has parameters <code>input</code> and <code>batch_size</code>, with specific details as follows:
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Parameter Description</th>
+<th>Parameter Type</th>
+<th>Options</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>Data to be predicted, supporting multiple input types</td>
+<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td>
+<ul>
+<li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
+<li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
+<li><b>URL link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">Example</a></li>
+<li><b>Local directory</b>, this directory must contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
+<li><b>Dictionary</b>, the <code>key</code> of the dictionary must correspond to the specific task, such as <code>"img"</code> for image classification tasks. The <code>val</code> of the dictionary supports the above types of data, for example: <code>{"img": "/root/data1"}</code></li>
+<li><b>List</b>, elements of the list must be of the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code></li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td>Batch size</td>
+<td><code>int</code></td>
+<td>Any integer</td>
+<td>1</td>
+</tr>
+</table>
+
+* Process the prediction results. Each sample's prediction result is a corresponding Result object, and it supports operations such as printing and saving as a `json` file:
+
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Method Description</th>
+<th>Parameter</th>
+<th>Parameter Type</th>
+<th>Parameter Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print the result to the terminal</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>Whether to format the output content using <code>JSON</code> indentation</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. It is only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. If set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> will retain the original characters. It is only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save the result as a JSON-formatted file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The path to save the file. If it is a directory, the saved file will have the same name as the input file</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data, making it more readable. It is only effective when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. If set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> will retain the original characters. It is only effective when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+</table>
+
+* In addition, it also supports obtaining a visualization image with results through attributes, as follows:
+
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Attribute Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format</td>
+</tr>
+</table>
+
 For more information on using PaddleX's single-model inference APIs, refer to [PaddleX Single Model Python Script Usage Instructions](../../instructions/model_python_API.en.md).
 
 ## IV. Custom Development
@@ -84,43 +235,42 @@ python main.py -c paddlex/configs/modules/table_recognition/SLANet.yaml \
 After executing the above command, PaddleX will validate the dataset and summarize its basic information. If the command runs successfully, it will print `Check dataset passed !` in the log. The validation results file is saved in `./output/check_dataset_result.json`, and related outputs are saved in the `./output/check_dataset` directory in the current directory, including visual examples of sample images and sample distribution histograms.
 
 <details><summary>👉 <b>Details of Validation Results (Click to Expand)</b></summary>
-
 <p>The specific content of the validation result file is:</p>
 <pre><code class="language-bash">{
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;train_samples&quot;: 2000,
-    &quot;train_sample_paths&quot;: [
-      &quot;../dataset/table_rec_dataset_examples/images/border_right_7384_X9UFEPKVMLALY7DDB11A.jpg&quot;,
-      &quot;../dataset/table_rec_dataset_examples/images/border_top_13708_VE2DGBD4DCQU2ITLBTEA.jpg&quot;,
-      &quot;../dataset/table_rec_dataset_examples/images/border_top_6490_14Z6ZN6G52GG4XA0K4XU.jpg&quot;,
-      &quot;../dataset/table_rec_dataset_examples/images/border_top_14236_DG96EX0EDKIIDK8P6ENG.jpg&quot;,
-      &quot;../dataset/table_rec_dataset_examples/images/border_19648_SV8B7X34RTYRAT2T5CPI.jpg&quot;,
-      &quot;../dataset/table_rec_dataset_examples/images/border_bottom_7186_HODBC25HISMCSVKY0HJ9.jpg&quot;,
-      &quot;../dataset/table_rec_dataset_examples/images/head_border_bottom_5773_4K4H9OVK9X9YVHE4Y1BQ.jpg&quot;,
-      &quot;../dataset/table_rec_dataset_examples/images/border_7760_8C62CCH5T57QUGE0NTHZ.jpg&quot;,
-      &quot;../dataset/table_rec_dataset_examples/images/border_bottom_15707_B1YVOU3X4NHHB6TL269O.jpg&quot;,
-      &quot;../dataset/table_rec_dataset_examples/images/no_border_5223_HLG406UK35UD5EUYC2AV.jpg&quot;
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "train_samples": 2000,
+    "train_sample_paths": [
+      "../dataset/table_rec_dataset_examples/images/border_right_7384_X9UFEPKVMLALY7DDB11A.jpg",
+      "../dataset/table_rec_dataset_examples/images/border_top_13708_VE2DGBD4DCQU2ITLBTEA.jpg",
+      "../dataset/table_rec_dataset_examples/images/border_top_6490_14Z6ZN6G52GG4XA0K4XU.jpg",
+      "../dataset/table_rec_dataset_examples/images/border_top_14236_DG96EX0EDKIIDK8P6ENG.jpg",
+      "../dataset/table_rec_dataset_examples/images/border_19648_SV8B7X34RTYRAT2T5CPI.jpg",
+      "../dataset/table_rec_dataset_examples/images/border_bottom_7186_HODBC25HISMCSVKY0HJ9.jpg",
+      "../dataset/table_rec_dataset_examples/images/head_border_bottom_5773_4K4H9OVK9X9YVHE4Y1BQ.jpg",
+      "../dataset/table_rec_dataset_examples/images/border_7760_8C62CCH5T57QUGE0NTHZ.jpg",
+      "../dataset/table_rec_dataset_examples/images/border_bottom_15707_B1YVOU3X4NHHB6TL269O.jpg",
+      "../dataset/table_rec_dataset_examples/images/no_border_5223_HLG406UK35UD5EUYC2AV.jpg"
     ],
-    &quot;val_samples&quot;: 100,
-    &quot;val_sample_paths&quot;: [
-      &quot;../dataset/table_rec_dataset_examples/images/border_2945_L7MSRHBZRW6Y347G39O6.jpg&quot;,
-      &quot;../dataset/table_rec_dataset_examples/images/head_border_bottom_4825_LH9WI6X104CP3VFXPSON.jpg&quot;,
-      &quot;../dataset/table_rec_dataset_examples/images/head_border_bottom_16837_79KHWU9WDM9ZQHNBGQAL.jpg&quot;,
-      &quot;../dataset/table_rec_dataset_examples/images/border_bottom_10107_9ENLLC29SQ6XI8WZY53E.jpg&quot;,
-      &quot;../dataset/table_rec_dataset_examples/images/border_top_16668_JIS0YFDZKTKETZIEKCKX.jpg&quot;,
-      &quot;../dataset/table_rec_dataset_examples/images/border_18653_J9SSKHLFTRJD4J8W17OW.jpg&quot;,
-      &quot;../dataset/table_rec_dataset_examples/images/border_bottom_8396_VJ3QJ3I0DP63P4JR77FE.jpg&quot;,
-      &quot;../dataset/table_rec_dataset_examples/images/border_9017_K2V7QBWSU2BA4R3AJSO7.jpg&quot;,
-      &quot;../dataset/table_rec_dataset_examples/images/border_top_19494_SDFMWP92NOB2OT7109FI.jpg&quot;,
-      &quot;../dataset/table_rec_dataset_examples/images/no_border_288_6LK683JUCMOQ38V5BV29.jpg&quot;
+    "val_samples": 100,
+    "val_sample_paths": [
+      "../dataset/table_rec_dataset_examples/images/border_2945_L7MSRHBZRW6Y347G39O6.jpg",
+      "../dataset/table_rec_dataset_examples/images/head_border_bottom_4825_LH9WI6X104CP3VFXPSON.jpg",
+      "../dataset/table_rec_dataset_examples/images/head_border_bottom_16837_79KHWU9WDM9ZQHNBGQAL.jpg",
+      "../dataset/table_rec_dataset_examples/images/border_bottom_10107_9ENLLC29SQ6XI8WZY53E.jpg",
+      "../dataset/table_rec_dataset_examples/images/border_top_16668_JIS0YFDZKTKETZIEKCKX.jpg",
+      "../dataset/table_rec_dataset_examples/images/border_18653_J9SSKHLFTRJD4J8W17OW.jpg",
+      "../dataset/table_rec_dataset_examples/images/border_bottom_8396_VJ3QJ3I0DP63P4JR77FE.jpg",
+      "../dataset/table_rec_dataset_examples/images/border_9017_K2V7QBWSU2BA4R3AJSO7.jpg",
+      "../dataset/table_rec_dataset_examples/images/border_top_19494_SDFMWP92NOB2OT7109FI.jpg",
+      "../dataset/table_rec_dataset_examples/images/no_border_288_6LK683JUCMOQ38V5BV29.jpg"
     ]
   },
-  &quot;analysis&quot;: {},
-  &quot;dataset_path&quot;: &quot;./dataset/table_rec_dataset_examples&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;PubTabTableRecDataset&quot;
+  "analysis": {},
+  "dataset_path": "./dataset/table_rec_dataset_examples",
+  "show_type": "image",
+  "dataset_type": "PubTabTableRecDataset"
 }
 </code></pre>
 <p>In the above validation results, <code>check_pass</code> being True indicates that the dataset format meets the requirements. Explanations for other indicators are as follows:</p>
@@ -135,7 +285,6 @@ After executing the above command, PaddleX will validate the dataset and summari
 After completing the dataset verification, you can convert the dataset format or re-split the training/validation ratio by <b>modifying the configuration file</b> or <b>appending hyperparameters</b>.
 
 <details><summary>👉 <b>Details on Format Conversion / Dataset Splitting (Click to Expand)</b></summary>
-
 <p><b>(1) Dataset Format Conversion</b></p>
 <p>Table structure recognition does not support data format conversion.</p>
 <p><b>(2) Dataset Splitting</b></p>
@@ -188,7 +337,6 @@ the following steps are required:
 
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <ul>
 <li>During model training, PaddleX automatically saves the model weight files, with the default being <code>output</code>. If you need to specify a save path, you can set it through the <code>-o Global.output</code> field in the configuration file.</li>
 <li>PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.</li>
@@ -218,7 +366,6 @@ Similar to model training, the following steps are required:
 Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <p>When evaluating the model, you need to specify the model weights file path. Each configuration file has a default weight save path. If you need to change it, simply append the command line parameter to set it, such as <code>-o Evaluate.weight_path=./output/best_accuracy/best_accuracy.pdparams</code>.</p>
 <p>After completing the model evaluation, an <code>evaluate_result.json</code> file will be produced, which records the evaluation results, specifically, whether the evaluation task was completed successfully and the model's evaluation metrics, including acc ;</p></details>
 

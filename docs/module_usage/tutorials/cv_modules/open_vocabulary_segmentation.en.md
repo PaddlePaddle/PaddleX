@@ -238,7 +238,7 @@ Related methods and parameter explanations are as follows:
 </tr>
 </table>
 
-For more information on the usage of PaddleX single-model inference APIs, please refer to [PaddleX Single-Model Python Script Usage Guide](../../instructions/model_python_API.md).
+For more information on the usage of PaddleX single-model inference APIs, please refer to [PaddleX Single-Model Python Script Usage Guide](../../instructions/model_python_API.en.md).
 
 ## IV. Secondary Development
 The current module temporarily does not support fine-tuning training and only supports inference integration. Fine-tuning training for this module is planned to be supported in the future.

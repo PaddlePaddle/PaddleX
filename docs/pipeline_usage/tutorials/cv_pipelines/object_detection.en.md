@@ -7,62 +7,59 @@ comments: true
 ## 1. Introduction to General Object Detection Pipeline
 Object detection aims to identify the categories and locations of multiple objects in images or videos by generating bounding boxes to mark these objects. Unlike simple image classification, object detection not only requires recognizing what objects are present in an image, such as people, cars, and animals, but also accurately determining the specific position of each object within the image, typically represented by rectangular boxes. This technology is widely used in autonomous driving, surveillance systems, smart photo albums, and other fields, relying on deep learning models (e.g., YOLO, Faster R-CNN) that can efficiently extract features and perform real-time detection, significantly enhancing the computer's ability to understand image content.
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/object_detection/01.png">
-
-
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/object_detection/01.png"/>
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Description</th>
 </tr>
 <tr>
 <td>PicoDet-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_pretrained.pdparams">Trained Model</a></td>
 <td>42.6</td>
-<td>16.6715</td>
-<td>169.904</td>
+<td>14.68 / 5.81</td>
+<td>47.32 / 47.32</td>
 <td>20.9 M</td>
 <td rowspan="2">PP-PicoDet is a lightweight object detection algorithm for full-size, wide-angle targets, considering the computational capacity of mobile devices. Compared to traditional object detection algorithms, PP-PicoDet has a smaller model size and lower computational complexity, achieving higher speed and lower latency while maintaining detection accuracy.</td>
 </tr>
 <tr>
 <td>PicoDet-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_pretrained.pdparams">Trained Model</a></td>
 <td>29.1</td>
-<td>14.097</td>
-<td>37.6563</td>
+<td>7.98 / 2.33</td>
+<td>14.82 / 5.60</td>
 <td>4.4 M</td>
 </tr>
 <tr>
 <td>PP-YOLOE_plus-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-L_pretrained.pdparams">Trained Model</a></td>
 <td>52.9</td>
-<td>33.5644</td>
-<td>814.825</td>
+<td>33.55 / 10.46</td>
+<td>189.05 / 189.05</td>
 <td>185.3 M</td>
 <td rowspan="2">PP-YOLOE_plus is an upgraded version of the high-precision cloud-edge integrated model PP-YOLOE, developed by Baidu's PaddlePaddle vision team. By using the large-scale Objects365 dataset and optimizing preprocessing, it significantly enhances the model's end-to-end inference speed.</td>
 </tr>
 <tr>
 <td>PP-YOLOE_plus-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_pretrained.pdparams">Trained Model</a></td>
 <td>43.7</td>
-<td>16.8884</td>
-<td>223.059</td>
+<td>12.16 / 4.58</td>
+<td>73.86 / 52.90</td>
 <td>28.3 M</td>
 </tr>
 <tr>
 <td>RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_pretrained.pdparams">Trained Model</a></td>
 <td>56.3</td>
-<td>114.814</td>
-<td>3933.39</td>
+<td>115.92 / 28.16</td>
+<td>971.32 / 971.32</td>
 <td>435.8 M</td>
 <td rowspan="2">RT-DETR is the first real-time end-to-end object detector. The model features an efficient hybrid encoder to meet both model performance and throughput requirements, efficiently handling multi-scale features, and proposes an accelerated and optimized query selection mechanism to optimize the dynamics of decoder queries. RT-DETR supports flexible end-to-end inference speeds by using different decoders.</td>
 </tr>
 <tr>
 <td>RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_pretrained.pdparams">Trained Model</a></td>
 <td>53.0</td>
-<td>34.5252</td>
-<td>1454.27</td>
+<td>35.00 / 10.45</td>
+<td>495.51 / 495.51</td>
 <td>113.7 M</td>
 </tr>
 </table>
@@ -70,287 +67,285 @@ Object detection aims to identify the categories and locations of multiple objec
 > ❗ The above list features the <b>6 core models</b> that the image classification module primarily supports. In total, this module supports <b>37 models</b>. The complete list of models is as follows:
 
 <details><summary> 👉Details of Model List</summary>
-
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
 <tr>
 <td>Cascade-FasterRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Cascade-FasterRCNN-ResNet50-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-FasterRCNN-ResNet50-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>41.1</td>
-<td>-</td>
-<td>-</td>
+<td>135.92 / 135.92</td>
+<td>nan / nan</td>
 <td>245.4 M</td>
 <td rowspan="2">Cascade-FasterRCNN is an improved version of the Faster R-CNN object detection model. By coupling multiple detectors and optimizing detection results using different IoU thresholds, it addresses the mismatch problem between training and prediction stages, enhancing the accuracy of object detection.</td>
 </tr>
 <tr>
 <td>Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>45.0</td>
-<td>-</td>
-<td>-</td>
+<td>138.23 / 138.23</td>
+<td>nan / nan</td>
 <td>246.2 M</td>
 </tr>
 <tr>
 <td>CenterNet-DLA-34</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/CenterNet-DLA-34_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CenterNet-DLA-34_pretrained.pdparams">Trained Model</a></td>
 <td>37.6</td>
-<td>-</td>
-<td>-</td>
+<td>nan / nan</td>
+<td>nan / nan</td>
 <td>75.4 M</td>
 <td rowspan="2">CenterNet is an anchor-free object detection model that treats the keypoints of the object to be detected as a single point—the center point of its bounding box, and performs regression through these keypoints.</td>
 </tr>
 <tr>
 <td>CenterNet-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/CenterNet-ResNet50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CenterNet-ResNet50_pretrained.pdparams">Trained Model</a></td>
 <td>38.9</td>
-<td>-</td>
-<td>-</td>
+<td>nan / nan</td>
+<td>nan / nan</td>
 <td>319.7 M</td>
 </tr>
 <tr>
 <td>DETR-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/DETR-R50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DETR-R50_pretrained.pdparams">Trained Model</a></td>
 <td>42.3</td>
-<td>59.2132</td>
-<td>5334.52</td>
+<td>62.91 / 17.33</td>
+<td>392.63 / 392.63</td>
 <td>159.3 M</td>
 <td>DETR is a transformer-based object detection model proposed by Facebook. It achieves end-to-end object detection without the need for predefined anchor boxes or NMS post-processing strategies.</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet34-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet34-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet34-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>37.8</td>
-<td>-</td>
-<td>-</td>
+<td>83.33 / 31.64</td>
+<td>nan / nan</td>
 <td>137.5 M</td>
 <td rowspan="9">Faster R-CNN is a typical two-stage object detection model that first generates region proposals and then performs classification and regression on these proposals. Compared to its predecessors R-CNN and Fast R-CNN, Faster R-CNN's main improvement lies in the region proposal aspect, using a Region Proposal Network (RPN) to provide region proposals instead of traditional selective search. RPN is a Convolutional Neural Network (CNN) that shares convolutional features with the detection network, reducing the computational overhead of region proposals.</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet50-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>38.4</td>
-<td>-</td>
-<td>-</td>
+<td>107.08 / 35.40</td>
+<td>nan / nan</td>
 <td>148.1 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet50-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet50-vd-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-vd-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>39.5</td>
-<td>-</td>
-<td>-</td>
+<td>109.36 / 36.00</td>
+<td>nan / nan</td>
 <td>148.1 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet50-vd-SSLDv2-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>41.4</td>
-<td>-</td>
-<td>-</td>
+<td>109.06 / 36.19</td>
+<td>nan / nan</td>
 <td>148.1 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50_pretrained.pdparams">Trained Model</a></td>
 <td>36.7</td>
-<td>-</td>
-<td>-</td>
+<td>496.33 / 109.12</td>
+<td>nan / nan</td>
 <td>120.2 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet101-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet101-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet101-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>41.4</td>
-<td>-</td>
-<td>-</td>
+<td>148.21 / 42.21</td>
+<td>nan / nan</td>
 <td>216.3 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet101</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet101_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet101_pretrained.pdparams">Trained Model</a></td>
 <td>39.0</td>
-<td>-</td>
-<td>-</td>
+<td>538.58 / 120.88</td>
+<td>nan / nan</td>
 <td>188.1 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNeXt101-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNeXt101-vd-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNeXt101-vd-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>43.4</td>
-<td>-</td>
-<td>-</td>
+<td>258.01 / 58.25</td>
+<td>nan / nan</td>
 <td>360.6 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-Swin-Tiny-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-Swin-Tiny-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-Swin-Tiny-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>42.6</td>
-<td>-</td>
-<td>-</td>
+<td>nan / nan</td>
+<td>nan / nan</td>
 <td>159.8 M</td>
 </tr>
 <tr>
 <td>FCOS-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FCOS-ResNet50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FCOS-ResNet50_pretrained.pdparams">Trained Model</a></td>
 <td>39.6</td>
-<td>103.367</td>
-<td>3424.91</td>
+<td>106.13 / 28.32</td>
+<td>721.79 / 721.79</td>
 <td>124.2 M</td>
 <td>FCOS is an anchor-free object detection model that performs dense predictions. It uses the backbone of RetinaNet and directly regresses the width and height of the target object on the feature map, predicting the object's category and centerness (the degree of offset of pixels on the feature map from the object's center), which is eventually used as a weight to adjust the object score.</td>
 </tr>
 <tr>
 <td>PicoDet-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_pretrained.pdparams">Trained Model</a></td>
 <td>42.6</td>
-<td>16.6715</td>
-<td>169.904</td>
+<td>14.68 / 5.81</td>
+<td>47.32 / 47.32</td>
 <td>20.9 M</td>
 <td rowspan="4">PP-PicoDet is a lightweight object detection algorithm designed for full-size and wide-aspect-ratio targets, with a focus on mobile device computation. Compared to traditional object detection algorithms, PP-PicoDet boasts smaller model sizes and lower computational complexity, achieving higher speeds and lower latency while maintaining detection accuracy.</td>
 </tr>
 <tr>
 <td>PicoDet-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-M_pretrained.pdparams">Trained Model</a></td>
 <td>37.5</td>
-<td>16.2311</td>
-<td>71.7257</td>
+<td>9.62 / 3.23</td>
+<td>23.75 / 14.88</td>
 <td>16.8 M</td>
 </tr>
 <tr>
 <td>PicoDet-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_pretrained.pdparams">Trained Model</a></td>
 <td>29.1</td>
-<td>14.097</td>
-<td>37.6563</td>
+<td>7.98 / 2.33</td>
+<td>14.82 / 5.60</td>
 <td>4.4 M</td>
 </tr>
 <tr>
 <td>PicoDet-XS</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-XS_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-XS_pretrained.pdparams">Trained Model</a></td>
 <td>26.2</td>
-<td>13.8102</td>
-<td>48.3139</td>
+<td>9.66 / 2.75</td>
+<td>19.15 / 7.24</td>
 <td>5.7 M</td>
 </tr>
 <tr>
 <td>PP-YOLOE_plus-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-L_pretrained.pdparams">Trained Model</a></td>
 <td>52.9</td>
-<td>33.5644</td>
-<td>814.825</td>
+<td>33.55 / 10.46</td>
+<td>189.05 / 189.05</td>
 <td>185.3 M</td>
 <td rowspan="4">PP-YOLOE_plus is an iteratively optimized and upgraded version of PP-YOLOE, a high-precision cloud-edge integrated model developed by Baidu PaddlePaddle's Vision Team. By leveraging the large-scale Objects365 dataset and optimizing preprocessing, it significantly enhances the end-to-end inference speed of the model.</td>
 </tr>
 <tr>
 <td>PP-YOLOE_plus-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-M_pretrained.pdparams">Trained Model</a></td>
 <td>49.8</td>
-<td>19.843</td>
-<td>449.261</td>
+<td>19.52 / 7.46</td>
+<td>113.36 / 113.36</td>
 <td>82.3 M</td>
 </tr>
 <tr>
 <td>PP-YOLOE_plus-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_pretrained.pdparams">Trained Model</a></td>
 <td>43.7</td>
-<td>16.8884</td>
-<td>223.059</td>
+<td>12.16 / 4.58</td>
+<td>73.86 / 52.90</td>
 <td>28.3 M</td>
 </tr>
 <tr>
 <td>PP-YOLOE_plus-X</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-X_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-X_pretrained.pdparams">Trained Model</a></td>
 <td>54.7</td>
-<td>57.8995</td>
-<td>1439.93</td>
+<td>58.87 / 15.84</td>
+<td>292.93 / 292.93</td>
 <td>349.4 M</td>
 </tr>
 <tr>
 <td>RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_pretrained.pdparams">Trained Model</a></td>
 <td>56.3</td>
-<td>114.814</td>
-<td>3933.39</td>
+<td>115.92 / 28.16</td>
+<td>971.32 / 971.32</td>
 <td>435.8 M</td>
 <td rowspan="5">RT-DETR is the first real-time end-to-end object detector. It features an efficient hybrid encoder that balances model performance and throughput, efficiently processes multi-scale features, and introduces an accelerated and optimized query selection mechanism to dynamize decoder queries. RT-DETR supports flexible end-to-end inference speeds through the use of different decoders.</td>
 </tr>
 <tr>
 <td>RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_pretrained.pdparams">Trained Model</a></td>
 <td>53.0</td>
-<td>34.5252</td>
-<td>1454.27</td>
+<td>35.00 / 10.45</td>
+<td>495.51 / 495.51</td>
 <td>113.7 M</td>
 </tr>
 <tr>
 <td>RT-DETR-R18</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-R18_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-R18_pretrained.pdparams">Trained Model</a></td>
 <td>46.5</td>
-<td>19.89</td>
-<td>784.824</td>
+<td>20.21 / 6.23</td>
+<td>266.01 / 266.01</td>
 <td>70.7 M</td>
 </tr>
 <tr>
 <td>RT-DETR-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-R50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-R50_pretrained.pdparams">Trained Model</a></td>
 <td>53.1</td>
-<td>41.9327</td>
-<td>1625.95</td>
+<td>42.14 / 11.31</td>
+<td>523.97 / 523.97</td>
 <td>149.1 M</td>
 </tr>
 <tr>
 <td>RT-DETR-X</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-X_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-X_pretrained.pdparams">Trained Model</a></td>
 <td>54.8</td>
-<td>61.8042</td>
-<td>2246.64</td>
+<td>61.24 / 15.83</td>
+<td>647.08 / 647.08</td>
 <td>232.9 M</td>
 </tr>
 <tr>
 <td>YOLOv3-DarkNet53</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOv3-DarkNet53_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOv3-DarkNet53_pretrained.pdparams">Trained Model</a></td>
 <td>39.1</td>
-<td>40.1055</td>
-<td>883.041</td>
+<td>41.58 / 10.10</td>
+<td>158.78 / 158.78</td>
 <td>219.7 M</td>
 <td rowspan="3">YOLOv3 is a real-time end-to-end object detector that utilizes a unique single Convolutional Neural Network (CNN) to frame the object detection problem as a regression task, enabling real-time detection. The model employs multi-scale detection to enhance performance across different object sizes.</td>
 </tr>
 <tr>
 <td>YOLOv3-MobileNetV3</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOv3-MobileNetV3_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOv3-MobileNetV3_pretrained.pdparams">Trained Model</a></td>
 <td>31.4</td>
-<td>18.6692</td>
-<td>267.214</td>
+<td>16.53 / 5.70</td>
+<td>60.44 / 60.44</td>
 <td>83.8 M</td>
 </tr>
 <tr>
 <td>YOLOv3-ResNet50_vd_DCN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOv3-ResNet50_vd_DCN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOv3-ResNet50_vd_DCN_pretrained.pdparams">Trained Model</a></td>
 <td>40.6</td>
-<td>31.6276</td>
-<td>856.047</td>
+<td>32.91 / 10.07</td>
+<td>225.72 / 224.32</td>
 <td>163.0 M</td>
 </tr>
 <tr>
 <td>YOLOX-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOX-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-L_pretrained.pdparams">Trained Model</a></td>
 <td>50.1</td>
-<td>185.691</td>
-<td>1250.58</td>
+<td>121.19 / 13.55</td>
+<td>295.38 / 274.15</td>
 <td>192.5 M</td>
 <td rowspan="6">Building upon YOLOv3's framework, YOLOX significantly boosts detection performance in complex scenarios by incorporating Decoupled Head, Data Augmentation, Anchor Free, and SimOTA components.</td>
 </tr>
 <tr>
 <td>YOLOX-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOX-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-M_pretrained.pdparams">Trained Model</a></td>
 <td>46.9</td>
-<td>123.324</td>
-<td>688.071</td>
+<td>87.19 / 10.09</td>
+<td>183.95 / 172.67</td>
 <td>90.0 M</td>
 </tr>
 <tr>
 <td>YOLOX-N</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOX-N_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-N_pretrained.pdparams">Trained Model</a></td>
 <td>26.1</td>
-<td>79.1665</td>
-<td>155.59</td>
+<td>53.31 / 45.02</td>
+<td>69.69 / 59.18</td>
 <td>3.4 M</td>
 </tr>
 <tr>
 <td>YOLOX-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOX-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-S_pretrained.pdparams">Trained Model</a></td>
 <td>40.4</td>
-<td>184.828</td>
-<td>474.446</td>
+<td>129.52 / 13.19</td>
+<td>181.39 / 179.01</td>
 <td>32.0 M</td>
 </tr>
 <tr>
 <td>YOLOX-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOX-T_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-T_pretrained.pdparams">Trained Model</a></td>
 <td>32.9</td>
-<td>102.748</td>
-<td>212.52</td>
+<td>66.81 / 61.31</td>
+<td>92.30 / 83.90</td>
 <td>18.1 M</td>
 </tr>
 <tr>
 <td>YOLOX-X</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOX-X_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-X_pretrained.pdparams">Trained Model</a></td>
 <td>51.8</td>
-<td>227.361</td>
-<td>2067.84</td>
+<td>156.40 / 20.17</td>
+<td>480.14 / 454.35</td>
 <td>351.5 M</td>
 </tr>
 </table>
-
 <p><b>Note: The precision metrics mentioned are based on the <a href="https://cocodataset.org/#home">COCO2017</a> validation set mAP(0.5:0.95). All model GPU inference times are measured on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p></details>
 
 ## 2. Quick Start
@@ -359,7 +354,7 @@ PaddleX's pre-trained model pipelines allow for quick experience of their effect
 ### 2.1 Online Experience
 You can [experience the General Object Detection Pipeline online](https://aistudio.baidu.com/community/app/70230/webUI) using the demo images provided by the official source, for example:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/object_detection/02.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/object_detection/02.png"/>
 
 If you are satisfied with the pipeline's performance, you can directly integrate and deploy it. If not, you can also use your private data to <b>fine-tune the model within the pipeline</b>.
 
@@ -381,7 +376,7 @@ For the description of parameters and interpretation of results, please refer to
 
 The visualization results are saved to `save_path`, as shown below:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/object_detection/03.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/object_detection/03.png"/>
 
 #### 2.2.2 Integration via Python Script
 The command-line method described above allows you to quickly experience and view the results. However, in a project, code integration is often required. You can complete the fast inference of the production line with just a few lines of code as follows:
@@ -457,9 +452,9 @@ In the above Python script, the following steps are executed:
 <td><code>Python Var|str|list</code></td>
 <td>
 <ul>
-  <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
-  <li><b>str</b>: Local path of an image file or PDF file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the network URL of an image file or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">Example</a>; <b>Local directory</b>, which must contain images to be predicted, such as the local path: <code>/root/data/</code> (Currently, prediction of PDF files in directories is not supported; PDF files must be specified with an exact file path)</li>
-  <li><b>List</b>: Elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
+<li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
+<li><b>str</b>: Local path of an image file or PDF file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the network URL of an image file or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">Example</a>; <b>Local directory</b>, which must contain images to be predicted, such as the local path: <code>/root/data/</code> (Currently, prediction of PDF files in directories is not supported; PDF files must be specified with an exact file path)</li>
+<li><b>List</b>: Elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
 </ul>
 </td>
 <td>None</td>
@@ -470,8 +465,8 @@ In the above Python script, the following steps are executed:
 <td><code>float/dict/None</code></td>
 <td>
 <ul>
-  <li><b>float</b>, such as 0.2, indicates filtering out all bounding boxes with confidence scores less than 0.2</li>
-  <li><b>Dictionary</b>, where the keys are <b>int</b> type representing <code>cls_id</code>, and the values are <b>float</b> type thresholds. For example, <code>{0: 0.45, 2: 0.48, 7: 0.4}</code> indicates applying a threshold of 0.45 for class ID 0, 0.48 for class ID 2, and 0.4 for class ID 7</li>
+<li><b>float</b>, such as 0.2, indicates filtering out all bounding boxes with confidence scores less than 0.2</li>
+<li><b>Dictionary</b>, where the keys are <b>int</b> type representing <code>cls_id</code>, and the values are <b>float</b> type thresholds. For example, <code>{0: 0.45, 2: 0.48, 7: 0.4}</code> indicates applying a threshold of 0.45 for class ID 0, 0.48 for class ID 2, and 0.4 for class ID 7</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -492,8 +487,8 @@ In the above Python script, the following steps are executed:
 </tr>
 </thead>
 <tr>
-<td rowspan = "3"><code>print()</code></td>
-<td rowspan = "3">Print the result to the terminal</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print the result to the terminal</td>
 <td><code>format_json</code></td>
 <td><code>bool</code></td>
 <td>Whether to format the output content using <code>JSON</code> indentation</td>
@@ -512,8 +507,8 @@ In the above Python script, the following steps are executed:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td rowspan = "3"><code>save_to_json()</code></td>
-<td rowspan = "3">Save the result as a JSON file</td>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save the result as a JSON file</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
 <td>The file path for saving. If it is a directory, the saved file will have the same name as the input file type</td>
@@ -569,12 +564,12 @@ In the above Python script, the following steps are executed:
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">Get the prediction results in <code>json</code> format.</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction results in <code>json</code> format.</td>
 </tr>
 <tr>
-<td rowspan = "2"><code>img</code></td>
-<td rowspan = "2">Get the visualization image in <code>dict</code> format.</td>
+<td rowspan="2"><code>img</code></td>
+<td rowspan="2">Get the visualization image in <code>dict</code> format.</td>
 </tr>
 </table>
 
@@ -618,7 +613,6 @@ Additionally, PaddleX provides three other deployment methods, detailed as follo
 Below is the API reference for basic service deployment and multi-language service call examples:
 
 <details><summary>API Reference</summary>
-
 <p>For the main operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
@@ -765,79 +759,73 @@ Below is the API reference for basic service deployment and multi-language servi
 </table>
 <p>An example of <code>result</code> is as follows:</p>
 <pre><code class="language-json">{
-&quot;detectedObjects&quot;: [
+"detectedObjects": [
 {
-&quot;bbox&quot;: [
+"bbox": [
 404.4967956542969,
 90.15770721435547,
 506.2465515136719,
 285.4187316894531
 ],
-&quot;categoryId&quot;: 0,
-&quot;score&quot;: 0.7418514490127563
+"categoryId": 0,
+"score": 0.7418514490127563
 },
 {
-&quot;bbox&quot;: [
+"bbox": [
 155.33145141601562,
 81.10954284667969,
 199.71136474609375,
 167.4235382080078
 ],
-&quot;categoryId&quot;: 1,
-&quot;score&quot;: 0.7328268885612488
+"categoryId": 1,
+"score": 0.7328268885612488
 }
 ],
-&quot;image&quot;: &quot;xxxxxx&quot;
+"image": "xxxxxx"
 }
 </code></pre></details>
-
 <details><summary>Multilingual API Call Examples</summary>
-
 <details>
 <summary>Python</summary>
-
-
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/object-detection&quot; # Service URL
-image_path = &quot;./demo.jpg&quot;
-output_image_path = &quot;./out.jpg&quot;
+API_URL = "http://localhost:8080/object-detection" # Service URL
+image_path = "./demo.jpg"
+output_image_path = "./out.jpg"
 
 # Base64 encode the local image
-with open(image_path, &quot;rb&quot;) as file:
+with open(image_path, "rb") as file:
     image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
-payload = {&quot;image&quot;: image_data}  # Base64 encoded file content or image URL
+payload = {"image": image_data}  # Base64 encoded file content or image URL
 
 # Call the API
 response = requests.post(API_URL, json=payload)
 
 # Process the API response
 assert response.status_code == 200
-result = response.json()[&quot;result&quot;]
-with open(output_image_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result[&quot;image&quot;]))
-print(f&quot;Output image saved at {output_image_path}&quot;)
-print(&quot;\nDetected objects:&quot;)
-print(result[&quot;detectedObjects&quot;])
+result = response.json()["result"]
+with open(output_image_path, "wb") as file:
+    file.write(base64.b64decode(result["image"]))
+print(f"Output image saved at {output_image_path}")
+print("\nDetected objects:")
+print(result["detectedObjects"])
 </code></pre></details>
-
 <details><summary>C++</summary>
-
 <pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &quot;cpp-httplib/httplib.h&quot; // <url id="cu9mpkm1bb2s6cmn38bg" type="url" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" wc="15064">https://github.com/Huiyicc/cpp-httplib</url>
-#include &quot;nlohmann/json.hpp&quot; // <url id="cu9mpkm1bb2s6cmn38c0" type="url" status="parsed" title="GitHub - nlohmann/json: JSON for Modern C++" wc="80311">https://github.com/nlohmann/json</url>
-#include &quot;base64.hpp&quot; // <url id="cu9mpkm1bb2s6cmn38cg" type="url" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" wc="2293">https://github.com/tobiaslocker/base64</url>
+#include "cpp-httplib/httplib.h" // <url id="cu9mpkm1bb2s6cmn38bg" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" type="url" wc="15064">https://github.com/Huiyicc/cpp-httplib</url>
+#include "nlohmann/json.hpp" // <url id="cu9mpkm1bb2s6cmn38c0" status="parsed" title="GitHub - nlohmann/json: JSON for Modern C++" type="url" wc="80311">https://github.com/nlohmann/json</url>
+#include "base64.hpp" // <url id="cu9mpkm1bb2s6cmn38cg" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" type="url" wc="2293">https://github.com/tobiaslocker/base64</url>
 
 int main() {
-    httplib::Client client(&quot;localhost:8080&quot;);
-    const std::string imagePath = &quot;./demo.jpg&quot;;
-    const std::string outputImagePath = &quot;./out.jpg&quot;;
+    httplib::Client client("localhost:8080");
+    const std::string imagePath = "./demo.jpg";
+    const std::string outputImagePath = "./out.jpg";
 
     httplib::Headers headers = {
-        {&quot;Content-Type&quot;, &quot;application/json&quot;}
+        {"Content-Type", "application/json"}
     };
 
     // Base64 encode the local image
@@ -847,63 +835,61 @@ int main() {
 
     std::vector&lt;char&gt; buffer(size);
     if (!file.read(buffer.data(), size)) {
-        std::cerr &lt;&lt; &quot;Error reading file.&quot; &lt;&lt; std::endl;
+        std::cerr &lt;&lt; "Error reading file." &lt;&lt; std::endl;
         return 1;
     }
     std::string bufferStr(reinterpret_cast&lt;const char*&gt;(buffer.data()), buffer.size());
     std::string encodedImage = base64::to_base64(bufferStr);
 
     nlohmann::json jsonObj;
-    jsonObj[&quot;image&quot;] = encodedImage;
+    jsonObj["image"] = encodedImage;
     std::string body = jsonObj.dump();
 
     // Call the API
-    auto response = client.Post(&quot;/object-detection&quot;, headers, body, &quot;application/json&quot;);
+    auto response = client.Post("/object-detection", headers, body, "application/json");
     // Process the API response
     if (response &amp;&amp; response-&gt;status == 200) {
         nlohmann::json jsonResponse = nlohmann::json::parse(response-&gt;body);
-        auto result = jsonResponse[&quot;result&quot;];
+        auto result = jsonResponse["result"];
 
-        encodedImage = result[&quot;image&quot;];
+        encodedImage = result["image"];
         std::string decodedString = base64::from_base64(encodedImage);
         std::vector&lt;unsigned char&gt; decodedImage(decodedString.begin(), decodedString.end());
         std::ofstream outputImage(outPutImagePath, std::ios::binary | std::ios::out);
         if (outputImage.is_open()) {
             outputImage.write(reinterpret_cast&lt;char*&gt;(decodedImage.data()), decodedImage.size());
             outputImage.close();
-            std::cout &lt;&lt; &quot;Output image saved at &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
+            std::cout &lt;&lt; "Output image saved at " &lt;&lt; outPutImagePath &lt;&lt; std::endl;
         } else {
-            std::cerr &lt;&lt; &quot;Unable to open file for writing: &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
+            std::cerr &lt;&lt; "Unable to open file for writing: " &lt;&lt; outPutImagePath &lt;&lt; std::endl;
         }
 
-        auto detectedObjects = result[&quot;detectedObjects&quot;];
-        std::cout &lt;&lt; &quot;\nDetected objects:&quot; &lt;&lt; std::endl;
+        auto detectedObjects = result["detectedObjects"];
+        std::cout &lt;&lt; "\nDetected objects:" &lt;&lt; std::endl;
         for (const auto&amp; obj : detectedObjects) {
             std::cout &lt;&lt; obj &lt;&lt; std::endl;
         }
     } else {
-        std::cout &lt;&lt; &quot;Failed to send HTTP request.&quot; &lt;&lt; std::endl;
+        std::cout &lt;&lt; "Failed to send HTTP request." &lt;&lt; std::endl;
         return 1;
     }
 
     return 0;
 }
 </code></pre></details>
-
 <details><summary>C++</summary>
-
 <pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &quot;cpp-httplib/httplib.h&quot; // <url id="cu9mqi3of8jgdv7nc1s0" type="url" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" wc="15064">https://github.com/Huiyicc/cpp-httplib</url>
-#include &quot;nlohmann/json.hpp&quot; // <url id="cu9mqi3of8jgdv7nc1sg" type="url" status="parsed" title="GitHub - nlohmann/json: JSON for Modern C++" wc="80311">https://github.com/nlohmann/json</url>
-#include &quot;base64.hpp&quot; // <url id="cu9mqi3of8jgdv7nc1t0" type="url" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" wc="2293">https://github.com/tobiaslocker/base64</url>
+#include "cpp-httplib/httplib.h" // <url id="cu9mqi3of8jgdv7nc1s0" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" type="url" wc="15064">https://github.com/Huiyicc/cpp-httplib</url>
+#include "nlohmann/json.hpp" // <url id="cu9mqi3of8jgdv7nc1sg" status="parsed" title="GitHub - nlohmann/json: JSON for Modern C++" type="url" wc="80311">https://github.com/nlohmann/json</url>
+#include "base64.hpp" // <url id="cu9mqi3of8jgdv7nc1t0" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" type="url" wc="2293">https://github.com/tobiaslocker/base64</url>
 
 int main() {
-    httplib::Client client(&quot;localhost:8080&quot;);
-    const std::string imagePath = &quot;./demo.jpg&quot;;
-    const std::string outputImagePath = &quot;./out.jpg&quot;;
+    httplib::Client client("localhost:8080");
+    const std::string imagePath = "./demo.jpg";
+    const std::string outputImagePath = "./out.jpg";
 
     httplib::Headers headers = {
-        {&quot;Content-Type&quot;, &quot;application/json&quot;}
+        {"Content-Type", "application/json"}
     };
 
     // Base64 encode the local image
@@ -913,51 +899,49 @@ int main() {
 
     std::vector&lt;char&gt; buffer(size);
     if (!file.read(buffer.data(), size)) {
-        std::cerr &lt;&lt; &quot;Error reading file.&quot; &lt;&lt; std::endl;
+        std::cerr &lt;&lt; "Error reading file." &lt;&lt; std::endl;
         return 1;
     }
     std::string bufferStr(reinterpret_cast&lt;const char*&gt;(buffer.data()), buffer.size());
     std::string encodedImage = base64::to_base64(bufferStr);
 
     nlohmann::json jsonObj;
-    jsonObj[&quot;image&quot;] = encodedImage;
+    jsonObj["image"] = encodedImage;
     std::string body = jsonObj.dump();
 
     // Call the API
-    auto response = client.Post(&quot;/object-detection&quot;, headers, body, &quot;application/json&quot;);
+    auto response = client.Post("/object-detection", headers, body, "application/json");
     // Process the API response
     if (response &amp;&amp; response-&gt;status == 200) {
         nlohmann::json jsonResponse = nlohmann::json::parse(response-&gt;body);
-        auto result = jsonResponse[&quot;result&quot;];
+        auto result = jsonResponse["result"];
 
-        encodedImage = result[&quot;image&quot;];
+        encodedImage = result["image"];
         std::string decodedString = base64::from_base64(encodedImage);
         std::vector&lt;unsigned char&gt; decodedImage(decodedString.begin(), decodedString.end());
         std::ofstream outputImage(outPutImagePath, std::ios::binary | std::ios::out);
         if (outputImage.is_open()) {
             outputImage.write(reinterpret_cast&lt;char*&gt;(decodedImage.data()), decodedImage.size());
             outputImage.close();
-            std::cout &lt;&lt; &quot;Output image saved at &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
+            std::cout &lt;&lt; "Output image saved at " &lt;&lt; outPutImagePath &lt;&lt; std::endl;
         } else {
-            std::cerr &lt;&lt; &quot;Unable to open file for writing: &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
+            std::cerr &lt;&lt; "Unable to open file for writing: " &lt;&lt; outPutImagePath &lt;&lt; std::endl;
         }
 
-        auto detectedObjects = result[&quot;detectedObjects&quot;];
-        std::cout &lt;&lt; &quot;\nDetected objects:&quot; &lt;&lt; std::endl;
+        auto detectedObjects = result["detectedObjects"];
+        std::cout &lt;&lt; "\nDetected objects:" &lt;&lt; std::endl;
         for (const auto&amp; obj : detectedObjects) {
             std::cout &lt;&lt; obj &lt;&lt; std::endl;
         }
     } else {
-        std::cout &lt;&lt; &quot;Failed to send HTTP request.&quot; &lt;&lt; std::endl;
+        std::cout &lt;&lt; "Failed to send HTTP request." &lt;&lt; std::endl;
         return 1;
     }
 
     return 0;
 }
 </code></pre></details>
-
 <details><summary>Java</summary>
-
 <pre><code class="language-java">import okhttp3.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -970,9 +954,9 @@ import java.util.Base64;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String API_URL = &quot;http://localhost:8080/object-detection&quot;; // Service URL
-        String imagePath = &quot;./demo.jpg&quot;; // Local image
-        String outputImagePath = &quot;./out.jpg&quot;; // Output image
+        String API_URL = "http://localhost:8080/object-detection"; // Service URL
+        String imagePath = "./demo.jpg"; // Local image
+        String outputImagePath = "./out.jpg"; // Output image
 
         // Encode the local image in Base64
         File file = new File(imagePath);
@@ -981,11 +965,11 @@ public class Main {
 
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode params = objectMapper.createObjectNode();
-        params.put(&quot;image&quot;, imageData); // Base64 encoded file content or image URL
+        params.put("image", imageData); // Base64 encoded file content or image URL
 
         // Create an OkHttpClient instance
         OkHttpClient client = new OkHttpClient();
-        MediaType JSON = MediaType.Companion.get(&quot;application/json; charset=utf-8&quot;);
+        MediaType JSON = MediaType.Companion.get("application/json; charset=utf-8");
         RequestBody body = RequestBody.Companion.create(params.toString(), JSON);
         Request request = new Request.Builder()
                 .url(API_URL)
@@ -997,68 +981,66 @@ public class Main {
             if (response.isSuccessful()) {
                 String responseBody = response.body().string();
                 JsonNode resultNode = objectMapper.readTree(responseBody);
-                JsonNode result = resultNode.get(&quot;result&quot;);
-                String base64Image = result.get(&quot;image&quot;).asText();
-                JsonNode detectedObjects = result.get(&quot;detectedObjects&quot;);
+                JsonNode result = resultNode.get("result");
+                String base64Image = result.get("image").asText();
+                JsonNode detectedObjects = result.get("detectedObjects");
 
                 byte[] imageBytes = Base64.getDecoder().decode(base64Image);
                 try (FileOutputStream fos = new FileOutputStream(outputImagePath)) {
                     fos.write(imageBytes);
                 }
-                System.out.println(&quot;Output image saved at &quot; + outputImagePath);
-                System.out.println(&quot;\nDetected objects: &quot; + detectedObjects.toString());
+                System.out.println("Output image saved at " + outputImagePath);
+                System.out.println("\nDetected objects: " + detectedObjects.toString());
             } else {
-                System.err.println(&quot;Request failed with code: &quot; + response.code());
+                System.err.println("Request failed with code: " + response.code());
             }
         }
     }
 }
 </code></pre></details>
-
 <details><summary>Go</summary>
-
 <pre><code class="language-go">package main
 
 import (
-    &quot;bytes&quot;
-    &quot;encoding/base64&quot;
-    &quot;encoding/json&quot;
-    &quot;fmt&quot;
-    &quot;io/ioutil&quot;
-    &quot;net/http&quot;
+    "bytes"
+    "encoding/base64"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
 )
 
 func main() {
-    API_URL := &quot;http://localhost:8080/object-detection&quot;
-    imagePath := &quot;./demo.jpg&quot;
-    outputImagePath := &quot;./out.jpg&quot;
+    API_URL := "http://localhost:8080/object-detection"
+    imagePath := "./demo.jpg"
+    outputImagePath := "./out.jpg"
 
     // Encode the local image to Base64
     imageBytes, err := ioutil.ReadFile(imagePath)
     if err != nil {
-        fmt.Println(&quot;Error reading image file:&quot;, err)
+        fmt.Println("Error reading image file:", err)
         return
     }
     imageData := base64.StdEncoding.EncodeToString(imageBytes)
 
-    payload := map[string]string{&quot;image&quot;: imageData} // Base64-encoded file content or image URL
+    payload := map[string]string{"image": imageData} // Base64-encoded file content or image URL
     payloadBytes, err := json.Marshal(payload)
     if err != nil {
-        fmt.Println(&quot;Error marshaling payload:&quot;, err)
+        fmt.Println("Error marshaling payload:", err)
         return
     }
 
     // Call the API
     client := &amp;http.Client{}
-    req, err := http.NewRequest(&quot;POST&quot;, API_URL, bytes.NewBuffer(payloadBytes))
+    req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
     if err != nil {
-        fmt.Println(&quot;Error creating request:&quot;, err)
+        fmt.Println("Error creating request:", err)
         return
     }
 
     res, err := client.Do(req)
     if err != nil {
-        fmt.Println(&quot;Error sending request:&quot;, err)
+        fmt.Println("Error sending request:", err)
         return
     }
     defer res.Body.Close()
@@ -1066,42 +1048,40 @@ func main() {
     // Process the API response data
     body, err := ioutil.ReadAll(res.Body)
     if err != nil {
-        fmt.Println(&quot;Error reading response body:&quot;, err)
+        fmt.Println("Error reading response body:", err)
         return
     }
     type Response struct {
         Result struct {
-            Image      string   `json:&quot;image&quot;`
-            DetectedObjects []map[string]interface{} `json:&quot;detectedObjects&quot;`
-        } `json:&quot;result&quot;`
+            Image      string   `json:"image"`
+            DetectedObjects []map[string]interface{} `json:"detectedObjects"`
+        } `json:"result"`
     }
     var respData Response
     err = json.Unmarshal([]byte(string(body)), &amp;respData)
     if err != nil {
-        fmt.Println(&quot;Error unmarshaling response body:&quot;, err)
+        fmt.Println("Error unmarshaling response body:", err)
         return
     }
 
     outputImageData, err := base64.StdEncoding.DecodeString(respData.Result.Image)
     if err != nil {
-        fmt.Println(&quot;Error decoding base64 image data:&quot;, err)
+        fmt.Println("Error decoding base64 image data:", err)
         return
     }
     err = ioutil.WriteFile(outputImagePath, outputImageData, 0644)
     if err != nil {
-        fmt.Println(&quot;Error writing image to file:&quot;, err)
+        fmt.Println("Error writing image to file:", err)
         return
     }
-    fmt.Printf(&quot;Image saved at %s.jpg\n&quot;, outputImagePath)
-    fmt.Println(&quot;\nDetected objects:&quot;)
+    fmt.Printf("Image saved at %s.jpg\n", outputImagePath)
+    fmt.Println("\nDetected objects:")
     for _, obj := range respData.Result.DetectedObjects {
         fmt.Println(obj)
     }
 }
 </code></pre></details>
-
 <details><summary>C#</summary>
-
 <pre><code class="language-csharp">using System;
 using System.IO;
 using System.Net.Http;
@@ -1112,9 +1092,9 @@ using Newtonsoft.Json.Linq;
 
 class Program
 {
-    static readonly string API_URL = &quot;http://localhost:8080/object-detection&quot;;
-    static readonly string imagePath = &quot;./demo.jpg&quot;;
-    static readonly string outputImagePath = &quot;./out.jpg&quot;;
+    static readonly string API_URL = "http://localhost:8080/object-detection";
+    static readonly string imagePath = "./demo.jpg";
+    static readonly string outputImagePath = "./out.jpg";
 
     static async Task Main(string[] args)
     {
@@ -1124,8 +1104,8 @@ class Program
         byte[] imageBytes = File.ReadAllBytes(imagePath);
         string image_data = Convert.ToBase64String(imageBytes);
 
-        var payload = new JObject{ { &quot;image&quot;, image_data } }; // Base64 encoded file content or image URL
-        var content = new StringContent(payload.ToString(), Encoding.UTF8, &quot;application/json&quot;);
+        var payload = new JObject{ { "image", image_data } }; // Base64 encoded file content or image URL
+        var content = new StringContent(payload.ToString(), Encoding.UTF8, "application/json");
 
         // Call the API
         HttpResponseMessage response = await httpClient.PostAsync(API_URL, content);
@@ -1135,25 +1115,23 @@ class Program
         string responseBody = await response.Content.ReadAsStringAsync();
         JObject jsonResponse = JObject.Parse(responseBody);
 
-        string base64Image = jsonResponse[&quot;result&quot;][&quot;image&quot;].ToString();
+        string base64Image = jsonResponse["result"]["image"].ToString();
         byte[] outputImageBytes = Convert.FromBase64String(base64Image);
 
         File.WriteAllBytes(outputImagePath, outputImageBytes);
-        Console.WriteLine($&quot;Output image saved at {outputImagePath}&quot;);
-        Console.WriteLine(&quot;\nDetected objects:&quot;);
-        Console.WriteLine(jsonResponse[&quot;result&quot;][&quot;detectedObjects&quot;].ToString());
+        Console.WriteLine($"Output image saved at {outputImagePath}");
+        Console.WriteLine("\nDetected objects:");
+        Console.WriteLine(jsonResponse["result"]["detectedObjects"].ToString());
     }
 }
 </code></pre></details>
-
 <details><summary>Node.js</summary>
-
 <pre><code class="language-js">const axios = require('axios');
 const fs = require('fs');
 
 const API_URL = 'http://localhost:8080/object-detection';
 const imagePath = './demo.jpg';
-const outputImagePath = &quot;./out.jpg&quot;;
+const outputImagePath = "./out.jpg";
 
 let config = {
    method: 'POST',
@@ -1174,31 +1152,29 @@ function encodeImageToBase64(filePath) {
 axios.request(config)
 .then((response) =&gt; {
     // Process the data returned by the API
-    const result = response.data[&quot;result&quot;];
-    const imageBuffer = Buffer.from(result[&quot;image&quot;], 'base64');
+    const result = response.data["result"];
+    const imageBuffer = Buffer.from(result["image"], 'base64');
     fs.writeFile(outputImagePath, imageBuffer, (err) =&gt; {
       if (err) throw err;
       console.log(`Output image saved at ${outputImagePath}`);
     });
-    console.log(&quot;\nDetected objects:&quot;);
-    console.log(result[&quot;detectedObjects&quot;]);
+    console.log("\nDetected objects:");
+    console.log(result["detectedObjects"]);
 })
 .catch((error) =&gt; {
   console.log(error);
 });
 </code></pre></details>
-
 <details><summary>PHP</summary>
-
 <pre><code class="language-php">&lt;?php
 
-$API_URL = &quot;http://localhost:8080/object-detection&quot;; // Service URL
-$image_path = &quot;./demo.jpg&quot;;
-$output_image_path = &quot;./out.jpg&quot;;
+$API_URL = "http://localhost:8080/object-detection"; // Service URL
+$image_path = "./demo.jpg";
+$output_image_path = "./out.jpg";
 
 // Encode the local image in Base64
 $image_data = base64_encode(file_get_contents($image_path));
-$payload = array(&quot;image&quot; =&gt; $image_data); // Base64 encoded file content or image URL
+$payload = array("image" =&gt; $image_data); // Base64 encoded file content or image URL
 
 // Call the API
 $ch = curl_init($API_URL);
@@ -1210,11 +1186,11 @@ $response = curl_exec($ch);
 curl_close($ch);
 
 // Process the returned data
-$result = json_decode($response, true)[&quot;result&quot;];
-file_put_contents($output_image_path, base64_decode($result[&quot;image&quot;]));
-echo &quot;Output image saved at &quot; . $output_image_path . &quot;\n&quot;;
-echo &quot;\nDetected objects:\n&quot;;
-print_r($result[&quot;detectedObjects&quot;]);
+$result = json_decode($response, true)["result"];
+file_put_contents($output_image_path, base64_decode($result["image"]));
+echo "Output image saved at " . $output_image_path . "\n";
+echo "\nDetected objects:\n";
+print_r($result["detectedObjects"]);
 
 ?&gt;
 </code></pre></details>

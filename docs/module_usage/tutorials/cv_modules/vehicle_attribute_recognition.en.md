@@ -15,8 +15,8 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mA (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
@@ -25,8 +25,8 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 <tr>
 <td>PP-LCNet_x1_0_vehicle_attribute</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_vehicle_attribute_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_vehicle_attribute_pretrained.pdparams">Trained Model</a></td>
 <td>91.7</td>
-<td>3.84845</td>
-<td>9.23735</td>
+<td>2.32 / 2.32</td>
+<td>3.22 / 1.26</td>
 <td>6.7 M</td>
 <td>PP-LCNet_x1_0_vehicle_attribute is a lightweight vehicle attribute recognition model based on PP-LCNet.</td>
 </tr>
@@ -37,7 +37,7 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 
 ## <span id="lable">III. Quick Integration</span>
 
-> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation.en.md)
+&gt; ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 After installing the wheel package, a few lines of code can complete the inference of the vehicle attribute recognition module. You can easily switch models under this module, and you can also integrate the model inference of the vehicle attribute recognition module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_attribute_007.jpg) to your local machine.
 
@@ -80,47 +80,46 @@ python main.py -c paddlex/configs/modules/vehicle_attribute_recognition/PP-LCNet
 After executing the above command, PaddleX will validate the dataset and summarize its basic information. If the command runs successfully, it will print `Check dataset passed !` in the log. The validation results file is saved in `./output/check_dataset_result.json`, and related outputs are saved in the `./output/check_dataset` directory in the current directory, including visual examples of sample images and sample distribution histograms.
 
 <details><summary>👉 <b>Details of Validation Results (Click to Expand)</b></summary>
-
 <p>The specific content of the validation result file is:</p>
 <pre><code class="language-bash">{
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;label_file&quot;: &quot;../../dataset/vehicle_attribute_examples/label.txt&quot;,
-    &quot;num_classes&quot;: 19,
-    &quot;train_samples&quot;: 1200,
-    &quot;train_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/0018_c017_00033140_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0010_c019_00034275_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0015_c019_00068660_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0016_c017_00049590_1.jpg&quot;,
-      &quot;check_dataset/demo_img/0018_c016_00052280_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0023_c001_00006995_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0022_c004_00065910_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0007_c019_00048655_1.jpg&quot;,
-      &quot;check_dataset/demo_img/0022_c007_00072970_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0022_c008_00065785_0.jpg&quot;
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "label_file": "../../dataset/vehicle_attribute_examples/label.txt",
+    "num_classes": 19,
+    "train_samples": 1200,
+    "train_sample_paths": [
+      "check_dataset/demo_img/0018_c017_00033140_0.jpg",
+      "check_dataset/demo_img/0010_c019_00034275_0.jpg",
+      "check_dataset/demo_img/0015_c019_00068660_0.jpg",
+      "check_dataset/demo_img/0016_c017_00049590_1.jpg",
+      "check_dataset/demo_img/0018_c016_00052280_0.jpg",
+      "check_dataset/demo_img/0023_c001_00006995_0.jpg",
+      "check_dataset/demo_img/0022_c004_00065910_0.jpg",
+      "check_dataset/demo_img/0007_c019_00048655_1.jpg",
+      "check_dataset/demo_img/0022_c007_00072970_0.jpg",
+      "check_dataset/demo_img/0022_c008_00065785_0.jpg"
     ],
-    &quot;val_samples&quot;: 300,
-    &quot;val_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/0025_c003_00054095_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0023_c013_00006350_1.jpg&quot;,
-      &quot;check_dataset/demo_img/0024_c003_00046320_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0025_c005_00054795_2.jpg&quot;,
-      &quot;check_dataset/demo_img/0024_c012_00041770_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0024_c007_00060845_1.jpg&quot;,
-      &quot;check_dataset/demo_img/0023_c017_00013150_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0024_c014_00040410_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0025_c002_00050685_1.jpg&quot;,
-      &quot;check_dataset/demo_img/0025_c005_00032645_0.jpg&quot;
+    "val_samples": 300,
+    "val_sample_paths": [
+      "check_dataset/demo_img/0025_c003_00054095_0.jpg",
+      "check_dataset/demo_img/0023_c013_00006350_1.jpg",
+      "check_dataset/demo_img/0024_c003_00046320_0.jpg",
+      "check_dataset/demo_img/0025_c005_00054795_2.jpg",
+      "check_dataset/demo_img/0024_c012_00041770_0.jpg",
+      "check_dataset/demo_img/0024_c007_00060845_1.jpg",
+      "check_dataset/demo_img/0023_c017_00013150_0.jpg",
+      "check_dataset/demo_img/0024_c014_00040410_0.jpg",
+      "check_dataset/demo_img/0025_c002_00050685_1.jpg",
+      "check_dataset/demo_img/0025_c005_00032645_0.jpg"
     ]
   },
-  &quot;analysis&quot;: {
-    &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
+  "analysis": {
+    "histogram": "check_dataset/histogram.png"
   },
-  &quot;dataset_path&quot;: &quot;./dataset/vehicle_attribute_examples&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;MLClsDataset&quot;
+  "dataset_path": "./dataset/vehicle_attribute_examples",
+  "show_type": "image",
+  "dataset_type": "MLClsDataset"
 }
 </code></pre>
 <p>In the above validation results, <code>check_pass</code> being True indicates that the dataset format meets the requirements. Explanations for other indicators are as follows:</p>
@@ -132,14 +131,13 @@ After executing the above command, PaddleX will validate the dataset and summari
 <li><code>attributes.val_sample_paths</code>: The list of relative paths to the visualization images of samples in the validation set of this dataset;</li>
 </ul>
 <p>Additionally, the dataset verification also analyzes the distribution of the length and width of all images in the dataset and plots a histogram (histogram.png):
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/vehicle_attri/01.png"></p></details>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/vehicle_attri/01.png"/></p></details>
 
 
 #### 4.1.3 Dataset Format Conversion / Dataset Splitting (Optional)
 After completing dataset verification, you can convert the dataset format or re-split the training/validation ratio by <b>modifying the configuration file</b> or <b>appending hyperparameters</b>.
 
 <details><summary>👉 <b>Details on Format Conversion / Dataset Splitting (Click to Expand)</b></summary>
-
 <p><b>(1) Dataset Format Conversion</b></p>
 <p>Vehicle attribute recognition does not support dataset format conversion.</p>
 <p><b>(2) Dataset Splitting</b></p>
@@ -191,7 +189,6 @@ The steps required are:
 Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration Parameters](../../instructions/config_parameters_common.en.md).
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <ul>
 <li>During model training, PaddleX automatically saves the model weight files, with the default being <code>output</code>. If you need to specify a save path, you can set it through the <code>-o Global.output</code> field in the configuration file.</li>
 <li>PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.</li>
@@ -223,7 +220,6 @@ Other related parameters can be set by modifying the `Global` and `Evaluate` fie
 
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <p>When evaluating the model, you need to specify the model weights file path. Each configuration file has a default weight save path built-in. If you need to change it, simply set it by appending a command line parameter, such as <code>-o Evaluate.weight_path=./output/best_model/best_model.pdparams</code>.</p>
 <p>After completing the model evaluation, an <code>evaluate_result.json</code> file will be produced, which records the evaluation results, specifically, whether the evaluation task was completed successfully and the model's evaluation metrics, including MultiLabelMAP;</p></details>
 

@@ -1313,7 +1313,7 @@ You only need to specify three parameters:
 
 !!! example "Video-related Pipelines CLI"
 
-    === Video Classification"
+    === "Video Classification"
 
         ```bash
         paddlex --pipeline video_classification \

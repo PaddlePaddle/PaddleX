@@ -35,7 +35,7 @@ The text line orientation classification module primarily distinguishes the orie
 
 ## III. Quick Integration
 
-> ❗ Before quick integration, please install the PaddleX wheel package first. For details, please refer to the [PaddleX Local Installation Guide](../../../installation/installation.md)
+> ❗ Before quick integration, please install the PaddleX wheel package first. For details, please refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 After completing the installation of the wheel package, you can perform inference for the text line orientation classification module with just a few lines of code. You can switch models under this module at will, and you can also integrate the model inference of the text line orientation classification module into your project. Before running the following code, please download the [example image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/textline_rot180_demo.jpg) to your local machine. If the download link is not working, please check the validity of the URL and try again.
 

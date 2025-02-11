@@ -15,8 +15,8 @@ Face detection is a fundamental task in object detection, aiming to automaticall
 <tr>
 <th style="text-align: center;">Model</th><th>Model Download Link</th>
 <th style="text-align: center;">AP (%)<br/>Easy/Medium/Hard</th>
-<th style="text-align: center;">GPU Inference Time (ms)</th>
-<th style="text-align: center;">CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th style="text-align: center;">Model Size (M)</th>
 <th style="text-align: center;">Description</th>
 </tr>
@@ -25,43 +25,43 @@ Face detection is a fundamental task in object detection, aiming to automaticall
 <tr>
 <td style="text-align: center;">BlazeFace</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace_pretrained.pdparams">Trained Model</a></td>
 <td style="text-align: center;">77.7/73.4/49.5</td>
-<td style="text-align: center;">49.9</td>
-<td style="text-align: center;">68.2</td>
+<td style="text-align: center;">60.34 / 54.76</td>
+<td style="text-align: center;">84.18 / 84.18</td>
 <td style="text-align: center;">0.447</td>
 <td style="text-align: center;">A lightweight and efficient face detection model</td>
 </tr>
 <tr>
 <td style="text-align: center;">BlazeFace-FPN-SSH</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace-FPN-SSH_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace-FPN-SSH_pretrained.pdparams">Trained Model</a></td>
 <td style="text-align: center;">83.2/80.5/60.5</td>
-<td style="text-align: center;">52.4</td>
-<td style="text-align: center;">73.2</td>
+<td style="text-align: center;">69.29 / 63.42</td>
+<td style="text-align: center;">86.96 / 86.96</td>
 <td style="text-align: center;">0.606</td>
 <td style="text-align: center;">An improved model of BlazeFace, incorporating FPN and SSH structures</td>
 </tr>
 <tr>
 <td style="text-align: center;">PicoDet_LCNet_x2_5_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_LCNet_x2_5_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_LCNet_x2_5_face_pretrained.pdparams">Trained Model</a></td>
 <td style="text-align: center;">93.7/90.7/68.1</td>
-<td style="text-align: center;">33.7</td>
-<td style="text-align: center;">185.1</td>
+<td style="text-align: center;">35.37 / 12.88</td>
+<td style="text-align: center;">126.24 / 126.24</td>
 <td style="text-align: center;">28.9</td>
 <td style="text-align: center;">Face Detection model based on PicoDet_LCNet_x2_5</td>
 </tr>
 <tr>
 <td style="text-align: center;">PP-YOLOE_plus-S_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-S_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_face_pretrained.pdparams">Trained Model</a></td>
 <td style="text-align: center;">93.9/91.8/79.8</td>
-<td style="text-align: center;">25.8</td>
-<td style="text-align: center;">159.9</td>
+<td style="text-align: center;">22.54 / 8.33</td>
+<td style="text-align: center;">138.67 / 138.67</td>
 <td style="text-align: center;">26.5</td>
 <td style="text-align: center;">Face Detection model based on PP-YOLOE_plus-S</td>
 </tr>
 </tbody>
 </table>
 <b>Note: The above accuracy metrics are evaluated on the WIDER-FACE validation set with an input size of 640*640. GPU inference time is based on an NVIDIA V100 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 6271C CPU @ 2.60GHz and FP32 precision.</b>
-</details>
+
 
 ## III. Quick Integration  <a id="quick"> </a>
 
-> ❗ Before quick integration, please install the PaddleX wheel package first. For details, please refer to the [PaddleX Local Installation Guide](../../../installation/installation.md)
+&gt; ❗ Before quick integration, please install the PaddleX wheel package first. For details, please refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 After completing the installation of the wheel package, you can perform inference for the face detection module with just a few lines of code. You can switch models under this module at will, and you can also integrate the model inference of the face detection module into your project. Before running the following code, please download the [example image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/face_detection.png) to your local machine.
 
@@ -97,8 +97,8 @@ The meanings of the parameters are as follows:
 
 The visualization image is as follows:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/face_det/face_detection_res.png">
-</details>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/face_det/face_detection_res.png"/>
+
 
 The explanations for the methods, parameters, etc., are as follows:
 
@@ -133,8 +133,8 @@ The explanations for the methods, parameters, etc., are as follows:
 <td><code>int/list</code></td>
 <td>
 <ul>
-  <li><b>int</b>, e.g., 640, indicating that the input image will be resized to 640x640</li>
-  <li><b>List</b>, e.g., [640, 512], indicating that the input image will be resized to a width of 640 and a height of 512</li>
+<li><b>int</b>, e.g., 640, indicating that the input image will be resized to 640x640</li>
+<li><b>List</b>, e.g., [640, 512], indicating that the input image will be resized to a width of 640 and a height of 512</li>
 </ul>
 </td>
 <td>None</td>
@@ -168,12 +168,12 @@ The explanations for the methods, parameters, etc., are as follows:
 <td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
 <td>
 <ul>
-  <li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
-  <li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
-  <li><b>URL link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">Example</a></li>
-  <li><b>Local directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
-  <li><b>Dictionary</b>, the <code>key</code> of the dictionary must correspond to the specific task, such as <code>"img"</code> for image classification tasks. The <code>value</code> of the dictionary supports the above types of data, for example: <code>{"img": "/root/data1"}</code></li>
-  <li><b>List</b>, elements of the list must be of the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code></li>
+<li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
+<li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
+<li><b>URL link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">Example</a></li>
+<li><b>Local directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
+<li><b>Dictionary</b>, the <code>key</code> of the dictionary must correspond to the specific task, such as <code>"img"</code> for image classification tasks. The <code>value</code> of the dictionary supports the above types of data, for example: <code>{"img": "/root/data1"}</code></li>
+<li><b>List</b>, elements of the list must be of the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code></li>
 </ul>
 </td>
 <td>None</td>
@@ -305,32 +305,31 @@ python main.py -c paddlex/configs/modules/face_detection/PicoDet_LCNet_x2_5_face
 After executing the above command, PaddleX will validate the dataset and collect its basic information. Upon successful execution, the log will print the message `Check dataset passed !`. The validation result file will be saved in `./output/check_dataset_result.json`, and related outputs will be saved in the `./output/check_dataset` directory of the current directory. The output directory includes visualized example images and histograms of sample distributions.
 
 <details><summary>👉 <b>Validation Result Details (Click to Expand)</b></summary>
-
 <p>The specific content of the validation result file is:</p>
 <pre><code class="language-bash">{
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;num_classes&quot;: 1,
-    &quot;train_samples&quot;: 500,
-    &quot;train_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/0--Parade/0_Parade_marchingband_1_849.jpg&quot;,
-      &quot;check_dataset/demo_img/0--Parade/0_Parade_Parade_0_904.jpg&quot;,
-      &quot;check_dataset/demo_img/0--Parade/0_Parade_marchingband_1_799.jpg&quot;
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "num_classes": 1,
+    "train_samples": 500,
+    "train_sample_paths": [
+      "check_dataset/demo_img/0--Parade/0_Parade_marchingband_1_849.jpg",
+      "check_dataset/demo_img/0--Parade/0_Parade_Parade_0_904.jpg",
+      "check_dataset/demo_img/0--Parade/0_Parade_marchingband_1_799.jpg"
     ],
-    &quot;val_samples&quot;: 100,
-    &quot;val_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/1--Handshaking/1_Handshaking_Handshaking_1_384.jpg&quot;,
-      &quot;check_dataset/demo_img/1--Handshaking/1_Handshaking_Handshaking_1_538.jpg&quot;,
-      &quot;check_dataset/demo_img/1--Handshaking/1_Handshaking_Handshaking_1_429.jpg&quot;
+    "val_samples": 100,
+    "val_sample_paths": [
+      "check_dataset/demo_img/1--Handshaking/1_Handshaking_Handshaking_1_384.jpg",
+      "check_dataset/demo_img/1--Handshaking/1_Handshaking_Handshaking_1_538.jpg",
+      "check_dataset/demo_img/1--Handshaking/1_Handshaking_Handshaking_1_429.jpg"
     ]
   },
-  &quot;analysis&quot;: {
-    &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
+  "analysis": {
+    "histogram": "check_dataset/histogram.png"
   },
-  &quot;dataset_path&quot;: &quot;./dataset/example_data/widerface_coco_examples&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;COCODetDataset&quot;
+  "dataset_path": "./dataset/example_data/widerface_coco_examples",
+  "show_type": "image",
+  "dataset_type": "COCODetDataset"
 }
 </code></pre>
 <p>The verification results mentioned above indicate that <code>check_pass</code> being <code>True</code> means the dataset format meets the requirements. Details of other indicators are as follows:</p>
@@ -342,14 +341,13 @@ After executing the above command, PaddleX will validate the dataset and collect
 <li><code>attributes.val_sample_paths</code>: The list of relative paths to the visualization images of validation samples in this dataset;</li>
 </ul>
 <p>The dataset verification also analyzes the distribution of sample numbers across all classes and generates a histogram (histogram.png):</p>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/face_det/01.png"></p></details>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/face_det/01.png"/></p></details>
 
 #### 4.1.3 Dataset Format Conversion/Dataset Splitting (Optional)
 
 After completing dataset verification, you can convert the dataset format or re-split the training/validation ratio by <b>modifying the configuration file</b> or <b>appending hyperparameters</b>.
 
 <details><summary>👉 <b>Details on Format Conversion/Dataset Splitting (Click to Expand)</b></summary>
-
 <p><b>(1) Dataset Format Conversion</b></p>
 <p>Face detection does not support data format conversion.</p>
 <p><b>(2) Dataset Splitting</b></p>
@@ -403,7 +401,6 @@ The steps required are:
 Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration Parameters for Model Tasks](../../instructions/config_parameters_common.en.md).
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <ul>
 <li>During model training, PaddleX automatically saves model weight files, defaulting to <code>output</code>. To specify a save path, use the <code>-o Global.output</code> field in the configuration file.</li>
 <li>PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.</li>
@@ -434,7 +431,6 @@ Similar to model training, the process involves the following steps:
 Other related parameters can be configured by modifying the fields under `Global` and `Evaluate` in the `.yaml` configuration file. For detailed information, please refer to [PaddleX Common Configuration Parameters for Models](../../instructions/config_parameters_common.en.md)。
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <p>When evaluating the model, you need to specify the model weights file path. Each configuration file has a default weight save path built-in. If you need to change it, simply set it by appending a command line parameter, such as <code>-o Evaluate.weight_path=./output/best_model/best_model/model.pdparams</code>.</p>
 <p>After completing the model evaluation, an <code>evaluate_result.json</code> file will be generated, which records the evaluation results, specifically whether the evaluation task was completed successfully, and the model's evaluation metrics, including AP.</p></details>
 
