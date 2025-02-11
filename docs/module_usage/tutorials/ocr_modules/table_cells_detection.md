@@ -21,7 +21,7 @@ comments: true
 <tr>
 <td>RT-DETR-L_wired_table_cell_det</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_wired_table_cell_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wired_table_cell_det_pretrained.pdparams">训练模型</a></td>
-<td rowspan="2">--</td>
+<td rowspan="2">82.7</td>
 <td rowspan="2">--</td>
 <td rowspan="2">--</td>
 <td rowspan="2">124M</td>
@@ -34,7 +34,7 @@ comments: true
 </tr>
 </table>
 
-<p><b>注：以上精度指标测量自 PaddleX 内部自建表格单元格检测数据集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p></details>
+<p><b>注：以上精度指标测量自 PaddleX 内部自建评测集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。考虑到表格单元格检测模块需要被结合在表格识别产线v2中使用，因此基于表格识别产线v2计算其 mAP 精度。</b></p>
 
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
@@ -44,7 +44,7 @@ comments: true
 ```python
 from paddlex import create_model
 model = create_model(model_name="RT-DETR-L_wired_table_cell_det")
-output = model.predict("table_recognition.jpg", batch_size=1)
+output = model.predict("table_recognition.jpg", threshold=0.3, batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -54,11 +54,12 @@ for res in output:
 <details><summary>👉 <b>运行后，得到的结果为：（点击展开）</b></summary>
 
 ```json
-{'res': {'input_path': 'table_recognition.jpg', 'boxes': [{'cls_id': 0, 'label': 'cell', 'score': 0.9319108128547668, 'coordinate': [109.835846, 95.89979, 212.7077, 127.055466]}, {'cls_id': 0, 'label': 'cell', 'score': 0.9308021664619446, 'coordinate': [109.75361, 64.866486, 212.84799, 95.822426]}, {'cls_id': 0, 'label': 'cell', 'score': 0.9255117177963257, 'coordinate': [110.00513, 30.894377, 212.81178, 64.80416]}, {'cls_id': 0, 'label': 'cell', 'score': 0.918117344379425, 'coordinate': [212.87247, 30.97587, 403.8024, 64.86235]}, {'cls_id': 0, 'label': 'cell', 'score': 0.9053983688354492, 'coordinate': [212.89151, 95.95629, 403.36572, 127.11717]}, {'cls_id': 0, 'label': 'cell', 'score': 0.8567661046981812, 'coordinate': [212.77899, 64.98128, 403.9478, 95.87939]}, {'cls_id': 0, 'label': 'cell', 'score': 0.7800847887992859, 'coordinate': [404.12827, 64.99693, 547.1579, 95.95234]}, {'cls_id': 0, 'label': 'cell', 'score': 0.7557389736175537, 'coordinate': [2.657493, 30.968334, 109.947815, 64.894485]}, {'cls_id': 0, 'label': 'cell', 'score': 0.6763500571250916, 'coordinate': [2.5346346, 96.218285, 109.79284, 127.097565]}, {'cls_id': 0, 'label': 'cell', 'score': 0.6708637475967407, 'coordinate': [404.02423, 95.9553, 547.27985, 127.17637]}, {'cls_id': 0, 'label': 'cell', 'score': 0.6568276286125183, 'coordinate': [2.2822304, 65.10485, 109.99168, 95.964096]}, {'cls_id': 0, 'label': 'cell', 'score': 0.6159431338310242, 'coordinate': [109.78963, 95.94173, 213.05418, 127.06708]}, {'cls_id': 0, 'label': 'cell', 'score': 0.6098588109016418, 'coordinate': [2.2127364, 65.04467, 110.07493, 95.99106]}, {'cls_id': 0, 'label': 'cell', 'score': 0.6019916534423828, 'coordinate': [403.98883, 96.003845, 547.2072, 127.17022]}, {'cls_id': 0, 'label': 'cell', 'score': 0.5713056921958923, 'coordinate': [404.4564, 30.951345, 547.1254, 65.081154]}, {'cls_id': 0, 'label': 'cell', 'score': 0.5697788000106812, 'coordinate': [212.81021, 96.05031, 403.7318, 127.14639]}]}}
+{"input_path": "table_recognition.jpg", "page_index": null, "boxes": [{"cls_id": 0, "label": "cell", "score": 0.9319108128547668, "coordinate": [109.83584594726562, 95.89978790283203, 212.70770263671875, 127.05546569824219]}, {"cls_id": 0, "label": "cell", "score": 0.9308021664619446, "coordinate": [109.75360870361328, 64.86648559570312, 212.84799194335938, 95.82242584228516]}, {"cls_id": 0, "label": "cell", "score": 0.9255117177963257, "coordinate": [110.005126953125, 30.894376754760742, 212.81178283691406, 64.80416107177734]}, {"cls_id": 0, "label": "cell", "score": 0.918117344379425, "coordinate": [212.87246704101562, 30.97587013244629, 403.8023986816406, 64.86235046386719]}, {"cls_id": 0, "label": "cell", "score": 0.9053983688354492, "coordinate": [212.89151000976562, 95.95629119873047, 403.36572265625, 127.11717224121094]}, {"cls_id": 0, "label": "cell", "score": 0.8567661046981812, "coordinate": [212.77899169921875, 64.98127746582031, 403.94781494140625, 95.87938690185547]}, {"cls_id": 0, "label": "cell", "score": 0.7800847887992859, "coordinate": [404.1282653808594, 64.99693298339844, 547.1578979492188, 95.95233917236328]}, {"cls_id": 0, "label": "cell", "score": 0.7557389736175537, "coordinate": [2.6574931144714355, 30.968334197998047, 109.94781494140625, 64.89448547363281]}, {"cls_id": 0, "label": "cell", "score": 0.6763500571250916, "coordinate": [2.534634590148926, 96.2182846069336, 109.79283905029297, 127.09756469726562]}, {"cls_id": 0, "label": "cell", "score": 0.6708637475967407, "coordinate": [404.02423095703125, 95.9552993774414, 547.2798461914062, 127.1763687133789]}, {"cls_id": 0, "label": "cell", "score": 0.6568276286125183, "coordinate": [2.2822303771972656, 65.10485076904297, 109.9916763305664, 95.96409606933594]}, {"cls_id": 0, "label": "cell", "score": 0.6159431338310242, "coordinate": [109.78962707519531, 95.94172668457031, 213.05418395996094, 127.06707763671875]}, {"cls_id": 0, "label": "cell", "score": 0.6098588109016418, "coordinate": [2.2127363681793213, 65.04467010498047, 110.0749282836914, 95.99105834960938]}, {"cls_id": 0, "label": "cell", "score": 0.6019916534423828, "coordinate": [403.98883056640625, 96.00384521484375, 547.2072143554688, 127.17021942138672]}, {"cls_id": 0, "label": "cell", "score": 0.5713056921958923, "coordinate": [404.4563903808594, 30.951345443725586, 547.1254272460938, 65.0811538696289]}, {"cls_id": 0, "label": "cell", "score": 0.5697788000106812, "coordinate": [212.81021118164062, 96.05030822753906, 403.7318115234375, 127.14639282226562]}, {"cls_id": 0, "label": "cell", "score": 0.4522075355052948, "coordinate": [4.883366584777832, 0.22239652276039124, 543.5488891601562, 31.06178855895996]}, {"cls_id": 0, "label": "cell", "score": 0.4165799021720886, "coordinate": [404.32574462890625, 30.99039649963379, 547.0177001953125, 65.01567840576172]}, {"cls_id": 0, "label": "cell", "score": 0.37421756982803345, "coordinate": [4.255210876464844, 0.18794140219688416, 543.521728515625, 30.862964630126953]}, {"cls_id": 0, "label": "cell", "score": 0.37030676007270813, "coordinate": [5.542935371398926, 0.2003617286682129, 541.3729858398438, 31.145313262939453]}, {"cls_id": 0, "label": "cell", "score": 0.34807300567626953, "coordinate": [2.534700393676758, 96.17605590820312, 109.90091705322266, 127.14675903320312]}, {"cls_id": 0, "label": "cell", "score": 0.3399328589439392, "coordinate": [3.5424537658691406, 0.17436155676841736, 543.90283203125, 31.138904571533203]}]}
 ```
 
 参数含义如下：
 - `input_path`：输入的待预测图像的路径
+- `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `null`
 - `boxes`：预测的目标框信息，一个字典列表。每个字典代表一个检出的目标，包含以下信息：
   - `cls_id`：类别ID，一个整数
   - `label`：类别标签，一个字符串
@@ -70,7 +71,7 @@ for res in output:
 
 可视化图像如下：
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/table_cells_det/table_cells_det_res.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/table_cells_detection/01.jpg">
 
 相关方法、参数等说明如下：
 
@@ -113,7 +114,7 @@ for res in output:
 </tr>
 <tr>
 <td><code>threshold</code></td>
-<td>用于过滤掉低置信度预测结果的阈值；如果不指定，将默认使用PaddleX官方模型配置</td>
+<td>用于过滤掉低置信度预测结果的阈值；如果不指定，将默认使用PaddleX官方模型配置。在表格单元格检测任务中，适当降低阈值可能有助于获得更准确的结果</td>
 <td><code>float/dict</code></td>
 <td>
 <ul>
@@ -142,14 +143,13 @@ for res in output:
 <tr>
 <td><code>input</code></td>
 <td>待预测数据，支持多种输入类型</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
   <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
   <li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
   <li><b>URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">示例</a></li>
   <li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
-  <li><b>字典</b>，字典的<code>key</code>需与具体任务对应，如图像分类任务对应<code>\"img\"</code>，字典的<code>val</code>支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code></li>
   <li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code></li>
 </ul>
 </td>
@@ -254,7 +254,7 @@ for res in output:
 </tr>
 <tr>
 <td rowspan = "1"><code>img</code></td>
-<td rowspan = "1">获取格式为<code>dict</code>的可视化图像</td>
+<td rowspan = "1">获取可视化图像</td>
 </tr>
 
 </table>
@@ -337,7 +337,7 @@ python main.py -c paddlex/configs/modules/table_cells_detection/RT-DETR-L_wired_
 <li><code>attributes.val_sample_paths</code>：该数据集验证集样本可视化图片相对路径列表；</li>
 </ul>
 <p>另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：</p>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/table_cells_det/01.png"></p></details>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/table_cells_detection/02.png"></p></details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
 在您完成数据校验之后，可以通过<b>修改配置文件</b>或是<b>追加超参数</b>的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。

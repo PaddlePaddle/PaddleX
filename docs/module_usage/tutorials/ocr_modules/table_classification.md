@@ -20,14 +20,14 @@ comments: true
 </tr>
 <tr>
 <td>PP-LCNet_x1_0_table_cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/CLIP_vit_base_patch16_224_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_table_cls_pretrained.pdparams">训练模型</a></td>
-<td>--</td>
+<td>94.2</td>
 <td>--</td>
 <td>--</td>
 <td>6.6M</td>
 </tr>
 </table>
 
-<p><b>注：以上精度指标测量自 PaddleX 内部自建表格分类数据集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p></details>
+<p><b>注：以上精度指标测量自 PaddleX 内部自建评测数据集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
 
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)。
@@ -45,14 +45,19 @@ for res in output:
 
 运行后，得到的结果为：
 ```json
-{'res': {'input_path': 'table_recognition.jpg', 'class_ids': array([0, 1], dtype=int32), 'scores': array([0.84421, 0.15579], dtype=float32), 'label_names': ['wired_table', 'wireless_table']}}
+{"res": {"input_path": "table_recognition.jpg", "page_index": null,  "class_ids": array([0, 1], dtype=int32), "scores": array([0.84421, 0.15579], dtype=float32), "label_names": ["wired_table", "wireless_table"]}}
 ```
 
 运行结果参数含义如下：
-- `input_path`：表示输入图片的路径。
-- `class_ids`：表示预测结果的类别id。
-- `scores`：表示预测结果的置信度。
-- `label_names`：表示预测结果的类别名。
+- `input_path`：表示输入图片的路径
+- `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `null`
+- `class_ids`：表示预测结果的类别id
+- `scores`：表示预测结果的置信度
+- `label_names`：表示预测结果的类别名
+
+可视化图像如下：
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/table_classification/01.jpg">
 
 相关方法、参数等说明如下：
 
@@ -100,14 +105,13 @@ for res in output:
 <tr>
 <td><code>input</code></td>
 <td>待预测数据，支持多种输入类型</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
   <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
   <li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
   <li><b>URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">示例</a></li>
   <li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
-  <li><b>字典</b>，字典的<code>key</code>需与具体任务对应，如表格分类任务对应<code>\"img\"</code>，字典的<code>val</code>支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code></li>
   <li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code></li>
 </ul>
 </td>
@@ -190,8 +194,11 @@ for res in output:
 <td rowspan = "1"><code>json</code></td>
 <td rowspan = "1">获取预测的<code>json</code>格式的结果</td>
 </tr>
+<tr>
+<td rowspan = "1"><code>img</code></td>
+<td rowspan = "1">获取可视化图像</td>
+</tr>
 </table>
-
 
 关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 
@@ -272,7 +279,7 @@ python main.py -c paddlex/configs/modules/table_classification/PP-LCNet_x1_0_tab
 <li><code>attributes.val_sample_paths</code>：该数据集验证集样本可视化图片相对路径列表；</li>
 </ul>
 <p>另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：</p>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/table_classification/01.png"></p></details>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/table_classification/02.png"></p></details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
 在您完成数据校验之后，可以通过<b>修改配置文件</b>或是<b>追加超参数</b>的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。
