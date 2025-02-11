@@ -59,7 +59,7 @@ class LayoutParsingPipelineV2(BasePipeline):
 
         self.batch_sampler = ImageBatchSampler(batch_size=1)
 
-        self.img_reader = ReadImage(format="RGB")
+        self.img_reader = ReadImage(format="BGR")
 
     def inintial_predictor(self, config: dict) -> None:
         """Initializes the predictor based on the provided configuration.
