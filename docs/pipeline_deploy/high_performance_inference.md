@@ -8,7 +8,6 @@ comments: true
 
 ## 目录
 
-- [0. 注意事项](#0.-注意事项)
 - [1. 基础使用方法](#1.-基础使用方法)
   - [1.1 安装高性能推理插件](#1.1-安装高性能推理插件)
   - [1.2 启用高性能推理插件](#1.2-启用高性能推理插件)
@@ -17,15 +16,13 @@ comments: true
   - [2.2 二次开发高性能推理插件](#2.2-二次开发高性能推理插件)
 - [3. 支持使用高性能推理插件的产线与模型](#3.-支持使用高性能推理插件的产线与模型)
 
-## 0. 注意事项
-
-若您使用的是 Windows 系统，请参考[PaddleX本地安装教程——2.1基于Docker获取PaddleX](../installation/installation.md#21-基于docker获取paddlex) 使用 docker 启动 PaddleX 容器。启动容器后，您可以继续阅读本指南以使用高性能推理。
-
 ## 1. 基础使用方法
 
 使用高性能推理插件前，请确保您已经按照[PaddleX本地安装教程](../installation/installation.md) 完成了PaddleX的安装，且按照PaddleX产线命令行使用说明或PaddleX产线Python脚本使用说明跑通了产线的快速推理。
 
 ### 1.1 安装高性能推理插件
+
+* 注意：若您使用的是 Windows 系统，请参考[PaddleX本地安装教程——2.1基于Docker获取PaddleX](../installation/installation.md#21-基于docker获取paddlex) 使用 Docker 启动 PaddleX 容器。启动容器后，您可以继续阅读本指南以使用高性能推理。
 
 根据设备类型，执行如下指令，安装高性能推理插件：
 

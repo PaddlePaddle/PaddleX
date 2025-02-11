@@ -25,6 +25,7 @@ from paddlex.inference.models.image_multilabel_classification.result import (
     MLClassResult,
 )
 from paddlex.modules.multilabel_classification.model_list import MODELS
+from paddlex.utils import logging
 
 from paddlex_hpi.models.base import CVPredictor, HPIParams
 
@@ -55,8 +56,8 @@ class MLClasPredictor(CVPredictor):
         self, option: ui.RuntimeOption
     ) -> ui.vision.classification.PyOnlyMultilabelClassificationModel:
         if self._threshold:
-            if isinstance(self._threshold, (dict, list)):
-                raise TypeError("`threshold` must be float or None in PaddleX HPI")
+            if not isinstance(self._threshold, (float, None)):
+                logging.warning("`threshold` must be float or None in PaddleX HPI")
 
             with open(self.config_path, "r") as file:
                 config = yaml.safe_load(file)
@@ -98,7 +99,7 @@ class MLClasPredictor(CVPredictor):
         threshold: Union[float, dict, list, None] = None,
     ) -> Dict[str, List[Any]]:
         if threshold:
-            raise TypeError(
+            logging.warning(
                 "`threshold` is not supported for multilabel classification in PaddleX HPI"
             )
 

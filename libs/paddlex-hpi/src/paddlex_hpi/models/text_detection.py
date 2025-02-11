@@ -20,6 +20,7 @@ import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
 from paddlex.inference.models.text_detection.result import TextDetResult
 from paddlex.modules.text_detection.model_list import CURVE_MODELS, MODELS
+from paddlex.utils import logging
 
 from paddlex_hpi._utils.misc import parse_scale
 from paddlex_hpi.models.base import CVPredictor, HPIParams
@@ -44,11 +45,11 @@ class TextDetPredictor(CVPredictor):
         use_dilation: Union[bool, None] = None,
     ) -> None:
         if limit_type is not None:
-            raise TypeError(
+            logging.warning(
                 "The default value for `limit_type` is max, and cannot be set in PaddleX HPI."
             )
         if max_candidates is not None:
-            raise TypeError(
+            logging.warning(
                 "The default value for `max_candidates` is 1000, and cannot be set in PaddleX HPI."
             )
         super().__init__(
@@ -106,11 +107,11 @@ class TextDetPredictor(CVPredictor):
         use_dilation: Union[bool, None] = None,
     ) -> Dict[str, List[Any]]:
         if limit_type is not None:
-            raise TypeError(
+            logging.warning(
                 "The default value for `limit_type` is max, and cannot be set in PaddleX HPI."
             )
         if max_candidates is not None:
-            raise TypeError(
+            logging.warning(
                 "The default value for `max_candidates` is 1000, and cannot be set in PaddleX HPI."
             )
         self._ui_model.preprocessor.set_normalize(self._mean, self._std, True)

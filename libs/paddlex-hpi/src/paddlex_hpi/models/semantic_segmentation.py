@@ -20,6 +20,7 @@ import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
 from paddlex.inference.models.semantic_segmentation.result import SegResult
 from paddlex.modules.semantic_segmentation.model_list import MODELS
+from paddlex.utils import logging
 
 from paddlex_hpi.models.base import CVPredictor, HPIParams
 
@@ -37,7 +38,7 @@ class SegPredictor(CVPredictor):
         target_size: Union[int, Tuple[int], None] = None,
     ) -> None:
         if target_size:
-            raise TypeError("`target_size` is not supported in PaddleX HPI.")
+            logging.warning("`target_size` is not supported in PaddleX HPI.")
         super().__init__(
             model_dir=model_dir,
             config=config,
@@ -67,7 +68,7 @@ class SegPredictor(CVPredictor):
         self, batch_data: List[Any], target_size: Union[int, Tuple[int], None] = None
     ) -> Dict[str, List[Any]]:
         if target_size:
-            raise TypeError("`target_size` is not supported in PaddleX HPI.")
+            logging.warning("`target_size` is not supported in PaddleX HPI.")
 
         batch_raw_imgs = self._data_reader(imgs=batch_data.instances)
         imgs = [np.ascontiguousarray(img) for img in batch_raw_imgs]
