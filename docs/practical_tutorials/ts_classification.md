@@ -13,7 +13,7 @@ PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组
 PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX 在本地体验，另外一种是可以在 <b>AI Studio 星河社区</b>上体验。
 
 * 本地体验方式：
-```
+```python
 from paddlex import create_model
 model = create_model("TimesNet_cls")
 output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_cls.csv", batch_size=1)
@@ -70,7 +70,7 @@ tar -xf ./dataset/ts_classify_examples.tar -C ./dataset/
 在对数据集校验时，只需一行命令：
 
 ```
-python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_classify_examples
 ```
@@ -116,7 +116,7 @@ python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
 在训练之前，请确保您已经对数据集进行了校验。完成 PaddleX 模型的训练，只需如下一条命令：
 
 ```
-    python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+    python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/ts_classify_examples \
     -o Train.epochs_iters=5 \
@@ -172,7 +172,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，只需一行命令：
 
 ```
-    python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+    python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ts_classify_examples \
     -o Evaluate.weight_path=./output/best_model/model.pdparams
@@ -271,11 +271,12 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 </tr>
 </tbody>
 </table>
+
 ## 6. 产线测试
 将模型目录设置为训练完成的模型进行测试，使用[测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_classification/test.csv)，进行预测：
 
 ```
-python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/inference" \
     -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_classification/test.csv"
@@ -291,10 +292,29 @@ python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
 ## 7. 开发集成/部署
 如果通用时序分类产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
 
-1. 若您需要将通用时序分类产线直接应用在您的 Python 项目中，可以参考 如下示例代码：
+1. 若您需要使用微调后的模型权重，可以获取 ts_classification 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+
 ```
+paddlex --get_pipeline_config ts_classification --save_path ./my_path
+```
+
+将微调后模型权重的本地路径填写至产线配置文件中的 `model_dir` 即可, 若您需要将通用时序分类产线直接应用在您的 Python 项目中，可以参考 如下示例：
+
+```yaml
+pipeline_name: ts_classification
+
+SubModules:
+  TSClassification:
+    module_name: ts_classification
+    model_name: TimesNet_cls
+    model_dir: ./output/inference  # 此处替换为您训练后得到的模型权重本地路径
+    batch_size: 1
+```
+随后，在您的 Python 代码中，您可以这样使用产线：
+
+```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="ts_anomaly_detection")
+pipeline = create_pipeline(pipeline="my_path/ts_classification.yaml")
 output = pipeline.predict("pre_ts.csv")
 for res in output:
     res.print() # 打印预测的结构化输出

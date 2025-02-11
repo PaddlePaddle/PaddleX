@@ -96,7 +96,7 @@ tar -xf ./dataset/remote_scene_object_detection.tar -C ./dataset/
 When validating the dataset, you only need one line of command:
 
 ```bash
-python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
+python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/remote_scene_object_detection
 ```
@@ -138,7 +138,7 @@ After executing the above command, PaddleX will validate the dataset and count t
   "analysis": {
     "histogram": "check_dataset\/histogram.png"
   },
-  "dataset_path": "\/git_commit\/final_commit_dev\/PaddleX\/_zzl_sod\/rdet_dota_examples",
+  "dataset_path": "rdet_dota_examples",
   "show_type": "image",
   "dataset_type": "COCODetDataset"
 }
@@ -183,7 +183,7 @@ Dataset conversion and dataset splitting support being enabled at the same time.
 Before training, please ensure that you have validated the dataset. To complete the training of the PaddleX model, you only need the following command:
 
 ```bash
-python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
+python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/remote_scene_object_detection \
     -o Train.epochs_iters=80
@@ -221,7 +221,7 @@ After completing the model training, all outputs are saved under the specified o
 After completing the model training, you can evaluate the specified model weight file on the validation set to verify the model accuracy. Using PaddleX for model evaluation requires only one command:
 
 ```bash
-python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
+python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/remote_scene_object_detection
 ```
@@ -267,7 +267,7 @@ Experiment results after changing epoch:
 Replace the model in the pipeline with the fine-tuned model for testing, such as:
 
 ```bash
-python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
+python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="output/best_model/inference" \
     -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/remote-scene-det_example.png"
@@ -282,10 +282,32 @@ Through the above, the prediction results can be generated under `./output`, as 
 
 ## 7. Development Integration/Deployment
 If the small object detection pipeline can meet your requirements for pipeline inference speed and accuracy, you can directly proceed with development integration/deployment.
-1. Directly apply the trained model in your Python project. You can refer to the following sample code, and modify `Pipeline.model` in `paddlex/pipelines/small_object_detection.yaml` configuration file to your own model path `output/best_model/inference`:
+
+1. If you need to use the fine-tuned model weights, you can obtain the configuration file for the small_object_detection pipeline and load it for prediction. You can execute the following command to save the results in my_path:
+
+```
+paddlex --get_pipeline_config small_object_detection --save_path ./my_path
+```
+
+Fill in the local path of the fine-tuned model weights into the `model_dir` field in the configuration file. If you need to directly apply the general small_object_detection pipeline to your Python project, you can refer to the following example:
+
+```yaml
+pipeline_name: small_object_detection
+
+SubModules:
+  SmallObjectDetection:
+    module_name: small_object_detection
+    model_name: PP-YOLOE_plus_SOD-L
+    model_dir: null # Replace this with the local path to your trained model weights.
+    batch_size: 1
+    threshold: 0.5
+```
+
+Subsequently, in your Python code, you can utilize the pipeline as follows:
+
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="paddlex/pipelines/small_object_detection.yaml")
+pipeline = create_pipeline(pipeline="my_path/small_object_detection.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/remote-scene-det_example.png")
 for res in output:
     res.print() # Print the structured output of the prediction
