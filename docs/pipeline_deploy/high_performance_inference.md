@@ -325,38 +325,51 @@ python -m pip install ../../python/dist/ultra_infer*.whl
   <tr>
     <td rowspan="2">通用OCR</td>
     <td>文本检测</td>
-    <td><b>2</b> / 2 </td>
+    <td><b>4</b> / 4 </td>
     <td>无 </td>
   </tr>
 
   <tr>
     <td>文本识别</td>
-    <td><b>2</b> / 2 </td>
+    <td><b>4</b> / 4 </td>
     <td>无 </td>
   </tr>
 
   <tr>
     <td rowspan="7">文档场景信息抽取v3</td>
-    <td>表格识别</td>
-    <td><b>2</b> / 2 </td>
-    <td>无 </td>
+    <td>表格结构识别</td>
+    <td><b>2</b> / 4 </td>
+    <td>
+      <details>
+        <summary>查看详情</summary>
+        SLANeXt_wired</br>
+        SLANeXt_wireless</br>
+      </details>
+    </td>
   </tr>
 
   <tr>
     <td>版面区域检测</td>
-    <td><b>8</b> / 8 </td>
-    <td>无 </td>
+    <td><b>8</b> / 11 </td>
+    <td>
+      <details>
+        <summary>查看详情</summary>
+        PP-DocLayout-L</br>
+        PP-DocLayout-M</br>
+        PP-DocLayout-S</br>
+      </details>
+    </td>
   </tr>
 
   <tr>
     <td>文本检测</td>
-    <td><b>2</b> / 2 </td>
+    <td><b>4</b> / 4 </td>
     <td>无 </td>
   </tr>
 
   <tr>
     <td>文本识别</td>
-    <td><b>2</b> / 2 </td>
+    <td><b>4</b> / 4 </td>
     <td>无 </td>
   </tr>
 
@@ -381,38 +394,55 @@ python -m pip install ../../python/dist/ultra_infer*.whl
   <tr>
     <td rowspan="4">通用表格识别</td>
     <td>版面区域检测</td>
-    <td><b>8</b> / 8 </td>
-    <td>无 </td>
+    <td><b>8</b> / 11 </td>
+    <td>
+      <details>
+        <summary>查看详情</summary>
+        PP-DocLayout-L</br>
+        PP-DocLayout-M</br>
+        PP-DocLayout-S</br>
+      </details>
+    </td>
   </tr>
 
   <tr>
-    <td>表格识别</td>
-    <td><b>2</b> / 2 </td>
-    <td>无 </td>
+    <td>表格结构识别</td>
+    <td><b>2</b> / 4 </td>
+    <td>
+      <details>
+        <summary>查看详情</summary>
+        SLANeXt_wired</br>
+        SLANeXt_wireless</br>
+      </details>
+    </td>
   </tr>
 
   <tr>
     <td>文本检测</td>
-    <td><b>2</b> / 2 </td>
+    <td><b>4</b> / 4 </td>
     <td>无 </td>
   </tr>
 
   <tr>
     <td>文本识别</td>
-    <td><b>2</b> / 2 </td>
+    <td><b>4</b> / 4 </td>
     <td>无</td>
   </tr>
 
   <tr>
     <td>通用目标检测</td>
     <td>目标检测</td>
-    <td><b>34</b> / 37</td>
+    <td><b>34</b> / 41</td>
     <td>
       <details>
         <summary>查看详情</summary>
         FasterRCNN-Swin-Tiny-FPN<br>
         CenterNet-DLA-34<br>
-        CenterNet-ResNet50
+        CenterNet-ResNet50<br>
+        Co-DINO-R50<br>
+        Co-DINO-Swin-L<br>
+        Co-Deformable-DETR-R50<br>
+        Co-Deformable-DETR-Swin-T<br>
       </details>
     </td>
   </tr>
@@ -441,7 +471,7 @@ python -m pip install ../../python/dist/ultra_infer*.whl
   <tr>
     <td>通用语义分割</td>
     <td>语义分割</td>
-    <td><b>14</b> / 14 </td>
+    <td><b>20</b> / 20 </td>
     <td>无</td>
   </tr>
 
@@ -495,25 +525,38 @@ python -m pip install ../../python/dist/ultra_infer*.whl
   <tr>
     <td rowspan="8">通用版面解析</td>
     <td>表格结构识别</td>
-    <td><b>2</b> / 2 </td>
-    <td>无 </td>
+    <td><b>2</b> / 4 </td>
+    <td>
+      <details>
+        <summary>查看详情</summary>
+        SLANeXt_wired</br>
+        SLANeXt_wireless</br>
+      </details>
+    </td>
   </tr>
 
   <tr>
-    <td>版面区域分析</td>
-    <td><b>8</b> / 8 </td>
-    <td>无 </td>
+    <td>版面区域检测</td>
+    <td><b>8</b> / 11 </td>
+    <td>
+      <details>
+        <summary>查看详情</summary>
+        PP-DocLayout-L</br>
+        PP-DocLayout-M</br>
+        PP-DocLayout-S</br>
+      </details>
+    </td>
   </tr>
 
   <tr>
     <td>文本检测</td>
-    <td><b>2</b> / 2 </td>
+    <td><b>4</b> / 4 </td>
     <td>无 </td>
   </tr>
 
   <tr>
     <td>文本识别</td>
-    <td><b>2</b> / 2 </td>
+    <td><b>4</b> / 4 </td>
     <td>无 </td>
   </tr>
 
@@ -544,8 +587,15 @@ python -m pip install ../../python/dist/ultra_infer*.whl
   <tr>
     <td rowspan="2">公式识别</td>
     <td>版面区域检测</td>
-    <td><b>8</b> / 8 </td>
-    <td>无 </td>
+    <td><b>8</b> / 11 </td>
+    <td>
+      <details>
+        <summary>查看详情</summary>
+        PP-DocLayout-L</br>
+        PP-DocLayout-M</br>
+        PP-DocLayout-S</br>
+      </details>
+    </td>
   </tr>
 
   <tr>
@@ -563,9 +613,16 @@ python -m pip install ../../python/dist/ultra_infer*.whl
 
   <tr>
     <td rowspan="3">印章文本识别</td>
-    <td>版面区域分析</td>
-    <td><b>8</b> / 8 </td>
-    <td>无 </td>
+    <td>版面区域检测</td>
+    <td><b>8</b> / 11 </td>
+    <td>
+      <details>
+        <summary>查看详情</summary>
+        PP-DocLayout-L</br>
+        PP-DocLayout-M</br>
+        PP-DocLayout-S</br>
+      </details>
+    </td>
   </tr>
 
   <tr>
@@ -576,7 +633,7 @@ python -m pip install ../../python/dist/ultra_infer*.whl
 
   <tr>
     <td>文本识别</td>
-    <td><b>2</b> / 2 </td>
+    <td><b>4</b> / 4 </td>
     <td>无 </td>
   </tr>
 

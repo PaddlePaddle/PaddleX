@@ -7815,7 +7815,10 @@
         },
         "PP-OCRv4_server_det": {
           "backend_config_pairs": [
-
+            [
+              "tensorrt",
+              {}
+            ],
             [
               "paddle_infer",
               {
