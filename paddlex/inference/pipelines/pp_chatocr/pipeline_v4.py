@@ -13,16 +13,18 @@
 # limitations under the License.
 
 from typing import Any, Dict, Optional, Union, List, Tuple
+import os
 import re
 import cv2
+import copy
 import json
 import base64
 import numpy as np
-import copy
 from .pipeline_base import PP_ChatOCR_Pipeline
 from ...common.reader import ReadImage
 from ...common.batch_sampler import ImageBatchSampler
 from ....utils import logging
+from ....utils.file_interface import custom_open
 from ...utils.pp_option import PaddlePredictorOption
 from ..layout_parsing.result import LayoutParsingResult
 from ..components.chat_server import BaseChat
@@ -67,6 +69,7 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
         if initial_predictor:
             self.inintial_visual_predictor(config)
             self.inintial_chat_predictor(config)
+            self.inintial_retriever_predictor(config)
             self.inintial_mllm_predictor(config)
 
         self.batch_sampler = ImageBatchSampler(batch_size=1)
@@ -384,7 +387,7 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
         self,
         visual_info: dict,
         min_characters: int = 3500,
-        llm_request_interval: float = 1.0,
+        block_size: int = 300,
         flag_save_bytes_vector: bool = False,
         retriever_config: dict = None,
     ) -> dict:
@@ -394,7 +397,7 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
         Args:
             visual_info (dict): The visual information input, can be a single instance or a list of instances.
             min_characters (int): The minimum number of characters required for text processing, defaults to 3500.
-            llm_request_interval (float): The interval between LLM requests, defaults to 1.0.
+            block_size (int): The size of each chunk to split the text into.
             flag_save_bytes_vector (bool): Whether to save the vector as bytes, defaults to False.
             retriever_config (dict): The configuration for the retriever, defaults to None.
 
@@ -444,7 +447,11 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
         vector_info["flag_save_bytes_vector"] = False
         if len(all_text_str) > min_characters:
             vector_info["flag_too_short_text"] = False
-            vector_info["vector"] = retriever.generate_vector_database(all_items)
+            vector_info["model_name"] = retriever.model_name
+            vector_info["block_size"] = block_size
+            vector_info["vector"] = retriever.generate_vector_database(
+                all_items, block_size=block_size
+            )
             if flag_save_bytes_vector:
                 vector_info["vector"] = retriever.encode_vector_store_to_bytes(
                     vector_info["vector"]
@@ -456,8 +463,25 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
         return vector_info
 
     def save_vector(self, vector_info: dict, save_path: str) -> None:
-        with open(save_path, "w") as fout:
-            fout.write(json.dumps(vector_info, ensure_ascii=False) + "\n")
+        directory = os.path.dirname(save_path)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        if self.retriever is None:
+            logging.warning("The retriever is not initialized,will initialize it now.")
+            self.inintial_retriever_predictor(self.config)
+
+        vector_info_data = copy.deepcopy(vector_info)
+        if (
+            not vector_info["flag_too_short_text"]
+            and not vector_info["flag_save_bytes_vector"]
+        ):
+            vector_info_data["vector"] = self.retriever.encode_vector_store_to_bytes(
+                vector_info_data["vector"]
+            )
+            vector_info_data["flag_save_bytes_vector"] = True
+
+        with custom_open(save_path, "w") as fout:
+            fout.write(json.dumps(vector_info_data, ensure_ascii=False) + "\n")
         return
 
     def load_vector(self, data_path: str) -> dict:
@@ -476,11 +500,12 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
             ):
                 logging.error("Invalid vector info.")
                 return {"error": "Invalid vector info when load vector!"}
-
             if vector_info["flag_save_bytes_vector"]:
                 vector_info["vector"] = self.retriever.decode_vector_store_from_bytes(
                     vector_info["vector"]
                 )
+                vector_info["flag_save_bytes_vector"] = False
+
         return vector_info
 
     def format_key(self, key_list: Union[str, List[str]]) -> List[str]:
@@ -510,9 +535,19 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
     def mllm_pred(
         self,
         input: Union[str, np.ndarray],
-        key_list,
-        **kwargs,
+        key_list: Union[str, List[str]],
+        mllm_chat_bot_config=None,
     ) -> dict:
+        """
+        Generates MLLM results based on the provided key list and input image.
+
+        Args:
+            input (Union[str, np.ndarray]): Input image path, or numpy array of an image.
+            key_list (Union[str, list[str]]): A single key or a list of keys to extract information.
+            chat_bot_config (dict): The parameters for LLM chatbot, including api_type, api_key... refer to config file for more details.
+        Returns:
+            dict: A dictionary containing the chat results.
+        """
         if self.use_mllm_predict == False:
             logging.error("MLLM prediction is disabled.")
             return {"mllm_res": "Error:MLLM prediction is disabled!"}
@@ -539,6 +574,13 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
             )
             self.inintial_mllm_predictor(self.config)
 
+        if mllm_chat_bot_config is not None:
+            from .. import create_chat_bot
+
+            mllm_chat_bot = create_chat_bot(mllm_chat_bot_config)
+        else:
+            mllm_chat_bot = self.mllm_chat_bot
+
         for image_array in image_array_list:
 
             assert len(image_array.shape) == 3
@@ -550,7 +592,7 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
                     str(key)
                     + "\n请用图片中完整出现的内容回答，可以是单词、短语或句子，针对问题回答尽可能详细和完整，并保持格式、单位、符号和标点都与图片中的文字内容完全一致。"
                 )
-                mllm_chat_bot_result = self.mllm_chat_bot.generate_chat_results(
+                mllm_chat_bot_result = mllm_chat_bot.generate_chat_results(
                     prompt=prompt, image=image_base64
                 )
                 if mllm_chat_bot_result is None:
@@ -636,6 +678,11 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
             question_key_list = [f"{key}" for key in key_list]
             vector = vector_info["vector"]
             if not vector_info["flag_too_short_text"]:
+                assert (
+                    vector_info["model_name"] == retriever.model_name
+                ), f"The vector model name ({vector_info['model_name']}) does not match the retriever model name ({retriever.model_name}). Please check your retriever config."
+                if vector_info["flag_save_bytes_vector"]:
+                    vector = retriever.decode_vector_store_from_bytes(vector)
                 related_text = retriever.similarity_retrieval(
                     question_key_list, vector, topk=50, min_characters=min_characters
                 )
