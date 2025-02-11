@@ -773,14 +773,17 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 
 * <details open>
   <summary> <b> 🌐 3D </b></summary>
+  
   * [🚗 3D Multimodal Fusion Detection Module Usage Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/3d_bev_detection.html)
 
 * <details open>
   <summary> <b> 🎤 Speech </b></summary>
+
   * [🌐 Multilingual Speech Recognition Module Usage Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/speech_modules/multilingual_speech_recognition.html)
 
 * <details open>
   <summary> <b> 🎥 Video </b></summary>
+
   * [📈 Video Classification Module Usage Tutorial](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/video_modules/video_classification.html)
   * [🔍 Video Detection Module Usage Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/video_modules/video_detection.html)
 

@@ -778,10 +778,12 @@ for res in output:
 
 * <details open>
   <summary> <b> 🎤 语音 </b></summary>
+
   * [🌐 多语种语音识别模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/speech_modules/multilingual_speech_recognition.html)
 
 * <details open>
   <summary> <b> 🎥 视频 </b></summary>
+  
   * [📈 视频分类模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/video_modules/video_classification.html)
   * [🔍 视频检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/video_modules/video_detection.html)
 
