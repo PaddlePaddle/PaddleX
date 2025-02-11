@@ -21,7 +21,7 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 <th>Model</th><th>Model Download Link</th>
 <th>AP (%)<br/>Easy/Medium/Hard</th>
 <th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time</th>
+<th>CPU Inference Time (ms)</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>

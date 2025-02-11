@@ -9,79 +9,72 @@ Human keypoint detection aims to analyze human posture and movements by identify
 
 PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of pedestrian detection and keypoint detection modules, optimized for mobile devices. It can accurately and smoothly perform multi-person pose estimation tasks on mobile devices.
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/human_keypoint_detection/01.jpg">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/human_keypoint_detection/01.jpg"/>
 <b>The Human Keypoint Detection Pipeline includes pedestrian detection and human keypoint detection modules</b>, with several models available. You can choose the model based on the benchmark data below. <b>If you prioritize model accuracy, choose a model with higher accuracy; if you prioritize inference speed, choose a model with faster inference speed; if you prioritize storage size, choose a model with a smaller storage size</b>.
 
 <summary> 👉Model List Details</summary>
-
 <b>Pedestrian Detection Module:</b>
-
 <table>
-  <tr>
-    <th>Model</th>
-    <th>mAP(0.5:0.95)</th>
-    <th>mAP(0.5)</th>
-    <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time (ms)</th>
-    <th>Model Storage Size (M)</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td>PP-YOLOE-L_human</td>
-    <td>48.0</td>
-    <td>81.9</td>
-    <td>32.8</td>
-    <td>777.7</td>
-    <td>196.02</td>
-    <td rowspan="2">Pedestrian detection model based on PP-YOLOE</td>
-  </tr>
-  <tr>
-    <td>PP-YOLOE-S_human</td>
-    <td>42.5</td>
-    <td>77.9</td>
-    <td>15.0</td>
-    <td>179.3</td>
-    <td>28.79</td>
-  </tr>
+<tr>
+<th>Model</th>
+<th>mAP(0.5:0.95)</th>
+<th>mAP(0.5)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (M)</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>PP-YOLOE-L_human</td>
+<td>48.0</td>
+<td>81.9</td>
+<td>33.27 / 9.19</td>
+<td>173.72 / 173.72</td>
+<td>196.02</td>
+<td rowspan="2">Pedestrian detection model based on PP-YOLOE</td>
+</tr>
+<tr>
+<td>PP-YOLOE-S_human</td>
+<td>42.5</td>
+<td>77.9</td>
+<td>9.94 / 3.42</td>
+<td>54.48 / 46.52</td>
+<td>28.79</td>
+</tr>
 </table>
-
 <b>Note: The above accuracy metrics are based on the CrowdHuman dataset mAP(0.5:0.95). All model GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision, and CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
-
 <b>Human Keypoint Detection Module:</b>
-
 <table>
-  <tr>
-    <th>Model</th>
-    <th>Solution</th>
-    <th>Input Size</th>
-    <th>AP(0.5:0.95)</th>
-    <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time (ms)</th>
-    <th>Model Storage Size (M)</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td>PP-TinyPose_128x96</td>
-    <td>Top-Down</td>
-    <td>128*96</td>
-    <td>58.4</td>
-    <td></td>
-    <td></td>
-    <td>4.9</td>
-    <td rowspan="2">PP-TinyPose is a real-time keypoint detection model developed by Baidu PaddlePaddle Vision Team, optimized for mobile devices, capable of smoothly performing multi-person pose estimation tasks on mobile devices</td>
-  </tr>
-  <tr>
-    <td>PP-TinyPose_256x192</td>
-    <td>Top-Down</td>
-    <td>256*192</td>
-    <td>68.3</td>
-    <td></td>
-    <td></td>
-    <td>4.9</td>
-  </tr>
+<tr>
+<th>Model</th>
+<th>Solution</th>
+<th>Input Size</th>
+<th>AP(0.5:0.95)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (M)</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>PP-TinyPose_128x96</td>
+<td>Top-Down</td>
+<td>128*96</td>
+<td>58.4</td>
+<td></td>
+<td></td>
+<td>4.9</td>
+<td rowspan="2">PP-TinyPose is a real-time keypoint detection model developed by Baidu PaddlePaddle Vision Team, optimized for mobile devices, capable of smoothly performing multi-person pose estimation tasks on mobile devices</td>
+</tr>
+<tr>
+<td>PP-TinyPose_256x192</td>
+<td>Top-Down</td>
+<td>256*192</td>
+<td>68.3</td>
+<td></td>
+<td></td>
+<td>4.9</td>
+</tr>
 </table>
-
 <b>Note: The above accuracy metrics are based on the COCO dataset AP(0.5:0.95), with detection boxes obtained from ground truth annotations. All model GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision, and CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
 
 ## 2. Quick Start
@@ -94,7 +87,7 @@ Not supported for online experience.
 
 ### 2.2 Local Experience
 
-> ❗ Before using the Human Keypoint Detection Pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
+&gt; ❗ Before using the Human Keypoint Detection Pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
 
 #### 2.2.1 Command Line Experience
 
@@ -114,7 +107,7 @@ The relevant parameter descriptions and results explanations can be referred to 
 
 The visualization results are saved to `save_path`, as shown below:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/human_keypoint_detection/01.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/human_keypoint_detection/01.jpg"/>
 
 #### 2.2.2 Integration via Python Script
 The above command line method allows you to quickly experience and view the results. In a project, code integration is often required. You can complete the quick inference of the pipeline with the following lines of code:
@@ -192,9 +185,9 @@ In the above Python script, the following steps are executed:
 <td><code>Python Var|str|list</code></td>
 <td>
 <ul>
-  <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code>.</li>
-  <li><b>str</b>: Local path of an image file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as a network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">example</a>; <b>Local directory</b>, which should contain images to be predicted, such as <code>/root/data/</code>.</li>
-  <li><b>List</b>: Elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, or <code>[\"/root/data1\", \"/root/data2\"]</code>.</li>
+<li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code>.</li>
+<li><b>str</b>: Local path of an image file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as a network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">example</a>; <b>Local directory</b>, which should contain images to be predicted, such as <code>/root/data/</code>.</li>
+<li><b>List</b>: Elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, or <code>[\"/root/data1\", \"/root/data2\"]</code>.</li>
 </ul>
 </td>
 <td>None</td>
@@ -205,8 +198,8 @@ In the above Python script, the following steps are executed:
 <td><code>float|None</code></td>
 <td>
 <ul>
-  <li><b>float</b>: For example, <code>0.5</code> means filtering out all bounding boxes with a score lower than <code>0.5</code>.</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used, which is <code>0.5</code>.</li>
+<li><b>float</b>: For example, <code>0.5</code> means filtering out all bounding boxes with a score lower than <code>0.5</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used, which is <code>0.5</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -276,7 +269,6 @@ In the above Python script, the following steps are executed:
 <td>N/A</td>
 </tr>
 </table>
-
 <ul><li><details><summary>👉 Calling the <code>print()</code> method will print the following result to the terminal (click to expand):</summary>
 
 ```bash
@@ -466,12 +458,12 @@ In the above Python script, the following steps are executed:
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">Get the predicted <code>json</code> format result</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the predicted <code>json</code> format result</td>
 </tr>
 <tr>
-<td rowspan = "2"><code>img</code></td>
-<td rowspan = "2">Get the visualized image in <code>dict</code> format</td>
+<td rowspan="2"><code>img</code></td>
+<td rowspan="2">Get the visualized image in <code>dict</code> format</td>
 </tr>
 </table>
 
@@ -513,40 +505,35 @@ Additionally, PaddleX provides three other deployment methods, detailed as follo
 Below are the API references and multi-language service invocation examples for basic service deployment:
 
 <details><summary>API Reference</summary>
-
 </details>
-
 <details><summary>Multi-language Service Invocation Examples</summary>
-
 <details>
 <summary>Python</summary>
-
-
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/ocr&quot; # Service URL
-image_path = &quot;./demo.jpg&quot;
-output_image_path = &quot;./out.jpg&quot;
+API_URL = "http://localhost:8080/ocr" # Service URL
+image_path = "./demo.jpg"
+output_image_path = "./out.jpg"
 
 # Base64 encode the local image
-with open(image_path, &quot;rb&quot;) as file:
+with open(image_path, "rb") as file:
     image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
-payload = {&quot;image&quot;: image_data}  # Base64 encoded file content or image URL
+payload = {"image": image_data}  # Base64 encoded file content or image URL
 
 # Call the API
 response = requests.post(API_URL, json=payload)
 
 # Process the API response
 assert response.status_code == 200
-result = response.json()[&quot;result&quot;]
-with open(output_image_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result[&quot;image&quot;]))
-print(f&quot;Output image saved at {output_image_path}&quot;)
-print(&quot;\nDetected texts:&quot;)
-print(result[&quot;texts&quot;])
+result = response.json()["result"]
+with open(output_image_path, "wb") as file:
+    file.write(base64.b64decode(result["image"]))
+print(f"Output image saved at {output_image_path}")
+print("\nDetected texts:")
+print(result["texts"])
 </code></pre>
 </details>
 </details>

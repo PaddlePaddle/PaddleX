@@ -164,13 +164,14 @@ def args_cfg():
 
     # Parse known arguments to get the pipeline name
     args, remaining_args = parser.parse_known_args()
-    pipeline_name = args.pipeline
+    pipeline = args.pipeline
     pipeline_args = []
 
-    if (
-        not (args.install or args.serve or args.paddle2onnx)
-        and pipeline_name is not None
-    ):
+    if not (args.install or args.serve or args.paddle2onnx) and pipeline is not None:
+        if os.path.isfile(pipeline):
+            pipeline_name = load_pipeline_config(pipeline)["pipeline_name"]
+        else:
+            pipeline_name = pipeline
 
         if pipeline_name not in PIPELINE_ARGUMENTS:
             support_pipelines = ", ".join(PIPELINE_ARGUMENTS.keys())

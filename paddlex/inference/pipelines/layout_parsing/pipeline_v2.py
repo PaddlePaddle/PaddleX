@@ -225,20 +225,113 @@ class LayoutParsingPipelineV2(BasePipeline):
         overall_ocr_res: OCRResult,
         table_res_list: list,
         seal_res_list: list,
+        formula_res_list: list,
+        text_det_limit_side_len: Optional[int] = None,
+        text_det_limit_type: Optional[str] = None,
+        text_det_thresh: Optional[float] = None,
+        text_det_box_thresh: Optional[float] = None,
+        text_det_unclip_ratio: Optional[float] = None,
+        text_rec_score_thresh: Optional[float] = None,
     ) -> list:
         """
-        Get the layout parsing result based on the layout detection result, OCR result, and other recognition results.
-
+        Retrieves the layout parsing result based on the layout detection result, OCR result, and other recognition results.
         Args:
             image (list): The input image.
-            layout_det_res (DetResult): The layout detection results.
-            overall_ocr_res (OCRResult): The overall OCR results.
-            table_res_list (list): A list of table detection results.
-            seal_res_list (list): A list of seal detection results.
-
+            layout_det_res (DetResult): The detection result containing the layout information of the document.
+            overall_ocr_res (OCRResult): The overall OCR result containing text information.
+            table_res_list (list): A list of table recognition results.
+            seal_res_list (list): A list of seal recognition results.
+            formula_res_list (list): A list of formula recognition results.
+            text_det_limit_side_len (Optional[int], optional): The maximum side length of the text detection region. Defaults to None.
+            text_det_limit_type (Optional[str], optional): The type of limit for the text detection region. Defaults to None.
+            text_det_thresh (Optional[float], optional): The confidence threshold for text detection. Defaults to None.
+            text_det_box_thresh (Optional[float], optional): The confidence threshold for text detection bounding boxes. Defaults to None
+            text_det_unclip_ratio (Optional[float], optional): The unclip ratio for text detection. Defaults to None.
+            text_rec_score_thresh (Optional[float], optional): The score threshold for text recognition. Defaults to None.
         Returns:
             list: A list of dictionaries representing the layout parsing result.
         """
+        matched_ocr_dict = {}
+        image = np.array(image)
+        object_boxes = []
+
+        for object_box_idx, box_info in enumerate(layout_det_res["boxes"]):
+            box = box_info["coordinate"]
+            label = box_info["label"].lower()
+            object_boxes.append(box)
+
+            if label not in ["formula", "table", "seal"]:
+                _, matched_idxs = get_sub_regions_ocr_res(
+                    overall_ocr_res, [box], return_match_idx=True
+                )
+                for matched_idx in matched_idxs:
+                    if matched_ocr_dict.get(matched_idx, None) is None:
+                        matched_ocr_dict[matched_idx] = [object_box_idx]
+                    else:
+                        matched_ocr_dict[matched_idx].append(object_box_idx)
+
+        already_processed = set()
+        for matched_idx, layout_box_ids in matched_ocr_dict.items():
+            if len(layout_box_ids) <= 1:
+                continue
+
+            # one ocr is matched to multiple layout boxes, split the text into multiple lines
+            for idx in layout_box_ids:
+                if idx in already_processed:
+                    continue
+
+                already_processed.add(idx)
+                wht_im = np.ones(image.shape, dtype=image.dtype) * 255
+                box = object_boxes[idx]
+                x1, y1, x2, y2 = [int(i) for i in box]
+                wht_im[y1:y2, x1:x2, :] = image[y1:y2, x1:x2, :]
+                sub_ocr_res = next(
+                    self.general_ocr_pipeline(
+                        wht_im,
+                        text_det_limit_side_len=text_det_limit_side_len,
+                        text_det_limit_type=text_det_limit_type,
+                        text_det_thresh=text_det_thresh,
+                        text_det_box_thresh=text_det_box_thresh,
+                        text_det_unclip_ratio=text_det_unclip_ratio,
+                        text_rec_score_thresh=text_rec_score_thresh,
+                    )
+                )
+                _, matched_idxs = get_sub_regions_ocr_res(
+                    overall_ocr_res, [box], return_match_idx=True
+                )
+                for matched_idx in sorted(matched_idxs, reverse=True):
+                    del overall_ocr_res["dt_polys"][matched_idx]
+                    del overall_ocr_res["rec_texts"][matched_idx]
+                    overall_ocr_res["rec_boxes"] = np.delete(
+                        overall_ocr_res["rec_boxes"], matched_idx, axis=0
+                    )
+                    del overall_ocr_res["rec_polys"][matched_idx]
+                    del overall_ocr_res["rec_scores"][matched_idx]
+
+                overall_ocr_res["dt_polys"].extend(sub_ocr_res["dt_polys"])
+                overall_ocr_res["rec_texts"].extend(sub_ocr_res["rec_texts"])
+                overall_ocr_res["rec_boxes"] = np.concatenate(
+                    [overall_ocr_res["rec_boxes"], sub_ocr_res["rec_boxes"]], axis=0
+                )
+                overall_ocr_res["rec_polys"].extend(sub_ocr_res["rec_polys"])
+                overall_ocr_res["rec_scores"].extend(sub_ocr_res["rec_scores"])
+
+        for formula_res in formula_res_list:
+            x_min, y_min, x_max, y_max = list(map(int, formula_res["dt_polys"]))
+            poly_points = [
+                (x_min, y_min),
+                (x_max, y_min),
+                (x_max, y_max),
+                (x_min, y_max),
+            ]
+            overall_ocr_res["dt_polys"].append(poly_points)
+            overall_ocr_res["rec_texts"].append(f"${formula_res['rec_formula']}$")
+            overall_ocr_res["rec_boxes"] = np.vstack(
+                (overall_ocr_res["rec_boxes"], [formula_res["dt_polys"]])
+            )
+            overall_ocr_res["rec_polys"].append(poly_points)
+            overall_ocr_res["rec_scores"].append(1)
+
         layout_parsing_res = get_single_block_parsing_res(
             overall_ocr_res=overall_ocr_res,
             layout_det_res=layout_det_res,
@@ -445,24 +538,6 @@ class LayoutParsingPipelineV2(BasePipeline):
                         text_rec_score_thresh=text_rec_score_thresh,
                     ),
                 )
-
-                for formula_res in formula_res_list:
-                    x_min, y_min, x_max, y_max = list(map(int, formula_res["dt_polys"]))
-                    poly_points = [
-                        (x_min, y_min),
-                        (x_max, y_min),
-                        (x_max, y_max),
-                        (x_min, y_max),
-                    ]
-                    overall_ocr_res["dt_polys"].append(poly_points)
-                    overall_ocr_res["rec_texts"].append(
-                        f"${formula_res['rec_formula']}$"
-                    )
-                    overall_ocr_res["rec_boxes"] = np.vstack(
-                        (overall_ocr_res["rec_boxes"], [formula_res["dt_polys"]])
-                    )
-                    overall_ocr_res["rec_polys"].append(poly_points)
-                    overall_ocr_res["rec_scores"].append(1)
             else:
                 overall_ocr_res = {}
 
@@ -511,19 +586,26 @@ class LayoutParsingPipelineV2(BasePipeline):
             else:
                 seal_res_list = []
 
-            for formula_res in formula_res_list:
-                x_min, y_min, x_max, y_max = list(map(int, formula_res["dt_polys"]))
-                doc_preprocessor_image[y_min:y_max, x_min:x_max, :] = formula_res[
-                    "input_img"
-                ]
-
             parsing_res_list = self.get_layout_parsing_res(
                 doc_preprocessor_image,
                 layout_det_res=layout_det_res,
                 overall_ocr_res=overall_ocr_res,
                 table_res_list=table_res_list,
                 seal_res_list=seal_res_list,
+                formula_res_list=formula_res_list,
+                text_det_limit_side_len=text_det_limit_side_len,
+                text_det_limit_type=text_det_limit_type,
+                text_det_thresh=text_det_thresh,
+                text_det_box_thresh=text_det_box_thresh,
+                text_det_unclip_ratio=text_det_unclip_ratio,
+                text_rec_score_thresh=text_rec_score_thresh,
             )
+
+            for formula_res in formula_res_list:
+                x_min, y_min, x_max, y_max = list(map(int, formula_res["dt_polys"]))
+                doc_preprocessor_image[y_min:y_max, x_min:x_max, :] = formula_res[
+                    "input_img"
+                ]
 
             single_img_res = {
                 "input_path": batch_data.input_paths[0],

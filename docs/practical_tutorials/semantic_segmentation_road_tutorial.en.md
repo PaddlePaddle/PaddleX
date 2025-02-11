@@ -83,7 +83,7 @@ tar -xf ./dataset/semantic-segmentation-makassaridn-road-dataset.tar -C ./datase
 To verify the dataset, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
+python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/semantic-segmentation-makassaridn-road-dataset
 ```
@@ -110,9 +110,9 @@ After executing the above command, PaddleX will verify the dataset and collect b
   "analysis": {
     "histogram": "check_dataset/histogram.png"
   },
-  "dataset_path": "./dataset/semantic-segmentation-makassaridn-road-dataset",
+  "dataset_path": "semantic-segmentation-makassaridn-road-dataset",
   "show_type": "image",
-  "dataset_type": "COCODetDataset"
+  "dataset_type": "SegDataset"
 }
 ```
 
@@ -158,7 +158,7 @@ Data conversion and splitting can be enabled simultaneously. For data splitting,
 Before training, ensure that you have validated your dataset. To complete the training of a PaddleX model, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
+python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/semantic-segmentation-makassaridn-road-dataset \
     -o Train.num_classes=4
@@ -196,7 +196,7 @@ After completing model training, all outputs are saved in the specified output d
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model's accuracy. To evaluate a model using PaddleX, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
+python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/semantic-segmentation-makassaridn-road-dataset
 ```
@@ -316,7 +316,7 @@ Changing Epoch Results:
 Replace the model in the production line with the fine-tuned model for testing, for example:
 
 ```bash
-python main.py -c paddlex/configs/semantic_segmentation/PP-LiteSeg-T.yaml \
+python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="output/best_model/inference" \
     -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png"
@@ -331,16 +331,39 @@ The prediction results will be generated under `./output`, where the prediction 
 
 ## 7. Development Integration/Deployment
 If the general semantic segmentation pipeline meets your requirements for inference speed and accuracy in the production line, you can proceed directly with development integration/deployment.
-1. Directly apply the trained model in your Python project by referring to the following sample code, and modify the `Pipeline.model` in the `paddlex/pipelines/semantic_segmentation.yaml` configuration file to your own model path:
+
+1. If you need to use the fine-tuned model weights, you can obtain the configuration file for the semantic_segmentation pipeline and load it for prediction. You can execute the following command to save the results in my_path:
+
+```
+paddlex --get_pipeline_config semantic_segmentation --save_path ./my_path
+```
+
+Fill in the local path of the fine-tuned model weights into the `model_dir` field in the configuration file. If you need to directly apply the general semantic segmentation pipeline to your Python project, you can refer to the following example:
+
+```yaml
+pipeline_name: semantic_segmentation
+
+SubModules:
+  SemanticSegmentation:
+    module_name: semantic_segmentation
+    model_name: PP-LiteSeg-T
+    model_dir: null # Replace this with the local path to your trained model weights.
+    batch_size: 1
+    target_size: None
+```
+
+Subsequently, in your Python code, you can utilize the pipeline as follows:
+
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="paddlex/pipelines/semantic_segmentation.yaml")
+pipeline = create_pipeline(pipeline="my_path/semantic_segmentation.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png")
 for res in output:
     res.print() # Print the structured output of the prediction
     res.save_to_img("./output/") # Save the visualized image of the result
     res.save_to_json("./output/") # Save the structured output of the prediction
 ```
+
 For more parameters, please refer to [General Semantic Segmentation Pipeline Usage Tutorial](../pipeline_usage/tutorials/cv_pipelines/semantic_segmentation.en.md).
 
 2. Additionally, PaddleX offers three other deployment methods, detailed as follows:

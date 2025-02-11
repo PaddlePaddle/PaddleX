@@ -7,15 +7,14 @@ comments: true
 ## 1. Introduction to the General Semantic Segmentation Pipeline
 Semantic segmentation is a computer vision technique that aims to assign each pixel in an image to a specific category, enabling a detailed understanding of the image content. Semantic segmentation not only identifies the types of objects in an image but also classifies each pixel, allowing regions of the same category to be fully labeled. For example, in a street scene image, semantic segmentation can distinguish pedestrians, cars, the sky, and roads pixel by pixel, forming a detailed label map. This technology is widely used in autonomous driving, medical image analysis, and human-computer interaction, often relying on deep learning models (such as SegFormer, etc.) to extract features by CNN or Transformer, and achieve high-precision pixel-level classification, providing a foundation for further intelligent analysis.
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/semantic_segmentation/01.png">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/semantic_segmentation/01.png"/>
 <table>
 <thead>
 <tr>
 <th>Model Name</th><th>Model Download Link</th>
 <th>mIoU (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 </tr>
 </thead>
@@ -23,15 +22,15 @@ Semantic segmentation is a computer vision technique that aims to assign each pi
 <tr>
 <td>OCRNet_HRNet-W48</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/OCRNet_HRNet-W48_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W48_pretrained.pdparams">Trained Model</a></td>
 <td>82.15</td>
-<td>78.9976</td>
-<td>2226.95</td>
+<td>627.36 / 170.76</td>
+<td>3531.61 / 3531.61</td>
 <td>249.8 M</td>
 </tr>
 <tr>
 <td>PP-LiteSeg-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LiteSeg-T_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-T_pretrained.pdparams">Trained Model</a></td>
 <td>73.10</td>
-<td>7.6827</td>
-<td>138.683</td>
+<td>30.16 / 14.03</td>
+<td>420.07 / 235.01</td>
 <td>28.5 M</td>
 </tr>
 </tbody>
@@ -45,8 +44,8 @@ Semantic segmentation is a computer vision technique that aims to assign each pi
 <tr>
 <th>Model Name</th><th>Model Download Link</th>
 <th>mIoU (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 </tr>
 </thead>
@@ -54,57 +53,57 @@ Semantic segmentation is a computer vision technique that aims to assign each pi
 <tr>
 <td>Deeplabv3_Plus-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Deeplabv3_Plus-R50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3_Plus-R50_pretrained.pdparams">Trained Model</a></td>
 <td>80.36</td>
-<td>61.0531</td>
-<td>1513.58</td>
+<td>503.51 / 122.30</td>
+<td>3543.91 / 3543.91</td>
 <td>94.9 M</td>
 </tr>
 <tr>
 <td>Deeplabv3_Plus-R101</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Deeplabv3_Plus-R101_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3_Plus-R101_pretrained.pdparams">Trained Model</a></td>
 <td>81.10</td>
-<td>100.026</td>
-<td>2460.71</td>
+<td>803.79 / 175.45</td>
+<td>5136.21 / 5136.21</td>
 <td>162.5 M</td>
 </tr>
 <tr>
 <td>Deeplabv3-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Deeplabv3-R50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3-R50_pretrained.pdparams">Trained Model</a></td>
 <td>79.90</td>
-<td>82.2631</td>
-<td>1735.83</td>
+<td>647.56 / 121.67</td>
+<td>3803.09 / 3803.09</td>
 <td>138.3 M</td>
 </tr>
 <tr>
 <td>Deeplabv3-R101</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Deeplabv3-R101_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3-R101_pretrained.pdparams">Trained Model</a></td>
 <td>80.85</td>
-<td>121.492</td>
-<td>2685.51</td>
+<td>950.43 / 178.50</td>
+<td>5517.14 / 5517.14</td>
 <td>205.9 M</td>
 </tr>
 <tr>
 <td>OCRNet_HRNet-W18</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/OCRNet_HRNet-W18_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W18_pretrained.pdparams">Trained Model</a></td>
 <td>80.67</td>
-<td>48.2335</td>
-<td>906.385</td>
+<td>286.12 / 80.76</td>
+<td>1794.03 / 1794.03</td>
 <td>43.1 M</td>
 </tr>
 <tr>
 <td>OCRNet_HRNet-W48</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/OCRNet_HRNet-W48_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W48_pretrained.pdparams">Trained Model</a></td>
 <td>82.15</td>
-<td>78.9976</td>
-<td>2226.95</td>
+<td>627.36 / 170.76</td>
+<td>3531.61 / 3531.61</td>
 <td>249.8 M</td>
 </tr>
 <tr>
 <td>PP-LiteSeg-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LiteSeg-T_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-T_pretrained.pdparams">Trained Model</a></td>
 <td>73.10</td>
-<td>7.6827</td>
-<td>138.683</td>
+<td>30.16 / 14.03</td>
+<td>420.07 / 235.01</td>
 <td>28.5 M</td>
 </tr>
 <tr>
 <td>PP-LiteSeg-B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LiteSeg-B_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-B_pretrained.pdparams">Trained Model</a></td>
 <td>75.25</td>
-<td>10.9935</td>
-<td>194.727</td>
+<td>40.92 / 20.18</td>
+<td>494.32 / 310.34</td>
 <td>47.0 M</td>
 </tr>
 <tr>
@@ -201,7 +200,7 @@ PaddleX's pre-trained model pipelines can be quickly experienced. You can experi
 ### 2.1 Online Experience
 You can [experience online](https://aistudio.baidu.com/community/app/100062/webUI?source=appCenter) the effects of the General Semantic Segmentation Pipeline, using the official demo images for recognition, for example:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/semantic_segmentation/02.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/semantic_segmentation/02.png"/>
 
 If you are satisfied with the pipeline's performance, you can directly integrate and deploy it. If not, you can also use your private data to <b>fine-tune the model in the pipeline online</b>.
 
@@ -230,7 +229,7 @@ After running, the result will be printed to the terminal, as follows:
 The explanation of the output result parameters can be found in the [2.2.2 Integration with Python Script](#222-integration-with-python-script) section.
 
 The visualization results are saved under `save_path`, and the visualization result of semantic segmentation is as follows:
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/semantic_segmentation/03.png" alt="Semantic Segmentation Visualization Result">
+<img alt="Semantic Segmentation Visualization Result" src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/semantic_segmentation/03.png"/>
 
 #### 2.2.2 Integration with Python Script
 * The above command line is for quickly experiencing and viewing the effect. Generally, in a project, it is often necessary to integrate through code. You can complete the fast inference of the pipeline with just a few lines of code. The inference code is as follows:
@@ -305,9 +304,9 @@ In the above Python script, the following steps are executed:
 <td><code>Python Var|str|list</code></td>
 <td>
 <ul>
-  <li><b>Python Var</b>: For example, image data represented by <code>numpy.ndarray</code></li>
-  <li><b>str</b>: For example, the local path of an image file or PDF file: <code>/root/data/img.jpg</code>; <b>For URL links</b>, such as the network URL of an image file or PDF file: <a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png">Example</a>; <b>For local directories</b>, the directory should contain images to be predicted, such as the local path: <code>/root/data/</code> (currently does not support prediction of directories containing PDF files, PDF files need to be specified to a specific file path)</li>
-  <li><b>List</b>: List elements need to be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
+<li><b>Python Var</b>: For example, image data represented by <code>numpy.ndarray</code></li>
+<li><b>str</b>: For example, the local path of an image file or PDF file: <code>/root/data/img.jpg</code>; <b>For URL links</b>, such as the network URL of an image file or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png">Example</a>; <b>For local directories</b>, the directory should contain images to be predicted, such as the local path: <code>/root/data/</code> (currently does not support prediction of directories containing PDF files, PDF files need to be specified to a specific file path)</li>
+<li><b>List</b>: List elements need to be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -318,13 +317,13 @@ In the above Python script, the following steps are executed:
 <td><code>str|None</code></td>
 <td>
 <ul>
-  <li><b>CPU</b>: For example, <code>cpu</code> indicates using CPU for inference;</li>
-  <li><b>GPU</b>: For example, <code>gpu:0</code> indicates using the first GPU for inference;</li>
-  <li><b>NPU</b>: For example, <code>npu:0</code> indicates using the first NPU for inference;</li>
-  <li><b>XPU</b>: For example, <code>xpu:0</code> indicates using the first XPU for inference;</li>
-  <li><b>MLU</b>: For example, <code>mlu:0</code> indicates using the first MLU for inference;</li>
-  <li><b>DCU</b>: For example, <code>dcu:0</code> indicates using the first DCU for inference;</li>
-  <li><b>None</b>: If set to <code>None</code>, it will use the parameter value initialized by the pipeline by default. During initialization, it will preferentially use the local GPU 0 device, if not available, it will use the CPU device;</li>
+<li><b>CPU</b>: For example, <code>cpu</code> indicates using CPU for inference;</li>
+<li><b>GPU</b>: For example, <code>gpu:0</code> indicates using the first GPU for inference;</li>
+<li><b>NPU</b>: For example, <code>npu:0</code> indicates using the first NPU for inference;</li>
+<li><b>XPU</b>: For example, <code>xpu:0</code> indicates using the first XPU for inference;</li>
+<li><b>MLU</b>: For example, <code>mlu:0</code> indicates using the first MLU for inference;</li>
+<li><b>DCU</b>: For example, <code>dcu:0</code> indicates using the first DCU for inference;</li>
+<li><b>None</b>: If set to <code>None</code>, it will use the parameter value initialized by the pipeline by default. During initialization, it will preferentially use the local GPU 0 device, if not available, it will use the CPU device;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -334,14 +333,13 @@ In the above Python script, the following steps are executed:
 <td><code>int|-1|None|tuple[int,int]</code></td>
 <td>
 <ul>
-    <li><b>int</b>: Any integer greater than <code>0</code></li>
-    <li><b>-1</b>: If set to <code>-1</code>, no rescale operation will be performed, and the original image resolution will be used for prediction</li>
-    <li><b>None</b>: If set to <code>None</code>, it will use the parameter initialized by the pipeline by default. That is, the original image resolution will be used for prediction</li>
-    <li><b>tuple[int,int]</b>: The actual prediction resolution of the image will be rescaled to this size</li>
+<li><b>int</b>: Any integer greater than <code>0</code></li>
+<li><b>-1</b>: If set to <code>-1</code>, no rescale operation will be performed, and the original image resolution will be used for prediction</li>
+<li><b>None</b>: If set to <code>None</code>, it will use the parameter initialized by the pipeline by default. That is, the original image resolution will be used for prediction</li>
+<li><b>tuple[int,int]</b>: The actual prediction resolution of the image will be rescaled to this size</li>
 </ul>
 </td>
 <td><code>None</code></td>
-</tr>
 
 </table>
 
@@ -359,8 +357,8 @@ In the above Python script, the following steps are executed:
 </tr>
 </thead>
 <tr>
-<td rowspan = "3"><code>print()</code></td>
-<td rowspan = "3">Print the result to the terminal</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print the result to the terminal</td>
 <td><code>format_json</code></td>
 <td><code>bool</code></td>
 <td>Whether to format the output content using <code>JSON</code> indentation</td>
@@ -379,8 +377,8 @@ In the above Python script, the following steps are executed:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td rowspan = "3"><code>save_to_json()</code></td>
-<td rowspan = "3">Save the result as a JSON file</td>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save the result as a JSON file</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
 <td>The file path for saving. If it is a directory, the saved file will have the same name as the input file type</td>
@@ -430,12 +428,12 @@ In the above Python script, the following steps are executed:
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">Get the prediction results in <code>json</code> format</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction results in <code>json</code> format</td>
 </tr>
 <tr>
-<td rowspan = "2"><code>img</code></td>
-<td rowspan = "2">Get the visualization image in <code>dict</code> format</td>
+<td rowspan="2"><code>img</code></td>
+<td rowspan="2">Get the visualization image in <code>dict</code> format</td>
 </tr>
 </table>
 
@@ -482,7 +480,6 @@ Moreover, PaddleX also provides three other deployment methods, as detailed belo
 Below are the API references for basic service deployment and examples of multi-language service calls:
 
 <details><summary>API Reference</summary>
-
 <p>For the main operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
@@ -607,66 +604,60 @@ Below are the API references for basic service deployment and examples of multi-
 </table>
 <p>An example of <code>result</code> is as follows:</p>
 <pre><code class="language-json">{
-&quot;labelMap&quot;: [
+"labelMap": [
 0,
 0,
 1,
 2
 ],
-&quot;size&quot;: [
+"size": [
 2,
 2
 ],
-&quot;image&quot;: &quot;xxxxxx&quot;
+"image": "xxxxxx"
 }
 </code></pre></details>
-
 <details><summary>Multi-language Service Call Example</summary>
-
 <details>
 <summary>Python</summary>
-
-
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/semantic-segmentation&quot; # Service URL
-image_path = &quot;./demo.jpg&quot;
-output_image_path = &quot;./out.jpg&quot;
+API_URL = "http://localhost:8080/semantic-segmentation" # Service URL
+image_path = "./demo.jpg"
+output_image_path = "./out.jpg"
 
 # Base64 encode the local image
-with open(image_path, &quot;rb&quot;) as file:
+with open(image_path, "rb") as file:
     image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
-payload = {&quot;image&quot;: image_data}  # Base64 encoded file content or image URL
+payload = {"image": image_data}  # Base64 encoded file content or image URL
 
 # Call the API
 response = requests.post(API_URL, json=payload)
 
 # Handle the API response
 assert response.status_code == 200
-result = response.json()[&quot;result&quot;]
-with open(output_image_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result[&quot;image&quot;]))
-print(f&quot;Output image saved at {output_image_path}&quot;)
+result = response.json()["result"]
+with open(output_image_path, "wb") as file:
+    file.write(base64.b64decode(result["image"]))
+print(f"Output image saved at {output_image_path}")
 # result.labelMap records the category label of each pixel in the image (in row-major order) see API reference documentation for details
 </code></pre></details>
-
 <details><summary>C++</summary>
-
 <pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &quot;cpp-httplib/httplib.h&quot; // https://github.com/Huiyicc/cpp-httplib
-#include &quot;nlohmann/json.hpp&quot; // https://github.com/nlohmann/json
-#include &quot;base64.hpp&quot; // https://github.com/tobiaslocker/base64
+#include "cpp-httplib/httplib.h" // https://github.com/Huiyicc/cpp-httplib
+#include "nlohmann/json.hpp" // https://github.com/nlohmann/json
+#include "base64.hpp" // https://github.com/tobiaslocker/base64
 
 int main() {
-    httplib::Client client(&quot;localhost:8080&quot;);
-    const std::string imagePath = &quot;./demo.jpg&quot;;
-    const std::string outputImagePath = &quot;./out.jpg&quot;;
+    httplib::Client client("localhost:8080");
+    const std::string imagePath = "./demo.jpg";
+    const std::string outputImagePath = "./out.jpg";
 
     httplib::Headers headers = {
-        {&quot;Content-Type&quot;, &quot;application/json&quot;}
+        {"Content-Type", "application/json"}
     };
 
     // Base64 encode the local image
@@ -676,46 +667,44 @@ int main() {
 
     std::vector&lt;char&gt; buffer(size);
     if (!file.read(buffer.data(), size)) {
-        std::cerr &lt;&lt; &quot;Error reading file.&quot; &lt;&lt; std::endl;
+        std::cerr &lt;&lt; "Error reading file." &lt;&lt; std::endl;
         return 1;
     }
     std::string bufferStr(reinterpret_cast&lt;const char*&gt;(buffer.data()), buffer.size());
     std::string encodedImage = base64::to_base64(bufferStr);
 
     nlohmann::json jsonObj;
-    jsonObj[&quot;image&quot;] = encodedImage;
+    jsonObj["image"] = encodedImage;
     std::string body = jsonObj.dump();
 
     // Call the API
-    auto response = client.Post(&quot;/semantic-segmentation&quot;, headers, body, &quot;application/json&quot;);
+    auto response = client.Post("/semantic-segmentation", headers, body, "application/json");
     // Handle the API response
     if (response &amp;&amp; response-&gt;status == 200) {
         nlohmann::json jsonResponse = nlohmann::json::parse(response-&gt;body);
-        auto result = jsonResponse[&quot;result&quot;];
+        auto result = jsonResponse["result"];
 
-        encodedImage = result[&quot;image&quot;];
+        encodedImage = result["image"];
         std::string decodedString = base64::from_base64(encodedImage);
         std::vector&lt;unsigned char&gt; decodedImage(decodedString.begin(), decodedString.end());
         std::ofstream outputImage(outPutImagePath, std::ios::binary | std::ios::out);
         if (outputImage.is_open()) {
             outputImage.write(reinterpret_cast&lt;char*&gt;(decodedImage.data()), decodedImage.size());
             outputImage.close();
-            std::cout &lt;&lt; &quot;Output image saved at &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
+            std::cout &lt;&lt; "Output image saved at " &lt;&lt; outPutImagePath &lt;&lt; std::endl;
             // result.labelMap records the category label of each pixel in the image (in row-major order) see API reference documentation for details
         } else {
-            std::cerr &lt;&lt; &quot;Unable to open file for writing: &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
+            std::cerr &lt;&lt; "Unable to open file for writing: " &lt;&lt; outPutImagePath &lt;&lt; std::endl;
         }
     } else {
-        std::cout &lt;&lt; &quot;Failed to send HTTP request.&quot; &lt;&lt; std::endl;
+        std::cout &lt;&lt; "Failed to send HTTP request." &lt;&lt; std::endl;
         return 1;
     }
 
     return 0;
 }
 </code></pre></details>
-
 <details><summary>Java</summary>
-
 <pre><code class="language-java">import okhttp3.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -772,51 +761,49 @@ public class Main {
     }
 }
 </code></pre></details>
-
 <details><summary>Go</summary>
-
 <pre><code class="language-go">package main
 
 import (
-    &quot;bytes&quot;
-    &quot;encoding/base64&quot;
-    &quot;encoding/json&quot;
-    &quot;fmt&quot;
-    &quot;io/ioutil&quot;
-    &quot;net/http&quot;
+    "bytes"
+    "encoding/base64"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
 )
 
 func main() {
-    API_URL := &quot;http://localhost:8080/semantic-segmentation&quot;
-    imagePath := &quot;./demo.jpg&quot;
-    outputImagePath := &quot;./out.jpg&quot;
+    API_URL := "http://localhost:8080/semantic-segmentation"
+    imagePath := "./demo.jpg"
+    outputImagePath := "./out.jpg"
 
     // Encode the local image to Base64
     imageBytes, err := ioutil.ReadFile(imagePath)
     if err != nil {
-        fmt.Println(&quot;Error reading image file:&quot;, err)
+        fmt.Println("Error reading image file:", err)
         return
     }
     imageData := base64.StdEncoding.EncodeToString(imageBytes)
 
-    payload := map[string]string{&quot;image&quot;: imageData} // Base64-encoded file content or image URL
+    payload := map[string]string{"image": imageData} // Base64-encoded file content or image URL
     payloadBytes, err := json.Marshal(payload)
     if err != nil {
-        fmt.Println(&quot;Error marshaling payload:&quot;, err)
+        fmt.Println("Error marshaling payload:", err)
         return
     }
 
     // Call the API
     client := &amp;http.Client{}
-    req, err := http.NewRequest(&quot;POST&quot;, API_URL, bytes.NewBuffer(payloadBytes))
+    req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
     if err != nil {
-        fmt.Println(&quot;Error creating request:&quot;, err)
+        fmt.Println("Error creating request:", err)
         return
     }
 
     res, err := client.Do(req)
     if err != nil {
-        fmt.Println(&quot;Error sending request:&quot;, err)
+        fmt.Println("Error sending request:", err)
         return
     }
     defer res.Body.Close()
@@ -824,39 +811,37 @@ func main() {
     // Process the response data
     body, err := ioutil.ReadAll(res.Body)
     if err != nil {
-        fmt.Println(&quot;Error reading response body:&quot;, err)
+        fmt.Println("Error reading response body:", err)
         return
     }
     type Response struct {
         Result struct {
-            Image      string   `json:&quot;image&quot;`
-            Labelmap []map[string]interface{} `json:&quot;labelMap&quot;`
-        } `json:&quot;result&quot;`
+            Image      string   `json:"image"`
+            Labelmap []map[string]interface{} `json:"labelMap"`
+        } `json:"result"`
     }
     var respData Response
     err = json.Unmarshal([]byte(string(body)), &amp;respData)
     if err != nil {
-        fmt.Println(&quot;Error unmarshaling response body:&quot;, err)
+        fmt.Println("Error unmarshaling response body:", err)
         return
     }
 
     outputImageData, err := base64.StdEncoding.DecodeString(respData.Result.Image)
     if err != nil {
-        fmt.Println(&quot;Error decoding base64 image data:&quot;, err)
+        fmt.Println("Error decoding base64 image data:", err)
         return
     }
     err = ioutil.WriteFile(outputImagePath, outputImageData, 0644)
     if err != nil {
-        fmt.Println(&quot;Error writing image to file:&quot;, err)
+        fmt.Println("Error writing image to file:", err)
         return
     }
-    fmt.Printf(&quot;Image saved at %s.jpg\n&quot;, outputImagePath)
+    fmt.Printf("Image saved at %s.jpg\n", outputImagePath)
     // result.labelMap records the class labels of each pixel in the image (arranged in row-major order). See the API reference for details.
 }
 </code></pre></details>
-
 <details><summary>C#</summary>
-
 <pre><code class="language-csharp">using System;
 using System.IO;
 using System.Net.Http;
@@ -867,9 +852,9 @@ using Newtonsoft.Json.Linq;
 
 class Program
 {
-    static readonly string API_URL = &quot;http://localhost:8080/semantic-segmentation&quot;;
-    static readonly string imagePath = &quot;./demo.jpg&quot;;
-    static readonly string outputImagePath = &quot;./out.jpg&quot;;
+    static readonly string API_URL = "http://localhost:8080/semantic-segmentation";
+    static readonly string imagePath = "./demo.jpg";
+    static readonly string outputImagePath = "./out.jpg";
 
     static async Task Main(string[] args)
     {
@@ -879,8 +864,8 @@ class Program
         byte[] imageBytes = File.ReadAllBytes(imagePath);
         string image_data = Convert.ToBase64String(imageBytes);
 
-        var payload = new JObject{ { &quot;image&quot;, image_data } }; // Base64 encoded file content or image URL
-        var content = new StringContent(payload.ToString(), Encoding.UTF8, &quot;application/json&quot;);
+        var payload = new JObject{ { "image", image_data } }; // Base64 encoded file content or image URL
+        var content = new StringContent(payload.ToString(), Encoding.UTF8, "application/json");
 
         // Call the API
         HttpResponseMessage response = await httpClient.PostAsync(API_URL, content);
@@ -890,24 +875,22 @@ class Program
         string responseBody = await response.Content.ReadAsStringAsync();
         JObject jsonResponse = JObject.Parse(responseBody);
 
-        string base64Image = jsonResponse[&quot;result&quot;][&quot;image&quot;].ToString();
+        string base64Image = jsonResponse["result"]["image"].ToString();
         byte[] outputImageBytes = Convert.FromBase64String(base64Image);
 
         File.WriteAllBytes(outputImagePath, outputImageBytes);
-        Console.WriteLine($&quot;Output image saved at {outputImagePath}&quot;);
+        Console.WriteLine($"Output image saved at {outputImagePath}");
         // result.labelMap records the class label of each pixel in the image (arranged in row-major order). See the API reference documentation for details.
     }
 }
 </code></pre></details>
-
 <details><summary>Node.js</summary>
-
 <pre><code class="language-js">const axios = require('axios');
 const fs = require('fs');
 
 const API_URL = 'http://localhost:8080/semantic-segmentation'
 const imagePath = './demo.jpg'
-const outputImagePath = &quot;./out.jpg&quot;;
+const outputImagePath = "./out.jpg";
 
 let config = {
    method: 'POST',
@@ -928,8 +911,8 @@ function encodeImageToBase64(filePath) {
 axios.request(config)
 .then((response) =&gt; {
     // Handle the API response
-    const result = response.data[&quot;result&quot;];
-    const imageBuffer = Buffer.from(result[&quot;image&quot;], 'base64');
+    const result = response.data["result"];
+    const imageBuffer = Buffer.from(result["image"], 'base64');
     fs.writeFile(outputImagePath, imageBuffer, (err) =&gt; {
       if (err) throw err;
       console.log(`Output image saved at ${outputImagePath}`);
@@ -940,9 +923,7 @@ axios.request(config)
   console.log(error);
 });
 </code></pre></details>
-
 <details><summary>PHP</summary>
-
 <pre><code class="language-php">&lt;?php
 
 $API_URL = "http://localhost:8080/semantic-segmentation"; // Service URL
@@ -983,20 +964,20 @@ Since the general semantic segmentation pipeline includes a semantic segmentatio
 
 
 <table>
-  <thead>
-    <tr>
-      <th>Scenario</th>
-      <th>Fine-Tuning Module</th>
-      <th>Reference Link</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Prediction results are not satisfactory</td>
-      <td>Semantic Segmentation Module</td>
-      <td><a href="../../../module_usage/tutorials/cv_modules/semantic_segmentation.en.md">Link</a></td>
-    </tr>
-  </tbody>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Fine-Tuning Module</th>
+<th>Reference Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prediction results are not satisfactory</td>
+<td>Semantic Segmentation Module</td>
+<td><a href="../../../module_usage/tutorials/cv_modules/semantic_segmentation.en.md">Link</a></td>
+</tr>
+</tbody>
 </table>
 
 ### 4.2 Model Application

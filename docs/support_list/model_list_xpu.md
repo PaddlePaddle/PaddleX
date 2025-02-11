@@ -258,7 +258,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>4.2 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">训练模型</a></td></tr>
 <tr>
-<td>PP-OCRv4_server_det ）</td>
+<td>PP-OCRv4_server_det</td>
 <td>82.69</td>
 <td>100.1M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_det ）_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det ）_pretrained.pdparams">训练模型</a></td></tr>

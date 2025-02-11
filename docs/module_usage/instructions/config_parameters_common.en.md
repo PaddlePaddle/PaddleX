@@ -5,6 +5,7 @@ comments: true
 # PaddleX Common Model Configuration File Parameter Explanation
 
 # Global
+
 <table>
 <thead>
 <tr>
@@ -47,7 +48,9 @@ comments: true
 </tr>
 </tbody>
 </table>
+
 # CheckDataset
+
 <table>
 <thead>
 <tr>
@@ -102,7 +105,9 @@ comments: true
 </tr>
 </tbody>
 </table>
+
 # Train
+
 <table>
 <thead>
 <tr>
@@ -175,7 +180,9 @@ comments: true
 </tr>
 </tbody>
 </table>
+
 # Evaluate
+
 <table>
 <thead>
 <tr>
@@ -200,7 +207,9 @@ comments: true
 </tr>
 </tbody>
 </table>
+
 # Export
+
 <table>
 <thead>
 <tr>
@@ -219,7 +228,9 @@ comments: true
 </tr>
 </tbody>
 </table>
+
 # Predict
+
 <table>
 <thead>
 <tr>
@@ -248,5 +259,13 @@ comments: true
 <td>Path to the prediction input</td>
 <td>The prediction input path specified in the YAML file</td>
 </tr>
+
+<tr>
+<td>kernel_option</td>
+<td>dict</td>
+<td>Path to the prediction input</td>
+<td>Inference engine setting, such as: "run_mode: paddle"</td>
+</tr>
+
 </tbody>
 </table>

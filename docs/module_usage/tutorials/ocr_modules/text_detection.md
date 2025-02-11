@@ -15,8 +15,8 @@ comments: true
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>检测Hmean（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M)</th>
 <th>介绍</th>
 </tr>
@@ -25,38 +25,37 @@ comments: true
 <tr>
 <td>PP-OCRv4_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">训练模型</a></td>
 <td>82.56</td>
-<td>83.3501</td>
-<td>2434.01</td>
+<td>83.34 / 80.91</td>
+<td>442.58 / 442.58</td>
 <td>109</td>
 <td>PP-OCRv4 的服务端文本检测模型，精度更高，适合在性能较好的服务器上部署</td>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">训练模型</a></td>
 <td>77.35</td>
-<td>10.6923</td>
-<td>120.177</td>
+<td>8.79 / 3.13</td>
+<td>51.00 / 28.58</td>
 <td>4.7</td>
 <td>PP-OCRv4 的移动端文本检测模型，效率更高，适合在端侧设备部署</td>
 </tr>
 <tr>
 <td>PP-OCRv3_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv3_mobile_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv3_mobile_det_pretrained.pdparams">训练模型</a></td>
 <td>78.68</td>
-<td></td>
-<td></td>
+<td>8.44 / 2.91</td>
+<td>27.87 / 27.87</td>
 <td>2.1</td>
 <td>PP-OCRv3 的移动端文本检测模型，效率更高，适合在端侧设备部署</td>
 </tr>
 <tr>
 <td>PP-OCRv3_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv3_server_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv3_server_det_pretrained.pdparams">训练模型</a></td>
 <td>80.11</td>
-<td></td>
-<td></td>
+<td>65.41 / 13.67</td>
+<td>305.07 / 305.07</td>
 <td>102.1</td>
 <td>PP-OCRv3 的服务端文本检测模型，精度更高，适合在性能较好的服务器上部署</td>
 </tr>
 </tbody>
 </table>
-
 <b>注：以上精度指标的评估集是 PaddleOCR 自建的中英文数据集，覆盖街景、网图、文档、手写多个场景，其中文本识别包含 593 张图片。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b>
 
 ## 三、快速集成
@@ -77,17 +76,18 @@ for res in output:
 运行后，得到的结果为：
 
 ```bash
-{'res': {'input_path': 'general_ocr_001.png', 'dt_polys': [[[73, 553], [443, 541], [444, 574], [74, 585]], [[17, 507], [515, 489], [517, 534], [19, 552]], [[191, 458], [398, 449], [400, 481], [193, 490]], [[41, 413], [483, 390], [485, 431], [43, 453]]], 'dt_scores': [0.7555687038101032, 0.701620896397861, 0.8839516283528792, 0.8123399529333318]}}
+{'res': {'input_path': 'general_ocr_001.png', "page_index": None, 'dt_polys': [[[73, 552], [453, 542], [454, 575], [74, 585]], [[17, 506], [515, 486], [517, 535], [19, 555]], [[189, 457], [398, 449], [399, 482], [190, 490]], [[41, 412], [484, 387], [486, 433], [43, 457]]], 'dt_scores': [0.7555687038101032, 0.701620896397861, 0.8839516283528792, 0.8123399529333318]}}
 ```
 
 运行结果参数含义如下：
 - `input_path`：表示输入待预测图像的路径
+- `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
 - `dt_polys`：表示预测的文本检测框，其中每个文本检测框包含一个四边形的四个顶点。其中每个顶点都是一个二元组，分别表示该顶点的x坐标和y坐标
 - `dt_scores`：表示预测的文本检测框的置信度
 
 可视化图片如下：
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/text_det/general_ocr_001_res.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/text_det/general_ocr_001_res.png"/>
 
 相关方法、参数等说明如下：
 
@@ -123,8 +123,8 @@ for res in output:
 <td>
 <ul>
 <li><b>int</b>: 大于0的任意整数
-<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</td>
-</ul>
+<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -134,9 +134,9 @@ for res in output:
 <td>
 <ul>
 <li><b>str</b>: 支持min和max. min表示保证图像最短边不小于det_limit_side_len, max: 表示保证图像最长边不大于limit_side_len
-<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</td>
-</ul>
-</td>
+<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</li></li></ul></td>
+
+
 <td>None</td>
 </tr>
 <tr>
@@ -146,8 +146,8 @@ for res in output:
 <td>
 <ul>
 <li><b>float</b>: 大于0的任意浮点数
-<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</td>
-</ul>
+<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -157,8 +157,8 @@ for res in output:
 <td>
 <ul>
 <li><b>float</b>: 大于0的任意浮点数
-<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</td>
-</ul>
+<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -168,8 +168,8 @@ for res in output:
 <td>
 <ul>
 <li><b>float</b>: 大于0的任意浮点数
-<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</td>
-</ul>
+<li><b>None</b>: 如果设置为None, 将默认使用PaddleX官方模型配置中的该参数值</li></li></ul></td>
+
 <td>None</td>
 </tr>
 </table>
@@ -198,8 +198,7 @@ for res in output:
   <li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
   <li><b>URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">示例</a></li>
   <li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
-  <li><b>字典</b>，字典的<code>key</code>需与具体任务对应，如图像分类任务对应<code>\"img\"</code>，字典的<code>val</code>支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code></li>
-  <li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code></li>
+  <li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td>无</td>
@@ -218,8 +217,8 @@ for res in output:
 <td>
 <ul>
 <li><b>int</b>: 大于0的任意整数
-<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</td>
-</ul>
+<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -229,9 +228,9 @@ for res in output:
 <td>
 <ul>
 <li><b>str</b>: 支持min和max. min表示保证图像最短边不小于det_limit_side_len, max: 表示保证图像最长边不大于limit_side_len
-<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</td>
-</ul>
-</td>
+<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</li></li></ul></td>
+
+
 <td>None</td>
 </tr>
 <tr>
@@ -241,8 +240,8 @@ for res in output:
 <td>
 <ul>
 <li><b>float</b>: 大于0的任意浮点数
-<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</td>
-</ul>
+<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -252,8 +251,8 @@ for res in output:
 <td>
 <ul>
 <li><b>float</b>: 大于0的任意浮点数
-<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</td>
-</ul>
+<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -263,8 +262,8 @@ for res in output:
 <td>
 <ul>
 <li><b>float</b>: 大于0的任意浮点数
-<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</td>
-</ul>
+<li><b>None</b>: 如果设置为None, 将默认使用模型初始化的该参数值</li></li></ul></td>
+
 <td>None</td>
 </tr>
 </table>
@@ -283,8 +282,8 @@ for res in output:
 </tr>
 </thead>
 <tr>
-<td rowspan = "3"><code>print()</code></td>
-<td rowspan = "3">打印结果到终端</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">打印结果到终端</td>
 <td><code>format_json</code></td>
 <td><code>bool</code></td>
 <td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
@@ -303,8 +302,8 @@ for res in output:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td rowspan = "3"><code>save_to_json()</code></td>
-<td rowspan = "3">将结果保存为json格式的文件</td>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">将结果保存为json格式的文件</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
 <td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
@@ -342,14 +341,13 @@ for res in output:
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">获取预测的<code>json</code>格式的结果</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">获取预测的<code>json</code>格式的结果</td>
 </tr>
 <tr>
-<td rowspan = "1"><code>img</code></td>
-<td rowspan = "1">获取格式为<code>dict</code>的可视化图像</td>
+<td rowspan="1"><code>img</code></td>
+<td rowspan="1">获取格式为<code>dict</code>的可视化图像</td>
 </tr>
-
 </table>
 
 
@@ -384,26 +382,26 @@ python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_mobile_det.yam
 <details><summary>👉 <b>校验结果详情（点击展开）</b></summary>
 <p>校验结果文件具体内容为：</p>
 <pre><code class="language-bash">{
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;train_samples&quot;: 200,
-    &quot;train_sample_paths&quot;: [
-      &quot;../dataset/ocr_det_dataset_examples/images/train_img_61.jpg&quot;,
-      &quot;../dataset/ocr_det_dataset_examples/images/train_img_289.jpg&quot;
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "train_samples": 200,
+    "train_sample_paths": [
+      "../dataset/ocr_det_dataset_examples/images/train_img_61.jpg",
+      "../dataset/ocr_det_dataset_examples/images/train_img_289.jpg"
     ],
-    &quot;val_samples&quot;: 50,
-    &quot;val_sample_paths&quot;: [
-      &quot;../dataset/ocr_det_dataset_examples/images/val_img_61.jpg&quot;,
-      &quot;../dataset/ocr_det_dataset_examples/images/val_img_137.jpg&quot;
+    "val_samples": 50,
+    "val_sample_paths": [
+      "../dataset/ocr_det_dataset_examples/images/val_img_61.jpg",
+      "../dataset/ocr_det_dataset_examples/images/val_img_137.jpg"
     ]
   },
-  &quot;analysis&quot;: {
-    &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
+  "analysis": {
+    "histogram": "check_dataset/histogram.png"
   },
-  &quot;dataset_path&quot;: &quot;./dataset/ocr_det_dataset_examples&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;TextDetDataset&quot;
+  "dataset_path": "./dataset/ocr_det_dataset_examples",
+  "show_type": "image",
+  "dataset_type": "TextDetDataset"
 }
 </code></pre>
 <p>上述校验结果中，<code>check_pass</code> 为 <code>true</code> 表示数据集格式符合要求，其他部分指标的说明如下：</p>
@@ -414,14 +412,13 @@ python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_mobile_det.yam
 <li><code>attributes.val_sample_paths</code>：该数据集验证集样本可视化图片相对路径列表；</li>
 </ul>
 <p>另外，数据集校验还对数据集中所有图片的长宽分布情况进行了分析分析，并绘制了分布直方图（histogram.png）：</p>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/text_det/01.png"></p></details>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/text_det/01.png"/></p></details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
 
 在您完成数据校验之后，可以通过<b>修改配置文件</b>或是<b>追加超参数</b>的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。
 
 <details><summary>👉 <b>格式转换/数据集划分详情（点击展开）</b></summary>
-
 <p><b>（1）数据集格式转换</b></p>
 <p>文本检测不支持数据格式转换。</p>
 <p><b>（2）数据集划分</b></p>
@@ -473,7 +470,6 @@ python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_mobile_det.yam
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明 [PaddleX通用模型配置文件参数说明](../../../module_usage/instructions/config_parameters_common.md)。
 
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
-
 <ul>
 <li>模型训练过程中，PaddleX 会自动保存模型权重文件，默认为<code>output</code>，如需指定保存路径，可通过配置文件中 <code>-o Global.output</code> 字段进行设置。</li>
 <li>PaddleX 对您屏蔽了动态图权重和静态图权重的概念。在模型训练的过程中，会同时产出动态图和静态图的权重，在模型推理时，默认选择静态图权重推理。</li>
@@ -505,7 +501,6 @@ python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_mobile_det.yam
 
 
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
-
 <p>在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如<code>-o Evaluate.weight_path=./output/best_accuracy/best_accuracy.pdparams</code>。</p>
 <p>在完成模型评估后，会产出<code>evaluate_result.json</code>，其记录了评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标，包含 <code>precision</code>、<code>recall</code>、<code>hmean</code>。</p></details>
 
@@ -535,8 +530,10 @@ python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_mobile_det.yam
 
 1.<b>产线集成</b>
 
-文本检测模块可以集成的 PaddleX 产线有[通用 OCR 产线](../../../pipeline_usage/tutorials/ocr_pipelines/OCR.md)、[表格识别产线](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition.md)、[文档场景信息抽取v3产线（PP-ChatOCRv3）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md)，只需要替换模型路径即可完成相关产线的文本检测模块的模型更新。
+文本检测模块可以集成的 PaddleX 产线有[通用 OCR 产线](../../../pipeline_usage/tutorials/ocr_pipelines/OCR.md)、[表格识别产线](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition.md)、[文档场景信息抽取v3产线（PP-ChatOCRv3-doc）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.md)，只需要替换模型路径即可完成相关产线的文本检测模块的模型更新。
 
 2.<b>模块集成</b>
 
 您产出的权重可以直接集成到文本检测模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
+
+您也可以利用 PaddleX 高性能推理插件来优化您模型的推理过程，进一步提升效率，详细的流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_inference.md)。

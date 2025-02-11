@@ -52,6 +52,15 @@ output = pipeline.predict(
 #     use_table_recognition=True,
 # )
 
+# output = pipeline.predict(
+#     "./test_samples/layout_double_column.png",
+#     use_doc_orientation_classify=False,
+#     use_doc_unwarping=False,
+#     use_common_ocr=True,
+#     use_seal_recognition=True,
+#     use_table_recognition=True,
+# )
+
 for res in output:
     res.print()
     res.save_to_img("./output")
