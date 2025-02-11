@@ -18,6 +18,11 @@ PaddleX offers two ways to experience the pipeline: one is through the PaddleX w
     ```bash
     paddlex --pipeline OCR \
         --input https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR_rec/case.png
+        --use_doc_orientation_classify False \
+        --use_doc_unwarping False \
+        --use_textline_orientation False \
+        --device gpu:0 \
+        --save_path ./output/
     ```
 
 - AIStudio Community Experience: Go to [Baidu AIStudio Community](https://aistudio.baidu.com/pipeline/mine), click "Create Pipeline", and create a <b>Universal OCR</b> pipeline for a quick trial.
@@ -87,7 +92,7 @@ tar -xf ./dataset/handwrite_chinese_text_rec.tar -C ./dataset/
 To verify the dataset, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/text_recognition/PP-OCRv4_server_rec.yaml \
+python main.py -c paddlex/configs/modules/text_recognition/PP-OCRv4_server_rec.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/handwrite_chinese_text_rec
 ```
@@ -128,7 +133,7 @@ After executing the above command, PaddleX will verify the dataset and collect b
   "analysis": {
     "histogram": "check_dataset\/histogram.png"
   },
-  "dataset_path": "\/mnt\/liujiaxuan01\/new\/new2\/handwrite_chinese_text_rec",
+  "dataset_path": "handwrite_chinese_text_rec",
   "show_type": "image",
   "dataset_type": "MSTextRecDataset"
 }
@@ -172,7 +177,7 @@ During data splitting, the original annotation files will be renamed to `xxx.bak
 Before training, ensure that you have validated your dataset. To complete PaddleX model training, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/text_recognition/PP-OCRv4_server_rec.yaml \
+python main.py -c paddlex/configs/modules/text_recognition/PP-OCRv4_server_rec.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/handwrite_chinese_text_rec
 ```
@@ -209,7 +214,7 @@ After completing model training, all outputs are saved in the specified output d
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model accuracy. To evaluate a model using PaddleX, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/text_recognition/PP-OCRv4_server_rec.yaml \
+python main.py -c paddlex/configs/modules/text_recognition/PP-OCRv4_server_rec.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/handwrite_chinese_text_rec
 ```
@@ -307,10 +312,10 @@ Next, based on a learning rate of 0.0002, we can increase the number of training
 Replace the model in the production line with the fine-tuned model for testing, for example:
 
 ```bash
-paddlex --pipeline OCR \
-        --model PP-OCRv4_server_det PP-OCRv4_server_rec \
-        --model_dir None output/best_accuracy/inference \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR_rec/case.png
+python main.py -c paddlex/configs/modules/text_recognition/PP-OCRv4_server_rec.yaml \
+    -o Global.mode=predict \
+    -o Predict.model_dir="output/best_model/inference" \
+    -o Predict.input=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR_rec/case.png
 ```
 
 The prediction results will be generated under `./output`, and the prediction result for `case.jpg` is shown below:
@@ -322,16 +327,52 @@ The prediction results will be generated under `./output`, and the prediction re
 
 ## 7. Development Integration/Deployment
 If the general OCR pipeline meets your requirements for inference speed and accuracy in the production line, you can proceed directly with development integration/deployment.
-1. Directly apply the trained model in your Python project by referring to the following sample code, and modify the `Pipeline.model` in the `paddlex/pipelines/OCR.yaml` configuration file to your own model path:
+
+1. If you need to use the fine-tuned model weights, you can obtain the configuration file for the OCR pipeline and load it for prediction. You can execute the following command to save the results in my_path:
+
+```
+paddlex --get_pipeline_config OCR --save_path ./my_path
+```
+
+Fill in the local path of the fine-tuned model weights into the `model_dir` field in the configuration file. If you need to directly apply the OCR pipeline to your Python project, you can refer to the following example:
+
+```yaml
+pipeline_name: OCR
+
+text_type: general
+
+use_doc_preprocessor: True
+use_textline_orientation: True
+
+SubPipelines:
+  DocPreprocessor:
+    ...
+
+SubModules:
+  TextDetection:
+    ...
+  TextLineOrientation:
+    ...
+  TextRecognition:
+    module_name: text_recognition
+    model_name: PP-OCRv4_mobile_rec
+    model_dir: null # 此处替换为您训练后得到的模型权重本地路径
+    batch_size: 1
+    score_thresh: 0.0
+```
+
+Subsequently, in your Python code, you can utilize the pipeline as follows:
+
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="paddlex/pipelines/OCR.yaml")
+pipeline = create_pipeline(pipeline="my_path/OCR.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR_rec/case.png")
 for res in output:
     res.print() # Print the structured output of the prediction
     res.save_to_img("./output/") # Save the visualized image of the result
     res.save_to_json("./output/") # Save the structured output of the prediction
 ```
+
 For more parameters, please refer to the [General OCR Pipeline Usage Tutorial](../pipeline_usage/tutorials/ocr_pipelines/OCR.en.md).
 
 2. Additionally, PaddleX offers three other deployment methods, detailed as follows:

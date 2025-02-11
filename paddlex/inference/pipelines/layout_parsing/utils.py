@@ -743,7 +743,7 @@ def _img_array2path(data: np.ndarray) -> str:
         # Generate a unique filename using UUID
         img_name = f"image_{uuid.uuid4().hex}.png"
 
-        return {f"imgs/{img_name}": Image.fromarray(data[:, :, ::-1])}
+        return {f"imgs/{img_name}": Image.fromarray(data)}
     else:
         raise ValueError(
             "Input data must be a 3-dimensional numpy array representing an image."

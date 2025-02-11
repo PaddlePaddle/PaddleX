@@ -84,7 +84,7 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
             <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1e798e05-dee7-4b41-9cc4-6708b6014efa"></td>
         </tr>
         <tr>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.html"><strong>PP-ChatOCRv3-doc</strong></a></th>
+            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.html"><strong>PP-ChatOCRv3-doc</strong></a></th>
             <th><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.html"><strong>Time Series Forecasting</strong></a></th>
             <th><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.html"><strong>Time Series Anomaly Detection</strong></a></th>
             <th><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.html"><strong>Time Series Classification</strong></a></th>
@@ -1788,9 +1788,9 @@ The following steps were executed:
 
     ---
 
-    Document scene information extraction v3 (PP-ChatOCRv3) is a document and image intelligent analysis solution with PaddlePaddle features, combining LLM and OCR technologies to solve complex document information extraction challenges such as layout analysis, rare character recognition, multi-page PDF, table, and seal recognition in one stop.
+    Document scene information extraction v3 (PP-ChatOCRv3-doc) is a document and image intelligent analysis solution with PaddlePaddle features, combining LLM and OCR technologies to solve complex document information extraction challenges such as layout analysis, rare character recognition, multi-page PDF, table, and seal recognition in one stop.
 
-    [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.en.md)
+    [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.en.md)
 
 - **OCR**
 

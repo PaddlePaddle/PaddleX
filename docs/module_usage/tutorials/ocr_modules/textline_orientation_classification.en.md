@@ -413,7 +413,7 @@ The model can be directly integrated into the PaddleX pipeline or into your own 
 
 1. **Pipeline Integration**
 
-The text line orientation classification module can be integrated into the [Document Scene Information Extraction v3 Pipeline (PP-ChatOCRv3)](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.en.md). Simply replace the model path to update the text line orientation classification module.
+The text line orientation classification module can be integrated into the [Document Scene Information Extraction v3 Pipeline (PP-ChatOCRv3-doc)](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.en.md). Simply replace the model path to update the text line orientation classification module.
 
 2. **Module Integration**
 

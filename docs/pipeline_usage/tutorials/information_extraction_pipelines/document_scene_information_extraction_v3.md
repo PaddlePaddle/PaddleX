@@ -5,7 +5,7 @@ comments: true
 # 文档场景信息抽取v3产线使用教程
 
 ## 1. 文档场景信息抽取v3产线介绍
-文档场景信息抽取v3（PP-ChatOCRv3）是飞桨特色的文档和图像智能分析解决方案，结合了 LLM 和 OCR 技术，一站式解决版面分析、生僻字、多页 pdf、表格、印章识别等常见的复杂文档信息抽取难点问题，结合文心大模型将海量数据和知识相融合，准确率高且应用广泛。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上部署。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
+文档场景信息抽取v3（PP-ChatOCRv3-doc）是飞桨特色的文档和图像智能分析解决方案，结合了 LLM 和 OCR 技术，一站式解决版面分析、生僻字、多页 pdf、表格、印章识别等常见的复杂文档信息抽取难点问题，结合文心大模型将海量数据和知识相融合，准确率高且应用广泛。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上部署。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
 
 <img src="https://github.com/user-attachments/assets/90cb740b-7741-4383-bc4c-663f9d042d02"/>
 
@@ -314,7 +314,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 
 首先需要配置获取 `PP-ChatOCRv3-doc` 产线的配置文件，可以通过以下命令获取：
 ```bash
-python -m paddlex --get_pipeline_config PP-ChatOCRv3-doc ./
+paddlex --get_pipeline_config PP-ChatOCRv3-doc ./
 ```
 
 执行上述命令后，配置文件会存储在当前路径下，打开配置文件，填写大语言模型的 ak/sk(access_token)，如下所示：
@@ -338,7 +338,7 @@ SubModules:
 ......
 ```
 
-PP-ChatOCRv3 仅支持文心大模型，支持在[百度云千帆平台](https://console.bce.baidu.com/qianfan/ais/console/onlineService)或者[星河社区 AIStudio](https://aistudio.baidu.com/)上获取相关的 ak/sk(access_token)。如果使用百度云千帆平台，可以参考[AK和SK鉴权调用API流程](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8) 获取ak/sk，如果使用星河社区 AIStudio，可以在[星河社区 AIStudio 访问令牌](https://aistudio.baidu.com/account/accessToken)中获取 access_token。
+PP-ChatOCRv3-doc 仅支持文心大模型，支持在[百度云千帆平台](https://console.bce.baidu.com/qianfan/ais/console/onlineService)或者[星河社区 AIStudio](https://aistudio.baidu.com/)上获取相关的 ak/sk(access_token)。如果使用百度云千帆平台，可以参考[AK和SK鉴权调用API流程](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8) 获取ak/sk，如果使用星河社区 AIStudio，可以在[星河社区 AIStudio 访问令牌](https://aistudio.baidu.com/account/accessToken)中获取 access_token。
 
 更新配置文件后，即可使用几行Python代码完成快速推理，可以使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_certificate-1.png)测试：
 
@@ -360,7 +360,7 @@ for res in visual_predict_res:
     layout_parsing_result = res["layout_parsing_result"]
 
 vector_info = pipeline.build_vector(visual_info_list, flag_save_bytes_vector=True)
-chat_result = pipeline.chat(key_list=["驾驶室准乘人数"], visual_info_list, vector_info=vector_info)
+chat_result = pipeline.chat(key_list=["驾驶室准乘人数"], visual_info=visual_info_list, vector_info=vector_info)
 print(chat_result)
 
 ```
@@ -371,7 +371,7 @@ print(chat_result)
 {'chat_res': {'驾驶室准乘人数': '2'}}
 ```
 
-PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
+PP-ChatOCRv3-doc 预测的流程、API说明、产出说明如下：
 
 <details><summary>（1）调用 <code>create_pipeline</code> 方法实例化PP-ChatOCRv3产线对象。</summary>
 
@@ -391,7 +391,13 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 <td><code>pipeline</code></td>
 <td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
 <td><code>str</code></td>
-<td>无</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>产线具体的配置信息（如果和<code>pipeline</code>同时设置，优先级高于<code>pipeline</code>，且要求产线名和<code>pipeline</code>一致）。</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
@@ -408,7 +414,8 @@ PP-ChatOCRv3 预测的流程、API说明、产出说明如下：
 </tbody>
 </table>
 </details>
-<details><summary>（2）调用 PP-ChatOCRv3 产线对象的 <code>visual_predict()</code> 方法获取视觉预测结果。 该方法将返回一个 generator。</summary>
+
+<details><summary>（2）调用 PP-ChatOCRv3-doc 产线对象的 <code>visual_predict()</code> 方法获取视觉预测结果。 该方法将返回一个 generator。</summary>
 
 以下是 `visual_predict()` 方法的参数及其说明：
 
@@ -870,8 +877,10 @@ for res in visual_predict_res:
             - `rec_scores`: `(List[float])` 单元格的识别置信度
             - `rec_boxes`: `(numpy.ndarray)` 检测框的矩形边界框数组，shape为(n, 4)，dtype为int16。每一行表示一个矩形
 
-- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
-- 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_ocr_res_img.{your_img_extension}`，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)
+- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
+- 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则会将版面区域检测可视化图像、全局OCR可视化图像、版面阅读顺序可视化图像等内容保存，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)
+
+
 
 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
 <table>
@@ -894,7 +903,8 @@ for res in visual_predict_res:
 - `json` 属性获取的预测结果为dict类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
 - `img` 属性返回的预测结果是一个字典类型的数据。其中，键分别为 `layout_det_res`、`overall_ocr_res`、`text_paragraphs_ocr_res`、`formula_res_region1`、`table_cell_img` 和 `seal_res_region1`，对应的值是 `Image.Image` 对象：分别用于显示版面区域检测、OCR、OCR文本段落、公式、表格和印章结果的可视化图像。如果没有使用可选模块，则字典中只包含 `layout_det_res`。
 </details>
-<details><summary>（4）调用PP-ChatOCRv3的产线对象的 <code>build_vector()</code> 方法，对文本内容进行向量构建。</summary>
+
+<details><summary>（4）调用 PP-ChatOCRv3-doc 的产线对象的 <code>build_vector()</code> 方法，对文本内容进行向量构建。</summary>
 
 以下是 `build_vector()` 方法的参数及其说明：
 
@@ -944,7 +954,8 @@ for res in visual_predict_res:
 - `flag_too_short_text`：`(bool)`是否文本长度小于最小字符数量
 - `vector`: `(str|list)` 文本的二进制内容或者文本内容，取决于`flag_save_bytes_vector`和`min_characters`的值，如果`flag_save_bytes_vector=True`且文本长度大于等于最小字符数量，则返回二进制内容；否则返回原始的文本。
 </details>
-<details><summary>（5）调用PP-ChatOCRv3的产线对象的 <code>chat()</code> 方法，对关键信息进行抽取。</summary>
+
+<details><summary>（5）调用 PP-ChatOCRv3-doc 的产线对象的 <code>chat()</code> 方法，对关键信息进行抽取。</summary>
 
 以下是 `chat()` 方法的参数及其说明：
 
@@ -1690,11 +1701,13 @@ SubModules:
     TextRecognition:
     module_name: text_recognition
     model_name: PP-OCRv4_server_rec
-    model_dir: null # 替换为微调后的文本检测模型权重路径
+    model_dir: null # 替换为微调后的文本识别模型权重路径
     batch_size: 1
             score_thresh: 0
 ......
 ```
+
+<br>注：为了文档紧凑，上述只列举了两个模型，事实上，配置文件中的模型均可替换。</br>
 
 随后， 参考[2.2 本地体验](#22-本地体验)中的命令行方式或Python脚本方式，加载修改后的产线配置文件即可。
 
