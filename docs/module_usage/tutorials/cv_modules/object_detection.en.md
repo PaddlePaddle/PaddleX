@@ -630,7 +630,7 @@ After executing the above command, PaddleX will validate the dataset and summari
   "analysis": {
     "histogram": "check_dataset/histogram.png"
   },
-  "dataset_path": "./dataset/det_coco_examples",
+  "dataset_path": "det_coco_examples",
   "show_type": "image",
   "dataset_type": "COCODetDataset"
 }

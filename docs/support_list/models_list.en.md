@@ -12,7 +12,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model Name</th>
 <th>Top1 Acc (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size</th>
 <th>yaml File</th>
@@ -724,7 +724,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model Name</th>
 <th>mAP (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size</th>
 <th>yaml File</th>
@@ -790,7 +790,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model Name</th>
 <th>mA (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size</th>
 <th>yaml File</th>
@@ -816,7 +816,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model Name</th>
 <th>mA (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size</th>
 <th>yaml File</th>
@@ -841,7 +841,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model Name</th>
 <th>recall@1 (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size</th>
 <th>yaml File</th>
@@ -882,7 +882,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model Name</th>
 <th>Top-1 Acc (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size</th>
 <th>yaml File</th>
@@ -908,7 +908,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <th>Model Name</th>
 <th>Output Feature Dimension</th>
 <th>Acc (%)<br/>AgeDB-30/CFP-FP/LFW</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>yaml File</th>
@@ -943,7 +943,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model Name</th>
 <th>mAP (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size</th>
 <th>yaml File</th>
@@ -968,7 +968,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model Name</th>
 <th>mAP (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size</th>
 <th>yaml File</th>
@@ -1311,7 +1311,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model Name</th>
 <th>mAP (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size</th>
 <th>yaml File</th>
@@ -1357,7 +1357,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <th>Model</th>
 <th>mAP(0.5:0.95)</th>
 <th>mAP(0.5)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Model Download Link</th>
@@ -1379,7 +1379,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <table>
 <tr>
 <th>Model</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Model Download Link</th>
@@ -1407,7 +1407,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model</th>
 <th>mAP(%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>yaml File</th>
@@ -1431,7 +1431,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model Name</th>
 <th>mAP (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size</th>
 <th>yaml File</th>
@@ -1464,7 +1464,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model Name</th>
 <th>mAP (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size</th>
 <th>yaml File</th>
@@ -1497,7 +1497,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model Name</th>
 <th style="text-align: center;">AP (%)<br/>Easy/Medium/Hard</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size</th>
 <th>yaml File</th>
@@ -1547,7 +1547,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model Name</th>
 <th>mIoU</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size</th>
 <th>yaml File</th>
@@ -1576,7 +1576,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <th>Scheme</th>
 <th>Input Size</th>
 <th>AP(0.5:0.95)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>yaml File</th>
@@ -1634,7 +1634,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model Name</th>
 <th>mloU（%）</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size</th>
 <th>yaml File</th>
@@ -1774,7 +1774,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model Name</th>
 <th>mIoU (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size</th>
 <th>yaml File</th>
@@ -1823,7 +1823,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model Name</th>
 <th>Mask AP</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size</th>
 <th>yaml File</th>
@@ -1974,7 +1974,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model</th>
 <th>Detection Hmean (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>yaml File</th>
@@ -2028,7 +2028,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model Name</th>
 <th>Detection Hmean (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size</th>
 <th>yaml File</th>
@@ -2062,7 +2062,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model</th>
 <th>Recognition Avg Accuracy(%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>yaml File</th>
@@ -2110,7 +2110,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model</th>
 <th>Recognition Avg Accuracy(%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>yaml File</th>
@@ -2131,7 +2131,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model</th>
 <th>Recognition Avg Accuracy(%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>yaml File</th>
@@ -2153,7 +2153,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model</th>
 <th>Recognition Avg Accuracy(%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>yaml File</th>
@@ -2183,7 +2183,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model</th>
 <th>Recognition Avg Accuracy(%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>yaml File</th>
@@ -2330,7 +2330,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model</th>
 <th>Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>yaml File</th>
@@ -2377,7 +2377,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model</th>
 <th>mAP(%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>yaml File</th>
@@ -2406,7 +2406,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model</th>
 <th>Top1 Acc(%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>yaml File</th>
@@ -2430,7 +2430,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model Name</th>
 <th>MS-SSIM (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size</th>
 <th>yaml File</th>
@@ -2459,7 +2459,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>yaml File</th>
@@ -2484,7 +2484,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>yaml File</th>
@@ -2528,7 +2528,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>yaml File</th>
@@ -2554,7 +2554,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>yaml File</th>
@@ -2601,7 +2601,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <th>Model</th>
 <th>Top-1 Acc (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>yaml File</th>
