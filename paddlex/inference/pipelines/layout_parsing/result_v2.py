@@ -416,9 +416,9 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         for block in self["parsing_res_list"]:
             sub_blocks = block["sub_blocks"]
             for sub_block in sub_blocks:
-                if sub_block["label"] == "image":
+                if sub_block["label"] in ["image", "chart"]:
                     image_path, image_value = next(
-                        iter(sub_block["image"]["img"].items())
+                        iter(sub_block[sub_block["label"]]["img"].items())
                     )
                     markdown_info["markdown_images"][image_path] = image_value
 
