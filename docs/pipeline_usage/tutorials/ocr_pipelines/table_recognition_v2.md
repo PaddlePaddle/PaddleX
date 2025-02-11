@@ -9,22 +9,18 @@ comments: true
 
 通用表格识别产线v2用于解决表格识别任务，对图片中的表格进行识别，并以HTML格式输出。与通用表格识别产线不同，本产线引入了表格分类和表格单元格检测两个模块，并将其与表格结构识别模块串联以完成表格识别任务。基于本产线，可实现对表格的精准预测，使用场景覆盖通用、制造、金融、交通等各个领域。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/01.png">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/01.png"/>
 <b>通用</b><b>表格识别</b><b>产线v2中包含必选的表格结构识别模块、表格分类模块、表格单元格定位模块、文本检测模块和文本识别模块，以及可选的版面区域检测模块、文档图像方向分类模块和文本图像矫正模块</b>。
 
 <b>如果您更注重模型的精度，请选择精度较高的模型；如果您更在意模型的推理速度，请选择推理速度较快的模型；如果您关注模型的存储大小，请选择存储体积较小的模型。</b>
-
-
 <details><summary> 👉模型列表详情</summary>
-
 <p><b>表格识别模块模型：</b></p>
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>精度（%）</th>
-<th>GPU推理耗时 (ms)</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小 (M)</th>
 <th>介绍</th>
 </tr>
@@ -42,18 +38,14 @@ comments: true
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANeXt_wireless_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANeXt_wireless_pretrained.pdparams">训练模型</a></td>
 </tr>
 </table>
-
-
 <b>注：以上精度指标测量自 PaddleX 内部自建高难度中文表格识别数据集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b>
-
-
 <p><b>表格分类模块模型：</b></p>
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>Top1 Acc(%)</th>
-<th>GPU推理耗时 (ms)</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小 (M)</th>
 </tr>
 <tr>
@@ -65,15 +57,13 @@ comments: true
 </tr>
 </table>
 <p><b>注：以上精度指标测量自 PaddleX 内部自建表格分类数据集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
-
-
 <p><b>表格单元格检测模块模型：</b></p>
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>mAP(%)</th>
-<th>GPU推理耗时 (ms)</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小 (M)</th>
 <th>介绍</th>
 </tr>
@@ -93,16 +83,14 @@ comments: true
 </tr>
 </table>
 <p><b>注：以上精度指标测量自 PaddleX 内部自建表格单元格检测数据集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
-
-
 <p><b>文本检测模块模型：</b></p>
 <table>
 <thead>
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>检测Hmean（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M)</th>
 <th>介绍</th>
 </tr>
@@ -111,47 +99,45 @@ comments: true
 <tr>
 <td>PP-OCRv4_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">训练模型</a></td>
 <td>82.69</td>
-<td>83.3501</td>
-<td>2434.01</td>
+<td>83.34 / 80.91</td>
+<td>442.58 / 442.58</td>
 <td>109</td>
 <td>PP-OCRv4 的服务端文本检测模型，精度更高，适合在性能较好的服务器上部署</td>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">训练模型</a></td>
 <td>77.79</td>
-<td>10.6923</td>
-<td>120.177</td>
+<td>8.79 / 3.13</td>
+<td>51.00 / 28.58</td>
 <td>4.7</td>
 <td>PP-OCRv4 的移动端文本检测模型，效率更高，适合在端侧设备部署</td>
 </tr>
 </tbody>
 </table>
 <p><b>注：以上精度指标的评估集是 PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中检测包含 500 张图片。以上所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
-
-
 <p><b>文本识别模块模型：</b></p>
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>识别 Avg Accuracy(%)</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M）</th>
 <th>介绍</th>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">训练模型</a></td>
 <td>78.20</td>
-<td>7.95018</td>
-<td>46.7868</td>
+<td>4.82 / 4.82</td>
+<td>16.74 / 4.64</td>
 <td>10.6 M</td>
 <td rowspan="2">PP-OCRv4是百度飞桨视觉团队自研的文本识别模型PP-OCRv3的下一个版本，通过引入数据增强方案、GTC-NRTR指导分支等策略，在模型推理速度不变的情况下，进一步提升了文本识别精度。该模型提供了服务端（server）和移动端（mobile）两个不同版本，来满足不同场景下的工业需求。</td>
 </tr>
 <tr>
 <td>PP-OCRv4_server_rec </td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">训练模型</a></td>
 <td>79.20</td>
-<td>7.19439</td>
-<td>140.179</td>
+<td>6.58 / 6.58</td>
+<td>33.17 / 33.17</td>
 <td>71.2 M</td>
 </tr>
 </table>
@@ -160,16 +146,16 @@ comments: true
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>识别 Avg Accuracy(%)</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时（ms）</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M）</th>
 <th>介绍</th>
 </tr>
 <tr>
 <td>ch_SVTRv2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_SVTRv2_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">训练模型</a></td>
 <td>68.81</td>
-<td>8.36801</td>
-<td>165.706</td>
+<td>8.08 / 8.08</td>
+<td>50.17 / 42.50</td>
 <td>73.9 M</td>
 <td rowspan="1">
 SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队研发的服务端文本识别模型，其在PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务中荣获一等奖，A榜端到端识别精度相比PP-OCRv4提升6%。
@@ -181,30 +167,28 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>识别 Avg Accuracy(%)</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时（ms）</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M）</th>
 <th>介绍</th>
 </tr>
 <tr>
 <td>ch_RepSVTR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_RepSVTR_rec_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">训练模型</a></td>
 <td>65.07</td>
-<td>10.5047</td>
-<td>51.5647</td>
+<td>5.93 / 5.93</td>
+<td>20.73 / 7.32</td>
 <td>22.1 M</td>
 <td rowspan="1">    RepSVTR 文本识别模型是一种基于SVTRv2 的移动端文本识别模型，其在PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务中荣获一等奖，B榜端到端识别精度相比PP-OCRv4提升2.5%，推理速度持平。</td>
 </tr>
 </table>
 <p><b>注：以上精度指标的评估集是 <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务</a>B榜。 所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
-
-
 <table>
 <thead>
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>mAP(0.5)（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M）</th>
 <th>介绍</th>
 </tr>
@@ -236,20 +220,18 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 </tr>
 </tbody>
 </table>
-
 <b>注：以上精度指标的评估集是 PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志、合同、书本、试卷和研报等常见的 500 张文档类型图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
 
-> ❗ 以上列出的是版面检测模块重点支持的<b>3个核心模型</b>，该模块总共支持<b>11个全量模型</b>，包含多个预定义了不同类别的模型，完整的模型列表如下：
+&gt; ❗ 以上列出的是版面检测模块重点支持的<b>3个核心模型</b>，该模块总共支持<b>11个全量模型</b>，包含多个预定义了不同类别的模型，完整的模型列表如下：
 
 * <b>表格版面检测模型</b>
-
 <table>
 <thead>
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>mAP(0.5)（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M）</th>
 <th>介绍</th>
 </tr>
@@ -258,24 +240,22 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <tr>
 <td>PicoDet_layout_1x_table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_table_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">训练模型</a></td>
 <td>97.5</td>
-<td>12.623</td>
-<td>90.8934</td>
+<td>8.02 / 3.09</td>
+<td>23.70 / 20.41</td>
 <td>7.4 M</td>
 <td>基于PicoDet-1x在自建数据集训练的高效率版面区域定位模型，可定位表格这1类区域</td>
 </tr>
-</table>
-
+</tbody></table>
 <b>注：以上精度指标的评估集是 PaddleOCR 自建的版面表格区域检测数据集，包含中英文 7835 张带有表格的论文文档类型图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
 
 * <b>3类版面检测模型，包含表格、图像、印章</b>
-
 <table>
 <thead>
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>mAP(0.5)（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M）</th>
 <th>介绍</th>
 </tr>
@@ -284,40 +264,38 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <tr>
 <td>PicoDet-S_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">训练模型</a></td>
 <td>88.2</td>
-<td>13.5</td>
-<td>45.8</td>
+<td>8.99 / 2.22</td>
+<td>16.11 / 8.73</td>
 <td>4.8</td>
 <td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型</td>
 </tr>
 <tr>
 <td>PicoDet-L_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">训练模型</a></td>
 <td>89.0</td>
-<td>15.7</td>
-<td>159.8</td>
+<td>13.05 / 4.50</td>
+<td>41.30 / 41.30</td>
 <td>22.6</td>
 <td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的效率精度均衡版面区域定位模型</td>
 </tr>
 <tr>
 <td>RT-DETR-H_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">训练模型</a></td>
 <td>95.8</td>
-<td>114.6</td>
-<td>3832.6</td>
+<td>114.93 / 27.71</td>
+<td>947.56 / 947.56</td>
 <td>470.1</td>
 <td>基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型</td>
 </tr>
-</table>
-
+</tbody></table>
 <b>注：以上精度指标的评估集是 PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志和研报等常见的 1154 张文档类型图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
 
 * <b>5类英文文档区域检测模型，包含文字、标题、表格、图片以及列表</b>
-
 <table>
 <thead>
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>mAP(0.5)（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M）</th>
 <th>介绍</th>
 </tr>
@@ -326,24 +304,22 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <tr>
 <td>PicoDet_layout_1x</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">训练模型</a></td>
 <td>97.8</td>
-<td>13.0</td>
-<td>91.3</td>
+<td>9.03 / 3.10</td>
+<td>25.82 / 20.70</td>
 <td>7.4</td>
 <td>基于PicoDet-1x在PubLayNet数据集训练的高效率英文文档版面区域定位模型</td>
 </tr>
-</table>
-
+</tbody></table>
 <b>注：以上精度指标的评估集是 [PubLayNet](https://developer.ibm.com/exchanges/data/all/publaynet/) 的评估数据集，包含英文文档的 11245 张文图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
 
 * <b>17类区域检测模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</b>
-
 <table>
 <thead>
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>mAP(0.5)（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M）</th>
 <th>介绍</th>
 </tr>
@@ -352,35 +328,30 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <tr>
 <td>PicoDet-S_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">训练模型</a></td>
 <td>87.4</td>
-<td>13.6</td>
-<td>46.2</td>
+<td>9.11 / 2.12</td>
+<td>15.42 / 9.12</td>
 <td>4.8</td>
 <td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型</td>
 </tr>
-
 <tr>
 <td>PicoDet-L_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">训练模型</a></td>
 <td>89.0</td>
-<td>17.2</td>
-<td>160.2</td>
+<td>13.50 / 4.69</td>
+<td>43.32 / 43.32</td>
 <td>22.6</td>
 <td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的效率精度均衡版面区域定位模型</td>
 </tr>
-
 <tr>
 <td>RT-DETR-H_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">训练模型</a></td>
 <td>98.3</td>
-<td>115.1</td>
-<td>3827.2</td>
+<td>115.29 / 104.09</td>
+<td>995.27 / 995.27</td>
 <td>470.2</td>
 <td>基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型</td>
 </tr>
 </tbody>
 </table>
-
 <b>注：以上精度指标的评估集是 PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志和研报等常见的 892 张文档类型图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
-
-
 <p><b>文本图像矫正模块模型（可选）：</b></p>
 <table>
 <thead>
@@ -401,16 +372,14 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 </tbody>
 </table>
 <p><b>模型的精度指标测量自 <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet benchmark</a>。</b></p>
-
-
 <p><b>文档图像方向分类模块模型（可选）：</b></p>
 <table>
 <thead>
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>Top-1 Acc（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M)</th>
 <th>介绍</th>
 </tr>
@@ -419,8 +388,8 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <tr>
 <td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">训练模型</a></td>
 <td>99.06</td>
-<td>3.84845</td>
-<td>9.23735</td>
+<td>2.31 / 0.43</td>
+<td>3.37 / 1.27</td>
 <td>7</td>
 <td>基于PP-LCNet_x1_0的文档图像分类模型，含有四个类别，即0度，90度，180度，270度</td>
 </tr>
@@ -589,7 +558,7 @@ paddlex --pipeline table_recognition_v2 \
 </details>
 
 可视化结果保存在`save_path`下，其中表格识别的可视化结果如下：
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/03.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/03.png"/>
 
 
 ### 2.2 Python脚本方式集成
@@ -673,9 +642,9 @@ for res in output:
 <td><code>Python Var|str|list</code></td>
 <td>
 <ul>
-  <li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
-  <li><b>str</b>：如图像文件或者PDF文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件或PDF文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code>(当前不支持目录中包含PDF文件的预测，PDF文件需要指定到具体文件路径)</li>
-  <li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
+<li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
+<li><b>str</b>：如图像文件或者PDF文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件或PDF文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code>(当前不支持目录中包含PDF文件的预测，PDF文件需要指定到具体文件路径)</li>
+<li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -686,13 +655,13 @@ for res in output:
 <td><code>str|None</code></td>
 <td>
 <ul>
-  <li><b>CPU</b>：如 <code>cpu</code> 表示使用 CPU 进行推理；</li>
-  <li><b>GPU</b>：如 <code>gpu:0</code> 表示使用第 1 块 GPU 进行推理；</li>
-  <li><b>NPU</b>：如 <code>npu:0</code> 表示使用第 1 块 NPU 进行推理；</li>
-  <li><b>XPU</b>：如 <code>xpu:0</code> 表示使用第 1 块 XPU 进行推理；</li>
-  <li><b>MLU</b>：如 <code>mlu:0</code> 表示使用第 1 块 MLU 进行推理；</li>
-  <li><b>DCU</b>：如 <code>dcu:0</code> 表示使用第 1 块 DCU 进行推理；</li>
-  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化时，会优先使用本地的 GPU 0号设备，如果没有，则使用 CPU 设备；</li>
+<li><b>CPU</b>：如 <code>cpu</code> 表示使用 CPU 进行推理；</li>
+<li><b>GPU</b>：如 <code>gpu:0</code> 表示使用第 1 块 GPU 进行推理；</li>
+<li><b>NPU</b>：如 <code>npu:0</code> 表示使用第 1 块 NPU 进行推理；</li>
+<li><b>XPU</b>：如 <code>xpu:0</code> 表示使用第 1 块 XPU 进行推理；</li>
+<li><b>MLU</b>：如 <code>mlu:0</code> 表示使用第 1 块 MLU 进行推理；</li>
+<li><b>DCU</b>：如 <code>dcu:0</code> 表示使用第 1 块 DCU 进行推理；</li>
+<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化时，会优先使用本地的 GPU 0号设备，如果没有，则使用 CPU 设备；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -703,8 +672,8 @@ for res in output:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
-  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -715,8 +684,8 @@ for res in output:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
-  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -726,77 +695,61 @@ for res in output:
 <td><code>int|None</code></td>
 <td>
 <ul>
-  <li><b>int</b>：大于 <code>0</code> 的任意整数；</li>
-  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>960</code>；</li>
+<li><b>int</b>：大于 <code>0</code> 的任意整数；</li>
+<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>960</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
-</tr>
 <td><code>text_det_limit_type</code></td>
 <td>文本检测的图像边长限制类型</td>
 <td><code>str|None</code></td>
 <td>
 <ul>
-  <li><b>str</b>：支持 <code>min</code> 和 <code>max</code>，<code>min</code> 表示保证图像最短边不小于 <code>det_limit_side_len</code>，<code>max</code> 表示保证图像最长边不大于 <code>limit_side_len</code></li>
-  <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>max</code>；</li>
+<li><b>str</b>：支持 <code>min</code> 和 <code>max</code>，<code>min</code> 表示保证图像最短边不小于 <code>det_limit_side_len</code>，<code>max</code> 表示保证图像最长边不大于 <code>limit_side_len</code></li>
+<li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>max</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
-</tr>
 <td><code>text_det_thresh</code></td>
 <td>检测像素阈值，输出的概率图中，得分大于该阈值的像素点才会被认为是文字像素点</td>
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
-    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.3</code></td>
-</ul>
-</td>
+<li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.3</code></li></li></ul></td>
 <td><code>None</code></td>
-</tr>
 <td><code>text_det_box_thresh</code></td>
 <td>检测框阈值，检测结果边框内，所有像素点的平均得分大于该阈值时，该结果会被认为是文字区域</td>
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
-    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.6</code></td>
-</ul>
-</td>
+<li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.6</code></li></li></ul></td>
 <td><code>None</code></td>
-</tr>
 <td><code>text_det_unclip_ratio</code></td>
 <td>文本检测扩张系数，使用该方法对文字区域进行扩张，该值越大，扩张的面积越大</td>
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
-    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>2.0</code></td>
-</ul>
-</ul>
-</td>
+<li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>2.0</code></li></li></ul></td>
 <td><code>None</code></td>
-</tr>
 <td><code>text_rec_score_thresh</code></td>
 <td>文本识别阈值，得分大于该阈值的文本结果会被保留</td>
 <td><code>float|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
-    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.0</code>。即不设阈值</td>
-</ul>
-</ul>
-</td>
+<li><b>float</b>：大于 <code>0</code> 的任意浮点数
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.0</code>。即不设阈值</li></li></ul></td>
 <td><code>None</code></td>
-</tr>
 <tr>
 <td><code>use_layout_detection</code></td>
 <td>是否使用版面检测模块</td>
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
-  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -807,11 +760,9 @@ for res in output:
 <td><code>float|dict|None</code></td>
 <td>
 <ul>
-    <li><b>float</b>：大于 <code>0</code> 的任意浮点数
+<li><b>float</b>：大于 <code>0</code> 的任意浮点数
     <li><b>dict</b>：key是int类别id， value是大于 <code>0</code> 的任意浮点数
-    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.5</code></td>
-</ul>
-</td>
+    <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.5</code></li></li></li></ul></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -820,8 +771,8 @@ for res in output:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
-  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -832,9 +783,9 @@ for res in output:
 <td><code>float|list|None</code></td>
 <td>
 <ul>
-  <li><b>float</b>, 大于0的浮点数，如 1.1 , 表示将模型输出的检测框中心不变，宽和高都扩张1.1倍</li>
-  <li><b>列表</b>, 如 [1.2, 1.5] , 表示将模型输出的检测框中心不变，宽度扩张1.2倍，高度扩张1.5倍</li>
-  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为1.0</li>
+<li><b>float</b>, 大于0的浮点数，如 1.1 , 表示将模型输出的检测框中心不变，宽和高都扩张1.1倍</li>
+<li><b>列表</b>, 如 [1.2, 1.5] , 表示将模型输出的检测框中心不变，宽度扩张1.2倍，高度扩张1.5倍</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为1.0</li>
 </ul>
 </td>
 <tr>
@@ -843,15 +794,15 @@ for res in output:
 <td><code>string|None</code></td>
 <td>
 <ul>
-  <li><b>large</b>, 设置为large时，表示在模型输出的检测框中，对于互相重叠包含的检测框，只保留外部最大的框，删除重叠的内部框。</li>
-  <li><b>small</b>, 设置为small，表示在模型输出的检测框中，对于互相重叠包含的检测框，只保留内部被包含的小框，删除重叠的外部框。</li>
-  <li><b>union</b>, 不进行框的过滤处理，内外框都保留</li>
-  <li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>large</code></li>
+<li><b>large</b>, 设置为large时，表示在模型输出的检测框中，对于互相重叠包含的检测框，只保留外部最大的框，删除重叠的内部框。</li>
+<li><b>small</b>, 设置为small，表示在模型输出的检测框中，对于互相重叠包含的检测框，只保留内部被包含的小框，删除重叠的外部框。</li>
+<li><b>union</b>, 不进行框的过滤处理，内外框都保留</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>large</code></li>
 </ul>
 </td>
 <td>None</td>
 </tr>
-</table>
+</tr></table>
 
 （3）对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`xlsx`文件、保存为`HTML`文件、保存为`json`文件的操作:
 
@@ -867,8 +818,8 @@ for res in output:
 </tr>
 </thead>
 <tr>
-<td rowspan = "3"><code>print()</code></td>
-<td rowspan = "3">打印结果到终端</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">打印结果到终端</td>
 <td><code>format_json</code></td>
 <td><code>bool</code></td>
 <td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
@@ -887,8 +838,8 @@ for res in output:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td rowspan = "3"><code>save_to_json()</code></td>
-<td rowspan = "3">将结果保存为json格式的文件</td>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">将结果保存为json格式的文件</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
 <td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
@@ -930,8 +881,6 @@ for res in output:
 <td>保存的文件路径，支持目录或文件路径</td>
 <td>无</td>
 </tr>
-
-
 </table>
 
 - 调用`print()` 方法会将结果打印到终端，打印到终端的内容解释如下：
@@ -997,12 +946,12 @@ for res in output:
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">获取预测的 <code>json</code> 格式的结果</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">获取预测的 <code>json</code> 格式的结果</td>
 </tr>
 <tr>
-<td rowspan = "2"><code>img</code></td>
-<td rowspan = "2">获取格式为 <code>dict</code> 的可视化图像</td>
+<td rowspan="2"><code>img</code></td>
+<td rowspan="2">获取格式为 <code>dict</code> 的可视化图像</td>
 </tr>
 </table>
 
@@ -1054,7 +1003,6 @@ for res in output:
 以下是基础服务化部署的API参考与多语言服务调用示例：
 
 <details><summary>API参考</summary>
-
 <p>对于服务提供的主要操作：</p>
 <ul>
 <li>HTTP请求方法为POST。</li>
@@ -1148,33 +1096,93 @@ for res in output:
 </tr>
 <tr>
 <td><code>fileType</code></td>
-<td><code>integer</code></td>
+<td><code>integer</code> | <code>null</code></td>
 <td>文件类型。<code>0</code>表示PDF文件，<code>1</code>表示图像文件。若请求体无此属性，则将根据URL推断文件类型。</td>
 <td>否</td>
 </tr>
-</tbody>
-</table>
-<ul>
-<li>请求处理成功时，响应体的<code>result</code>具有如下属性：</li>
-</ul>
-<table>
-<thead>
 <tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>tableRecResults</code></td>
-<td><code>object</code></td>
-<td>表格识别结果。数组长度为1（对于图像输入）或文档页数与10中的较小者（对于PDF输入）。对于PDF输入，数组中的每个元素依次表示PDF文件中每一页的处理结果。</td>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>use_doc_orientation_classify</code> 参数说明。</td>
+<td>否</td>
 </tr>
 <tr>
-<td><code>dataInfo</code></td>
-<td><code>object</code></td>
-<td>输入数据信息。</td>
+<td><code>useDocUnwarping</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>use_doc_unwarping</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useLayoutDetection</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>use_layout_detection</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useOcrModel</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>use_ocr_model</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>layoutThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>layout_threshold</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>layoutNms</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>layout_nms</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>layoutUnclipRatio</code></td>
+<td><code>number</code> | <code>array</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>layout_unclip_ratio</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>layoutMergeBboxesMode</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>layout_merge_bboxes_mode</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_det_limit_side_len</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_det_limit_type</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_det_thresh</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_det_box_thresh</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_det_unclip_ratio</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_rec_score_thresh</code> 参数说明。</td>
+<td>否</td>
 </tr>
 </tbody>
 </table>
@@ -1189,77 +1197,51 @@ for res in output:
 </thead>
 <tbody>
 <tr>
-<td><code>tables</code></td>
-<td><code>array</code></td>
-<td>表格位置和内容。</td>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>产线对象的 <code>predict</code> 方法生成结果的 JSON 表示中 <code>res</code> 字段的简化版本，其中去除了 <code>input_path</code> 字段</td>
 </tr>
 <tr>
-<td><code>layoutImage</code></td>
-<td><code>string</code></td>
-<td>版面区域检测结果图。图像为JPEG格式，使用Base64编码。</td>
+<td><code>outputImages</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>输入图像和预测结果图像的键值对。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 <tr>
-<td><code>ocrImage</code></td>
-<td><code>string</code></td>
-<td>OCR结果图。图像为JPEG格式，使用Base64编码。</td>
-</tr>
-</tbody>
-</table>
-<p><code>tables</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>bbox</code></td>
-<td><code>array</code></td>
-<td>表格位置。数组中元素依次为边界框左上角x坐标、左上角y坐标、右下角x坐标以及右下角y坐标。</td>
-</tr>
-<tr>
-<td><code>html</code></td>
-<td><code>string</code></td>
-<td>HTML格式的表格识别结果。</td>
+<td><code>inputImage</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>输入图像。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 </tbody>
 </table></details>
-
 <details><summary>多语言调用服务示例</summary>
-
 <details>
 <summary>Python</summary>
-
-
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/table-recognition&quot;
-file_path = &quot;./demo.jpg&quot;
+API_URL = "http://localhost:8080/table-recognition"
+file_path = "./demo.jpg"
 
-with open(file_path, &quot;rb&quot;) as file:
+with open(file_path, "rb") as file:
     file_bytes = file.read()
-    file_data = base64.b64encode(file_bytes).decode(&quot;ascii&quot;)
+    file_data = base64.b64encode(file_bytes).decode("ascii")
 
-payload = {&quot;file&quot;: file_data, &quot;fileType&quot;: 1}
+payload = {"file": file_data, "fileType": 1}
 
 response = requests.post(API_URL, json=payload)
 
 assert response.status_code == 200
-result = response.json()[&quot;result&quot;]
-for i, res in enumerate(result[&quot;tableRecResults&quot;]):
-    print(&quot;Detected tables:&quot;)
-    print(res[&quot;tables&quot;])
-    layout_img_path = f&quot;layout_{i}.jpg&quot;
-    with open(layout_img_path, &quot;wb&quot;) as f:
-        f.write(base64.b64decode(res[&quot;layoutImage&quot;]))
-    ocr_img_path = f&quot;ocr_{i}.jpg&quot;
-    with open(ocr_img_path, &quot;wb&quot;) as f:
-        f.write(base64.b64decode(res[&quot;ocrImage&quot;]))
-    print(f&quot;Output images saved at {layout_img_path} and {ocr_img_path}&quot;)
+result = response.json()["result"]
+for i, res in enumerate(result["tableRecResults"]):
+    print("Detected tables:")
+    print(res["tables"])
+    layout_img_path = f"layout_{i}.jpg"
+    with open(layout_img_path, "wb") as f:
+        f.write(base64.b64decode(res["layoutImage"]))
+    ocr_img_path = f"ocr_{i}.jpg"
+    with open(ocr_img_path, "wb") as f:
+        f.write(base64.b64decode(res["ocrImage"]))
+    print(f"Output images saved at {layout_img_path} and {ocr_img_path}")
 </code></pre></details>
 </details>
 <br/>
@@ -1274,55 +1256,55 @@ for i, res in enumerate(result[&quot;tableRecResults&quot;]):
 由于通用表格识别产线v2包含若干模块，模型产线的效果如果不及预期，可能来自于其中任何一个模块。您可以对识别效果差的图片进行分析，进而确定是哪个模块存在问题，并参考以下表格中对应的微调教程链接进行模型微调。
 
 <table>
-  <thead>
-    <tr>
-      <th>情形</th>
-      <th>微调模块</th>
-      <th>微调参考链接</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>表格结分类错误</td>
-      <td>表格分类模块</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/table_classification.md">链接</a></td>
-    </tr>
-    <tr>
-      <td>表格单元格定位错误</td>
-      <td>表格单元格检测模块</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/table_cells_detection.md">链接</a></td>
-    </tr>
-    <tr>
-      <td>表格结构识别错误</td>
-      <td>表格结构识别模块</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/table_structure_recognition.md">链接</a></td>
-    </tr>
-    <tr>
-      <td>未能成功检测到表格所在区域</td>
-      <td>版面区域检测模块</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/layout_detection.md">链接</a></td>
-    </tr>
-    <tr>
-      <td>文本存在漏检</td>
-      <td>文本检测模块</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/text_detection.md">链接</a></td>
-    </tr>
-    <tr>
-      <td>文本内容都不准</td>
-      <td>文本识别模块</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/text_recognition.md">链接</a></td>
-    </tr>
-    <tr>
-      <td>整图旋转矫正不准</td>
-      <td>文档图像方向分类模块</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.md">链接</a></td>
-    </tr>
-    <tr>
-      <td>图像扭曲矫正不准</td>
-      <td>文本图像矫正模块</td>
-      <td>暂不支持微调</td>
-    </tr>
-  </tbody>
+<thead>
+<tr>
+<th>情形</th>
+<th>微调模块</th>
+<th>微调参考链接</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>表格结分类错误</td>
+<td>表格分类模块</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/table_classification.md">链接</a></td>
+</tr>
+<tr>
+<td>表格单元格定位错误</td>
+<td>表格单元格检测模块</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/table_cells_detection.md">链接</a></td>
+</tr>
+<tr>
+<td>表格结构识别错误</td>
+<td>表格结构识别模块</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/table_structure_recognition.md">链接</a></td>
+</tr>
+<tr>
+<td>未能成功检测到表格所在区域</td>
+<td>版面区域检测模块</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/layout_detection.md">链接</a></td>
+</tr>
+<tr>
+<td>文本存在漏检</td>
+<td>文本检测模块</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/text_detection.md">链接</a></td>
+</tr>
+<tr>
+<td>文本内容都不准</td>
+<td>文本识别模块</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/text_recognition.md">链接</a></td>
+</tr>
+<tr>
+<td>整图旋转矫正不准</td>
+<td>文档图像方向分类模块</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.md">链接</a></td>
+</tr>
+<tr>
+<td>图像扭曲矫正不准</td>
+<td>文本图像矫正模块</td>
+<td>暂不支持微调</td>
+</tr>
+</tbody>
 </table>
 
 ### 4.2 模型应用

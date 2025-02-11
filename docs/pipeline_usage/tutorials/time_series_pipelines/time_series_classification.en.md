@@ -71,7 +71,7 @@ The above command line is for quickly experiencing and viewing the results. Gene
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="ts_cls")
+pipeline = create_pipeline(pipeline="ts_classification", device="gpu:0")
 output = pipeline.predict("ts_cls.csv")
 for res in output:
     res.print() ## 打印预测的结构化输出
@@ -97,6 +97,18 @@ In the above Python script, the following steps are executed:
 <td><code>pipeline</code></td>
 <td>The name of the pipeline or the path to the pipeline configuration file. If it is a pipeline name, it must be a pipeline supported by PaddleX.</td>
 <td><code>str</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it takes precedence over <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it takes precedence over <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>

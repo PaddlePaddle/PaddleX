@@ -14,39 +14,38 @@ The image feature module is one of the important tasks in computer vision, prima
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recall@1 (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-ShiTuV2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-ShiTuV2_rec_pretrained.pdparams">Trained Model</a></td>
 <td>84.2</td>
-<td>5.23428</td>
-<td>19.6005</td>
+<td>3.48 / 0.55</td>
+<td>8.04 / 4.04</td>
 <td>16.3 M</td>
 <td rowspan="3">PP-ShiTuV2 is a general image feature system consisting of three modules: object detection, feature extraction, and vector retrieval. These models are part of the feature extraction module and can be selected based on system requirements.</td>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec_CLIP_vit_base</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-ShiTuV2_rec_CLIP_vit_base_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-ShiTuV2_rec_CLIP_vit_base_pretrained.pdparams">Trained Model</a></td>
 <td>88.69</td>
-<td>13.1957</td>
-<td>285.493</td>
+<td>12.94 / 2.88</td>
+<td>58.36 / 58.36</td>
 <td>306.6 M</td>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec_CLIP_vit_large</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-ShiTuV2_rec_CLIP_vit_large_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-ShiTuV2_rec_CLIP_vit_large_pretrained.pdparams">Trained Model</a></td>
 <td>91.03</td>
-<td>51.1284</td>
-<td>1131.28</td>
+<td>51.65 / 11.18</td>
+<td>255.78 / 255.78</td>
 <td>1.05 G</td>
 </tr>
 </table>
-
 <b>Note: The above accuracy metrics are Recall@1 from AliProducts. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
 
 ## III. Quick Integration
-> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
+&gt; ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 After installing the wheel package, a few lines of code can complete the inference of the image feature module. You can switch between models under this module freely, and you can also integrate the model inference of the image feature module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_recognition_001.jpg) to your local machine.
 
@@ -120,12 +119,12 @@ Descriptions of related methods, parameters, etc., are as follows:
 <td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
 <td>
 <ul>
-  <li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
-  <li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
-  <li><b>URL link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">Example</a></li>
-  <li><b>Local directory</b>, which must contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
-  <li><b>Dictionary</b>, where the <code>key</code> must correspond to the specific task (e.g., <code>"img"</code> for image classification), and the <code>value</code> supports the above types of data, for example: <code>{"img": "/root/data1"}</code></li>
-  <li><b>List</b>, elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code></li>
+<li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
+<li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
+<li><b>URL link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">Example</a></li>
+<li><b>Local directory</b>, which must contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
+<li><b>Dictionary</b>, where the <code>key</code> must correspond to the specific task (e.g., <code>"img"</code> for image classification), and the <code>value</code> supports the above types of data, for example: <code>{"img": "/root/data1"}</code></li>
+<li><b>List</b>, elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code></li>
 </ul>
 </td>
 <td>None</td>
@@ -234,58 +233,57 @@ python main.py -c paddlex/configs/modules/image_feature/PP-ShiTuV2_rec.yaml \
 After executing the above command, PaddleX will validate the dataset and summarize its basic information. If the command runs successfully, it will print `Check dataset passed !` in the log. The validation results file is saved in `./output/check_dataset_result.json`, and related outputs are saved in the `./output/check_dataset` directory in the current directory, including visual examples of sample images and sample distribution histograms.
 
 <details><summary>👉 <b>Details of Validation Results (Click to Expand)</b></summary>
-
 <p>The specific content of the validation result file is:</p>
 <pre><code class="language-bash">
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;train_samples&quot;: 1000,
-    &quot;train_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/05_1_front.jpg&quot;,
-      &quot;check_dataset/demo_img/02_1_front.jpg&quot;,
-      &quot;check_dataset/demo_img/02_3_back.jpg&quot;,
-      &quot;check_dataset/demo_img/04_3_back.jpg&quot;,
-      &quot;check_dataset/demo_img/04_2_side.jpg&quot;,
-      &quot;check_dataset/demo_img/12_1_front.jpg&quot;,
-      &quot;check_dataset/demo_img/07_2_side.jpg&quot;,
-      &quot;check_dataset/demo_img/04_7_additional.jpg&quot;,
-      &quot;check_dataset/demo_img/04_4_full.jpg&quot;,
-      &quot;check_dataset/demo_img/01_1_front.jpg&quot;
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "train_samples": 1000,
+    "train_sample_paths": [
+      "check_dataset/demo_img/05_1_front.jpg",
+      "check_dataset/demo_img/02_1_front.jpg",
+      "check_dataset/demo_img/02_3_back.jpg",
+      "check_dataset/demo_img/04_3_back.jpg",
+      "check_dataset/demo_img/04_2_side.jpg",
+      "check_dataset/demo_img/12_1_front.jpg",
+      "check_dataset/demo_img/07_2_side.jpg",
+      "check_dataset/demo_img/04_7_additional.jpg",
+      "check_dataset/demo_img/04_4_full.jpg",
+      "check_dataset/demo_img/01_1_front.jpg"
     ],
-    &quot;gallery_samples&quot;: 110,
-    &quot;gallery_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/06_2_side.jpg&quot;,
-      &quot;check_dataset/demo_img/01_4_full.jpg&quot;,
-      &quot;check_dataset/demo_img/04_7_additional.jpg&quot;,
-      &quot;check_dataset/demo_img/02_1_front.jpg&quot;,
-      &quot;check_dataset/demo_img/02_3_back.jpg&quot;,
-      &quot;check_dataset/demo_img/02_3_back.jpg&quot;,
-      &quot;check_dataset/demo_img/02_4_full.jpg&quot;,
-      &quot;check_dataset/demo_img/03_4_full.jpg&quot;,
-      &quot;check_dataset/demo_img/02_2_side.jpg&quot;,
-      &quot;check_dataset/demo_img/03_2_side.jpg&quot;
+    "gallery_samples": 110,
+    "gallery_sample_paths": [
+      "check_dataset/demo_img/06_2_side.jpg",
+      "check_dataset/demo_img/01_4_full.jpg",
+      "check_dataset/demo_img/04_7_additional.jpg",
+      "check_dataset/demo_img/02_1_front.jpg",
+      "check_dataset/demo_img/02_3_back.jpg",
+      "check_dataset/demo_img/02_3_back.jpg",
+      "check_dataset/demo_img/02_4_full.jpg",
+      "check_dataset/demo_img/03_4_full.jpg",
+      "check_dataset/demo_img/02_2_side.jpg",
+      "check_dataset/demo_img/03_2_side.jpg"
     ],
-    &quot;query_samples&quot;: 125,
-    &quot;query_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/08_7_additional.jpg&quot;,
-      &quot;check_dataset/demo_img/01_7_additional.jpg&quot;,
-      &quot;check_dataset/demo_img/02_4_full.jpg&quot;,
-      &quot;check_dataset/demo_img/04_4_full.jpg&quot;,
-      &quot;check_dataset/demo_img/09_7_additional.jpg&quot;,
-      &quot;check_dataset/demo_img/04_3_back.jpg&quot;,
-      &quot;check_dataset/demo_img/02_1_front.jpg&quot;,
-      &quot;check_dataset/demo_img/06_2_side.jpg&quot;,
-      &quot;check_dataset/demo_img/02_7_additional.jpg&quot;,
-      &quot;check_dataset/demo_img/02_2_side.jpg&quot;
+    "query_samples": 125,
+    "query_sample_paths": [
+      "check_dataset/demo_img/08_7_additional.jpg",
+      "check_dataset/demo_img/01_7_additional.jpg",
+      "check_dataset/demo_img/02_4_full.jpg",
+      "check_dataset/demo_img/04_4_full.jpg",
+      "check_dataset/demo_img/09_7_additional.jpg",
+      "check_dataset/demo_img/04_3_back.jpg",
+      "check_dataset/demo_img/02_1_front.jpg",
+      "check_dataset/demo_img/06_2_side.jpg",
+      "check_dataset/demo_img/02_7_additional.jpg",
+      "check_dataset/demo_img/02_2_side.jpg"
     ]
   },
-  &quot;analysis&quot;: {
-    &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
+  "analysis": {
+    "histogram": "check_dataset/histogram.png"
   },
-  &quot;dataset_path&quot;: &quot;./dataset/Inshop_examples&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;ShiTuRecDataset&quot;
+  "dataset_path": "./dataset/Inshop_examples",
+  "show_type": "image",
+  "dataset_type": "ShiTuRecDataset"
 }
 </code></pre>
 <p>In the above validation results, <code>check_pass</code> being True indicates that the dataset format meets the requirements. Explanations for other indicators are as follows:
@@ -296,13 +294,12 @@ After executing the above command, PaddleX will validate the dataset and summari
 * <code>attributes.gallery_sample_paths</code>: A list of relative paths to the visual images of gallery (or reference) samples in this dataset;
 * <code>attributes.query_sample_paths</code>: A list of relative paths to the visual images of query samples in this dataset;</p>
 <p>Additionally, the dataset verification also analyzes the number of images and image categories within the dataset, and generates a distribution histogram (histogram.png):</p>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/img_recognition/01.png"></p></details>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/img_recognition/01.png"/></p></details>
 
 ### 4.1.3 Dataset Format Conversion / Dataset Splitting (Optional)
 After completing the data verification, you can convert the dataset format and re-split the training/validation ratio by <b>modifying the configuration file</b> or <b>appending hyperparameters</b>.
 
 <details><summary>👉 <b>Details of Format Conversion / Dataset Splitting (Click to Expand)</b></summary>
-
 <p><b>(1) Dataset Format Conversion</b></p>
 <p>The image feature task supports converting <code>LabelMe</code> format datasets to <code>ShiTuRecDataset</code> format. The parameters for dataset format conversion can be set by modifying the fields under <code>CheckDataset</code> in the configuration file. Some example parameter descriptions in the configuration file are as follows:</p>
 <ul>
@@ -391,7 +388,6 @@ The following steps are required:
 Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file instructions for the corresponding task module of the model [PaddleX Common Configuration File Parameters](../../instructions/config_parameters_common.en.md).
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <ul>
 <li>During model training, PaddleX automatically saves the model weight files, with the default being <code>output</code>. If you need to specify a save path, you can set it through the <code>-o Global.output</code> field in the configuration file.</li>
 <li>PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.</li>
@@ -422,7 +418,6 @@ Similar to model training, the following steps are required:
 Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file, detailed instructions can be found in [PaddleX Common Configuration File Parameters](../../instructions/config_parameters_common.en.md).
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <p>When evaluating the model, you need to specify the model weights file path. Each configuration file has a default weight save path built-in. If you need to change it, simply set it by appending a command line parameter, such as <code>-o Evaluate.weight_path=./output/best_model/best_model.pdparams</code>.</p>
 <p>After completing the model evaluation, an <code>evaluate_result.json</code> file will be produced, which records the evaluation results, specifically, whether the evaluation task was completed successfully and the model's evaluation metrics, including recall1、recall5、mAP；</p></details>
 
@@ -447,7 +442,7 @@ Similar to model training and evaluation, the following steps are required:
 * Specify the input data path: `-o Predict.input="..."`.
 Other related parameters can be set by modifying the `Global` and `Predict` fields in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
 
-> ❗ Note: The inference result of the recognition model is a set of vectors, which requires a retrieval module to complete image feature.
+&gt; ❗ Note: The inference result of the recognition model is a set of vectors, which requires a retrieval module to complete image feature.
 
 #### 4.4.2 Model Integration
 The model can be directly integrated into the PaddleX pipeline or directly into your own project.

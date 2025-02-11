@@ -14,8 +14,8 @@ comments: true
 <th>模型</th><th>模型下载链接</th>
 <th>mAP(0.5:0.95)</th>
 <th>mAP(0.5)</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M）</th>
 <th>介绍</th>
 </tr>
@@ -23,8 +23,8 @@ comments: true
 <td>PP-YOLOE-L_human</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE-L_human_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-L_human_pretrained.pdparams">训练模型</a></td>
 <td>48.0</td>
 <td>81.9</td>
-<td>32.8</td>
-<td>777.7</td>
+<td>33.27 / 9.19</td>
+<td>173.72 / 173.72</td>
 <td>196.02</td>
 <td rowspan="2">基于PP-YOLOE的行人检测模型</td>
 </tr>
@@ -32,12 +32,11 @@ comments: true
 <td>PP-YOLOE-S_human</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE-S_human_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-S_human_pretrained.pdparams">训练模型</a></td>
 <td>42.5</td>
 <td>77.9</td>
-<td>15.0</td>
-<td>179.3</td>
+<td>9.94 / 3.42</td>
+<td>54.48 / 46.52</td>
 <td>28.79</td>
 </tr>
 </table>
-
 <b>注：以上精度指标为CrowdHuman数据集 mAP(0.5:0.95)。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b>
 
 
@@ -71,7 +70,7 @@ for res in output:
 
 可视化图片如下：
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/human_detection/human_detection_res.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/human_detection/human_detection_res.jpg"/>
 
 相关方法、参数等说明如下：
 
@@ -129,14 +128,14 @@ for res in output:
 <tr>
 <td><code>input</code></td>
 <td>待预测数据，支持多种输入类型</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
-  <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
-  <li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
-  <li><b>URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png">示例</a></li>
-  <li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
-  <li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
+<li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
+<li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
+<li><b>URL链接</b>，如图像文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png">示例</a></li>
+<li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
+<li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td>无</td>
@@ -154,9 +153,9 @@ for res in output:
 <td><code>float</code>/<code>dict[int, float]</code>/<code>None</code></td>
 <td>
 <ul>
-  <li><b>None</b>，表示沿用上一层设置, 参数设置优先级从高到低为: <code>predict参数传入 > create_model初始化传入 > yaml配置文件设置</code></li>
-  <li><b>float</b>，对于所有的类别使用同一个阈值。如0.5，表示推理时使用0.5作为所有类别的低分object过滤阈值</li>
-  <li><b>dict[int, float]</b>，如<code>{0: 0.5, 1: 0.35}</code>，表示推理时对类别0使用0.5低分过滤阈值，对类别1使用0.35低分过滤阈值。行人检测为单类别检测，无需此设置。</li>
+<li><b>None</b>，表示沿用上一层设置, 参数设置优先级从高到低为: <code>predict参数传入 > create_model初始化传入 > yaml配置文件设置</code></li>
+<li><b>float</b>，对于所有的类别使用同一个阈值。如0.5，表示推理时使用0.5作为所有类别的低分object过滤阈值</li>
+<li><b>dict[int, float]</b>，如<code>{0: 0.5, 1: 0.35}</code>，表示推理时对类别0使用0.5低分过滤阈值，对类别1使用0.35低分过滤阈值。行人检测为单类别检测，无需此设置。</li>
 </ul>
 </td>
 <td>None</td>
@@ -177,8 +176,8 @@ for res in output:
 </tr>
 </thead>
 <tr>
-<td rowspan = "3"><code>print()</code></td>
-<td rowspan = "3">打印结果到终端</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">打印结果到终端</td>
 <td><code>format_json</code></td>
 <td><code>bool</code></td>
 <td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
@@ -197,8 +196,8 @@ for res in output:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td rowspan = "3"><code>save_to_json()</code></td>
-<td rowspan = "3">将结果保存为json格式的文件</td>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">将结果保存为json格式的文件</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
 <td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
@@ -236,12 +235,12 @@ for res in output:
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">获取预测的<code>json</code>格式的结果</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">获取预测的<code>json</code>格式的结果</td>
 </tr>
 <tr>
-<td rowspan = "1"><code>img</code></td>
-<td rowspan = "1">获取格式为<code>dict</code>的可视化图像</td>
+<td rowspan="1"><code>img</code></td>
+<td rowspan="1">获取格式为<code>dict</code>的可视化图像</td>
 </tr>
 </table>
 
@@ -275,30 +274,29 @@ python main.py -c paddlex/configs/modules/human_detection/PP-YOLOE-S_human.yaml 
 执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息，命令运行成功后会在log中打印出`Check dataset passed !`信息。校验结果文件保存在`./output/check_dataset_result.json`，同时相关产出会保存在当前目录的`./output/check_dataset`目录下，产出目录中包括可视化的示例样本图片和样本分布直方图。
 
 <details><summary>👉 <b>校验结果详情（点击展开）</b></summary>
-
 <p>校验结果文件具体内容为：</p>
 <pre><code class="language-bash">{
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;num_classes&quot;: 1,
-    &quot;train_samples&quot;: 500,
-    &quot;train_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/000041.jpg&quot;,
-      &quot;check_dataset/demo_img/000042.jpg&quot;,
-      &quot;check_dataset/demo_img/000044.jpg&quot;
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "num_classes": 1,
+    "train_samples": 500,
+    "train_sample_paths": [
+      "check_dataset/demo_img/000041.jpg",
+      "check_dataset/demo_img/000042.jpg",
+      "check_dataset/demo_img/000044.jpg"
     ],
-    &quot;val_samples&quot;: 100,
-    &quot;val_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/001138.jpg&quot;,
-      &quot;check_dataset/demo_img/001140.jpg&quot;,
-      &quot;check_dataset/demo_img/001141.jpg&quot;
+    "val_samples": 100,
+    "val_sample_paths": [
+      "check_dataset/demo_img/001138.jpg",
+      "check_dataset/demo_img/001140.jpg",
+      "check_dataset/demo_img/001141.jpg"
     ]
   },
-  &quot;analysis&quot;: {
-    &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
+  "analysis": {
+    "histogram": "check_dataset/histogram.png"
   },
-  &quot;dataset_path&quot;: &quot;./dataset/example_data/widerperson_coco_examples&quot;,
+  &quot;dataset_path&quot;: &quot;widerperson_coco_examples&quot;,
   &quot;show_type&quot;: &quot;image&quot;,
   &quot;dataset_type&quot;: &quot;COCODetDataset&quot;
 }
@@ -312,13 +310,12 @@ python main.py -c paddlex/configs/modules/human_detection/PP-YOLOE-S_human.yaml 
 <li><code>attributes.val_sample_paths</code>：该数据集验证集样本可视化图片相对路径列表；</li>
 </ul>
 <p>数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：</p>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/ped_det/01.png"></p></details>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/ped_det/01.png"/></p></details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
 在您完成数据校验之后，可以通过<b>修改配置文件</b>或是<b>追加超参数</b>的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。
 
 <details><summary>👉 <b>格式转换/数据集划分详情（点击展开）</b></summary>
-
 <p><b>（1）数据集格式转换</b></p>
 <p>行人检测不支持数据格式转换。</p>
 <p><b>（2）数据集划分</b></p>
@@ -372,7 +369,6 @@ python main.py -c paddlex/configs/modules/human_detection/PP-YOLOE-S_human.yaml 
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
-
 <ul>
 <li>模型训练过程中，PaddleX 会自动保存模型权重文件，默认为<code>output</code>，如需指定保存路径，可通过配置文件中 <code>-o Global.output</code> 字段进行设置。</li>
 <li>PaddleX 对您屏蔽了动态图权重和静态图权重的概念。在模型训练的过程中，会同时产出动态图和静态图的权重，在模型推理时，默认选择静态图权重推理。</li>
@@ -403,7 +399,6 @@ python main.py -c paddlex/configs/modules/human_detection/PP-YOLOE-S_human.yaml 
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Evaluate`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
-
 <p>在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如<code>-o Evaluate.weight_path=./output/best_model/best_model/model.pdparams</code>。</p>
 <p>在完成模型评估后，会产出<code>evaluate_result.json，其记录了</code>评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标，包含 AP；</p></details>
 
@@ -437,3 +432,5 @@ python main.py -c paddlex/configs/modules/human_detection/PP-YOLOE-S_human.yaml 
 2.**模块集成**
 
 您产出的权重可以直接集成到行人检测模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
+
+您也可以利用 PaddleX 高性能推理插件来优化您模型的推理过程，进一步提升效率，详细的流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_inference.md)。

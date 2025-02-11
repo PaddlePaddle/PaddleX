@@ -188,7 +188,7 @@ Pipeline:
 <tbody>
 <tr>
 <td>文档场景信息抽取v3</td>
-<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.html">文档场景信息抽取v3产线使用教程</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.html">文档场景信息抽取v3产线使用教程</a></td>
 </tr>
 <tr>
 <td>通用图像分类</td>

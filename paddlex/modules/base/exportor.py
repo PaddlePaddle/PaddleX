@@ -36,9 +36,7 @@ def build_exportor(config: AttrDict) -> "BaseExportor":
     try:
         import feature_line_modules
     except ModuleNotFoundError:
-        logging.info(
-            "The PaddleX FeaTure Line plugin is not installed, but continuing execution."
-        )
+        pass
     return BaseExportor.get(model_name)(config)
 
 

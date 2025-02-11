@@ -15,8 +15,8 @@ comments: true
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>mA（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M)</th>
 <th>介绍</th>
 </tr>
@@ -25,8 +25,8 @@ comments: true
 <tr>
 <td>PP-LCNet_x1_0_vehicle_attribute</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_vehicle_attribute_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_vehicle_attribute_pretrained.pdparams">训练模型</a></td>
 <td>91.7</td>
-<td>3.84845</td>
-<td>9.23735</td>
+<td>2.32 / 2.32</td>
+<td>3.22 / 1.26</td>
 <td>6.7 M</td>
 <td>PP-LCNet_x1_0_vehicle_attribute 是一种基于PP-LCNet的轻量级车辆属性识别模型。</td>
 </tr>
@@ -77,47 +77,46 @@ python main.py -c paddlex/configs/modules/vehicle_attribute_recognition/PP-LCNet
 执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息，命令运行成功后会在log中打印出`Check dataset passed !`信息。校验结果文件保存在`./output/check_dataset_result.json`，同时相关产出会保存在当前目录的`./output/check_dataset`目录下，产出目录中包括可视化的示例样本图片和样本分布直方图。
 
 <details><summary>👉 <b>校验结果详情（点击展开）</b></summary>
-
 <p>校验结果文件具体内容为：</p>
 <pre><code class="language-bash">{
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;label_file&quot;: &quot;../../dataset/vehicle_attribute_examples/label.txt&quot;,
-    &quot;num_classes&quot;: 19,
-    &quot;train_samples&quot;: 1200,
-    &quot;train_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/0018_c017_00033140_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0010_c019_00034275_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0015_c019_00068660_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0016_c017_00049590_1.jpg&quot;,
-      &quot;check_dataset/demo_img/0018_c016_00052280_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0023_c001_00006995_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0022_c004_00065910_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0007_c019_00048655_1.jpg&quot;,
-      &quot;check_dataset/demo_img/0022_c007_00072970_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0022_c008_00065785_0.jpg&quot;
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "label_file": "../../dataset/vehicle_attribute_examples/label.txt",
+    "num_classes": 19,
+    "train_samples": 1200,
+    "train_sample_paths": [
+      "check_dataset/demo_img/0018_c017_00033140_0.jpg",
+      "check_dataset/demo_img/0010_c019_00034275_0.jpg",
+      "check_dataset/demo_img/0015_c019_00068660_0.jpg",
+      "check_dataset/demo_img/0016_c017_00049590_1.jpg",
+      "check_dataset/demo_img/0018_c016_00052280_0.jpg",
+      "check_dataset/demo_img/0023_c001_00006995_0.jpg",
+      "check_dataset/demo_img/0022_c004_00065910_0.jpg",
+      "check_dataset/demo_img/0007_c019_00048655_1.jpg",
+      "check_dataset/demo_img/0022_c007_00072970_0.jpg",
+      "check_dataset/demo_img/0022_c008_00065785_0.jpg"
     ],
-    &quot;val_samples&quot;: 300,
-    &quot;val_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/0025_c003_00054095_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0023_c013_00006350_1.jpg&quot;,
-      &quot;check_dataset/demo_img/0024_c003_00046320_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0025_c005_00054795_2.jpg&quot;,
-      &quot;check_dataset/demo_img/0024_c012_00041770_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0024_c007_00060845_1.jpg&quot;,
-      &quot;check_dataset/demo_img/0023_c017_00013150_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0024_c014_00040410_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0025_c002_00050685_1.jpg&quot;,
-      &quot;check_dataset/demo_img/0025_c005_00032645_0.jpg&quot;
+    "val_samples": 300,
+    "val_sample_paths": [
+      "check_dataset/demo_img/0025_c003_00054095_0.jpg",
+      "check_dataset/demo_img/0023_c013_00006350_1.jpg",
+      "check_dataset/demo_img/0024_c003_00046320_0.jpg",
+      "check_dataset/demo_img/0025_c005_00054795_2.jpg",
+      "check_dataset/demo_img/0024_c012_00041770_0.jpg",
+      "check_dataset/demo_img/0024_c007_00060845_1.jpg",
+      "check_dataset/demo_img/0023_c017_00013150_0.jpg",
+      "check_dataset/demo_img/0024_c014_00040410_0.jpg",
+      "check_dataset/demo_img/0025_c002_00050685_1.jpg",
+      "check_dataset/demo_img/0025_c005_00032645_0.jpg"
     ]
   },
-  &quot;analysis&quot;: {
-    &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
+  "analysis": {
+    "histogram": "check_dataset/histogram.png"
   },
-  &quot;dataset_path&quot;: &quot;./dataset/vehicle_attribute_examples&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;MLClsDataset&quot;
+  "dataset_path": "./dataset/vehicle_attribute_examples",
+  "show_type": "image",
+  "dataset_type": "MLClsDataset"
 }
 </code></pre>
 <p>上述校验结果中，check_pass 为 true 表示数据集格式符合要求，其他部分指标的说明如下：</p>
@@ -129,13 +128,12 @@ python main.py -c paddlex/configs/modules/vehicle_attribute_recognition/PP-LCNet
 <li><code>attributes.val_sample_paths</code>：该数据集验证集样本可视化图片相对路径列表；</li>
 </ul>
 <p>另外，数据集校验还对数据集中所有图片的长宽分布情况进行了分析分析，并绘制了分布直方图（histogram.png）：</p>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/vehicle_attri/01.png"></p></details>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/vehicle_attri/01.png"/></p></details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
 在您完成数据校验之后，可以通过<b>修改配置文件</b>或是<b>追加超参数</b>的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。
 
 <details><summary>👉 <b>格式转换/数据集划分详情（点击展开）</b></summary>
-
 <p><b>（1）数据集格式转换</b></p>
 <p>车辆属性识别不支持数据格式转换。</p>
 <p><b>（2）数据集划分</b></p>
@@ -187,7 +185,6 @@ python main.py -c paddlex/configs/modules/vehicle_attribute_recognition/PP-LCNet
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
-
 <ul>
 <li>模型训练过程中，PaddleX 会自动保存模型权重文件，默认为<code>output</code>，如需指定保存路径，可通过配置文件中 <code>-o Global.output</code> 字段进行设置。</li>
 <li>PaddleX 对您屏蔽了动态图权重和静态图权重的概念。在模型训练的过程中，会同时产出动态图和静态图的权重，在模型推理时，默认选择静态图权重推理。</li>
@@ -218,7 +215,6 @@ python main.py -c paddlex/configs/modules/vehicle_attribute_recognition/PP-LCNet
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Evaluate`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
-
 <p>在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如<code>-o Evaluate.weight_path=./output/best_model/best_model.pdparams</code>。</p>
 <p>在完成模型评估后，会产出<code>evaluate_result.json，其记录了</code>评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标，包括 MultiLabelMAP；</p></details>
 
@@ -255,3 +251,5 @@ python main.py -c paddlex/configs/modules/vehicle_attribute_recognition/PP-LCNet
 2.<b>模块集成</b>
 
 您产出的权重可以直接集成到车辆属性识别模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
+
+您也可以利用 PaddleX 高性能推理插件来优化您模型的推理过程，进一步提升效率，详细的流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_inference.md)。

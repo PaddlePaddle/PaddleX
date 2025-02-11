@@ -23,7 +23,7 @@ Train:
 
 Evaluate:
   batch_size: 1
-  weight_path: output/train/best_model/model.pdparams
+  weight_path: output/best_model/model.pdparams
 
 
 Export:

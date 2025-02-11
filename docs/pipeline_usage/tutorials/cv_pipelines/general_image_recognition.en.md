@@ -10,69 +10,66 @@ The General Image Recognition Pipeline aims to solve the problem of open-domain 
 
 PP-ShiTuV2 is a practical general image recognition system mainly composed of three modules: mainbody detection module, image feature module, and vector retrieval module. The system integrates and improves various strategies in multiple aspects, including backbone network, loss function, data augmentation, learning rate scheduling, regularization, pre-trained model, and model pruning and quantization. It optimizes each module and ultimately achieves better performance in multiple application scenarios.
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/general_image_recognition/pp_shitu_v2.jpg">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/general_image_recognition/pp_shitu_v2.jpg"/>
 <b>The General Image Recognition Pipeline includes the mainbody detection module and the image feature module</b>, with several models to choose. You can select the model to use based on the benchmark data below. <b>If you prioritize model precision, choose a model with higher precision. If you prioritize inference speed, choose a model with faster inference. If you prioritize model storage size, choose a model with a smaller storage size</b>.
 
 
 <b>Mainbody Detection Module:</b>
-
 <table>
-  <tr>
-    <th>Model</th>
-    <th>mAP(0.5:0.95)</th>
-    <th>mAP(0.5)</th>
-    <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time (ms)</th>
-    <th>Model Size (M)</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td>PP-ShiTuV2_det</td>
-    <td>41.5</td>
-    <td>62.0</td>
-    <td>33.7</td>
-    <td>537.0</td>
-    <td>27.54</td>
-    <td>An mainbody detection model based on PicoDet_LCNet_x2_5, which may detect multiple common objects simultaneously.</td>
-  </tr>
+<tr>
+<th>Model</th>
+<th>mAP(0.5:0.95)</th>
+<th>mAP(0.5)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Size (M)</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>PP-ShiTuV2_det</td>
+<td>41.5</td>
+<td>62.0</td>
+<td>12.79 / 4.51</td>
+<td>44.14 / 44.14</td>
+<td>27.54</td>
+<td>An mainbody detection model based on PicoDet_LCNet_x2_5, which may detect multiple common objects simultaneously.</td>
+</tr>
 </table>
 
 Note: The above accuracy metrics are based on the private mainbody detection dataset.
 
 <b>Image Feature Module:</b>
-
 <table>
-  <tr>
-    <th>Model</th>
-    <th>Recall@1 (%)</th>
-    <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time (ms)</th>
-    <th>Model Size (M)</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td>PP-ShiTuV2_rec</td>
-    <td>84.2</td>
-    <td>5.23428</td>
-    <td>19.6005</td>
-    <td>16.3 M</td>
-    <td rowspan="3">PP-ShiTuV2 is a general image feature system consisting of three modules: mainbody detection, feature extraction, and vector retrieval. These models are part of the feature extraction module, and different models can be selected based on system requirements.</td>
-  </tr>
-  <tr>
-    <td>PP-ShiTuV2_rec_CLIP_vit_base</td>
-    <td>88.69</td>
-    <td>13.1957</td>
-    <td>285.493</td>
-    <td>306.6 M</td>
-  </tr>
-  <tr>
-    <td>PP-ShiTuV2_rec_CLIP_vit_large</td>
-    <td>91.03</td>
-    <td>51.1284</td>
-    <td>1131.28</td>
-    <td>1.05 G</td>
-  </tr>
+<tr>
+<th>Model</th>
+<th>Recall@1 (%)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Size (M)</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>PP-ShiTuV2_rec</td>
+<td>84.2</td>
+<td>3.48 / 0.55</td>
+<td>8.04 / 4.04</td>
+<td>16.3 M</td>
+<td rowspan="3">PP-ShiTuV2 is a general image feature system consisting of three modules: mainbody detection, feature extraction, and vector retrieval. These models are part of the feature extraction module, and different models can be selected based on system requirements.</td>
+</tr>
+<tr>
+<td>PP-ShiTuV2_rec_CLIP_vit_base</td>
+<td>88.69</td>
+<td>12.94 / 2.88</td>
+<td>58.36 / 58.36</td>
+<td>306.6 M</td>
+</tr>
+<tr>
+<td>PP-ShiTuV2_rec_CLIP_vit_large</td>
+<td>91.03</td>
+<td>51.65 / 11.18</td>
+<td>255.78 / 255.78</td>
+<td>1.05 G</td>
+</tr>
 </table>
 
 Note: The above accuracy metrics are based on AliProducts Recall@1. All GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.
@@ -87,7 +84,7 @@ Not supported yet.
 
 ### 2.2 Local Experience
 
-> ❗ Before using the general image recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
+&gt; ❗ Before using the general image recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
 
 #### 2.2.1 Command Line Experience
 
@@ -173,8 +170,8 @@ In the above Python script, the following steps are executed:
 <td><code>str</code>|<code>list</code></td>
 <td>
 <ul>
-  <li><b>str</b>: The root directory of the dataset. The data organization method is referenced in <a href="#2.3-Data Organization for Index Building">Section 2.3 Data Organization for Index Building</a>.</li>
-  <li><b>List[numpy.ndarray]</b>: Gallery image data in the form of a list of numpy arrays.</li>
+<li><b>str</b>: The root directory of the dataset. The data organization method is referenced in <a href="#2.3-Data Organization for Index Building">Section 2.3 Data Organization for Index Building</a>.</li>
+<li><b>List[numpy.ndarray]</b>: Gallery image data in the form of a list of numpy arrays.</li>
 </ul>
 </td>
 <td>None</td>
@@ -185,8 +182,8 @@ In the above Python script, the following steps are executed:
 <td><code>str|list</code></td>
 <td>
 <ul>
-  <li><b>str</b>: The path to the annotation file. The data organization method is referenced in <a href="#2.3-Data Organization for Index Building">Section 2.3 Data Organization for Index Building</a>.</li>
-  <li><b>List[str]</b>: Gallery image annotations in the form of a list of strings.</li>
+<li><b>str</b>: The path to the annotation file. The data organization method is referenced in <a href="#2.3-Data Organization for Index Building">Section 2.3 Data Organization for Index Building</a>.</li>
+<li><b>List[str]</b>: Gallery image annotations in the form of a list of strings.</li>
 </ul>
 </td>
 <td>None</td>
@@ -197,8 +194,8 @@ In the above Python script, the following steps are executed:
 <td><code>str</code></td>
 <td>
 <ul>
-  <li><code>"IP"</code>: Inner Product</li>
-  <li><code>"L2"</code>: Euclidean Distance</li>
+<li><code>"IP"</code>: Inner Product</li>
+<li><code>"L2"</code>: Euclidean Distance</li>
 </ul>
 </td>
 <td><code>"IP"</code></td>
@@ -209,9 +206,9 @@ In the above Python script, the following steps are executed:
 <td><code>str</code></td>
 <td>
 <ul>
-  <li><code>"HNSW32"</code>: Faster search speed and higher accuracy, but does not support the <code>remove_index()</code> operation.</li>
-  <li><code>"IVF"</code>: Faster search speed but relatively lower accuracy, supports <code>append_index()</code> and <code>remove_index()</code> operations.</li>
-  <li><code>"Flat"</code>: Slower search speed but higher accuracy, supports <code>append_index()</code> and <code>remove_index()</code> operations.</li>
+<li><code>"HNSW32"</code>: Faster search speed and higher accuracy, but does not support the <code>remove_index()</code> operation.</li>
+<li><code>"IVF"</code>: Faster search speed but relatively lower accuracy, supports <code>append_index()</code> and <code>remove_index()</code> operations.</li>
+<li><code>"Flat"</code>: Slower search speed but higher accuracy, supports <code>append_index()</code> and <code>remove_index()</code> operations.</li>
 </ul>
 </td>
 <td><code>"HNSW32"</code></td>
@@ -258,9 +255,9 @@ The index library object `index` supports the `save` method, which is used to sa
 <td><code>Python Var|str|list</code></td>
 <td>
 <ul>
-  <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
-  <li><b>str</b>: Local path of the image file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the network URL of the image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">Example</a>; <b>Local directory</b>, the directory should contain images to be predicted, such as the local path: <code>/root/data/</code></li>
-  <li><b>List</b>: Elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
+<li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
+<li><b>str</b>: Local path of the image file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the network URL of the image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">Example</a>; <b>Local directory</b>, the directory should contain images to be predicted, such as the local path: <code>/root/data/</code></li>
+<li><b>List</b>: Elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td>None</td>
@@ -271,8 +268,8 @@ The index library object `index` supports the `save` method, which is used to sa
 <td><code>str|paddlex.inference.components.retrieval.faiss.IndexData|None</code></td>
 <td>
 <ul>
-    <li><b>str</b> type representing a directory (the directory should contain the feature library files, including <code>vector.index</code> and <code>index_info.yaml</code>)</li>
-    <li><b>IndexData</b> object created by the <code>build_index</code> method</li>
+<li><b>str</b> type representing a directory (the directory should contain the feature library files, including <code>vector.index</code> and <code>index_info.yaml</code>)</li>
+<li><b>IndexData</b> object created by the <code>build_index</code> method</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -293,8 +290,8 @@ The index library object `index` supports the `save` method, which is used to sa
 </tr>
 </thead>
 <tr>
-<td rowspan = "3"><code>print()</code></td>
-<td rowspan = "3">Print the result to the terminal</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print the result to the terminal</td>
 <td><code>format_json</code></td>
 <td><code>bool</code></td>
 <td>Whether to format the output content using <code>JSON</code> indentation</td>
@@ -313,8 +310,8 @@ The index library object `index` supports the `save` method, which is used to sa
 <td><code>False</code></td>
 </tr>
 <tr>
-<td rowspan = "3"><code>save_to_json()</code></td>
-<td rowspan = "3">Save the result as a JSON file</td>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save the result as a JSON file</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
 <td>Path to save the file. If it is a directory, the saved file name will be consistent with the input file type</td>
@@ -359,7 +356,7 @@ The index library object `index` supports the `save` method, which is used to sa
 - Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}.json`. If a file is specified, it will be saved directly to that file.
 - Calling the `save_to_img()` method will save the visualization result to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (The production line usually contains many result images, it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, leaving only the last one). In the above example, the visualization result is as follows:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/general_image_recognition/01.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/general_image_recognition/01.jpg"/>
 
 * Additionally, it also supports obtaining the visualized image with results and prediction results through attributes, as follows:
 
@@ -371,12 +368,12 @@ The index library object `index` supports the `save` method, which is used to sa
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">Get the prediction result in <code>json</code> format</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format</td>
 </tr>
 <tr>
-<td rowspan = "2"><code>img</code></td>
-<td rowspan = "2">Get the visualized image in <code>dict</code> format</td>
+<td rowspan="2"><code>img</code></td>
+<td rowspan="2">Get the visualized image in <code>dict</code> format</td>
 </tr>
 </table>
 
@@ -438,8 +435,8 @@ The parameters of the above method are described as follows:
 <td><code>str</code>|<code>list</code></td>
 <td>
 <ul>
-  <li><b>str</b>: Root directory of images, data organization refers to <a href="#2.3-Data Organization for Building the Index Library">Section 2.3 Data Organization for Building the Index Library</a></li>
-  <li><b>List[numpy.ndarray]</b>: Gallery image data in the form of a list of numpy arrays</li>
+<li><b>str</b>: Root directory of images, data organization refers to <a href="#2.3-Data Organization for Building the Index Library">Section 2.3 Data Organization for Building the Index Library</a></li>
+<li><b>List[numpy.ndarray]</b>: Gallery image data in the form of a list of numpy arrays</li>
 </ul>
 </td>
 <td>None</td>
@@ -450,8 +447,8 @@ The parameters of the above method are described as follows:
 <td><code>str</code>|<code>list</code></td>
 <td>
 <ul>
-  <li><b>str</b>: Path to the label file, data organization is the same as when building the feature library, refer to <a href="#2.3-Data Organization for Building the Index Library">Section 2.3 Data Organization for Building the Index Library</a></li>
-  <li><b>List[str]</b>: Gallery image labels in the form of a list of strings</li>
+<li><b>str</b>: Path to the label file, data organization is the same as when building the feature library, refer to <a href="#2.3-Data Organization for Building the Index Library">Section 2.3 Data Organization for Building the Index Library</a></li>
+<li><b>List[str]</b>: Gallery image labels in the form of a list of strings</li>
 </ul>
 </td>
 <td>None</td>
@@ -462,8 +459,8 @@ The parameters of the above method are described as follows:
 <td><code>str</code></td>
 <td>
 <ul>
-  <li><code>"IP"</code>: Inner Product</li>
-  <li><code>"L2"</code>: Euclidean Distance</li>
+<li><code>"IP"</code>: Inner Product</li>
+<li><code>"L2"</code>: Euclidean Distance</li>
 </ul>
 </td>
 <td><code>"IP"</code></td>
@@ -474,9 +471,9 @@ The parameters of the above method are described as follows:
 <td><code>str</code></td>
 <td>
 <ul>
-  <li><code>"HNSW32"</code>: Faster search speed and higher accuracy, but does not support <code>remove_index()</code> operation</li>
-  <li><code>"IVF"</code>: Faster search speed but relatively lower accuracy, supports <code>append_index()</code> and <code>remove_index()</code> operations</li>
-  <li><code>"Flat"</code>: Slower search speed but higher accuracy, supports <code>append_index()</code> and <code>remove_index()</code> operations</li>
+<li><code>"HNSW32"</code>: Faster search speed and higher accuracy, but does not support <code>remove_index()</code> operation</li>
+<li><code>"IVF"</code>: Faster search speed but relatively lower accuracy, supports <code>append_index()</code> and <code>remove_index()</code> operations</li>
+<li><code>"Flat"</code>: Slower search speed but higher accuracy, supports <code>append_index()</code> and <code>remove_index()</code> operations</li>
 </ul>
 </td>
 <td><code>"HNSW32"</code></td>
@@ -498,15 +495,14 @@ The parameters of the above method are described as follows:
 <td><code>str|paddlex.inference.components.retrieval.faiss.IndexData</code></td>
 <td>
 <ul>
-    <li><b>str</b>: Directory (the directory should contain feature library files, including <code>vector.index</code> and <code>index_info.yaml</code>)</li>
-    <li><b>IndexData</b> object created by <code>build_index</code> method</li>
+<li><b>str</b>: Directory (the directory should contain feature library files, including <code>vector.index</code> and <code>index_info.yaml</code>)</li>
+<li><b>IndexData</b> object created by <code>build_index</code> method</li>
 </ul>
 </td>
 <td>None</td>
 </tr>
 </tbody>
 </table>
-
 <b>Note</b>: <code>HNSW32</code> has compatibility issues on the Windows platform, which may prevent the index library from being built or loaded.
 
 ### 2.3 Data Organization for Building the Index Library
@@ -535,7 +531,6 @@ Additionally, PaddleX provides three other deployment methods, detailed as follo
 Below is the API reference for basic service deployment and multi-language service call examples:
 
 <details><summary>API Reference</summary>
-
 <p>For the main operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
@@ -651,7 +646,6 @@ Below is the API reference for basic service deployment and multi-language servi
 </tr>
 </tbody>
 </table>
-
 <ul>
 <li>When the request is processed successfully, the <code>result</code> in the response body has the following properties:</li>
 </ul>
@@ -906,89 +900,85 @@ Below is the API reference for basic service deployment and multi-language servi
 </tbody>
 </table>
 </details>
-
 <details><summary>Multi-language Service Call Example</summary>
-
 <details>
 <summary>Python</summary>
-
-
 <pre><code class="language-python">import base64
 import pprint
 import sys
 
 import requests
 
-API_BASE_URL = &quot;http://0.0.0.0:8080&quot;
+API_BASE_URL = "http://0.0.0.0:8080"
 
 base_image_label_pairs = [
-    {&quot;image&quot;: &quot;./demo0.jpg&quot;, &quot;label&quot;: &quot;Rabbit&quot;},
-    {&quot;image&quot;: &quot;./demo1.jpg&quot;, &quot;label&quot;: &quot;Rabbit&quot;},
-    {&quot;image&quot;: &quot;./demo2.jpg&quot;, &quot;label&quot;: &quot;Dog&quot;},
+    {"image": "./demo0.jpg", "label": "Rabbit"},
+    {"image": "./demo1.jpg", "label": "Rabbit"},
+    {"image": "./demo2.jpg", "label": "Dog"},
 ]
 image_label_pairs_to_add = [
-    {&quot;image&quot;: &quot;./demo3.jpg&quot;, &quot;label&quot;: &quot;Dog&quot;},
+    {"image": "./demo3.jpg", "label": "Dog"},
 ]
 ids_to_remove = [1]
-infer_image_path = &quot;./demo4.jpg&quot;
-output_image_path = &quot;./out.jpg&quot;
+infer_image_path = "./demo4.jpg"
+output_image_path = "./out.jpg"
 
 for pair in base_image_label_pairs:
-    with open(pair[&quot;image&quot;], &quot;rb&quot;) as file:
+    with open(pair["image"], "rb") as file:
         image_bytes = file.read()
-        image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
-    pair[&quot;image&quot;] = image_data
+        image_data = base64.b64encode(image_bytes).decode("ascii")
+    pair["image"] = image_data
 
-payload = {&quot;imageLabelPairs&quot;: base_image_label_pairs}
-resp_index_build = requests.post(f&quot;{API_BASE_URL}/shitu-index-build&quot;, json=payload)
+payload = {"imageLabelPairs": base_image_label_pairs}
+resp_index_build = requests.post(f"{API_BASE_URL}/shitu-index-build", json=payload)
 if resp_index_build.status_code != 200:
-    print(f&quot;Request to shitu-index-build failed with status code {resp_index_build}.&quot;)
+    print(f"Request to shitu-index-build failed with status code {resp_index_build}.")
     pprint.pp(resp_index_build.json())
     sys.exit(1)
-result_index_build = resp_index_build.json()[&quot;result&quot;
-print(f&quot;Number of images indexed: {len(result_index_build['idMap'])}&quot;)
+result_index_build = resp_index_build.json()["result"
+print(f"Number of images indexed: {len(result_index_build['idMap'])}")
 
 for pair in image_label_pairs_to_add:
-    with open(pair[&quot;image&quot;], &quot;rb&quot;) as file:
+    with open(pair["image"], "rb") as file:
         image_bytes = file.read()
-        image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
-    pair[&quot;image&quot;] = image_data
+        image_data = base64.b64encode(image_bytes).decode("ascii")
+    pair["image"] = image_data
 
-payload = {&quot;imageLabelPairs&quot;: image_label_pairs_to_add, &quot;indexKey&quot;: result_index_build[&quot;indexKey&quot;]}
-resp_index_add = requests.post(f&quot;{API_BASE_URL}/shitu-index-add&quot;, json=payload)
+payload = {"imageLabelPairs": image_label_pairs_to_add, "indexKey": result_index_build["indexKey"]}
+resp_index_add = requests.post(f"{API_BASE_URL}/shitu-index-add", json=payload)
 if resp_index_add.status_code != 200:
-    print(f&quot;Request to shitu-index-add failed with status code {resp_index_add}.&quot;)
+    print(f"Request to shitu-index-add failed with status code {resp_index_add}.")
     pprint.pp(resp_index_add.json())
     sys.exit(1)
-result_index_add = resp_index_add.json()[&quot;result&quot;]
-print(f&quot;Number of images indexed: {len(result_index_add['idMap'])}&quot;)
+result_index_add = resp_index_add.json()["result"]
+print(f"Number of images indexed: {len(result_index_add['idMap'])}")
 
-payload = {&quot;ids&quot;: ids_to_remove, &quot;indexKey&quot;: result_index_build[&quot;indexKey&quot;]}
-resp_index_remove = requests.post(f&quot;{API_BASE_URL}/shitu-index-remove&quot;, json=payload)
+payload = {"ids": ids_to_remove, "indexKey": result_index_build["indexKey"]}
+resp_index_remove = requests.post(f"{API_BASE_URL}/shitu-index-remove", json=payload)
 if resp_index_remove.status_code != 200:
-    print(f&quot;Request to shitu-index-remove failed with status code {resp_index_remove}.&quot;)
+    print(f"Request to shitu-index-remove failed with status code {resp_index_remove}.")
     pprint.pp(resp_index_remove.json())
     sys.exit(1)
-result_index_remove = resp_index_remove.json()[&quot;result&quot;]
-print(f&quot;Number of images indexed: {len(result_index_remove['idMap'])}&quot;)
+result_index_remove = resp_index_remove.json()["result"]
+print(f"Number of images indexed: {len(result_index_remove['idMap'])}")
 
-with open(infer_image_path, &quot;rb&quot;) as file:
+with open(infer_image_path, "rb") as file:
     image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
-payload = {&quot;image&quot;: image_data, &quot;indexKey&quot;: result_index_build[&quot;indexKey&quot;]}
-resp_infer = requests.post(f&quot;{API_BASE_URL}/shitu-infer&quot;, json=payload)
+payload = {"image": image_data, "indexKey": result_index_build["indexKey"]}
+resp_infer = requests.post(f"{API_BASE_URL}/shitu-infer", json=payload)
 if resp_infer.status_code != 200:
-    print(f&quot;Request to shitu-infer failed with status code {resp_infer}.&quot;)
+    print(f"Request to shitu-infer failed with status code {resp_infer}.")
     pprint.pp(resp_infer.json())
     sys.exit(1)
-result_infer = resp_infer.json()[&quot;result&quot;]
+result_infer = resp_infer.json()["result"]
 
-with open(output_image_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result_infer[&quot;image&quot;]))
-print(f&quot;Output image saved at {output_image_path}&quot;)
-print(&quot;\nDetected objects:&quot;)
-pprint.pp(result_infer[&quot;detectedObjects&quot;])
+with open(output_image_path, "wb") as file:
+    file.write(base64.b64decode(result_infer["image"]))
+print(f"Output image saved at {output_image_path}")
+print("\nDetected objects:")
+pprint.pp(result_infer["detectedObjects"])
 </code></pre></details>
 </details>
 <br/>
@@ -1042,7 +1032,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(
     pipeline="PP-ShiTuV2",
-    device="npu:0" # gpu:0 --> npu:0
+    device="npu:0" # gpu:0 --&gt; npu:0
     )
 ```
 
