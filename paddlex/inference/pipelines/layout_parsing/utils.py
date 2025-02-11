@@ -402,6 +402,7 @@ def get_single_block_parsing_res(
 
     single_block_layout_parsing_res = []
     input_img = overall_ocr_res["doc_preprocessor_res"]["output_img"]
+    seal_index = 0
 
     for box_info in layout_det_res["boxes"]:
         block_bbox = box_info["coordinate"]
@@ -411,7 +412,7 @@ def get_single_block_parsing_res(
         seg_end_flag = True
 
         if label == "table":
-            for i, table_res in enumerate(table_res_list):
+            for table_res in table_res_list:
                 if (
                     _calculate_overlap_area_div_minbox_area_ratio(
                         block_bbox, table_res["cell_box_list"][0]
@@ -427,25 +428,21 @@ def get_single_block_parsing_res(
                             "seg_end_flag": seg_end_flag,
                         },
                     )
-                    del table_res_list[i]
                     break
         elif label == "seal":
             if len(seal_res_list) > 0:
                 single_block_layout_parsing_res.append(
                     {
                         "block_label": label,
-                        "block_content": {
-                            "img": input_img[
-                                int(block_bbox[1]) : int(block_bbox[3]),
-                                int(block_bbox[0]) : int(block_bbox[2]),
-                            ],
-                        },
+                        "block_content": ", ".join(
+                            seal_res_list[seal_index]["rec_texts"]
+                        ),
                         "block_bbox": block_bbox,
                         "seg_start_flag": seg_start_flag,
                         "seg_end_flag": seg_end_flag,
                     },
                 )
-                del seal_res_list[-1]
+                seal_index += 1
         else:
             overall_text_boxes = overall_ocr_res["rec_boxes"]
             for box_no in range(len(overall_text_boxes)):
