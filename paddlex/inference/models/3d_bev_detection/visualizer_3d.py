@@ -5,7 +5,7 @@ import argparse
 
 class Visualizer3D:
     def __init__(self):
-        self.vis = open3d.visualization.Visualizer()
+        self.vis = open3d.visualization.Visualizer() # initialize visualizer
 
     def boxes_to_lines(self, box: np.ndarray) -> open3d.geometry.LineSet:
         """
