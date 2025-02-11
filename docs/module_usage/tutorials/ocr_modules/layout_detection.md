@@ -207,11 +207,12 @@ for res in output:
 <details><summary>👉 <b>运行后，得到的结果为：（点击展开）</b></summary>
 
 ```bash
-{'res': {'input_path': 'layout.jpg', 'boxes': [{'cls_id': 8, 'label': 'table', 'score': 0.9866330623626709, 'coordinate': [74.30874633789062, 105.7123031616211, 321.9883728027344, 299.10858154296875]}, {'cls_id': 2, 'label': 'text', 'score': 0.9859815835952759, 'coordinate': [34.65811538696289, 349.9101867675781, 358.3383483886719, 611.3431396484375]}, {'cls_id': 2, 'label': 'text', 'score': 0.9850621223449707, 'coordinate': [34.94462203979492, 647.3794555664062, 358.3255920410156, 849.2332763671875]}, {'cls_id': 8, 'label': 'table', 'score': 0.9850116968154907, 'coordinate': [438.06829833984375, 105.3771743774414, 662.88720703125, 313.8873291015625]}, {'cls_id': 2, 'label': 'text', 'score': 0.9847850799560547, 'coordinate': [385.97052001953125, 497.03924560546875, 710.9548950195312, 697.6804809570312]}, {'cls_id': 2, 'label': 'text', 'score': 0.9805687665939331, 'coordinate': [385.7969665527344, 345.9375305175781, 710.0733642578125, 459.14373779296875]}, {'cls_id': 2, 'label': 'text', 'score': 0.9799897074699402, 'coordinate': [386.07574462890625, 735.3798217773438, 710.6078491210938, 850.2001953125]}, {'cls_id': 9, 'label': 'table_title', 'score': 0.9375936388969421, 'coordinate': [35.273826599121094, 19.851961135864258, 358.9250793457031, 77.81258392333984]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.8755733966827393, 'coordinate': [386.6318359375, 476.6071472167969, 699.783447265625, 490.11639404296875]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.8617452383041382, 'coordinate': [387.27447509765625, 715.9579467773438, 524.3836669921875, 729.2079467773438]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.8607752919197083, 'coordinate': [35.45162582397461, 627.4959716796875, 185.63442993164062, 640.4028930664062]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.8575425148010254, 'coordinate': [35.33491134643555, 330.8046875, 141.46853637695312, 344.40728759765625]}, {'cls_id': 9, 'label': 'table_title', 'score': 0.7957680225372314, 'coordinate': [385.9385986328125, 19.754547119140625, 711.5118408203125, 75.00630950927734]}]}}
+{'res': {'input_path': 'layout.jpg', 'page_index': None, 'boxes': [{'cls_id': 8, 'label': 'table', 'score': 0.9866330623626709, 'coordinate': [74.30875, 105.7123, 321.98837, 299.10858]}, {'cls_id': 2, 'label': 'text', 'score': 0.9859815835952759, 'coordinate': [34.658115, 349.9102, 358.33835, 611.34314]}, {'cls_id': 2, 'label': 'text', 'score': 0.9850621223449707, 'coordinate': [34.944622, 647.37946, 358.3256, 849.2333]}, {'cls_id': 8, 'label': 'table', 'score': 0.9850116968154907, 'coordinate': [438.0683, 105.377174, 662.8872, 313.88733]}, {'cls_id': 2, 'label': 'text', 'score': 0.9847850799560547, 'coordinate': [385.97052, 497.03925, 710.9549, 697.6805]}, {'cls_id': 2, 'label': 'text', 'score': 0.9805687665939331, 'coordinate': [385.79697, 345.93753, 710.07336, 459.14374]}, {'cls_id': 2, 'label': 'text', 'score': 0.9799897074699402, 'coordinate': [386.07574, 735.3798, 710.60785, 850.2002]}, {'cls_id': 9, 'label': 'table_title', 'score': 0.9375936388969421, 'coordinate': [35.273827, 19.851961, 358.92508, 77.812584]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.8755733966827393, 'coordinate': [386.63184, 476.60715, 699.78345, 490.1164]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.8617452383041382, 'coordinate': [387.27448, 715.95795, 524.38367, 729.20795]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.8607752919197083, 'coordinate': [35.451626, 627.496, 185.63443, 640.4029]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.8575425148010254, 'coordinate': [35.33491, 330.8047, 141.46854, 344.4073]}, {'cls_id': 9, 'label': 'table_title', 'score': 0.7957680225372314, 'coordinate': [385.9386, 19.754547, 711.51184, 75.00631]}]}}
 ```
 
 参数含义如下：
 - `input_path`：输入的待预测图像的路径
+- `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
 - `boxes`：预测的目标框信息，一个字典列表。每个字典代表一个检出的目标，包含以下信息：
   - `cls_id`：类别ID，一个整数
   - `label`：类别标签，一个字符串
@@ -335,12 +336,11 @@ for res in output:
 <td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
 <td>
 <ul>
-<li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
-<li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
-<li><b>URL链接</b>，如图像文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">示例</a></li>
-<li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
-<li><b>字典</b>，字典的<code>key</code>需与具体任务对应，如图像分类任务对应<code>\"img\"</code>，字典的<code>val</code>支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code></li>
-<li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code></li>
+  <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
+  <li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
+  <li><b>URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg">示例</a></li>
+  <li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
+  <li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td>无</td>
@@ -506,7 +506,7 @@ tar -xf ./dataset/det_layout_examples.tar -C ./dataset/
 一行命令即可完成数据校验：
 
 ```bash
-python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_layout_examples
 ```
@@ -576,13 +576,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>随后执行命令：</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_layout_examples
 </code></pre>
 <p>数据划分执行之后，原有标注文件会被在原路径下重命名为 <code>xxx.bak</code>。</p>
 <p>以上参数同样支持通过追加命令行参数的方式进行设置：</p>
-<pre><code>python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls.yaml  \
+<pre><code>python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_layout_examples \
     -o CheckDataset.split.enable=True \
@@ -591,16 +591,16 @@ CheckDataset:
 </code></pre></details>
 
 ### 4.2 模型训练
-一条命令即可完成模型的训练，以此处`PicoDet-L_layout_3cls`的训练为例：
+一条命令即可完成模型的训练，以此处`PP-DocLayout-L`的训练为例：
 
 ```bash
-python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/det_layout_examples
 ```
 需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`PicoDet-L_layout_3cls.yaml`，训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)）
+* 指定模型的`.yaml` 配置文件路径（此处为`PP-DocLayout-L.yaml`，训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
@@ -624,13 +624,13 @@ python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ```bash
-python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/det_layout_examples
 ```
 与模型训练类似，需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`PicoDet-L_layout_3cls.yaml`）
+* 指定模型的`.yaml` 配置文件路径（此处为`PP-DocLayout-L.yaml`）
 * 指定模式为模型评估：`-o Global.mode=evaluate`
 * 指定验证数据集路径：`-o Global.dataset_dir`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Evaluate`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
@@ -645,14 +645,14 @@ python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls
 #### 4.4.1 模型推理
 * 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg)到本地。
 ```bash
-python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="layout.jpg"
 ```
 与模型训练和评估类似，需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`PicoDet-L_layout_3cls.yaml`）
+* 指定模型的`.yaml` 配置文件路径（此处为`PP-DocLayout-L.yaml`）
 * 指定模式为模型推理预测：`-o Global.mode=predict`
 * 指定模型权重路径：`-o Predict.model_dir="./output/best_model/inference"`
 * 指定输入数据路径：`-o Predict.input="..."`
@@ -663,7 +663,7 @@ python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls
 模型可以直接集成到PaddleX产线中，也可以直接集成到您自己的项目中。
 
 1. <b>产线集成</b>
-版面区域检测模块可以集成的PaddleX产线有[通用表格识别产线](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition.md)、[文档场景信息抽取v3产线（PP-ChatOCRv3）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md)，只需要替换模型路径即可完成版面区域检测模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
+版面区域检测模块可以集成的PaddleX产线有[通用表格识别产线](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition.md)、[文档场景信息抽取v3产线（PP-ChatOCRv3-doc）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.md)，只需要替换模型路径即可完成版面区域检测模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
 
 1. <b>模块集成</b>
 您产出的权重可以直接集成到版面区域检测模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。

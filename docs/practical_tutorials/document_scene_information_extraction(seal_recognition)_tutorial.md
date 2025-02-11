@@ -22,47 +22,73 @@ PaddleX 提供了两种体验的方式，你可以在线体验文档场景信息
 
 ### 2.1 本地体验
 
-在本地使用文档场景信息抽取v3产线前，请确保您已经按照[PaddleX本地安装教程](../installation/installation.md)完成了PaddleX的wheel包安装。几行代码即可完成产线的快速推理：
+在本地使用文档场景信息抽取v3产线前，请确保您已经按照[PaddleX本地安装教程](../installation/installation.md)完成了PaddleX的wheel包安装。
+
+
+首先需要配置获取 `PP-ChatOCRv3-doc` 产线的配置文件，可以通过以下命令获取：
+```bash
+python -m paddlex --get_pipeline_config PP-ChatOCRv3-doc --save_path ./
+```
+
+执行上述命令后，配置文件会存储在当前路径下，打开配置文件，填写大语言模型的 ak/sk(access_token)，如下所示：
+
+```yaml
+......
+SubModules:
+  LLM_Chat:
+    module_name: chat_bot
+    model_name: ernie-3.5
+    api_type: qianfan
+    ak: "" # Your LLM API key
+    sk: ""  # Your LLM secret key
+
+  LLM_Retriever:
+    module_name: retriever
+    model_name: ernie-3.5
+    api_type: qianfan
+    ak: "" # Your LLM API key
+    sk: ""  # Your LLM secret key
+......
+```
+
+PP-ChatOCRv3 仅支持文心大模型，支持在[百度云千帆平台](https://console.bce.baidu.com/qianfan/ais/console/onlineService)或者[星河社区 AIStudio](https://aistudio.baidu.com/)上获取相关的 ak/sk(access_token)。如果使用百度云千帆平台，可以参考[AK和SK鉴权调用API流程](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8) 获取ak/sk，如果使用星河社区 AIStudio，可以在[星河社区 AIStudio 访问令牌](https://aistudio.baidu.com/account/accessToken)中获取 access_token。
+
+更新配置文件后，即可使用几行Python代码完成快速推理：
+
 
 
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(
-    pipeline="PP-ChatOCRv3-doc",
-    llm_name="ernie-3.5",
-    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # 使用千帆接口，请填入您的ak与sk，否则无法调用大模型
-    # llm_params={"api_type": "aistudio", "access_token": ""} # 或者使用AIStudio接口，请填入您的access_token，否则无法调用大模型
-    )
+pipeline = create_pipeline(pipeline="./PP-ChatOCRv3-doc.yaml")
 
-visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/test.png")
 
-for res in visual_result:
-    res.save_to_img("./output")
-    res.save_to_html('./output')
-    res.save_to_xlsx('./output')
+visual_predict_res = pipeline.visual_predict(input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/test.png",
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+    use_common_ocr=True,
+    use_seal_recognition=True,
+    use_table_recognition=True)
 
-vector = pipeline.build_vector(visual_info=visual_info)
-chat_result = pipeline.chat(
-    key_list=["印章名称"],
-    visual_info=visual_info,
-    vector=vector,
-    )
-chat_result.print()
+visual_info_list = []
+for res in visual_predict_res:
+    visual_info_list.append(res["visual_info"])
+    layout_parsing_result = res["layout_parsing_result"]
+    layout_parsing_result.save_to_img("./output")
+    # layout_parsing_result.save_to_json("./output")
+    # layout_parsing_result.save_to_xlsx("./output")
+    # layout_parsing_result.save_to_html("./output")
+
+vector_info = pipeline.build_vector(visual_info_list, flag_save_bytes_vector=True)
+chat_result = pipeline.chat(key_list=["印章名称"], visual_info=visual_info_list, vector_info=vector_info)
+print(chat_result)
 ```
-
-<b>注</b>：目前仅支持文心大模型，支持在[百度云千帆平台](https://console.bce.baidu.com/qianfan/ais/console/onlineService)或者[星河社区 AIStudio](https://aistudio.baidu.com/)上获取相关的 ak/sk(access_token)。如果使用百度云千帆平台，可以参考[AK和SK鉴权调用API流程](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8) 获取ak/sk，如果使用星河社区 AIStudio，可以在[星河社区 AIStudio 访问令牌](https://aistudio.baidu.com/account/accessToken)中获取 access_token。
-
 
 输出打印的结果如下：
 
 ```
-The result has been saved in output/tmpx5tmgsem_curve_0.jpg.
-The result has been saved in output/tmpx5tmgsem_layout.jpg.
-The result has been saved in output/tmpx5tmgsem_ocr.jpg.
-The retrieved vectorstore is not for PaddleX and will return vectorstore directly
 
-{'chat_res': {'印章名称': '击资源局'}, 'prompt': ''}
+{'chat_res': {'印章名称': '大中国土资源局'}}
 ```
 
 在`output` 目录中，保存了印章文本检测、OCR（如有表格，还有表格识别可视化结果以及表格html和xlsx）结果。
@@ -72,7 +98,7 @@ The retrieved vectorstore is not for PaddleX and will return vectorstore directl
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/PP-ChatOCRv3_doc/seal_01.png">
 
 
-通过上面的文档场景信息抽取的快速体验可以进行 Badcase 分析，发现文档场景信息抽取产线的官方模型，在当前需求场景中存在下面的问题：在OCR识别的可视化中，印章的文本弯曲检测框有偏差，导致印章文本识别错误；印章的信息没有被正确的抽取出来。在`{'chat_res': {'印章': '未知'}, 'prompt': ''}`中的结果是未知。因此，本节工作聚焦于印章信息抽取的场景，对文档场景信息抽取产线中的印章文本检测模型进行微调，从而达到能够精确提取文档中印章文本信息的能力。
+通过上面的文档场景信息抽取的快速体验可以进行 Badcase 分析，发现文档场景信息抽取产线的官方模型，在当前需求场景中存在下面的问题：在OCR识别的可视化中，印章的文本弯曲检测框有偏差，导致印章文本识别错误；印章的信息没有被正确的抽取出来。在`{'chat_res': {'印章名称': '大中国土资源局'}`中的结果是错误的。因此，本节工作聚焦于印章信息抽取的场景，对文档场景信息抽取产线中的印章文本检测模型进行微调，从而达到能够精确提取文档中印章文本信息的能力。
 
 
 ### 2.2 在线体验
@@ -137,7 +163,7 @@ tar -xf ./dataset/practical_seal.tar -C ./dataset/
 在对数据集校验时，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
+python main.py -c paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/practical_seal/
 ```
@@ -178,7 +204,7 @@ python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.y
   "analysis": {
     "histogram": "check_dataset\/histogram.png"
   },
-  "dataset_path": ".\/dataset\/practical_seal\/",
+  "dataset_path": "practical_seal/",
   "show_type": "image",
   "dataset_type": "TextDetDataset"
 }
@@ -222,7 +248,7 @@ python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.y
 在训练之前，请确保您已经对数据集进行了校验。完成 PaddleX 模型的训练，只需如下一条命令：
 
 ```bash
-python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
+python main.py -c paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/practical_seal \
     -o Train.epochs_iters=30 \
@@ -263,7 +289,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
+python main.py -c paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/practical_seal
 ```
@@ -348,7 +374,7 @@ python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.y
 调整不同参数执行训练的命令可以参考：
 
 ```bash
-python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
+python main.py -c paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_seal_det.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/practical_seal \
     -o Train.learning_rate=0.0001 \
@@ -366,22 +392,27 @@ python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.y
 paddlex --get_pipeline_config PP-ChatOCRv3-doc --save_path ./my_path
 ```
 
-将`PP-ChatOCRv3-doc.yaml`中的`Pipeline.seal_text_det_model`字段修改为上面微调后的模型路径，修改后配置如下：
+参考2.1 填写大语言模型的 ak/sk(access_token)， 并将`PP-ChatOCRv3-doc.yaml`中的`SubPipelines.SealRecognition.SealOCR.SubModules.TextDetection.model_dir`字段修改为上面微调后的模型路径，修改后配置如下：
 
 ```yaml
-Pipeline:
-  layout_model: RT-DETR-H_layout_3cls
-  table_model: SLANet_plus
-  text_det_model: PP-OCRv4_server_det
-  text_rec_model: PP-OCRv4_server_rec
-  seal_text_det_model: ./output/best_accuracy/inference
-  doc_image_ori_cls_model: null
-  doc_image_unwarp_model: null
-  llm_name: "ernie-3.5"
-  llm_params:
-    api_type: qianfan
-    ak:
-    sk:
+......
+SubPipelines:
+    ...
+    SealRecognition:
+        ...
+          SealOCR:
+            ...
+            SubModules:
+              TextDetection:
+                module_name: seal_text_detection
+                model_name: PP-OCRv4_server_seal_det
+                model_dir: output/best_accuracy/inference # 修改为微调后的模型路径
+                limit_side_len: 736
+                limit_type: min
+                thresh: 0.2
+                box_thresh: 0.6
+                unclip_ratio: 0.5
+......
 ```
 
 修改后，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可应用配置。
@@ -389,34 +420,32 @@ Pipeline:
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(
-    pipeline="./my_path/PP-ChatOCRv3-doc.yaml",
-    llm_name="ernie-3.5",
-    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # 请填入您的ak与sk，否则无法调用大模型
-    # llm_params={"api_type": "aistudio", "access_token": ""} # 或者使用AIStudio接口，请填入您的access_token，否则无法调用大模型
-    )
+pipeline = create_pipeline(pipeline="./my_path/PP-ChatOCRv3-doc.yaml")
 
-visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/test.png")
+visual_predict_res = pipeline.visual_predict(input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/test.png",
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+    use_common_ocr=True,
+    use_seal_recognition=True,
+    use_table_recognition=True)
 
-for res in visual_result:
-    res.save_to_img("./output_ft")
-    res.save_to_html('./output_ft')
-    res.save_to_xlsx('./output_ft')
+visual_info_list = []
+for res in visual_predict_res:
+    visual_info_list.append(res["visual_info"])
+    layout_parsing_result = res["layout_parsing_result"]
+    layout_parsing_result.save_to_img("./output_ft")
 
-vector = pipeline.build_vector(visual_info=visual_info)
-chat_result = pipeline.chat(
-    key_list=["印章名称"],
-    visual_info=visual_info,
-    vector=vector,
-    )
-chat_result.print()
+vector_info = pipeline.build_vector(visual_info_list, flag_save_bytes_vector=True)
+chat_result = pipeline.chat(key_list=["印章名称"], visual_info=visual_info_list, vector_info=vector_info)
+print(chat_result)
+
 ```
 
 通过上述可在`./output_ft`下生成预测结果，打印的关键信息抽取结果：
 
 
 ```
-{'chat_res': {'印章名称': '广关市国士资源局'}, 'prompt': ''}
+{'chat_res': {'印章名称': '广关市国士资源局'}}
 ```
 
 可以发现，在模型微调之后，关键信息已经被正确的提取出来。
@@ -435,30 +464,25 @@ chat_result.print()
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(
-    pipeline="./my_path/PP-ChatOCRv3-doc.yaml",
-    llm_name="ernie-3.5",
-    llm_params={"api_type": "qianfan", "ak": "", "sk": ""} # 请填入您的ak与sk，否则无法调用大模型
-    # llm_params={"api_type": "aistudio", "access_token": ""} # 或者使用AIStudio接口，请填入您的access_token，否则无法调用大模型
-    )
+pipeline = create_pipeline(pipeline="./my_path/PP-ChatOCRv3-doc.yaml")
 
-visual_result, visual_info = pipeline.visual_predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/test.png")
+visual_predict_res = pipeline.visual_predict(input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/test.png",
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+    use_common_ocr=True,
+    use_seal_recognition=True,
+    use_table_recognition=True)
 
-for res in visual_result:
-    res.save_to_img("./output")
-    res.save_to_html('./output')
-    res.save_to_xlsx('./output')
+visual_info_list = []
+for res in visual_predict_res:
+    visual_info_list.append(res["visual_info"])
+    layout_parsing_result = res["layout_parsing_result"]
 
-vector = pipeline.build_vector(visual_info=visual_info)
-chat_result = pipeline.chat(
-    key_list=["印章名称"],
-    visual_info=visual_info,
-    vector=vector,
-    )
-chat_result.print()
+vector_info = pipeline.build_vector(visual_info_list, flag_save_bytes_vector=True)
+chat_result = pipeline.chat(key_list=["印章名称"], visual_info=visual_info_list, vector_info=vector_info)
 ```
 
-更多参数请参考 [文档场景信息抽取v3产线使用教程](../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md)。
+更多参数请参考 [文档场景信息抽取v3产线使用教程](../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.md)。
 
 2. 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
 

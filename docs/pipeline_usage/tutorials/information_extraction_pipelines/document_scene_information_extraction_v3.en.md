@@ -311,7 +311,7 @@ You can [experience online](https://aistudio.baidu.com/community/app/182491/webU
 If you are satisfied with the pipeline's performance, you can directly integrate and deploy it. If not, you can also use your private data to <b>fine-tune the models in the pipeline online</b>.
 
 ### 2.2 Local Experience
-Before using the PP-ChatOCRv3 pipeline locally, please ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+Before using the PP-ChatOCRv3-doc pipeline locally, please ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 
 A few lines of code are all you need to complete the quick inference of the pipeline. Using the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf), taking the PP-ChatOCRv3-doc pipeline as an example:
 
