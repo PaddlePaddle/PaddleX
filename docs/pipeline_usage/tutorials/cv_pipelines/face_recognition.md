@@ -9,8 +9,7 @@ comments: true
 
 人脸识别产线是专注于解决人脸定位和识别任务的端到端串联系统，可以从图像中快速准确地定位人脸区域、提取人脸特征，并与特征库中预先建立的特征做检索比对，从而确认身份信息。
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/face_recognition/02.jpg">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/face_recognition/02.jpg"/>
 <b>人脸识别产线中包含了人脸检测模块和人脸特征模块</b>，每个模块中包含了若干模型，具体使用哪些模型，您可以根据下边的 benchmark 数据来选择。<b>如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型</b>。
 
 <p><b>人脸检测模块：</b></p>
@@ -19,8 +18,8 @@ comments: true
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>AP(%)</th>
-<th>GPU推理耗时 (ms)</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小 (M)</th>
 <th>介绍</th>
 </tr>
@@ -29,8 +28,8 @@ comments: true
 <tr>
 <td>BlazeFace</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace_pretrained.pdparams">训练模型</a></td>
 <td>15.4</td>
-<td>49.9</td>
-<td>68.2</td>
+<td>60.34 / 54.76</td>
+<td>84.18 / 84.18</td>
 <td>0.447</td>
 <td>轻量高效的人脸检测模型</td>
 </tr>
@@ -38,28 +37,28 @@ comments: true
 <tr>
 <td>BlazeFace-FPN-SSH</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace-FPN-SSH_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace-FPN-SSH_pretrained.pdparams">训练模型</a></td>
 <td>18.7</td>
-<td>52.4</td>
-<td>73.2</td>
+<td>69.29 / 63.42</td>
+<td>86.96 / 86.96</td>
 <td>0.606</td>
 <td>BlazeFace的改进模型，增加FPN和SSH结构</td>
 </tr>
 <tr>
 <td>PicoDet_LCNet_x2_5_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_LCNet_x2_5_face_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_LCNet_x2_5_face_pretrained.pdparams">训练模型</a></td>
 <td>31.4</td>
-<td>33.7</td>
-<td>185.1</td>
+<td>35.37 / 12.88</td>
+<td>126.24 / 126.24</td>
 <td>28.9</td>
 <td>基于PicoDet_LCNet_x2_5的人脸检测模型</td>
 </tr>
 <tr>
 <td>PP-YOLOE_plus-S_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-S_face_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_face_pretrained.pdparams">训练模型</a></td>
 <td>36.1</td>
-<td>25.8</td>
-<td>159.9</td>
+<td>22.54 / 8.33</td>
+<td>138.67 / 138.67</td>
 <td>26.5</td>
 <td>基于PP-YOLOE_plus-S的人脸检测模型</td>
 </tr>
-</tbody>
+</tr></tbody>
 </table>
 <p>注：以上精度指标是在 COCO 格式的 WIDER-FACE 验证集上，以640
 *640作为输入尺寸评估得到的。所有模型 GPU 推理耗时基于 NVIDIA V100 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 6271C CPU @ 2.60GHz，精度类型为 FP32。</p>
@@ -70,8 +69,8 @@ comments: true
 <th>模型</th><th>模型下载链接</th>
 <th>输出特征维度</th>
 <th>Acc (%)<br/>AgeDB-30/CFP-FP/LFW</th>
-<th>GPU推理耗时 (ms)</th>
-<th>CPU推理耗时</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小 (M)</th>
 <th>介绍</th>
 </tr>
@@ -81,8 +80,8 @@ comments: true
 <td>MobileFaceNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MobileFaceNet_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileFaceNet_pretrained.pdparams">训练模型</a></td>
 <td>128</td>
 <td>96.28/96.71/99.58</td>
-<td>5.7</td>
-<td>101.6</td>
+<td>3.16 / 0.48</td>
+<td>6.49 / 6.49</td>
 <td>4.1</td>
 <td>基于MobileFaceNet在MS1Mv3数据集上训练的人脸特征提取模型</td>
 </tr>
@@ -90,8 +89,8 @@ comments: true
 <td>ResNet50_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ResNet50_face_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_face_pretrained.pdparams">训练模型</a></td>
 <td>512</td>
 <td>98.12/98.56/99.77</td>
-<td>8.7</td>
-<td>200.7</td>
+<td>5.68 / 1.09</td>
+<td>14.96 / 11.90</td>
 <td>87.2</td>
 <td>基于ResNet50在MS1Mv3数据集上训练的人脸特征提取模型</td>
 </tr>
@@ -201,8 +200,8 @@ for res in output:
 <td><code>str</code>|<code>list</code></td>
 <td>
 <ul>
-  <li><b>str</b>：图片根目录，数据组织方式参考<a href="#2.3-构建特征库的数据组织方式">2.3节 构建特征库的数据组织方式</a></li>
-  <li><b>List[numpy.ndarray]</b>：numpy.array列表类型的底库图片数据</li>
+<li><b>str</b>：图片根目录，数据组织方式参考<a href="#2.3-构建特征库的数据组织方式">2.3节 构建特征库的数据组织方式</a></li>
+<li><b>List[numpy.ndarray]</b>：numpy.array列表类型的底库图片数据</li>
 </ul>
 </td>
 <td>无</td>
@@ -213,8 +212,8 @@ for res in output:
 <td><code>str|list</code></td>
 <td>
 <ul>
-  <li><b>str</b>：标注文件的路径，数据组织方式与构建特征库时相同，参考<a href="#2.3-构建特征库的数据组织方式">2.3节 构建特征库的数据组织方式</a></li>
-  <li><b>List[str]</b>：str列表类型的底库图片标注</li>
+<li><b>str</b>：标注文件的路径，数据组织方式与构建特征库时相同，参考<a href="#2.3-构建特征库的数据组织方式">2.3节 构建特征库的数据组织方式</a></li>
+<li><b>List[str]</b>：str列表类型的底库图片标注</li>
 </ul>
 </td>
 <td>无</td>
@@ -225,8 +224,8 @@ for res in output:
 <td><code>str</code></td>
 <td>
 <ul>
-  <li><code>"IP"</code>：内积（Inner Product）</li>
-  <li><code>"L2"</code>：欧几里得距离（Euclidean Distance）</li>
+<li><code>"IP"</code>：内积（Inner Product）</li>
+<li><code>"L2"</code>：欧几里得距离（Euclidean Distance）</li>
 </ul>
 </td>
 <td><code>"IP"</code></td>
@@ -237,9 +236,9 @@ for res in output:
 <td><code>str</code></td>
 <td>
 <ul>
-  <li><code>"HNSW32"</code>：检索速度较快且精度较高，但不支持 <code>remove_index()</code> 操作</li>
-  <li><code>"IVF"</code>：检索速度较快但精度相对较低，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
-  <li><code>"Flat"</code>：检索速度较低精度较高，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
+<li><code>"HNSW32"</code>：检索速度较快且精度较高，但不支持 <code>remove_index()</code> 操作</li>
+<li><code>"IVF"</code>：检索速度较快但精度相对较低，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
+<li><code>"Flat"</code>：检索速度较低精度较高，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
 </ul>
 </td>
 <td><code>"HNSW32"</code></td>
@@ -285,9 +284,9 @@ for res in output:
 <td><code>Python Var|str|list</code></td>
 <td>
 <ul>
-  <li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
-  <li><b>str</b>：如图像文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code></li>
-  <li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
+<li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
+<li><b>str</b>：如图像文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code></li>
+<li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td>无</td>
@@ -298,8 +297,8 @@ for res in output:
 <td><code>str|paddlex.inference.components.retrieval.faiss.IndexData|None</code></td>
 <td>
 <ul>
-    <li><b>str</b>类型表示的目录（该目录下需要包含特征库文件，包括<code>vector.index</code>和<code>index_info.yaml</code>）</li>
-    <li><code>build_index</code>方法创建的<b>IndexData</b>对象</li>
+<li><b>str</b>类型表示的目录（该目录下需要包含特征库文件，包括<code>vector.index</code>和<code>index_info.yaml</code>）</li>
+<li><code>build_index</code>方法创建的<b>IndexData</b>对象</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -320,8 +319,8 @@ for res in output:
 </tr>
 </thead>
 <tr>
-<td rowspan = "3"><code>print()</code></td>
-<td rowspan = "3">打印结果到终端</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">打印结果到终端</td>
 <td><code>format_json</code></td>
 <td><code>bool</code></td>
 <td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
@@ -340,8 +339,8 @@ for res in output:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td rowspan = "3"><code>save_to_json()</code></td>
-<td rowspan = "3">将结果保存为json格式的文件</td>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">将结果保存为json格式的文件</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
 <td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
@@ -385,7 +384,7 @@ for res in output:
 - 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.json`，如果指定为文件，则直接保存到该文件中。
 - 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.{your_img_extension}`，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)，上述示例中，可视化结果如下所示：
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/face_recognition/02.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/face_recognition/02.jpg"/>
 
 * 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
 
@@ -397,12 +396,12 @@ for res in output:
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">获取预测的 <code>json</code> 格式的结果</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">获取预测的 <code>json</code> 格式的结果</td>
 </tr>
 <tr>
-<td rowspan = "2"><code>img</code></td>
-<td rowspan = "2">获取格式为 <code>dict</code> 的可视化图像</td>
+<td rowspan="2"><code>img</code></td>
+<td rowspan="2">获取格式为 <code>dict</code> 的可视化图像</td>
 </tr>
 </table>
 
@@ -465,8 +464,8 @@ index_data.save("face_index")
 <td><code>str</code>|<code>list</code></td>
 <td>
 <ul>
-  <li><b>str</b>：图片根目录，数据组织方式参考<a href="#2.3-构建特征库的数据组织方式">2.3节 构建特征库的数据组织方式</a></li>
-  <li><b>List[numpy.ndarray]</b>：numpy.array列表类型的底库图片数据</li>
+<li><b>str</b>：图片根目录，数据组织方式参考<a href="#2.3-构建特征库的数据组织方式">2.3节 构建特征库的数据组织方式</a></li>
+<li><b>List[numpy.ndarray]</b>：numpy.array列表类型的底库图片数据</li>
 </ul>
 </td>
 <td>无</td>
@@ -477,8 +476,8 @@ index_data.save("face_index")
 <td><code>str|list</code></td>
 <td>
 <ul>
-  <li><b>str</b>：标注文件的路径，数据组织方式与构建特征库时相同，参考<a href="#2.3-构建特征库的数据组织方式">2.3节 构建特征库的数据组织方式</a></li>
-  <li><b>List[str]</b>：str列表类型的底库图片标注</li>
+<li><b>str</b>：标注文件的路径，数据组织方式与构建特征库时相同，参考<a href="#2.3-构建特征库的数据组织方式">2.3节 构建特征库的数据组织方式</a></li>
+<li><b>List[str]</b>：str列表类型的底库图片标注</li>
 </ul>
 </td>
 <td>无</td>
@@ -489,8 +488,8 @@ index_data.save("face_index")
 <td><code>str</code></td>
 <td>
 <ul>
-  <li><code>"IP"</code>：内积（Inner Product）</li>
-  <li><code>"L2"</code>：欧几里得距离（Euclidean Distance）</li>
+<li><code>"IP"</code>：内积（Inner Product）</li>
+<li><code>"L2"</code>：欧几里得距离（Euclidean Distance）</li>
 </ul>
 </td>
 <td><code>"IP"</code></td>
@@ -501,9 +500,9 @@ index_data.save("face_index")
 <td><code>str</code></td>
 <td>
 <ul>
-  <li><code>"HNSW32"</code>：检索速度较快且精度较高，但不支持 <code>remove_index()</code> 操作</li>
-  <li><code>"IVF"</code>：检索速度较快但精度相对较低，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
-  <li><code>"Flat"</code>：检索速度较低精度较高，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
+<li><code>"HNSW32"</code>：检索速度较快且精度较高，但不支持 <code>remove_index()</code> 操作</li>
+<li><code>"IVF"</code>：检索速度较快但精度相对较低，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
+<li><code>"Flat"</code>：检索速度较低精度较高，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
 </ul>
 </td>
 <td><code>"HNSW32"</code></td>
@@ -525,15 +524,14 @@ index_data.save("face_index")
 <td><code>str|paddlex.inference.components.retrieval.faiss.IndexData</code></td>
 <td>
 <ul>
-    <li><b>str</b>类型表示的目录（该目录下需要包含特征库文件，包括<code>vector.index</code>和<code>index_info.yaml</code>）</li>
-    <li><code>build_index</code>方法创建的<b>IndexData</b>对象</li>
+<li><b>str</b>类型表示的目录（该目录下需要包含特征库文件，包括<code>vector.index</code>和<code>index_info.yaml</code>）</li>
+<li><code>build_index</code>方法创建的<b>IndexData</b>对象</li>
 </ul>
 </td>
 <td>无</td>
 </tr>
 </tbody>
 </table>
-
 <b>注意</b>：<code>HNSW32</code>在windows平台存在兼容性问题，可能导致索引库无法构建、加载。
 
 ### 2.3 构建特征库的数据组织方式
@@ -567,7 +565,6 @@ data_root             # 数据集根目录，目录名称可以改变
 以下是基础服务化部署的API参考与多语言服务调用示例：
 
 <details><summary>API参考</summary>
-
 <p>对于服务提供的主要操作：</p>
 <ul>
 <li>HTTP请求方法为POST。</li>
@@ -735,7 +732,7 @@ data_root             # 数据集根目录，目录名称可以改变
 <td><code>indexKey</code></td>
 <td><code>string</code></td>
 <td>索引对应的键。由<code>buildIndex</code>操作提供。</td>
-<td>否</td>
+<td>是</td>
 </tr>
 </tbody>
 </table>
@@ -808,7 +805,7 @@ data_root             # 数据集根目录，目录名称可以改变
 <td><code>indexKey</code></td>
 <td><code>string</code></td>
 <td>索引对应的键。由<code>buildIndex</code>操作提供。</td>
-<td>否</td>
+<td>是</td>
 </tr>
 </tbody>
 </table>
@@ -861,6 +858,30 @@ data_root             # 数据集根目录，目录名称可以改变
 <td>索引对应的键。由<code>buildIndex</code>操作提供。</td>
 <td>否</td>
 </tr>
+<tr>
+<td><code>detThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>det_threshold</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>recThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>rec_threshold</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>hammingRadius</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>hamming_radius</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>topk</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>topk</code> 参数说明。</td>
+<td>否</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -882,7 +903,7 @@ data_root             # 数据集根目录，目录名称可以改变
 </tr>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></td>
+<td><code>string</code> | <code>null</code></td>
 <td>识别结果图。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 </tbody>
@@ -937,89 +958,85 @@ data_root             # 数据集根目录，目录名称可以改变
 </tbody>
 </table>
 </details>
-
 <details><summary>多语言调用服务示例</summary>
-
 <details>
 <summary>Python</summary>
-
-
 <pre><code class="language-python">import base64
 import pprint
 import sys
 
 import requests
 
-API_BASE_URL = &quot;http://0.0.0.0:8080&quot;
+API_BASE_URL = "http://0.0.0.0:8080"
 
 base_image_label_pairs = [
-    {&quot;image&quot;: &quot;./demo0.jpg&quot;, &quot;label&quot;: &quot;ID0&quot;},
-    {&quot;image&quot;: &quot;./demo1.jpg&quot;, &quot;label&quot;: &quot;ID1&quot;},
-    {&quot;image&quot;: &quot;./demo2.jpg&quot;, &quot;label&quot;: &quot;ID2&quot;},
+    {"image": "./demo0.jpg", "label": "ID0"},
+    {"image": "./demo1.jpg", "label": "ID1"},
+    {"image": "./demo2.jpg", "label": "ID2"},
 ]
 image_label_pairs_to_add = [
-    {&quot;image&quot;: &quot;./demo3.jpg&quot;, &quot;label&quot;: &quot;ID2&quot;},
+    {"image": "./demo3.jpg", "label": "ID2"},
 ]
 ids_to_remove = [1]
-infer_image_path = &quot;./demo4.jpg&quot;
-output_image_path = &quot;./out.jpg&quot;
+infer_image_path = "./demo4.jpg"
+output_image_path = "./out.jpg"
 
 for pair in base_image_label_pairs:
-    with open(pair[&quot;image&quot;], &quot;rb&quot;) as file:
+    with open(pair["image"], "rb") as file:
         image_bytes = file.read()
-        image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
-    pair[&quot;image&quot;] = image_data
+        image_data = base64.b64encode(image_bytes).decode("ascii")
+    pair["image"] = image_data
 
-payload = {&quot;imageLabelPairs&quot;: base_image_label_pairs}
-resp_index_build = requests.post(f&quot;{API_BASE_URL}/face-recognition-index-build&quot;, json=payload)
+payload = {"imageLabelPairs": base_image_label_pairs}
+resp_index_build = requests.post(f"{API_BASE_URL}/face-recognition-index-build", json=payload)
 if resp_index_build.status_code != 200:
-    print(f&quot;Request to face-recognition-index-build failed with status code {resp_index_build}.&quot;)
+    print(f"Request to face-recognition-index-build failed with status code {resp_index_build}.")
     pprint.pp(resp_index_build.json())
     sys.exit(1)
-result_index_build = resp_index_build.json()[&quot;result&quot;]
-print(f&quot;Number of images indexed: {len(result_index_build['idMap'])}&quot;)
+result_index_build = resp_index_build.json()["result"]
+print(f"Number of images indexed: {len(result_index_build['idMap'])}")
 
 for pair in image_label_pairs_to_add:
-    with open(pair[&quot;image&quot;], &quot;rb&quot;) as file:
+    with open(pair["image"], "rb") as file:
         image_bytes = file.read()
-        image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
-    pair[&quot;image&quot;] = image_data
+        image_data = base64.b64encode(image_bytes).decode("ascii")
+    pair["image"] = image_data
 
-payload = {&quot;imageLabelPairs&quot;: image_label_pairs_to_add, &quot;indexKey&quot;: result_index_build[&quot;indexKey&quot;]}
-resp_index_add = requests.post(f&quot;{API_BASE_URL}/face-recognition-index-add&quot;, json=payload)
+payload = {"imageLabelPairs": image_label_pairs_to_add, "indexKey": result_index_build["indexKey"]}
+resp_index_add = requests.post(f"{API_BASE_URL}/face-recognition-index-add", json=payload)
 if resp_index_add.status_code != 200:
-    print(f&quot;Request to face-recognition-index-add failed with status code {resp_index_add}.&quot;)
+    print(f"Request to face-recognition-index-add failed with status code {resp_index_add}.")
     pprint.pp(resp_index_add.json())
     sys.exit(1)
-result_index_add = resp_index_add.json()[&quot;result&quot;]
-print(f&quot;Number of images indexed: {len(result_index_add['idMap'])}&quot;)
+result_index_add = resp_index_add.json()["result"]
+print(f"Number of images indexed: {len(result_index_add['idMap'])}")
 
-payload = {&quot;ids&quot;: ids_to_remove, &quot;indexKey&quot;: result_index_build[&quot;indexKey&quot;]}
-resp_index_remove = requests.post(f&quot;{API_BASE_URL}/face-recognition-index-remove&quot;, json=payload)
+payload = {"ids": ids_to_remove, "indexKey": result_index_build["indexKey"]}
+resp_index_remove = requests.post(f"{API_BASE_URL}/face-recognition-index-remove", json=payload)
 if resp_index_remove.status_code != 200:
-    print(f&quot;Request to face-recognition-index-remove failed with status code {resp_index_remove}.&quot;)
+    print(f"Request to face-recognition-index-remove failed with status code {resp_index_remove}.")
     pprint.pp(resp_index_remove.json())
     sys.exit(1)
-result_index_remove = resp_index_remove.json()[&quot;result&quot;]
-print(f&quot;Number of images indexed: {len(result_index_remove['idMap'])}&quot;)
+result_index_remove = resp_index_remove.json()["result"]
+print(f"Number of images indexed: {len(result_index_remove['idMap'])}")
 
-with open(infer_image_path, &quot;rb&quot;) as file:
+with open(infer_image_path, "rb") as file:
     image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
-payload = {&quot;image&quot;: image_data, &quot;indexKey&quot;: result_index_build[&quot;indexKey&quot;]}
-resp_infer = requests.post(f&quot;{API_BASE_URL}/face-recognition-infer&quot;, json=payload)
+payload = {"image": image_data, "indexKey": result_index_build["indexKey"]}
+resp_infer = requests.post(f"{API_BASE_URL}/face-recognition-infer", json=payload)
 if resp_infer.status_code != 200:
-    print(f&quot;Request to face-recogntion-infer failed with status code {resp_infer}.&quot;)
+    print(f"Request to face-recogntion-infer failed with status code {resp_infer}.")
     pprint.pp(resp_infer.json())
     sys.exit(1)
-result_infer = resp_infer.json()[&quot;result&quot;]
+result_infer = resp_infer.json()["result"]
 
-with open(output_image_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result_infer[&quot;image&quot;]))
-print(f&quot;Output image saved at {output_image_path}&quot;)
-print(&quot;\nDetected faces:&quot;)
-pprint.pp(result_infer[&quot;faces&quot;])
+with open(output_image_path, "wb") as file:
+    file.write(base64.b64decode(result_infer["image"]))
+print(f"Output image saved at {output_image_path}")
+print("\nDetected faces:")
+pprint.pp(result_infer["faces"])
 </code></pre>
 </details>
 </details>

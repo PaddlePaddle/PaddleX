@@ -482,7 +482,7 @@ vector_info = pipeline.build_vector(visual_info_list, flag_save_bytes_vector=Tru
 chat_result = pipeline.chat(key_list=["印章名称"], visual_info=visual_info_list, vector_info=vector_info)
 ```
 
-更多参数请参考 [文档场景信息抽取v3产线使用教程](../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md)。
+更多参数请参考 [文档场景信息抽取v3产线使用教程](../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.md)。
 
 2. 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
 

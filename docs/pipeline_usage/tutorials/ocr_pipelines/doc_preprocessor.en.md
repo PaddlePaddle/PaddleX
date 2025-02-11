@@ -19,7 +19,7 @@ The document image preprocessing pipeline integrates two major functions: docume
 <tr>
 <th>Model</th><th>Model download link</th>
 <th>Top-1 Acc（%）</th>
-<th>GPU inference time（ms）</th>
+<th>GPU inference time (ms)</th>
 <th>CPU inference time (ms)</th>
 <th>Model storage size（M)</th>
 <th>Introduction</th>

@@ -17,7 +17,7 @@ comments: true
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>mAP 0.5:0.95</th>
-<th>GPU推理耗时（ms）</th>
+<th>GPU推理耗时 (ms)</th>
 <th>CPU推理耗时 (ms)</th>
 <th>模型存储大小（M）</th>
 <th>介绍</th>
@@ -46,7 +46,7 @@ comments: true
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>mAP（%）</th>
-<th>GPU推理耗时（ms）</th>
+<th>GPU推理耗时 (ms)</th>
 <th>CPU推理耗时 (ms)</th>
 <th>模型存储大小（M)</th>
 <th>介绍</th>
@@ -441,6 +441,18 @@ for res in output:
 <td>服务器可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
 <td>是</td>
 </tr>
+<tr>
+<td><code>detThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>det_threshold</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>clsThreshold</code></td>
+<td><code>number</code> | <code>array</code> | <code>object</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>cls_threshold</code> 参数说明。</td>
+<td>否</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -462,7 +474,7 @@ for res in output:
 </tr>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></td>
+<td><code>string</code> | <code>null</code></td>
 <td>车辆属性识别结果图。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 </tbody>

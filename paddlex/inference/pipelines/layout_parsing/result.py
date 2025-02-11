@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict
-import numpy as np
-from PIL import Image, ImageDraw
 import copy
+from pathlib import Path
+from PIL import Image, ImageDraw
+from typing import Dict
+import copy
+import numpy as np
 from ...common.result import BaseCVResult, HtmlMixin, XlsxMixin, JsonMixin
 
 
@@ -27,6 +29,15 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
         super().__init__(data)
         HtmlMixin.__init__(self)
         XlsxMixin.__init__(self)
+
+    def _get_input_fn(self):
+        fn = super()._get_input_fn()
+        if (page_idx := self["page_index"]) is not None:
+            fp = Path(fn)
+            stem, suffix = fp.stem, fp.suffix
+            return f"{stem}_{page_idx}{suffix}"
+        else:
+            return fn
 
     def _to_img(self) -> Dict[str, np.ndarray]:
         res_img_dict = {}
