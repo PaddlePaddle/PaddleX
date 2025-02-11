@@ -78,6 +78,7 @@ class Visualizer3D:
         result_boxes = np.array(result_boxes)
         for i in range(result_boxes.shape[0]):
             lines = self.boxes_to_lines(result_boxes[i])
+            # show different colors for different classes
             if label_preds[i] <= 4:
                 obs_color = [0, 1, 0] # 'car', 'truck', 'trailer', 'bus', 'construction_vehicle',
             elif (label_preds[i] <= 6):
