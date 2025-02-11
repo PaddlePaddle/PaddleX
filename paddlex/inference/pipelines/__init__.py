@@ -205,7 +205,7 @@ def create_retriever(
     return retriever
 
 
-def create_prompt_engeering(
+def create_prompt_engineering(
     config: Dict,
     *args,
     **kwargs,
