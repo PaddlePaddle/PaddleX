@@ -37,22 +37,52 @@ comments: true
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
-完成 wheel 包的安装后，几行代码即可完成目标检测模块的推理，可以任意切换该模块下的模型，您也可以将3D多模态融合检测模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例输入](https://paddle-model-ecology.bj.bcebos.com/paddlex/det_3d/demo_det_3d/nuscenes_infos_val.pkl)到本地。
+完成 wheel 包的安装后，几行代码即可完成目标检测模块的推理，可以任意切换该模块下的模型，您也可以将3D多模态融合检测模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例输入](https://paddle-model-ecology.bj.bcebos.com/paddlex/det_3d/demo_det_3d/nuscenes_demo_infer.tar)到本地。
 
 ```python
-from paddlex import create_model
-model = create_model(model_name="BEVFusion")
-output = model.predict(input="nuscenes_infos_val.pkl", batch_size=1)
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(pipeline="3d_bev_detection")
+output = pipeline.predict("nuscenes_demo_infer.tar")
+
 for res in output:
-    res.print()
-    res.save_to_json(save_path="./output/res.json")
+    res.print()  ## 打印预测的结构化输出
+    res.save_to_json("./output/")  ## 保存结果到json文件
 ```
 
 运行后，得到的结果为：
 ```bash
 {"res":
   {
-    "input_path": "./data/nuscenes/samples/LIDAR_TOP/n008-2018-08-01-15-16-36-0400__LIDAR_TOP__1533151616947490.pcd.bin", "input_img_paths": ["./data/nuscenes/samples/CAM_FRONT_LEFT/n008-2018-08-01-15-16-36-0400__CAM_FRONT_LEFT__1533151616904806.jpg", "./data/nuscenes/samples/CAM_FRONT/n008-2018-08-01-15-16-36-0400__CAM_FRONT__1533151616912404.jpg", "./data/nuscenes/samples/CAM_FRONT_RIGHT/n008-2018-08-01-15-16-36-0400__CAM_FRONT_RIGHT__1533151616920482.jpg", "./data/nuscenes/samples/CAM_BACK_RIGHT/n008-2018-08-01-15-16-36-0400__CAM_BACK_RIGHT__1533151616928113.jpg", "./data/nuscenes/samples/CAM_BACK/n008-2018-08-01-15-16-36-0400__CAM_BACK__1533151616937558.jpg", "./data/nuscenes/samples/CAM_BACK_LEFT/n008-2018-08-01-15-16-36-0400__CAM_BACK_LEFT__1533151616947405.jpg"], "sample_id": "cc57c1ea80fe46a7abddfdb15654c872", "boxes_3d": [[-8.913962364196777, 13.30993366241455, -1.7353310585021973, 1.9886571168899536, 4.886075019836426, 1.877254605293274, 6.317165374755859, -0.00018131558317691088, 0.022375036031007767]], "labels_3d": [0], "scores_3d": [0.9951273202896118]
+    'input_path': 'samples/LIDAR_TOP/n015-2018-10-08-15-36-50+0800__LIDAR_TOP__1538984253447765.pcd.bin',
+    'sample_id': 'b4ff30109dd14c89b24789dc5713cf8c',
+    'input_img_paths': [
+      'samples/CAM_FRONT_LEFT/n015-2018-10-08-15-36-50+0800__CAM_FRONT_LEFT__1538984253404844.jpg',
+      'samples/CAM_FRONT/n015-2018-10-08-15-36-50+0800__CAM_FRONT__1538984253412460.jpg',
+      'samples/CAM_FRONT_RIGHT/n015-2018-10-08-15-36-50+0800__CAM_FRONT_RIGHT__1538984253420339.jpg',
+      'samples/CAM_BACK_RIGHT/n015-2018-10-08-15-36-50+0800__CAM_BACK_RIGHT__1538984253427893.jpg',
+      'samples/CAM_BACK/n015-2018-10-08-15-36-50+0800__CAM_BACK__1538984253437525.jpg',
+      'samples/CAM_BACK_LEFT/n015-2018-10-08-15-36-50+0800__CAM_BACK_LEFT__1538984253447423.jpg'
+    ]
+    "boxes_3d": [
+        [
+            14.5425386428833,
+            22.142045974731445,
+            -1.2903141975402832,
+            1.8441576957702637,
+            4.433370113372803,
+            1.7367216348648071,
+            6.367165565490723,
+            0.0036598597653210163,
+            -0.013568558730185032
+        ]
+    ],
+    "labels_3d": [
+        0
+    ],
+    "scores_3d": [
+        0.9920279383659363
+    ]
   }
 }
 ```
@@ -277,7 +307,7 @@ python main.py -c paddlex/configs/modules/3d_bev_detection/BEVFusion.yaml \
     &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
   },
   &quot;dataset_path&quot;: &quot;/workspace/bevfusion/Paddle3D/data/nuscenes&quot;,
-  &quot;show_type&quot;: &quot;path for images and lidar&quot;,
+  &quot;show_type&quot;: &quot;txt&quot;,
   &quot;dataset_type&quot;: &quot;NuscenesMMDataset&quot;
 }
 </code></pre>

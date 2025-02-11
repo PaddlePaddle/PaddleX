@@ -29,6 +29,10 @@ from .base_batch_sampler import BaseBatchSampler
 
 class Det3DBatchSampler(BaseBatchSampler):
 
+    def __init__(self, temp_dir) -> None:
+        super().__init__()
+        self.temp_dir = temp_dir
+
     # XXX: auto download for url
     def _download_from_url(self, in_path: str) -> str:
         file_name = Path(in_path).name
@@ -103,10 +107,9 @@ class Det3DBatchSampler(BaseBatchSampler):
                 logging.warning(
                     f"Not supported input data type! Only `str` is supported! So has been ignored: {input}."
                 )
-            # extract tar file
-            tar_root_dir = os.path.dirname(ann_path)
-            self.extract_tar(ann_path, tar_root_dir)
-            data_root_dir, _ = os.path.splitext(ann_path)
+            # extract tar file to tempdir
+            dataset_name = self.extract_tar(ann_path, self.temp_dir)
+            data_root_dir = os.path.join(self.temp_dir, dataset_name)
             ann_pkl_path = os.path.join(data_root_dir, "nuscenes_infos_val.pkl")
             self.data_infos = self.load_annotations(ann_pkl_path, data_root_dir)
             sample_set.extend(self.data_infos)
@@ -128,8 +131,17 @@ class Det3DBatchSampler(BaseBatchSampler):
 
     def extract_tar(self, tar_path, extract_path="."):
         try:
+            memdirs = set()
             with tarfile.open(tar_path, "r") as tar:
-                tar.extractall(path=extract_path)
-                print(f"file extract to {extract_path}")
+                for member in tar.getmembers():
+                    memdir = member.name.split("/")[0]
+                    memdirs.add(memdir)
+                    tar.extract(member, path=extract_path)
+                logging.info(f"file extract to {extract_path}")
+            assert (
+                len(memdirs) == 1
+            ), "Only one base directory is allowed for 3d bev dataset!"
+            return list(memdirs)[0]
         except Exception as e:
-            print(f"error occurred while extracting tar file: {e}")
+            logging.error(f"error occurred while extracting tar file")
+            raise e

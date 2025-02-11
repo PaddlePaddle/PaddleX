@@ -533,14 +533,6 @@ class LayoutParsingPipelineV2(BasePipeline):
             else:
                 overall_ocr_res = {}
 
-            if model_settings["use_general_ocr"]:
-                text_paragraphs_ocr_res = self.get_text_paragraphs_ocr_res(
-                    overall_ocr_res,
-                    layout_det_res,
-                )
-            else:
-                text_paragraphs_ocr_res = {}
-
             if model_settings["use_table_recognition"]:
                 table_res_all = next(
                     self.table_recognition_pipeline(

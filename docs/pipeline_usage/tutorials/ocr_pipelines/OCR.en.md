@@ -9,21 +9,18 @@ OCR (Optical Character Recognition) is a technology that converts text in images
 
 The General OCR production line is designed to solve text recognition tasks, extracting text information from images and outputting it in text form. This production line integrates the well-known end-to-end OCR series systems, PP-OCRv3 and PP-OCRv4, supporting recognition of over 80 languages. Additionally, it includes functions for image orientation correction and distortion correction. Based on this production line, precise text content prediction at the millisecond level on CPUs can be achieved, covering a wide range of applications including general, manufacturing, finance, and transportation sectors. The production line also provides flexible deployment options, supporting calls in various programming languages on multiple hardware platforms. Moreover, it offers the capability for secondary development, allowing you to train and optimize on your own dataset. The trained models can also be seamlessly integrated.
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/01.png">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/01.png"/>
 <b>The General OCR production line includes mandatory text detection and text recognition modules, as well as optional document image orientation classification, text image correction, and text line orientation classification modules.</b> The document image orientation classification and text image correction modules are integrated as a document preprocessing sub-line into the General OCR production line. Each module contains multiple models, and you can choose the model based on the benchmark test data below.
 
 <b>If you prioritize model accuracy, choose a high-accuracy model; if you prioritize inference speed, choose a faster inference model; if you care about model storage size, choose a smaller model.</b>
-
 <p><b>Document Image Orientation Classification Module (Optional):</b></p>
-
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top-1 Acc (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -32,17 +29,15 @@ The General OCR production line is designed to solve text recognition tasks, ext
 <tr>
 <td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Training Model</a></td>
 <td>99.06</td>
-<td>3.84845</td>
-<td>9.23735</td>
+<td>2.31 / 0.43</td>
+<td>3.37 / 1.27</td>
 <td>7</td>
 <td>A document image classification model based on PP-LCNet_x1_0, with four categories: 0 degrees, 90 degrees, 180 degrees, and 270 degrees.</td>
 </tr>
 </tbody>
 </table>
 <b>Note: The evaluation dataset for the above accuracy metrics is a self-built dataset covering multiple scenarios such as certificates and documents, with 1,000 images. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
-
 <p><b>Text Image Correction Module (Optional):</b></p>
-
 <table>
 <thead>
 <tr>
@@ -62,15 +57,14 @@ The General OCR production line is designed to solve text recognition tasks, ext
 </tbody>
 </table>
 <b>Note: The accuracy metrics of the model are measured from the <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet benchmark</a>.</b>
-
 <p><b>Text Detection Module:</b></p>
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Detection Hmean (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -79,82 +73,80 @@ The General OCR production line is designed to solve text recognition tasks, ext
 <tr>
 <td>PP-OCRv4_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">Training Model</a></td>
 <td>82.56</td>
-<td>83.3501</td>
-<td>2434.01</td>
+<td>83.34 / 80.91</td>
+<td>442.58 / 442.58</td>
 <td>109</td>
 <td>The server-side text detection model of PP-OCRv4, with higher accuracy, suitable for deployment on high-performance servers</td>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">Training Model</a></td>
 <td>77.35</td>
-<td>10.6923</td>
-<td>120.177</td>
+<td>8.79 / 3.13</td>
+<td>51.00 / 28.58</td>
 <td>4.7</td>
 <td>The mobile text detection model of PP-OCRv4, with higher efficiency, suitable for deployment on edge devices</td>
 </tr>
 <tr>
 <td>PP-OCRv3_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv3_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv3_mobile_det_pretrained.pdparams">Training Model</a></td>
 <td>78.68</td>
-<td></td>
-<td></td>
+<td>8.44 / 2.91</td>
+<td>27.87 / 27.87</td>
 <td>2.1</td>
 <td>The mobile text detection model of PP-OCRv3, with higher efficiency, suitable for deployment on edge devices</td>
 </tr>
 <tr>
 <td>PP-OCRv3_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv3_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv3_server_det_pretrained.pdparams">Training Model</a></td>
 <td>80.11</td>
-<td></td>
-<td></td>
+<td>65.41 / 13.67</td>
+<td>305.07 / 305.07</td>
 <td>102.1</td>
 <td>The server-side text detection model of PP-OCRv3, with higher accuracy, suitable for deployment on high-performance servers</td>
 </tr>
 </tbody>
 </table>
-
 <p><b>Text Recognition Module:</b></p>
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
 <tr>
 <td>PP-OCRv4_server_rec_doc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_doc_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
 <td>81.53</td>
-<td></td>
-<td></td>
+<td>6.65 / 6.65</td>
+<td>32.92 / 32.92</td>
 <td>74.7 M</td>
 <td>PP-OCRv4_server_rec_doc is trained on a mixed dataset of more Chinese document data and PP-OCR training data, based on PP-OCRv4_server_rec. It enhances the recognition of traditional Chinese characters, Japanese, and special characters, supporting over 15,000 characters. It improves both document-related and general text recognition capabilities.</td>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Training Model</a></td>
 <td>78.74</td>
-<td>7.95018</td>
-<td>46.7868</td>
+<td>4.82 / 4.82</td>
+<td>16.74 / 4.64</td>
 <td>10.6 M</td>
 <td>The lightweight recognition model of PP-OCRv4, with high inference efficiency, suitable for deployment on various hardware devices, including edge devices</td>
 </tr>
 <tr>
 <td>PP-OCRv4_server_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Training Model</a></td>
 <td>80.61</td>
-<td>7.19439</td>
-<td>140.179</td>
+<td>6.58 / 6.58</td>
+<td>33.17 / 33.17</td>
 <td>71.2 M</td>
 <td>The server-side recognition model of PP-OCRv4, with high inference accuracy, suitable for deployment on various servers</td>
 </tr>
 <tr>
 <td>en_PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/en_PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
 <td>70.39</td>
-<td></td>
-<td></td>
+<td>4.81 / 4.81</td>
+<td>16.10 / 5.31</td>
 <td>6.8 M</td>
 <td>The ultra-lightweight English recognition model trained based on the PP-OCRv4 recognition model, supporting English and numeric recognition</td>
 </tr>
 </table>
-
 <b>Note: The evaluation dataset for the above accuracy metrics is a self-built Chinese dataset by PaddleOCR, covering multiple scenarios such as street view, web images, documents, and handwriting, with 11,000 images for text recognition. All model GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
 
 > ❗ The above list features the <b>4 core models</b> that the text recognition module primarily supports. In total, this module supports <b>18 models</b>. The complete list of models is as follows:
@@ -162,52 +154,49 @@ The General OCR production line is designed to solve text recognition tasks, ext
 <details><summary> 👉Model List Details</summary>
 
 * <b>Chinese Recognition Model</b>
-
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy(%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
 <tr>
 <td>PP-OCRv4_server_rec_doc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_doc_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
 <td></td>
-<td></td>
-<td></td>
+<td>6.65 / 6.65</td>
+<td>32.92 / 32.92</td>
 <td></td>
 <td>PP-OCRv4_server_rec_doc is trained on a mixed dataset of more Chinese document data and PP-OCR training data based on PP-OCRv4_server_rec. It has added the recognition capabilities for some traditional Chinese characters, Japanese, and special characters. The number of recognizable characters is over 15,000. In addition to the improvement in document-related text recognition, it also enhances the general text recognition capability.</td>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Training Model</a></td>
 <td>78.20</td>
-<td>7.95018</td>
-<td>46.7868</td>
+<td>4.82 / 4.82</td>
+<td>16.74 / 4.64</td>
 <td>10.6 M</td>
 <td>The PP-OCRv4 recognition model is an upgrade from PP-OCRv3. Under comparable speed conditions, the effect in Chinese and English scenarios is further improved. The average recognition accuracy of the 80 multilingual models is increased by more than 8%.</td>
 </tr>
 <tr>
 <td>PP-OCRv4_server_rec </td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Trained Model</a></td>
 <td>79.20</td>
-<td>7.19439</td>
-<td>140.179</td>
+<td>6.58 / 6.58</td>
+<td>33.17 / 33.17</td>
 <td>71.2 M</td>
 <td>A high-precision server text recognition model, featuring high accuracy, fast speed, and multilingual support. It is suitable for text recognition tasks in various scenarios.</td>
 </tr>
 <tr>
 <td>PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
 <td></td>
-<td></td>
-<td></td>
+<td>5.87 / 5.87</td>
+<td>9.07 / 4.28</td>
 <td></td>
 <td>An ultra-lightweight OCR model suitable for mobile applications. It adopts an encoder-decoder structure based on Transformer and enhances recognition accuracy and efficiency through techniques such as data augmentation and mixed precision training. The model size is 10.6M, making it suitable for deployment on resource-constrained devices. It can be used in scenarios such as mobile photo translation and business card recognition.</td>
 </tr>
 </table>
-
 <p><b>Note: The evaluation set for the above accuracy indicators is the Chinese dataset built by PaddleOCR, covering multiple scenarios such as street view, web images, documents, and handwriting. The text recognition includes 11,000 images. The GPU inference time for all models is based on NVIDIA Tesla T4 machines with FP32 precision type. The CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
-
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -228,7 +217,6 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 </td>
 </tr>
 </table>
-
 <p><b>Note: The evaluation set for the above accuracy indicators is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a> - Task One: OCR End-to-End Recognition Task A list. The GPU inference time for all models is based on NVIDIA Tesla T4 machines with FP32 precision type. The CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
 <table>
 <tr>
@@ -248,11 +236,9 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td rowspan="1">    The RepSVTR text recognition model is a mobile text recognition model based on SVTRv2. It won the first prize in the PaddleOCR Algorithm Model Challenge - Task One: OCR End-to-End Recognition Task. The end-to-end recognition accuracy on the B list is 2.5% higher than that of PP-OCRv4, with the same inference speed.</td>
 </tr>
 </table>
-
 <p><b>Note: The evaluation set for the above accuracy indicators is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a> - Task One: OCR End-to-End Recognition Task B list. The GPU inference time for all models is based on NVIDIA Tesla T4 machines with FP32 precision type. The CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
 
 * <b>English Recognition Model</b>
-
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -281,7 +267,6 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 </table>
 
 * <b>Multilingual Recognition Model</b>
-
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -372,9 +357,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>Devanagari Script Recognition</td>
 </tr>
 </table>
-
 </details>
-
 <p><b>Text Line Orientation Classification Module (Optional):</b></p>
 <table>
 <thead>
@@ -382,8 +365,8 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <th>Model</th>
 <th>Model Download Link</th>
 <th>Top-1 Acc (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -411,7 +394,7 @@ All model production lines provided by PaddleX can be quickly experienced. You c
 ### 2.1 Online Experience
 You can [experience the general OCR production line online](https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent) by recognizing the demo images provided by the official platform, for example:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/02.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/02.png"/>
 
 If you are satisfied with the performance of the production line, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the methods in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the production line using your private data</b>. If you have local hardware resources for training, you can start training directly on your local machine; if not, the Star River Zero-Code platform provides a one-click training service. You don't need to write any code—just upload your data and start the training task with one click.
 
@@ -446,7 +429,7 @@ After running, the results will be printed to the terminal as follows:
 ```
 
 The visualized results are saved under `save_path`, and the OCR visualization results are as follows:
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/03.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/03.png"/>
 
 #### 2.2.2 Python Script Integration
 * The above command line is for quick experience and effect checking. Generally, in a project, integration through code is often required. You can complete the quick inference of the production line with just a few lines of code. The inference code is as follows:
@@ -490,6 +473,13 @@ In the above Python script, the following steps are executed:
 <td><code>None</code></td>
 </tr>
 <tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the pipeline (if set simultaneously with the <code>pipeline</code>, it takes precedence over the <code>pipeline</code>, and the pipeline name must match the <code>pipeline</code>).
+</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>device</code></td>
 <td>The device used for production line inference. It supports specifying specific GPU card numbers, such as "gpu:0", other hardware card numbers, such as "npu:0", or CPU, such as "cpu".</td>
 <td><code>str</code></td>
@@ -522,9 +512,9 @@ In the above Python script, the following steps are executed:
 <td><code>Python Var|str|list</code></td>
 <td>
 <ul>
-  <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
-  <li><b>str</b>: Local path of an image file or PDF file, e.g., <code>/root/data/img.jpg</code>; <b>URL link</b>, e.g., network URL of an image file or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">example</a>; <b>local directory</b>, which must contain images to be predicted, e.g., <code>/root/data/</code> (prediction of PDF files in directories is currently not supported; PDF files must specify the exact file path)</li>
-  <li><b>List</b>: Elements of the list must be of the above types, e.g., <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
+<li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
+<li><b>str</b>: Local path of an image file or PDF file, e.g., <code>/root/data/img.jpg</code>; <b>URL link</b>, e.g., network URL of an image file or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">example</a>; <b>local directory</b>, which must contain images to be predicted, e.g., <code>/root/data/</code> (prediction of PDF files in directories is currently not supported; PDF files must specify the exact file path)</li>
+<li><b>List</b>: Elements of the list must be of the above types, e.g., <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -535,13 +525,13 @@ In the above Python script, the following steps are executed:
 <td><code>str|None</code></td>
 <td>
 <ul>
-  <li><b>CPU</b>: Use CPU for inference, e.g., <code>cpu</code></li>
-  <li><b>GPU</b>: Use the first GPU for inference, e.g., <code>gpu:0</code></li>
-  <li><b>NPU</b>: Use the first NPU for inference, e.g., <code>npu:0</code></li>
-  <li><b>XPU</b>: Use the first XPU for inference, e.g., <code>xpu:0</code></li>
-  <li><b>MLU</b>: Use the first MLU for inference, e.g., <code>mlu:0</code></li>
-  <li><b>DCU</b>: Use the first DCU for inference, e.g., <code>dcu:0</code></li>
-  <li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used. During initialization, the local GPU 0 will be used if available; otherwise, the CPU will be used.</li>
+<li><b>CPU</b>: Use CPU for inference, e.g., <code>cpu</code></li>
+<li><b>GPU</b>: Use the first GPU for inference, e.g., <code>gpu:0</code></li>
+<li><b>NPU</b>: Use the first NPU for inference, e.g., <code>npu:0</code></li>
+<li><b>XPU</b>: Use the first XPU for inference, e.g., <code>xpu:0</code></li>
+<li><b>MLU</b>: Use the first MLU for inference, e.g., <code>mlu:0</code></li>
+<li><b>DCU</b>: Use the first DCU for inference, e.g., <code>dcu:0</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used. During initialization, the local GPU 0 will be used if available; otherwise, the CPU will be used.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -552,8 +542,8 @@ In the above Python script, the following steps are executed:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>: <code>True</code> or <code>False</code></li>
-  <li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>True</code></li>
+<li><b>bool</b>: <code>True</code> or <code>False</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>True</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -564,8 +554,8 @@ In the above Python script, the following steps are executed:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>: <code>True</code> or <code>False</code></li>
-  <li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>True</code></li>
+<li><b>bool</b>: <code>True</code> or <code>False</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>True</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -576,8 +566,8 @@ In the above Python script, the following steps are executed:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>: <code>True</code> or <code>False</code></li>
-  <li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>True</code></li>
+<li><b>bool</b>: <code>True</code> or <code>False</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>True</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -588,8 +578,8 @@ In the above Python script, the following steps are executed:
 <td><code>int|None</code></td>
 <td>
 <ul>
-  <li><b>int</b>: Any integer greater than <code>0</code></li>
-  <li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>960</code></li>
+<li><b>int</b>: Any integer greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>960</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -600,8 +590,8 @@ In the above Python script, the following steps are executed:
 <td><code>str|None</code></td>
 <td>
 <ul>
-  <li><b>str</b>: Supports <code>min</code> and <code>max</code>. <code>min</code> ensures that the shortest side of the image is not less than <code>det_limit_side_len</code>, while <code>max</code> ensures that the longest side is not greater than <code>limit_side_len</code></li>
-  <li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>max</code></li>
+<li><b>str</b>: Supports <code>min</code> and <code>max</code>. <code>min</code> ensures that the shortest side of the image is not less than <code>det_limit_side_len</code>, while <code>max</code> ensures that the longest side is not greater than <code>limit_side_len</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>max</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -612,8 +602,8 @@ In the above Python script, the following steps are executed:
 <td><code>float|None</code></td>
 <td>
 <ul>
-  <li><b>float</b>: Any floating-point number greater than <code>0</code></li>
-  <li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>0.3</code></li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>0.3</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -624,8 +614,8 @@ In the above Python script, the following steps are executed:
 <td><code>float|None</code></td>
 <td>
 <ul>
-  <li><b>float</b>: Any floating-point number greater than <code>0</code></li>
-  <li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>0.6</code></li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>0.6</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -636,8 +626,8 @@ In the above Python script, the following steps are executed:
 <td><code>float|None</code></td>
 <td>
 <ul>
-  <li><b>float</b>: Any floating-point number greater than <code>0</code></li>
-  <li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>2.0</code></li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>2.0</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -648,8 +638,8 @@ In the above Python script, the following steps are executed:
 <td><code>float|None</code></td>
 <td>
 <ul>
-  <li><b>float</b>: Any floating-point number greater than <code>0</code></li>
-  <li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>0.0</code> (i.e., no threshold)</li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>0.0</code> (i.e., no threshold)</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -828,9 +818,7 @@ In addition, PaddleX also provides three other deployment methods, which are det
 Below are the API reference and multi-language service invocation examples for the basic serving solution:
 
 <details><summary>API Reference</summary>
-
 <p>For primary operations provided by the service:</p>
-
 <ul>
 <li>The HTTP request method is POST.</li>
 <li>Both the request body and response body are JSON data (JSON objects).</li>
@@ -896,9 +884,7 @@ Below are the API reference and multi-language service invocation examples for t
 </tr>
 </tbody>
 </table>
-
 <p>Primary operations provided by the service:</p>
-
 <ul>
 <li><b><code>infer</code></b></li>
 </ul>
@@ -920,9 +906,7 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-
 <td>The URL of an image file or PDF file accessible by the server, or the Base64 encoded result of the content of the above-mentioned file types. For PDF files with more than 10 pages, only the content of the first 10 pages will be used.</td>
-
 <td>Yes</td>
 </tr>
 <tr>
@@ -973,7 +957,7 @@ Below are the API reference and multi-language service invocation examples for t
 <td><code>ocrResults</code></td>
 <td><code>array</code></td>
 <td>OCR results. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
-</tr>
+
 <tr>
 <td><code>dataInfo</code></td>
 <td><code>object</code></td>
@@ -1030,25 +1014,20 @@ Below are the API reference and multi-language service invocation examples for t
 </tr>
 </tbody>
 </table>
-
-
-
 <details><summary>Multi-language Service Call Examples</summary>
-
 <details>
 <summary>Python</summary>
-
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/ocr&quot;
-file_path = &quot;./demo.jpg&quot;
+API_URL = "http://localhost:8080/ocr"
+file_path = "./demo.jpg"
 
-with open(file_path, &quot;rb&quot;) as file:
+with open(file_path, "rb") as file:
     file_bytes = file.read()
-    file_data = base64.b64encode(file_bytes).decode(&quot;ascii&quot;)
+    file_data = base64.b64encode(file_bytes).decode("ascii")
 
-payload = {&quot;file&quot;: file_data, &quot;fileType&quot;: 1}
+payload = {"file": file_data, "fileType": 1}
 
 
 # Call the API
@@ -1057,14 +1036,14 @@ response = requests.post(API_URL, json=payload)
 # Process the response data
 assert response.status_code == 200
 
-result = response.json()[&quot;result&quot;]
-for i, res in enumerate(result[&quot;ocrResults&quot;]):
-    print(&quot;Detected texts:&quot;)
-    print(res[&quot;texts&quot;])
-    output_img_path = f&quot;out_{i}.jpg&quot;
-    with open(output_img_path, &quot;wb&quot;) as f:
-        f.write(base64.b64decode(res[&quot;image&quot;]))
-    print(f&quot;Output image saved at {output_img_path}&quot;)
+result = response.json()["result"]
+for i, res in enumerate(result["ocrResults"]):
+    print("Detected texts:")
+    print(res["texts"])
+    output_img_path = f"out_{i}.jpg"
+    with open(output_img_path, "wb") as f:
+        f.write(base64.b64decode(res["image"]))
+    print(f"Output image saved at {output_img_path}")
 
 </code></pre></details>
 </details>
@@ -1080,40 +1059,40 @@ If the default model weights provided by the General OCR production line do not 
 Since the General OCR production line consists of several modules, the unsatisfactory performance of the production line may originate from any one of these modules. You can analyze the images with poor recognition results to identify which module is problematic and refer to the corresponding fine-tuning tutorial links in the table below for model fine-tuning.
 
 <table>
-  <thead>
-    <tr>
-      <th>Scenario</th>
-      <th>Fine-Tuning Module</th>
-      <th>Fine-Tuning Reference Link</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Text is missed in detection</td>
-      <td>Text Detection Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/text_detection.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Text content is inaccurate</td>
-      <td>Text Recognition Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/text_recognition.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Vertical or rotated text line correction is inaccurate</td>
-      <td>Text Line Orientation Classification Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/textline_orientation_classification.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Whole-image rotation correction is inaccurate</td>
-      <td>Document Image Orientation Classification Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Image distortion correction is inaccurate</td>
-      <td>Text Image Correction Module</td>
-      <td>Fine-tuning not supported yet</td>
-    </tr>
-  </tbody>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Fine-Tuning Module</th>
+<th>Fine-Tuning Reference Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Text is missed in detection</td>
+<td>Text Detection Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/text_detection.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Text content is inaccurate</td>
+<td>Text Recognition Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/text_recognition.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Vertical or rotated text line correction is inaccurate</td>
+<td>Text Line Orientation Classification Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/textline_orientation_classification.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Whole-image rotation correction is inaccurate</td>
+<td>Document Image Orientation Classification Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Image distortion correction is inaccurate</td>
+<td>Text Image Correction Module</td>
+<td>Fine-tuning not supported yet</td>
+</tr>
+</tbody>
 </table>
 
 ### 4.2 Model Application
@@ -1168,3 +1147,4 @@ paddlex --pipeline OCR \
 ```
 
 If you want to use the General OCR production line on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+</details>

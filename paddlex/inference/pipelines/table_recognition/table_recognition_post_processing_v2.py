@@ -156,7 +156,6 @@ def match_table_and_ocr(cell_box_list: list, ocr_dt_boxes: list) -> dict:
             matched[distances.index(sorted_distances[0])].append(i)
     return matched
 
-
 def get_html_result(
     matched_index: dict, ocr_contents: dict, pred_structures: list
 ) -> str:
@@ -181,6 +180,8 @@ def get_html_result(
             if "<td></td>" == tag:
                 pred_html.extend("<td>")
             if td_index in matched_index.keys():
+                if len(matched_index[td_index])==0:
+                    continue
                 b_with = False
                 if (
                     "<b>" in ocr_contents[matched_index[td_index][0]]
@@ -218,10 +219,9 @@ def get_html_result(
     html += "".join(end_structure)
     return html
 
-
 def sort_table_cells_boxes(boxes):
     """
-    Sort the input list of bounding boxes by using the DBSCAN algorithm to cluster based on the top-left y-coordinate (y1), and then sort within each line from left to right based on the top-left x-coordinate (x1).
+    Sort the input list of bounding boxes.
 
     Args:
         boxes (list of lists): The input list of bounding boxes, where each bounding box is formatted as [x1, y1, x2, y2].
@@ -229,42 +229,30 @@ def sort_table_cells_boxes(boxes):
     Returns:
         sorted_boxes (list of lists): The list of bounding boxes sorted.
     """
-    import numpy as np
-    from sklearn.cluster import DBSCAN
 
-    # Extract the top-left y-coordinates (y1)
-    y1_coords = np.array([box[1] for box in boxes])
-    y1_coords = y1_coords.reshape(-1, 1)  # Convert to a 2D array
-
-    # Choose an appropriate eps parameter based on the range of y-values
-    y_range = y1_coords.max() - y1_coords.min()
-    eps = y_range / 50  # Adjust the denominator as needed
-
-    # Perform clustering using DBSCAN
-    db = DBSCAN(eps=eps, min_samples=1).fit(y1_coords)
-    labels = db.labels_
-
-    # Group bounding boxes by their labels
-    clusters = {}
-    for label, box in zip(labels, boxes):
-        if label not in clusters:
-            clusters[label] = []
-        clusters[label].append(box)
-
-    # Sort rows based on y-coordinates
-    # Compute the average y1 value for each row and sort from top to bottom
-    sorted_rows = sorted(
-        clusters.items(), key=lambda item: np.mean([box[1] for box in item[1]])
-    )
-
-    # Within each row, sort by x1 coordinate
-    sorted_boxes = []
-    for label, row in sorted_rows:
-        row_sorted = sorted(row, key=lambda x: x[0])
-        sorted_boxes.extend(row_sorted)
-
+    boxes_sorted_by_y = sorted(boxes, key=lambda box: box[1])
+    rows = []
+    current_row = []
+    current_y = None
+    tolerance = 10
+    for box in boxes_sorted_by_y:
+        x1, y1, x2, y2 = box
+        if current_y is None:
+            current_row.append(box)
+            current_y = y1
+        else:
+            if abs(y1 - current_y) <= tolerance:
+                current_row.append(box)
+            else:
+                current_row.sort(key=lambda x: x[0])
+                rows.append(current_row)
+                current_row = [box]
+                current_y = y1
+    if current_row:
+        current_row.sort(key=lambda x: x[0])
+        rows.append(current_row)
+    sorted_boxes = [box for row in rows for box in row] 
     return sorted_boxes
-
 
 def convert_to_four_point_coordinates(boxes):
     """
@@ -324,7 +312,8 @@ def get_table_recognition_res(
     Returns:
         SingleTableRecognitionResult: An object containing the single table recognition result.
     """
-    table_cells_result =convert_to_four_point_coordinates(table_cells_result)
+
+    table_cells_result = convert_to_four_point_coordinates(table_cells_result)
 
     table_box = np.array([table_box])
     table_ocr_pred = get_sub_regions_ocr_res(overall_ocr_res, table_box)

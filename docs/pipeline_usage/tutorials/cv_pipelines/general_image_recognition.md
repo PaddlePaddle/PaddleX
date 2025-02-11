@@ -10,20 +10,18 @@ comments: true
 
 PP-ShiTuV2 是一个实用的通用图像识别系统，主要由主体检测、特征学习和向量检索三个模块组成。该系统从骨干网络选择和调整、损失函数的选择、数据增强、学习率变换策略、正则化参数选择、预训练模型使用以及模型裁剪量化多个方面，融合改进多种策略，对各个模块进行优化，最终在多个实际应用场景上的检索性能均有较好效果。
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/general_image_recognition/pp_shitu_v2.jpg">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/general_image_recognition/pp_shitu_v2.jpg"/>
 <b>通用图像识别产线中包含了主体检测模块和图像特征模块</b>，有若干模型可供选择，您可以根据下边的 benchmark 数据来选择使用的模型。<b>如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型推理速度，请选择推理速度较快的模型，如您更考虑模型存储大小，请选择存储大小较小的模型</b>。
 
 
 <b>主体检测模块：</b>
-
 <table>
 <tr>
 <th>模型</th>
 <th>mAP(0.5:0.95)</th>
 <th>mAP(0.5)</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M）</th>
 <th>介绍</th>
 </tr>
@@ -31,8 +29,8 @@ PP-ShiTuV2 是一个实用的通用图像识别系统，主要由主体检测、
 <td>PP-ShiTuV2_det</td>
 <td>41.5</td>
 <td>62.0</td>
-<td>33.7</td>
-<td>537.0</td>
+<td>12.79 / 4.51</td>
+<td>44.14 / 44.14</td>
 <td>27.54</td>
 <td>基于PicoDet_LCNet_x2_5的主体检测模型，模型可能会同时检测出多个常见主体。</td>
 </tr>
@@ -41,37 +39,35 @@ PP-ShiTuV2 是一个实用的通用图像识别系统，主要由主体检测、
 注：以上精度指标为 PaddleClas 主体检测数据集。
 
 <b>图像特征模块：</b>
-
-
 <table>
 <tr>
 <th>模型</th>
 <th>recall@1 (%)</th>
-<th>GPU推理耗时 (ms)</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小 (M)</th>
 <th>介绍</th>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec</td>
 <td>84.2</td>
-<td>5.23428</td>
-<td>19.6005</td>
+<td>3.48 / 0.55</td>
+<td>8.04 / 4.04</td>
 <td>16.3 M</td>
 <td rowspan="3">PP-ShiTuV2是一个通用图像特征系统，由主体检测、特征提取、向量检索三个模块构成，这些模型是其中的特征提取模块的模型之一，可以根据系统的情况选择不同的模型。</td>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec_CLIP_vit_base</td>
 <td>88.69</td>
-<td>13.1957</td>
-<td>285.493</td>
+<td>12.94 / 2.88</td>
+<td>58.36 / 58.36</td>
 <td>306.6 M</td>
 </tr>
 <tr>
 <td>PP-ShiTuV2_rec_CLIP_vit_large</td>
 <td>91.03</td>
-<td>51.1284</td>
-<td>1131.28</td>
+<td>51.65 / 11.18</td>
+<td>255.78 / 255.78</td>
 <td>1.05 G</td>
 </tr>
 </table>
@@ -173,8 +169,8 @@ for res in output:
 <td><code>str</code>|<code>list</code></td>
 <td>
 <ul>
-  <li><b>str</b>：数据集的根目录，数据组织方式参考<a href="#2.3-构建索引库的数据组织方式">2.3节 构建索引库的数据组织方式</a></li>
-  <li><b>List[numpy.ndarray]</b>：numpy.array列表类型的底库图片数据</li>
+<li><b>str</b>：数据集的根目录，数据组织方式参考<a href="#2.3-构建索引库的数据组织方式">2.3节 构建索引库的数据组织方式</a></li>
+<li><b>List[numpy.ndarray]</b>：numpy.array列表类型的底库图片数据</li>
 </ul>
 </td>
 <td>无</td>
@@ -185,8 +181,8 @@ for res in output:
 <td><code>str|list</code></td>
 <td>
 <ul>
-  <li><b>str</b>：数据标注文件路径，数据组织方式参考<a href="#2.3-构建索引库的数据组织方式">2.3节 构建索引库的数据组织方式</a></li>
-  <li><b>List[str]</b>：str列表类型的底库图片标注</li>
+<li><b>str</b>：数据标注文件路径，数据组织方式参考<a href="#2.3-构建索引库的数据组织方式">2.3节 构建索引库的数据组织方式</a></li>
+<li><b>List[str]</b>：str列表类型的底库图片标注</li>
 </ul>
 </td>
 <td>无</td>
@@ -197,8 +193,8 @@ for res in output:
 <td><code>str</code></td>
 <td>
 <ul>
-  <li><code>"IP"</code>：内积（Inner Product）</li>
-  <li><code>"L2"</code>：欧几里得距离（Euclidean Distance）</li>
+<li><code>"IP"</code>：内积（Inner Product）</li>
+<li><code>"L2"</code>：欧几里得距离（Euclidean Distance）</li>
 </ul>
 </td>
 <td><code>"IP"</code></td>
@@ -209,9 +205,9 @@ for res in output:
 <td><code>str</code></td>
 <td>
 <ul>
-  <li><code>"HNSW32"</code>：检索速度较快且精度较高，但不支持 <code>remove_index()</code> 操作</li>
-  <li><code>"IVF"</code>：检索速度较快但精度相对较低，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
-  <li><code>"Flat"</code>：检索速度较低精度较高，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
+<li><code>"HNSW32"</code>：检索速度较快且精度较高，但不支持 <code>remove_index()</code> 操作</li>
+<li><code>"IVF"</code>：检索速度较快但精度相对较低，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
+<li><code>"Flat"</code>：检索速度较低精度较高，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
 </ul>
 </td>
 <td><code>"HNSW32"</code></td>
@@ -258,9 +254,9 @@ for res in output:
 <td><code>Python Var|str|list</code></td>
 <td>
 <ul>
-  <li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
-  <li><b>str</b>：如图像文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code></li>
-  <li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
+<li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
+<li><b>str</b>：如图像文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code></li>
+<li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td>无</td>
@@ -271,8 +267,8 @@ for res in output:
 <td><code>str|paddlex.inference.components.retrieval.faiss.IndexData|None</code></td>
 <td>
 <ul>
-    <li><b>str</b>类型表示的目录（该目录下需要包含特征库文件，包括<code>vector.index</code>和<code>index_info.yaml</code>）</li>
-    <li><code>build_index</code>方法创建的<b>IndexData</b>对象</li>
+<li><b>str</b>类型表示的目录（该目录下需要包含特征库文件，包括<code>vector.index</code>和<code>index_info.yaml</code>）</li>
+<li><code>build_index</code>方法创建的<b>IndexData</b>对象</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -293,8 +289,8 @@ for res in output:
 </tr>
 </thead>
 <tr>
-<td rowspan = "3"><code>print()</code></td>
-<td rowspan = "3">打印结果到终端</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">打印结果到终端</td>
 <td><code>format_json</code></td>
 <td><code>bool</code></td>
 <td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
@@ -313,8 +309,8 @@ for res in output:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td rowspan = "3"><code>save_to_json()</code></td>
-<td rowspan = "3">将结果保存为json格式的文件</td>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">将结果保存为json格式的文件</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
 <td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
@@ -358,7 +354,7 @@ for res in output:
 - 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}.json`，如果指定为文件，则直接保存到该文件中。
 - 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.{your_img_extension}`，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)，上述示例中，可视化结果如下所示：
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/general_image_recognition/01.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/general_image_recognition/01.jpg"/>
 
 * 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
 
@@ -370,12 +366,12 @@ for res in output:
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">获取预测的 <code>json</code> 格式的结果</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">获取预测的 <code>json</code> 格式的结果</td>
 </tr>
 <tr>
-<td rowspan = "2"><code>img</code></td>
-<td rowspan = "2">获取格式为 <code>dict</code> 的可视化图像</td>
+<td rowspan="2"><code>img</code></td>
+<td rowspan="2">获取格式为 <code>dict</code> 的可视化图像</td>
 </tr>
 </table>
 
@@ -437,8 +433,8 @@ index_data.save("drink_index")
 <td><code>str</code>|<code>list</code></td>
 <td>
 <ul>
-  <li><b>str</b>：图片根目录，数据组织方式参考<a href="#2.3-构建索引库的数据组织方式">2.3节 构建索引库的数据组织方式</a></li>
-  <li><b>List[numpy.ndarray]</b>：numpy.array列表类型的底库图片数据</li>
+<li><b>str</b>：图片根目录，数据组织方式参考<a href="#2.3-构建索引库的数据组织方式">2.3节 构建索引库的数据组织方式</a></li>
+<li><b>List[numpy.ndarray]</b>：numpy.array列表类型的底库图片数据</li>
 </ul>
 </td>
 <td>无</td>
@@ -449,8 +445,8 @@ index_data.save("drink_index")
 <td><code>str|list</code></td>
 <td>
 <ul>
-  <li><b>str</b>：标注文件的路径，数据组织方式与构建特征库时相同，参考<a href="#2.3-构建索引库的数据组织方式">2.3节 构建索引库的数据组织方式</a></li>
-  <li><b>List[str]</b>：str列表类型的底库图片标注</li>
+<li><b>str</b>：标注文件的路径，数据组织方式与构建特征库时相同，参考<a href="#2.3-构建索引库的数据组织方式">2.3节 构建索引库的数据组织方式</a></li>
+<li><b>List[str]</b>：str列表类型的底库图片标注</li>
 </ul>
 </td>
 <td>无</td>
@@ -461,8 +457,8 @@ index_data.save("drink_index")
 <td><code>str</code></td>
 <td>
 <ul>
-  <li><code>"IP"</code>：内积（Inner Product）</li>
-  <li><code>"L2"</code>：欧几里得距离（Euclidean Distance）</li>
+<li><code>"IP"</code>：内积（Inner Product）</li>
+<li><code>"L2"</code>：欧几里得距离（Euclidean Distance）</li>
 </ul>
 </td>
 <td><code>"IP"</code></td>
@@ -473,9 +469,9 @@ index_data.save("drink_index")
 <td><code>str</code></td>
 <td>
 <ul>
-  <li><code>"HNSW32"</code>：检索速度较快且精度较高，但不支持 <code>remove_index()</code> 操作</li>
-  <li><code>"IVF"</code>：检索速度较快但精度相对较低，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
-  <li><code>"Flat"</code>：检索速度较低精度较高，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
+<li><code>"HNSW32"</code>：检索速度较快且精度较高，但不支持 <code>remove_index()</code> 操作</li>
+<li><code>"IVF"</code>：检索速度较快但精度相对较低，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
+<li><code>"Flat"</code>：检索速度较低精度较高，支持 <code>append_index()</code> 和 <code>remove_index()</code> 操作</li>
 </ul>
 </td>
 <td><code>"HNSW32"</code></td>
@@ -497,15 +493,14 @@ index_data.save("drink_index")
 <td><code>str|paddlex.inference.components.retrieval.faiss.IndexData</code></td>
 <td>
 <ul>
-    <li><b>str</b>类型表示的目录（该目录下需要包含特征库文件，包括<code>vector.index</code>和<code>index_info.yaml</code>）</li>
-    <li><code>build_index</code>方法创建的<b>IndexData</b>对象</li>
+<li><b>str</b>类型表示的目录（该目录下需要包含特征库文件，包括<code>vector.index</code>和<code>index_info.yaml</code>）</li>
+<li><code>build_index</code>方法创建的<b>IndexData</b>对象</li>
 </ul>
 </td>
 <td>无</td>
 </tr>
 </tbody>
 </table>
-
 <b>注意</b>：<code>HNSW32</code>在windows平台存在兼容性问题，可能导致索引库无法构建、加载。
 
 ### 2.3 构建索引库的数据组织方式
@@ -534,7 +529,6 @@ data_root             # 数据集根目录，目录名称可以改变
 以下是基础服务化部署的API参考与多语言服务调用示例：
 
 <details><summary>API参考</summary>
-
 <p>对于服务提供的主要操作：</p>
 <ul>
 <li>HTTP请求方法为POST。</li>
@@ -702,7 +696,7 @@ data_root             # 数据集根目录，目录名称可以改变
 <td><code>indexKey</code></td>
 <td><code>string</code></td>
 <td>索引对应的键。由<code>buildIndex</code>操作提供。</td>
-<td>否</td>
+<td>是</td>
 </tr>
 </tbody>
 </table>
@@ -775,7 +769,7 @@ data_root             # 数据集根目录，目录名称可以改变
 <td><code>indexKey</code></td>
 <td><code>string</code></td>
 <td>索引对应的键。由<code>buildIndex</code>操作提供。</td>
-<td>否</td>
+<td>是</td>
 </tr>
 </tbody>
 </table>
@@ -828,6 +822,30 @@ data_root             # 数据集根目录，目录名称可以改变
 <td>索引对应的键。由<code>buildIndex</code>操作提供。</td>
 <td>否</td>
 </tr>
+<tr>
+<td><code>detThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>det_threshold</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>recThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>rec_threshold</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>hammingRadius</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>hamming_radius</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>topk</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>topk</code> 参数说明。</td>
+<td>否</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -849,7 +867,7 @@ data_root             # 数据集根目录，目录名称可以改变
 </tr>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></td>
+<td><code>string</code> | <code>null</code></td>
 <td>识别结果图。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 </tbody>
@@ -904,89 +922,85 @@ data_root             # 数据集根目录，目录名称可以改变
 </tbody>
 </table>
 </details>
-
 <details><summary>多语言调用服务示例</summary>
-
 <details>
 <summary>Python</summary>
-
-
 <pre><code class="language-python">import base64
 import pprint
 import sys
 
 import requests
 
-API_BASE_URL = &quot;http://0.0.0.0:8080&quot;
+API_BASE_URL = "http://0.0.0.0:8080"
 
 base_image_label_pairs = [
-    {&quot;image&quot;: &quot;./demo0.jpg&quot;, &quot;label&quot;: &quot;兔子&quot;},
-    {&quot;image&quot;: &quot;./demo1.jpg&quot;, &quot;label&quot;: &quot;兔子&quot;},
-    {&quot;image&quot;: &quot;./demo2.jpg&quot;, &quot;label&quot;: &quot;小狗&quot;},
+    {"image": "./demo0.jpg", "label": "兔子"},
+    {"image": "./demo1.jpg", "label": "兔子"},
+    {"image": "./demo2.jpg", "label": "小狗"},
 ]
 image_label_pairs_to_add = [
-    {&quot;image&quot;: &quot;./demo3.jpg&quot;, &quot;label&quot;: &quot;小狗&quot;},
+    {"image": "./demo3.jpg", "label": "小狗"},
 ]
 ids_to_remove = [1]
-infer_image_path = &quot;./demo4.jpg&quot;
-output_image_path = &quot;./out.jpg&quot;
+infer_image_path = "./demo4.jpg"
+output_image_path = "./out.jpg"
 
 for pair in base_image_label_pairs:
-    with open(pair[&quot;image&quot;], &quot;rb&quot;) as file:
+    with open(pair["image"], "rb") as file:
         image_bytes = file.read()
-        image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
-    pair[&quot;image&quot;] = image_data
+        image_data = base64.b64encode(image_bytes).decode("ascii")
+    pair["image"] = image_data
 
-payload = {&quot;imageLabelPairs&quot;: base_image_label_pairs}
-resp_index_build = requests.post(f&quot;{API_BASE_URL}/shitu-index-build&quot;, json=payload)
+payload = {"imageLabelPairs": base_image_label_pairs}
+resp_index_build = requests.post(f"{API_BASE_URL}/shitu-index-build", json=payload)
 if resp_index_build.status_code != 200:
-    print(f&quot;Request to shitu-index-build failed with status code {resp_index_build}.&quot;)
+    print(f"Request to shitu-index-build failed with status code {resp_index_build}.")
     pprint.pp(resp_index_build.json())
     sys.exit(1)
-result_index_build = resp_index_build.json()[&quot;result&quot;]
-print(f&quot;Number of images indexed: {len(result_index_build['idMap'])}&quot;)
+result_index_build = resp_index_build.json()["result"]
+print(f"Number of images indexed: {len(result_index_build['idMap'])}")
 
 for pair in image_label_pairs_to_add:
-    with open(pair[&quot;image&quot;], &quot;rb&quot;) as file:
+    with open(pair["image"], "rb") as file:
         image_bytes = file.read()
-        image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
-    pair[&quot;image&quot;] = image_data
+        image_data = base64.b64encode(image_bytes).decode("ascii")
+    pair["image"] = image_data
 
-payload = {&quot;imageLabelPairs&quot;: image_label_pairs_to_add, &quot;indexKey&quot;: result_index_build[&quot;indexKey&quot;]}
-resp_index_add = requests.post(f&quot;{API_BASE_URL}/shitu-index-add&quot;, json=payload)
+payload = {"imageLabelPairs": image_label_pairs_to_add, "indexKey": result_index_build["indexKey"]}
+resp_index_add = requests.post(f"{API_BASE_URL}/shitu-index-add", json=payload)
 if resp_index_add.status_code != 200:
-    print(f&quot;Request to shitu-index-add failed with status code {resp_index_add}.&quot;)
+    print(f"Request to shitu-index-add failed with status code {resp_index_add}.")
     pprint.pp(resp_index_add.json())
     sys.exit(1)
-result_index_add = resp_index_add.json()[&quot;result&quot;]
-print(f&quot;Number of images indexed: {len(result_index_add['idMap'])}&quot;)
+result_index_add = resp_index_add.json()["result"]
+print(f"Number of images indexed: {len(result_index_add['idMap'])}")
 
-payload = {&quot;ids&quot;: ids_to_remove, &quot;indexKey&quot;: result_index_build[&quot;indexKey&quot;]}
-resp_index_remove = requests.post(f&quot;{API_BASE_URL}/shitu-index-remove&quot;, json=payload)
+payload = {"ids": ids_to_remove, "indexKey": result_index_build["indexKey"]}
+resp_index_remove = requests.post(f"{API_BASE_URL}/shitu-index-remove", json=payload)
 if resp_index_remove.status_code != 200:
-    print(f&quot;Request to shitu-index-remove failed with status code {resp_index_remove}.&quot;)
+    print(f"Request to shitu-index-remove failed with status code {resp_index_remove}.")
     pprint.pp(resp_index_remove.json())
     sys.exit(1)
-result_index_remove = resp_index_remove.json()[&quot;result&quot;]
-print(f&quot;Number of images indexed: {len(result_index_remove['idMap'])}&quot;)
+result_index_remove = resp_index_remove.json()["result"]
+print(f"Number of images indexed: {len(result_index_remove['idMap'])}")
 
-with open(infer_image_path, &quot;rb&quot;) as file:
+with open(infer_image_path, "rb") as file:
     image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
-payload = {&quot;image&quot;: image_data, &quot;indexKey&quot;: result_index_build[&quot;indexKey&quot;]}
-resp_infer = requests.post(f&quot;{API_BASE_URL}/shitu-infer&quot;, json=payload)
+payload = {"image": image_data, "indexKey": result_index_build["indexKey"]}
+resp_infer = requests.post(f"{API_BASE_URL}/shitu-infer", json=payload)
 if resp_infer.status_code != 200:
-    print(f&quot;Request to shitu-infer failed with status code {resp_infer}.&quot;)
+    print(f"Request to shitu-infer failed with status code {resp_infer}.")
     pprint.pp(resp_infer.json())
     sys.exit(1)
-result_infer = resp_infer.json()[&quot;result&quot;]
+result_infer = resp_infer.json()["result"]
 
-with open(output_image_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result_infer[&quot;image&quot;]))
-print(f&quot;Output image saved at {output_image_path}&quot;)
-print(&quot;\nDetected objects:&quot;)
-pprint.pp(result_infer[&quot;detectedObjects&quot;])
+with open(output_image_path, "wb") as file:
+    file.write(base64.b64decode(result_infer["image"]))
+print(f"Output image saved at {output_image_path}")
+print("\nDetected objects:")
+pprint.pp(result_infer["detectedObjects"])
 </code></pre></details>
 </details>
 <br/>

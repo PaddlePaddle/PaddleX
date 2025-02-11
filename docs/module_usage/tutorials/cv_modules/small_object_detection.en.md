@@ -14,8 +14,8 @@ Small object detection typically refers to accurately detecting and locating sma
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5:0.95)</th>
 <th>mAP(0.5)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description (VisDrone)</th>
 </tr>
@@ -23,8 +23,8 @@ Small object detection typically refers to accurately detecting and locating sma
 <td>PP-YOLOE_plus_SOD-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus_SOD-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-L_pretrained.pdparams">Trained Model</a></td>
 <td>31.9</td>
 <td>52.1</td>
-<td>57.1</td>
-<td>1007.0</td>
+<td>114.24 / 93.98</td>
+<td>285.39 / 285.39</td>
 <td>324.93</td>
 <td rowspan="3">PP-YOLOE_plus small object detection model trained on VisDrone. VisDrone is a benchmark dataset specifically for unmanned aerial vehicle (UAV) visual data, which is used for small object detection due to the small size of the targets and the inherent challenges they pose.</td>
 </tr>
@@ -32,25 +32,24 @@ Small object detection typically refers to accurately detecting and locating sma
 <td>PP-YOLOE_plus_SOD-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus_SOD-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-S_pretrained.pdparams">Trained Model</a></td>
 <td>25.1</td>
 <td>42.8</td>
-<td>65.5</td>
-<td>324.4</td>
+<td>135.68 / 122.94</td>
+<td>188.09 / 107.74</td>
 <td>77.29</td>
 </tr>
 <tr>
 <td>PP-YOLOE_plus_SOD-largesize-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus_SOD-largesize-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus_SOD-largesize-L_pretrained.pdparams">Trained Model</a></td>
 <td>42.7</td>
 <td>65.9</td>
-<td>458.5</td>
-<td>11172.7</td>
+<td>639.57 / 332.79</td>
+<td>2807.12 / 2807.12</td>
 <td>340.42</td>
 </tr>
 </table>
-
 <b>Note: The evaluation set for the above accuracy metrics is VisDrone-DET dataset mAP(0.5:0.95). GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
 
 
 ## III. Quick Integration  <a id="quick"> </a>
-> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
+&gt; ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 After installing the wheel package, you can complete the inference of the small object detection module with just a few lines of code. You can switch models under this module freely, and you can also integrate the model inference of the small object detection module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg) to your local machine.
 
@@ -80,11 +79,11 @@ Parameter meanings are as follows:
   - `score`: Confidence score of the bounding box, a float.
   - `coordinate`: Coordinates of the bounding box, a list [xmin, ymin, xmax, ymax].
 
-</details>
+
 
 The visualization image is as follows:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/smallobj_det/small_object_detection_res.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/smallobj_det/small_object_detection_res.jpg"/>
 
 **Note:** Due to network issues, the above URL may not be accessible. If you need to access this link, please check the validity of the URL and try again. If the problem persists, it may be related to the link itself or the network connection.
 
@@ -125,7 +124,7 @@ Related methods, parameters, and explanations are as follows:
 </table>
 
 * The `model_name` must be specified. After specifying `model_name`, the default model parameters built into PaddleX are used. If `model_dir` is specified, the user-defined model is used.
-* `threshold` is the threshold for filtering low-confidence objects. The default is `None`, which means using the settings from the previous layer. The priority of parameter settings from highest to lowest is: `predict parameter > create_model initialization > yaml configuration file`. Currently, two types of threshold settings are supported:
+* `threshold` is the threshold for filtering low-confidence objects. The default is `None`, which means using the settings from the previous layer. The priority of parameter settings from highest to lowest is: `predict parameter &gt; create_model initialization &gt; yaml configuration file`. Currently, two types of threshold settings are supported:
   * `float`, using the same threshold for all classes.
   * `dict`, where the key is the class ID and the value is the threshold, allowing different thresholds for different classes.
 
@@ -144,14 +143,14 @@ Related methods, parameters, and explanations are as follows:
 <tr>
 <td><code>input</code></td>
 <td>Data to be predicted, supporting multiple input types</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
-  <li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
-  <li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
-  <li><b>URL link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg">Example</a></li>
-  <li><b>Local directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
-  <li><b>List</b>, elements of the list must be of the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
+<li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
+<li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
+<li><b>URL link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg">Example</a></li>
+<li><b>Local directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
+<li><b>List</b>, elements of the list must be of the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
 </ul>
 </td>
 <td>None</td>
@@ -169,9 +168,9 @@ Related methods, parameters, and explanations are as follows:
 <td><code>float</code>/<code>dict</code>/<code>None</code></td>
 <td>
 <ul>
-  <li><b>None</b>, indicating the use of settings from the previous layer. The priority of parameter settings from highest to lowest is: <code>predict parameter > create_model initialization > yaml configuration file</code></li>
-  <li><b>float</b>, such as 0.5, indicating the use of <code>0.5</code> as the threshold for filtering low-confidence objects during inference</li>
-  <li><b>dict</b>, such as <code>{0: 0.5, 1: 0.35}</code>, indicating the use of 0.5 as the threshold for class 0 and 0.35 for class 1 during inference.</li>
+<li><b>None</b>, indicating the use of settings from the previous layer. The priority of parameter settings from highest to lowest is: <code>predict parameter &gt; create_model initialization &gt; yaml configuration file</code></li>
+<li><b>float</b>, such as 0.5, indicating the use of <code>0.5</code> as the threshold for filtering low-confidence objects during inference</li>
+<li><b>dict</b>, such as <code>{0: 0.5, 1: 0.35}</code>, indicating the use of 0.5 as the threshold for class 0 and 0.35 for class 1 during inference.</li>
 </ul>
 </td>
 <td>None</td>
@@ -289,30 +288,29 @@ python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_S
 After executing the above command, PaddleX will validate the dataset and collect its basic information. Upon successful execution, the log will print the message `Check dataset passed !`. The validation result file will be saved in `./output/check_dataset_result.json`, and related outputs will be saved in the `./output/check_dataset` directory of the current directory. The output directory includes visualized example images and histograms of sample distributions.
 
 <details><summary>👉 <b>Details of validation results (click to expand)</b></summary>
-
 <p>The specific content of the validation result file is:</p>
 <pre><code class="language-bash">{
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;num_classes&quot;: 10,
-    &quot;train_samples&quot;: 1610,
-    &quot;train_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/9999938_00000_d_0000352.jpg&quot;,
-      &quot;check_dataset/demo_img/9999941_00000_d_0000014.jpg&quot;,
-      &quot;check_dataset/demo_img/9999973_00000_d_0000043.jpg&quot;
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "num_classes": 10,
+    "train_samples": 1610,
+    "train_sample_paths": [
+      "check_dataset/demo_img/9999938_00000_d_0000352.jpg",
+      "check_dataset/demo_img/9999941_00000_d_0000014.jpg",
+      "check_dataset/demo_img/9999973_00000_d_0000043.jpg"
     ],
-    &quot;val_samples&quot;: 548,
-    &quot;val_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/0000330_00801_d_0000804.jpg&quot;,
-      &quot;check_dataset/demo_img/0000103_00180_d_0000026.jpg&quot;,
-      &quot;check_dataset/demo_img/0000291_04001_d_0000888.jpg&quot;
+    "val_samples": 548,
+    "val_sample_paths": [
+      "check_dataset/demo_img/0000330_00801_d_0000804.jpg",
+      "check_dataset/demo_img/0000103_00180_d_0000026.jpg",
+      "check_dataset/demo_img/0000291_04001_d_0000888.jpg"
     ]
   },
-  &quot;analysis&quot;: {
-    &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
+  "analysis": {
+    "histogram": "check_dataset/histogram.png"
   },
-  &quot;dataset_path&quot;: &quot;./dataset/example_data/small_det_examples&quot;,
+  &quot;dataset_path&quot;: &quot;small_det_examples&quot;,
   &quot;show_type&quot;: &quot;image&quot;,
   &quot;dataset_type&quot;: &quot;COCODetDataset&quot;
 }
@@ -326,13 +324,12 @@ After executing the above command, PaddleX will validate the dataset and collect
 <li><code>attributes.val_sample_paths</code>： A list of relative paths to the visualized images of samples in the validation set of this dataset.</li>
 </ul>
 <p>The dataset validation also analyzes the distribution of sample counts across all classes in the dataset and generates a histogram (histogram.png) to visualize this distribution. </p>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/smallobj_det/01.png"></p></details>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/smallobj_det/01.png"/></p></details>
 
 #### 4.1.3 Dataset Format Conversion / Dataset Splitting (Optional)
 After completing the dataset verification, you can convert the dataset format or re-split the training/validation ratio by <b>modifying the configuration file</b> or <b>appending hyperparameters</b>.
 
 <details><summary>👉 <b>Details on Format Conversion / Dataset Splitting (Click to Expand)</b></summary>
-
 <p><b>(1) Dataset Format Conversion</b></p>
 <p>Small object detection supports converting datasets in <code>VOC</code> and <code>LabelMe</code> formats to <code>COCO</code> format.</p>
 <p>Parameters related to dataset validation can be set by modifying the fields under <code>CheckDataset</code> in the configuration file. Examples of some parameters in the configuration file are as follows:</p>
@@ -413,7 +410,6 @@ The steps required are:
 Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration Parameters for Model Tasks](../../instructions/config_parameters_common.en.md).
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <ul>
 <li>During model training, PaddleX automatically saves model weight files, defaulting to <code>output</code>. To specify a save path, use the <code>-o Global.output</code> field in the configuration file.</li>
 <li>PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.</li>
@@ -444,7 +440,6 @@ Similar to model training, the process involves the following steps:
 Other related parameters can be configured by modifying the fields under `Global` and `Evaluate` in the `.yaml` configuration file. For detailed information, please refer to [PaddleX Common Configuration Parameters for Models](../../instructions/config_parameters_common.en.md)。
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <p>When evaluating the model, you need to specify the model weights file path. Each configuration file has a default weight save path built-in. If you need to change it, simply set it by appending a command line parameter, such as <code>-o Evaluate.weight_path=./output/best_model/best_model/model.pdparams</code>.</p>
 <p>After completing the model evaluation, an <code>evaluate_result.json</code> file will be generated, which records the evaluation results, specifically whether the evaluation task was completed successfully, and the model's evaluation metrics, including AP.</p></details>
 

@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import copy
 from pathlib import Path
+from PIL import Image, ImageDraw
 from typing import Dict
 
 import cv2
