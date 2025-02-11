@@ -691,12 +691,43 @@ margin探寻实验结果：
 
 ## 7. 产线集成
 
-在使用卡通场景数据完成人脸检测模型和人脸特征模型的训练微调后，您可挑选高精度的模型权重集成到PaddleX的人脸识别产线中。只需将 `paddlex/configs/pipelines/face_recognition.yaml` 配置文件中的 `SubModules.Detection.model_dir` 和 `SubModules.Recognition.model_dir` 分别修改为自己微调训练的人脸检测模型路径和人脸特征模型路径（PaddleX训练过程中会保存最优模型的路径到output/best_model/inference中），并执行以下Python脚本重新推理官方模型权重表现差的卡通人脸演示数据：
+在使用卡通场景数据完成人脸检测模型和人脸特征模型的训练微调后，您可挑选高精度的模型权重集成到PaddleX的人脸识别产线中。
+
+首先获取 face_recognition 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+
+```bash
+paddlex --get_pipeline_config face_recognition --save_path ./my_path
+```
+
+将配置文件中的 `SubModules.Detection.model_dir` 和 `SubModules.Recognition.model_dir` 分别修改为自己微调训练的人脸检测模型路径和人脸特征模型路径, 若您需要将人脸识别产线直接应用在您的 Python 项目中，可以参考如下示例：
+
+```yaml
+pipeline_name: face_recognition
+
+index: None
+det_threshold: 0.6
+rec_threshold: 0.4
+rec_topk: 5
+
+SubModules:
+  Detection:
+    module_name: face_detection
+    model_name: PP-YOLOE_plus-S_face
+    model_dir: "path/to/your/det_model" # 使用卡通人脸数据微调的人脸检测模型
+    batch_size: 1
+  Recognition:
+    module_name: face_feature
+    model_name: ResNet50_face
+    model_dir: "path/to/your/rec_model" # 使用卡通人脸数据微调的人脸特征模型
+    batch_size: 1
+```
+
+随后，在您的 Python 代码中，您可以这样使用产线：
 
 ```python
 from paddlex import create_pipeline
 # 创建人脸识别产线
-pipeline = create_pipeline(pipeline="face_recognition")
+pipeline = create_pipeline(pipeline="my_path/face_recognition.yaml")
 # 构建卡通人脸特征底库
 index_data = pipeline.build_index(gallery_imgs="cartoonface_demo_gallery", gallery_label="cartoonface_demo_gallery/gallery.txt")
 # 图像预测
@@ -705,7 +736,8 @@ for res in output:
     res.print()
     res.save_to_img("./output/") # 保存可视化结果图像
 ```
-如果存在卡通人脸可以检出但识别为 “Unknown0.00“ 的情况，可以修改 `paddlex/configs/pipelines/face_recognition.yaml` 配置文件中的 `rec_thresholds`，降低检索阈值后再次尝试。如果存在人脸识别错误的情况，请更换最优权重为最后一轮权重，或者更换不同超参数训练的识别模型权重再次尝试。
+
+如果存在卡通人脸可以检出但识别为 “Unknown0.00“ 的情况，可以修改配置文件中的 `rec_thresholds`，降低检索阈值后再次尝试。如果存在人脸识别错误的情况，请更换最优权重为最后一轮权重，或者更换不同超参数训练的识别模型权重再次尝试。
 
 ## 8、产线服务化部署
 
@@ -742,7 +774,7 @@ paddlex --get_pipeline_config face_recognition --save_path ./
 ```yaml
 pipeline_name: face_recognition
 
-index: None
+index: ./cartoonface_index # 本地特征底库目录，使用第(1)步中构建好的特征底库
 det_threshold: 0.6
 rec_threshold: 0.4
 rec_topk: 5
