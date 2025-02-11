@@ -98,70 +98,6 @@ comments: true
 <td>4.834</td>
 <td>基于PicoDet-S在中英文论文、杂志、合同、书本、试卷和研报等场景上自建数据集训练的高效率版面区域定位模型</td>
 </tr>
-<tr>
-<td>PicoDet_layout_1x</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">训练模型</a></td>
-<td>86.8</td>
-<td>13.0</td>
-<td>91.3</td>
-<td>7.4</td>
-<td>基于PicoDet-1x在PubLayNet数据集训练的高效率版面区域定位模型，可定位包含文字、标题、表格、图片以及列表这5类区域</td>
-</tr>
-<tr>
-<td>PicoDet_layout_1x_table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_table_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">训练模型</a></td>
-<td>95.7</td>
-<td>12.623</td>
-<td>90.8934</td>
-<td>7.4 M</td>
-<td>基于PicoDet-1x在自建数据集训练的高效率版面区域定位模型，可定位包含表格这1类区域</td>
-</tr>
-<tr>
-<td>PicoDet-S_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">训练模型</a></td>
-<td>87.1</td>
-<td>13.5</td>
-<td>45.8</td>
-<td>4.8</td>
-<td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含3个类别：表格，图像和印章</td>
-</tr>
-<tr>
-<td>PicoDet-S_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">训练模型</a></td>
-<td>70.3</td>
-<td>13.6</td>
-<td>46.2</td>
-<td>4.8</td>
-<td>基于PicoDet-S轻量模型在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</td>
-</tr>
-<tr>
-<td>PicoDet-L_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">训练模型</a></td>
-<td>89.3</td>
-<td>15.7</td>
-<td>159.8</td>
-<td>22.6</td>
-<td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含3个类别：表格，图像和印章</td>
-</tr>
-<tr>
-<td>PicoDet-L_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">训练模型</a></td>
-<td>79.9</td>
-<td>17.2</td>
-<td>160.2</td>
-<td>22.6</td>
-<td>基于PicoDet-L在中英文论文、杂志和研报等场景上自建数据集训练的高效率版面区域定位模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</td>
-</tr>
-<tr>
-<td>RT-DETR-H_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_3cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">训练模型</a></td>
-<td>95.9</td>
-<td>114.6</td>
-<td>3832.6</td>
-<td>470.1</td>
-<td>基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型，包含3个类别：表格，图像和印章</td>
-</tr>
-<tr>
-<td>RT-DETR-H_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_17cls_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">训练模型</a></td>
-<td>92.6</td>
-<td>115.1</td>
-<td>3827.2</td>
-<td>470.2</td>
-<td>基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</td>
-</tr>
 </tbody>
 </table>
 <p><b>注：以上精度指标的评估集是 PaddleOCR 自建的版面区域分析数据集，包含中英文论文、杂志和研报等常见的 1w 张文档类型图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p>
@@ -557,50 +493,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 </tbody>
 </table>
 <p><b>注：以上精度指标的评估集是自建的数据集，包含500张圆形印章图像。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p>
-<p><b>文本图像矫正模块模型：</b></p>
-<table>
-<thead>
-<tr>
-<th>模型</th><th>模型下载链接</th>
-<th>MS-SSIM （%）</th>
-<th>模型存储大小（M)</th>
-<th>介绍</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>UVDoc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/UVDoc_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">训练模型</a></td>
-<td>54.40</td>
-<td>30.3 M</td>
-<td>高精度文本图像矫正模型</td>
-</tr>
-</tbody>
-</table>
-<p><b>模型的精度指标测量自 <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet benchmark</a>。</b></p>
-<p><b>文档图像方向分类模块模型：</b></p>
-<table>
-<thead>
-<tr>
-<th>模型</th><th>模型下载链接</th>
-<th>Top-1 Acc（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
-<th>模型存储大小（M)</th>
-<th>介绍</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">训练模型</a></td>
-<td>99.06</td>
-<td>3.84845</td>
-<td>9.23735</td>
-<td>7</td>
-<td>基于PP-LCNet_x1_0的文档图像分类模型，含有四个类别，即0度，90度，180度，270度</td>
-</tr>
-</tbody>
-</table>
-<p><b>注：以上精度指标的评估集是自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p></details>
+</b></p></details>
 
 <b></b>
 
@@ -1178,7 +1071,7 @@ for item in markdown_images:
 </table>
 
 - 调用`print()` 方法会将结果打印到终端，打印到终端的内容解释如下：
-    - `input_path`: `(str)` 待预测图像的输入路径
+    - `input_path`: `(str)` 待预测图像或者PDF的输入路径
 
     - `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
 
@@ -1190,13 +1083,22 @@ for item in markdown_images:
         - `use_table_recognition`: `(bool)` 控制是否启用表格识别子产线
         - `use_formula_recognition`: `(bool)` 控制是否启用公式识别子产线
 
+    - `doc_preprocessor_res`: `(Dict[str, Union[List[float], str]])` 文档预处理结果字典，仅当`use_doc_preprocessor=True`时存在
+        - `input_path`: `(str)` 文档预处理子产线接受的图像路径，当输入为`numpy.ndarray`时，保存为`None`，此处为`None`
+        - `page_index`: `None`，此处的输入为`numpy.ndarray`，所以值为`None`
+        - `model_settings`: `(Dict[str, bool])` 文档预处理子产线的模型配置参数
+          - `use_doc_orientation_classify`: `(bool)` 控制是否启用文档图像方向分类子模块
+          - `use_doc_unwarping`: `(bool)` 控制是否启用文本图像扭曲矫正子模块
+        - `angle`: `(int)` 文档图像方向分类子模块的预测结果，启用时返回实际角度值
+
     - `parsing_res_list`: `(List[Dict])` 解析结果的列表，每个元素为一个字典，列表顺序为解析后的阅读顺序。
         - `layout_bbox`: `(np.ndarray)` 版面区域的边界框。
-        - `{label}`: `(str)` key 为版面区域的标签，例如`text`, `table`等，内容为版面区域内的内容。
+        - `label`: `(str)` key 为版面区域的标签，例如`text`, `table`等，内容为版面区域内的内容。
         - `layout`: `(str)` 版面排版类型，例如 `double`, `single` 等。
 
     - `overall_ocr_res`: `(Dict[str, Union[List[str], List[float], numpy.ndarray]])` 全局 OCR 结果的字典
-      -  `input_path`: `(Union[str, None])` 图像OCR子产线接受的图像路径，当输入为`numpy.ndarray`时，保存为`None`
+      - `input_path`: `(Union[str, None])` 图像OCR子产线接受的图像路径，当输入为`numpy.ndarray`时，保存为`None`
+      - `page_index`: `None`，此处的输入为`numpy.ndarray`，所以值为`None`
       - `model_settings`: `(Dict)` OCR子产线的模型配置参数
       - `dt_polys`: `(List[numpy.ndarray])` 文本检测的多边形框列表。每个检测框由4个顶点坐标构成的numpy数组表示，数组shape为(4, 2)，数据类型为int16
       - `dt_scores`: `(List[float])` 文本检测框的置信度列表
@@ -1228,6 +1130,7 @@ for item in markdown_images:
 
     - `seal_res_list`: `(List[Dict[str, Union[numpy.ndarray, List[float], str]]])` 印章识别结果列表，每个元素为一个字典
         - `input_path`: `(str)` 印章图像的输入路径
+        - `page_index`: `None`，此处的输入为`numpy.ndarray`，所以值为`None`
         - `model_settings`: `(Dict)` 印章识别子产线的模型配置参数
         - `dt_polys`: `(List[numpy.ndarray])` 印章检测框列表，格式同`dt_polys`
         - `text_det_params`: `(Dict[str, Dict[str, int, float]])` 印章检测模块的配置参数, 具体参数含义同上
@@ -1570,9 +1473,8 @@ for res in result[&quot;layoutParsingResults&quot;]:
 如果通用版面解析v2产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升通用版面解析v2产线的在您的场景中的识别效果。
 
 ### 4.1 模型微调
-由于通用版面解析v2产线包含7个模块，模型产线的效果不及预期可能来自于其中任何一个模块。
 
-由于通用版面解析v2产线包含若干模块，模型产线的效果不及预期可能来自于其中任何一个模块。。您可以对提取效果差的 case 进行分析，通过可视化图像，确定是哪个模块存在问题，并参考以下表格中对应的微调教程链接进行模型微调。
+由于通用版面解析v2产线包含若干模块，模型产线的效果不及预期可能来自于其中任何一个模块。您可以对提取效果差的 case 进行分析，通过可视化图像，确定是哪个模块存在问题，并参考以下表格中对应的微调教程链接进行模型微调。
 
 
 <table>

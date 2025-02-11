@@ -568,7 +568,7 @@ python main.py -c paddlex/configs/modules/seal_text_detection/PP-OCRv4_server_se
 
 1.<b>产线集成</b>
 
-印章文本检测模块可以集成的PaddleX产线有[文档场景信息抽取v3产线（PP-ChatOCRv3）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md)，只需要替换模型路径即可完成印章文本检测模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
+印章文本检测模块可以集成的PaddleX产线有[文档场景信息抽取v3产线（PP-ChatOCRv3-doc）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.md)，只需要替换模型路径即可完成印章文本检测模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
 
 2.<b>模块集成</b>
 

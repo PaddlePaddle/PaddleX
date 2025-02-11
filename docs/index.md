@@ -83,7 +83,7 @@ PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了�
             <td><img src="https://github.com/PaddlePaddle/PaddleX/assets/142379845/1e798e05-dee7-4b41-9cc4-6708b6014efa"></td>
         </tr>
         <tr>
-            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.html"><strong>文本图像智能分析</strong></a></th>
+            <th><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.html"><strong>文本图像智能分析</strong></a></th>
             <th><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/time_series_pipelines/time_series_forecasting.html"><strong>时序预测</strong></a></th>
             <th><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.html"><strong>时序异常检测</strong></a></th>
             <th><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.html"><strong>时序分类</strong></a></th>
@@ -1787,9 +1787,9 @@ for res in output:
 
     ---
 
-    文档场景信息抽取v3（PP-ChatOCRv3）是飞桨特色的文档和图像智能分析解决方案，结合了 LLM 和 OCR 技术，一站式解决版面分析、生僻字、多页 pdf、表格、印章识别等常见的复杂文档信息抽取难点问题。
+    文档场景信息抽取v3（PP-ChatOCRv3-doc）是飞桨特色的文档和图像智能分析解决方案，结合了 LLM 和 OCR 技术，一站式解决版面分析、生僻字、多页 pdf、表格、印章识别等常见的复杂文档信息抽取难点问题。
 
-    [:octicons-arrow-right-24: 教程](pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md)
+    [:octicons-arrow-right-24: 教程](pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.md)
 
 - **通用OCR**
 

@@ -648,7 +648,7 @@ python main.py -c paddlex/configs/modules/text_recognition/PP-OCRv4_mobile_rec.y
 
 1.<b>产线集成</b>
 
-文本识别模块可以集成的PaddleX产线有[通用 OCR 产线](../../../pipeline_usage/tutorials/ocr_pipelines/OCR.md)、[通用表格识别产线](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition.md)、[文档场景信息抽取v3产线（PP-ChatOCRv3）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md)，只需要替换模型路径即可完成相关产线的文本识别模块的模型更新。
+文本识别模块可以集成的PaddleX产线有[通用 OCR 产线](../../../pipeline_usage/tutorials/ocr_pipelines/OCR.md)、[通用表格识别产线](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition.md)、[文档场景信息抽取v3产线（PP-ChatOCRv3-doc）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.md)，只需要替换模型路径即可完成相关产线的文本识别模块的模型更新。
 
 2.<b>模块集成</b>
 

@@ -194,7 +194,7 @@ PaddleX combines model information and runtime environment information to provid
   </tr>
 
   <tr>
-    <td rowspan="7">PP-ChatOCRv3</td>
+    <td rowspan="7">PP-ChatOCRv3-doc</td>
     <td>Table Recognition</td>
     <td>✅</td>
   </tr>
