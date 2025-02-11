@@ -37,40 +37,50 @@ PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX whe
 PaddleX 提供了 15 个端到端的实例分割模型，具体可参考 [模型列表](../support_list/models_list.md)，其中部分模型的 benchmark 如下：
 
 <table>
-<thead>
 <tr>
-<th>模型列表</th>
-<th>mAP(%)</th>
-<th>GPU 推理耗时(ms)</th>
-<th>模型存储大小(M)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Mask-RT-DETR-H</td>
-<td>48.8</td>
-<td>61.40</td>
-<td>486</td>
+<th>模型</th><th>模型下载链接</th>
+<th>Mask AP</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（M）</th>
+<th>介绍</th>
 </tr>
 <tr>
-<td>Mask-RT-DETR-X</td>
-<td>47.5</td>
-<td>45.70</td>
-<td>257</td>
+<td>Mask-RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-H_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-H_pretrained.pdparams">训练模型</a></td>
+<td>50.6</td>
+<td>172.36 / 172.36</td>
+<td>1615.75 / 1615.75</td>
+<td>449.9 M</td>
+<td rowspan="5">Mask-RT-DETR 是一种基于RT-DETR的实例分割模型，通过采用最优性能的更好的PP-HGNetV2作为骨干网络，构建了MaskHybridEncoder编码器，引入了IOU-aware Query Selection 技术，使其在相同推理耗时上取得了SOTA实例分割精度。</td>
 </tr>
 <tr>
-<td>Mask-RT-DETR-L</td>
+<td>Mask-RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-L_pretrained.pdparams">训练模型</a></td>
 <td>45.7</td>
-<td>37.40</td>
-<td>123</td>
+<td>88.18 / 88.18</td>
+<td>1090.84 / 1090.84</td>
+<td>113.6 M</td>
 </tr>
 <tr>
-<td>Mask-RT-DETR-S</td>
-<td>40.9</td>
-<td>32.40</td>
-<td>57</td>
+<td>Mask-RT-DETR-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-M_pretrained.pdparams">训练模型</a></td>
+<td>42.7</td>
+<td>78.69 / 78.69</td>
+<td></td>
+<td>66.6 M</td>
 </tr>
-</tbody>
+<tr>
+<td>Mask-RT-DETR-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-S_pretrained.pdparams">训练模型</a></td>
+<td>41.0</td>
+<td>33.5007</td>
+<td>-</td>
+<td>51.8 M</td>
+</tr>
+<tr>
+<td>Mask-RT-DETR-X</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-X_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-X_pretrained.pdparams">训练模型</a></td>
+<td>47.5</td>
+<td>114.16 / 114.16</td>
+<td>1240.92 / 1240.92</td>
+<td>237.5 M</td>
+</tr>
 </table>
 > <b>注：以上精度指标为 [COCO2017](https://cocodataset.org/#home) 验证集 mAP(0.5:0.95)，GPU 推理耗时基于 NVIDIA  V100 机器，精度类型为 FP32。</b>
 
@@ -93,13 +103,13 @@ tar -xf ./dataset/intseg_remote_sense_coco.tar -C ./dataset/
 在对数据集校验时，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
+python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-H.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/intseg_remote_sense_coco
 ```
 
 执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息。命令运行成功后会在 log 中打印出 `Check dataset passed !` 信息，同时相关产出会保存在当前目录的 `./output/check_dataset` 目录下，产出目录中包括可视化的示例样本图片和样本分布直方图。校验结果文件保存在 `./output/check_dataset_result.json`，校验结果文件具体内容为
-```
+```json
 {
   "done_flag": true,
   "check_pass": true,
@@ -165,7 +175,7 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
 在训练之前，请确保您已经对数据集进行了校验。完成 PaddleX 模型的训练，只需如下一条命令：
 
 ```bash
-python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
+python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-H.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/intseg_remote_sense_coco \
     -o Train.num_classes=10
@@ -203,7 +213,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
+python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-H.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/intseg_remote_sense_coco
 ```
@@ -323,7 +333,7 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
 将产线中的模型替换为微调后的模型进行测试，如：
 
 ```bash
-python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
+python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-H.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="output/best_model/inference" \
     -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/remotesensing_demo.png"
@@ -338,10 +348,32 @@ python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
 
 ## 7. 开发集成/部署
 如果通用实例分割产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
-1. 直接将训练好的模型应用在您的 Python 项目中，可以参考如下示例代码，并将`paddlex/pipelines/instance_segmentation.yaml`配置文件中的`Pipeline.model`修改为自己的模型路径：
+
+1. 若您需要使用微调后的模型权重，可以获取 instance_segmentation 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+
+```bash
+paddlex --get_pipeline_config instance_segmentation --save_path ./my_path
+```
+
+将微调后模型权重的本地路径填写至产线配置文件中的 `model_dir` 即可, 若您需要将通用实例分割产线直接应用在您的 Python 项目中，可以参考如下示例：
+
+```yaml
+pipeline_name: instance_segmentation
+
+SubModules:
+  InstanceSegmentation:
+    module_name: instance_segmentation
+    model_name: Mask-RT-DETR-S
+    model_dir: null # 此处替换为您训练后得到的模型权重本地路径
+    batch_size: 1
+    threshold: 0.5
+```
+
+随后，在您的 Python 代码中，您可以这样使用产线：
+
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="paddlex/pipelines/instance_segmentation.yaml")
+pipeline = create_pipeline(pipeline="my_path/instance_segmentation.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/remotesensing_demo.png")
 for res in output:
     res.print() # 打印预测的结构化输出
