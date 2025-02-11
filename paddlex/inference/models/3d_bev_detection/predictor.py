@@ -86,7 +86,10 @@ class BEVDet3DPredictor(BasicPredictor):
         Returns:
             tuple: A tuple containing the preprocessors and inference engine.
         """
-        if lazy_paddle.is_compiled_with_cuda() and not lazy_paddle.is_compiled_with_rocm():
+        if (
+            lazy_paddle.is_compiled_with_cuda()
+            and not lazy_paddle.is_compiled_with_rocm()
+        ):
             from ....ops.voxelize import hard_voxelize
             from ....ops.iou3d_nms import nms_gpu
         else:
@@ -100,6 +103,7 @@ class BEVDet3DPredictor(BasicPredictor):
             name, op = func(self, **args) if args else func(self)
             if op:
                 pre_tfs[name] = op
+        pre_tfs["GetInferInput"] = GetInferInput()
 
         infer = StaticInfer(
             model_dir=self.model_dir,

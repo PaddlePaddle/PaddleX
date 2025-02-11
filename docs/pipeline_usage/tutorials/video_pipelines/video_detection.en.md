@@ -266,8 +266,6 @@ In the above Python script, the following steps are executed:
         - `float`: Confidence score of the bounding box, a floating-point number
         - `str`: Category of the bounding box, a string
 
-    - `angle`: `(int)` Prediction result of document orientation classification. When enabled, the values are [0, 90, 180, 270]; when disabled, it is -1
-
 - Calling the `save_to_json()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}.json`; if specified as a file, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` types will be converted to lists.
 
 - Calling the `save_to_video()` method will save the visualization results to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`; if specified as a file, it will be saved directly to that file.

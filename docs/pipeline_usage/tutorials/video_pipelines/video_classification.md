@@ -401,32 +401,12 @@ for res in output:
 <td>是</td>
 </tr>
 <tr>
-<td><code>inferenceParams</code></td>
-<td><code>object</code></td>
-<td>推理参数。</td>
+<td><code>topk</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>topk</code> 参数说明。</td>
 <td>否</td>
 </tr>
 </tbody>
-</table>
-<p><code>inferenceParams</code>的属性如下：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-<th>是否必填</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>topK</code></td>
-<td><code>integer</code></td>
-<td>结果中将只保留得分最高的<code>topK</code>个类别。</td>
-<td>否</td>
-</tr>
-</tbody>
-</table>
 <ul>
 <li>请求处理成功时，响应体的<code>result</code>具有如下属性：</li>
 </ul>
@@ -443,11 +423,6 @@ for res in output:
 <td><code>categories</code></td>
 <td><code>array</code></td>
 <td>视频类别信息。</td>
-</tr>
-<tr>
-<td><code>video</code></td>
-<td><code>string</code></td>
-<td>视频分类结果图。视频为JPEG格式，使用Base64编码。</td>
 </tr>
 </tbody>
 </table>
@@ -517,10 +492,7 @@ response = requests.post(API_URL, json=payload)
 # 处理接口返回数据
 assert response.status_code == 200
 result = response.json()[&quot;result&quot;]
-with open(output_video_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result[&quot;video&quot;]))
-print(f&quot;Output video saved at {output_video_path}&quot;)
-print(&quot;\nCategories:&quot;)
+print(&quot;Categories:&quot;)
 print(result[&quot;categories&quot;])
 </code></pre></details>
 <details><summary>C++</summary>
@@ -533,7 +505,6 @@ print(result[&quot;categories&quot;])
 int main() {
     httplib::Client client(&quot;localhost:8080&quot;);
     const std::string videoPath = &quot;./demo.mp4&quot;;
-    const std::string outputImagePath = &quot;./out.mp4&quot;;
 
     httplib::Headers headers = {
         {&quot;Content-Type&quot;, &quot;application/json&quot;}
@@ -562,19 +533,6 @@ int main() {
     if (response &amp;&amp; response-&gt;status == 200) {
         nlohmann::json jsonResponse = nlohmann::json::parse(response-&gt;body);
         auto result = jsonResponse[&quot;result&quot;];
-
-        encodedImage = result[&quot;video&quot;];
-        std::string decodedString = base64::from_base64(encodedImage);
-        std::vector&lt;unsigned char&gt; decodedImage(decodedString.begin(), decodedString.end());
-        std::ofstream outputImage(outPutImagePath, std::ios::binary | std::ios::out);
-        if (outputImage.is_open()) {
-            outputImage.write(reinterpret_cast&lt;char*&gt;(decodedImage.data()), decodedImage.size());
-            outputImage.close();
-            std::cout &lt;&lt; &quot;Output video saved at &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
-        } else {
-            std::cerr &lt;&lt; &quot;Unable to open file for writing: &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
-        }
-
         auto categories = result[&quot;categories&quot;];
         std::cout &lt;&lt; &quot;\nCategories:&quot; &lt;&lt; std::endl;
         for (const auto&amp; category : categories) {
@@ -605,7 +563,6 @@ public class Main {
     public static void main(String[] args) throws IOException {
         String API_URL = &quot;http://localhost:8080/video-classification&quot;; // 服务URL
         String videoPath = &quot;./demo.mp4&quot;; // 本地视频
-        String outputImagePath = &quot;./out.mp4&quot;; // 输出视频
 
         // 对本地视频进行Base64编码
         File file = new File(videoPath);
@@ -631,14 +588,7 @@ public class Main {
                 String responseBody = response.body().string();
                 JsonNode resultNode = objectMapper.readTree(responseBody);
                 JsonNode result = resultNode.get(&quot;result&quot;);
-                String base64Image = result.get(&quot;video&quot;).asText();
                 JsonNode categories = result.get(&quot;categories&quot;);
-
-                byte[] videoBytes = Base64.getDecoder().decode(base64Image);
-                try (FileOutputStream fos = new FileOutputStream(outputImagePath)) {
-                    fos.write(videoBytes);
-                }
-                System.out.println(&quot;Output video saved at &quot; + outputImagePath);
                 System.out.println(&quot;\nCategories: &quot; + categories.toString());
             } else {
                 System.err.println(&quot;Request failed with code: &quot; + response.code());
@@ -664,7 +614,6 @@ import (
 func main() {
     API_URL := &quot;http://localhost:8080/video-classification&quot;
     videoPath := &quot;./demo.mp4&quot;
-    outputImagePath := &quot;./out.mp4&quot;
 
     // 对本地视频进行Base64编码
     videoBytes, err := ioutil.ReadFile(videoPath)
@@ -704,7 +653,6 @@ func main() {
     }
     type Response struct {
         Result struct {
-            Image      string   `json:&quot;video&quot;`
             Categories []map[string]interface{} `json:&quot;categories&quot;`
         } `json:&quot;result&quot;`
     }
@@ -715,17 +663,6 @@ func main() {
         return
     }
 
-    outputImageData, err := base64.StdEncoding.DecodeString(respData.Result.Image)
-    if err != nil {
-        fmt.Println(&quot;Error decoding base64 video data:&quot;, err)
-        return
-    }
-    err = ioutil.WriteFile(outputImagePath, outputImageData, 0644)
-    if err != nil {
-        fmt.Println(&quot;Error writing video to file:&quot;, err)
-        return
-    }
-    fmt.Printf(&quot;Image saved at %s.mp4\n&quot;, outputImagePath)
     fmt.Println(&quot;\nCategories:&quot;)
     for _, category := range respData.Result.Categories {
         fmt.Println(category)
@@ -747,7 +684,6 @@ class Program
 {
     static readonly string API_URL = &quot;http://localhost:8080/video-classification&quot;;
     static readonly string videoPath = &quot;./demo.mp4&quot;;
-    static readonly string outputImagePath = &quot;./out.mp4&quot;;
 
     static async Task Main(string[] args)
     {
@@ -768,11 +704,6 @@ class Program
         string responseBody = await response.Content.ReadAsStringAsync();
         JObject jsonResponse = JObject.Parse(responseBody);
 
-        string base64Image = jsonResponse[&quot;result&quot;][&quot;video&quot;].ToString();
-        byte[] outputImageBytes = Convert.FromBase64String(base64Image);
-
-        File.WriteAllBytes(outputImagePath, outputImageBytes);
-        Console.WriteLine($&quot;Output video saved at {outputImagePath}&quot;);
         Console.WriteLine(&quot;\nCategories:&quot;);
         Console.WriteLine(jsonResponse[&quot;result&quot;][&quot;categories&quot;].ToString());
     }
@@ -786,7 +717,6 @@ const fs = require('fs');
 
 const API_URL = 'http://localhost:8080/video-classification'
 const videoPath = './demo.mp4'
-const outputImagePath = &quot;./out.mp4&quot;;
 
 let config = {
    method: 'POST',
@@ -808,11 +738,6 @@ axios.request(config)
 .then((response) =&gt; {
     // 处理接口返回数据
     const result = response.data[&quot;result&quot;];
-    const videoBuffer = Buffer.from(result[&quot;video&quot;], 'base64');
-    fs.writeFile(outputImagePath, videoBuffer, (err) =&gt; {
-      if (err) throw err;
-      console.log(`Output video saved at ${outputImagePath}`);
-    });
     console.log(&quot;\nCategories:&quot;);
     console.log(result[&quot;categories&quot;]);
 })
@@ -826,7 +751,6 @@ axios.request(config)
 
 $API_URL = &quot;http://localhost:8080/video-classification&quot;; // 服务URL
 $video_path = &quot;./demo.mp4&quot;;
-$output_video_path = &quot;./out.mp4&quot;;
 
 // 对本地视频进行Base64编码
 $video_data = base64_encode(file_get_contents($video_path));
@@ -842,8 +766,6 @@ curl_close($ch);
 
 // 处理接口返回数据
 $result = json_decode($response, true)[&quot;result&quot;];
-file_put_contents($output_video_path, base64_decode($result[&quot;video&quot;]));
-echo &quot;Output video saved at &quot; . $output_video_path . &quot;\n&quot;;
 echo &quot;\nCategories:\n&quot;;
 print_r($result[&quot;categories&quot;]);
 ?&gt;

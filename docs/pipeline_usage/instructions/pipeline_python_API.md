@@ -4,7 +4,7 @@ comments: true
 
 # PaddleX模型产线Python脚本使用说明
 
-在使用Python脚本进行模型产线快速推理前，请确保您已经按照[PaddleX本地安装教程](../../installation/installation.md)完成了PaddleX的安装。
+在使用 Python 脚本进行模型产线快速推理前，请确保您已经按照 [PaddleX 本地安装教程](../../installation/installation.md)完成了 PaddleX 的安装。
 
 ## 一、使用示例
 
@@ -13,35 +13,43 @@ comments: true
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline("image_classification")
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg", batch_size=1)
+output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg", batch_size=1, topk=5)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
     res.save_to_json("./output/res.json")
 ```
+
 简单来说，只需三步：
 
 * 调用`create_pipeline()`方法实例化预测模型产线对象；
 * 调用预测模型产线对象的`predict()`方法进行推理预测；
-* 调用`print()`、`save_to_xxx()`等相关方法对预测结果进行可视化或是保存。
+* 调用`print()`、`save_to_xxx()`等相关方法对预测结果进行打印输出或是保存。
 
 ## 二、API说明
 
 ### 1. 调用`create_pipeline()`方法实例化预测模型产线对象
+
 * `create_pipeline`：实例化预测模型产线对象；
   * 参数：
-    * `pipeline_name`：`str` 类型，产线名或是本地产线配置文件路径，如“image_classification”、“/path/to/image_classification.yaml”；
-    * `device`：`str` 类型，用于设置模型推理设备，如为GPU设置则可以指定卡号，如“cpu”、“gpu:2”；
-    * `pp_option`：`PaddlePredictorOption` 类型，用于设置模型推理后端；
+    * `pipeline`：`str` 类型，产线名或是本地产线配置文件路径，如“image_classification”、“/path/to/image_classification.yaml”；
+    * `device`：`str` 类型，用于设置模型推理设备，如为 GPU 则可以指定卡号，如“cpu”、“gpu:2”，默认情况下，如有 GPU 设置则使用 0 号 GPU，否则使用 CPU；
+    * `pp_option`：`PaddlePredictorOption` 类型，用于设置模型推理后端，关于推理后端的详细说明，请参考下文[4-推理后端设置](#4-推理后端设置)；
   * 返回值：`BasePredictor`类型。
+
 ### 2. 调用预测模型产线对象的`predict()`方法进行推理预测
+
 * `predict`：使用定义的预测模型产线，对输入数据进行预测；
   * 参数：
     * `input`：任意类型，支持str类型表示的待预测数据文件路径，或是包含待预测文件的目录，或是网络URL；对于CV任务，支持numpy.ndarray表示的图像数据；对于TS任务，支持pandas.DataFrame类型数据；同样支持上述类型所构成的list类型；
   * 返回值：`generator`，每次调用返回一个样本的预测结果；
+
 ### 3. 对预测结果进行可视化
+
 模型产线的预测结果支持访问、可视化及保存，可通过相应的属性或方法实现，具体如下：
+
 #### 属性：
+
 * `str`：`str` 类型表示的预测结果；
   * 返回值：`str` 类型，预测结果的str表示；
 * `json`：json格式表示的预测结果；
@@ -50,7 +58,10 @@ for res in output:
   * 返回值：`PIL.Image` 类型；
 * `html`：预测结果的HTML表示；
   * 返回值：`str` 类型；
+* _`更多`_：不同产线的预测结果支持不同的表示方式，更多属性请参考具体产线文档；
+
 #### 方法：
+
 * `print()`：将预测结果输出，需要注意，当预测结果不便于直接输出时，会省略相关内容；
   * 参数：
     * `json_format`：`bool`类型，默认为`False`，表示不使用json格式化输出；
@@ -79,6 +90,7 @@ for res in output:
   * 参数：
     * `save_path`：`str`类型，结果保存的路径；
   * 返回值：无；
+* _`更多`_：不同产线的预测结果支持不同的存储方式，更多方法请参考具体产线文档；
 
 ### 4. 推理后端设置
 
@@ -97,6 +109,7 @@ PaddleX 支持通过`PaddlePredictorOption`设置推理后端，相关API如下�
   * 返回值：`int` 类型，当前设置的加速库计算线程数。
 
 #### 方法：
+
 * `get_support_run_mode`：获取支持的推理后端设置；
   * 参数：无；
   * 返回值：list 类型，可选的推理后端设置。

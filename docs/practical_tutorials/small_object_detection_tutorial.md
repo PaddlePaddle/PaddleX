@@ -102,7 +102,7 @@ tar -xf ./dataset/remote_scene_object_detection.tar -C ./dataset/
 在对数据集校验时，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
+python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/remote_scene_object_detection
 ```
@@ -144,7 +144,7 @@ python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-large
   "analysis": {
     "histogram": "check_dataset\/histogram.png"
   },
-  "dataset_path": "\/git_commit\/final_commit_dev\/PaddleX\/_zzl_sod\/rdet_dota_examples",
+  "dataset_path": "rdet_dota_examples",
   "show_type": "image",
   "dataset_type": "COCODetDataset"
 }
@@ -190,7 +190,7 @@ python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-large
 在训练之前，请确保您已经对数据集进行了校验。完成 PaddleX 模型的训练，只需如下一条命令：
 
 ```bash
-python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
+python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/remote_scene_object_detection \
     -o Train.epochs_iters=80
@@ -228,7 +228,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
+python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/remote_scene_object_detection
 ```
@@ -274,7 +274,7 @@ python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-large
 将产线中的模型替换为微调后的模型进行测试，如：
 
 ```bash
-python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
+python main.py -c paddlex/configs/modules/small_object_detection/PP-YOLOE_plus_SOD-largesize-L.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="output/best_model/inference" \
     -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/remote-scene-det_example.png"
@@ -289,19 +289,40 @@ python main.py -c paddlex/configs/small_object_detection/PP-YOLOE_plus_SOD-large
 
 ## 7. 开发集成/部署
 如果小目标检测产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
-1. 直接将训练好的模型应用在您的 Python 项目中，可以参考如下示例代码，并将`paddlex/pipelines/small_object_detection.yaml`配置文件中的`Pipeline.model`修改为自己的模型路径`output/best_model/inference`：
+1. 若您需要使用微调后的模型权重，可以获取 small_object_detection 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+
+```
+paddlex --get_pipeline_config small_object_detection --save_path ./my_path
+```
+
+将微调后模型权重的本地路径填写至产线配置文件中的 `model_dir` 即可, 若您需要将通用小目标检测产线直接应用在您的 Python 项目中，可以参考 如下示例：
+
+```yaml
+pipeline_name: small_object_detection
+
+SubModules:
+  SmallObjectDetection:
+    module_name: small_object_detection
+    model_name: PP-YOLOE_plus_SOD-L
+    model_dir: null # 此处替换为您训练后得到的模型权重本地路径
+    batch_size: 1
+    threshold: 0.5
+```
+
+随后，在您的 Python 代码中，您可以这样使用产线：
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="paddlex/pipelines/small_object_detection.yaml")
+pipeline = create_pipeline(pipeline="my_path/small_object_detection.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/remote-scene-det_example.png")
 for res in output:
     res.print() # 打印预测的结构化输出
     res.save_to_img("./output/") # 保存结果可视化图像
     res.save_to_json("./output/") # 保存预测的结构化输出
 ```
+
 更多参数请参考 [小目标检测产线使用教程](../pipeline_usage/tutorials/cv_pipelines/small_object_detection.md)。
 
-1. 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
+2. 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
 
 * 高性能部署：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能部署流程请参考 [PaddleX 高性能推理指南](../pipeline_deploy/high_performance_inference.md)。
 * 服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考 [PaddleX 服务化部署指南](../pipeline_deploy/serving.md)。

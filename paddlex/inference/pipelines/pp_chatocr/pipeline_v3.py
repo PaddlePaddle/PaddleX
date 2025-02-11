@@ -25,6 +25,7 @@ from ....utils import logging
 from ....utils.file_interface import custom_open
 from ...utils.pp_option import PaddlePredictorOption
 from ..layout_parsing.result import LayoutParsingResult
+from ..components.chat_server import BaseChat
 
 
 class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
@@ -38,6 +39,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
+        initial_predictor: bool = True,
     ) -> None:
         """Initializes the pp-chatocrv3-doc pipeline.
 
@@ -47,22 +49,31 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
             use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
             use_layout_parsing (bool, optional): Whether to use layout parsing. Defaults to True.
+            initial_predictor (bool, optional): Whether to initialize the predictor. Defaults to True.
         """
 
         super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
 
         self.pipeline_name = config["pipeline_name"]
+        self.config = config
+        self.use_layout_parser = config.get("use_layout_parser", True)
 
-        self.inintial_predictor(config)
+        self.layout_parsing_pipeline = None
+        self.chat_bot = None
+        self.retriever = None
+
+        if initial_predictor:
+            self.inintial_visual_predictor(config)
+            self.inintial_chat_predictor(config)
 
         self.batch_sampler = ImageBatchSampler(batch_size=1)
         self.img_reader = ReadImage(format="BGR")
 
         self.table_structure_len_max = 500
 
-    def inintial_predictor(self, config: dict) -> None:
+    def inintial_visual_predictor(self, config: dict) -> None:
         """
-        Initializes the predictor with the given configuration.
+        Initializes the visual predictor with the given configuration.
 
         Args:
             config (dict): The configuration dictionary containing the necessary
@@ -70,23 +81,26 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         Returns:
             None
         """
-
         self.use_layout_parser = config.get("use_layout_parser", True)
+
         if self.use_layout_parser:
             layout_parsing_config = config.get("SubPipelines", {}).get(
                 "LayoutParser",
                 {"pipeline_config_error": "config error for layout_parsing_pipeline!"},
             )
             self.layout_parsing_pipeline = self.create_pipeline(layout_parsing_config)
+        return
 
-        from .. import create_chat_bot
+    def inintial_retriever_predictor(self, config: dict) -> None:
+        """
+        Initializes the retriever predictor with the given configuration.
 
-        chat_bot_config = config.get("SubModules", {}).get(
-            "LLM_Chat",
-            {"chat_bot_config_error": "config error for llm chat bot!"},
-        )
-        self.chat_bot = create_chat_bot(chat_bot_config)
-
+        Args:
+            config (dict): The configuration dictionary containing the necessary
+                                parameters for initializing the predictor.
+        Returns:
+            None
+        """
         from .. import create_retriever
 
         retriever_config = config.get("SubModules", {}).get(
@@ -95,7 +109,25 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         )
         self.retriever = create_retriever(retriever_config)
 
-        from .. import create_prompt_engeering
+    def inintial_chat_predictor(self, config: dict) -> None:
+        """
+        Initializes the chat predictor with the given configuration.
+
+        Args:
+            config (dict): The configuration dictionary containing the necessary
+                                parameters for initializing the predictor.
+        Returns:
+            None
+        """
+        from .. import create_chat_bot
+
+        chat_bot_config = config.get("SubModules", {}).get(
+            "LLM_Chat",
+            {"chat_bot_config_error": "config error for llm chat bot!"},
+        )
+        self.chat_bot = create_chat_bot(chat_bot_config)
+
+        from .. import create_prompt_engineering
 
         text_pe_config = (
             config.get("SubModules", {})
@@ -105,7 +137,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
                 {"pe_config_error": "config error for text_pe!"},
             )
         )
-        self.text_pe = create_prompt_engeering(text_pe_config)
+        self.text_pe = create_prompt_engineering(text_pe_config)
 
         table_pe_config = (
             config.get("SubModules", {})
@@ -115,7 +147,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
                 {"pe_config_error": "config error for table_pe!"},
             )
         )
-        self.table_pe = create_prompt_engeering(table_pe_config)
+        self.table_pe = create_prompt_engineering(table_pe_config)
         return
 
     def decode_visual_result(self, layout_parsing_result: LayoutParsingResult) -> dict:
@@ -206,6 +238,12 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         if self.use_layout_parser == False:
             logging.error("The models for layout parser are not initialized.")
             yield {"error": "The models for layout parser are not initialized."}
+
+        if self.layout_parsing_pipeline is None:
+            logging.warning(
+                "The layout parsing pipeline is not initialized, will initialize it now."
+            )
+            self.inintial_visual_predictor(self.config)
 
         for layout_parsing_result in self.layout_parsing_pipeline.predict(
             input,
@@ -308,6 +346,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         min_characters: int = 3500,
         llm_request_interval: float = 1.0,
         flag_save_bytes_vector: bool = False,
+        retriever_config: dict = None,
     ) -> dict:
         """
         Build a vector representation from visual information.
@@ -317,6 +356,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
             min_characters (int): The minimum number of characters required for text processing, defaults to 3500.
             llm_request_interval (float): The interval between LLM requests, defaults to 1.0.
             flag_save_bytes_vector (bool): Whether to save the vector as bytes, defaults to False.
+            retriever_config (dict): The configuration for the retriever, defaults to None.
 
         Returns:
             dict: A dictionary containing the vector info and a flag indicating if the text is too short.
@@ -327,8 +367,19 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         else:
             visual_info_list = visual_info
 
-        all_visual_info = self.merge_visual_info_list(visual_info_list)
+        if retriever_config is not None:
+            from .. import create_retriever
 
+            retriever = create_retriever(retriever_config)
+        else:
+            if self.retriever is None:
+                logging.warning(
+                    "The retriever is not initialized,will initialize it now."
+                )
+                self.inintial_retriever_predictor(self.config)
+            retriever = self.retriever
+
+        all_visual_info = self.merge_visual_info_list(visual_info_list)
         (
             all_normal_text_list,
             all_table_text_list,
@@ -350,7 +401,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         vector_info["flag_save_bytes_vector"] = False
         if len(all_text_str) > min_characters:
             vector_info["flag_too_short_text"] = False
-            vector_info["vector"] = self.retriever.generate_vector_database(all_items)
+            vector_info["vector"] = retriever.generate_vector_database(all_items)
             if flag_save_bytes_vector:
                 vector_info["vector"] = self.retriever.encode_vector_store_to_bytes(
                     vector_info["vector"]
@@ -372,7 +423,11 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
 
     def load_vector(self, data_path: str) -> dict:
         vector_info = None
-        with custom_open(data_path, "r") as fin:
+        if self.retriever is None:
+            logging.warning("The retriever is not initialized,will initialize it now.")
+            self.inintial_retriever_predictor(self.config)
+
+        with open(data_path, "r") as fin:
             data = fin.readline()
             vector_info = json.loads(data)
             if (
@@ -413,7 +468,12 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         return []
 
     def generate_and_merge_chat_results(
-        self, prompt: str, key_list: list, final_results: dict, failed_results: list
+        self,
+        chat_bot: BaseChat,
+        prompt: str,
+        key_list: list,
+        final_results: dict,
+        failed_results: list,
     ) -> None:
         """
         Generate and merge chat results into the final results dictionary.
@@ -428,7 +488,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
             None
         """
 
-        llm_result = self.chat_bot.generate_chat_results(prompt)
+        llm_result = chat_bot.generate_chat_results(prompt)
         if llm_result is None:
             logging.error(
                 "chat bot error: \n [prompt:]\n %s\n [result:] %s\n"
@@ -446,6 +506,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
 
     def get_related_normal_text(
         self,
+        retriever_config: dict,
         use_vector_retrieval: bool,
         vector_info: dict,
         key_list: List[str],
@@ -456,22 +517,36 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         Retrieve related normal text based on vector retrieval or all normal text list.
 
         Args:
+            retriever_config (dict): Configuration for the retriever.
             use_vector_retrieval (bool): Whether to use vector retrieval.
             vector_info (dict): Dictionary containing vector information.
             key_list (list[str]): List of keys to generate question keys.
             all_normal_text_list (list): List of normal text.
-            min_characters (int): Minimum number of characters required for the output.
+            min_characters (int): The minimum number of characters required for text processing, defaults to 3500.
 
         Returns:
             str: Related normal text.
         """
 
         if use_vector_retrieval and vector_info is not None:
+
+            if retriever_config is not None:
+                from .. import create_retriever
+
+                retriever = create_retriever(retriever_config)
+            else:
+                if self.retriever is None:
+                    logging.warning(
+                        "The retriever is not initialized,will initialize it now."
+                    )
+                    self.inintial_retriever_predictor(self.config)
+                retriever = self.retriever
+
             question_key_list = [f"{key}" for key in key_list]
             vector = vector_info["vector"]
             if not vector_info["flag_too_short_text"]:
-                related_text = self.retriever.similarity_retrieval(
-                    question_key_list, vector
+                related_text = retriever.similarity_retrieval(
+                    question_key_list, vector, topk=50, min_characters=min_characters
                 )
             else:
                 if len(vector) > 0:
@@ -507,6 +582,8 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         table_rules_str: str = None,
         table_few_shot_demo_text_content: str = None,
         table_few_shot_demo_key_value_list: str = None,
+        chat_bot_config: dict = None,
+        retriever_config: dict = None,
     ) -> dict:
         """
         Generates chat results based on the provided key list and visual information.
@@ -527,6 +604,8 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
             table_rules_str (str): The rules for generating table results.
             table_few_shot_demo_text_content (str): The text content for table few-shot demos.
             table_few_shot_demo_key_value_list (str): The key-value list for table few-shot demos.
+            chat_bot_config(dict): The parameters for LLM chatbot, including api_type, api_key... refer to config file for more details.
+            retriever_config (dict): The parameters for LLM retriever, including api_type, api_key... refer to config file for more details.
         Returns:
             dict: A dictionary containing the chat results.
         """
@@ -540,6 +619,19 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
             visual_info_list = [visual_info]
         else:
             visual_info_list = visual_info
+
+        if self.chat_bot is None:
+            logging.warning(
+                "The LLM chat bot is not initialized,will initialize it now."
+            )
+            self.inintial_chat_predictor(self.config)
+
+        if chat_bot_config is not None:
+            from .. import create_chat_bot
+
+            chat_bot = create_chat_bot(chat_bot_config)
+        else:
+            chat_bot = self.chat_bot
 
         all_visual_info = self.merge_visual_info_list(visual_info_list)
 
@@ -568,11 +660,16 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
                             )
 
                             self.generate_and_merge_chat_results(
-                                prompt, key_list, final_results, failed_results
+                                chat_bot,
+                                prompt,
+                                key_list,
+                                final_results,
+                                failed_results,
                             )
 
         if len(key_list) > 0:
             related_text = self.get_related_normal_text(
+                retriever_config,
                 use_vector_retrieval,
                 vector_info,
                 key_list,
@@ -591,7 +688,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
                     few_shot_demo_key_value_list=text_few_shot_demo_key_value_list,
                 )
                 self.generate_and_merge_chat_results(
-                    prompt, key_list, final_results, failed_results
+                    chat_bot, prompt, key_list, final_results, failed_results
                 )
         return {"chat_res": final_results}
 

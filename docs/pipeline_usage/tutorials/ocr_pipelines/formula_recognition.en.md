@@ -10,21 +10,18 @@ Formula recognition is a technology that automatically identifies and extracts L
 
 The formula recognition pipeline is designed to solve formula recognition tasks by extracting formula information from images and outputting it in LaTeX source code format. This pipeline integrates the advanced formula recognition model PP-FormulaNet developed by the PaddlePaddle Vision Team and the well-known formula recognition model UniMERNet. It is an end-to-end formula recognition system that supports the recognition of simple printed formulas, complex printed formulas, and handwritten formulas. Additionally, it includes functions for image orientation correction and distortion correction. Based on this pipeline, precise formula content prediction can be achieved, covering various application scenarios in education, research, finance, manufacturing, and other fields. The pipeline also provides flexible deployment options, supporting multiple hardware devices and programming languages. Moreover, it offers the capability for secondary development. You can train and optimize the pipeline on your own dataset, and the trained model can be seamlessly integrated.
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/03.png" style="width: 70%">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/03.png" style="width: 70%"/>
 <b>The formula recognition pipeline includes a mandatory formula recognition module,</b> as well as optional layout detection, document image orientation classification, and text image unwarping modules. The document image orientation classification module and the text image unwarping module are integrated into the formula recognition pipeline as a document preprocessing sub-pipeline. Each module contains multiple models, and you can choose the model based on the benchmark test data below.
 
 <b>If you prioritize model accuracy, choose a model with higher precision; if you care more about inference speed, choose a faster model; if you are concerned about model storage size, choose a smaller model.</b>
-
 <p><b>Document Image Orientation Classification Module (Optional):</b></p>
-
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top-1 Acc (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -33,18 +30,15 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <tr>
 <td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Training Model</a></td>
 <td>99.06</td>
-<td>3.84845</td>
-<td>9.23735</td>
+<td>2.31 / 0.43</td>
+<td>3.37 / 1.27</td>
 <td>7</td>
 <td>A document image classification model based on PP-LCNet_x1_0, with four categories: 0 degrees, 90 degrees, 180 degrees, and 270 degrees.</td>
 </tr>
 </tbody>
 </table>
 <b>Note: The evaluation dataset for the above accuracy metrics is a self-built dataset covering multiple scenarios such as certificates and documents, with 1,000 images. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
-
-
 <p><b>Text Image Correction Module (Optional):</b></p>
-
 <table>
 <thead>
 <tr>
@@ -64,16 +58,14 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tbody>
 </table>
 <b>Note: The accuracy metrics of the model are measured from the <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet benchmark</a>.</b>
-
 <p><b>Layout Detection Module (Optional):</b></p>
-
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -105,20 +97,18 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 </tbody>
 </table>
-
 <b>Note: The evaluation dataset for the above precision metrics is a self-built layout area detection dataset by PaddleOCR, containing 500 common document-type images of Chinese and English papers, magazines, contracts, books, exams, and research reports. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
 
 > ❗ The above list includes the <b>3 core models</b> that are key supported by the text recognition module. The module actually supports a total of <b>11 full models</b>, including several predefined models with different categories. The complete model list is as follows:
 
 <details><summary> 👉 Details of Model List</summary>
-
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -127,24 +117,22 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <tr>
 <td>PicoDet_layout_1x_table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_table_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">Training Model</a></td>
 <td>97.5</td>
-<td>12.623</td>
-<td>90.8934</td>
+<td>8.02 / 3.09</td>
+<td>23.70 / 20.41</td>
 <td>7.4 M</td>
 <td>A high-efficiency layout area localization model trained on a self-built dataset using PicoDet-1x, capable of detecting table regions.</td>
 </tr>
-</table>
-
+</tbody></table>
 <b>Note: The evaluation dataset for the above precision metrics is a self-built layout table area detection dataset by PaddleOCR, containing 7835 Chinese and English document images with tables. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
 
 * <b>3-Class Layout Detection Model, including Table, Image, and Stamp</b>
-
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -153,40 +141,38 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <tr>
 <td>PicoDet-S_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_3cls_pretrained.pdparams">Training Model</a></td>
 <td>88.2</td>
-<td>13.5</td>
-<td>45.8</td>
+<td>8.99 / 2.22</td>
+<td>16.11 / 8.73</td>
 <td>4.8</td>
 <td>A high-efficiency layout area localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using PicoDet-S.</td>
 </tr>
 <tr>
 <td>PicoDet-L_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_3cls_pretrained.pdparams">Training Model</a></td>
 <td>89.0</td>
-<td>15.7</td>
-<td>159.8</td>
+<td>13.05 / 4.50</td>
+<td>41.30 / 41.30</td>
 <td>22.6</td>
 <td>A balanced efficiency and precision layout area localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using PicoDet-L.</td>
 </tr>
 <tr>
 <td>RT-DETR-H_layout_3cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">Training Model</a></td>
 <td>95.8</td>
-<td>114.6</td>
-<td>3832.6</td>
+<td>114.93 / 27.71</td>
+<td>947.56 / 947.56</td>
 <td>470.1</td>
 <td>A high-precision layout area localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using RT-DETR-H.</td>
 </tr>
-</table>
-
+</tbody></table>
 <b>Note: The evaluation dataset for the above precision metrics is a self-built layout area detection dataset by PaddleOCR, containing 1154 common document images of Chinese and English papers, magazines, and research reports. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
 
 * <b>5-Class English Document Area Detection Model, including Text, Title, Table, Image, and List</b>
-
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -195,24 +181,22 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <tr>
 <td>PicoDet_layout_1x</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">Training Model</a></td>
 <td>97.8</td>
-<td>13.0</td>
-<td>91.3</td>
+<td>9.03 / 3.10</td>
+<td>25.82 / 20.70</td>
 <td>7.4</td>
 <td>A high-efficiency English document layout area localization model trained on the PubLayNet dataset using PicoDet-1x.</td>
 </tr>
-</table>
-
+</tbody></table>
 <b>Note: The evaluation dataset for the above precision metrics is the [PubLayNet](https://developer.ibm.com/exchanges/data/all/publaynet/) dataset, containing 11245 English document images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
 
 * <b>17-Class Area Detection Model, including 17 common layout categories: Paragraph Title, Image, Text, Number, Abstract, Content, Figure Caption, Formula, Table, Table Caption, References, Document Title, Footnote, Header, Algorithm, Footer, and Stamp</b>
-
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -221,35 +205,31 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <tr>
 <td>PicoDet-S_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_layout_17cls_pretrained.pdparams">Training Model</a></td>
 <td>87.4</td>
-<td>13.6</td>
-<td>46.2</td>
+<td>9.11 / 2.12</td>
+<td>15.42 / 9.12</td>
 <td>4.8</td>
 <td>A high-efficiency layout area localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using PicoDet-S.</td>
 </tr>
-
 <tr>
 <td>PicoDet-L_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_layout_17cls_pretrained.pdparams">Training Model</a></td>
 <td>89.0</td>
-<td>17.2</td>
-<td>160.2</td>
+<td>13.50 / 4.69</td>
+<td>43.32 / 43.32</td>
 <td>22.6</td>
 <td>A balanced efficiency and precision layout area localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using PicoDet-L.</td>
 </tr>
-
 <tr>
 <td>RT-DETR-H_layout_17cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">Training Model</a></td>
 <td>98.3</td>
-<td>115.1</td>
-<td>3827.2</td>
+<td>115.29 / 104.09</td>
+<td>995.27 / 995.27</td>
 <td>470.2</td>
 <td>A high-precision layout area localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using RT-DETR-H.</td>
 </tr>
 </tbody>
 </table>
-
 <b>Note: The evaluation dataset for the above precision metrics is a self-built layout area detection dataset by PaddleOCR, containing 892 common document images of Chinese and English papers, magazines, and research reports. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
 </details>
-
 <p><b>Formula Recognition Module </b></p>
 <table>
 <tr>
@@ -283,9 +263,6 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <td>LaTeX-OCR is a formula recognition algorithm based on an autoregressive large model. It uses Hybrid ViT as the backbone network and a transformer as the decoder, significantly improving the accuracy of formula recognition.</td>
 </tr>
 </table>
-
-
-
 <b>Note: The above accuracy metrics are measured using an internally built formula recognition test set within PaddleX. The BLEU score of LaTeX_OCR_rec on the LaTeX-OCR formula recognition test set is 0.8821. All model GPU inference times are based on machines with Tesla V100 GPUs, with precision type FP32.</b>
 
 ## 2. Quick Start
@@ -322,8 +299,7 @@ The explanation of the running result parameters can refer to the result interpr
 
 The visualization results are saved under `save_path`, where the visualization result of formula recognition is as follows:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/04.png" style="width: 70%">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/04.png" style="width: 70%"/>
 <b>If you need to visualize the formula recognition pipeline, you need to run the following command to install the LaTeX rendering environment. Currently, visualization of the formula recognition pipeline only supports the Ubuntu environment, and other environments are not supported. For complex formulas, the LaTeX result may contain some advanced representations that may not be successfully displayed in environments such as Markdown:</b>
 
 ```bash
@@ -417,9 +393,9 @@ In the above Python script, the following steps are executed:
 <td><code>Python Var|str|list</code></td>
 <td>
 <ul>
-  <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
-  <li><b>str</b>: Local path of image or PDF file, e.g., <code>/root/data/img.jpg</code>; <b>URL link</b>, e.g., network URL of image or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/pipelines/general_formula_recognition_001.png">Example</a>; <b>Local directory</b>, the directory should contain images to be predicted, e.g., local path: <code>/root/data/</code> (currently does not support prediction of PDF files in directories; PDF files must be specified with a specific file path)</li>
-  <li><b>List</b>: Elements of the list must be of the above types, e.g., <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
+<li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
+<li><b>str</b>: Local path of image or PDF file, e.g., <code>/root/data/img.jpg</code>; <b>URL link</b>, e.g., network URL of image or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/pipelines/general_formula_recognition_001.png">Example</a>; <b>Local directory</b>, the directory should contain images to be predicted, e.g., local path: <code>/root/data/</code> (currently does not support prediction of PDF files in directories; PDF files must be specified with a specific file path)</li>
+<li><b>List</b>: Elements of the list must be of the above types, e.g., <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -430,13 +406,13 @@ In the above Python script, the following steps are executed:
 <td><code>str|None</code></td>
 <td>
 <ul>
-  <li><b>CPU</b>: e.g., <code>cpu</code> indicates using CPU for inference;</li>
-  <li><b>GPU</b>: e.g., <code>gpu:0</code> indicates using the 1st GPU for inference;</li>
-  <li><b>NPU</b>: e.g., <code>npu:0</code> indicates using the 1st NPU for inference;</li>
-  <li><b>XPU</b>: e.g., <code>xpu:0</code> indicates using the 1st XPU for inference;</li>
-  <li><b>MLU</b>: e.g., <code>mlu:0</code> indicates using the 1st MLU for inference;</li>
-  <li><b>DCU</b>: e.g., <code>dcu:0</code> indicates using the 1st DCU for inference;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used. During initialization, the local GPU 0 will be prioritized; if unavailable, the CPU will be used.</li>
+<li><b>CPU</b>: e.g., <code>cpu</code> indicates using CPU for inference;</li>
+<li><b>GPU</b>: e.g., <code>gpu:0</code> indicates using the 1st GPU for inference;</li>
+<li><b>NPU</b>: e.g., <code>npu:0</code> indicates using the 1st NPU for inference;</li>
+<li><b>XPU</b>: e.g., <code>xpu:0</code> indicates using the 1st XPU for inference;</li>
+<li><b>MLU</b>: e.g., <code>mlu:0</code> indicates using the 1st MLU for inference;</li>
+<li><b>DCU</b>: e.g., <code>dcu:0</code> indicates using the 1st DCU for inference;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used. During initialization, the local GPU 0 will be prioritized; if unavailable, the CPU will be used.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -447,8 +423,8 @@ In the above Python script, the following steps are executed:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>.</li>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -459,8 +435,8 @@ In the above Python script, the following steps are executed:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>.</li>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -471,8 +447,8 @@ In the above Python script, the following steps are executed:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>.</li>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -483,9 +459,9 @@ In the above Python script, the following steps are executed:
 <td><code>float/dict/None</code></td>
 <td>
 <ul>
-  <li><b>float</b>, e.g., 0.2, indicating filtering out all bounding boxes with confidence scores below 0.2</li>
-  <li><b>Dictionary</b>, with <b>int</b> keys representing <code>cls_id</code> and <b>float</b> values as thresholds. For example, <code>{0: 0.45, 2: 0.48, 7: 0.4}</code> indicates applying a threshold of 0.45 for class ID 0, 0.48 for class ID 2, and 0.4 for class ID 7</li>
-  <li><b>None</b>: If not specified, the default PaddleX official model configuration will be used</li>
+<li><b>float</b>, e.g., 0.2, indicating filtering out all bounding boxes with confidence scores below 0.2</li>
+<li><b>Dictionary</b>, with <b>int</b> keys representing <code>cls_id</code> and <b>float</b> values as thresholds. For example, <code>{0: 0.45, 2: 0.48, 7: 0.4}</code> indicates applying a threshold of 0.45 for class ID 0, 0.48 for class ID 2, and 0.4 for class ID 7</li>
+<li><b>None</b>: If not specified, the default PaddleX official model configuration will be used</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -496,8 +472,8 @@ In the above Python script, the following steps are executed:
 <td><code>bool/None</code></td>
 <td>
 <ul>
-  <li><b>bool</b>: <code>True</code> or <code>False</code>, indicating whether to use NMS for post-processing to filter overlapping bounding boxes</li>
-  <li><b>None</b>: If not specified, the default PaddleX official model configuration will be used</li>
+<li><b>bool</b>: <code>True</code> or <code>False</code>, indicating whether to use NMS for post-processing to filter overlapping bounding boxes</li>
+<li><b>None</b>: If not specified, the default PaddleX official model configuration will be used</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -508,9 +484,9 @@ In the above Python script, the following steps are executed:
 <td><code>float/list/None</code></td>
 <td>
 <ul>
-  <li><b>float</b>: A positive float number, e.g., 1.1, indicating that the center of the bounding box remains unchanged while the width and height are both scaled up by a factor of 1.1</li>
-  <li><b>List</b>: e.g., [1.2, 1.5], indicating that the center of the bounding box remains unchanged while the width is scaled up by a factor of 1.2 and the height by a factor of 1.5</li>
-  <li><b>None</b>: If not specified, the default PaddleX official model configuration will be used</li>
+<li><b>float</b>: A positive float number, e.g., 1.1, indicating that the center of the bounding box remains unchanged while the width and height are both scaled up by a factor of 1.1</li>
+<li><b>List</b>: e.g., [1.2, 1.5], indicating that the center of the bounding box remains unchanged while the width is scaled up by a factor of 1.2 and the height by a factor of 1.5</li>
+<li><b>None</b>: If not specified, the default PaddleX official model configuration will be used</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -520,15 +496,15 @@ In the above Python script, the following steps are executed:
 <td><code>string/None</code></td>
 <td>
 <ul>
-  <li><b>large</b>: When set to "large", only the largest outer bounding box will be retained for overlapping bounding boxes, and the inner overlapping boxes will be removed.</li>
-  <li><b>small</b>: When set to "small", only the smallest inner bounding boxes will be retained for overlapping bounding boxes, and the outer overlapping boxes will be removed.</li>
-  <li><b>union</b>: No filtering of bounding boxes will be performed, and both inner and outer boxes will be retained.</li>
-  <li><b>None</b>: If not specified, the default PaddleX official model configuration will be used</li>
+<li><b>large</b>: When set to "large", only the largest outer bounding box will be retained for overlapping bounding boxes, and the inner overlapping boxes will be removed.</li>
+<li><b>small</b>: When set to "small", only the smallest inner bounding boxes will be retained for overlapping bounding boxes, and the outer overlapping boxes will be removed.</li>
+<li><b>union</b>: No filtering of bounding boxes will be performed, and both inner and outer boxes will be retained.</li>
+<li><b>None</b>: If not specified, the default PaddleX official model configuration will be used</li>
 </ul>
 </td>
 <td><code>None</code></td>
 </tr>
-</tbody>
+</tr></tbody>
 </table>
 
 (3) Process the prediction results. The prediction result of each sample is of `dict` type, and supports operations such as printing, saving as an image, and saving as a `json` file:
@@ -545,8 +521,8 @@ In the above Python script, the following steps are executed:
 </tr>
 </thead>
 <tr>
-<td rowspan = "3"><code>print()</code></td>
-<td rowspan = "3">Print results to terminal</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print results to terminal</td>
 <td><code>format_json</code></td>
 <td><code>bool</code></td>
 <td>Whether to format the output content using <code>JSON</code> indentation</td>
@@ -565,8 +541,8 @@ In the above Python script, the following steps are executed:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td rowspan = "3"><code>save_to_json()</code></td>
-<td rowspan = "3">Save results as a JSON file</td>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save results as a JSON file</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
 <td>Path to save the file. If it is a directory, the saved file will be named the same as the input file type</td>
@@ -636,12 +612,12 @@ In the above Python script, the following steps are executed:
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">Get the prediction results in <code>json</code> format</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction results in <code>json</code> format</td>
 </tr>
 <tr>
-<td rowspan = "2"><code>img</code></td>
-<td rowspan = "2">Get the visualization image in <code>dict</code> format</td>
+<td rowspan="2"><code>img</code></td>
+<td rowspan="2">Get the visualization image in <code>dict</code> format</td>
 </tr>
 </table>
 
@@ -693,7 +669,6 @@ In addition, PaddleX also provides three other deployment methods, which are det
 Below are the API references for basic service-based deployment and multi-language service invocation examples:
 
 <details><summary>API Reference</summary>
-
 <p>For the main operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
@@ -867,35 +842,32 @@ Below are the API references for basic service-based deployment and multi-langua
 </tbody>
 </table>
 </details>
-
 <details><summary>Multi-language Service Call Examples</summary>
-
 <details>
 <summary>Python</summary>
-
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/formula-recognition&quot;
-file_path = &quot;./demo.jpg&quot;
+API_URL = "http://localhost:8080/formula-recognition"
+file_path = "./demo.jpg"
 
-with open(file_path, &quot;rb&quot;) as file:
+with open(file_path, "rb") as file:
     file_bytes = file.read()
-    file_data = base64.b64encode(file_bytes).decode(&quot;ascii&quot;)
+    file_data = base64.b64encode(file_bytes).decode("ascii")
 
-payload = {&quot;file&quot;: file_data, &quot;fileType&quot;: 1}
+payload = {"file": file_data, "fileType": 1}
 
 response = requests.post(API_URL, json=payload)
 
 assert response.status_code == 200
-result = response.json()[&quot;result&quot;]
-for i, res in enumerate(result[&quot;formulaRecResults&quot;]):
-    print(&quot;Detected formulas:&quot;)
-    print(res[&quot;formulas&quot;])
-    layout_img_path = f&quot;layout_{i}.jpg&quot;
-    with open(layout_img_path, &quot;wb&quot;) as f:
-        f.write(base64.b64decode(res[&quot;layoutImage&quot;]))
-    print(f&quot;Output image saved at {layout_img_path}&quot;)
+result = response.json()["result"]
+for i, res in enumerate(result["formulaRecResults"]):
+    print("Detected formulas:")
+    print(res["formulas"])
+    layout_img_path = f"layout_{i}.jpg"
+    with open(layout_img_path, "wb") as f:
+        f.write(base64.b64decode(res["layoutImage"]))
+    print(f"Output image saved at {layout_img_path}")
 </code></pre></details>
 </details>
 <br/>
@@ -912,35 +884,35 @@ Since the formula recognition pipeline consists of several modules, if the pipel
 
 
 <table>
-  <thead>
-    <tr>
-      <th>Scenario</th>
-      <th>Fine-Tuning Module</th>
-      <th>Reference Link</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Formulas are missing</td>
-      <td>Layout Detection Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/layout_detection.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Formula content is inaccurate</td>
-      <td>Formula Recognition Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/formula_recognition.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Whole-image rotation correction is inaccurate</td>
-      <td>Document Image Orientation Classification Module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Image distortion correction is inaccurate</td>
-      <td>Text Image Correction Module</td>
-      <td>Fine-tuning not supported</td>
-    </tr>
-  </tbody>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Fine-Tuning Module</th>
+<th>Reference Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Formulas are missing</td>
+<td>Layout Detection Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/layout_detection.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Formula content is inaccurate</td>
+<td>Formula Recognition Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/formula_recognition.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Whole-image rotation correction is inaccurate</td>
+<td>Document Image Orientation Classification Module</td>
+<td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Image distortion correction is inaccurate</td>
+<td>Text Image Correction Module</td>
+<td>Fine-tuning not supported</td>
+</tr>
+</tbody>
 </table>
 
 
