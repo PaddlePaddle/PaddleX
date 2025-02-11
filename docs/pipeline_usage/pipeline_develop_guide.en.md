@@ -186,7 +186,7 @@ Choose the appropriate deployment method for your model pipeline based on your n
 <tbody>
 <tr>
 <td>PP-ChatOCR-doc v3</td>
-<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.html">PP-ChatOCR-doc v3 Pipeline Usage Tutorial</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.html">PP-ChatOCR-doc v3 Pipeline Usage Tutorial</a></td>
 </tr>
 <tr>
 <td>Image Classification</td>

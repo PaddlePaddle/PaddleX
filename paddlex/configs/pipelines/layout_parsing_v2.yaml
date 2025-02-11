@@ -37,7 +37,7 @@ SubPipelines:
     pipeline_name: OCR
     text_type: general
     use_doc_preprocessor: False
-    use_textline_orientation: False
+    use_textline_orientation: True
     SubModules:
       TextDetection:
         module_name: text_detection
@@ -48,13 +48,18 @@ SubPipelines:
         thresh: 0.3
         box_thresh: 0.6
         unclip_ratio: 2.0
-        
+      TextLineOrientation:
+        module_name: textline_orientation
+        model_name: PP-LCNet_x0_25_textline_ori
+        model_dir: null
+        batch_size: 1 
       TextRecognition:
         module_name: text_recognition
         model_name: PP-OCRv4_server_rec_doc
         model_dir: null
         batch_size: 1
         score_thresh: 0.0
+ 
 
   TableRecognition:
     pipeline_name: table_recognition_v2

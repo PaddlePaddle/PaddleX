@@ -18,7 +18,9 @@ PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX whe
   - 本地体验方式：
     ```bash
     paddlex --pipeline image_classification \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/garbage_demo.png
+        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/garbage_demo.png \
+        --device gpu:0 \
+        --save_path ./output/
     ```
 
   - 星河社区体验方式：前往[AI Studio 星河社区](https://aistudio.baidu.com/pipeline/mine)，点击【创建产线】，创建【<b>通用图像分类</b>】产线进行快速体验；
@@ -133,7 +135,7 @@ tar -xf ./dataset/trash40.tar -C ./dataset/
 在对数据集校验时，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
+python main.py -c paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/trash40/
 ```
@@ -160,7 +162,7 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
   "analysis": {
     "histogram": "check_dataset/histogram.png"
   },
-  "dataset_path": "./dataset/trash40/",
+  "dataset_path": "trash40",
   "show_type": "image",
   "dataset_type": "ClsDataset"
 }
@@ -203,7 +205,7 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
 在训练之前，请确保您已经对数据集进行了校验。完成 PaddleX 模型的训练，只需如下一条命令：
 
 ```bash
-python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
+python main.py -c paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/trash40 \
     -o Train.num_classes=40
@@ -241,7 +243,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
+python main.py -c paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/trash40
 ```
@@ -361,7 +363,7 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
 将产线中的模型替换为微调后的模型进行测试，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/garbage_demo.png)，进行预测：
 
 ```bash
-python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
+python main.py -c paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="output/best_model/inference" \
     -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/garbage_demo.png"
@@ -376,16 +378,39 @@ python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
 
 ## 7. 开发集成/部署
 如果通用图像分类产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
-1. 直接将训练好的模型应用在您的 Python 项目中，可以参考如下示例代码，并将`paddlex/pipelines/image_classification.yaml`配置文件中的`Pipeline.model`修改为自己的模型路径：
+
+1. 若您需要使用微调后的模型权重，可以获取 image_classification 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+
+```
+paddlex --get_pipeline_config image_classification --save_path ./my_path
+```
+
+将微调后模型权重的本地路径填写至产线配置文件中的 `model_dir` 即可, 若您需要将通用图像分类产线直接应用在您的 Python 项目中，可以参考 如下示例：
+
+```yaml
+pipeline_name: image_classification
+
+SubModules:
+  ImageClassification:
+    module_name: image_classification
+    model_name: PP-LCNet_x0_5
+    model_dir: null # 此处替换为您训练后得到的模型权重本地路径
+    batch_size: 4
+    topk: 5
+```
+
+随后，在您的 Python 代码中，您可以这样使用产线：
+
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="paddlex/pipelines/image_classification.yaml")
+pipeline = create_pipeline(pipeline="my_path/image_classification.yaml")
 output = pipeline.predict("./dataset/trash40/images/test/0/img_154.jpg")
 for res in output:
     res.print() # 打印预测的结构化输出
     res.save_to_img("./output/") # 保存结果可视化图像
     res.save_to_json("./output/") # 保存预测的结构化输出
 ```
+
 更多参数请参考 [图像分类产线使用教程](../pipeline_usage/tutorials/cv_pipelines/image_classification.md)。
 
 2. 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：

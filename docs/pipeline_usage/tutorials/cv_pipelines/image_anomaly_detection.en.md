@@ -5,7 +5,8 @@ comments: true
 # Image Anomaly Detection Pipeline Tutorial
 
 ## 1. Introduction to Image Anomaly Detection Pipeline
-Image anomaly detection is an image processing technique that identifies unusual or non-conforming patterns within images through analysis. It is widely applied in industrial quality inspection, medical image analysis, and security monitoring. By leveraging machine learning and deep learning algorithms, image anomaly detection can automatically recognize potential defects, anomalies, or abnormal behaviors in images, enabling us to promptly identify issues and take corresponding actions. The image anomaly detection system is designed to automatically detect and mark anomalies in images, enhancing work efficiency and accuracy.
+Image anomaly detection is an image processing technique that identifies images that stand out or do not conform to normal patterns by analyzing the content within the images. It can automatically detect potential defects, anomalies, or abnormal behaviors in images, thereby helping us to identify problems in a timely manner and take appropriate measures.
+This production line integrates the high-precision anomaly detection model STFPM, which extracts regions of anomalies or defects from images. The application scenarios cover various fields, including industrial manufacturing, food appearance quality inspection, and medical image analysis. The production line also offers flexible service-oriented deployment options, supporting the use of multiple programming languages on various hardware platforms. Moreover, it provides the capability for secondary development. You can train and fine-tune models on your own dataset based on this production line, and the trained models can be seamlessly integrated.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_anomaly_detection/01.png">
 
@@ -89,6 +90,12 @@ In the above Python script, the following steps are executed:
 <td>Pipeline name or pipeline configuration file path. If it is a pipeline name, it must be a pipeline supported by PaddleX.</td>
 <td><code>str</code></td>
 <td>None</td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
@@ -790,7 +797,7 @@ SubModules:
   AnomalyDetection:
     module_name: anomaly_detection
     model_name: STFPM
-    model_dir: null  # 替换为微调后的文档图像方向分类模型权重路径
+    model_dir: null  # Replace with the fine-tuned image anomaly detection model weight path
     batch_size: 1
 ```
 

@@ -17,7 +17,9 @@ PaddleX offers two ways to experience the pipelines: one is through the PaddleX 
 - Local Experience:
     ```bash
     paddlex --pipeline image_classification \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/garbage_demo.png
+        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/garbage_demo.png \
+        --device gpu:0 \
+        --save_path ./output/
     ```
 
 - AIStudio Community Experience: Go to [Baidu AIStudio Community](https://aistudio.baidu.com/pipeline/mine), click "Create Pipeline", and create a <b>General Image Classification</b> pipeline for a quick trial.
@@ -133,7 +135,7 @@ tar -xf ./dataset/trash40.tar -C ./dataset/
 To verify the dataset, simply run the following command:
 
 ```bash
-python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
+python main.py -c paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/trash40/
 ```
@@ -161,7 +163,7 @@ After executing the above command, PaddleX will verify the dataset and count the
   "analysis": {
     "histogram": "check_dataset/histogram.png"
   },
-  "dataset_path": "./dataset/trash40/",
+  "dataset_path": "trash40",
   "show_type": "image",
   "dataset_type": "ClsDataset"
 }
@@ -206,7 +208,7 @@ When splitting data, the original annotation files will be renamed as `xxx.bak` 
 Before training, please ensure that you have validated the dataset. To complete PaddleX model training, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
+python main.py -c paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/trash40 \
     -o Train.num_classes=40
@@ -244,7 +246,7 @@ After completing model training, all outputs are saved in the specified output d
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model accuracy. To evaluate a model using PaddleX, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
+python main.py -c paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/trash40
 ```
@@ -364,7 +366,7 @@ Changing Epochs Experiment Results:
 Replace the model in the production line with the fine-tuned model for testing. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/garbage_demo.png) to perform predictions:
 
 ```bash
-python main.py -c paddlex/configs/image_classification/PP-LCNet_x1_0.yaml \
+python main.py -c paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="output/best_model/inference" \
     -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/garbage_demo.png"
@@ -379,16 +381,38 @@ The prediction results will be generated under `./output`, and the prediction re
 
 ## 7. Development Integration/Deployment
 If the General Image Classification Pipeline meets your requirements for inference speed and accuracy in the production line, you can proceed directly with development integration/deployment.
-1. Directly apply the trained model in your Python project by referring to the following sample code, and modify the `Pipeline.model` in the `paddlex/pipelines/image_classification.yaml` configuration file to your own model path:
+
+1. If you need to use the fine-tuned model weights, you can obtain the configuration file for the image_classification pipeline and load it for prediction. You can execute the following command to save the results in my_path:
+
+```
+paddlex --get_pipeline_config image_classification --save_path ./my_path
+```
+
+Fill in the local path of the fine-tuned model weights into the `model_dir` field in the configuration file. If you need to directly apply the general image classification pipeline to your Python project, you can refer to the following example:
+
+```yaml
+pipeline_name: image_classification
+
+SubModules:
+  ImageClassification:
+    module_name: image_classification
+    model_name: PP-LCNet_x0_5
+    model_dir: null # Replace this with the local path to your trained model weights
+    batch_size: 4
+    topk: 5
+```
+Subsequently, in your Python code, you can utilize the pipeline as follows:
+
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="paddlex/pipelines/image_classification.yaml")
+pipeline = create_pipeline(pipeline="my_path/image_classification.yaml")
 output = pipeline.predict("./dataset/trash40/images/test/0/img_154.jpg")
 for res in output:
     res.print() # Print the structured output of the prediction
-    res.save_to_img("./output/") # Save the visualized result image
+    res.save_to_img("./output/") # Save the visualized image of the result
     res.save_to_json("./output/") # Save the structured output of the prediction
 ```
+
 For more parameters, please refer to the [General Image Classification Pipeline Usage Tutorial](../pipeline_usage/tutorials/cv_pipelines/image_classification.en.md).
 
 2. Additionally, PaddleX offers three other deployment methods, detailed as follows:

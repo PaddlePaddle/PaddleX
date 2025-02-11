@@ -46,7 +46,7 @@ Keypoint detection algorithms mainly include two approaches: Top-Down and Bottom
 **Note: The above accuracy metrics are based on the COCO dataset AP(0.5:0.95) using ground truth annotations for bounding boxes. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision, while CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 
 ## III. Quick Integration
-> ❗ Before quick integration, please install the PaddleX wheel package first. For details, please refer to the [PaddleX Local Installation Guide](../../../installation/installation.md)
+> ❗ Before quick integration, please install the PaddleX wheel package first. For details, please refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 After completing the installation of the wheel package, you can perform inference for the human keypoint detection module with just a few lines of code. You can switch models under this module at will, and you can also integrate the model inference of the human keypoint detection module into your project. Before running the following code, please download the [example image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/keypoint_detection_002.jpg) to your local machine.
 
@@ -243,13 +243,13 @@ The explanations for the methods, parameters, etc., are as follows:
 </tr>
 </table>
 
-For more information on using the PaddleX single-model inference API, please refer to the [PaddleX Single-Model Python Script Usage Instructions](../../instructions/model_python_API.md).
+For more information on using the PaddleX single-model inference API, please refer to the [PaddleX Single-Model Python Script Usage Instructions](../../instructions/model_python_API.en.md).
 
 ## IV. Secondary Development
-If you aim to improve the accuracy of existing models, you can leverage PaddleX's secondary development capabilities to create better keypoint detection models. Before developing keypoint detection models with PaddleX, make sure to install the PaddleDetection plugin for PaddleX. The installation process can be found in the [PaddleX Local Installation Guide](../../../installation/installation.md).
+If you aim to improve the accuracy of existing models, you can leverage PaddleX's secondary development capabilities to create better keypoint detection models. Before developing keypoint detection models with PaddleX, make sure to install the PaddleDetection plugin for PaddleX. The installation process can be found in the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 
 ### 4.1 Data Preparation
-Before training a model, you need to prepare the dataset for the specific task module. PaddleX provides a data validation feature for each module, and **only datasets that pass the validation can be used for model training**. Additionally, PaddleX offers demo datasets for each module, which you can use to complete subsequent development based on the official demo data. If you wish to use your private dataset for model training, please refer to the [PaddleX Keypoint Detection Data Annotation Guide](../../../data_annotations/cv_modules/keypoint_detection.md).
+Before training a model, you need to prepare the dataset for the specific task module. PaddleX provides a data validation feature for each module, and **only datasets that pass the validation can be used for model training**. Additionally, PaddleX offers demo datasets for each module, which you can use to complete subsequent development based on the official demo data. If you wish to use your private dataset for model training, please refer to the [PaddleX Keypoint Detection Data Annotation Guide](../../../data_annotations/cv_modules/keypoint_detection.en.md).
 
 #### 4.1.1 Downloading Demo Data
 You can use the following commands to download the demo dataset to a specified folder:
@@ -414,7 +414,7 @@ Similar to model training and evaluation, the following steps are required:
 * Specify the mode as model inference prediction: `-o Global.mode=predict`
 * Specify the path to the model weights: `-o Predict.model_dir="./output/best_model/inference"`
 * Specify the path to the input data: `-o Predict.input="..."`
-Other related parameters can be set by modifying the fields under `Global` and `Predict` in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.md).
+Other related parameters can be set by modifying the fields under `Global` and `Predict` in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
 
 #### 4.4.2 Model Integration
 The model can be directly integrated into the PaddleX pipeline or into your own project.

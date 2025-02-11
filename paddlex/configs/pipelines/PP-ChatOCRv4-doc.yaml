@@ -93,7 +93,7 @@ SubModules:
 
 SubPipelines:
   LayoutParser:
-    pipeline_name: layout_parsing
+    pipeline_name: layout_parsing_v2
 
     use_doc_preprocessor: True
     use_general_ocr: True
@@ -148,7 +148,7 @@ SubPipelines:
             model_name: PP-OCRv4_server_rec_doc
             model_dir: null
             batch_size: 1
-            score_thresh: 0
+            score_thresh: 0.0
 
       TableRecognition:
         pipeline_name: table_recognition_v2

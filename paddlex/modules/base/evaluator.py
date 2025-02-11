@@ -36,9 +36,7 @@ def build_evaluater(config: AttrDict) -> "BaseEvaluator":
     try:
         import feature_line_modules
     except ModuleNotFoundError:
-        info(
-            "The PaddleX FeaTure Line plugin is not installed, but continuing execution."
-        )
+        pass
     return BaseEvaluator.get(model_name)(config)
 
 

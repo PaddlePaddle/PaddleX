@@ -13,7 +13,8 @@ PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组
 PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX 在本地体验，另外一种是可以在 <b>AI Studio 星河社区</b>上体验。
 
 * 本地体验方式：
-```
+
+```python
 from paddlex import create_model
 model = create_model("PatchTST_ad")
 output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.csv", batch_size=1)
@@ -25,7 +26,7 @@ for res in output:
 注：由于时序数据和场景紧密相关，时序任务的在线体验官方内置模型仅是在一个特定场景下的模型方案，并非通用方案，不适用其他场景，因此体验方式不支持使用任意的文件来体验官方模型方案效果。但是，在完成自己场景数据下的模型训练之后，可以选择自己训练的模型方案，并使用对应场景的数据进行在线体验。
 
 ## 3. 选择模型
-PaddleX 提供了5个端到端的时序异常检测模型，具体可参考 [模型列表](../support_list/models_list.md)，其中模型的benchmark如下：
+PaddleX 提供了4个端到端的时序异常检测模型，具体可参考 [模型列表](../support_list/models_list.md)，其中模型的benchmark如下：
 
 <table>
 <thead>
@@ -71,17 +72,10 @@ PaddleX 提供了5个端到端的时序异常检测模型，具体可参考 [模
 <td>164K</td>
 <td>PatchTST是兼顾局部模式和全局依赖关系的高精度时序异常检测模型</td>
 </tr>
-<tr>
-<td>TimesNet_ad</td>
-<td>0.9837</td>
-<td>0.9480</td>
-<td>0.9656</td>
-<td>732K</td>
-<td>通过多周期分析，TimesNet是适应性强的高精度时序异常检测模型</td>
-</tr>
 </tbody>
 </table>
 > <b>注：以上精度指标测量自</b>[PSM](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_anomaly_examples.tar)<b>数据集，时序长度为100。</b>
+
 ## 4. 数据准备和校验
 ### 4.1 数据准备
 为了演示时序异常检测任务整个流程，我们将使用公开的 MSL 数据集进行模型训练及验证。PSM（火星科学实验室）数据集由来自美国国家航空航天局，具有 55 个维度，其中包含来自航天器监测系统的意外事件异常（ISA）报告的遥测异常数据。具有实际应用背景，能够更好地反映真实场景中的异常情况，通常用于测试和验证时间序列异常检测模型的性能。本教程中基于该数据集进行异常检测。
@@ -104,7 +98,7 @@ tar -xf ./dataset/msl.tar -C ./dataset/
 在对数据集校验时，只需一行命令：
 
 ```
-python main.py -c paddlex/configs/ts_anomaly_detection/PatchTST_ad.yaml \
+python main.py -c paddlex/configs/modules/ts_anomaly_detection/PatchTST_ad.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/msl
 ```
@@ -153,7 +147,7 @@ python main.py -c paddlex/configs/ts_anomaly_detection/PatchTST_ad.yaml \
 在训练之前，请确保您已经对数据集进行了校验。完成 PaddleX 模型的训练，只需如下一条命令：
 
 ```
-  python main.py -c paddlex/configs/ts_anomaly_detection/PatchTST_ad.yaml \
+  python main.py -c paddlex/configs/modules/ts_anomaly_detection/PatchTST_ad.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/msl \
     -o Train.epochs_iters=5 \
@@ -206,7 +200,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，只需一行命令：
 
 ```
-    python main.py -c paddlex/configs/ts_anomaly_detection/PatchTST_ad.yaml \
+    python main.py -c paddlex/configs/modules/ts_anomaly_detection/PatchTST_ad.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/msl
 ```
@@ -308,11 +302,13 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 </tr>
 </tbody>
 </table>
+
 ## 6. 产线测试
+
 将产线中的模型替换为微调后的模型进行测试，使用[测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_anomaly_detection/test.csv)进行预测：
 
 ```
-python main.py -c paddlex/configs/ts_anomaly_detection/PatchTST_ad.yaml \
+python main.py -c paddlex/configs/modules/ts_anomaly_detection/PatchTST_ad.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/inference" \
     -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_anomaly_detection/test.csv"
@@ -328,15 +324,36 @@ python main.py -c paddlex/configs/ts_anomaly_detection/PatchTST_ad.yaml \
 ## 7.开发集成/部署
 如果通用时序异常检测产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
 
-1. 若您需要将通用时序异常检测产线直接应用在您的 Python 项目中，可以参考 如下示例代码：
+1. 若您需要使用微调后的模型权重，可以获取 ts_anomaly_detection 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+
 ```
+paddlex --get_pipeline_config ts_anomaly_detection --save_path ./my_path
+```
+
+将微调后模型权重的本地路径填写至产线配置文件中的 `model_dir` 即可, 若您需要将通用时序分类产线直接应用在您的 Python 项目中，可以参考 如下示例：
+
+```yaml
+pipeline_name: ts_anomaly_detection
+
+SubModules:
+  TSAnomalyDetection:
+    module_name: ts_anomaly_detection
+    model_name: PatchTST_ad
+    model_dir: ./output/inference  # 此处替换为您训练后得到的模型权重本地路径
+    batch_size: 1
+```
+
+随后执行如下代码即可完成预测：
+
+```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="ts_anomaly_detection")
+pipeline = create_pipeline(pipeline="my_path/ts_anomaly_detection.yaml")
 output = pipeline.predict("pre_ts.csv")
 for res in output:
     res.print() # 打印预测的结构化输出
     res.save_to_csv("./output/") # 保存csv格式结果
 ```
+
 更多参数请参考[时序异常检测产线使用教程](../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.md)
 
 2. 此外，PaddleX 时序异常检测产线也提供了服务化部署方式，详细说明如下：
