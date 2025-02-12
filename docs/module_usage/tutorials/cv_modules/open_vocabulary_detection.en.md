@@ -105,7 +105,7 @@ Related methods, parameters, and explanations are as follows:
 </table>
 
 * The `model_name` must be specified. After specifying `model_name`, the model parameters built into PaddleX will be used by default. If `model_dir` is specified, the user-defined model will be used.
-* `thresholds` is the filtering threshold used by the model. The default is None, which means using the settings from the previous layer. The priority of parameter settings from high to low is: `predict parameter input > create_model initialization input > yaml configuration file setting`.
+* `thresholds` is the filtering threshold used by the model. The default is None, which means using the settings from the lower priority. The priority of parameter settings from high to low is: `predict parameter input > create_model initialization input > yaml configuration file setting`.
   * The GroundingDINO series of models require two thresholds during inference: box_threshold (default 0.3) and text_threshold (default 0.25). The parameter input format is `{"box_threshold": 0.3, "text_threshold": 0.25}`.
 
 * The `predict()` method of the open-vocabulary object detection model is called for inference prediction. The parameters of the `predict()` method are `input`, `batch_size`, `thresholds`, and `prompt`, with specific explanations as follows:
@@ -148,7 +148,7 @@ Related methods, parameters, and explanations are as follows:
 <td><code>dict</code>/<code>None</code></td>
 <td>
 <ul>
-  <li><b>None</b>, indicating the use of the settings from the previous layer. The priority of parameter settings from high to low is: <code>predict parameter input > create_model initialization input > yaml configuration file setting</code></li>
+  <li><b>None</b>, indicating the use of the settings from the lower priority. The priority of parameter settings from high to low is: <code>predict parameter input > create_model initialization input > yaml configuration file setting</code></li>
   <li><b>dict</b>, such as <code>{"box_threshold": 0.3, "text_threshold": 0.25}</code>, indicating that the box_threshold is set to 0.3 and the text_threshold is set to 0.25 during inference</li>
 </ul>
 </td>

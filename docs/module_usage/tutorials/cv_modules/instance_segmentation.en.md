@@ -235,7 +235,7 @@ Related methods, parameters, and explanations are as follows:
 </table>
 
 * The `model_name` must be specified. After specifying `model_name`, the default model parameters built into PaddleX are used. If `model_dir` is specified, the user-defined model is used.
-* `threshold` is the threshold for filtering low-confidence objects. The default is `None`, which means using the settings from the previous layer. The priority of parameter settings from highest to lowest is: `predict parameter &gt; create_model initialization &gt; yaml configuration file`.
+* `threshold` is the threshold for filtering low-confidence objects. The default is `None`, which means using the settings from the lower priority. The priority of parameter settings from highest to lowest is: `predict parameter > create_model initialization > yaml configuration file`.
 
 * The `predict()` method of the general instance segmentation model is called for inference prediction. The `predict()` method has parameters `input`, `batch_size`, and `threshold`, which are explained as follows:
 
@@ -277,7 +277,7 @@ Related methods, parameters, and explanations are as follows:
 <td><code>float</code>/<code>None</code></td>
 <td>
 <ul>
-<li><b>None</b>, indicating the use of settings from the previous layer. The priority of parameter settings from highest to lowest is: <code>predict parameter &gt; create_model initialization &gt; yaml configuration file</code></li>
+<li><b>None</b>, indicating the use of settings from the lower priority. The priority of parameter settings from highest to lowest is: <code>predict parameter &gt; create_model initialization &gt; yaml configuration file</code></li>
 <li><b>float</b>, such as 0.5, indicating the use of <code>0.5</code> as the threshold for filtering low-confidence objects during inference</li>
 </ul>
 </td>

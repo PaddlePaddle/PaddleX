@@ -106,7 +106,7 @@ Related methods, parameters, and explanations are as follows:
 </table>
 
 * The `model_name` must be specified. After specifying `model_name`, the default model parameters built into PaddleX are used. If `model_dir` is specified, the user-defined model is used.
-* `threshold` is the threshold for filtering low-confidence objects. The default is `None`, which means using the settings from the previous layer. The priority of parameter settings from highest to lowest is: `predict parameter > create_model initialization > yaml configuration file`. Currently, two types of threshold settings are supported:
+* `threshold` is the threshold for filtering low-confidence objects. The default is `None`, which means using the settings from the lower priority. The priority of parameter settings from highest to lowest is: `predict parameter > create_model initialization > yaml configuration file`. Currently, two types of threshold settings are supported:
   * `float`, using the same threshold for all classes.
   * `dict`, where the key is the class ID and the value is the threshold, allowing different thresholds for different classes. Since main body detection is a single-class detection, this setting is not required.
 
@@ -150,7 +150,7 @@ Related methods, parameters, and explanations are as follows:
 <td><code>float</code>/<code>dict</code>/<code>None</code></td>
 <td>
 <ul>
-<li><b>None</b>, indicating the use of settings from the previous layer. The priority of parameter settings from highest to lowest is: <code>predict parameter > create_model initialization > yaml configuration file</code></li>
+<li><b>None</b>, indicating the use of settings from the lower priority. The priority of parameter settings from highest to lowest is: <code>predict parameter > create_model initialization > yaml configuration file</code></li>
 <li><b>float</b>, such as 0.5, indicating the use of <code>0.5</code> as the threshold for filtering low-confidence objects during inference</li>
 <li><b>dict</b>, such as <code>{0: 0.5, 1: 0.35}</code>, indicating the use of 0.5 as the threshold for class 0 and 0.35 for class 1 during inference. Since main body detection is a single-class detection, this setting is not required.</li>
 </ul>

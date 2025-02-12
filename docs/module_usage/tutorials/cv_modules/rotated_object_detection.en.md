@@ -28,7 +28,6 @@ Rotated object detection is a derivative of the object detection module, specifi
 </tr>
 </table>
 <p><b>Note: The above accuracy metrics are on the <a href="https://captain-whu.github.io/DOTA/">DOTA</a> validation set mAP(0.5:0.95)。All model GPU inference times are based on an NVIDIA TRX2080 Ti machine, with precision type F16, and CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32.</b></p>
-> ❗ The above listed are the rotated object detection models currently supported by paddleX，actually PaddleDetection supports<b>10</b>rotated object detection models, For a detailed model list, please refer to <a href="https://github.com/PaddlePaddle/PaddleDetection/tree/release/2.8/configs/rotate">PaddleDetection</a>
 
 
 ## III. Quick Integration
@@ -111,11 +110,11 @@ Related methods and parameter explanations are as follows:
 
 * The `model_name` must be specified. After specifying `model_name`, the model parameters built into PaddleX will be used by default. If `model_dir` is specified, the user-defined model will be used.
 
-* `threshold` is the threshold for filtering low-score objects. The default is `None`, which means using the settings from the previous layer. The priority of parameter settings from high to low is: `predict parameter input > create_model initialization > yaml configuration file setting`. Currently, two threshold setting methods are supported:
+* `threshold` is the threshold for filtering low-score objects. The default is `None`, which means using the settings from the lower priority. The priority of parameter settings from high to low is: `predict parameter input > create_model initialization > yaml configuration file setting`. Currently, two threshold setting methods are supported:
   * `float`: Use the same threshold for all classes.
   * `dict`: The key is the class ID, and the value is the threshold, allowing different thresholds for different classes.
 
-* `img_size` is the resolution used by the model for prediction. The default is `None`, which means using the settings from the previous layer. The priority of parameter settings from high to low is: `create_model initialization > yaml configuration file setting`.
+* `img_size` is the resolution used by the model for prediction. The default is `None`, which means using the settings from the lower priority. The priority of parameter settings from high to low is: `create_model initialization > yaml configuration file setting`.
 
 * The `predict()` method of the rotated object detection model is called for inference prediction. The parameters of the `predict()` method are `input`, `batch_size`, and `threshold`, with specific explanations as follows:
 
@@ -157,7 +156,7 @@ Related methods and parameter explanations are as follows:
 <td><code>float</code>/<code>dict</code>/<code>None</code></td>
 <td>
 <ul>
-  <li><b>None</b>, indicating the use of settings from the previous layer. The priority of parameter settings from high to low is: <code>predict parameter input > create_model initialization > yaml configuration file setting</code></li>
+  <li><b>None</b>, indicating the use of settings from the lower priority. The priority of parameter settings from high to low is: <code>predict parameter input > create_model initialization > yaml configuration file setting</code></li>
   <li><b>float</b>, such as 0.5, indicating the use of <code>0.5</code> as the threshold for all classes during inference</li>
   <li><b>dict</b>, such as <code>{0: 0.5, 1: 0.35}</code>, indicating the use of 0.5 as the threshold for class 0 and 0.35 as the threshold for class 1 during inference</li>
 </ul>
