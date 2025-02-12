@@ -36,60 +36,61 @@ After the trial, determine if the pipeline meets your expectations (including ac
 PaddleX provides 37 end-to-end object detection models. Refer to the [Model List](../support_list/models_list.en.md) for details. Here's a benchmark of some models:
 
 <table>
-<thead>
 <tr>
-<th>Model List</th>
+<th>Model</th><th>Model Download Link</th>
 <th>mAP(%)</th>
-<th>GPU Inference Time(ms)</th>
-<th>CPU Inference Time(ms)</th>
-<th>Model Size(M)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>RT-DETR-H</td>
-<td>56.3</td>
-<td>100.65</td>
-<td>8451.92</td>
-<td>471</td>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (M)</th>
+<th>Description</th>
 </tr>
 <tr>
-<td>RT-DETR-L</td>
-<td>53.0</td>
-<td>27.89</td>
-<td>841.00</td>
-<td>125</td>
-</tr>
-<tr>
-<td>PP-YOLOE_plus-L</td>
-<td>52.9</td>
-<td>29.67</td>
-<td>700.97</td>
-<td>200</td>
-</tr>
-<tr>
-<td>PP-YOLOE_plus-S</td>
-<td>43.7</td>
-<td>8.11</td>
-<td>137.23</td>
-<td>31</td>
-</tr>
-<tr>
-<td>PicoDet-L</td>
+<td>PicoDet-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_pretrained.pdparams">Trained Model</a></td>
 <td>42.6</td>
-<td>10.09</td>
-<td>129.32</td>
-<td>23</td>
+<td>14.68 / 5.81</td>
+<td>47.32 / 47.32</td>
+<td>20.9 M</td>
+<td rowspan="2">PP-PicoDet is a lightweight object detection algorithm for full-size, wide-angle targets, considering the computational capacity of mobile devices. Compared to traditional object detection algorithms, PP-PicoDet has a smaller model size and lower computational complexity, achieving higher speed and lower latency while maintaining detection accuracy.</td>
 </tr>
 <tr>
-<td>PicoDet-S</td>
+<td>PicoDet-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_pretrained.pdparams">Trained Model</a></td>
 <td>29.1</td>
-<td>3.17</td>
-<td>13.36</td>
-<td>5</td>
+<td>7.98 / 2.33</td>
+<td>14.82 / 5.60</td>
+<td>4.4 M</td>
 </tr>
-</tbody>
+<tr>
+<td>PP-YOLOE_plus-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-L_pretrained.pdparams">Trained Model</a></td>
+<td>52.9</td>
+<td>33.55 / 10.46</td>
+<td>189.05 / 189.05</td>
+<td>185.3 M</td>
+<td rowspan="2">PP-YOLOE_plus is an upgraded version of the high-precision cloud-edge integrated model PP-YOLOE, developed by Baidu's PaddlePaddle vision team. By using the large-scale Objects365 dataset and optimizing preprocessing, it significantly enhances the model's end-to-end inference speed.</td>
+</tr>
+<tr>
+<td>PP-YOLOE_plus-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_pretrained.pdparams">Trained Model</a></td>
+<td>43.7</td>
+<td>12.16 / 4.58</td>
+<td>73.86 / 52.90</td>
+<td>28.3 M</td>
+</tr>
+<tr>
+<td>RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_pretrained.pdparams">Trained Model</a></td>
+<td>56.3</td>
+<td>115.92 / 28.16</td>
+<td>971.32 / 971.32</td>
+<td>435.8 M</td>
+<td rowspan="2">RT-DETR is the first real-time end-to-end object detector. The model features an efficient hybrid encoder to meet both model performance and throughput requirements, efficiently handling multi-scale features, and proposes an accelerated and optimized query selection mechanism to optimize the dynamics of decoder queries. RT-DETR supports flexible end-to-end inference speeds by using different decoders.</td>
+</tr>
+<tr>
+<td>RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_pretrained.pdparams">Trained Model</a></td>
+<td>53.0</td>
+<td>35.00 / 10.45</td>
+<td>495.51 / 495.51</td>
+<td>113.7 M</td>
+</tr>
 </table>
+
 > <b>Note: The above accuracy metrics are based on the mAP(0.5:0.95) of the [COCO2017](https://cocodataset.org/#home) validation set. GPU inference time is measured on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
 
 In summary, models listed from top to bottom offer faster inference speeds, while those from bottom to top offer higher accuracy. This tutorial uses the PP-YOLOE_plus-S model as an example to complete the full model development process. Choose a suitable model based on your actual usage scenario, train it, evaluate the model weights within the pipeline, and finally deploy
@@ -111,7 +112,7 @@ tar -xf ./dataset/fall_det.tar -C ./dataset/
 To verify the dataset, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
+python main.py -c paddlex/configs/modules/object_detection/PP-YOLOE_plus-S.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/fall_det
 ```
@@ -185,7 +186,7 @@ Data conversion and data splitting can be enabled simultaneously. For data split
 Before training, ensure that you have validated your dataset. To complete the training of a PaddleX model, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
+python main.py -c paddlex/configs/modules/object_detection/PP-YOLOE_plus-S.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/fall_det \
     -o Train.num_classes=1
@@ -223,7 +224,7 @@ After completing model training, all outputs are saved in the specified output d
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model's accuracy. To evaluate a model using PaddleX, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
+python main.py -c paddlex/configs/modules/object_detection/PP-YOLOE_plus-S.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/fall_det
 ```
@@ -335,7 +336,7 @@ Changing Epochs Results:
 Replace the model in the production line with the fine-tuned model for testing, for example:
 
 ```bash
-python main.py -c paddlex/configs/object_detection/PP-YOLOE_plus-S.yaml \
+python main.py -c paddlex/configs/modules/object_detection/PP-YOLOE_plus-S.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="output/best_model/inference" \
     -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/fall.png"
@@ -350,16 +351,40 @@ The prediction results will be generated under `./output`, and the prediction re
 
 ## 7. Development Integration/Deployment
 If the General Object Detection Pipeline meets your requirements for inference speed and precision in the production line, you can proceed directly with development integration/deployment.
-1. Directly apply the trained model in your Python project by referring to the following sample code, and modify the `Pipeline.model` in the `paddlex/pipelines/object_detection.yaml` configuration file to your own model path:
+
+1. If you need to use the fine-tuned model weights, you can obtain the pipeline configuration file for object detection and load it for prediction. You can execute the following command to save the results in `my_path`:
+
+```bash
+paddlex --get_pipeline_config object_detection --save_path ./my_path
+```
+
+Fill in the local path of the fine-tuned model weights in the `model_dir` of the pipeline configuration file. If you want to directly apply the general object detection pipeline in your Python project, you can refer to the example below:
+
+```yaml
+pipeline_name: object_detection
+
+SubModules:
+  ObjectDetection:
+    module_name: object_detection
+    model_name: PicoDet-S
+    model_dir: null # Replace this with the local path to your trained model weights
+    batch_size: 1
+    img_size: null
+    threshold: null
+```
+
+Then, in your Python code, you can use the pipeline as follows:
+
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="paddlex/pipelines/object_detection.yaml")
+pipeline = create_pipeline(pipeline="my_path/object_detection.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/fall.png")
 for res in output:
     res.print() # Print the structured output of the prediction
-    res.save_to_img("./output/") # Save the visualized image of the result
+    res.save_to_img("./output/") # Save the result as a visualized image
     res.save_to_json("./output/") # Save the structured output of the prediction
 ```
+
 For more parameters, please refer to [General Object Detection Pipeline Usage Tutorial](../pipeline_usage/tutorials/cv_pipelines/object_detection.en.md).
 
 2. Additionally, PaddleX offers three other deployment methods, detailed as follows:

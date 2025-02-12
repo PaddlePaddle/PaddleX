@@ -9,7 +9,7 @@ Face recognition is a crucial component in the field of computer vision, aiming 
 
 The face recognition pipeline is an end-to-end system dedicated to solving face detection and recognition tasks. It can quickly and accurately locate face regions in images, extract facial features, and retrieve and compare them with pre-established features in a feature database to confirm identity information.
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/face_recognition/01.png"/>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/face_recognition/02.jpg"/>
 <b>The face recognition pipeline includes a face detection module and a face feature module</b>, with several models in each module. Which models to use can be selected based on the benchmark data below. <b>If you prioritize model accuracy, choose models with higher accuracy; if you prioritize inference speed, choose models with faster inference; if you prioritize model size, choose models with smaller storage requirements</b>.
 
 
@@ -200,7 +200,7 @@ In the above Python script, the following steps are performed:
 <td><code>str</code>|<code>list</code></td>
 <td>
 <ul>
-<li><b>str</b>: The root directory of the images, data organization method refers to <a href="#2.3-构建特征库的数据组织方式">Section 2.3 Data Organization Method for Building Feature Library</a></li>
+<li><b>str</b>: The root directory of the images, data organization method refers to <a href="#23-data-organization-for-building-the-feature-library">Section 2.3 Data Organization Method for Building Feature Library</a></li>
 <li><b>List[numpy.ndarray]</b>: List of numpy.array type base library image data</li>
 </ul>
 </td>
@@ -212,7 +212,7 @@ In the above Python script, the following steps are performed:
 <td><code>str|list</code></td>
 <td>
 <ul>
-<li><b>str</b>: The path to the annotation file, the data organization method is the same as when building the feature library, refer to <a href="#2.3-构建特征库的数据组织方式">Section 2.3 Data Organization Method for Building Feature Library</a></li>
+<li><b>str</b>: The path to the annotation file, the data organization method is the same as when building the feature library, refer to <a href="#23-data-organization-for-building-the-feature-library">Section 2.3 Data Organization Method for Building Feature Library</a></li>
 <li><b>List[str]</b>: List of str type base library image annotations</li>
 </ul>
 </td>
@@ -1046,12 +1046,12 @@ SubModules:
   Detection:
     module_name: face_detection
     model_name: PP-YOLOE_plus-S_face
-    model_dir: null #可修改为微调后人脸检测模型的本地路径
+    model_dir: null # Can be modified to the local path of the fine-tuned face detection model
     batch_size: 1
   Recognition:
     module_name: face_feature
     model_name: ResNet50_face
-    model_dir: null #可修改为微调后人脸特征模型的本地路径
+    model_dir: null # Can be modified to the local path of the fine-tuned face feature model
     batch_size: 1
 ```
 

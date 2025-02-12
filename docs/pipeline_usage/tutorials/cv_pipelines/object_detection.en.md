@@ -362,7 +362,7 @@ If you are satisfied with the pipeline's performance, you can directly integrate
 Before using the general object detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 
 #### 2.2.1 Command Line Experience
-You can quickly experience the effect of the object detection pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png)，并将  `--input` replace with the local path for prediction.
+You can quickly experience the effect of the object detection pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png), and replace `--input` with the local path for prediction.
 
 ```bash
 paddlex --pipeline object_detection \
@@ -372,7 +372,7 @@ paddlex --pipeline object_detection \
         --device gpu:0
 ```
 
-For the description of parameters and interpretation of results, please refer to the parameter explanation and result interpretation in [2.2.2 Integration via Python Script](#222-python脚本方式集成).
+For the description of parameters and interpretation of results, please refer to the parameter explanation and result interpretation in [2.2.2 Integration via Python Script](#222-integration-via-python-script).
 
 The visualization results are saved to `save_path`, as shown below:
 
@@ -1204,7 +1204,7 @@ You can choose the appropriate method to deploy the model production line based 
 If the default model weights provided by the general object detection production line do not meet your accuracy or speed requirements in your scenario, you can try further <b>fine-tuning</b> the existing model using <b>your own specific domain or application scenario data</b> to improve the recognition performance of the general object detection production line in your scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the general object detection production line includes an object detection module, if the performance of the model production line is not as expected, you need to refer to the [Secondary Development](../../../module_usage/tutorials/cv_modules/object_detection.en.md#四二次开发) section in the [Object Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/object_detection.en.md) to fine-tune the object detection model using your private dataset.
+Since the general object detection production line includes an object detection module, if the performance of the model production line is not as expected, you need to refer to the [Secondary Development](../../../module_usage/tutorials/cv_modules/object_detection.en.md#iv-custom-development) section in the [Object Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/object_detection.en.md) to fine-tune the object detection model using your private dataset.
 
 ### 4.2 Model Application
 After completing the fine-tuning training with your private dataset, you will obtain a local model weight file.
@@ -1218,7 +1218,7 @@ SubModules:
   ObjectDetection:
     module_name: object_detection
     model_name: PicoDet-S
-    model_dir: null #可修改为微调后模型的本地路径
+    model_dir: null # Can be modified to the local path of the fine-tuned model
     batch_size: 1
     img_size: null
     threshold: null

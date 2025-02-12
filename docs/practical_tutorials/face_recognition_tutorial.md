@@ -457,7 +457,7 @@ python main.py -c paddlex/configs/modules/face_detection/PP-YOLOE_plus-S.yaml \
 通过上述指令可在`./output`下生成预测结果，其中`cartoon_demo.jpg`的预测结果如下：
 <center>
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/face_detection/04.jpg" width="600"/>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/face_recognition/04.jpg" width="600"/>
 
 </center>
 
