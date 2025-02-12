@@ -27,6 +27,7 @@ def check(dataset_dir):
     if not osp.exists(dataset_dir) or not osp.isdir(dataset_dir):
         raise DatasetFileNotFoundError(file_path=dataset_dir)
 
+    # check train and val
     anno_file = osp.join(dataset_dir, "nuscenes_infos_train.pkl")
     if not osp.exists(anno_file):
         raise DatasetFileNotFoundError(file_path=anno_file)
