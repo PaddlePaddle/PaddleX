@@ -26,7 +26,7 @@ from .custom_device_whitelist import (
     GCU_WHITELIST,
 )
 
-SUPPORTED_DEVICE_TYPE = ["cpu", "gpu", "xpu", "npu", "mlu", "gcu"]
+SUPPORTED_DEVICE_TYPE = ["cpu", "gpu", "xpu", "npu", "mlu", "gcu", "dcu"]
 
 
 def _constr_device(device_type, device_ids):

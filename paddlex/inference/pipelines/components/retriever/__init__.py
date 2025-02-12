@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .ernie_bot_retriever import ErnieBotRetriever
+from .qianfan_bot_retriever import QianFanBotRetriever
 from .openai_bot_retriever import OpenAIBotRetriever
