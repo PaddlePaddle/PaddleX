@@ -34,7 +34,7 @@ from ...models.object_detection.result import DetResult
 from ..components import convert_points_to_boxes
 
 
-def convert_bgr2rgb(data: Image.Image) -> np.ndarray:
+def convert_bgr2rgb(data: Image.Image) -> Image.Image:
     """
     Convert BGR image to RGB image.
 
@@ -44,6 +44,7 @@ def convert_bgr2rgb(data: Image.Image) -> np.ndarray:
     Returns:
         PIL.Image: The converted RGB image data.
     """
+    return data
     original_img_array = np.array(data)
     if original_img_array.ndim == 3 and original_img_array.shape[2] == 3:
         res_img_array = original_img_array[:, :, ::-1]
@@ -496,12 +497,11 @@ def get_single_block_parsing_res(
                 single_block_layout_parsing_res.append(
                     {
                         "block_label": label,
-                        "block_content": {
-                            "img": input_img[
-                                int(block_bbox[1]) : int(block_bbox[3]),
-                                int(block_bbox[0]) : int(block_bbox[2]),
-                            ],
-                        },
+                        "block_content": "".join(rec_res["rec_texts"]),
+                        "block_image": input_img[
+                            int(block_bbox[1]) : int(block_bbox[3]),
+                            int(block_bbox[0]) : int(block_bbox[2]),
+                        ],
                         "block_bbox": block_bbox,
                         "seg_start_flag": seg_start_flag,
                         "seg_end_flag": seg_end_flag,
@@ -801,7 +801,7 @@ def recursive_img_array2path(
     if isinstance(data, dict):
         for k, v in data.items():
             if k in labels and isinstance(v, np.ndarray) and v.ndim == 3:
-                data[k] = _img_array2path(v[:, :, ::-1])
+                data[k] = _img_array2path(v)
             else:
                 recursive_img_array2path(v, labels)
     elif isinstance(data, list):
@@ -1583,7 +1583,7 @@ def get_layout_ordering(
 
     # image,figure,chart,seal label
     nearest_match_(
-        vision_title_blocks,
+        vision_blocks,
         distance_type="nearest_iou_edge_distance",
         is_add_index=False,
     )
@@ -1598,9 +1598,9 @@ def get_layout_ordering(
     for idx, block in enumerate(parsing_result):
         block["sub_index"] = idx + 1
 
-    # image,figure,chart,seal label
+    # image,figure,chart,seal title label
     nearest_match_(
-        vision_blocks,
+        vision_title_blocks,
         distance_type="nearest_iou_edge_distance",
         is_add_index=False,
     )
@@ -1755,7 +1755,7 @@ def _nearest_edge_distance(
     weight: List[float] = [1.0, 1.0, 1.0, 1.0],
     label: str = "text",
     no_mask_labels: List[str] = [],
-    min_edge_distances_config: List[float] = [],
+    min_edge_distance_config: List[float] = [],
     tolerance_len: float = 10.0,
 ) -> Tuple[float, List[float]]:
     """
@@ -1767,7 +1767,7 @@ def _nearest_edge_distance(
         weight (list, optional): Directional weights for the edge distances [left, right, up, down]. Defaults to [1, 1, 1, 1].
         label (str, optional): The label/type of the object in the bounding box (e.g., 'text'). Defaults to 'text'.
         no_mask_labels (list, optional): Labels for which no masking is applied when calculating edge distances. Defaults to an empty list.
-        min_edge_distances_config (list, optional): Configuration for minimum edge distances [min_edge_distance_x, min_edge_distance_y].
+        min_edge_distance_config (list, optional): Configuration for minimum edge distances [min_edge_distance_x, min_edge_distance_y].
         Defaults to [float('inf'), float('inf')].
         tolerance_len (float, optional): The tolerance length for adjusting edge distances. Defaults to 10.
 
@@ -1783,9 +1783,9 @@ def _nearest_edge_distance(
     if match_bbox_iou > 0 and label not in no_mask_labels:
         return 0, [0, 0]
 
-    if not min_edge_distances_config:
-        min_edge_distances_config = [float("inf"), float("inf")]
-    min_edge_distance_x, min_edge_distance_y = min_edge_distances_config
+    if not min_edge_distance_config:
+        min_edge_distance_config = [float("inf"), float("inf")]
+    min_edge_distance_x, min_edge_distance_y = min_edge_distance_config
 
     x1, y1, x2, y2 = input_bbox
     x1_prime, y1_prime, x2_prime, y2_prime = match_bbox
@@ -1857,9 +1857,8 @@ def _get_weights(label, horizontal):
         )  # left-down ,  right-left
     elif label in [
         "paragraph_title",
+        "table_title",
         "abstract",
-        "figure_title",
-        "chart_title",
         "image",
         "seal",
         "chart",
@@ -1898,7 +1897,7 @@ def _nearest_iou_edge_distance(
         title_labels (List[str], optional): Labels that indicate the object is a title. Defaults to an empty list.
         title_text (List[Tuple[int, List[int]]], optional): Text content associated with title labels, in the format [(position_indicator, [x1, y1, x2, y2]), ...].
         sub_title (List[List[int]], optional): List of subtitle bounding boxes to adjust the input_bbox. Defaults to an empty list.
-        min_distance_config (List[float], optional): Configuration for minimum distances [min_edge_distances_config, up_edge_distances_config, total_distance].
+        min_distance_config (List[float], optional): Configuration for minimum distances [min_edge_distance_config, up_edge_distances_config, total_distance].
         tolerance_len (float, optional): The tolerance length for adjusting edge distances. Defaults to 10.0.
 
     Returns:
@@ -1910,7 +1909,7 @@ def _nearest_iou_edge_distance(
     x1, y1, x2, y2 = input_bbox
     x1_prime, y1_prime, x2_prime, y2_prime = match_bbox
 
-    min_edge_distances_config, up_edge_distances_config, total_distance = (
+    min_edge_distance_config, up_edge_distances_config, total_distance = (
         min_distance_config
     )
 
@@ -1980,7 +1979,7 @@ def _nearest_iou_edge_distance(
         weight,
         label=label,
         no_mask_labels=no_mask_labels,
-        min_edge_distances_config=min_edge_distances_config,
+        min_edge_distance_config=min_edge_distance_config,
         tolerance_len=tolerance_len,
     )
 
@@ -2011,8 +2010,8 @@ def _nearest_iou_edge_distance(
     # Update minimum distance configuration if a smaller distance is found
     if total_distance > distance:
         edge_distance_config = [
-            min(min_edge_distances_config[0], edge_distance_config[0]),
-            min(min_edge_distances_config[1], edge_distance_config[1]),
+            min(min_edge_distance_config[0], edge_distance_config[0]),
+            min(min_edge_distance_config[1], edge_distance_config[1]),
         ]
         min_distance_config = [
             edge_distance_config,

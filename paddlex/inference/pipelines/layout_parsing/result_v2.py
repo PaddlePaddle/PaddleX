@@ -190,7 +190,16 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         data["page_index"] = self["page_index"]
         model_settings = self["model_settings"]
         data["model_settings"] = model_settings
-        data["parsing_res_list"] = self["parsing_res_list"]
+        parsing_res_list = self["parsing_res_list"]
+        parsing_res_list = [
+            {
+                "block_label": parsing_res["block_label"],
+                "block_content": parsing_res["block_content"],
+                "block_bbox": parsing_res["block_bbox"],
+            }
+            for parsing_res in parsing_res_list
+        ]
+        data["parsing_res_list"] = parsing_res_list
         if self["model_settings"]["use_doc_preprocessor"]:
             data["doc_preprocessor_res"] = self["doc_preprocessor_res"].json["res"]
         data["layout_det_res"] = self["layout_det_res"].json["res"]
@@ -272,7 +281,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             )
         self.already_sorted == True
 
-        recursive_img_array2path(self["parsing_res_list"], labels=["img"])
+        recursive_img_array2path(self["parsing_res_list"], labels=["block_image"])
 
         def _format_data(obj):
 
@@ -302,21 +311,12 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
             def format_image(label):
                 img_tags = []
-                if "img" in block[label]:
-                    image_path = "".join(block[label]["img"].keys())
-                    img_tags.append(
-                        '<div style="text-align: center;"><img src="{}" alt="Image" /></div>'.format(
-                            image_path.replace("-\n", "").replace("\n", " "),
-                        ),
-                    )
-                if "image_text" in block[label]:
-                    img_tags.append(
-                        '<div style="text-align: center;">{}</div>'.format(
-                            block[label]["image_text"]
-                            .replace("-\n", "")
-                            .replace("\n", " "),
-                        ),
-                    )
+                image_path = "".join(block[label].keys())
+                img_tags.append(
+                    '<div style="text-align: center;"><img src="{}" alt="Image" /></div>'.format(
+                        image_path.replace("-\n", "").replace("\n", " "),
+                    ),
+                )
                 return "\n".join(img_tags)
 
             def format_reference():
@@ -350,8 +350,8 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 "content": lambda: block["block_content"]
                 .replace("-\n", " ")
                 .replace("\n", " "),
-                "image": lambda: format_image("block_content"),
-                "chart": lambda: format_image("block_content"),
+                "image": lambda: format_image("block_image"),
+                "chart": lambda: format_image("block_image"),
                 "formula": lambda: f"$${block['block_content']}$$",
                 "table": format_table,
                 # "reference": format_reference,
@@ -389,9 +389,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         markdown_info["markdown_images"] = dict()
         for block in self["parsing_res_list"]:
             if block["block_label"] in ["image", "chart"]:
-                image_path, image_value = next(
-                    iter(block["block_content"]["img"].items())
-                )
+                image_path, image_value = next(iter(block["block_image"].items()))
                 markdown_info["markdown_images"][image_path] = image_value
 
         return markdown_info
