@@ -142,7 +142,12 @@ for res in output:
     res.visualize(save_path="./output/", show=True) ## 3D result visualization. If the runtime environment has a graphical interface, set `show=True`; otherwise, set it to `False`.
 ```
 
-<b>Note: </b> If the runtime environment does not have a graphical interface, visualization will not be possible, but the results will still be saved. You can run the script in an environment that supports a graphical interface to visualize the saved results:
+<b>Note: </b>  
+1、To visualize 3D detection results, you need to install the open3d package first. The installation command is as follows:
+```bash
+pip install open3d
+```
+2、If the runtime environment does not have a graphical interface, visualization will not be possible, but the results will still be saved. You can run the script in an environment that supports a graphical interface to visualize the saved results:
 ```bash
 python paddlex/inference/models/3d_bev_detection/visualizer_3d.py --save_path="./output/"
 ```
