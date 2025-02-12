@@ -1216,6 +1216,7 @@ for res in output:
 <details><summary>多语言调用服务示例</summary>
 <details>
 <summary>Python</summary>
+
 <pre><code class="language-python">import base64
 import requests
 
