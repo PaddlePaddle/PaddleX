@@ -1096,9 +1096,18 @@ for item in markdown_images:
         - `angle`: `(int)` 文档图像方向分类子模块的预测结果，启用时返回实际角度值
 
     - `parsing_res_list`: `(List[Dict])` 解析结果的列表，每个元素为一个字典，列表顺序为解析后的阅读顺序。
-        - `layout_bbox`: `(np.ndarray)` 版面区域的边界框。
-        - `label`: `(str)` key 为版面区域的标签，例如`text`, `table`等，内容为版面区域内的内容。
-        - `layout`: `(str)` 版面排版类型，例如 `double`, `single` 等。
+        - `block_bbox`: `(np.ndarray)` 版面区域的边界框。
+        - `block_label`: `(str)` 版面区域的标签，例如`text`, `table`等。
+        - `block_content`: `(str)` 内容为版面区域内的内容。
+        - `seg_start_flag`: `(bool)` 标识该版面区域是否是段落的开始。
+        - `seg_end_flag`: `(bool)` 标识该版面区域是否是段落的结束。
+        - `sub_label`: `(str)` 版面区域的子标签，例如`text`的子标签可能为`title_text`。
+        - `sub_index`: `(int)` 版面区域的子索引，用于恢复Markdown。
+        - `index`: `(int)` 版面区域的索引，用于显示版面排序结果。
+
+
+
+
 
     - `overall_ocr_res`: `(Dict[str, Union[List[str], List[float], numpy.ndarray]])` 全局 OCR 结果的字典
       - `input_path`: `(Union[str, None])` 图像OCR子产线接受的图像路径，当输入为`numpy.ndarray`时，保存为`None`
@@ -1120,12 +1129,6 @@ for item in markdown_images:
       - `rec_texts`: `(List[str])` 文本识别结果列表，仅包含置信度超过`text_rec_score_thresh`的文本
       - `rec_scores`: `(List[float])` 文本识别的置信度列表，已按`text_rec_score_thresh`过滤
       - `rec_polys`: `(List[numpy.ndarray])` 经过置信度过滤的文本检测框列表，格式同`dt_polys`
-
-    - `text_paragraphs_ocr_res`: `(Dict[str, Union[List[str], List[float], numpy.ndarray]])` 段落OCR结果，版面类型非表格、印章和公式类型的段落OCR结果
-        - `rec_polys`: `(List[numpy.ndarray])` 文本检测框列表，格式同`dt_polys`
-        - `rec_texts`: `(List[str])` 文本识别结果列表
-        - `rec_scores`: `(List[float])` 文本识别结果的置信度列表
-        - `rec_boxes`: `(numpy.ndarray)` 检测框的矩形边界框数组，shape为(n, 4)，dtype为int16。每一行表示一个
 
     - `formula_res_list`: `(List[Dict[str, Union[numpy.ndarray, List[float], str]]])` 公式识别结果列表，每个元素为一个字典
         - `rec_formula`: `(str)` 公式识别结果
