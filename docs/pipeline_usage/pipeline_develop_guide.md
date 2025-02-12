@@ -188,7 +188,7 @@ Pipeline:
 <tbody>
 <tr>
 <td>文档场景信息抽取v3</td>
-<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.html">文档场景信息抽取v3产线使用教程</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.html">文档场景信息抽取v3产线使用教程</a></td>
 </tr>
 <tr>
 <td>通用图像分类</td>
@@ -235,6 +235,26 @@ Pipeline:
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html">图像异常检测产线使用教程</a></td>
 </tr>
 <tr>
+<td>人体关键点检测</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.html">人体关键点检测产线使用教程</a></td>
+</tr>
+<tr>
+<td>开放词汇检测</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_detection.html">开放词汇检测产线使用教程</a></td>
+</tr>
+<tr>
+<td>开放词汇分割</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_segmentation.html">开放词汇分割产线使用教程</a></td>
+</tr>
+<tr>
+<td>旋转目标检测</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/rotated_object_detection.html">旋转目标检测产线使用教程</a></td>
+</tr>
+<tr>
+<td>3D多模态融合检测</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/3d_bev_detection.html">3D多模态融合检测产线使用教程</a></td>
+</tr>
+<tr>
 <td>通用OCR</td>
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/OCR.html">通用OCR产线使用教程</a></td>
 </tr>
@@ -243,8 +263,16 @@ Pipeline:
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/table_recognition.html">通用表格识别产线使用教程</a></td>
 </tr>
 <tr>
+<td>通用表格识别v2</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.html">通用表格识别产线v2使用教程</a></td>
+</tr>
+<tr>
 <td>通用版面解析</td>
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html">通用版面解析产线使用教程</a></td>
+</tr>
+<tr>
+<td>通用版面解析v2</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.html">通用版面解析v2产线使用教程</a></td>
 </tr>
 <tr>
 <td>公式识别</td>
@@ -253,6 +281,10 @@ Pipeline:
 <tr>
 <td>印章文本识别</td>
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html">印章文本识别产线使用教程</a></td>
+</tr>
+<tr>
+<td>文档图像预处理</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html">文档图像预处理产线使用教程</a></td>
 </tr>
 <tr>
 <td>时序预测</td>
@@ -265,6 +297,18 @@ Pipeline:
 <tr>
 <td>时序分类</td>
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.html">通用时序分类产线使用教程</a></td>
+</tr>
+<tr>
+<td>多语种语音识别</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/speech_pipelines/multilingual_speech_recognition.html">多语种语音识别产线使用教程</a></td>
+</tr>
+<tr>
+<td>通用视频分类</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/video_pipelines/video_classification.html">通用视频分类产线使用教程</a></td>
+</tr>
+<tr>
+<td>通用视频检测</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/video_pipelines/video_detection.html">通用视频检测产线使用教程</a></td>
 </tr>
 </tbody>
 </table>

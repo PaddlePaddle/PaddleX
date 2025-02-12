@@ -13,8 +13,8 @@ The text detection module is a crucial component in OCR (Optical Character Recog
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Detection Hmean (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
@@ -23,21 +23,22 @@ The text detection module is a crucial component in OCR (Optical Character Recog
 <tr>
 <td>PP-OCRv4_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">Trained Model</a></td>
 <td>82.69</td>
-<td>83.3501</td>
-<td>2434.01</td>
+<td>83.34 / 80.91</td>
+<td>442.58 / 442.58</td>
 <td>109</td>
 <td>The server-side text detection model of PP-OCRv4, featuring higher accuracy and suitable for deployment on high-performance servers</td>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">Trained Model</a></td>
 <td>77.79</td>
-<td>10.6923</td>
-<td>120.177</td>
+<td>8.79 / 3.13</td>
+<td>51.00 / 28.58</td>
 <td>4.7</td>
 <td>The mobile text detection model of PP-OCRv4, optimized for efficiency and suitable for deployment on edge devices</td>
 </tr>
 </tbody>
 </table>
+
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 
@@ -56,17 +57,18 @@ for res in output:
 After running, the result obtained is:
 
 ```bash
-{'res': {'input_path': 'general_ocr_001.png', 'dt_polys': [[[73, 553], [443, 541], [444, 574], [74, 585]], [[17, 507], [515, 489], [517, 534], [19, 552]], [[191, 458], [398, 449], [400, 481], [193, 490]], [[41, 413], [483, 390], [485, 431], [43, 453]]], 'dt_scores': [0.7555687038101032, 0.701620896397861, 0.8839516283528792, 0.8123399529333318]}}
+{'res': {'input_path': 'general_ocr_001.png', "page_index": None, 'dt_polys': [[[73, 552], [453, 542], [454, 575], [74, 585]], [[17, 506], [515, 486], [517, 535], [19, 555]], [[189, 457], [398, 449], [399, 482], [190, 490]], [[41, 412], [484, 387], [486, 433], [43, 457]]], 'dt_scores': [0.7555687038101032, 0.701620896397861, 0.8839516283528792, 0.8123399529333318]}}
 ```
 
 The meanings of the running result parameters are as follows:
 - `input_path`: Indicates the path of the input image to be predicted.
+- `page_index`: If the input is a PDF file, it indicates which page of the PDF it is; otherwise, it is `None`.
 - `dt_polys`: Indicates the predicted text detection boxes, where each text detection box contains four vertices of a quadrilateral. Each vertex is a tuple representing the x and y coordinates of the vertex.
 - `dt_scores`: Indicates the confidence scores of the predicted text detection boxes.
 
 The visualization image is as follows:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/text_det/general_ocr_001_res.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/text_det/general_ocr_001_res.png"/>
 
 Note: Due to network issues, the above URL may not be successfully parsed. If you need the content of this webpage, please check the validity of the link and try again. Alternatively, if parsing this link is not necessary for your question, please proceed with other questions.
 
@@ -104,8 +106,8 @@ Relevant methods, parameters, and explanations are as follows:
 <td>
 <ul>
 <li><b>int</b>: Any integer greater than 0
-<li><b>None</b>: If set to None, the default value from the PaddleX official model configuration will be used</td>
-</ul>
+<li><b>None</b>: If set to None, the default value from the PaddleX official model configuration will be used</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -115,9 +117,9 @@ Relevant methods, parameters, and explanations are as follows:
 <td>
 <ul>
 <li><b>str</b>: Supports "min" and "max". "min" ensures the shortest side of the image is not less than `limit_side_len`, "max" ensures the longest side is not greater than `limit_side_len`
-<li><b>None</b>: If set to None, the default value from the PaddleX official model configuration will be used</td>
-</ul>
-</td>
+<li><b>None</b>: If set to None, the default value from the PaddleX official model configuration will be used</li></li></ul></td>
+
+
 <td>None</td>
 </tr>
 <tr>
@@ -127,8 +129,8 @@ Relevant methods, parameters, and explanations are as follows:
 <td>
 <ul>
 <li><b>float</b>: Any float greater than 0
-<li><b>None</b>: If set to None, the default value from the PaddleX official model configuration will be used</td>
-</ul>
+<li><b>None</b>: If set to None, the default value from the PaddleX official model configuration will be used</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -138,8 +140,8 @@ Relevant methods, parameters, and explanations are as follows:
 <td>
 <ul>
 <li><b>float</b>: Any float greater than 0
-<li><b>None</b>: If set to None, the default value from the PaddleX official model configuration will be used</td>
-</ul>
+<li><b>None</b>: If set to None, the default value from the PaddleX official model configuration will be used</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -149,8 +151,8 @@ Relevant methods, parameters, and explanations are as follows:
 <td>
 <ul>
 <li><b>float</b>: Any float greater than 0
-<li><b>None</b>: If set to None, the default value from the PaddleX official model configuration will be used</td>
-</ul>
+<li><b>None</b>: If set to None, the default value from the PaddleX official model configuration will be used</li></li></ul></td>
+
 <td>None</td>
 </tr>
 </table>
@@ -175,12 +177,11 @@ Relevant methods, parameters, and explanations are as follows:
 <td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
 <td>
 <ul>
-  <li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
-  <li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
-  <li><b>URL link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">Example</a></li>
-  <li><b>Local directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
-  <li><b>Dictionary</b>, the <code>key</code> of the dictionary must correspond to the specific task, such as <code>"img"</code> for image classification tasks. The <code>value</code> of the dictionary supports the above types of data, for example: <code>{"img": "/root/data1"}</code></li>
-  <li><b>List</b>, elements of the list must be the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code></li>
+<li><b>Python Variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
+<li><b>File Path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
+<li><b>URL Link</b>, such as the web URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">Example</a></li>
+<li><b>Local Directory</b>, the directory should contain the data files to be predicted, such as the local path: <code>/root/data/</code></li>
+<li><b>List</b>, the elements of the list should be of the above-mentioned data types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td>None</td>
@@ -199,8 +200,8 @@ Relevant methods, parameters, and explanations are as follows:
 <td>
 <ul>
 <li><b>int</b>: Any integer greater than 0
-<li><b>None</b>: If set to None, the default value from model initialization will be used</td>
-</ul>
+<li><b>None</b>: If set to None, the default value from model initialization will be used</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -210,9 +211,9 @@ Relevant methods, parameters, and explanations are as follows:
 <td>
 <ul>
 <li><b>str</b>: Supports "min" and "max". "min" ensures the shortest side of the image is not less than `limit_side_len`, "max" ensures the longest side is not greater than `limit_side_len`
-<li><b>None</b>: If set to None, the default value from model initialization will be used</td>
-</ul>
-</td>
+<li><b>None</b>: If set to None, the default value from model initialization will be used</li></li></ul></td>
+
+
 <td>None</td>
 </tr>
 <tr>
@@ -222,8 +223,8 @@ Relevant methods, parameters, and explanations are as follows:
 <td>
 <ul>
 <li><b>float</b>: Any float greater than 0
-<li><b>None</b>: If set to None, the default value from model initialization will be used</td>
-</ul>
+<li><b>None</b>: If set to None, the default value from model initialization will be used</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -233,8 +234,8 @@ Relevant methods, parameters, and explanations are as follows:
 <td>
 <ul>
 <li><b>float</b>: Any float greater than 0
-<li><b>None</b>: If set to None, the default value from model initialization will be used</td>
-</ul>
+<li><b>None</b>: If set to None, the default value from model initialization will be used</li></li></ul></td>
+
 <td>None</td>
 </tr>
 <tr>
@@ -244,8 +245,8 @@ Relevant methods, parameters, and explanations are as follows:
 <td>
 <ul>
 <li><b>float</b>: Any float greater than 0
-<li><b>None</b>: If set to None, the default value from model initialization will be used</td>
-</ul>
+<li><b>None</b>: If set to None, the default value from model initialization will be used</li></li></ul></td>
+
 <td>None</td>
 </tr>
 </table>
@@ -365,26 +366,26 @@ After executing the above command, PaddleX will validate the dataset and gather 
 <details><summary>👉 <b>Validation Result Details (Click to Expand)</b></summary>
 <p>The specific content of the validation result file is:</p>
 <pre><code class="language-bash">{
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;train_samples&quot;: 200,
-    &quot;train_sample_paths&quot;: [
-      &quot;../dataset/ocr_det_dataset_examples/images/train_img_61.jpg&quot;,
-      &quot;../dataset/ocr_det_dataset_examples/images/train_img_289.jpg&quot;
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "train_samples": 200,
+    "train_sample_paths": [
+      "../dataset/ocr_det_dataset_examples/images/train_img_61.jpg",
+      "../dataset/ocr_det_dataset_examples/images/train_img_289.jpg"
     ],
-    &quot;val_samples&quot;: 50,
-    &quot;val_sample_paths&quot;: [
-      &quot;../dataset/ocr_det_dataset_examples/images/val_img_61.jpg&quot;,
-      &quot;../dataset/ocr_det_dataset_examples/images/val_img_137.jpg&quot;
+    "val_samples": 50,
+    "val_sample_paths": [
+      "../dataset/ocr_det_dataset_examples/images/val_img_61.jpg",
+      "../dataset/ocr_det_dataset_examples/images/val_img_137.jpg"
     ]
   },
-  &quot;analysis&quot;: {
-    &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
+  "analysis": {
+    "histogram": "check_dataset/histogram.png"
   },
-  &quot;dataset_path&quot;: &quot;./dataset/ocr_det_dataset_examples&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;TextDetDataset&quot;
+  "dataset_path": "./dataset/ocr_det_dataset_examples",
+  "show_type": "image",
+  "dataset_type": "TextDetDataset"
 }
 </code></pre>
 <p>In the above validation result, <code>check_pass</code> being <code>true</code> indicates that the dataset format meets the requirements. The explanation of other metrics is as follows:</p>
@@ -395,14 +396,13 @@ After executing the above command, PaddleX will validate the dataset and gather 
 <li><code>attributes.val_sample_paths</code>: List of relative paths for visualizing validation sample images in the dataset;</li>
 </ul>
 <p>Additionally, the dataset validation also analyzed the distribution of the length and width of all images in the dataset and plotted a distribution histogram (histogram.png):</p>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/text_det/01.png"></p></details>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/text_det/01.png"/></p></details>
 
 ### 4.1.3 Dataset Format Conversion/Dataset Splitting (Optional)
 
 After completing data validation, you can convert the dataset format and re-split the training/validation ratio by <b>modifying the configuration file</b> or <b>appending hyperparameters</b>.
 
 <details><summary>👉 <b>Details on Format Conversion/Dataset Splitting (Click to Expand)</b></summary>
-
 <p><b>(1) Dataset Format Conversion</b></p>
 <p>Text detection does not support data format conversion.</p>
 <p><b>(2) Dataset Splitting</b></p>
@@ -454,7 +454,6 @@ The steps required are:
 Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration Parameters Documentation](../../../module_usage/instructions/config_parameters_common.en.md).
 
 <details><summary>👉 <b>More Information (Click to Expand)</b></summary>
-
 <ul>
 <li>During model training, PaddleX automatically saves the model weight files, with the default being <code>output</code>. If you need to specify a save path, you can set it through the <code>-o Global.output</code> field in the configuration file.</li>
 <li>PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.</li>
@@ -488,7 +487,6 @@ Similar to model training, the following steps are required:
 Other related parameters can be set by modifying the fields under `Global` and `Evaluate` in the `.yaml` configuration file. For details, please refer to [PaddleX General Model Configuration File Parameter Instructions](../../../module_usage/instructions/config_parameters_common.md).
 
 <details><summary>👉 <b>More Instructions (Click to Expand)</b></summary>
-
 <p>During model evaluation, you need to specify the path to the model weight file. Each configuration file has a built-in default weight save path. If you need to change it, you can set it by adding a command line argument, such as <code>-o Evaluate.weight_path=./output/best_accuracy/best_accuracy.pdparams</code>.</p>
 <p>After completing the model evaluation, an <code>evaluate_result.json</code> will be generated, which records the evaluation results. Specifically, it records whether the evaluation task was completed successfully and the model's evaluation metrics, including <code>precision</code>, <code>recall</code>, and <code>hmean</code>.</p></details>
 
@@ -519,7 +517,7 @@ Models can be directly integrated into PaddleX pipelines or into your own projec
 
 1.<b>Pipeline Integration</b>
 
-The text detection module can be integrated into PaddleX pipelines such as the [General OCR Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/OCR.en.md), [Table Recognition Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition.en.md), and [PP-ChatOCRv3-doc](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.en.md). Simply replace the model path to update the text detection module of the relevant pipeline.
+The text detection module can be integrated into PaddleX pipelines such as the [General OCR Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/OCR.en.md), [Table Recognition Pipeline](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition.en.md), and [PP-ChatOCRv3-doc](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.en.md). Simply replace the model path to update the text detection module of the relevant pipeline.
 
 2.<b>Module Integration</b>
 

@@ -34,40 +34,54 @@ PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX whe
 
 ## 3. 选择模型
 
-PaddleX 提供了 2 个端到端的文本检测模型，具体可参考 [模型列表](../support_list/models_list.md)，其中模型的 benchmark 如下：
+PaddleX 提供了 4 个端到端的文本检测模型，具体可参考 [模型列表](../support_list/models_list.md)，其中模型的 benchmark 如下：
 
 <table>
 <thead>
 <tr>
-<th>模型列表</th>
-<th>检测Hmean(%)</th>
-<th>识别 Avg Accuracy(%)</th>
-<th>GPU 推理耗时(ms)</th>
-<th>CPU 推理耗时(ms)</th>
-<th>模型存储大小(M)</th>
+<th>模型</th>
+<th>检测Hmean（%）</th>
+<th>GPU推理耗时（ms）</th>
+<th>CPU推理耗时 (ms)</th>
+<th>模型存储大小（M)</th>
+<th>介绍</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>PP-OCRv4_server</td>
-<td>82.69</td>
-<td>79.20</td>
-<td>22.20346</td>
-<td>2662.158</td>
-<td>198</td>
+<td>PP-OCRv4_server_det</td>
+<td>82.56</td>
+<td>83.3501</td>
+<td>2434.01</td>
+<td>109</td>
+<td>PP-OCRv4 的服务端文本检测模型，精度更高，适合在性能较好的服务器上部署</td>
 </tr>
 <tr>
-<td>PP-OCRv4_mobile</td>
-<td>77.79</td>
-<td>78.20</td>
-<td>2.719474</td>
-<td>79.1097</td>
-<td>15</td>
+<td>PP-OCRv4_mobile_det</td>
+<td>77.35</td>
+<td>10.6923</td>
+<td>120.177</td>
+<td>4.7</td>
+<td>PP-OCRv4 的移动端文本检测模型，效率更高，适合在端侧设备部署</td>
+</tr>
+<tr>
+<td>PP-OCRv3_mobile_det</td>
+<td>78.68</td>
+<td>-</td>
+<td>-</td>
+<td>2.1</td>
+<td>PP-OCRv3 的移动端文本检测模型，效率更高，适合在端侧设备部署</td>
+</tr>
+<tr>
+<td>PP-OCRv3_server_det</td>
+<td>80.11</td>
+<td>-</td>
+<td>-</td>
+<td>102.1</td>
+<td>PP-OCRv3 的服务端文本检测模型，精度更高，适合在性能较好的服务器上部署</td>
 </tr>
 </tbody>
 </table>
-<b>注：以上精度指标为 PaddleOCR 自建中文数据集验证集 检测Hmean 和 识别 Avg Accuracy，GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
-简单来说，表格从上到下，模型推理速度更快，从下到上，模型精度更高。本教程以 `PP-OCRv4_server` 模型为例，完成一次模型全流程开发。你可以依据自己的实际使用场景，判断并选择一个合适的模型做训练，训练完成后可在产线内评估合适的模型权重，并最终用于实际使用场景中。
 
 ## 4. 数据准备和校验
 ### 4.1 数据准备
@@ -86,7 +100,7 @@ tar -xf ./dataset/ccpd_text_det.tar -C ./dataset/
 在对数据集校验时，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/text_detection/PP-OCRv4_server_det.yaml \
+python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_server_det.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ccpd_text_det
 ```
@@ -99,35 +113,35 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_server_det.yaml \
   "attributes": {
     "train_samples": 5769,
     "train_sample_paths": [
-      "..\/..\/ccpd_text_det\/images\/0274305555556-90_266-204&460_520&548-516&548_209&547_204&464_520&460-0_0_3_25_24_24_24_26-63-89.jpg",
-      "..\/..\/ccpd_text_det\/images\/0126171875-90_267-294&424_498&486-498&486_296&485_294&425_496&424-0_0_3_24_33_32_30_31-157-29.jpg",
-      "..\/..\/ccpd_text_det\/images\/0371516927083-89_254-178&423_517&534-517&534_204&525_178&431_496&423-1_0_3_24_33_31_29_31-117-667.jpg",
-      "..\/..\/ccpd_text_det\/images\/03349609375-90_268-211&469_526&576-526&567_214&576_211&473_520&469-0_0_3_27_31_32_29_32-174-48.jpg",
-      "..\/..\/ccpd_text_det\/images\/0388454861111-90_269-138&409_496&518-496&518_138&517_139&410_491&409-0_0_3_24_27_26_26_30-174-148.jpg",
-      "..\/..\/ccpd_text_det\/images\/0198741319444-89_112-208&517_449&600-423&593_208&600_233&517_449&518-0_0_3_24_28_26_26_26-87-268.jpg",
-      "..\/..\/ccpd_text_det\/images\/3027782118055555555-91_92-186&493_532&574-529&574_199&565_186&497_532&493-0_0_3_27_26_30_33_32-73-336.jpg",
-      "..\/..\/ccpd_text_det\/images\/034375-90_258-168&449_528&546-528&542_186&546_168&449_525&449-0_0_3_26_30_30_26_33-94-221.jpg",
-      "..\/..\/ccpd_text_det\/images\/0286501736111-89_92-290&486_577&587-576&577_290&587_292&491_577&486-0_0_3_17_25_28_30_33-134-122.jpg",
-      "..\/..\/ccpd_text_det\/images\/02001953125-92_103-212&486_458&569-458&569_224&555_212&486_446&494-0_0_3_24_24_25_24_24-88-24.jpg"
+      "check_dataset\/demo_img\/0274305555556-90_266-204&460_520&548-516&548_209&547_204&464_520&460-0_0_3_25_24_24_24_26-63-89.jpg",
+      "check_dataset\/demo_img\/0126171875-90_267-294&424_498&486-498&486_296&485_294&425_496&424-0_0_3_24_33_32_30_31-157-29.jpg",
+      "check_dataset\/demo_img\/0371516927083-89_254-178&423_517&534-517&534_204&525_178&431_496&423-1_0_3_24_33_31_29_31-117-667.jpg",
+      "check_dataset\/demo_img\/03349609375-90_268-211&469_526&576-526&567_214&576_211&473_520&469-0_0_3_27_31_32_29_32-174-48.jpg",
+      "check_dataset\/demo_img\/0388454861111-90_269-138&409_496&518-496&518_138&517_139&410_491&409-0_0_3_24_27_26_26_30-174-148.jpg",
+      "check_dataset\/demo_img\/0198741319444-89_112-208&517_449&600-423&593_208&600_233&517_449&518-0_0_3_24_28_26_26_26-87-268.jpg",
+      "check_dataset\/demo_img\/3027782118055555555-91_92-186&493_532&574-529&574_199&565_186&497_532&493-0_0_3_27_26_30_33_32-73-336.jpg",
+      "check_dataset\/demo_img\/034375-90_258-168&449_528&546-528&542_186&546_168&449_525&449-0_0_3_26_30_30_26_33-94-221.jpg",
+      "check_dataset\/demo_img\/0286501736111-89_92-290&486_577&587-576&577_290&587_292&491_577&486-0_0_3_17_25_28_30_33-134-122.jpg",
+      "check_dataset\/demo_img\/02001953125-92_103-212&486_458&569-458&569_224&555_212&486_446&494-0_0_3_24_24_25_24_24-88-24.jpg"
     ],
     "val_samples": 1001,
     "val_sample_paths": [
-      "..\/..\/ccpd_text_det\/images\/3056141493055555554-88_93-205&455_603&597-603&575_207&597_205&468_595&455-0_0_3_24_32_27_31_33-90-213.jpg",
-      "..\/..\/ccpd_text_det\/images\/0680295138889-88_94-120&474_581&623-577&605_126&623_120&483_581&474-0_0_5_24_31_24_24_24-116-518.jpg",
-      "..\/..\/ccpd_text_det\/images\/0482421875-87_265-154&388_496&530-490&495_154&530_156&411_496&388-0_0_5_25_33_33_33_33-84-104.jpg",
-      "..\/..\/ccpd_text_det\/images\/0347504340278-105_106-235&443_474&589-474&589_240&518_235&443_473&503-0_0_3_25_30_33_27_30-162-4.jpg",
-      "..\/..\/ccpd_text_det\/images\/0205338541667-93_262-182&428_410&519-410&519_187&499_182&428_402&442-0_0_3_24_26_29_32_24-83-63.jpg",
-      "..\/..\/ccpd_text_det\/images\/0380913628472-97_250-234&403_529&534-529&534_250&480_234&403_528&446-0_0_3_25_25_24_25_25-185-85.jpg",
-      "..\/..\/ccpd_text_det\/images\/020598958333333334-93_267-256&471_482&563-478&563_256&546_262&471_482&484-0_0_3_26_24_25_32_24-102-115.jpg",
-      "..\/..\/ccpd_text_det\/images\/3030323350694444445-86_131-170&495_484&593-434&569_170&593_226&511_484&495-11_0_5_30_30_31_33_24-118-59.jpg",
-      "..\/..\/ccpd_text_det\/images\/3016158854166666667-86_97-243&471_462&546-462&527_245&546_243&479_453&471-0_0_3_24_30_27_24_29-98-40.jpg",
-      "..\/..\/ccpd_text_det\/images\/0340831163194-89_264-177&412_488&523-477&506_177&523_185&420_488&412-0_0_3_24_30_29_31_31-109-46.jpg"
+      "check_dataset\/demo_img\/3056141493055555554-88_93-205&455_603&597-603&575_207&597_205&468_595&455-0_0_3_24_32_27_31_33-90-213.jpg",
+      "check_dataset\/demo_img\/0680295138889-88_94-120&474_581&623-577&605_126&623_120&483_581&474-0_0_5_24_31_24_24_24-116-518.jpg",
+      "check_dataset\/demo_img\/0482421875-87_265-154&388_496&530-490&495_154&530_156&411_496&388-0_0_5_25_33_33_33_33-84-104.jpg",
+      "check_dataset\/demo_img\/0347504340278-105_106-235&443_474&589-474&589_240&518_235&443_473&503-0_0_3_25_30_33_27_30-162-4.jpg",
+      "check_dataset\/demo_img\/0205338541667-93_262-182&428_410&519-410&519_187&499_182&428_402&442-0_0_3_24_26_29_32_24-83-63.jpg",
+      "check_dataset\/demo_img\/0380913628472-97_250-234&403_529&534-529&534_250&480_234&403_528&446-0_0_3_25_25_24_25_25-185-85.jpg",
+      "check_dataset\/demo_img\/020598958333333334-93_267-256&471_482&563-478&563_256&546_262&471_482&484-0_0_3_26_24_25_32_24-102-115.jpg",
+      "check_dataset\/demo_img\/3030323350694444445-86_131-170&495_484&593-434&569_170&593_226&511_484&495-11_0_5_30_30_31_33_24-118-59.jpg",
+      "check_dataset\/demo_img\/3016158854166666667-86_97-243&471_462&546-462&527_245&546_243&479_453&471-0_0_3_24_30_27_24_29-98-40.jpg",
+      "check_dataset\/demo_img\/0340831163194-89_264-177&412_488&523-477&506_177&523_185&420_488&412-0_0_3_24_30_29_31_31-109-46.jpg"
     ]
   },
   "analysis": {
     "histogram": "check_dataset\/histogram.png"
   },
-  "dataset_path": "\/mnt\/liujiaxuan01\/new\/new2\/ccpd_text_det",
+  "dataset_path": "ccpd_text_det",
   "show_type": "image",
   "dataset_type": "TextDetDataset"
 }
@@ -169,7 +183,7 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_server_det.yaml \
 在训练之前，请确保您已经对数据集进行了校验。完成 PaddleX 模型的训练，只需如下一条命令：
 
 ```bash
-python main.py -c paddlex/configs/text_detection/PP-OCRv4_server_det.yaml \
+python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_server_det.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/ccpd_text_det
 ```
@@ -206,7 +220,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/text_detection/PP-OCRv4_server_det.yaml \
+python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_server_det.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ccpd_text_det
 ```
@@ -291,13 +305,41 @@ python main.py -c paddlex/configs/text_detection/PP-OCRv4_server_det.yaml \
 
 ## 6. 产线测试
 
-将产线中的模型替换为微调后的模型进行测试，如：
+产线中的模型替换为微调后的模型进行测试，可以获取 OCR 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
 
-```bash
-paddlex --pipeline OCR \
-        --model PP-OCRv4_server_det PP-OCRv4_server_rec \
-        --model_dir output/best_accuracy/inference None \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR/case1.jpg
+```
+paddlex --get_pipeline_config OCR --save_path ./my_path
+```
+
+将配置文件中的`SubModules.TextDetection.model_dir`修改为自己的模型路径：
+
+```yaml
+SubModules:
+  TextDetection:
+    module_name: text_detection
+    model_name: PP-OCRv4_mobile_det
+    model_dir: output/best_accuracy/inference # 替换为微调后的文本检测模型权重路径
+    ...
+```
+
+随后，基于Python脚本方式，加载修改后的产线配置文件即可:
+
+```python
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(pipeline="my_path/OCR.yaml")
+
+output = pipeline.predict(
+    input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR/case1.jpg",
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+    use_textline_orientation=False,
+)
+for res in output:
+    res.print()
+    res.save_to_img(save_path="./output/")
+    res.save_to_json(save_path="./output/")
+
 ```
 
 通过上述可在`./output`下生成预测结果，其中`case1.jpg`的预测结果如下：
@@ -309,15 +351,24 @@ paddlex --pipeline OCR \
 
 ## 7. 开发集成/部署
 如果通用 OCR 产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
-1. 直接将训练好的模型应用在您的 Python 项目中，可以参考如下示例代码，并将`paddlex/pipelines/OCR.yaml`配置文件中的`Pipeline.model`修改为自己的模型路径：
+1. 直接将训练好的模型应用在您的 Python 项目中，可以参考如下示例代码:
+
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="paddlex/pipelines/OCR.yaml")
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR/case1.jpg")
+
+pipeline = create_pipeline(pipeline="paddlex/configs/pipelines/OCR.yaml")
+
+output = pipeline.predict(
+    input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR/case1.jpg",
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+    use_textline_orientation=False,
+)
 for res in output:
-    res.print() # 打印预测的结构化输出
-    res.save_to_img("./output/") # 保存结果可视化图像
-    res.save_to_json("./output/") # 保存预测的结构化输出
+    res.print()
+    res.save_to_img(save_path="./output/")
+    res.save_to_json(save_path="./output/")
+
 ```
 更多参数请参考 [OCR 产线使用教程](../pipeline_usage/tutorials/ocr_pipelines/OCR.md)。
 

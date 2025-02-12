@@ -46,7 +46,7 @@ Keypoint detection algorithms mainly include two approaches: Top-Down and Bottom
 **Note: The above accuracy metrics are based on the COCO dataset AP(0.5:0.95) using ground truth annotations for bounding boxes. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision, while CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
 
 ## III. Quick Integration
-> ❗ Before quick integration, please install the PaddleX wheel package first. For details, please refer to the [PaddleX Local Installation Guide](../../../installation/installation.md)
+> ❗ Before quick integration, please install the PaddleX wheel package first. For details, please refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 After completing the installation of the wheel package, you can perform inference for the human keypoint detection module with just a few lines of code. You can switch models under this module at will, and you can also integrate the model inference of the human keypoint detection module into your project. Before running the following code, please download the [example image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/keypoint_detection_002.jpg) to your local machine.
 
@@ -62,10 +62,6 @@ for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
     res.save_to_json("./output/res.json")
-```
-
-```bash
-{'res': {'input_path': 'keypoint_detection_002.jpg', 'kpts': [{'keypoints': [[175.2838134765625, 56.043609619140625, 0.6522828936576843], [181.32794189453125, 49.642051696777344, 0.7338210940361023], [169.46002197265625, 50.59111022949219, 0.6837076544761658], [193.3421173095703, 51.91969680786133, 0.8676544427871704], [164.50787353515625, 55.6519889831543, 0.8232858777046204], [219.7235870361328, 90.28710174560547, 0.8812915086746216], [152.90377807617188, 95.07806396484375, 0.9093065857887268], [233.1095733642578, 149.6704864501953, 0.7706904411315918], [139.5576629638672, 144.38327026367188, 0.7555014491081238], [245.22830200195312, 202.4243927001953, 0.706590473651886], [117.83794403076172, 188.56410217285156, 0.8892115950584412], [203.29542541503906, 200.2967071533203, 0.838330864906311], [172.00791931152344, 201.1993865966797, 0.7636935710906982], [181.18797302246094, 273.0669250488281, 0.8719099164009094], [185.1750030517578, 278.4797668457031, 0.6878190040588379], [171.55068969726562, 362.42730712890625, 0.7994316816329956], [201.6941375732422, 354.5953369140625, 0.6789217591285706]], 'kpt_score': 0.7831441760063171}]}}
 ```
 
 <details><summary>👉 <b>The result obtained after running is: (Click to expand)</b></summary>
@@ -139,15 +135,14 @@ The explanations for the methods, parameters, etc., are as follows:
 <tr>
 <td><code>input</code></td>
 <td>Data to be predicted, supporting multiple input types</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
   <li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
   <li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
   <li><b>URL link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">Example</a></li>
   <li><b>Local directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
-  <li><b>Dictionary</b>, the <code>key</code> of the dictionary must correspond to the specific task, such as <code>"img"</code> for image classification tasks. The <code>value</code> of the dictionary supports the above types of data, for example: <code>{"img": "/root/data1"}</code></li>
-  <li><b>List</b>, elements of the list must be of the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code></li>
+  <li><b>List</b>, the elements of the list should be of the above-mentioned data types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td>None</td>
@@ -243,13 +238,13 @@ The explanations for the methods, parameters, etc., are as follows:
 </tr>
 </table>
 
-For more information on using the PaddleX single-model inference API, please refer to the [PaddleX Single-Model Python Script Usage Instructions](../../instructions/model_python_API.md).
+For more information on using the PaddleX single-model inference API, please refer to the [PaddleX Single-Model Python Script Usage Instructions](../../instructions/model_python_API.en.md).
 
 ## IV. Secondary Development
-If you aim to improve the accuracy of existing models, you can leverage PaddleX's secondary development capabilities to create better keypoint detection models. Before developing keypoint detection models with PaddleX, make sure to install the PaddleDetection plugin for PaddleX. The installation process can be found in the [PaddleX Local Installation Guide](../../../installation/installation.md).
+If you aim to improve the accuracy of existing models, you can leverage PaddleX's secondary development capabilities to create better keypoint detection models. Before developing keypoint detection models with PaddleX, make sure to install the PaddleDetection plugin for PaddleX. The installation process can be found in the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 
 ### 4.1 Data Preparation
-Before training a model, you need to prepare the dataset for the specific task module. PaddleX provides a data validation feature for each module, and **only datasets that pass the validation can be used for model training**. Additionally, PaddleX offers demo datasets for each module, which you can use to complete subsequent development based on the official demo data. If you wish to use your private dataset for model training, please refer to the [PaddleX Keypoint Detection Data Annotation Guide](../../../data_annotations/cv_modules/keypoint_detection.md).
+Before training a model, you need to prepare the dataset for the specific task module. PaddleX provides a data validation feature for each module, and **only datasets that pass the validation can be used for model training**. Additionally, PaddleX offers demo datasets for each module, which you can use to complete subsequent development based on the official demo data. If you wish to use your private dataset for model training, please refer to the [PaddleX Keypoint Detection Data Annotation Guide](../../../data_annotations/cv_modules/keypoint_detection.en.md).
 
 #### 4.1.1 Downloading Demo Data
 You can use the following commands to download the demo dataset to a specified folder:
@@ -267,7 +262,7 @@ A single command can complete the data validation:
 python main.py -c paddlex/configs/keypoint_detection/PP-TinyPose_128x96.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/keypoint_coco_examples
-````
+```
 
 After executing the above command, PaddleX will validate the dataset and summarize its basic information. If the command runs successfully, it will print `Check dataset passed !` in the log. The validation result file is saved at `./output/check_dataset_result.json`, and related outputs are saved in the `./output/check_dataset `directory under the current directory. This includes visualized sample images and sample distribution histograms.
 
@@ -414,7 +409,7 @@ Similar to model training and evaluation, the following steps are required:
 * Specify the mode as model inference prediction: `-o Global.mode=predict`
 * Specify the path to the model weights: `-o Predict.model_dir="./output/best_model/inference"`
 * Specify the path to the input data: `-o Predict.input="..."`
-Other related parameters can be set by modifying the fields under `Global` and `Predict` in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.md).
+Other related parameters can be set by modifying the fields under `Global` and `Predict` in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
 
 #### 4.4.2 Model Integration
 The model can be directly integrated into the PaddleX pipeline or into your own project.

@@ -24,7 +24,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import font_manager
 from matplotlib.backends.backend_agg import FigureCanvasAgg
-from nuscenes.nuscenes import NuScenes
 
 from paddlex.utils.fonts import PINGFANG_FONT_FILE_PATH
 

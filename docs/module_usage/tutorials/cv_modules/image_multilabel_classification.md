@@ -14,50 +14,62 @@ comments: true
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>mAP(%)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小 (M)</th>
 <th>介绍</th>
 </tr>
 <tr>
 <td>CLIP_vit_base_patch16_448_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/CLIP_vit_base_patch16_448_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CLIP_vit_base_patch16_448_ML_pretrained.pdparams">训练模型</a></td>
 <td>89.15</td>
+<td>54.75 / 14.30</td>
+<td>280.23 / 280.23</td>
 <td>325.6 M</td>
 <td>CLIP_ML是一种基于CLIP的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B0_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-HGNetV2-B0_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B0_ML_pretrained.pdparams">训练模型</a></td>
 <td>80.98</td>
+<td>6.47 / 1.38</td>
+<td>21.56 / 13.69</td>
 <td>39.6 M</td>
 <td rowspan="3">PP-HGNetV2_ML是一种基于PP-HGNetV2的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B4_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-HGNetV2-B4_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B4_ML_pretrained.pdparams">训练模型</a></td>
 <td>87.96</td>
+<td>9.63 / 2.79</td>
+<td>43.98 / 36.63</td>
 <td>88.5 M</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B6_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-HGNetV2-B6_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B6_ML_pretrained.pdparams">训练模型</a></td>
 <td>91.25</td>
+<td>37.07 / 9.43</td>
+<td>188.58 / 188.58</td>
 <td>286.5 M</td>
 </tr>
 <tr>
 <td>PP-LCNet_x1_0_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_ML_pretrained.pdparams">训练模型</a></td>
 <td>77.96</td>
+<td>4.04 / 1.15</td>
+<td>11.76 / 8.32</td>
 <td>29.4 M</td>
 <td>PP-LCNet_ML是一种基于PP-LCNet的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
 </tr>
 <tr>
 <td>ResNet50_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ResNet50_ML_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_ML_pretrained.pdparams">训练模型</a></td>
 <td>83.50</td>
+<td>12.12 / 3.27</td>
+<td>51.79 / 44.36</td>
 <td>108.9 M</td>
 <td>ResNet50_ML是一种基于ResNet50的图像多标签分类模型，通过结合ML-Decoder，显著提升了模型在图像多标签分类任务上的准确性。</td>
 </tr>
 </table>
-
-
 <b>注：以上精度指标为[COCO2017](https://cocodataset.org/#home)的多标签分类任务mAP。</b>
 
 ## 三、快速集成
-> ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
+ > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
 
 wheel 包的安装后，几行代码即可完成图像多标签分类模块的推理，可以任意切换该模块下的模型，您也可以将图像多标签分类的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png)到本地。
 
@@ -77,6 +89,7 @@ for res in output:
 
 运行结果参数含义如下：
 - `input_path`：表示输入待预测多类别图像的路径
+- `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
 - `class_ids`：表示多类别图像的预测标签ID
 - `scores`：表示多类别图像的预测标签置信度
 - `label_names`：表示多类别图像的预测标签名称
@@ -84,7 +97,7 @@ for res in output:
 
 可视化图片如下：
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/image_multilabel_classification/multilabel_classification_005_result.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/image_multilabel_classification/multilabel_classification_005_result.png"/>
 
 相关方法、参数等说明如下：
 
@@ -124,6 +137,13 @@ for res in output:
 </td>
 <td>0.5</td>
 </tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理</td>
+<td><code>bool</code></td>
+<td>无</td>
+<td><code>False</code></td>
+</tr>
 </table>
 
 * 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
@@ -145,15 +165,14 @@ for res in output:
 <tr>
 <td><code>input</code></td>
 <td>待预测数据，支持多种输入类型</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
-  <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
-  <li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
-  <li><b>URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png">示例</a></li>
-  <li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
-  <li><b>字典</b>，字典的<code>key</code>需与具体任务对应，如图像分类任务对应<code>\"img\"</code>，字典的<code>val</code>支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code></li>
-  <li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code></li>
+<li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
+<li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
+<li><b>URL链接</b>，如图像文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png">示例</a></li>
+<li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
+<li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td>无</td>
@@ -192,8 +211,8 @@ for res in output:
 </tr>
 </thead>
 <tr>
-<td rowspan = "3"><code>print()</code></td>
-<td rowspan = "3">打印结果到终端</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">打印结果到终端</td>
 <td><code>format_json</code></td>
 <td><code>bool</code></td>
 <td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
@@ -212,8 +231,8 @@ for res in output:
 <td><code>False</code></td>
 </tr>
 <tr>
-<td rowspan = "3"><code>save_to_json()</code></td>
-<td rowspan = "3">将结果保存为json格式的文件</td>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">将结果保存为json格式的文件</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
 <td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
@@ -251,14 +270,13 @@ for res in output:
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">获取预测的<code>json</code>格式的结果</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">获取预测的<code>json</code>格式的结果</td>
 </tr>
 <tr>
-<td rowspan = "1"><code>img</code></td>
-<td rowspan = "1">获取格式为<code>dict</code>的可视化图像</td>
+<td rowspan="1"><code>img</code></td>
+<td rowspan="1">获取格式为<code>dict</code>的可视化图像</td>
 </tr>
-
 </table>
 
 
@@ -288,45 +306,44 @@ python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCN
 执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息，命令运行成功后会在 log 中打印出`Check dataset passed !`信息。校验结果文件保存在`./output/check_dataset_result.json`，同时相关产出会保存在当前目录的`./output/check_dataset`目录下，产出目录中包括可视化的示例样本图片和样本分布直方图。
 
 <details><summary>👉 <b>校验结果详情（点击展开）</b></summary>
-
 <p>校验结果文件具体内容为：</p>
 <pre><code class="language-bash">{
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;label_file&quot;: &quot;../../dataset/mlcls_nus_examples/label.txt&quot;,
-    &quot;num_classes&quot;: 33,
-    &quot;train_samples&quot;: 17463,
-    &quot;train_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/0543_4338693.jpg&quot;,
-      &quot;check_dataset/demo_img/0272_347806939.jpg&quot;,
-      &quot;check_dataset/demo_img/0069_2291994812.jpg&quot;,
-      &quot;check_dataset/demo_img/0012_1222850604.jpg&quot;,
-      &quot;check_dataset/demo_img/0238_53773041.jpg&quot;,
-      &quot;check_dataset/demo_img/0373_541261977.jpg&quot;,
-      &quot;check_dataset/demo_img/0567_519506868.jpg&quot;,
-      &quot;check_dataset/demo_img/0023_289621557.jpg&quot;,
-      &quot;check_dataset/demo_img/0581_484524659.jpg&quot;,
-      &quot;check_dataset/demo_img/0325_120753036.jpg&quot;
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "label_file": "../../dataset/mlcls_nus_examples/label.txt",
+    "num_classes": 33,
+    "train_samples": 17463,
+    "train_sample_paths": [
+      "check_dataset/demo_img/0543_4338693.jpg",
+      "check_dataset/demo_img/0272_347806939.jpg",
+      "check_dataset/demo_img/0069_2291994812.jpg",
+      "check_dataset/demo_img/0012_1222850604.jpg",
+      "check_dataset/demo_img/0238_53773041.jpg",
+      "check_dataset/demo_img/0373_541261977.jpg",
+      "check_dataset/demo_img/0567_519506868.jpg",
+      "check_dataset/demo_img/0023_289621557.jpg",
+      "check_dataset/demo_img/0581_484524659.jpg",
+      "check_dataset/demo_img/0325_120753036.jpg"
     ],
-    &quot;val_samples&quot;: 17463,
-    &quot;val_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/0546_130758157.jpg&quot;,
-      &quot;check_dataset/demo_img/0284_2230710138.jpg&quot;,
-      &quot;check_dataset/demo_img/0090_1491261559.jpg&quot;,
-      &quot;check_dataset/demo_img/0013_392798436.jpg&quot;,
-      &quot;check_dataset/demo_img/0246_2248376356.jpg&quot;,
-      &quot;check_dataset/demo_img/0377_1349296474.jpg&quot;,
-      &quot;check_dataset/demo_img/0570_2457645006.jpg&quot;,
-      &quot;check_dataset/demo_img/0027_309333946.jpg&quot;,
-      &quot;check_dataset/demo_img/0584_132639537.jpg&quot;,
-      &quot;check_dataset/demo_img/0329_206031527.jpg&quot;
+    "val_samples": 17463,
+    "val_sample_paths": [
+      "check_dataset/demo_img/0546_130758157.jpg",
+      "check_dataset/demo_img/0284_2230710138.jpg",
+      "check_dataset/demo_img/0090_1491261559.jpg",
+      "check_dataset/demo_img/0013_392798436.jpg",
+      "check_dataset/demo_img/0246_2248376356.jpg",
+      "check_dataset/demo_img/0377_1349296474.jpg",
+      "check_dataset/demo_img/0570_2457645006.jpg",
+      "check_dataset/demo_img/0027_309333946.jpg",
+      "check_dataset/demo_img/0584_132639537.jpg",
+      "check_dataset/demo_img/0329_206031527.jpg"
     ]
   },
-  &quot;analysis&quot;: {
-    &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
+  "analysis": {
+    "histogram": "check_dataset/histogram.png"
   },
-  &quot;dataset_path&quot;: &quot;./dataset/mlcls_nus_examples&quot;,
+  &quot;dataset_path&quot;: &quot;mlcls_nus_examples&quot;,
   &quot;show_type&quot;: &quot;image&quot;,
   &quot;dataset_type&quot;: &quot;MLClsDataset&quot;
 }
@@ -340,13 +357,12 @@ python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCN
 <li><code>attributes.val_sample_paths</code>：该数据集验证集样本可视化图片相对路径列表；</li>
 </ul>
 <p>另外，数据集校验还对数据集中所有类别的样本数量分布情况进行了分析，并绘制了分布直方图（histogram.png）：</p>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/ml_classification/01.png"></p></details>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/ml_classification/01.png"/></p></details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
 在您完成数据校验之后，可以通过<b>修改配置文件</b>或是<b>追加超参数</b>的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。
 
 <details><summary>👉 <b>格式转换/数据集划分详情（点击展开）</b></summary>
-
 <p><b>（1）数据集格式转换</b></p>
 <p>图像多标签分类支持 <code>COCO</code>格式的数据集转换为 <code>MLClsDataset</code>格式，数据集格式转换的参数可以通过修改配置文件中 <code>CheckDataset</code> 下的字段进行设置，配置文件中部分参数的示例说明如下：</p>
 <ul>
@@ -431,7 +447,6 @@ python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCN
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
-
 <ul>
 <li>模型训练过程中，PaddleX 会自动保存模型权重文件，默认为<code>output</code>，如需指定保存路径，可通过配置文件中 <code>-o Global.output</code> 字段进行设置。</li>
 <li>PaddleX 对您屏蔽了动态图权重和静态图权重的概念。在模型训练的过程中，会同时产出动态图和静态图的权重，在模型推理时，默认选择静态图权重推理。</li>
@@ -462,7 +477,6 @@ python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCN
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Evaluate`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
-
 <p>在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如<code>-o Evaluate.weight_path=./output/best_model/best_model.pdparams</code>。</p>
 <p>在完成模型评估后，会产出<code>evaluate_result.json，其记录了</code>评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标，包括 MultiLabelMAP；</p></details>
 
@@ -496,3 +510,5 @@ python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCN
 2.<b>模块集成</b>
 
 您产出的权重可以直接集成到图像多标签分类模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
+
+您也可以利用 PaddleX 高性能推理插件来优化您模型的推理过程，进一步提升效率，详细的流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_inference.md)。

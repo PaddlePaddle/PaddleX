@@ -35,9 +35,7 @@ def build_dataset_checker(config: AttrDict) -> "BaseDatasetChecker":
     try:
         import feature_line_modules
     except ModuleNotFoundError:
-        info(
-            "The PaddleX FeaTure Line plugin is not installed, but continuing execution."
-        )
+        pass
 
     return BaseDatasetChecker.get(model_name)(config)
 

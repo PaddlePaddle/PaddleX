@@ -17,7 +17,11 @@ from pathlib import Path
 from abc import ABC, abstractmethod
 
 from .build_model import build_model
-from ...utils.device import update_device_num, set_env_for_device
+from ...utils.device import (
+    update_device_num,
+    set_env_for_device,
+    check_supported_device,
+)
 from ...utils.misc import AutoRegisterABCMetaClass
 from ...utils.config import AttrDict
 from ...utils import logging
@@ -36,9 +40,7 @@ def build_exportor(config: AttrDict) -> "BaseExportor":
     try:
         import feature_line_modules
     except ModuleNotFoundError:
-        logging.info(
-            "The PaddleX FeaTure Line plugin is not installed, but continuing execution."
-        )
+        pass
     return BaseExportor.get(model_name)(config)
 
 
@@ -116,10 +118,16 @@ exporting!"
         Returns:
             str: device setting, such as: `gpu:0,1`, `npu:0,1`, `cpu`.
         """
+        check_supported_device(self.global_config.device, self.global_config.model)
         set_env_for_device(self.global_config.device)
-        if using_device_number:
-            return update_device_num(self.global_config.device, using_device_number)
-        return self.global_config.device
+        device_setting = (
+            update_device_num(self.global_config.device, using_device_number)
+            if using_device_number
+            else self.global_config.device
+        )
+        # replace "dcu" with "gpu"
+        device_setting = device_setting.replace("dcu", "gpu")
+        return device_setting
 
     def update_config(self):
         """update export config"""

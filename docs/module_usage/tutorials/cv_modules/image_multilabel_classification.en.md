@@ -14,49 +14,62 @@ The image multi-label classification module is a crucial component in computer v
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
 <tr>
 <td>CLIP_vit_base_patch16_448_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/CLIP_vit_base_patch16_448_ML_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CLIP_vit_base_patch16_448_ML_pretrained.pdparams">Trained Model</a></td>
 <td>89.15</td>
+<td>54.75 / 14.30</td>
+<td>280.23 / 280.23</td>
 <td>325.6 M</td>
 <td>CLIP_ML is an image multi-label classification model based on CLIP, which significantly improves accuracy on multi-label classification tasks by incorporating an ML-Decoder.</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B0_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-HGNetV2-B0_ML_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B0_ML_pretrained.pdparams">Trained Model</a></td>
 <td>80.98</td>
+<td>6.47 / 1.38</td>
+<td>21.56 / 13.69</td>
 <td>39.6 M</td>
 <td rowspan="3">PP-HGNetV2_ML is an image multi-label classification model based on PP-HGNetV2, which significantly improves accuracy on multi-label classification tasks by incorporating an ML-Decoder.</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B4_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-HGNetV2-B4_ML_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B4_ML_pretrained.pdparams">Trained Model</a></td>
 <td>87.96</td>
+<td>9.63 / 2.79</td>
+<td>43.98 / 36.63</td>
 <td>88.5 M</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B6_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-HGNetV2-B6_ML_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B6_ML_pretrained.pdparams">Trained Model</a></td>
 <td>91.25</td>
+<td>37.07 / 9.43</td>
+<td>188.58 / 188.58</td>
 <td>286.5 M</td>
 </tr>
 <tr>
 <td>PP-LCNet_x1_0_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_ML_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_ML_pretrained.pdparams">Trained Model</a></td>
 <td>77.96</td>
+<td>4.04 / 1.15</td>
+<td>11.76 / 8.32</td>
 <td>29.4 M</td>
 <td>PP-LCNet_ML is an image multi-label classification model based on PP-LCNet, which significantly improves accuracy on multi-label classification tasks by incorporating an ML-Decoder.</td>
 </tr>
 <tr>
 <td>ResNet50_ML</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ResNet50_ML_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_ML_pretrained.pdparams">Trained Model</a></td>
 <td>83.50</td>
+<td>12.12 / 3.27</td>
+<td>51.79 / 44.36</td>
 <td>108.9 M</td>
 <td>ResNet50_ML is an image multi-label classification model based on ResNet50, which significantly improves accuracy on multi-label classification tasks by incorporating an ML-Decoder.</td>
 </tr>
 </table>
-
 <b>Note: The above accuracy metrics are mAP for the multi-label classification task on [COCO2017](https://cocodataset.org/#home).</b>
 
 ## III. Quick Integration
-> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
+&gt; ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 After installing the wheel package, you can complete multi-label classification module inference with just a few lines of code. You can switch between models in this module freely, and you can also integrate the model inference of the multi-label classification module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png) to your local machine.
 
@@ -78,13 +91,14 @@ After running, the result obtained is:
 
 The meanings of the running results parameters are as follows:
 - `input_path`: Indicates the path of the input multi-class image to be predicted.
+- `page_index`: If the input is a PDF file, it indicates which page of the PDF is currently being processed; otherwise, it is `None`.
 - `class_ids`: Indicates the predicted label IDs of the multi-class image.
 - `scores`: Indicates the confidence scores of the predicted labels of the multi-class image.
 - `label_names`: Indicates the predicted label names of the multi-class image.
 
 The visualization image is as follows:
 
-<img src="https://github.com/user-attachments/assets/4bdd6999-637d-4c9b-aa47-8dd6f587f5a1">
+<img src="https://github.com/user-attachments/assets/4bdd6999-637d-4c9b-aa47-8dd6f587f5a1"/>
 
 **Note:** Due to network issues, the above URL may not be accessible. If you need to access this link, please check the validity of the URL and try again. If the problem persists, it may be related to the link itself or the network connection.
 
@@ -134,15 +148,14 @@ Related methods, parameters, and explanations are as follows:
 <tr>
 <td><code>input</code></td>
 <td>Data to be predicted, supporting multiple input types</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
-  <li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
-  <li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
-  <li><b>URL link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png">Example</a></li>
-  <li><b>Local directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
-  <li><b>Dictionary</b>, the <code>key</code> of the dictionary must correspond to the specific task, such as <code>"img"</code> for image classification tasks. The <code>value</code> of the dictionary supports the above types of data, for example: <code>{"img": "/root/data1"}</code></li>
-  <li><b>List</b>, elements of the list must be of the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code></li>
+<li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
+<li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
+<li><b>URL link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png">Example</a></li>
+<li><b>Local directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
+<li><b>List</b>, the elements of the list should be of the above-mentioned data types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td>None</td>
@@ -215,8 +228,8 @@ Related methods, parameters, and explanations are as follows:
 <td><code>save_path</code></td>
 <td><code>str</code></td>
 <td>The path to save the file. If it is a directory, the saved file name will be consistent with the input file name</td>
-<td>None</vd>
-</tr>
+<td>None
+</td></tr>
 </table>
 
 * Additionally, it supports obtaining the visualization image with results and the prediction results through attributes, as follows:
@@ -264,47 +277,46 @@ python main.py -c paddlex/configs/modules/image_multilabel_classification/PP-LCN
 After executing the above command, PaddleX will validate the dataset and summarize its basic information. If the command runs successfully, it will print `Check dataset passed !` in the log. The validation results file is saved in `./output/check_dataset_result.json`, and related outputs are saved in the `./output/check_dataset` directory in the current directory, including visual examples of sample images and sample distribution histograms.
 
 <details><summary>👉 <b>Details of Validation Results (Click to Expand)</b></summary>
-
 <p>The specific content of the validation result file is:</p>
 <pre><code class="language-bash">{
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;label_file&quot;: &quot;../../dataset/mlcls_nus_examples/label.txt&quot;,
-    &quot;num_classes&quot;: 33,
-    &quot;train_samples&quot;: 17463,
-    &quot;train_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/0543_4338693.jpg&quot;,
-      &quot;check_dataset/demo_img/0272_347806939.jpg&quot;,
-      &quot;check_dataset/demo_img/0069_2291994812.jpg&quot;,
-      &quot;check_dataset/demo_img/0012_1222850604.jpg&quot;,
-      &quot;check_dataset/demo_img/0238_53773041.jpg&quot;,
-      &quot;check_dataset/demo_img/0373_541261977.jpg&quot;,
-      &quot;check_dataset/demo_img/0567_519506868.jpg&quot;,
-      &quot;check_dataset/demo_img/0023_289621557.jpg&quot;,
-      &quot;check_dataset/demo_img/0581_484524659.jpg&quot;,
-      &quot;check_dataset/demo_img/0325_120753036.jpg&quot;
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "label_file": "../../dataset/mlcls_nus_examples/label.txt",
+    "num_classes": 33,
+    "train_samples": 17463,
+    "train_sample_paths": [
+      "check_dataset/demo_img/0543_4338693.jpg",
+      "check_dataset/demo_img/0272_347806939.jpg",
+      "check_dataset/demo_img/0069_2291994812.jpg",
+      "check_dataset/demo_img/0012_1222850604.jpg",
+      "check_dataset/demo_img/0238_53773041.jpg",
+      "check_dataset/demo_img/0373_541261977.jpg",
+      "check_dataset/demo_img/0567_519506868.jpg",
+      "check_dataset/demo_img/0023_289621557.jpg",
+      "check_dataset/demo_img/0581_484524659.jpg",
+      "check_dataset/demo_img/0325_120753036.jpg"
     ],
-    &quot;val_samples&quot;: 17463,
-    &quot;val_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/0546_130758157.jpg&quot;,
-      &quot;check_dataset/demo_img/0284_2230710138.jpg&quot;,
-      &quot;check_dataset/demo_img/0090_1491261559.jpg&quot;,
-      &quot;check_dataset/demo_img/0013_392798436.jpg&quot;,
-      &quot;check_dataset/demo_img/0246_2248376356.jpg&quot;,
-      &quot;check_dataset/demo_img/0377_1349296474.jpg&quot;,
-      &quot;check_dataset/demo_img/0570_2457645006.jpg&quot;,
-      &quot;check_dataset/demo_img/0027_309333946.jpg&quot;,
-      &quot;check_dataset/demo_img/0584_132639537.jpg&quot;,
-      &quot;check_dataset/demo_img/0329_206031527.jpg&quot;
+    "val_samples": 17463,
+    "val_sample_paths": [
+      "check_dataset/demo_img/0546_130758157.jpg",
+      "check_dataset/demo_img/0284_2230710138.jpg",
+      "check_dataset/demo_img/0090_1491261559.jpg",
+      "check_dataset/demo_img/0013_392798436.jpg",
+      "check_dataset/demo_img/0246_2248376356.jpg",
+      "check_dataset/demo_img/0377_1349296474.jpg",
+      "check_dataset/demo_img/0570_2457645006.jpg",
+      "check_dataset/demo_img/0027_309333946.jpg",
+      "check_dataset/demo_img/0584_132639537.jpg",
+      "check_dataset/demo_img/0329_206031527.jpg"
     ]
   },
-  &quot;analysis&quot;: {
-    &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
+  "analysis": {
+    "histogram": "check_dataset/histogram.png"
   },
-  &quot;dataset_path&quot;: &quot;./dataset/mlcls_nus_examples&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;MLClsDataset&quot;
+  "dataset_path": "mlcls_nus_examples",
+  "show_type": "image",
+  "dataset_type": "MLClsDataset"
 }
 </code></pre>
 <p>In the above validation results, <code>check_pass</code> being True indicates that the dataset format meets the requirements. Explanations for other indicators are as follows:</p>
@@ -316,14 +328,13 @@ After executing the above command, PaddleX will validate the dataset and summari
 <li><code>attributes.val_sample_paths</code>: A list of relative paths to the visual samples in the validation set of this dataset;</li>
 </ul>
 <p>Additionally, the dataset validation analyzes the sample number distribution across all classes in the dataset and generates a distribution histogram (histogram.png):
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/ml_classification/01.png"></p></details>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/ml_classification/01.png"/></p></details>
 
 #### 4.1.3 Dataset Format Conversion/Dataset Splitting (Optional)
 
 After completing data validation, you can convert the dataset format or re-split the training/validation ratio of the dataset by <b>modifying the configuration file</b> or <b>appending hyperparameters</b>.
 
 <details><summary>👉 <b>Dataset Format Conversion/Dataset Splitting Details (Click to Expand)</b></summary>
-
 <p><b>(1) Dataset Format Conversion</b></p>
 <p>The multi-label image classification supports the conversion of <code>COCO</code> format datasets to <code>MLClsDataset</code> format. The parameters for dataset format conversion can be set by modifying the fields under <code>CheckDataset</code> in the configuration file. Examples of some parameters in the configuration file are as follows:</p>
 <ul>
@@ -407,7 +418,6 @@ the following steps are required:
 
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <ul>
 <li>During model training, PaddleX automatically saves the model weight files, with the default being <code>output</code>. If you need to specify a save path, you can set it through the <code>-o Global.output</code> field in the configuration file.</li>
 <li>PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.</li>
@@ -440,7 +450,6 @@ Similar to model training, the following steps are required:
 Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <p>When evaluating the model, you need to specify the model weights file path. Each configuration file has a default weight save path. If you need to change it, simply append the command line parameter to set it, such as <code>-o Evaluate.weight_path=./output/best_model/best_model.pdparams</code>.</p>
 <p>After completing the model evaluation, an <code>evaluate_result.json</code> file will be produced, which records the evaluation results, specifically, whether the evaluation task was completed successfully and the model's evaluation metrics, including MultiLabelMAP;</p></details>
 

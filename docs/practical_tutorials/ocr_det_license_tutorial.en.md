@@ -33,39 +33,54 @@ After experiencing the pipeline, determine if it meets your expectations (includ
 
 ## 3. Select a Model
 
-PaddleX provides two end-to-end text detection models. For details, refer to the [Model List](../support_list/models_list.en.md). The benchmarks of the models are as follows:
+PaddleX provides 4 end-to-end text detection models. For details, refer to the [Model List](../support_list/models_list.en.md). The benchmarks of the models are as follows:
 
 <table>
 <thead>
 <tr>
-<th>Model List</th>
-<th>Detection Hmean(%)</th>
-<th>Recognition Avg Accuracy(%)</th>
-<th>GPU Inference Time(ms)</th>
-<th>CPU Inference Time(ms)</th>
-<th>Model Size(M)</th>
+<th>Model</th>
+<th>Detection Hmean (%)</th>
+<th>GPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)</th>
+<th>Model Storage Size (M)</th>
+<th>Introduction</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>PP-OCRv4_server</td>
-<td>82.69</td>
-<td>79.20</td>
-<td>22.20346</td>
-<td>2662.158</td>
-<td>198</td>
+<td>PP-OCRv4_server_det</td>
+<td>82.56</td>
+<td>83.3501</td>
+<td>2434.01</td>
+<td>109</td>
+<td>The server-side text detection model of PP-OCRv4, with higher accuracy, suitable for deployment on high-performance servers</td>
 </tr>
 <tr>
-<td>PP-OCRv4_mobile</td>
-<td>77.79</td>
-<td>78.20</td>
-<td>2.719474</td>
-<td>79.1097</td>
-<td>15</td>
+<td>PP-OCRv4_mobile_det</td>
+<td>77.35</td>
+<td>10.6923</td>
+<td>120.177</td>
+<td>4.7</td>
+<td>The mobile text detection model of PP-OCRv4, with higher efficiency, suitable for deployment on edge devices</td>
+</tr>
+<tr>
+<td>PP-OCRv3_mobile_det</td>
+<td>78.68</td>
+<td>-</td>
+<td>-</td>
+<td>2.1</td>
+<td>The mobile text detection model of PP-OCRv3, with higher efficiency, suitable for deployment on edge devices</td>
+</tr>
+<tr>
+<td>PP-OCRv3_server_det</td>
+<td>80.11</td>
+<td>-</td>
+<td>-</td>
+<td>102.1</td>
+<td>The server-side text detection model of PP-OCRv3, with higher accuracy, suitable for deployment on high-performance servers</td>
 </tr>
 </tbody>
 </table>
-<b>Note: The above accuracy metrics are for the Detection Hmean and Recognition Avg Accuracy on PaddleOCR's self-built Chinese dataset validation set. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
 
 In short, the models listed from top to bottom have faster inference speeds, while from bottom to top, they have higher accuracy. This tutorial uses the `PP-OCRv4_server` model as an example to complete a full model development process. Depending on your actual usage scenario, choose a suitable model for training. After training, evaluate the appropriate model weights within the pipeline and use them in practical scenarios.
 
@@ -86,7 +101,7 @@ tar -xf ./dataset/ccpd_text_det.tar -C ./dataset/
 To validate the dataset, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/text_detection/PP-OCRv4_server_det.yaml \
+python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_server_det.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ccpd_text_det
 ```
@@ -100,35 +115,35 @@ After executing the above command, PaddleX will validate the dataset and collect
   "attributes": {
     "train_samples": 5769,
     "train_sample_paths": [
-      "..\/..\/ccpd_text_det\/images\/0274305555556-90_266-204&460_520&548-516&548_209&547_204&464_520&460-0_0_3_25_24_24_24_26-63-89.jpg",
-      "..\/..\/ccpd_text_det\/images\/0126171875-90_267-294&424_498&486-498&486_296&485_294&425_496&424-0_0_3_24_33_32_30_31-157-29.jpg",
-      "..\/..\/ccpd_text_det\/images\/0371516927083-89_254-178&423_517&534-517&534_204&525_178&431_496&423-1_0_3_24_33_31_29_31-117-667.jpg",
-      "..\/..\/ccpd_text_det\/images\/03349609375-90_268-211&469_526&576-526&567_214&576_211&473_520&469-0_0_3_27_31_32_29_32-174-48.jpg",
-      "..\/..\/ccpd_text_det\/images\/0388454861111-90_269-138&409_496&518-496&518_138&517_139&410_491&409-0_0_3_24_27_26_26_30-174-148.jpg",
-      "..\/..\/ccpd_text_det\/images\/0198741319444-89_112-208&517_449&600-423&593_208&600_233&517_449&518-0_0_3_24_28_26_26_26-87-268.jpg",
-      "..\/..\/ccpd_text_det\/images\/3027782118055555555-91_92-186&493_532&574-529&574_199&565_186&497_532&493-0_0_3_27_26_30_33_32-73-336.jpg",
-      "..\/..\/ccpd_text_det\/images\/034375-90_258-168&449_528&546-528&542_186&546_168&449_525&449-0_0_3_26_30_30_26_33-94-221.jpg",
-      "..\/..\/ccpd_text_det\/images\/0286501736111-89_92-290&486_577&587-576&577_290&587_292&491_577&486-0_0_3_17_25_28_30_33-134-122.jpg",
-      "..\/..\/ccpd_text_det\/images\/02001953125-92_103-212&486_458&569-458&569_224&555_212&486_446&494-0_0_3_24_24_25_24_24-88-24.jpg"
+      "check_dataset\/demo_img\/0274305555556-90_266-204&460_520&548-516&548_209&547_204&464_520&460-0_0_3_25_24_24_24_26-63-89.jpg",
+      "check_dataset\/demo_img\/0126171875-90_267-294&424_498&486-498&486_296&485_294&425_496&424-0_0_3_24_33_32_30_31-157-29.jpg",
+      "check_dataset\/demo_img\/0371516927083-89_254-178&423_517&534-517&534_204&525_178&431_496&423-1_0_3_24_33_31_29_31-117-667.jpg",
+      "check_dataset\/demo_img\/03349609375-90_268-211&469_526&576-526&567_214&576_211&473_520&469-0_0_3_27_31_32_29_32-174-48.jpg",
+      "check_dataset\/demo_img\/0388454861111-90_269-138&409_496&518-496&518_138&517_139&410_491&409-0_0_3_24_27_26_26_30-174-148.jpg",
+      "check_dataset\/demo_img\/0198741319444-89_112-208&517_449&600-423&593_208&600_233&517_449&518-0_0_3_24_28_26_26_26-87-268.jpg",
+      "check_dataset\/demo_img\/3027782118055555555-91_92-186&493_532&574-529&574_199&565_186&497_532&493-0_0_3_27_26_30_33_32-73-336.jpg",
+      "check_dataset\/demo_img\/034375-90_258-168&449_528&546-528&542_186&546_168&449_525&449-0_0_3_26_30_30_26_33-94-221.jpg",
+      "check_dataset\/demo_img\/0286501736111-89_92-290&486_577&587-576&577_290&587_292&491_577&486-0_0_3_17_25_28_30_33-134-122.jpg",
+      "check_dataset\/demo_img\/02001953125-92_103-212&486_458&569-458&569_224&555_212&486_446&494-0_0_3_24_24_25_24_24-88-24.jpg"
     ],
     "val_samples": 1001,
     "val_sample_paths": [
-      "..\/..\/ccpd_text_det\/images\/3056141493055555554-88_93-205&455_603&597-603&575_207&597_205&468_595&455-0_0_3_24_32_27_31_33-90-213.jpg",
-      "..\/..\/ccpd_text_det\/images\/0680295138889-88_94-120&474_581&623-577&605_126&623_120&483_581&474-0_0_5_24_31_24_24_24-116-518.jpg",
-      "..\/..\/ccpd_text_det\/images\/0482421875-87_265-154&388_496&530-490&495_154&530_156&411_496&388-0_0_5_25_33_33_33_33-84-104.jpg",
-      "..\/..\/ccpd_text_det\/images\/0347504340278-105_106-235&443_474&589-474&589_240&518_235&443_473&503-0_0_3_25_30_33_27_30-162-4.jpg",
-      "..\/..\/ccpd_text_det\/images\/0205338541667-93_262-182&428_410&519-410&519_187&499_182&428_402&442-0_0_3_24_26_29_32_24-83-63.jpg",
-      "..\/..\/ccpd_text_det\/images\/0380913628472-97_250-234&403_529&534-529&534_250&480_234&403_528&446-0_0_3_25_25_24_25_25-185-85.jpg",
-      "..\/..\/ccpd_text_det\/images\/020598958333333334-93_267-256&471_482&563-478&563_256&546_262&471_482&484-0_0_3_26_24_25_32_24-102-115.jpg",
-      "..\/..\/ccpd_text_det\/images\/3030323350694444445-86_131-170&495_484&593-434&569_170&593_226&511_484&495-11_0_5_30_30_31_33_24-118-59.jpg",
-      "..\/..\/ccpd_text_det\/images\/3016158854166666667-86_97-243&471_462&546-462&527_245&546_243&479_453&471-0_0_3_24_30_27_24_29-98-40.jpg",
-      "..\/..\/ccpd_text_det\/images\/0340831163194-89_264-177&412_488&523-477&506_177&523_185&420_488&412-0_0_3_24_30_29_31_31-109-46.jpg"
+      "check_dataset\/demo_img\/3056141493055555554-88_93-205&455_603&597-603&575_207&597_205&468_595&455-0_0_3_24_32_27_31_33-90-213.jpg",
+      "check_dataset\/demo_img\/0680295138889-88_94-120&474_581&623-577&605_126&623_120&483_581&474-0_0_5_24_31_24_24_24-116-518.jpg",
+      "check_dataset\/demo_img\/0482421875-87_265-154&388_496&530-490&495_154&530_156&411_496&388-0_0_5_25_33_33_33_33-84-104.jpg",
+      "check_dataset\/demo_img\/0347504340278-105_106-235&443_474&589-474&589_240&518_235&443_473&503-0_0_3_25_30_33_27_30-162-4.jpg",
+      "check_dataset\/demo_img\/0205338541667-93_262-182&428_410&519-410&519_187&499_182&428_402&442-0_0_3_24_26_29_32_24-83-63.jpg",
+      "check_dataset\/demo_img\/0380913628472-97_250-234&403_529&534-529&534_250&480_234&403_528&446-0_0_3_25_25_24_25_25-185-85.jpg",
+      "check_dataset\/demo_img\/020598958333333334-93_267-256&471_482&563-478&563_256&546_262&471_482&484-0_0_3_26_24_25_32_24-102-115.jpg",
+      "check_dataset\/demo_img\/3030323350694444445-86_131-170&495_484&593-434&569_170&593_226&511_484&495-11_0_5_30_30_31_33_24-118-59.jpg",
+      "check_dataset\/demo_img\/3016158854166666667-86_97-243&471_462&546-462&527_245&546_243&479_453&471-0_0_3_24_30_27_24_29-98-40.jpg",
+      "check_dataset\/demo_img\/0340831163194-89_264-177&412_488&523-477&506_177&523_185&420_488&412-0_0_3_24_30_29_31_31-109-46.jpg"
     ]
   },
   "analysis": {
     "histogram": "check_dataset\/histogram.png"
   },
-  "dataset_path": "\/mnt\/liujiaxuan01\/new\/new2\/ccpd_text_det",
+  "dataset_path": "ccpd_text_det",
   "show_type": "image",
   "dataset_type": "TextDetDataset"
 }
@@ -171,7 +186,7 @@ During data splitting, the original annotation files will be renamed to `xxx.bak
 Before training, ensure you have verified the dataset. To complete PaddleX model training, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/text_detection/PP-OCRv4_server_det.yaml \
+python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_server_det.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/ccpd_text_det
 ```
@@ -208,7 +223,7 @@ After completing model training, all outputs are saved in the specified output d
 After completing model training, you can evaluate the specified model weights file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation requires only one command:
 
 ```bash
-python main.py -c paddlex/configs/text_detection/PP-OCRv4_server_det.yaml \
+python main.py -c paddlex/configs/modules/text_detection/PP-OCRv4_server_det.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ccpd_text_det
 ```
@@ -293,13 +308,41 @@ Next, based on a learning rate of 0.001, we can increase the number of training 
 
 ## 6. Production Line Testing
 
-Replace the models in the production line with the fine-tuned models for testing, for example:
+Replace the model in the production line with the fine-tuned model for testing. You can obtain the OCR production configuration file and load the configuration file for prediction. You can execute the following command to save the results in `my_path`:
 
 ```bash
-paddlex --pipeline OCR \
-        --model PP-OCRv4_server_det PP-OCRv4_server_rec \
-        --model_dir output/best_accuracy/inference None \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR/case1.jpg
+paddlex --get_pipeline_config OCR --save_path ./my_path
+```
+
+Modify the `SubModules.TextDetection.model_dir` in the configuration file to your model path.
+
+```yaml
+SubModules:
+  TextDetection:
+    module_name: text_detection
+    model_name: PP-OCRv4_mobile_det
+    model_dir: output/best_accuracy/inference # 替换为微调后的文本检测模型权重路径
+    ...
+```
+
+Subsequently, based on the Python script method, you can load the modified production configuration file:
+
+```python
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(pipeline="my_path/OCR.yaml")
+
+output = pipeline.predict(
+    input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR/case1.jpg",
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+    use_textline_orientation=False,
+)
+for res in output:
+    res.print()
+    res.save_to_img(save_path="./output/")
+    res.save_to_json(save_path="./output/")
+
 ```
 
 This will generate prediction results under `./output`, where the prediction result for `case1.jpg` is shown below:
@@ -311,19 +354,26 @@ This will generate prediction results under `./output`, where the prediction res
 
 ## 7. Development Integration/Deployment
 If the general OCR pipeline meets your requirements for inference speed and accuracy in the production line, you can proceed directly with development integration/deployment.
-1. Directly apply the trained model in your Python project by referring to the following sample code, and modify the `Pipeline.model` in the `paddlex/pipelines/OCR.yaml` configuration file to your own model path:
+1. Directly apply the trained model in your Python project. You can refer to the following example:
+
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="paddlex/pipelines/OCR.yaml")
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR/case1.jpg")
-for res in output:
-    res.print() # Print the structured output of the prediction
-    res.save_to_img("./output/") # Save the visualized image of the result
-    res.save_to_json("./output/") # Save the structured output of the prediction
+pipeline = create_pipeline(pipeline="paddlex/configs/pipelines/OCR.yaml")
+
+output = pipeline.predict(
+    input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR/case1.jpg",
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+    use_textline_orientation=False,
+)
+    res.print()
+    res.save_to_img(save_path="./output/")
+    res.save_to_json(save_path="./output/")
+
 ```
 For more parameters, please refer to the [General OCR Pipeline Usage Tutorial](../pipeline_usage/tutorials/ocr_pipelines/OCR.en.md).
 
-2. Additionally, PaddleX offers three other deployment methods, detailed as follows:
+1. Additionally, PaddleX offers three other deployment methods, detailed as follows:
 
 * high-performance inference: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../pipeline_deploy/high_performance_inference.en.md).
 * Service-Oriented Deployment: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving cost-effective service-oriented deployment of production lines. For detailed service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../pipeline_deploy/serving.en.md).

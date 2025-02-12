@@ -34,13 +34,25 @@ PaddleX 提供了以下快速体验的方式，可以直接通过 PaddleX wheel 
 
 ## 3. 选择模型
 
-PaddleX 提供了 1 个端到端的高精度异常检测模型，具体可参考 [模型列表](../support_list/models_list.md)，其中部分模型的benchmark如下：
+PaddleX 提供了 1 个端到端的高精度异常检测模型，具体可参考 [模型列表](../support_list/models_list.md)，其中模型的benchmark如下：
 
-|模型名称|Avg（%）|GPU推理耗时（ms）|CPU推理耗时（ms）|模型存储大小|yaml 文件|
-|-|-|-|-|-|-|
-|STFPM|96.2|-|-|21.5 M|[STFPM.yaml](../../paddlex/configs/modules/image_anomaly_detection/STFPM.yaml)|
-
-**注：以上精度指标为 **[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)** 验证集 平均异常分数。**
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>mIoU</th>
+<th>模型存储大小（M)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STFPM</td>
+<td>0.9901</td>
+<td>22.5</td>
+</tr>
+</tbody>
+</table>
+<b>以上模型精度指标测量自 MVTec_AD 数据集中的grid类别。</b>
 
 
 ## 4. 数据准备和校验
@@ -60,7 +72,7 @@ tar -xf ./dataset/anomaly_detection_hazelnut.tar -C ./dataset/
 在对数据集校验时，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/image_anomaly_detection/STFPM.yaml \
+python main.py -c paddlex/configs/modules/image_anomaly_detection/STFPM.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/anomaly_detection_hazelnut
 ```
@@ -72,37 +84,37 @@ python main.py -c paddlex/configs/image_anomaly_detection/STFPM.yaml \
   "check_pass": true,
   "attributes": {
     "train_sample_paths": [
-      "check_dataset\/demo_img\/294.png",
-      "check_dataset\/demo_img\/260.png",
-      "check_dataset\/demo_img\/297.png",
-      "check_dataset\/demo_img\/170.png",
-      "check_dataset\/demo_img\/068.png",
-      "check_dataset\/demo_img\/212.png",
-      "check_dataset\/demo_img\/204.png",
-      "check_dataset\/demo_img\/233.png",
-      "check_dataset\/demo_img\/367.png",
-      "check_dataset\/demo_img\/383.png"
+      "check_dataset/demo_img/294.png",
+      "check_dataset/demo_img/260.png",
+      "check_dataset/demo_img/297.png",
+      "check_dataset/demo_img/170.png",
+      "check_dataset/demo_img/068.png",
+      "check_dataset/demo_img/212.png",
+      "check_dataset/demo_img/204.png",
+      "check_dataset/demo_img/233.png",
+      "check_dataset/demo_img/367.png",
+      "check_dataset/demo_img/383.png"
     ],
     "train_samples": 391,
     "val_sample_paths": [
-      "check_dataset\/demo_img\/012.png",
-      "check_dataset\/demo_img\/017.png",
-      "check_dataset\/demo_img\/006.png",
-      "check_dataset\/demo_img\/013.png",
-      "check_dataset\/demo_img\/014.png",
-      "check_dataset\/demo_img\/010.png",
-      "check_dataset\/demo_img\/007.png",
-      "check_dataset\/demo_img\/001.png",
-      "check_dataset\/demo_img\/002.png",
-      "check_dataset\/demo_img\/009.png"
+      "check_dataset/demo_img/012.png",
+      "check_dataset/demo_img/017.png",
+      "check_dataset/demo_img/006.png",
+      "check_dataset/demo_img/013.png",
+      "check_dataset/demo_img/014.png",
+      "check_dataset/demo_img/010.png",
+      "check_dataset/demo_img/007.png",
+      "check_dataset/demo_img/001.png",
+      "check_dataset/demo_img/002.png",
+      "check_dataset/demo_img/009.png"
     ],
     "val_samples": 70,
     "num_classes": 1
   },
   "analysis": {
-    "histogram": "check_dataset\/histogram.png"
+    "histogram": "check_dataset/histogram.png"
   },
-  "dataset_path": ".\/dataset\/hazelnut",
+  "dataset_path": "anomaly_detection_hazelnut",
   "show_type": "image",
   "dataset_type": "SegDataset"
 }
@@ -148,7 +160,7 @@ python main.py -c paddlex/configs/image_anomaly_detection/STFPM.yaml \
 在训练之前，请确保您已经对数据集进行了校验。完成 PaddleX 模型的训练，只需如下一条命令：
 
 ```bash
-python main.py -c paddlex/configs/image_anomaly_detection/STFPM.yaml \
+python main.py -c paddlex/configs/modules/image_anomaly_detection/STFPM.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/anomaly_detection_hazelnut \
     -o Train.epochs_iters=4000
@@ -159,7 +171,7 @@ python main.py -c paddlex/configs/image_anomaly_detection/STFPM.yaml \
 PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相关参数。模型训练相关的参数可以通过修改配置文件中 `Train` 下的字段进行设置，配置文件中部分参数的示例说明如下：
 
 * `Global`：
-    * `mode`：模式，支持数据校验（`check_dataset`）、模型训练（`train`）、模型评估（`evaluate`）；
+    * `mode`：模式，支持数据校验（`check_dataset`）、模型训练（`train`）、模型评估（`evaluate`）和 模型推理 （`predict`）；
     * `device`：训练设备，可选`cpu`、`gpu`、`xpu`、`npu`、`mlu`，除 cpu 外，多卡训练可指定卡号，如：`gpu:0,1,2,3`；
 * `Train`：训练超参数设置；
     * `epochs_iters`：训练迭代次数数设置；
@@ -186,7 +198,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/image_anomaly_detection/STFPM.yaml \
+python main.py -c paddlex/configs/modules/image_anomaly_detection/STFPM.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/anomaly_detection_hazelnut
 ```
@@ -229,13 +241,35 @@ python main.py -c paddlex/configs/image_anomaly_detection/STFPM.yaml \
 
 ## 6. 产线测试
 
-将产线中的模型替换为微调后的模型进行测试，如：
+将产线中的模型替换为微调后的模型进行测试, 可以获取 anomaly_detection 产线配置文件，并加载配置文件进行预测。可执行如下命令将配置保存在 `my_path` 中：
 
-```bash
-python main.py -c paddlex/configs/image_anomaly_detection/STFPM.yaml \
-    -o Global.mode=predict \
-    -o Predict.model_dir="output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_hazelnut.png"
+```
+paddlex --get_pipeline_config anomaly_detection --save_path ./my_path
+```
+
+将`my_path/anomaly_detection.yaml`配置文件中的`SubModules.AnomalyDetection.model_dir`修改为自己的模型路径`output/best_model/inference`：
+
+```yaml
+pipeline_name: anomaly_detection
+
+SubModules:
+  AnomalyDetection:
+    module_name: anomaly_detection
+    model_name: STFPM
+    model_dir: output/best_model/inference  # 替换为微调后的图像异常检测模型权重路径
+    batch_size: 1
+```
+
+随后在 Python 代码中，您可以这样调用产线：
+
+```python
+from paddlex import create_pipeline
+pipeline = create_pipeline(pipeline="./my_path/anomaly_detection.yaml")
+output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_hazelnut.png")
+for res in output:
+    res.print() ## 打印预测的结构化输出
+    res.save_to_img("./output/") ## 保存结果可视化图像
+    res.save_to_json("./output/") ## 保存预测的结构化输出
 ```
 
 通过上述可在`./output`下生成预测结果，其中`uad_hazelnut.png`的预测结果如下：
@@ -247,10 +281,12 @@ python main.py -c paddlex/configs/image_anomaly_detection/STFPM.yaml \
 
 ## 7. 开发集成/部署
 如果通用异常检测产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
-1. 直接将训练好的模型应用在您的 Python 项目中，可以参考如下示例代码，并将`paddlex/pipelines/anomaly_detection.yaml`配置文件中的`Pipeline.model`修改为自己的模型路径`output/best_model/inference`：
+
+1. 直接将训练好的模型应用在您的 Python 项目中，可以参考如下示例:
+
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="paddlex/pipelines/anomaly_detection.yaml")
+pipeline = create_pipeline(pipeline="my_path/anomaly_detection.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_hazelnut.png")
 for res in output:
     res.print() # 打印预测的结构化输出

@@ -142,6 +142,12 @@ In the above Python script, the following steps are performed:
 <td><code>None</code></td>
 </tr>
 <tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it takes precedence over <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>device</code></td>
 <td>The inference device for the production line. It supports specifying the specific card number of the hardware, such as "gpu:0" for GPU, "npu:0" for NPU, or "cpu" for CPU.</td>
 <td><code>str</code></td>
@@ -807,7 +813,7 @@ SubModules:
   TSAnomalyDetection:
     module_name: ts_anomaly_detection
     model_name: DLinear_ad
-    model_dir: null  # 此处替换为您训练后得到的模型权重本地路径
+    model_dir: null  # Can be modified to the local path of the fine-tuned model
     batch_size: 1
 ```
 

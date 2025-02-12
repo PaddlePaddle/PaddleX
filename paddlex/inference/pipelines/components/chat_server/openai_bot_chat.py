@@ -41,6 +41,9 @@ class OpenAIBotChat(BaseChat):
         """
         super().__init__()
         model_name = config.get("model_name", None)
+        # compatible with historical model name
+        if model_name == "ernie-3.5":
+            model_name = "ernie-3.5-8k"
         api_type = config.get("api_type", None)
         api_key = config.get("api_key", None)
         base_url = config.get("base_url", None)

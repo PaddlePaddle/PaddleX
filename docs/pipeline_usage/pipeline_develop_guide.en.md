@@ -186,7 +186,7 @@ Choose the appropriate deployment method for your model pipeline based on your n
 <tbody>
 <tr>
 <td>PP-ChatOCR-doc v3</td>
-<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.html">PP-ChatOCR-doc v3 Pipeline Usage Tutorial</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.html">PP-ChatOCR-doc v3 Pipeline Usage Tutorial</a></td>
 </tr>
 <tr>
 <td>Image Classification</td>
@@ -233,6 +233,26 @@ Choose the appropriate deployment method for your model pipeline based on your n
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html">Image Anomaly Detection Pipeline Usage Tutorial</a></td>
 </tr>
 <tr>
+<td>Human Keypoint Detection</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.html">Human Keypoint Detection Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
+<td>Open Vocabulary Detection</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_detection.html">Open Vocabulary Detection Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
+<td>Open Vocabulary Segmentation</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_segmentation.html">Open Vocabulary Segmentation Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
+<td>Rotated Object Detection</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/rotated_object_detection.html">Rotated Object Detection Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
+<td>3D Bev Detection</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/3d_bev_detection.html">3D Bev Detection Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
 <td>OCR</td>
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/OCR.html">OCR Pipeline Usage Tutorial</a></td>
 </tr>
@@ -241,8 +261,16 @@ Choose the appropriate deployment method for your model pipeline based on your n
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/table_recognition.html">Table Recognition Pipeline Usage Tutorial</a></td>
 </tr>
 <tr>
+<td>Table Recognition v2</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.html">Table Recognition v2 Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
 <td>Layout Parsing</td>
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html">Layout Parsing Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
+<td>Layout Parsing v2</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.html">Layout Parsing v2 Pipeline Usage Tutorial</a></td>
 </tr>
 <tr>
 <td>Formula Recognition</td>
@@ -251,6 +279,10 @@ Choose the appropriate deployment method for your model pipeline based on your n
 <tr>
 <td>Seal Recognition</td>
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html">Seal Recognition Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
+<td>Document Image Preprocessing</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html">Document Image Preprocessing Pipeline Usage Tutorial</a></td>
 </tr>
 <tr>
 <td>Time Series Forecasting</td>
@@ -263,6 +295,18 @@ Choose the appropriate deployment method for your model pipeline based on your n
 <tr>
 <td>Time Series Classification</td>
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/time_series_pipelines/time_series_classification.html">Time Series Classification Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
+<td>Multilingual Speech Recognition</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/speech_pipelines/multilingual_speech_recognition.html">Multilingual Speech Recognition Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
+<td>Video Classification</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/video_pipelines/video_classification.html">Video Classification Pipeline Usage Tutorial</a></td>
+</tr>
+<tr>
+<td>Video Detection</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/video_pipelines/video_detection.html">Video Detection Pipeline Usage Tutorial</a></td>
 </tr>
 </tbody>
 </table>

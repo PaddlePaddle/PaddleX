@@ -5,10 +5,9 @@ comments: true
 # Vehicle Attribute Recognition Pipeline Tutorial
 
 ## 1. Introduction to Vehicle Attribute Recognition Pipeline
-Vehicle attribute recognition is a crucial component in computer vision systems. Its primary task is to locate and label specific attributes of vehicles in images or videos, such as vehicle type, color, and license plate number. This task not only requires accurately detecting vehicles but also identifying detailed attribute information for each vehicle. The vehicle attribute recognition pipeline is an end-to-end serial system for locating and recognizing vehicle attributes, widely used in traffic management, intelligent parking, security surveillance, autonomous driving, and other fields. It significantly enhances system efficiency and intelligence levels, driving the development and innovation of related industries.
+Vehicle attribute recognition is a crucial component in computer vision systems. Its primary task is to locate and label specific attributes of vehicles in images or videos, such as vehicle type, color, and license plate number. This task not only requires accurately detecting vehicles but also identifying detailed attribute information for each vehicle. The vehicle attribute recognition pipeline is an end-to-end serial system for locating and recognizing vehicle attributes, widely used in traffic management, intelligent parking, security surveillance, autonomous driving, and other fields. It significantly enhances system efficiency and intelligence levels, driving the development and innovation of related industries. This pipeline also offers a flexible service-oriented deployment approach, supporting the use of multiple programming languages on various hardware platforms. Moreover, this production line provides the capability for secondary development. You can train and optimize models on your own dataset based on this production line, and the trained models can be seamlessly integrated.
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/vehicle_attribute_recognition/01.jpg">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/vehicle_attribute_recognition/01.jpg"/>
 <b>The vehicle attribute recognition pipeline includes a vehicle detection module and a vehicle attribute recognition module</b>, with several models in each module. Which models to use can be selected based on the benchmark data below. <b>If you prioritize model accuracy, choose models with higher accuracy; if you prioritize inference speed, choose models with faster inference; if you prioritize model storage size, choose models with smaller storage</b>.
 
 <p><b>Vehicle Detection Module</b>:</p>
@@ -16,28 +15,27 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP 0.5:0.95</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
 <tr>
 <td>PP-YOLOE-S_vehicle</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE-S_vehicle_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-S_vehicle_pretrained.pdparams">Trained Model</a></td>
 <td>61.3</td>
-<td>15.4</td>
-<td>178.4</td>
+<td>9.79 / 3.48</td>
+<td>54.14 / 46.69</td>
 <td>28.79</td>
 <td rowspan="2">Vehicle detection model based on PP-YOLOE</td>
 </tr>
 <tr>
 <td>PP-YOLOE-L_vehicle</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE-L_vehicle_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE-L_vehicle_pretrained.pdparams">Trained Model</a></td>
 <td>63.9</td>
-<td>32.6</td>
-<td>775.6</td>
+<td>32.84 / 9.03</td>
+<td>176.60 / 176.60</td>
 <td>196.02</td>
 </tr>
 </table>
-
 <p><b>Note: The above accuracy metrics are mAP(0.5:0.95) on the PPVehicle validation set. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
 <p><b>Vehicle Attribute Recognition Module</b>:</p>
 <table>
@@ -45,8 +43,8 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
@@ -55,8 +53,8 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 <tr>
 <td>PP-LCNet_x1_0_vehicle_attribute</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_vehicle_attribute_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_vehicle_attribute_pretrained.pdparams">Trained Model</a></td>
 <td>91.7</td>
-<td>3.84845</td>
-<td>9.23735</td>
+<td>2.32 / 0.52</td>
+<td>3.22 / 1.26</td>
 <td>6.7 M</td>
 <td>PP-LCNet_x1_0_vehicle_attribute is a lightweight vehicle attribute recognition model based on PP-LCNet.</td>
 </tr>
@@ -77,7 +75,7 @@ Before using the vehicle attribute recognition pipeline locally, ensure you have
 You can quickly experience the vehicle attribute recognition pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_attribute_002.jpg) and replace `--input` with the local path for prediction.
 
 ```bash
-paddlex --pipeline vehicle_attribute_recognition --input vehicle_attribute_002.jpg --device gpu:0
+paddlex --pipeline vehicle_attribute_recognition --input vehicle_attribute_002.jpg --device gpu:0 --save_path ./output/
 ```
 Parameter Description:
 
@@ -89,7 +87,7 @@ For the explanation of the running result parameters, you can refer to the resul
 
 The visualization results are saved under `save_path`, and the visualization result is as follows:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/vehicle_attribute_recognition/01.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/vehicle_attribute_recognition/01.jpg"/>
 
 
 #### 2.2.2 Integration via Python Script
@@ -116,6 +114,12 @@ In the above Python script, the following steps are executed:
 <td>The name of the production line or the path to the production line configuration file. If it is the name of a production line, it must be supported by PaddleX.</td>
 <td><code>str</code></td>
 <td>None</td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
@@ -150,9 +154,9 @@ In the above Python script, the following steps are executed:
 <td><code>Python Var|str|list</code></td>
 <td>
 <ul>
-  <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code>.</li>
-  <li><b>str</b>: Local path of the image file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the network URL of the image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_attribute_002.jpg">Example</a>; <b>Local directory</b>, which should contain images to be predicted, such as <code>/root/data/</code>.</li>
-  <li><b>List</b>: Elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>.</li>
+<li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code>.</li>
+<li><b>str</b>: Local path of the image file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the network URL of the image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_attribute_002.jpg">Example</a>; <b>Local directory</b>, which should contain images to be predicted, such as <code>/root/data/</code>.</li>
+<li><b>List</b>: Elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -163,13 +167,13 @@ In the above Python script, the following steps are executed:
 <td><code>str|None</code></td>
 <td>
 <ul>
-  <li><b>CPU</b>: Use CPU for inference, such as <code>cpu</code>.</li>
-  <li><b>GPU</b>: Use the specified GPU for inference, such as <code>gpu:0</code> for the first GPU.</li>
-  <li><b>NPU</b>: Use the specified NPU for inference, such as <code>npu:0</code> for the first NPU.</li>
-  <li><b>XPU</b>: Use the specified XPU for inference, such as <code>xpu:0</code> for the first XPU.</li>
-  <li><b>MLU</b>: Use the specified MLU for inference, such as <code>mlu:0</code> for the first MLU.</li>
-  <li><b>DCU</b>: Use the specified DCU for inference, such as <code>dcu:0</code> for the first DCU.</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used. During initialization, it will prioritize the local GPU device 0; if unavailable, it will use the CPU.</li>
+<li><b>CPU</b>: Use CPU for inference, such as <code>cpu</code>.</li>
+<li><b>GPU</b>: Use the specified GPU for inference, such as <code>gpu:0</code> for the first GPU.</li>
+<li><b>NPU</b>: Use the specified NPU for inference, such as <code>npu:0</code> for the first NPU.</li>
+<li><b>XPU</b>: Use the specified XPU for inference, such as <code>xpu:0</code> for the first XPU.</li>
+<li><b>MLU</b>: Use the specified MLU for inference, such as <code>mlu:0</code> for the first MLU.</li>
+<li><b>DCU</b>: Use the specified DCU for inference, such as <code>dcu:0</code> for the first DCU.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used. During initialization, it will prioritize the local GPU device 0; if unavailable, it will use the CPU.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -180,8 +184,8 @@ In the above Python script, the following steps are executed:
 <td><code>float | None</code></td>
 <td>
 <ul>
-  <li><b>float</b>: For example, <code>0.5</code>, which means filtering out all bounding boxes with a score less than <code>0.5</code>.</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, initialized to <code>0.5</code>.</li>
+<li><b>float</b>: For example, <code>0.5</code>, which means filtering out all bounding boxes with a score less than <code>0.5</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, initialized to <code>0.5</code>.</li>
 </ul>
 </td>
 <td><code>0.5</code></td>
@@ -192,10 +196,10 @@ In the above Python script, the following steps are executed:
 <td><code>float | dict | list | None</code></td>
 <td>
 <ul>
-  <li><b>float</b>: A uniform threshold for attribute recognition.</li>
-  <li><b>list</b>: For example, <code>[0.5, 0.45, 0.48, 0.4]</code>, which means different thresholds for different classes in the order of <code>label list</code>.</li>
-  <li><b>dict</b>: The key is <code>default</code> or <code>int</code> type, and the value is a <code>float</code> threshold. For example, <code>{"default": 0.5, 0: 0.45, 2: 0.48, 7: 0.4}</code>. <code>default</code> represents the uniform threshold for attribute recognition, while other <code>int</code> types apply specific thresholds to classes with cls_id 0, 2, and 7.</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, initialized to <code>0.7</code>.</li>
+<li><b>float</b>: A uniform threshold for attribute recognition.</li>
+<li><b>list</b>: For example, <code>[0.5, 0.45, 0.48, 0.4]</code>, which means different thresholds for different classes in the order of <code>label list</code>.</li>
+<li><b>dict</b>: The key is <code>default</code> or <code>int</code> type, and the value is a <code>float</code> threshold. For example, <code>{"default": 0.5, 0: 0.45, 2: 0.48, 7: 0.4}</code>. <code>default</code> represents the uniform threshold for attribute recognition, while other <code>int</code> types apply specific thresholds to classes with cls_id 0, 2, and 7.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, initialized to <code>0.7</code>.</li>
 </ul>
 </td>
 <td><code>0.7</code></td>
@@ -268,13 +272,14 @@ In the above Python script, the following steps are executed:
 - When calling the <code>print()</code> method, the result will be printed to the terminal. The printed content is explained as follows:
 
     - `input_path`: `(str)` The input path of the image to be predicted.
+    - `page_index`: `(Union[int, None])` If the input is a PDF file, it indicates the current page number of the PDF; otherwise, it is `None`.
     - `boxes`: `(List[Dict])` The category IDs of the prediction results.
     - `labels`: `(List[str])` The category names of the prediction results.
     - `cls_scores`: `(List[numpy.ndarray])` The confidence scores of the attribute prediction results.
     - `det_scores`: `(float)` The confidence scores of the vehicle detection boxes.
 
-- When calling the <code>save_to_json()</code> method, the above content will be saved to the specified <code>save_path</code>. If a directory is specified, the saved path will be <code>save_path/{your_img_basename}.json</code>. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the <code>numpy.array</code> type will be converted to a list format.
-- When calling the <code>save_to_img()</code> method, the visualization result will be saved to the specified <code>save_path</code>. If a directory is specified, the saved path will be <code>save_path/{your_img_basename}_res.{your_img_extension}</code>. If a file is specified, it will be saved directly to that file. (In production, there are usually many result images, so it is not recommended to specify a specific file path directly; otherwise, multiple images will be overwritten, and only the last image will be retained.)
+- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.json`. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` type will be converted to a list format.
+- Calling the `save_to_img()` method will save the visualization result to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (The production line usually contains many result images, so it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, and only the last image will be retained.)
 
 * Additionally, it also supports obtaining visualized images with results and prediction results through attributes, as follows:
 
@@ -304,7 +309,7 @@ Additionally, you can obtain the vehicle attribute recognition pipeline configur
 paddlex --get_pipeline_config vehicle_attribute_recognition --save_path ./my_path
 ```
 
-If you have obtained the configuration file, you can customize the settings for the OCR production line by simply modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the configuration file. The example is as follows:
+If you have obtained the configuration file, you can customize the settings for the Vehicle Attribute Recognition pipeline by simply modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the configuration file. The example is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -338,7 +343,6 @@ In addition, PaddleX also provides three other deployment methods, which are det
 Below are the API references for basic service-oriented deployment and multi-language service invocation examples:
 
 <details><summary>API Reference</summary>
-
 <p>For the main operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
@@ -506,37 +510,34 @@ Below are the API references for basic service-oriented deployment and multi-lan
 </tbody>
 </table>
 </details>
-
 <details><summary>Multi-Language Service Call Examples</summary>
-
 <details>
 <summary>Python</summary>
-
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/vehicle-attribute-recognition&quot; # Service URL
-image_path = &quot;./demo.jpg&quot;
-output_image_path = &quot;./out.jpg&quot;
+API_URL = "http://localhost:8080/vehicle-attribute-recognition" # Service URL
+image_path = "./demo.jpg"
+output_image_path = "./out.jpg"
 
 # Encode the local image using Base64
-with open(image_path, &quot;rb&quot;) as file:
+with open(image_path, "rb") as file:
     image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
-payload = {&quot;image&quot;: image_data}  # Base64-encoded file content or image URL
+payload = {"image": image_data}  # Base64-encoded file content or image URL
 
 # Call the API
 response = requests.post(API_URL, json=payload)
 
 # Process the response data
 assert response.status_code == 200
-result = response.json()[&quot;result&quot;]
-with open(output_image_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result[&quot;image&quot;]))
-print(f&quot;Output image saved at {output_image_path}&quot;)
-print(&quot;\nDetected vehicles:&quot;)
-print(result[&quot;vehicles&quot;])
+result = response.json()["result"]
+with open(output_image_path, "wb") as file:
+    file.write(base64.b64decode(result["image"]))
+print(f"Output image saved at {output_image_path}")
+print("\nDetected vehicles:")
+print(result["vehicles"])
 </code></pre></details>
 </details>
 <br/>
@@ -551,27 +552,26 @@ If the default model weights provided by the vehicle attribute recognition produ
 Since the vehicle attribute recognition production line includes both a vehicle detection module and a vehicle attribute recognition module, if the performance of the production line is not satisfactory, the issue may lie in either of these modules. You can analyze the images with poor recognition results to determine which module is problematic and refer to the corresponding fine-tuning tutorial links in the table below for model fine-tuning.
 
 <table>
-  <thead>
-    <tr>
-      <th>Scenario</th>
-      <th>Fine-Tuning Module</th>
-      <th>Fine-Tuning Reference Link</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Inaccurate vehicle detection</td>
-      <td>Vehicle Detection Module</td>
-      <td><a href="../../../module_usage/tutorials/cv_modules/vehicle_detection.en.md">Link</a></td>
-    </tr>
-    <tr>
-      <td>Inaccurate attribute recognition</td>
-      <td>Vehicle Attribute Recognition Module</td>
-      <td><a href="../../../module_usage/tutorials/cv_modules/vehicle_attribute_recognition.en.md">Link</a></td>
-    </tr>
-  </tbody>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Fine-Tuning Module</th>
+<th>Fine-Tuning Reference Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inaccurate vehicle detection</td>
+<td>Vehicle Detection Module</td>
+<td><a href="../../../module_usage/tutorials/cv_modules/vehicle_detection.en.md">Link</a></td>
+</tr>
+<tr>
+<td>Inaccurate attribute recognition</td>
+<td>Vehicle Attribute Recognition Module</td>
+<td><a href="../../../module_usage/tutorials/cv_modules/vehicle_attribute_recognition.en.md">Link</a></td>
+</tr>
+</tbody>
 </table>
-
 <b>Note:</b> The parameters in the configuration file are initialization parameters for the production line. If you wish to change the initialization parameters for the vehicle attribute recognition production line, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in a configuration file by specifying the path of the configuration file with `--pipeline`.
 
 ## 3. Development Integration/Deployment
@@ -588,20 +588,20 @@ In addition, PaddleX also provides three other deployment methods, which are det
 
 Below are the API references for basic service-oriented deployment and multi-language service invocation examples:
 
-```bash
+```yaml
 pipeline_name: vehicle_attribute_recognition
 
 SubModules:
   Detection:
     module_name: object_detection
     model_name: PP-YOLOE-L_vehicle
-    model_dir: null
+    model_dir: null # Replace with the path to the fine-tuned vehicle detection model weights
     batch_size: 1
     threshold: 0.5
   Classification:
     module_name: multilabel_classification
     model_name: PP-LCNet_x1_0_vehicle_attribute
-    model_dir: null
+    model_dir: null # Replace with the path to the fine-tuned vehicle attribute recognition model weights
     batch_size: 1
     threshold: 0.7
 ```
@@ -619,4 +619,4 @@ paddlex --pipeline vehicle_attribute_recognition \
         --device npu:0
 ```
 
-If you want to use the general OCR production line on a wider range of hardware devices, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+If you want to use the general Vehicle Attribute Recognition pipeline on a wider range of hardware devices, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).

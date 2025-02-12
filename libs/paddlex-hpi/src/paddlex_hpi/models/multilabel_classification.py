@@ -21,10 +21,11 @@ from pathlib import Path
 import tempfile
 import yaml
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.models_new.image_multilabel_classification.result import (
+from paddlex.inference.models.image_multilabel_classification.result import (
     MLClassResult,
 )
 from paddlex.modules.multilabel_classification.model_list import MODELS
+from paddlex.utils import logging
 
 from paddlex_hpi.models.base import CVPredictor, HPIParams
 
@@ -37,6 +38,7 @@ class MLClasPredictor(CVPredictor):
         model_dir: Union[str, os.PathLike],
         config: Optional[Dict[str, Any]] = None,
         device: Optional[str] = None,
+        batch_size: int = 1,
         hpi_params: Optional[HPIParams] = None,
         threshold: Union[float, dict, list, None] = None,
     ) -> None:
@@ -45,6 +47,7 @@ class MLClasPredictor(CVPredictor):
             model_dir=model_dir,
             config=config,
             device=device,
+            batch_size=batch_size,
             hpi_params=hpi_params,
         )
         self._label_list = self._get_label_list()
@@ -53,8 +56,8 @@ class MLClasPredictor(CVPredictor):
         self, option: ui.RuntimeOption
     ) -> ui.vision.classification.PyOnlyMultilabelClassificationModel:
         if self._threshold:
-            if isinstance(self._threshold, (dict, list)):
-                raise TypeError("`threshold` must be float or None in PaddleX HPI")
+            if not isinstance(self._threshold, (float, None)):
+                logging.warning("`threshold` must be float or None in PaddleX HPI")
 
             with open(self.config_path, "r") as file:
                 config = yaml.safe_load(file)
@@ -96,11 +99,11 @@ class MLClasPredictor(CVPredictor):
         threshold: Union[float, dict, list, None] = None,
     ) -> Dict[str, List[Any]]:
         if threshold:
-            raise TypeError(
+            logging.warning(
                 "`threshold` is not supported for multilabel classification in PaddleX HPI"
             )
 
-        batch_raw_imgs = self._data_reader(imgs=batch_data)
+        batch_raw_imgs = self._data_reader(imgs=batch_data.instances)
         imgs = [np.ascontiguousarray(img) for img in batch_raw_imgs]
         ui_results = self._ui_model.batch_predict(imgs)
 
@@ -116,7 +119,8 @@ class MLClasPredictor(CVPredictor):
                 )
 
         return {
-            "input_path": batch_data,
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
             "input_img": batch_raw_imgs,
             "class_ids": class_ids_list,
             "scores": scores_list,

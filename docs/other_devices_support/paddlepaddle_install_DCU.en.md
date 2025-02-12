@@ -27,7 +27,7 @@ Within the started docker container, download and install the wheel package rele
 
 ```bash
 # Download and install the wheel package
-pip install paddlepaddle-rocm -i https://www.paddlepaddle.org.cn/packages/nightly/dcu
+pip install paddlepaddle-dcu -i https://www.paddlepaddle.org.cn/packages/nightly/dcu
 ```
 
 After the installation package is installed, run the following command to verify it:

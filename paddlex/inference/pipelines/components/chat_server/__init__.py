@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .ernie_bot_chat import ErnieBotChat
+from .base import BaseChat
 from .openai_bot_chat import OpenAIBotChat

@@ -15,8 +15,8 @@ comments: true
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>mA（%）</th>
-<th>GPU推理耗时（ms）</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小（M)</th>
 <th>介绍</th>
 </tr>
@@ -25,8 +25,8 @@ comments: true
 <tr>
 <td>PP-LCNet_x1_0_vehicle_attribute</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_vehicle_attribute_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_vehicle_attribute_pretrained.pdparams">训练模型</a></td>
 <td>91.7</td>
-<td>3.84845</td>
-<td>9.23735</td>
+<td>2.32 / 0.52</td>
+<td>3.22 / 1.26</td>
 <td>6.7 M</td>
 <td>PP-LCNet_x1_0_vehicle_attribute 是一种基于PP-LCNet的轻量级车辆属性识别模型。</td>
 </tr>
@@ -40,18 +40,215 @@ comments: true
 
 完成 wheel 包的安装后，几行代码即可完成车辆属性识别模块的推理，可以任意切换该模块下的模型，您也可以将车辆属性识别的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_attribute_007.jpg)到本地。
 
-```bash
+```python
 from paddlex import create_model
-model = create_model("PP-LCNet_x1_0_vehicle_attribute")
+model = create_model(model_name="PP-LCNet_x1_0_vehicle_attribute")
 output = model.predict("vehicle_attribute_007.jpg", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
     res.save_to_json("./output/res.json")
 ```
-关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 
-<b>备注</b>：其中 `output` 的值索引为0-9表示颜色属性，对应的颜色分别是：yellow(黄色), orange(橙色), green(绿色), gray(灰色), red(红色), blue(蓝色), white(白色), golden(金色), brown(棕色), black(黑色)；索引为10-18表示车型属性，对应的车型分别是sedan(轿车), suv(越野车), van(面包车), hatchback(掀背车), mpv(多用途汽车), pickup(皮卡车), bus(公共汽车), truck(卡车), estate(旅行车)。
+运行后，得到的结果为：
+```bash
+{'res': {'input_path': 'vehicle_attribute_007.jpg', 'page_index': None, 'class_ids': array([ 0, 13]), 'scores': array([0.98929, 0.97349]), 'label_names': ['yellow(黄色)', 'hatchback(掀背车)']}}
+```
+
+运行结果参数含义如下：
+- `input_path`：表示输入待预测多类别图像的路径
+- `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
+- `class_ids`：表示车辆属性图像的预测标签ID
+- `scores`：表示车辆属性图像的预测标签置信度
+- `label_names`：表示车辆属性图像的预测标签名称
+
+可视化图片如下：
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/vehicle_attri/vehicle_attribute_007_res.jpg">
+
+相关方法、参数等说明如下：
+
+* `create_model`实例化车辆属性识别模型（此处以`PP-LCNet_x1_0_vehicle_attribute`为例），具体说明如下：
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td><code>model_name</code></td>
+<td>模型名称</td>
+<td><code>str</code></td>
+<td>无</td>
+<td><code>PP-LCNet_x1_0_vehicle_attribute</code></td>
+</tr>
+<tr>
+<td><code>model_dir</code></td>
+<td>模型存储路径</td>
+<td><code>str</code></td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td>车辆属性识别阈值</td>
+<td><code>float/list/dict</code></td>
+<td><li><b>float类型变量</b>，任意[0-1]之间浮点数：<code>0.5</code></li>
+<li><b>list类型变量</b>，由多个[0-1]之间浮点数组成的列表：<code>[0.5,0.5,...]</code></li>
+<li><b>dict类型变量</b>,指定不同类别使用不同的阈值，其中"default"为必须包含的键:<code>{"default":0.5,1:0.1,...}</code>
+</li>
+</td>
+<td>0.5</td>
+</tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理</td>
+<td><code>bool</code></td>
+<td>无</td>
+<td><code>False</code></td>
+</tr>
+</table>
+
+* 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
+
+* 其中，`threshold` 参数用于设置多标签分类的阈值，默认为0.7。当设置为浮点数时，表示所有类别均使用该阈值；当设置为列表时，表示不同类别使用不同的阈值,此时需保持列表长度与类别数量一致；当设置为字典时，`default` 为必须包含的键， 表示所有类别的默认阈值，其它类别使用各自的阈值。例如：{"default":0.5,1:0.1}。
+
+* 调用多标签分类模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` , `batch_size` 和  `threshold`，具体说明如下：
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>待预测数据，支持多种输入类型</td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
+<td>
+<ul>
+  <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
+  <li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
+  <li><b>URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png">示例</a></li>
+  <li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
+  <li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
+</ul>
+</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td>批大小</td>
+<td><code>int</code></td>
+<td>任意整数</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td>车辆属性识别阈值</td>
+<td><code>float/list/dict</code></td>
+<td><li><b>float类型变量</b>，任意[0-1]之间浮点数：<code>0.5</code></li>
+<li><b>list类型变量</b>，由多个[0-1]之间浮点数组成的列表：<code>[0.5,0.5,...]</code></li>
+<li><b>dict类型变量</b>,指定不同类别使用不同的阈值，其中"default"为必须包含的键:<code>{"default":0.5,1:0.1,...}</code>
+</li>
+</td>
+<td>0.5</td>
+</tr>
+</table>
+
+* 对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`json`文件的操作:
+
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>方法说明</th>
+<th>参数</th>
+<th>参数类型</th>
+<th>参数说明</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "3"><code>print()</code></td>
+<td rowspan = "3">打印结果到终端</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan = "3"><code>save_to_json()</code></td>
+<td rowspan = "3">将结果保存为json格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>将结果保存为图像格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+</table>
+
+* 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>属性说明</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "1"><code>json</code></td>
+<td rowspan = "1">获取预测的<code>json</code>格式的结果</td>
+</tr>
+<tr>
+<td rowspan = "1"><code>img</code></td>
+<td rowspan = "1">获取格式为<code>dict</code>的可视化图像</td>
+</tr>
+
+</table>
+
+
+关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 
 ## 四、二次开发
 如果你追求更高精度的现有模型，可以使用 PaddleX 的二次开发能力，开发更好的车辆属性识别模型。在使用 PaddleX 开发车辆属性识别模型之前，请务必安装 PaddleX 的 分类 相关模型训练插件，安装过程可以参考[PaddleX本地安装教程](../../../installation/installation.md)。
@@ -77,47 +274,46 @@ python main.py -c paddlex/configs/modules/vehicle_attribute_recognition/PP-LCNet
 执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息，命令运行成功后会在log中打印出`Check dataset passed !`信息。校验结果文件保存在`./output/check_dataset_result.json`，同时相关产出会保存在当前目录的`./output/check_dataset`目录下，产出目录中包括可视化的示例样本图片和样本分布直方图。
 
 <details><summary>👉 <b>校验结果详情（点击展开）</b></summary>
-
 <p>校验结果文件具体内容为：</p>
 <pre><code class="language-bash">{
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;label_file&quot;: &quot;../../dataset/vehicle_attribute_examples/label.txt&quot;,
-    &quot;num_classes&quot;: 19,
-    &quot;train_samples&quot;: 1200,
-    &quot;train_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/0018_c017_00033140_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0010_c019_00034275_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0015_c019_00068660_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0016_c017_00049590_1.jpg&quot;,
-      &quot;check_dataset/demo_img/0018_c016_00052280_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0023_c001_00006995_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0022_c004_00065910_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0007_c019_00048655_1.jpg&quot;,
-      &quot;check_dataset/demo_img/0022_c007_00072970_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0022_c008_00065785_0.jpg&quot;
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "label_file": "../../dataset/vehicle_attribute_examples/label.txt",
+    "num_classes": 19,
+    "train_samples": 1200,
+    "train_sample_paths": [
+      "check_dataset/demo_img/0018_c017_00033140_0.jpg",
+      "check_dataset/demo_img/0010_c019_00034275_0.jpg",
+      "check_dataset/demo_img/0015_c019_00068660_0.jpg",
+      "check_dataset/demo_img/0016_c017_00049590_1.jpg",
+      "check_dataset/demo_img/0018_c016_00052280_0.jpg",
+      "check_dataset/demo_img/0023_c001_00006995_0.jpg",
+      "check_dataset/demo_img/0022_c004_00065910_0.jpg",
+      "check_dataset/demo_img/0007_c019_00048655_1.jpg",
+      "check_dataset/demo_img/0022_c007_00072970_0.jpg",
+      "check_dataset/demo_img/0022_c008_00065785_0.jpg"
     ],
-    &quot;val_samples&quot;: 300,
-    &quot;val_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/0025_c003_00054095_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0023_c013_00006350_1.jpg&quot;,
-      &quot;check_dataset/demo_img/0024_c003_00046320_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0025_c005_00054795_2.jpg&quot;,
-      &quot;check_dataset/demo_img/0024_c012_00041770_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0024_c007_00060845_1.jpg&quot;,
-      &quot;check_dataset/demo_img/0023_c017_00013150_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0024_c014_00040410_0.jpg&quot;,
-      &quot;check_dataset/demo_img/0025_c002_00050685_1.jpg&quot;,
-      &quot;check_dataset/demo_img/0025_c005_00032645_0.jpg&quot;
+    "val_samples": 300,
+    "val_sample_paths": [
+      "check_dataset/demo_img/0025_c003_00054095_0.jpg",
+      "check_dataset/demo_img/0023_c013_00006350_1.jpg",
+      "check_dataset/demo_img/0024_c003_00046320_0.jpg",
+      "check_dataset/demo_img/0025_c005_00054795_2.jpg",
+      "check_dataset/demo_img/0024_c012_00041770_0.jpg",
+      "check_dataset/demo_img/0024_c007_00060845_1.jpg",
+      "check_dataset/demo_img/0023_c017_00013150_0.jpg",
+      "check_dataset/demo_img/0024_c014_00040410_0.jpg",
+      "check_dataset/demo_img/0025_c002_00050685_1.jpg",
+      "check_dataset/demo_img/0025_c005_00032645_0.jpg"
     ]
   },
-  &quot;analysis&quot;: {
-    &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
+  "analysis": {
+    "histogram": "check_dataset/histogram.png"
   },
-  &quot;dataset_path&quot;: &quot;./dataset/vehicle_attribute_examples&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;MLClsDataset&quot;
+  "dataset_path": "vehicle_attribute_examples",
+  "show_type": "image",
+  "dataset_type": "MLClsDataset"
 }
 </code></pre>
 <p>上述校验结果中，check_pass 为 true 表示数据集格式符合要求，其他部分指标的说明如下：</p>
@@ -129,13 +325,12 @@ python main.py -c paddlex/configs/modules/vehicle_attribute_recognition/PP-LCNet
 <li><code>attributes.val_sample_paths</code>：该数据集验证集样本可视化图片相对路径列表；</li>
 </ul>
 <p>另外，数据集校验还对数据集中所有图片的长宽分布情况进行了分析分析，并绘制了分布直方图（histogram.png）：</p>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/vehicle_attri/01.png"></p></details>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/vehicle_attri/01.png"/></p></details>
 
 #### 4.1.3 数据集格式转换/数据集划分（可选）
 在您完成数据校验之后，可以通过<b>修改配置文件</b>或是<b>追加超参数</b>的方式对数据集的格式进行转换，也可以对数据集的训练/验证比例进行重新划分。
 
 <details><summary>👉 <b>格式转换/数据集划分详情（点击展开）</b></summary>
-
 <p><b>（1）数据集格式转换</b></p>
 <p>车辆属性识别不支持数据格式转换。</p>
 <p><b>（2）数据集划分</b></p>
@@ -187,7 +382,6 @@ python main.py -c paddlex/configs/modules/vehicle_attribute_recognition/PP-LCNet
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
-
 <ul>
 <li>模型训练过程中，PaddleX 会自动保存模型权重文件，默认为<code>output</code>，如需指定保存路径，可通过配置文件中 <code>-o Global.output</code> 字段进行设置。</li>
 <li>PaddleX 对您屏蔽了动态图权重和静态图权重的概念。在模型训练的过程中，会同时产出动态图和静态图的权重，在模型推理时，默认选择静态图权重推理。</li>
@@ -218,7 +412,6 @@ python main.py -c paddlex/configs/modules/vehicle_attribute_recognition/PP-LCNet
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Evaluate`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 <details><summary>👉 <b>更多说明（点击展开）</b></summary>
-
 <p>在模型评估时，需要指定模型权重文件路径，每个配置文件中都内置了默认的权重保存路径，如需要改变，只需要通过追加命令行参数的形式进行设置即可，如<code>-o Evaluate.weight_path=./output/best_model/best_model.pdparams</code>。</p>
 <p>在完成模型评估后，会产出<code>evaluate_result.json，其记录了</code>评估的结果，具体来说，记录了评估任务是否正常完成，以及模型的评估指标，包括 MultiLabelMAP；</p></details>
 
@@ -243,15 +436,17 @@ python main.py -c paddlex/configs/modules/vehicle_attribute_recognition/PP-LCNet
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Predict`下的字段来进行设置，详细请参考[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。
 
 #### 4.4.2 模型集成
-模型可以直接集成到您自己的项目中。您产出的权重可以直接集成到行人属性识别模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
+模型可以直接集成到您自己的项目中。您产出的权重可以直接集成到车辆属性识别模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
 
 #### 4.4.2 模型集成
 模型可以直接集成到 PaddleX 产线中，也可以直接集成到您自己的项目中。
 
 1.<b>产线集成</b>
 
-车辆属性识别模块可以集成的PaddleX产线有[通用图像多标签分类产线](../../../pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md)，只需要替换模型路径即可完成相关产线的车辆属性识别模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
+车辆属性识别模块可以集成的PaddleX产线有[车辆属性识别产线](../../../pipeline_usage/tutorials/cv_pipelines/vehicle_attribute_recognition.md)，只需要替换模型路径即可完成相关产线的车辆属性识别模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
 
 2.<b>模块集成</b>
 
 您产出的权重可以直接集成到车辆属性识别模块中，可以参考[快速集成](#三快速集成)的 Python 示例代码，只需要将模型替换为你训练的到的模型路径即可。
+
+您也可以利用 PaddleX 高性能推理插件来优化您模型的推理过程，进一步提升效率，详细的流程请参考[PaddleX高性能推理指南](../../../pipeline_deploy/high_performance_inference.md)。

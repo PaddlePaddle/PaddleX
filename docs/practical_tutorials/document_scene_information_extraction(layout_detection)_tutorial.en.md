@@ -537,7 +537,7 @@ chat_result = pipeline.chat(
 chat_result.print()
 ```
 
-For more parameters, please refer to the [Document Scene Information Extraction Pipeline Usage Tutorial](../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.en.md).
+For more parameters, please refer to the [Document Scene Information Extraction Pipeline Usage Tutorial](../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.en.md).
 
 2. Additionally, PaddleX offers three other deployment methods, detailed as follows:
 
