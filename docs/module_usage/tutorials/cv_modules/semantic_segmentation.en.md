@@ -14,8 +14,8 @@ Semantic segmentation is a technique in computer vision that classifies each pix
 <tr>
 <th>Model Name</th><th>Model Download Link</th>
 <th>mIoU (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 </tr>
 </thead>
@@ -23,20 +23,20 @@ Semantic segmentation is a technique in computer vision that classifies each pix
 <tr>
 <td>OCRNet_HRNet-W48</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/OCRNet_HRNet-W48_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W48_pretrained.pdparams">Trained Model</a></td>
 <td>82.15</td>
-<td>78.9976</td>
-<td>2226.95</td>
+<td>627.36 / 170.76</td>
+<td>3531.61 / 3531.61</td>
 <td>249.8 M</td>
 </tr>
 <tr>
 <td>PP-LiteSeg-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LiteSeg-T_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-T_pretrained.pdparams">Trained Model</a></td>
 <td>73.10</td>
-<td>7.6827</td>
-<td>138.683</td>
+<td>30.16 / 14.03</td>
+<td>420.07 / 235.01</td>
 <td>28.5 M</td>
 </tr>
 </tbody>
 </table>
-> ❗ The above list features the <b>2 core models</b> that the image classification module primarily supports. In total, this module supports <b>18 models</b>. The complete list of models is as follows:
+&gt; ❗ The above list features the <b>2 core models</b> that the image classification module primarily supports. In total, this module supports <b>18 models</b>. The complete list of models is as follows:
 
 <details><summary> 👉Model List Details</summary>
 <table>
@@ -44,8 +44,8 @@ Semantic segmentation is a technique in computer vision that classifies each pix
 <tr>
 <th>Model Name</th><th>Model Download Link</th>
 <th>mIoU (%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 </tr>
 </thead>
@@ -53,57 +53,57 @@ Semantic segmentation is a technique in computer vision that classifies each pix
 <tr>
 <td>Deeplabv3_Plus-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Deeplabv3_Plus-R50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3_Plus-R50_pretrained.pdparams">Trained Model</a></td>
 <td>80.36</td>
-<td>61.0531</td>
-<td>1513.58</td>
+<td>503.51 / 122.30</td>
+<td>3543.91 / 3543.91</td>
 <td>94.9 M</td>
 </tr>
 <tr>
 <td>Deeplabv3_Plus-R101</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Deeplabv3_Plus-R101_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3_Plus-R101_pretrained.pdparams">Trained Model</a></td>
 <td>81.10</td>
-<td>100.026</td>
-<td>2460.71</td>
+<td>803.79 / 175.45</td>
+<td>5136.21 / 5136.21</td>
 <td>162.5 M</td>
 </tr>
 <tr>
 <td>Deeplabv3-R50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Deeplabv3-R50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3-R50_pretrained.pdparams">Trained Model</a></td>
 <td>79.90</td>
-<td>82.2631</td>
-<td>1735.83</td>
+<td>647.56 / 121.67</td>
+<td>3803.09 / 3803.09</td>
 <td>138.3 M</td>
 </tr>
 <tr>
 <td>Deeplabv3-R101</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Deeplabv3-R101_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Deeplabv3-R101_pretrained.pdparams">Trained Model</a></td>
 <td>80.85</td>
-<td>121.492</td>
-<td>2685.51</td>
+<td>950.43 / 178.50</td>
+<td>5517.14 / 5517.14</td>
 <td>205.9 M</td>
 </tr>
 <tr>
 <td>OCRNet_HRNet-W18</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/OCRNet_HRNet-W18_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W18_pretrained.pdparams">Trained Model</a></td>
 <td>80.67</td>
-<td>48.2335</td>
-<td>906.385</td>
+<td>286.12 / 80.76</td>
+<td>1794.03 / 1794.03</td>
 <td>43.1 M</td>
 </tr>
 <tr>
 <td>OCRNet_HRNet-W48</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/OCRNet_HRNet-W48_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/OCRNet_HRNet-W48_pretrained.pdparams">Trained Model</a></td>
 <td>82.15</td>
-<td>78.9976</td>
-<td>2226.95</td>
+<td>627.36 / 170.76</td>
+<td>3531.61 / 3531.61</td>
 <td>249.8 M</td>
 </tr>
 <tr>
 <td>PP-LiteSeg-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LiteSeg-T_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-T_pretrained.pdparams">Trained Model</a></td>
 <td>73.10</td>
-<td>7.6827</td>
-<td>138.683</td>
+<td>30.16 / 14.03</td>
+<td>420.07 / 235.01</td>
 <td>28.5 M</td>
 </tr>
 <tr>
 <td>PP-LiteSeg-B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LiteSeg-B_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LiteSeg-B_pretrained.pdparams">Trained Model</a></td>
 <td>75.25</td>
-<td>10.9935</td>
-<td>194.727</td>
+<td>40.92 / 20.18</td>
+<td>494.32 / 310.34</td>
 <td>47.0 M</td>
 </tr>
 <tr>
@@ -209,7 +209,7 @@ Semantic segmentation is a technique in computer vision that classifies each pix
 <p><b>The accuracy metrics of the above models are measured on the <a href="https://groups.csail.mit.edu/vision/datasets/ADE20K/">ADE20k</a> dataset. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p></details>
 
 ## III. Quick Integration
-> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
+&gt; ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 
 Just a few lines of code can complete the inference of the Semantic Segmentation module, allowing you to easily switch between models under this module. You can also integrate the model inference of the the Semantic Segmentation module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png) to your local machine.
@@ -237,7 +237,7 @@ The meanings of the runtime parameters are as follows:
 
 The visualization image is as follows:
 
-<img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/semantic_segmentation/general_semantic_segmentation_002_res.png" alt="Visualization Image">
+<img alt="Visualization Image" src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/semantic_segmentation/general_semantic_segmentation_002_res.png"/>
 
 Note: The image link may not be accessible due to network issues or problems with the link itself. If you need to access the image, please check the validity of the link and try again.
 
@@ -279,7 +279,7 @@ Related methods, parameters, and explanations are as follows:
 
 * The `model_name` must be specified. After specifying `model_name`, the built-in model parameters of PaddleX are used by default. If `model_dir` is specified, the user-defined model is used.
 
-* The `target_size` is specified during initialization to set the resolution for model inference. The default value is `None`. `-1` indicates that the original image size is used for inference, and `None` indicates that the settings from the previous layer are used. The priority order for parameter settings is: `predict parameter > create_model initialization > yaml configuration file`.
+* The `target_size` is specified during initialization to set the resolution for model inference. The default value is `None`. `-1` indicates that the original image size is used for inference, and `None` indicates that the settings from the previous layer are used. The priority order for parameter settings is: `predict parameter &gt; create_model initialization &gt; yaml configuration file`.
 
 * The `predict()` method of the general semantic segmentation model is called for inference and prediction. The parameters of the `predict()` method are `input`, `batch_size`, and `target_size`, with specific explanations as follows:
 
@@ -299,11 +299,11 @@ Related methods, parameters, and explanations are as follows:
 <td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
-  <li><b>Python Variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
-  <li><b>File Path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
-  <li><b>URL Link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_001.png">Example</a></li>
-  <li><b>Local Directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
-  <li><b>List</b>, elements of the list should be data of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
+<li><b>Python Variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
+<li><b>File Path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
+<li><b>URL Link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_001.png">Example</a></li>
+<li><b>Local Directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
+<li><b>List</b>, elements of the list should be data of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td>None</td>
@@ -321,10 +321,10 @@ Related methods, parameters, and explanations are as follows:
 <td><code>int</code>/<code>tuple</code></td>
 <td>
 <ul>
-  <li><b>-1</b>, indicating inference using the original image size</li>
-  <li><b>None</b>, indicating the settings from the previous layer are used. The priority order for parameter settings is: <code>predict parameter > create_model initialization > yaml configuration file</code></li>
-  <li><b>int</b>, such as 512, indicating inference using a resolution of <code>(512, 512)</code></li>
-  <li><b>tuple</b>, such as (512, 1024), indicating inference using a resolution of <code>(512, 1024)</code></li>
+<li><b>-1</b>, indicating inference using the original image size</li>
+<li><b>None</b>, indicating the settings from the previous layer are used. The priority order for parameter settings is: <code>predict parameter &gt; create_model initialization &gt; yaml configuration file</code></li>
+<li><b>int</b>, such as 512, indicating inference using a resolution of <code>(512, 512)</code></li>
+<li><b>tuple</b>, such as (512, 1024), indicating inference using a resolution of <code>(512, 1024)</code></li>
 </ul>
 </td>
 <td>None</td>
@@ -445,30 +445,29 @@ python main.py -c paddlex/configs/modules/semantic_segmentation/PP-LiteSeg-T.yam
 After executing the above command, PaddleX will verify the dataset and collect basic information about it. Once the command runs successfully, a message saying `Check dataset passed !` will be printed in the log. The verification results will be saved in `./output/check_dataset_result.json`, and related outputs will be stored in the `./output/check_dataset` directory, including visual examples of sample images and a histogram of sample distribution.
 
 <details><summary>👉 <b>Verification Result Details (click to expand)</b></summary>
-
 <p>The specific content of the verification result file is:</p>
 <pre><code class="language-bash">{
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;train_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/P0005.jpg&quot;,
-      &quot;check_dataset/demo_img/P0050.jpg&quot;
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "train_sample_paths": [
+      "check_dataset/demo_img/P0005.jpg",
+      "check_dataset/demo_img/P0050.jpg"
     ],
-    &quot;train_samples&quot;: 267,
-    &quot;val_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/N0139.jpg&quot;,
-      &quot;check_dataset/demo_img/P0137.jpg&quot;
+    "train_samples": 267,
+    "val_sample_paths": [
+      "check_dataset/demo_img/N0139.jpg",
+      "check_dataset/demo_img/P0137.jpg"
     ],
-    &quot;val_samples&quot;: 76,
-    &quot;num_classes&quot;: 2
+    "val_samples": 76,
+    "num_classes": 2
   },
-  &quot;analysis&quot;: {
-    &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
+  "analysis": {
+    "histogram": "check_dataset/histogram.png"
   },
-  &quot;dataset_path&quot;: &quot;seg_optic_examples&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;SegDataset&quot;
+  "dataset_path": "seg_optic_examples",
+  "show_type": "image",
+  "dataset_type": "SegDataset"
 }
 </code></pre>
 <p>The verification results above indicate that <code>check_pass</code> being <code>True</code> means the dataset format meets the requirements. Explanations for other indicators are as follows:</p>
@@ -480,11 +479,10 @@ After executing the above command, PaddleX will verify the dataset and collect b
 <li><code>attributes.val_sample_paths</code>: A list of relative paths to the visualization images of validation samples in this dataset;</li>
 </ul>
 <p>The dataset verification also analyzes the distribution of sample numbers across all classes and plots a histogram (histogram.png):</p>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/semanticseg/01.png"></p></details>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/semanticseg/01.png"/></p></details>
 
 #### 4.1.3 Dataset Format Conversion/Dataset Splitting (Optional) (Click to Expand)
 <details><summary>👉 <b>Details on Format Conversion/Dataset Splitting (Click to Expand)</b></summary>
-
 <p>After completing dataset verification, you can convert the dataset format or re-split the training/validation ratio by modifying the configuration file or appending hyperparameters.</p>
 <p><b>(1) Dataset Format Conversion</b></p>
 <p>Semantic segmentation supports converting <code>LabelMe</code> format datasets to the required format.</p>
@@ -572,7 +570,6 @@ You need to follow these steps:
 Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to train using the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration Parameters Documentation](../../instructions/config_parameters_common.en.md).
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <ul>
 <li>During model training, PaddleX automatically saves model weight files, with the default path being <code>output</code>. To specify a different save path, use the <code>-o Global.output</code> field in the configuration file.</li>
 <li>PaddleX abstracts the concepts of dynamic graph weights and static graph weights from you. During model training, both dynamic and static graph weights are produced, and static graph weights are used by default for model inference.</li>
@@ -605,7 +602,6 @@ Similar to model training, follow these steps:
 Other related parameters can be set by modifying the `Global` and `Evaluate` fields in the `.yaml` configuration file. For more details, refer to the [PaddleX Common Configuration Parameters Documentation](../../instructions/config_parameters_common.en.md).
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <p>When evaluating the model, you need to specify the model weight file path. Each configuration file has a default weight save path. If you need to change it, simply append the command line parameter, e.g., <code>-o Evaluate.weight_path=./output/best_model/best_model.pdparams</code>.</p>
 <p>After model evaluation, the following outputs are typically produced:</p>
 <ul>

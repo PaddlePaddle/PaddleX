@@ -147,29 +147,6 @@ class LayoutParsingPipeline(BasePipeline):
 
         return
 
-    def get_text_paragraphs_ocr_res(
-        self, overall_ocr_res: OCRResult, layout_det_res: DetResult
-    ) -> OCRResult:
-        """
-        Retrieves the OCR results for text paragraphs, excluding those of formulas, tables, and seals.
-
-        Args:
-            overall_ocr_res (OCRResult): The overall OCR result containing text information.
-            layout_det_res (DetResult): The detection result containing the layout information of the document.
-
-        Returns:
-            OCRResult: The OCR result for text paragraphs after excluding formulas, tables, and seals.
-        """
-        object_boxes = []
-        for box_info in layout_det_res["boxes"]:
-            if box_info["label"].lower() in ["formula", "table", "seal"]:
-                object_boxes.append(box_info["coordinate"])
-        object_boxes = np.array(object_boxes)
-        sub_regions_ocr_res = get_sub_regions_ocr_res(
-            overall_ocr_res, object_boxes, flag_within=False
-        )
-        return sub_regions_ocr_res
-
     def get_layout_parsing_res(
         self,
         image: list,
@@ -204,32 +181,53 @@ class LayoutParsingPipeline(BasePipeline):
             list: A list of dictionaries representing the layout parsing result.
         """
         layout_parsing_res = []
-        sub_image_list = []
         matched_ocr_dict = {}
-        sub_image_region_id = 0
         formula_index = 0
         table_index = 0
         seal_index = 0
         image = np.array(image)
-        image_labels = ["image", "figure", "img", "fig"]
         object_boxes = []
         for object_box_idx, box_info in enumerate(layout_det_res["boxes"]):
             single_box_res = {}
             box = box_info["coordinate"]
             label = box_info["label"].lower()
-            single_box_res["layout_bbox"] = box
+            single_box_res["block_bbox"] = box
+            single_box_res["block_label"] = label
+            single_box_res["block_content"] = ""
             object_boxes.append(box)
-            if label == "formula" and len(formula_res_list) > formula_index:
-                single_box_res["formula"] = formula_res_list[formula_index][
-                    "rec_formula"
-                ]
-                formula_index += 1
-            elif label == "table" and len(table_res_list) > table_index:
-                single_box_res["table"] = table_res_list[table_index]["pred_html"]
-                table_index += 1
-            elif label == "seal" and len(seal_res_list) > seal_index:
-                single_box_res["seal"] = "".join(seal_res_list[seal_index]["rec_texts"])
-                seal_index += 1
+            if label == "formula":
+                if len(formula_res_list) > 0:
+                    assert (
+                        len(formula_res_list) > formula_index
+                    ), f"The number of \
+                        formula regions of layout parsing pipeline \
+                        and formula recognition pipeline are different!"
+                    single_box_res["block_content"] = formula_res_list[formula_index][
+                        "rec_formula"
+                    ]
+                    formula_index += 1
+            elif label == "table":
+                if len(table_res_list) > 0:
+                    assert (
+                        len(table_res_list) > table_index
+                    ), f"The number of \
+                        table regions of layout parsing pipeline \
+                        and table recognition pipeline are different!"
+                    single_box_res["block_content"] = table_res_list[table_index][
+                        "pred_html"
+                    ]
+                    table_index += 1
+            elif label == "seal":
+                if len(seal_res_list) > 0:
+                    assert (
+                        len(seal_res_list) > seal_index
+                    ), f"The number of \
+                        seal regions of layout parsing pipeline \
+                        and seal recognition pipeline are different!"
+                    single_box_res["block_content"] = ", ".join(
+                        seal_res_list[seal_index]["rec_texts"]
+                    )
+                    seal_index += 1
             else:
                 ocr_res_in_box, matched_idxs = get_sub_regions_ocr_res(
                     overall_ocr_res, [box], return_match_idx=True
@@ -239,23 +237,14 @@ class LayoutParsingPipeline(BasePipeline):
                         matched_ocr_dict[matched_idx] = [object_box_idx]
                     else:
                         matched_ocr_dict[matched_idx].append(object_box_idx)
-                if label in image_labels:
-                    crop_img_info = self._crop_by_boxes(image, [box_info])
-                    crop_img_info = crop_img_info[0]
-                    sub_image_list.append(crop_img_info["img"])
-                    single_box_res[f"{label}_text"] = "\n".join(
-                        ocr_res_in_box["rec_texts"]
-                    )
-                else:
-                    single_box_res["text"] = "\n".join(ocr_res_in_box["rec_texts"])
-            if single_box_res:
-                layout_parsing_res.append(single_box_res)
+                single_box_res["block_content"] = "\n".join(ocr_res_in_box["rec_texts"])
+            layout_parsing_res.append(single_box_res)
         for layout_box_ids in matched_ocr_dict.values():
             # one ocr is matched to multiple layout boxes, split the text into multiple lines
             if len(layout_box_ids) > 1:
                 for idx in layout_box_ids:
                     wht_im = np.ones(image.shape, dtype=image.dtype) * 255
-                    box = layout_parsing_res[idx]["layout_bbox"]
+                    box = layout_parsing_res[idx]["block_bbox"]
                     x1, y1, x2, y2 = [int(i) for i in box]
                     wht_im[y1:y2, x1:x2, :] = image[y1:y2, x1:x2, :]
                     sub_ocr_res = next(
@@ -269,7 +258,7 @@ class LayoutParsingPipeline(BasePipeline):
                             text_rec_score_thresh=text_rec_score_thresh,
                         )
                     )
-                    layout_parsing_res[idx]["text"] = "\n".join(
+                    layout_parsing_res[idx]["block_content"] = "\n".join(
                         sub_ocr_res["rec_texts"]
                     )
 
@@ -281,13 +270,14 @@ class LayoutParsingPipeline(BasePipeline):
             ocr_without_layout_boxes["rec_boxes"], ocr_without_layout_boxes["rec_texts"]
         ):
             single_box_res = {}
-            single_box_res["layout_bbox"] = ocr_rec_box
-            single_box_res["text_without_layout"] = ocr_rec_text
+            single_box_res["block_bbox"] = ocr_rec_box
+            single_box_res["block_label"] = "other_text"
+            single_box_res["block_content"] = ocr_rec_text
             layout_parsing_res.append(single_box_res)
 
         layout_parsing_res = sorted_layout_boxes(layout_parsing_res, w=image.shape[1])
 
-        return layout_parsing_res, sub_image_list
+        return layout_parsing_res
 
     def check_model_settings_valid(self, input_params: Dict) -> bool:
         """
@@ -500,13 +490,6 @@ class LayoutParsingPipeline(BasePipeline):
             else:
                 overall_ocr_res = {}
 
-            if model_settings["use_general_ocr"]:
-                text_paragraphs_ocr_res = self.get_text_paragraphs_ocr_res(
-                    overall_ocr_res, layout_det_res
-                )
-            else:
-                text_paragraphs_ocr_res = {}
-
             if model_settings["use_table_recognition"]:
                 table_res_all = next(
                     self.table_recognition_pipeline(
@@ -557,7 +540,7 @@ class LayoutParsingPipeline(BasePipeline):
             else:
                 formula_res_list = []
 
-            parsing_res_list, sub_image_list = self.get_layout_parsing_res(
+            parsing_res_list = self.get_layout_parsing_res(
                 doc_preprocessor_image,
                 layout_det_res=layout_det_res,
                 overall_ocr_res=overall_ocr_res,
@@ -578,12 +561,10 @@ class LayoutParsingPipeline(BasePipeline):
                 "doc_preprocessor_res": doc_preprocessor_res,
                 "layout_det_res": layout_det_res,
                 "overall_ocr_res": overall_ocr_res,
-                "text_paragraphs_ocr_res": text_paragraphs_ocr_res,
                 "table_res_list": table_res_list,
                 "seal_res_list": seal_res_list,
                 "formula_res_list": formula_res_list,
                 "parsing_res_list": parsing_res_list,
                 "model_settings": model_settings,
-                "sub_image_list": sub_image_list,
             }
             yield LayoutParsingResult(single_img_res)

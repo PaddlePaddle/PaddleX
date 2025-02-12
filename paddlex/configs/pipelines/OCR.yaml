@@ -35,10 +35,10 @@ SubModules:
     module_name: textline_orientation
     model_name: PP-LCNet_x0_25_textline_ori 
     model_dir: null
-    batch_size: 1    
+    batch_size: 6    
   TextRecognition:
     module_name: text_recognition
     model_name: PP-OCRv4_mobile_rec 
     model_dir: null
-    batch_size: 1
+    batch_size: 6
     score_thresh: 0.0

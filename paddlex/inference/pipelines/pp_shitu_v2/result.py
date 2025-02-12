@@ -79,7 +79,11 @@ def draw_box(img, boxes):
         )
 
         # draw label
-        text = "{} {:.2f}".format(dt["label"], score)
+        if score is not None:
+            text = "{} {:.2f}".format(dt["label"], score)
+        else:
+            text = "{}".format(dt["label"])
+
         if tuple(map(int, PIL.__version__.split("."))) <= (10, 0, 0):
             tw, th = draw.textsize(text, font=font)
         else:

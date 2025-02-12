@@ -81,7 +81,7 @@ comments: true
 <td>Cascade-FasterRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Cascade-FasterRCNN-ResNet50-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-FasterRCNN-ResNet50-FPN_pretrained.pdparams">训练模型</a></td>
 <td>41.1</td>
 <td>135.92 / 135.92</td>
-<td>nan / nan</td>
+<td>-</td>
 <td>245.4 M</td>
 <td rowspan="2">Cascade-FasterRCNN 是一种改进的Faster R-CNN目标检测模型，通过耦联多个检测器，利用不同IoU阈值优化检测结果，解决训练和预测阶段的mismatch问题，提高目标检测的准确性。</td>
 </tr>
@@ -89,22 +89,22 @@ comments: true
 <td>Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">训练模型</a></td>
 <td>45.0</td>
 <td>138.23 / 138.23</td>
-<td>nan / nan</td>
+<td>-</td>
 <td>246.2 M</td>
 </tr>
 <tr>
 <td>CenterNet-DLA-34</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/CenterNet-DLA-34_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CenterNet-DLA-34_pretrained.pdparams">训练模型</a></td>
 <td>37.6</td>
-<td>nan / nan</td>
-<td>nan / nan</td>
+<td>-</td>
+<td>-</td>
 <td>75.4 M</td>
 <td rowspan="2">CenterNet是一种anchor-free目标检测模型，把待检测物体的关键点视为单一点-即其边界框的中心点，并通过关键点进行回归。</td>
 </tr>
 <tr>
 <td>CenterNet-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/CenterNet-ResNet50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CenterNet-ResNet50_pretrained.pdparams">训练模型</a></td>
 <td>38.9</td>
-<td>nan / nan</td>
-<td>nan / nan</td>
+<td>-</td>
+<td>-</td>
 <td>319.7 M</td>
 </tr>
 <tr>
@@ -119,7 +119,7 @@ comments: true
 <td>FasterRCNN-ResNet34-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet34-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet34-FPN_pretrained.pdparams">训练模型</a></td>
 <td>37.8</td>
 <td>83.33 / 31.64</td>
-<td>nan / nan</td>
+<td>-</td>
 <td>137.5 M</td>
 <td rowspan="9">Faster R-CNN是典型的two-stage目标检测模型，即先生成区域建议（Region Proposal），然后在生成的Region Proposal上做分类和回归。相较于前代R-CNN和Fast R-CNN，Faster R-CNN的改进主要在于区域建议方面，使用区域建议网络（Region Proposal Network, RPN）提供区域建议，以取代传统选择性搜索。RPN是卷积神经网络，并与检测网络共享图像的卷积特征，减少了区域建议的计算开销。</td>
 </tr>
@@ -127,56 +127,56 @@ comments: true
 <td>FasterRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet50-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-FPN_pretrained.pdparams">训练模型</a></td>
 <td>38.4</td>
 <td>107.08 / 35.40</td>
-<td>nan / nan</td>
+<td>-</td>
 <td>148.1 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet50-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet50-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-vd-FPN_pretrained.pdparams">训练模型</a></td>
 <td>39.5</td>
 <td>109.36 / 36.00</td>
-<td>nan / nan</td>
+<td>-</td>
 <td>148.1 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet50-vd-SSLDv2-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">训练模型</a></td>
 <td>41.4</td>
 <td>109.06 / 36.19</td>
-<td>nan / nan</td>
+<td>-</td>
 <td>148.1 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet50_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50_pretrained.pdparams">训练模型</a></td>
 <td>36.7</td>
 <td>496.33 / 109.12</td>
-<td>nan / nan</td>
+<td>-</td>
 <td>120.2 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet101-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet101-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet101-FPN_pretrained.pdparams">训练模型</a></td>
 <td>41.4</td>
 <td>148.21 / 42.21</td>
-<td>nan / nan</td>
+<td>-</td>
 <td>216.3 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet101</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet101_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet101_pretrained.pdparams">训练模型</a></td>
 <td>39.0</td>
 <td>538.58 / 120.88</td>
-<td>nan / nan</td>
+<td>-</td>
 <td>188.1 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNeXt101-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNeXt101-vd-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNeXt101-vd-FPN_pretrained.pdparams">训练模型</a></td>
 <td>43.4</td>
 <td>258.01 / 58.25</td>
-<td>nan / nan</td>
+<td>-</td>
 <td>360.6 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-Swin-Tiny-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-Swin-Tiny-FPN_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-Swin-Tiny-FPN_pretrained.pdparams">训练模型</a></td>
 <td>42.6</td>
-<td>nan / nan</td>
-<td>nan / nan</td>
+<td>-</td>
+<td>-</td>
 <td>159.8 M</td>
 </tr>
 <tr>
@@ -355,7 +355,7 @@ comments: true
 <td rowspan="2">Co-DETR是一种先进的端到端目标检测器。它基于DETR架构，通过引入协同混合分配训练策略，将目标检测任务中的传统一对多标签分配与一对一匹配相结合，从而显著提高了检测性能和训练效率</td>
 </tr>
 <tr>
-<td>Co-Deformable-DETR-Swin-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Co-Deformable-DETR-Swin-T.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-Swin-T_pretrained.pdparams">训练模型</a></td>
+<td>Co-Deformable-DETR-Swin-T</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Co-Deformable-DETR-Swin-T_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Co-Deformable-DETR-Swin-T_pretrained.pdparams">训练模型</a></td>
 <td>48.0</td>
 <td></td>
 <td></td>
@@ -455,6 +455,13 @@ for res in output:
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理</td>
+<td><code>bool</code></td>
+<td>无</td>
+<td><code>False</code></td>
 </tr>
 </table>
 
@@ -650,7 +657,7 @@ python main.py -c paddlex/configs/modules/object_detection/PicoDet-S.yaml \
   "analysis": {
     "histogram": "check_dataset/histogram.png"
   },
-  "dataset_path": "./dataset/det_coco_examples",
+  "dataset_path": "det_coco_examples",
   "show_type": "image",
   "dataset_type": "COCODetDataset"
 }

@@ -35,9 +35,23 @@ After experiencing the pipeline, determine if it meets your expectations (includ
 
 PaddleX provides 1 end-to-end anomaly detection models. For details, refer to the [Model List](../support_list/models_list.en.md). Some model benchmarks are as follows:
 
-| Model List          | Avg (%) | GPU Inference Time (ms) | CPU Inference Time (ms) | Model Size (M) | yaml file |
-|-|-|-|-|-|-|
-|STFPM|96.2|-|-|21.5 M|[STFPM.yaml](../../paddlex/configs/modules/image_anomaly_detection/STFPM.yaml)|
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>mIoU</th>
+<th>Model Storage Size (M)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STFPM</td>
+<td>0.9901</td>
+<td>22.5</td>
+</tr>
+</tbody>
+</table>
+<b>The above model accuracy metrics are measured from the grid category in the MVTec_AD dataset.</b>
 
 > **Note: The above accuracy metrics are measured on the [MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad) dataset.**
 
@@ -58,7 +72,7 @@ tar -xf ./dataset/anomaly_detection_hazelnut.tar -C ./dataset/
 To verify the dataset, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/image_anomaly_detection/STFPM.yaml \
+python main.py -c paddlex/configs/modules/image_anomaly_detection/STFPM.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/anomaly_detection_hazelnut
 ```
@@ -71,37 +85,37 @@ After executing the above command, PaddleX will verify the dataset and collect b
   "check_pass": true,
   "attributes": {
     "train_sample_paths": [
-      "check_dataset\/demo_img\/294.png",
-      "check_dataset\/demo_img\/260.png",
-      "check_dataset\/demo_img\/297.png",
-      "check_dataset\/demo_img\/170.png",
-      "check_dataset\/demo_img\/068.png",
-      "check_dataset\/demo_img\/212.png",
-      "check_dataset\/demo_img\/204.png",
-      "check_dataset\/demo_img\/233.png",
-      "check_dataset\/demo_img\/367.png",
-      "check_dataset\/demo_img\/383.png"
+      "check_dataset/demo_img/294.png",
+      "check_dataset/demo_img/260.png",
+      "check_dataset/demo_img/297.png",
+      "check_dataset/demo_img/170.png",
+      "check_dataset/demo_img/068.png",
+      "check_dataset/demo_img/212.png",
+      "check_dataset/demo_img/204.png",
+      "check_dataset/demo_img/233.png",
+      "check_dataset/demo_img/367.png",
+      "check_dataset/demo_img/383.png"
     ],
     "train_samples": 391,
     "val_sample_paths": [
-      "check_dataset\/demo_img\/012.png",
-      "check_dataset\/demo_img\/017.png",
-      "check_dataset\/demo_img\/006.png",
-      "check_dataset\/demo_img\/013.png",
-      "check_dataset\/demo_img\/014.png",
-      "check_dataset\/demo_img\/010.png",
-      "check_dataset\/demo_img\/007.png",
-      "check_dataset\/demo_img\/001.png",
-      "check_dataset\/demo_img\/002.png",
-      "check_dataset\/demo_img\/009.png"
+      "check_dataset/demo_img/012.png",
+      "check_dataset/demo_img/017.png",
+      "check_dataset/demo_img/006.png",
+      "check_dataset/demo_img/013.png",
+      "check_dataset/demo_img/014.png",
+      "check_dataset/demo_img/010.png",
+      "check_dataset/demo_img/007.png",
+      "check_dataset/demo_img/001.png",
+      "check_dataset/demo_img/002.png",
+      "check_dataset/demo_img/009.png"
     ],
     "val_samples": 70,
     "num_classes": 1
   },
   "analysis": {
-    "histogram": "check_dataset\/histogram.png"
+    "histogram": "check_dataset/histogram.png"
   },
-  "dataset_path": ".\/dataset\/hazelnut",
+  "dataset_path": "anomaly_detection_hazelnut",
   "show_type": "image",
   "dataset_type": "SegDataset"
 }
@@ -149,7 +163,7 @@ Data conversion and splitting can be enabled simultaneously. For data splitting,
 Before training, ensure that you have validated your dataset. To complete the training of a PaddleX model, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/image_anomaly_detection/STFPM.yaml \
+python main.py -c paddlex/configs/modules/image_anomaly_detection/STFPM.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/anomaly_detection_hazelnut \
     -o Train.epochs_iters=4000
@@ -160,7 +174,7 @@ PaddleX supports modifying training hyperparameters, single/multi-GPU training, 
 Each model in PaddleX provides a configuration file for model development, which is used to set relevant parameters. Model training-related parameters can be set by modifying the `Train` fields in the configuration file. Some example parameter descriptions in the configuration file are as follows:
 
 * `Global`:
-    * `mode`: Mode, supports dataset validation (`check_dataset`), model training (`train`), and model evaluation (`evaluate`);
+    * `mode`: Mode, supports data verification (`check_dataset`), model training (`train`), model evaluation (`evaluate`), and model inference (`predict`);
     * `device`: Training device, options include `cpu`, `gpu`, `xpu`, `npu`, `mlu`. For multi-GPU training, specify card numbers, e.g., `gpu:0,1,2,3`;
 * `Train`: Training hyperparameter settings;
     * `epochs_iters`: Number of training iterations;
@@ -187,7 +201,7 @@ After completing model training, all outputs are saved in the specified output d
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model's accuracy. To evaluate a model using PaddleX, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/image_anomaly_detection/STFPM.yaml \
+python main.py -c paddlex/configs/modules/image_anomaly_detection/STFPM.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/anomaly_detection_hazelnut
 ```
@@ -231,13 +245,35 @@ Changing Epoch Results:
 
 ## 6. Production Line Testing
 
-Replace the model in the production line with the fine-tuned model for testing, for example:
+Replace the model in the production line with the fine-tuned model for testing. You can obtain the anomaly_detection production configuration file and load the configuration file for prediction. You can execute the following command to save the configuration in `my_path`:
 
-```bash
-python main.py -c paddlex/configs/image_anomaly_detection/STFPM.yaml \
-    -o Global.mode=predict \
-    -o Predict.model_dir="output/best_model/inference" \
-    -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_hazelnut.png"
+```
+paddlex --get_pipeline_config anomaly_detection --save_path ./my_path
+```
+
+Modify the `SubModules.AnomalyDetection.model_dir` in the configuration file `my_path/anomaly_detection.yaml` to your model path `output/best_model/inference`:
+
+pipeline_name: anomaly_detection
+
+```yaml
+SubModules:
+  AnomalyDetection:
+    module_name: anomaly_detection
+    model_name: STFPM
+    model_dir: output/best_model/inference  # Replace with the fine-tuned image anomaly detection model weight path
+    batch_size: 1
+```
+
+Subsequently, in the Python code, you can call the production line as follows:
+
+```python
+from paddlex import create_pipeline
+pipeline = create_pipeline(pipeline="./my_path/anomaly_detection.yaml")
+output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_hazelnut.png")
+for res in output:
+    res.print()  ## Print the structured output of the prediction
+    res.save_to_img("./output/")  ## Save the visualized result image
+    res.save_to_json("./output/")  ## Save the structured output of the prediction
 ```
 
 The prediction results will be generated under `./output`, where the prediction result for `uad_hazelnut.png` is shown below:
@@ -249,10 +285,11 @@ The prediction results will be generated under `./output`, where the prediction 
 
 ## 7. Development Integration/Deployment
 If the anomaly detection pipeline meets your requirements for inference speed and accuracy in the production line, you can proceed directly with development integration/deployment.
-1. Directly apply the trained model in your Python project by referring to the following sample code, and modify the `Pipeline.model` in the `paddlex/pipelines/anomaly_detection.yaml` configuration file to your own model path `output/best_model/inference`:
+1. Directly apply the trained model in your Python project. You can refer to the following example:
+
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="paddlex/pipelines/anomaly_detection.yaml")
+pipeline = create_pipeline(pipeline="my_path/anomaly_detection.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_hazelnut.png")
 for res in output:
     res.print() # Print the structured output of the prediction
@@ -261,7 +298,7 @@ for res in output:
 ```
 For more parameters, please refer to [Anomaly Detection Pipeline Usage Tutorial](../pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.en.md).
 
-2. Additionally, PaddleX offers three other deployment methods, detailed as follows:
+1. Additionally, PaddleX offers three other deployment methods, detailed as follows:
 
 * high-performance inference: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../pipeline_deploy/high_performance_inference.en.md).
 * Service-Oriented Deployment: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving cost-effective service-oriented deployment of production lines. For detailed service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../pipeline_deploy/serving.en.md).

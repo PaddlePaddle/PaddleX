@@ -194,14 +194,14 @@ comments: true
 <tr>
 <td>MaskFormer_small</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MaskFormer_small_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskFormer_small_pretrained.pdparams">训练模型</a></td>
 <td>49.70</td>
-<td></td>
+<td>69.856</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td>MaskFormer_tiny</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MaskFormer_tiny_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MaskFormer_tiny_pretrained.pdparams">训练模型</a></td>
 <td>46.69</td>
-<td></td>
+<td>50.157</td>
 <td></td>
 <td></td>
 </tr>
@@ -270,6 +270,13 @@ for res in output:
 <td><code>int/tuple</code></td>
 <td><code>None/-1/int/tuple</code></td>
 <td><code>None</code></td>
+</tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理</td>
+<td><code>bool</code></td>
+<td>无</td>
+<td><code>False</code></td>
 </tr>
 </table>
 

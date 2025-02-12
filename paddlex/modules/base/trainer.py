@@ -16,7 +16,11 @@ import os
 from abc import ABC, abstractmethod
 from pathlib import Path
 from .build_model import build_model
-from ...utils.device import update_device_num, set_env_for_device
+from ...utils.device import (
+    update_device_num,
+    set_env_for_device,
+    check_supported_device,
+)
 from ...utils.misc import AutoRegisterABCMetaClass
 from ...utils.config import AttrDict
 from ...utils.logging import info
@@ -108,6 +112,7 @@ training!"
         Returns:
             str: device setting, such as: `gpu:0,1`, `npu:0,1` `cpu`.
         """
+        check_supported_device(self.global_config.device, self.global_config.model)
         set_env_for_device(self.global_config.device)
         if using_device_number:
             return update_device_num(self.global_config.device, using_device_number)

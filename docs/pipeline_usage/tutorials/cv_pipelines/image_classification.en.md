@@ -5,7 +5,7 @@ comments: true
 # General Image Classification Pipeline Tutorial
 
 ## 1. Introduction to the General Image Classification Pipeline
-Image classification is a technique that assigns images to predefined categories. It is widely applied in object recognition, scene understanding, and automatic annotation. Image classification can identify various objects such as animals, plants, traffic signs, and categorize them based on their features. By leveraging deep learning models, image classification can automatically extract image features and perform accurate classification.
+Image classification is a technique that assigns images to predefined categories. It is widely applied in object recognition, scene understanding, and automatic annotation. Image classification can identify various objects such as animals, plants, traffic signs, and categorize them based on their features. By leveraging deep learning models, image classification can automatically extract image features and perform accurate classification.This production line also offers a flexible service-oriented deployment approach, supporting the use of multiple programming languages on various hardware platforms. Moreover, this production line provides the capability for secondary development. You can train and optimize models on your own dataset based on this production line, and the trained models can be seamlessly integrated.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_classification/01.png"/>
 <b>The General Image Classification Pipeline includes an image classification module. If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, select a model with faster inference. If you prioritize model storage size, choose a model with a smaller storage size.</b>
@@ -16,6 +16,7 @@ Image classification is a technique that assigns images to predefined categories
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
+<th>Description</th>
 </tr>
 <tr>
 <td>CLIP_vit_base_patch16_224</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/CLIP_vit_base_patch16_224_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CLIP_vit_base_patch16_224_pretrained.pdparams">Trained Model</a></td>
@@ -23,6 +24,7 @@ Image classification is a technique that assigns images to predefined categories
 <td>12.84 / 2.82</td>
 <td>60.52 / 60.52</td>
 <td>306.5 M</td>
+<td>The general high-precision image classification model of the large visual model CLIP fine-tuned on the ImageNet1k dataset</td>
 </tr>
 <tr>
 <td>MobileNetV3_small_x1_0</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MobileNetV3_small_x1_0_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileNetV3_small_x1_0_pretrained.pdparams">Trained Model</a></td>
@@ -30,6 +32,7 @@ Image classification is a technique that assigns images to predefined categories
 <td>3.76 / 0.53</td>
 <td>5.11 / 1.43</td>
 <td>10.5 M</td>
+<td>MobileNetV3 is a new lightweight network based on NAS proposed by Google in 2019. To further improve performance, the relu and sigmoid activation functions are replaced with hard_swish and hard_sigmoid activation functions, respectively. Additionally, several strategies specifically aimed at reducing the computational load of the network have been introduced.</td>
 </tr>
 <tr>
 <td>PP-HGNet_small</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-HGNet_small_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNet_small_pretrained.pdparams">Trained Model</a></td>
@@ -37,6 +40,7 @@ Image classification is a technique that assigns images to predefined categories
 <td>5.12 / 1.73</td>
 <td>25.01 / 25.01</td>
 <td>86.5 M</td>
+<td>PP-HGNet (High Performance GPU Net) is a high-performance backbone network developed by the Baidu PaddlePaddle Vision Team, specifically optimized for GPU platforms. This network builds upon VOVNet and incorporates a learnable downsampling layer (LDS Layer), integrating the advantages of models such as ResNet_vd and PPHGNet. The model achieves higher accuracy compared to other state-of-the-art (SOTA) models at the same speed on GPU platforms.</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B0</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-HGNetV2-B0_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B0_pretrained.pdparams">Trained Model</a></td>
@@ -44,6 +48,7 @@ Image classification is a technique that assigns images to predefined categories
 <td>3.83 / 0.57</td>
 <td>9.95 / 2.37</td>
 <td>21.4 M</td>
+<td rowspan="3">PP-HGNetV2 (High Performance GPU Network V2) is the next-generation version of PP-HGNet developed by the Baidu PaddlePaddle Vision Team. Building upon PP-HGNet, it has been further optimized and improved. Ultimately, on NVIDIA GPU devices, it achieves an extreme "Accuracy-Latency Balance," with accuracy significantly surpassing other models of the same inference speed.</td>
 </tr>
 <tr>
 <td>PP-HGNetV2-B4</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-HGNetV2-B4_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-HGNetV2-B4_pretrained.pdparams">Trained Model</a></td>
@@ -65,6 +70,7 @@ Image classification is a technique that assigns images to predefined categories
 <td>2.35 / 0.47</td>
 <td>4.03 / 1.35</td>
 <td>10.5 M</td>
+<td>PP-LCNet_x1_0 is designed with a specific backbone network for Intel CPU devices and their acceleration library MKLDNN. Compared to other lightweight state-of-the-art (SOTA) models, this backbone network can further enhance model performance without increasing inference time, ultimately significantly surpassing existing SOTA models.</td>
 </tr>
 <tr>
 <td>ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ResNet50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_pretrained.pdparams">Trained Model</a></td>
@@ -72,6 +78,7 @@ Image classification is a technique that assigns images to predefined categories
 <td>6.44 / 1.16</td>
 <td>15.04 / 11.63</td>
 <td>90.8 M</td>
+<td>The ResNet series of models was proposed in 2015 and won the championship in the ILSVRC2015 competition with a top-5 error rate of 3.57%. The network innovatively introduced the residual structure, and by stacking multiple residual structures, the ResNet network was constructed.</td>
 </tr>
 <tr>
 <td>SwinTransformer_tiny_patch4_window7_224</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SwinTransformer_tiny_patch4_window7_224_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SwinTransformer_tiny_patch4_window7_224_pretrained.pdparams">Trained Model</a></td>
@@ -79,6 +86,7 @@ Image classification is a technique that assigns images to predefined categories
 <td>6.66 / 2.15</td>
 <td>60.45 / 60.45</td>
 <td>100.1 M</td>
+<td>SwinTransformer is a new type of visual Transformer network that can be used as a general-purpose backbone network in the field of computer vision. SwinTransformer consists of a hierarchical Transformer structure represented by shifted windows. The shifted windows confine the self-attention computation to non-overlapping local windows while allowing cross-window connections, thereby enhancing the network's performance.</td>
 </tr>
 </table>
 
@@ -696,7 +704,7 @@ You can quickly experience the image classification pipeline with a single comma
 
 
 ```bash
-paddlex --pipeline image_classification --input general_image_classification_001.jpg --device gpu:0
+paddlex --pipeline image_classification --input general_image_classification_001.jpg --device gpu:0 --save_path ./output/
 ```
 
 The relevant parameter descriptions can be found in the parameter explanation section of [2.2.2 Python Script Integration](#222-integration-via-python-script).
@@ -747,6 +755,12 @@ In the above Python script, the following steps are executed:
 <td>The name of the production line or the path to the production line configuration file. If it is the name of a production line, it must be supported by PaddleX.</td>
 <td><code>str</code></td>
 <td>None</td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
@@ -1061,11 +1075,12 @@ In the above Python script, the following steps are executed:
 - Calling the `print()` method will print the results to the terminal, with the following explanations for the printed content:
 
     - `input_path`: `(str)` The input path of the image to be predicted.
+    - `page_index`: `(Union[int, None])` If the input is a PDF file, it indicates the current page number of the PDF; otherwise, it is `None`.
     - `class_ids`: `(List[numpy.ndarray])` The class IDs of the prediction results.
     - `scores`: `(List[numpy.ndarray])` The confidence scores of the prediction results.
     - `label_names`: `(List[str])` The names of the predicted classes.
 
-- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}.json`. If a file is specified, the results will be saved directly to that file. Since JSON files do not support saving NumPy arrays, `numpy.array` types will be converted to lists.
+- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.json`. If a file is specified, the results will be saved directly to that file. Since JSON files do not support saving NumPy arrays, `numpy.array` types will be converted to lists.
 
 - Calling the `save_to_img()` method will save the visualized results to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`. If a file is specified, the results will be saved directly to that file. (It is not recommended to specify a specific file path directly, as multiple images will be overwritten, leaving only the last one.)
 
@@ -1096,7 +1111,7 @@ Additionally, you can obtain the configuration file for the image classification
 ```
 paddlex --get_pipeline_config image_classification --save_path ./my_path
 ```
-If you have obtained the configuration file, you can customize the settings for the OCR production line by simply modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the configuration file. The example is as follows:
+If you have obtained the configuration file, you can customize the settings for the image classification production line by simply modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the configuration file. The example is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -1699,7 +1714,7 @@ SubModules:
   ImageClassification:
     module_name: image_classification
     model_name: PP-LCNet_x0_5
-    model_dir: null
+    model_dir: null # Replace with the path to the fine-tuned image classification model weights
     batch_size: 4
     topk: 5
 ```

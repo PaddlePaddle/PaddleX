@@ -9,8 +9,7 @@ Face recognition is a crucial component in the field of computer vision, aiming 
 
 The face recognition pipeline is an end-to-end system dedicated to solving face detection and recognition tasks. It can quickly and accurately locate face regions in images, extract facial features, and retrieve and compare them with pre-established features in a feature database to confirm identity information.
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/face_recognition/01.png">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/face_recognition/01.png"/>
 <b>The face recognition pipeline includes a face detection module and a face feature module</b>, with several models in each module. Which models to use can be selected based on the benchmark data below. <b>If you prioritize model accuracy, choose models with higher accuracy; if you prioritize inference speed, choose models with faster inference; if you prioritize model size, choose models with smaller storage requirements</b>.
 
 
@@ -20,8 +19,8 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>AP (%)<br/>Easy/Medium/Hard</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
@@ -30,32 +29,32 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 <tr>
 <td>BlazeFace</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace_pretrained.pdparams">Trained Model</a></td>
 <td>77.7/73.4/49.5</td>
-<td></td>
-<td></td>
+<td>60.34 / 54.76</td>
+<td>84.18 / 84.18</td>
 <td>0.447</td>
 <td>A lightweight and efficient face detection model</td>
 </tr>
 <tr>
 <td>BlazeFace-FPN-SSH</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace-FPN-SSH_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace-FPN-SSH_pretrained.pdparams">Trained Model</a></td>
 <td>83.2/80.5/60.5</td>
-<td>52.4</td>
-<td>73.2</td>
+<td>69.29 / 63.42</td>
+<td>86.96 / 86.96</td>
 <td>0.606</td>
 <td>Improved BlazeFace with FPN and SSH structures</td>
 </tr>
 <tr>
 <td>PicoDet_LCNet_x2_5_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_LCNet_x2_5_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_LCNet_x2_5_face_pretrained.pdparams">Trained Model</a></td>
 <td>93.7/90.7/68.1</td>
-<td>33.7</td>
-<td>185.1</td>
+<td>35.37 / 12.88</td>
+<td>126.24 / 126.24</td>
 <td>28.9</td>
 <td>Face detection model based on PicoDet_LCNet_x2_5</td>
 </tr>
 <tr>
 <td>PP-YOLOE_plus-S_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-S_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_face_pretrained.pdparams">Trained Model</a></td>
 <td>93.9/91.8/79.8</td>
-<td>25.8</td>
-<td>159.9</td>
+<td>22.54 / 8.33</td>
+<td>138.67 / 138.67</td>
 <td>26.5</td>
 <td>Face detection model based on PP-YOLOE_plus-S</td>
 </tr>
@@ -106,14 +105,14 @@ The pre-trained model pipelines provided by PaddleX can be quickly experienced. 
 Oneline Experience is not supported at the moment.
 
 ### 2.2 Local Experience
-> ❗ Before using the face recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
+&gt; ❗ Before using the face recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
 
 #### 2.2.1 Command Line Experience
 
 Command line experience is not supported yet.
 
 #### 2.2.2 Python Script Integration
-Please download the [test image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/friends1.jpg) for testing.</url>
+Please download the [test image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/friends1.jpg) for testing.
 In the example run of this pipeline, you need to pre-build a face feature library. You can refer to the following instructions to download the official demo data for subsequent construction of the face feature library.
 You can refer to the following command to download the Demo dataset to the specified folder:
 
@@ -201,8 +200,8 @@ In the above Python script, the following steps are performed:
 <td><code>str</code>|<code>list</code></td>
 <td>
 <ul>
-  <li><b>str</b>: The root directory of the images, data organization method refers to <a href="#2.3-构建特征库的数据组织方式">Section 2.3 Data Organization Method for Building Feature Library</a></li>
-  <li><b>List[numpy.ndarray]</b>: List of numpy.array type base library image data</li>
+<li><b>str</b>: The root directory of the images, data organization method refers to <a href="#2.3-构建特征库的数据组织方式">Section 2.3 Data Organization Method for Building Feature Library</a></li>
+<li><b>List[numpy.ndarray]</b>: List of numpy.array type base library image data</li>
 </ul>
 </td>
 <td>None</td>
@@ -213,8 +212,8 @@ In the above Python script, the following steps are performed:
 <td><code>str|list</code></td>
 <td>
 <ul>
-  <li><b>str</b>: The path to the annotation file, the data organization method is the same as when building the feature library, refer to <a href="#2.3-构建特征库的数据组织方式">Section 2.3 Data Organization Method for Building Feature Library</a></li>
-  <li><b>List[str]</b>: List of str type base library image annotations</li>
+<li><b>str</b>: The path to the annotation file, the data organization method is the same as when building the feature library, refer to <a href="#2.3-构建特征库的数据组织方式">Section 2.3 Data Organization Method for Building Feature Library</a></li>
+<li><b>List[str]</b>: List of str type base library image annotations</li>
 </ul>
 </td>
 <td>None</td>
@@ -225,8 +224,8 @@ In the above Python script, the following steps are performed:
 <td><code>str</code></td>
 <td>
 <ul>
-  <li><code>"IP"</code>: Inner Product</li>
-  <li><code>"L2"</code>: Euclidean Distance</li>
+<li><code>"IP"</code>: Inner Product</li>
+<li><code>"L2"</code>: Euclidean Distance</li>
 </ul>
 </td>
 <td><code>"IP"</code></td>
@@ -237,9 +236,9 @@ In the above Python script, the following steps are performed:
 <td><code>str</code></td>
 <td>
 <ul>
-  <li><code>"HNSW32"</code>: Fast retrieval speed and high accuracy, but does not support <code>remove_index()</code> operation</li>
-  <li><code>"IVF"</code>: Fast retrieval speed but relatively low accuracy, supports <code>append_index()</code> and <code>remove_index()</code> operations</li>
-  <li><code>"Flat"</code>: Low retrieval speed and high accuracy, supports <code>append_index()</code> and <code>remove_index()</code> operations</li>
+<li><code>"HNSW32"</code>: Fast retrieval speed and high accuracy, but does not support <code>remove_index()</code> operation</li>
+<li><code>"IVF"</code>: Fast retrieval speed but relatively low accuracy, supports <code>append_index()</code> and <code>remove_index()</code> operations</li>
+<li><code>"Flat"</code>: Low retrieval speed and high accuracy, supports <code>append_index()</code> and <code>remove_index()</code> operations</li>
 </ul>
 </td>
 <td><code>"HNSW32"</code></td>
@@ -286,9 +285,9 @@ In the above Python script, the following steps are performed:
 <td><code>Python Var|str|list</code></td>
 <td>
 <ul>
-  <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
-  <li><b>str</b>: Local path of an image file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as a network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">Example</a>; <b>Local directory</b>, which should contain images to be predicted, such as <code>/root/data/</code></li>
-  <li><b>List</b>: Elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
+<li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code></li>
+<li><b>str</b>: Local path of an image file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as a network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">Example</a>; <b>Local directory</b>, which should contain images to be predicted, such as <code>/root/data/</code></li>
+<li><b>List</b>: Elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code></li>
 </ul>
 </td>
 <td>None</td>
@@ -299,8 +298,8 @@ In the above Python script, the following steps are performed:
 <td><code>str|paddlex.inference.components.retrieval.faiss.IndexData|None</code></td>
 <td>
 <ul>
-    <li><b>str</b> type representing a directory (which should contain feature library files, including <code>vector.index</code> and <code>index_info.yaml</code>)</li>
-    <li><b>IndexData</b> object created by the <code>build_index</code> method</li>
+<li><b>str</b> type representing a directory (which should contain feature library files, including <code>vector.index</code> and <code>index_info.yaml</code>)</li>
+<li><b>IndexData</b> object created by the <code>build_index</code> method</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -387,7 +386,7 @@ In the above Python script, the following steps are performed:
 - Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.json`. If a file is specified, it will be saved directly to that file.
 - Calling the `save_to_img()` method will save the visualization result to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (The production line usually contains many result images; it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, leaving only the last one.) In the example above, the visualization result is as follows:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/face_recognition/02.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/face_recognition/02.jpg"/>
 
 * Additionally, it also supports obtaining the visualized image with results and prediction results through attributes, as follows:
 
@@ -399,12 +398,12 @@ In the above Python script, the following steps are performed:
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">Get the prediction result in <code>json</code> format.</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format.</td>
 </tr>
 <tr>
-<td rowspan = "2"><code>img</code></td>
-<td rowspan = "2">Get the visualized image in <code>dict</code> format.</td>
+<td rowspan="2"><code>img</code></td>
+<td rowspan="2">Get the visualized image in <code>dict</code> format.</td>
 </tr>
 </table>
 
@@ -467,8 +466,8 @@ The parameters of the above method are described as follows:
 <td><code>str</code>|<code>list</code></td>
 <td>
 <ul>
-  <li><b>str</b>: Root directory of images, data organization refers to <a href="#2.3-Data Organization for Building the Feature Library">Section 2.3 Data Organization for Building the Feature Library</a></li>
-  <li><b>List[numpy.ndarray]</b>: Gallery image data in the form of a list of numpy arrays</li>
+<li><b>str</b>: Root directory of images, data organization refers to <a href="#2.3-Data Organization for Building the Feature Library">Section 2.3 Data Organization for Building the Feature Library</a></li>
+<li><b>List[numpy.ndarray]</b>: Gallery image data in the form of a list of numpy arrays</li>
 </ul>
 </td>
 <td>None</td>
@@ -479,8 +478,8 @@ The parameters of the above method are described as follows:
 <td><code>str|list</code></td>
 <td>
 <ul>
-  <li><b>str</b>: Path to the label file, data organization is the same as when building the feature library, refer to <a href="#2.3-Data Organization for Building the Feature Library">Section 2.3 Data Organization for Building the Feature Library</a></li>
-  <li><b>List[str]</b>: Gallery image labels in the form of a list of strings</li>
+<li><b>str</b>: Path to the label file, data organization is the same as when building the feature library, refer to <a href="#2.3-Data Organization for Building the Feature Library">Section 2.3 Data Organization for Building the Feature Library</a></li>
+<li><b>List[str]</b>: Gallery image labels in the form of a list of strings</li>
 </ul>
 </td>
 <td>None</td>
@@ -491,8 +490,8 @@ The parameters of the above method are described as follows:
 <td><code>str</code></td>
 <td>
 <ul>
-  <li><code>"IP"</code>: Inner Product</li>
-  <li><code>"L2"</code>: Euclidean Distance</li>
+<li><code>"IP"</code>: Inner Product</li>
+<li><code>"L2"</code>: Euclidean Distance</li>
 </ul>
 </td>
 <td><code>"IP"</code></td>
@@ -503,9 +502,9 @@ The parameters of the above method are described as follows:
 <td><code>str</code></td>
 <td>
 <ul>
-  <li><code>"HNSW32"</code>: Faster search speed and higher accuracy, but does not support <code>remove_index()</code> operation</li>
-  <li><code>"IVF"</code>: Faster search speed but relatively lower accuracy, supports <code>append_index()</code> and <code>remove_index()</code> operations</li>
-  <li><code>"Flat"</code>: Slower search speed but higher accuracy, supports <code>append_index()</code> and <code>remove_index()</code> operations</li>
+<li><code>"HNSW32"</code>: Faster search speed and higher accuracy, but does not support <code>remove_index()</code> operation</li>
+<li><code>"IVF"</code>: Faster search speed but relatively lower accuracy, supports <code>append_index()</code> and <code>remove_index()</code> operations</li>
+<li><code>"Flat"</code>: Slower search speed but higher accuracy, supports <code>append_index()</code> and <code>remove_index()</code> operations</li>
 </ul>
 </td>
 <td><code>"HNSW32"</code></td>
@@ -527,15 +526,14 @@ The parameters of the above method are described as follows:
 <td><code>str|paddlex.inference.components.retrieval.faiss.IndexData</code></td>
 <td>
 <ul>
-    <li><b>str</b>: Directory (the directory should contain feature library files, including <code>vector.index</code> and <code>index_info.yaml</code>)</li>
-    <li><b>IndexData</b> object created by <code>build_index</code> method</li>
+<li><b>str</b>: Directory (the directory should contain feature library files, including <code>vector.index</code> and <code>index_info.yaml</code>)</li>
+<li><b>IndexData</b> object created by <code>build_index</code> method</li>
 </ul>
 </td>
 <td>None</td>
 </tr>
 </tbody>
 </table>
-
 <b>Note</b>: <code>HNSW32</code> has compatibility issues on the Windows platform, which may prevent the index library from being built or loaded.
 
 ### 2.3 Data Organization for Building the Feature Library
@@ -570,7 +568,6 @@ Additionally, PaddleX provides three other deployment methods, detailed as follo
 Below is the API reference for basic service deployment and multi-language service call examples:
 
 <details><summary>API Reference</summary>
-
 <p>For the main operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
@@ -710,7 +707,6 @@ Below is the API reference for basic service deployment and multi-language servi
 </tr>
 </tbody>
 </table>
-
 <ul>
 <li><b><code>addImagesToIndex</code></b></li>
 </ul>
@@ -941,89 +937,85 @@ Below is the API reference for basic service deployment and multi-language servi
 </tbody>
 </table>
 </details>
-
 <details><summary>Multi-language Service Call Example</summary>
-
 <details>
 <summary>Python</summary>
-
-
 <pre><code class="language-python">import base64
 import pprint
 import sys
 
 import requests
 
-API_BASE_URL = &quot;<url id="cu9nt776o68pmutlr330" type="url" status="failed" title="" wc="0">http://0.0.0.0:8080&quot;</url>
+API_BASE_URL = "<url id="cu9nt776o68pmutlr330" status="failed" title="" type="url" wc="0">http://0.0.0.0:8080"</url>
 
 base_image_label_pairs = [
-    {&quot;image&quot;: &quot;./demo0.jpg&quot;, &quot;label&quot;: &quot;ID0&quot;},
-    {&quot;image&quot;: &quot;./demo1.jpg&quot;, &quot;label&quot;: &quot;ID1&quot;},
-    {&quot;image&quot;: &quot;./demo2.jpg&quot;, &quot;label&quot;: &quot;ID2&quot;},
+    {"image": "./demo0.jpg", "label": "ID0"},
+    {"image": "./demo1.jpg", "label": "ID1"},
+    {"image": "./demo2.jpg", "label": "ID2"},
 ]
 image_label_pairs_to_add = [
-    {&quot;image&quot;: &quot;./demo3.jpg&quot;, &quot;label&quot;: &quot;ID2&quot;},
+    {"image": "./demo3.jpg", "label": "ID2"},
 ]
 ids_to_remove = [1]
-infer_image_path = &quot;./demo4.jpg&quot;
-output_image_path = &quot;./out.jpg&quot;
+infer_image_path = "./demo4.jpg"
+output_image_path = "./out.jpg"
 
 for pair in base_image_label_pairs:
-    with open(pair[&quot;image&quot;], &quot;rb&quot;) as file:
+    with open(pair["image"], "rb") as file:
         image_bytes = file.read()
-        image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
-    pair[&quot;image&quot;] = image_data
+        image_data = base64.b64encode(image_bytes).decode("ascii")
+    pair["image"] = image_data
 
-payload = {&quot;imageLabelPairs&quot;: base_image_label_pairs}
-resp_index_build = requests.post(f&quot;{API_BASE_URL}/face-recognition-index-build&quot;, json=payload)
+payload = {"imageLabelPairs": base_image_label_pairs}
+resp_index_build = requests.post(f"{API_BASE_URL}/face-recognition-index-build", json=payload)
 if resp_index_build.status_code != 200:
-    print(f&quot;Request to face-recognition-index-build failed with status code {resp_index_build}.&quot;)
+    print(f"Request to face-recognition-index-build failed with status code {resp_index_build}.")
     pprint.pp(resp_index_build.json())
     sys.exit(1)
-result_index_build = resp_index_build.json()[&quot;result&quot;]
-print(f&quot;Number of images indexed: {len(result_index_build['idMap'])}&quot;)
+result_index_build = resp_index_build.json()["result"]
+print(f"Number of images indexed: {len(result_index_build['idMap'])}")
 
 for pair in image_label_pairs_to_add:
-    with open(pair[&quot;image&quot;], &quot;rb&quot;) as file:
+    with open(pair["image"], "rb") as file:
         image_bytes = file.read()
-        image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
-    pair[&quot;image&quot;] = image_data
+        image_data = base64.b64encode(image_bytes).decode("ascii")
+    pair["image"] = image_data
 
-payload = {&quot;imageLabelPairs&quot;: image_label_pairs_to_add, &quot;indexKey&quot;: result_index_build[&quot;indexKey&quot;]}
-resp_index_add = requests.post(f&quot;{API_BASE_URL}/face-recognition-index-add&quot;, json=payload)
+payload = {"imageLabelPairs": image_label_pairs_to_add, "indexKey": result_index_build["indexKey"]}
+resp_index_add = requests.post(f"{API_BASE_URL}/face-recognition-index-add", json=payload)
 if resp_index_add.status_code != 200:
-    print(f&quot;Request to face-recognition-index-add failed with status code {resp_index_add}.&quot;)
+    print(f"Request to face-recognition-index-add failed with status code {resp_index_add}.")
     pprint.pp(resp_index_add.json())
     sys.exit(1)
-result_index_add = resp_index_add.json()[&quot;result&quot;]
-print(f&quot;Number of images indexed: {len(result_index_add['idMap'])}&quot;)
+result_index_add = resp_index_add.json()["result"]
+print(f"Number of images indexed: {len(result_index_add['idMap'])}")
 
-payload = {&quot;ids&quot;: ids_to_remove, &quot;indexKey&quot;: result_index_build[&quot;indexKey&quot;]}
-resp_index_remove = requests.post(f&quot;{API_BASE_URL}/face-recognition-index-remove&quot;, json=payload)
+payload = {"ids": ids_to_remove, "indexKey": result_index_build["indexKey"]}
+resp_index_remove = requests.post(f"{API_BASE_URL}/face-recognition-index-remove", json=payload)
 if resp_index_remove.status_code != 200:
-    print(f&quot;Request to face-recognition-index-remove failed with status code {resp_index_remove}.&quot;)
+    print(f"Request to face-recognition-index-remove failed with status code {resp_index_remove}.")
     pprint.pp(resp_index_remove.json())
     sys.exit(1)
-result_index_remove = resp_index_remove.json()[&quot;result&quot;]
-print(f&quot;Number of images indexed: {len(result_index_remove['idMap'])}&quot;)
+result_index_remove = resp_index_remove.json()["result"]
+print(f"Number of images indexed: {len(result_index_remove['idMap'])}")
 
-with open(infer_image_path, &quot;rb&quot;) as file:
+with open(infer_image_path, "rb") as file:
     image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode(&quot;ascii&quot;)
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
-payload = {&quot;image&quot;: image_data, &quot;indexKey&quot;: result_index_build[&quot;indexKey&quot;]}
-resp_infer = requests.post(f&quot;{API_BASE_URL}/face-recognition-infer&quot;, json=payload)
+payload = {"image": image_data, "indexKey": result_index_build["indexKey"]}
+resp_infer = requests.post(f"{API_BASE_URL}/face-recognition-infer", json=payload)
 if resp_infer.status_code != 200:
-    print(f&quot;Request to face-recogntion-infer failed with status code {resp_infer}.&quot;)
+    print(f"Request to face-recogntion-infer failed with status code {resp_infer}.")
     pprint.pp(resp_infer.json())
     sys.exit(1)
-result_infer = resp_infer.json()[&quot;result&quot;]
+result_infer = resp_infer.json()["result"]
 
-with open(output_image_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result_infer[&quot;image&quot;]))
-print(f&quot;Output image saved at {output_image_path}&quot;)
-print(&quot;\nDetected faces:&quot;)
-pprint.pp(result_infer[&quot;faces&quot;])
+with open(output_image_path, "wb") as file:
+    file.write(base64.b64decode(result_infer["image"]))
+print(f"Output image saved at {output_image_path}")
+print("\nDetected faces:")
+pprint.pp(result_infer["faces"])
 </code></pre>
 </details>
 </details>
@@ -1075,7 +1067,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(
     pipeline="face_recognition",
-    device="npu:0" # gpu:0 --> npu:0
+    device="npu:0" # gpu:0 --&gt; npu:0
     )
 ```
 

@@ -15,8 +15,8 @@ Face feature models typically take standardized face images processed through de
 <th>Model</th><th>Model Download Link</th>
 <th>Output Feature Dimension</th>
 <th>Acc (%)<br/>AgeDB-30/CFP-FP/LFW</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
@@ -26,8 +26,8 @@ Face feature models typically take standardized face images processed through de
 <td>MobileFaceNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MobileFaceNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileFaceNet_pretrained.pdparams">Trained Model</a></td>
 <td>128</td>
 <td>96.28/96.71/99.58</td>
-<td>5.7</td>
-<td>101.6</td>
+<td>3.16 / 0.48</td>
+<td>6.49 / 6.49</td>
 <td>4.1</td>
 <td>Face feature model trained on MobileFaceNet with MS1Mv3 dataset</td>
 </tr>
@@ -35,8 +35,8 @@ Face feature models typically take standardized face images processed through de
 <td>ResNet50_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ResNet50_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_face_pretrained.pdparams">Trained Model</a></td>
 <td>512</td>
 <td>98.12/98.56/99.77</td>
-<td>8.7</td>
-<td>200.7</td>
+<td>5.68 / 1.09</td>
+<td>14.96 / 11.90</td>
 <td>87.2</td>
 <td>Face feature model trained on ResNet50 with MS1Mv3 dataset</td>
 </tr>
@@ -45,7 +45,7 @@ Face feature models typically take standardized face images processed through de
 <p>Note: The above accuracy metrics are Accuracy scores measured on the AgeDB-30, CFP-FP, and LFW datasets, respectively. All model GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</p>
 
 ## III. Quick Integration
-> ❗ Before quick integration, please install the PaddleX wheel package. For details, refer to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md)
+&gt; ❗ Before quick integration, please install the PaddleX wheel package. For details, refer to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md)
 
 After installing the whl package, a few lines of code can complete the inference of the face feature module. You can switch models under this module freely, and you can also integrate the model inference of the face feature module into your project. Before running the following code, please download the [example image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/face_recognition_001.jpg) to your local machine.
 
@@ -126,15 +126,14 @@ The explanations for the methods, parameters, etc., are as follows:
 <tr>
 <td><code>input</code></td>
 <td>Data to be predicted, supporting multiple input types</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
-  <li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
-  <li><b>File path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
-  <li><b>URL link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">Example</a></li>
-  <li><b>Local directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
-  <li><b>Dictionary</b>, the <code>key</code> of the dictionary must correspond to the specific task, such as <code>"img"</code> for image classification tasks. The <code>value</code> of the dictionary supports the above types of data, for example: <code>{"img": "/root/data1"}</code></li>
-  <li><b>List</b>, elements of the list must be of the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code></li>
+<li><b>Python Variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
+<li><b>File Path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
+<li><b>URL Link</b>, such as the web URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">Example</a></li>
+<li><b>Local Directory</b>, the directory should contain the data files to be predicted, such as the local path: <code>/root/data/</code></li>
+<li><b>List</b>, the elements of the list should be of the above-mentioned data types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td>None</td>
@@ -246,47 +245,46 @@ python main.py -c paddlex/configs/modules/face_feature/MobileFaceNet.yaml \
 After executing the above command, PaddleX will validate the dataset and collect its basic information. Upon successful execution, the log will print the message `Check dataset passed !`. The validation result file will be saved in `./output/check_dataset_result.json`, and related outputs will be saved in the `./output/check_dataset` directory of the current directory. The output directory includes visualized example images and histograms of sample distributions.
 
 <details><summary>👉 <b>Validation Result Details (Click to Expand)</b></summary>
-
 <p>The specific content of the validation result file is:</p>
 <pre><code class="language-bash">{
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;train_label_file&quot;: &quot;../../dataset/face_rec_examples/train/label.txt&quot;,
-    &quot;train_num_classes&quot;: 995,
-    &quot;train_samples&quot;: 1000,
-    &quot;train_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/01378592.jpg&quot;,
-      &quot;check_dataset/demo_img/04331410.jpg&quot;,
-      &quot;check_dataset/demo_img/03485713.jpg&quot;,
-      &quot;check_dataset/demo_img/02382123.jpg&quot;,
-      &quot;check_dataset/demo_img/01722397.jpg&quot;,
-      &quot;check_dataset/demo_img/02682349.jpg&quot;,
-      &quot;check_dataset/demo_img/00272794.jpg&quot;,
-      &quot;check_dataset/demo_img/03151987.jpg&quot;,
-      &quot;check_dataset/demo_img/01725764.jpg&quot;,
-      &quot;check_dataset/demo_img/02580369.jpg&quot;
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "train_label_file": "../../dataset/face_rec_examples/train/label.txt",
+    "train_num_classes": 995,
+    "train_samples": 1000,
+    "train_sample_paths": [
+      "check_dataset/demo_img/01378592.jpg",
+      "check_dataset/demo_img/04331410.jpg",
+      "check_dataset/demo_img/03485713.jpg",
+      "check_dataset/demo_img/02382123.jpg",
+      "check_dataset/demo_img/01722397.jpg",
+      "check_dataset/demo_img/02682349.jpg",
+      "check_dataset/demo_img/00272794.jpg",
+      "check_dataset/demo_img/03151987.jpg",
+      "check_dataset/demo_img/01725764.jpg",
+      "check_dataset/demo_img/02580369.jpg"
     ],
-    &quot;val_label_file&quot;: &quot;../../dataset/face_rec_examples/val/pair_label.txt&quot;,
-    &quot;val_num_classes&quot;: 2,
-    &quot;val_samples&quot;: 500,
-    &quot;val_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/Don_Carcieri_0001.jpg&quot;,
-      &quot;check_dataset/demo_img/Eric_Fehr_0001.jpg&quot;,
-      &quot;check_dataset/demo_img/Harry_Kalas_0001.jpg&quot;,
-      &quot;check_dataset/demo_img/Francis_Ford_Coppola_0001.jpg&quot;,
-      &quot;check_dataset/demo_img/Amer_al-Saadi_0001.jpg&quot;,
-      &quot;check_dataset/demo_img/Sergei_Ivanov_0001.jpg&quot;,
-      &quot;check_dataset/demo_img/Erin_Runnion_0003.jpg&quot;,
-      &quot;check_dataset/demo_img/Bill_Stapleton_0001.jpg&quot;,
-      &quot;check_dataset/demo_img/Daniel_Bruehl_0001.jpg&quot;,
-      &quot;check_dataset/demo_img/Clare_Short_0004.jpg&quot;
+    "val_label_file": "../../dataset/face_rec_examples/val/pair_label.txt",
+    "val_num_classes": 2,
+    "val_samples": 500,
+    "val_sample_paths": [
+      "check_dataset/demo_img/Don_Carcieri_0001.jpg",
+      "check_dataset/demo_img/Eric_Fehr_0001.jpg",
+      "check_dataset/demo_img/Harry_Kalas_0001.jpg",
+      "check_dataset/demo_img/Francis_Ford_Coppola_0001.jpg",
+      "check_dataset/demo_img/Amer_al-Saadi_0001.jpg",
+      "check_dataset/demo_img/Sergei_Ivanov_0001.jpg",
+      "check_dataset/demo_img/Erin_Runnion_0003.jpg",
+      "check_dataset/demo_img/Bill_Stapleton_0001.jpg",
+      "check_dataset/demo_img/Daniel_Bruehl_0001.jpg",
+      "check_dataset/demo_img/Clare_Short_0004.jpg"
     ]
   },
-  &quot;analysis&quot;: {},
-  &quot;dataset_path&quot;: &quot;./dataset/face_rec_examples&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;ClsDataset&quot;
+  "analysis": {},
+  "dataset_path": "./dataset/face_rec_examples",
+  "show_type": "image",
+  "dataset_type": "ClsDataset"
 }
 </code></pre>
 <p>The verification results mentioned above indicate that <code>check_pass</code> being <code>True</code> means the dataset format meets the requirements. Details of other indicators are as follows:</p>
@@ -302,7 +300,6 @@ After executing the above command, PaddleX will validate the dataset and collect
 After completing the data validation, you can convert the dataset format and re-split the training/validation ratio by <b>modifying the configuration file</b> or <b>adding hyperparameters</b>.
 
 <details><summary>👉 <b>Details on Format Conversion / Dataset Splitting (Click to Expand)</b></summary>
-
 <p>The face feature module does not support data format conversion or dataset splitting.</p></details>
 
 #### 4.1.4 Data Organization for Face Feature Module
@@ -352,7 +349,6 @@ The steps required are:
 Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file or by appending parameters in the command line. For example, to specify the first two GPUs for training: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file instructions for the corresponding task module [PaddleX Common Configuration Parameters for Model Tasks](../../instructions/config_parameters_common.en.md).
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <ul>
 <li>During model training, PaddleX automatically saves model weight files, defaulting to <code>output</code>. To specify a save path, use the <code>-o Global.output</code> field in the configuration file.</li>
 <li>PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.</li>
@@ -417,3 +413,4 @@ The face feature module can be integrated into the PaddleX pipeline for [<b>Face
 2. <b>Module Integration</b>
 
 The weights you produced can be directly integrated into the face feature module. You can refer to the Python example code in [Quick Integration](#III.-Quick-Integration) and only need to replace the model with the path to the model you trained.
+</details></details>
