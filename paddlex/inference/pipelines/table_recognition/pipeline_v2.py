@@ -338,17 +338,15 @@ class TableRecognitionPipelineV2(BasePipeline):
         Returns:
             list of list: List of adjusted bounding boxes relative to table_box, for boxes fully inside table_box.
         """
-        tol = 5
+        tol=0
         # Extract coordinates from table_box
         x_min_t, y_min_t, x_max_t, y_max_t = table_box
-
         adjusted_boxes = []
         for box in ocr_det_boxes:
             x_min_b, y_min_b, x_max_b, y_max_b = box
-
             # Check if the box is fully inside table_box
             if (x_min_b+tol >= x_min_t and y_min_b+tol >= y_min_t and
-                x_max_b+tol <= x_max_t and y_max_b+tol <= y_max_t):
+                x_max_b-tol <= x_max_t and y_max_b-tol <= y_max_t):
                 # Adjust the coordinates to be relative to table_box
                 adjusted_box = [
                     x_min_b - x_min_t,  # Adjust x1
@@ -398,7 +396,7 @@ class TableRecognitionPipelineV2(BasePipeline):
             box1_area = (box1[2] - box1[0]) * (box1[3] - box1[1])
             box2_area = (box2[2] - box2[0]) * (box2[3] - box2[1])
             # Calculate the IoU
-            iou = intersection_area / float(box1_area + box2_area - intersection_area)
+            iou = intersection_area / float(box1_area)
             return iou
 
         # Function to combine rectangles into N rectangles
@@ -407,11 +405,11 @@ class TableRecognitionPipelineV2(BasePipeline):
             Combine rectangles into N rectangles based on geometric proximity.
 
             Args:
-            rectangles (list of list of int): A list of rectangles, each represented by [x1, y1, x2, y2].
-            N (int): The desired number of combined rectangles.
+                rectangles (list of list of int): A list of rectangles, each represented by [x1, y1, x2, y2].
+                N (int): The desired number of combined rectangles.
 
             Returns:
-            list of list of int: A list of N combined rectangles.
+                list of list of int: A list of N combined rectangles.
             """
             # Number of input rectangles
             num_rects = len(rectangles)
@@ -453,44 +451,52 @@ class TableRecognitionPipelineV2(BasePipeline):
         cells_det_results = np.array(cells_det_results)
         cells_det_scores = np.array(cells_det_scores)
         ocr_det_results = np.array(ocr_det_results)
+        more_cells_flag = False
         if len(cells_det_results) == html_pred_boxes_nums:
             return cells_det_results
         # Step 1: If cells_det_results has more rectangles than html_pred_boxes_nums
         elif len(cells_det_results) > html_pred_boxes_nums:
-                return combine_rectangles(cells_det_results, html_pred_boxes_nums)
+            more_cells_flag = True
+            # Select the indices of the top html_pred_boxes_nums scores
+            top_indices = np.argsort(-cells_det_scores)[:html_pred_boxes_nums]
+            # Adjust the corresponding rectangles
+            cells_det_results = cells_det_results[top_indices].tolist()
+        # Threshold for IoU
+        iou_threshold = 0.6
+        # List to store ocr_miss_boxes
+        ocr_miss_boxes = []
+        # For each rectangle in ocr_det_results
+        for ocr_rect in ocr_det_results:
+            merge_ocr_box_iou = []
+            # Flag to indicate if ocr_rect has IoU >= threshold with any cell_rect
+            has_large_iou = False
+            # For each rectangle in cells_det_results
+            for cell_rect in cells_det_results:
+                # Compute IoU
+                iou = compute_iou(ocr_rect, cell_rect)
+                if iou > 0:
+                    merge_ocr_box_iou.append(iou)
+                if (iou>=iou_threshold) or (sum(merge_ocr_box_iou)>=iou_threshold):
+                    has_large_iou = True
+                    break
+            if not has_large_iou:
+                ocr_miss_boxes.append(ocr_rect)
+        # If no ocr_miss_boxes, return cells_det_results
+        if len(ocr_miss_boxes) == 0:
+            final_results = cells_det_results if more_cells_flag==True else cells_det_results.tolist()
         else:
-            # return cells_det_results
-            # Threshold for IoU
-            iou_threshold = 0.1
-            # List to store ocr_miss_boxes
-            ocr_miss_boxes = []
-            # For each rectangle in ocr_det_results
-            for ocr_rect in ocr_det_results:
-                # Flag to indicate if ocr_rect has IoU >= threshold with any cell_rect
-                has_large_iou = False
-                # For each rectangle in cells_det_results
-                for cell_rect in cells_det_results:
-                    # Compute IoU
-                    iou = compute_iou(ocr_rect, cell_rect)
-                    if iou >= iou_threshold:
-                        has_large_iou = True
-                        break
-                if not has_large_iou:
-                    ocr_miss_boxes.append(ocr_rect)
-            # If no ocr_miss_boxes, return cells_det_results
-            if len(ocr_miss_boxes) == 0:
-                return cells_det_results.tolist()
+            if more_cells_flag == True:
+                final_results = combine_rectangles(cells_det_results+ocr_miss_boxes, html_pred_boxes_nums)
             else:
                 # Need to combine ocr_miss_boxes into N rectangles
                 N = html_pred_boxes_nums - len(cells_det_results)
-                if len(ocr_miss_boxes) == N:
-                    return cells_det_results.tolist() + ocr_miss_boxes
-                else:
-                    # Combine ocr_miss_boxes into N rectangles
-                    ocr_supp_boxes = combine_rectangles(ocr_miss_boxes, N)
-                    # Combine cells_det_results and ocr_supp_boxes
-                    final_results = np.concatenate((cells_det_results, ocr_supp_boxes), axis=0)
-                    return final_results.tolist()
+                # Combine ocr_miss_boxes into N rectangles
+                ocr_supp_boxes = combine_rectangles(ocr_miss_boxes, N)
+                # Combine cells_det_results and ocr_supp_boxes
+                final_results = np.concatenate((cells_det_results, ocr_supp_boxes), axis=0).tolist()
+        if len(final_results) <= 0.6*html_pred_boxes_nums:
+            final_results = combine_rectangles(ocr_det_results, html_pred_boxes_nums)
+        return final_results
 
     def predict_single_table_recognition_res(
         self,
@@ -525,9 +531,7 @@ class TableRecognitionPipelineV2(BasePipeline):
                 self.wireless_table_cells_detection_model(image_array, threshold=0.3)
             ) # Setting the threshold to 0.3 can improve the accuracy of table cells detection. 
               # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
-        table_structure_result = self.extract_results(
-            table_structure_pred, "table_stru"
-        )
+        table_structure_result = self.extract_results(table_structure_pred, "table_stru")
         table_cells_result, table_cells_score = self.extract_results(table_cells_pred, "det")
         table_cells_result, table_cells_score = self.cells_det_results_nms(table_cells_result, table_cells_score)
         ocr_det_boxes = self.get_region_ocr_det_boxes(overall_ocr_res["rec_boxes"].tolist(), table_box)

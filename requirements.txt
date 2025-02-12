@@ -2,7 +2,7 @@ prettytable # only for benchmark
 py-cpuinfo # LaTeX_OCR_rec only support MKLDNN on CPU
 imagesize
 colorlog
-PyYAML
+PyYAML==6.0.2
 filelock
 ftfy
 ruamel.yaml
@@ -34,11 +34,10 @@ ujson
 Pillow
 importlib_resources>=6.4
 ######## For Chatocrv3 #######
-qianfan==0.0.3
-langchain==0.1.5
-langchain-community==0.0.17
-erniebot == 0.5.9
-erniebot-agent == 0.5.2
+langchain==0.2.17
+langchain-community==0.2.17
+langchain-text-splitters==0.2.4
+transformers==4.40.0
 unstructured
 networkx
 faiss-cpu

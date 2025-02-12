@@ -131,11 +131,10 @@ def sorted_layout_boxes(res, w):
     """
     num_boxes = len(res)
     if num_boxes == 1:
-        res[0]["layout"] = "single"
         return res
 
     # Sort on the y axis first or sort it on the x axis
-    sorted_boxes = sorted(res, key=lambda x: (x["layout_bbox"][1], x["layout_bbox"][0]))
+    sorted_boxes = sorted(res, key=lambda x: (x["block_bbox"][1], x["block_bbox"][0]))
     _boxes = list(sorted_boxes)
 
     new_res = []
@@ -148,27 +147,24 @@ def sorted_layout_boxes(res, w):
             break
         # Check that the bbox is on the left
         elif (
-            _boxes[i]["layout_bbox"][0] < w / 4
-            and _boxes[i]["layout_bbox"][2] < 3 * w / 5
+            _boxes[i]["block_bbox"][0] < w / 4
+            and _boxes[i]["block_bbox"][2] < 3 * w / 5
         ):
-            _boxes[i]["layout"] = "double"
             res_left.append(_boxes[i])
             i += 1
-        elif _boxes[i]["layout_bbox"][0] > 2 * w / 5:
-            _boxes[i]["layout"] = "double"
+        elif _boxes[i]["block_bbox"][0] > 2 * w / 5:
             res_right.append(_boxes[i])
             i += 1
         else:
             new_res += res_left
             new_res += res_right
-            _boxes[i]["layout"] = "single"
             new_res.append(_boxes[i])
             res_left = []
             res_right = []
             i += 1
 
-    res_left = sorted(res_left, key=lambda x: (x["layout_bbox"][1]))
-    res_right = sorted(res_right, key=lambda x: (x["layout_bbox"][1]))
+    res_left = sorted(res_left, key=lambda x: (x["block_bbox"][1]))
+    res_right = sorted(res_right, key=lambda x: (x["block_bbox"][1]))
 
     if res_left:
         new_res += res_left

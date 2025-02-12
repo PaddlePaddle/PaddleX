@@ -15,9 +15,9 @@
 from typing import Any, Dict, Optional, Union, List, Tuple
 import os
 import re
+import copy
 import json
 import numpy as np
-import copy
 from .pipeline_base import PP_ChatOCR_Pipeline
 from ...common.reader import ReadImage
 from ...common.batch_sampler import ImageBatchSampler
@@ -65,6 +65,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         if initial_predictor:
             self.inintial_visual_predictor(config)
             self.inintial_chat_predictor(config)
+            self.inintial_retriever_predictor(config)
 
         self.batch_sampler = ImageBatchSampler(batch_size=1)
         self.img_reader = ReadImage(format="BGR")
@@ -344,7 +345,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         self,
         visual_info: dict,
         min_characters: int = 3500,
-        llm_request_interval: float = 1.0,
+        block_size: int = 300,
         flag_save_bytes_vector: bool = False,
         retriever_config: dict = None,
     ) -> dict:
@@ -354,7 +355,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         Args:
             visual_info (dict): The visual information input, can be a single instance or a list of instances.
             min_characters (int): The minimum number of characters required for text processing, defaults to 3500.
-            llm_request_interval (float): The interval between LLM requests, defaults to 1.0.
+            block_size (int): The size of each chunk to split the text into.
             flag_save_bytes_vector (bool): Whether to save the vector as bytes, defaults to False.
             retriever_config (dict): The configuration for the retriever, defaults to None.
 
@@ -401,9 +402,13 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         vector_info["flag_save_bytes_vector"] = False
         if len(all_text_str) > min_characters:
             vector_info["flag_too_short_text"] = False
-            vector_info["vector"] = retriever.generate_vector_database(all_items)
+            vector_info["model_name"] = retriever.model_name
+            vector_info["block_size"] = block_size
+            vector_info["vector"] = retriever.generate_vector_database(
+                all_items, block_size=block_size
+            )
             if flag_save_bytes_vector:
-                vector_info["vector"] = self.retriever.encode_vector_store_to_bytes(
+                vector_info["vector"] = retriever.encode_vector_store_to_bytes(
                     vector_info["vector"]
                 )
                 vector_info["flag_save_bytes_vector"] = True
@@ -416,9 +421,22 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         directory = os.path.dirname(save_path)
         if not os.path.exists(directory):
             os.makedirs(directory)
+        if self.retriever is None:
+            logging.warning("The retriever is not initialized,will initialize it now.")
+            self.inintial_retriever_predictor(self.config)
+
+        vector_info_data = copy.deepcopy(vector_info)
+        if (
+            not vector_info["flag_too_short_text"]
+            and not vector_info["flag_save_bytes_vector"]
+        ):
+            vector_info_data["vector"] = self.retriever.encode_vector_store_to_bytes(
+                vector_info_data["vector"]
+            )
+            vector_info_data["flag_save_bytes_vector"] = True
 
         with custom_open(save_path, "w") as fout:
-            fout.write(json.dumps(vector_info, ensure_ascii=False) + "\n")
+            fout.write(json.dumps(vector_info_data, ensure_ascii=False) + "\n")
         return
 
     def load_vector(self, data_path: str) -> dict:
@@ -437,11 +455,12 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
             ):
                 logging.error("Invalid vector info.")
                 return {"error": "Invalid vector info when load vector!"}
-
             if vector_info["flag_save_bytes_vector"]:
                 vector_info["vector"] = self.retriever.decode_vector_store_from_bytes(
                     vector_info["vector"]
                 )
+                vector_info["flag_save_bytes_vector"] = False
+
         return vector_info
 
     def format_key(self, key_list: Union[str, List[str]]) -> List[str]:
@@ -545,6 +564,11 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
             question_key_list = [f"{key}" for key in key_list]
             vector = vector_info["vector"]
             if not vector_info["flag_too_short_text"]:
+                assert (
+                    vector_info["model_name"] == retriever.model_name
+                ), f"The vector model name ({vector_info['model_name']}) does not match the retriever model name ({retriever.model_name}). Please check your retriever config."
+                if vector_info["flag_save_bytes_vector"]:
+                    vector = retriever.decode_vector_store_from_bytes(vector)
                 related_text = retriever.similarity_retrieval(
                     question_key_list, vector, topk=50, min_characters=min_characters
                 )

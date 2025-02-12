@@ -49,16 +49,6 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
         if model_settings["use_general_ocr"] or model_settings["use_table_recognition"]:
             res_img_dict["overall_ocr_res"] = self["overall_ocr_res"].img["ocr_res_img"]
 
-        if model_settings["use_general_ocr"]:
-            general_ocr_res = copy.deepcopy(self["overall_ocr_res"])
-            general_ocr_res["rec_polys"] = self["text_paragraphs_ocr_res"]["rec_polys"]
-            general_ocr_res["rec_texts"] = self["text_paragraphs_ocr_res"]["rec_texts"]
-            general_ocr_res["rec_scores"] = self["text_paragraphs_ocr_res"][
-                "rec_scores"
-            ]
-            general_ocr_res["rec_boxes"] = self["text_paragraphs_ocr_res"]["rec_boxes"]
-            res_img_dict["text_paragraphs_ocr_res"] = general_ocr_res.img["ocr_res_img"]
-
         if model_settings["use_table_recognition"] and len(self["table_res_list"]) > 0:
             table_cell_img = Image.fromarray(
                 copy.deepcopy(self["doc_preprocessor_res"]["output_img"])
@@ -94,15 +84,6 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
                 key = f"formula_res_region{formula_region_id}"
                 res_img_dict[key] = sub_formula_res_dict["res"]
 
-        if len(self["sub_image_list"]) > 0:
-            for sno in range(len(self["sub_image_list"])):
-                sub_region_image = Image.fromarray(
-                    copy.deepcopy(self["sub_image_list"][sno])
-                )
-                sub_region_image_id = sno + 1
-                key = f"sub_region_image{sub_region_image_id}"
-                res_img_dict[key] = sub_region_image
-
         return res_img_dict
 
     def _to_str(self, *args, **kwargs) -> Dict[str, str]:
@@ -126,15 +107,6 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
         data["layout_det_res"] = self["layout_det_res"].str["res"]
         if model_settings["use_general_ocr"] or model_settings["use_table_recognition"]:
             data["overall_ocr_res"] = self["overall_ocr_res"].str["res"]
-        if model_settings["use_general_ocr"]:
-            general_ocr_res = {}
-            general_ocr_res["rec_polys"] = self["text_paragraphs_ocr_res"]["rec_polys"]
-            general_ocr_res["rec_texts"] = self["text_paragraphs_ocr_res"]["rec_texts"]
-            general_ocr_res["rec_scores"] = self["text_paragraphs_ocr_res"][
-                "rec_scores"
-            ]
-            general_ocr_res["rec_boxes"] = self["text_paragraphs_ocr_res"]["rec_boxes"]
-            data["text_paragraphs_ocr_res"] = general_ocr_res
         if model_settings["use_table_recognition"] and len(self["table_res_list"]) > 0:
             data["table_res_list"] = []
             for sno in range(len(self["table_res_list"])):
@@ -178,15 +150,6 @@ class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):
         data["layout_det_res"] = self["layout_det_res"].json["res"]
         if model_settings["use_general_ocr"] or model_settings["use_table_recognition"]:
             data["overall_ocr_res"] = self["overall_ocr_res"].json["res"]
-        if model_settings["use_general_ocr"]:
-            general_ocr_res = {}
-            general_ocr_res["rec_polys"] = self["text_paragraphs_ocr_res"]["rec_polys"]
-            general_ocr_res["rec_texts"] = self["text_paragraphs_ocr_res"]["rec_texts"]
-            general_ocr_res["rec_scores"] = self["text_paragraphs_ocr_res"][
-                "rec_scores"
-            ]
-            general_ocr_res["rec_boxes"] = self["text_paragraphs_ocr_res"]["rec_boxes"]
-            data["text_paragraphs_ocr_res"] = general_ocr_res
         if model_settings["use_table_recognition"] and len(self["table_res_list"]) > 0:
             data["table_res_list"] = []
             for sno in range(len(self["table_res_list"])):

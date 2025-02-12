@@ -72,7 +72,7 @@ tar -xf ./dataset/anomaly_detection_hazelnut.tar -C ./dataset/
 在对数据集校验时，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/modules/modules/image_anomaly_detection/STFPM.yaml \
+python main.py -c paddlex/configs/modules/image_anomaly_detection/STFPM.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/anomaly_detection_hazelnut
 ```

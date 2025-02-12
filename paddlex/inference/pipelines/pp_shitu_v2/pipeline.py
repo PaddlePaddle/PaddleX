@@ -106,9 +106,9 @@ class ShiTuV2Pipeline(BasePipeline):
         single_img_res = {"input_path": input_data, "input_img": raw_img, "boxes": []}
         for i, obj in enumerate(det_res["boxes"]):
             rec_scores = rec_res["score"][i]
-            if isinstance(rec_scores, np.ndarray):
-                rec_scores = rec_scores.tolist()
+            rec_scores = rec_scores if rec_scores is not None else [None]
             labels = rec_res["label"][i]
+            labels = labels if labels is not None else [None]
             single_img_res["boxes"].append(
                 {
                     "labels": labels,

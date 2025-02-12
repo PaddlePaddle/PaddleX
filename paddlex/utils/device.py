@@ -18,8 +18,15 @@ import GPUtil
 import lazy_paddle as paddle
 from . import logging
 from .errors import raise_unsupported_device_error
+from .custom_device_whitelist import (
+    DCU_WHITELIST,
+    MLU_WHITELIST,
+    NPU_WHITELIST,
+    XPU_WHITELIST,
+    GCU_WHITELIST,
+)
 
-SUPPORTED_DEVICE_TYPE = ["cpu", "gpu", "xpu", "npu", "mlu", "gcu"]
+SUPPORTED_DEVICE_TYPE = ["cpu", "gpu", "xpu", "npu", "mlu", "gcu", "dcu"]
 
 
 def _constr_device(device_type, device_ids):
@@ -112,3 +119,27 @@ def set_env_for_device(device):
         if device_type.lower() == "gcu":
             envs = {"FLAGS_use_stride_kernel": "0"}
             _set(envs)
+
+
+def check_supported_device(device, model_name):
+    device_type, device_ids = parse_device(device)
+    if device_type == "dcu":
+        assert (
+            model_name in DCU_WHITELIST
+        ), f"The DCU device does not yet support `{model_name}` model!"
+    elif device_type == "mlu":
+        assert (
+            model_name in MLU_WHITELIST
+        ), f"The MLU device does not yet support `{model_name}` model!"
+    elif device_type == "npu":
+        assert (
+            model_name in NPU_WHITELIST
+        ), f"The NPU device does not yet support `{model_name}` model!"
+    elif device_type == "xpu":
+        assert (
+            model_name in XPU_WHITELIST
+        ), f"The XPU device does not yet support `{model_name}` model!"
+    elif device_type == "gcu":
+        assert (
+            model_name in GCU_WHITELIST
+        ), f"The GCU device does not yet support `{model_name}` model!"

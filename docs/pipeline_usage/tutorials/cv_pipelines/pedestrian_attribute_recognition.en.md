@@ -5,7 +5,7 @@ comments: true
 # Pedestrian Attribute Recognition Pipeline Tutorial
 
 ## 1. Introduction to Pedestrian Attribute Recognition Pipeline
-Pedestrian attribute recognition is a key function in computer vision systems, used to locate and label specific characteristics of pedestrians in images or videos, such as gender, age, clothing color, and style. This task not only requires accurately detecting pedestrians but also identifying detailed attribute information for each pedestrian. The pedestrian attribute recognition pipeline is an end-to-end serial system for locating and recognizing pedestrian attributes, widely used in smart cities, security surveillance, and other fields, significantly enhancing the system's intelligence level and management efficiency.
+Pedestrian attribute recognition is a key function in computer vision systems, used to locate and label specific characteristics of pedestrians in images or videos, such as gender, age, clothing color, and style. This task not only requires accurately detecting pedestrians but also identifying detailed attribute information for each pedestrian. The pedestrian attribute recognition pipeline is an end-to-end serial system for locating and recognizing pedestrian attributes, widely used in smart cities, security surveillance, and other fields, significantly enhancing the system's intelligence level and management efficiency.This production line also offers a flexible service-oriented deployment approach, supporting the use of multiple programming languages on various hardware platforms. Moreover, this production line provides the capability for secondary development. You can train and optimize models on your own dataset based on this production line, and the trained models can be seamlessly integrated.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/pedestrian_attribute_recognition/01.jpg"/>
 <b>The pedestrian attribute recognition pipeline includes a pedestrian detection module and a pedestrian attribute recognition module</b>, with several models in each module. Which models to use specifically can be selected based on the benchmark data below. <b>If you prioritize model accuracy, choose models with higher accuracy; if you prioritize inference speed, choose models with faster inference; if you prioritize model storage size, choose models with smaller storage</b>.
@@ -79,7 +79,7 @@ Before using the pedestrian attribute recognition pipeline locally, please ensur
 You can quickly experience the pedestrian attribute recognition pipeline with a single command. Use [the test image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pedestrian_attribute_002.jpg) and replace `--input` with your local path for prediction.
 
 ```bash
-paddlex --pipeline pedestrian_attribute_recognition --input pedestrian_attribute_002.jpg --device gpu:0
+paddlex --pipeline pedestrian_attribute_recognition --input pedestrian_attribute_002.jpg --device gpu:0 --save_path ./output/
 ```
 
 The relevant parameter descriptions can be found in the parameter explanation section of [2.2.2 Python Script Integration](#222-python脚本方式集成).
@@ -133,6 +133,12 @@ In the above Python script, the following steps are executed:
 <td>The name of the production line or the path to the production line configuration file. If it is the name of a production line, it must be supported by PaddleX.</td>
 <td><code>str</code></td>
 <td>None</td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
@@ -285,12 +291,13 @@ In the above Python script, the following steps are executed:
 - Calling the `print()` method will print the result to the terminal, and the content printed to the terminal is explained as follows:
 
     - `input_path`: `(str)` The input path of the image to be predicted.
+    - `page_index`: `(Union[int, None])` If the input is a PDF file, it indicates the current page number of the PDF; otherwise, it is `None`.
     - `boxes`: `(List[Dict])` Indicates the category ID of the prediction result.
     - `labels`: `(List[str])` Indicates the category name of the prediction result.
     - `cls_scores`: `(List[numpy.ndarray])` Indicates the confidence of the attribute prediction result.
     - `det_scores`: `(float)` Indicates the confidence of the pedestrian detection box.
 
-- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}.json`. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` type will be converted to a list format.
+- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.json`. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` type will be converted to a list format.
 - Calling the `save_to_img()` method will save the visualization result to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (The production line usually contains many result images, so it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, and only the last image will be retained.)
 
 * Additionally, it also supports obtaining visualized images with results and prediction results through attributes, as follows:
@@ -322,7 +329,7 @@ paddlex --get_pipeline_config pedestrian_attribute_recognition --save_path ./my_
 ```
 
 
-If you have obtained the configuration file, you can customize the settings for the OCR pipeline. Simply modify the `pipeline` parameter value in the `create_pipeline` method to the path of the pipeline configuration file. An example is as follows:
+If you have obtained the configuration file, you can customize the settings for the pedestrian attribute recognition production line by simply modifying the value of the `pipeline` parameter in the `create_pipeline` method to the path of the production line configuration file. The example is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -597,13 +604,13 @@ SubModules:
   Detection:
     module_name: object_detection
     model_name: PP-YOLOE-L_human
-    model_dir: null
+    model_dir: null # Replace with the path to the fine-tuned pedestrian detection model weights
     batch_size: 1
     threshold: 0.5
   Classification:
     module_name: multilabel_classification
     model_name: PP-LCNet_x1_0_pedestrian_attribute
-    model_dir: null
+    model_dir: null # Replace with the path to the fine-tuned pedestrian attribute recognition model weights
     batch_size: 1
     threshold: 0.7
 ```
@@ -620,4 +627,4 @@ paddlex --pipeline pedestrian_attribute_recognition \
         --device npu:0
 ```
 
-If you want to use the general OCR production line on a wider range of hardware devices, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+If you want to use the general Pedestrian Attribute Recognition pipeline on a wider range of hardware devices, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).

@@ -9,11 +9,10 @@ openpyxl
 premailer
 python-docx
 ######## For Chatocrv3 #######
-qianfan==0.0.3
-langchain==0.1.5
-langchain-community==0.0.17
-erniebot == 0.5.9
-erniebot-agent == 0.5.2
+langchain==0.2.17
+langchain-community==0.2.17
+langchain-text-splitters==0.2.4
+transformers==4.40.0
 unstructured
 networkx
 numpy==1.24.4; python_version<"3.12"

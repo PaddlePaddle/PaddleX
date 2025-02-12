@@ -65,7 +65,7 @@ The object detection module is a crucial component in computer vision systems, r
 </tr>
 </table>
 
-&gt; ❗ The above list features the <b>6 core models</b> that the image classification module primarily supports. In total, this module supports <b>37 models</b>. The complete list of models is as follows:
+> ❗ The above list features the <b>6 core models</b> that the image classification module primarily supports. In total, this module supports <b>37 models</b>. The complete list of models is as follows:
 
 <details><summary> 👉Details of Model List</summary>
 <table>
@@ -81,7 +81,7 @@ The object detection module is a crucial component in computer vision systems, r
 <td>Cascade-FasterRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Cascade-FasterRCNN-ResNet50-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-FasterRCNN-ResNet50-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>41.1</td>
 <td>135.92 / 135.92</td>
-<td>nan / nan</td>
+<td>-</td>
 <td>245.4 M</td>
 <td rowspan="2">Cascade-FasterRCNN is an improved version of the Faster R-CNN object detection model. By coupling multiple detectors and optimizing detection results using different IoU thresholds, it addresses the mismatch problem between training and prediction stages, enhancing the accuracy of object detection.</td>
 </tr>
@@ -89,22 +89,22 @@ The object detection module is a crucial component in computer vision systems, r
 <td>Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Cascade-FasterRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>45.0</td>
 <td>138.23 / 138.23</td>
-<td>nan / nan</td>
+<td>-</td>
 <td>246.2 M</td>
 </tr>
 <tr>
 <td>CenterNet-DLA-34</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/CenterNet-DLA-34_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CenterNet-DLA-34_pretrained.pdparams">Trained Model</a></td>
 <td>37.6</td>
-<td>nan / nan</td>
-<td>nan / nan</td>
+<td>-</td>
+<td>-</td>
 <td>75.4 M</td>
 <td rowspan="2">CenterNet is an anchor-free object detection model that treats the keypoints of the object to be detected as a single point—the center point of its bounding box, and performs regression through these keypoints.</td>
 </tr>
 <tr>
 <td>CenterNet-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/CenterNet-ResNet50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/CenterNet-ResNet50_pretrained.pdparams">Trained Model</a></td>
 <td>38.9</td>
-<td>nan / nan</td>
-<td>nan / nan</td>
+<td>-</td>
+<td>-</td>
 <td>319.7 M</td>
 </tr>
 <tr>
@@ -119,7 +119,7 @@ The object detection module is a crucial component in computer vision systems, r
 <td>FasterRCNN-ResNet34-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet34-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet34-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>37.8</td>
 <td>83.33 / 31.64</td>
-<td>nan / nan</td>
+<td>-</td>
 <td>137.5 M</td>
 <td rowspan="9">Faster R-CNN is a typical two-stage object detection model that first generates region proposals and then performs classification and regression on these proposals. Compared to its predecessors R-CNN and Fast R-CNN, Faster R-CNN's main improvement lies in the region proposal aspect, using a Region Proposal Network (RPN) to provide region proposals instead of traditional selective search. RPN is a Convolutional Neural Network (CNN) that shares convolutional features with the detection network, reducing the computational overhead of region proposals.</td>
 </tr>
@@ -127,56 +127,56 @@ The object detection module is a crucial component in computer vision systems, r
 <td>FasterRCNN-ResNet50-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet50-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>38.4</td>
 <td>107.08 / 35.40</td>
-<td>nan / nan</td>
+<td>-</td>
 <td>148.1 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet50-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet50-vd-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-vd-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>39.5</td>
 <td>109.36 / 36.00</td>
-<td>nan / nan</td>
+<td>-</td>
 <td>148.1 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet50-vd-SSLDv2-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet50-vd-SSLDv2-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50-vd-SSLDv2-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>41.4</td>
 <td>109.06 / 36.19</td>
-<td>nan / nan</td>
+<td>-</td>
 <td>148.1 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet50</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet50_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet50_pretrained.pdparams">Trained Model</a></td>
 <td>36.7</td>
 <td>496.33 / 109.12</td>
-<td>nan / nan</td>
+<td>-</td>
 <td>120.2 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet101-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet101-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet101-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>41.4</td>
 <td>148.21 / 42.21</td>
-<td>nan / nan</td>
+<td>-</td>
 <td>216.3 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNet101</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNet101_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNet101_pretrained.pdparams">Trained Model</a></td>
 <td>39.0</td>
 <td>538.58 / 120.88</td>
-<td>nan / nan</td>
+<td>-</td>
 <td>188.1 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-ResNeXt101-vd-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-ResNeXt101-vd-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-ResNeXt101-vd-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>43.4</td>
 <td>258.01 / 58.25</td>
-<td>nan / nan</td>
+<td>-</td>
 <td>360.6 M</td>
 </tr>
 <tr>
 <td>FasterRCNN-Swin-Tiny-FPN</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FasterRCNN-Swin-Tiny-FPN_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/FasterRCNN-Swin-Tiny-FPN_pretrained.pdparams">Trained Model</a></td>
 <td>42.6</td>
-<td>nan / nan</td>
-<td>nan / nan</td>
+<td>-</td>
+<td>-</td>
 <td>159.8 M</td>
 </tr>
 <tr>
@@ -351,7 +351,7 @@ The object detection module is a crucial component in computer vision systems, r
 
 ## III. Quick Integration
 
-&gt; ❗ Before proceeding with quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+> ❗ Before proceeding with quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 
 After installing the wheel package, you can perform object detection inference with just a few lines of code. You can easily switch between models within the module and integrate the object detection inference into your projects. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png) to your local machine.
 
@@ -630,7 +630,7 @@ After executing the above command, PaddleX will validate the dataset and summari
   "analysis": {
     "histogram": "check_dataset/histogram.png"
   },
-  "dataset_path": "./dataset/det_coco_examples",
+  "dataset_path": "det_coco_examples",
   "show_type": "image",
   "dataset_type": "COCODetDataset"
 }

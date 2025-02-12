@@ -696,6 +696,7 @@ for res in output:
 
 运行结果参数含义如下：
 - `input_path`：表示输入图片的路径。
+- `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`。
 - `class_ids`：表示预测结果的类别id。
 - `scores`：表示预测结果的置信度。
 - `label_names`：表示预测结果的类别名。
@@ -742,6 +743,13 @@ for res in output:
 </td>
 <td>5</td>
 </tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理</td>
+<td><code>bool</code></td>
+<td>无</td>
+<td><code>False</code></td>
+</tr>
 </table>
 
 * 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
@@ -761,15 +769,14 @@ for res in output:
 <tr>
 <td><code>input</code></td>
 <td>待预测数据，支持多种输入类型</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
 <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
 <li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
 <li><b>URL链接</b>，如图像文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg">示例</a></li>
 <li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
-<li><b>字典</b>，字典的<code>key</code>需与具体任务对应，如图像分类任务对应<code>\"img\"</code>，字典的<code>val</code>支持上述类型数据，例如：<code>{\"img\": \"/root/data1\"}</code></li>
-<li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code>，<code>[{\"img\": \"/root/data1\"}, {\"img\": \"/root/data2/img.jpg\"}]</code></li>
+<li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td>无</td>
@@ -925,9 +932,15 @@ python main.py -c paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yam
   "analysis": {
     "histogram": "check_dataset/histogram.png"
   },
+<<<<<<< HEAD
   "dataset_path": "./dataset/cls_flowers_examples",
   "show_type": "image",
   "dataset_type": "ClsDataset"
+=======
+  &quot;dataset_path&quot;: &quot;cls_flowers_examples&quot;,
+  &quot;show_type&quot;: &quot;image&quot;,
+  &quot;dataset_type&quot;: &quot;ClsDataset&quot;
+>>>>>>> modify_pipeline_and_module_docs
 }
 </code></pre>
 <p>上述校验结果中，check_pass 为 True 表示数据集格式符合要求，其他部分指标的说明如下：</p>
