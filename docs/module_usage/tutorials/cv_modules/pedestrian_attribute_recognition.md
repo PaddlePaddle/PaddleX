@@ -39,18 +39,29 @@ comments: true
 
 完成 wheel 包的安装后，几行代码即可完成行人属性识别模块的推理，可以任意切换该模块下的模型，您也可以将行人属性识别的模块中的模型推理集成到您的项目中。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pedestrian_attribute_006.jpg)到本地。
 
-```bash
+```python
 from paddlex import create_model
-model = create_model("PP-LCNet_x1_0_pedestrian_attribute")
+model = create_model(model_name="PP-LCNet_x1_0_pedestrian_attribute")
 output = model.predict("pedestrian_attribute_006.jpg", batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
     res.save_to_json("./output/res.json")
 ```
-关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 
-<b>备注</b>：其中 `output` 的值索引为0表示是否佩戴帽子，索引值为1表示是否佩戴眼镜，索引值2-7表示上衣风格，索引值8-13表示下装风格，索引值14表示是否穿靴子，索引值15-17表示背的包的类型，索引值18表示正面是否持物，索引值19-21表示年龄，索引值22表示性别，索引值23-25表示朝向。具体地，属性包含以下类型：
+运行后，得到的结果为：
+```bash
+{'res': {'input_path': 'pedestrian_attribute_006.jpg', 'page_index': None, 'class_ids': array([10, ..., 23]), 'scores': array([1.     , ..., 0.54777]), 'label_names': ['LongCoat(长外套)', 'Age18-60(年龄在18-60岁之间)', 'Trousers(长裤)', 'Front(面朝前)']}}
+```
+
+运行结果参数含义如下：
+- `input_path`：表示输入待预测多类别图像的路径
+- `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
+- `class_ids`：表示行人属性图像的预测标签ID
+- `scores`：表示行人属性图像的预测标签置信度
+- `label_names`：表示行人属性图像的预测标签名称
+
+<b>备注</b>：其中 `class_ids` 的值索引为0表示是否佩戴帽子，索引值为1表示是否佩戴眼镜，索引值2-7表示上衣风格，索引值8-13表示下装风格，索引值14表示是否穿靴子，索引值15-17表示背的包的类型，索引值18表示正面是否持物，索引值19-21表示年龄，索引值22表示性别，索引值23-25表示朝向。具体地，属性包含以下类型:
 
 ```
 - 性别：男、女
@@ -66,9 +77,197 @@ for res in output:
 - 长外套：是、否
 - 长裤：是、否
 - 短裤：是、否
-- 短裙&amp;裙子：是、否
+- 短裙&裙子：是、否
 - 穿靴：是、否
 ```
+
+可视化图片如下：
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/ped_attri/pedestrian_attribute_006_res.jpg">
+
+相关方法、参数等说明如下：
+
+* `create_model`实例化行人属性识别模型（此处以`PP-LCNet_x1_0_pedestrian_attribute`为例），具体说明如下：
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td><code>model_name</code></td>
+<td>模型名称</td>
+<td><code>str</code></td>
+<td>无</td>
+<td><code>PP-LCNet_x1_0_pedestrian_attribute</code></td>
+</tr>
+<tr>
+<td><code>model_dir</code></td>
+<td>模型存储路径</td>
+<td><code>str</code></td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td>行人属性识别阈值</td>
+<td><code>float/list/dict</code></td>
+<td><li><b>float类型变量</b>，任意[0-1]之间浮点数：<code>0.5</code></li>
+<li><b>list类型变量</b>，由多个[0-1]之间浮点数组成的列表：<code>[0.5,0.5,...]</code></li>
+<li><b>dict类型变量</b>,指定不同类别使用不同的阈值，其中"default"为必须包含的键:<code>{"default":0.5,1:0.1,...}</code>
+</li>
+</td>
+<td>0.5</td>
+</tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理</td>
+<td><code>bool</code></td>
+<td>无</td>
+<td><code>False</code></td>
+</tr>
+</table>
+
+* 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
+
+* 其中，`threshold` 参数用于设置多标签分类的阈值，默认为0.7。当设置为浮点数时，表示所有类别均使用该阈值；当设置为列表时，表示不同类别使用不同的阈值,此时需保持列表长度与类别数量一致；当设置为字典时，`default` 为必须包含的键， 表示所有类别的默认阈值，其它类别使用各自的阈值。例如：{"default":0.5,1:0.1}。
+
+* 调用多标签分类模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` , `batch_size` 和  `threshold`，具体说明如下：
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+<th>参数类型</th>
+<th>可选项</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td><code>input</code></td>
+<td>待预测数据，支持多种输入类型</td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
+<td>
+<ul>
+  <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
+  <li><b>文件路径</b>，如图像文件的本地路径：<code>/root/data/img.jpg</code></li>
+  <li><b>URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/multilabel_classification_005.png">示例</a></li>
+  <li><b>本地目录</b>，该目录下需包含待预测数据文件，如本地路径：<code>/root/data/</code></li>
+  <li><b>列表</b>，列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></code></li>
+</ul>
+</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>batch_size</code></td>
+<td>批大小</td>
+<td><code>int</code></td>
+<td>任意整数</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td>行人属性识别阈值</td>
+<td><code>float/list/dict</code></td>
+<td><li><b>float类型变量</b>，任意[0-1]之间浮点数：<code>0.5</code></li>
+<li><b>list类型变量</b>，由多个[0-1]之间浮点数组成的列表：<code>[0.5,0.5,...]</code></li>
+<li><b>dict类型变量</b>,指定不同类别使用不同的阈值，其中"default"为必须包含的键:<code>{"default":0.5,1:0.1,...}</code>
+</li>
+</td>
+<td>0.5</td>
+</tr>
+</table>
+
+* 对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`json`文件的操作:
+
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>方法说明</th>
+<th>参数</th>
+<th>参数类型</th>
+<th>参数说明</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "3"><code>print()</code></td>
+<td rowspan = "3">打印结果到终端</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>是否对输出内容进行使用 <code>JSON</code> 缩进格式化</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan = "3"><code>save_to_json()</code></td>
+<td rowspan = "3">将结果保存为json格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>指定缩进级别，以美化输出的 <code>JSON</code> 数据，使其更具可读性，仅当 <code>format_json</code> 为 <code>True</code> 时有效</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>控制是否将非 <code>ASCII</code> 字符转义为 <code>Unicode</code>。设置为 <code>True</code> 时，所有非 <code>ASCII</code> 字符将被转义；<code>False</code> 则保留原始字符，仅当<code>format_json</code>为<code>True</code>时有效</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>将结果保存为图像格式的文件</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>保存的文件路径，当为目录时，保存文件命名与输入文件类型命名一致</td>
+<td>无</td>
+</tr>
+</table>
+
+* 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>属性说明</th>
+</tr>
+</thead>
+<tr>
+<td rowspan = "1"><code>json</code></td>
+<td rowspan = "1">获取预测的<code>json</code>格式的结果</td>
+</tr>
+<tr>
+<td rowspan = "1"><code>img</code></td>
+<td rowspan = "1">获取格式为<code>dict</code>的可视化图像</td>
+</tr>
+
+</table>
+
+
+关于更多 PaddleX 的单模型推理的 API 的使用方法，可以参考的使用方法，可以参考[PaddleX单模型Python脚本使用说明](../../instructions/model_python_API.md)。
 
 ## 四、二次开发
 如果你追求更高精度的现有模型，可以使用 PaddleX 的二次开发能力，开发更好的行人属性识别模型。在使用 PaddleX 开发行人属性识别之前，请务必安装 PaddleX 的分类相关模型训练插件，安装过程可以参考 [PaddleX本地安装教程](../../../installation/installation.md)中的二次开发部分。
@@ -131,7 +330,7 @@ python main.py -c paddlex/configs/modules/pedestrian_attribute_recognition/PP-LC
   "analysis": {
     "histogram": "check_dataset/histogram.png"
   },
-  "dataset_path": "./dataset/pedestrian_attribute_examples",
+  "dataset_path": "pedestrian_attribute_examples",
   "show_type": "image",
   "dataset_type": "MLClsDataset"
 }
@@ -262,7 +461,7 @@ python main.py -c paddlex/configs/modules/pedestrian_attribute_recognition/PP-LC
 
 1.<b>产线集成</b>
 
-行人属性识别模块可以集成的PaddleX产线有[通用图像多标签分类产线](../../../pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.md)，只需要替换模型路径即可完成相关产线的行人属性识别模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
+行人属性识别模块可以集成的PaddleX产线有[行人属性识别产线](../../../pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute_recognition.md)，只需要替换模型路径即可完成相关产线的行人属性识别模块的模型更新。在产线集成中，你可以使用高性能部署和服务化部署来部署你得到的模型。
 
 2.<b>模块集成</b>
 

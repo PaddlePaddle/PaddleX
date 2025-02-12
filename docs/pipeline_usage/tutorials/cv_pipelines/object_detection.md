@@ -66,7 +66,7 @@ comments: true
 </tr>
 </table>
 
-&gt; ❗ 以上列出的是目标检测模块重点支持的<b>6个核心模型</b>，该模块总共支持<b>37个模型</b>，完整的模型列表如下：
+> ❗ 以上列出的是目标检测模块重点支持的<b>6个核心模型</b>，该模块总共支持<b>37个模型</b>，完整的模型列表如下：
 
 <details><summary> 👉模型列表详情</summary>
 <table>
@@ -566,7 +566,7 @@ for res in output:
         - `score`：目标框置信度，一个浮点数
         - `coordinate`：目标框坐标，一个浮点数列表，格式为<code>[xmin, ymin, xmax, ymax]</code>
 
-- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
+- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
 - 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.{your_img_extension}`，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)
 
 * 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：

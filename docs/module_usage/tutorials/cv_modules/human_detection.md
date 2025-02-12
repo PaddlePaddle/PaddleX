@@ -106,6 +106,13 @@ for res in output:
 <td>无</td>
 <td>None</td>
 </tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理</td>
+<td><code>bool</code></td>
+<td>无</td>
+<td><code>False</code></td>
+</tr>
 </table>
 
 * 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。

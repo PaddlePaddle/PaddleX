@@ -139,7 +139,20 @@ output = pipeline.predict("nuscenes_demo_infer.tar")
 for res in output:
     res.print()  ## Print the structured output of the prediction
     res.save_to_json("./output/")  ## Save the results to a json file
+    res.visualize(save_path="./output/", show=True) ## 3D result visualization. If the runtime environment has a graphical interface, set `show=True`; otherwise, set it to `False`.
 ```
+
+<b>Note: </b>  
+1、To visualize 3D detection results, you need to install the open3d package first. The installation command is as follows:
+```bash
+pip install open3d
+```
+2、If the runtime environment does not have a graphical interface, visualization will not be possible, but the results will still be saved. You can run the script in an environment that supports a graphical interface to visualize the saved results:
+```bash
+python paddlex/inference/models/3d_bev_detection/visualizer_3d.py --save_path="./output/"
+```
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/images/pipelines/3d_bev_detection/02.png">
 
 In the above Python script, the following steps are executed:
 
@@ -243,6 +256,7 @@ output = pipeline.predict("nuscenes_demo_infer.tar")
 for res in output:
     res.print()  ## Print the structured output of the prediction
     res.save_to_json("./output/")  ## Save the results to a json file
+    res.visualize(save_path="./output/", show=True) ## 3D result visualization. If the runtime environment has a graphical interface, set `show=True`; otherwise, set it to `False`.
 ```
 
 <b>Note: </b>The parameters in the configuration file are pipeline initialization parameters. If you want to change the 3D multi-modal fusion detection pipeline initialization parameters, you can directly modify the parameters in the configuration file and load the configuration file for prediction. At the same time, CLI prediction also supports passing in a configuration file by specifying the path with `--pipeline`.

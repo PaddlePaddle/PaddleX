@@ -84,7 +84,7 @@ Not supported yet.
 
 ### 2.2 Local Experience
 
-&gt; ❗ Before using the general image recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
+> ❗ Before using the general image recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
 
 #### 2.2.1 Command Line Experience
 
@@ -1032,7 +1032,7 @@ from paddlex import create_pipeline
 
 pipeline = create_pipeline(
     pipeline="PP-ShiTuV2",
-    device="npu:0" # gpu:0 --&gt; npu:0
+    device="npu:0" # gpu:0 --> npu:0
     )
 ```
 

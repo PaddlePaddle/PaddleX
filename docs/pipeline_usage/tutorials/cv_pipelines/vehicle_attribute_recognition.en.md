@@ -5,7 +5,7 @@ comments: true
 # Vehicle Attribute Recognition Pipeline Tutorial
 
 ## 1. Introduction to Vehicle Attribute Recognition Pipeline
-Vehicle attribute recognition is a crucial component in computer vision systems. Its primary task is to locate and label specific attributes of vehicles in images or videos, such as vehicle type, color, and license plate number. This task not only requires accurately detecting vehicles but also identifying detailed attribute information for each vehicle. The vehicle attribute recognition pipeline is an end-to-end serial system for locating and recognizing vehicle attributes, widely used in traffic management, intelligent parking, security surveillance, autonomous driving, and other fields. It significantly enhances system efficiency and intelligence levels, driving the development and innovation of related industries.
+Vehicle attribute recognition is a crucial component in computer vision systems. Its primary task is to locate and label specific attributes of vehicles in images or videos, such as vehicle type, color, and license plate number. This task not only requires accurately detecting vehicles but also identifying detailed attribute information for each vehicle. The vehicle attribute recognition pipeline is an end-to-end serial system for locating and recognizing vehicle attributes, widely used in traffic management, intelligent parking, security surveillance, autonomous driving, and other fields. It significantly enhances system efficiency and intelligence levels, driving the development and innovation of related industries. This pipeline also offers a flexible service-oriented deployment approach, supporting the use of multiple programming languages on various hardware platforms. Moreover, this production line provides the capability for secondary development. You can train and optimize models on your own dataset based on this production line, and the trained models can be seamlessly integrated.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/vehicle_attribute_recognition/01.jpg"/>
 <b>The vehicle attribute recognition pipeline includes a vehicle detection module and a vehicle attribute recognition module</b>, with several models in each module. Which models to use can be selected based on the benchmark data below. <b>If you prioritize model accuracy, choose models with higher accuracy; if you prioritize inference speed, choose models with faster inference; if you prioritize model storage size, choose models with smaller storage</b>.
@@ -53,7 +53,7 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 <tr>
 <td>PP-LCNet_x1_0_vehicle_attribute</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_vehicle_attribute_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_vehicle_attribute_pretrained.pdparams">Trained Model</a></td>
 <td>91.7</td>
-<td>2.32 / 2.32</td>
+<td>2.32 / 0.52</td>
 <td>3.22 / 1.26</td>
 <td>6.7 M</td>
 <td>PP-LCNet_x1_0_vehicle_attribute is a lightweight vehicle attribute recognition model based on PP-LCNet.</td>
@@ -75,7 +75,7 @@ Before using the vehicle attribute recognition pipeline locally, ensure you have
 You can quickly experience the vehicle attribute recognition pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_attribute_002.jpg) and replace `--input` with the local path for prediction.
 
 ```bash
-paddlex --pipeline vehicle_attribute_recognition --input vehicle_attribute_002.jpg --device gpu:0
+paddlex --pipeline vehicle_attribute_recognition --input vehicle_attribute_002.jpg --device gpu:0 --save_path ./output/
 ```
 Parameter Description:
 
@@ -114,6 +114,12 @@ In the above Python script, the following steps are executed:
 <td>The name of the production line or the path to the production line configuration file. If it is the name of a production line, it must be supported by PaddleX.</td>
 <td><code>str</code></td>
 <td>None</td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
@@ -266,13 +272,14 @@ In the above Python script, the following steps are executed:
 - When calling the <code>print()</code> method, the result will be printed to the terminal. The printed content is explained as follows:
 
     - `input_path`: `(str)` The input path of the image to be predicted.
+    - `page_index`: `(Union[int, None])` If the input is a PDF file, it indicates the current page number of the PDF; otherwise, it is `None`.
     - `boxes`: `(List[Dict])` The category IDs of the prediction results.
     - `labels`: `(List[str])` The category names of the prediction results.
     - `cls_scores`: `(List[numpy.ndarray])` The confidence scores of the attribute prediction results.
     - `det_scores`: `(float)` The confidence scores of the vehicle detection boxes.
 
-- When calling the <code>save_to_json()</code> method, the above content will be saved to the specified <code>save_path</code>. If a directory is specified, the saved path will be <code>save_path/{your_img_basename}.json</code>. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the <code>numpy.array</code> type will be converted to a list format.
-- When calling the <code>save_to_img()</code> method, the visualization result will be saved to the specified <code>save_path</code>. If a directory is specified, the saved path will be <code>save_path/{your_img_basename}_res.{your_img_extension}</code>. If a file is specified, it will be saved directly to that file. (In production, there are usually many result images, so it is not recommended to specify a specific file path directly; otherwise, multiple images will be overwritten, and only the last image will be retained.)
+- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.json`. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` type will be converted to a list format.
+- Calling the `save_to_img()` method will save the visualization result to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (The production line usually contains many result images, so it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, and only the last image will be retained.)
 
 * Additionally, it also supports obtaining visualized images with results and prediction results through attributes, as follows:
 
@@ -302,7 +309,7 @@ Additionally, you can obtain the vehicle attribute recognition pipeline configur
 paddlex --get_pipeline_config vehicle_attribute_recognition --save_path ./my_path
 ```
 
-If you have obtained the configuration file, you can customize the settings for the OCR production line by simply modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the configuration file. The example is as follows:
+If you have obtained the configuration file, you can customize the settings for the Vehicle Attribute Recognition pipeline by simply modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the configuration file. The example is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -581,20 +588,20 @@ In addition, PaddleX also provides three other deployment methods, which are det
 
 Below are the API references for basic service-oriented deployment and multi-language service invocation examples:
 
-```bash
+```yaml
 pipeline_name: vehicle_attribute_recognition
 
 SubModules:
   Detection:
     module_name: object_detection
     model_name: PP-YOLOE-L_vehicle
-    model_dir: null
+    model_dir: null # Replace with the path to the fine-tuned vehicle detection model weights
     batch_size: 1
     threshold: 0.5
   Classification:
     module_name: multilabel_classification
     model_name: PP-LCNet_x1_0_vehicle_attribute
-    model_dir: null
+    model_dir: null # Replace with the path to the fine-tuned vehicle attribute recognition model weights
     batch_size: 1
     threshold: 0.7
 ```
@@ -612,4 +619,4 @@ paddlex --pipeline vehicle_attribute_recognition \
         --device npu:0
 ```
 
-If you want to use the general OCR production line on a wider range of hardware devices, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+If you want to use the general Vehicle Attribute Recognition pipeline on a wider range of hardware devices, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).

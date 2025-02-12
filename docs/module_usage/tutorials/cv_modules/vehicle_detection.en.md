@@ -11,35 +11,34 @@ Vehicle detection is a subtask of object detection, specifically referring to th
 
 
 <table>
-  <tr>
-    <th>Model</th>
-    <th>mAP 0.5:0.95</th>
-    <th>GPU Inference Time (ms)</th>
-    <th>CPU Inference Time (ms)</th>
-    <th>Model Size (M)</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td>PP-YOLOE-S_vehicle</td>
-    <td>61.3</td>
-    <td>15.4</td>
-    <td>178.4</td>
-    <td>28.79</td>
-    <td rowspan="2">Vehicle detection model based on PP-YOLOE</td>
-  </tr>
-  <tr>
-    <td>PP-YOLOE-L_vehicle</td>
-    <td>63.9</td>
-    <td>32.6</td>
-    <td>775.6</td>
-    <td>196.02</td>
-  </tr>
-
+<tr>
+<th>Model</th>
+<th>mAP 0.5:0.95</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Size (M)</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>PP-YOLOE-S_vehicle</td>
+<td>61.3</td>
+<td>9.79 / 3.48</td>
+<td>54.14 / 46.69</td>
+<td>28.79</td>
+<td rowspan="2">Vehicle detection model based on PP-YOLOE</td>
+</tr>
+<tr>
+<td>PP-YOLOE-L_vehicle</td>
+<td>63.9</td>
+<td>32.84 / 9.03</td>
+<td>176.60 / 176.60</td>
+<td>196.02</td>
+</tr>
 <b>Note: The evaluation set for the above accuracy metrics is PPVehicle dataset mAP(0.5:0.95). GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
-</details>
+
 
 ## III. Quick Integration
-> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
+&gt; ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 After installing the wheel package, you can complete the inference of the vehicle detection module with just a few lines of code. You can switch models under this module freely, and you can also integrate the model inference of the vehicle detection module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_detection.jpg) to your local machine.
 
@@ -71,7 +70,7 @@ The meanings of the runtime parameters are as follows:
 
 The visualization image is as follows:
 
-<img src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/vehicle_detection/vehicle_detection_res.jpg" alt="Visualization Image">
+<img alt="Visualization Image" src="https://raw.githubusercontent.com/BluebirdStory/PaddleX_doc_images/main/images/modules/vehicle_detection/vehicle_detection_res.jpg"/>
 
 Related methods, parameters, and explanations are as follows:
 
@@ -111,7 +110,7 @@ Related methods, parameters, and explanations are as follows:
 
 * The `model_name` must be specified. After specifying `model_name`, the built-in model parameters of PaddleX are used by default. If `model_dir` is specified, the user-defined model is used.
 
-* The `threshold` is the threshold for filtering low-score objects. The default value is `None`, indicating that the settings from the previous layer are used. The priority order for parameter settings is: `predict parameter > create_model initialization > yaml configuration file`. Currently, two types of threshold settings are supported:
+* The `threshold` is the threshold for filtering low-score objects. The default value is `None`, indicating that the settings from the previous layer are used. The priority order for parameter settings is: `predict parameter &gt; create_model initialization &gt; yaml configuration file`. Currently, two types of threshold settings are supported:
   * `float`: Use the same threshold for all classes.
   * `dict`: The key is the class ID, and the value is the threshold. Different thresholds can be set for different classes. For vehicle detection, which is a single-class detection task, this setting is not required.
 
@@ -133,11 +132,11 @@ Related methods, parameters, and explanations are as follows:
 <td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
-  <li><b>Python Variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
-  <li><b>File Path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
-  <li><b>URL Link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png">Example</a></li>
-  <li><b>Local Directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
-  <li><b>List</b>, elements of the list should be data of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
+<li><b>Python Variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
+<li><b>File Path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
+<li><b>URL Link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png">Example</a></li>
+<li><b>Local Directory</b>, the directory should contain data files to be predicted, such as the local path: <code>/root/data/</code></li>
+<li><b>List</b>, elements of the list should be data of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td>None</td>
@@ -155,9 +154,9 @@ Related methods, parameters, and explanations are as follows:
 <td><code>float</code>/<code>dict</code>/<code>None</code></td>
 <td>
 <ul>
-  <li><b>None</b>, indicating the settings from the previous layer are used. The priority order for parameter settings is: <code>predict parameter > create_model initialization > yaml configuration file</code></li>
-  <li><b>float</b>, such as 0.5, indicating the threshold of 0.5 is used for filtering low-score objects during inference</li>
-  <li><b>dict</b>, such as <code>{0: 0.5, 1: 0.35}</code>, indicating a threshold of 0.5 for class 0 and 0.35 for class 1 during inference. Vehicle detection is a single-class detection task and does not require this setting.</li>
+<li><b>None</b>, indicating the settings from the previous layer are used. The priority order for parameter settings is: <code>predict parameter &gt; create_model initialization &gt; yaml configuration file</code></li>
+<li><b>float</b>, such as 0.5, indicating the threshold of 0.5 is used for filtering low-score objects during inference</li>
+<li><b>dict</b>, such as <code>{0: 0.5, 1: 0.35}</code>, indicating a threshold of 0.5 for class 0 and 0.35 for class 1 during inference. Vehicle detection is a single-class detection task and does not require this setting.</li>
 </ul>
 </td>
 <td>None</td>
@@ -274,32 +273,31 @@ python main.py -c paddlex/configs/modules/vehicle_detection/PP-YOLOE-S_vehicle.y
 After executing the above command, PaddleX will validate the dataset and collect its basic information. Upon successful execution, the log will print the message `Check dataset passed !`. The validation result file will be saved in `./output/check_dataset_result.json`, and related outputs will be saved in the `./output/check_dataset` directory of the current directory. The output directory includes visualized example images and histograms of sample distributions.
 
 <details><summary>👉 <b>Details of validation results (click to expand)</b></summary>
-
 <p>The specific content of the validation result file is:</p>
 <pre><code class="language-bash">{
-  &quot;done_flag&quot;: true,
-  &quot;check_pass&quot;: true,
-  &quot;attributes&quot;: {
-    &quot;num_classes&quot;: 4,
-    &quot;train_samples&quot;: 500,
-    &quot;train_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/MVI_20011__img00001.jpg&quot;,
-      &quot;check_dataset/demo_img/MVI_20011__img00005.jpg&quot;,
-      &quot;check_dataset/demo_img/MVI_20011__img00009.jpg&quot;
+  "done_flag": true,
+  "check_pass": true,
+  "attributes": {
+    "num_classes": 4,
+    "train_samples": 500,
+    "train_sample_paths": [
+      "check_dataset/demo_img/MVI_20011__img00001.jpg",
+      "check_dataset/demo_img/MVI_20011__img00005.jpg",
+      "check_dataset/demo_img/MVI_20011__img00009.jpg"
     ],
-    &quot;val_samples&quot;: 100,
-    &quot;val_sample_paths&quot;: [
-      &quot;check_dataset/demo_img/MVI_20032__img00401.jpg&quot;,
-      &quot;check_dataset/demo_img/MVI_20032__img00405.jpg&quot;,
-      &quot;check_dataset/demo_img/MVI_20032__img00409.jpg&quot;
+    "val_samples": 100,
+    "val_sample_paths": [
+      "check_dataset/demo_img/MVI_20032__img00401.jpg",
+      "check_dataset/demo_img/MVI_20032__img00405.jpg",
+      "check_dataset/demo_img/MVI_20032__img00409.jpg"
     ]
   },
-  &quot;analysis&quot;: {
-    &quot;histogram&quot;: &quot;check_dataset/histogram.png&quot;
+  "analysis": {
+    "histogram": "check_dataset/histogram.png"
   },
-  &quot;dataset_path&quot;: &quot;vehicle_coco_examples&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;COCODetDataset&quot;
+  "dataset_path": "vehicle_coco_examples",
+  "show_type": "image",
+  "dataset_type": "COCODetDataset"
 }
 </code></pre>
 <p>In the above validation results, <code>check_pass</code> being <code>True</code> indicates that the dataset format meets the requirements. The explanations for other indicators are as follows:</p>
@@ -311,13 +309,12 @@ After executing the above command, PaddleX will validate the dataset and collect
 <li><code>attributes.val_sample_paths</code>： A list of relative paths to the visualized images of samples in the validation set of this dataset.</li>
 </ul>
 <p>The dataset validation also analyzes the distribution of sample counts across all classes in the dataset and generates a histogram (histogram.png) to visualize this distribution. </p>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/vehicle_det/01.png"></p></details>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/vehicle_det/01.png"/></p></details>
 
 #### 4.1.3 Dataset Format Conversion / Dataset Splitting (Optional)
 After completing the dataset verification, you can convert the dataset format or re-split the training/validation ratio by <b>modifying the configuration file</b> or <b>appending hyperparameters</b>.
 
 <details><summary>👉 <b>Details on Format Conversion / Dataset Splitting (Click to Expand)</b></summary>
-
 <p><b>(1) Dataset Format Conversion</b></p>
 <p>Vehicle detection does not support data format conversion.</p>
 <p><b>(2) Dataset Splitting</b></p>
@@ -369,7 +366,6 @@ The steps required are:
 Other related parameters can be set by modifying the `Global` and `Train` fields in the `.yaml` configuration file, or adjusted by appending parameters in the command line. For example, to specify training on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the [PaddleX Common Configuration Parameters for Model Tasks](../../instructions/config_parameters_common.en.md).
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <ul>
 <li>During model training, PaddleX automatically saves model weight files, defaulting to <code>output</code>. To specify a save path, use the <code>-o Global.output</code> field in the configuration file.</li>
 <li>PaddleX shields you from the concepts of dynamic graph weights and static graph weights. During model training, both dynamic and static graph weights are produced, and static graph weights are selected by default for model inference.</li>
@@ -400,7 +396,6 @@ Similar to model training, the process involves the following steps:
 Other related parameters can be configured by modifying the fields under `Global` and `Evaluate` in the `.yaml` configuration file. For detailed information, please refer to[PaddleX Common Configuration Parameters for Models](../../instructions/config_parameters_common.en.md)。
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
-
 <p>When evaluating the model, you need to specify the model weights file path. Each configuration file has a default weight save path built-in. If you need to change it, simply set it by appending a command line parameter, such as <code>-o Evaluate.weight_path=./output/best_model/best_model/model.pdparams</code>.</p>
 <p>After completing the model evaluation, an <code>evaluate_result.json</code> file will be generated, which records the evaluation results, specifically whether the evaluation task was completed successfully, and the model's evaluation metrics, including AP.</p></details>
 
@@ -435,3 +430,4 @@ Other related parameters can be set by modifying the fields under `Global` and `
 
 #### 4.4.2 Model Integration
 The weights you produced can be directly integrated into the vehicle detection module. You can refer to the Python example code in [Quick Integration](#iii-quick-integration), simply replace the model with the path to your trained model.
+</table>

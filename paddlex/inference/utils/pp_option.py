@@ -15,7 +15,12 @@
 import os
 from typing import Dict, List
 
-from ...utils.device import parse_device, set_env_for_device, get_default_device
+from ...utils.device import (
+    parse_device,
+    set_env_for_device,
+    get_default_device,
+    check_supported_device,
+)
 from ...utils import logging
 from .new_ir_blacklist import NEWIR_BLOCKLIST
 
@@ -107,7 +112,9 @@ class PaddlePredictorOption(object):
 
     @property
     def device(self):
-        return self._cfg["device"]
+        device = self._cfg["device"]
+        check_supported_device(device, self.model_name)
+        return device
 
     @device.setter
     def device(self, device: str):

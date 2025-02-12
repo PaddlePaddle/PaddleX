@@ -48,7 +48,21 @@ output = pipeline.predict("nuscenes_demo_infer.tar")
 for res in output:
     res.print()  ## 打印预测的结构化输出
     res.save_to_json("./output/")  ## 保存结果到json文件
+    res.visualize(save_path="./output/", show=True) ## 3d结果可视化，如果运行环境有图形界面设置show=True，否则设置为False
 ```
+
+<b>注：</b>   
+1、3d检测结果可视化需要先安装open3d包，安装命令如下：
+```bash
+pip install open3d
+```
+2、如果运行环境没有图形界面，则无法可视化，但不影响结果的保存，可以在支持图形界面的环境下运行脚本，对保存的结果进行可视化:
+```bash
+python paddlex/inference/models/3d_bev_detection/visualizer_3d.py --save_path="./output/"
+```
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/images/pipelines/3d_bev_detection/02.png">
+
 
 运行后，得到的结果为：
 ```bash

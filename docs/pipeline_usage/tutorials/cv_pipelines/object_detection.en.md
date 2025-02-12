@@ -551,7 +551,7 @@ In the above Python script, the following steps are executed:
         - `score`: The confidence score of the bounding box, a floating-point number.
         - `coordinate`: The coordinates of the bounding box, a list of floating-point numbers in the format <code>[xmin, ymin, xmax, ymax]</code>.
 
-- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}.json`. If specified as a file, it will be saved directly to that file. Since JSON files do not support saving NumPy arrays, any `numpy.array` type will be converted to a list format.
+- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}_res.json`. If specified as a file, it will be saved directly to that file. Since JSON files do not support saving NumPy arrays, any `numpy.array` type will be converted to a list format.
 - Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`. If specified as a file, it will be saved directly to that file. (The pipeline usually contains many result images, so it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten and only the last image will be retained.)
 
 * Additionally, it also supports obtaining the visualization image with results and prediction results through attributes, as follows:
