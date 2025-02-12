@@ -272,13 +272,14 @@ In the above Python script, the following steps are executed:
 - When calling the <code>print()</code> method, the result will be printed to the terminal. The printed content is explained as follows:
 
     - `input_path`: `(str)` The input path of the image to be predicted.
+    - `page_index`: `(Union[int, None])` If the input is a PDF file, it indicates the current page number of the PDF; otherwise, it is `None`.
     - `boxes`: `(List[Dict])` The category IDs of the prediction results.
     - `labels`: `(List[str])` The category names of the prediction results.
     - `cls_scores`: `(List[numpy.ndarray])` The confidence scores of the attribute prediction results.
     - `det_scores`: `(float)` The confidence scores of the vehicle detection boxes.
 
-- When calling the <code>save_to_json()</code> method, the above content will be saved to the specified <code>save_path</code>. If a directory is specified, the saved path will be <code>save_path/{your_img_basename}.json</code>. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the <code>numpy.array</code> type will be converted to a list format.
-- When calling the <code>save_to_img()</code> method, the visualization result will be saved to the specified <code>save_path</code>. If a directory is specified, the saved path will be <code>save_path/{your_img_basename}_res.{your_img_extension}</code>. If a file is specified, it will be saved directly to that file. (In production, there are usually many result images, so it is not recommended to specify a specific file path directly; otherwise, multiple images will be overwritten, and only the last image will be retained.)
+- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.json`. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` type will be converted to a list format.
+- Calling the `save_to_img()` method will save the visualization result to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (The production line usually contains many result images, so it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, and only the last image will be retained.)
 
 * Additionally, it also supports obtaining visualized images with results and prediction results through attributes, as follows:
 
@@ -587,20 +588,20 @@ In addition, PaddleX also provides three other deployment methods, which are det
 
 Below are the API references for basic service-oriented deployment and multi-language service invocation examples:
 
-```bash
+```yaml
 pipeline_name: vehicle_attribute_recognition
 
 SubModules:
   Detection:
     module_name: object_detection
     model_name: PP-YOLOE-L_vehicle
-    model_dir: null
+    model_dir: null # Replace with the path to the fine-tuned vehicle detection model weights
     batch_size: 1
     threshold: 0.5
   Classification:
     module_name: multilabel_classification
     model_name: PP-LCNet_x1_0_vehicle_attribute
-    model_dir: null
+    model_dir: null # Replace with the path to the fine-tuned vehicle attribute recognition model weights
     batch_size: 1
     threshold: 0.7
 ```

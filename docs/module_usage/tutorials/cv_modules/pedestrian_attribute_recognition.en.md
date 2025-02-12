@@ -55,61 +55,81 @@ After running, the obtained result is:
 {'res': {'input_path': 'pedestrian_attribute_006.jpg', 'page_index': None, 'class_ids': array([10, ..., 23]), 'scores': array([1.     , ..., 0.54777]), 'label_names': ['LongCoat(长外套)', 'Age18-60(年龄在18-60岁之间)', 'Trousers(长裤)', 'Front(面朝前)']}}
 ```
 
-运行结果参数含义如下：
-- `input_path`：表示输入待预测多类别图像的路径
-- `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
-- `class_ids`：表示行人属性图像的预测标签ID
-- `scores`：表示行人属性图像的预测标签置信度
-- `label_names`：表示行人属性图像的预测标签名称
+<b>Note</b>: The index of the `class_ids` value represents the following attributes: index 0 indicates whether a hat is worn, index 1 indicates whether glasses are worn, indexes 2-7 represent the style of the upper garment, indexes 8-13 represent the style of the lower garment, index 14 indicates whether boots are worn, indexes 15-17 represent the type of bag carried, index 18 indicates whether an object is held in front, indexes 19-21 represent age, index 22 represents gender, and indexes 23-25 represent orientation. Specifically, the attributes include the following types:
 
-可视化图片如下：
+```
+- Gender: Male, Female
+- Age: Under 18, 18-60, Over 60
+- Orientation: Front, Back, Side
+- Accessories: Glasses, Hat, None
+- Holding Object in Front: Yes, No
+- Bag: Backpack, Shoulder Bag, Handbag
+- Upper Garment Style: Striped, Logo, Plaid, Patchwork
+- Lower Garment Style: Striped, Patterned
+- Short-sleeved Shirt: Yes, No
+- Long-sleeved Shirt: Yes, No
+- Long Coat: Yes, No
+- Pants: Yes, No
+- Shorts: Yes, No
+- Skirt: Yes, No
+- Boots: Yes, No
+```
+
+The meanings of the parameters in the running result are as follows:
+- `input_path`: Indicates the path of the input multi-category image to be predicted.
+- `page_index`: If the input is a PDF file, it indicates which page of the PDF is currently being processed; otherwise, it is `None`.
+- `class_ids`: Indicates the predicted label IDs of the pedestrian attribute images.
+- `scores`: Indicates the confidence scores of the predicted labels of the pedestrian attribute images.
+- `label_names`: Indicates the names of the predicted labels of the pedestrian attribute images.
+
+The visualization image is as follows:
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/ped_attri/pedestrian_attribute_006_res.jpg" alt="Pedestrian Attribute Result">
 
-相关方法、参数等说明如下：
+Relevant methods, parameters, and explanations are as follows:
 
-* `create_model`实例化行人属性识别模型（此处以`PP-LCNet_x1_0_pedestrian_attribute`为例），具体说明如下：
+* `create_model` instantiates the vehicle attribute recognition model (here, `PP-LCNet_x1_0_pedestrian_attribute` is used as an example). The specific explanations are as follows:
 <table>
 <thead>
 <tr>
-<th>参数</th>
-<th>参数说明</th>
-<th>参数类型</th>
-<th>可选项</th>
-<th>默认值</th>
+<th>Parameter</th>
+<th>Parameter Description</th>
+<th>Parameter Type</th>
+<th>Options</th>
+<th>Default Value</th>
 </tr>
 </thead>
 <tr>
 <td><code>model_name</code></td>
-<td>模型名称</td>
+<td>The name of the model</td>
 <td><code>str</code></td>
-<td>无</td>
+<td>None</td>
 <td><code>PP-LCNet_x1_0_pedestrian_attribute</code></td>
 </tr>
 <tr>
 <td><code>model_dir</code></td>
-<td>模型存储路径</td>
+<td>The storage path of the model</td>
 <td><code>str</code></td>
-<td>无</td>
-<td>无</td>
+<td>None</td>
+<td>None</td>
 </tr>
 <tr>
 <td><code>threshold</code></td>
-<td>行人属性识别阈值</td>
+<td>The threshold for vehicle attribute recognition</td>
 <td><code>float/list/dict</code></td>
-<td><li><b>float类型变量</b>，任意[0-1]之间浮点数：<code>0.5</code></li>
-<li><b>list类型变量</b>，由多个[0-1]之间浮点数组成的列表：<code>[0.5,0.5,...]</code></li>
-<li><b>dict类型变量</b>,指定不同类别使用不同的阈值，其中"default"为必须包含的键:<code>{"default":0.5,1:0.1,...}</code></li>
+<td><li><b>float variable</b>, any floating-point number between [0-1]: <code>0.5</code></li>
+<li><b>list variable</b>, a list composed of multiple floating-point numbers between [0-1]: <code>[0.5,0.5,...]</code></li>
+<li><b>dict variable</b>, specifying different thresholds for different categories, where "default" is a required key: <code>{"default":0.5,1:0.1,...}</code></li>
 </td>
 <td>0.5</td>
 </tr>
 </table>
 
-* 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
+* The `model_name` must be specified. After specifying `model_name`, PaddleX's built-in model parameters are used by default. If `model_dir` is specified, the user-defined model is used.
 
-* 其中，`threshold` 参数用于设置多标签分类的阈值，默认为0.7。当设置为浮点数时，表示所有类别均使用该阈值；当设置为列表时，表示不同类别使用不同的阈值,此时需保持列表长度与类别数量一致；当设置为字典时，`default` 为必须包含的键， 表示所有类别的默认阈值，其它类别使用各自的阈值。例如：{"default":0.5,1:0.1}。
+* The `threshold` parameter is used to set the threshold for multi-label classification, with a default value of 0.7. When set as a float, it means all categories use this threshold; when set as a list, different categories use different thresholds, and the list length must match the number of categories; when set as a dictionary, "default" is a required key, indicating the default threshold for all categories, while other categories use their respective thresholds. For example: <code>{"default":0.5,1:0.1}</code>.
 
-* 调用多标签分类模型的 `predict()` 方法进行推理预测，`predict()` 方法参数有 `input` , `batch_size` 和  `threshold`，具体说明如下：
+* The `predict()` method of the multi-label classification model is called for inference prediction. The parameters of the `predict()` method include `input`, `batch_size`, and `threshold`, with specific explanations as follows:
 
 <table>
 <thead>

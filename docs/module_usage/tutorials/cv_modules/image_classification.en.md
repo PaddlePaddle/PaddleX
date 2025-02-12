@@ -908,7 +908,7 @@ After executing the above command, PaddleX will validate the dataset and summari
   "analysis": {
     "histogram": "check_dataset/histogram.png"
   },
-  "dataset_path": "./dataset/cls_flowers_examples",
+  "dataset_path": "cls_flowers_examples",
   "show_type": "image",
   "dataset_type": "ClsDataset"
 }

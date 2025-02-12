@@ -5,7 +5,7 @@ comments: true
 # General Image Multi-Label Classification Pipeline Tutorial
 
 ## 1. Introduction to the General Image Multi-Label Classification Pipeline
-Image multi-label classification is a technique that assigns multiple relevant categories to a single image simultaneously, widely used in image annotation, content recommendation, and social media analysis. It can identify multiple objects or features present in an image, for example, an image containing both "dog" and "outdoor" labels. By leveraging deep learning models, image multi-label classification automatically extracts image features and performs accurate classification, providing users with more comprehensive information. This technology is of great significance in applications such as intelligent search engines and automatic content generation.
+Image multi-label classification is a technique that assigns multiple relevant categories to a single image simultaneously, widely used in image annotation, content recommendation, and social media analysis. It can identify multiple objects or features present in an image, for example, an image containing both "dog" and "outdoor" labels. By leveraging deep learning models, image multi-label classification automatically extracts image features and performs accurate classification, providing users with more comprehensive information. This technology is of great significance in applications such as intelligent search engines and automatic content generation.This pipeline also offers a flexible service-oriented deployment approach, supporting the use of multiple programming languages on various hardware platforms. Moreover, this production line provides the capability for secondary development. You can train and optimize models on your own dataset based on this production line, and the trained models can be seamlessly integrated.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_multi_label_classification/01.png">
 
@@ -116,6 +116,12 @@ In the above Python script, the following steps are performed:
 <td>Pipeline name or pipeline configuration file path. If it is a pipeline name, it must be a pipeline supported by PaddleX.</td>
 <td><code>str</code></td>
 <td>None</td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
@@ -256,6 +262,7 @@ In the above Python script, the following steps are performed:
 - Calling the `print()` method will print the result to the terminal. The content printed to the terminal is explained as follows:
 
     - `input_path`: `(str)` Input path of the image to be predicted.
+    - `page_index`: `(Union[int, None])` If the input is a PDF file, it indicates the current page number of the PDF; otherwise, it is `None`.
     - `class_ids`: `(List[numpy.ndarray])` Indicates the class IDs of the prediction results.
     - `scores`: `(List[numpy.ndarray])` Indicates the confidence scores of the prediction results.
     - `label_names`: `(List[str])` Indicates the class names of the prediction results.
@@ -291,7 +298,7 @@ In addition, you can obtain the general image multi-label classification pipelin
 paddlex --get_pipeline_config image_multilabel_classification --save_path ./my_path
 ```
 
-If you have obtained the configuration file, you can customize the settings for the OCR production line by simply modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the configuration file. An example is as follows:
+If you have obtained the configuration file, you can customize the settings for the image multi-label classification production line by simply modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the configuration file. An example is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -908,7 +915,7 @@ SubModules:
   ImageMultiLabelClassification:
     module_name: image_multilabel_classification
     model_name: PP-HGNetV2-B6_ML
-    model_dir: null
+    model_dir: null # Modify this path to the local fine-tuned model weight file
     batch_size: 4
 ```
 
@@ -925,4 +932,4 @@ paddlex --pipeline image_multilabel_classification \
         --device npu:0
 ```
 
-If you want to use the general OCR pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+If you want to use the general image multi-label classification pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
