@@ -120,11 +120,14 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
     ) -> ResultResponse[schema.BuildVectorStoreResult]:
         pipeline = ctx.pipeline
 
-        kwargs: Dict[str, Any] = {"flag_save_bytes_vector": True}
+        kwargs: Dict[str, Any] = {
+            "flag_save_bytes_vector": True,
+            "retriever_config": request.retrieverConfig,
+        }
         if request.minCharacters is not None:
             kwargs["min_characters"] = request.minCharacters
-        if request.llmRequestInterval is not None:
-            kwargs["llm_request_interval"] = request.llmRequestInterval
+        if request.blockSize is not None:
+            kwargs["block_size"] = request.blockSize
 
         vector_info = await serving_utils.call_async(
             pipeline.pipeline.build_vector,
@@ -143,8 +146,8 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
         "invokeMllm",
     )
     async def _invoke_mllm(
-        request: schema.invokeMLLMRequest,
-    ) -> ResultResponse[schema.invokeMLLMResult]:
+        request: schema.InvokeMLLMRequest,
+    ) -> ResultResponse[schema.InvokeMLLMResult]:
         pipeline = ctx.pipeline
         aiohttp_session = ctx.aiohttp_session
 
@@ -153,15 +156,16 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
         )
         image = serving_utils.image_bytes_to_array(file_bytes)
 
-        vector_info = await serving_utils.call_async(
-            pipeline.mllm_pred,
+        mllm_predict_info = await serving_utils.call_async(
+            pipeline.pipeline.mllm_pred,
             image,
             request.keyList,
+            mllm_chat_bot_config=request.mllmChatBotConfig,
         )
 
-        return ResultResponse[schema.invokeMLLMResult](
+        return ResultResponse[schema.InvokeMLLMResult](
             logId=serving_utils.generate_log_id(),
-            result=schema.invokeMLLMResult(vectorInfo=vector_info),
+            result=schema.InvokeMLLMResult(mllmPredictInfo=mllm_predict_info),
         )
 
     @primary_operation(
@@ -186,16 +190,21 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             table_rules_str=request.tableRulesStr,
             table_few_shot_demo_text_content=request.tableFewShotDemoTextContent,
             table_few_shot_demo_key_value_list=request.tableFewShotDemoKeyValueList,
+            chat_bot_config=request.chatBotConfig,
+            retriever_config=request.retrieverConfig,
         )
         if request.useVectorRetrieval is not None:
             kwargs["use_vector_retrieval"] = request.useVectorRetrieval
         if request.minCharacters is not None:
             kwargs["min_characters"] = request.minCharacters
+        if request.mllmIntegrationStrategy is not None:
+            kwargs["mllm_integration_strategy"] = request.mllmIntegrationStrategy
 
         result = await serving_utils.call_async(
             pipeline.pipeline.chat,
             request.keyList,
             request.visualInfo,
+            **kwargs,
         )
 
         return ResultResponse[schema.ChatResult](

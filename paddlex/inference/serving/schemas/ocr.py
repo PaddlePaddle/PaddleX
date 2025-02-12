@@ -15,7 +15,6 @@
 from typing import Final, List, Optional
 
 from pydantic import BaseModel
-from typing_extensions import Literal
 
 from ..infra.models import DataInfo, PrimaryOperations
 from .shared import ocr
@@ -36,7 +35,7 @@ class InferRequest(ocr.BaseInferRequest):
     useDocUnwarping: Optional[bool] = None
     useTextlineOrientation: Optional[bool] = None
     textDetLimitSideLen: Optional[int] = None
-    textDetLimitType: Optional[Literal["min", "max"]] = None
+    textDetLimitType: Optional[str] = None
     # Better to use "threshold"? Be consistent with the pipeline API though.
     textDetThresh: Optional[float] = None
     textDetBoxThresh: Optional[float] = None
