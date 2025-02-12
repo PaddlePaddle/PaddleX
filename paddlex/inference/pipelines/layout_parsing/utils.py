@@ -19,12 +19,9 @@ __all__ = [
     "recursive_img_array2path",
     "get_show_color",
     "sorted_layout_boxes",
-    "convert_bgr2rgb",
 ]
 
 import numpy as np
-import copy
-import cv2
 from PIL import Image
 import uuid
 from pathlib import Path
@@ -32,26 +29,6 @@ from typing import Optional, Union, List, Tuple, Dict, Any
 from ..ocr.result import OCRResult
 from ...models.object_detection.result import DetResult
 from ..components import convert_points_to_boxes
-
-
-def convert_bgr2rgb(data: Image.Image) -> Image.Image:
-    """
-    Convert BGR image to RGB image.
-
-    Args:
-        data (PIL.Image): The input image data.
-
-    Returns:
-        PIL.Image: The converted RGB image data.
-    """
-    return data
-    original_img_array = np.array(data)
-    if original_img_array.ndim == 3 and original_img_array.shape[2] == 3:
-        res_img_array = original_img_array[:, :, ::-1]
-    else:
-        res_img_array = original_img_array
-    res_img = Image.fromarray(res_img_array)
-    return res_img
 
 
 def get_overlap_boxes_idx(src_boxes: np.ndarray, ref_boxes: np.ndarray) -> List:

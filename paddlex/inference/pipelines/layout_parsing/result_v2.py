@@ -16,9 +16,7 @@ from __future__ import annotations
 import copy
 from pathlib import Path
 from PIL import Image, ImageDraw
-from typing import Dict
 
-import cv2
 import re
 import numpy as np
 from PIL import Image
@@ -29,13 +27,11 @@ from ...common.result import (
     HtmlMixin,
     JsonMixin,
     MarkdownMixin,
-    StrMixin,
     XlsxMixin,
 )
 from .utils import get_layout_ordering
 from .utils import recursive_img_array2path
 from .utils import get_show_color
-from .utils import convert_bgr2rgb
 
 
 class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
@@ -66,14 +62,10 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         if model_settings["use_doc_preprocessor"]:
             for key, value in self["doc_preprocessor_res"].img.items():
                 res_img_dict[key] = value
-        res_img_dict["layout_det_res"] = convert_bgr2rgb(
-            self["layout_det_res"].img["res"]
-        )
+        res_img_dict["layout_det_res"] = self["layout_det_res"].img["res"]
 
         if model_settings["use_general_ocr"] or model_settings["use_table_recognition"]:
-            res_img_dict["overall_ocr_res"] = convert_bgr2rgb(
-                self["overall_ocr_res"].img["ocr_res_img"]
-            )
+            res_img_dict["overall_ocr_res"] = self["overall_ocr_res"].img["ocr_res_img"]
 
         if model_settings["use_table_recognition"] and len(self["table_res_list"]) > 0:
             table_cell_img = Image.fromarray(
