@@ -87,7 +87,7 @@ Not supported for online experience.
 
 ### 2.2 Local Experience
 
-&gt; ❗ Before using the Human Keypoint Detection Pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
+> ❗ Before using the Human Keypoint Detection Pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
 
 #### 2.2.1 Command Line Experience
 

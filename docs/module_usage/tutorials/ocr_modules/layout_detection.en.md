@@ -50,7 +50,7 @@ The core task of structure analysis is to parse and segment the content of input
 </table>
 <b>Note: The evaluation dataset for the above precision metrics is a self-built layout area detection dataset by PaddleOCR, containing 500 common document-type images of Chinese and English papers, magazines, contracts, books, exams, and research reports. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
 
-&gt; ❗ The above list includes the <b>3 core models</b> that are key supported by the text recognition module. The module actually supports a total of <b>11 full models</b>, including several predefined models with different categories. The complete model list is as follows:
+> ❗ The above list includes the <b>3 core models</b> that are key supported by the text recognition module. The module actually supports a total of <b>11 full models</b>, including several predefined models with different categories. The complete model list is as follows:
 
 <details><summary> 👉 Details of Model List</summary>
 
@@ -186,7 +186,7 @@ The core task of structure analysis is to parse and segment the content of input
 
 
 ## III. Quick Integration  <a id="quick"> </a>
-&gt; ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Tutorial](../../../installation/installation.en.md)
+> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Tutorial](../../../installation/installation.en.md)
 
 After installing the wheel package, a few lines of code can complete the inference of the structure analysis module. You can switch models under this module freely, and you can also integrate the model inference of the structure analysis module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg) to your local machine.
 
@@ -207,10 +207,11 @@ for res in output:
 <details><summary>👉 <b>After running, the result is: (Click to expand)</b></summary>
 
 ```bash
-{'res': {'input_path': 'layout.jpg', 'boxes': [{'cls_id': 8, 'label': 'table', 'score': 0.9866330623626709, 'coordinate': [74.30874633789062, 105.7123031616211, 321.9883728027344, 299.10858154296875]}, {'cls_id': 2, 'label': 'text', 'score': 0.9859815835952759, 'coordinate': [34.65811538696289, 349.9101867675781, 358.3383483886719, 611.3431396484375]}, {'cls_id': 2, 'label': 'text', 'score': 0.9850621223449707, 'coordinate': [34.94462203979492, 647.3794555664062, 358.3255920410156, 849.2332763671875]}, {'cls_id': 8, 'label': 'table', 'score': 0.9850116968154907, 'coordinate': [438.06829833984375, 105.3771743774414, 662.88720703125, 313.8873291015625]}, {'cls_id': 2, 'label': 'text', 'score': 0.9847850799560547, 'coordinate': [385.97052001953125, 497.03924560546875, 710.9548950195312, 697.6804809570312]}, {'cls_id': 2, 'label': 'text', 'score': 0.9805687665939331, 'coordinate': [385.7969665527344, 345.9375305175781, 710.0733642578125, 459.14373779296875]}, {'cls_id': 2, 'label': 'text', 'score': 0.9799897074699402, 'coordinate': [386.07574462890625, 735.3798217773438, 710.6078491210938, 850.2001953125]}, {'cls_id': 9, 'label': 'table_title', 'score': 0.9375936388969421, 'coordinate': [35.273826599121094, 19.851961135864258, 358.9250793457031, 77.81258392333984]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.8755733966827393, 'coordinate': [386.6318359375, 476.6071472167969, 699.783447265625, 490.11639404296875]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.8617452383041382, 'coordinate': [387.27447509765625, 715.9579467773438, 524.3836669921875, 729.2079467773438]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.8607752919197083, 'coordinate': [35.45162582397461, 627.4959716796875, 185.63442993164062, 640.4028930664062]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.8575425148010254, 'coordinate': [35.33491134643555, 330.8046875, 141.46853637695312, 344.40728759765625]}, {'cls_id': 9, 'label': 'table_title', 'score': 0.7957680225372314, 'coordinate': [385.9385986328125, 19.754547119140625, 711.5118408203125, 75.00630950927734]}]}}
+{'res': {'input_path': 'layout.jpg', 'page_index': None, 'boxes': [{'cls_id': 8, 'label': 'table', 'score': 0.9866330623626709, 'coordinate': [74.30875, 105.7123, 321.98837, 299.10858]}, {'cls_id': 2, 'label': 'text', 'score': 0.9859815835952759, 'coordinate': [34.658115, 349.9102, 358.33835, 611.34314]}, {'cls_id': 2, 'label': 'text', 'score': 0.9850621223449707, 'coordinate': [34.944622, 647.37946, 358.3256, 849.2333]}, {'cls_id': 8, 'label': 'table', 'score': 0.9850116968154907, 'coordinate': [438.0683, 105.377174, 662.8872, 313.88733]}, {'cls_id': 2, 'label': 'text', 'score': 0.9847850799560547, 'coordinate': [385.97052, 497.03925, 710.9549, 697.6805]}, {'cls_id': 2, 'label': 'text', 'score': 0.9805687665939331, 'coordinate': [385.79697, 345.93753, 710.07336, 459.14374]}, {'cls_id': 2, 'label': 'text', 'score': 0.9799897074699402, 'coordinate': [386.07574, 735.3798, 710.60785, 850.2002]}, {'cls_id': 9, 'label': 'table_title', 'score': 0.9375936388969421, 'coordinate': [35.273827, 19.851961, 358.92508, 77.812584]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.8755733966827393, 'coordinate': [386.63184, 476.60715, 699.78345, 490.1164]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.8617452383041382, 'coordinate': [387.27448, 715.95795, 524.38367, 729.20795]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.8607752919197083, 'coordinate': [35.451626, 627.496, 185.63443, 640.4029]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.8575425148010254, 'coordinate': [35.33491, 330.8047, 141.46854, 344.4073]}, {'cls_id': 9, 'label': 'table_title', 'score': 0.7957680225372314, 'coordinate': [385.9386, 19.754547, 711.51184, 75.00631]}]}}
 ```
 The meanings of the parameters are as follows:
 - `input_path`: The path to the input image for prediction.
+- `page_index`: If the input is a PDF file, it indicates which page of the PDF it is; otherwise, it is `None`.
 - `boxes`: Information about the predicted bounding boxes, a list of dictionaries. Each dictionary represents a detected object and contains the following information:
   - `cls_id`: Class ID, an integer.
   - `label`: Class label, a string.
@@ -221,8 +222,6 @@ The meanings of the parameters are as follows:
 
 The visualized image is as follows:
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_det/layout_res.jpg"/>
-
-**Note**: Due to network issues, the above URL may not be successfully parsed. If you need the content of this webpage, please check the validity of the link and try again. If the issue persists, it might be related to the link itself or the network connection.
 
 Relevant methods, parameters, and explanations are as follows:
 
@@ -338,10 +337,9 @@ Relevant methods, parameters, and explanations are as follows:
 <ul>
 <li><b>Python Variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
 <li><b>File Path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
-<li><b>URL Link</b>, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_rec_001.png">Example</a></li>
-<li><b>Local Directory</b>, the directory should contain data files for prediction, such as the local path: <code>/root/data/</code></li>
-<li><b>Dictionary</b>, the <code>key</code> of the dictionary must correspond to the specific task, such as <code>"img"</code> for image classification tasks. The <code>value</code> supports the above types of data, for example: <code>{"img": "/root/data1"}</code></li>
-<li><b>List</b>, elements of the list must be of the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code></li>
+<li><b>URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg">示例</a></li>
+<li><b>Local Directory</b>, the directory should contain the data files to be predicted, such as the local path: <code>/root/data/</code></li>
+<li><b>List</b>, the elements of the list should be of the above-mentioned data types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
 <td>None</td>
@@ -444,7 +442,7 @@ tar -xf ./dataset/det_layout_examples.tar -C ./dataset/
 A single command can complete data validation:
 
 ```bash
-python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_layout_examples
 ```
@@ -516,13 +514,13 @@ CheckDataset:
   ......
 </code></pre>
 <p>Then execute the command:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls.yaml \
+<pre><code class="language-bash">python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_layout_examples
 </code></pre>
 <p>After dataset splitting, the original annotation files will be renamed to <code>xxx.bak</code> in the original path.</p>
 <p>The above parameters can also be set by appending command-line arguments:</p>
-<pre><code class="language-bash">python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls.yaml  \
+<pre><code>python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_layout_examples \
     -o CheckDataset.split.enable=True \
@@ -532,16 +530,16 @@ CheckDataset:
 
 ### 4.2 Model Training
 
-A single command is sufficient to complete model training, taking the training of PicoDet-L_layout_3cls as an example:
+A single command is sufficient to complete model training, taking the training of PP-DocLayout-L as an example:
 
 ```bash
-python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/det_layout_examples
 ```
 The steps required are:
 
-* Specify the path to the `.yaml` configuration file of the model (here it is `PicoDet-L_layout_3cls.yaml`,When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list.en.md))
+* Specify the path to the `.yaml` configuration file of the model (here it is `PP-DocLayout-L.yaml`,When training other models, you need to specify the corresponding configuration files. The relationship between the model and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list.en.md))
 * Specify the mode as model training: `-o Global.mode=train`
 * Specify the path to the training dataset: `-o Global.dataset_dir`
 
@@ -566,13 +564,13 @@ Other related parameters can be set by modifying the `Global` and `Train` fields
 After completing model training, you can evaluate the specified model weight file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation, you can complete the evaluation with a single command:
 
 ```bash
-python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/det_layout_examples
 ```
 Similar to model training, the process involves the following steps:
 
-* Specify the path to the `.yaml` configuration file for the model（here it's `PicoDet-L_layout_3cls.yaml`）
+* Specify the path to the `.yaml` configuration file for the model（here it's `PP-DocLayout-L.yaml`）
 * Set the mode to model evaluation: `-o Global.mode=evaluate`
 * Specify the path to the validation dataset: `-o Global.dataset_dir`
 Other related parameters can be configured by modifying the fields under `Global` and `Evaluate` in the `.yaml` configuration file. For detailed information, please refer to [PaddleX Common Configuration Parameters for Models](../../instructions/config_parameters_common.en.md)。
@@ -587,14 +585,14 @@ After completing model training and evaluation, you can use the trained model we
 #### 4.4.1 Model Inference
 * To perform inference predictions through the command line, simply use the following command. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg) to your local machine.
 ```bash
-python main.py -c paddlex/configs/modules/layout_detection/PicoDet-L_layout_3cls.yaml \
+python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="layout.jpg"
 ```
 Similar to model training and evaluation, the following steps are required:
 
-* Specify the `.yaml` configuration file path of the model (here it is `PicoDet-L_layout_3cls.yaml`)
+* Specify the `.yaml` configuration file path of the model (here it is `PP-DocLayout-L.yaml`)
 * Set the mode to model inference prediction: `-o Global.mode=predict`
 * Specify the model weights path: `-o Predict.model_dir="./output/best_model/inference"`
 * Specify the input data path: `-o Predict.input="..."`
