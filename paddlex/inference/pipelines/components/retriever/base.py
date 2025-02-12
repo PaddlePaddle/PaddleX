@@ -138,7 +138,6 @@ class BaseRetriever(ABC, metaclass=AutoRegisterABCMetaClass):
                 documents=all_splits, embedding=self.embedding
             )
         except ValueError as e:
-            print(e)
             vectorstore = None
 
         return vectorstore
@@ -181,8 +180,6 @@ class BaseRetriever(ABC, metaclass=AutoRegisterABCMetaClass):
         if vectorstore == b"":
             logging.warning("The retrieved vectorstore is empty,will empty vector.")
             return None
-
-        print(vectorstore)
 
         vector = vectorstores.FAISS.deserialize_from_bytes(
             vectorstore,

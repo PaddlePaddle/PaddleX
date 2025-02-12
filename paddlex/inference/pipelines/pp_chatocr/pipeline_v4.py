@@ -203,10 +203,11 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
             content = parsing_res_list[pno]["block_content"]
             if label in ["table", "formula"]:
                 continue
-            if label not in normal_text_dict:
-                normal_text_dict["words in " + label] = content
+            key = f"words in {label}"
+            if key not in normal_text_dict:
+                normal_text_dict[key] = content
             else:
-                normal_text_dict["words in " + label] += f"\n {content}"
+                normal_text_dict[key] += f"\n {content}"
 
         table_res_list = layout_parsing_result["table_res_list"]
         table_text_list = []
