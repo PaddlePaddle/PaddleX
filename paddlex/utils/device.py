@@ -17,6 +17,7 @@ import GPUtil
 
 import lazy_paddle as paddle
 from . import logging
+from .flags import DISABLE_DEV_MODEL_WL
 from .errors import raise_unsupported_device_error
 from .custom_device_whitelist import (
     DCU_WHITELIST,
@@ -122,6 +123,11 @@ def set_env_for_device(device):
 
 
 def check_supported_device(device, model_name):
+    if DISABLE_DEV_MODEL_WL:
+        logging.warning(
+            "Skip checking if model is supported on device because the flag `PADDLE_PDX_DISABLE_DEV_MODEL_WL` has been set."
+        )
+        return
     device_type, device_ids = parse_device(device)
     if device_type == "dcu":
         assert (
