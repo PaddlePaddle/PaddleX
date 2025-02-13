@@ -92,6 +92,7 @@ class OpenAIBotChat(BaseChat):
         Returns:
             Dict: The chat completion result from the model.
         """
+        llm_result = {"content": None, "reasoning_content": None}
         try:
             if image:
                 chat_completion = self.client.chat.completions.create(
@@ -119,7 +120,7 @@ class OpenAIBotChat(BaseChat):
                     temperature=temperature,
                     top_p=0.001,
                 )
-                llm_result = chat_completion.choices[0].message.content
+                llm_result["content"] = chat_completion.choices[0].message.content
                 return llm_result
             elif self.config.get("end_point", "chat_completion") == "chat_completion":
                 chat_completion = self.client.chat.completions.create(
@@ -134,7 +135,13 @@ class OpenAIBotChat(BaseChat):
                     temperature=temperature,
                     top_p=0.001,
                 )
-                llm_result = chat_completion.choices[0].message.content
+                llm_result["content"] = chat_completion.choices[0].message.content
+                try:
+                    llm_result["reasoning_content"] = chat_completion.choices[
+                        0
+                    ].message.reasoning_content
+                except:
+                    pass
                 return llm_result
             else:
                 chat_completion = self.client.completions.create(
@@ -148,12 +155,12 @@ class OpenAIBotChat(BaseChat):
                     chat_completion = json.loads(chat_completion)
                     llm_result = chat_completion["choices"][0]["text"]
                 else:
-                    llm_result = chat_completion.choices[0].text
+                    llm_result["content"] = chat_completion.choices[0].text
                 return llm_result
         except Exception as e:
             logging.error(e)
             self.ERROR_MASSAGE = "大模型调用失败"
-        return None
+        return llm_result
 
     def fix_llm_result_format(self, llm_result: str) -> dict:
         """
