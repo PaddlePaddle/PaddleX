@@ -332,12 +332,12 @@ Relevant methods, parameters, and explanations are as follows:
 <tr>
 <td><code>input</code></td>
 <td>Data for prediction, supporting multiple input types</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
 <li><b>Python Variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
 <li><b>File Path</b>, such as the local path of an image file: <code>/root/data/img.jpg</code></li>
-<li><b>URL链接</b>，如图像文件的网络URL：<a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg">示例</a></li>
+<li><b>URL link</b>, such as the network URL of an image file: <a href = "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout.jpg">示例</a></li>
 <li><b>Local Directory</b>, the directory should contain the data files to be predicted, such as the local path: <code>/root/data/</code></li>
 <li><b>List</b>, the elements of the list should be of the above-mentioned data types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
@@ -472,7 +472,7 @@ After executing the above command, PaddleX will validate the dataset and collect
   "analysis": {
     "histogram": "check_dataset/histogram.png"
   },
-  "dataset_path": "./dataset/example_data/det_layout_examples",
+  "dataset_path": "det_layout_examples",
   "show_type": "image",
   "dataset_type": "COCODetDataset"
 }

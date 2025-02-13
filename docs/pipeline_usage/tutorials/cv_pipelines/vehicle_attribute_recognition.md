@@ -64,12 +64,18 @@ comments: true
 <p><b>注：以上精度指标为 VeRi 数据集mA。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p>
 
 ## 2. 快速开始
-PaddleX 所提供的模型产线可以在本地使用命令行或 Python 体验车辆属性识别产线的效果。
+PaddleX 所提供的模型产线均可以快速体验效果，你可以在星河社区线体验车辆属性识别产线的效果，也可以在本地使用命令行或 Python 体验车辆属性识别产线的效果。
 
 ### 2.1 在线体验
-暂不支持在线体验
+
+您可以[在线体验](https://aistudio.baidu.com/community/app/387979/webUI?source=appCenter)车辆属性识别产线的效果，用官方提供的 Demo 图片进行识别，例如：
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/vehicle_attribute_recognition/vehicle_attribute_aistudio.png"/>
+
+如果您对产线运行的效果满意，可以直接进行集成部署。您可以选择从云端下载部署包，也可以参考[2.2节本地体验](#22-本地体验)中的方法进行本地部署。如果对效果不满意，您可以利用私有数据<b>对产线中的模型进行微调训练</b>。如果您具备本地训练的硬件资源，可以直接在本地开展训练；如果没有，星河零代码平台提供了一键式训练服务，无需编写代码，只需上传数据后，即可一键启动训练任务。
 
 ### 2.2 本地体验
+
 在本地使用车辆属性识别产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
 #### 2.2.1 命令行方式体验
@@ -601,20 +607,20 @@ print(result["vehicles"])
 
 若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径替换至产线配置文件中的对应位置即可：
 
-```
+```yaml
 pipeline_name: vehicle_attribute_recognition
 
 SubModules:
   Detection:
     module_name: object_detection
     model_name: PP-YOLOE-L_vehicle
-    model_dir: null
+    model_dir: null # 替换为微调后的车辆检测模型权重路径
     batch_size: 1
     threshold: 0.5
   Classification:
     module_name: multilabel_classification
     model_name: PP-LCNet_x1_0_vehicle_attribute
-    model_dir: null
+    model_dir: null # 替换为微调后的车辆属性识别模型权重路径
     batch_size: 1
     threshold: 0.7
 ```

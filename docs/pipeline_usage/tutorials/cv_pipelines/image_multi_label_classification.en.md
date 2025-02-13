@@ -55,11 +55,19 @@ Image multi-label classification is a technique that assigns multiple relevant c
 <p><b>Note: The above accuracy metrics are mAP for the multi-label classification task on </b><a href="https://cocodataset.org/#home">COCO2017</a><b>. The GPU inference time for all models is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
 
 ## 2. Quick Start
-PaddleX supports experiencing the effects of the General Image Multi-Label Classification Pipeline locally using command line or Python.
+All model production lines provided by PaddleX can be quickly experienced. You can experience the effect of the image multi-label classification pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the image multi-label classification pipeline.
 
-Before using the General Image Multi-Label Classification Pipeline locally, please ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
+### 2.1 Online Experience
+You can [experience the image multi-label classification pipeline online](https://aistudio.baidu.com/community/app/387974/webUI?source=appCenter) by recognizing the demo images provided by the official platform, for example:
 
-### 2.1 Command Line Experience
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_multi_label_classification/multi_label_cls.png"/>
+
+If you are satisfied with the performance of the production line, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the methods in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the production line using your private data</b>. If you have local hardware resources for training, you can start training directly on your local machine; if not, the Star River Zero-Code platform provides a one-click training service. You don't need to write any code—just upload your data and start the training task with one click.
+
+### 2.2 Local Experience
+> ❗ Before using the image multi-label classification pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
+
+#### 2.2.1 Command Line Experience
 You can quickly experience the image multi-label classification pipeline effect with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg), and replace `--input` with the local path for prediction.
 
 ```bash
@@ -80,7 +88,8 @@ The visualization results are saved under `save_path`, and the visualization res
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_multi_label_classification/02.png">
 
-### 2.2 Python Script Integration
+#### 2.2.2 Python Script Integration
+
 * The above command line is for quickly experiencing and viewing the effect. Generally, in a project, it is often necessary to integrate through code. You can complete the quick inference of the production line with just a few lines of code. The inference code is as follows:
 
 ```python

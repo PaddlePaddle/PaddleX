@@ -270,11 +270,19 @@ comments: true
 <b>注：以上精度指标测量自 PaddleX 内部自建公式识别测试集。LaTeX_OCR_rec在LaTeX-OCR公式识别测试集的BLEU score为 0.8821。所有模型 GPU 推理耗时基于 Tesla V100 GPUs 机器，精度类型为 FP32。</b>
 
 ## 2. 快速开始
-PaddleX 支持在本地使用命令行或 Python 体验公式识别产线的效果。
+PaddleX 所提供的模型产线均可以快速体验效果，你可以在星河社区线体验公式识别产线的效果，也可以在本地使用命令行或 Python 体验公式识别产线的效果。
 
-在本地使用公式识别产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+### 2.1 在线体验
+您可以[在线体验](https://aistudio.baidu.com/community/app/387976/webUI?source=appCenter)公式识别产线的效果，用官方提供的 Demo 图片进行识别，例如：
 
-### 2.1 命令行方式体验
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/formula_aistudio.png"/>
+
+如果您对产线运行的效果满意，可以直接进行集成部署。您可以选择从云端下载部署包，也可以参考[2.2节本地体验](#22-本地体验)中的方法进行本地部署。如果对效果不满意，您可以利用私有数据<b>对产线中的模型进行微调训练</b>。如果您具备本地训练的硬件资源，可以直接在本地开展训练；如果没有，星河零代码平台提供了一键式训练服务，无需编写代码，只需上传数据后，即可一键启动训练任务。
+
+### 2.2 本地体验
+❗ 在本地使用公式识别产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+
+#### 2.2.1 命令行方式体验
 一行命令即可快速体验公式识别产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/pipelines/general_formula_recognition_001.png)，并将 `--input` 替换为本地路径，进行预测
 
 ```bash
@@ -310,7 +318,7 @@ sudo apt-get install texlive texlive-latex-base texlive-latex-extra -y
 ```
 <b>备注</b>： 由于公式识别可视化过程中需要对每张公式图片进行渲染，因此耗时较长，请您耐心等待。
 
-### 2.2 Python脚本方式集成
+#### 2.2.2 Python脚本方式集成
 几行代码即可完成产线的快速推理，以公式识别产线为例：
 
 ```python

@@ -58,6 +58,7 @@ for res in output:
 
 运行结果参数含义如下：
 - `input_path`：表示输入图片的路径。
+- `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
 - `class_ids`：表示预测结果的类别 id，含有两个类别，即0度和180度。
 - `scores`：表示预测结果的置信度。
 - `label_names`：表示预测结果的类别名。
@@ -413,7 +414,7 @@ python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_te
 
 1.<b>产线集成</b>
 
-文本行方向分类模块可以集成的PaddleX产线有[通用OCR产线](../../../pipeline_usage/tutorials/ocr_pipelines/OCR.md)和[文档场景信息抽取v3产线（PP-ChatOCRv3-doc）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.md)，只需要替换模型路径即可完成文本行方向分类模块的模型更新。
+文本行方向分类模块可以集成的PaddleX产线有[通用OCR产线](../../../pipeline_usage/tutorials/ocr_pipelines/OCR.md)、[通用版面解析产线](../../../pipeline_usage/tutorials/ocr_pipelines/layout_parsing.md)、[通用版面解析v2产线](../../../pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.md)和[文档场景信息抽取v3产线（PP-ChatOCRv3-doc）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.md)，只需要替换模型路径即可完成文本行方向分类模块的模型更新。
 
 2.<b>模块集成</b>
 

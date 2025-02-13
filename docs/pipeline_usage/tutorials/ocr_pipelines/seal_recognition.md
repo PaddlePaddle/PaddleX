@@ -494,11 +494,19 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 </details>
 
 ## 2. 快速开始
-PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可以在本地使用命令行或 Python 体验印章文本识别产线的效果。
+PaddleX 所提供的模型产线均可以快速体验效果，你可以在星河社区线体验印章文本识别产线的效果，也可以在本地使用命令行或 Python 体验印章文本识别产线的效果。
 
-在本地使用印章文本识别产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+### 2.1 在线体验
+您可以[在线体验](https://aistudio.baidu.com/community/app/387977/webUI?source=appCenter)印章文本识别产线的效果，用官方提供的 Demo 图片进行识别，例如：
 
-### 2.1 命令行方式体验
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/seal_recognition/seal_aistudio.png"/>
+
+如果您对产线运行的效果满意，可以直接进行集成部署。您可以选择从云端下载部署包，也可以参考[2.2节本地体验](#22-本地体验)中的方法进行本地部署。如果对效果不满意，您可以利用私有数据<b>对产线中的模型进行微调训练</b>。如果您具备本地训练的硬件资源，可以直接在本地开展训练；如果没有，星河零代码平台提供了一键式训练服务，无需编写代码，只需上传数据后，即可一键启动训练任务。
+
+### 2.2 本地体验
+❗ 在本地使用印章文本识别产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+
+#### 2.2.1 命令行方式体验
 一行命令即可快速体验印章文本识别产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png)，并将 `--input` 替换为本地路径，进行预测
 
 ```bash
@@ -545,7 +553,7 @@ paddlex --pipeline seal_recognition \
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/seal_recognition/03.png"/>
 
 
-### 2.1.2 Python脚本方式集成
+#### 2.2.2 Python脚本方式集成
 
 * 上述命令行是为了快速体验查看效果，一般来说，在项目中，往往需要通过代码集成，您可以通过几行代码即可完成产线的快速推理，推理代码如下：
 

@@ -177,23 +177,23 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     </tr>
         <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/small_object_detection.html">小目标检测</a></td>
-        <td>🚧</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/387975/webUI?source=appCenter">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
     </tr>
         <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.html">图像多标签分类</a></td>
-        <td>🚧</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/387974/webUI?source=appCenter">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html">图像异常检测</a></td>
@@ -287,23 +287,23 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/formula_recognition.html">公式识别</a></td>
-        <td>🚧</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/387976/webUI?source=appCenter">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html">印章文本识别</a></td>
-        <td>🚧</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/387977/webUI?source=appCenter">链接</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html">文档图像预处理</a></td>
@@ -327,23 +327,23 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute_recognition.html">行人属性识别</a></td>
-        <td>🚧</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/387978/webUI?source=appCenter">链接</a></td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/vehicle_attribute_recognition.html">车辆属性识别</a></td>
-        <td>🚧</td>
+        <td><a href = "https://aistudio.baidu.com/community/app/387979/webUI?source=appCenter">链接</a></td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/face_recognition.html">人脸识别</a></td>
@@ -700,7 +700,7 @@ for res in output:
   * [🗞️ 通用版面解析产线v2使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.html)
   * [📐 公式识别产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/formula_recognition.html)
   * [🖋️ 印章文本识别产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html)
-  * [🖌️ 文档图像预处理产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html) 
+  * [🖌️ 文档图像预处理产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html)
 </details>
 
 * <details open>
@@ -832,7 +832,7 @@ for res in output:
 
 * <details open>
   <summary> <b> 🎥 视频 </b></summary>
-  
+
   * [📈 视频分类模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/video_modules/video_classification.html)
   * [🔍 视频检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/video_modules/video_detection.html)
 

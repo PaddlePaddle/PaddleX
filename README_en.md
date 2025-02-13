@@ -179,23 +179,23 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
         <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/small_object_detection.html">Small Object Detection</a></td>
-        <td>🚧</td>
+        <td><a href="https://aistudio.baidu.com/community/app/387975/webUI?source=appCenter">Link</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
     </tr>
         <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.html">Multi-label Image Classification</a></td>
-        <td>🚧</td>
+        <td><a href="https://aistudio.baidu.com/community/app/387974/webUI?source=appCenter">Link</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html">Image Anomaly Detection</a></td>
@@ -289,23 +289,23 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/formula_recognition.html">Formula Recognition</a></td>
-        <td>🚧</td>
+        <td><a href="https://aistudio.baidu.com/community/app/387976/webUI?source=appCenter">Link</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html">Seal Recognition</a></td>
-        <td>🚧</td>
+        <td><a href="https://aistudio.baidu.com/community/app/387977/webUI?source=appCenter">Link</a></td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html">Document Image Preprocessing</a></td>
@@ -318,7 +318,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>🚧</td>
     </tr>
     <tr>
-        <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/general_image_recognition.html>Image Recognition</a></td>
+        <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/general_image_recognition.html">Image Recognition</a></td>
         <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
@@ -329,23 +329,23 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute.html">Pedestrian Attribute Recognition</a></td>
-        <td>🚧</td>
+        <td><a href="https://aistudio.baidu.com/community/app/387978/webUI?source=appCenter">Link</a></td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/vehicle_attribute.html">Vehicle Attribute Recognition</a></td>
-        <td>🚧</td>
+        <td><a href="https://aistudio.baidu.com/community/app/387979/webUI?source=appCenter">Link</a></td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
     </tr>
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/face_recognition.html">Face Recognition</a></td>
@@ -822,7 +822,7 @@ For other pipelines in Python scripts, just adjust the `pipeline` parameter of t
 
 * <details open>
   <summary> <b> 🌐 3D </b></summary>
-  
+
   * [🚗 3D Multimodal Fusion Detection Module Usage Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/3d_bev_detection.html)
 
 * <details open>

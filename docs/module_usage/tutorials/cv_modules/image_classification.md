@@ -932,15 +932,9 @@ python main.py -c paddlex/configs/modules/image_classification/PP-LCNet_x1_0.yam
   "analysis": {
     "histogram": "check_dataset/histogram.png"
   },
-<<<<<<< HEAD
-  "dataset_path": "./dataset/cls_flowers_examples",
+  "dataset_path": "cls_flowers_examples",
   "show_type": "image",
   "dataset_type": "ClsDataset"
-=======
-  &quot;dataset_path&quot;: &quot;cls_flowers_examples&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;ClsDataset&quot;
->>>>>>> modify_pipeline_and_module_docs
 }
 </code></pre>
 <p>上述校验结果中，check_pass 为 True 表示数据集格式符合要求，其他部分指标的说明如下：</p>

@@ -46,14 +46,21 @@ Small object detection is a specialized technique for identifying tiny objects w
 <p><b>Note: The above accuracy metrics are based on the </b><a href="https://github.com/VisDrone/VisDrone-Dataset">VisDrone-DET</a><b> validation set mAP(0.5:0.95). All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
 
 ## 2. Quick Start
-PaddleX supports experiencing the small object detection pipeline's effects through command line or Python locally.
 
-Before using the small object detection pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
+All model production lines provided by PaddleX can be quickly experienced. You can experience the effect of the small object detection pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the small object detection pipeline.
 
-### 2.1 Local Experience
-> ❗ Before using the general small object detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+### 2.1 Online Experience
 
-#### 2.1.1 Command Line Experience
+You can [experience the small object detection pipeline online](https://aistudio.baidu.com/community/app/387975/webUI?source=appCenter) by recognizing the demo images provided by the official platform, for example:
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/small_object_detection/small_obj_det_aistudio.jpg"/>
+
+If you are satisfied with the performance of the production line, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the methods in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the production line using your private data</b>. If you have local hardware resources for training, you can start training directly on your local machine; if not, the Star River Zero-Code platform provides a one-click training service. You don't need to write any code—just upload your data and start the training task with one click.
+
+### 2.2 Local Experience
+Before using the small object detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+
+#### 2.2.1 Command Line Experience
 * You can quickly experience the small object detection pipeline effect with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg), and replace `--input` with the local path for prediction.
 
 ```bash

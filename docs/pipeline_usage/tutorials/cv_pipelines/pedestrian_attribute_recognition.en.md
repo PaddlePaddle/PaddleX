@@ -67,10 +67,16 @@ Pedestrian attribute recognition is a key function in computer vision systems, u
 <p><b>Note: The above accuracy metrics are mA on PaddleX's internally built dataset. GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
 
 ## 2. Quick Start
-The model pipelines provided by PaddleX can be experienced locally using the command line or Python for pedestrian attribute recognition.
+
+All model production lines provided by PaddleX can be quickly experienced. You can experience the effect of the pedestrian attribute recognition pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the pedestrian attribute recognition pipeline.
 
 ### 2.1 Online Experience
-Online experience is not currently supported.
+
+You can [experience the pedestrian attribute recognition pipeline online](https://aistudio.baidu.com/community/app/387978/webUI?source=appCenter) by recognizing the demo images provided by the official platform, for example:
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/pedestrian_attribute_recognition/ped_attr_aistudio.png"/>
+
+If you are satisfied with the performance of the production line, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the methods in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the production line using your private data</b>. If you have local hardware resources for training, you can start training directly on your local machine; if not, the Star River Zero-Code platform provides a one-click training service. You don't need to write any code—just upload your data and start the training task with one click.
 
 ### 2.2 Local Experience
 Before using the pedestrian attribute recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).

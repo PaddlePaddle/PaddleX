@@ -341,7 +341,7 @@ for res in output:
 <tr>
 <td><code>input</code></td>
 <td>待预测数据，支持多种输入类型</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
   <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
@@ -543,7 +543,7 @@ python main.py -c paddlex/configs/modules/layout_detection/PP-DocLayout-L.yaml \
   "analysis": {
     "histogram": "check_dataset/histogram.png"
   },
-  "dataset_path": "./dataset/example_data/det_layout_examples",
+  "dataset_path": "det_layout_examples",
   "show_type": "image",
   "dataset_type": "COCODetDataset"
 }
