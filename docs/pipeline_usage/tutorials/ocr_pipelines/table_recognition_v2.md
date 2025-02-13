@@ -39,6 +39,7 @@ comments: true
 </tr>
 </table>
 <b>注：以上精度指标测量自 PaddleX 内部自建高难度中文表格识别数据集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b>
+
 <p><b>表格分类模块模型：</b></p>
 <table>
 <tr>
@@ -51,8 +52,8 @@ comments: true
 <tr>
 <td>PP-LCNet_x1_0_table_cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/CLIP_vit_base_patch16_224_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_table_cls_pretrained.pdparams">训练模型</a></td>
 <td>94.2</td>
-<td>--</td>
-<td>--</td>
+<td>2.35 / 0.47</td>
+<td>4.03 / 1.35</td>
 <td>6.6M</td>
 </tr>
 </table>
@@ -73,8 +74,8 @@ comments: true
 <td>RT-DETR-L_wired_table_cell_det</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_wired_table_cell_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wired_table_cell_det_pretrained.pdparams">训练模型</a></td>
 <td rowspan="2">82.7</td>
-<td rowspan="2">--</td>
-<td rowspan="2">--</td>
+<td rowspan="2">35.00 / 10.45</td>
+<td rowspan="2">495.51 / 495.51</td>
 <td rowspan="2">124M</td>
 <td rowspan="2">RT-DETR 是第一个实时的端到端目标检测模型。百度飞桨视觉团队基于 RT-DETR-L 作为基础模型，在自建表格单元格检测数据集上完成预训练，实现了对有线表格、无线表格均有较好性能的表格单元格检测。
 </td>
@@ -84,7 +85,7 @@ comments: true
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_wireless_table_cell_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wireless_table_cell_det_pretrained.pdparams">训练模型</a></td>
 </tr>
 </table>
-<p><b>注：以上精度指标测量自 PaddleX 内部自建评测集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。考虑到表格单元格检测模块需要被结合在表格识别产线v2中使用，因此基于表格识别产线v2计算其 mAP 精度。</b></p>
+<p><b>注：以上精度指标测量自 PaddleX 内部自建评测集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。考虑到实际应用时，表格单元格检测模块需要被集成在表格识别产线v2中使用，因此采用表格识别产线v2输出的表格单元格检测结果计算 mAP 精度。</b></p>
 
 
 <p><b>文本检测模块模型：</b></p>
@@ -559,10 +560,10 @@ paddlex --pipeline table_recognition_v2 \
 ```
 运行结果参数说明可以参考[2.2 Python脚本方式集成](#22-python脚本方式集成)中的结果解释。
 
-</details>
-
 可视化结果保存在`save_path`下，其中表格识别的可视化结果如下：
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/01.jpg">
+
+</details>
 
 
 ### 2.2 Python脚本方式集成

@@ -272,7 +272,7 @@ python main.py -c paddlex/configs/modules/table_structure_recognition/SLANet.yam
       "check_dataset/demo_img/no_border_288_6LK683JUCMOQ38V5BV29.jpg"
     ]
   },
-  "analysis": {"check_dataset/histogram.png"},
+  "analysis": {},
   "dataset_path": "table_rec_dataset_examples",
   "show_type": "image",
   "dataset_type": "PubTabTableRecDataset"

@@ -13,17 +13,17 @@ The table cell detection module is a key component of table recognition tasks, r
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
 <tr>
 <td>RT-DETR-L_wired_table_cell_det</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_wired_table_cell_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wired_table_cell_det_pretrained.pdparams">Training Model</a></td>
-<td rowspan="2">--</td>
-<td rowspan="2">--</td>
-<td rowspan="2">--</td>
+<td rowspan="2">82.7</td>
+<td rowspan="2">35.00 / 10.45</td>
+<td rowspan="2">495.51 / 495.51</td>
 <td rowspan="2">124M</td>
 <td rowspan="2">RT-DETR is the first real-time end-to-end object detection model. The Baidu PaddlePaddle Vision Team, based on RT-DETR-L as the base model, has completed pretraining on a self-built table cell detection dataset, achieving good performance for both wired and wireless table cell detection.
 </td>
@@ -34,7 +34,7 @@ The table cell detection module is a key component of table recognition tasks, r
 </tr>
 </table>
 
-<p><b>Note: The above accuracy metrics are measured from the internal table cell detection dataset of PaddleX. All model GPU inference times are based on an NVIDIA Tesla T4 machine, with precision type FP32. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32.</b></p>
+<p><b>Note: The above accuracy metrics are measured from the internal table cell detection dataset of PaddleX. All model GPU inference times are based on an NVIDIA Tesla T4 machine, with precision type FP32. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32. Considering that the table cell detection module needs to be integrated into the table recognition production line v2 for practical applications, the table cell detection results output from the table recognition production line v2 are used to calculate the mAP accuracy.</b></p>
 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package first. For details, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
@@ -44,7 +44,7 @@ After installing the wheel package, you can complete the inference of the table 
 ```python
 from paddlex import create_model
 model = create_model(model_name="RT-DETR-L_wired_table_cell_det")
-output = model.predict("table_recognition.jpg", batch_size=1)
+output = model.predict("table_recognition.jpg",  threshold=0.3, batch_size=1)
 for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
@@ -54,24 +54,23 @@ for res in output:
 <details><summary>👉 <b>After running, the result is: (Click to expand)</b></summary>
 
 ```json
-{'res': {'input_path': 'table_recognition.jpg', 'boxes': [{'cls_id': 0, 'label': 'cell', 'score': 0.9319108128547668, 'coordinate': [109.835846, 95.89979, 212.7077, 127.055466]}, {'cls_id': 0, 'label': 'cell', 'score': 0.9308021664619446, 'coordinate': [109.75361, 64.866486, 212.84799, 95.822426]}, {'cls_id': 0, 'label': 'cell', 'score': 0.9255117177963257, 'coordinate': [110.00513, 30.894377, 212.81178, 64.80416]}, {'cls_id': 0, 'label': 'cell', 'score': 0.918117344379425, 'coordinate': [212.87247, 30.97587, 403.8024, 64.86235]}, {'cls_id': 0, 'label': 'cell', 'score': 0.9053983688354492, 'coordinate': [212.89151, 95.95629, 403.36572, 127.11717]}, {'cls_id': 0, 'label': 'cell', 'score': 0.8567661046981812, 'coordinate': [212.77899, 64.98128, 403.9478, 95.87939]}, {'cls_id': 0, 'label': 'cell', 'score': 0.7800847887992859, 'coordinate': [404.12827, 64.99693, 547.1579, 95.95234]}, {'cls_id': 0, 'label': 'cell', 'score': 0.7557389736175537, 'coordinate': [2.657493, 30.968334, 109.947815, 64.894485]}, {'cls_id': 0, 'label': 'cell', 'score': 0.6763500571250916, 'coordinate': [2.5346346, 96.218285, 109.79284, 127.097565]}, {'cls_id': 0, 'label': 'cell', 'score': 0.6708637475967407, 'coordinate': [404.02423, 95.9553, 547.27985, 127.17637]}, {'cls_id': 0, 'label': 'cell', 'score': 0.6568276286125183, 'coordinate': [2.2822304, 65.10485, 109.99168, 95.964096]}, {'cls_id': 0, 'label': 'cell', 'score': 0.6159431338310242, 'coordinate': [109.78963, 95.94173, 213.05418, 127.06708]}, {'cls_id': 0, 'label': 'cell', 'score': 0.6098588109016418, 'coordinate': [2.2127364, 65.04467, 110.07493, 95.99106]}, {'cls_id': 0, 'label': 'cell', 'score': 0.6019916534423828, 'coordinate': [403.98883, 96.003845, 547.2072, 127.17022]}, {'cls_id': 0, 'label': 'cell', 'score': 0.5713056921958923, 'coordinate': [404.4564, 30.951345, 547.1254, 65.081154]}, {'cls_id': 0, 'label': 'cell', 'score': 0.5697788000106812, 'coordinate': [212.81021, 96.05031, 403.7318, 127.14639]}]}}
+{"input_path": "table_recognition.jpg", "page_index": null, "boxes": [{"cls_id": 0, "label": "cell", "score": 0.9319108128547668, "coordinate": [109.83584594726562, 95.89978790283203, 212.70770263671875, 127.05546569824219]}, {"cls_id": 0, "label": "cell", "score": 0.9308021664619446, "coordinate": [109.75360870361328, 64.86648559570312, 212.84799194335938, 95.82242584228516]}, {"cls_id": 0, "label": "cell", "score": 0.9255117177963257, "coordinate": [110.005126953125, 30.894376754760742, 212.81178283691406, 64.80416107177734]}, {"cls_id": 0, "label": "cell", "score": 0.918117344379425, "coordinate": [212.87246704101562, 30.97587013244629, 403.8023986816406, 64.86235046386719]}, {"cls_id": 0, "label": "cell", "score": 0.9053983688354492, "coordinate": [212.89151000976562, 95.95629119873047, 403.36572265625, 127.11717224121094]}, {"cls_id": 0, "label": "cell", "score": 0.8567661046981812, "coordinate": [212.77899169921875, 64.98127746582031, 403.94781494140625, 95.87938690185547]}, {"cls_id": 0, "label": "cell", "score": 0.7800847887992859, "coordinate": [404.1282653808594, 64.99693298339844, 547.1578979492188, 95.95233917236328]}, {"cls_id": 0, "label": "cell", "score": 0.7557389736175537, "coordinate": [2.6574931144714355, 30.968334197998047, 109.94781494140625, 64.89448547363281]}, {"cls_id": 0, "label": "cell", "score": 0.6763500571250916, "coordinate": [2.534634590148926, 96.2182846069336, 109.79283905029297, 127.09756469726562]}, {"cls_id": 0, "label": "cell", "score": 0.6708637475967407, "coordinate": [404.02423095703125, 95.9552993774414, 547.2798461914062, 127.1763687133789]}, {"cls_id": 0, "label": "cell", "score": 0.6568276286125183, "coordinate": [2.2822303771972656, 65.10485076904297, 109.9916763305664, 95.96409606933594]}, {"cls_id": 0, "label": "cell", "score": 0.6159431338310242, "coordinate": [109.78962707519531, 95.94172668457031, 213.05418395996094, 127.06707763671875]}, {"cls_id": 0, "label": "cell", "score": 0.6098588109016418, "coordinate": [2.2127363681793213, 65.04467010498047, 110.0749282836914, 95.99105834960938]}, {"cls_id": 0, "label": "cell", "score": 0.6019916534423828, "coordinate": [403.98883056640625, 96.00384521484375, 547.2072143554688, 127.17021942138672]}, {"cls_id": 0, "label": "cell", "score": 0.5713056921958923, "coordinate": [404.4563903808594, 30.951345443725586, 547.1254272460938, 65.0811538696289]}, {"cls_id": 0, "label": "cell", "score": 0.5697788000106812, "coordinate": [212.81021118164062, 96.05030822753906, 403.7318115234375, 127.14639282226562]}, {"cls_id": 0, "label": "cell", "score": 0.4522075355052948, "coordinate": [4.883366584777832, 0.22239652276039124, 543.5488891601562, 31.06178855895996]}, {"cls_id": 0, "label": "cell", "score": 0.4165799021720886, "coordinate": [404.32574462890625, 30.99039649963379, 547.0177001953125, 65.01567840576172]}, {"cls_id": 0, "label": "cell", "score": 0.37421756982803345, "coordinate": [4.255210876464844, 0.18794140219688416, 543.521728515625, 30.862964630126953]}, {"cls_id": 0, "label": "cell", "score": 0.37030676007270813, "coordinate": [5.542935371398926, 0.2003617286682129, 541.3729858398438, 31.145313262939453]}, {"cls_id": 0, "label": "cell", "score": 0.34807300567626953, "coordinate": [2.534700393676758, 96.17605590820312, 109.90091705322266, 127.14675903320312]}, {"cls_id": 0, "label": "cell", "score": 0.3399328589439392, "coordinate": [3.5424537658691406, 0.17436155676841736, 543.90283203125, 31.138904571533203]}]}
 ```
 
-<details><summary>👉 <b>After running, the result is: (Click to expand)</b></summary>
-
 The meanings of the parameters are as follows:
-- `input_path`: The path of the input image to be predicted.
+- `input_path`: The path of the input image to be predicted
+- `page_index`：If the input is a PDF file, this indicates the current page number of the PDF. Otherwise, it is `null`
 - `boxes`: Information of the predicted bounding boxes, a list of dictionaries. Each dictionary represents a detected target, containing the following information:
   - `cls_id`: Class ID, an integer.
   - `label`: Class label, a string.
   - `score`: Confidence of the bounding box, a floating-point number.
   - `coordinate`: Coordinates of the bounding box, a list of floating-point numbers, in the format <code>[xmin, ymin, xmax, ymax]</code>
 
-</details>
-
 The visualized image is as follows:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/table_cells_det/table_cells_det_res.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/table_cells_detection/01.jpg">
+
+</details>
 
 Note: Due to network issues, the above URL may not be successfully parsed. If you need the content from this link, please check the validity of the URL and try again. If you do not need the content from this link, please let me know, and I will proceed with answering your question.
 
@@ -116,7 +115,7 @@ The following is the explanation of the methods, parameters, etc.:
 </tr>
 <tr>
 <td><code>threshold</code></td>
-<td>Threshold to filter out low-confidence predictions; if not specified, the default configuration of the PaddleX official model will be used</td>
+<td>Threshold to filter out low-confidence predictions; if not specified, the default configuration of the PaddleX official model will be used. In table cell detection tasks, lowering the threshold appropriately may help to obtain more accurate results.</td>
 <td><code>float/dict</code></td>
 <td>
 <ul>
@@ -145,7 +144,7 @@ The following is the explanation of the methods, parameters, etc.:
 <tr>
 <td><code>input</code></td>
 <td>Data to be predicted, supporting multiple input types</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
   <li><b>Python variable</b>, such as <code>numpy.ndarray</code> representing image data</li>
@@ -340,7 +339,7 @@ After executing the above command, PaddleX will verify the dataset and collect b
 <li><code>attributes.val_sample_paths</code>: A list of relative paths to the visualization images of the validation samples in this dataset;</li>
 </ul>
 <p>In addition, the dataset verification has analyzed the distribution of sample counts for all classes in the dataset and plotted a histogram (histogram.png):</p>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/table_cells_det/01.png"></p></details>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/table_cells_detection/02.png"></p></details>
 
 #### 4.1.3 Dataset Format Conversion/Dataset Splitting (Optional)
 After you complete the data verification, you can convert the dataset format by <b>modifying the configuration file</b> or <b>adding hyperparameters</b>. You can also re-split the training/validation ratio of the dataset.
@@ -424,7 +423,7 @@ python main.py -c paddlex/configs/modules/table_cells_detection/RT-DETR-L_wired_
 
 The following steps are required:
 
-* Specify the path to the model's `.yaml` configuration file (here it is `RT-DETR-L_wired_table_cell_det.yaml`. When training other models, the corresponding configuration file must be specified. The correspondence between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list.en.md)).
+* Specify the path to the model's `.yaml` configuration file (here it is `RT-DETR-L_wired_table_cell_det.yaml`). When training other models, the corresponding configuration file must be specified. The correspondence between models and configuration files can be found in the [PaddleX Model List (CPU/GPU)](../../../support_list/models_list.en.md)).
 * Specify the mode as model training: `-o Global.mode=train`
 * Specify the path to the training dataset: `-o Global.dataset_dir`
 Other related parameters can be set by modifying the fields under `Global` and `Train` in the `.yaml` configuration file, or by adding parameters in the command line. For example, to train on the first two GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file instructions for the corresponding model task module in [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).

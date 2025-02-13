@@ -13,8 +13,8 @@ comments: true
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>mAP(%)</th>
-<th>GPU推理耗时 (ms)</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小 (M)</th>
 <th>介绍</th>
 </tr>
@@ -22,8 +22,8 @@ comments: true
 <td>RT-DETR-L_wired_table_cell_det</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_wired_table_cell_det_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wired_table_cell_det_pretrained.pdparams">训练模型</a></td>
 <td rowspan="2">82.7</td>
-<td rowspan="2">--</td>
-<td rowspan="2">--</td>
+<td rowspan="2">35.00 / 10.45</td>
+<td rowspan="2">495.51 / 495.51</td>
 <td rowspan="2">124M</td>
 <td rowspan="2">RT-DETR 是第一个实时的端到端目标检测模型。百度飞桨视觉团队基于 RT-DETR-L 作为基础模型，在自建表格单元格检测数据集上完成预训练，实现了对有线表格、无线表格均有较好性能的表格单元格检测。
 </td>
@@ -34,7 +34,7 @@ comments: true
 </tr>
 </table>
 
-<p><b>注：以上精度指标测量自 PaddleX 内部自建评测集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。考虑到表格单元格检测模块需要被结合在表格识别产线v2中使用，因此基于表格识别产线v2计算其 mAP 精度。</b></p>
+<p><b>注：以上精度指标测量自 PaddleX 内部自建评测集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。考虑到实际应用时，表格单元格检测模块需要被集成在表格识别产线v2中使用，因此采用表格识别产线v2输出的表格单元格检测结果计算 mAP 精度。</b></p>
 
 ## 三、快速集成
 > ❗ 在快速集成前，请先安装 PaddleX 的 wheel 包，详细请参考 [PaddleX本地安装教程](../../../installation/installation.md)
@@ -66,12 +66,12 @@ for res in output:
   - `score`：目标框置信度，一个浮点数
   - `coordinate`：目标框坐标，一个浮点数列表，格式为<code>[xmin, ymin, xmax, ymax]</code>
 
-</details>
-
-
 可视化图像如下：
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/table_cells_detection/01.jpg">
+
+
+</details>
 
 相关方法、参数等说明如下：
 
@@ -422,7 +422,7 @@ python main.py -c paddlex/configs/modules/table_cells_detection/RT-DETR-L_wired_
 ```
 需要如下几步：
 
-* 指定模型的`.yaml` 配置文件路径（此处为`RT-DETR-L_wired_table_cell_det.yaml`，训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)）
+* 指定模型的`.yaml` 配置文件路径（此处为`RT-DETR-L_wired_table_cell_det.yaml`），训练其他模型时，需要的指定相应的配置文件，模型和配置的文件的对应关系，可以查阅[PaddleX模型列表（CPU/GPU）](../../../support_list/models_list.md)）
 * 指定模式为模型训练：`-o Global.mode=train`
 * 指定训练数据集路径：`-o Global.dataset_dir`
 其他相关参数均可通过修改`.yaml`配置文件中的`Global`和`Train`下的字段来进行设置，也可以通过在命令行中追加参数来进行调整。如指定前 2 卡 gpu 训练：`-o Global.device=gpu:0,1`；设置训练轮次数为 10：`-o Train.epochs_iters=10`。更多可修改的参数及其详细解释，可以查阅模型对应任务模块的配置文件说明[PaddleX通用模型配置文件参数说明](../../instructions/config_parameters_common.md)。

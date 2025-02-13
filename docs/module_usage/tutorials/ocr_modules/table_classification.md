@@ -14,15 +14,15 @@ comments: true
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>Top1 Acc(%)</th>
-<th>GPU推理耗时 (ms)</th>
-<th>CPU推理耗时 (ms)</th>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>模型存储大小 (M)</th>
 </tr>
 <tr>
 <td>PP-LCNet_x1_0_table_cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/CLIP_vit_base_patch16_224_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_table_cls_pretrained.pdparams">训练模型</a></td>
 <td>94.2</td>
-<td>--</td>
-<td>--</td>
+<td>2.35 / 0.47</td>
+<td>4.03 / 1.35</td>
 <td>6.6M</td>
 </tr>
 </table>
@@ -44,8 +44,8 @@ for res in output:
 ```
 
 运行后，得到的结果为：
-```json
-{"res": {"input_path": "table_recognition.jpg", "page_index": null,  "class_ids": array([0, 1], dtype=int32), "scores": array([0.84421, 0.15579], dtype=float32), "label_names": ["wired_table", "wireless_table"]}}
+```
+{"res": {"input_path": "table_recognition.jpg", "page_index": null, "class_ids": array([0, 1], dtype=int32), "scores": array([0.84421, 0.15579], dtype=float32), "label_names": ["wired_table", "wireless_table"]}}
 ```
 
 运行结果参数含义如下：
