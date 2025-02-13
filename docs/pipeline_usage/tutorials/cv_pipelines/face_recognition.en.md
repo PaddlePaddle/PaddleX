@@ -105,7 +105,7 @@ The pre-trained model pipelines provided by PaddleX can be quickly experienced. 
 Oneline Experience is not supported at the moment.
 
 ### 2.2 Local Experience
-&gt; ❗ Before using the face recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
+> ❗ Before using the face recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
 
 #### 2.2.1 Command Line Experience
 
@@ -122,7 +122,7 @@ wget https://paddle-model-ecology.bj.bcebos.com/paddlex/data/face_demo_gallery.t
 tar -xf ./face_demo_gallery.tar
 ```
 
-If you wish to build a facial feature library using your private dataset, you can refer to [Section 2.3 Data Organization for Building Feature Libraries](). After that, you can complete the establishment of the facial feature library and the fast inference of the facial recognition production line with just a few lines of code.
+If you wish to build a facial feature library using your private dataset, you can refer to [Section 2.3 Data Organization for Building Feature Libraries](). After that, you can complete the establishment of the facial feature library and the fast inference of the facial recognition pipeline with just a few lines of code.
 
 ```python
 from paddlex import create_pipeline
@@ -141,7 +141,7 @@ for res in output:
 
 In the above Python script, the following steps are performed:
 
-(1) Call `create_pipeline` to instantiate the face recognition production line object. The specific parameter descriptions are as follows:
+(1) Call `create_pipeline` to instantiate the face recognition pipeline object. The specific parameter descriptions are as follows:
 
 <table>
 <thead>
@@ -155,7 +155,7 @@ In the above Python script, the following steps are performed:
 <tbody>
 <tr>
 <td><code>pipeline</code></td>
-<td>The name of the production line or the path to the production line configuration file. If it is the name of the production line, it must be a production line supported by PaddleX.</td>
+<td>The name of the pipeline or the path to the pipeline configuration file. If it is the name of the pipeline, it must be a pipeline supported by PaddleX.</td>
 <td><code>str</code></td>
 <td>None</td>
 </tr>
@@ -168,20 +168,20 @@ In the above Python script, the following steps are performed:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The inference device for the production line. Supports specifying the specific card number of the GPU, such as "gpu:0", the specific card number of other hardware, such as "npu:0", and CPU such as "cpu".</td>
+<td>The inference device for the pipeline. Supports specifying the specific card number of the GPU, such as "gpu:0", the specific card number of other hardware, such as "npu:0", and CPU such as "cpu".</td>
 <td><code>str</code></td>
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference, available only when the production line supports high-performance inference.</td>
+<td>Whether to enable high-performance inference, available only when the pipeline supports high-performance inference.</td>
 <td><code>bool</code></td>
 <td><code>False</code></td>
 </tr>
 </tbody>
 </table>
 
-(2) Call the `build_index` method of the face recognition production line object to build the face feature library. The specific parameter descriptions are as follows:
+(2) Call the `build_index` method of the face recognition pipeline object to build the face feature library. The specific parameter descriptions are as follows:
 
 <table>
 <thead>
@@ -384,7 +384,7 @@ In the above Python script, the following steps are performed:
         - `coordinate`: Coordinates of the face bounding box, in the format [xmin, ymin, xmax, ymax].
 
 - Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.json`. If a file is specified, it will be saved directly to that file.
-- Calling the `save_to_img()` method will save the visualization result to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (The production line usually contains many result images; it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, leaving only the last one.) In the example above, the visualization result is as follows:
+- Calling the `save_to_img()` method will save the visualization result to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (The pipeline usually contains many result images; it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, leaving only the last one.) In the example above, the visualization result is as follows:
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/face_recognition/02.jpg"/>
 
@@ -416,7 +416,7 @@ The above Python script integration method uses the parameter settings in the Pa
 paddlex --get_pipeline_config face_recognition --save_path ./my_path
 ```
 
-If you have obtained the configuration file, you can customize the settings for the face recognition production line. You just need to modify the `pipeline` parameter value in the `create_pipeline` method to the path of your custom production line configuration file.
+If you have obtained the configuration file, you can customize the settings for the face recognition pipeline. You just need to modify the `pipeline` parameter value in the `create_pipeline` method to the path of your custom pipeline configuration file.
 
 For example, if your custom configuration file is saved in `./my_path/face_recognition.yaml`, you just need to execute:
 
@@ -555,15 +555,15 @@ data_root             # Root directory of the dataset, the directory name can be
 ```
 
 ## 3. Development Integration/Deployment
-If the face recognition production line meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
+If the face recognition pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
-If you need to apply the face recognition production line directly in your Python project, you can refer to the example code in [2.2.2 Python Script Integration](#222-python-script-integration).
+If you need to apply the face recognition pipeline directly in your Python project, you can refer to the example code in [2.2.2 Python Script Integration](#222-python-script-integration).
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
 🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX offers a high-performance inference plugin aimed at deeply optimizing the performance of model inference and pre/post-processing, significantly speeding up the end-to-end process. For detailed high-performance inference processes, please refer to [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service Deployment</b>: Service deployment is a common form of deployment in actual production environments. By encapsulating the inference function as a service, clients can access these services via network requests to obtain inference results. PaddleX supports multiple production line service deployment schemes. For detailed production line service deployment processes, please refer to [PaddleX Service Deployment Guide](../../../pipeline_deploy/serving.en.md).
+☁️ <b>Service Deployment</b>: Service deployment is a common form of deployment in actual production environments. By encapsulating the inference function as a service, clients can access these services via network requests to obtain inference results. PaddleX supports multiple pipeline service deployment schemes. For detailed pipeline service deployment processes, please refer to [PaddleX Service Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
 Below is the API reference for basic service deployment and multi-language service call examples:
 
@@ -735,7 +735,7 @@ Below is the API reference for basic service deployment and multi-language servi
 <td><code>indexKey</code></td>
 <td><code>string</code></td>
 <td>The key corresponding to the index. Provided by the <code>buildIndex</code> operation.</td>
-<td>No</td>
+<td>Yes</td>
 </tr>
 </tbody>
 </table>
@@ -808,7 +808,7 @@ Below is the API reference for basic service deployment and multi-language servi
 <td><code>indexKey</code></td>
 <td><code>string</code></td>
 <td>The key corresponding to the index. Provided by the <code>buildIndex</code> operation.</td>
-<td>No</td>
+<td>Yes</td>
 </tr>
 </tbody>
 </table>
@@ -861,6 +861,30 @@ Below is the API reference for basic service deployment and multi-language servi
 <td>The key corresponding to the index. Provided by the <code>buildIndex</code> operation.</td>
 <td>No</td>
 </tr>
+<tr>
+<td><code>detThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>det_threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>recThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>rec_threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>hammingRadius</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>hamming_radius</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>topk</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>Refer to the <code>topk</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -882,7 +906,7 @@ Below is the API reference for basic service deployment and multi-language servi
 </tr>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></td>
+<td><code>string</code> | <code>null</code></td>
 <td>The recognition result image. The image is in JPEG format and is Base64-encoded.</td>
 </tr>
 </tbody>
@@ -1055,12 +1079,12 @@ SubModules:
     batch_size: 1
 ```
 
-Subsequently, refer to the command-line or Python script methods in [2.2 Local Experience]() to load the modified production line configuration file.
+Subsequently, refer to the command-line or Python script methods in [2.2 Local Experience]() to load the modified pipeline configuration file.
 
 ## 5. Multi-Hardware Support
 PaddleX supports a variety of mainstream hardware devices, including NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware devices.
 
-For example, when running the face recognition production line using Python, to change the runtime device from NVIDIA GPU to Ascend NPU, just modify the `device` in the script to `npu`:
+For example, when running the face recognition pipeline using Python, to change the runtime device from NVIDIA GPU to Ascend NPU, just modify the `device` in the script to `npu`:
 
 ```python
 from paddlex import create_pipeline
@@ -1071,4 +1095,4 @@ pipeline = create_pipeline(
     )
 ```
 
-If you want to use the face recognition production line on more types of hardware, please refer to [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+If you want to use the face recognition pipeline on more types of hardware, please refer to [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).

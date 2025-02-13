@@ -97,7 +97,7 @@ The visualized results are saved under `save_path`. The visualized results are a
 
 #### 2.1.2 Python Script Integration
 
-The above command line is for quickly experiencing and viewing the effect. Generally, in a project, it is often necessary to integrate through code. You can complete quick inference in a production line with just a few lines of code. The inference code is as follows:
+The above command line is for quickly experiencing and viewing the effect. Generally, in a project, it is often necessary to integrate through code. You can complete quick inference in a pipeline with just a few lines of code. The inference code is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -360,6 +360,205 @@ If you need to apply the document image preprocessing pipeline directly to your 
 Additionally, PaddleX offers three other deployment methods, detailed as follows:
 
 🚀 <b>High-Performance Inference</b>: In real production environments, many applications have stringent performance standards for deployment strategies, especially regarding response speed, to ensure efficient system operation and a smooth user experience. To address this, PaddleX provides a high-performance inference plugin designed to deeply optimize model inference and pre/post-processing, resulting in significant end-to-end process acceleration. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
+
+<details><summary>API Reference</summary>
+<p>For the main operations provided by the service:</p>
+<ul>
+<li>The HTTP request method is POST.</li>
+<li>Both the request body and response body are JSON data (JSON objects).</li>
+<li>When the request is processed successfully, the response status code is <code>200</code>, and the attributes of the response body are as follows:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>The UUID of the request.</td>
+</tr>
+<tr>
+<td><code>errorCode</code></td>
+<td><code>integer</code></td>
+<td>Error code. Fixed as <code>0</code>.</td>
+</tr>
+<tr>
+<td><code>errorMsg</code></td>
+<td><code>string</code></td>
+<td>Error message. Fixed as <code>"Success"</code>.</td>
+</tr>
+<tr>
+<td><code>result</code></td>
+<td><code>object</code></td>
+<td>The result of the operation.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>When the request is not processed successfully, the attributes of the response body are as follows:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>The UUID of the request.</td>
+</tr>
+<tr>
+<td><code>errorCode</code></td>
+<td><code>integer</code></td>
+<td>Error code. Same as the response status code.</td>
+</tr>
+<tr>
+<td><code>errorMsg</code></td>
+<td><code>string</code></td>
+<td>Error message.</td>
+</tr>
+</tbody>
+</table>
+<p>The main operations provided by the service are as follows:</p>
+<ul>
+<li><b><code>infer</code></b></li>
+</ul>
+<p>Obtain the document image preprocessing results.</p>
+<p><code>POST /doc_preprocessor</code></p>
+<ul>
+<li>The attributes of the request body are as follows:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>file</code></td>
+<td><code>string</code></td>
+<td>The URL of an image or PDF file accessible by the server, or the Base64-encoded content of the file. For PDF files exceeding 10 pages, only the first 10 pages will be used.</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>fileType</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>The type of the file. <code>0</code> for PDF files, <code>1</code> for image files. If this attribute is missing, the file type will be inferred from the URL.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the <code>use_doc_orientation_classify</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useDocUnwarping</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the <code>use_doc_unwarping</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>When the request is processed successfully, the <code>result</code> in the response body has the following attributes:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>docPreprocessingResults</code></td>
+<td><code>object</code></td>
+<td>Document image preprocessing results. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
+</tr>
+<tr>
+<td><code>dataInfo</code></td>
+<td><code>object</code></td>
+<td>Information about the input data.</td>
+</tr>
+</tbody>
+</table>
+<p>Each element in <code>docPreprocessingResults</code> is an <code>object</code> with the following attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>outputImage</code></td>
+<td><code>string</code></td>
+<td>The preprocessed image. The image is in PNG format and is Base64-encoded.</td>
+</tr>
+<tr>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>A simplified version of the <code>res</code> field in the JSON representation of the result generated by the pipeline object's <code>predict</code> method, excluding the <code>input_path</code> field.</td>
+</tr>
+<tr>
+<td><code>docPreprocessingImage</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>The visualization result image. The image is in JPEG format and is Base64-encoded.</td>
+</tr>
+<tr>
+<td><code>inputImage</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>The input image. The image is in JPEG format and is Base64-encoded.</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details><summary>Multi-language Service Call Example</summary>
+<details>
+<summary>Python</summary>
+
+<pre><code class="language-python">import base64
+import requests
+
+API_URL = "http://localhost:8080/document-preprocessing"
+file_path = "./demo.jpg"
+
+with open(file_path, "rb") as file:
+    file_bytes = file.read()
+    file_data = base64.b64encode(file_bytes).decode("ascii")
+
+payload = {"file": file_data, "fileType": 1}
+
+response = requests.post(API_URL, json=payload)
+
+assert response.status_code == 200
+result = response.json()["result"]
+for i, res in enumerate(result["docPreprocessingResults"]):
+    print(res["prunedResult"])
+    output_img_path = f"out_{i}.png"
+    with open(output_img_path, "wb") as f:
+        f.write(base64.b64decode(res["outputImage"]))
+    print(f"Output image saved at {output_img_path}")
+</code></pre></details>
+</details>
+<br/>
 
 ☁️ <b>Service Deployment</b>: Service deployment is a common form of deployment in real production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports multiple pipeline service deployment solutions. For detailed pipeline service deployment procedures, please refer to the [PaddleX Service Deployment Guide](../../../pipeline_deploy/serving.en.md).
 

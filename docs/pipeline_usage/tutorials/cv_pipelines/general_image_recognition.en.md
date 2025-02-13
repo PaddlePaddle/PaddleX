@@ -111,7 +111,7 @@ for res in output:
 
 In the above Python script, the following steps are executed:
 
-(1) Call the `create_pipeline` to instantiate the general image recognition production line object. The specific parameter descriptions are as follows:
+(1) Call the `create_pipeline` to instantiate the general image recognition pipeline object. The specific parameter descriptions are as follows:
 
 <table>
 <thead>
@@ -125,7 +125,7 @@ In the above Python script, the following steps are executed:
 <tbody>
 <tr>
 <td><code>pipeline</code></td>
-<td>The name of the production line or the path to the production line configuration file. If it is a production line name, it must be a production line supported by PaddleX.</td>
+<td>The name of the pipeline or the path to the pipeline configuration file. If it is a pipeline name, it must be a pipeline supported by PaddleX.</td>
 <td><code>str</code></td>
 <td>None</td>
 </tr>
@@ -138,20 +138,20 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The inference device for the production line. Supports specifying specific GPU card numbers, such as "gpu:0", specific card numbers for other hardware, such as "npu:0", or CPU, such as "cpu".</td>
+<td>The inference device for the pipeline. Supports specifying specific GPU card numbers, such as "gpu:0", specific card numbers for other hardware, such as "npu:0", or CPU, such as "cpu".</td>
 <td><code>str</code></td>
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference. This is only available if the production line supports high-performance inference.</td>
+<td>Whether to enable high-performance inference. This is only available if the pipeline supports high-performance inference.</td>
 <td><code>bool</code></td>
 <td><code>False</code></td>
 </tr>
 </tbody>
 </table>
 
-(2) Call the `build_index` method of the general image recognition production line object to build the index library. The specific parameter descriptions are as follows:
+(2) Call the `build_index` method of the general image recognition pipeline object to build the index library. The specific parameter descriptions are as follows:
 
 <table>
 <thead>
@@ -237,7 +237,7 @@ The index library object `index` supports the `save` method, which is used to sa
 </tbody>
 </table>
 
-(3) Call the `predict` method of the general image recognition production line object for inference prediction: The `predict` method takes `input` as a parameter, which is used to input the data to be predicted and supports multiple input methods. Specific examples are as follows:
+(3) Call the `predict` method of the general image recognition pipeline object for inference prediction: The `predict` method takes `input` as a parameter, which is used to input the data to be predicted and supports multiple input methods. Specific examples are as follows:
 
 <table>
 <thead>
@@ -264,7 +264,7 @@ The index library object `index` supports the `save` method, which is used to sa
 </tr>
 <tr>
 <td><code>index</code></td>
-<td>The feature library used for production line inference prediction, optional parameter. If this parameter is not provided, the index library specified in the production line configuration file will be used by default.</td>
+<td>The feature library used for pipeline inference prediction, optional parameter. If this parameter is not provided, the index library specified in the pipeline configuration file will be used by default.</td>
 <td><code>str|paddlex.inference.components.retrieval.faiss.IndexData|None</code></td>
 <td>
 <ul>
@@ -354,7 +354,7 @@ The index library object `index` supports the `save` method, which is used to sa
         - `coordinate`: Coordinates of the target box, in the format [xmin, ymin, xmax, ymax]
 
 - Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}.json`. If a file is specified, it will be saved directly to that file.
-- Calling the `save_to_img()` method will save the visualization result to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (The production line usually contains many result images, it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, leaving only the last one). In the above example, the visualization result is as follows:
+- Calling the `save_to_img()` method will save the visualization result to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (The pipeline usually contains many result images, it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, leaving only the last one). In the above example, the visualization result is as follows:
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/general_image_recognition/01.jpg"/>
 
@@ -386,7 +386,7 @@ The above Python script integration method uses the parameter settings in the Pa
 paddlex --get_pipeline_config PP-ShiTuV2 --save_path ./my_path
 ```
 
-If you have obtained the configuration file, you can customize the settings for the general image recognition production line. You just need to modify the `pipeline` parameter value in the `create_pipeline` method to the path of your custom production line configuration file.
+If you have obtained the configuration file, you can customize the settings for the general image recognition pipeline. You just need to modify the `pipeline` parameter value in the `create_pipeline` method to the path of your custom pipeline configuration file.
 
 For example, if your custom configuration file is saved in `./my_path/PP-ShiTuV2.yaml`, you just need to execute:
 
@@ -518,15 +518,15 @@ data_root             # The root directory of the dataset; the directory name ca
 
 ## 3. Development Integration/Deployment
 
-If the general image recognition production line meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
+If the general image recognition pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
-If you need to apply the general image recognition production line directly in your Python project, you can refer to the example code in [2.2.2 Python Script Integration](#222-python-script-integration).
+If you need to apply the general image recognition pipeline directly in your Python project, you can refer to the example code in [2.2.2 Python Script Integration](#222-python-script-integration).
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
 🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX offers a high-performance inference plugin aimed at deeply optimizing the performance of model inference and pre/post-processing, significantly speeding up the end-to-end process. For detailed high-performance inference processes, please refer to [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service Deployment</b>: Service deployment is a common form of deployment in actual production environments. By encapsulating the inference function as a service, clients can access these services via network requests to obtain inference results. PaddleX supports multiple production line service deployment schemes. For detailed production line service deployment processes, please refer to [PaddleX Service Deployment Guide](../../../pipeline_deploy/serving.en.md).
+☁️ <b>Service Deployment</b>: Service deployment is a common form of deployment in actual production environments. By encapsulating the inference function as a service, clients can access these services via network requests to obtain inference results. PaddleX supports multiple pipeline service deployment schemes. For detailed pipeline service deployment processes, please refer to [PaddleX Service Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
 Below is the API reference for basic service deployment and multi-language service call examples:
 
@@ -698,7 +698,7 @@ Below is the API reference for basic service deployment and multi-language servi
 <td><code>indexKey</code></td>
 <td><code>string</code></td>
 <td>The key corresponding to the index. Provided by the <code>buildIndex</code> operation.</td>
-<td>No</td>
+<td>Yes</td>
 </tr>
 </tbody>
 </table>
@@ -771,7 +771,7 @@ Below is the API reference for basic service deployment and multi-language servi
 <td><code>indexKey</code></td>
 <td><code>string</code></td>
 <td>The key corresponding to the index. Provided by the <code>buildIndex</code> operation.</td>
-<td>No</td>
+<td>Yes</td>
 </tr>
 </tbody>
 </table>
@@ -824,6 +824,30 @@ Below is the API reference for basic service deployment and multi-language servi
 <td>The key corresponding to the index. Provided by the <code>buildIndex</code> operation.</td>
 <td>No</td>
 </tr>
+<tr>
+<td><code>detThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>det_threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>recThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>rec_threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>hammingRadius</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>hamming_radius</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>topk</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>Refer to the <code>topk</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -845,7 +869,7 @@ Below is the API reference for basic service deployment and multi-language servi
 </tr>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></td>
+<td><code>string</code></td>| <code>null</code></td>
 <td>The recognition result image. The image is in JPEG format and is Base64-encoded.</td>
 </tr>
 </tbody>
@@ -984,15 +1008,15 @@ pprint.pp(result_infer["detectedObjects"])
 <br/>
 
 📱 <b>Edge Deployment</b>: Edge deployment is a method where computation and data processing functions are placed on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment processes, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
-You can choose the appropriate method to deploy the model production line based on your needs for subsequent AI application integration.
+You can choose the appropriate method to deploy the model pipeline based on your needs for subsequent AI application integration.
 
 ## 4. Secondary Development
 
-If the default model weights provided by the general image recognition production line do not meet your accuracy or speed requirements in your scenario, you can try further <b>fine-tuning</b> the existing model using <b>your own specific domain or application scenario data</b> to improve the recognition performance of the production line in your scenario.
+If the default model weights provided by the general image recognition pipeline do not meet your accuracy or speed requirements in your scenario, you can try further <b>fine-tuning</b> the existing model using <b>your own specific domain or application scenario data</b> to improve the recognition performance of the pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
 
-Since the general image recognition production line includes two modules (main body detection module and image feature module), the suboptimal performance of the model production line may come from either module.
+Since the general image recognition pipeline includes two modules (main body detection module and image feature module), the suboptimal performance of the model pipeline may come from either module.
 
 You can analyze the images with poor recognition results. If you find that many main body targets are not detected during the analysis, it may be due to the inadequacy of the main body detection model. You need to refer to the [Main Body Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/mainbody_detection.en.md) in the [Secondary Development](../../../module_usage/tutorials/cv_modules/mainbody_detection.en.md) section to fine-tune the main body detection model using your private dataset. If there are matching errors in the detected main bodies, it indicates that the image feature model needs further improvement. You need to refer to the [Image Feature Module Development Tutorial](../../../module_usage/tutorials/cv_modules/image_feature.en.md) in the [Secondary Development](../../../module_usage/tutorials/cv_modules/image_feature.en.md) section to fine-tune the image feature model.
 
@@ -1000,7 +1024,7 @@ You can analyze the images with poor recognition results. If you find that many 
 
 After completing the fine-tuning training with your private dataset, you will obtain a local model weight file.
 
-If you need to use the fine-tuned model weights, simply modify the production line configuration file by replacing the local path of the fine-tuned model weights in the corresponding position in the configuration file:
+If you need to use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local path of the fine-tuned model weights in the corresponding position in the configuration file:
 
 ```yaml
 
@@ -1019,13 +1043,13 @@ SubModules:
     batch_size: 1
 ```
 
-Subsequently, refer to the command line method or Python script method in [2.2 Local Experience](#22-local-experience) to load the modified production line configuration file.
+Subsequently, refer to the command line method or Python script method in [2.2 Local Experience](#22-local-experience) to load the modified pipeline configuration file.
 
 ##  5. Multi-Hardware Support
 
 PaddleX supports various mainstream hardware devices such as NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>You only need to modify the `--device` parameter</b> to achieve seamless switching between different hardware.
 
-For example, when running the general image recognition production line using Python, to change the running device from NVIDIA GPU to Ascend NPU, you only need to modify the `device` in the script to npu:
+For example, when running the general image recognition pipeline using Python, to change the running device from NVIDIA GPU to Ascend NPU, you only need to modify the `device` in the script to npu:
 
 ```python
 from paddlex import create_pipeline

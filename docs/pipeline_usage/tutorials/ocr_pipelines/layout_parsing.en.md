@@ -383,7 +383,7 @@ After running, the result will be:
 </code></pre></details>
 
 ### 2.2 Python Script Integration
-A few lines of code are all you need to quickly perform inference on your production line. Taking the general layout parsing pipeline as an example:
+A few lines of code are all you need to quickly perform inference on your pipeline. Taking the general layout parsing pipeline as an example:
 
 ```python
 from paddlex import create_pipeline
@@ -528,25 +528,25 @@ Additionally, PaddleX offers three other deployment methods, detailed as follows
 Below are the API reference and multi-language service invocation examples for the basic serving solution:
 
 <details><summary>API Reference</summary>
-<p>For primary operations provided by the service:</p>
+<p>For the main operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
-<li>The request body and the response body are both JSON data (JSON objects).</li>
-<li>When the request is processed successfully, the response status code is <code>200</code>, and the response body properties are as follows:</li>
+<li>Both the request body and response body are JSON data (JSON objects).</li>
+<li>When the request is processed successfully, the response status code is <code>200</code>, and the attributes of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>logId</code></td>
 <td><code>string</code></td>
-<td>UUID for the request.</td>
+<td>The UUID of the request.</td>
 </tr>
 <tr>
 <td><code>errorCode</code></td>
@@ -556,31 +556,31 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error description. Fixed as <code>"Success"</code>.</td>
+<td>Error message. Fixed as <code>"Success"</code>.</td>
 </tr>
 <tr>
 <td><code>result</code></td>
 <td><code>object</code></td>
-<td>Operation result.</td>
+<td>The result of the operation.</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>When the request is not processed successfully, the response body properties are as follows:</li>
+<li>When the request is not processed successfully, the attributes of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>logId</code></td>
 <td><code>string</code></td>
-<td>UUID for the request.</td>
+<td>The UUID of the request.</td>
 </tr>
 <tr>
 <td><code>errorCode</code></td>
@@ -590,25 +590,25 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error description.</td>
+<td>Error message.</td>
 </tr>
 </tbody>
 </table>
-<p>Primary operations provided by the service:</p>
+<p>The main operations provided by the service are as follows:</p>
 <ul>
 <li><b><code>infer</code></b></li>
 </ul>
-<p>Performs layout parsing.</p>
+<p>Perform layout parsing.</p>
 <p><code>POST /layout-parsing</code></p>
 <ul>
-<li>Request body properties:</li>
+<li>The attributes of the request body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 <th>Required</th>
 </tr>
 </thead>
@@ -616,51 +616,171 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>The URL of an image file or PDF file accessible by the server, or the Base64 encoded result of the content of the above-mentioned file types. For PDF files with more than 10 pages, only the content of the first 10 pages will be used.</td>
+<td>The URL of an image or PDF file accessible by the server, or the Base64-encoded content of the above file types. For PDF files with more than 10 pages, only the content of the first 10 pages will be used.</td>
 <td>Yes</td>
 </tr>
 <tr>
 <td><code>fileType</code></td>
-<td><code>integer</code></td>
-<td>File type. <code>0</code> indicates a PDF file, and <code>1</code> indicates an image file. If this property is not present in the request body, the file type will be inferred based on the URL.</td>
+<td><code>integer</code>｜<code>null</code></td>
+<td>File type. <code>0</code> represents a PDF file, and <code>1</code> represents an image file. If this attribute is missing from the request body, the file type will be inferred based on the URL.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useImgOrientationCls</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable document image orientation classification. This function is enabled by default.</td>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>use_doc_orientation_classify</code> parameter in the <code>predict</code> method of the pipeline.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useImgUnwarping</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable text image rectification. This function is enabled by default.</td>
+<td><code>useDocUnwarping</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>use_doc_unwarping</code> parameter in the <code>predict</code> method of the pipeline.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useSealTextDet</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable seal text detection. This function is enabled by default.</td>
+<td><code>useTextlineOrientation</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>use_textline_orientation</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useGeneralOcr</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>use_general_ocr</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useSealRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>use_seal_recognition</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useTableRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>use_table_recognition</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useFormulaRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>use_formula_recognition</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>See the description of the <code>text_det_limit_side_len</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>See the description of the <code>text_det_limit_type</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>text_det_thresh</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>text_det_box_thresh</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>text_det_unclip_ratio</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>text_rec_score_thresh</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>See the description of the <code>seal_det_limit_side_len</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>See the description of the <code>seal_det_limit_type</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>seal_det_thresh</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>seal_det_box_thresh</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>seal_det_unclip_ratio</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>seal_rec_score_thresh</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>layout_threshold</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutNms</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>layout_nms</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutUnclipRatio</code></td>
+<td><code>number</code> | <code>array</code> | <code>null</code></td>
+<td>See the description of the <code>layout_unclip_ratio</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutMergeBboxesMode</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>See the description of the <code>layout_merge_bboxes_mode</code> parameter in the <code>predict</code> method of the pipeline.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>When the request is processed successfully, the <code>result</code> of the response body has the following properties:</li>
+<li>When the request is processed successfully, the response body's <code>result</code> has the following attributes:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>layoutParsingResults</code></td>
 <td><code>array</code></td>
-<td>Layout parsing results. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
+<td>The layout parsing results. The length of the array is 1 (for image input) or the smaller of the document page count and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
 </tr>
 <tr>
 <td><code>dataInfo</code></td>
@@ -669,92 +789,68 @@ Below are the API reference and multi-language service invocation examples for t
 </tr>
 </tbody>
 </table>
-<p>Each element in <code>layoutParsingResults</code> is an <code>object</code> with the following properties:</p>
+<p>Each element in <code>layoutParsingResults</code> is an <code>object</code> with the following attributes:</p>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>layoutElements</code></td>
-<td><code>array</code></td>
-<td>Layout element information.</td>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>A simplified version of the <code>res</code> field in the JSON representation generated by the <code>predict</code> method of the production object, with the <code>input_path</code> field removed.</td>
+</tr>
+<tr>
+<td><code>outputImages</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>A key-value pair of the input image and the prediction result image. The images are in JPEG format and encoded in Base64.</td>
+</tr>
+<tr>
+<td><code>inputImage</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>The input image. The image is in JPEG format and encoded in Base64.</td>
 </tr>
 </tbody>
 </table>
-<p>Each element in <code>layoutElements</code> is an <code>object</code> with the following properties:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>bbox</code></td>
-<td><code>array</code></td>
-<td>Position of the layout element. The elements in the array are the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner of the bounding box, respectively.</td>
-</tr>
-<tr>
-<td><code>label</code></td>
-<td><code>string</code></td>
-<td>Label of the layout element.</td>
-</tr>
-<tr>
-<td><code>text</code></td>
-<td><code>string</code></td>
-<td>Text contained in the layout element.</td>
-</tr>
-<tr>
-<td><code>layoutType</code></td>
-<td><code>string</code></td>
-<td>Arrangement of the layout element.</td>
-</tr>
-<tr>
-<td><code>image</code></td>
-<td><code>string</code></td>
-<td>Image of the layout element, in JPEG format, encoded using Base64.</td>
-</tr>
-</tbody>
-</table></details>
+</details>
 
-<details><summary>Multi-language Service Invocation Examples</summary>
+<details><summary>Multi-language Service Call Example</summary>
 <details>
 <summary>Python</summary>
+
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = "http://localhost:8080/layout-parsing"
+API_URL = "http://localhost:8080/layout-parsing" # Service URL
+file_path = "./demo.jpg"
 
-with open(image_path, "rb") as file:
-    image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode("ascii")
+with open(file_path, "rb") as file:
+    file_bytes = file.read()
+    file_data = base64.b64encode(file_bytes).decode("ascii")
 
 payload = {
-    "file": image_data,
+    "file": file_data, # Base64-encoded file content or file URL
     "fileType": 1,
-    "useImgOrientationCls": True,
-    "useImgUnwarping": True,
-    "useSealTextDet": True,
 }
 
+# Call the API
 response = requests.post(API_URL, json=payload)
 
+# Process the response data
 assert response.status_code == 200
 result = response.json()["result"]
 print("\nDetected layout elements:")
-for res in result["layoutParsingResults"]:
-    for ele in res["layoutElements"]:
-        print("===============================")
-        print("bbox:", ele["bbox"])
-        print("label:", ele["label"])
-        print("text:", repr(ele["text"]))
+for i, res in enumerate(result["layoutParsingResults"]):
+    print(res["prunedResult"])
+    for img_name, img in res["outputImages"].items():
+        img_path = f"{img_name}_{i}.jpg"
+        with open(img_path, "wb") as f:
+            f.write(base64.b64decode(img))
+        print(f"Output image saved at {img_path}")
 </code></pre></details>
 </details>
 <br/>
@@ -782,7 +878,7 @@ You can analyze images with poor recognition results and follow the guidelines b
 ### 4.2 Model Application
 After fine-tuning your model with a private dataset, you will obtain local model weights files.
 
-To use the fine-tuned model weights, simply modify the production line configuration file by replacing the local paths of the fine-tuned model weights to the corresponding positions in the configuration file:
+To use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local paths of the fine-tuned model weights to the corresponding positions in the configuration file:
 
 ```python
 ......
@@ -801,7 +897,7 @@ To use the fine-tuned model weights, simply modify the production line configura
   device: "gpu:0"
 ......
 ```
-Subsequently, refer to the command line or Python script methods in the local experience to load the modified production line configuration file.
+Subsequently, refer to the command line or Python script methods in the local experience to load the modified pipeline configuration file.
 
 ## 5. Multi-Hardware Support
 PaddleX supports various mainstream hardware devices such as NVIDIA GPUs, Kunlun XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware.

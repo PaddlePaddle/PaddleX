@@ -90,7 +90,7 @@ The General Table Recognition Pipeline v2 is designed to solve table recognition
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_wireless_table_cell_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wireless_table_cell_det_pretrained.pdparams">Training Model</a></td>
 </tr>
 </table>
-<p><b>Note: The above accuracy metrics are measured from the internal table cell detection dataset of PaddleX. All model GPU inference times are based on an NVIDIA Tesla T4 machine, with precision type FP32. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32. Considering that the table cell detection module needs to be integrated into the table recognition production line v2 for practical applications, the table cell detection results output from the table recognition production line v2 are used to calculate the mAP accuracy.</b></p>
+<p><b>Note: The above accuracy metrics are measured from the internal table cell detection dataset of PaddleX. All model GPU inference times are based on an NVIDIA Tesla T4 machine, with precision type FP32. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32. Considering that the table cell detection module needs to be integrated into the table recognition pipeline v2 for practical applications, the table cell detection results output from the table recognition pipeline v2 are used to calculate the mAP accuracy.</b></p>
 
 <p><b>Text Detection Module Models:</b></p>
 <table>
@@ -412,16 +412,16 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 
 
 ## 2. Quick Start
-All model production lines provided by PaddleX can be quickly experienced. You can use the command line or Python locally to experience the effect of the general table recognition production line v2.
+All model pipelines provided by PaddleX can be quickly experienced. You can use the command line or Python locally to experience the effect of the general table recognition pipeline v2.
 
 ### 2.1 Online Experience
 Online experience is not supported at the moment.
 
 ### 2.2 Local Experience
-Before using the General Table Recognition Production Line v2 locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
+Before using the General Table Recognition pipeline v2 locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
 
 ### 2.1 Command Line Experience
-You can quickly experience the effect of the table recognition production line with one command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg), and replace `--input` with the local path for prediction.
+You can quickly experience the effect of the table recognition pipeline with one command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg), and replace `--input` with the local path for prediction.
 
 ```bash
 paddlex --pipeline table_recognition_v2 \
@@ -620,7 +620,7 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>config</code></td>
-<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td>Specific configuration information for the pipeline (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the pipeline name must be consistent with <code>pipeline</code>).</td>
 <td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
@@ -780,7 +780,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -793,7 +793,7 @@ In the above Python script, the following steps are executed:
 <ul>
 <li><b>float</b>: Any floating-point number greater than <code>0</code></li>
 <li><b>dict</b>: Key is an integer category ID, value is any floating-point number greater than <code>0</code></li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>0.5</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used, initialized as <code>0.5</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -805,7 +805,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -818,7 +818,7 @@ In the above Python script, the following steps are executed:
 <ul>
 <li><b>float</b>: A floating-point number greater than 0, e.g., 1.1, indicating that the center of the detection box remains unchanged, and both the width and height are scaled by 1.1 times</li>
 <li><b>list</b>: e.g., [1.2, 1.5], indicating that the center of the detection box remains unchanged, the width is scaled by 1.2 times, and the height is scaled by 1.5 times</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as 1.0</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used, initialized as 1.0</li>
 </ul>
 </td>
 <tr>
@@ -830,7 +830,7 @@ In the above Python script, the following steps are executed:
 <li><b>large</b>: When set to large, only the outermost box will be retained for overlapping detection boxes, and the inner overlapping boxes will be removed.</li>
 <li><b>small</b>: When set to small, only the innermost boxes will be retained for overlapping detection boxes, and the outer overlapping boxes will be removed.</li>
 <li><b>union</b>: No filtering of boxes will be performed; both inner and outer boxes will be retained.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>large</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used, initialized as <code>large</code></li>
 </ul>
 </td>
 <td>None</td>
@@ -920,11 +920,11 @@ In the above Python script, the following steps are executed:
 
     - `input_path`: `(str)` The input path of the image to be predicted
 
-    - `model_settings`: `(Dict[str, bool])` Configuration parameters required for the production line model
+    - `model_settings`: `(Dict[str, bool])` Configuration parameters required for the pipeline model
 
-        - `use_doc_preprocessor`: `(bool)` Controls whether to enable the document preprocessing sub-production line
-    - `use_layout_detection`: `(bool)` Controls whether to enable the layout detection sub-production line
-    - `use_ocr_model`: `(bool)` Controls whether to enable the OCR sub-production line
+        - `use_doc_preprocessor`: `(bool)` Controls whether to enable the document preprocessing sub-pipeline
+    - `use_layout_detection`: `(bool)` Controls whether to enable the layout detection sub-pipeline
+    - `use_ocr_model`: `(bool)` Controls whether to enable the OCR sub-pipeline
     - `layout_det_res`: `(Dict[str, Union[List[numpy.ndarray], List[float]]])` Output result of the layout detection sub-module. Only exists when `use_layout_detection=True`
         - `input_path`: `(Union[str, None])` The image path accepted by the layout detection module, saved as `None` when the input is a `numpy.ndarray`
         - `page_index`: `(Union[int, None])` If the input is a PDF file, it indicates the current page number of the PDF, otherwise it is `None`
@@ -932,9 +932,9 @@ In the above Python script, the following steps are executed:
             - `cls_id`: `(int)` The class ID of the detection box
             - `score`: `(float)` The confidence score of the detection box
             - `coordinate`: `(List[float])` The coordinates of the four corners of the detection box, in the order of x1, y1, x2, y2, representing the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner  
-    - `doc_preprocessor_res`: `(Dict[str, Union[str, Dict[str, bool], int]])` The output result of the document preprocessing sub-production line. Exists only when `use_doc_preprocessor=True`
-        - `input_path`: `(Union[str, None])` The image path accepted by the image preprocessing sub-production line, saved as `None` when the input is `numpy.ndarray`
-        - `model_settings`: `(Dict)` Model configuration parameters for the preprocessing sub-production line
+    - `doc_preprocessor_res`: `(Dict[str, Union[str, Dict[str, bool], int]])` The output result of the document preprocessing sub-pipeline. Exists only when `use_doc_preprocessor=True`
+        - `input_path`: `(Union[str, None])` The image path accepted by the image preprocessing sub-pipeline, saved as `None` when the input is `numpy.ndarray`
+        - `model_settings`: `(Dict)` Model configuration parameters for the preprocessing sub-pipeline
             - `use_doc_orientation_classify`: `(bool)` Controls whether to enable document orientation classification
             - `use_doc_unwarping`: `(bool)` Controls whether to enable document unwarping
         - `angle`: `(int)` The prediction result of document orientation classification. When enabled, the values are [0,1,2,3], corresponding to [0°,90°,180°,270°] respectively; when not enabled, it is -1
@@ -963,11 +963,11 @@ In the above Python script, the following steps are executed:
 
 - Calling the `save_to_json()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}.json`; if specified as a file, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` types will be converted to lists.
 
-- Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}_ocr_res_img.{your_img_extension}`; if specified as a file, it will be saved directly to that file. (The production line usually contains many result images, it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, leaving only the last image)
+- Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}_ocr_res_img.{your_img_extension}`; if specified as a file, it will be saved directly to that file. (The pipeline usually contains many result images, it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, leaving only the last image)
 
-- Calling the `save_to_html()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}.html`; if specified as a file, it will be saved directly to that file. In the general table recognition production line v2, the HTML form of the table in the image will be written to the specified HTML file.
+- Calling the `save_to_html()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}.html`; if specified as a file, it will be saved directly to that file. In the general table recognition pipeline v2, the HTML form of the table in the image will be written to the specified HTML file.
 
-- Calling the `save_to_xlsx()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}.xlsx`; if specified as a file, it will be saved directly to that file. In the general table recognition production line v2, the Excel form of the table in the image will be written to the specified XLSX file.
+- Calling the `save_to_xlsx()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}.xlsx`; if specified as a file, it will be saved directly to that file. In the general table recognition pipeline v2, the Excel form of the table in the image will be written to the specified XLSX file.
 
 * Additionally, it also supports obtaining visualized images and prediction results through attributes, as follows:
 
@@ -991,7 +991,7 @@ In the above Python script, the following steps are executed:
 - The prediction result obtained by the `json` attribute is a dict type of data, with content consistent with the content saved by calling the `save_to_json()` method.
 - The prediction result returned by the `img` attribute is a dictionary type of data. The keys are `table_res_img`, `ocr_res_img`, `layout_res_img`, and `preprocessed_img`, and the corresponding values are four `Image.Image` objects, in order: visualized image of table recognition result, visualized image of OCR result, visualized image of layout region detection result, and visualized image of image preprocessing. If a sub-module is not used, the corresponding result image is not included in the dictionary.
 
-In addition, you can obtain the general table recognition production line v2 configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
+In addition, you can obtain the general table recognition pipeline v2 configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
 
 ```
 paddlex --get_pipeline_config table_recognition_v2 --save_path ./my_path
@@ -1039,7 +1039,7 @@ Below are the API references and multi-language service call examples for basic 
 <ul>
 <li>The HTTP request method is POST.</li>
 <li>Both the request body and response body are JSON data (JSON objects).</li>
-<li>When the request is successfully processed, the response status code is <code>200</code>, and the attributes of the response body are as follows:</li>
+<li>When the request is processed successfully, the response status code is <code>200</code>, and the properties of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
@@ -1058,12 +1058,12 @@ Below are the API references and multi-language service call examples for basic 
 <tr>
 <td><code>errorCode</code></td>
 <td><code>integer</code></td>
-<td>Error code. Fixed to <code>0</code>.</td>
+<td>Error code. Fixed as <code>0</code>.</td>
 </tr>
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error message. Fixed to <code>"Success"</code>.</td>
+<td>Error message. Fixed as <code>"Success"</code>.</td>
 </tr>
 <tr>
 <td><code>result</code></td>
@@ -1073,7 +1073,7 @@ Below are the API references and multi-language service call examples for basic 
 </tbody>
 </table>
 <ul>
-<li>When the request is not successfully processed, the attributes of the response body are as follows:</li>
+<li>When the request is not processed successfully, the properties of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
@@ -1108,7 +1108,7 @@ Below are the API references and multi-language service call examples for basic 
 <p>Locate and recognize tables in the image.</p>
 <p><code>POST /table-recognition</code></p>
 <ul>
-<li>The attributes of the request body are as follows:</li>
+<li>The properties of the request body are as follows:</li>
 </ul>
 <table>
 <thead>
@@ -1123,93 +1123,132 @@ Below are the API references and multi-language service call examples for basic 
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>The URL of an image or PDF file accessible by the server, or the Base64-encoded content of the file. For PDF files with more than 10 pages, only the first 10 pages will be used.</td>
+<td>The URL of an image file or PDF file accessible by the server, or the Base64-encoded content of the above file types. For PDF files with more than 10 pages, only the content of the first 10 pages will be used.</td>
 <td>Yes</td>
 </tr>
 <tr>
 <td><code>fileType</code></td>
-<td><code>integer</code></td>
-<td>The type of the file. <code>0</code> indicates a PDF file, and <code>1</code> indicates an image file. If this attribute is not provided in the request body, the file type will be inferred from the URL.</td>
+<td><code>integer</code> | <code>null</code></td>
+<td>The type of the file. <code>0</code> indicates a PDF file, and <code>1</code> indicates an image file. If this attribute is not present in the request body, the file type will be inferred based on the URL.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the <code>use_doc_orientation_classify</code> parameter description in the production <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useDocUnwarping</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the <code>use_doc_unwarping</code> parameter description in the production <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useLayoutDetection</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the <code>use_layout_detection</code> parameter description in the production <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useOcrModel</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the <code>use_ocr_model</code> parameter description in the production <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the <code>layout_threshold</code> parameter description in the production <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutNms</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>layout_nms</code> parameter in the production <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutUnclipRatio</code></td>
+<td><code>number</code> | <code>array</code> | <code>null</code></td>
+<td>See the description of the <code>layout_unclip_ratio</code> parameter in the production <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutMergeBboxesMode</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>See the description of the <code>layout_merge_bboxes_mode</code> parameter in the production <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>See the description of the <code>text_det_limit_side_len</code> parameter in the production <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>See the description of the <code>text_det_limit_type</code> parameter in the production <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>text_det_thresh</code> parameter in the production <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>text_det_box_thresh</code> parameter in the production <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>text_det_unclip_ratio</code> parameter in the production <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>text_rec_score_thresh</code> parameter in the production <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
-<ul>
-<li>When the request is successfully processed, the <code>result</code> in the response body has the following attributes:</li>
-</ul>
+<p>Each element in <code>tableRecResults</code> is an <code>object</code> with the following properties:</p>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Meaning</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>tableRecResults</code></td>
+<td><code>prunedResult</code></td>
 <td><code>object</code></td>
-<td>The result of table recognition. The length of the array is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
+<td>A simplified version of the <code>res</code> field in the JSON representation generated by the <code>predict</code> method of the pipeline object, with the <code>input_path</code> field removed.</td>
 </tr>
 <tr>
-<td><code>dataInfo</code></td>
-<td><code>object</code></td>
-<td>Information about the input data.</td>
-</tr>
-</tbody>
-</table>
-<p>Each element in <code>tableRecResults</code> is an <code>object</code> with the following attributes:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>tables</code></td>
-<td><code>array</code></td>
-<td>The location and content of the tables.</td>
+<td><code>outputImages</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>A key-value pair of input images and prediction result images. Images are in JPEG format and encoded with Base64.</td>
 </tr>
 <tr>
-<td><code>layoutImage</code></td>
-<td><code>string</code></td>
-<td>The result image of layout region detection. The image is in JPEG format and encoded using Base64.</td>
-</tr>
-<tr>
-<td><code>ocrImage</code></td>
-<td><code>string</code></td>
-<td>The OCR result image. The image is in JPEG format and encoded using Base64.</td>
-</tr>
-</tbody>
-</table>
-<p>Each element in <code>tables</code> is an <code>object</code> with the following attributes:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>bbox</code></td>
-<td><code>array</code></td>
-<td>The location of the table. The elements in the array are the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner.</td>
-</tr>
-<tr>
-<td><code>html</code></td>
-<td><code>string</code></td>
-<td>The table recognition result in HTML format.</td>
+<td><code>inputImage</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>The input image. The image is in JPEG format and encoded with Base64.</td>
 </tr>
 </tbody>
 </table></details>
-<details><summary>Multi-Language Service Invocation Examples</summary>
+<details><summary>Multi-language service call example</summary>
 <details>
 <summary>Python</summary>
+
 <pre><code class="language-python">import base64
 import requests
 
@@ -1241,13 +1280,13 @@ for i, res in enumerate(result["tableRecResults"]):
 <br/>
 
 📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on user devices, allowing them to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
-You can choose the appropriate deployment method based on your needs to integrate the model production line into subsequent AI applications.
+You can choose the appropriate deployment method based on your needs to integrate the model pipeline into subsequent AI applications.
 
 ## 4. Custom Development
-If the default model weights provided by the General Table Recognition Production Line v2 do not meet your requirements in terms of accuracy or speed, you can try to further <b>fine-tune</b> the existing models using <b>your own domain-specific or application data</b> to improve the recognition performance of the General Table Recognition Production Line v2 in your specific scenario.
+If the default model weights provided by the General Table Recognition pipeline v2 do not meet your requirements in terms of accuracy or speed, you can try to further <b>fine-tune</b> the existing models using <b>your own domain-specific or application data</b> to improve the recognition performance of the General Table Recognition pipeline v2 in your specific scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the General Table Recognition Production Line v2 consists of several modules, if the overall performance is not satisfactory, the issue may lie in any one of these modules. You can analyze the images with poor recognition results to identify which module is problematic and refer to the corresponding fine-tuning tutorial links in the table below.
+Since the General Table Recognition pipeline v2 consists of several modules, if the overall performance is not satisfactory, the issue may lie in any one of these modules. You can analyze the images with poor recognition results to identify which module is problematic and refer to the corresponding fine-tuning tutorial links in the table below.
 
 <table>
 <thead>
@@ -1304,7 +1343,7 @@ Since the General Table Recognition Production Line v2 consists of several modul
 ### 4.2 Model Application
 After fine-tuning with your private dataset, you can obtain the local model weight file.
 
-To use the fine-tuned model weights, simply modify the production line configuration file by replacing the local path of the fine-tuned model weights in the corresponding position in the configuration file:
+To use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local path of the fine-tuned model weights in the corresponding position in the configuration file:
 
 ```yaml
 SubModules:
@@ -1378,12 +1417,12 @@ SubPipelines:
         score_thresh: 0
 ```
 
-Subsequently, refer to the command line method or Python script method in [2.2 Local Experience](#22-本地体验) to load the modified production line configuration file.
+Subsequently, refer to the command line method or Python script method in [2.2 Local Experience](#22-本地体验) to load the modified pipeline configuration file.
 
 ## 5. Multi-Hardware Support
 PaddleX supports various mainstream hardware devices such as NVIDIA GPU, Kunlun Chip XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to achieve seamless switching between different hardware.
 
-For example, if you use Ascend NPU for OCR production line inference, the Python command used is:
+For example, if you use Ascend NPU for OCR pipeline inference, the Python command used is:
 
 ```bash
 paddlex --pipeline table_recognition_v2 \
@@ -1392,5 +1431,5 @@ paddlex --pipeline table_recognition_v2 \
         --device npu:0
 ```
 
-If you want to use the General Table Recognition Production Line v2 on a wider variety of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+If you want to use the General Table Recognition pipeline v2 on a wider variety of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
 

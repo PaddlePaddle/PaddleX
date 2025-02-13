@@ -35,7 +35,7 @@ The instance segmentation module is a crucial component in computer vision syste
 </tr>
 </table>
 
-&gt; ❗ The above list features the <b>2 core models</b> that the image classification module primarily supports. In total, this module supports <b>15 models</b>. The complete list of models is as follows:
+> ❗ The above list features the <b>2 core models</b> that the image classification module primarily supports. In total, this module supports <b>15 models</b>. The complete list of models is as follows:
 
 <details><summary> 👉Model List Details</summary>
 <table>
@@ -162,7 +162,7 @@ The instance segmentation module is a crucial component in computer vision syste
 <p><b>Note: The above accuracy metrics are based on the Mask AP of the <a href="https://cocodataset.org/#home">COCO2017</a> validation set. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p></details>
 
 ## <span id="lable">III. Quick Integration</span>
-&gt; ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md)
+> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md)
 
 After installing the wheel package, a few lines of code can complete the inference of the instance segmentation module. You can switch models under this module freely, and you can also integrate the model inference of the instance segmentation module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png) to your local machine.
 
@@ -580,3 +580,5 @@ The instance segmentation module can be integrated into the [General Instance Se
 
 2.<b>Module Integration</b>
 The weights you produce can be directly integrated into the instance segmentation module. Refer to the Python example code in <a href="#lable">Quick Integration</a> , and simply replace the model with the path to your trained model.
+
+You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).

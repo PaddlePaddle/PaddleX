@@ -217,7 +217,7 @@ The results are the same as those obtained through the command line.
 
 In the above Python script, the following steps are executed:
 
-（1）Instantiate the  production line object using `create_pipeline`: Specific parameter descriptions are as follows:
+（1）Instantiate the  pipeline object using `create_pipeline`: Specific parameter descriptions are as follows:
 
 <table>
 <thead>
@@ -231,31 +231,31 @@ In the above Python script, the following steps are executed:
 <tbody>
 <tr>
 <td><code>pipeline</code></td>
-<td>The name of the production line or the path to the production line configuration file. If it is the name of the production line, it must be supported by PaddleX.</td>
+<td>The name of the pipeline or the path to the pipeline configuration file. If it is the name of the pipeline, it must be supported by PaddleX.</td>
 <td><code>str</code></td>
 <td>None</td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The device for production line model inference. Supports: "gpu", "cpu".</td>
+<td>The device for pipeline model inference. Supports: "gpu", "cpu".</td>
 <td><code>str</code></td>
 <td><code>gpu</code></td>
 </tr>
 <tr>
 <td><code>config</code></td>
-<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td>Specific configuration information for the pipeline (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the pipeline name must be consistent with <code>pipeline</code>).</td>
 <td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference, only available if the production line supports it.</td>
+<td>Whether to enable high-performance inference, only available if the pipeline supports it.</td>
 <td><code>bool</code></td>
 <td><code>False</code></td>
 </tr>
 </tbody>
 </table>
-（2）Invoke the `predict` method of the  production line object for inference prediction: The `predict` method parameter is `x`, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
+（2）Invoke the `predict` method of the  pipeline object for inference prediction: The `predict` method parameter is `x`, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
 
 <table>
 <thead>
@@ -352,25 +352,25 @@ Additionally, PaddleX provides three other deployment methods, detailed as follo
 Below are the API reference and multi-language service invocation examples for the basic serving solution:
 
 <details><summary>API Reference</summary>
-<p>For primary operations provided by the service:</p>
+<p>For the main operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
-<li>The request body and the response body are both JSON data (JSON objects).</li>
-<li>When the request is processed successfully, the response status code is <code>200</code>, and the response body properties are as follows:</li>
+<li>The request body and response body are both JSON data (JSON objects).</li>
+<li>When the request is processed successfully, the response status code is <code>200</code>, and the attributes of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>logId</code></td>
 <td><code>string</code></td>
-<td>UUID for the request.</td>
+<td>The UUID of the request.</td>
 </tr>
 <tr>
 <td><code>errorCode</code></td>
@@ -385,26 +385,26 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>result</code></td>
 <td><code>object</code></td>
-<td>Operation result.</td>
+<td>The result of the operation.</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>When the request is not processed successfully, the response body properties are as follows:</li>
+<li>When the request is not processed successfully, the attributes of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>logId</code></td>
 <td><code>string</code></td>
-<td>UUID for the request.</td>
+<td>The UUID of the request.</td>
 </tr>
 <tr>
 <td><code>errorCode</code></td>
@@ -418,21 +418,21 @@ Below are the API reference and multi-language service invocation examples for t
 </tr>
 </tbody>
 </table>
-<p>Primary operations provided by the service:</p>
+<p>The main operations provided by the service are as follows:</p>
 <ul>
 <li><b><code>infer</code></b></li>
 </ul>
-<p>Locate and recognize tables in images.</p>
+<p>Locate and recognize tables in the image.</p>
 <p><code>POST /table-recognition</code></p>
 <ul>
-<li>Request body properties:</li>
+<li>The properties of the request body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 <th>Required</th>
 </tr>
 </thead>
@@ -440,19 +440,103 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>The URL of an image file or PDF file accessible by the server, or the Base64 encoded result of the content of the above-mentioned file types. For PDF files with more than 10 pages, only the content of the first 10 pages will be used.</td>
+<td>The URL of an image file or PDF file accessible by the server, or the Base64 encoding result of the content of the above file types. For PDF files exceeding 10 pages, only the content of the first 10 pages will be used.</td>
 <td>Yes</td>
 </tr>
 <tr>
 <td><code>fileType</code></td>
-<td><code>integer</code></td>
-<td>File type. <code>0</code> indicates a PDF file, and <code>1</code> indicates an image file. If this property is not present in the request body, the file type will be inferred based on the URL.</td>
+<td><code>integer</code> | <code>null</code></td>
+<td>The file type. <code>0</code> represents a PDF file, and <code>1</code> represents an image file. If this attribute is not present in the request body, the file type will be inferred based on the URL.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>use_doc_orientation_classify</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useDocUnwarping</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>use_doc_unwarping</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useLayoutDetection</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>use_layout_detection</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useOcrModel</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>use_ocr_model</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>layout_threshold</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutNms</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>layout_nms</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutUnclipRatio</code></td>
+<td><code>number</code> | <code>array</code> | <code>null</code></td>
+<td>See the description of the <code>layout_unclip_ratio</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutMergeBboxesMode</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>See the description of the <code>layout_merge_bboxes_mode</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>See the description of the <code>text_det_limit_side_len</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>See the description of the <code>text_det_limit_type</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>text_det_thresh</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>text_det_box_thresh</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>text_det_unclip_ratio</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>text_rec_score_thresh</code> parameter in the <code>predict</code> method of the pipeline.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>When the request is processed successfully, the <code>result</code> of the response body has the following properties:</li>
+<li>When the request is processed successfully, the <code>result</code> in the response body has the following attributes:</li>
 </ul>
 <table>
 <thead>
@@ -465,8 +549,8 @@ Below are the API reference and multi-language service invocation examples for t
 <tbody>
 <tr>
 <td><code>tableRecResults</code></td>
-<td><code>array</code></td>
-<td>Table recognition results. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
+<td><code>object</code></td>
+<td>The table recognition result. The length of the array is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
 </tr>
 <tr>
 <td><code>dataInfo</code></td>
@@ -475,7 +559,7 @@ Below are the API reference and multi-language service invocation examples for t
 </tr>
 </tbody>
 </table>
-<p>Each element in <code>tableRecResults</code> is an <code>object</code> with the following properties:</p>
+<p>Each element in <code>tableRecResults</code> is an <code>object</code> with the following attributes:</p>
 <table>
 <thead>
 <tr>
@@ -486,47 +570,26 @@ Below are the API reference and multi-language service invocation examples for t
 </thead>
 <tbody>
 <tr>
-<td><code>tables</code></td>
-<td><code>array</code></td>
-<td>Positions and contents of tables.</td>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>The simplified version of the <code>res</code> field in the JSON representation generated by the <code>predict</code> method of the production object, with the <code>input_path</code> field removed.</td>
 </tr>
 <tr>
-<td><code>layoutImage</code></td>
-<td><code>string</code></td>
-<td>Layout area detection result image. The image is in JPEG format and encoded using Base64.</td>
+<td><code>outputImages</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>A key-value pair of the input image and the predicted result image. The images are in JPEG format and encoded in Base64.</td>
 </tr>
 <tr>
-<td><code>ocrImage</code></td>
-<td><code>string</code></td>
-<td>OCR result image. The image is in JPEG format and encoded using Base64.</td>
-</tr>
-</tbody>
-</table>
-<p>Each element in <code>tables</code> is an <code>object</code> with the following properties:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>bbox</code></td>
-<td><code>array</code></td>
-<td>Table position. The elements in the array are the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner of the bounding box, respectively.</td>
-</tr>
-<tr>
-<td><code>html</code></td>
-<td><code>string</code></td>
-<td>Table recognition result in HTML format.</td>
+<td><code>inputImage</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>The input image. The image is in JPEG format and encoded in Base64.</td>
 </tr>
 </tbody>
 </table></details>
-<details><summary>Multi-Language Service Invocation Examples</summary>
+<details><summary>Multi-language service call example</summary>
 <details>
 <summary>Python</summary>
+
 <pre><code class="language-python">import base64
 import requests
 
@@ -544,15 +607,12 @@ response = requests.post(API_URL, json=payload)
 assert response.status_code == 200
 result = response.json()["result"]
 for i, res in enumerate(result["tableRecResults"]):
-    print("Detected tables:")
-    print(res["tables"])
-    layout_img_path = f"layout_{i}.jpg"
-    with open(layout_img_path, "wb") as f:
-        f.write(base64.b64decode(res["layoutImage"]))
-    ocr_img_path = f"ocr_{i}.jpg"
-    with open(ocr_img_path, "wb") as f:
-        f.write(base64.b64decode(res["ocrImage"]))
-    print(f"Output images saved at {layout_img_path} and {ocr_img_path}")
+    print(res["prunedResult"])
+    for img_name, img in res["outputImages"].items():
+        img_path = f"{img_name}_{i}.jpg"
+        with open(img_path, "wb") as f:
+            f.write(base64.b64decode(img))
+        print(f"Output image saved at {img_path}")
 </code></pre></details>
 </details>
 <br/>
@@ -575,7 +635,7 @@ Analyze images with poor recognition results and follow the rules below for anal
 ### 4.2 Model Application
 After fine-tuning your model with a private dataset, you will obtain local model weights files.
 
-To use the fine-tuned model weights, simply modify the production line configuration file by replacing the local path of the fine-tuned model weights to the corresponding location in the configuration file:
+To use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local path of the fine-tuned model weights to the corresponding location in the configuration file:
 
 ```python
 ......
@@ -590,7 +650,7 @@ To use the fine-tuned model weights, simply modify the production line configura
   device: "gpu:0"
 ......
 ```
-Then, refer to the command line or Python script method in the local experience to load the modified production line configuration file.
+Then, refer to the command line or Python script method in the local experience to load the modified pipeline configuration file.
 
 ## 5. Multi-Hardware Support
 PaddleX supports various mainstream hardware devices such as NVIDIA GPU, Kunlun XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware.

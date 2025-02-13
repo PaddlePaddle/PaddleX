@@ -45,7 +45,7 @@ Face feature models typically take standardized face images processed through de
 <p>Note: The above accuracy metrics are Accuracy scores measured on the AgeDB-30, CFP-FP, and LFW datasets, respectively. All model GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</p>
 
 ## III. Quick Integration
-&gt; ❗ Before quick integration, please install the PaddleX wheel package. For details, refer to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md)
+> ❗ Before quick integration, please install the PaddleX wheel package. For details, refer to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md)
 
 After installing the whl package, a few lines of code can complete the inference of the face feature module. You can switch models under this module freely, and you can also integrate the model inference of the face feature module into your project. Before running the following code, please download the [example image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/face_recognition_001.jpg) to your local machine.
 
@@ -378,11 +378,14 @@ Similar to model training, the process involves the following steps:
 Other related parameters can be configured by modifying the fields under `Global` and `Evaluate` in the `.yaml` configuration file. For detailed information, please refer to [PaddleX Common Configuration Parameters for Models](../../instructions/config_parameters_common.en.md)。
 
 <details>
+
 <summary>👉 <b>More Details (Click to Expand)</b></summary>
 
 During model evaluation, the path to the model weights file needs to be specified. Each configuration file has a default weight save path built in. If you need to change it, you can set it by appending a command line parameter, such as `-o Evaluate.weight_path="./output/best_model/best_model/model.pdparams"`.
 
-After completing the model evaluation, an `evaluate_result.json` file will be produced, which records the evaluation results. Specifically, it records whether the evaluation task was completed normally and the model's evaluation metrics, including Accuracy.</details>
+After completing the model evaluation, an `evaluate_result.json` file will be produced, which records the evaluation results. Specifically, it records whether the evaluation task was completed normally and the model's evaluation metrics, including Accuracy.
+
+</details>
 
 ### <b>4.4 Model Inference</b>
 After completing model training and evaluation, you can use the trained model weights for inference predictions. In PaddleX, model inference predictions can be implemented through two methods: command line and wheel package.
@@ -413,4 +416,5 @@ The face feature module can be integrated into the PaddleX pipeline for [<b>Face
 2. <b>Module Integration</b>
 
 The weights you produced can be directly integrated into the face feature module. You can refer to the Python example code in [Quick Integration](#III.-Quick-Integration) and only need to replace the model with the path to the model you trained.
-</details></details>
+
+You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).

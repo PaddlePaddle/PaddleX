@@ -5,7 +5,7 @@ comments: true
 # Pedestrian Attribute Recognition Pipeline Tutorial
 
 ## 1. Introduction to Pedestrian Attribute Recognition Pipeline
-Pedestrian attribute recognition is a key function in computer vision systems, used to locate and label specific characteristics of pedestrians in images or videos, such as gender, age, clothing color, and style. This task not only requires accurately detecting pedestrians but also identifying detailed attribute information for each pedestrian. The pedestrian attribute recognition pipeline is an end-to-end serial system for locating and recognizing pedestrian attributes, widely used in smart cities, security surveillance, and other fields, significantly enhancing the system's intelligence level and management efficiency.This production line also offers a flexible service-oriented deployment approach, supporting the use of multiple programming languages on various hardware platforms. Moreover, this production line provides the capability for secondary development. You can train and optimize models on your own dataset based on this production line, and the trained models can be seamlessly integrated.
+Pedestrian attribute recognition is a key function in computer vision systems, used to locate and label specific characteristics of pedestrians in images or videos, such as gender, age, clothing color, and style. This task not only requires accurately detecting pedestrians but also identifying detailed attribute information for each pedestrian. The pedestrian attribute recognition pipeline is an end-to-end serial system for locating and recognizing pedestrian attributes, widely used in smart cities, security surveillance, and other fields, significantly enhancing the system's intelligence level and management efficiency.This pipeline also offers a flexible service-oriented deployment approach, supporting the use of multiple programming languages on various hardware platforms. Moreover, this pipeline provides the capability for secondary development. You can train and optimize models on your own dataset based on this pipeline, and the trained models can be seamlessly integrated.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/pedestrian_attribute_recognition/01.jpg"/>
 <b>The pedestrian attribute recognition pipeline includes a pedestrian detection module and a pedestrian attribute recognition module</b>, with several models in each module. Which models to use specifically can be selected based on the benchmark data below. <b>If you prioritize model accuracy, choose models with higher accuracy; if you prioritize inference speed, choose models with faster inference; if you prioritize model storage size, choose models with smaller storage</b>.
@@ -68,7 +68,7 @@ Pedestrian attribute recognition is a key function in computer vision systems, u
 
 ## 2. Quick Start
 
-All model production lines provided by PaddleX can be quickly experienced. You can experience the effect of the pedestrian attribute recognition pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the pedestrian attribute recognition pipeline.
+All model pipelines provided by PaddleX can be quickly experienced. You can experience the effect of the pedestrian attribute recognition pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the pedestrian attribute recognition pipeline.
 
 ### 2.1 Online Experience
 
@@ -76,7 +76,7 @@ You can [experience the pedestrian attribute recognition pipeline online](https:
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/pedestrian_attribute_recognition/ped_attr_aistudio.png"/>
 
-If you are satisfied with the performance of the production line, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the methods in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the production line using your private data</b>. If you have local hardware resources for training, you can start training directly on your local machine; if not, the Star River Zero-Code platform provides a one-click training service. You don't need to write any code—just upload your data and start the training task with one click.
+If you are satisfied with the performance of the pipeline, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the methods in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the pipeline using your private data</b>. If you have local hardware resources for training, you can start training directly on your local machine; if not, the Star River Zero-Code platform provides a one-click training service. You don't need to write any code—just upload your data and start the training task with one click.
 
 ### 2.2 Local Experience
 Before using the pedestrian attribute recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
@@ -122,7 +122,7 @@ The results obtained are the same as those from the command line method.
 
 In the above Python script, the following steps are executed:
 
-(1) The pedestrian attribute recognition production line object is instantiated via `create_pipeline()`. The specific parameter descriptions are as follows:
+(1) The pedestrian attribute recognition pipeline object is instantiated via `create_pipeline()`. The specific parameter descriptions are as follows:
 
 <table>
 <thead>
@@ -136,32 +136,32 @@ In the above Python script, the following steps are executed:
 <tbody>
 <tr>
 <td><code>pipeline</code></td>
-<td>The name of the production line or the path to the production line configuration file. If it is the name of a production line, it must be supported by PaddleX.</td>
+<td>The name of the pipeline or the path to the pipeline configuration file. If it is the name of a pipeline, it must be supported by PaddleX.</td>
 <td><code>str</code></td>
 <td>None</td>
 </tr>
 <tr>
 <td><code>config</code></td>
-<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td>Specific configuration information for the pipeline (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the pipeline name must be consistent with <code>pipeline</code>).</td>
 <td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The device used for production line inference. It supports specifying the specific card number of GPUs, such as "gpu:0", other hardware card numbers, such as "npu:0", and CPUs, such as "cpu".</td>
+<td>The device used for pipeline inference. It supports specifying the specific card number of GPUs, such as "gpu:0", other hardware card numbers, such as "npu:0", and CPUs, such as "cpu".</td>
 <td><code>str</code></td>
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference. This is only available if the production line supports high-performance inference.</td>
+<td>Whether to enable high-performance inference. This is only available if the pipeline supports high-performance inference.</td>
 <td><code>bool</code></td>
 <td><code>False</code></td>
 </tr>
 </tbody>
 </table>
 
-(2) The `predict()` method of the pedestrian attribute recognition production line object is called to perform inference prediction. This method returns a `generator`. Below are the parameters and their descriptions for the `predict()` method:
+(2) The `predict()` method of the pedestrian attribute recognition pipeline object is called to perform inference prediction. This method returns a `generator`. Below are the parameters and their descriptions for the `predict()` method:
 
 <table>
 <thead>
@@ -188,7 +188,7 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The device used for production line inference.</td>
+<td>The device used for pipeline inference.</td>
 <td><code>str|None</code></td>
 <td>
 <ul>
@@ -198,7 +198,7 @@ In the above Python script, the following steps are executed:
 <li><b>XPU</b>: Use the specified XPU for inference, such as <code>xpu:0</code> for the first XPU.</li>
 <li><b>MLU</b>: Use the specified MLU for inference, such as <code>mlu:0</code> for the first MLU.</li>
 <li><b>DCU</b>: Use the specified DCU for inference, such as <code>dcu:0</code> for the first DCU.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used. During initialization, it will prioritize the local GPU device 0; if unavailable, it will use the CPU.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used. During initialization, it will prioritize the local GPU device 0; if unavailable, it will use the CPU.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -210,7 +210,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>float</b>: For example, <code>0.5</code>, which means filtering out all bounding boxes with a score less than <code>0.5</code>.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, initialized to <code>0.5</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized to <code>0.5</code>.</li>
 </ul>
 </td>
 <td><code>0.5</code></td>
@@ -224,7 +224,7 @@ In the above Python script, the following steps are executed:
 <li><b>float</b>: A uniform threshold for attribute recognition.</li>
 <li><b>list</b>: For example, <code>[0.5, 0.45, 0.48, 0.4]</code>, which means different thresholds for different classes in the order of <code>label list</code>.</li>
 <li><b>dict</b>: The key is <code>default</code> or <code>int</code> type, and the value is a <code>float</code> threshold. For example, <code>{"default": 0.5, 0: 0.45, 2: 0.48, 7: 0.4}</code>. <code>default</code> represents the uniform threshold for multi-label classification, while other <code>int</code> types apply specific thresholds to classes with cls_id 0, 2, and 7.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, initialized to <code>0.7</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized to <code>0.7</code>.</li>
 </ul>
 </td>
 <td><code>0.7</code></td>
@@ -304,7 +304,7 @@ In the above Python script, the following steps are executed:
     - `det_scores`: `(float)` Indicates the confidence of the pedestrian detection box.
 
 - Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.json`. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` type will be converted to a list format.
-- Calling the `save_to_img()` method will save the visualization result to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (The production line usually contains many result images, so it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, and only the last image will be retained.)
+- Calling the `save_to_img()` method will save the visualization result to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (The pipeline usually contains many result images, so it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, and only the last image will be retained.)
 
 * Additionally, it also supports obtaining visualized images with results and prediction results through attributes, as follows:
 
@@ -335,7 +335,7 @@ paddlex --get_pipeline_config pedestrian_attribute_recognition --save_path ./my_
 ```
 
 
-If you have obtained the configuration file, you can customize the settings for the pedestrian attribute recognition production line by simply modifying the value of the `pipeline` parameter in the `create_pipeline` method to the path of the production line configuration file. The example is as follows:
+If you have obtained the configuration file, you can customize the settings for the pedestrian attribute recognition pipeline by simply modifying the value of the `pipeline` parameter in the `create_pipeline` method to the path of the pipeline configuration file. The example is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -352,19 +352,19 @@ for res in output:
 
 ```
 
-<b>Note:</b> The parameters in the configuration file are the initialization parameters for the production line. If you wish to change the initialization parameters for the pedestrian attribute recognition production line, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in a configuration file, simply specify the path to the configuration file with `--pipeline`.
+<b>Note:</b> The parameters in the configuration file are the initialization parameters for the pipeline. If you wish to change the initialization parameters for the pedestrian attribute recognition pipeline, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in a configuration file, simply specify the path to the configuration file with `--pipeline`.
 
 ## 3. Development Integration/Deployment
 
-If the production line meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
+If the pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
-If you need to integrate the production line directly into your Python project, you can refer to the example code in [2.2.2 Python Script Integration](#222-python脚本方式集成).
+If you need to integrate the pipeline directly into your Python project, you can refer to the example code in [2.2.2 Python Script Integration](#222-python脚本方式集成).
 
 In addition, PaddleX also provides three other deployment methods, which are detailed as follows:
 
 🚀 <b>High-Performance Inference</b>: In practical production environments, many applications have strict performance requirements for deployment strategies, especially in terms of response speed, to ensure the efficient operation of the system and a smooth user experience. To this end, PaddleX provides a high-performance inference plugin, which aims to deeply optimize the performance of model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed information on high-performance inference, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common form of deployment in practical production environments. By encapsulating the inference functionality into a service, clients can access these services via network requests to obtain inference results. PaddleX supports multiple service-oriented deployment solutions for production lines. For detailed information on service-oriented deployment, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving.en.md).
+☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common form of deployment in practical production environments. By encapsulating the inference functionality into a service, clients can access these services via network requests to obtain inference results. PaddleX supports multiple service-oriented deployment solutions for pipelines. For detailed information on service-oriented deployment, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
 Below are the API references for basic service-oriented deployment and examples of multi-language service calls:
 
@@ -460,6 +460,18 @@ Below are the API references for basic service-oriented deployment and examples 
 <td>The URL of an image file accessible by the server or the Base64-encoded content of an image file.</td>
 <td>Yes</td>
 </tr>
+<tr>
+<td><code>detThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>det_threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>clsThreshold</code></td>
+<td><code>number</code> | <code>array</code> | <code>object</code> | <code>null</code></td>
+<td>Refer to the <code>cls_threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -481,7 +493,7 @@ Below are the API references for basic service-oriented deployment and examples 
 </tr>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></td>
+<td><code>string</code>| <code>null</code></td>
 <td>The result image of pedestrian attribute recognition. The image is in JPEG format and is Base64-encoded.</td>
 </tr>
 </tbody>
@@ -601,7 +613,7 @@ Since the pedestrian attribute recognition pipeline includes both a pedestrian a
 ### 4.2 Model Application
 After you complete fine-tuning with your private dataset, you will obtain a local model weight file.
 
-If you need to use the fine-tuned model weights, simply modify the production line configuration file by replacing the local path of the fine-tuned model weights to the corresponding position in the file:
+If you need to use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local path of the fine-tuned model weights to the corresponding position in the file:
 
 ```yaml
 pipeline_name: pedestrian_attribute_recognition
@@ -621,11 +633,11 @@ SubModules:
     threshold: 0.7
 ```
 
-Subsequently, refer to the command line method or Python script method in the local experience section to load the modified production line configuration file.
+Subsequently, refer to the command line method or Python script method in the local experience section to load the modified pipeline configuration file.
 
 ## 5. Multi-Hardware Support
 PaddleX supports a variety of mainstream hardware devices, including NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the --device parameter</b> to seamlessly switch between different hardware devices.
-For example, if you are using Ascend NPU for inference in the pedestrian attribute recognition production line, the Python command you would use is:
+For example, if you are using Ascend NPU for inference in the pedestrian attribute recognition pipeline, the Python command you would use is:
 
 ```bash
 paddlex --pipeline pedestrian_attribute_recognition \

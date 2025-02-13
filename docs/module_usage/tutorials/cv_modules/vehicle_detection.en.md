@@ -38,7 +38,7 @@ Vehicle detection is a subtask of object detection, specifically referring to th
 
 
 ## III. Quick Integration
-&gt; ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
+> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 After installing the wheel package, you can complete the inference of the vehicle detection module with just a few lines of code. You can switch models under this module freely, and you can also integrate the model inference of the vehicle detection module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_detection.jpg) to your local machine.
 
@@ -430,4 +430,5 @@ Other related parameters can be set by modifying the fields under `Global` and `
 
 #### 4.4.2 Model Integration
 The weights you produced can be directly integrated into the vehicle detection module. You can refer to the Python example code in [Quick Integration](#iii-quick-integration), simply replace the model with the path to your trained model.
-</table>
+
+You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).

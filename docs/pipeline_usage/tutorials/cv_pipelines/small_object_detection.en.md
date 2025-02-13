@@ -47,7 +47,7 @@ Small object detection is a specialized technique for identifying tiny objects w
 
 ## 2. Quick Start
 
-All model production lines provided by PaddleX can be quickly experienced. You can experience the effect of the small object detection pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the small object detection pipeline.
+All model pipelines provided by PaddleX can be quickly experienced. You can experience the effect of the small object detection pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the small object detection pipeline.
 
 ### 2.1 Online Experience
 
@@ -55,7 +55,7 @@ You can [experience the small object detection pipeline online](https://aistudio
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/small_object_detection/small_obj_det_aistudio.jpg"/>
 
-If you are satisfied with the performance of the production line, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the methods in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the production line using your private data</b>. If you have local hardware resources for training, you can start training directly on your local machine; if not, the Star River Zero-Code platform provides a one-click training service. You don't need to write any code—just upload your data and start the training task with one click.
+If you are satisfied with the performance of the pipeline, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the methods in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the pipeline using your private data</b>. If you have local hardware resources for training, you can start training directly on your local machine; if not, the Star River Zero-Code platform provides a one-click training service. You don't need to write any code—just upload your data and start the training task with one click.
 
 ### 2.2 Local Experience
 Before using the small object detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
@@ -85,7 +85,7 @@ The visualization results are saved under `save_path`, and the visualization res
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/small_object_detection/02.png"/>
 
 #### 2.1.2 Python Script Integration
-* The above command line is for quickly experiencing and viewing the effect. Generally, in a project, it is often necessary to integrate through code. You can complete the quick inference of the production line with just a few lines of code. The inference code is as follows:
+* The above command line is for quickly experiencing and viewing the effect. Generally, in a project, it is often necessary to integrate through code. You can complete the quick inference of the pipeline with just a few lines of code. The inference code is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -302,7 +302,7 @@ In addition, you can obtain the small object detection pipeline configuration fi
 paddlex --get_pipeline_config small_object_detection --save_path ./my_path
 ```
 
-If you have obtained the configuration file, you can customize the settings for the small object detection production line by simply modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the configuration file. An example is as follows:
+If you have obtained the configuration file, you can customize the settings for the small object detection pipeline by simply modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the configuration file. An example is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -427,6 +427,12 @@ Below is the API reference for basic service deployment and multi-language servi
 <td>The URL of an image file accessible by the server or the Base64-encoded content of an image file.</td>
 <td>Yes</td>
 </tr>
+<tr>
+<td><code>threshold</code></td>
+<td><code>number</code> | <code>object</code> | <code>null</code></td>
+<td>Refer to the <code>threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -448,7 +454,7 @@ Below is the API reference for basic service deployment and multi-language servi
 </tr>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></td>
+<td><code>string</code>| <code>null</code></td>
 <td>The result image of object detection. The image is in JPEG format and is Base64-encoded.</td>
 </tr>
 </tbody>
@@ -474,6 +480,11 @@ Below is the API reference for basic service deployment and multi-language servi
 <td>The category ID of the detected object.</td>
 </tr>
 <tr>
+<td><code>categoryName</code></td>
+<td><code>string</code></td>
+<td>The name of the target category.</td>
+</tr>
+<tr>
 <td><code>score</code></td>
 <td><code>number</code></td>
 <td>The score of the detected object.</td>
@@ -491,6 +502,7 @@ Below is the API reference for basic service deployment and multi-language servi
 285.4187316894531
 ],
 "categoryId": 0,
+"categoryName": "person",
 "score": 0.7418514490127563
 },
 {
@@ -501,6 +513,7 @@ Below is the API reference for basic service deployment and multi-language servi
 167.4235382080078
 ],
 "categoryId": 1,
+"categoryName": "bottle",
 "score": 0.7328268885612488
 }
 ],
@@ -898,12 +911,12 @@ SubModules:
     threshold: 0.5
 ```
 
-Subsequently, refer to the command-line method or Python script method in the [local experience](#21-local-experience) to load the modified production line configuration file.
+Subsequently, refer to the command-line method or Python script method in the [local experience](#21-local-experience) to load the modified pipeline configuration file.
 
 ## 5. Multi-Hardware Support
 PaddleX supports a variety of mainstream hardware devices, including NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware devices.
 
-For example, if you use Ascend NPU for small object detection in the production line, the Python command used is:
+For example, if you use Ascend NPU for small object detection in the pipeline, the Python command used is:
 
 ```bash
 paddlex --pipeline small_object_detection \
@@ -913,4 +926,4 @@ paddlex --pipeline small_object_detection \
         --device npu:0
 ```
 
-If you want to use the universal small object detection production line on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+If you want to use the universal small object detection pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).

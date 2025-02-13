@@ -5,7 +5,7 @@ comments: true
 # Table Classification Module Usage Tutorial
 
 ## I. Overview
-The table classification module is a key component of a computer vision system, responsible for classifying input table images. The performance of this module directly affects the accuracy and efficiency of the entire table recognition process. The table classification module typically receives table images as input and then, through deep learning algorithms, classifies them into predefined categories based on the characteristics and content of the images, such as wired tables and wireless tables. The classification results of the table classification module are provided as output for use in table recognition-related production lines.
+The table classification module is a key component of a computer vision system, responsible for classifying input table images. The performance of this module directly affects the accuracy and efficiency of the entire table recognition process. The table classification module typically receives table images as input and then, through deep learning algorithms, classifies them into predefined categories based on the characteristics and content of the images, such as wired tables and wireless tables. The classification results of the table classification module are provided as output for use in table recognition-related pipelines.
 
 ## II. Supported Model List
 
@@ -395,12 +395,14 @@ Similar to model training and evaluation, the following steps are required:
 Other related parameters can be set by modifying the fields under `Global` and `Predict` in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
 
 #### 4.4.2 Model Integration
-The model can be directly integrated into the PaddleX production line or directly integrated into your own project.
+The model can be directly integrated into the PaddleX pipeline or directly integrated into your own project.
 
-1.<b>Production Line Integration</b>
+1.<b>Pipeline Integration</b>
 
-The table classification module can be integrated into the PaddleX production line such as [General Table Classification Pipeline v2](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.en.md). You just need to replace the model path to update the table classification module in the related production line. In production line integration, you can deploy the model you obtained using high-performance deployment and service-oriented deployment.
+The table classification module can be integrated into the PaddleX pipeline such as [General Table Classification Pipeline v2](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.en.md). You just need to replace the model path to update the table classification module in the related pipeline. In pipeline integration, you can deploy the model you obtained using high-performance deployment and service-oriented deployment.
 
 2.<b>Module Integration</b>
 
 The weights you generate can be directly integrated into the table classification module. You can refer to the Python example code in [Quick Integration](#Three-Quick-Integration). Just replace the model with the path of the model you have trained.
+
+You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).

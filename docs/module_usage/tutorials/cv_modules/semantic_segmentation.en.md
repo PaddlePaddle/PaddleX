@@ -36,7 +36,7 @@ Semantic segmentation is a technique in computer vision that classifies each pix
 </tr>
 </tbody>
 </table>
-&gt; ❗ The above list features the <b>2 core models</b> that the image classification module primarily supports. In total, this module supports <b>18 models</b>. The complete list of models is as follows:
+> ❗ The above list features the <b>2 core models</b> that the image classification module primarily supports. In total, this module supports <b>18 models</b>. The complete list of models is as follows:
 
 <details><summary> 👉Model List Details</summary>
 <table>
@@ -209,7 +209,7 @@ Semantic segmentation is a technique in computer vision that classifies each pix
 <p><b>The accuracy metrics of the above models are measured on the <a href="https://groups.csail.mit.edu/vision/datasets/ADE20K/">ADE20k</a> dataset. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p></details>
 
 ## III. Quick Integration
-&gt; ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
+> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 
 Just a few lines of code can complete the inference of the Semantic Segmentation module, allowing you to easily switch between models under this module. You can also integrate the model inference of the the Semantic Segmentation module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_semantic_segmentation_002.png) to your local machine.
@@ -645,3 +645,5 @@ The document semantic segmentation module can be integrated into PaddleX pipelin
 2. <b>Module Integration</b>
 
 The weights you produce can be directly integrated into the semantic segmentation module. You can refer to the Python sample code in [Quick Integration](#iii-quick-integration) and just replace the model with the path to the model you trained.
+
+You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).

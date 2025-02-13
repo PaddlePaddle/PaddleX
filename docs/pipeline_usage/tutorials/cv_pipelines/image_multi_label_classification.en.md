@@ -5,7 +5,7 @@ comments: true
 # General Image Multi-Label Classification Pipeline Tutorial
 
 ## 1. Introduction to the General Image Multi-Label Classification Pipeline
-Image multi-label classification is a technique that assigns multiple relevant categories to a single image simultaneously, widely used in image annotation, content recommendation, and social media analysis. It can identify multiple objects or features present in an image, for example, an image containing both "dog" and "outdoor" labels. By leveraging deep learning models, image multi-label classification automatically extracts image features and performs accurate classification, providing users with more comprehensive information. This technology is of great significance in applications such as intelligent search engines and automatic content generation.This pipeline also offers a flexible service-oriented deployment approach, supporting the use of multiple programming languages on various hardware platforms. Moreover, this production line provides the capability for secondary development. You can train and optimize models on your own dataset based on this production line, and the trained models can be seamlessly integrated.
+Image multi-label classification is a technique that assigns multiple relevant categories to a single image simultaneously, widely used in image annotation, content recommendation, and social media analysis. It can identify multiple objects or features present in an image, for example, an image containing both "dog" and "outdoor" labels. By leveraging deep learning models, image multi-label classification automatically extracts image features and performs accurate classification, providing users with more comprehensive information. This technology is of great significance in applications such as intelligent search engines and automatic content generation.This pipeline also offers a flexible service-oriented deployment approach, supporting the use of multiple programming languages on various hardware platforms. Moreover, this pipeline provides the capability for secondary development. You can train and optimize models on your own dataset based on this pipeline, and the trained models can be seamlessly integrated.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_multi_label_classification/01.png">
 
@@ -55,14 +55,14 @@ Image multi-label classification is a technique that assigns multiple relevant c
 <p><b>Note: The above accuracy metrics are mAP for the multi-label classification task on </b><a href="https://cocodataset.org/#home">COCO2017</a><b>. The GPU inference time for all models is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
 
 ## 2. Quick Start
-All model production lines provided by PaddleX can be quickly experienced. You can experience the effect of the image multi-label classification pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the image multi-label classification pipeline.
+All model pipelines provided by PaddleX can be quickly experienced. You can experience the effect of the image multi-label classification pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the image multi-label classification pipeline.
 
 ### 2.1 Online Experience
 You can [experience the image multi-label classification pipeline online](https://aistudio.baidu.com/community/app/387974/webUI?source=appCenter) by recognizing the demo images provided by the official platform, for example:
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_multi_label_classification/multi_label_cls.png"/>
 
-If you are satisfied with the performance of the production line, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the methods in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the production line using your private data</b>. If you have local hardware resources for training, you can start training directly on your local machine; if not, the Star River Zero-Code platform provides a one-click training service. You don't need to write any code—just upload your data and start the training task with one click.
+If you are satisfied with the performance of the pipeline, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the methods in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the pipeline using your private data</b>. If you have local hardware resources for training, you can start training directly on your local machine; if not, the Star River Zero-Code platform provides a one-click training service. You don't need to write any code—just upload your data and start the training task with one click.
 
 ### 2.2 Local Experience
 > ❗ Before using the image multi-label classification pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
@@ -90,7 +90,7 @@ The visualization results are saved under `save_path`, and the visualization res
 
 #### 2.2.2 Python Script Integration
 
-* The above command line is for quickly experiencing and viewing the effect. Generally, in a project, it is often necessary to integrate through code. You can complete the quick inference of the production line with just a few lines of code. The inference code is as follows:
+* The above command line is for quickly experiencing and viewing the effect. Generally, in a project, it is often necessary to integrate through code. You can complete the quick inference of the pipeline with just a few lines of code. The inference code is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -128,7 +128,7 @@ In the above Python script, the following steps are performed:
 </tr>
 <tr>
 <td><code>config</code></td>
-<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td>Specific configuration information for the pipeline (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the pipeline name must be consistent with <code>pipeline</code>).</td>
 <td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
@@ -307,7 +307,7 @@ In addition, you can obtain the general image multi-label classification pipelin
 paddlex --get_pipeline_config image_multilabel_classification --save_path ./my_path
 ```
 
-If you have obtained the configuration file, you can customize the settings for the image multi-label classification production line by simply modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the configuration file. An example is as follows:
+If you have obtained the configuration file, you can customize the settings for the image multi-label classification pipeline by simply modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the configuration file. An example is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -324,18 +324,18 @@ for res in output:
 
 ```
 
-<b>Note:</b> The parameters in the configuration file are the initialization parameters of the production line. If you want to change the initialization parameters of the general image multi-label classification production line, you can directly modify the parameters in the configuration file and load the configuration file for prediction. At the same time, CLI prediction also supports passing in the configuration file, and you can specify the path of the configuration file with `--pipeline`.
+<b>Note:</b> The parameters in the configuration file are the initialization parameters of the pipeline. If you want to change the initialization parameters of the general image multi-label classification pipeline, you can directly modify the parameters in the configuration file and load the configuration file for prediction. At the same time, CLI prediction also supports passing in the configuration file, and you can specify the path of the configuration file with `--pipeline`.
 
 ## 3. Development Integration/Deployment
-If the production line meets your requirements for inference speed and accuracy, you can proceed with development integration/deployment directly.
+If the pipeline meets your requirements for inference speed and accuracy, you can proceed with development integration/deployment directly.
 
-If you need to apply the production line directly in your Python project, you can refer to the example code in [2.2 Python Script Integration](#22-python脚本方式集成).
+If you need to apply the pipeline directly in your Python project, you can refer to the example code in [2.2 Python Script Integration](#22-python脚本方式集成).
 
 In addition, PaddleX also provides three other deployment methods, detailed as follows:
 
 🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. Therefore, PaddleX provides a high-performance inference plugin, aiming to deeply optimize the performance of model inference and pre/post-processing, achieving significant acceleration of the end-to-end process. For detailed high-performance inference processes, please refer to [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service Deployment</b>: Service deployment is a common form of deployment in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports multiple production line service deployment solutions. For detailed production line service deployment processes, please refer to [PaddleX Service Deployment Guide](../../../pipeline_deploy/serving.en.md).
+☁️ <b>Service Deployment</b>: Service deployment is a common form of deployment in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports multiple pipeline service deployment solutions. For detailed pipeline service deployment processes, please refer to [PaddleX Service Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
 Below is the API reference for basic service deployment and multi-language service call examples:
 
@@ -433,28 +433,9 @@ Below is the API reference for basic service deployment and multi-language servi
 <td>Yes</td>
 </tr>
 <tr>
-<td><code>inferenceParams</code></td>
-<td><code>object</code></td>
-<td>Inference parameters.</td>
-<td>No</td>
-</tr>
-</tbody>
-</table>
-<p>The properties of <code>inferenceParams</code> are as follows:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Required</th>
-</tr>
-</thead>
-<tbody>
-<tr>
 <td><code>threshold</code></td>
-<td><code>number</code></td>
-<td>Category score threshold.</td>
+<td><code>number</code> | <code>array</code> | <code>object</code> | <code>null</code></td>
+<td>Refer to the <code>threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
@@ -478,7 +459,7 @@ Below is the API reference for basic service deployment and multi-language servi
 </tr>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></td>
+<td><code>string</code>| <code>null</code></td>
 <td>The image classification result. The image is in JPEG format and is encoded in Base64.</td>
 </tr>
 </tbody>
@@ -886,14 +867,14 @@ print_r($result[&quot;categories&quot;]);
 <br/>
 
 📱 <b>Edge Deployment</b>: Edge deployment is a method where computation and data processing functions are placed on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment processes, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
-You can choose the appropriate method to deploy the model production line based on your needs for subsequent AI application integration.
+You can choose the appropriate method to deploy the model pipeline based on your needs for subsequent AI application integration.
 
 ## 4. Secondary Development
-If the default model weights provided by the general image multi-label classification production line do not meet your accuracy or speed requirements in your scenario, you can try further <b>fine-tuning</b> the existing model using <b>your own specific domain or application scenario data</b> to improve the recognition performance of the general image multi-label classification production line in your scenario.
+If the default model weights provided by the general image multi-label classification pipeline do not meet your accuracy or speed requirements in your scenario, you can try further <b>fine-tuning</b> the existing model using <b>your own specific domain or application scenario data</b> to improve the recognition performance of the general image multi-label classification pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
 
-Since the general image multi-label classification production line includes an image multi-label classification module, if the performance of the model production line is not as expected, you need to refer to the fine-tuning tutorial link in the table below to fine-tune the model.
+Since the general image multi-label classification pipeline includes an image multi-label classification module, if the performance of the model pipeline is not as expected, you need to refer to the fine-tuning tutorial link in the table below to fine-tune the model.
 
 <table>
   <thead>
@@ -915,7 +896,7 @@ Since the general image multi-label classification production line includes an i
 ### 4.2 Model Application
 After completing the fine-tuning training with your private dataset, you will obtain a local model weight file.
 
-If you need to use the fine-tuned model weights, simply modify the production line configuration file by replacing the local path of the fine-tuned model weights in the corresponding position in the configuration file:
+If you need to use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local path of the fine-tuned model weights in the corresponding position in the configuration file:
 
 ``` yaml
 pipeline_name: image_multilabel_classification
@@ -928,12 +909,12 @@ SubModules:
     batch_size: 4
 ```
 
-Subsequently, refer to the command line method or Python script method in the local experience section to load the modified production line configuration file.
+Subsequently, refer to the command line method or Python script method in the local experience section to load the modified pipeline configuration file.
 
 ##  5. Multi-Hardware Support
 PaddleX supports various mainstream hardware devices such as NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>You only need to modify the `--device` parameter</b> to achieve seamless switching between different hardware.
 
-For example, if you use Ascend NPU for inference of the general image multi-label classification production line, the Python command used is:
+For example, if you use Ascend NPU for inference of the general image multi-label classification pipeline, the Python command used is:
 
 ```bash
 paddlex --pipeline image_multilabel_classification \

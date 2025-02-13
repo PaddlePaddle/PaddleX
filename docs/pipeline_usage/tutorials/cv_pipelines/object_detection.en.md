@@ -379,7 +379,7 @@ The visualization results are saved to `save_path`, as shown below:
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/object_detection/03.png"/>
 
 #### 2.2.2 Integration via Python Script
-The command-line method described above allows you to quickly experience and view the results. However, in a project, code integration is often required. You can complete the fast inference of the production line with just a few lines of code as follows:
+The command-line method described above allows you to quickly experience and view the results. However, in a project, code integration is often required. You can complete the fast inference of the pipeline with just a few lines of code as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -596,19 +596,19 @@ for res in output:
     res.save_to_json("./output/")
 ```
 
-<b>Note:</b> The parameters in the configuration file are initialization parameters for the production line. If you wish to change the initialization parameters for the general object detection production line, you can directly modify the parameters in the configuration file and load the configuration file for prediction.
+<b>Note:</b> The parameters in the configuration file are initialization parameters for the pipeline. If you wish to change the initialization parameters for the general object detection pipeline, you can directly modify the parameters in the configuration file and load the configuration file for prediction.
 
 ## 3. Development Integration/Deployment
 
-If the production line meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
+If the pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
-If you need to apply the production line directly in your Python project, you can refer to the example code in [2.2.2 Python Script Integration](#222-python-script-integration).
+If you need to apply the pipeline directly in your Python project, you can refer to the example code in [2.2.2 Python Script Integration](#222-python-script-integration).
 
 Additionally, PaddleX provides three other deployment methods, detailed as follows:
 
 🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX offers a high-performance inference plugin aimed at deeply optimizing the performance of model inference and pre/post-processing, significantly speeding up the end-to-end process. For detailed high-performance inference processes, please refer to [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service Deployment</b>: Service deployment is a common form of deployment in actual production environments. By encapsulating the inference function as a service, clients can access these services via network requests to obtain inference results. PaddleX supports multiple production line service deployment schemes. For detailed production line service deployment processes, please refer to [PaddleX Service Deployment Guide](../../../pipeline_deploy/serving.en.md).
+☁️ <b>Service Deployment</b>: Service deployment is a common form of deployment in actual production environments. By encapsulating the inference function as a service, clients can access these services via network requests to obtain inference results. PaddleX supports multiple pipeline service deployment schemes. For detailed pipeline service deployment processes, please refer to [PaddleX Service Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
 Below is the API reference for basic service deployment and multi-language service call examples:
 
@@ -703,6 +703,12 @@ Below is the API reference for basic service deployment and multi-language servi
 <td><code>string</code></td>
 <td>The URL of an image file accessible by the server or the Base64-encoded content of the image file.</td>
 <td>Yes</td>
+<tr>
+<td><code>threshold</code></td>
+<td><code>number</code> | <code>object</code> | <code>null</code></td>
+<td>Refer to the <code>threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
 </tr>
 </tbody>
 </table>
@@ -725,7 +731,7 @@ Below is the API reference for basic service deployment and multi-language servi
 </tr>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></td>
+<td><code>string</code>| <code>null</code></td>
 <td>The result image of object detection. The image is in JPEG format and encoded in Base64.</td>
 </tr>
 </tbody>
@@ -744,6 +750,11 @@ Below is the API reference for basic service deployment and multi-language servi
 <td><code>bbox</code></td>
 <td><code>array</code></td>
 <td>The position of the detected object. The elements in the array are the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner.</td>
+</tr>
+<tr>
+<td><code>categoryName</code></td>
+<td><code>string</code></td>
+<td>The name of the target category.</td>
 </tr>
 <tr>
 <td><code>categoryId</code></td>
@@ -768,6 +779,7 @@ Below is the API reference for basic service deployment and multi-language servi
 285.4187316894531
 ],
 "categoryId": 0,
+"categoryName": "oranage",
 "score": 0.7418514490127563
 },
 {
@@ -778,6 +790,7 @@ Below is the API reference for basic service deployment and multi-language servi
 167.4235382080078
 ],
 "categoryId": 1,
+"categoryName": "banana",
 "score": 0.7328268885612488
 }
 ],
@@ -1198,18 +1211,18 @@ print_r($result["detectedObjects"]);
 <br/>
 
 📱 <b>Edge Deployment</b>: Edge deployment is a method where computation and data processing functions are placed on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment processes, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
-You can choose the appropriate method to deploy the model production line based on your needs for subsequent AI application integration.
+You can choose the appropriate method to deploy the model pipeline based on your needs for subsequent AI application integration.
 
 ## 4. Secondary Development
-If the default model weights provided by the general object detection production line do not meet your accuracy or speed requirements in your scenario, you can try further <b>fine-tuning</b> the existing model using <b>your own specific domain or application scenario data</b> to improve the recognition performance of the general object detection production line in your scenario.
+If the default model weights provided by the general object detection pipeline do not meet your accuracy or speed requirements in your scenario, you can try further <b>fine-tuning</b> the existing model using <b>your own specific domain or application scenario data</b> to improve the recognition performance of the general object detection pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the general object detection production line includes an object detection module, if the performance of the model production line is not as expected, you need to refer to the [Secondary Development](../../../module_usage/tutorials/cv_modules/object_detection.en.md#iv-custom-development) section in the [Object Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/object_detection.en.md) to fine-tune the object detection model using your private dataset.
+Since the general object detection pipeline includes an object detection module, if the performance of the model pipeline is not as expected, you need to refer to the [Secondary Development](../../../module_usage/tutorials/cv_modules/object_detection.en.md#iv-custom-development) section in the [Object Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/object_detection.en.md) to fine-tune the object detection model using your private dataset.
 
 ### 4.2 Model Application
 After completing the fine-tuning training with your private dataset, you will obtain a local model weight file.
 
-If you need to use the fine-tuned model weights, simply modify the production line configuration file by replacing the local path of the fine-tuned model weights in the corresponding position in the configuration file:
+If you need to use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local path of the fine-tuned model weights in the corresponding position in the configuration file:
 
 ```yaml
 pipeline_name: object_detection
@@ -1239,4 +1252,4 @@ paddlex --pipeline object_detection \
         --device npu:0
 ```
 
-If you want to use the general object detection production line on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+If you want to use the general object detection pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).

@@ -83,7 +83,7 @@ for res in output:
 
 In the above Python script, the following steps were executed:
 
-(1) The Rotated Object Detection production line object was instantiated via `create_pipeline()`, with the specific parameters described as follows:
+(1) The Rotated Object Detection pipeline object was instantiated via `create_pipeline()`, with the specific parameters described as follows:
 
 <table>
 <thead>
@@ -97,32 +97,32 @@ In the above Python script, the following steps were executed:
 <tbody>
 <tr>
 <td><code>pipeline_name</code></td>
-<td>The name of the production line, which must be supported by PaddleX.</td>
+<td>The name of the pipeline, which must be supported by PaddleX.</td>
 <td><code>str</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
 <td><code>config</code></td>
-<td>The path to the production line configuration file.</td>
+<td>The path to the pipeline configuration file.</td>
 <td><code>str</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The device used for production line inference. It supports specifying the specific card number of the GPU, such as "gpu:0", other hardware card numbers, such as "npu:0", or CPU, such as "cpu".</td>
+<td>The device used for pipeline inference. It supports specifying the specific card number of the GPU, such as "gpu:0", other hardware card numbers, such as "npu:0", or CPU, such as "cpu".</td>
 <td><code>str</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference, which is only available if the production line supports high-performance inference.</td>
+<td>Whether to enable high-performance inference, which is only available if the pipeline supports high-performance inference.</td>
 <td><code>bool</code></td>
 <td><code>False</code></td>
 </tr>
 </tbody>
 </table>
 
-(2) The `predict()` method of the Rotated Object Detection production line object was called for inference prediction. This method returns a `generator`. Below are the parameters of the `predict()` method and their descriptions:
+(2) The `predict()` method of the Rotated Object Detection pipeline object was called for inference prediction. This method returns a `generator`. Below are the parameters of the `predict()` method and their descriptions:
 
 <table>
 <thead>
@@ -149,7 +149,7 @@ In the above Python script, the following steps were executed:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The device used for production line inference</td>
+<td>The device used for pipeline inference</td>
 <td><code>str|None</code></td>
 <td>
 <ul>
@@ -159,7 +159,7 @@ In the above Python script, the following steps were executed:
   <li><b>XPU</b>: e.g., <code>xpu:0</code> indicates using the 1st XPU for inference;</li>
   <li><b>MLU</b>: e.g., <code>mlu:0</code> indicates using the 1st MLU for inference;</li>
   <li><b>DCU</b>: e.g., <code>dcu:0</code> indicates using the 1st DCU for inference;</li>
-  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used. During initialization, the local GPU 0 will be prioritized; if unavailable, the CPU will be used;</li>
+  <li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used. During initialization, the local GPU 0 will be prioritized; if unavailable, the CPU will be used;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -170,7 +170,7 @@ In the above Python script, the following steps were executed:
 <td><code>None|float|dict[int, float]</code></td>
 <td>
 <ul>
-    <li><b>None</b>: If set to <code>None</code>, the default production line initialization parameter <code>0.5</code> will be used, i.e., 0.5 as the low-score object filtering threshold for all categories</li>
+    <li><b>None</b>: If set to <code>None</code>, the default pipeline initialization parameter <code>0.5</code> will be used, i.e., 0.5 as the low-score object filtering threshold for all categories</li>
     <li><b>float</b>: Any float number greater than 0 and less than 1</li>
     <li><b>dict[int, float]</b>: The key represents the category ID, and the value represents the threshold for that category, allowing different low-score filtering thresholds for different categories, e.g., <code>{0:0.5, 1:0.35}</code> indicates using 0.5 and 0.35 as the low-score filtering thresholds for categories 0 and 1, respectively</li>
 </ul>
@@ -280,7 +280,7 @@ In the above Python script, the following steps were executed:
 - The prediction result obtained by the `json` attribute is a dict type of data, with content consistent with the content saved by calling the `save_to_json()` method.
 - The prediction result returned by the `img` attribute is a dictionary type of data. The key is `res`, and the corresponding value is an `Image.Image` object: an image used to display the prediction result of rotated object detection.
 
-In addition, you can obtain the rotated object detection production line configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
+In addition, you can obtain the rotated object detection pipeline configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
 
 ```
 paddlex --get_pipeline_config rotated_object_detection --save_path ./my_path
@@ -412,6 +412,18 @@ Below are the API references and multi-language service call examples for basic 
 <td>The URL of an image file accessible to the server or the Base64 encoded result of the image file content.</td>
 <td>Yes</td>
 </tr>
+<tr>
+<td><code>detThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>det_threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>clsThreshold</code></td>
+<td><code>number</code> | <code>array</code> | <code>object</code> | <code>null</code></td>
+<td>Refer to the <code>cls_threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -457,6 +469,11 @@ Below are the API references and multi-language service call examples for basic 
 <td><code>categoryId</code></td>
 <td><code>integer</code></td>
 <td>Object category ID.</td>
+</tr>
+<tr>
+<td><code>categoryName</code></td>
+<td><code>string</code></td>
+<td>The name of the target category.</td>
 </tr>
 <tr>
 <td><code>score</code></td>

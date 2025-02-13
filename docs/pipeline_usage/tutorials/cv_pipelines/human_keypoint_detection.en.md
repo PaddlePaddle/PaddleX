@@ -447,7 +447,7 @@ In the above Python script, the following steps are executed:
         - `kpt_score`: Overall confidence score of the keypoints, which is the average confidence score of the keypoints
 
 - Calling the `save_to_json()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}_res.json`; if specified as a file, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` types will be converted to lists.
-- Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`; if specified as a file, it will be saved directly to that file. (The production line usually contains many result images, it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, leaving only the last image)
+- Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`; if specified as a file, it will be saved directly to that file. (The pipeline usually contains many result images, it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, leaving only the last image)
 
 * Additionally, it also supports obtaining visualized images and prediction results through attributes, as follows:
 
@@ -506,6 +506,163 @@ Additionally, PaddleX provides three other deployment methods, detailed as follo
 Below are the API references and multi-language service invocation examples for basic service deployment:
 
 <details><summary>API Reference</summary>
+
+<p>For the main operations provided by the service:</p>
+<ul>
+<li>The HTTP request method is POST.</li>
+<li>Both the request body and response body are JSON data (JSON objects).</li>
+<li>When the request is processed successfully, the response status code is <code>200</code>, and the attributes of the response body are as follows:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>The UUID of the request.</td>
+</tr>
+<tr>
+<td><code>errorCode</code></td>
+<td><code>integer</code></td>
+<td>Error code. Fixed as <code>0</code>.</td>
+</tr>
+<tr>
+<td><code>errorMsg</code></td>
+<td><code>string</code></td>
+<td>Error message. Fixed as <code>"Success"</code>.</td>
+</tr>
+<tr>
+<td><code>result</code></td>
+<td><code>object</code></td>
+<td>The result of the operation.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>When the request is not processed successfully, the attributes of the response body are as follows:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>The UUID of the request.</td>
+</tr>
+<tr>
+<td><code>errorCode</code></td>
+<td><code>integer</code></td>
+<td>Error code. Same as the response status code.</td>
+</tr>
+<tr>
+<td><code>errorMsg</code></td>
+<td><code>string</code></td>
+<td>Error message.</td>
+</tr>
+</tbody>
+</table>
+<p>The main operations provided by the service are as follows:</p>
+<ul>
+<li><b><code>infer</code></b></li>
+</ul>
+<p>Perform human keypoint detection on images.</p>
+<p><code>POST /human-keypoint-detection</code></p>
+<ul>
+<li>The attributes of the request body are as follows:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>image</code></td>
+<td><code>string</code></td>
+<td>The URL of the image file accessible by the server or the Base64-encoded content of the image file.</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>detThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Threshold for human detection model.</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>When the request is processed successfully, the <code>result</code> in the response body has the following attributes:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>image</code></td>
+<td><code>string</code></td>
+<td>The URL of the image file accessible by the server or the Base64-encoded content of the image file.</td>
+</tr>
+<tr>
+<td><code>persons</code></td>
+<td><code>array</code></td>
+<td>Results of human keypoint detection.</td>
+</tr>
+</tbody>
+</table>
+<p>Each element in <code>persons</code> is an <code>object</code> with the following attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bbox</code></td>
+<td><code>array</code></td>
+<td>Location of the detected object. Elements in the array are the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner.</td>
+</tr>
+<tr>
+<td><code>kpts</code></td>
+<td><code>array</code></td>
+<td>Coordinates of keypoints.</td>
+</tr>
+<tr>
+<td><code>detScore</code></td>
+<td><code>number</code></td>
+<td>Detection score.</td>
+</tr>
+<tr>
+<td><code>kptScore</code></td>
+<td><code>number</code></td>
+<td>Keypoint score.</td>
+</tr>
+</tbody>
+</table>
+
 </details>
 <details><summary>Multi-language Service Invocation Examples</summary>
 <details>
@@ -513,7 +670,7 @@ Below are the API references and multi-language service invocation examples for 
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = "http://localhost:8080/ocr" # Service URL
+API_URL = "http://localhost:8080/human-keypoint-detection" # Service URL
 image_path = "./demo.jpg"
 output_image_path = "./out.jpg"
 
@@ -533,12 +690,12 @@ result = response.json()["result"]
 with open(output_image_path, "wb") as file:
     file.write(base64.b64decode(result["image"]))
 print(f"Output image saved at {output_image_path}")
-print("\nDetected texts:")
-print(result["texts"])
+print("\nDetected persons:")
+print(result["persons"])
 </code></pre>
 </details>
 </details>
-
+<br />
 
 📱 <b>Edge Deployment</b>: Edge deployment is a method where computation and data processing functions are placed on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
 You can choose the appropriate deployment method based on your needs to integrate the AI application subsequently.
@@ -596,4 +753,4 @@ paddlex --pipeline human_keypoint_detection \
         --device npu:0
 ```
 
-If you want to use the general image recognition production line on more types of hardware, please refer to the <a href="../../../other_devices_support/multi_devices_use_guide.en.md">PaddleX Multi-Hardware Usage Guide</a>.
+If you want to use the general image recognition pipeline on more types of hardware, please refer to the <a href="../../../other_devices_support/multi_devices_use_guide.en.md">PaddleX Multi-Hardware Usage Guide</a>.

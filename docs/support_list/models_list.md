@@ -819,30 +819,6 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 </table>
 <b>注：以上精度指标为 AliProducts recall@1。</b>
 
-## [文档方向分类模块](../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.md)
-<table>
-<thead>
-<tr>
-<th>模型名称</th>
-<th>Top-1 Acc（%）</th>
-<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小</th>
-<th>yaml 文件</th>
-<th>模型下载链接</th></tr>
-</thead>
-<tbody>
-<tr>
-<td>PP-LCNet_x1_0_doc_ori</td>
-<td>99.06</td>
-<td>2.31 / 0.43</td>
-<td>3.37 / 1.27</td>
-<td>7</td>
-<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/doc_text_orientation/PP-LCNet_x1_0_doc_ori.yaml">PP-LCNet_x1_0_doc_ori.yaml</a></td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">训练模型</a></td></tr>
-</tbody>
-</table>
-<b>注：以上精度指标为 PaddleX 内部自建数据集 Top-1 Acc 。</b>
 
 ## [人脸特征模块](../module_usage/tutorials/cv_modules/face_feature.md)
 <table>
@@ -2517,6 +2493,36 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 </tr>
 </tbody>
 </table>
+<b>注：以上精度指标的评估集是自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
+
+
+## [文本行方向分类模块](../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.md)
+
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>Top-1 Acc（%）</th>
+<th>GPU推理耗时（ms）<br>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br>[常规模式 / 高性能模式]</th>
+<th>模型存储大小（M)</th>
+<th>yaml文件</th>
+<th>模型下载链接</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-LCNet_x1_0_doc_ori</td>
+<td>99.06</td>
+<td>2.31 / 0.43</td>
+<td>3.37 / 1.27</td>
+<td>7</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml">PP-LCNet_x0_25_textline_ori.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">训练模型</a></td>
+</tr>
+</tbody>
+</table>
+
 <b>注：以上精度指标的评估集是自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
 
 

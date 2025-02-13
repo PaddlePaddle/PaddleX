@@ -200,7 +200,7 @@ The visualization results are saved under `save_path`, and the visualization res
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/instance_segmentation/03.png"/>
 
 #### 2.2.2 Python Script Integration
-* The above command line is for quickly experiencing and viewing the effect. Generally, in a project, it is often necessary to integrate through code. You can complete the quick inference of the production line with a few lines of code. The inference code is as follows:
+* The above command line is for quickly experiencing and viewing the effect. Generally, in a project, it is often necessary to integrate through code. You can complete the quick inference of the pipeline with a few lines of code. The inference code is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -419,7 +419,7 @@ In addition, you can obtain the instance segmentation pipeline configuration fil
 paddlex --get_pipeline_config instance_segmentation --save_path ./my_path
 ```
 
-If you have obtained the configuration file, you can customize the settings for the instance segmentation production line by simply modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the configuration file. An example is as follows:
+If you have obtained the configuration file, you can customize the settings for the instance segmentation pipeline by simply modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the configuration file. An example is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -544,6 +544,12 @@ Below are the API references for basic service deployment and examples of multi-
 <td>The URL of the image file accessible by the server or the Base64 encoded content of the image file.</td>
 <td>Yes</td>
 </tr>
+<tr>
+<td><code>threshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -565,7 +571,7 @@ Below are the API references for basic service deployment and examples of multi-
 </tr>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></td>
+<td><code>string</code>| <code>null</code></td>
 <td>The result image of instance segmentation. The image is in JPEG format and encoded using Base64.</td>
 </tr>
 </tbody>
@@ -589,6 +595,11 @@ Below are the API references for basic service deployment and examples of multi-
 <td><code>categoryId</code></td>
 <td><code>integer</code></td>
 <td>The category ID of the instance.</td>
+</tr>
+<tr>
+<td><code>categoryName</code></td>
+<td><code>string</code></td>
+<td>The label name of the instance category.</td>
 </tr>
 <tr>
 <td><code>score</code></td>
@@ -1039,7 +1050,7 @@ SubModules:
     threshold: 0.5
 ```
 
-Subsequently, refer to the command-line or Python script methods in the local experience section to load the modified production line configuration file.
+Subsequently, refer to the command-line or Python script methods in the local experience section to load the modified pipeline configuration file.
 
 ## 5. Multi-Hardware Support
 PaddleX supports a variety of mainstream hardware devices, including NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware devices.
@@ -1054,4 +1065,4 @@ paddlex --pipeline instance_segmentation \
         --device npu:0
 ```
 
-If you want to use the general instance segmentation production line on more types of hardware, please refer to [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+If you want to use the general instance segmentation pipeline on more types of hardware, please refer to [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).

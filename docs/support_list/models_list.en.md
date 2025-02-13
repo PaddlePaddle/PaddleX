@@ -2622,6 +2622,36 @@ PaddleX includes multiple production lines, each containing several modules, and
 </table>
 <b>Note: The evaluation set for the above accuracy metrics is a self-built dataset covering multiple scenarios such as documents and certificates, with 1000 images. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
 
+
+## [Text Line Orientation Classification Module](../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md)
+
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Top-1 Acc (%)</th>
+<th>GPU Inference Time (ms)<br>[Standard Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br>[Standard Mode / High-Performance Mode]</th>
+<th>Model Storage Size (M)</th>
+<th>YAML File</th>
+<th>Model Download Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-LCNet_x1_0_doc_ori</td>
+<td>99.06</td>
+<td>2.31 / 0.43</td>
+<td>3.37 / 1.27</td>
+<td>7</td>
+<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_textline_ori.yaml">PP-LCNet_x0_25_textline_ori.yaml</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Training Model</a></td>
+</tr>
+</tbody>
+</table>
+
+<b>Note: The evaluation dataset for the above accuracy metrics is a self-built dataset covering multiple scenarios such as certificates and documents, with 1,000 images. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision, and the CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+
 ## [Time Series Forecasting Module](../module_usage/tutorials/time_series_modules/time_series_forecasting.en.md)
 
 <table>

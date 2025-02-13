@@ -6,7 +6,7 @@ comments: true
 
 ## 1. Introduction to Image Anomaly Detection Pipeline
 Image anomaly detection is an image processing technique that identifies images that stand out or do not conform to normal patterns by analyzing the content within the images. It can automatically detect potential defects, anomalies, or abnormal behaviors in images, thereby helping us to identify problems in a timely manner and take appropriate measures.
-This production line integrates the high-precision anomaly detection model STFPM, which extracts regions of anomalies or defects from images. The application scenarios cover various fields, including industrial manufacturing, food appearance quality inspection, and medical image analysis. The production line also offers flexible service-oriented deployment options, supporting the use of multiple programming languages on various hardware platforms. Moreover, it provides the capability for secondary development. You can train and fine-tune models on your own dataset based on this production line, and the trained models can be seamlessly integrated.
+This pipeline integrates the high-precision anomaly detection model STFPM, which extracts regions of anomalies or defects from images. The application scenarios cover various fields, including industrial manufacturing, food appearance quality inspection, and medical image analysis. The pipeline also offers flexible service-oriented deployment options, supporting the use of multiple programming languages on various hardware platforms. Moreover, it provides the capability for secondary development. You can train and fine-tune models on your own dataset based on this pipeline, and the trained models can be seamlessly integrated.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_anomaly_detection/01.png">
 
@@ -36,7 +36,7 @@ PaddleX provides pre-trained models for the anomaly detection pipeline, allowing
 Before using the image anomaly detection pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
 
 ### 2.1 Command-Line Experience
-You can quickly experience the image anomaly detection production line with just one command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png), and replace `--input` with the local path for prediction.
+You can quickly experience the image anomaly detection pipeline with just one command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png), and replace `--input` with the local path for prediction.
 
 Note: Due to network issues, the above URL could not be successfully parsed. If you need the content of this webpage, please check the validity of the URL and try again later. If you do not need the content of this link, you can proceed with the other instructions.
 
@@ -58,7 +58,7 @@ The visualization results are saved under `save_path`, and the visualization res
 
 ### 2.2 Python Script Integration
 
-The above command line is for quickly experiencing and checking the effect. Generally, in a project, it is often necessary to integrate through code. You can complete the quick inference of the production line with a few lines of code. The inference code is as follows:
+The above command line is for quickly experiencing and checking the effect. Generally, in a project, it is often necessary to integrate through code. You can complete the quick inference of the pipeline with a few lines of code. The inference code is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -93,7 +93,7 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>config</code></td>
-<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td>Specific configuration information for the pipeline (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the pipeline name must be consistent with <code>pipeline</code>).</td>
 <td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
@@ -259,7 +259,7 @@ In addition, you can obtain the anomaly_detection pipeline configuration file an
 paddlex --get_pipeline_config anomaly_detection --save_path ./my_path
 ```
 
-If you have obtained the configuration file, you can customize the various configurations of the image anomaly detection production line. You only need to modify the `pipeline` parameter value in the `create_pipeline` method to the path of the production line configuration file.
+If you have obtained the configuration file, you can customize the various configurations of the image anomaly detection pipeline. You only need to modify the `pipeline` parameter value in the `create_pipeline` method to the path of the pipeline configuration file.
 
 For example, if your configuration file is saved in `./my_path/*anomaly_detection.yaml`, you only need to execute:
 
@@ -274,15 +274,15 @@ for res in output:
 ```
 
 ## 3. Development Integration/Deployment
-If the production line meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
+If the pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
-If you need to integrate the production line directly into your Python project, you can refer to the example code in [2.2 Python Script Integration](#22-python脚本方式集成).
+If you need to integrate the pipeline directly into your Python project, you can refer to the example code in [2.2 Python Script Integration](#22-python脚本方式集成).
 
 In addition, PaddleX also provides three other deployment methods, which are detailed as follows:
 
 🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have strict performance requirements for deployment strategies, especially in terms of response speed, to ensure efficient system operation and smooth user experience. To this end, PaddleX provides a high-performance inference plugin, which aims to deeply optimize the performance of model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service-Based Deployment</b>: Service-based deployment is a common form of deployment in actual production environments. By encapsulating inference capabilities into services, clients can access these services through network requests to obtain inference results. PaddleX supports various service-based deployment solutions for production lines. For detailed procedures, please refer to the [PaddleX Service-Based Deployment Guide](../../../pipeline_deploy/serving.en.md).
+☁️ <b>Service-Based Deployment</b>: Service-based deployment is a common form of deployment in actual production environments. By encapsulating inference capabilities into services, clients can access these services through network requests to obtain inference results. PaddleX supports various service-based deployment solutions for pipelines. For detailed procedures, please refer to the [PaddleX Service-Based Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
 Below are the API references for basic service-based deployment and examples of multi-language service calls:
 
@@ -375,7 +375,7 @@ Below are the API references for basic service-based deployment and examples of 
 <tbody>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></td>
+<td><code>string</code></td>| <code>null</code></td>
 <td>The URL of the image file accessible by the server or the Base64 encoded result of the image file content.</td>
 <td>Yes</td>
 </tr>
@@ -801,12 +801,12 @@ SubModules:
     batch_size: 1
 ```
 
-Subsequently, refer to the command line method or Python script method in [2. Quick Start]() to load the modified production line configuration file.
+Subsequently, refer to the command line method or Python script method in [2. Quick Start]() to load the modified pipeline configuration file.
 
 ##  5. Multi-Hardware Support
 PaddleX supports a variety of mainstream hardware devices such as NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device`</b> parameter to achieve seamless switching between different hardware.
 
-For example, if you are using Ascend NPU for image anomaly detection production line inference, the Python command used is:
+For example, if you are using Ascend NPU for image anomaly detection pipeline inference, the Python command used is:
 
 ```bash
 paddlex --pipeline anomaly_detection --input uad_grid.png --device npu:0

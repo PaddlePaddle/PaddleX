@@ -266,14 +266,14 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <b>Note: The above accuracy metrics are measured using an internally built formula recognition test set within PaddleX. The BLEU score of LaTeX_OCR_rec on the LaTeX-OCR formula recognition test set is 0.8821. All model GPU inference times are based on machines with Tesla V100 GPUs, with precision type FP32.</b>
 
 ## 2. Quick Start
-All model production lines provided by PaddleX can be quickly experienced. You can experience the effect of the formula recognition pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the formula recognition pipeline.
+All model pipelines provided by PaddleX can be quickly experienced. You can experience the effect of the formula recognition pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the formula recognition pipeline.
 
 ### 2.1 Online Experience
 You can [experience the formula recognition pipeline online](https://aistudio.baidu.com/community/app/387976/webUI?source=appCenter) by recognizing the demo images provided by the official platform, for example:
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/formula_aistudio.png"/>
 
-If you are satisfied with the performance of the production line, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the methods in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the production line using your private data</b>. If you have local hardware resources for training, you can start training directly on your local machine; if not, the Star River Zero-Code platform provides a one-click training service. You don't need to write any code—just upload your data and start the training task with one click.
+If you are satisfied with the performance of the pipeline, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the methods in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the pipeline using your private data</b>. If you have local hardware resources for training, you can start training directly on your local machine; if not, the Star River Zero-Code platform provides a one-click training service. You don't need to write any code—just upload your data and start the training task with one click.
 
 ### 2.2 Local Experience
 > ❗ Before using the formula recognition pipelin locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
@@ -318,7 +318,7 @@ sudo apt-get install texlive texlive-latex-base texlive-latex-extra -y
 <b>Note</b>: Due to the need to render each formula image during the formula recognition visualization process, the process takes a long time. Please be patient.
 
 #### 2.2.2 Python Script Integration
-A few lines of code can quickly complete the production line inference. Taking the formula recognition production line as an example:
+A few lines of code can quickly complete the pipeline inference. Taking the formula recognition pipeline as an example:
 
 ```python
 from paddlex import create_pipeline
@@ -383,7 +383,7 @@ In the above Python script, the following steps are executed:
 </tbody>
 </table>
 
-(2) Call the `predict()` method of the formula recognition production line object for inference prediction. This method will return a `generator`. Below are the parameters of the `predict()` method and their descriptions:
+(2) Call the `predict()` method of the formula recognition pipeline object for inference prediction. This method will return a `generator`. Below are the parameters of the `predict()` method and their descriptions:
 <table>
 <thead>
 <tr>
@@ -410,7 +410,7 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>Production line inference device</td>
+<td>pipeline inference device</td>
 <td><code>str|None</code></td>
 <td>
 <ul>
@@ -420,7 +420,7 @@ In the above Python script, the following steps are executed:
 <li><b>XPU</b>: e.g., <code>xpu:0</code> indicates using the 1st XPU for inference;</li>
 <li><b>MLU</b>: e.g., <code>mlu:0</code> indicates using the 1st MLU for inference;</li>
 <li><b>DCU</b>: e.g., <code>dcu:0</code> indicates using the 1st DCU for inference;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used. During initialization, the local GPU 0 will be prioritized; if unavailable, the CPU will be used.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used. During initialization, the local GPU 0 will be prioritized; if unavailable, the CPU will be used.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -432,7 +432,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used, initialized as <code>True</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -444,7 +444,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used, initialized as <code>True</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -456,7 +456,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the pipeline will be used, initialized as <code>True</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -584,14 +584,14 @@ In the above Python script, the following steps are executed:
 
     - `page_index`: `(Union[int, None])` If the input is a PDF file, this indicates the current page number of the PDF. Otherwise, it is `None`
 
-    - `model_settings`: `(Dict[str, bool])` The model parameters required for the production line configuration.
+    - `model_settings`: `(Dict[str, bool])` The model parameters required for the pipeline configuration.
 
-        - `use_doc_preprocessor`: `(bool)` Controls whether to enable the document preprocessing sub-production line.
+        - `use_doc_preprocessor`: `(bool)` Controls whether to enable the document preprocessing sub-pipeline.
         - `use_layout_detection`: `(bool)` Controls whether to enable the layout area detection module.
 
-    - `doc_preprocessor_res`: `(Dict[str, Union[str, Dict[str, bool], int]])` The output result of the document preprocessing sub-production line. It exists only when `use_doc_preprocessor=True`.
-        - `input_path`: `(Union[str, None])` The image path accepted by the image preprocessing sub-production line. When the input is a `numpy.ndarray`, it is saved as `None`.
-        - `model_settings`: `(Dict)` The model configuration parameters of the preprocessing sub-production line.
+    - `doc_preprocessor_res`: `(Dict[str, Union[str, Dict[str, bool], int]])` The output result of the document preprocessing sub-pipeline. It exists only when `use_doc_preprocessor=True`.
+        - `input_path`: `(Union[str, None])` The image path accepted by the image preprocessing sub-pipeline. When the input is a `numpy.ndarray`, it is saved as `None`.
+        - `model_settings`: `(Dict)` The model configuration parameters of the preprocessing sub-pipeline.
             - `use_doc_orientation_classify`: `(bool)` Controls whether to enable document orientation classification.
             - `use_doc_unwarping`: `(bool)` Controls whether to enable document distortion correction.
         - `angle`: `(int)` The prediction result of document orientation classification. When enabled, it takes values from [0,1,2,3], corresponding to [0°,90°,180°,270°]; when disabled, it is -1.
@@ -608,7 +608,7 @@ In the above Python script, the following steps are executed:
         - `dt_polys`: `(List[float])` The bounding box coordinates predicted by formula recognition, in the format [x_min, y_min, x_max, y_max], where (x_min, y_min) is the top-left corner and (x_max, y_max) is the bottom-right corner.
 
 - Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.json`. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, `numpy.array` types will be converted to list format.
-- Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_formula_res_img.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (The production line usually contains many result images, so it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten and only the last one will be retained.)
+- Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_formula_res_img.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (The pipeline usually contains many result images, so it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten and only the last one will be retained.)
 
 * In addition, you can also obtain the visualization image with results and the prediction results through attributes, as follows:
 
@@ -632,7 +632,7 @@ In the above Python script, the following steps are executed:
 - The prediction results obtained through the `json` attribute are of the dict type, with content consistent with what is saved using the `save_to_json()` method.
 - The prediction results returned by the `img` attribute are of the dictionary type. The keys are `preprocessed_img`, `layout_det_res`, and `formula_res_img`, corresponding to three `Image.Image` objects: the first one displays the visualization image of image preprocessing, the second one displays the visualization image of layout area detection, and the third one displays the visualization image of formula recognition. If the image preprocessing sub-module is not used, the dictionary does not contain `preprocessed_img`; if the layout area detection sub-module is not used, the dictionary does not contain `layout_det_res`.
 
-In addition, you can obtain the configuration file of the formula recognition production line and load the configuration file for prediction. You can execute the following command to save the results in `my_path`:
+In addition, you can obtain the configuration file of the formula recognition pipeline and load the configuration file for prediction. You can execute the following command to save the results in `my_path`:
 
 ```
 paddlex --get_pipeline_config formula_recognition --save_path ./my_path
@@ -661,18 +661,18 @@ for res in output:
     res.save_to_json(save_path="./output/")
 ```
 
-<b>Note:</b> The parameters in the configuration file are initialization parameters for the production line. If you want to change the initialization parameters for the formula recognition production line, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in a configuration file, simply specify the path of the configuration file with `--pipeline`.
+<b>Note:</b> The parameters in the configuration file are initialization parameters for the pipeline. If you want to change the initialization parameters for the formula recognition pipeline, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in a configuration file, simply specify the path of the configuration file with `--pipeline`.
 
 ## 3. Development Integration/Deployment
-If the formula recognition production line meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
+If the formula recognition pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
-If you need to integrate the formula recognition production line into your Python project, you can refer to the example code in [ 2.2 Integration via Python Script](#22-integration-via-python-script).
+If you need to integrate the formula recognition pipeline into your Python project, you can refer to the example code in [ 2.2 Integration via Python Script](#22-integration-via-python-script).
 
 In addition, PaddleX also provides three other deployment methods, which are detailed as follows:
 
 🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have strict performance requirements for deployment strategies, especially in terms of response speed, to ensure efficient system operation and smooth user experience. To this end, PaddleX provides a high-performance inference plugin, which aims to deeply optimize the performance of model inference and pre/post-processing, significantly speeding up the end-to-end process. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service-Based Deployment</b>: Service-based deployment is a common form of deployment in actual production environments. By encapsulating inference capabilities into services, clients can access these services via network requests to obtain inference results. PaddleX supports multiple production line service-based deployment solutions. For detailed production line service-based deployment procedures, please refer to the [PaddleX Service-Based Deployment Guide](../../../pipeline_deploy/serving.en.md).
+☁️ <b>Service-Based Deployment</b>: Service-based deployment is a common form of deployment in actual production environments. By encapsulating inference capabilities into services, clients can access these services via network requests to obtain inference results. PaddleX supports multiple pipeline service-based deployment solutions. For detailed pipeline service-based deployment procedures, please refer to the [PaddleX Service-Based Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
 Below are the API references for basic service-based deployment and multi-language service invocation examples:
 
@@ -747,7 +747,7 @@ Below are the API references for basic service-based deployment and multi-langua
 <ul>
 <li><b><code>infer</code></b></li>
 </ul>
-<p>Get the formula recognition result of an image.</p>
+<p>Obtain the formula recognition results from images.</p>
 <p><code>POST /formula-recognition</code></p>
 <ul>
 <li>The attributes of the request body are as follows:</li>
@@ -765,13 +765,31 @@ Below are the API references for basic service-based deployment and multi-langua
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>The URL of an image or PDF file accessible by the server, or the Base64-encoded content of the above file types. For PDF files exceeding 10 pages, only the content of the first 10 pages will be used.</td>
+<td>The URL of an image or PDF file accessible by the server, or the Base64-encoded content of the file. For PDF files exceeding 10 pages, only the first 10 pages will be used.</td>
 <td>Yes</td>
 </tr>
 <tr>
 <td><code>fileType</code></td>
-<td><code>integer</code></td>
-<td>The type of the file. <code>0</code> indicates a PDF file, and <code>1</code> indicates an image file. If this attribute is missing in the request body, the file type will be inferred from the URL.</td>
+<td><code>integer</code> | <code>null</code></td>
+<td>The type of the file. <code>0</code> for PDF files, <code>1</code> for image files. If this attribute is missing, the file type will be inferred from the URL.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the <code>use_doc_orientation_classify</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useDocUnwarping</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the <code>use_doc_unwarping</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useLayoutDetection</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the <code>use_layout_detection</code> parameter description in the pipeline <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
@@ -791,7 +809,7 @@ Below are the API references for basic service-based deployment and multi-langua
 <tr>
 <td><code>formulaRecResults</code></td>
 <td><code>object</code></td>
-<td>The formula recognition result. The length of the array is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
+<td>The formula recognition results. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
 </tr>
 <tr>
 <td><code>dataInfo</code></td>
@@ -811,48 +829,27 @@ Below are the API references for basic service-based deployment and multi-langua
 </thead>
 <tbody>
 <tr>
-<td><code>formulas</code></td>
-<td><code>array</code></td>
-<td>The positions and contents of the formulas.</td>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>A simplified version of the <code>res</code> field in the JSON representation of the result generated by the pipeline object's <code>predict</code> method, excluding the <code>input_path</code> field.</td>
 </tr>
 <tr>
-<td><code>inputImage</code></td>
+<td><code>outputImages</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>A key-value pair of input images and predicted result images. The images are in JPEG format and are Base64-encoded.</td>
+</tr>
+<tr>
+<td><code>inputImage</code> | <code>null</code></td>
 <td><code>string</code></td>
 <td>The input image. The image is in JPEG format and is Base64-encoded.</td>
-</tr>
-<tr>
-<td><code>layoutImage</code></td>
-<td><code>string</code></td>
-<td>The layout detection result image. The image is in JPEG format and is Base64-encoded.</td>
-</tr>
-</tbody>
-</table>
-<p>Each element in <code>formulas</code> is an <code>object</code> with the following attributes:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>poly</code></td>
-<td><code>array</code></td>
-<td>The position of the formula. The elements in the array are the coordinates of the vertices of the polygon surrounding the text.</td>
-</tr>
-<tr>
-<td><code>latex</code></td>
-<td><code>string</code></td>
-<td>The content of the formula.</td>
 </tr>
 </tbody>
 </table>
 </details>
-<details><summary>Multi-language Service Call Examples</summary>
+<details><summary>Multi-language Service Invocation Example</summary>
 <details>
 <summary>Python</summary>
+
 <pre><code class="language-python">import base64
 import requests
 
@@ -870,12 +867,12 @@ response = requests.post(API_URL, json=payload)
 assert response.status_code == 200
 result = response.json()["result"]
 for i, res in enumerate(result["formulaRecResults"]):
-    print("Detected formulas:")
-    print(res["formulas"])
-    layout_img_path = f"layout_{i}.jpg"
-    with open(layout_img_path, "wb") as f:
-        f.write(base64.b64decode(res["layoutImage"]))
-    print(f"Output image saved at {layout_img_path}")
+    print(res["prunedResult"])
+    for img_name, img in res["outputImages"].items():
+        img_path = f"{img_name}_{i}.jpg"
+        with open(img_path, "wb") as f:
+            f.write(base64.b64decode(img))
+        print(f"Output image saved at {img_path}")
 </code></pre></details>
 </details>
 <br/>
@@ -981,4 +978,4 @@ paddlex --pipeline formula_recognition \
 ```
 Of course, you can also specify the hardware device when calling `create_pipeline()` or `predict()` in a Python script.
 
-If you want to use the formula recognition production line on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+If you want to use the formula recognition pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).

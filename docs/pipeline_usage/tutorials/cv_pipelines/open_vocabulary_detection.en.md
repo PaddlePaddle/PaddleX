@@ -72,7 +72,7 @@ The visualization results are saved under `save_path`, and the visualization res
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/open_vocabulary_detection/open_vocabulary_detection_res.jpg"> 
 
 #### 2.1.2 Python Script Integration
-* The above command line is for quickly experiencing the effect. Generally, in a project, it is often necessary to integrate through code. You can complete the rapid inference of the production line with just a few lines of code. The inference code is as follows:
+* The above command line is for quickly experiencing the effect. Generally, in a project, it is often necessary to integrate through code. You can complete the rapid inference of the pipeline with just a few lines of code. The inference code is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -291,7 +291,7 @@ In the above Python script, the following steps are executed:
 - The prediction result obtained by the `json` attribute is a dict type of data, with content consistent with the content saved by calling the `save_to_json()` method.
 - The prediction result returned by the `img` attribute is a dictionary type of data. The key is `res`, and the corresponding value is an `Image.Image` object used for visualizing the open vocabulary detection results.
 
-In addition, you can obtain the open vocabulary detection production line configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
+In addition, you can obtain the open vocabulary detection pipeline configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
 
 ```
 paddlex --get_pipeline_config open_vocabulary_detection --save_path ./my_path
@@ -432,7 +432,7 @@ Below are the API references and multi-language service invocation examples for 
 </tr>
 <tr>
 <td><code>thresholds</code></td>
-<td><code>dict[str, float]</code></td>
+<td><code>object</code> | <code>null</code></td>
 <td>The thresholds used by the model for prediction.</td>
 <td>No</td>
 </tr>

@@ -399,11 +399,11 @@ Similar to model training and evaluation, the following steps are required:
 Other related parameters can be set by modifying the fields under `Global` and `Predict` in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
 
 #### 4.4.2 Model Integration
-The model can be directly integrated into the PaddleX production line or into your own project.
+The model can be directly integrated into the PaddleX pipeline or into your own project.
 
-1.<b>Production Line Integration</b>
+1.<b>pipeline Integration</b>
 
-The 3D multimodal fusion detection module can be integrated into the 3D detection production line of PaddleX. Simply replacing the model path will complete the model update for the target detection module in the relevant production line. In production line integration, you can deploy your model using high-performance deployment and service-oriented deployment.
+The 3D multimodal fusion detection module can be integrated into the 3D detection pipeline of PaddleX. Simply replacing the model path will complete the model update for the target detection module in the relevant pipeline. In pipeline integration, you can deploy your model using high-performance deployment and service-oriented deployment.
 
 2.<b>Module Integration</b>
 

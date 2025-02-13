@@ -427,8 +427,10 @@ Other related parameters can be set by modifying the fields under `Global` and `
 
 1. **Pipeline Integration**
 
-The pedestrian detection module can be integrated into PaddleX pipelines such as [**Human Keypoint Detection**](../../../pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.en.md). You can update the keypoint detection module in the production line simply by replacing the model path. In production line integration, you can deploy your models using high-performance deployment and service deployment methods.
+The pedestrian detection module can be integrated into PaddleX pipelines such as [**Human Keypoint Detection**](../../../pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.en.md). You can update the keypoint detection module in the pipeline simply by replacing the model path. In pipeline integration, you can deploy your models using high-performance deployment and service deployment methods.
 
 2. **Module Integration**
 
 The weights you produce can be directly integrated into the pedestrian detection module. You can refer to the Python example code in [Quick Integration](#iii-quick-integration). Simply replace the model with the path to your trained model to complete the integration.
+
+You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).

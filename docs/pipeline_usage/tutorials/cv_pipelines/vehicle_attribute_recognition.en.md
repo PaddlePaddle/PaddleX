@@ -5,7 +5,7 @@ comments: true
 # Vehicle Attribute Recognition Pipeline Tutorial
 
 ## 1. Introduction to Vehicle Attribute Recognition Pipeline
-Vehicle attribute recognition is a crucial component in computer vision systems. Its primary task is to locate and label specific attributes of vehicles in images or videos, such as vehicle type, color, and license plate number. This task not only requires accurately detecting vehicles but also identifying detailed attribute information for each vehicle. The vehicle attribute recognition pipeline is an end-to-end serial system for locating and recognizing vehicle attributes, widely used in traffic management, intelligent parking, security surveillance, autonomous driving, and other fields. It significantly enhances system efficiency and intelligence levels, driving the development and innovation of related industries. This pipeline also offers a flexible service-oriented deployment approach, supporting the use of multiple programming languages on various hardware platforms. Moreover, this production line provides the capability for secondary development. You can train and optimize models on your own dataset based on this production line, and the trained models can be seamlessly integrated.
+Vehicle attribute recognition is a crucial component in computer vision systems. Its primary task is to locate and label specific attributes of vehicles in images or videos, such as vehicle type, color, and license plate number. This task not only requires accurately detecting vehicles but also identifying detailed attribute information for each vehicle. The vehicle attribute recognition pipeline is an end-to-end serial system for locating and recognizing vehicle attributes, widely used in traffic management, intelligent parking, security surveillance, autonomous driving, and other fields. It significantly enhances system efficiency and intelligence levels, driving the development and innovation of related industries. This pipeline also offers a flexible service-oriented deployment approach, supporting the use of multiple programming languages on various hardware platforms. Moreover, this pipeline provides the capability for secondary development. You can train and optimize models on your own dataset based on this pipeline, and the trained models can be seamlessly integrated.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/vehicle_attribute_recognition/01.jpg"/>
 <b>The vehicle attribute recognition pipeline includes a vehicle detection module and a vehicle attribute recognition module</b>, with several models in each module. Which models to use can be selected based on the benchmark data below. <b>If you prioritize model accuracy, choose models with higher accuracy; if you prioritize inference speed, choose models with faster inference; if you prioritize model storage size, choose models with smaller storage</b>.
@@ -64,7 +64,7 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 
 ## 2. Quick Start
 
-All model production lines provided by PaddleX can be quickly experienced. You can experience the effect of the vehicle attribute recognition pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the vehicle attribute recognition pipeline.
+All model pipelines provided by PaddleX can be quickly experienced. You can experience the effect of the vehicle attribute recognition pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the vehicle attribute recognition pipeline.
 
 ### 2.1 Online Experience
 
@@ -72,7 +72,7 @@ You can [experience the vehicle attribute recognition pipeline](https://aistudio
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/vehicle_attribute_recognition/vehicle_attribute_aistudio.png"/>
 
-If you are satisfied with the performance of the production line, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the methods in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the production line using your private data</b>. If you have local hardware resources for training, you can start training directly on your local machine; if not, the Star River Zero-Code platform provides a one-click training service. You don't need to write any code—just upload your data and start the training task with one click.
+If you are satisfied with the performance of the pipeline, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the methods in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the pipeline using your private data</b>. If you have local hardware resources for training, you can start training directly on your local machine; if not, the Star River Zero-Code platform provides a one-click training service. You don't need to write any code—just upload your data and start the training task with one click.
 
 ### 2.2 Local Experience
 Before using the vehicle attribute recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
@@ -103,7 +103,7 @@ The results obtained are the same as those from the command line method.
 
 In the above Python script, the following steps are executed:
 
-(1) The vehicle attribute recognition production line object is instantiated via `create_pipeline()`. The specific parameter descriptions are as follows:
+(1) The vehicle attribute recognition pipeline object is instantiated via `create_pipeline()`. The specific parameter descriptions are as follows:
 
 <table>
 <thead>
@@ -117,32 +117,32 @@ In the above Python script, the following steps are executed:
 <tbody>
 <tr>
 <td><code>pipeline</code></td>
-<td>The name of the production line or the path to the production line configuration file. If it is the name of a production line, it must be supported by PaddleX.</td>
+<td>The name of the pipeline or the path to the pipeline configuration file. If it is the name of a pipeline, it must be supported by PaddleX.</td>
 <td><code>str</code></td>
 <td>None</td>
 </tr>
 <tr>
 <td><code>config</code></td>
-<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td>Specific configuration information for the pipeline (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the pipeline name must be consistent with <code>pipeline</code>).</td>
 <td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The device used for production line inference. It supports specifying the specific card number of GPUs, such as "gpu:0", other hardware card numbers, such as "npu:0", and CPUs, such as "cpu".</td>
+<td>The device used for pipeline inference. It supports specifying the specific card number of GPUs, such as "gpu:0", other hardware card numbers, such as "npu:0", and CPUs, such as "cpu".</td>
 <td><code>str</code></td>
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference. This is only available if the production line supports high-performance inference.</td>
+<td>Whether to enable high-performance inference. This is only available if the pipeline supports high-performance inference.</td>
 <td><code>bool</code></td>
 <td><code>False</code></td>
 </tr>
 </tbody>
 </table>
 
-(2) The `predict()` method of the vehicle attribute recognition production line object is called to perform inference prediction. This method returns a `generator`. Below are the parameters and their descriptions for the `predict()` method:
+(2) The `predict()` method of the vehicle attribute recognition pipeline object is called to perform inference prediction. This method returns a `generator`. Below are the parameters and their descriptions for the `predict()` method:
 
 <table>
 <thead>
@@ -169,7 +169,7 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The device used for production line inference.</td>
+<td>The device used for pipeline inference.</td>
 <td><code>str|None</code></td>
 <td>
 <ul>
@@ -179,7 +179,7 @@ In the above Python script, the following steps are executed:
 <li><b>XPU</b>: Use the specified XPU for inference, such as <code>xpu:0</code> for the first XPU.</li>
 <li><b>MLU</b>: Use the specified MLU for inference, such as <code>mlu:0</code> for the first MLU.</li>
 <li><b>DCU</b>: Use the specified DCU for inference, such as <code>dcu:0</code> for the first DCU.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used. During initialization, it will prioritize the local GPU device 0; if unavailable, it will use the CPU.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used. During initialization, it will prioritize the local GPU device 0; if unavailable, it will use the CPU.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -191,7 +191,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>float</b>: For example, <code>0.5</code>, which means filtering out all bounding boxes with a score less than <code>0.5</code>.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, initialized to <code>0.5</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized to <code>0.5</code>.</li>
 </ul>
 </td>
 <td><code>0.5</code></td>
@@ -205,7 +205,7 @@ In the above Python script, the following steps are executed:
 <li><b>float</b>: A uniform threshold for attribute recognition.</li>
 <li><b>list</b>: For example, <code>[0.5, 0.45, 0.48, 0.4]</code>, which means different thresholds for different classes in the order of <code>label list</code>.</li>
 <li><b>dict</b>: The key is <code>default</code> or <code>int</code> type, and the value is a <code>float</code> threshold. For example, <code>{"default": 0.5, 0: 0.45, 2: 0.48, 7: 0.4}</code>. <code>default</code> represents the uniform threshold for attribute recognition, while other <code>int</code> types apply specific thresholds to classes with cls_id 0, 2, and 7.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, initialized to <code>0.7</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized to <code>0.7</code>.</li>
 </ul>
 </td>
 <td><code>0.7</code></td>
@@ -285,7 +285,7 @@ In the above Python script, the following steps are executed:
     - `det_scores`: `(float)` The confidence scores of the vehicle detection boxes.
 
 - Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.json`. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` type will be converted to a list format.
-- Calling the `save_to_img()` method will save the visualization result to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (The production line usually contains many result images, so it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, and only the last image will be retained.)
+- Calling the `save_to_img()` method will save the visualization result to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (The pipeline usually contains many result images, so it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, and only the last image will be retained.)
 
 * Additionally, it also supports obtaining visualized images with results and prediction results through attributes, as follows:
 
@@ -332,19 +332,19 @@ for res in output:
 
 ```
 
-<b>Note:</b> The parameters in the configuration file are initialization parameters for the production line. If you wish to change the initialization parameters for the vehicle attribute recognition production line, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in a configuration file by specifying the path of the configuration file with `--pipeline`.
+<b>Note:</b> The parameters in the configuration file are initialization parameters for the pipeline. If you wish to change the initialization parameters for the vehicle attribute recognition pipeline, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in a configuration file by specifying the path of the configuration file with `--pipeline`.
 
 ## 3. Development Integration/Deployment
 
-If the production line meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
+If the pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
-If you need to integrate the production line into your Python project, you can refer to the example code in [2.2.2 Python Script Method](#222-python-script-method).
+If you need to integrate the pipeline into your Python project, you can refer to the example code in [2.2.2 Python Script Method](#222-python-script-method).
 
 In addition, PaddleX also provides three other deployment methods, which are detailed as follows:
 
 🚀 <b>High-Performance Inference</b>: In practical production environments, many applications have strict standards for the performance metrics of deployment strategies, especially response speed, to ensure efficient system operation and smooth user experience. To this end, PaddleX offers a high-performance inference plugin aimed at deeply optimizing the performance of model inference and pre/post-processing, significantly speeding up the end-to-end process. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common form of deployment in practical production environments. By encapsulating inference capabilities into services, clients can access these services via network requests to obtain inference results. PaddleX supports various production line service-oriented deployment solutions. For detailed production line service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving.en.md).
+☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common form of deployment in practical production environments. By encapsulating inference capabilities into services, clients can access these services via network requests to obtain inference results. PaddleX supports various pipeline service-oriented deployment solutions. For detailed pipeline service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
 Below are the API references for basic service-oriented deployment and multi-language service invocation examples:
 
@@ -440,6 +440,18 @@ Below are the API references for basic service-oriented deployment and multi-lan
 <td>The URL of the image file accessible by the server or the Base64-encoded content of the image file.</td>
 <td>Yes</td>
 </tr>
+<tr>
+<td><code>detThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>det_threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>clsThreshold</code></td>
+<td><code>number</code> | <code>array</code> | <code>object</code> | <code>null</code></td>
+<td>Refer to the <code>cls_threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -461,7 +473,7 @@ Below are the API references for basic service-oriented deployment and multi-lan
 </tr>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></td>
+<td><code>string</code>| <code>null</code></td>
 <td>The vehicle attribute recognition result image. The image is in JPEG format and is Base64-encoded.</td>
 </tr>
 </tbody>
@@ -549,13 +561,13 @@ print(result["vehicles"])
 <br/>
 
 📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on user devices, allowing them to process data locally without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed instructions, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
-You can choose the appropriate deployment method based on your needs to integrate the model production line into your AI application.
+You can choose the appropriate deployment method based on your needs to integrate the model pipeline into your AI application.
 
 ## 4. Secondary Development
-If the default model weights provided by the vehicle attribute recognition production line do not meet your requirements in terms of accuracy or speed, you can attempt to <b>further fine-tune the existing models using your own domain-specific or application-specific data</b> to improve the recognition performance of the vehicle attribute recognition production line in your scenario.
+If the default model weights provided by the vehicle attribute recognition pipeline do not meet your requirements in terms of accuracy or speed, you can attempt to <b>further fine-tune the existing models using your own domain-specific or application-specific data</b> to improve the recognition performance of the vehicle attribute recognition pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the vehicle attribute recognition production line includes both a vehicle detection module and a vehicle attribute recognition module, if the performance of the production line is not satisfactory, the issue may lie in either of these modules. You can analyze the images with poor recognition results to determine which module is problematic and refer to the corresponding fine-tuning tutorial links in the table below for model fine-tuning.
+Since the vehicle attribute recognition pipeline includes both a vehicle detection module and a vehicle attribute recognition module, if the performance of the pipeline is not satisfactory, the issue may lie in either of these modules. You can analyze the images with poor recognition results to determine which module is problematic and refer to the corresponding fine-tuning tutorial links in the table below for model fine-tuning.
 
 <table>
 <thead>
@@ -578,19 +590,19 @@ Since the vehicle attribute recognition production line includes both a vehicle 
 </tr>
 </tbody>
 </table>
-<b>Note:</b> The parameters in the configuration file are initialization parameters for the production line. If you wish to change the initialization parameters for the vehicle attribute recognition production line, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in a configuration file by specifying the path of the configuration file with `--pipeline`.
+<b>Note:</b> The parameters in the configuration file are initialization parameters for the pipeline. If you wish to change the initialization parameters for the vehicle attribute recognition pipeline, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in a configuration file by specifying the path of the configuration file with `--pipeline`.
 
 ## 3. Development Integration/Deployment
 
-If the production line meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
+If the pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
-If you need to integrate the production line into your Python project, you can refer to the example code in [2.2.2 Python Script Method](#222-python-script-method).
+If you need to integrate the pipeline into your Python project, you can refer to the example code in [2.2.2 Python Script Method](#222-python-script-method).
 
 In addition, PaddleX also provides three other deployment methods, which are detailed as follows:
 
 🚀 <b>High-Performance Inference</b>: In practical production environments, many applications have strict standards for the performance metrics of deployment strategies, especially response speed, to ensure efficient system operation and smooth user experience. To this end, PaddleX offers a high-performance inference plugin aimed at deeply optimizing the performance of model inference and pre/post-processing, significantly speeding up the end-to-end process. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common form of deployment in practical production environments. By encapsulating inference capabilities into services, clients can access these services via network requests to obtain inference results. PaddleX supports various production line service-oriented deployment solutions. For detailed production line service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving.en.md).
+☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common form of deployment in practical production environments. By encapsulating inference capabilities into services, clients can access these services via network requests to obtain inference results. PaddleX supports various pipeline service-oriented deployment solutions. For detailed pipeline service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
 Below are the API references for basic service-oriented deployment and multi-language service invocation examples:
 

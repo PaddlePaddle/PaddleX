@@ -72,7 +72,7 @@ The visualization results are saved under `save_path`, and the visualization res
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/open_vocabulary_segmentation/open_vocabulary_segmentation_res.jpg">
 
 #### 2.1.2 Python Script Integration
-* The above command line is for quickly experiencing the effect. Generally, in a project, integration through code is often required. You can complete the rapid inference of the production line with just a few lines of code. The inference code is as follows:
+* The above command line is for quickly experiencing the effect. Generally, in a project, integration through code is often required. You can complete the rapid inference of the pipeline with just a few lines of code. The inference code is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -295,7 +295,7 @@ In the above Python script, the following steps are executed:
 - The prediction result obtained by the `json` attribute is a dict type of data, with content consistent with the content saved by calling the `save_to_json()` method.
 - The prediction result returned by the `img` attribute is a dictionary type of data. The key is `res`, and the corresponding value is an `Image.Image` object used for visualizing the open vocabulary segmentation results.
 
-In addition, you can obtain the open vocabulary segmentation production line configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
+In addition, you can obtain the open vocabulary segmentation pipeline configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
 
 ```
 paddlex --get_pipeline_config open_vocabulary_segmentation --save_path ./my_path
@@ -431,13 +431,13 @@ Below are the API references and multi-language service invocation examples for 
 </tr>
 <tr>
 <td><code>prompt</code></td>
-<td><code>list[list[float]]</code></td>
+<td><code>array</code></td>
 <td>The prompt used for prediction.</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code>prompt_type</code></td>
-<td><code>str</code></td>
+<td><code>promptType</code></td>
+<td><code>string</code></td>
 <td>The type of prompt used for prediction.</td>
 <td>Yes</td>
 </tr>
@@ -461,7 +461,7 @@ Below are the API references and multi-language service invocation examples for 
 <td>The segmentation prediction results.</td>
 </tr>
 <tr>
-<td><code>mask_infos</code></td>
+<td><code>maskInfos</code></td>
 <td><code>array</code></td>
 <td>Corresponds one-to-one with the elements in the <code>masks</code> field, recording the prompts used for the corresponding segmentation results in <code>masks</code>.</td>
 </tr>
@@ -473,7 +473,29 @@ Below are the API references and multi-language service invocation examples for 
 </tbody>
 </table>
 <b>Note</b>: Considering network transmission, the segmentation results recorded in the <code>masks</code> field are encoded with <code>rle</code>. To obtain the original segmentation results, you need to decode them using <code>pycocotools.mask.decode</code>.
-
+</br>
+<p>Each element in <code>detectedObjects</code> is an <code>object</code> with the following attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label</code></td>
+<td><code>string</code></td>
+<td>The category of the prompt used to generate the mask.</td>
+</tr>
+<tr>
+<td><code>prompt</code></td>
+<td><code>array</code></td>
+<td>The prompt array.</td>
+</tr>
+</tbody>
+</table>
 <p><code>result</code> example is as follows:</p>
 <pre><code class="language-python">
 {
@@ -525,334 +547,7 @@ print("\nresult(with rle encoded binary mask):")
 print(result)
 </code></pre></details>
 
-<details><summary>C++</summary>
 
-<pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &quot;cpp-httplib/httplib.h&quot; // <url id="cu9qa4v6rtpc5bkamn0g" type="url" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" wc="15064">https://github.com/Huiyicc/cpp-httplib</url> 
-#include &quot;nlohmann/json.hpp&quot; // <url id="cu9qa4v6rtpc5bkamn10" type="url" status="parsed" title="GitHub - nlohmann/json: JSON for Modern C++" wc="80311">https://github.com/nlohmann/json</url> 
-#include &quot;base64.hpp&quot; // <url id="cu9qa4v6rtpc5bkamn1g" type="url" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" wc="2293">https://github.com/tobiaslocker/base64</url> 
-
-int main() {
-    httplib::Client client(&quot;localhost:8080&quot;);
-    const std::string imagePath = &quot;./demo.jpg&quot;;
-    const std::string outputImagePath = &quot;./out.jpg&quot;;
-
-    httplib::Headers headers = {
-        {&quot;Content-Type&quot;, &quot;application/json&quot;}
-    };
-
-    // Encode the local image with Base64
-    std::ifstream file(imagePath, std::ios::binary | std::ios::ate);
-    std::streamsize size = file.tellg();
-    file.seekg(0, std::ios::beg);
-
-    std::vector&lt;char&gt; buffer(size);
-    if (!file.read(buffer.data(), size)) {
-        std::cerr &lt;&lt; &quot;Error reading file.&quot; &lt;&lt; std::endl;
-        return 1;
-    }
-    std::string bufferStr(reinterpret_cast&lt;const char*&gt;(buffer.data()), buffer.size());
-    std::string encodedImage = base64::to_base64(bufferStr);
-
-    nlohmann::json jsonObj;
-    jsonObj[&quot;image&quot;] = encodedImage;
-    std::string body = jsonObj.dump();
-
-    // Call the API
-    auto response = client.Post(&quot;/small-object-segmentation&quot;, headers, body, &quot;application/json&quot;);
-    // Process the returned data from the API
-    if (response &amp;&amp; response-&gt;status == 200) {
-        nlohmann::json jsonResponse = nlohmann::json::parse(response-&gt;body);
-        auto result = jsonResponse[&quot;result&quot;];
-
-        encodedImage = result[&quot;image&quot;];
-        std::string decodedString = base64::from_base64(encodedImage);
-        std::vector&lt;unsigned char&gt; decodedImage(decodedString.begin(), decodedString.end());
-        std::ofstream outputImage(outPutImagePath, std::ios::binary | std::ios::out);
-        if (outputImage.is_open()) {
-            outputImage.write(reinterpret_cast&lt;char*&gt;(decodedImage.data()), decodedImage.size());
-            outputImage.close();
-            std::cout &lt;&lt; &quot;Output image saved at &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
-        } else {
-            std::cerr &lt;&lt; &quot;Unable to open file for writing: &quot; &lt;&lt; outPutImagePath &lt;&lt; std::endl;
-        }
-
-        auto detectedObjects = result[&quot;detectedObjects&quot;];
-        std::cout &lt;&lt; &quot;\nDetected objects:&quot; &lt;&lt; std::endl;
-        for (const auto&amp; category : detectedObjects) {
-            std::cout &lt;&lt; category &lt;&lt; std::endl;
-        }
-    } else {
-        std::cout &lt;&lt; &quot;Failed to send HTTP request.&quot; &lt;&lt; std::endl;
-        return 1;
-    }
-
-    return 0;
-}
-</code></pre></details>
-
-<details><summary>Java</summary>
-
-<pre><code class="language-java">import okhttp3.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Base64;
-
-public class Main {
-    public static void main(String[] args) throws IOException {
-        String API_URL = &quot;http://localhost:8080/small-object-segmentation&quot;; // Service URL
-        String imagePath = &quot;./demo.jpg&quot;; // Local image path
-        String outputImagePath = &quot;./out.jpg&quot;; // Output image path
-
-        // Encode the local image in Base64
-        File file = new File(imagePath);
-        byte[] fileContent = java.nio.file.Files.readAllBytes(file.toPath());
-        String imageData = Base64.getEncoder().encodeToString(fileContent);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        ObjectNode params = objectMapper.createObjectNode();
-        params.put(&quot;image&quot;, imageData); // Base64-encoded file content or image URL
-
-        // Create an OkHttpClient instance
-        OkHttpClient client = new OkHttpClient();
-        MediaType JSON = MediaType.Companion.get(&quot;application/json; charset=utf-8&quot;);
-        RequestBody body = RequestBody.Companion.create(params.toString(), JSON);
-        Request request = new Request.Builder()
-                .url(API_URL)
-                .post(body)
-                .build();
-
-        // Call the API and process the response data
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                String responseBody = response.body().string();
-                JsonNode resultNode = objectMapper.readTree(responseBody);
-                JsonNode result = resultNode.get(&quot;result&quot;);
-                String base64Image = result.get(&quot;image&quot;).asText();
-                JsonNode detectedObjects = result.get(&quot;detectedObjects&quot;);
-
-                byte[] imageBytes = Base64.getDecoder().decode(base64Image);
-                try (FileOutputStream fos = new FileOutputStream(outputImagePath)) {
-                    fos.write(imageBytes);
-                }
-                System.out.println(&quot;Output image saved at &quot; + outputImagePath);
-                System.out.println(&quot;\nDetected objects: &quot; + detectedObjects.toString());
-            } else {
-                System.err.println(&quot;Request failed with code: &quot; + response.code());
-            }
-        }
-    }
-}
-</code></pre></details>
-
-<details><summary>Go</summary>
-
-<pre><code class="language-go">package main
-
-import (
-    &quot;bytes&quot;
-    &quot;encoding/base64&quot;
-    &quot;encoding/json&quot;
-    &quot;fmt&quot;
-    &quot;io/ioutil&quot;
-    &quot;net/http&quot;
-)
-
-func main() {
-    API_URL := &quot;http://localhost:8080/small-object-segmentation&quot;
-    imagePath := &quot;./demo.jpg&quot;
-    outputImagePath := &quot;./out.jpg&quot;
-
-    // Encode the local image in Base64
-    imageBytes, err := ioutil.ReadFile(imagePath)
-    if err != nil {
-        fmt.Println(&quot;Error reading image file:&quot;, err)
-        return
-    }
-    imageData := base64.StdEncoding.EncodeToString(imageBytes)
-
-    payload := map[string]string{&quot;image&quot;: imageData} // Base64-encoded file content or image URL
-    payloadBytes, err := json.Marshal(payload)
-    if err != nil {
-        fmt.Println(&quot;Error marshaling payload:&quot;, err)
-        return
-    }
-
-    // Call the API
-    client := &amp;http.Client{}
-    req, err := http.NewRequest(&quot;POST&quot;, API_URL, bytes.NewBuffer(payloadBytes))
-    if err != nil {
-        fmt.Println(&quot;Error creating request:&quot;, err)
-        return
-    }
-
-    res, err := client.Do(req)
-    if err != nil {
-        fmt.Println(&quot;Error sending request:&quot;, err)
-        return
-    }
-    defer res.Body.Close()
-
-    // Process the response data
-    body, err := ioutil.ReadAll(res.Body)
-    if err != nil {
-        fmt.Println(&quot;Error reading response body:&quot;, err)
-        return
-    }
-    type Response struct {
-        Result struct {
-            Image      string   `json:&quot;image&quot;`
-            DetectedObjects []map[string]interface{} `json:&quot;detectedObjects&quot;`
-        } `json:&quot;result&quot;`
-    }
-    var respData Response
-    err = json.Unmarshal([]byte(string(body)), &amp;respData)
-    if err != nil {
-        fmt.Println(&quot;Error unmarshaling response body:&quot;, err)
-        return
-    }
-
-    outputImageData, err := base64.StdEncoding.DecodeString(respData.Result.Image)
-    if err != nil {
-        fmt.Println(&quot;Error decoding base64 image data:&quot;, err)
-        return
-    }
-    err = ioutil.WriteFile(outputImagePath, outputImageData, 0644)
-    if err != nil {
-        fmt.Println(&quot;Error writing image to file:&quot;, err)
-        return
-    }
-    fmt.Printf(&quot;Image saved at %s.jpg\n&quot;, outputImagePath)
-    fmt.Println(&quot;\nDetected objects:&quot;)
-    for _, category := range respData.Result.DetectedObjects {
-        fmt.Println(category)
-    }
-}
-</code></pre></details>
-
-<details><summary>C#</summary>
-
-<pre><code class="language-csharp">using System;
-using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-
-class Program
-{
-    static readonly string API_URL = &quot;http://localhost:8080/small-object-segmentation&quot;;
-    static readonly string imagePath = &quot;./demo.jpg&quot;;
-    static readonly string outputImagePath = &quot;./out.jpg&quot;;
-
-    static async Task Main(string[] args)
-    {
-        var httpClient = new HttpClient();
-
-        // Base64 encode the local image
-        byte[] imageBytes = File.ReadAllBytes(imagePath);
-        string image_data = Convert.ToBase64String(imageBytes);
-
-        var payload = new JObject{ { &quot;image&quot;, image_data } }; // Base64 encoded file content or image URL
-        var content = new StringContent(payload.ToString(), Encoding.UTF8, &quot;application/json&quot;);
-
-        // Call the API
-        HttpResponseMessage response = await httpClient.PostAsync(API_URL, content);
-        response.EnsureSuccessStatusCode();
-
-        // Process the API response
-        string responseBody = await response.Content.ReadAsStringAsync();
-        JObject jsonResponse = JObject.Parse(responseBody);
-
-        string base64Image = jsonResponse[&quot;result&quot;][&quot;image&quot;].ToString();
-        byte[] outputImageBytes = Convert.FromBase64String(base64Image);
-
-        File.WriteAllBytes(outputImagePath, outputImageBytes);
-        Console.WriteLine($&quot;Output image saved at {outputImagePath}&quot;);
-        Console.WriteLine(&quot;\nDetected objects:&quot;);
-        Console.WriteLine(jsonResponse[&quot;result&quot;][&quot;detectedObjects&quot;].ToString());
-    }
-}
-</code></pre></details>
-
-<details><summary>Node.js</summary>
-
-<pre><code class="language-js">const axios = require('axios');
-const fs = require('fs');
-
-const API_URL = 'http://localhost:8080/small-object-segmentation'
-const imagePath = './demo.jpg'
-const outputImagePath = &quot;./out.jpg&quot;;
-
-let config = {
-   method: 'POST',
-   maxBodyLength: Infinity,
-   url: API_URL,
-   data: JSON.stringify({
-    'image': encodeImageToBase64(imagePath)  // Base64 encoded file content or image URL
-  })
-};
-
-// Base64 encode the local image
-function encodeImageToBase64(filePath) {
-  const bitmap = fs.readFileSync(filePath);
-  return Buffer.from(bitmap).toString('base64');
-}
-
-// Call the API
-axios.request(config)
-.then((response) =&gt; {
-    // Process the API response
-    const result = response.data[&quot;result&quot;];
-    const imageBuffer = Buffer.from(result[&quot;image&quot;], 'base64');
-    fs.writeFile(outputImagePath, imageBuffer, (err) =&gt; {
-      if (err) throw err;
-      console.log(`Output image saved at ${outputImagePath}`);
-    });
-    console.log(&quot;\nDetected objects:&quot;);
-    console.log(result[&quot;detectedObjects&quot;]);
-})
-.catch((error) =&gt; {
-  console.log(error);
-});
-</code></pre></details>
-
-<details><summary>PHP</summary>
-
-<pre><code class="language-php">&lt;?php
-
-$API_URL = &quot;http://localhost:8080/small-object-segmentation&quot;; // Service URL
-$image_path = &quot;./demo.jpg&quot;;
-$output_image_path = &quot;./out.jpg&quot;;
-
-// Base64 encode the local image
-$image_data = base64_encode(file_get_contents($image_path));
-$payload = array(&quot;image&quot; =&gt; $image_data); // Base64 encoded file content or image URL
-
-// Call the API
-$ch = curl_init($API_URL);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$response = curl_exec($ch);
-curl_close($ch);
-
-// Process the API response
-$result = json_decode($response, true)[&quot;result&quot;];
-file_put_contents($output_image_path, base64_decode($result[&quot;image&quot;]));
-echo &quot;Output image saved at &quot; . $output_image_path . &quot;\n&quot;;
-echo &quot;\nDetected objects:\n&quot;;
-print_r($result[&quot;detectedObjects&quot;]);
-
-?&gt;
-</code></pre></details>
 </details>
 <br/>
 

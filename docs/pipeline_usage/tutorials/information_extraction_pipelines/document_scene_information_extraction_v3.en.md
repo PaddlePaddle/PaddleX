@@ -619,25 +619,25 @@ Additionally, PaddleX provides three other deployment methods, detailed as follo
 Below are the API reference and multi-language service invocation examples for the basic serving solution:
 
 <details><summary>API Reference</summary>
-<p>For primary operations provided by the service:</p>
+<p>For the main operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
-<li>The request body and the response body are both JSON data (JSON objects).</li>
-<li>When the request is processed successfully, the response status code is <code>200</code>, and the response body properties are as follows:</li>
+<li>Both the request body and response body are JSON data (JSON objects).</li>
+<li>When the request is processed successfully, the response status code is <code>200</code>, and the attributes of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>logId</code></td>
 <td><code>string</code></td>
-<td>UUID for the request.</td>
+<td>The UUID of the request.</td>
 </tr>
 <tr>
 <td><code>errorCode</code></td>
@@ -647,31 +647,31 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error description. Fixed as <code>"Success"</code>.</td>
+<td>Error message. Fixed as <code>"Success"</code>.</td>
 </tr>
 <tr>
 <td><code>result</code></td>
 <td><code>object</code></td>
-<td>Operation result.</td>
+<td>The result of the operation.</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>When the request is not processed successfully, the response body properties are as follows:</li>
+<li>When the request is not processed successfully, the attributes of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>logId</code></td>
 <td><code>string</code></td>
-<td>UUID for the request.</td>
+<td>The UUID of the request.</td>
 </tr>
 <tr>
 <td><code>errorCode</code></td>
@@ -681,25 +681,25 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error description.</td>
+<td>Error message.</td>
 </tr>
 </tbody>
 </table>
-<p>Primary operations provided by the service are as follows:</p>
+<p>The main operations provided by the service are as follows:</p>
 <ul>
 <li><b><code>analyzeImages</code></b></li>
 </ul>
-<p>Analyze images using computer vision models to obtain OCR, table recognition results, and extract key information from the images.</p>
+<p>Analyze images using computer vision models to obtain OCR and table recognition results, and extract key information from images.</p>
 <p><code>POST /chatocr-visual</code></p>
 <ul>
-<li>Request body properties:</li>
+<li>The attributes of the request body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 <th>Required</th>
 </tr>
 </thead>
@@ -707,80 +707,139 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>The URL of an accessible image file or PDF file, or the Base64 encoded content of the above file types. For PDF files with more than 10 pages, only the first 10 pages will be used.</td>
+<td>The URL of an image or PDF file accessible by the server, or the Base64-encoded content of the file. For PDF files exceeding 10 pages, only the first 10 pages will be used.</td>
 <td>Yes</td>
 </tr>
 <tr>
 <td><code>fileType</code></td>
-<td><code>integer</code></td>
-<td>File type. <code>0</code> represents PDF files, <code>1</code> represents image files. If this property is not present in the request body, the file type will be inferred based on the URL.</td>
+<td><code>integer</code> | <code>null</code></td>
+<td>The type of the file. <code>0</code> for PDF files, <code>1</code> for image files. If this attribute is missing, the file type will be inferred from the URL.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useImgOrientationCls</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable document image orientation classification. This feature is enabled by default.</td>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the <code>use_doc_orientation_classify</code> parameter description in the pipeline <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useImgUnwarping</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable text image correction. This feature is enabled by default.</td>
+<td><code>useDocUnwarping</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the <code>use_doc_unwarping</code> parameter description in the pipeline <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useSealTextDet</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable seal text detection. This feature is enabled by default.</td>
+<td><code>useGeneralOcr</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the <code>use_general_ocr</code> parameter description in the pipeline <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>inferenceParams</code></td>
-<td><code>object</code></td>
-<td>Inference parameters.</td>
+<td><code>useSealRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the <code>use_seal_recognition</code> parameter description in the pipeline <code>predict</code> method.</td>
 <td>No</td>
 </tr>
-</tbody>
-</table>
-<p>Properties of <code>inferenceParams</code>:</p>
-<table>
-<thead>
 <tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Required</th>
+<td><code>useTableRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the <code>use_table_recognition</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
 </tr>
-</thead>
-<tbody>
 <tr>
-<td><code>maxLongSide</code></td>
-<td><code>integer</code></td>
-<td>During inference, if the length of the longer side of the input image for the text detection model is greater than <code>maxLongSide</code>, the image will be scaled so that the length of the longer side equals <code>maxLongSide</code>.</td>
+<td><code>textDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>Refer to the <code>text_det_limit_side_len</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Refer to the <code>text_det_limit_type</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>text_det_thresh</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>text_det_box_thresh</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>text_det_unclip_ratio</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>text_rec_score_thresh</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>Refer to the <code>seal_det_limit_side_len</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Refer to the <code>seal_det_limit_type</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>seal_det_thresh</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>seal_det_box_thresh</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>seal_det_unclip_ratio</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>seal_rec_score_thresh</code> parameter description in the pipeline <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>When the request is processed successfully, the <code>result</code> in the response body has the following properties:</li>
+<li>When the request is processed successfully, the <code>result</code> in the response body has the following attributes:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>visualResults</code></td>
+<td><code>layoutParsingResults</code></td>
 <td><code>array</code></td>
-<td>Analysis results obtained using the computer vision model. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file in sequence.</td>
+<td>The analysis results obtained using a computer vision model. The length of the array is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
 </tr>
 <tr>
 <td><code>visualInfo</code></td>
-<td><code>object</code></td>
+<td><code>array</code></td>
 <td>Key information in the image, which can be used as input for other operations.</td>
 </tr>
 <tr>
@@ -790,245 +849,87 @@ Below are the API reference and multi-language service invocation examples for t
 </tr>
 </tbody>
 </table>
-<p>Each element in <code>visualResults</code> is an <code>object</code> with the following properties:</p>
+<p>Each element in <code>layoutParsingResults</code> is an <code>object</code> with the following attributes:</p>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>texts</code></td>
-<td><code>array</code></td>
-<td>Text locations, contents, and scores.</td>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>A simplified version of the <code>res</code> field in the JSON representation of the result generated by the <code>predict</code> method of the production object, with the <code>input_path</code> field removed.</td>
 </tr>
 <tr>
-<td><code>tables</code></td>
-<td><code>array</code></td>
-<td>Table locations and contents.</td>
+<td><code>outputImages</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>A key-value pair of the input image and the predicted result image. The images are in JPEG format, encoded in Base64.</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
-<td><code>string</code></td>
-<td>Input image. The image is in JPEG format and encoded in Base64.</td>
-</tr>
-<tr>
-<td><code>ocrImage</code></td>
-<td><code>string</code></td>
-<td>OCR result image. The image is in JPEG format and encoded in Base64.</td>
-</tr>
-<tr>
-<td><code>layoutImage</code></td>
-<td><code>string</code></td>
-<td>Layout area detection result image. The image is in JPEG format and encoded in Base64.</td>
-</tr>
-</tbody>
-</table>
-<p>Each element in <code>texts</code> is an <code>object</code> with the following properties:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>poly</code></td>
-<td><code>array</code></td>
-<td>Text location. The elements in the array are the vertex coordinates of the polygon enclosing the text in sequence.</td>
-</tr>
-<tr>
-<td><code>text</code></td>
-<td><code>string</code></td>
-<td>Text content.</td>
-</tr>
-<tr>
-<td><code>score</code></td>
-<td><code>number</code></td>
-<td>Text recognition score.</td>
-</tr>
-</tbody>
-</table>
-<p>Each element in <code>tables</code> is an <code>object</code> with the following properties:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>bbox</code></td>
-<td><code>array</code></td>
-<td>Table location. The elements in the array are the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner of the bounding box in sequence.</td>
-</tr>
-<tr>
-<td><code>html</code></td>
-<td><code>string</code></td>
-<td>Table recognition result in HTML format.</td>
+<td><code>string</code> | <code>null</code></td>
+<td>The input image. The image is in JPEG format, encoded in Base64.</td>
 </tr>
 </tbody>
 </table>
 <ul>
 <li><b><code>buildVectorStore</code></b></li>
 </ul>
-<p>Builds a vector database.</p>
+<p>Build a vector database.</p>
 <p><code>POST /chatocr-vector</code></p>
 <ul>
-<li>The request body properties are as follows:</li>
+<li>The attributes of the request body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 <th>Required</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>visualInfo</code></td>
-<td><code>object</code></td>
-<td>Key information from the image. Provided by the <code>analyzeImages</code> operation.</td>
+<td><code>array</code></td>
+<td>Key information in the image. Provided by the <code>analyzeImages</code> operation.</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code>minChars</code></td>
-<td><code>integer</code></td>
-<td>Minimum data length to enable the vector database.</td>
+<td><code>minCharacters</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>The minimum data length required to enable the vector database.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>llmRequestInterval</code></td>
-<td><code>number</code></td>
-<td>Interval time for calling the large language model API.</td>
+<td><code>number</code> | <code>null</code></td>
+<td>The interval time for calling the large language model API.</td>
 <td>No</td>
 </tr>
+</tbody>
+</table>
+<ul>
+<li>When the request is processed successfully, the <code>result</code> in the response body has the following attributes:</li>
+</ul>
+<table>
+<thead>
 <tr>
-<td><code>llmName</code></td>
-<td><code>string</code></td>
-<td>Name of the large language model.</td>
-<td>No</td>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
 </tr>
+</thead>
+<tbody>
 <tr>
-<td><code>llmParams</code></td>
+<td><code>vectorInfo</code></td>
 <td><code>object</code></td>
-<td>Parameters for the large language model API.</td>
-<td>No</td>
-</tr>
-</tbody>
-</table>
-<p>Currently, <code>llmParams</code> can take one of the following forms:</p>
-<pre><code class="language-json">{
-"apiType": "qianfan",
-"apiKey": "{Qianfan Platform API key}",
-"secretKey": "{Qianfan Platform secret key}"
-}
-</code></pre>
-<pre><code class="language-json">{
-"apiType": "aistudio",
-"accessToken": "{AI Studio access token}"
-}
-</code></pre>
-<ul>
-<li>When the request is processed successfully, the <code>result</code> in the response body has the following properties:</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>vectorStore</code></td>
-<td><code>string</code></td>
-<td>Serialized result of the vector database, which can be used as input for other operations.</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li><b><code>retrieveKnowledge</code></b></li>
-</ul>
-<p>Perform knowledge retrieval.</p>
-<p><code>POST /chatocr-retrieval</code></p>
-<ul>
-<li>The request body properties are as follows:</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Required</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>keys</code></td>
-<td><code>array</code></td>
-<td>List of keywords.</td>
-<td>Yes</td>
-</tr>
-<tr>
-<td><code>vectorStore</code></td>
-<td><code>string</code></td>
-<td>Serialized result of the vector database. Provided by the <code>buildVectorStore</code> operation.</td>
-<td>Yes</td>
-</tr>
-<tr>
-<td><code>llmName</code></td>
-<td><code>string</code></td>
-<td>Name of the large language model.</td>
-<td>No</td>
-</tr>
-<tr>
-<td><code>llmParams</code></td>
-<td><code>object</code></td>
-<td>API parameters for the large language model.</td>
-<td>No</td>
-</tr>
-</tbody>
-</table>
-<p>Currently, <code>llmParams</code> can take one of the following forms:</p>
-<pre><code class="language-json">{
-"apiType": "qianfan",
-"apiKey": "{Qianfan Platform API key}",
-"secretKey": "{Qianfan Platform secret key}"
-}
-</code></pre>
-<pre><code class="language-json">{
-"apiType": "aistudio",
-"accessToken": "{AI Studio access token}"
-}
-</code></pre>
-<ul>
-<li>When the request is processed successfully, the <code>result</code> in the response body has the following properties:</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>retrievalResult</code></td>
-<td><code>string</code></td>
-<td>The result of knowledge retrieval, which can be used as input for other operations.</td>
+<td>The serialized result of the vector database, which can be used as input for other operations.</td>
 </tr>
 </tbody>
 </table>
@@ -1038,20 +939,20 @@ Below are the API reference and multi-language service invocation examples for t
 <p>Interact with large language models to extract key information.</p>
 <p><code>POST /chatocr-chat</code></p>
 <ul>
-<li>Request body properties:</li>
+<li>The properties of the request body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 <th>Required</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>keys</code></td>
+<td><code>keyList</code></td>
 <td><code>array</code></td>
 <td>List of keywords.</td>
 <td>Yes</td>
@@ -1059,143 +960,123 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>visualInfo</code></td>
 <td><code>object</code></td>
-<td>Key information from images. Provided by the <code>analyzeImages</code> operation.</td>
+<td>Key information in the image. Provided by the <code>analyzeImages</code> operation.</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code>vectorStore</code></td>
-<td><code>string</code></td>
+<td><code>useVectorRetrieval</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the <code>use_vector_retrieval</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>vectorInfo</code></td>
+<td><code>object</code> | <code>null</code></td>
 <td>Serialized result of the vector database. Provided by the <code>buildVectorStore</code> operation.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>retrievalResult</code></td>
-<td><code>string</code></td>
-<td>Results of knowledge retrieval. Provided by the <code>retrieveKnowledge</code> operation.</td>
+<td><code>minCharacters</code></td>
+<td><code>integer</code></td>
+<td>Minimum data length required to enable the vector database.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>taskDescription</code></td>
-<td><code>string</code></td>
-<td>Task prompt.</td>
+<td><code>textTaskDescription</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>See the <code>text_task_description</code> parameter description in the pipeline <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>rules</code></td>
-<td><code>string</code></td>
-<td>Custom extraction rules, e.g., for output formatting.</td>
+<td><code>textOutputFormat</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>See the <code>text_output_format</code> parameter description in the pipeline <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>fewShot</code></td>
-<td><code>string</code></td>
-<td>Example prompts.</td>
+<td><code>textRulesStr</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>See the <code>text_rules_str</code> parameter description in the pipeline <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>llmName</code></td>
-<td><code>string</code></td>
-<td>Name of the large language model.</td>
+<td><code>textFewShotDemoTextContent</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>See the <code>text_few_shot_demo_text_content</code> parameter description in the pipeline <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>llmParams</code></td>
-<td><code>object</code></td>
-<td>API parameters for the large language model.</td>
+<td><code>textFewShotDemoKeyValueList</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>See the <code>text_few_shot_demo_key_value_list</code> parameter description in the pipeline <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>returnPrompts</code></td>
-<td><code>boolean</code></td>
-<td>Whether to return the prompts used. Enabled by default.</td>
+<td><code>tableTaskDescription</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>See the <code>table_task_description</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableOutputFormat</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>See the <code>table_output_format</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableRulesStr</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>See the <code>table_rules_str</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableFewShotDemoTextContent</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>See the <code>table_few_shot_demo_text_content</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableFewShotDemoKeyValueList</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>See the <code>table_few_shot_demo_key_value_list</code> parameter description in the pipeline <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
-<p>Currently, <code>llmParams</code> can take one of the following forms:</p>
-<pre><code class="language-json">{
-"apiType": "qianfan",
-"apiKey": "{Qianfan Platform API key}",
-"secretKey": "{Qianfan Platform secret key}"
-}
-</code></pre>
-<pre><code class="language-json">{
-"apiType": "aistudio",
-"accessToken": "{AI Studio access token}"
-}
-</code></pre>
 <ul>
-<li>On successful request processing, the <code>result</code> in the response body has the following properties:</li>
+<li>When the request is processed successfully, the <code>result</code> in the response body has the following attributes:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>chatResult</code></td>
 <td><code>object</code></td>
-<td>Extracted key information.</td>
-</tr>
-<tr>
-<td><code>prompts</code></td>
-<td><code>object</code></td>
-<td>Prompts used.</td>
-</tr>
-</tbody>
-</table>
-<p>Properties of <code>prompts</code>:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>ocr</code></td>
-<td><code>array</code></td>
-<td>OCR prompts.</td>
-</tr>
-<tr>
-<td><code>table</code></td>
-<td><code>array</code></td>
-<td>Table prompts.</td>
-</tr>
-<tr>
-<td><code>html</code></td>
-<td><code>array</code></td>
-<td>HTML prompts.</td>
+<td>The result of key information extraction.</td>
 </tr>
 </tbody>
 </table></details>
-<details><summary>Multi-Language Service Invocation Examples</summary>
+<details><summary>Multi-language service call example</summary>
 <details>
 <summary>Python</summary>
+
 <pre><code class="language-python">import base64
 import pprint
 import sys
 
 import requests
 
+
 API_BASE_URL = "http://0.0.0.0:8080"
-API_KEY = "{Qianfan Platform API key}"
-SECRET_KEY = "{Qianfan Platform secret key}"
-LLM_NAME = "ernie-3.5"
-LLM_PARAMS = {
-    "apiType": "qianfan",
-    "apiKey": API_KEY,
-    "secretKey": SECRET_KEY,
-}
 
 file_path = "./demo.jpg"
-keys = ["电话"]
+keys = ["Name"]
 
 with open(file_path, "rb") as file:
     file_bytes = file.read()
@@ -1204,9 +1085,6 @@ with open(file_path, "rb") as file:
 payload = {
     "file": file_data,
     "fileType": 1,
-    "useImgOrientationCls": True,
-    "useImgUnwarping": True,
-    "useSealTextDet": True,
 }
 resp_visual = requests.post(url=f"{API_BASE_URL}/chatocr-visual", json=payload)
 if resp_visual.status_code != 200:
@@ -1218,25 +1096,16 @@ if resp_visual.status_code != 200:
     sys.exit(1)
 result_visual = resp_visual.json()["result"]
 
-for i, res in enumerate(result_visual["visualResults"]):
-    print("Texts:")
-    pprint.pp(res["texts"])
-    print("Tables:")
-    pprint.pp(res["tables"])
-    layout_img_path = f"layout_{i}.jpg"
-    with open(layout_img_path, "wb") as f:
-        f.write(base64.b64decode(res["layoutImage"]))
-    ocr_img_path = f"ocr_{i}.jpg"
-    with open(ocr_img_path, "wb") as f:
-        f.write(base64.b64decode(res["ocrImage"]))
-    print(f"Output images saved at {layout_img_path} and {ocr_img_path}")
+for i, res in enumerate(result_visual["layoutParsingResults"]):
+    print(res["prunedResult"])
+    for img_name, img in res["outputImages"].items():
+        img_path = f"{img_name}_{i}.jpg"
+        with open(img_path, "wb") as f:
+            f.write(base64.b64decode(img))
+        print(f"Output image saved at {img_path}")
 
 payload = {
     "visualInfo": result_visual["visualInfo"],
-    "minChars": 200,
-    "llmRequestInterval": 1000,
-    "llmName": LLM_NAME,
-    "llmParams": LLM_PARAMS,
 }
 resp_vector = requests.post(url=f"{API_BASE_URL}/chatocr-vector", json=payload)
 if resp_vector.status_code != 200:
@@ -1249,33 +1118,12 @@ if resp_vector.status_code != 200:
 result_vector = resp_vector.json()["result"]
 
 payload = {
-    "keys": keys,
-    "vectorStore": result_vector["vectorStore"],
-    "llmName": LLM_NAME,
-    "llmParams": LLM_PARAMS,
-}
-resp_retrieval = requests.post(url=f"{API_BASE_URL}/chatocr-retrieval", json=payload)
-if resp_retrieval.status_code != 200:
-    print(
-        f"Request to chatocr-retrieval failed with status code {resp_retrieval.status_code}.",
-        file=sys.stderr,
-    )
-    pprint.pp(resp_retrieval.json())
-    sys.exit(1)
-result_retrieval = resp_retrieval.json()["result"]
-
-payload = {
-    "keys": keys,
+    "keyList": keys,
     "visualInfo": result_visual["visualInfo"],
-    "vectorStore": result_vector["vectorStore"],
-    "retrievalResult": result_retrieval["retrievalResult"],
-    "taskDescription": "",
-    "rules": "",
-    "fewShot": "",
-    "llmName": LLM_NAME,
-    "llmParams": LLM_PARAMS,
-    "returnPrompts": True,
+    "useVectorRetrieval": True,
+    "vectorInfo": result_vector["vectorInfo"],
 }
+
 resp_chat = requests.post(url=f"{API_BASE_URL}/chatocr-chat", json=payload)
 if resp_chat.status_code != 200:
     print(
@@ -1285,12 +1133,10 @@ if resp_chat.status_code != 200:
     pprint.pp(resp_chat.json())
     sys.exit(1)
 result_chat = resp_chat.json()["result"]
-print("\nPrompts:")
-pprint.pp(result_chat["prompts"])
 print("Final result:")
 print(result_chat["chatResult"])
 </code></pre>
-<b>Note</b>: Please fill in your API key and secret key at `API_KEY` and `SECRET_KEY`.</details>
+<b>Note</b>: Please fill in your API key and secret key at `API_KEY` and `SECRET_KEY`. </details>
 </details>
 <br/>
 

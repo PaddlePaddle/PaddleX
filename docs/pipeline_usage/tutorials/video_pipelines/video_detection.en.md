@@ -70,7 +70,7 @@ The visualization results are saved under `save_path`, and the visualization res
 
 #### 2.1.2 Integration with Python Script
 
-The above command line is for quickly experiencing and viewing the effect. Generally speaking, in a project, it is often necessary to integrate through code. You can complete the rapid inference of the production line with just a few lines of code. The inference code is as follows:
+The above command line is for quickly experiencing and viewing the effect. Generally speaking, in a project, it is often necessary to integrate through code. You can complete the rapid inference of the pipeline with just a few lines of code. The inference code is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -289,7 +289,7 @@ In the above Python script, the following steps are executed:
 
 - The prediction result obtained by the `json` attribute is a dict type of data, with content consistent with the content saved by calling the `save_to_json()` method.
 
-In addition, you can obtain the video_detection production line configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
+In addition, you can obtain the video_detection pipeline configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
 
 ```
 paddlex --get_pipeline_config video_detection --save_path ./my_path
@@ -329,8 +329,8 @@ Below are the API references and multi-language service invocation examples for 
 <p>For the main operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
-<li>Both the request body and response body are JSON data (JSON objects).</li>
-<li>When the request is processed successfully, the response status code is <code>200</code>, and the response body has the following attributes:</li>
+<li>Both the request body and the response body are JSON data (JSON objects).</li>
+<li>When the request is processed successfully, the response status code is <code>200</code>, and the attributes of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
@@ -354,17 +354,17 @@ Below are the API references and multi-language service invocation examples for 
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error description. Fixed at <code>"Success"</code>.</td>
+<td>Error message. Fixed at <code>"Success"</code>.</td>
 </tr>
 <tr>
 <td><code>result</code></td>
 <td><code>object</code></td>
-<td>The result of the operation.</td>
+<td>Operation result.</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>When the request is not processed successfully, the response body has the following attributes:</li>
+<li>When the request is not processed successfully, the attributes of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
@@ -388,7 +388,7 @@ Below are the API references and multi-language service invocation examples for 
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error description.</td>
+<td>Error message.</td>
 </tr>
 </tbody>
 </table>
@@ -396,8 +396,8 @@ Below are the API references and multi-language service invocation examples for 
 <ul>
 <li><b><code>infer</code></b></li>
 </ul>
-<p>Perform video classification.</p>
-<p><code>POST /video-classification</code></p>
+<p>Classify videos.</p>
+<p><code>POST /video-detection</code></p>
 <ul>
 <li>The attributes of the request body are as follows:</li>
 </ul>
@@ -414,36 +414,24 @@ Below are the API references and multi-language service invocation examples for 
 <tr>
 <td><code>video</code></td>
 <td><code>string</code></td>
-<td>The URL of the video file accessible by the server or the Base64 encoded result of the video file content.</td>
+<td>The URL of the video file accessible by the server or the Base64-encoded content of the video file.</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code>inferenceParams</code></td>
-<td><code>object</code></td>
-<td>Inference parameters.</td>
+<td><code>nmsThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>nms_thresh</code> parameter description in the production <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>scoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>score_thresh</code> parameter description in the production <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
-<p>The attributes of <code>inferenceParams</code> are as follows:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Meaning</th>
-<th>Required</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>score_threshold</code></td>
-<td><code>integer</code></td>
-<td>Only boxes with scores higher than this threshold <code>score_threshold</code> will be retained in the results.</td>
-<td>No</td>
-</tr>
-</tbody>
-</table>
+
 <ul>
 <li>When the request is processed successfully, the <code>result</code> in the response body has the following attributes:</li>
 </ul>
@@ -457,18 +445,13 @@ Below are the API references and multi-language service invocation examples for 
 </thead>
 <tbody>
 <tr>
-<td><code>categories</code></td>
+<td><code>frames</code></td>
 <td><code>array</code></td>
-<td>Video category information.</td>
-</tr>
-<tr>
-<td><code>video</code></td>
-<td><code>string</code></td>
-<td>The video detection result image. The video is in JPEG format and encoded in Base64.</td>
+<td>The detection result of each frame.</td>
 </tr>
 </tbody>
 </table>
-<p>Each element in <code>categories</code> is an <code>object</code> with the following attributes:</p>
+<p>Each element in <code>frames</code> is an <code>object</code> with the following attributes:</p>
 <table>
 <thead>
 <tr>
@@ -479,36 +462,46 @@ Below are the API references and multi-language service invocation examples for 
 </thead>
 <tbody>
 <tr>
-<td><code>id</code></td>
+<td><code>index</code></td>
 <td><code>integer</code></td>
-<td>Category ID.</td>
+<td>The frame number starting from 0.</td>
 </tr>
 <tr>
-<td><code>name</code></td>
+<td><code>detectedObjects</code></td>
+<td><code>array</code></td>
+<td>Information about the location, category, and other details of the detected objects.</td>
+</tr>
+</tbody>
+</table>
+<p>Each element in <code>detectedObjects</code> is an <code>object</code> with the following attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bbox</code></td>
+<td><code>array</code></td>
+<td>The location of the detected object. The elements in the array are the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner.</td>
+</tr>
+<tr>
+<td><code>categoryName</code></td>
 <td><code>string</code></td>
-<td>Category name.</td>
+<td>The name of the detected object category.</td>
 </tr>
 <tr>
 <td><code>score</code></td>
 <td><code>number</code></td>
-<td>Category score.</td>
+<td>The score of the detected object.</td>
 </tr>
 </tbody>
 </table>
-<p>An example of <code>result</code> is as follows:</p>
-<pre><code class="language-json">{
-&quot;categories&quot;: [
-{
-&quot;id&quot;: 5,
-&quot;name&quot;: &quot;Rabbit&quot;,
-&quot;score&quot;: 0.93
-}
-],
-&quot;video&quot;: &quot;xxxxxx&quot;
-}
-</code></pre></details>
-
-<details><summary>Multi-language Service Invocation Example</summary>
+</details>
+<details><summary>Multi-language Service Call Example</summary>
 
 <details>
 <summary>Python</summary>
@@ -516,9 +509,8 @@ Below are the API references and multi-language service invocation examples for 
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = "http://localhost:8080/video-classification"  # Service URL
+API_URL = "http://localhost:8080/video-detection" # Service URL
 video_path = "./demo.mp4"
-output_video_path = "./out.mp4"
 
 # Encode the local video using Base64
 with open(video_path, "rb") as file:
@@ -530,340 +522,11 @@ payload = {"video": video_data}  # Base64-encoded file content or video URL
 # Call the API
 response = requests.post(API_URL, json=payload)
 
-# Process the response data
+# Process the API response
 assert response.status_code == 200
 result = response.json()["result"]
-with open(output_video_path, "wb") as file:
-    file.write(base64.b64decode(result["video"]))
-print(f"Output video saved at {output_video_path}")
-print("\nCategories:")
-print(result["categories"])
-</code></pre></details>
-<details><summary>C++</summary>
-
-<pre><code class="language-cpp">#include <iostream>
-#include "cpp-httplib/httplib.h" // https://github.com/Huiyicc/cpp-httplib
-#include "nlohmann/json.hpp" // https://github.com/nlohmann/json
-#include "base64.hpp" // https://github.com/tobiaslocker/base64
-
-int main() {
-    httplib::Client client("localhost:8080");
-    const std::string videoPath = "./demo.mp4";
-    const std::string outputImagePath = "./out.mp4";
-
-    httplib::Headers headers = {
-        {"Content-Type", "application/json"}
-    };
-
-    // Encode the local video using Base64
-    std::ifstream file(videoPath, std::ios::binary | std::ios::ate);
-    std::streamsize size = file.tellg();
-    file.seekg(0, std::ios::beg);
-
-    std::vector<char> buffer(size);
-    if (!file.read(buffer.data(), size)) {
-        std::cerr << "Error reading file." << std::endl;
-        return 1;
-    }
-    std::string bufferStr(reinterpret_cast<const char*>(buffer.data()), buffer.size());
-    std::string encodedImage = base64::to_base64(bufferStr);
-
-    nlohmann::json jsonObj;
-    jsonObj["video"] = encodedImage;
-    std::string body = jsonObj.dump();
-
-    // Call the API
-    auto response = client.Post("/video-classification", headers, body, "application/json");
-    // Process the response data
-    if (response && response->status == 200) {
-        nlohmann::json jsonResponse = nlohmann::json::parse(response->body);
-        auto result = jsonResponse["result"];
-
-        encodedImage = result["video"];
-        std::string decodedString = base64::from_base64(encodedImage);
-        std::vector<unsigned char> decodedImage(decodedString.begin(), decodedString.end());
-        std::ofstream outputImage(outputImagePath, std::ios::binary | std::ios::out);
-        if (outputImage.is_open()) {
-            outputImage.write(reinterpret_cast<char*>(decodedImage.data()), decodedImage.size());
-            outputImage.close();
-            std::cout << "Output video saved at " << outputImagePath << std::endl;
-        } else {
-            std::cerr << "Unable to open file for writing: " << outputImagePath << std::endl;
-        }
-
-        auto categories = result["categories"];
-        std::cout << "\nCategories:" << std::endl;
-        for (const auto& category : categories) {
-            std::cout << category << std::endl;
-        }
-    } else {
-        std::cout << "Failed to send HTTP request." << std::endl;
-        return 1;
-    }
-
-    return 0;
-}
-</code></pre></details>
-
-<details><summary>Java</summary>
-
-<pre><code class="language-java">import okhttp3.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Base64;
-
-public class Main {
-    public static void main(String[] args) throws IOException {
-        String API_URL = "http://localhost:8080/video-classification"; // Service URL
-        String videoPath = "./demo.mp4"; // Local video
-        String outputImagePath = "./out.mp4"; // Output video
-
-        // Encode the local video using Base64
-        File file = new File(videoPath);
-        byte[] fileContent = java.nio.file.Files.readAllBytes(file.toPath());
-        String videoData = Base64.getEncoder().encodeToString(fileContent);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        ObjectNode params = objectMapper.createObjectNode();
-        params.put("video", videoData); // Base64-encoded file content or video URL
-
-        // Create an OkHttpClient instance
-        OkHttpClient client = new OkHttpClient();
-        MediaType JSON = MediaType.Companion.get("application/json; charset=utf-8");
-        RequestBody body = RequestBody.Companion.create(params.toString(), JSON);
-        Request request = new Request.Builder()
-                .url(API_URL)
-                .post(body)
-                .build();
-
-        // Call the API and process the response data
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                String responseBody = response.body().string();
-                JsonNode resultNode = objectMapper.readTree(responseBody);
-                JsonNode result = resultNode.get("result");
-                String base64Image = result.get("video").asText();
-                JsonNode categories = result.get("categories");
-
-                byte[] videoBytes = Base64.getDecoder().decode(base64Image);
-                try (FileOutputStream fos = new FileOutputStream(outputImagePath)) {
-                    fos.write(videoBytes);
-                }
-                System.out.println("Output video saved at " + outputImagePath);
-                System.out.println("\nCategories: " + categories.toString());
-            } else {
-                System.err.println("Request failed with code: " + response.code());
-            }
-        }
-    }
-}
-</code></pre></details>
-
-<details><summary>Go</summary>
-
-<pre><code class="language-go">package main
-
-import (
-    &quot;bytes&quot;
-    &quot;encoding/base64&quot;
-    &quot;encoding/json&quot;
-    &quot;fmt&quot;
-    &quot;io/ioutil&quot;
-    &quot;net/http&quot;
-)
-
-func main() {
-    API_URL := &quot;http://localhost:8080/video-classification&quot;
-    videoPath := &quot;./demo.mp4&quot;
-    outputImagePath := &quot;./out.mp4&quot;
-
-    // Encode the local video in Base64
-    videoBytes, err := ioutil.ReadFile(videoPath)
-    if err != nil {
-        fmt.Println(&quot;Error reading video file:&quot;, err)
-        return
-    }
-    videoData := base64.StdEncoding.EncodeToString(videoBytes)
-
-    payload := map[string]string{&quot;video&quot;: videoData} // Base64-encoded file content or video URL
-    payloadBytes, err := json.Marshal(payload)
-    if err != nil {
-        fmt.Println(&quot;Error marshaling payload:&quot;, err)
-        return
-    }
-
-    // Call the API
-    client := &amp;http.Client{}
-    req, err := http.NewRequest(&quot;POST&quot;, API_URL, bytes.NewBuffer(payloadBytes))
-    if err != nil {
-        fmt.Println(&quot;Error creating request:&quot;, err)
-        return
-    }
-
-    res, err := client.Do(req)
-    if err != nil {
-        fmt.Println(&quot;Error sending request:&quot;, err)
-        return
-    }
-    defer res.Body.Close()
-
-    // Process the response data
-    body, err := ioutil.ReadAll(res.Body)
-    if err != nil {
-        fmt.Println(&quot;Error reading response body:&quot;, err)
-        return
-    }
-    type Response struct {
-        Result struct {
-            Image      string   `json:&quot;video&quot;`
-            Categories []map[string]interface{} `json:&quot;categories&quot;`
-        } `json:&quot;result&quot;`
-    }
-    var respData Response
-    err = json.Unmarshal([]byte(string(body)), &amp;respData)
-    if err != nil {
-        fmt.Println(&quot;Error unmarshaling response body:&quot;, err)
-        return
-    }
-
-    outputImageData, err := base64.StdEncoding.DecodeString(respData.Result.Image)
-    if err != nil {
-        fmt.Println(&quot;Error decoding base64 video data:&quot;, err)
-        return
-    }
-    err = ioutil.WriteFile(outputImagePath, outputImageData, 0644)
-    if err != nil {
-        fmt.Println(&quot;Error writing video to file:&quot;, err)
-        return
-    }
-    fmt.Printf(&quot;Image saved at %s.mp4\n&quot;, outputImagePath)
-    fmt.Println(&quot;\nCategories:&quot;)
-    for _, category := range respData.Result.Categories {
-        fmt.Println(category)
-    }
-}
-</code></pre></details>
-
-<details><summary>C#</summary>
-
-<pre><code class="language-csharp">using System;
-using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-
-class Program
-{
-    static readonly string API_URL = &quot;http://localhost:8080/video-classification&quot;;
-    static readonly string videoPath = &quot;./demo.mp4&quot;;
-    static readonly string outputImagePath = &quot;./out.mp4&quot;;
-
-    static async Task Main(string[] args)
-    {
-        var httpClient = new HttpClient();
-
-        // Encode the local video in Base64
-        byte[] videoBytes = File.ReadAllBytes(videoPath);
-        string video_data = Convert.ToBase64String(videoBytes);
-
-        var payload = new JObject{ { &quot;video&quot;, video_data } }; // Base64-encoded file content or video URL
-        var content = new StringContent(payload.ToString(), Encoding.UTF8, &quot;application/json&quot;);
-
-        // Call the API
-        HttpResponseMessage response = await httpClient.PostAsync(API_URL, content);
-        response.EnsureSuccessStatusCode();
-
-        // Process the response data
-        string responseBody = await response.Content.ReadAsStringAsync();
-        JObject jsonResponse = JObject.Parse(responseBody);
-
-        string base64Image = jsonResponse[&quot;result&quot;][&quot;video&quot;].ToString();
-        byte[] outputImageBytes = Convert.FromBase64String(base64Image);
-
-        File.WriteAllBytes(outputImagePath, outputImageBytes);
-        Console.WriteLine($&quot;Output video saved at {outputImagePath}&quot;);
-        Console.WriteLine(&quot;\nCategories:&quot;);
-        Console.WriteLine(jsonResponse[&quot;result&quot;][&quot;categories&quot;].ToString());
-    }
-}
-</code></pre></details>
-
-<details><summary>Node.js</summary>
-
-<pre><code class="language-js">const axios = require('axios');
-const fs = require('fs');
-
-const API_URL = 'http://localhost:8080/video-classification'
-const videoPath = './demo.mp4'
-const outputImagePath = &quot;./out.mp4&quot;;
-
-let config = {
-   method: 'POST',
-   maxBodyLength: Infinity,
-   url: API_URL,
-   data: JSON.stringify({
-    'video': encodeImageToBase64(videoPath)  // Base64-encoded file content or video URL
-  })
-};
-
-// Encode the local video in Base64
-function encodeImageToBase64(filePath) {
-  const bitmap = fs.readFileSync(filePath);
-  return Buffer.from(bitmap).toString('base64');
-}
-
-// Call the API
-axios.request(config)
-.then((response) =&gt; {
-    // Process the response data
-    const result = response.data[&quot;result&quot;];
-    const videoBuffer = Buffer.from(result[&quot;video&quot;], 'base64');
-    fs.writeFile(outputImagePath, videoBuffer, (err) =&gt; {
-      if (err) throw err;
-      console.log(`Output video saved at ${outputImagePath}`);
-    });
-    console.log(&quot;\nCategories:&quot;);
-    console.log(result[&quot;categories&quot;]);
-})
-.catch((error) =&gt; {
-  console.log(error);
-});
-</code></pre></details>
-
-<details><summary>PHP</summary>
-
-<pre><code class="language-php">&lt;?php
-
-$API_URL = &quot;http://localhost:8080/video-classification&quot;; // Service URL
-$video_path = &quot;./demo.mp4&quot;;
-$output_video_path = &quot;./out.mp4&quot;;
-
-// Base64 encode the local video
-$video_data = base64_encode(file_get_contents($video_path));
-$payload = array(&quot;video&quot; =&gt; $video_data); // Base64 encoded file content or video URL
-
-// Call the API
-$ch = curl_init($API_URL);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$response = curl_exec($ch);
-curl_close($ch);
-
-// Process the API response
-$result = json_decode($response, true)[&quot;result&quot;];
-file_put_contents($output_video_path, base64_decode($result[&quot;video&quot;]));
-echo &quot;Output video saved at &quot; . $output_video_path . &quot;\n&quot;;
-echo &quot;\nCategories:\n&quot;;
-print_r($result[&quot;categories&quot;]);
-?&gt;
+print("\nFrames:")
+print(result["frames"])
 </code></pre></details>
 </details>
 <br/>
@@ -891,15 +554,15 @@ Pipeline:
 ......
 ```
 
-Subsequently, refer to the command-line method or Python script method in the local experience to load the modified production line configuration file.
+Subsequently, refer to the command-line method or Python script method in the local experience to load the modified pipeline configuration file.
 
 ## 5. Multi-Hardware Support
 PaddleX supports a variety of mainstream hardware devices, including NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware devices.
 
-For example, if you use Ascend NPU for video detection in the production line, the command used is:
+For example, if you use Ascend NPU for video detection in the pipeline, the command used is:
 
 ```bash
 paddlex --pipeline video_detection --input HorseRiding.avi --device npu:0
 ```
 
-If you want to use the General Video Detection Production Line on a wider variety of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+If you want to use the General Video Detection pipeline on a wider variety of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).

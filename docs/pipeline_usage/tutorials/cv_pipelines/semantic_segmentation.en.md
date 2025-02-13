@@ -571,6 +571,12 @@ Below are the API references for basic service deployment and examples of multi-
 <td>The URL of the image file accessible by the server or the Base64 encoded content of the image file.</td>
 <td>Yes</td>
 </tr>
+<tr>
+<td><code>targetSize</code></td>
+<td><code>integer</code> | <code>array</code> | <code>null</code></td>
+<td>Refer to the <code>target_size</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -597,7 +603,7 @@ Below are the API references for basic service deployment and examples of multi-
 </tr>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></td>
+<td><code>string</code>| <code>null</code></td>
 <td>Semantic segmentation result image. The image is in JPEG format and encoded using Base64.</td>
 </tr>
 </tbody>
@@ -1010,4 +1016,4 @@ paddlex --pipeline semantic_segmentation \
         --device npu:0
 ```
 
-If you want to use the general semantic segmentation production line on a wider variety of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+If you want to use the general semantic segmentation pipeline on a wider variety of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
