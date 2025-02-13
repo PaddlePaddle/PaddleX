@@ -17,7 +17,7 @@ from typing import Any, Dict, List
 import ultra_infer as ui
 import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.models_new.formula_recognition.result import FormulaRecResult
+from paddlex.inference.models.formula_recognition.result import FormulaRecResult
 from paddlex.modules.formula_recognition.model_list import MODELS
 
 from paddlex_hpi.models.base import CVPredictor
@@ -44,7 +44,7 @@ class LaTeXOCRPredictor(CVPredictor):
         return FormulaRecResult
 
     def process(self, batch_data: List[Any]) -> Dict[str, List[Any]]:
-        batch_raw_imgs = self._data_reader(imgs=batch_data)
+        batch_raw_imgs = self._data_reader(imgs=batch_data.instances)
         imgs = [np.ascontiguousarray(img) for img in batch_raw_imgs]
         ui_results = self._ui_model.batch_predict(imgs)
 
@@ -53,7 +53,8 @@ class LaTeXOCRPredictor(CVPredictor):
             rec_text_list.append(ui_result.rec_text)
 
         return {
-            "input_path": batch_data,
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
             "input_img": batch_raw_imgs,
             "rec_text": rec_text_list,
         }

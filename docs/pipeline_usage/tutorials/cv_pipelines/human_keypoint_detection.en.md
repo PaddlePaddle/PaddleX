@@ -12,7 +12,7 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/pipelines/human_keypoint_detection/01.jpg"/>
 <b>The Human Keypoint Detection Pipeline includes pedestrian detection and human keypoint detection modules</b>, with several models available. You can choose the model based on the benchmark data below. <b>If you prioritize model accuracy, choose a model with higher accuracy; if you prioritize inference speed, choose a model with faster inference speed; if you prioritize storage size, choose a model with a smaller storage size</b>.
 
-<summary> 👉Model List Details</summary>
+<details><summary> 👉Model List Details</summary>
 <b>Pedestrian Detection Module:</b>
 <table>
 <tr>
@@ -76,6 +76,7 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 </tr>
 </table>
 <b>Note: The above accuracy metrics are based on the COCO dataset AP(0.5:0.95), with detection boxes obtained from ground truth annotations. All model GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision, and CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+</details>
 
 ## 2. Quick Start
 
@@ -87,7 +88,7 @@ Not supported for online experience.
 
 ### 2.2 Local Experience
 
-&gt; ❗ Before using the Human Keypoint Detection Pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
+> ❗ Before using the Human Keypoint Detection Pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
 
 #### 2.2.1 Command Line Experience
 
@@ -566,14 +567,14 @@ SubModules:
   ObjectDetection:
     module_name: object_detection
     model_name: PP-YOLOE-S_human
-    model_dir: null #可修改为微调后行人检测模型的本地路径
+    model_dir: null # Can be modified to the local path of the fine-tuned human detection model
     batch_size: 1
     threshold: null
     img_size: null
   KeypointDetection:
     module_name: keypoint_detection
     model_name: PP-TinyPose_128x96
-    model_dir: #可修改为微调后关键点检测模型的本地路径
+    model_dir: # Can be modified to the local path of the fine-tuned keypoint detection model
     batch_size: 1
     flip: False
     use_udp: null

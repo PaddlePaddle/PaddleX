@@ -1,13 +1,26 @@
 import os
-import open3d
 import numpy as np
 import argparse
+import importlib.util
+import sys
+
+class LazyLoader:
+    def __init__(self, module_name):
+        self.module_name = module_name
+        self._module = None
+
+    def __getattr__(self, item):
+        if self._module is None:
+            self._module = importlib.import_module(self.module_name)
+        return getattr(self._module, item)
+
+open3d = LazyLoader('open3d')
 
 class Visualizer3D:
     def __init__(self):
         self.vis = open3d.visualization.Visualizer() # initialize visualizer
 
-    def boxes_to_lines(self, box: np.ndarray) -> open3d.geometry.LineSet:
+    def boxes_to_lines(self, box: np.ndarray):
         """
            4-------- 6
          /|         /|

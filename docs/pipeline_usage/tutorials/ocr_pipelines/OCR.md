@@ -11,6 +11,7 @@ OCR（光学字符识别，Optical Character Recognition）是一种将图像中
 
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/01.png"/>
+
 <b>通用OCR产线中包含必选的文本检测模块和文本识别模块，</b>以及可选的文档图像方向分类模块、文本图像矫正模块和文本行方向分类模块。其中，文档图像方向分类模块和文本图像矫正模块作为文档预处理子产线被集成到通用OCR产线中。每个模块都包含多个模型，您可以根据下方的基准测试数据选择使用的模型。
 
 <b>如果您更注重模型的精度，请选择精度较高的模型；如果您更在意模型的推理速度，请选择推理速度较快的模型；如果您关注模型的存储大小，请选择存储体积较小的模型。</b>
@@ -415,7 +416,7 @@ PaddleX 所提供的模型产线均可以快速体验效果，你可以在星河
 如果您对产线运行的效果满意，可以直接进行集成部署。您可以选择从云端下载部署包，也可以参考[2.2节本地体验](#22-本地体验)中的方法进行本地部署。如果对效果不满意，您可以利用私有数据<b>对产线中的模型进行微调训练</b>。如果您具备本地训练的硬件资源，可以直接在本地开展训练；如果没有，星河零代码平台提供了一键式训练服务，无需编写代码，只需上传数据后，即可一键启动训练任务。
 
 ### 2.2 本地体验
-&gt;❗ 在本地使用通用OCR产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+❗ 在本地使用通用OCR产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
 #### 2.2.1 命令行方式体验
 * 一行命令即可快速体验OCR产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png)，并将 `--input` 替换为本地路径，进行预测
@@ -585,6 +586,7 @@ for res in output:
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_det_limit_side_len</code></td>
 <td>文本检测的图像边长限制</td>
 <td><code>int|None</code></td>
@@ -595,6 +597,7 @@ for res in output:
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_det_limit_type</code></td>
 <td>文本检测的图像边长限制类型</td>
 <td><code>str|None</code></td>
@@ -605,6 +608,7 @@ for res in output:
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_det_thresh</code></td>
 <td>检测像素阈值，输出的概率图中，得分大于该阈值的像素点才会被认为是文字像素点</td>
 <td><code>float|None</code></td>
@@ -613,6 +617,7 @@ for res in output:
 <li><b>float</b>：大于 <code>0</code> 的任意浮点数
     <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.3</code></li></li></ul></td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_det_box_thresh</code></td>
 <td>检测框阈值，检测结果边框内，所有像素点的平均得分大于该阈值时，该结果会被认为是文字区域</td>
 <td><code>float|None</code></td>
@@ -621,6 +626,7 @@ for res in output:
 <li><b>float</b>：大于 <code>0</code> 的任意浮点数
     <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.6</code></li></li></ul></td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_det_unclip_ratio</code></td>
 <td>文本检测扩张系数，使用该方法对文字区域进行扩张，该值越大，扩张的面积越大</td>
 <td><code>float|None</code></td>
@@ -629,6 +635,7 @@ for res in output:
 <li><b>float</b>：大于 <code>0</code> 的任意浮点数
     <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>2.0</code></li></li></ul></td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_rec_score_thresh</code></td>
 <td>文本识别阈值，得分大于该阈值的文本结果会被保留</td>
 <td><code>float|None</code></td>
@@ -1027,6 +1034,7 @@ for res in output:
 <details><summary>多语言调用服务示例</summary>
 <details>
 <summary>Python</summary>
+
 <pre><code class="language-python">import base64
 import requests
 

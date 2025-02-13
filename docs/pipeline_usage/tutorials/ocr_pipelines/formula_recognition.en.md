@@ -266,11 +266,19 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <b>Note: The above accuracy metrics are measured using an internally built formula recognition test set within PaddleX. The BLEU score of LaTeX_OCR_rec on the LaTeX-OCR formula recognition test set is 0.8821. All model GPU inference times are based on machines with Tesla V100 GPUs, with precision type FP32.</b>
 
 ## 2. Quick Start
-PaddleX supports experiencing the formula recognition pipeline locally using the command line or Python.
+All model production lines provided by PaddleX can be quickly experienced. You can experience the effect of the formula recognition pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the formula recognition pipeline.
 
-Before using the formula recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
+### 2.1 Online Experience
+You can [experience the formula recognition pipeline online](https://aistudio.baidu.com/community/app/387976/webUI?source=appCenter) by recognizing the demo images provided by the official platform, for example:
 
-### 2.1 Command Line Experience
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/formula_aistudio.png"/>
+
+If you are satisfied with the performance of the production line, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the methods in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the production line using your private data</b>. If you have local hardware resources for training, you can start training directly on your local machine; if not, the Star River Zero-Code platform provides a one-click training service. You don't need to write any code—just upload your data and start the training task with one click.
+
+### 2.2 Local Experience
+> ❗ Before using the formula recognition pipelin locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
+
+#### 2.2.1 Command Line Experience
 You can quickly experience the effect of the formula recognition pipeline with one command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/pipelines/general_formula_recognition_001.png), and replace `--input` with the local path for prediction.
 
 ```bash
@@ -309,7 +317,7 @@ sudo apt-get install texlive texlive-latex-base texlive-latex-extra -y
 
 <b>Note</b>: Due to the need to render each formula image during the formula recognition visualization process, the process takes a long time. Please be patient.
 
-### 2.2 Integration via Python Script
+#### 2.2.2 Python Script Integration
 A few lines of code can quickly complete the production line inference. Taking the formula recognition production line as an example:
 
 ```python

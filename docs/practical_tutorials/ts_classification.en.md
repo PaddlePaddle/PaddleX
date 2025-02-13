@@ -73,7 +73,7 @@ Missing Value Handling: To guarantee the quality and integrity of the data, miss
 Data Validation can be completed with just one command:
 
 ```
-python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/ts_classify_examples
 ```
@@ -121,7 +121,7 @@ If you need to convert the dataset format or re-split the dataset, please refer 
 Before training, ensure that you have validated the dataset. To complete PaddleX model training, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
 -o Global.mode=train \
 -o Global.dataset_dir=./dataset/ts_classify_examples \
 -o Train.epochs_iters=5 \
@@ -175,7 +175,7 @@ For more hyperparameter introductions, please refer to [PaddleX Time Series Task
 After completing model training, you can evaluate the specified model weights file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation requires just one command:
 
 ```
-    python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+    python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/ts_classify_examples \
     -o Evaluate.weight_path=./output/best_model/model.pdparams
@@ -277,7 +277,7 @@ Results of Increasing Training Epochs:
 Set the model directory to the trained model for testing, using the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_classification/test.csv) to perform predictions:
 
 ```bash
-python main.py -c paddlex/configs/ts_classification/TimesNet_cls.yaml \
+python main.py -c paddlex/configs/modules/ts_classification/TimesNet_cls.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/inference" \
     -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_classification/test.csv"
@@ -294,11 +294,31 @@ Other related parameters can be set by modifying the fields under `Global` and `
 ## 7. Development Integration/Deployment
 If the general time series classification pipeline meets your requirements for inference speed and accuracy, you can directly proceed with development integration/deployment.
 
-1. If you need to directly apply the general time series classification pipeline in your Python project, you can refer to the following sample code:
+1. If you need to use the fine-tuned model weights, you can obtain the ts_classification production configuration file and load the configuration file for prediction. You can execute the following command to save the results in `my_path`:
 
 ```
+paddlex --get_pipeline_config ts_classification --save_path ./my_path
+```
+
+Fill in the local path of the fine-tuned model weights into the `model_dir` in the production configuration file. If you need to directly apply the general time-series classification pipeline in your Python project, you can refer to the following example:
+
+```yaml
+pipeline_name: ts_classification
+
+SubModules:
+  TSClassification:
+    module_name: ts_classification
+    model_name: TimesNet_cls
+    model_dir: ./output/inference  # 此处替换为您训练后得到的模型权重本地路径
+    batch_size: 1
+```
+
+Subsequently, in your Python code, you can use the pipeline as follows:
+
+
+```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="ts_classification")
+pipeline = create_pipeline(pipeline="my_path/ts_classification.yaml")
 output = pipeline.predict("pre_ts.csv")
 for res in output:
     res.print() # 打印预测的结构化输出

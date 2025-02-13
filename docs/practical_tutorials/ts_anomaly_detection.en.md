@@ -13,6 +13,7 @@ First, choose the corresponding PaddleX pipeline based on your task scenario. Th
 PaddleX offers two ways to experience its capabilities: locally on your machine or on the <b>Baidu AIStudio Community</b>.
 
 * Local Experience:
+
 ```python
 from paddlex import create_model
 model = create_model("PatchTST_ad")
@@ -25,7 +26,7 @@ for res in output:
 Note: Due to the tight correlation between time series data and scenarios, the online experience of official models for time series tasks is tailored to a specific scenario and is not a general solution. Therefore, the experience mode does not support using arbitrary files to evaluate the official model's performance. However, after training a model with your own scenario data, you can select your trained model and use data from the corresponding scenario for online experience.
 
 ## 3. Choose a Model
-PaddleX provides five end-to-end time series anomaly detection models. For details, refer to the [Model List](../support_list/models_list.en.md). The benchmarks of these models are as follows:
+PaddleX provides 4 end-to-end time series anomaly detection models. For details, refer to the [Model List](../support_list/models_list.en.md). The benchmarks of these models are as follows:
 
 <table>
 <thead>
@@ -71,14 +72,6 @@ PaddleX provides five end-to-end time series anomaly detection models. For detai
 <td>164K</td>
 <td>A high-precision time series anomaly detection model that balances local patterns and global dependencies</td>
 </tr>
-<tr>
-<td>TimesNet_ad</td>
-<td>0.9837</td>
-<td>0.9480</td>
-<td>0.9656</td>
-<td>732K</td>
-<td>A highly adaptive and high-precision time series anomaly detection model through multi-period analysis</td>
-</tr>
 </tbody>
 </table>
 > <b>Note: The above accuracy metrics are measured on the [PSM](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_anomaly_examples.tar) dataset with a time series length of 100.</b>
@@ -108,7 +101,7 @@ tar -xf ./dataset/msl.tar -C ./dataset/
 Data Validation can be completed with just one command:
 
 ```
-python main.py -c paddlex/configs/ts_anomaly_detection/PatchTST_ad.yaml \
+python main.py -c paddlex/configs/modules/ts_anomaly_detection/PatchTST_ad.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/msl
 ```
@@ -158,7 +151,7 @@ If you need to convert the dataset format or re-split the dataset, refer to Sect
 Before training, ensure that you have verified the dataset. To complete PaddleX model training, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/ts_anomaly_detection/PatchTST_ad.yaml \
+python main.py -c paddlex/configs/modules/ts_anomaly_detection/PatchTST_ad.yaml \
 -o Global.mode=train \
 -o Global.dataset_dir=./dataset/msl \
 -o Train.epochs_iters=5 \
@@ -208,7 +201,7 @@ For more introductions to hyperparameters, please refer to [PaddleX Time Series 
 After completing model training, you can evaluate the specified model weights file on the validation set to verify the model's accuracy. Using PaddleX for model evaluation requires just one command:
 
 ```bash
-python main.py -c paddlex/configs/ts_anomaly_detection/PatchTST_ad.yaml \
+python main.py -c paddlex/configs/modules/ts_anomaly_detection/PatchTST_ad.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/msl
 ```
@@ -315,7 +308,7 @@ Increasing Training Epochs Results:
 Replace the model in the production line with the fine-tuned model for testing, using the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_anomaly_detection/test.csv) for prediction:
 
 ```
-python main.py -c paddlex/configs/ts_anomaly_detection/PatchTST_ad.yaml \
+python main.py -c paddlex/configs/modules/ts_anomaly_detection/PatchTST_ad.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/inference" \
     -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_anomaly_detection/test.csv"
@@ -330,18 +323,39 @@ Other related parameters can be set by modifying the `Global` and `Evaluate` fie
 ## 7. Integration/Deployment
 If the general-purpose time series anomaly detection pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
-1. If you need to apply the general-purpose time series anomaly detection pipeline directly in your Python project, you can refer to the following sample code:
+1. If you need to use the fine-tuned model weights, you can obtain the ts_anomaly_detection production configuration file and load the configuration file for prediction. You can execute the following command to save the results in `my_path`:
+
 ```
+paddlex --get_pipeline_config ts_anomaly_detection --save_path ./my_path
+```
+
+Fill in the local path of the fine-tuned model weights into the `model_dir` in the production configuration file. If you need to directly apply the general time-series classification pipeline in your Python project, you can refer to the following example:
+
+```yaml
+pipeline_name: ts_anomaly_detection
+
+SubModules:
+  TSAnomalyDetection:
+    module_name: ts_anomaly_detection
+    model_name: PatchTST_ad
+    model_dir: ./output/inference  # 此处替换为您训练后得到的模型权重本地路径
+    batch_size: 1
+```
+
+Then, execute the following code to complete the prediction:
+
+```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="ts_anomaly_detection")
+pipeline = create_pipeline(pipeline="my_path/ts_anomaly_detection.yaml")
 output = pipeline.predict("pre_ts.csv")
 for res in output:
-    res.print()
-    res.save_to_csv("./output/")
+    res.print() # 打印预测的结构化输出
+    res.save_to_csv("./output/") # 保存csv格式结果
 ```
+
 For more parameters, please refer to the [Time Series Anomaly Detection Pipeline Usage Tutorial](../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.en.md)
 
-2. Additionally, PaddleX's time series anomaly detection pipeline also offers a service-oriented deployment method, detailed as follows:
+1. Additionally, PaddleX's time series anomaly detection pipeline also offers a service-oriented deployment method, detailed as follows:
 
 Service-Oriented Deployment: This is a common deployment form in actual production environments. By encapsulating the inference functionality as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving service-oriented deployment of pipelines at low cost. For detailed instructions on service-oriented deployment, please refer to the [PaddleX Service-Oriented Deployment Guide](../pipeline_deploy/serving.en.md).
 You can choose the appropriate method to deploy your model pipeline based on your needs, and proceed with subsequent AI application integration.

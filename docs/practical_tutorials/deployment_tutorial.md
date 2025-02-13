@@ -9,32 +9,32 @@ comments: true
 PaddleX 的三种部署方式详细说明如下：
 
 * 高性能推理：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能推理流程请参考 [PaddleX 高性能推理指南](../pipeline_deploy/high_performance_inference.md)。
+
 * 服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考 [PaddleX 服务化部署指南](../pipeline_deploy/serving.md)。
+
 * 端侧部署：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考 [PaddleX端侧部署指南](../pipeline_deploy/edge_deploy.md)。
 
 本教程将举三个实际应用例子，来依次介绍 PaddleX 的三种部署方式。
 
 ## 1 高性能推理示例
 
-### 1.1 获取序列号与激活
+### 1.1 安装高性能推理插件
 
-在 [飞桨AI Studio星河社区-人工智能学习与实训社区](https://aistudio.baidu.com/paddlex/commercialization) 页面的“开源模型产线部署序列号咨询与获取”部分选择“立即获取”，如下图所示：
+根据设备类型，执行如下指令，安装高性能推理插件：
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-1.png">
+如果你的设备是 CPU，请使用以下命令安装 PaddleX 的 CPU 版本：
 
-选择需要部署的产线，并点击“获取”。之后，可以在页面下方的“开源产线部署SDK序列号管理”部分找到获取到的序列号：
+```bash
+paddlex --install hpi-cpu
+```
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-2.png">
+如果你的设备是 GPU，请使用以下命令安装 PaddleX 的 GPU 版本。请注意，GPU 版本包含了 CPU 版本的所有功能，因此无需单独安装 CPU 版本：
 
-使用序列号完成激活后，即可使用高性能推理插件。PaddleX 提供离线激活和在线激活两种方式（均只支持 Linux 系统）：
+```bash
+paddlex --install hpi-gpu
+```
 
-* 联网激活：在使用推理 API 或 CLI 时，通过参数指定序列号及联网激活，使程序自动完成激活。
-* 离线激活：按照序列号管理界面中的指引（点击“操作”中的“离线激活”），获取机器的设备指纹，并将序列号与设备指纹绑定以获取证书，完成激活。使用这种激活方式，需要手动将证书存放在机器的 `${HOME}/.baidu/paddlex/licenses` 目录中（如果目录不存在，需要创建目录），并在使用推理 API 或 CLI 时指定序列号。
-请注意：每个序列号只能绑定到唯一的设备指纹，且只能绑定一次。这意味着用户如果使用不同的机器部署模型，则必须为每台机器准备单独的序列号。
-
-### 1.2 安装高性能推理插件
-
-在下表中根据处理器架构、操作系统、设备类型、Python 版本等信息，找到对应的安装指令并在部署环境中执行：
+目前高性能推理支持的处理器架构、操作系统、设备类型和 Python 版本如下表所示：
 
 <table>
   <tr>
@@ -42,7 +42,6 @@ PaddleX 的三种部署方式详细说明如下：
     <th>操作系统</th>
     <th>设备类型</th>
     <th>Python 版本</th>
-    <th>安装指令</th>
   </tr>
   <tr>
     <td rowspan="7">x86-64</td>
@@ -51,86 +50,80 @@ PaddleX 的三种部署方式详细说明如下：
   </tr>
   <tr>
     <td>3.8</td>
-    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3.8 - --arch x86_64 --os linux --device cpu --py 38</td>
   </tr>
   <tr>
     <td>3.9</td>
-    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3.9 - --arch x86_64 --os linux --device cpu --py 39</td>
   </tr>
   <tr>
     <td>3.10</td>
-    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3.10 - --arch x86_64 --os linux --device cpu --py 310</td>
   </tr>
   <tr>
     <td rowspan="3">GPU&nbsp;（CUDA&nbsp;11.8&nbsp;+&nbsp;cuDNN&nbsp;8.6）</td>
     <td>3.8</td>
-    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3.8 - --arch x86_64 --os linux --device gpu_cuda118_cudnn86 --py 38</td>
   </tr>
   <tr>
     <td>3.9</td>
-    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3.9 - --arch x86_64 --os linux --device gpu_cuda118_cudnn86 --py 39</td>
   </tr>
   <tr>
     <td>3.10</td>
-    <td>curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3.10 - --arch x86_64 --os linux --device gpu_cuda118_cudnn86 --py 310</td>
   </tr>
 </table>
 
-* 当设备类型为 GPU 时，请使用与环境匹配的 CUDA 和 cuDNN 版本对应的安装指令，否则，将无法正常使用高性能推理插件。
-* 对于 Linux 系统，使用 Bash 执行安装指令。
-* 当设备类型为 CPU 时，安装的高性能推理插件仅支持使用 CPU 进行推理；对于其他设备类型，安装的高性能推理插件则支持使用 CPU 或其他设备进行推理。
+### 1.2 启用高性能推理插件
 
-### 1.3 启用高性能推理插件
+对于 PaddleX CLI，指定 `--use_hpip`，即可启用高性能推理插件。以通用图像分类产线为例：
 
-在启用高性能插件前，请确保当前环境的 `LD_LIBRARY_PATH` 没有指定 TensorRT 的共享库目录，因为插件中已经集成了 TensorRT，避免 TensorRT 版本冲突导致插件无法正常使用。
-
-对于 PaddleX CLI，指定 `--use_hpip`，并设置序列号，即可启用高性能推理插件。如果希望进行联网激活，在第一次使用序列号时，需指定 `--update_license`，以通用OCR产线为例：
-
-```
+```bash
 paddlex \
-    --pipeline OCR \
-    --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png \
+    --pipeline image_classification \
+    --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
     --device gpu:0 \
-    --use_hpip \
-    --serial_number {序列号}
-
-# 如果希望进行联网激活
-paddlex \
-    --pipeline OCR \
-    --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png \
-    --device gpu:0 \
-    --use_hpip \
-    --update_license \
-    --serial_number {序列号}
+    --use_hpip
 ```
 
-对于 PaddleX Python API，启用高性能推理插件的方法类似。仍以通用OCR产线为例：
+对于 PaddleX Python API，启用高性能推理插件的方法类似。以通用图像分类产线和图像分类模块为例：
 
-```
+通用图像分类产线：
+
+```python
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(
-    pipeline="OCR",
-    use_hpip=True,
-    hpi_params={"serial_number": xxx}
+    pipeline="image_classification",
+    device="gpu",
+    use_hpip=True
 )
 
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png ")
+output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg")
+```
+
+图像分类模块：
+
+```python
+from paddlex import create_model
+
+model = create_model(
+    model_name="ResNet18",
+    device="gpu",
+    use_hpip=True
+)
+
+output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg")
 ```
 
 启用高性能推理插件得到的推理结果与未启用插件时一致。对于部分模型，在首次启用高性能推理插件时，可能需要花费较长时间完成推理引擎的构建。PaddleX 将在推理引擎的第一次构建完成后将相关信息缓存在模型目录，并在后续复用缓存中的内容以提升初始化速度。
 
-### 1.4 推理步骤
+### 1.3 推理步骤
 
 本推理步骤基于 <b>PaddleX CLI、联网激活序列号、Python 3.10.0、设备类型为CPU</b> 的方式使用高性能推理插件，其他使用方式（如不同 Python 版本、设备类型或 PaddleX Python API）可参考 [PaddleX 高性能推理指南](../pipeline_deploy/high_performance_inference.md) 替换相应的指令。
 
 ```bash
 # 安装高性能推理插件
-curl -s https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/install_script/latest/install_paddlex_hpi.py | python3.10 - --arch x86_64 --os linux --device cpu --py 310
+paddlex --install hpi-gpu
 # 确保当前环境的 `LD_LIBRARY_PATH` 没有指定 TensorRT 的共享库目录 可以使用下面命令去除或手动去除
 export LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | tr ':' '\n' | grep -v TensorRT | tr '\n' ':' | sed 's/:*$//')
 # 执行推理
-paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0 --use_hpip --serial_number {序列号} --update_license True --save_path ./output
+paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0 --save_path ./output
 ```
 
 运行结果：
@@ -138,14 +131,14 @@ paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddle
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/deployment/01.png"  width="700" />
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/deployment/02.png"  width="700" />
 
-### 1.5 更换产线或模型
+### 1.4 更换产线或模型
 
 - 更换产线：
 
   若想更换其他产线使用高性能推理插件，则替换 `--pipeline` 传入的值即可，以下以通用目标检测产线为例：
 
   ```bash
-  paddlex --pipeline object_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png --device gpu:0 --use_hpip --serial_number {序列号} --update_license True --save_path ./output
+  paddlex --pipeline object_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png --device gpu:0 --use_hpip --save_path ./output
   ```
 
 - 更换模型：
@@ -153,28 +146,25 @@ paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddle
   OCR 产线默认使用 PP-OCRv4_mobile_det、PP-OCRv4_mobile_rec 模型，若想更换其他模型，如 PP-OCRv4_server_det、PP-OCRv4_server_rec 模型，可参考 [通用OCR产线使用教程](../pipeline_usage/tutorials/ocr_pipelines/OCR.md)，具体操作如下：
 
   ```bash
-  # 1. 获取 OCR 产线配置文件并保存到 ./OCR.yaml
-  paddlex --get_pipeline_config OCR --save_path ./OCR.yaml
+  # 1. 修改 OCR 产线配置文件
+  #    将 SubModules.TextDetection.model_name 的值改为 PP-OCRv4_server_det
+  #    将 SubModules.TextDetection.model_dir 的值改为 PP-OCRv4_server_det 模型所在路径
+  #    将 SubModules.TextRecognition.model_name 的值改为 PP-OCRv4_server_rec
+  #    将 SubModules.TextRecognition.model_dir 的值改为 PP-OCRv4_server_rec 模型所在路径
 
-  # 2. 修改 ./OCR.yaml 配置文件
-  #    将 Pipeline.text_det_model 的值改为 PP-OCRv4_server_det 模型所在路径
-  #    将 Pipeline.text_rec_model 的值改为 PP-OCRv4_server_rec 模型所在路径
-
-  # 3. 执行推理时使用修改后的配置文件
-  paddlex --pipeline ./OCR.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0 --use_hpip --serial_number {序列号} --update_license True --save_path ./output
+  # 2. 执行推理
+  paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0 --use_hpip --save_path ./output
   ```
 
   通用目标检测产线默认使用 PicoDet-S 模型，若想更换其他模型，如 RT-DETR 模型，可参考 [通用目标检测产线使用教程](../pipeline_usage/tutorials/cv_pipelines/object_detection.md)，具体操作如下：
 
   ```bash
-  # 1. 获取 OCR 产线配置文件并保存到 ./object_detection.yaml
-  paddlex --get_pipeline_config object_detection --save_path ./object_detection.yaml
+  # 1. 修改 object_detection 产线配置文件
+  #    将 SubModules.ObjectDetection.model_name 的值改为 RT-DETR
+  #    将 SubModules.ObjectDetection.model_dir 的值改为 RT-DETR 模型所在路径
 
-  # 2. 修改 ./object_detection.yaml 配置文件
-  #    将 Pipeline.model 的值改为 RT-DETR 模型所在路径
-
-  # 3. 执行推理时使用修改后的配置文件
-  paddlex --pipeline ./object_detection.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0 --use_hpip --serial_number {序列号} --update_license True --save_path ./output
+  # 2. 执行推理
+  paddlex --pipeline object_detection --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0 --use_hpip --save_path ./output
   ```
 
   其他产线的操作与上述两条产线的操作类似，更多细节可参考产线使用教程。

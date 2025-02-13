@@ -37,60 +37,61 @@ PaddleX 提供了两种体验的方式，一种是可以直接通过 PaddleX whe
 PaddleX 提供了 37 个端到端的目标检测模型，具体可参考 [模型列表](../support_list/models_list.md)，其中部分模型的benchmark如下：
 
 <table>
-<thead>
 <tr>
-<th>模型列表</th>
+<th>模型</th><th>模型下载链接</th>
 <th>mAP(%)</th>
-<th>GPU 推理耗时(ms)</th>
-<th>CPU 推理耗时(ms)</th>
-<th>模型存储大小(M)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>RT-DETR-H</td>
-<td>56.3</td>
-<td>100.65</td>
-<td>8451.92</td>
-<td>471</td>
+<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
+<th>模型存储大小 (M)</th>
+<th>介绍</th>
 </tr>
 <tr>
-<td>RT-DETR-L</td>
-<td>53.0</td>
-<td>27.89</td>
-<td>841.00</td>
-<td>125</td>
-</tr>
-<tr>
-<td>PP-YOLOE_plus-L</td>
-<td>52.9</td>
-<td>29.67</td>
-<td>700.97</td>
-<td>200</td>
-</tr>
-<tr>
-<td>PP-YOLOE_plus-S</td>
-<td>43.7</td>
-<td>8.11</td>
-<td>137.23</td>
-<td>31</td>
-</tr>
-<tr>
-<td>PicoDet-L</td>
+<td>PicoDet-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-L_pretrained.pdparams">训练模型</a></td>
 <td>42.6</td>
-<td>10.09</td>
-<td>129.32</td>
-<td>23</td>
+<td>14.68 / 5.81</td>
+<td>47.32 / 47.32</td>
+<td>20.9 M</td>
+<td rowspan="2">PP-PicoDet是一种全尺寸、棱视宽目标的轻量级目标检测算法，它考虑移动端设备运算量。与传统目标检测算法相比，PP-PicoDet具有更小的模型尺寸和更低的计算复杂度，并在保证检测精度的同时更高的速度和更低的延迟。</td>
 </tr>
 <tr>
-<td>PicoDet-S</td>
+<td>PicoDet-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet-S_pretrained.pdparams">训练模型</a></td>
 <td>29.1</td>
-<td>3.17</td>
-<td>13.36</td>
-<td>5</td>
+<td>7.98 / 2.33</td>
+<td>14.82 / 5.60</td>
+<td>4.4 M</td>
 </tr>
-</tbody>
+<tr>
+<td>PP-YOLOE_plus-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-L_pretrained.pdparams">训练模型</a></td>
+<td>52.9</td>
+<td>33.55 / 10.46</td>
+<td>189.05 / 189.05</td>
+<td>185.3 M</td>
+<td rowspan="2">PP-YOLOE_plus 是一种是百度飞桨视觉团队自研的云边一体高精度模型PP-YOLOE迭代优化升级的版本，通过使用Objects365大规模数据集、优化预处理，大幅提升了模型端到端推理速度。</td>
+</tr>
+<tr>
+<td>PP-YOLOE_plus-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_pretrained.pdparams">训练模型</a></td>
+<td>43.7</td>
+<td>12.16 / 4.58</td>
+<td>73.86 / 52.90</td>
+<td>28.3 M</td>
+</tr>
+<tr>
+<td>RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_pretrained.pdparams">训练模型</a></td>
+<td>56.3</td>
+<td>115.92 / 28.16</td>
+<td>971.32 / 971.32</td>
+<td>435.8 M</td>
+<td rowspan="2">RT-DETR是第一个实时端到端目标检测器。该模型设计了一个高效的混合编码器，满足模型效果与吞吐率的双需求，高效处理多尺度特征，并提出了加速和优化的查询选择机制，以优化解码器查询的动态化。RT-DETR支持通过使用不同的解码器来实现灵活端到端推理速度。</td>
+</tr>
+<tr>
+<td>RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_pretrained.pdparams">训练模型</a></td>
+<td>53.0</td>
+<td>35.00 / 10.45</td>
+<td>495.51 / 495.51</td>
+<td>113.7 M</td>
+</tr>
 </table>
+
 > <b>注：以上精度指标为 <a href="https://cocodataset.org/#home" target="_blank">COCO2017</a> 验证集 mAP(0.5:0.95)。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b>
 
 简单来说，表格从上到下，模型推理速度更快，从下到上，模型精度更高。本教程以 PicoDet-L 模型为例，完成一次模型全流程开发。你可以依据自己的实际使用场景，判断并选择一个合适的模型做训练，训练完成后可在产线内评估合适的模型权重，并最终用于实际使用场景中。
@@ -112,7 +113,7 @@ tar -xf ./dataset/det_mini_fashion_pedia_coco.tar -C ./dataset/
 在对数据集校验时，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/object_detection/PicoDet-L.yaml \
+python main.py -c paddlex/configs/modules/object_detection/PicoDet-L.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/det_mini_fashion_pedia_coco
 ```
@@ -184,7 +185,7 @@ python main.py -c paddlex/configs/object_detection/PicoDet-L.yaml \
 在训练之前，请确保您已经对数据集进行了校验。完成 PaddleX 模型的训练，只需如下一条命令：
 
 ```bash
-python main.py -c paddlex/configs/object_detection/PicoDet-L.yaml \
+python main.py -c paddlex/configs/modules/object_detection/PicoDet-L.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/det_mini_fashion_pedia_coco \
     -o Train.num_classes=15
@@ -222,7 +223,7 @@ PaddleX 中每个模型都提供了模型开发的配置文件，用于设置相
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，只需一行命令：
 
 ```bash
-python main.py -c paddlex/configs/object_detection/PicoDet-L.yaml \
+python main.py -c paddlex/configs/modules/object_detection/PicoDet-L.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/det_mini_fashion_pedia_coco
 ```
@@ -342,7 +343,7 @@ python main.py -c paddlex/configs/object_detection/PicoDet-L.yaml \
 将产线中的模型替换为微调后的模型进行测试，如：
 
 ```bash
-python main.py -c paddlex/configs/object_detection/PicoDet-L.yaml \
+python main.py -c paddlex/configs/modules/object_detection/PicoDet-L.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="output/best_model/inference" \
     -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/object_detection/FashionPedia_demo.png"
@@ -357,10 +358,33 @@ python main.py -c paddlex/configs/object_detection/PicoDet-L.yaml \
 
 ## 7. 开发集成/部署
 如果通用目标检测产线可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
-1. 直接将训练好的模型应用在您的 Python 项目中，可以参考如下示例代码，并将`paddlex/pipelines/object_detection.yaml`配置文件中的`Pipeline.model`修改为自己的模型路径：
+
+1. 若您需要使用微调后的模型权重，可以获取 object_detection 产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
+
+```bash
+paddlex --get_pipeline_config object_detection --save_path ./my_path
+```
+
+将微调后模型权重的本地路径填写至产线配置文件中的 `model_dir` 即可, 若您需要将通用目标检测产线直接应用在您的 Python 项目中，可以参考 如下示例：
+
+```yaml
+pipeline_name: object_detection
+
+SubModules:
+  ObjectDetection:
+    module_name: object_detection
+    model_name: PicoDet-S
+    model_dir: null # 此处替换为您训练后得到的模型权重本地路径
+    batch_size: 1
+    img_size: null
+    threshold: null
+```
+
+随后，在您的 Python 代码中，您可以这样使用产线：
+
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="paddlex/pipelines/object_detection.yaml")
+pipeline = create_pipeline(pipeline="my_path/object_detection.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/object_detection/FashionPedia_demo.png")
 for res in output:
     res.print() # 打印预测的结构化输出

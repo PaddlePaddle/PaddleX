@@ -537,9 +537,9 @@ print(result["detectedObjects"])
 <details><summary>C++</summary>
 
 <pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &quot;cpp-httplib/httplib.h&quot; // <url id="cu9pu8852ceh1d3h24gg" type="url" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" wc="15064">https://github.com/Huiyicc/cpp-httplib</url> 
-#include &quot;nlohmann/json.hpp&quot; // <url id="cu9pu8852ceh1d3h24h0" type="url" status="parsed" title="GitHub - nlohmann/json: JSON for Modern C++" wc="80311">https://github.com/nlohmann/json</url> 
-#include &quot;base64.hpp&quot; // <url id="cu9pu8852ceh1d3h24hg" type="url" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" wc="2293">https://github.com/tobiaslocker/base64</url> 
+#include &quot;cpp-httplib/httplib.h&quot; // <url id="cu9pu8852ceh1d3h24gg" type="url" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" wc="15064">https://github.com/Huiyicc/cpp-httplib</url>
+#include &quot;nlohmann/json.hpp&quot; // <url id="cu9pu8852ceh1d3h24h0" type="url" status="parsed" title="GitHub - nlohmann/json: JSON for Modern C++" wc="80311">https://github.com/nlohmann/json</url>
+#include &quot;base64.hpp&quot; // <url id="cu9pu8852ceh1d3h24hg" type="url" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" wc="2293">https://github.com/tobiaslocker/base64</url>
 
 int main() {
     httplib::Client client(&quot;localhost:8080&quot;);
@@ -969,7 +969,7 @@ SubModules:
   RotatedObjectDetection:
     module_name: rotated_object_detection
     model_name: PP-YOLOE-R-L
-    model_dir: null # 替换为微调后的旋转目标检测模型权重路径
+    model_dir: null # Here replaced with the newly fine-tuned weight path.
     batch_size: 1
     threshold: 0.5
 ```

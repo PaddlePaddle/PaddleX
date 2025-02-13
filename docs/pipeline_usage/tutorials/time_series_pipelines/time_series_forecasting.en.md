@@ -66,6 +66,7 @@ Time series forecasting is a technique that utilizes historical data to predict 
 </tbody>
 </table>
 <p><b>Note: The above accuracy metrics are measured on <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/data/Etth1.tar">ETTH1</a>. All model GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 ## 2. Quick Start
 The pre-trained model pipelines provided by PaddleX allow for quick experience of their effects. You can experience the effects of the General Time Series Forecasting Pipeline online or locally using command line or Python.
 
@@ -841,7 +842,7 @@ SubModules:
   TSForecast:
     module_name: ts_forecast
     model_name: DLinear
-    model_dir: null # 此处替换为您训练后得到的模型权重本地路径
+    model_dir: null # Can be modified to the local path of the fine-tuned model
     batch_size: 1
 ```
 

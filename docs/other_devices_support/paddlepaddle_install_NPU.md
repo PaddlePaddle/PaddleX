@@ -30,8 +30,8 @@ docker run -it --name paddle-npu-dev -v $(pwd):/work \
 * 下载安装 Python3.9 的 wheel 安装包
 ```bash
 # 注意需要先安装飞桨 cpu 版本
-python3.9 -m pip install paddlepaddle==3.0.0.dev20240520 -i https://www.paddlepaddle.org.cn/packages/nightly/cpu/
-python3.9 -m pip install paddle_custom_npu==3.0.0.dev20240719 -i https://www.paddlepaddle.org.cn/packages/nightly/npu/
+python -m pip install paddlepaddle -i https://www.paddlepaddle.org.cn/packages/nightly/cpu
+python -m pip install paddle-custom-npu -i https://www.paddlepaddle.org.cn/packages/nightly/npu
 ```
 * arm机器上需要设置环境变量（x86环境无需设置）
 ```bash

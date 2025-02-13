@@ -990,7 +990,7 @@ SubModules:
   SemanticSegmentation:
     module_name: semantic_segmentation
     model_name: PP-LiteSeg-T
-    model_dir: null # 替换为微调后的语义分割模型权重路径
+    model_dir: null # Here replaced with the newly fine-tuned weight path.
     batch_size: 1
     target_size: None
 ```

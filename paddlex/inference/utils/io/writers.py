@@ -312,7 +312,8 @@ class OpenCVImageWriterBackend(_ImageWriterBackend):
     def _write_obj(self, out_path, obj):
         """write image object by OpenCV"""
         if isinstance(obj, Image.Image):
-            arr = np.asarray(obj)
+            # Assuming the channel order is RGB.
+            arr = np.asarray(obj)[:, :, ::-1]
         elif isinstance(obj, np.ndarray):
             arr = obj
         else:

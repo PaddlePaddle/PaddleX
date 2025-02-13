@@ -308,13 +308,14 @@ class LayoutParsingPipelineV2(BasePipeline):
                     del overall_ocr_res["rec_polys"][matched_idx]
                     del overall_ocr_res["rec_scores"][matched_idx]
 
-                overall_ocr_res["dt_polys"].extend(sub_ocr_res["dt_polys"])
-                overall_ocr_res["rec_texts"].extend(sub_ocr_res["rec_texts"])
-                overall_ocr_res["rec_boxes"] = np.concatenate(
-                    [overall_ocr_res["rec_boxes"], sub_ocr_res["rec_boxes"]], axis=0
-                )
-                overall_ocr_res["rec_polys"].extend(sub_ocr_res["rec_polys"])
-                overall_ocr_res["rec_scores"].extend(sub_ocr_res["rec_scores"])
+                if sub_ocr_res["rec_boxes"] != []:
+                    overall_ocr_res["dt_polys"].extend(sub_ocr_res["dt_polys"])
+                    overall_ocr_res["rec_texts"].extend(sub_ocr_res["rec_texts"])
+                    overall_ocr_res["rec_boxes"] = np.concatenate(
+                        [overall_ocr_res["rec_boxes"], sub_ocr_res["rec_boxes"]], axis=0
+                    )
+                    overall_ocr_res["rec_polys"].extend(sub_ocr_res["rec_polys"])
+                    overall_ocr_res["rec_scores"].extend(sub_ocr_res["rec_scores"])
 
         for formula_res in formula_res_list:
             x_min, y_min, x_max, y_max = list(map(int, formula_res["dt_polys"]))
@@ -332,20 +333,12 @@ class LayoutParsingPipelineV2(BasePipeline):
             overall_ocr_res["rec_polys"].append(poly_points)
             overall_ocr_res["rec_scores"].append(1)
 
-        layout_parsing_res = get_single_block_parsing_res(
+        parsing_res_list = get_single_block_parsing_res(
             overall_ocr_res=overall_ocr_res,
             layout_det_res=layout_det_res,
             table_res_list=table_res_list,
             seal_res_list=seal_res_list,
         )
-
-        parsing_res_list = [
-            {
-                "block_bbox": [0, 0, 2550, 2550],
-                "block_size": [image.shape[1], image.shape[0]],
-                "sub_blocks": layout_parsing_res,
-            },
-        ]
 
         return parsing_res_list
 
@@ -541,14 +534,6 @@ class LayoutParsingPipelineV2(BasePipeline):
             else:
                 overall_ocr_res = {}
 
-            if model_settings["use_general_ocr"]:
-                text_paragraphs_ocr_res = self.get_text_paragraphs_ocr_res(
-                    overall_ocr_res,
-                    layout_det_res,
-                )
-            else:
-                text_paragraphs_ocr_res = {}
-
             if model_settings["use_table_recognition"]:
                 table_res_all = next(
                     self.table_recognition_pipeline(
@@ -613,7 +598,6 @@ class LayoutParsingPipelineV2(BasePipeline):
                 "doc_preprocessor_res": doc_preprocessor_res,
                 "layout_det_res": layout_det_res,
                 "overall_ocr_res": overall_ocr_res,
-                "text_paragraphs_ocr_res": text_paragraphs_ocr_res,
                 "table_res_list": table_res_list,
                 "seal_res_list": seal_res_list,
                 "formula_res_list": formula_res_list,

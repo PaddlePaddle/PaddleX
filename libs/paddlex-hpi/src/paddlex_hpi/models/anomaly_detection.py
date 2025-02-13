@@ -17,7 +17,7 @@ from typing import Any, Dict, List
 import ultra_infer as ui
 import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.models_new.anomaly_detection.result import UadResult
+from paddlex.inference.models.anomaly_detection.result import UadResult
 from paddlex.modules.anomaly_detection.model_list import MODELS
 
 from paddlex_hpi.models.base import CVPredictor
@@ -44,7 +44,7 @@ class UadPredictor(CVPredictor):
         return UadResult
 
     def process(self, batch_data: List[Any]) -> Dict[str, List[Any]]:
-        batch_raw_imgs = self._data_reader(imgs=batch_data)
+        batch_raw_imgs = self._data_reader(imgs=batch_data.instances)
         imgs = [np.ascontiguousarray(img) for img in batch_raw_imgs]
         ui_results = self._ui_model.batch_predict(imgs)
 
@@ -57,7 +57,8 @@ class UadPredictor(CVPredictor):
             preds_list.append(pred)
 
         return {
-            "input_path": batch_data,
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
             "input_img": batch_raw_imgs,
             "pred": preds_list,
         }

@@ -5,7 +5,7 @@ comments: true
 # 通用图像多标签分类产线使用教程
 
 ## 1. 通用图像多标签分类产线介绍
-图像多标签分类是一种将一张图像同时分配到多个相关类别的技术，广泛应用于图像标注、内容推荐和社交媒体分析等领域。它能够识别图像中存在的多个物体或特征，例如一张图片中同时包含“狗”和“户外”这两个标签。通过使用深度学习模型，图像多标签分类能够自动提取图像特征并进行准确分类，以便为用户提供更加全面的信息。这项技术在智能搜索引擎和自动内容生成等应用中具有重要意义。
+图像多标签分类是一种将一张图像同时分配到多个相关类别的技术，广泛应用于图像标注、内容推荐和社交媒体分析等领域。它能够识别图像中存在的多个物体或特征，例如一张图片中同时包含“狗”和“户外”这两个标签。通过使用深度学习模型，图像多标签分类能够自动提取图像特征并进行准确分类，以便为用户提供更加全面的信息。这项技术在智能搜索引擎和自动内容生成等应用中具有重要意义。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_multi_label_classification/01.png">
 
@@ -56,11 +56,19 @@ comments: true
 
 
 ## 2. 快速开始
-PaddleX 支持在本地使用命令行或 Python 体验通用图像多标签分类产线的效果。
+PaddleX 所提供的模型产线均可以快速体验效果，你可以在星河社区线体验通用图像多标签分类产线的效果，也可以在本地使用命令行或 Python 体验通用图像多标签分类产线的效果。
 
-在本地使用通用图像多标签分类产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+### 2.1 在线体验
+您可以[在线体验](https://aistudio.baidu.com/community/app/387974/webUI?source=appCenter)通用图像多标签分类产线的效果，用官方提供的 Demo 图片进行识别，例如：
 
-### 2.1 命令行方式体验
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_multi_label_classification/multi_label_cls.png"/>
+
+如果您对产线运行的效果满意，可以直接进行集成部署。您可以选择从云端下载部署包，也可以参考[2.2节本地体验](#22-本地体验)中的方法进行本地部署。如果对效果不满意，您可以利用私有数据<b>对产线中的模型进行微调训练</b>。如果您具备本地训练的硬件资源，可以直接在本地开展训练；如果没有，星河零代码平台提供了一键式训练服务，无需编写代码，只需上传数据后，即可一键启动训练任务。
+
+### 2.2 本地体验
+❗ 在本地使用通用图像多标签分类产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+
+#### 2.2.1 命令行方式体验
 一行命令即可快速体验图像多标签分类产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg)，并将 `--input` 替换为本地路径，进行预测
 
 ```bash
@@ -80,7 +88,7 @@ paddlex --pipeline image_multilabel_classification --input general_image_classif
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_multi_label_classification/02.png">
 
-### 2.2 Python脚本方式集成
+#### 2.2.1 命令行方式体验
 * 上述命令行是为了快速体验查看效果，一般来说，在项目中，往往需要通过代码集成，您可以通过几行代码即可完成产线的快速推理，推理代码如下：
 
 ```python
@@ -115,6 +123,12 @@ for res in output:
 <td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
 <td><code>str</code></td>
 <td>None</td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>产线具体的配置信息（如果和<code>pipeline</code>同时设置，优先级高于<code>pipeline</code>，且要求产线名和<code>pipeline</code>一致）。</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
@@ -253,11 +267,12 @@ for res in output:
 - 调用`print()` 方法会将结果打印到终端，打印到终端的内容解释如下：
 
     - `input_path`: `(str)` 待预测图像的输入路径。
+    - `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`。
     - `class_ids`: `(List[numpy.ndarray])` 表示预测结果的类别id。
     - `scores`: `(List[numpy.ndarray])` 表示预测结果的置信度。
     - `label_names`: `(List[str])` 表示预测结果的类别名称。
 
-- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
+- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
 - 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.{your_img_extension}`，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)
 
 * 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
@@ -288,7 +303,7 @@ for res in output:
 paddlex --get_pipeline_config image_multilabel_classification --save_path ./my_path
 ```
 
-若您获取了配置文件，即可对OCR产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。示例如下：
+若您获取了配置文件，即可对通用图像多标签分类产线各项配置进行自定义，只需要修改 `create_pipeline` 方法中的 `pipeline` 参数值为产线配置文件路径即可。示例如下：
 
 ```python
 from paddlex import create_pipeline
@@ -885,7 +900,7 @@ SubModules:
   ImageMultiLabelClassification:
     module_name: image_multilabel_classification
     model_name: PP-HGNetV2-B6_ML
-    model_dir: null
+    model_dir: null # 替换为微调后的多标签分类模型权重路径
     batch_size: 4
 ```
 随后， 参考本地体验中的命令行方式或 Python 脚本方式，加载修改后的产线配置文件即可。
@@ -903,4 +918,4 @@ paddlex --pipeline image_multilabel_classification \
 
 当然，您也可以在 Python 脚本中 `create_pipeline()` 时或者 `predict()` 时指定硬件设备。
 
-若您想在更多种类的硬件上使用通用OCR产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。
+若您想在更多种类的硬件上使用通用通用图像多标签分类产线，请参考[PaddleX多硬件使用指南](../../../other_devices_support/multi_devices_use_guide.md)。
