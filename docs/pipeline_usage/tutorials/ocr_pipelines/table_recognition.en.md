@@ -242,6 +242,12 @@ In the above Python script, the following steps are executed:
 <td><code>gpu</code></td>
 </tr>
 <tr>
+<td><code>config</code></td>
+<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td><code>dict[str, Any]</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
 <td><code>use_hpip</code></td>
 <td>Whether to enable high-performance inference, only available if the production line supports it.</td>
 <td><code>bool</code></td>

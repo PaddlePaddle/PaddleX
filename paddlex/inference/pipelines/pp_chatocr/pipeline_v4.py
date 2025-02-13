@@ -553,14 +553,9 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
         if isinstance(input, list):
             logging.error("Input is a list, but it's not supported here.")
             return {"mllm_res": "Error:Input is a list, but it's not supported here!"}
-        image_array_list = self.img_reader([input])
-        if (
-            isinstance(input, str)
-            and input.endswith(".pdf")
-            and len(image_array_list) > 1
-        ):
-            logging.error("The input with PDF should have only one page.")
-            return {"mllm_res": "Error:The input with PDF should have only one page!"}
+        if isinstance(input, str) and input.endswith(".pdf"):
+            logging.error("MLMM prediction does not support PDF currently!")
+            return {"mllm_res": "Error:MLMM prediction does not support PDF currently!"}
 
         if self.mllm_chat_bot is None:
             logging.warning(
@@ -575,9 +570,8 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
         else:
             mllm_chat_bot = self.mllm_chat_bot
 
-        for image_array in image_array_list:
+        for image_array in self.img_reader([input]):
 
-            assert len(image_array.shape) == 3
             image_string = cv2.imencode(".jpg", image_array)[1].tostring()
             image_base64 = base64.b64encode(image_string).decode("utf-8")
             result = {}

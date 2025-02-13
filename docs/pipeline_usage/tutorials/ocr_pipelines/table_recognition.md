@@ -288,7 +288,7 @@ paddlex --pipeline table_recognition \
         --device gpu:0
 ```
 
-相关的参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的参数说明。
+相关的参数说明可以参考[2.2 Python脚本方式](#22-python脚本方式集成)中的参数说明。
 
 运行后，会将结果打印到终端上，结果如下：
 
@@ -426,7 +426,7 @@ paddlex --pipeline table_recognition \
        [508, 126],
        [451, 126]], dtype=int16)], 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上，没想', '江、江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': [0.9943075180053711, 0.9951075315475464, 0.9907732009887695, 0.9975494146347046, 0.9974043369293213, 0.9983242750167847, 0.991967499256134, 0.9898287653923035, 0.9961177110671997, 0.9975040555000305, 0.9986456632614136, 0.9987970590591431], 'rec_boxes': [array([232,   0, 318,  24], dtype=int16), array([32, 38, 67, 55], dtype=int16), array([119,  34, 196,  57], dtype=int16), array([222,  29, 396,  60], dtype=int16), array([419,  30, 542,  61], dtype=int16), array([29, 71, 72, 92], dtype=int16), array([287,  72, 329,  93], dtype=int16), array([456,  68, 501,  94], dtype=int16), array([  8, 101,  89, 130], dtype=int16), array([139, 105, 172, 126], dtype=int16), array([274, 101, 340, 130], dtype=int16), array([451, 103, 508, 126], dtype=int16)]}}]}}
 ```
-运行结果参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的结果解释。
+运行结果参数说明可以参考[2.2 Python脚本方式](#22-python脚本方式集成)中的结果解释。
 
 可视化结果保存在`save_path`下，其中表格识别的可视化结果如下：
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/03.png"/>
@@ -438,7 +438,7 @@ paddlex --pipeline table_recognition \
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline_name="table_recognition")
+pipeline = create_pipeline(pipeline="table_recognition")
 
 output = pipeline.predict(
     input="table_recognition.jpg",
@@ -472,6 +472,12 @@ for res in output:
 <td><code>pipeline</code></td>
 <td>产线名称或是产线配置文件路径。如为产线名称，则必须为 PaddleX 所支持的产线。</td>
 <td><code>str</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>产线具体的配置信息（如果和<code>pipeline</code>同时设置，优先级高于<code>pipeline</code>，且要求产线名和<code>pipeline</code>一致）。</td>
+<td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -765,7 +771,7 @@ paddlex --get_pipeline_config table_recognition --save_path ./my_path
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline_name="./my_path/table_recognition.yaml")
+pipeline = create_pipeline(pipeline="./my_path/table_recognition.yaml")
 
 output = pipeline.predict(
     input="table_recognition.jpg",

@@ -4,13 +4,13 @@
 
 <p align="center">
     <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202-red.svg"></a>
-    <a href=""><img src="https://img.shields.io/badge/Python-3.8%2C%203.9%2C%203.10-blue.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/Python-3.8~3.12-blue.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/OS-Linux%2C%20Windows%2C%20Mac-orange.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/Hardware-CPU%2C%20GPU%2C%20XPU%2C%20NPU%2C%20MLU%2C%20DCU-yellow.svg"></a>
 </p>
 
 <h4 align="center">
-  <a href=#-特性>🌟 特性</a> | <a href=https://aistudio.baidu.com/pipeline/mine>🌐 在线体验</a>｜<a href=#️-快速开始>🚀 快速开始</a> | <a href=https://paddlepaddle.github.io/PaddleX/latest/index.html> 📖 文档</a> | <a href=#-能力支持> 🔥能力支持</a> | <a href=https://paddlepaddle.github.io/PaddleX/latest/support_list/models_list.html> 📋 模型列表</a>
+  <a href=#-特性>🌟 特性</a> | <a href=https://aistudio.baidu.com/application/center/app?tag=%E5%85%A8%E9%83%A8&flod=86503>🌐 在线体验</a>｜<a href=#️-快速开始>🚀 快速开始</a> | <a href=https://paddlepaddle.github.io/PaddleX/latest/index.html> 📖 文档</a> | <a href=#-能力支持> 🔥能力支持</a> | <a href=https://paddlepaddle.github.io/PaddleX/latest/support_list/models_list.html> 📋 模型列表</a>
 
 </h4>
 
@@ -519,21 +519,20 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
 
 ### 🛠️ 安装
 
-> ❗安装 PaddleX 前请先确保您有基础的 **Python 运行环境**（注：当前支持Python 3.8 ～ Python 3.10下运行，更多Python版本适配中）。PaddleX 3.0-beta2 版本依赖的 PaddlePaddle 版本为 3.0.0b2。
+> ❗在安装 PaddleX 之前，请确保您已具备基本的 **Python 运行环境**（注：目前支持 Python 3.8 至 Python 3.12）。PaddleX 3.0-rc0 版本依赖的 PaddlePaddle 版本为 3.0.0rc0。
 
 * **安装 PaddlePaddle**
 ```bash
-# cpu
+# CPU 版本
 python -m pip install paddlepaddle==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
 
-# gpu，该命令仅适用于 CUDA 版本为 11.8 的机器环境
+# GPU 版本，需显卡驱动程序版本 ≥450.80.02（Linux）或 ≥452.39（Windows）
 python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
 
-# gpu，该命令仅适用于 CUDA 版本为 12.3 的机器环境
+# GPU 版本，需显卡驱动程序版本 ≥545.23.06（Linux）或 ≥545.84（Windows）
 python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
 ```
-> ❗ 更多飞桨 Wheel 版本请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation./docs/zh/install/pip/linux-pip.html)。
-
+> ❗无需关注物理机上的 CUDA 版本，只需关注显卡驱动程序版本。更多飞桨 Wheel 版本信息，请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation./docs/zh/install/pip/linux-pip.html)。
 
 * **安装PaddleX**
 
@@ -551,39 +550,33 @@ pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0
 paddlex --pipeline [产线名称] --input [输入图片] --device [运行设备]
 ```
 
-只需指定三个参数：
-* `pipeline`：产线名称
-* `input`：待处理的输入文件（如图片）的本地路径或 URL
-* `device`: 使用的 GPU 序号（例如`gpu:0`表示使用第 0 块 GPU），也可选择使用 CPU（`cpu`）
+PaddleX的每一条产线对应特定的参数，您可以在各自的产线文档中查看具体的参数说明。每条产线需指定必要的三个参数：
+* `pipeline`：产线名称或产线配置文件
+* `input`：待处理的输入文件（如图片）的本地路径、目录或 URL
+* `device`：使用的硬件设备及序号（例如`gpu:0`表示使用第 0 块 GPU），也可选择使用 NPU(`npu:0`)、 XPU(`xpu:0`)、CPU(`cpu`)等。
 
 
 以通用 OCR 产线为例：
 ```bash
-paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png --device gpu:0
+paddlex --pipeline OCR \
+        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png \
+        --use_doc_orientation_classify False \
+        --use_doc_unwarping False \
+        --use_textline_orientation False \
+        --save_path ./output \
+        --device gpu:0
 ```
 <details>
   <summary><b>👉 点击查看运行结果 </b></summary>
 
 ```bash
-{
-'input_path': '/root/.paddlex/predict_input/general_ocr_002.png',
-'dt_polys': [array([[161,  27],
-       [353,  22],
-       [354,  69],
-       [162,  74]], dtype=int16), array([[426,  26],
-       [657,  21],
-       [657,  58],
-       [426,  62]], dtype=int16), array([[702,  18],
-       [822,  13],
-       [824,  57],
-       [704,  62]], dtype=int16), array([[341, 106],
-       [405, 106],
-       [405, 128],
-       [341, 128]], dtype=int16)
-       ...],
-'dt_scores': [0.758478200014338, 0.7021546472698513, 0.8536622648391111, 0.8619181462164781, 0.8321051217096188, 0.8868756173427551, 0.7982964727675609, 0.8289939036796322, 0.8289428877522524, 0.8587063317632897, 0.7786755892491615, 0.8502032769081344, 0.8703346500042997, 0.834490931790065, 0.908291103353393, 0.7614978661708064, 0.8325774055997542, 0.7843421347676149, 0.8680889482955594, 0.8788859304537682, 0.8963341277518075, 0.9364654810069546, 0.8092413027028257, 0.8503743089091863, 0.7920740420391101, 0.7592224394793805, 0.7920547400069311, 0.6641757962457888, 0.8650289477605955, 0.8079483304467047, 0.8532207681055275, 0.8913377034754717],
-'rec_text': ['登机牌', 'BOARDING', 'PASS', '舱位', 'CLASS', '序号 SERIALNO.', '座位号', '日期 DATE', 'SEAT NO', '航班 FLIGHW', '035', 'MU2379', '始发地', 'FROM', '登机口', 'GATE', '登机时间BDT', '目的地TO', '福州', 'TAIYUAN', 'G11', 'FUZHOU', '身份识别IDNO', '姓名NAME', 'ZHANGQIWEI', 票号TKTNO', '张祺伟', '票价FARE', 'ETKT7813699238489/1', '登机口于起飞前10分钟关闭GATESCLOSE10MINUTESBEFOREDEPARTURETIME'],
-'rec_score': [0.9985831379890442, 0.999696917533874512, 0.9985735416412354, 0.9842517971992493, 0.9383274912834167, 0.9943678975105286, 0.9419361352920532, 0.9221674799919128, 0.9555020928382874, 0.9870321154594421, 0.9664073586463928, 0.9988052248954773, 0.9979352355003357, 0.9985110759735107, 0.9943482875823975, 0.9991195797920227, 0.9936401844024658, 0.9974591135978699, 0.9743705987930298, 0.9980487823486328, 0.9874696135520935, 0.9900962710380554, 0.9952947497367859, 0.9950481653213501, 0.989926815032959, 0.9915552139282227, 0.9938777685165405, 0.997239887714386, 0.9963340759277344, 0.9936134815216064, 0.97223961353302]}
+{'res': {'input_path': 'general_ocr_002.png', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'doc_preprocessor_res': {'input_path': None, 'model_settings': {'use_doc_orientation_classify': True, 'use_doc_unwarping': False}, 'angle': 0},'dt_polys': [array([[ 3, 10],
+       [82, 10],
+       [82, 33],
+       [ 3, 33]], dtype=int16), ...], 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': [-1, ...], 'text_rec_score_thresh': 0.0, 'rec_texts': ['www.99*', ...], 'rec_scores': [0.8980069160461426,  ...], 'rec_polys': [array([[ 3, 10],
+       [82, 10],
+       [82, 33],
+       [ 3, 33]], dtype=int16), ...], 'rec_boxes': array([[  3,  10,  82,  33], ...], dtype=int16)}}
 ```
 
 可视化结果如下：
@@ -592,7 +585,7 @@ paddlex --pipeline OCR --input https://paddle-model-ecology.bj.bcebos.com/paddle
 
 </details>
 
-其他产线的命令行使用，只需将 `pipeline` 参数调整为相应产线的名称。下面列出了每个产线对应的命令：
+其他产线的命令行使用，只需将 `pipeline` 参数调整为相应产线的名称，参数调整为对应的产线的参数即可。下面列出了每个产线对应的命令：
 
 <details>
   <summary><b>👉 更多产线的命令行使用</b></summary>
@@ -636,10 +629,10 @@ for res in output:
 执行了如下几个步骤：
 
 * `create_pipeline()` 实例化产线对象
-* 传入图片并调用产线对象的 `predict` 方法进行推理预测
+* 传入图片并调用产线对象的 `predict()` 方法进行推理预测
 * 对预测结果进行处理
 
-其他产线的 Python 脚本使用，只需将 `create_pipeline()` 方法的 `pipeline` 参数调整为相应产线的名称。下面列出了每个产线对应的参数名称及详细的使用解释：
+其他产线的 Python 脚本使用，只需将 `create_pipeline()` 方法的 `pipeline` 参数调整为相应产线的名称，参数调整为对应的产线的参数即可。下面列出了每个产线对应的参数名称及详细的使用解释：
 <details>
   <summary><b>👉 更多产线的Python脚本使用</b></summary>
 
@@ -733,12 +726,12 @@ for res in output:
   </details>
 
 * <details open>
-    <summary> <b> 🎤 语音分析</b> </summary>
+    <summary> <b> 🎤 语音识别</b> </summary>
 
     * [🌐 多语种语音识别产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/speech_pipelines/multilingual_speech_recognition.html)
 
 * <details open>
-    <summary> <b> 🎥 视频处理</b> </summary>
+    <summary> <b> 🎥 视频识别</b> </summary>
 
     * [📈 通用视频分类产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/video_pipelines/video_classification.html)
     * [🔍 通用视频检测产线使用教程](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/video_pipelines/video_detection.html)
@@ -798,11 +791,20 @@ for res in output:
   * [🔍 主体检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/mainbody_detection.html)
   * [🚶 行人检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/human_detection.html)
   * [🚗 车辆检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/vehicle_detection.html)
-  * [🚶‍♂️ 人体关键点检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/human_keypoint_detection.html)
-  * [🌐 开放词汇目标检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/open_vocabulary_detection.html)
   * [🔄 旋转目标检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/rotated_object_detection.html)
 
+* <details open>
+  <summary> <b> 🌐 开放词汇目标检测 </b></summary>
+
+  * [🌐 开放词汇目标检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/open_vocabulary_detection.html)
   </details>
+
+* <details open>
+  <summary> <b> 🎯 关键点检测 </b></summary>
+
+  * [🚶‍♂️ 人体关键点检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/human_keypoint_detection.html)
+  </details>
+
 
 * <details open>
   <summary> <b> 🖼️ 图像分割 </b></summary>
@@ -810,6 +812,11 @@ for res in output:
   * [🗺️ 语义分割模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/semantic_segmentation.html)
   * [🔍 实例分割模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/instance_segmentation.html)
   * [🚨 图像异常检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/anomaly_detection.html)
+  </details>
+
+* <details open>
+  <summary> <b> 🌐 开放词汇分割 </b></summary>
+
   * [🌐 开放词汇分割模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/open_vocabulary_segmentation.html)
   </details>
 
@@ -822,16 +829,17 @@ for res in output:
   </details>
 
 * <details open>
-  <summary> <b> 🌐 3D </b></summary>
-  * [🚗 3D多模态融合检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/3d_bev_detection.html)
+  <summary> <b> 📦 3D </b></summary>
+
+  * [📦 3D多模态融合检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/3d_bev_detection.html)
 
 * <details open>
-  <summary> <b> 🎤 语音 </b></summary>
+  <summary> <b> 🎤 语音识别 </b></summary>
 
   * [🌐 多语种语音识别模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/speech_modules/multilingual_speech_recognition.html)
 
 * <details open>
-  <summary> <b> 🎥 视频 </b></summary>
+  <summary> <b> 🎥 视频识别 </b></summary>
 
   * [📈 视频分类模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/video_modules/video_classification.html)
   * [🔍 视频检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/video_modules/video_detection.html)
