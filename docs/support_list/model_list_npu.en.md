@@ -711,6 +711,11 @@ PaddleX incorporates multiple pipelines, each containing several modules, and ea
 <td>46.9</td>
 <td>90.0 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOX-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-M_pretrained.pdparams">Trained Model</a></td></tr>
+<tr>
+<td>YOLOX-N</td>
+<td>26.1</td>
+<td>3.4M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOX-N_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-N_pretrained.pdparams">训练模型</a></td></tr>
 </tbody>
 </table>
 <b>Note: The above accuracy metrics are for </b>[VisDrone-DET](https://github.com/VisDrone/VisDrone-Dataset)<b> validation set mAP(0.5:0.95)。</b>

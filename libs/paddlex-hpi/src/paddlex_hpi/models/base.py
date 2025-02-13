@@ -28,7 +28,7 @@ from typing import (
 import ultra_infer as ui
 from ultra_infer.model import BaseUltraInferModel
 from paddlex.inference.common.reader import ReadImage, ReadTS
-from paddlex.inference.models_new import BasePredictor
+from paddlex.inference.models import BasePredictor
 from paddlex.inference.utils.new_ir_blacklist import NEWIR_BLOCKLIST
 from paddlex.utils import device as device_helper
 from paddlex.utils import logging
@@ -53,11 +53,13 @@ class HPPredictor(BasePredictor, metaclass=AutoRegisterABCMetaClass):
         model_dir: Union[str, PathLike],
         config: Optional[Dict[str, Any]] = None,
         device: Optional[str] = None,
+        batch_size: int = 1,
         use_onnx_model: Optional[bool] = None,
         hpi_params: Optional[HPIParams] = None,
     ) -> None:
         super().__init__(model_dir=model_dir, config=config)
         self._device = device or device_helper.get_default_device()
+        self.batch_sampler.batch_size = batch_size
         self._onnx_format = use_onnx_model
         self._check_and_choose_model_format()
         self._hpi_params = hpi_params or {}

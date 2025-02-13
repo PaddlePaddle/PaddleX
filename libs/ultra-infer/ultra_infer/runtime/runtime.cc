@@ -264,16 +264,6 @@ void Runtime::CreatePaddleBackend() {
 #endif
   FDINFO << "Runtime initialized with Backend::PDINFER in " << option.device
          << "." << std::endl;
-
-  const char *pirApiFlag = "FLAGS_enable_pir_api";
-  const char *envValue = getenv(pirApiFlag);
-  if (envValue == nullptr ||
-      (std::string(envValue) != "0" && std::string(envValue) != "False")) {
-    FDWARNING
-        << "To ensure the correct operation of the Paddle backend, please set"
-           "the environment variable 'FLAGS_enable_pir_api' to 'False'."
-        << std::endl;
-  }
 }
 
 void Runtime::CreateOpenVINOBackend() {

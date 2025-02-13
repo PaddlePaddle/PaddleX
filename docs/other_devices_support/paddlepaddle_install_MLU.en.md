@@ -30,8 +30,8 @@ Within the started docker container, download and install the wheel package rele
 ```bash
 # Download and install the wheel package
 # Note: You need to install the CPU version of PaddlePaddle first
-python -m pip install paddlepaddle==3.0.0.dev20240624 -i https://www.paddlepaddle.org.cn/packages/nightly/cpu/
-python -m pip install paddle-custom-mlu==3.0.0.dev20240806 -i https://www.paddlepaddle.org.cn/packages/nightly/mlu/
+python -m pip install paddlepaddle -i https://www.paddlepaddle.org.cn/packages/nightly/cpu
+python -m pip install paddle-custom-mlu -i https://www.paddlepaddle.org.cn/packages/nightly/mlu
 ```
 
 Verify the installation. After installation, run the following command:

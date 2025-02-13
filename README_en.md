@@ -465,6 +465,55 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <td>🚧</td>
     <td>🚧</td>
   </tr>
+  <tr>
+    <td>Multi-label Image Classification</td>
+    <td>✅</td>
+    <td>🚧</td>
+    <td>🚧</td>
+    <td>✅</td>
+  </tr>
+  <tr>
+    <td>Pedestrian Attribute Recognition</td>
+    <td>✅</td>
+    <td>🚧</td>
+    <td>🚧</td>
+    <td>🚧</td>
+  </tr>
+  <tr>
+    <td>Vehicle Attribute Recognition</td>
+    <td>✅</td>
+    <td>🚧</td>
+    <td>🚧</td>
+    <td>🚧</td>
+  </tr>
+  <tr>
+    <td>Image Recognition</td>
+    <td>✅</td>
+    <td>🚧</td>
+    <td>✅</td>
+    <td>✅</td>
+  </tr>
+  <tr>
+    <td>Seal Recognition</td>
+    <td>✅</td>
+    <td>🚧</td>
+    <td>🚧</td>
+    <td>🚧</td>
+  </tr>
+  <tr>
+    <td>Image Anomaly Detection</td>
+    <td>✅</td>
+    <td>✅</td>
+    <td>✅</td>
+    <td>✅</td>
+  </tr>
+  <tr>
+    <td>Face Recognition</td>
+    <td>✅</td>
+    <td>✅</td>
+    <td>✅</td>
+    <td>✅</td>
+  </tr>
 </table>
 
 
