@@ -32,7 +32,22 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 </tr>
 </tbody>
 </table>
-<b>Note: The above accuracy metrics are mA on the VeRi dataset. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**: VeRi dataset.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 
 ## <span id="lable">III. Quick Integration</span>

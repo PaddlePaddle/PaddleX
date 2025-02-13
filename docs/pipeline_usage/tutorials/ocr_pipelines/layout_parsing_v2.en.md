@@ -34,7 +34,7 @@ Layout analysis is a technology that extracts structured information from docume
 </tr>
 </tbody>
 </table>
-<b>Note: The evaluation set for the above accuracy metrics is a self-built dataset covering various scenarios including identification documents and documents, with 1000 images. The GPU inference time is based on an NVIDIA Tesla T4 machine, with a precision type of FP32. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and a precision type of FP32.</b>
+
 <p><b>Text Image Rectification Module (Optional):</b></p>
 <table>
 <thead>
@@ -54,7 +54,7 @@ Layout analysis is a technology that extracts structured information from docume
 </tr>
 </tbody>
 </table>
-<b>Note: The model's accuracy metrics are measured from the <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet benchmark</a>.</b>
+
 <p><b>Layout Detection Module Model (Required):</b></p>
 <table>
 <thead>
@@ -158,7 +158,7 @@ Layout analysis is a technology that extracts structured information from docume
 </tr>
 </tbody>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is a self-built layout region analysis dataset by PaddleOCR, containing 10,000 common document-type images of Chinese and English papers, magazines, and research reports. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+
 <p><b>Table Structure Recognition Module (Optional):</b></p>
 <table>
 <tr>
@@ -186,7 +186,7 @@ Layout analysis is a technology that extracts structured information from docume
 <td>SLANet_plus is the enhanced version of the SLANet table structure recognition model independently developed by the Baidu PaddlePaddle Vision Team. Compared to SLANet, SLANet_plus has significantly improved the ability to recognize wireless and complex tables and reduced the model's sensitivity to table positioning accuracy. Even if there is a deviation in table positioning, it can still recognize accurately.</td>
 </tr>
 </table>
-<p><b>Note: The above accuracy metrics are measured on an internal English table recognition dataset built by PaddleX. All model GPU inference times are based on an NVIDIA Tesla T4 machine, with precision type FP32. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32.</b></p>
+
 <p><b>Text Detection Module (Required):</b></p>
 <table>
 <thead>
@@ -234,7 +234,7 @@ Layout analysis is a technology that extracts structured information from docume
 </tr>
 </tbody>
 </table>
-<p><b>Note: The above accuracy metrics are evaluated on a Chinese dataset built by PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 500 images for detection. All model GPU inference times are based on an NVIDIA Tesla T4 machine, with precision type FP32. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32.</b></p>
+
 <p><b>Text Recognition Module Model (Required):</b></p>
 
 * <b>Chinese Text Recognition Model</b>
@@ -280,7 +280,7 @@ Layout analysis is a technology that extracts structured information from docume
 <td>The lightweight recognition model of PP-OCRv3, with high inference efficiency, can be deployed on various hardware devices, including edge devices.</td>
 </tr>
 </table>
-<p><b>Note: The evaluation dataset for the above accuracy metrics is the self-built Chinese dataset of PaddleOCR, covering multiple scenarios such as street views, web images, documents, and handwriting, with 8,367 images for text recognition. The GPU inference time for all models is based on an NVIDIA Tesla T4 machine, with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and FP32 precision type.</b></p>
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -301,7 +301,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </td>
 </tr>
 </table>
-<p><b>Note: The evaluation dataset for the above accuracy metrics is the leaderboard A of the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a> - Task 1: OCR End-to-End Recognition Task. The GPU inference time for all models is based on an NVIDIA Tesla T4 machine, with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and FP32 precision type.</b></p>
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -320,7 +320,6 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <td rowspan="1">RepSVTR is a mobile text recognition model based on SVTRv2. It won the first prize in the PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task, with a 2.5% improvement in end-to-end recognition accuracy compared to PP-OCRv4 and comparable inference speed.</td>
 </tr>
 </table>
-<p><b>Note: The evaluation dataset for the above accuracy metrics is the leaderboard B of the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a> - Task 1: OCR End-to-End Recognition Task. The GPU inference time for all models is based on an NVIDIA Tesla T4 machine, with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and FP32 precision type.</b></p>
 
 * <b>English Recognition Model</b>
 <table>
@@ -440,7 +439,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <td>An ultra-lightweight Devanagari letter recognition model trained based on the PP-OCRv3 recognition model, supporting recognition of Devanagari letters and numbers.</td>
 </tr>
 </table>
-<p><b>Note: The evaluation datasets for the above accuracy metrics are multi-language datasets built by PaddleX. The GPU inference time for all models is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 <p><b>Text Line Orientation Classification Module (Optional):</b></p>
 <table>
 <thead>
@@ -465,7 +464,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </tr>
 </tbody>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is a self-built dataset covering multiple scenarios such as certificates and documents, containing 1,000 images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+
 <p><b>Formula Recognition Module (Optional):</b></p>
 <table>
 <thead>
@@ -491,7 +490,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </tr>
 </tbody>
 </table>
-<p><b>Note: The above accuracy metrics are measured from the <a href="https://drive.google.com/drive/folders/13CA4vAmOmD_I_dSbvLp-Lf0s6KiaNfuO">LaTeX-OCR Formula Recognition Test Set</a>. All models have GPU inference time based on an NVIDIA Tesla T4 machine with FP32 precision type. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+
 <p><b>Seal Text Detection Module (Optional):</b></p>
 <table>
 <thead>
@@ -523,7 +522,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </tr>
 </tbody>
 </table>
-<p><b>Note: The evaluation dataset for the above precision metrics is a self-built dataset containing 500 circular seal images. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+
 <p><b>Text Image Rectification Module Model:</b></p>
 <table>
 <thead>
@@ -567,7 +566,34 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </tr>
 </tbody>
 </table>
-<p><b>Note: The evaluation dataset for the above precision metrics is a self-built dataset covering various scenarios such as ID cards and documents, containing 1000 images. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**:
+    - Text Image Rectification Model: [DocUNet](https://www3.cs.stonybrook.edu/~cvl/docunet.html).
+    - Layout Region Detection Model: A self-built layout analysis dataset using PaddleOCR, containing 10,000 images of common document types such as Chinese and English papers, magazines, and research reports.
+    - Table Structure Recognition Model: A self-built English table recognition dataset using PaddleX.
+    - Text Detection Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 500 images for detection.
+    - Chinese Recognition Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.
+    - ch_SVTRv2_rec: Evaluation set A for "OCR End-to-End Recognition Task" in the [PaddleOCR Algorithm Model Challenge](https://aistudio.baidu.com/competition/detail/1131/0/introduction).
+    - ch_RepSVTR_rec: Evaluation set B for "OCR End-to-End Recognition Task" in the [PaddleOCR Algorithm Model Challenge](https://aistudio.baidu.com/competition/detail/1131/0/introduction).
+    - English Recognition Model: A self-built English dataset using PaddleX.
+    - Multilingual Recognition Model: A self-built multilingual dataset using PaddleX.
+    - Text Line Orientation Classification Model: A self-built dataset using PaddleX, covering various scenarios such as ID cards and documents, containing 1000 images.
+    - Seal Text Detection Model: A self-built dataset using PaddleX, containing 500 images of circular seal textures.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+
 </details>
 
 ## 2. Quick Start
@@ -1741,7 +1767,7 @@ SubModules:
   LayoutDetection:
     module_name: layout_detection
     model_name: PP-DocLayout-L
-    model_dir: null 
+    model_dir: null
 ......
 SubPipelines:
   GeneralOCR:
@@ -1753,7 +1779,7 @@ SubPipelines:
       TextDetection:
         module_name: text_detection
         model_name: PP-OCRv4_server_rec_doc
-        model_dir: null 
+        model_dir: null
         limit_side_len: 960
         limit_type: max
         thresh: 0.3

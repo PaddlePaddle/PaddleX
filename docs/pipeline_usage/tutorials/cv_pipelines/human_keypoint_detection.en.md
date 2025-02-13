@@ -42,7 +42,7 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 <td>28.79</td>
 </tr>
 </table>
-<b>Note: The above accuracy metrics are based on the CrowdHuman dataset mAP(0.5:0.95). All model GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision, and CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+
 <b>Human Keypoint Detection Module:</b>
 <table>
 <tr>
@@ -75,7 +75,25 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 <td>4.9</td>
 </tr>
 </table>
-<b>Note: The above accuracy metrics are based on the COCO dataset AP(0.5:0.95), with detection boxes obtained from ground truth annotations. All model GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision, and CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**:
+    - Pedestrian Detection Model: CrowdHuman Dataset.
+    - Human Keypoint Detection Model: COCO Dataset AP(0.5:0.95), with detection boxes obtained from ground truth annotations.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+
 </details>
 
 ## 2. Quick Start

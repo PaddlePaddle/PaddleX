@@ -44,7 +44,6 @@ The General Table Recognition Pipeline v2 is designed to solve table recognition
 <td>6.9 M</td>
 </tr>
 </table>
-<b>Note: The above accuracy metrics are measured from the high-difficulty Chinese table recognition dataset internally built by PaddleX. The GPU inference time for all models is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b>
 
 <p><b>Table Classification Module Models:</b></p>
 <table>
@@ -63,7 +62,6 @@ The General Table Recognition Pipeline v2 is designed to solve table recognition
 <td>6.6M</td>
 </tr>
 </table>
-<p><b>Note: The above accuracy metrics are measured from the internal table classification dataset built by PaddleX. All models' GPU inference time is based on an NVIDIA Tesla T4 machine, with a precision type of FP32. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and a precision type of FP32.</b></p>
 
 <p><b>Table Cell Detection Module Models:</b></p>
 <table>
@@ -90,7 +88,6 @@ The General Table Recognition Pipeline v2 is designed to solve table recognition
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_wireless_table_cell_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wireless_table_cell_det_pretrained.pdparams">Training Model</a></td>
 </tr>
 </table>
-<p><b>Note: The above accuracy metrics are measured from the internal table cell detection dataset of PaddleX. All model GPU inference times are based on an NVIDIA Tesla T4 machine, with precision type FP32. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32. Considering that the table cell detection module needs to be integrated into the table recognition pipeline v2 for practical applications, the table cell detection results output from the table recognition pipeline v2 are used to calculate the mAP accuracy.</b></p>
 
 <p><b>Text Detection Module Models:</b></p>
 <table>
@@ -123,7 +120,7 @@ The General Table Recognition Pipeline v2 is designed to solve table recognition
 </tr>
 </tbody>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is a self-built Chinese dataset by PaddleOCR, covering multiple scenarios such as street view, web images, documents, and handwriting, with 500 images for detection. All models' GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 <p><b>Text Recognition Module Models:</b></p>
 <table>
 <tr>
@@ -150,7 +147,7 @@ The General Table Recognition Pipeline v2 is designed to solve table recognition
 <td>71.2 M</td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is a self-built Chinese dataset by PaddleOCR, covering multiple scenarios such as street view, web images, documents, and handwriting, with 11,000 images for text recognition. All models' GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -171,7 +168,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a> leaderboard A. All models' GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -190,7 +187,6 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <td rowspan="1">RepSVTR is a mobile text recognition model based on SVTRv2. It won the first prize in the PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task, with a 2.5% improvement in end-to-end recognition accuracy compared to PP-OCRv4 and comparable inference speed.</td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a> leaderboard B. All models' GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
 <p><b>Layout Region Detection Module Models (Optional):</b></p>
 <table>
 <thead>
@@ -230,7 +226,6 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </tr>
 </tbody>
 </table>
-<b>Note: The evaluation dataset for the above accuracy metrics is the layout region detection dataset built by PaddleOCR, containing 500 common document-type images of Chinese and English papers, magazines, contracts, books, exams, and research reports. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b>
 
 > ❗ The above list includes the <b>3 core models</b> that are the focus of the layout detection module. The module supports a total of <b>11 full models</b>, including multiple predefined models with different categories. The complete list of models is as follows:
 
@@ -256,7 +251,6 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <td>A high-efficiency layout region localization model trained on a self-built dataset using PicoDet-1x, capable of locating 1 type of region: tables</td>
 </tr>
 </tbody></table>
-<b>Note: The evaluation dataset for the above accuracy metrics is the layout table region detection dataset built by PaddleOCR, containing 7,835 document-type images of Chinese and English papers with tables. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b>
 
 * <b>3-category layout detection model, including tables, images, and seals</b>
 <table>
@@ -297,7 +291,6 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <td>A high-precision layout region localization model trained on a self-built dataset of Chinese and English papers, magazines, and research reports using RT-DETR-H</td>
 </tr>
 </tbody></table>
-<b>Note: The evaluation dataset for the above accuracy metrics is the layout region detection dataset built by PaddleOCR, containing 1,154 common document-type images of Chinese and English papers, magazines, and research reports. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b>
 
 * <b>5-category English document region detection model, including text, title, table, image, and list</b>
 <table>
@@ -321,7 +314,6 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <td>A high-efficiency English document layout region localization model trained on the PubLayNet dataset using PicoDet-1x</td>
 </tr>
 </tbody></table>
-<b>Note: The evaluation dataset for the above accuracy metrics is the [PubLayNet](https://developer.ibm.com/exchanges/data/all/publaynet/) evaluation dataset, containing 11,245 images of English documents. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b>
 
 * <b>17-category region detection model, including 17 common layout categories: paragraph title, image, text, number, abstract, content, figure title, formula, table, table title, reference, document title, footnote, header, algorithm, footer, seal</b>
 <table>
@@ -362,7 +354,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </tr>
 </tbody>
 </table>
-<p><b>Note: The evaluation dataset for the above accuracy metrics is the layout region detection dataset built by PaddleOCR, containing 892 common document-type images of Chinese and English papers, magazines, and research reports. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+
 <p><b>Text Image Correction Module Model (Optional):</b></p>
 <table>
 <thead>
@@ -406,7 +398,37 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </tr>
 </tbody>
 </table>
-<p><b>Note: The accuracy metrics above are evaluated on a self-built dataset covering multiple scenarios such as documents and certificates, including 1000 images. GPU inference time is based on NVIDIA Tesla T4 machines with FP32 precision, and CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**:
+    - Document Image Orientation Classification Model: A self-built dataset using PaddleX, covering various scenarios such as ID cards and documents, containing 1000 images.
+    - Layout Region Detection Model: A self-built layout region detection dataset using PaddleOCR, including 500 images of common document types such as Chinese and English papers, magazines, contracts, books, exam papers, and research reports.
+    - Table Layout Detection Model: A self-built table region detection dataset using PaddleOCR, containing 7835 images of paper documents with tables in both Chinese and English.
+    - 3-Category Layout Detection Model: A self-built layout region detection dataset using PaddleOCR, including 1154 images of common document types such as Chinese and English papers, magazines, and research reports.
+    - 5-Category English Document Region Detection Model: The evaluation dataset from [PubLayNet](https://developer.ibm.com/exchanges/data/all/publaynet), containing 11245 images of English documents.
+    - 17-Category Region Detection Model: A self-built layout region detection dataset using PaddleOCR, including 892 images of common document types such as Chinese and English papers, magazines, and research reports.
+    - Table Structure Recognition Model: A self-built high-difficulty Chinese table recognition dataset using PaddleX.
+    - Table Cell Detection Model: A self-built evaluation dataset using PaddleX.
+    - Table Classification Model: A self-built evaluation dataset using PaddleX.
+    - Text Detection Model: A self-built Chinese dataset using PaddleOCR, covering various scenarios such as street scenes, web images, documents, and handwriting, with 500 images for detection.
+    - Chinese Recognition Model: A self-built Chinese dataset using PaddleOCR, covering various scenarios such as street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.
+    - ch_SVTRv2_rec: The A-rank evaluation set from the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a>.
+    - ch_RepSVTR_rec: The B-rank evaluation set from the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a>.
+    - English Recognition Model: A self-built English dataset using PaddleX.
+    - Multilingual Recognition Model: A self-built multi-language dataset using PaddleX.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 </details>
 
@@ -591,11 +613,11 @@ output = pipeline.predict(
 )
 
 for res in output:
-    res.print() 
-    res.save_to_img("./output/") 
-    res.save_to_xlsx("./output/") 
-    res.save_to_html("./output/") 
-    res.save_to_json("./output/") 
+    res.print()
+    res.save_to_img("./output/")
+    res.save_to_xlsx("./output/")
+    res.save_to_html("./output/")
+    res.save_to_json("./output/")
 ```
 
 In the above Python script, the following steps are executed:
@@ -1011,11 +1033,11 @@ output = pipeline.predict(
 )
 
 for res in output:
-    res.print() 
-    res.save_to_img("./output/") 
-    res.save_to_xlsx("./output/") 
-    res.save_to_html("./output/") 
-    res.save_to_json("./output/") 
+    res.print()
+    res.save_to_img("./output/")
+    res.save_to_xlsx("./output/")
+    res.save_to_html("./output/")
+    res.save_to_json("./output/")
 
 ```
 
@@ -1361,17 +1383,17 @@ SubModules:
     module_name: table_structure_recognition
     model_name: SLANeXt_wired
     model_dir: null # 替换为微调后的有线表格结构识别模型权重路径
-  
+
   WirelessTableStructureRecognition:
     module_name: table_structure_recognition
     model_name: SLANeXt_wireless
     model_dir: null # 替换为微调后的无线表格结构识别模型权重路径
-  
+
   WiredTableCellsDetection:
     module_name: table_cells_detection
     model_name: RT-DETR-L_wired_table_cell_det
     model_dir: null # 替换为微调后的有线表格单元格检测模型权重路径
-  
+
   WirelessTableCellsDetection:
     module_name: table_cells_detection
     model_name: RT-DETR-L_wireless_table_cell_det
@@ -1408,7 +1430,7 @@ SubPipelines:
         thresh: 0.3
         box_thresh: 0.6
         unclip_ratio: 2.0
-        
+
       TextRecognition:
         module_name: text_recognition
         model_name: PP-OCRv4_server_rec

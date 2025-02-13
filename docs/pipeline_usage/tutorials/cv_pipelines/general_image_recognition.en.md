@@ -36,7 +36,6 @@ PP-ShiTuV2 is a practical general image recognition system mainly composed of th
 </tr>
 </table>
 
-Note: The above accuracy metrics are based on the private mainbody detection dataset.
 
 <b>Image Feature Module:</b>
 <table>
@@ -72,7 +71,23 @@ Note: The above accuracy metrics are based on the private mainbody detection dat
 </tr>
 </table>
 
-Note: The above accuracy metrics are based on AliProducts Recall@1. All GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**:
+    - Subject Detection Model: PaddleClas Subject Detection Dataset.
+    - Image Feature Model: AliProducts Dataset.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## 2. Quick Start
 

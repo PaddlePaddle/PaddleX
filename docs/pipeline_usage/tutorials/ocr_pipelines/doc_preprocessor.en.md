@@ -36,7 +36,6 @@ The document image preprocessing pipeline integrates two major functions: docume
 </tr>
 </tbody>
 </table>
-<b>Note: The accuracy metrics mentioned above are evaluated on a self-constructed dataset, which covers various scenarios such as IDs and documents, including 1000 images. The GPU inference time is based on an NVIDIA Tesla T4 machine with a precision type of FP32. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and a precision type of FP32.</b>
 
 <p><b>Text Image Unwarping Module (Optional)：</b></p>
 
@@ -58,9 +57,24 @@ The document image preprocessing pipeline integrates two major functions: docume
 </tr>
 </tbody>
 </table>
-<b>The accuracy metrics of the model are measured from <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet benchmark</a> </b>
 
+**Test Environment Description**:
 
+- **Performance Test Environment**
+  - **Test Dataset**:
+    - Document Image Orientation Classification Module: A self-built dataset using PaddleX, covering multiple scenarios such as ID cards and documents, containing 1000 images.
+    - Text Image Rectification Module: [DocUNet](https://www3.cs.stonybrook.edu/~cvl/docunet.html).
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## 2. Quick Start
 

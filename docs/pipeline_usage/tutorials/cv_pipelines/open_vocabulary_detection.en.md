@@ -35,8 +35,21 @@ Open vocabulary object detection is an advanced object detection technology that
 <td rowspan="3">An open vocabulary object detection model trained on O365, GoldG, and Cap4M datasets. The text encoder uses Bert, and the visual model part adopts DINO overall, with additional cross-modal fusion modules designed, achieving good results in the field of open vocabulary object detection.</td>
 </tr>
 </table>
+**Test Environment Description**:
 
-<b>Note: The above accuracy metrics are based on the COCO val2017 validation set mAP(0.5:0.95). All model GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision, and CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+- **Performance Test Environment**
+  - **Test Dataset**: COCO val2017 validation set
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## 2. Quick Start
 
@@ -69,7 +82,7 @@ The explanation of the running result parameters can refer to the result explana
 
 The visualization results are saved under `save_path`, and the visualization results of open vocabulary detection are as follows:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/open_vocabulary_detection/open_vocabulary_detection_res.jpg"> 
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/open_vocabulary_detection/open_vocabulary_detection_res.jpg">
 
 #### 2.1.2 Python Script Integration
 * The above command line is for quickly experiencing the effect. Generally, in a project, it is often necessary to integrate through code. You can complete the rapid inference of the pipeline with just a few lines of code. The inference code is as follows:
@@ -553,9 +566,9 @@ print(result["detectedObjects"])
 <details><summary>C++</summary>
 
 <pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &quot;cpp-httplib/httplib.h&quot; // <url id="cu9q6pqi5970ak6ek5e0" type="url" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" wc="15064">https://github.com/Huiyicc/cpp-httplib</url> 
-#include &quot;nlohmann/json.hpp&quot; // <url id="cu9q6pqi5970ak6ek5eg" type="url" status="parsed" title="GitHub - nlohmann/json: JSON for Modern C++" wc="80311">https://github.com/nlohmann/json</url> 
-#include &quot;base64.hpp&quot; // <url id="cu9q6pqi5970ak6ek5f0" type="url" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" wc="2293">https://github.com/tobiaslocker/base64</url> 
+#include &quot;cpp-httplib/httplib.h&quot; // <url id="cu9q6pqi5970ak6ek5e0" type="url" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" wc="15064">https://github.com/Huiyicc/cpp-httplib</url>
+#include &quot;nlohmann/json.hpp&quot; // <url id="cu9q6pqi5970ak6ek5eg" type="url" status="parsed" title="GitHub - nlohmann/json: JSON for Modern C++" wc="80311">https://github.com/nlohmann/json</url>
+#include &quot;base64.hpp&quot; // <url id="cu9q6pqi5970ak6ek5f0" type="url" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" wc="2293">https://github.com/tobiaslocker/base64</url>
 
 int main() {
     httplib::Client client(&quot;localhost:8080&quot;);
@@ -889,4 +902,3 @@ The current pipeline temporarily does not support fine-tuning training, only inf
 
 ## 5. Multi-Hardware Support
 The current pipeline temporarily only supports GPU and CPU inference. Adaptation to more hardware for this pipeline is planned to be supported in the future.
-

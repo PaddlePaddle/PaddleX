@@ -60,7 +60,7 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 </tr>
 </tbody>
 </table>
-<p>Note: The above accuracy metrics are evaluated on the WIDER-FACE validation set with an input size of 640x640. All GPU inference times are based on an NVIDIA V100 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 6271C CPU @ 2.60GHz and FP32 precision.</p>
+
 <p><b>Face Recognition Module</b>:</p>
 <table>
 <thead>
@@ -95,7 +95,24 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 </tr>
 </tbody>
 </table>
-<p>Note: The above accuracy metrics are Accuracy scores measured on the AgeDB-30, CFP-FP, and LFW datasets, respectively. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</p>
+
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**:
+    - Face Detection Model: Evaluated on the WIDER-FACE validation set in COCO format with an input size of 640*640.
+    - Face Feature Model: Evaluated on the AgeDB-30, CFP-FP, and LFW datasets, respectively.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## 2. Quick Start
 The pre-trained model pipelines provided by PaddleX can be quickly experienced. You can experience the effects of the face recognition pipeline online or locally using command-line or Python.

@@ -32,7 +32,23 @@ BEVFusion is a multi-modal 3D object detection model that fuses surround camera 
 <tr>
 </table>
 
-<p>Note: The above accuracy metrics are for the <a href="https://www.nuscenes.org/nuscenes">nuscenes</a> validation set with mAP(0.5:0.95) and NDS 60.9, with an accuracy type of FP32.</p></details>
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**: <a href="https://www.nuscenes.org/nuscenes">nuscenes</a> validation set
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+
+</details>
 
 ## 2. Quick Start
 
@@ -142,7 +158,7 @@ for res in output:
     res.visualize(save_path="./output/", show=True) ## 3D result visualization. If the runtime environment has a graphical interface, set `show=True`; otherwise, set it to `False`.
 ```
 
-<b>Note: </b>  
+<b>Note: </b>
 1、To visualize 3D detection results, you need to install the open3d package first. The installation command is as follows:
 ```bash
 pip install open3d

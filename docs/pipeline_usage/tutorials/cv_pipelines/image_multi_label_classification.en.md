@@ -52,7 +52,22 @@ Image multi-label classification is a technique that assigns multiple relevant c
 </tr>
 </tbody>
 </table>
-<p><b>Note: The above accuracy metrics are mAP for the multi-label classification task on </b><a href="https://cocodataset.org/#home">COCO2017</a><b>. The GPU inference time for all models is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**: multi-label classification task on </b><a href="https://cocodataset.org/#home">COCO2017</a><b>.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## 2. Quick Start
 All model pipelines provided by PaddleX can be quickly experienced. You can experience the effect of the image multi-label classification pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the image multi-label classification pipeline.

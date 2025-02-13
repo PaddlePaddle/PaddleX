@@ -94,7 +94,6 @@ The seal text recognition pipeline is used to recognize the text content of seal
 </tr>
 </tbody>
 </table>
-<b>Note: The evaluation dataset for the above accuracy metrics is the self-built layout region detection dataset of PaddleOCR, which includes 500 common document images of Chinese and English papers, magazines, contracts, books, test papers, and research reports. GPU inference time is based on NVIDIA Tesla T4 machine, precision type is FP32, and CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads, precision type is FP32.</b>
 
 > ❗ The above listed are the <b>3 core models</b> that the layout detection module mainly supports. This module supports a total of <b>11 full models</b>, including multiple models predefined with different categories. Among them, there are 9 models that include the seal category. In addition to the above 3 core models, the remaining model list is as follows:
 
@@ -138,7 +137,7 @@ The seal text recognition pipeline is used to recognize the text content of seal
 <td>A high-precision layout area localization model trained on a self-built dataset for Chinese and English papers, magazines, and research reports based on RT-DETR-H</td>
 </tr>
 </tbody></table>
-<b>Note: The evaluation set for the above accuracy metrics is the layout area detection dataset self-built by PaddleOCR, which includes 1,154 images of common document types such as Chinese and English papers, magazines, and research reports. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+
 
 * <b>17-category Layout Detection Models, including 17 common layout categories: paragraph title, image, text, number, abstract, content, figure title, formula, table, table title, reference, document title, footnote, header, algorithm, footer, seal</b>
 <table>
@@ -179,8 +178,7 @@ The seal text recognition pipeline is used to recognize the text content of seal
 </tr>
 </tbody>
 </table>
-<b>Note: The evaluation set for the above accuracy metrics is the layout area detection dataset self-built by PaddleOCR, which includes 892 images of common document types such as Chinese and English papers, magazines, and research reports. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
-</details>
+
 <p><b>Document Image Orientation Classification Module (Optional):</b></p>
 <table>
 <thead>
@@ -204,7 +202,6 @@ The seal text recognition pipeline is used to recognize the text content of seal
 </tr>
 </tbody>
 </table>
-<p><b>Note: The above accuracy metrics are evaluated on a self-built dataset covering multiple scenarios such as certificates and documents, containing 1000 images. GPU inference time is based on NVIDIA Tesla T4 machine, precision type is FP32, CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads, precision type is FP32.</b></p>
 <p><b>Text Image Correction Module (Optional):</b></p>
 <table>
 <thead>
@@ -224,7 +221,7 @@ The seal text recognition pipeline is used to recognize the text content of seal
 </tr>
 </tbody>
 </table>
-<b>Note: The accuracy metrics of the model are measured from the <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet benchmark</a>.</b>
+
 <p><b>Text Detection Module:</b></p>
 <table>
 <thead>
@@ -256,7 +253,7 @@ The seal text recognition pipeline is used to recognize the text content of seal
 </tr>
 </tbody>
 </table>
-<b>Note: The above accuracy metrics are evaluated on a self-built dataset containing 500 circular seal images. GPU inference time is based on NVIDIA Tesla T4 machine, precision type is FP32, CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads, precision type is FP32.</b>
+
 <p><b>Text Recognition Module:</b></p>
 <table>
 <tr>
@@ -292,7 +289,7 @@ The seal text recognition pipeline is used to recognize the text content of seal
 <td>An ultra-lightweight OCR model suitable for mobile applications. It adopts an encoder-decoder structure based on Transformer and enhances recognition accuracy and efficiency through techniques such as data augmentation and mixed precision training. The model size is 10.6M, making it suitable for deployment on resource-constrained devices. It can be used in scenarios such as mobile photo translation and business card recognition.</td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy indicators is the Chinese dataset built by PaddleOCR, covering multiple scenarios such as street view, web images, documents, and handwriting. The text recognition includes 11,000 images. The GPU inference time for all models is based on NVIDIA Tesla T4 machines with FP32 precision type. The CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -313,7 +310,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 </td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy indicators is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a> - Task One: OCR End-to-End Recognition Task A list. The GPU inference time for all models is based on NVIDIA Tesla T4 machines with FP32 precision type. The CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -332,7 +329,6 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td rowspan="1">    The RepSVTR text recognition model is a mobile text recognition model based on SVTRv2. It won the first prize in the PaddleOCR Algorithm Model Challenge - Task One: OCR End-to-End Recognition Task. The end-to-end recognition accuracy on the B list is 2.5% higher than that of PP-OCRv4, with the same inference speed.</td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy indicators is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a> - Task One: OCR End-to-End Recognition Task B list. The GPU inference time for all models is based on NVIDIA Tesla T4 machines with FP32 precision type. The CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
 
 * <b>English Recognition Model</b>
 <table>
@@ -454,6 +450,36 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 </tr>
 </table>
 
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**:
+    - Document Image Orientation Classification Model: A self-built dataset using PaddleX, covering various scenarios such as ID cards and documents, containing 1000 images.
+    - Text Image Rectification Model: [DocUNet](https://www3.cs.stonybrook.edu/~cvl/docunet.html).
+    - Layout Detection Model: A self-built layout detection dataset using PaddleOCR, including 500 images of common document types such as Chinese and English papers, magazines, contracts, books, exam papers, and research reports.
+    - 3-Category Layout Detection Model: A self-built layout detection dataset using PaddleOCR, containing 1154 images of common document types such as Chinese and English papers, magazines, and research reports.
+    - 17-Category Region Detection Model: A self-built layout detection dataset using PaddleOCR, including 892 images of common document types such as Chinese and English papers, magazines, and research reports.
+    - Text Detection Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 500 images for detection.
+    - Chinese Recognition Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.
+    - ch_SVTRv2_rec: Evaluation set A for [PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition](https://aistudio.baidu.com/competition/detail/1131/0/introduction).
+    - ch_RepSVTR_rec: Evaluation set B for [PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition](https://aistudio.baidu.com/competition/detail/1131/0/introduction).
+    - English Recognition Model: A self-built English dataset using PaddleX.
+    - Multilingual Recognition Model: A self-built multilingual dataset using PaddleX.
+    - Text Line Orientation Classification Model: A self-built dataset using PaddleX, covering various scenarios such as ID cards and documents, containing 1000 images.
+    - Seal Text Detection Model: A self-built dataset using PaddleX, containing 500 images of circular seal textures.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+
+</details>
 
 ## 2. Quick Start
 All model pipelines provided by PaddleX can be quickly experienced. You can experience the effect of the seal text recognition pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the seal text recognition pipeline.

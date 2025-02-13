@@ -48,7 +48,6 @@ comments: true
 </tr>
 </tbody>
 </table>
-<b>注：以上精度指标的评估集是 PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志、合同、书本、试卷和研报等常见的 500 张文档类型图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
 
 
 > ❗ 以上列出的是版面检测模块重点支持的<b>3个核心模型</b>，该模块总共支持<b>11个全量模型</b>，包含多个预定义了不同类别的模型，完整的模型列表如下：
@@ -77,7 +76,6 @@ comments: true
 <td>基于PicoDet-1x在自建数据集训练的高效率版面区域定位模型，可定位表格这1类区域</td>
 </tr>
 </tbody></table>
-<b>注：以上精度指标的评估集是 PaddleOCR 自建的版面表格区域检测数据集，包含中英文 7835 张带有表格的论文文档类型图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
 
 * <b>3类版面检测模型，包含表格、图像、印章</b>
 <table>
@@ -117,7 +115,6 @@ comments: true
 <td>基于RT-DETR-H在中英文论文、杂志和研报等场景上自建数据集训练的高精度版面区域定位模型</td>
 </tr>
 </tbody></table>
-<b>注：以上精度指标的评估集是 PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志和研报等常见的 1154 张文档类型图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
 
 * <b>5类英文文档区域检测模型，包含文字、标题、表格、图片以及列表</b>
 <table>
@@ -141,7 +138,6 @@ comments: true
 <td>基于PicoDet-1x在PubLayNet数据集训练的高效率英文文档版面区域定位模型</td>
 </tr>
 </tbody></table>
-<b>注：以上精度指标的评估集是 [PubLayNet](https://developer.ibm.com/exchanges/data/all/publaynet/) 的评估数据集，包含英文文档的 11245 张文图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
 
 * <b>17类区域检测模型，包含17个版面常见类别，分别是：段落标题、图片、文本、数字、摘要、内容、图表标题、公式、表格、表格标题、参考文献、文档标题、脚注、页眉、算法、页脚、印章</b>
 <table>
@@ -182,7 +178,27 @@ comments: true
 </tr>
 </tbody>
 </table>
-<b>注：以上精度指标的评估集是 PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志和研报等常见的 892 张文档类型图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
+
+**测试环境说明：**
+
+- **性能测试环境**
+  - **测试数据集**：
+    - 版面检测模型： PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志、合同、书本、试卷和研报等常见的 500 张文档类型图片。
+    - 表格版面检测模型：PaddleOCR 自建的版面表格区域检测数据集，包含中英文 7835 张带有表格的论文文档类型图片。
+    - 3类版面检测模型：PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志和研报等常见的 1154 张文档类型图片。
+    - 5类英文文档区域检测模型：[PubLayNet](https://developer.ibm.com/exchanges/data/all/publaynet) 的评估数据集，包含英文文档的 11245 张文图片。
+    - 17类区域检测模型：PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志和研报等常见的 892 张文档类型图片。
+  - **硬件配置**：
+    - GPU：NVIDIA Tesla T4
+    - CPU：Intel Xeon Gold 6271C @ 2.60GHz
+    - 其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **推理模式说明**
+
+| 模式        | GPU配置                          | CPU配置          | 加速技术组合                                |
+|-------------|----------------------------------|------------------|---------------------------------------------|
+| 常规模式    | FP32精度 / 无TRT加速             | FP32精度 / 8线程       | PaddleInference                             |
+| 高性能模式  | 选择先验精度类型和加速策略的最优组合         | FP32精度 / 8线程       | 选择先验最优后端（Paddle/OpenVINO/TRT等） |
 </details>
 
 ## 三、快速集成

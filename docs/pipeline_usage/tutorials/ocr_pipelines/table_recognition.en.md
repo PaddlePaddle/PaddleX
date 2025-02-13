@@ -40,7 +40,7 @@ SLANet_plus is an enhanced version of SLANet, a table structure recognition mode
 </td>
 </tr>
 </table>
-<p><b>Note: The above accuracy metrics are measured on PaddleX's internal self-built English table recognition dataset. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 <p><b>Layout Analysis Module Models</b>:</p>
 <table>
 <thead>
@@ -120,7 +120,7 @@ SLANet_plus is an enhanced version of SLANet, a table structure recognition mode
 </tr>
 </tbody>
 </table>
-<p><b>Note: The above accuracy metrics are evaluated on PaddleX's self-built layout analysis dataset containing 10,000 images. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 <p><b>Text Detection Module Models</b>:</p>
 <table>
 <thead>
@@ -148,7 +148,35 @@ SLANet_plus is an enhanced version of SLANet, a table structure recognition mode
 <td>100.1M</td>
 </tr>
 </tbody>
-</table></details>
+</table>
+
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**:
+    - Document Image Orientation Classification Model: A self-built dataset using PaddleX, covering various scenarios such as ID cards and documents, containing 1000 images.
+    - Text Image Rectification Model: [DocUNet](https://www3.cs.stonybrook.edu/~cvl/docunet.html).
+    - Layout Region Detection Model: A self-built layout analysis dataset using PaddleOCR, containing 10,000 images of common document types such as Chinese and English papers, magazines, and research reports.
+    - Table Structure Recognition Model: A self-built English table recognition dataset using PaddleX.
+    - Text Detection Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 500 images for detection.
+    - Chinese Recognition Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.
+    - ch_SVTRv2_rec: Evaluation set A for "OCR End-to-End Recognition Task" in the [PaddleOCR Algorithm Model Challenge](https://aistudio.baidu.com/competition/detail/1131/0/introduction).
+    - ch_RepSVTR_rec: Evaluation set B for "OCR End-to-End Recognition Task" in the [PaddleOCR Algorithm Model Challenge](https://aistudio.baidu.com/competition/detail/1131/0/introduction).
+    - English Recognition Model: A self-built English dataset using PaddleX.
+    - Multilingual Recognition Model: A self-built multilingual dataset using PaddleX.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+
+</details>
 
 ## 2. Quick Start
 PaddleX's pre-trained model pipelines allow for quick experience of their effects. You can experience the effects of the General Image Classification pipeline online or locally using command line or Python.

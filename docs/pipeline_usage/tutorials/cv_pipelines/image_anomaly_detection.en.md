@@ -28,7 +28,22 @@ This pipeline integrates the high-precision anomaly detection model STFPM, which
 </tr>
 </tbody>
 </table>
-<b>Note: The above accuracy metrics are the average anomaly scores on the </b>[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)<b> validation set. All model GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**: The above accuracy metrics are the average anomaly scores on the </b>[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)<b> validation set.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## 2. Quick Start
 PaddleX provides pre-trained models for the anomaly detection pipeline, allowing for quick experience of its effects. You can use the command line or Python to experience the image anomaly detection pipeline locally.

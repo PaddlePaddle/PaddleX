@@ -66,7 +66,22 @@ The image multi-label classification module is a crucial component in computer v
 <td>ResNet50_ML is an image multi-label classification model based on ResNet50, which significantly improves accuracy on multi-label classification tasks by incorporating an ML-Decoder.</td>
 </tr>
 </table>
-<b>Note: The above accuracy metrics are mAP for the multi-label classification task on [COCO2017](https://cocodataset.org/#home).</b>
+
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**:  multi-label classification task on [COCO2017](https://cocodataset.org/#home).
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)

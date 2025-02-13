@@ -60,8 +60,7 @@ comments: true
 </tr>
 </tr></tbody>
 </table>
-<p>注：以上精度指标是在 COCO 格式的 WIDER-FACE 验证集上，以640
-*640作为输入尺寸评估得到的。所有模型 GPU 推理耗时基于 NVIDIA V100 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 6271C CPU @ 2.60GHz，精度类型为 FP32。</p>
+
 <p><b>人脸特征模块：</b></p>
 <table>
 <thead>
@@ -96,7 +95,24 @@ comments: true
 </tr>
 </tbody>
 </table>
-<p>注：以上精度指标是分别在 AgeDB-30、CFP-FP 和 LFW 数据集上测得的 Accuracy。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</p>
+
+**测试环境说明：**
+
+- **性能测试环境**
+  - **测试数据集**
+    - 人脸检测模型：COCO 格式的 WIDER-FACE 验证集上，以640*640作为输入尺寸评估得到的。
+    - 人脸特征模型：分别在 AgeDB-30、CFP-FP 和 LFW 数据集。
+  - **硬件配置**：
+    - GPU：NVIDIA Tesla T4
+    - CPU：Intel Xeon Gold 6271C @ 2.60GHz
+    - 其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **推理模式说明**
+
+| 模式        | GPU配置                          | CPU配置          | 加速技术组合                                |
+|-------------|----------------------------------|------------------|---------------------------------------------|
+| 常规模式    | FP32精度 / 无TRT加速             | FP32精度 / 8线程       | PaddleInference                             |
+| 高性能模式  | 选择先验精度类型和加速策略的最优组合         | FP32精度 / 8线程       | 选择先验最优后端（Paddle/OpenVINO/TRT等） |
 
 ## 2. 快速开始
 PaddleX 所提供的模型产线均可以快速体验效果，你可以在线体验人脸识别产线的效果，也可以在本地使用命令行或 Python 体验人脸识别产线的效果。

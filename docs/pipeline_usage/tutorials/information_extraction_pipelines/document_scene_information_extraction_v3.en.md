@@ -41,7 +41,7 @@ The <b>PP-ChatOCRv3-doc</b> pipeline includes modules for <b>Table Structure Rec
 <td>SLANet_plus is an enhanced version of SLANet, the table structure recognition model developed by Baidu PaddleX Team. Compared to SLANet, SLANet_plus significantly improves the recognition ability for wireless and complex tables and reduces the model's sensitivity to the accuracy of table positioning, enabling more accurate recognition even with offset table positioning.</td>
 </tr>
 </table>
-<p><b>Note: The above accuracy metrics are measured on PaddleX's internally built English table recognition dataset. All GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 <p><b>Layout Detection Module Models</b>:</p>
 <table>
 <thead>
@@ -121,7 +121,7 @@ The <b>PP-ChatOCRv3-doc</b> pipeline includes modules for <b>Table Structure Rec
 </tr>
 </tbody>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built layout region analysis dataset, containing 10,000 images of common document types, including English and Chinese papers, magazines, research reports, etc. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 <p><b>Text Detection Module Models</b>:</p>
 <table>
 <thead>
@@ -153,7 +153,7 @@ The <b>PP-ChatOCRv3-doc</b> pipeline includes modules for <b>Table Structure Rec
 </tr>
 </tbody>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built Chinese dataset, covering street scenes, web images, documents, and handwritten texts, with 500 images for detection. All GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 <p><b>Text Recognition Module Models</b>:</p>
 <table>
 <tr>
@@ -180,7 +180,7 @@ The <b>PP-ChatOCRv3-doc</b> pipeline includes modules for <b>Table Structure Rec
 <td>71.2 M</td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built Chinese dataset, covering street scenes, web images, documents, and handwritten texts, with 11,000 images for text recognition. All GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -201,7 +201,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team at 
 </td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a> A-list. GPU inference time is based on NVIDIA Tesla T4 with FP32 precision. CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -222,7 +222,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 </td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a> B-list. GPU inference time is based on NVIDIA Tesla T4 with FP32 precision. CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 <p><b>Seal Text Detection Module Models</b>:</p>
 <table>
 <thead>
@@ -254,7 +254,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 </tr>
 </tbody>
 </table>
-<p><b>Note: The above accuracy metrics are evaluated on a self-built dataset containing 500 circular seal images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 <p><b>Text Image Rectification Module Models</b>:</p>
 <table>
 <thead>
@@ -298,7 +298,34 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 </tr>
 </tbody>
 </table>
-<p><b>Note: The above accuracy metrics are evaluated on a self-built dataset covering various scenarios such as certificates and documents, containing 1000 images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p></details>
+
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**:
+    - Table Structure Recognition Model: PaddleX internally built English table recognition dataset.
+    - Layout Detection Model: PaddleOCR's self-built layout analysis dataset, containing 10,000 images of common document types such as Chinese and English papers, magazines, and research reports.
+    - Text Detection Model: PaddleOCR's self-built Chinese dataset, covering multiple scenarios including street scenes, web images, documents, and handwriting, with 500 images for detection.
+    - Text Recognition Model: PaddleOCR's self-built Chinese dataset, covering multiple scenarios including street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.
+    - ch_SVTRv2_rec: [PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task](https://aistudio.baidu.com/competition/detail/1131/0/introduction) A-rank evaluation set.
+    - ch_RepSVTR_rec: [PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task](https://aistudio.baidu.com/competition/detail/1131/0/introduction) B-rank evaluation set.
+    - English Recognition Model: PaddleX self-built English dataset.
+    - Multilingual Recognition Model: PaddleX self-built multilingual dataset.
+    - Text Line Direction Classification Model: PaddleX self-built dataset, covering multiple scenarios such as certificates and documents, containing 1,000 images.
+    - Text Image Rectification Model: [DocUNet](https://www3.cs.stonybrook.edu/~cvl/docunet.html).
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+
+</details>
 
 ## 2. Quick Start
 PaddleX's pre-trained model pipelines can be quickly experienced. You can experience the effect of the Document Scene Information Extraction v3 pipeline online or locally using Python.

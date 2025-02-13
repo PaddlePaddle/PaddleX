@@ -26,7 +26,21 @@ The 3D multimodal fusion detection module is a key component in the fields of co
 <tr>
 </table>
 
-<p><b>Note: The above accuracy metrics are based on the <a href="https://www.nuscenes.org/nuscenes">nuscenes</a> validation set with mAP(0.5:0.95) and NDS 60.9, and the precision type is FP32.</b></p>
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**: The above accuracy metrics are based on the <a href="https://www.nuscenes.org/nuscenes">nuscenes</a> validation set with mAP(0.5:0.95) and NDS 60.9, and the precision type is FP32.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package first. For details, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
@@ -46,7 +60,7 @@ for res in output:
     res.visualize(save_path="./output/", show=True) ## 3D result visualization. If the runtime environment has a graphical interface, set `show=True`; otherwise, set it to `False`.
 ```
 
-<b>Note: </b>  
+<b>Note: </b>
 1、To visualize 3D detection results, you need to install the open3d package first. The installation command is as follows:
 ```bash
 pip install open3d
@@ -408,4 +422,3 @@ The 3D multimodal fusion detection module can be integrated into the 3D detectio
 2.<b>Module Integration</b>
 
 The weights you generate can be directly integrated into the 3D multimodal fusion detection module. You can refer to the Python example code in [Quick Integration](). Just replace the model with the path of the model you have trained.
-

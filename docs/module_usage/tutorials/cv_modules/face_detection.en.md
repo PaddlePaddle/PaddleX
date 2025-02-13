@@ -56,7 +56,22 @@ Face detection is a fundamental task in object detection, aiming to automaticall
 </tr>
 </tbody>
 </table>
-<b>Note: The above accuracy metrics are evaluated on the WIDER-FACE validation set with an input size of 640*640. GPU inference time is based on an NVIDIA V100 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 6271C CPU @ 2.60GHz and FP32 precision.</b>
+
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**: The above accuracy metrics are evaluated on the WIDER-FACE validation set with an input size of 640*640.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 
 ## III. Quick Integration  <a id="quick"> </a>

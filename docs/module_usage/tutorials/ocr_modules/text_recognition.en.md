@@ -51,7 +51,6 @@ The text recognition module is the core component of an OCR (Optical Character R
 <td>The ultra-lightweight English text recognition model released by PaddleOCR in May 2023. It is small in size and fast in speed, and can achieve millisecond-level prediction on CPU. Compared with the PP-OCRv3 English model, the recognition accuracy is improved by 6%, and it is suitable for text recognition tasks in various scenarios.</td>
 </tr>
 </table>
-<b>Note: The evaluation set for the above accuracy indicators is the Chinese dataset built by PaddleOCR, covering multiple scenarios such as street view, web images, documents, and handwriting, with 11,000 images included in text recognition. All models' GPU inference time is based on NVIDIA Tesla T4 machine, with precision type of FP32. CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type of FP32.</b>
 
 > ❗ The above list features the <b>4 core models</b> that the text recognition module primarily supports. In total, this module supports <b>18 models</b>. The complete list of models is as follows:
 
@@ -100,7 +99,7 @@ The text recognition module is the core component of an OCR (Optical Character R
 <td>An ultra-lightweight OCR model suitable for mobile applications. It adopts an encoder-decoder structure based on Transformer and enhances recognition accuracy and efficiency through techniques such as data augmentation and mixed precision training. The model size is 10.6M, making it suitable for deployment on resource-constrained devices. It can be used in scenarios such as mobile photo translation and business card recognition.</td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy indicators is the Chinese dataset built by PaddleOCR, covering multiple scenarios such as street view, web images, documents, and handwriting. The text recognition includes 11,000 images. The GPU inference time for all models is based on NVIDIA Tesla T4 machines with FP32 precision type. The CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -121,7 +120,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 </td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy indicators is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a> - Task One: OCR End-to-End Recognition Task A list. The GPU inference time for all models is based on NVIDIA Tesla T4 machines with FP32 precision type. The CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -140,7 +139,6 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td rowspan="1">    The RepSVTR text recognition model is a mobile text recognition model based on SVTRv2. It won the first prize in the PaddleOCR Algorithm Model Challenge - Task One: OCR End-to-End Recognition Task. The end-to-end recognition accuracy on the B list is 2.5% higher than that of PP-OCRv4, with the same inference speed.</td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy indicators is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a> - Task One: OCR End-to-End Recognition Task B list. The GPU inference time for all models is based on NVIDIA Tesla T4 machines with FP32 precision type. The CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
 
 * <b>English Recognition Model</b>
 <table>
@@ -261,6 +259,28 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>Devanagari Script Recognition</td>
 </tr>
 </table>
+
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**:
+    - Chinese Recognition Model: A self-built Chinese dataset using PaddleOCR, covering various scenarios such as street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.
+    - ch_SVTRv2_rec: <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Track 1: OCR End-to-End Recognition Task</a> A-Rank Evaluation Set.
+    - ch_RepSVTR_rec: <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Track 1: OCR End-to-End Recognition Task</a> B-Rank Evaluation Set.
+    - English Recognition Model: A self-built English dataset using PaddleX.
+    - Multilingual Recognition Model: A self-built multilingual dataset using PaddleX.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+
 </details>
 
 ## III. Quick Integration

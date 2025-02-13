@@ -27,7 +27,22 @@ Rotated object detection is a derivative of the object detection module, specifi
 <td rowspan="1">PP-YOLOE-R is an efficient single-stage Anchor-free rotated box detection model. Based on PP-YOLOE, PP-YOLOE-R introduces a series of useful designs to improve detection accuracy with minimal parameters and computational cost.</td>
 </tr>
 </table>
-<p><b>Note: The above accuracy metrics are on the <a href="https://captain-whu.github.io/DOTA/">DOTA</a> validation set mAP(0.5:0.95)。All model GPU inference times are based on an NVIDIA TRX2080 Ti machine, with precision type F16, and CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32.</b></p>
+
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**: <a href="https://captain-whu.github.io/DOTA/">DOTA</a> validation set.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 
 ## III. Quick Integration

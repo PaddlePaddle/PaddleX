@@ -36,7 +36,7 @@ The General OCR pipeline is designed to solve text recognition tasks, extracting
 </tr>
 </tbody>
 </table>
-<b>Note: The evaluation dataset for the above accuracy metrics is a self-built dataset covering multiple scenarios such as certificates and documents, with 1,000 images. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+
 <p><b>Text Image Correction Module (Optional):</b></p>
 <table>
 <thead>
@@ -56,7 +56,7 @@ The General OCR pipeline is designed to solve text recognition tasks, extracting
 </tr>
 </tbody>
 </table>
-<b>Note: The accuracy metrics of the model are measured from the <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet benchmark</a>.</b>
+
 <p><b>Text Detection Module:</b></p>
 <table>
 <thead>
@@ -147,7 +147,6 @@ The General OCR pipeline is designed to solve text recognition tasks, extracting
 <td>The ultra-lightweight English recognition model trained based on the PP-OCRv4 recognition model, supporting English and numeric recognition</td>
 </tr>
 </table>
-<b>Note: The evaluation dataset for the above accuracy metrics is a self-built Chinese dataset by PaddleOCR, covering multiple scenarios such as street view, web images, documents, and handwriting, with 11,000 images for text recognition. All model GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
 
 > ❗ The above list features the <b>4 core models</b> that the text recognition module primarily supports. In total, this module supports <b>18 models</b>. The complete list of models is as follows:
 
@@ -196,7 +195,7 @@ The General OCR pipeline is designed to solve text recognition tasks, extracting
 <td>An ultra-lightweight OCR model suitable for mobile applications. It adopts an encoder-decoder structure based on Transformer and enhances recognition accuracy and efficiency through techniques such as data augmentation and mixed precision training. The model size is 10.6M, making it suitable for deployment on resource-constrained devices. It can be used in scenarios such as mobile photo translation and business card recognition.</td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy indicators is the Chinese dataset built by PaddleOCR, covering multiple scenarios such as street view, web images, documents, and handwriting. The text recognition includes 11,000 images. The GPU inference time for all models is based on NVIDIA Tesla T4 machines with FP32 precision type. The CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -217,7 +216,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 </td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy indicators is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a> - Task One: OCR End-to-End Recognition Task A list. The GPU inference time for all models is based on NVIDIA Tesla T4 machines with FP32 precision type. The CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -236,7 +235,6 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td rowspan="1">    The RepSVTR text recognition model is a mobile text recognition model based on SVTRv2. It won the first prize in the PaddleOCR Algorithm Model Challenge - Task One: OCR End-to-End Recognition Task. The end-to-end recognition accuracy on the B list is 2.5% higher than that of PP-OCRv4, with the same inference speed.</td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy indicators is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a> - Task One: OCR End-to-End Recognition Task B list. The GPU inference time for all models is based on NVIDIA Tesla T4 machines with FP32 precision type. The CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
 
 * <b>English Recognition Model</b>
 <table>
@@ -357,7 +355,6 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>Devanagari Script Recognition</td>
 </tr>
 </table>
-</details>
 <p><b>Text Line Orientation Classification Module (Optional):</b></p>
 <table>
 <thead>
@@ -386,7 +383,32 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 </tr>
 </tbody>
 </table>
-<b>Note: The evaluation dataset for the above accuracy metrics is a self-built dataset covering multiple scenarios such as certificates and documents, containing 1,000 images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**:
+    - Text Image Rectification Model: [DocUNet](https://www3.cs.stonybrook.edu/~cvl/docunet.html).
+    - Text Detection Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 500 images for detection.
+    - Chinese Recognition Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.
+    - ch_SVTRv2_rec: Evaluation set A for "OCR End-to-End Recognition Task" in the [PaddleOCR Algorithm Model Challenge](https://aistudio.baidu.com/competition/detail/1131/0/introduction).
+    - ch_RepSVTR_rec: Evaluation set B for "OCR End-to-End Recognition Task" in the [PaddleOCR Algorithm Model Challenge](https://aistudio.baidu.com/competition/detail/1131/0/introduction).
+    - English Recognition Model: A self-built English dataset using PaddleX.
+    - Multilingual Recognition Model: A self-built multilingual dataset using PaddleX.
+    - Text Line Orientation Classification Model: A self-built dataset using PaddleX, covering various scenarios such as ID cards and documents, containing 1000 images.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+
+</details>
 
 ## 2. Quick Start
 All model pipelines provided by PaddleX can be quickly experienced. You can experience the effect of the general OCR pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the general OCR pipeline.

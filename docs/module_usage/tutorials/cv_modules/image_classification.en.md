@@ -677,7 +677,24 @@ The image classification module is a crucial component in computer vision system
 <td>100.1 M</td>
 </tr>
 </tr></tr></tr></tr></table>
-<p><b>Note: The above accuracy metrics refer to Top-1 Accuracy on the <a href="https://www.image-net.org/index.php">ImageNet-1k</a> validation set. </b><b>All model GPU inference times are based on NVIDIA Tesla T4 machines, with precision type FP32. CPU inference speeds are based on Intel® Xeon® Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32.</b></p></details>
+
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**: <a href="https://www.image-net.org/index.php">ImageNet-1k</a> validation set.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+
+</details>
 
 ## <span id="lable">III. Quick Integration</span>
 > ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).

@@ -26,12 +26,26 @@ The table classification module is a key component of a computer vision system, 
 </tr>
 </table>
 
-<p><b>Note: The above accuracy metrics are measured from the internal table classification dataset built by PaddleX. All models' GPU inference time is based on an NVIDIA Tesla T4 machine, with a precision type of FP32. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and a precision type of FP32.</b></p>
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**: PaddleX Internal Self-built Evaluation Dataset.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package first. For details, please refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 
-After installing the wheel package, you can complete the inference of the table classification module with just a few lines of code. You can switch between models under this module at will, and you can also integrate the model inference of the table classification module into your project. Before running the following code, please download the [example image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg) to your local machine. 
+After installing the wheel package, you can complete the inference of the table classification module with just a few lines of code. You can switch between models under this module at will, and you can also integrate the model inference of the table classification module into your project. Before running the following code, please download the [example image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg) to your local machine.
 
 ```python
 from paddlex import create_model
