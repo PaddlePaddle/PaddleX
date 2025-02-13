@@ -308,13 +308,14 @@ class LayoutParsingPipelineV2(BasePipeline):
                     del overall_ocr_res["rec_polys"][matched_idx]
                     del overall_ocr_res["rec_scores"][matched_idx]
 
-                overall_ocr_res["dt_polys"].extend(sub_ocr_res["dt_polys"])
-                overall_ocr_res["rec_texts"].extend(sub_ocr_res["rec_texts"])
-                overall_ocr_res["rec_boxes"] = np.concatenate(
-                    [overall_ocr_res["rec_boxes"], sub_ocr_res["rec_boxes"]], axis=0
-                )
-                overall_ocr_res["rec_polys"].extend(sub_ocr_res["rec_polys"])
-                overall_ocr_res["rec_scores"].extend(sub_ocr_res["rec_scores"])
+                if sub_ocr_res["rec_boxes"] != []:
+                    overall_ocr_res["dt_polys"].extend(sub_ocr_res["dt_polys"])
+                    overall_ocr_res["rec_texts"].extend(sub_ocr_res["rec_texts"])
+                    overall_ocr_res["rec_boxes"] = np.concatenate(
+                        [overall_ocr_res["rec_boxes"], sub_ocr_res["rec_boxes"]], axis=0
+                    )
+                    overall_ocr_res["rec_polys"].extend(sub_ocr_res["rec_polys"])
+                    overall_ocr_res["rec_scores"].extend(sub_ocr_res["rec_scores"])
 
         for formula_res in formula_res_list:
             x_min, y_min, x_max, y_max = list(map(int, formula_res["dt_polys"]))
