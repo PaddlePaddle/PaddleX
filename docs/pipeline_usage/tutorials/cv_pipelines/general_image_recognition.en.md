@@ -510,10 +510,10 @@ The parameters of the above method are described as follows:
 The general image recognition pipeline example of PaddleX requires a pre-built index library for feature retrieval. If you wish to build an index library with your private data, you need to organize the data as follows:
 
 ```bash
-data_root             # 数据集根目录，目录名称可以改变
-├── images            # 图像的保存目录，目录名称可以改变
+data_root             # The root directory of the dataset; the directory name can be changed
+├── images            # The directory for storing images; the directory name can be changed
 │   │   ...
-└── gallery.txt       # 索引库数据集标注文件，文件名称可以改变。每行给出待检索图像路径和图像标签，使用空格分隔，内容举例： “0/0.jpg 脉动”
+└── gallery.txt       # The annotation file for the gallery dataset; the filename can be changed. Each line provides the path and label of an image to be retrieved, separated by a space. Example content: “0/0.jpg Pulse”
 ```
 
 ## 3. Development Integration/Deployment
@@ -1010,16 +1010,16 @@ SubModules:
   Detection:
     module_name: text_detection
     model_name: PP-ShiTuV2_det
-    model_dir: null #可修改为微调后主体检测模型的本地路径
+    model_dir: null # Can be modified to the local path of the fine-tuned mainbody detection model
     batch_size: 1
   Recognition:
     module_name: text_recognition
     model_name: PP-ShiTuV2_rec
-    model_dir: null #可修改为微调后图像特征模型的本地路径
+    model_dir: null # Can be modified to the local path of the fine-tuned image feature model
     batch_size: 1
 ```
 
-Subsequently, refer to the command line method or Python script method in [2.2 Local Experience](#22-本地体验) to load the modified production line configuration file.
+Subsequently, refer to the command line method or Python script method in [2.2 Local Experience](#22-local-experience) to load the modified production line configuration file.
 
 ##  5. Multi-Hardware Support
 

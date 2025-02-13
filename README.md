@@ -406,7 +406,7 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     <td>✅</td>
     <td>✅</td>
     <td>✅</td>
-    <td>🚧</td>
+    <td>✅</td>
   </tr>
   <tr>
     <td>通用表格识别</td>
@@ -420,7 +420,7 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     <td>✅</td>
     <td>✅</td>
     <td>✅</td>
-    <td>🚧</td>
+    <td>✅</td>
   </tr>
   <tr>
     <td>通用实例分割</td>
@@ -448,7 +448,7 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     <td>✅</td>
     <td>✅</td>
     <td>✅</td>
-    <td>🚧</td>
+    <td>✅</td>
   </tr>
   <tr>
     <td>时序异常检测</td>
@@ -463,6 +463,55 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     <td>🚧</td>
     <td>🚧</td>
     <td>🚧</td>
+  </tr>
+  <tr>
+    <td>图像多标签分类</td>
+    <td>✅</td>
+    <td>🚧</td>
+    <td>🚧</td>
+    <td>✅</td>
+  </tr>
+  <tr>
+    <td>行人属性识别</td>
+    <td>✅</td>
+    <td>🚧</td>
+    <td>🚧</td>
+    <td>🚧</td>
+  </tr>
+  <tr>
+    <td>车辆属性识别</td>
+    <td>✅</td>
+    <td>🚧</td>
+    <td>🚧</td>
+    <td>🚧</td>
+  </tr>
+  <tr>
+    <td>通用图像识别</td>
+    <td>✅</td>
+    <td>🚧</td>
+    <td>✅</td>
+    <td>✅</td>
+  </tr>
+  <tr>
+    <td>印章文本识别</td>
+    <td>✅</td>
+    <td>🚧</td>
+    <td>🚧</td>
+    <td>🚧</td>
+  </tr>
+  <tr>
+    <td>图像异常检测</td>
+    <td>✅</td>
+    <td>✅</td>
+    <td>✅</td>
+    <td>✅</td>
+  </tr>
+  <tr>
+    <td>人脸识别</td>
+    <td>✅</td>
+    <td>✅</td>
+    <td>✅</td>
+    <td>✅</td>
   </tr>
 </table>
 

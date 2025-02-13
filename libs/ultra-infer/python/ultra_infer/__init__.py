@@ -140,13 +140,6 @@ except:
     pass
 
 
-os.environ["FLAGS_enable_pir_api"] = "0"
-logging.warning(
-    "Please note that we have set the environment variable \
-'FLAGS_enable_pir_api' to 'False' to ensure the correct operation of the Paddle backend."
-)
-
-
 from .c_lib_wrap import (
     ModelFormat,
     Backend,

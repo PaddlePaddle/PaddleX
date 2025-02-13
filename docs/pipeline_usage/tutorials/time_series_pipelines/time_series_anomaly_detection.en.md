@@ -813,7 +813,7 @@ SubModules:
   TSAnomalyDetection:
     module_name: ts_anomaly_detection
     model_name: DLinear_ad
-    model_dir: null  # 此处替换为您训练后得到的模型权重本地路径
+    model_dir: null  # Can be modified to the local path of the fine-tuned model
     batch_size: 1
 ```
 

@@ -36,41 +36,31 @@ After experiencing the pipeline, determine if it meets your expectations (includ
 PaddleX provides 15 end-to-end instance segmentation models. Refer to the [Model List](../support_list/models_list.en.md) for details. Benchmarks for some models are as follows:
 
 <table>
-<thead>
 <tr>
-<th>Model List</th>
-<th>mAP(%)</th>
-<th>GPU Inference Time(ms)</th>
-<th>Model Size(M)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Mask-RT-DETR-H</td>
-<td>48.8</td>
-<td>61.40</td>
-<td>486</td>
+<th>Model</th><th>Model Download Link</th>
+<th>Mask AP</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Size (M)</th>
+<th>Description</th>
 </tr>
 <tr>
-<td>Mask-RT-DETR-X</td>
-<td>47.5</td>
-<td>45.70</td>
-<td>257</td>
+<td>Mask-RT-DETR-H</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-H_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-H_pretrained.pdparams">Trained Model</a></td>
+<td>50.6</td>
+<td>172.36 / 172.36</td>
+<td>1615.75 / 1615.75</td>
+<td>449.9 M</td>
+<td rowspan="5">Mask-RT-DETR is an instance segmentation model based on RT-DETR. By adopting the high-performance PP-HGNetV2 as the backbone network and constructing a MaskHybridEncoder encoder, along with introducing IOU-aware Query Selection technology, it achieves state-of-the-art (SOTA) instance segmentation accuracy with the same inference time.</td>
 </tr>
 <tr>
-<td>Mask-RT-DETR-L</td>
+<td>Mask-RT-DETR-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Mask-RT-DETR-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Mask-RT-DETR-L_pretrained.pdparams">Trained Model</a></td>
 <td>45.7</td>
-<td>37.40</td>
-<td>123</td>
+<td>88.18 / 88.18</td>
+<td>1090.84 / 1090.84</td>
+<td>113.6 M</td>
 </tr>
-<tr>
-<td>Mask-RT-DETR-S</td>
-<td>40.9</td>
-<td>32.40</td>
-<td>57</td>
-</tr>
-</tbody>
 </table>
+
 > <b>Note: The above accuracy metrics are mAP(0.5:0.95) on the [COCO2017](https://cocodataset.org/#home) validation set. GPU inference time is based on an NVIDIA V100 machine with FP32 precision.</b>
 
 In summary, models listed from top to bottom offer faster inference speeds, while those from bottom to top offer higher accuracy. This tutorial uses the `Mask-RT-DETR-H` model as an example to complete the full model development process. Choose a suitable model based on your actual usage scenario, train it, evaluate the model weights within the pipeline, and finally apply them in real-world scenarios.
@@ -92,7 +82,7 @@ tar -xf ./dataset/intseg_remote_sense_coco.tar -C ./dataset/
 When verifying the dataset, you only need one command:
 
 ```bash
-python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
+python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-H.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/intseg_remote_sense_coco
 ```
@@ -166,7 +156,7 @@ Data conversion and data splitting can be enabled simultaneously. For data split
 Before training, ensure that you have verified the dataset. To complete PaddleX model training, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
+python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-H.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/intseg_remote_sense_coco \
     -o Train.num_classes=10
@@ -204,7 +194,7 @@ After completing the model training, all outputs are saved in the specified outp
 After completing model training, you can evaluate the specified model weight files on the validation set to verify the model's accuracy. To perform model evaluation using PaddleX, simply use the following command:
 
 ```bash
-python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
+python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-H.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/intseg_remote_sense_coco
 ```
@@ -324,7 +314,7 @@ Epoch Variation Results:
 Replace the model in the production line with the fine-tuned model for testing, e.g.:
 
 ```bash
-python main.py -c paddlex/configs/instance_segmentation/Mask-RT-DETR-H.yaml \
+python main.py -c paddlex/configs/modules/instance_segmentation/Mask-RT-DETR-H.yaml \
     -o Global.mode=predict \
     -o Predict.model_dir="output/best_model/inference" \
     -o Predict.input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/remotesensing_demo.png"
@@ -341,15 +331,35 @@ The prediction results will be generated under `./output`, and the prediction re
 
 If the general instance segmentation pipeline meets your requirements for inference speed and accuracy, you can proceed with development integration/deployment.
 
-1. Directly apply the trained model in your Python project by referring to the following sample code, and modify the `Pipeline.model` in the `paddlex/pipelines/instance_segmentation.yaml` configuration file to your own model path:
+1. If you need to use the fine-tuned model weights, you can obtain the pipeline configuration file for instance segmentation and load it for prediction. You can execute the following command to save the results in `my_path`:
+
+```bash
+paddlex --get_pipeline_config instance_segmentation --save_path ./my_path
+```
+
+Fill in the local path of the fine-tuned model weights in the `model_dir` of the pipeline configuration file. If you want to directly apply the general instance segmentation pipeline in your Python project, you can refer to the example below:
+
+```yaml
+pipeline_name: instance_segmentation
+
+SubModules:
+  InstanceSegmentation:
+    module_name: instance_segmentation
+    model_name: Mask-RT-DETR-S
+    model_dir: null # Replace this with the local path to your trained model weights
+    batch_size: 1
+    threshold: 0.5
+```
+
+Then, in your Python code, you can use the pipeline as follows:
 
 ```python
 from paddlex import create_pipeline
-pipeline = create_pipeline(pipeline="paddlex/pipelines/instance_segmentation.yaml")
+pipeline = create_pipeline(pipeline="my_path/instance_segmentation.yaml")
 output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/remotesensing_demo.png")
 for res in output:
     res.print() # Print the structured output of the prediction
-    res.save_to_img("./output/") # Save the result visualization image
+    res.save_to_img("./output/") # Save the result as a visualized image
     res.save_to_json("./output/") # Save the structured output of the prediction
 ```
 For more parameters, please refer to the [General Instance Segmentation Pipline User Guide](../pipeline_usage/tutorials/cv_pipelines/instance_segmentation.en.md)。

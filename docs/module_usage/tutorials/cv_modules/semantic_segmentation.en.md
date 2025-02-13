@@ -279,7 +279,7 @@ Related methods, parameters, and explanations are as follows:
 
 * The `model_name` must be specified. After specifying `model_name`, the built-in model parameters of PaddleX are used by default. If `model_dir` is specified, the user-defined model is used.
 
-* The `target_size` is specified during initialization to set the resolution for model inference. The default value is `None`. `-1` indicates that the original image size is used for inference, and `None` indicates that the settings from the previous layer are used. The priority order for parameter settings is: `predict parameter &gt; create_model initialization &gt; yaml configuration file`.
+* The `target_size` is specified during initialization to set the resolution for model inference. The default value is `None`. `-1` indicates that the original image size is used for inference, and `None` indicates that the settings from the lower priority are used. The priority order for parameter settings is: `predict parameter > create_model initialization > yaml configuration file`.
 
 * The `predict()` method of the general semantic segmentation model is called for inference and prediction. The parameters of the `predict()` method are `input`, `batch_size`, and `target_size`, with specific explanations as follows:
 
@@ -322,7 +322,7 @@ Related methods, parameters, and explanations are as follows:
 <td>
 <ul>
 <li><b>-1</b>, indicating inference using the original image size</li>
-<li><b>None</b>, indicating the settings from the previous layer are used. The priority order for parameter settings is: <code>predict parameter &gt; create_model initialization &gt; yaml configuration file</code></li>
+<li><b>None</b>, indicating the settings from the lower priority are used. The priority order for parameter settings is: <code>predict parameter &gt; create_model initialization &gt; yaml configuration file</code></li>
 <li><b>int</b>, such as 512, indicating inference using a resolution of <code>(512, 512)</code></li>
 <li><b>tuple</b>, such as (512, 1024), indicating inference using a resolution of <code>(512, 1024)</code></li>
 </ul>

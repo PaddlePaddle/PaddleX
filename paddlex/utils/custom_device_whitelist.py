@@ -34,6 +34,7 @@ MLU_WHITELIST = [
     "MobileNetV3_small_x1_0",
     "MobileNetV3_small_x1_25",
     "PP-HGNet_small",
+    "PP-HGNet_tiny",
     "PP-LCNet_x0_5",
     "PP-LCNet_x0_25",
     "PP-LCNet_x0_35",

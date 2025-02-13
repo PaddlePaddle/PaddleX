@@ -68,8 +68,6 @@ The visualization image is as follows:
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/vehicle_attri/vehicle_attribute_007_res.jpg" alt="Vehicle Attribute Result">
 
-Please note that due to network issues, the above image link may not be successfully parsed. This issue might be related to the link itself or the network connection. If you need the content of this link, please check the validity of the link and try again. If the problem persists, you may need to access the link directly through a browser.
-
 Relevant methods, parameters, and explanations are as follows:
 
 * `create_model` instantiates the vehicle attribute recognition model (here, `PP-LCNet_x1_0_vehicle_attribute` is used as an example). The specific explanations are as follows:

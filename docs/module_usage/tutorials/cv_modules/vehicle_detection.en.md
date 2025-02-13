@@ -110,7 +110,7 @@ Related methods, parameters, and explanations are as follows:
 
 * The `model_name` must be specified. After specifying `model_name`, the built-in model parameters of PaddleX are used by default. If `model_dir` is specified, the user-defined model is used.
 
-* The `threshold` is the threshold for filtering low-score objects. The default value is `None`, indicating that the settings from the previous layer are used. The priority order for parameter settings is: `predict parameter &gt; create_model initialization &gt; yaml configuration file`. Currently, two types of threshold settings are supported:
+* The `threshold` is the threshold for filtering low-score objects. The default value is `None`, indicating that the settings from the lower priority are used. The priority order for parameter settings is: `predict parameter > create_model initialization > yaml configuration file`. Currently, two types of threshold settings are supported:
   * `float`: Use the same threshold for all classes.
   * `dict`: The key is the class ID, and the value is the threshold. Different thresholds can be set for different classes. For vehicle detection, which is a single-class detection task, this setting is not required.
 
@@ -154,7 +154,7 @@ Related methods, parameters, and explanations are as follows:
 <td><code>float</code>/<code>dict</code>/<code>None</code></td>
 <td>
 <ul>
-<li><b>None</b>, indicating the settings from the previous layer are used. The priority order for parameter settings is: <code>predict parameter &gt; create_model initialization &gt; yaml configuration file</code></li>
+<li><b>None</b>, indicating the settings from the lower priority are used. The priority order for parameter settings is: <code>predict parameter &gt; create_model initialization &gt; yaml configuration file</code></li>
 <li><b>float</b>, such as 0.5, indicating the threshold of 0.5 is used for filtering low-score objects during inference</li>
 <li><b>dict</b>, such as <code>{0: 0.5, 1: 0.35}</code>, indicating a threshold of 0.5 for class 0 and 0.35 for class 1 during inference. Vehicle detection is a single-class detection task and does not require this setting.</li>
 </ul>

@@ -61,6 +61,26 @@ for res in output:
 - `scores`：表示行人属性图像的预测标签置信度
 - `label_names`：表示行人属性图像的预测标签名称
 
+<b>备注</b>：其中 `class_ids` 的值索引为0表示是否佩戴帽子，索引值为1表示是否佩戴眼镜，索引值2-7表示上衣风格，索引值8-13表示下装风格，索引值14表示是否穿靴子，索引值15-17表示背的包的类型，索引值18表示正面是否持物，索引值19-21表示年龄，索引值22表示性别，索引值23-25表示朝向。具体地，属性包含以下类型:
+
+```
+- 性别：男、女
+- 年龄：小于18、18-60、大于60
+- 朝向：朝前、朝后、侧面
+- 配饰：眼镜、帽子、无
+- 正面持物：是、否
+- 包：双肩包、单肩包、手提包
+- 上衣风格：带条纹、带logo、带格子、拼接风格
+- 下装风格：带条纹、带图案
+- 短袖上衣：是、否
+- 长袖上衣：是、否
+- 长外套：是、否
+- 长裤：是、否
+- 短裤：是、否
+- 短裙&裙子：是、否
+- 穿靴：是、否
+```
+
 可视化图片如下：
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/ped_attri/pedestrian_attribute_006_res.jpg">
@@ -310,15 +330,9 @@ python main.py -c paddlex/configs/modules/pedestrian_attribute_recognition/PP-LC
   "analysis": {
     "histogram": "check_dataset/histogram.png"
   },
-<<<<<<< HEAD
-  "dataset_path": "./dataset/pedestrian_attribute_examples",
+  "dataset_path": "pedestrian_attribute_examples",
   "show_type": "image",
   "dataset_type": "MLClsDataset"
-=======
-  &quot;dataset_path&quot;: &quot;pedestrian_attribute_examples&quot;,
-  &quot;show_type&quot;: &quot;image&quot;,
-  &quot;dataset_type&quot;: &quot;MLClsDataset&quot;
->>>>>>> modify_pipeline_and_module_docs
 }
 </code></pre>
 <p>上述校验结果中，check_pass 为 true 表示数据集格式符合要求，其他部分指标的说明如下：</p>

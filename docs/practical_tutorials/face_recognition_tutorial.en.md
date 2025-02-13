@@ -465,7 +465,7 @@ python main.py -c paddlex/configs/modules/face_detection/PP-YOLOE_plus-S.yaml \
 The prediction results can be generated under `./output` through the above instructions, and the prediction result of `cartoon_demo.jpg` is as follows:
 <center>
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/face_detection/04.jpg" width="600"/>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/face_recognition/04.jpg" width="600"/>
 
 </center>
 
@@ -722,12 +722,12 @@ SubModules:
   Detection:
     module_name: face_detection
     model_name: PP-YOLOE_plus-S_face
-    model_dir: "path/to/your/det_model" # 使用卡通人脸数据微调的人脸检测模型
+    model_dir: "path/to/your/det_model" # # Face detection model fine-tuned with cartoon face data
     batch_size: 1
   Recognition:
     module_name: face_feature
     model_name: ResNet50_face
-    model_dir: "path/to/your/rec_model" # 使用卡通人脸数据微调的人脸特征模型
+    model_dir: "path/to/your/rec_model" # Face feature model fine-tuned with cartoon face data
     batch_size: 1
 ```
 
@@ -735,15 +735,15 @@ Subsequently, in your Python code, you can use the production line as follows:
 
 ```python
 from paddlex import create_pipeline
-# 创建人脸识别产线
+# Create a face recognition pipeline
 pipeline = create_pipeline(pipeline="my_path/face_recognition.yaml")
-# 构建卡通人脸特征底库
+# Build a cartoon face feature database
 index_data = pipeline.build_index(gallery_imgs="cartoonface_demo_gallery", gallery_label="cartoonface_demo_gallery/gallery.txt")
-# 图像预测
+# Predict the cartoon demo image
 output = pipeline.predict("cartoonface_demo_gallery/test_images/cartoon_demo.jpg", index=index_data)
 for res in output:
     res.print()
-    res.save_to_img("./output/") # 保存可视化结果图像
+    res.save_to_img("./output/") # Save the result to an image
 ```
 
 If there is a case where a cartoon face can be detected but is recognized as "Unknown0.00", you can modify the `rec_thresholds` in the configuration file and try again after lowering the retrieval threshold. If there are cases of face recognition errors, please replace the optimal weights with the weights from the last training round, or replace the recognition model weights trained with different hyperparameters and try again.
@@ -761,11 +761,11 @@ This section takes service-oriented deployment as an example and guides you thro
 
 ```python
 from paddlex import create_pipeline
-# 创建人脸识别产线
+# Create a face recognition pipeline
 pipeline = create_pipeline(pipeline="face_recognition")
-# 构建卡通人脸特征底库
+# Build a cartoon face feature database
 index_data = pipeline.build_index(gallery_imgs="cartoonface_demo_gallery", gallery_label="cartoonface_demo_gallery/gallery.txt")
-# 保存卡通人脸特征底库
+# Save the cartoon face feature database
 index_data.save("cartoonface_index")
 ```
 
@@ -786,7 +786,7 @@ paddlex --get_pipeline_config face_recognition --save_path ./
 ```yaml
 pipeline_name: face_recognition
 
-index: ./cartoonface_index # 本地特征底库目录，使用第(1)步中构建好的特征底库
+index: ./cartoonface_index # Local feature database directory, using the feature database constructed in step (1)
 det_threshold: 0.6
 rec_threshold: 0.4
 rec_topk: 5
@@ -795,12 +795,12 @@ SubModules:
   Detection:
     module_name: face_detection
     model_name: PP-YOLOE_plus-S_face
-    model_dir: "path/to/your/det_model" # 使用卡通人脸数据微调的人脸检测模型
+    model_dir: "path/to/your/det_model" # Face detection model fine-tuned with cartoon face data
     batch_size: 1
   Recognition:
     module_name: face_feature
     model_name: ResNet50_face
-    model_dir: "path/to/your/rec_model" # 使用卡通人脸数据微调的人脸特征模型
+    model_dir: "path/to/your/rec_model" # Face feature model fine-tuned with cartoon face data
     batch_size: 1
 ```
 
@@ -825,7 +825,7 @@ import requests
 
 API_BASE_URL = "http://0.0.0.0:8080"
 
-infer_image_path = "cartoonface_demo_gallery/test_images/cartoon_demo.jpg" # 测试图片
+infer_image_path = "cartoonface_demo_gallery/test_images/cartoon_demo.jpg" # test image path
 
 with open(infer_image_path, "rb") as file:
     image_bytes = file.read()

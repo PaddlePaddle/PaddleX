@@ -6,7 +6,7 @@ comments: true
 
 PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模块包含若干模型，具体使用哪些模型，您可以根据下边的 benchmark 数据来选择。如您更考虑模型精度，请选择精度较高的模型，如您更考虑模型存储大小，请选择存储大小较小的模型。
 
-## 图像分类模块
+## [图像分类模块](../module_usage/tutorials/cv_modules/image_classification.md)
 <table>
 <thead>
 <tr>
@@ -502,7 +502,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 </table>
 <b>注：以上精度指标为 VeRi 数据集 mA。</b>
 
-## 目标检测模块
+## [目标检测模块](../module_usage/tutorials/cv_modules/object_detection.md)
 <table>
 <thead>
 <tr>
@@ -711,6 +711,11 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>46.9</td>
 <td>90.0 M</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOX-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-M_pretrained.pdparams">训练模型</a></td></tr>
+<tr>
+<td>YOLOX-N</td>
+<td>26.1</td>
+<td>3.4M</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLOX-N_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOLOX-N_pretrained.pdparams">训练模型</a></td></tr>
 </tbody>
 </table>
 <b>注：以上精度指标为 </b>[VisDrone-DET](https://github.com/VisDrone/VisDrone-Dataset)<b> 验证集 mAP(0.5:0.95)。</b>
@@ -739,7 +744,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 </table>
 <b>注：以上精度指标为 </b>[CrowdHuman](https://bj.bcebos.com/v1/paddledet/data/crowdhuman.zip)<b> 验证集 mAP(0.5:0.95)。</b>
 
-## 语义分割模块
+## [语义分割模块](../module_usage/tutorials/cv_modules/semantic_segmentation.md)
 <table>
 <thead>
 <tr>
@@ -1045,7 +1050,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 </table>
 <b>注：以上精度指标为 </b>[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)<b> 验证集 平均异常分数。</b>
 
-## 文本检测模块
+## [文本检测模块](../module_usage/tutorials/ocr_modules/text_detection.md)
 <table>
 <thead>
 <tr>
@@ -1069,7 +1074,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 </table>
 <b>注：以上精度指标的评估集是 PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中检测包含 500 张图片。</b>
 
-## 文本识别模块
+## [文本识别模块](../module_usage/tutorials/ocr_modules/text_recognition.md)
 <table>
 <thead>
 <tr>
@@ -1127,7 +1132,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 </table>
 <b>注：以上精度指标的评估集是 [PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务](https://aistudio.baidu.com/competition/detail/1131/0/introduction)B榜。</b>
 
-## 表格结构识别模块
+## [表格结构识别模块](../module_usage/tutorials/ocr_modules/table_structure_recognition.md)
 <table>
 <thead>
 <tr>
@@ -1213,7 +1218,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 </table>
 <b>注：以上精度指标为 PaddleX 内部自建数据集 Top-1 Acc 。</b>
 
-## 版面区域分析模块
+## [版面区域检测模块](../module_usage/tutorials/ocr_modules/layout_detection.md)
 <table>
 <thead>
 <tr>
@@ -1247,7 +1252,7 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 </table>
 <b>注：以上精度指标的评估集是 PaddleOCR 自建的版面区域分析数据集，包含 1w 张图片。</b>
 
-## 时序预测模块
+## [时序预测模块](../module_usage/tutorials/time_series_modules/time_series_forecasting.md)
 <table>
 <thead>
 <tr>

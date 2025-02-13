@@ -401,7 +401,7 @@ Similar to model training and evaluation, the following steps are required:
 * Specify the mode as model inference prediction: `-o Global.mode=predict`
 * Specify the path to the model weights: `-o Predict.model_dir="./output/best_model/inference"`
 * Specify the path to the input data: `-o Predict.input="..."`
-Other related parameters can be set by modifying the fields under `Global` and `Predict` in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.md).
+Other related parameters can be set by modifying the fields under `Global` and `Predict` in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
 
 #### 4.4.2 Model Integration
 The model can be directly integrated into the PaddleX pipeline or into your own project.

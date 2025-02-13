@@ -1034,7 +1034,7 @@ SubModules:
   InstanceSegmentation:
     module_name: instance_segmentation
     model_name: Mask-RT-DETR-S
-    model_dir: null # 替换为微调后的实例分割模型权重路径
+    model_dir: null # Here replaced with the newly fine-tuned weight path.
     batch_size: 1
     threshold: 0.5
 ```

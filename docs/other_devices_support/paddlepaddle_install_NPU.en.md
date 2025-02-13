@@ -30,8 +30,8 @@ Currently, Python 3.9 wheel installation packages are provided. If you have a ne
 * Download and install the Python 3.9 wheel installation package
 ```bash
 # Note: You need to install the CPU version of PaddlePaddle first
-python3.9 -m pip install paddlepaddle==3.0.0.dev20240520 -i https://www.paddlepaddle.org.cn/packages/nightly/cpu/
-python3.9 -m pip install paddle_custom_npu==3.0.0.dev20240719 -i https://www.paddlepaddle.org.cn/packages/nightly/npu/
+python -m pip install paddlepaddle -i https://www.paddlepaddle.org.cn/packages/nightly/cpu
+python -m pip install paddle-custom-npu -i https://www.paddlepaddle.org.cn/packages/nightly/npu
 ```
 * Set environment variables on the arm machine (not required for x86 environment)
 ```bash

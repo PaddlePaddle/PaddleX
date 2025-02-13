@@ -886,7 +886,7 @@ SubModules:
   SmallObjectDetection:
     module_name: small_object_detection
     model_name: PP-YOLOE_plus_SOD-L
-    model_dir: null # 替换为微调后的小目标检测模型权重路径
+    model_dir: null # Here replaced with the newly fine-tuned weight path.
     batch_size: 1
     threshold: 0.5
 ```
