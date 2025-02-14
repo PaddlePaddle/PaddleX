@@ -60,6 +60,11 @@ void AdaptivePool2dKernel::CpuAdaptivePool(
   }
 }
 
+OrtStatusPtr AdaptivePool2dKernel::ComputeV2(OrtKernelContext *context) {
+  Compute(context);
+  return nullptr;
+}
+
 void AdaptivePool2dKernel::Compute(OrtKernelContext *context) {
 #if ORT_API_VERSION >= 14
   Ort::KernelContext ort_context{context};
