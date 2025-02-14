@@ -40,6 +40,7 @@ public:
   void GetAttribute(const OrtKernelInfo *info);
 
   void Compute(OrtKernelContext *context);
+  OrtStatusPtr ComputeV2(OrtKernelContext *context);
   void FastNMS(const float *boxes, const float *scores, const int &num_boxes,
                std::vector<int> *keep_indices);
   int NMSForEachSample(const float *boxes, const float *scores, int num_boxes,
@@ -51,6 +52,12 @@ struct MultiClassNmsOp
     : Ort::CustomOpBase<MultiClassNmsOp, MultiClassNmsKernel> {
   void *CreateKernel(OrtApi api, const OrtKernelInfo *info) const {
     return new MultiClassNmsKernel(api, info);
+  }
+
+  OrtStatusPtr CreateKernelV2(OrtApi api, const OrtKernelInfo *info,
+                              void **op_kernel) const {
+    *op_kernel = new MultiClassNmsKernel(api, info);
+    return nullptr;
   }
 
   const char *GetName() const { return "MultiClassNMS"; }
