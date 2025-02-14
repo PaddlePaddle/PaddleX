@@ -1444,9 +1444,15 @@ for res in visual_predict_res:
 <td>否</td>
 </tr>
 <tr>
-<td><code>llmRequestInterval</code></td>
-<td><code>number</code> | <code>null</code></td>
-<td>调用大语言模型API的间隔时间。</td>
+<td><code>blockSize</code></td>
+<td><code>int</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>block_size</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>retrieverConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>retriever_config</code> 参数说明。</td>
 <td>否</td>
 </tr>
 </tbody>
@@ -1576,6 +1582,18 @@ for res in visual_predict_res:
 <td><code>tableFewShotDemoKeyValueList</code></td>
 <td><code>string</code> | <code>null</code></td>
 <td>参见产线 <code>predict</code> 方法中的 <code>table_few_shot_demo_key_value_list</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>chatBotConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>chat_bot_config</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>retrieverConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>retriever_config</code> 参数说明。</td>
 <td>否</td>
 </tr>
 </tbody>

@@ -1285,7 +1285,6 @@ for res in visual_predict_res:
 以下是基础服务化部署的API参考与多语言服务调用示例：
 
 <details><summary>API参考</summary>
-
 <p>对于服务提供的主要操作：</p>
 <ul>
 <li>HTTP请求方法为POST。</li>
@@ -1379,51 +1378,110 @@ for res in visual_predict_res:
 </tr>
 <tr>
 <td><code>fileType</code></td>
-<td><code>integer</code></td>
+<td><code>integer</code> | <code>null</code></td>
 <td>文件类型。<code>0</code>表示PDF文件，<code>1</code>表示图像文件。若请求体无此属性，则将根据URL推断文件类型。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>useImgOrientationCls</code></td>
-<td><code>boolean</code></td>
-<td>是否启用文档图像方向分类功能。默认启用该功能。</td>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>use_doc_orientation_classify</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>useImgUnwarping</code></td>
-<td><code>boolean</code></td>
-<td>是否启用文本图像矫正功能。默认启用该功能。</td>
+<td><code>useDocUnwarping</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>use_doc_unwarping</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>useSealTextDet</code></td>
-<td><code>boolean</code></td>
-<td>是否启用印章文本检测功能。默认启用该功能。</td>
+<td><code>useGeneralOcr</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>use_general_ocr</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>inferenceParams</code></td>
-<td><code>object</code></td>
-<td>推理参数。</td>
+<td><code>useSealRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>use_seal_recognition</code> 参数说明。</td>
 <td>否</td>
 </tr>
-</tbody>
-</table>
-<p><code>inferenceParams</code>的属性如下：</p>
-<table>
-<thead>
 <tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-<th>是否必填</th>
+<td><code>useTableRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>use_table_recognition</code> 参数说明。</td>
+<td>否</td>
 </tr>
-</thead>
-<tbody>
 <tr>
-<td><code>maxLongSide</code></td>
-<td><code>integer</code></td>
-<td>推理时，若文本检测模型的输入图像较长边的长度大于<code>maxLongSide</code>，则将对图像进行缩放，使其较长边的长度等于<code>maxLongSide</code>。</td>
+<td><code>textDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_det_limit_side_len</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_det_limit_type</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_det_thresh</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_det_box_thresh</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_det_unclip_ratio</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>textRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_rec_score_thresh</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>sealDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>seal_det_limit_side_len</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>sealDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>seal_det_limit_type</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>sealDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>seal_det_thresh</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>sealDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>seal_det_box_thresh</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>sealDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>seal_det_unclip_ratio</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>sealRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>seal_rec_score_thresh</code> 参数说明。</td>
 <td>否</td>
 </tr>
 </tbody>
@@ -1441,13 +1499,13 @@ for res in visual_predict_res:
 </thead>
 <tbody>
 <tr>
-<td><code>visualResults</code></td>
+<td><code>layoutParsingResults</code></td>
 <td><code>array</code></td>
 <td>使用计算机视觉模型得到的分析结果。数组长度为1（对于图像输入）或文档页数与10中的较小者（对于PDF输入）。对于PDF输入，数组中的每个元素依次表示PDF文件中每一页的处理结果。</td>
 </tr>
 <tr>
 <td><code>visualInfo</code></td>
-<td><code>object</code></td>
+<td><code>array</code></td>
 <td>图像中的关键信息，可用作其他操作的输入。</td>
 </tr>
 <tr>
@@ -1457,7 +1515,7 @@ for res in visual_predict_res:
 </tr>
 </tbody>
 </table>
-<p><code>visualResults</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
+<p><code>layoutParsingResults</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
 <table>
 <thead>
 <tr>
@@ -1468,78 +1526,19 @@ for res in visual_predict_res:
 </thead>
 <tbody>
 <tr>
-<td><code>texts</code></td>
-<td><code>array</code></td>
-<td>文本位置、内容和得分。</td>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>产线对象的 <code>predict</code> 方法生成结果的 JSON 表示中 <code>res</code> 字段的简化版本，其中去除了 <code>input_path</code> 字段</td>
 </tr>
 <tr>
-<td><code>tables</code></td>
-<td><code>array</code></td>
-<td>表格位置和内容。</td>
+<td><code>outputImages</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>输入图像和预测结果图像的键值对。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
-<td><code>string</code></td>
+<td><code>string</code> | <code>null</code></td>
 <td>输入图像。图像为JPEG格式，使用Base64编码。</td>
-</tr>
-<tr>
-<td><code>layoutImage</code></td>
-<td><code>string</code></td>
-<td>版面区域检测结果图。图像为JPEG格式，使用Base64编码。</td>
-</tr>
-<tr>
-<td><code>ocrImage</code></td>
-<td><code>string</code></td>
-<td>OCR结果图。图像为JPEG格式，使用Base64编码。</td>
-</tr>
-</tbody>
-</table>
-<p><code>texts</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>poly</code></td>
-<td><code>array</code></td>
-<td>文本位置。数组中元素依次为包围文本的多边形的顶点坐标。</td>
-</tr>
-<tr>
-<td><code>text</code></td>
-<td><code>string</code></td>
-<td>文本内容。</td>
-</tr>
-<tr>
-<td><code>score</code></td>
-<td><code>number</code></td>
-<td>文本识别得分。</td>
-</tr>
-</tbody>
-</table>
-<p><code>tables</code>中的每个元素为一个<code>object</code>，具有如下属性：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>bbox</code></td>
-<td><code>array</code></td>
-<td>表格位置。数组中元素依次为边界框左上角x坐标、左上角y坐标、右下角x坐标以及右下角y坐标。</td>
-</tr>
-<tr>
-<td><code>html</code></td>
-<td><code>string</code></td>
-<td>HTML格式的表格识别结果。</td>
 </tr>
 </tbody>
 </table>
@@ -1563,48 +1562,30 @@ for res in visual_predict_res:
 <tbody>
 <tr>
 <td><code>visualInfo</code></td>
-<td><code>object</code></td>
+<td><code>array</code></td>
 <td>图像中的关键信息。由<code>analyzeImages</code>操作提供。</td>
 <td>是</td>
 </tr>
 <tr>
-<td><code>minChars</code></td>
-<td><code>integer</code></td>
+<td><code>minCharacters</code></td>
+<td><code>integer</code> | <code>null</code></td>
 <td>启用向量数据库的最小数据长度。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>llmRequestInterval</code></td>
-<td><code>number</code></td>
-<td>调用大语言模型API的间隔时间。</td>
+<td><code>blockSize</code></td>
+<td><code>int</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>block_size</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>llmName</code></td>
-<td><code>string</code></td>
-<td>大语言模型名称。</td>
-<td>否</td>
-</tr>
-<tr>
-<td><code>llmParams</code></td>
-<td><code>object</code></td>
-<td>大语言模型API参数。</td>
+<td><code>retrieverConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>retriever_config</code> 参数说明。</td>
 <td>否</td>
 </tr>
 </tbody>
 </table>
-<p>当前，<code>llmParams</code> 可以采用如下形式之一：</p>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;qianfan&quot;,
-&quot;apiKey&quot;: &quot;{千帆平台API key}&quot;,
-&quot;secretKey&quot;: &quot;{千帆平台secret key}&quot;
-}
-</code></pre>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;aistudio&quot;,
-&quot;accessToken&quot;: &quot;{星河社区access token}&quot;
-}
-</code></pre>
 <ul>
 <li>请求处理成功时，响应体的<code>result</code>具有如下属性：</li>
 </ul>
@@ -1618,17 +1599,17 @@ for res in visual_predict_res:
 </thead>
 <tbody>
 <tr>
-<td><code>vectorStore</code></td>
-<td><code>string</code></td>
+<td><code>vectorInfo</code></td>
+<td><code>object</code></td>
 <td>向量数据库序列化结果，可用作其他操作的输入。</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li><b><code>retrieveKnowledge</code></b></li>
+<li><b><code>invokeMLLM</code></b></li>
 </ul>
-<p>进行知识检索。</p>
-<p><code>POST /chatocr-retrieval</code></p>
+<p>获取多模态大模型抽取结果。</p>
+<p><code>POST /chatocr-mllm</code></p>
 <ul>
 <li>请求体的属性如下：</li>
 </ul>
@@ -1643,43 +1624,25 @@ for res in visual_predict_res:
 </thead>
 <tbody>
 <tr>
-<td><code>keys</code></td>
+<td><code>image</code></td>
+<td><code>string</code></code></td>
+<td>输入图像。</td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>keyList</code></td>
 <td><code>array</code></td>
 <td>关键词列表。</td>
 <td>是</td>
 </tr>
 <tr>
-<td><code>vectorStore</code></td>
-<td><code>string</code></td>
-<td>向量数据库序列化结果。由<code>buildVectorStore</code>操作提供。</td>
-<td>是</td>
-</tr>
-<tr>
-<td><code>llmName</code></td>
-<td><code>string</code></td>
-<td>大语言模型名称。</td>
-<td>否</td>
-</tr>
-<tr>
-<td><code>llmParams</code></td>
-<td><code>object</code></td>
-<td>大语言模型API参数。</td>
+<td><code>mllmChatBotConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>mllm_chat_bot_config</code> 参数说明。</td>
 <td>否</td>
 </tr>
 </tbody>
-</table>
-<p>当前，<code>llmParams</code> 可以采用如下形式之一：</p>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;qianfan&quot;,
-&quot;apiKey&quot;: &quot;{千帆平台API key}&quot;,
-&quot;secretKey&quot;: &quot;{千帆平台secret key}&quot;
-}
-</code></pre>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;aistudio&quot;,
-&quot;accessToken&quot;: &quot;{星河社区access token}&quot;
-}
-</code></pre>
+<table>
 <ul>
 <li>请求处理成功时，响应体的<code>result</code>具有如下属性：</li>
 </ul>
@@ -1693,9 +1656,9 @@ for res in visual_predict_res:
 </thead>
 <tbody>
 <tr>
-<td><code>retrievalResult</code></td>
-<td><code>string</code></td>
-<td>知识检索结果，可用作其他操作的输入。</td>
+<td><code>mllmPredictInfo</code></td>
+<td><code>object</code></td>
+<td>多模态大模型抽取结果。</td>
 </tr>
 </tbody>
 </table>
@@ -1718,7 +1681,7 @@ for res in visual_predict_res:
 </thead>
 <tbody>
 <tr>
-<td><code>keys</code></td>
+<td><code>keyList</code></td>
 <td><code>array</code></td>
 <td>关键词列表。</td>
 <td>是</td>
@@ -1730,67 +1693,97 @@ for res in visual_predict_res:
 <td>是</td>
 </tr>
 <tr>
-<td><code>vectorStore</code></td>
-<td><code>string</code></td>
+<td><code>useVectorRetrieval</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>use_vector_retrieval</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>vectorInfo</code></td>
+<td><code>object</code> | <code>null</code></td>
 <td>向量数据库序列化结果。由<code>buildVectorStore</code>操作提供。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>retrievalResult</code></td>
-<td><code>string</code></td>
-<td>知识检索结果。由<code>retrieveKnowledge</code>操作提供。</td>
+<td><code>minCharacters</code></td>
+<td><code>integer</code></td>
+<td>启用向量数据库的最小数据长度</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>taskDescription</code></td>
-<td><code>string</code></td>
-<td>提示词任务。</td>
+<td><code>textTaskDescription</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_task_description</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>rules</code></td>
-<td><code>string</code></td>
-<td>提示词规则。用于自定义信息抽取规则，例如规范输出格式。</td>
+<td><code>textOutputFormat</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_output_format</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>fewShot</code></td>
-<td><code>string</code></td>
-<td>提示词示例。</td>
+<td><code>textRulesStr</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_rules_str</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>llmName</code></td>
-<td><code>string</code></td>
-<td>大语言模型名称。</td>
+<td><code>textFewShotDemoTextContent</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_few_shot_demo_text_content</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>llmParams</code></td>
-<td><code>object</code></td>
-<td>大语言模型API参数。</td>
+<td><code>textFewShotDemoKeyValueList</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>text_few_shot_demo_key_value_list</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
-<td><code>returnPrompts</code></td>
-<td><code>boolean</code></td>
-<td>是否返回使用的提示词。默认禁用。</td>
+<td><code>tableTaskDescription</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>table_task_description</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>tableOutputFormat</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>table_output_format</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>tableRulesStr</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>table_rules_str</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>tableFewShotDemoTextContent</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>table_few_shot_demo_text_content</code> 参数说明。</td>
+</tr>
+<tr>
+<td><code>tableFewShotDemoKeyValueList</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>table_few_shot_demo_key_value_list</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>chatBotConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>chat_bot_config</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>retrieverConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>参见产线 <code>predict</code> 方法中的 <code>retriever_config</code> 参数说明。</td>
 <td>否</td>
 </tr>
 </tbody>
 </table>
-<p>当前，<code>llmParams</code> 可以采用如下形式之一：</p>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;qianfan&quot;,
-&quot;apiKey&quot;: &quot;{千帆平台API key}&quot;,
-&quot;secretKey&quot;: &quot;{千帆平台secret key}&quot;
-}
-</code></pre>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;aistudio&quot;,
-&quot;accessToken&quot;: &quot;{星河社区access token}&quot;
-}
-</code></pre>
 <ul>
 <li>请求处理成功时，响应体的<code>result</code>具有如下属性：</li>
 </ul>
@@ -1807,38 +1800,6 @@ for res in visual_predict_res:
 <td><code>chatResult</code></td>
 <td><code>object</code></td>
 <td>关键信息抽取结果。</td>
-</tr>
-<tr>
-<td><code>prompts</code></td>
-<td><code>object</code></td>
-<td>使用的提示词。</td>
-</tr>
-</tbody>
-</table>
-<p><code>prompts</code>的属性如下：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>类型</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>ocr</code></td>
-<td><code>array</code></td>
-<td>OCR提示词。</td>
-</tr>
-<tr>
-<td><code>table</code></td>
-<td><code>array</code></td>
-<td>表格提示词。</td>
-</tr>
-<tr>
-<td><code>html</code></td>
-<td><code>array</code></td>
-<td>HTML提示词。</td>
 </tr>
 </tbody>
 </table></details>
