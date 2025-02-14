@@ -1,10 +1,8 @@
 site_name: PaddleX 文档 #站点名称
-#site_url: https://paddlepaddle.github.io/PaddleX/
-site_url: https://amberc0209.github.io/PaddleX/
+site_url: https://paddlepaddle.github.io/PaddleX/
 docs_dir: docs # 文档路径
-
-repo_url: https://github.com/AmberC0209/PaddleX #仓库地址
-#repo_url: https://github.com/PaddlePaddle/PaddleX
+ 
+repo_url: https://github.com/PaddlePaddle/PaddleX #仓库地址
 edit_uri: edit/develop/docs/ #修改文件的路径
 theme:
   name: material
