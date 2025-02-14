@@ -99,13 +99,13 @@ plugins:
             文档场景信息抽取v3产线: PP-ChatOCRv3-doc
             OCR: OCR
             通用OCR产线: OCR
-            通用表格识别: General Table Recognition
-            通用表格识别v2: General Table Recognition V2
-            通用版面解析: General Layout Parsing
-            通用版面解析v2: General Layout Parsing V2
+            通用表格识别产线: General Table Recognition
+            通用表格识别v2产线: General Table Recognition V2
+            通用版面解析产线: General Layout Parsing
+            通用版面解析v2产线: General Layout Parsing V2
             公式识别产线: Formula Recognition
-            印章文本识别: Seal Recognition
-            文档图像预处理: Document Image Preprocessing
+            印章文本识别产线: Seal Recognition
+            文档图像预处理产线: Document Image Preprocessing
             计算机视觉: Computer Vision
             通用图像分类: General Image Classification
             通用目标检测: General Object Detection
@@ -165,6 +165,7 @@ plugins:
             图像分割: Image Segmentation
             语义分割模块: Semantic Segmentation
             实例分割模块: Instance Segmentation
+            人脸特征模块: Face Feature
             图像异常检测模块: Image Anomaly Detection
             时序分析: Time Series Analysis
             时序预测模块: Time Series Forecasting
@@ -206,6 +207,8 @@ plugins:
             时序异常检测任务模块: Time Series Anomaly Detection Task
             时序分类任务模块: Time Series Classification Task
             时序预测任务模块: Time Series Forecasting Task                 
+            语音识别: Speech
+            3D检测: 3D
             产线列表: Pipeline List
             PaddleX产线列表(CPU/GPU): PaddleX Pipeline List (CPU/GPU)
             PaddleX产线列表(DCU): PaddleX Pipeline List (DCU)
