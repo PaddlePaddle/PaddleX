@@ -45,12 +45,12 @@ for res in output:
 
 运行后，得到的结果为：
 ```
-{"res": {"input_path": "table_recognition.jpg", "page_index": null, "class_ids": array([0, 1], dtype=int32), "scores": array([0.84421, 0.15579], dtype=float32), "label_names": ["wired_table", "wireless_table"]}}
+{"res": {"input_path": "table_recognition.jpg", "page_index": None, "page_index": null, "class_ids": array([0, 1], dtype=int32), "scores": array([0.84421, 0.15579], dtype=float32), "label_names": ["wired_table", "wireless_table"]}}
 ```
 
 运行结果参数含义如下：
 - `input_path`：表示输入图片的路径
-- `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `null`
+- `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
 - `class_ids`：表示预测结果的类别id
 - `scores`：表示预测结果的置信度
 - `label_names`：表示预测结果的类别名

@@ -45,14 +45,14 @@ for res in output:
 After running the code, the result obtained is:
 
 ```
-{'res': {'input_path': 'table_recognition.jpg', 'class_ids': array([0, 1], dtype=int32), 'scores': array([0.84421, 0.15579], dtype=float32), 'label_names': ['wired_table', 'wireless_table']}}
+{'res': {'input_path': 'table_recognition.jpg', "page_index": None, 'class_ids': array([0, 1], dtype=int32), 'scores': array([0.84421, 0.15579], dtype=float32), 'label_names': ['wired_table', 'wireless_table']}}
 ```
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/table_classification/01.jpg">
 
 The meanings of the parameters in the running results are as follows:
 - `input_path`: Indicates the path of the input image.
-- `page_index`：If the input is a PDF file, this indicates the current page number of the PDF. Otherwise, it is `null`
+- `page_index`：If the input is a PDF file, this indicates the current page number of the PDF. Otherwise, it is `None`
 - `class_ids`: Indicates the class ID of the prediction result.
 - `scores`: Indicates the confidence of the prediction result.
 - `label_names`: Indicates the class name of the prediction result.
