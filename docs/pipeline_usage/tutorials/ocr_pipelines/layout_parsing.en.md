@@ -401,194 +401,589 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 </details>
 
 ## 2. Quick Start
+The pipelines provided by PaddleX allow for quick experience of their effects. You can use the command line or Python to experience the effects of the General Layout Parsing pipeline locally.
 
-PaddleX provides pre-trained model pipelines that can be quickly experienced. You can experience the effect of the General Image Classification pipeline online, or locally using command line or Python.
-
-Before using the General Layout Parsing pipeline locally, please ensure you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.md).
+Before using the General Layout Parsing pipeline locally, ensure you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Tutorial](../../../installation/installation.md).
 
 ### 2.1 Experience via Command Line
-One command is all you need to quickly experience the effect of the Layout Parsing pipeline. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/demo_paper.png) and replace `--input` with your local path to make predictions.
-
-```bash
-paddlex --pipeline layout_parsing --input demo_paper.png --device gpu:0
-```
-Parameter Explanation:
+You can quickly experience the effects of the Layout Parsing pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout_parsing_demo.png) and replace `--input` with the local path for prediction:
 
 ```
---pipeline: The name of the pipeline, here it is the Layout Parsing pipeline.
---input: The local path or URL of the input image to be processed.
---device: The GPU index to use (e.g., gpu:0 indicates using the first GPU, gpu:1,2 indicates using the second and third GPUs). You can also choose to use CPU (--device cpu).
+paddlex --pipeline layout_parsing \
+        --input layout_parsing_demo.png \
+        --use_doc_orientation_classify False \
+        --use_doc_unwarping False \
+        --use_textline_orientation False \
+        --save_path ./output \
+        --device gpu:0
 ```
+For parameter descriptions, refer to the parameter explanations in [2.2.2 Integration via Python Script](#222-integration-via-python-script).
 
-When executing the above command, the default Layout Parsing pipeline configuration file is loaded. If you need to customize the configuration file, you can execute the following command to obtain it:
+After running, the results will be printed to the terminal, as shown below:
 
 <details><summary> 👉Click to expand</summary>
-<pre><code class="language-bash">paddlex --get_pipeline_config layout_parsing
-</code></pre>
-<p>After execution, the layout parsing pipeline configuration file will be saved in the current directory. If you wish to customize the save location, you can execute the following command (assuming the custom save location is <code>./my_path</code>):</p>
-<pre><code class="language-bash">paddlex --get_pipeline_config layout_parsing --save_path ./my_path
-</code></pre>
-<p>After obtaining the pipeline configuration file, you can replace <code>--pipeline</code> with the saved path of the configuration file to make it take effect. For example, if the configuration file is saved as <code>./layout_parsing.yaml</code>, simply execute:</p>
-<pre><code class="language-bash">paddlex --pipeline ./layout_parsing.yaml --input layout_parsing.jpg
-</code></pre>
-<p>Here, parameters such as <code>--model</code> and <code>--device</code> do not need to be specified, as they will use the parameters in the configuration file. If these parameters are still specified, the specified parameters will take precedence.</p></details>
-
-After running, the result will be:
-
-<details><summary> 👉Click to expand</summary>
-<pre><code>{'input_path': PosixPath('/root/.paddlex/temp/tmp5jmloefs.png'), 'parsing_result': [{'input_path': PosixPath('/root/.paddlex/temp/tmpshsq8_w0.png'), 'layout_bbox': [51.46833, 74.22329, 542.4082, 232.77504], 'image': {'img': array([[[255, 255, 255],
-        [255, 255, 255],
-        [255, 255, 255],
+<pre><code>{'res': {'input_path': 'layout_parsing_demo.png', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_general_ocr': True, 'use_seal_recognition': True, 'use_table_recognition': True, 'use_formula_recognition': False}, 'parsing_res_list': [{'block_bbox': [133.37144, 40.12515, 1383.7618, 123.51433], 'block_label': 'text', 'block_content': '助力双方交往\n搭建友谊桥梁'}, {'block_bbox': [587.43024, 160.58405, 927.63995, 179.2846], 'block_label': 'figure_title', 'block_content': '本报记者沈小晓任彦黄培昭'}, {'block_bbox': [773.798, 200.63779, 1505.5233, 687.11847], 'block_label': 'image', 'block_content': ''}, {'block_bbox': [390.42462, 201.87276, 741.41675, 292.5969], 'block_label': 'text', 'block_content': '厄立特里亚高等教育与研究院合作建立，开\n设了中国语言课程和中国文化课程，注册学\n生2万余人次。10余年来，厄特孔院已成为\n当地民众了解中国的一扇窗口。'}, {'block_bbox': [9.70394, 202.7036, 359.6133, 340.30905], 'block_label': 'text', 'block_content': '身着中国传统民族服装的厄立特里亚青\n年依次登台表演中国民族舞、现代舞、扇子舞\n等，曼妙的舞姿赢得现场观众阵阵掌声。这\n是日前厄立特里亚高等教育与研究院孔子学\n院(以下简称"厄特孔院"举办“喜迎新年"中国\n歌舞比赛的场景。'}, {'block_bbox': [390.74887, 298.432, 740.7994, 436.79953], 'block_label': 'text', 'block_content': '黄鸣飞表示，随着来学习中文的人日益\n增多，阿斯马拉大学教学点已难以满足教学\n需要。2024年4月，由中企蜀道集团所属四\n川路桥承建的孔院教学楼项目在阿斯马拉开\n工建设，预计今年上半年峻工，建成后将为厄\n特孔院提供全新的办学场地。'}, {'block_bbox': [10.5880165, 346.2769, 359.125, 436.1819], 'block_label': 'text', 'block_content': '中国和厄立特里亚传统友谊深厚。近年\n来,在高质量共建“一带一路"框架下，中厄两\n国人文交流不断深化，互利合作的民意基础\n日益深厚。'}, {'block_bbox': [410.5304, 457.0797, 722.77606, 516.7847], 'block_label': 'text', 'block_content': '“在中国学习的经历\n让我看到更广阔的世界”'}, {'block_bbox': [30.340591, 457.54282, 341.95337, 516.82825], 'block_label': 'paragraph_title', 'block_content': '“学好中文，我们的\n未来不是梦"'}, {'block_bbox': [390.90765, 538.18097, 742.19904, 604.67365], 'block_label': 'text', 'block_content': '多年来，厄立特里亚广大赴华留学生和\n培训人员积极投身国家建设，成为助力该国\n发展的人才和厄中友好的见证者和推动者。'}, {'block_bbox': [9.953403, 538.3851, 359.45145, 652.02905], 'block_label': 'text', 'block_content': '“鲜花曾告诉我你怎样走过，大地知道你\n心中的每一个角落……"厄立特里亚阿斯马拉\n大学综合楼二层，一阵优美的歌声在走廊里回\n响。循着熟悉的旋律轻轻推开一间教室的门，\n学生们正跟着老师学唱中文歌曲《同一首歌》。'}, {'block_bbox': [390.89615, 610.6184, 741.1807, 747.9165], 'block_label': 'text', 'block_content': '在厄立特里亚全国妇女联盟工作的约翰\n娜·特韦尔德·凯莱塔就是其中一位。她曾在\n中华女子学院攻读硕士学位，研究方向是女\n性领导力与社会发展。其间，她实地走访中国\n多个地区，获得了观察中国社会发展的第一\n手资料。'}, {'block_bbox': [10.181939, 658.8049, 359.41302, 771.31146], 'block_label': 'text', 'block_content': '这是厄特孔院阿斯马拉大学教学点的一\n节中文歌曲课。为了让学生们更好地理解歌\n词大意，老师尤斯拉·穆罕默德萨尔·侯赛因逐\n字翻译和解释歌词。随着伴奏声响起，学生们\n边唱边随着节拍摇动身体，现场气氛热烈。'}, {'block_bbox': [809.68475, 705.4048, 1485.5435, 747.4364], 'block_label': 'figure_title', 'block_content': '在厄立特里亚不久前举办的第六届中国风筝文化节上，当地小学生体验风筝制作。\n中国驻厄立特里亚大使馆供图'}, {'block_bbox': [389.63492, 753.45245, 742.05634, 890.96497], 'block_label': 'text', 'block_content': '谈起在中国求学的经历，约翰娜记忆犹\n新：“中国的发展在当今世界是独一无二的。\n沿着中国特色社会主义道路坚定前行，中国\n创造了发展奇迹，这一切都离不开中国共产党\n的领导。中国的发展经验值得许多国家学习\n借鉴。”'}, {'block_bbox': [9.884867, 777.39636, 360.3998, 843.4287], 'block_label': 'text', 'block_content': '“这是中文歌曲初级班，共有32人。学\n生大部分来自首都阿斯马拉的中小学，年龄\n最小的仅有6岁。"尤斯拉告诉记者。'}, {'block_bbox': [9.801341, 850.1048, 359.61642, 1059.8444], 'block_label': 'text', 'block_content': '尤斯拉今年23岁，是厄立特里亚一所公立\n学校的艺术老师。她12岁开始在厄特孔院学\n习中文，在2017年第十届"汉语桥"世界中学生\n中文比赛中获得厄立特里亚赛区第一名，并和\n同伴代表厄立特里亚前往中国参加决赛，获得\n团体优胜奖。2022年起，尤斯拉开始在厄特孔\n院兼职教授中文歌曲，每周末两个课时。“中国\n文化博大精深，我希望我的学生们能够通过中\n文歌曲更好地理解中国文化。"她说。'}, {'block_bbox': [772.0007, 777.06, 1124.396, 1059.2354], 'block_label': 'text', 'block_content': '“不管远近都是客人，请不用客气；相约\n好了在一起，我们欢迎你…"在一场中厄青\n年联谊活动上，四川路桥中方员工同当地大\n学生合唱《北京欢迎你》。厄立特里亚技术学\n院计算机科学与工程专业学生鲁夫塔·谢拉\n是其中一名演唱者，她很早便在孔院学习中\n文，一直在为去中国留学作准备。“这句歌词\n是我们两国人民友谊的生动写照。无论是投\n身于厄立特里亚基础设施建设的中企员工，\n还是在中国留学的厄立特里亚学子，两国人\n民携手努力，必将推动两国关系不断向前发\n展。"鲁夫塔说。'}, {'block_bbox': [1155.9297, 777.71344, 1331.4728, 795.6411], 'block_label': 'text', 'block_content': '瓦的北红海省博物馆。'}, {'block_bbox': [1153.7091, 801.56256, 1504.5591, 987.63544], 'block_label': 'text', 'block_content': '博物馆二层陈列着一个发掘自阿杜利\n斯古城的中国古代陶制酒器，罐身上写着\n“万”“和"“禅"“山"等汉字。“这件文物证\n明，很早以前我们就通过海上丝绸之路进行\n贸易往来与文化交流。这也是厄立特里亚\n与中国友好交往历史的有力证明。"北红海\n省博物馆研究与文献部负责人伊萨亚斯·特\n斯法兹吉说。'}, {'block_bbox': [390.203, 897.60095, 742.03674, 1035.7938], 'block_label': 'text', 'block_content': '正在西南大学学习的厄立特里亚博士生\n穆卢盖塔·泽穆伊对中国怀有深厚感情。8\n盖塔在社交媒体上写下这样一段话：“这是我\n人生的重要一步，自此我拥有了一双坚固的\n鞋子，赋予我穿越荆棘的力量。"'}, {'block_bbox': [1154.4471, 993.4835, 1503.8441, 1107.7363], 'block_label': 'text', 'block_content': '厄立特里亚国家博物馆考古学和人类学\n研究员菲尔蒙·特韦尔德十分喜爱中国文\n化。他表示：“学习彼此的语言和文化，将帮\n助厄中两国人民更好地理解彼此，助力双方\n交往，搭建友谊桥梁。"'}, {'block_bbox': [391.17816, 1041.2622, 740.8725, 1131.4589], 'block_label': 'text', 'block_content': '穆卢盖塔密切关注中国在经济、科技、教\n育等领域的发展，“中国在科研等方面的实力\n与日俱增。在中国学习的经历让我看到更广\n阔的世界，从中受益匪浅。”'}, {'block_bbox': [9.486691, 1065.2955, 360.2089, 1180.0446], 'block_label': 'text', 'block_content': '“姐姐，你想去中国吗？"“非常想！我想\n去看故宫、爬长城。"尤斯拉的学生中有一对\n能歌善舞的姐妹，姐姐露娅今年15岁，妹妹\n莉娅14岁，两人都已在厄特孔院学习多年，\n中文说得格外流利。'}, {'block_bbox': [771.51514, 1065.1091, 1123.4568, 1179.5624], 'block_label': 'text', 'block_content': '厄立特里亚高等教育委员会主任助理萨\n马瑞表示：“每年我们都会组织学生到中国访\n问学习，目前有超过5000名厄立特里亚学生\n在中国留学。学习中国的教育经验，有助于\n提升厄立特里亚的教育水平。"'}, {'block_bbox': [1153.9272, 1114.0178, 1503.9585, 1347.0802], 'block_label': 'text', 'block_content': '厄立特里亚国家博物馆馆长塔吉丁·努\n里达姆·优素福曾多次访问中国，对中华文明\n的传承与创新、现代化博物馆的建设与发展\n印象深刻。“中国博物馆不仅有许多保存完好\n的文物，还充分运用先进科技手段进行展示，\n帮助人们更好理解中华文明。"塔吉丁说，“厄\n立特里亚与中国都拥有悠久的文明，始终相\n互理解、相互尊重。我希望未来与中国同行\n加强合作，共同向世界展示非洲和亚洲的灿\n烂文明。”'}, {'block_bbox': [390.8594, 1137.4973, 741.0567, 1346.7653], 'block_label': 'text', 'block_content': '23岁的莉迪亚·埃斯蒂法诺斯已在厄特\n孔院学习3年，在中国书法、中国画等方面表\n现十分优秀，在2024年厄立特里亚赛区的\n“汉语桥"比赛中获得一等奖。莉迪亚说：“学\n习中国书法让我的内心变得安宁和纯粹。我\n也喜欢中国的服饰，希望未来能去中国学习，\n把中国不同民族元素融入服装设计中，创作\n出更多精美作品，也把厄特文化分享给更多\n的中国朋友。”'}, {'block_bbox': [8.70449, 1186.1178, 359.8176, 1299.481], 'block_label': 'text', 'block_content': '露娅对记者说：“这些年来，怀着对中文\n和中国文化的热爱，我们姐妹俩始终相互鼓\n励，一起学习。我们的中文一天比一天好，还\n学会了中文歌和中国舞。我们一定要到中国\n去。学好中文，我们的未来不是梦！”'}, {'block_bbox': [9.666538, 1305.0905, 359.62704, 1347.939], 'block_label': 'text', 'block_content': '据厄特孔院中方院长黄鸣飞介绍，这所\n孔院成立于2013年3月，由贵州财经大学和'}, {'block_bbox': [791.9397, 1201.0502, 1104.4906, 1260.1833], 'block_label': 'text', 'block_content': '“共同向世界展示非\n洲和亚洲的灿烂文明”'}, {'block_bbox': [772.51917, 1281.01, 1123.4009, 1348.0028], 'block_label': 'text', 'block_content': '从阿斯马拉出发，沿着蜿蜓曲折的盘山\n公路一路向东寻找丝路印迹。驱车两个小\n时，记者来到位于厄立特里亚港口城市马萨'}], 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 1, 'label': 'image', 'score': 0.9853348731994629, 'coordinate': [773.798, 200.63779, 1505.5233, 687.11847]}, {'cls_id': 2, 'label': 'text', 'score': 0.9780634045600891, 'coordinate': [772.0007, 777.06, 1124.396, 1059.2354]}, {'cls_id': 2, 'label': 'text', 'score': 0.9771724343299866, 'coordinate': [1153.9272, 1114.0178, 1503.9585, 1347.0802]}, {'cls_id': 2, 'label': 'text', 'score': 0.9763692021369934, 'coordinate': [390.74887, 298.432, 740.7994, 436.79953]}, {'cls_id': 2, 'label': 'text', 'score': 0.9752321839332581, 'coordinate': [9.70394, 202.7036, 359.6133, 340.30905]}, {'cls_id': 2, 'label': 'text', 'score': 0.9751048684120178, 'coordinate': [1153.7091, 801.56256, 1504.5591, 987.63544]}, {'cls_id': 2, 'label': 'text', 'score': 0.9741119742393494, 'coordinate': [9.801341, 850.1048, 359.61642, 1059.8444]}, {'cls_id': 2, 'label': 'text', 'score': 0.9722761511802673, 'coordinate': [390.42462, 201.87276, 741.41675, 292.5969]}, {'cls_id': 2, 'label': 'text', 'score': 0.9718317985534668, 'coordinate': [390.8594, 1137.4973, 741.0567, 1346.7653]}, {'cls_id': 2, 'label': 'text', 'score': 0.9703624844551086, 'coordinate': [390.89615, 610.6184, 741.1807, 747.9165]}, {'cls_id': 2, 'label': 'text', 'score': 0.9677473306655884, 'coordinate': [8.70449, 1186.1178, 359.8176, 1299.481]}, {'cls_id': 2, 'label': 'text', 'score': 0.9674075841903687, 'coordinate': [390.203, 897.60095, 742.03674, 1035.7938]}, {'cls_id': 2, 'label': 'text', 'score': 0.9671176075935364, 'coordinate': [389.63492, 753.45245, 742.05634, 890.96497]}, {'cls_id': 2, 'label': 'text', 'score': 0.9656032919883728, 'coordinate': [10.5880165, 346.2769, 359.125, 436.1819]}, {'cls_id': 2, 'label': 'text', 'score': 0.9655402898788452, 'coordinate': [771.51514, 1065.1091, 1123.4568, 1179.5624]}, {'cls_id': 2, 'label': 'text', 'score': 0.96494060754776, 'coordinate': [1154.4471, 993.4835, 1503.8441, 1107.7363]}, {'cls_id': 2, 'label': 'text', 'score': 0.9630844593048096, 'coordinate': [772.51917, 1281.01, 1123.4009, 1348.0028]}, {'cls_id': 2, 'label': 'text', 'score': 0.9615732431411743, 'coordinate': [9.486691, 1065.2955, 360.2089, 1180.0446]}, {'cls_id': 2, 'label': 'text', 'score': 0.9598038792610168, 'coordinate': [10.181939, 658.8049, 359.41302, 771.31146]}, {'cls_id': 2, 'label': 'text', 'score': 0.9591749310493469, 'coordinate': [391.17816, 1041.2622, 740.8725, 1131.4589]}, {'cls_id': 2, 'label': 'text', 'score': 0.9563097953796387, 'coordinate': [9.953403, 538.3851, 359.45145, 652.02905]}, {'cls_id': 2, 'label': 'text', 'score': 0.95261549949646, 'coordinate': [390.90765, 538.18097, 742.19904, 604.67365]}, {'cls_id': 2, 'label': 'text', 'score': 0.9493226408958435, 'coordinate': [9.884867, 777.39636, 360.3998, 843.4287]}, {'cls_id': 2, 'label': 'text', 'score': 0.9399433135986328, 'coordinate': [9.666538, 1305.0905, 359.62704, 1347.939]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.9254537224769592, 'coordinate': [809.68475, 705.4048, 1485.5435, 747.4364]}, {'cls_id': 2, 'label': 'text', 'score': 0.9046457409858704, 'coordinate': [1155.9297, 777.71344, 1331.4728, 795.6411]}, {'cls_id': 2, 'label': 'text', 'score': 0.8674532771110535, 'coordinate': [410.5304, 457.0797, 722.77606, 516.7847]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.7949447631835938, 'coordinate': [30.340591, 457.54282, 341.95337, 516.82825]}, {'cls_id': 2, 'label': 'text', 'score': 0.7313820719718933, 'coordinate': [791.9397, 1201.0502, 1104.4906, 1260.1833]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.6073322892189026, 'coordinate': [587.43024, 160.58405, 927.63995, 179.2846]}, {'cls_id': 2, 'label': 'text', 'score': 0.5846534967422485, 'coordinate': [133.37144, 40.12515, 1383.7618, 123.51433]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[ 122,   28],
         ...,
-        [213, 221, 238],
-        [217, 223, 240],
-        [233, 234, 241]],
+        [ 122,  135]],
 
-       [[255, 255, 255],
-        [255, 255, 255],
-        [255, 255, 255],
+       ...,
+
+       [[1156, 1330],
         ...,
-        [255, 255, 255],
-        [255, 255, 255],
-        [255, 255, 255]]], dtype=uint8), 'image_text': ''}, 'layout': 'single'}, {'input_path': PosixPath('/root/.paddlex/temp/tmpcd2q9uyu.png'), 'layout_bbox': [47.68295, 243.08054, 546.28253, 295.71045], 'figure_title': 'Overview of RT-DETR, We feed th', 'layout': 'single'}, {'input_path': PosixPath('/root/.paddlex/temp/tmpr_iqa8b3.png'), 'layout_bbox': [58.416977, 304.1531, 275.9134, 400.07513], 'image': {'img': array([[[255, 255, 255],
-        [255, 255, 255],
-        [255, 255, 255],
+        [1156, 1351]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['助力双方交往', '搭建友谊桥梁', '西', '本报记者沈小晓任彦黄培昭', '身着中国传统民族服装的厄立特里亚青', '厄立特里亚高等教育与研究院合作建立，开', '年依次登台表演中国民族舞、现代舞、扇子舞', '设了中国语言课程和中国文化课程，注册学', '等，曼妙的舞姿赢得现场观众阵阵掌声。这', '生2万余人次。10余年来，厄特孔院已成为', '是日前厄立特里亚高等教育与研究院孔子学', '当地民众了解中国的一扇窗口。', '院(以下简称"厄特孔院"举办“喜迎新年"中国', '黄鸣飞表示，随着来学习中文的人日益', '歌舞比赛的场景。', '增多，阿斯马拉大学教学点已难以满足教学', '中国和厄立特里亚传统友谊深厚。近年', '需要。2024年4月，由中企蜀道集团所属四', '来,在高质量共建“一带一路"框架下，中厄两', '川路桥承建的孔院教学楼项目在阿斯马拉开', '国人文交流不断深化，互利合作的民意基础', '工建设，预计今年上半年峻工，建成后将为厄', '日益深厚。', '特孔院提供全新的办学场地。', '“学好中文，我们的', '“在中国学习的经历', '未来不是梦"', '让我看到更广阔的世界”', '“鲜花曾告诉我你怎样走过，大地知道你', '多年来，厄立特里亚广大赴华留学生和', '心中的每一个角落……"厄立特里亚阿斯马拉', '培训人员积极投身国家建设，成为助力该国', '大学综合楼二层，一阵优美的歌声在走廊里回', '发展的人才和厄中友好的见证者和推动者。', '响。循着熟悉的旋律轻轻推开一间教室的门，', '在厄立特里亚全国妇女联盟工作的约翰', '学生们正跟着老师学唱中文歌曲《同一首歌》。', '娜·特韦尔德·凯莱塔就是其中一位。她曾在', '这是厄特孔院阿斯马拉大学教学点的一', '中华女子学院攻读硕士学位，研究方向是女', '节中文歌曲课。为了让学生们更好地理解歌', '性领导力与社会发展。其间，她实地走访中国', '词大意，老师尤斯拉·穆罕默德萨尔·侯赛因逐', '多个地区，获得了观察中国社会发展的第一', '在厄立特里亚不久前举办的第六届中国风筝文化节上，当地小学生体验风筝制作。', '字翻译和解释歌词。随着伴奏声响起，学生们', '手资料。', '中国驻厄立特里亚大使馆供图', '边唱边随着节拍摇动身体，现场气氛热烈。', '谈起在中国求学的经历，约翰娜记忆犹', '“这是中文歌曲初级班，共有32人。学', '新：“中国的发展在当今世界是独一无二的。', '“不管远近都是客人，请不用客气；相约', '瓦的北红海省博物馆。', '生大部分来自首都阿斯马拉的中小学，年龄', '沿着中国特色社会主义道路坚定前行，中国', '好了在一起，我们欢迎你………"在一场中厄青', '博物馆二层陈列着一个发掘自阿杜利', '最小的仅有6岁。"尤斯拉告诉记者。', '创造了发展奇迹，这一切都离不开中国共产党', '年联谊活动上，四川路桥中方员工同当地大', '斯古城的中国古代陶制酒器，罐身上写着', '尤斯拉今年23岁，是厄立特里亚一所公立', '的领导。中国的发展经验值得许多国家学习', '学生合唱《北京欢迎你》。厄立特里亚技术学', '“万”“和”“禅”“山"等汉字。“这件文物证', '学校的艺术老师。她12岁开始在厄特孔院学', '借鉴。”', '院计算机科学与工程专业学生鲁夫塔·谢拉', '明，很早以前我们就通过海上丝绸之路进行', '习中文，在2017年第十届"汉语桥"世界中学生', '正在西南大学学习的厄立特里亚博士生', '是其中一名演唱者，她很早便在孔院学习中', '贸易往来与文化交流。这也是厄立特里亚', '中文比赛中获得厄立特里亚赛区第一名，并和', '穆卢盖塔·泽穆伊对中国怀有深厚感情。8', '文，一直在为去中国留学作准备。“这句歌词', '与中国友好交往历史的有力证明。"北红海', '同伴代表厄立特里亚前往中国参加决赛，获得', '是我们两国人民友谊的生动写照。无论是投', '省博物馆研究与文献部负责人伊萨亚斯·特', '团体优胜奖。2022年起，尤斯拉开始在厄特孔', '盖塔在社交媒体上写下这样一段话：“这是我', '身于厄立特里亚基础设施建设的中企员工，', '斯法兹吉说。', '院兼职教授中文歌曲，每周末两个课时。“中国', '人生的重要一步，自此我拥有了一双坚固的', '还是在中国留学的厄立特里亚学子，两国人', '厄立特里亚国家博物馆考古学和人类学', '文化博大精深，我希望我的学生们能够通过中', '鞋子，赋予我穿越荆棘的力量。"', '民携手努力，必将推动两国关系不断向前发', '研究员菲尔蒙·特韦尔德十分喜爱中国文', '文歌曲更好地理解中国文化。"她说。', '穆卢盖塔密切关注中国在经济、科技、教', '展。"鲁夫塔说。', '化。他表示：“学习彼此的语言和文化，将帮', '“姐姐，你想去中国吗？"“非常想！我想', '育等领域的发展，“中国在科研等方面的实力', '厄立特里亚高等教育委员会主任助理萨', '助厄中两国人民更好地理解彼此，助力双方', '去看故宫、爬长城。"尤斯拉的学生中有一对', '与日俱增。在中国学习的经历让我看到更广', '马瑞表示：“每年我们都会组织学生到中国访', '交往，搭建友谊桥梁。"', '能歌善舞的姐妹，姐姐露娅今年15岁，妹妹', '阔的世界，从中受益匪浅。”', '问学习，目前有超过5000名厄立特里亚学生', '厄立特里亚国家博物馆馆长塔吉丁·努', '莉娅14岁，两人都已在厄特孔院学习多年，', '23岁的莉迪亚·埃斯蒂法诺斯已在厄特', '在中国留学。学习中国的教育经验，有助于', '里达姆·优素福曾多次访问中国，对中华文明', '中文说得格外流利。', '孔院学习3年，在中国书法、中国画等方面表', '提升厄立特里亚的教育水平。"', '的传承与创新、现代化博物馆的建设与发展', '露娅对记者说：“这些年来，怀着对中文', '现十分优秀，在2024年厄立特里亚赛区的', '印象深刻。“中国博物馆不仅有许多保存完好', '“共同向世界展示非', '和中国文化的热爱，我们姐妹俩始终相互鼓', '“汉语桥"比赛中获得一等奖。莉迪亚说：“学', '的文物，还充分运用先进科技手段进行展示，', '励，一起学习。我们的中文一天比一天好，还', '习中国书法让我的内心变得安宁和纯粹。我', '洲和亚洲的灿烂文明”', '帮助人们更好理解中华文明。"塔吉丁说，“厄', '学会了中文歌和中国舞。我们一定要到中国', '也喜欢中国的服饰，希望未来能去中国学习，', '立特里亚与中国都拥有悠久的文明，始终相', '去。学好中文，我们的未来不是梦！”', '把中国不同民族元素融入服装设计中，创作', '从阿斯马拉出发，沿着蜿蜓曲折的盘山', '互理解、相互尊重。我希望未来与中国同行', '据厄特孔院中方院长黄鸣飞介绍，这所', '出更多精美作品，也把厄特文化分享给更多', '公路一路向东寻找丝路印迹。驱车两个小', '加强合作，共同向世界展示非洲和亚洲的灿', '孔院成立于2013年3月，由贵州财经大学和', '的中国朋友。”', '时，记者来到位于厄立特里亚港口城市马萨', '烂文明。”'], 'rec_scores': array([0.99982363, ..., 0.93620157]), 'rec_polys': array([[[ 122,   28],
         ...,
-        [255, 255, 255],
-        [255, 255, 255],
-        [255, 255, 255]]], dtype=uint8), 'image_text': ''}, 'layout': 'left'}, {'input_path': PosixPath('/root/.paddlex/temp/tmphpblxl3p.png'), 'layout_bbox': [100.62961, 405.97458, 234.79774, 414.77414], 'figure_title': 'Figure 5. The fusion block in CCFF.', 'layout': 'left'}, {'input_path': PosixPath('/root/.paddlex/temp/tmplgnczrsf.png'), 'layout_bbox': [47.81724, 421.9041, 288.01566, 550.538], 'text': 'D, Ds, not only significantly reduces latency (35% faster),\nRut\nnproves accuracy (0.4% AP higher), CCFF is opti\nased on the cross-scale fusion module, which\nnsisting of convolutional lavers intc\npath.\nThe role of the fusion block is t\n into a new feature, and its\nFigure 5. The f\nblock contains tw\n1 x1\nchannels, /V RepBlock\n. anc\n: two-path outputs are fused by element-wise add. We\ntormulate the calculation ot the hvbrid encoder as:', 'layout': 'left'}, {'input_path': PosixPath('/root/.paddlex/temp/tmpsq0ey9md.png'), 'layout_bbox': [94.60716, 558.703, 288.04193, 600.19434], 'formula': '\\begin{array}{l}{{\\Theta=K=\\mathrm{p.s.sp{\\pm}}\\mathrm{i.s.s.}(\\mathrm{l.s.}(\\mathrm{l.s.}(\\mathrm{l.s.}}),{\\qquad\\mathrm{{a.s.}}\\mathrm{s.}}}\\\\ {{\\tau_{\\mathrm{{s.s.s.s.s.}}(\\mathrm{l.s.},\\mathrm{l.s.},\\mathrm{s.s.}}\\mathrm{s.}\\mathrm{s.}}\\end{array}),}}\\\\ {{\\bar{\\mathrm{e-c.c.s.s.}(\\mathrm{s.},\\mathrm{s.s.},\\ s_{s}}\\mathrm{s.s.},\\tau),}}\\end{array}', 'layout': 'left'}, {'input_path': PosixPath('/root/.paddlex/temp/tmpv30qy0v4.png'), 'layout_bbox': [47.975555, 607.12024, 288.5776, 629.1252], 'text': 'tened feature to the same shape as Ss.\nwhere Re shape represents restoring the shape of the flat-', 'layout': 'left'}, {'input_path': PosixPath('/root/.paddlex/temp/tmp0jejzwwv.png'), 'layout_bbox': [48.383354, 637.581, 245.96404, 648.20496], 'paragraph_title': '4.3. Uncertainty-minimal Query Selection', 'layout': 'left'}, {'input_path': PosixPath('/root/.paddlex/temp/tmpushex416.png'), 'layout_bbox': [47.80134, 656.002, 288.50192, 713.24994], 'text': 'To reduce the difficulty of optimizing object queries in\nDETR, several subsequent works [42, 44, 45] propose query\nselection schemes, which have in common that they use the\nconfidence score to select the top K’ features from the en-\ncoder to initialize object queries (or just position queries).', 'layout': 'left'}, {'input_path': PosixPath('/root/.paddlex/temp/tmpki7e_6wc.png'), 'layout_bbox': [306.6371, 302.1026, 546.3772, 419.76724], 'text': 'The confidence score represents the likelihood that the fea\nture includes foreground objects. Nevertheless, the \nare required to simultaneously model the category\nojects, both of which determine the quality of the\npertor\ncore of the fes\nBased on the analysis, the current query\n considerable level of uncertainty in the\nresulting in sub-optimal initialization for\nand hindering the performance of the detector.', 'layout': 'right'}, {'input_path': PosixPath('/root/.paddlex/temp/tmppbxrfehp.png'), 'layout_bbox': [306.0642, 422.7347, 546.9216, 539.45734], 'text': 'To address this problem, we propose the uncertainty mini\nmal query selection scheme, which explicitly const\noptim\n the epistemic uncertainty to model the\nfeatures, thereby providing \nhigh-quality\nr the decoder. Specifically,\n the discrepancy between i\nalization P\nand classificat\n.(2\ntunction for the gradie', 'layout': 'right'}, {'input_path': PosixPath('/root/.paddlex/temp/tmp1mgiyd21.png'), 'layout_bbox': [331.52808, 549.32635, 546.5229, 586.15546], 'formula': '\\begin{array}{c c c}{{}}&amp;{{}}&amp;{{\\begin{array}{c}{{i\\langle X\\rangle=({\\bar{Y}}({\\bar{X}})+{\\bar{Z}}({\\bar{X}})\\mid X\\in{\\bar{\\pi}}^{\\prime}}}&amp;{{}}\\\\ {{}}&amp;{{}}&amp;{{}}\\end{array}}}&amp;{{\\emptyset}}\\\\ {{}}&amp;{{}}&amp;{{C(\\bar{X},{\\bar{X}})=C..\\scriptstyle(\\bar{0},{\\bar{Y}})+{\\mathcal{L}}_{{\\mathrm{s}}}({\\bar{X}}),\\ 6)}}&amp;{{}}\\end{array}', 'layout': 'right'}, {'input_path': PosixPath('/root/.paddlex/temp/tmp8t73dpym.png'), 'layout_bbox': [306.44016, 592.8762, 546.84314, 630.60126], 'text': 'where  and y denote the prediction and ground truth,\n= (c, b), c and b represent the category and bounding\nbox respectively, X represent the encoder feature.', 'layout': 'right'}, {'input_path': PosixPath('/root/.paddlex/temp/tmpftnxeyjm.png'), 'layout_bbox': [306.15652, 632.3142, 546.2463, 713.19073], 'text': 'Effectiveness analysis. To analyze the effectiveness of the\nuncertainty-minimal query selection, we visualize the clas-\nsificatior\nscores and IoU scores of the selected fe\nCOCO\na 12017, Figure 6. We draw the scatterplo\nt with\ndots\nrepresent the selected features from the model trained\nwith uncertainty-minimal query selection and vanilla query', 'layout': 'right'}]}
+        [ 122,  135]],
+
+       ...,
+
+       [[1156, 1330],
+        ...,
+        [1156, 1351]]], dtype=int16), 'rec_boxes': array([[ 122, ...,  135],
+       ...,
+       [1156, ..., 1351]], dtype=int16)}}}
 </code></pre></details>
 
-### 2.2 Python Script Integration
-A few lines of code are all you need to quickly perform inference on your pipeline. Taking the general layout parsing pipeline as an example:
+### 2.2 Integrating via Python Script
+A few lines of code suffice for rapid inference on the production line, taking the general layout parsing pipeline as an example:
 
 ```python
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="layout_parsing")
 
-output = pipeline.predict("demo_paper.png")
+output = pipeline.predict(
+    input="./layout_parsing_demo.png",
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+    use_textline_orientation=False,
+)
 for res in output:
-    res.print()  # Print the structured output of the prediction
-    res.save_to_img("./output/")  # Save the result as an image file
-    res.save_to_xlsx("./output/")  # Save the result as an Excel file
-    res.save_to_html("./output/")  # Save the result as an HTML file
+    res.print()  ## Print the structured output of the prediction
+    res.save_to_img(save_path="./output/")  ## Save the visualized image results of all submodules for the current image
+    res.save_to_json(save_path="./output/")  ## Save the structured JSON results for the current image
+    res.save_to_xlsx(save_path="./output/")  ## Save the sub-table results in XLSX format for the current image
+    res.save_to_html(save_path="./output/")  ## Save the sub-table results in HTML format for the current image
 ```
-The results obtained are the same as those from the command line method.
 
 In the above Python script, the following steps are executed:
 
-(1) Instantiate the `create_pipeline` to create a pipeline object: Specific parameter descriptions are as follows:
+（1）Instantiate the `create_pipeline` to create a pipeline object: The specific parameter descriptions are as follows:
 
 <table>
 <thead>
 <tr>
 <th>Parameter</th>
-<th>Description</th>
-<th>Type</th>
-<th>Default</th>
+<th>Parameter Description</th>
+<th>Parameter Type</th>
+<th>Default Value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>pipeline</code></td>
-<td>The name of the pipeline or the path to the pipeline configuration file. If it's a pipeline name, it must be supported by PaddleX.</td>
+<td>The name of the pipeline or the path to the pipeline configuration file. If it is the pipeline name, it must be a pipeline supported by PaddleX.</td>
 <td><code>str</code></td>
-<td>None</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>The path to the pipeline configuration file.</td>
+<td><code>str</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The device for pipeline model inference. Supports: "gpu", "cpu".</td>
+<td>The inference device for the pipeline. Supports specifying the specific card number for GPUs, such as "gpu:0", specific card numbers for other hardware, such as "npu:0", and CPUs as "cpu".</td>
 <td><code>str</code></td>
-<td>"gpu"</td>
+<td><code>gpu:0</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference, only available if the pipeline supports it.</td>
+<td>Whether to enable high-performance inference, only available if the pipeline supports high-performance inference.</td>
 <td><code>bool</code></td>
 <td><code>False</code></td>
 </tr>
 </tbody>
 </table>
-(2) Call the `predict` method of the pipeline object to perform inference: The `predict` method takes `x` as a parameter, which is used to input data to be predicted, supporting multiple input methods, as shown in the following examples:
+
+### (2) Invoke the `predict()` method of the Layout Analysis Pipeline object for inference prediction. This method will return a `generator`. Below are the parameters of the `predict()` method and their descriptions:
 
 <table>
 <thead>
 <tr>
+<th>Parameter</th>
+<th>Parameter Description</th>
 <th>Parameter Type</th>
-<th>Description</th>
+<th>Options</th>
+<th>Default Value</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td>Python Var</td>
-<td>Supports directly passing Python variables, such as numpy.ndarray representing image data.</td>
+<td><code>input</code></td>
+<td>The data to be predicted, supporting multiple input types, required</td>
+<td><code>Python Var|str|list</code></td>
+<td>
+<ul>
+<li><b>Python Var</b>: Such as <code>numpy.ndarray</code> representing image data</li>
+<li><b>str</b>: Such as the local path of an image file or PDF file: <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the network URL of an image file or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/demo_paper.png">Example</a>; <b>Local directory</b>, which should contain images to be predicted, such as the local path: <code>/root/data/</code> (currently does not support prediction of PDF files within directories, PDF files need to be specified to the specific file path)</li>
+<li><b>List</b>: List elements need to be of the above types of data, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, <code>[\"/root/data1\", \"/root/data2\"]</code></li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>str</code></td>
-<td>Supports passing the path of the file to be predicted, such as the local path of an image file: <code>/root/data/img.jpg</code>.</td>
+<td><code>device</code></td>
+<td>The inference device for the pipeline</td>
+<td><code>str|None</code></td>
+<td>
+<ul>
+<li><b>CPU</b>: Such as <code>cpu</code> to use CPU for inference;</li>
+<li><b>GPU</b>: Such as <code>gpu:0</code> to use the first GPU for inference;</li>
+<li><b>NPU</b>: Such as <code>npu:0</code> to use the first NPU for inference;</li>
+<li><b>XPU</b>: Such as <code>xpu:0</code> to use the first XPU for inference;</li>
+<li><b>MLU</b>: Such as <code>mlu:0</code> to use the first MLU for inference;</li>
+<li><b>DCU</b>: Such as <code>dcu:0</code> to use the first DCU for inference;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline. During initialization, it will prioritize using the local GPU 0 device, and if not available, it will use the CPU device;</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>str</code></td>
-<td>Supports passing the URL of the file to be predicted, such as the network URL of an image file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/demo_paper.png">Example</a>.</td>
+<td><code>use_doc_orientation_classify</code></td>
+<td>Whether to use the document orientation classification module</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>True</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>str</code></td>
-<td>Supports passing a local directory, which should contain files to be predicted, such as the local path: <code>/root/data/</code>.</td>
+<td><code>use_doc_unwarping</code></td>
+<td>Whether to use the document distortion correction module</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>True</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>dict</code></td>
-<td>Supports passing a dictionary type, where the key needs to correspond to the specific task, e.g., "img" for image classification tasks, and the value of the dictionary supports the above data types, e.g., <code>{"img": "/root/data1"}</code>.</td>
+<td><code>use_textline_orientation</code></td>
+<td>Whether to use the text line orientation classification module</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>True</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
 <tr>
-<td><code>list</code></td>
-<td>Supports passing a list, where the list elements need to be of the above data types, e.g., <code>[numpy.ndarray, numpy.ndarray]</code>, <code>["/root/data/img1.jpg", "/root/data/img2.jpg"]</code>, <code>["/root/data1", "/root/data2"]</code>, <code>[{"img": "/root/data1"}, {"img": "/root/data2/img.jpg"}]</code>.</td>
+<td><code>use_general_ocr</code></td>
+<td>Whether to use the OCR sub-pipeline</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>True</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
 </tr>
-</tbody>
+<tr>
+<td><code>use_seal_recognition</code></td>
+<td>Whether to use the seal recognition sub-pipeline</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>True</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>use_table_recognition</code></td>
+<td>Whether to use the table recognition sub-pipeline</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>True</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>use_formula_recognition</code></td>
+<td>Whether to use the formula recognition sub-pipeline</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>True</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>layout_threshold</code></td>
+<td>Score threshold for the layout model</td>
+<td><code>float|dict|None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any floating-point number between <code>0-1</code>;</li>
+<li><b>dict</b>: <code>{0:0.1}</code> where the key is the class ID and the value is the threshold for that class;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>0.5</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>layout_nms</code></td>
+<td>Whether to use NMS post-processing for the layout region detection model</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>True</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>layout_unclip_ratio</code></td>
+<td>Expansion coefficient for the detection box of the layout region detection model</td>
+<td><code>float|Tuple[float,float]|None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>;</li>
+<li><b>Tuple[float,float]</b>: Expansion coefficients in the horizontal and vertical directions respectively;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>1.0</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>layout_merge_bboxes_mode</code></td>
+<td>Overlapping box filtering method for layout region detection</td>
+<td><code>str|None</code></td>
+<td>
+<ul>
+<li><b>str</b>: <code>large</code>, <code>small</code>, <code>union</code>, indicating whether to keep the larger box, smaller box, or both when overlapping boxes are filtered</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>large</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_det_limit_side_len</code></td>
+<td>Image side length limit for text detection</td>
+<td><code>int|None</code></td>
+<td>
+<ul>
+<li><b>int</b>: Any integer greater than <code>0</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>960</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_det_limit_type</code></td>
+<td>Image side length limit type for text detection</td>
+<td><code>str|None</code></td>
+<td>
+<ul>
+<li><b>str</b>: Supports <code>min</code> and <code>max</code>, where <code>min</code> ensures that the shortest side of the image is not less than <code>det_limit_side_len</code>, and <code>max</code> ensures that the longest side of the image is not greater than <code>limit_side_len</code></li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>max</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_det_thresh</code></td>
+<td>Detection pixel threshold, where pixels with scores greater than this threshold in the output probability map are considered text pixels</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>
+    <li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, <code>0.3</code></li></li></ul></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_det_box_thresh</code></td>
+<td>Detection box threshold, where detection results with an average score of all pixels within the border greater than this threshold are considered text regions</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>
+    <li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, <code>0.6</code></li></li></ul></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_det_unclip_ratio</code></td>
+<td>Text detection expansion coefficient, which expands the text region. The larger this value, the larger the expansion area</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>
+    <li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, <code>2.0</code></li></li></ul></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>text_rec_score_thresh</code></td>
+<td>Text recognition threshold, where text results with scores greater than this threshold are retained</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>
+    <li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, <code>0.0</code>. I.e., no threshold is set</li></li></ul></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_det_limit_side_len</code></td>
+<td>Image side length limit for seal detection</td>
+<td><code>int|None</code></td>
+<td>
+<ul>
+<li><b>int</b>: Any integer greater than <code>0</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>960</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_det_limit_type</code></td>
+<td>Image side length limit type for seal detection</td>
+<td><code>str|None</code></td>
+<td>
+<ul>
+<li><b>str</b>: Supports <code>min</code> and <code>max</code>, where <code>min</code> ensures that the shortest side of the image is not less than <code>det_limit_side_len</code>, and <code>max</code> ensures that the longest side of the image is not greater than <code>limit_side_len</code></li>
+<li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>max</code>;</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_det_thresh</code></td>
+<td>Detection pixel threshold, where pixels with scores greater than this threshold in the output probability map are considered seal pixels</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>
+    <li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, <code>0.3</code></li></li></ul></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_det_box_thresh</code></td>
+<td>Detection box threshold, where detection results with an average score of all pixels within the border greater than this threshold are considered seal regions</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>
+    <li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, <code>0.6</code></li></li></ul></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_det_unclip_ratio</code></td>
+<td>Seal detection expansion coefficient, which expands the seal region. The larger this value, the larger the expansion area</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>
+    <li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, <code>2.0</code></li></li></ul></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>seal_rec_score_thresh</code></td>
+<td>Seal recognition threshold, where text results with scores greater than this threshold are retained</td>
+<td><code>float|None</code></td>
+<td>
+<ul>
+<li><b>float</b>: Any floating-point number greater than <code>0</code>
+    <li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, <code>0.0</code>. I.e., no threshold is set</li></li></ul></td>
+<td><code>None</code></td>
+</tr>
 </table>
-(3) Obtain the prediction results by calling the `predict` method: The `predict` method is a `generator`, so prediction results need to be obtained through iteration. The `predict` method predicts data in batches, so the prediction results are in the form of a list.
 
-(4) Process the prediction results: The prediction result for each sample is of `dict` type and supports printing or saving as files, with the supported file types depending on the specific pipeline, such as:
+(3) Processing Prediction Results: Each sample's prediction result is encapsulated in a corresponding Result object, supporting operations such as printing, saving as an image, and saving as a `json` file:
+
 
 <table>
 <thead>
 <tr>
 <th>Method</th>
-<th>Description</th>
-<th>Method Parameters</th>
+<th>Method Description</th>
+<th>Parameters</th>
+<th>Parameter Type</th>
+<th>Parameter Description</th>
+<th>Default Value</th>
 </tr>
 </thead>
-<tbody>
 <tr>
-<td><code>save_to_img</code></td>
-<td>Saves the result as an image file.</td>
-<td><code>- save_path</code>: <code>str</code> type, the path to save the file. When it's a directory, the saved file name is consistent with the input file name.</td>
+<td rowspan="3"><code>print()</code></td>
+<td rowspan="3">Print results to the terminal</td>
+<td><code>format_json</code></td>
+<td><code>bool</code></td>
+<td>Whether to format the output content with JSON indentation</td>
+<td><code>True</code></td>
 </tr>
 <tr>
-<td><code>save_to_html</code></td>
-<td>Saves the result as an HTML file.</td>
-<td><code>- save_path</code>: <code>str</code> type, the path to save the file. When it's a directory, the saved file name is consistent with the input file name.</td>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output JSON data for better readability, only valid when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
 </tr>
-</tbody>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Controls whether to escape non-ASCII characters to Unicode. When set to <code>True</code>, all non-ASCII characters will be escaped; <code>False</code> retains the original characters, only valid when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td rowspan="3"><code>save_to_json()</code></td>
+<td rowspan="3">Save results as a JSON file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving, when it is a directory, the saved file name will be consistent with the input file type</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><code>indent</code></td>
+<td><code>int</code></td>
+<td>Specify the indentation level to beautify the output JSON data for better readability, only valid when <code>format_json</code> is <code>True</code></td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>ensure_ascii</code></td>
+<td><code>bool</code></td>
+<td>Controls whether to escape non-ASCII characters to Unicode. When set to <code>True</code>, all non-ASCII characters will be escaped; <code>False</code> retains the original characters, only valid when <code>format_json</code> is <code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>save_to_img()</code></td>
+<td>Save the visual images of intermediate modules in PNG format</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving, supports directories or file paths</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><code>save_to_html()</code></td>
+<td>Save the tables in the file as an HTML file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving, supports directories or file paths</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><code>save_to_xlsx()</code></td>
+<td>Save the tables in the file as an XLSX file</td>
+<td><code>save_path</code></td>
+<td><code>str</code></td>
+<td>The file path for saving, supports directories or file paths</td>
+<td>N/A</td>
+</tr>
 </table>
-| `save_to_xlsx` | Saves the result as an Excel file. | `- save_path`: `str` type, the path to save the file. When it's a directory, the saved file name is consistent with the input file name.
 
-Within this tutorial on Artificial Intelligence and Computer Vision, we will explore the capabilities of saving and exporting results from various processes, including OCR (Optical Character Recognition), layout analysis, and table structure recognition. Specifically, the `save_to_img` function enables saving visualization results, `save_to_html` converts tables directly into HTML files, and `save_to_xlsx` exports tables as Excel files.
+- Calling the `print()` method will print the results to the terminal. The content printed to the terminal is explained as follows:
+    - `input_path`: `(str)` The input path of the image to be predicted
 
-Upon obtaining the configuration file, you can customize various settings for the layout parsing pipeline by simply modifying the `pipeline` parameter within the `create_pipeline` method to point to your configuration file path.
+    - `page_index`: `(Union[int, None])` If the input is a PDF file, it indicates the current page number of the PDF; otherwise, it is `None`
 
-For instance, if your configuration file is saved at `./my_path/layout_parsing.yaml`, you can execute the following code:
+    - `model_settings`: `(Dict[str, bool])` Model parameters required for configuring the pipeline
 
+        - `use_doc_preprocessor`: `(bool)` Controls whether to enable the document preprocessing pipeline
+        - `use_general_ocr`: `(bool)` Controls whether to enable the OCR pipeline
+        - `use_seal_recognition`: `(bool)` Controls whether to enable the seal recognition pipeline
+        - `use_table_recognition`: `(bool)` Controls whether to enable the table recognition pipeline
+        - `use_formula_recognition`: `(bool)` Controls whether to enable the formula recognition pipeline
+
+    - `parsing_res_list`: `(List[Dict])` A list of parsing results, each element is a dictionary, and the list order follows the reading order after parsing.
+        - `block_bbox`: `(np.ndarray)` The bounding box of the layout area.
+        - `block_label`: `(str)` The label of the layout area, such as `text`, `table`, etc.
+        - `block_content`: `(str)` The content within the layout area.
+
+    - `overall_ocr_res`: `(Dict[str, Union[List[str], List[float], numpy.ndarray]])` A dictionary of global OCR results
+      - `input_path`: `(Union[str, None])` The image path received by the OCR pipeline, when the input is `numpy.ndarray`, it is saved as `None`
+      - `model_settings`: `(Dict)` Model configuration parameters for the OCR pipeline
+      - `dt_polys`: `(List[numpy.ndarray])` A list of polygon boxes for text detection. Each detection box is represented by a numpy array consisting of 4 vertex coordinates, with a shape of (4, 2) and a data type of int16
+      - `dt_scores`: `(List[float])` A list of confidence scores for text detection boxes
+      - `text_det_params`: `(Dict[str, Dict[str, int, float]])` Configuration parameters for the text detection module
+        - `limit_side_len`: `(int)` The side length limit for image preprocessing
+        - `limit_type`: `(str)` The processing method for the side length limit
+        - `thresh`: `(float)` The confidence threshold for text pixel classification
+        - `box_thresh`: `(float)` The confidence threshold for text detection boxes
+        - `unclip_ratio`: `(float)` The inflation coefficient for text detection boxes
+        - `text_type`: `(str)` The type of text detection, currently fixed as "general"
+
+      - `text_type`: `(str)` The type of text detection, currently fixed as "general"
+      - `textline_orientation_angles`: `(List[int])` The prediction results for text line orientation classification. When enabled, it returns actual angle values (e.g., [0,0,1])
+      - `text_rec_score_thresh`: `(float)` The filtering threshold for text recognition results
+      - `rec_texts`: `(List[str])` A list of text recognition results, only including texts with confidence scores exceeding `text_rec_score_thresh`
+      - `rec_scores`: `(List[float])` A list of confidence scores for text recognition, already filtered by `text_rec_score_thresh`
+      - `rec_polys`: `(List[numpy.ndarray])` A list of text detection boxes after confidence filtering, with the same format as `dt_polys`
+
+    - `formula_res_list`: `(List[Dict[str, Union[numpy.ndarray, List[float], str]]])` A list of formula recognition results, each element is a dictionary
+        - `rec_formula`: `(str)` The formula recognition result
+        - `rec_polys`: `(numpy.ndarray)` The formula detection box, with a shape of (4, 2) and a dtype of int16
+        - `formula_region_id`: `(int)` The region ID where the formula is located
+
+    - `seal_res_list`: `(List[Dict[str, Union[numpy.ndarray, List[float], str]]])` A list of seal recognition results, each element is a dictionary
+        - `input_path`: `(str)` The input path of the seal image
+        - `model_settings`: `(Dict)` Model configuration parameters for```markdown
+**AI and Computer Vision Tutorial**
+
+- Calling the `save_to_json()` method will save the aforementioned content to the specified `save_path`. If a directory is specified, the save path will be `save_path/{your_img_basename}.json`. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, `numpy.array` types will be converted to list form.
+- Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If a directory is specified, the save path will be `save_path/{your_img_basename}_ocr_res_img.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (Production lines often contain many result images, so it is not recommended to specify a specific file path directly, as multiple images will be overwritten, leaving only the last one.)
+
+In addition, attributes are also supported for obtaining visual images with results and prediction results, specifically as follows:
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Attribute Description</th>
+</tr>
+</thead>
+<tr>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Obtain the predicted results in <code>json</code> format</td>
+</tr>
+<tr>
+<td rowspan="2"><code>img</code></td>
+<td rowspan="2">Obtain the visual image in <code>dict</code> format</td>
+</tr>
+</table>
+
+- The prediction results obtained by the `json` attribute are data of the `dict` type, with content consistent with that saved by calling the `save_to_json()` method.
+- The prediction results returned by the `img` attribute are data of the `dict` type. The keys are `layout_det_res`, `overall_ocr_res`, `text_paragraphs_ocr_res`, `formula_res_region1`, `table_cell_img`, and `seal_res_region1`, and the corresponding values are `Image.Image` objects: used to display the visual images of layout area detection, OCR, OCR text paragraphs, formulas, tables, and seal results, respectively. If optional modules are not used, only `layout_det_res` will be included in the dictionary.
+
+Furthermore, you can obtain the layout parsing pipeline configuration file and load it for prediction. Execute the following command to save the results in `my_path`:
+```
+paddlex --get_pipeline_config layout_parsing --save_path ./my_path
+```
+Once you have obtained the configuration file, you can customize the configurations of the layout parsing pipeline by modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the pipeline configuration file. An example is as follows:
 ```python
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/layout_parsing.yaml")
-output = pipeline.predict("layout_parsing.jpg")
+output = pipeline.predict(
+    input="./demo_paper.png",
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+    use_textline_orientation=False,
+)
 for res in output:
-    res.print()  # Prints the structured output of the layout parsing prediction
-    res.save_to_img("./output/")  # Saves the img format results from each submodule of the pipeline
-    res.save_to_xlsx("./output/")  # Saves the xlsx format results from the table recognition module
-    res.save_to_html("./output/")  # Saves the html results from the table recognition module
+    res.print()
+    res.save_to_img("./output/")
+    res.save_to_json("./output/")
 ```
+**Note**: The parameters in the configuration file are pipeline initialization parameters. If you wish to change the initialization parameters of the general layout parsing pipeline, you can directly modify the parameters in the configuration file and load it for prediction. Additionally, CLI prediction also supports passing in configuration files by specifying the path of the configuration file with `--pipeline`.
 
 ## 3. Development Integration/Deployment
 
