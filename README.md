@@ -41,9 +41,25 @@ PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了�
 
 ## 📣 近期更新
 
-🔥🔥 **2024.11.15**，PaddleX 3.0 Beta2 开源版正式发布，全面适配 PaddlePaddle 3.0b2 版本。**新增通用图像识别、人脸识别、车辆属性识别和行人属性识别产线，同时新增 42 个模型开发全流程适配昇腾 910B，并全面支持[GitHub 站点文档](https://paddlepaddle.github.io/PaddleX/latest/index.html)。**
+🔥🔥 **2025.2.14**，PaddleX v3.0.0rc0 重磅升级。本次版本全面适配 PaddlePaddle 3.0rc0，核心升级如下：
 
-🔥🔥 **2024.9.30**，PaddleX 3.0 Beta1 开源版正式发布，提供 **200+ 模型** 通过极简的 Python API 一键调用；实现基于统一命令的模型全流程开发，并开源 **PP-ChatOCRv3** 特色模型产线基础能力；支持 **100+ 模型高性能推理和服务化部署**（持续迭代中），**4条模型产线8个重点视觉模型端侧部署**；**100+ 模型开发全流程适配昇腾 910B**，**39+ 模型开发全流程适配昆仑芯和寒武纪**。
+- 新增 12 条高价值产线，重磅推出自研 **[版面解析v2产线](docs/pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.md)**、**[PP-ChatOCRv4-doc产线](docs/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.md)**、**[表格识别v2产线](docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.md)**。此外新增了文档处理、旋转框检测、开放词汇检测/分割、视频分析、多语种语音识别、3D 等场景的产线。
+
+- 扩充 48 个前沿模型，包括重磅推出的 OCR 领域的**版面区域检测模型 [PP-DocLayout](docs/module_usage/tutorials/ocr_modules/layout_detection.md)**、**公式识别模型 [PP-FormulaNet](docs/module_usage/tutorials/ocr_modules/formula_recognition.md)**，**表格结构识别模型 [SLANeXt](docs/module_usage/tutorials/ocr_modules/table_structure_recognition.md)**，**文本识别模型 [PP-OCRv4_server_rec_doc](docs/module_usage/tutorials/ocr_modules/text_recognition.md)**。CV 领域的 3D 检测、人体关键点、开放词汇检测/分割模型，以及语音识别领域的 Whisper 系列等模型。
+
+- 优化和升级模型和产线的推理 API，支持更多参数的配置，提升模型和产线推理的灵活性，[详情](docs/API_change_log/v3.0.0rc.md)。
+
+- 多硬件支持扩展：新增燧原 GCU 支持（90+模型），昇腾 NPU/昆仑芯 XPU/寒武纪 MLU/海光 DCU 模型数量显著提升。
+
+- 全场景部署能力升级：
+  - 高性能推理支持一键安装、Windows 系统及 220+ 模型，核心库 ultra-infer 开源；
+  - 服务化部署新增高稳定性方案，支持动态配置优化。
+
+- 系统兼容性增强：适配 Windows 训练/推理，全面支持 Python 3.11/3.12。
+
+🔥 **2024.11.15**，PaddleX 3.0 Beta2 开源版正式发布，全面适配 PaddlePaddle 3.0b2 版本。**新增通用图像识别、人脸识别、车辆属性识别和行人属性识别产线，同时新增 42 个模型开发全流程适配昇腾 910B，并全面支持[GitHub 站点文档](https://paddlepaddle.github.io/PaddleX/latest/index.html)。**
+
+🔥 **2024.9.30**，PaddleX 3.0 Beta1 开源版正式发布，提供 **200+ 模型** 通过极简的 Python API 一键调用；实现基于统一命令的模型全流程开发，并开源 **PP-ChatOCRv3** 特色模型产线基础能力；支持 **100+ 模型高性能推理和服务化部署**（持续迭代中），**4条模型产线8个重点视觉模型端侧部署**；**100+ 模型开发全流程适配昇腾 910B**，**39+ 模型开发全流程适配昆仑芯和寒武纪**。
 
 
 🔥 **2024.6.27**，PaddleX 3.0 Beta 开源版正式发布，支持以低代码的方式在本地端使用多种主流硬件进行产线和模型开发。
