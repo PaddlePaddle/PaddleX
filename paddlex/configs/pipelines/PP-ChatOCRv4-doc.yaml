@@ -143,7 +143,7 @@ SubPipelines:
             model_name: PP-OCRv4_server_rec_doc
             model_dir: null
             batch_size: 6
-            score_thresh: 0
+            score_thresh: 0.0
 
       TableRecognition:
         pipeline_name: table_recognition

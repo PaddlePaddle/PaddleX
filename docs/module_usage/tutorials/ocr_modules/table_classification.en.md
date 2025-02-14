@@ -5,7 +5,7 @@ comments: true
 # Table Classification Module Usage Tutorial
 
 ## I. Overview
-The table classification module is a key component of a computer vision system, responsible for classifying input table images. The performance of this module directly affects the accuracy and efficiency of the entire table recognition process. The table classification module typically receives table images as input and then, through deep learning algorithms, classifies them into predefined categories based on the characteristics and content of the images, such as wired tables and wireless tables. The classification results of the table classification module are provided as output for use in table recognition-related production lines.
+The table classification module is a key component of a computer vision system, responsible for classifying input table images. The performance of this module directly affects the accuracy and efficiency of the entire table recognition process. The table classification module typically receives table images as input and then, through deep learning algorithms, classifies them into predefined categories based on the characteristics and content of the images, such as wired tables and wireless tables. The classification results of the table classification module are provided as output for use in table recognition-related pipelines.
 
 ## II. Supported Model List
 
@@ -13,25 +13,39 @@ The table classification module is a key component of a computer vision system, 
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top1 Acc(%)</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time (ms)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 </tr>
 <tr>
 <td>PP-LCNet_x1_0_table_cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/CLIP_vit_base_patch16_224_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_table_cls_pretrained.pdparams">Training Model</a></td>
-<td>--</td>
-<td>--</td>
-<td>--</td>
+<td>94.2</td>
+<td>2.35 / 0.47</td>
+<td>4.03 / 1.35</td>
 <td>6.6M</td>
 </tr>
 </table>
 
-<p><b>Note: The above accuracy metrics are measured from the internal table classification dataset built by PaddleX. All models' GPU inference time is based on an NVIDIA Tesla T4 machine, with a precision type of FP32. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and a precision type of FP32.</b></p></details>
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**: PaddleX Internal Self-built Evaluation Dataset.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package first. For details, please refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 
-After installing the wheel package, you can complete the inference of the table classification module with just a few lines of code. You can switch between models under this module at will, and you can also integrate the model inference of the table classification module into your project. Before running the following code, please download the [example image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg) to your local machine. 
+After installing the wheel package, you can complete the inference of the table classification module with just a few lines of code. You can switch between models under this module at will, and you can also integrate the model inference of the table classification module into your project. Before running the following code, please download the [example image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg) to your local machine.
 
 ```python
 from paddlex import create_model
@@ -44,12 +58,15 @@ for res in output:
 
 After running the code, the result obtained is:
 
-```json
-{'res': {'input_path': 'table_recognition.jpg', 'class_ids': array([0, 1], dtype=int32), 'scores': array([0.84421, 0.15579], dtype=float32), 'label_names': ['wired_table', 'wireless_table']}}
 ```
+{'res': {'input_path': 'table_recognition.jpg', "page_index": None, 'class_ids': array([0, 1], dtype=int32), 'scores': array([0.84421, 0.15579], dtype=float32), 'label_names': ['wired_table', 'wireless_table']}}
+```
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/table_classification/01.jpg">
 
 The meanings of the parameters in the running results are as follows:
 - `input_path`: Indicates the path of the input image.
+- `page_index`：If the input is a PDF file, this indicates the current page number of the PDF. Otherwise, it is `None`
 - `class_ids`: Indicates the class ID of the prediction result.
 - `scores`: Indicates the confidence of the prediction result.
 - `label_names`: Indicates the class name of the prediction result.
@@ -100,7 +117,7 @@ The descriptions of the related methods and parameters are as follows:
 <tr>
 <td><code>input</code></td>
 <td>Data to be predicted, supporting multiple input types</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
   <li><b>Python variable</b>, such as image data represented by <code>numpy.ndarray</code></li>
@@ -186,8 +203,12 @@ The descriptions of the related methods and parameters are as follows:
 </tr>
 </thead>
 <tr>
-<td rowspan = "1"><code>json</code></td>
-<td rowspan = "1">Get the prediction result in <code>json</code> format</td>
+<td rowspan="1"><code>json</code></td>
+<td rowspan="1">Get the prediction result in <code>json</code> format</td>
+</tr>
+<tr>
+<td rowspan="1"><code>img</code></td>
+<td rowspan="1">Get the visualization image in <code>dict</code> format</td>
 </tr>
 </table>
 
@@ -271,7 +292,7 @@ After executing the above command, PaddleX will verify the dataset and collect b
 <li><code>attributes.val_sample_paths</code>: A list of relative paths for the visualization images of the validation samples in this dataset;</li>
 </ul>
 <p>In addition, the dataset verification has analyzed the distribution of sample counts for all classes in the dataset and generated a histogram (histogram.png):</p>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/table_classification/01.png"></p></details></url> 
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/modules/table_classification/02.png"></p></details>
 
 #### 4.1.3 Dataset Format Conversion/Dataset Splitting (Optional)
 After you complete the data verification, you can convert the dataset format by <b>modifying the configuration file</b> or <b>adding hyperparameters</b>. You can also re-split the training/validation ratio of the dataset.
@@ -388,12 +409,14 @@ Similar to model training and evaluation, the following steps are required:
 Other related parameters can be set by modifying the fields under `Global` and `Predict` in the `.yaml` configuration file. For details, please refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
 
 #### 4.4.2 Model Integration
-The model can be directly integrated into the PaddleX production line or directly integrated into your own project.
+The model can be directly integrated into the PaddleX pipeline or directly integrated into your own project.
 
-1.<b>Production Line Integration</b>
+1.<b>Pipeline Integration</b>
 
-The table classification module can be integrated into the PaddleX production line such as [General Table Classification Pipeline v2](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.en.md). You just need to replace the model path to update the table classification module in the related production line. In production line integration, you can deploy the model you obtained using high-performance deployment and service-oriented deployment.
+The table classification module can be integrated into the PaddleX pipeline such as [General Table Classification Pipeline v2](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.en.md). You just need to replace the model path to update the table classification module in the related pipeline. In pipeline integration, you can deploy the model you obtained using high-performance deployment and service-oriented deployment.
 
 2.<b>Module Integration</b>
 
 The weights you generate can be directly integrated into the table classification module. You can refer to the Python example code in [Quick Integration](#Three-Quick-Integration). Just replace the model with the path of the model you have trained.
+
+You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).

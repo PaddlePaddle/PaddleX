@@ -38,7 +38,7 @@ The <b>General Layout Parsing Pipeline</b> includes modules for table structure 
 <td>SLANet_plus is an enhanced version of SLANet, the table structure recognition model developed by Baidu PaddleX Team. Compared to SLANet, SLANet_plus significantly improves the recognition ability for wireless and complex tables and reduces the model's sensitivity to the accuracy of table positioning, enabling more accurate recognition even with offset table positioning.</td>
 </tr>
 </table>
-<p><b>Note: The above accuracy metrics are measured on PaddleX's internally built English table recognition dataset. All GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 <p><b>Layout Detection Module Models</b>:</p>
 <table>
 <thead>
@@ -211,8 +211,7 @@ The <b>General Layout Parsing Pipeline</b> includes modules for table structure 
 </tr>
 </tbody>
 </table>
-<b>Note: The evaluation dataset for the above precision metrics is a self-built layout area detection dataset by PaddleOCR, containing 892 common document images of Chinese and English papers, magazines, and research reports. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
-</details>
+
 <p><b>Text Detection Module Models</b>:</p>
 <table>
 <thead>
@@ -244,7 +243,7 @@ The <b>General Layout Parsing Pipeline</b> includes modules for table structure 
 </tr>
 </tbody>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built Chinese dataset, covering street scenes, web images, documents, and handwritten texts, with 500 images for detection. All GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 <p><b>Text Recognition Module Models</b>:</p>
 <table>
 <tr>
@@ -271,7 +270,7 @@ The <b>General Layout Parsing Pipeline</b> includes modules for table structure 
 <td>71.2 M</td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is PaddleOCR's self-built Chinese dataset, covering street scenes, web images, documents, and handwritten texts, with 11,000 images for text recognition. All GPU inference times are based on NVIDIA Tesla T4 machines with FP32 precision. CPU inference speeds are based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -292,7 +291,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team at 
 </td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a> A-list. GPU inference time is based on NVIDIA Tesla T4 with FP32 precision. CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -313,7 +312,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 </td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a> B-list. GPU inference time is based on NVIDIA Tesla T4 with FP32 precision. CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 <p><b>Formula Recognition Module Models</b>:</p>
 <table>
 <thead>
@@ -339,7 +338,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 </tr>
 </tbody>
 </table>
-<p><b>Note: The above accuracy metrics are measured on the <a href="https://drive.google.com/drive/folders/13CA4vAmOmD_I_dSbvLp-Lf0s6KiaNfuO">LaTeX-OCR Formula Recognition Test Set</a>. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 <p><b>Seal Text Detection Module Models</b>:</p>
 <table>
 <thead>
@@ -371,51 +370,35 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 </tr>
 </tbody>
 </table>
-<p><b>Note: The above accuracy metrics are evaluated on a self-built dataset containing 500 circular seal images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
-<p><b>Text Image Rectification Module Models</b>:</p>
-<table>
-<thead>
-<tr>
-<th>Model</th><th>Model Download Link</th>
-<th>MS-SSIM (%)</th>
-<th>Model Size (M)</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>UVDoc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/UVDoc_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">Trained Model</a></td>
-<td>54.40</td>
-<td>30.3 M</td>
-<td>High-precision text image rectification model</td>
-</tr>
-</tbody>
-</table>
-<p><b>The accuracy metrics of the models are measured from the <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet benchmark</a>.</b></p>
-<p><b>Document Image Orientation Classification Module Models</b>:</p>
-<table>
-<thead>
-<tr>
-<th>Model</th><th>Model Download Link</th>
-<th>Top-1 Acc (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Size (M)</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Trained Model</a></td>
-<td>99.06</td>
-<td>2.31 / 0.43</td>
-<td>3.37 / 1.27</td>
-<td>7</td>
-<td>A document image classification model based on PP-LCNet_x1_0, with four categories: 0°, 90°, 180°, 270°</td>
-</tr>
-</tbody>
-</table>
-<p><b>Note: The above accuracy metrics are evaluated on a self-built dataset covering various scenarios such as certificates and documents, containing 1000 images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p></details>
+
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**:
+    - Text Image Rectification Model: [DocUNet](https://www3.cs.stonybrook.edu/~cvl/docunet.html).
+    - Layout Region Detection Model: A self-built layout analysis dataset using PaddleOCR, containing 10,000 images of common document types such as Chinese and English papers, magazines, and research reports.
+    - Table Structure Recognition Model: A self-built English table recognition dataset using PaddleX.
+    - Text Detection Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 500 images for detection.
+    - Chinese Recognition Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.
+    - ch_SVTRv2_rec: Evaluation set A for "OCR End-to-End Recognition Task" in the [PaddleOCR Algorithm Model Challenge](https://aistudio.baidu.com/competition/detail/1131/0/introduction).
+    - ch_RepSVTR_rec: Evaluation set B for "OCR End-to-End Recognition Task" in the [PaddleOCR Algorithm Model Challenge](https://aistudio.baidu.com/competition/detail/1131/0/introduction).
+    - English Recognition Model: A self-built English dataset using PaddleX.
+    - Multilingual Recognition Model: A self-built multilingual dataset using PaddleX.
+    - Text Line Orientation Classification Model: A self-built dataset using PaddleX, covering various scenarios such as ID cards and documents, containing 1000 images.
+    - Seal Text Detection Model: A self-built dataset using PaddleX, containing 500 images of circular seal textures.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+
+</details>
 
 ## 2. Quick Start
 
@@ -477,7 +460,7 @@ After running, the result will be:
 </code></pre></details>
 
 ### 2.2 Python Script Integration
-A few lines of code are all you need to quickly perform inference on your production line. Taking the general layout parsing pipeline as an example:
+A few lines of code are all you need to quickly perform inference on your pipeline. Taking the general layout parsing pipeline as an example:
 
 ```python
 from paddlex import create_pipeline
@@ -622,25 +605,25 @@ Additionally, PaddleX offers three other deployment methods, detailed as follows
 Below are the API reference and multi-language service invocation examples for the basic serving solution:
 
 <details><summary>API Reference</summary>
-<p>For primary operations provided by the service:</p>
+<p>For the main operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
-<li>The request body and the response body are both JSON data (JSON objects).</li>
-<li>When the request is processed successfully, the response status code is <code>200</code>, and the response body properties are as follows:</li>
+<li>Both the request body and response body are JSON data (JSON objects).</li>
+<li>When the request is processed successfully, the response status code is <code>200</code>, and the attributes of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>logId</code></td>
 <td><code>string</code></td>
-<td>UUID for the request.</td>
+<td>The UUID of the request.</td>
 </tr>
 <tr>
 <td><code>errorCode</code></td>
@@ -650,31 +633,31 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error description. Fixed as <code>"Success"</code>.</td>
+<td>Error message. Fixed as <code>"Success"</code>.</td>
 </tr>
 <tr>
 <td><code>result</code></td>
 <td><code>object</code></td>
-<td>Operation result.</td>
+<td>The result of the operation.</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>When the request is not processed successfully, the response body properties are as follows:</li>
+<li>When the request is not processed successfully, the attributes of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>logId</code></td>
 <td><code>string</code></td>
-<td>UUID for the request.</td>
+<td>The UUID of the request.</td>
 </tr>
 <tr>
 <td><code>errorCode</code></td>
@@ -684,25 +667,25 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>errorMsg</code></td>
 <td><code>string</code></td>
-<td>Error description.</td>
+<td>Error message.</td>
 </tr>
 </tbody>
 </table>
-<p>Primary operations provided by the service:</p>
+<p>The main operations provided by the service are as follows:</p>
 <ul>
 <li><b><code>infer</code></b></li>
 </ul>
-<p>Performs layout parsing.</p>
+<p>Perform layout parsing.</p>
 <p><code>POST /layout-parsing</code></p>
 <ul>
-<li>Request body properties:</li>
+<li>The attributes of the request body are as follows:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 <th>Required</th>
 </tr>
 </thead>
@@ -710,51 +693,171 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>The URL of an image file or PDF file accessible by the server, or the Base64 encoded result of the content of the above-mentioned file types. For PDF files with more than 10 pages, only the content of the first 10 pages will be used.</td>
+<td>The URL of an image or PDF file accessible by the server, or the Base64-encoded content of the above file types. For PDF files with more than 10 pages, only the content of the first 10 pages will be used.</td>
 <td>Yes</td>
 </tr>
 <tr>
 <td><code>fileType</code></td>
-<td><code>integer</code></td>
-<td>File type. <code>0</code> indicates a PDF file, and <code>1</code> indicates an image file. If this property is not present in the request body, the file type will be inferred based on the URL.</td>
+<td><code>integer</code>｜<code>null</code></td>
+<td>File type. <code>0</code> represents a PDF file, and <code>1</code> represents an image file. If this attribute is missing from the request body, the file type will be inferred based on the URL.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useImgOrientationCls</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable document image orientation classification. This function is enabled by default.</td>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>use_doc_orientation_classify</code> parameter in the <code>predict</code> method of the pipeline.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useImgUnwarping</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable text image rectification. This function is enabled by default.</td>
+<td><code>useDocUnwarping</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>use_doc_unwarping</code> parameter in the <code>predict</code> method of the pipeline.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useSealTextDet</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable seal text detection. This function is enabled by default.</td>
+<td><code>useTextlineOrientation</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>use_textline_orientation</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useGeneralOcr</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>use_general_ocr</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useSealRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>use_seal_recognition</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useTableRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>use_table_recognition</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useFormulaRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>use_formula_recognition</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>See the description of the <code>text_det_limit_side_len</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>See the description of the <code>text_det_limit_type</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>text_det_thresh</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>text_det_box_thresh</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>text_det_unclip_ratio</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>text_rec_score_thresh</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>See the description of the <code>seal_det_limit_side_len</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>See the description of the <code>seal_det_limit_type</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>seal_det_thresh</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>seal_det_box_thresh</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>seal_det_unclip_ratio</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>seal_rec_score_thresh</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>See the description of the <code>layout_threshold</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutNms</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>See the description of the <code>layout_nms</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutUnclipRatio</code></td>
+<td><code>number</code> | <code>array</code> | <code>null</code></td>
+<td>See the description of the <code>layout_unclip_ratio</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutMergeBboxesMode</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>See the description of the <code>layout_merge_bboxes_mode</code> parameter in the <code>predict</code> method of the pipeline.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>When the request is processed successfully, the <code>result</code> of the response body has the following properties:</li>
+<li>When the request is processed successfully, the response body's <code>result</code> has the following attributes:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>layoutParsingResults</code></td>
 <td><code>array</code></td>
-<td>Layout parsing results. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
+<td>The layout parsing results. The length of the array is 1 (for image input) or the smaller of the document page count and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
 </tr>
 <tr>
 <td><code>dataInfo</code></td>
@@ -763,92 +866,68 @@ Below are the API reference and multi-language service invocation examples for t
 </tr>
 </tbody>
 </table>
-<p>Each element in <code>layoutParsingResults</code> is an <code>object</code> with the following properties:</p>
+<p>Each element in <code>layoutParsingResults</code> is an <code>object</code> with the following attributes:</p>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>layoutElements</code></td>
-<td><code>array</code></td>
-<td>Layout element information.</td>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>A simplified version of the <code>res</code> field in the JSON representation generated by the <code>predict</code> method of the production object, with the <code>input_path</code> field removed.</td>
+</tr>
+<tr>
+<td><code>outputImages</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>A key-value pair of the input image and the prediction result image. The images are in JPEG format and encoded in Base64.</td>
+</tr>
+<tr>
+<td><code>inputImage</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>The input image. The image is in JPEG format and encoded in Base64.</td>
 </tr>
 </tbody>
 </table>
-<p>Each element in <code>layoutElements</code> is an <code>object</code> with the following properties:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>bbox</code></td>
-<td><code>array</code></td>
-<td>Position of the layout element. The elements in the array are the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner of the bounding box, respectively.</td>
-</tr>
-<tr>
-<td><code>label</code></td>
-<td><code>string</code></td>
-<td>Label of the layout element.</td>
-</tr>
-<tr>
-<td><code>text</code></td>
-<td><code>string</code></td>
-<td>Text contained in the layout element.</td>
-</tr>
-<tr>
-<td><code>layoutType</code></td>
-<td><code>string</code></td>
-<td>Arrangement of the layout element.</td>
-</tr>
-<tr>
-<td><code>image</code></td>
-<td><code>string</code></td>
-<td>Image of the layout element, in JPEG format, encoded using Base64.</td>
-</tr>
-</tbody>
-</table></details>
+</details>
 
-<details><summary>Multi-language Service Invocation Examples</summary>
+<details><summary>Multi-language Service Call Example</summary>
 <details>
 <summary>Python</summary>
+
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = "http://localhost:8080/layout-parsing"
+API_URL = "http://localhost:8080/layout-parsing" # Service URL
+file_path = "./demo.jpg"
 
-with open(image_path, "rb") as file:
-    image_bytes = file.read()
-    image_data = base64.b64encode(image_bytes).decode("ascii")
+with open(file_path, "rb") as file:
+    file_bytes = file.read()
+    file_data = base64.b64encode(file_bytes).decode("ascii")
 
 payload = {
-    "file": image_data,
+    "file": file_data, # Base64-encoded file content or file URL
     "fileType": 1,
-    "useImgOrientationCls": True,
-    "useImgUnwarping": True,
-    "useSealTextDet": True,
 }
 
+# Call the API
 response = requests.post(API_URL, json=payload)
 
+# Process the response data
 assert response.status_code == 200
 result = response.json()["result"]
 print("\nDetected layout elements:")
-for res in result["layoutParsingResults"]:
-    for ele in res["layoutElements"]:
-        print("===============================")
-        print("bbox:", ele["bbox"])
-        print("label:", ele["label"])
-        print("text:", repr(ele["text"]))
+for i, res in enumerate(result["layoutParsingResults"]):
+    print(res["prunedResult"])
+    for img_name, img in res["outputImages"].items():
+        img_path = f"{img_name}_{i}.jpg"
+        with open(img_path, "wb") as f:
+            f.write(base64.b64decode(img))
+        print(f"Output image saved at {img_path}")
 </code></pre></details>
 </details>
 <br/>
@@ -876,7 +955,7 @@ You can analyze images with poor recognition results and follow the guidelines b
 ### 4.2 Model Application
 After fine-tuning your model with a private dataset, you will obtain local model weights files.
 
-To use the fine-tuned model weights, simply modify the production line configuration file by replacing the local paths of the fine-tuned model weights to the corresponding positions in the configuration file:
+To use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local paths of the fine-tuned model weights to the corresponding positions in the configuration file:
 
 ```python
 ......
@@ -895,7 +974,7 @@ To use the fine-tuned model weights, simply modify the production line configura
   device: "gpu:0"
 ......
 ```
-Subsequently, refer to the command line or Python script methods in the local experience to load the modified production line configuration file.
+Subsequently, refer to the command line or Python script methods in the local experience to load the modified pipeline configuration file.
 
 ## 5. Multi-Hardware Support
 PaddleX supports various mainstream hardware devices such as NVIDIA GPUs, Kunlun XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware.
