@@ -71,24 +71,24 @@ Layout analysis is a technology that extracts structured information from docume
 <tr>
 <td>PP-DocLayout-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">Training Model</a></td>
 <td>90.4</td>
-<td>34.5252</td>
-<td>1454.27</td>
+<td>34.6244 / 10.3945</td>
+<td>510.57 / -</td>
 <td>123.76 M</td>
 <td>A high-precision layout region detection model trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exam papers, and research reports, based on RT-DETR-L.</td>
 </tr>
 <tr>
 <td>PP-DocLayout-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">Training Model</a></td>
 <td>75.2</td>
-<td>15.9</td>
-<td>160.1</td>
+<td>13.3259 / 4.8685</td>
+<td>44.0680 / 44.0680</td>
 <td>22.578</td>
 <td>A layout region detection model with balanced precision and efficiency, trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exam papers, and research reports, based on PicoDet-L.</td>
 </tr>
 <tr>
 <td>PP-DocLayout-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">Training Model</a></td>
 <td>70.9</td>
-<td>13.8</td>
-<td>46.7</td>
+<td>8.3008 / 2.3794</td>
+<td>10.0623 / 9.9296</td>
 <td>4.834</td>
 <td>A high-efficiency layout region detection model trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exam papers, and research reports, based on PicoDet-S.</td>
 </tr>

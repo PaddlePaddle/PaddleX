@@ -25,24 +25,24 @@ comments: true
 <tr>
 <td>PP-DocLayout-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">训练模型</a></td>
 <td>90.4</td>
-<td>34.5252</td>
-<td>1454.27</td>
+<td>34.6244 / 10.3945</td>
+<td>510.57 / - </td>
 <td>123.76 M</td>
 <td>基于RT-DETR-L在包含中英文论文、杂志、合同、书本、试卷和研报等场景的自建数据集训练的高精度版面区域定位模型</td>
 </tr>
 <tr>
 <td>PP-DocLayout-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">训练模型</a></td>
 <td>75.2</td>
-<td>15.9</td>
-<td>160.1</td>
+<td>13.3259 / 4.8685</td>
+<td>44.0680 / 44.0680</td>
 <td>22.578</td>
 <td>基于PicoDet-L在包含中英文论文、杂志、合同、书本、试卷和研报等场景的自建数据集训练的精度效率平衡的版面区域定位模型</td>
 </tr>
 <tr>
 <td>PP-DocLayout-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">训练模型</a></td>
 <td>70.9</td>
-<td>13.8</td>
-<td>46.7</td>
+<td>8.3008 / 2.3794</td>
+<td>10.0623 / 9.9296</td>
 <td>4.834</td>
 <td>基于PicoDet-S在中英文论文、杂志、合同、书本、试卷和研报等场景上自建数据集训练的高效率版面区域定位模型</td>
 </tr>
