@@ -10,7 +10,7 @@ comments: true
 
 ## 1. 环境准备
 
-在使用之前，您首先需要参考 [PaddleX本地安装教程](../installation/installation.md) 完成 PaddleX 的本地安装。然后准备大语言模型的 api_key，PP-ChatOCRv3 支持调用 [百度云千帆平台](https://console.bce.baidu.com/qianfan/ais/console/onlineService) 提供的大模型推理服务，您可以参考[认证鉴权](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Um2wxbaps) 获取千帆平台的 api_key。
+在使用之前，您首先需要参考 [PaddleX本地安装教程](../installation/installation.md) 完成 PaddleX 的本地安装。然后准备大语言模型的 api_key，PP-ChatOCRv3 支持调用 [百度云千帆平台](https://console.bce.baidu.com/qianfan/ais/console/onlineService) 提供的大模型推理服务，您可以参考[认证鉴权](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Um2wxbaps) 获取千帆平台的 api_key。更多的 PP-ChatOCRv3 使用细节，可以参考 [PP-ChatOCRv3 文档](../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.md)。
 
 ## 2. 快速体验基于 DeepSeek 大模型的文档信息抽取
 
