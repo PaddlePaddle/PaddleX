@@ -5,7 +5,7 @@ comments: true
 # General Image Classification Pipeline Tutorial
 
 ## 1. Introduction to the General Image Classification Pipeline
-Image classification is a technique that assigns images to predefined categories. It is widely applied in object recognition, scene understanding, and automatic annotation. Image classification can identify various objects such as animals, plants, traffic signs, and categorize them based on their features. By leveraging deep learning models, image classification can automatically extract image features and perform accurate classification.This production line also offers a flexible service-oriented deployment approach, supporting the use of multiple programming languages on various hardware platforms. Moreover, this production line provides the capability for secondary development. You can train and optimize models on your own dataset based on this production line, and the trained models can be seamlessly integrated.
+Image classification is a technique that assigns images to predefined categories. It is widely applied in object recognition, scene understanding, and automatic annotation. Image classification can identify various objects such as animals, plants, traffic signs, and categorize them based on their features. By leveraging deep learning models, image classification can automatically extract image features and perform accurate classification.This pipeline also offers a flexible service-oriented deployment approach, supporting the use of multiple programming languages on various hardware platforms. Moreover, this pipeline provides the capability for secondary development. You can train and optimize models on your own dataset based on this pipeline, and the trained models can be seamlessly integrated.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_classification/01.png"/>
 <b>The General Image Classification Pipeline includes an image classification module. If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, select a model with faster inference. If you prioritize model storage size, choose a model with a smaller storage size.</b>
@@ -684,7 +684,24 @@ Image classification is a technique that assigns images to predefined categories
 <td>100.1 M</td>
 </tr>
 </tr></tr></tr></tr></table>
-<p><b>Note: The above accuracy metrics refer to Top-1 Accuracy on the <a href="https://www.image-net.org/index.php">ImageNet-1k</a> validation set. </b><b>All model GPU inference times are based on NVIDIA Tesla T4 machines, with precision type FP32. CPU inference speeds are based on Intel® Xeon® Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32.</b></p></details>
+
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**:  <a href="https://www.image-net.org/index.php">ImageNet-1k</a> validation set.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+
+</details>
 
 ## 2. Quick Start
 All model pipelines provided by PaddleX can be quickly experienced. You can experience the general image classification pipeline online in the Star River Community, or you can use the command line or Python locally to experience the effects of the general image classification pipeline.
@@ -738,7 +755,7 @@ for res in output:
 
 In the above Python script, the following steps are executed:
 
-(1) The general image classification production line object is instantiated via `create_pipeline()`. The specific parameter descriptions are as follows:
+(1) The general image classification pipeline object is instantiated via `create_pipeline()`. The specific parameter descriptions are as follows:
 
 <table>
 <thead>
@@ -752,32 +769,32 @@ In the above Python script, the following steps are executed:
 <tbody>
 <tr>
 <td><code>pipeline</code></td>
-<td>The name of the production line or the path to the production line configuration file. If it is the name of a production line, it must be supported by PaddleX.</td>
+<td>The name of the pipeline or the path to the pipeline configuration file. If it is the name of a pipeline, it must be supported by PaddleX.</td>
 <td><code>str</code></td>
 <td>None</td>
 </tr>
 <tr>
 <td><code>config</code></td>
-<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td>Specific configuration information for the pipeline (if set simultaneously with <code>pipeline</code>, it has higher priority than <code>pipeline</code>, and the pipeline name must be consistent with <code>pipeline</code>).</td>
 <td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The device used for production line inference. It supports specifying the specific card number of GPUs, such as "gpu:0", other hardware card numbers, such as "npu:0", and CPUs, such as "cpu".</td>
+<td>The device used for pipeline inference. It supports specifying the specific card number of GPUs, such as "gpu:0", other hardware card numbers, such as "npu:0", and CPUs, such as "cpu".</td>
 <td><code>str</code></td>
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference. This is only available if the production line supports high-performance inference.</td>
+<td>Whether to enable high-performance inference. This is only available if the pipeline supports high-performance inference.</td>
 <td><code>bool</code></td>
 <td><code>False</code></td>
 </tr>
 </tbody>
 </table>
 
-(2) The `predict()` method of the image classification production line object is called to perform inference prediction. This method returns a `generator`. Below are the parameters and their descriptions for the `predict()` method:
+(2) The `predict()` method of the image classification pipeline object is called to perform inference prediction. This method returns a `generator`. Below are the parameters and their descriptions for the `predict()` method:
 
 <table>
 <thead>
@@ -805,7 +822,7 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The device used for production line inference.</td>
+<td>The device used for pipeline inference.</td>
 <td><code>str|None</code></td>
 <td>
 <ul>
@@ -815,7 +832,7 @@ In the above Python script, the following steps are executed:
 <li><b>XPU</b>: Use the specified XPU for inference, such as <code>xpu:0</code> for the first XPU.</li>
 <li><b>MLU</b>: Use the specified MLU for inference, such as <code>mlu:0</code> for the first MLU.</li>
 <li><b>DCU</b>: Use the specified DCU for inference, such as <code>dcu:0</code> for the first DCU.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used. During initialization, it will prioritize the local GPU device 0; if unavailable, it will use the CPU.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used. During initialization, it will prioritize the local GPU device 0; if unavailable, it will use the CPU.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -919,7 +936,7 @@ for res in output:
 ```
 In the above Python script, the following steps are executed:
 
-(1) The general image classification production line object is instantiated via `create_pipeline()`. The specific parameter descriptions are as follows:
+(1) The general image classification pipeline object is instantiated via `create_pipeline()`. The specific parameter descriptions are as follows:
 
 <table>
 <thead>
@@ -933,26 +950,26 @@ In the above Python script, the following steps are executed:
 <tbody>
 <tr>
 <td><code>pipeline</code></td>
-<td>The name of the production line or the path to the production line configuration file. If it is the name of a production line, it must be supported by PaddleX.</td>
+<td>The name of the pipeline or the path to the pipeline configuration file. If it is the name of a pipeline, it must be supported by PaddleX.</td>
 <td><code>str</code></td>
 <td>None</td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The device used for production line inference. It supports specifying the specific card number of GPUs, such as "gpu:0", other hardware card numbers, such as "npu:0", and CPUs, such as "cpu".</td>
+<td>The device used for pipeline inference. It supports specifying the specific card number of GPUs, such as "gpu:0", other hardware card numbers, such as "npu:0", and CPUs, such as "cpu".</td>
 <td><code>str</code></td>
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference. This is only available if the production line supports high-performance inference.</td>
+<td>Whether to enable high-performance inference. This is only available if the pipeline supports high-performance inference.</td>
 <td><code>bool</code></td>
 <td><code>False</code></td>
 </tr>
 </tbody>
 </table>
 
-(2) The `predict()` method of the image classification production line object is called to perform inference prediction. This method returns a `generator`. Below are the parameters and their descriptions for the `predict()` method:
+(2) The `predict()` method of the image classification pipeline object is called to perform inference prediction. This method returns a `generator`. Below are the parameters and their descriptions for the `predict()` method:
 
 <table>
 <thead>
@@ -980,7 +997,7 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The device used for production line inference.</td>
+<td>The device used for pipeline inference.</td>
 <td><code>str|None</code></td>
 <td>
 <ul>
@@ -990,7 +1007,7 @@ In the above Python script, the following steps are executed:
 <li><b>XPU</b>: Use the specified XPU for inference, such as <code>xpu:0</code> for the first XPU.</li>
 <li><b>MLU</b>: Use the specified MLU for inference, such as <code>mlu:0</code> for the first MLU.</li>
 <li><b>DCU</b>: Use the specified DCU for inference, such as <code>dcu:0</code> for the first DCU.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used. During initialization, it will prioritize the local GPU device 0; if unavailable, it will use the CPU.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used. During initialization, it will prioritize the local GPU device 0; if unavailable, it will use the CPU.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -1106,12 +1123,12 @@ In the above Python script, the following steps are executed:
 - The prediction results obtained through the `json` attribute are of type `dict`, with content consistent with what is saved by calling the `save_to_json()` method.
 - The prediction results returned by the `img` attribute are of type `dict`. The key `res` corresponds to an `Image.Image` object: a visualized image for displaying classification results.
 
-Additionally, you can obtain the configuration file for the image classification production line and load it for prediction. You can run the following command to save the results in `my_path`:
+Additionally, you can obtain the configuration file for the image classification pipeline and load it for prediction. You can run the following command to save the results in `my_path`:
 
 ```
 paddlex --get_pipeline_config image_classification --save_path ./my_path
 ```
-If you have obtained the configuration file, you can customize the settings for the image classification production line by simply modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the configuration file. The example is as follows:
+If you have obtained the configuration file, you can customize the settings for the image classification pipeline by simply modifying the `pipeline` parameter value in the `create_pipeline` method to the path of the configuration file. The example is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -1236,28 +1253,9 @@ Below are the API references for basic service deployment and examples of multi-
 <td>Yes</td>
 </tr>
 <tr>
-<td><code>inferenceParams</code></td>
-<td><code>object</code></td>
-<td>Inference parameters.</td>
-<td>No</td>
-</tr>
-</tbody>
-</table>
-<p>The attributes of <code>inferenceParams</code> are as follows:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Required</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>topK</code></td>
-<td><code>integer</code></td>
-<td>The result will only retain the top <code>topK</code> categories with the highest scores.</td>
+<td><code>topk</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>See the <code>topk</code> parameter description in the <code>predict</code> method documentation.</td>
 <td>No</td>
 </tr>
 </tbody>
@@ -1281,7 +1279,7 @@ Below are the API references for basic service deployment and examples of multi-
 </tr>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></td>
+<td><code>string</code></td>| <code>null</code></td>
 <td>The image classification result. The image is in JPEG format and is encoded in Base64.</td>
 </tr>
 </tbody>
@@ -1719,12 +1717,12 @@ SubModules:
     topk: 5
 ```
 
-Subsequently, refer to the command line method or Python script method in the local experience section to load the modified production line configuration file.
+Subsequently, refer to the command line method or Python script method in the local experience section to load the modified pipeline configuration file.
 
 ## 5. Multi-Hardware Support
 PaddleX supports a variety of mainstream hardware devices, including NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware devices.
 
-For example, if you are using Ascend NPU for inference in the general image classification production line, the Python command you would use is:
+For example, if you are using Ascend NPU for inference in the general image classification pipeline, the Python command you would use is:
 
 ```bash
 paddlex --pipeline image_classification \

@@ -75,7 +75,21 @@ comments: true
 </tbody>
 </table>
 
-<p><b>注：以上精度指标测量自 </b><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/data/Etth1.tar">ETTH1</a><b> 测试数据集，输入序列长度为96，预测序列长度除 TiDE 外为96，TiDE为720 。</b></p>
+**测试环境说明：**
+
+- **性能测试环境**
+  - **测试数据集**：</b><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/data/Etth1.tar">ETTH1</a> 测试数据集。
+  - **硬件配置**：
+    - GPU：NVIDIA Tesla T4
+    - CPU：Intel Xeon Gold 6271C @ 2.60GHz
+    - 其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **推理模式说明**
+
+| 模式        | GPU配置                          | CPU配置          | 加速技术组合                                |
+|-------------|----------------------------------|------------------|---------------------------------------------|
+| 常规模式    | FP32精度 / 无TRT加速             | FP32精度 / 8线程       | PaddleInference                             |
+| 高性能模式  | 选择先验精度类型和加速策略的最优组合         | FP32精度 / 8线程       | 选择先验最优后端（Paddle/OpenVINO/TRT等） |
 
 ## 2. 快速开始
 

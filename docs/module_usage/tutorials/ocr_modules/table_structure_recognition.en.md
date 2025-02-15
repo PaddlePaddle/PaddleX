@@ -52,7 +52,21 @@ SLANet_plus is an enhanced version of SLANet, a table structure recognition mode
 </tr>
 </table>
 
-<b>Note: The above accuracy metrics are evaluated on a self-built English table recognition dataset by PaddleX. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**: PaddleX Internal Self-built High-difficulty Chinese Table Recognition Dataset.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 
 ## III. Quick Integration
@@ -72,13 +86,13 @@ for res in output:
 <details><summary>👉 <b>After running, the result is: (Click to expand)</b></summary>
 
 ```
-{'res': {'input_path': 'table_recognition.jpg', 'page_index': null, 'bbox': [array([ 42,   2, 390,   2, 388,  27,  40,  26]), array([11, 35, 89, 35, 87, 63, 11, 63]), array([113,  34, 192,  34, 186,  64, 109,  64]), array([219,  33, 399,  33, 393,  62, 212,  62]), array([413,  33, 544,  33, 544,  64, 407,  64]), array([12, 67, 98, 68, 96, 93, 12, 93]), array([115,  66, 205,  66, 200,  91, 111,  91]), array([234,  65, 390,  65, 385,  92, 227,  92]), array([414,  66, 537,  67, 537,  95, 409,  95]), array([  7,  97, 106,  97, 104, 128,   7, 128]), array([113,  96, 206,  95, 201, 127, 109, 127]), array([236,  96, 386,  96, 381, 128, 230, 128]), array([413,  96, 534,  95, 533, 127, 408, 127])], 'structure': ['<html>', '<body>', '<table>', '<tr>', '<td', ' colspan="4"', '>', '</td>', '</tr>', '<tr>', '<td></td>', '<td></td>', '<td></td>', '<td></td>', '</tr>', '<tr>', '<td></td>', '<td></td>', '<td></td>', '<td></td>', '</tr>', '<tr>', '<td></td>', '<td></td>', '<td></td>', '<td></td>', '</tr>', '</table>', '</body>', '</html>'], 'structure_score': 0.99948007}}
+{'res': {'input_path': 'table_recognition.jpg', 'page_index': None, 'bbox': [array([ 42,   2, 390,   2, 388,  27,  40,  26]), array([11, 35, 89, 35, 87, 63, 11, 63]), array([113,  34, 192,  34, 186,  64, 109,  64]), array([219,  33, 399,  33, 393,  62, 212,  62]), array([413,  33, 544,  33, 544,  64, 407,  64]), array([12, 67, 98, 68, 96, 93, 12, 93]), array([115,  66, 205,  66, 200,  91, 111,  91]), array([234,  65, 390,  65, 385,  92, 227,  92]), array([414,  66, 537,  67, 537,  95, 409,  95]), array([  7,  97, 106,  97, 104, 128,   7, 128]), array([113,  96, 206,  95, 201, 127, 109, 127]), array([236,  96, 386,  96, 381, 128, 230, 128]), array([413,  96, 534,  95, 533, 127, 408, 127])], 'structure': ['<html>', '<body>', '<table>', '<tr>', '<td', ' colspan="4"', '>', '</td>', '</tr>', '<tr>', '<td></td>', '<td></td>', '<td></td>', '<td></td>', '</tr>', '<tr>', '<td></td>', '<td></td>', '<td></td>', '<td></td>', '</tr>', '<tr>', '<td></td>', '<td></td>', '<td></td>', '<td></td>', '</tr>', '</table>', '</body>', '</html>'], 'structure_score': 0.99948007}}
 ```
 
 Parameter meanings are as follows:
 <ul>
 <li><code>input_path</code>: The path of the input image to be predicted</li>
-<li><code>page_index</code>：If the input is a PDF file, this indicates the current page number of the PDF. Otherwise, it is `null`</li>
+<li><code>page_index</code>：If the input is a PDF file, this indicates the current page number of the PDF. Otherwise, it is `None`</li>
 <li><code>boxes</code>: Predicted table cell information, a list composed of several predicted table cell coordinates. Note that the table cell predictions from the SLANeXt series models are invalid</li>
 <li><code>structure</code>: Predicted table structure in HTML expressions, a list composed of several predicted HTML keywords in order</li>
 <li><code>structure_score</code>: Confidence score of the predicted table structure</li>
@@ -403,3 +417,5 @@ The table structure recognition module can be integrated into PaddleX pipelines 
 2.<b>Module Integration</b>
 
 The model weights you produce can be directly integrated into the table structure recognition module. Refer to the Python example code in [Quick Integration](#iii-quick-integration) , and simply replace the model with the path to your trained model.
+
+You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).

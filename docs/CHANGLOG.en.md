@@ -5,6 +5,57 @@ comments: true
 # Version Update Information
 
 ## Latest Version Information
+### PaddleX v3.0.0rc0(2.14/2025)
+
+PaddleX 3.0 rc0 is fully compatible with PaddlePaddle 3.0rc0 version, adding 10+ pipelines, 40+ models, optimizing model and pipeline APIs, and adapting more models to multiple hardware. The high-performance inference and serving capabilities have been comprehensively upgraded. The specific new features are as follows:
+
+- <b>New pipelines</b>:
+  - <b>[Document Image Preprocessing Pipeline](pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.en.md)</b>, supporting the correction of rotated and distorted document images.
+  - <b>[PP-ChatOCRv4-doc Pipeline](pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.en.md)</b>, which integrates multimodal capabilities on the basis of the Document PP-ChatOCRv3-doc pipeline, enhances OCR recognition capabilities, optimizes Prompts, and ultimately improves the accuracy of document information extraction by 15 percentage points. Supports local large model OpenAI interface calls.
+  - <b>[Layout Parsing v2 Pipeline](pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.en.md)</b>, the core solution of PP-StructureV3. Based on the General Layout Parsing v1 pipeline, it optimizes layout area detection, table recognition, formula recognition, and reading order recovery capabilities, supports converting different types of document images and document PDF files into standard Markdown files, and performs strongly in document recovery capabilities in most scenarios.
+  - <b>[Table Recognition v2 Pipeline](pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.en.md)</b>, adopting a multi-model series networking solution of "table classification + table structure recognition + cell detection" to achieve higher precision end-to-end table recognition.
+  - <b>[Rotated Object Detection Pipeline](pipeline_usage/tutorials/cv_pipelines/rotated_object_detection.en.md)</b>, supporting the detection of rotated objects.
+  - <b>[Human Keypoint Detection Pipeline](pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.en.md)</b>, supporting precise acquisition of human keypoint positions such as shoulders, elbows, knees, etc., for pose estimation and behavior recognition.
+  - <b>[Open Vocabulary Object Detection Pipeline](pipeline_usage/tutorials/cv_pipelines/open_vocabulary_detection.en.md)</b>, supporting the detection of open-domain objects and predicting categories.
+  - <b>[Open Vocabulary Segmentation Pipeline](pipeline_usage/tutorials/cv_pipelines/open_vocabulary_segmentation.en.md)</b>, supporting image segmentation of open-domain objects.
+  - <b>[Video Detection Pipeline](pipeline_usage/tutorials/video_pipelines/video_detection.en.md)</b>, supporting efficient extraction of spatial and temporal features from videos, achieving accurate recognition and localization of objects in videos.
+  - <b>[Video Classification Pipeline](pipeline_usage/tutorials/video_pipelines/video_classification.en.md)</b>, supporting the extraction of spatiotemporal features from videos and accurate classification.
+  - <b>[Multilingual Speech Recognition Pipeline](pipeline_usage/tutorials/speech_pipelines/multilingual_speech_recognition.en.md)</b>, supporting automatic conversion of human-spoken multiple languages into corresponding text or commands.
+  - <b>[3D Bev Detection Pipeline](pipeline_usage/tutorials/cv_pipelines/3d_bev_detection.en.md)</b>, supporting input from multiple sensors (LiDAR, surround-view RGB cameras, etc.), processing data through deep learning methods, and outputting information such as position, shape, orientation, and category of objects in three-dimensional space.
+
+- <b>New models:</b>
+  - Added 28 OCR models, including the self-developed PP-DocLayout series for high precision and efficiency in layout area detection, the self-developed PP-FormulaNet series for high precision and efficiency in formula recognition, the self-developed SLANeXt series for table structure recognition, and the PP-OCRv4_server_rec_doc model for higher recognition accuracy in text recognition.
+  - Added 11 CV models, including 3D multimodal fusion detection models, open vocabulary object detection and segmentation models, rotated object detection models, and human keypoint detection models.
+  - Added 5 Speech models, including 5 models from the Whisper series.
+  - Added 4 Video models, including 1 video detection model and 3 video classification models.
+
+- <b>Model and pipeline capability upgrades:</b>
+  - Models and pipelines support more parameters, such as category thresholds for object detection models, expansion coefficients for text detection models, etc. CV and OCR models support PDF file input.
+  - OCR pipelines support document preprocessing operations such as document orientation classification and document correction, with built-in text line orientation classification models.
+  - Document Scene Information Extraction v3 pipeline supports standard OpenAI interface calls to large language models, supporting more large language model calls.
+  - Optimized user experience, with changes to some model and pipeline interfaces. For details, refer to the [API Upgrade Document](API_change_log/v3.0.0rc.md).
+
+- <b>Multi-hardware support:</b>
+  - Added model training and inference capabilities for the Suiyuan GCU hardware, supporting 90+ models, [GCU Model List](support_list/model_list_gcu.md)
+  - Added 50+ models for Ascend NPU, [NPU Model List](support_list/model_list_npu.en.md)
+  - Added 10+ models for Kunlunxin XPU, [XPU Model List](support_list/model_list_xpu.en.md)
+  - Added 10+ models for Cambricon MLU, [MLU Model List](support_list/model_list_mlu.en.md)
+  - Added 30+ models for Hygon DCU, [DCU Model List](support_list/model_list_dcu.en.md)
+
+- <b>Multi-environment adaptation:</b>
+  - Adapted to Windows systems, supporting the use of PaddleX for model training and inference on Windows. Fixed some installation failures on Windows systems.
+  - Training and inference fully adapted to Python3.11 and Python3.12.
+
+- <b>Comprehensive upgrade of deployment capabilities:</b>
+  - <b>High-performance inference:</b>
+    - Simplified installation and usage: Supports one-click installation of high-performance inference plugins using PaddleX CLI; no authentication is required to use high-performance inference plugins.
+    - Cross-platform support: Added support for Windows systems.
+    - Expanded model support: Increased the number of supported models, currently supporting 220+ models.
+    - Open-sourced core code: Open-sourced the core inference library ultra-infer, facilitating secondary development and customization by developers.
+  - <b>Serving:</b>
+    - Upgraded basic serving solutions: Upgraded basic serving solutions, supporting new pipelines and adapting to new features of existing pipelines.
+    - Added high-stability serving solutions: Added high-stability serving solutions, supporting flexible adjustment of service configurations to optimize service performance, with multiple solutions to meet different user needs.
+
 ### PaddleX v3.0.0beta2 (11.15/2024)
 
 PaddleX 3.0 Beta2 is fully compatible with the PaddlePaddle 3.0b2 version. <b>This update introduces new pipelines for general image recognition, face recognition, vehicle attribute recognition, and pedestrian attribute recognition. We have also developed 42 new models to fully support the Ascend 910B, with extensive documentation available on [GitHub Pages](https://paddlepaddle.github.io/PaddleX/latest/en/index.html).</b> Here’s a detailed look at the new features and improvements:

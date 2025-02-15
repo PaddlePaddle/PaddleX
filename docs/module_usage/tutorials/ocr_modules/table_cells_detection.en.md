@@ -34,7 +34,21 @@ The table cell detection module is a key component of table recognition tasks, r
 </tr>
 </table>
 
-<p><b>Note: The above accuracy metrics are measured from the internal table cell detection dataset of PaddleX. All model GPU inference times are based on an NVIDIA Tesla T4 machine, with precision type FP32. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32. Considering that the table cell detection module needs to be integrated into the table recognition production line v2 for practical applications, the table cell detection results output from the table recognition production line v2 are used to calculate the mAP accuracy.</b></p>
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**: PaddleX Internal Self-built Evaluation Dataset.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package first. For details, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
@@ -53,13 +67,13 @@ for res in output:
 
 <details><summary>👉 <b>After running, the result is: (Click to expand)</b></summary>
 
-```json
-{"input_path": "table_recognition.jpg", "page_index": null, "boxes": [{"cls_id": 0, "label": "cell", "score": 0.9319108128547668, "coordinate": [109.83584594726562, 95.89978790283203, 212.70770263671875, 127.05546569824219]}, {"cls_id": 0, "label": "cell", "score": 0.9308021664619446, "coordinate": [109.75360870361328, 64.86648559570312, 212.84799194335938, 95.82242584228516]}, {"cls_id": 0, "label": "cell", "score": 0.9255117177963257, "coordinate": [110.005126953125, 30.894376754760742, 212.81178283691406, 64.80416107177734]}, {"cls_id": 0, "label": "cell", "score": 0.918117344379425, "coordinate": [212.87246704101562, 30.97587013244629, 403.8023986816406, 64.86235046386719]}, {"cls_id": 0, "label": "cell", "score": 0.9053983688354492, "coordinate": [212.89151000976562, 95.95629119873047, 403.36572265625, 127.11717224121094]}, {"cls_id": 0, "label": "cell", "score": 0.8567661046981812, "coordinate": [212.77899169921875, 64.98127746582031, 403.94781494140625, 95.87938690185547]}, {"cls_id": 0, "label": "cell", "score": 0.7800847887992859, "coordinate": [404.1282653808594, 64.99693298339844, 547.1578979492188, 95.95233917236328]}, {"cls_id": 0, "label": "cell", "score": 0.7557389736175537, "coordinate": [2.6574931144714355, 30.968334197998047, 109.94781494140625, 64.89448547363281]}, {"cls_id": 0, "label": "cell", "score": 0.6763500571250916, "coordinate": [2.534634590148926, 96.2182846069336, 109.79283905029297, 127.09756469726562]}, {"cls_id": 0, "label": "cell", "score": 0.6708637475967407, "coordinate": [404.02423095703125, 95.9552993774414, 547.2798461914062, 127.1763687133789]}, {"cls_id": 0, "label": "cell", "score": 0.6568276286125183, "coordinate": [2.2822303771972656, 65.10485076904297, 109.9916763305664, 95.96409606933594]}, {"cls_id": 0, "label": "cell", "score": 0.6159431338310242, "coordinate": [109.78962707519531, 95.94172668457031, 213.05418395996094, 127.06707763671875]}, {"cls_id": 0, "label": "cell", "score": 0.6098588109016418, "coordinate": [2.2127363681793213, 65.04467010498047, 110.0749282836914, 95.99105834960938]}, {"cls_id": 0, "label": "cell", "score": 0.6019916534423828, "coordinate": [403.98883056640625, 96.00384521484375, 547.2072143554688, 127.17021942138672]}, {"cls_id": 0, "label": "cell", "score": 0.5713056921958923, "coordinate": [404.4563903808594, 30.951345443725586, 547.1254272460938, 65.0811538696289]}, {"cls_id": 0, "label": "cell", "score": 0.5697788000106812, "coordinate": [212.81021118164062, 96.05030822753906, 403.7318115234375, 127.14639282226562]}, {"cls_id": 0, "label": "cell", "score": 0.4522075355052948, "coordinate": [4.883366584777832, 0.22239652276039124, 543.5488891601562, 31.06178855895996]}, {"cls_id": 0, "label": "cell", "score": 0.4165799021720886, "coordinate": [404.32574462890625, 30.99039649963379, 547.0177001953125, 65.01567840576172]}, {"cls_id": 0, "label": "cell", "score": 0.37421756982803345, "coordinate": [4.255210876464844, 0.18794140219688416, 543.521728515625, 30.862964630126953]}, {"cls_id": 0, "label": "cell", "score": 0.37030676007270813, "coordinate": [5.542935371398926, 0.2003617286682129, 541.3729858398438, 31.145313262939453]}, {"cls_id": 0, "label": "cell", "score": 0.34807300567626953, "coordinate": [2.534700393676758, 96.17605590820312, 109.90091705322266, 127.14675903320312]}, {"cls_id": 0, "label": "cell", "score": 0.3399328589439392, "coordinate": [3.5424537658691406, 0.17436155676841736, 543.90283203125, 31.138904571533203]}]}
+```
+{"input_path": "table_recognition.jpg", "page_index": None, "boxes": [{"cls_id": 0, "label": "cell", "score": 0.9319108128547668, "coordinate": [109.83584594726562, 95.89978790283203, 212.70770263671875, 127.05546569824219]}, {"cls_id": 0, "label": "cell", "score": 0.9308021664619446, "coordinate": [109.75360870361328, 64.86648559570312, 212.84799194335938, 95.82242584228516]}, {"cls_id": 0, "label": "cell", "score": 0.9255117177963257, "coordinate": [110.005126953125, 30.894376754760742, 212.81178283691406, 64.80416107177734]}, {"cls_id": 0, "label": "cell", "score": 0.918117344379425, "coordinate": [212.87246704101562, 30.97587013244629, 403.8023986816406, 64.86235046386719]}, {"cls_id": 0, "label": "cell", "score": 0.9053983688354492, "coordinate": [212.89151000976562, 95.95629119873047, 403.36572265625, 127.11717224121094]}, {"cls_id": 0, "label": "cell", "score": 0.8567661046981812, "coordinate": [212.77899169921875, 64.98127746582031, 403.94781494140625, 95.87938690185547]}, {"cls_id": 0, "label": "cell", "score": 0.7800847887992859, "coordinate": [404.1282653808594, 64.99693298339844, 547.1578979492188, 95.95233917236328]}, {"cls_id": 0, "label": "cell", "score": 0.7557389736175537, "coordinate": [2.6574931144714355, 30.968334197998047, 109.94781494140625, 64.89448547363281]}, {"cls_id": 0, "label": "cell", "score": 0.6763500571250916, "coordinate": [2.534634590148926, 96.2182846069336, 109.79283905029297, 127.09756469726562]}, {"cls_id": 0, "label": "cell", "score": 0.6708637475967407, "coordinate": [404.02423095703125, 95.9552993774414, 547.2798461914062, 127.1763687133789]}, {"cls_id": 0, "label": "cell", "score": 0.6568276286125183, "coordinate": [2.2822303771972656, 65.10485076904297, 109.9916763305664, 95.96409606933594]}, {"cls_id": 0, "label": "cell", "score": 0.6159431338310242, "coordinate": [109.78962707519531, 95.94172668457031, 213.05418395996094, 127.06707763671875]}, {"cls_id": 0, "label": "cell", "score": 0.6098588109016418, "coordinate": [2.2127363681793213, 65.04467010498047, 110.0749282836914, 95.99105834960938]}, {"cls_id": 0, "label": "cell", "score": 0.6019916534423828, "coordinate": [403.98883056640625, 96.00384521484375, 547.2072143554688, 127.17021942138672]}, {"cls_id": 0, "label": "cell", "score": 0.5713056921958923, "coordinate": [404.4563903808594, 30.951345443725586, 547.1254272460938, 65.0811538696289]}, {"cls_id": 0, "label": "cell", "score": 0.5697788000106812, "coordinate": [212.81021118164062, 96.05030822753906, 403.7318115234375, 127.14639282226562]}, {"cls_id": 0, "label": "cell", "score": 0.4522075355052948, "coordinate": [4.883366584777832, 0.22239652276039124, 543.5488891601562, 31.06178855895996]}, {"cls_id": 0, "label": "cell", "score": 0.4165799021720886, "coordinate": [404.32574462890625, 30.99039649963379, 547.0177001953125, 65.01567840576172]}, {"cls_id": 0, "label": "cell", "score": 0.37421756982803345, "coordinate": [4.255210876464844, 0.18794140219688416, 543.521728515625, 30.862964630126953]}, {"cls_id": 0, "label": "cell", "score": 0.37030676007270813, "coordinate": [5.542935371398926, 0.2003617286682129, 541.3729858398438, 31.145313262939453]}, {"cls_id": 0, "label": "cell", "score": 0.34807300567626953, "coordinate": [2.534700393676758, 96.17605590820312, 109.90091705322266, 127.14675903320312]}, {"cls_id": 0, "label": "cell", "score": 0.3399328589439392, "coordinate": [3.5424537658691406, 0.17436155676841736, 543.90283203125, 31.138904571533203]}]}
 ```
 
 The meanings of the parameters are as follows:
 - `input_path`: The path of the input image to be predicted
-- `page_index`：If the input is a PDF file, this indicates the current page number of the PDF. Otherwise, it is `null`
+- `page_index`：If the input is a PDF file, this indicates the current page number of the PDF. Otherwise, it is `None`
 - `boxes`: Information of the predicted bounding boxes, a list of dictionaries. Each dictionary represents a detected target, containing the following information:
   - `cls_id`: Class ID, an integer.
   - `label`: Class label, a string.
@@ -241,7 +255,7 @@ The following is the explanation of the methods, parameters, etc.:
 </table>
 
 * Additionally, it also supports obtaining visualized images with results and prediction results through attributes, as follows:
-  
+
 <table>
 <thead>
 <tr>
@@ -482,12 +496,17 @@ Similar to model training and evaluation, the following steps are required:
 Other related parameters can be set by modifying the fields under `Global` and `Predict` in the `.yaml` configuration file. For details, please refer to [PaddleX General Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
 
 #### 4.4.2 Model Integration
-The model can be directly integrated into the PaddleX production line or into your own project.
+The model can be directly integrated into the PaddleX pipeline or into your own project.
 
-1.<b>Production Line Integration</b>
+1.<b>pipeline Integration</b>
 
-The table cell detection module can be integrated into the PaddleX production line [General Table Recognition Production Line v2](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.en.md). Simply replacing the model path will complete the model update for the table cell detection module in the relevant production line. In production line integration, you can deploy your model using high-performance deployment and service-oriented deployment.
+The table cell detection module can be integrated into the PaddleX pipeline [General Table Recognition pipeline v2](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.en.md). Simply replacing the model path will complete the model update for the table cell detection module in the relevant pipeline. In pipeline integration, you can deploy your model using high-performance deployment and service-oriented deployment.
 
 2.<b>Module Integration</b>
 
 The weights you generate can be directly integrated into the table cell detection module. You can refer to the Python example code in [Quick Integration](#3-Quick-Integration). Simply replace the model with the path of the model you have trained.
+<<<<<<< HEAD
+
+You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
+=======
+>>>>>>> update docs of benchmark

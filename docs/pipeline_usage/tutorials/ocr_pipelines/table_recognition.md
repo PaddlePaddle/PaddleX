@@ -13,6 +13,9 @@ comments: true
 <b>通用</b><b>表格识别</b><b>产线中包含必选的表格结构识别模块、文本检测模块和文本识别模块，以及可选的版面区域检测模块、文档图像方向分类模块和文本图像矫正模块</b>。
 
 <b>如果您更注重模型的精度，请选择精度较高的模型；如果您更在意模型的推理速度，请选择推理速度较快的模型；如果您关注模型的存储大小，请选择存储体积较小的模型。</b>
+
+<details><summary> 👉模型列表详情</summary>
+
 <p><b>表格识别模块模型：</b></p>
 <table>
 <tr>
@@ -39,7 +42,7 @@ comments: true
 <td>6.9 M</td>
 </tr>
 </table>
-<p><b>注：以上精度指标测量PaddleX 内部自建英文表格识别数据集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
+
 <p><b>文本检测模块模型：</b></p>
 <table>
 <thead>
@@ -71,7 +74,7 @@ comments: true
 </tr>
 </tbody>
 </table>
-<p><b>注：以上精度指标的评估集是 PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中检测包含 500 张图片。以上所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
+
 <p><b>文本识别模块模型：</b></p>
 <table>
 <tr>
@@ -98,7 +101,7 @@ comments: true
 <td>71.2 M</td>
 </tr>
 </table>
-<p><b>注：以上精度指标的评估集是 PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中文本识别包含 1.1w 张图片。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
+
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
@@ -119,7 +122,7 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 </td>
 </tr>
 </table>
-<p><b>注：以上精度指标的评估集是 <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务</a>A榜。 所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
+
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
@@ -138,7 +141,7 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <td rowspan="1">    RepSVTR 文本识别模型是一种基于SVTRv2 的移动端文本识别模型，其在PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务中荣获一等奖，B榜端到端识别精度相比PP-OCRv4提升2.5%，推理速度持平。</td>
 </tr>
 </table>
-<p><b>注：以上精度指标的评估集是 <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务</a>B榜。 所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
+
 <p><b>版面区域检测模块模型（可选）：</b></p>
 <table>
 <thead>
@@ -218,7 +221,7 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 </tr>
 </tbody>
 </table>
-<p><b>注：以上精度指标的评估集是 PaddleOCR 自建的版面区域分析数据集，包含中英文论文、杂志和研报等常见的 1w 张文档类型图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p>
+
 <p><b>文本图像矫正模块模型（可选）：</b></p>
 <table>
 <thead>
@@ -238,7 +241,7 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 </tr>
 </tbody>
 </table>
-<p><b>模型的精度指标测量自 <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet benchmark</a>。</b></p>
+
 <p><b>文档图像方向分类模块模型（可选）：</b></p>
 <table>
 <thead>
@@ -262,7 +265,34 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 </tr>
 </tbody>
 </table>
-<p><b>注：以上精度指标的评估集是自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p>
+
+**测试环境说明：**
+
+- **性能测试环境**
+  - **测试数据集**
+    - 文档图像方向分类模型：PaddleX 自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。
+    - 文本图像矫正模型：<a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet</a>。
+    - 版面区域检测模型：PaddleOCR 自建的版面区域分析数据集，包含中英文论文、杂志和研报等常见的 1w 张文档类型图片。
+    - 表格结构识别模型：PaddleX 内部自建英文表格识别数据集。
+    - 文本检测模型：PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中检测包含 500 张图片。
+    - 中文识别模型： PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中文本识别包含 1.1w 张图片。
+    - ch_SVTRv2_rec：<a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务</a>A榜评估集。
+    - ch_RepSVTR_rec：<a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务</a>B榜评估集。
+    - 英文识别模型：PaddleX 自建的英文数据集。
+    - 多语言识别模型：PaddleX 自建的多语种数据集。
+  - **硬件配置**：
+    - GPU：NVIDIA Tesla T4
+    - CPU：Intel Xeon Gold 6271C @ 2.60GHz
+    - 其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **推理模式说明**
+
+| 模式        | GPU配置                          | CPU配置          | 加速技术组合                                |
+|-------------|----------------------------------|------------------|---------------------------------------------|
+| 常规模式    | FP32精度 / 无TRT加速             | FP32精度 / 8线程       | PaddleInference                             |
+| 高性能模式  | 选择先验精度类型和加速策略的最优组合         | FP32精度 / 8线程       | 选择先验最优后端（Paddle/OpenVINO/TRT等） |
+
+</details>
 
 
 ## 2. 快速开始
@@ -292,145 +322,47 @@ paddlex --pipeline table_recognition \
 
 运行后，会将结果打印到终端上，结果如下：
 
+<details><summary>👉 <b>运行后，得到的结果为：（点击展开）</b></summary>
+
 ```bash
-{'res': {'input_path': 'table_recognition.jpg', 'model_settings': {'use_doc_preprocessor': True, 'use_layout_detection': True, 'use_ocr_model': True}, 'doc_preprocessor_res': {'input_path': '0.jpg', 'model_settings': {'use_doc_orientation_classify': True, 'use_doc_unwarping': True}, 'angle': 0}, 'layout_det_res': {'input_path': None, 'boxes': [{'cls_id': 0, 'label': 'Table', 'score': 0.9196816086769104, 'coordinate': [0, 8.614925, 550.9877, 132]}]}, 'overall_ocr_res': {'input_path': '0.jpg', 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': [array([[232,   0],
-       [318,   1],
-       [318,  24],
-       [232,  21]], dtype=int16), array([[32, 38],
-       [67, 38],
-       [67, 55],
-       [32, 55]], dtype=int16), array([[119,  34],
-       [196,  34],
-       [196,  57],
-       [119,  57]], dtype=int16), array([[222,  29],
-       [396,  31],
-       [396,  60],
-       [222,  58]], dtype=int16), array([[420,  30],
-       [542,  32],
-       [542,  61],
-       [419,  59]], dtype=int16), array([[29, 71],
-       [72, 71],
-       [72, 92],
-       [29, 92]], dtype=int16), array([[287,  72],
-       [329,  72],
-       [329,  93],
-       [287,  93]], dtype=int16), array([[458,  68],
-       [501,  71],
-       [499,  94],
-       [456,  91]], dtype=int16), array([[  9, 101],
-       [ 89, 103],
-       [ 89, 130],
-       [  8, 128]], dtype=int16), array([[139, 105],
-       [172, 105],
-       [172, 126],
-       [139, 126]], dtype=int16), array([[274, 103],
-       [339, 101],
-       [340, 128],
-       [275, 130]], dtype=int16), array([[451, 103],
-       [508, 103],
-       [508, 126],
-       [451, 126]], dtype=int16)], 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], 'text_rec_score_thresh': 0, 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上，没想', '江、江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': [0.9943075180053711, 0.9951075315475464, 0.9907732009887695, 0.9975494146347046, 0.9974043369293213, 0.9983242750167847, 0.991967499256134, 0.9898287653923035, 0.9961177110671997, 0.9975040555000305, 0.9986456632614136, 0.9987970590591431], 'rec_polys': [array([[232,   0],
-       [318,   1],
-       [318,  24],
-       [232,  21]], dtype=int16), array([[32, 38],
-       [67, 38],
-       [67, 55],
-       [32, 55]], dtype=int16), array([[119,  34],
-       [196,  34],
-       [196,  57],
-       [119,  57]], dtype=int16), array([[222,  29],
-       [396,  31],
-       [396,  60],
-       [222,  58]], dtype=int16), array([[420,  30],
-       [542,  32],
-       [542,  61],
-       [419,  59]], dtype=int16), array([[29, 71],
-       [72, 71],
-       [72, 92],
-       [29, 92]], dtype=int16), array([[287,  72],
-       [329,  72],
-       [329,  93],
-       [287,  93]], dtype=int16), array([[458,  68],
-       [501,  71],
-       [499,  94],
-       [456,  91]], dtype=int16), array([[  9, 101],
-       [ 89, 103],
-       [ 89, 130],
-       [  8, 128]], dtype=int16), array([[139, 105],
-       [172, 105],
-       [172, 126],
-       [139, 126]], dtype=int16), array([[274, 103],
-       [339, 101],
-       [340, 128],
-       [275, 130]], dtype=int16), array([[451, 103],
-       [508, 103],
-       [508, 126],
-       [451, 126]], dtype=int16)], 'rec_boxes': array([[232,   0, 318,  24],
-       [ 32,  38,  67,  55],
-       [119,  34, 196,  57],
-       [222,  29, 396,  60],
-       [419,  30, 542,  61],
-       [ 29,  71,  72,  92],
-       [287,  72, 329,  93],
-       [456,  68, 501,  94],
-       [  8, 101,  89, 130],
-       [139, 105, 172, 126],
-       [274, 101, 340, 130],
-       [451, 103, 508, 126]], dtype=int16)}, 'table_res_list': [{'cell_box_list': array([[  8.        ,   9.61492538, 532.        ,  26.61492538],
-       [  3.        ,  27.61492538, 104.        ,  65.61492538],
-       [109.        ,  28.61492538, 215.        ,  66.61492538],
-       [219.        ,  28.61492538, 396.        ,  64.61492538],
-       [396.        ,  29.61492538, 546.        ,  66.61492538],
-       [  1.        ,  65.61492538, 110.        ,  93.61492538],
-       [111.        ,  65.61492538, 215.        ,  94.61492538],
-       [220.        ,  66.61492538, 397.        ,  94.61492538],
-       [398.        ,  67.61492538, 544.        ,  94.61492538],
-       [  2.        ,  98.61492538, 111.        , 131.61492538],
-       [113.        ,  98.61492538, 216.        , 131.61492538],
-       [219.        ,  98.61492538, 400.        , 131.61492538],
-       [403.        ,  99.61492538, 545.        , 130.61492538]]), 'pred_html': '<html><body><table><tr><td colspan="4">CRuncover</td></tr><tr><td>Dres</td><td>连续工作3</td><td>取出来放在网上，没想</td><td>江、江等八大</td></tr><tr><td>Abstr</td><td></td><td>rSrivi</td><td>$709.</td></tr><tr><td>cludingGiv</td><td>2.72</td><td>Ingcubic</td><td>$744.78</td></tr></table></body></html>', 'table_ocr_pred': {'rec_polys': [array([[232,   0],
-       [318,   1],
-       [318,  24],
-       [232,  21]], dtype=int16), array([[32, 38],
-       [67, 38],
-       [67, 55],
-       [32, 55]], dtype=int16), array([[119,  34],
-       [196,  34],
-       [196,  57],
-       [119,  57]], dtype=int16), array([[222,  29],
-       [396,  31],
-       [396,  60],
-       [222,  58]], dtype=int16), array([[420,  30],
-       [542,  32],
-       [542,  61],
-       [419,  59]], dtype=int16), array([[29, 71],
-       [72, 71],
-       [72, 92],
-       [29, 92]], dtype=int16), array([[287,  72],
-       [329,  72],
-       [329,  93],
-       [287,  93]], dtype=int16), array([[458,  68],
-       [501,  71],
-       [499,  94],
-       [456,  91]], dtype=int16), array([[  9, 101],
-       [ 89, 103],
-       [ 89, 130],
-       [  8, 128]], dtype=int16), array([[139, 105],
-       [172, 105],
-       [172, 126],
-       [139, 126]], dtype=int16), array([[274, 103],
-       [339, 101],
-       [340, 128],
-       [275, 130]], dtype=int16), array([[451, 103],
-       [508, 103],
-       [508, 126],
-       [451, 126]], dtype=int16)], 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上，没想', '江、江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': [0.9943075180053711, 0.9951075315475464, 0.9907732009887695, 0.9975494146347046, 0.9974043369293213, 0.9983242750167847, 0.991967499256134, 0.9898287653923035, 0.9961177110671997, 0.9975040555000305, 0.9986456632614136, 0.9987970590591431], 'rec_boxes': [array([232,   0, 318,  24], dtype=int16), array([32, 38, 67, 55], dtype=int16), array([119,  34, 196,  57], dtype=int16), array([222,  29, 396,  60], dtype=int16), array([419,  30, 542,  61], dtype=int16), array([29, 71, 72, 92], dtype=int16), array([287,  72, 329,  93], dtype=int16), array([456,  68, 501,  94], dtype=int16), array([  8, 101,  89, 130], dtype=int16), array([139, 105, 172, 126], dtype=int16), array([274, 101, 340, 130], dtype=int16), array([451, 103, 508, 126], dtype=int16)]}}]}}
+{'res': {'input_path': 'table_recognition.jpg', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True, 'use_ocr_model': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 0, 'label': 'Table', 'score': 0.9922188520431519, 'coordinate': [3.0127392, 0.14648987, 547.5102, 127.72023]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[234,   6],
+        ...,
+        [234,  25]],
+
+       ...,
+
+       [[448, 101],
+        ...,
+        [448, 121]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': array([0.99512607, ..., 0.99844509]), 'rec_polys': array([[[234,   6],
+        ...,
+        [234,  25]],
+
+       ...,
+
+       [[448, 101],
+        ...,
+        [448, 121]]], dtype=int16), 'rec_boxes': array([[234, ...,  25],
+       ...,
+       [448, ..., 121]], dtype=int16)}, 'table_res_list': [{'cell_box_list': array([[  5.01273918, ...,  32.14648987],
+       ...,
+       [405.01273918, ..., 124.14648987]]), 'pred_html': '<html><body><table><tbody><tr><td colspan="4">CRuncover</td></tr><tr><td>Dres</td><td>连续工作3</td><td>取出来放在网上 没想</td><td>江、整江等八大</td></tr><tr><td>Abstr</td><td></td><td>rSrivi</td><td>$709.</td></tr><tr><td>cludingGiv</td><td>2.72</td><td>Ingcubic</td><td>$744.78</td></tr></tbody></table></body></html>', 'table_ocr_pred': {'rec_polys': array([[[234,   6],
+        ...,
+        [234,  25]],
+
+       ...,
+
+       [[448, 101],
+        ...,
+        [448, 121]]], dtype=int16), 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': array([0.99512607, ..., 0.99844509]), 'rec_boxes': array([[234, ...,  25],
+       ...,
+       [448, ..., 121]], dtype=int16)}}]}}
 ```
 运行结果参数说明可以参考[2.2 Python脚本方式](#22-python脚本方式集成)中的结果解释。
 
 可视化结果保存在`save_path`下，其中表格识别的可视化结果如下：
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/03.png"/>
 
+</details>
 
 ### 2.2 Python脚本方式集成
 * 上述命令行是为了快速体验查看效果，一般来说，在项目中，往往需要通过代码集成，您可以通过几行代码即可完成产线的快速推理，推理代码如下：
@@ -514,7 +446,7 @@ for res in output:
 <td>
 <ul>
 <li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
-<li><b>str</b>：如图像文件或者PDF文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件或PDF文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code>(当前不支持目录中包含PDF文件的预测，PDF文件需要指定到具体文件路径)</li>
+<li><b>str</b>：如图像文件或者PDF文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件或PDF文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code>(当前不支持目录中包含PDF文件的预测，PDF文件需要指定到具体文件路径)</li>
 <li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
@@ -561,6 +493,19 @@ for res in output:
 </td>
 <td><code>None</code></td>
 </tr>
+<tr>
+<td><code>use_layout_detection</code></td>
+<td>是否使用版面检测模块</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>；</li>
+<li><b>None</b>：如果设置为<code>None</code>, 将默认使用产线初始化的该参数值，初始化为<code>True</code>；</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+
 <td><code>text_det_limit_side_len</code></td>
 <td>文本检测的图像边长限制</td>
 <td><code>int|None</code></td>
@@ -571,6 +516,7 @@ for res in output:
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_det_limit_type</code></td>
 <td>文本检测的图像边长限制类型</td>
 <td><code>str|None</code></td>
@@ -581,6 +527,7 @@ for res in output:
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_det_thresh</code></td>
 <td>检测像素阈值，输出的概率图中，得分大于该阈值的像素点才会被认为是文字像素点</td>
 <td><code>float|None</code></td>
@@ -589,6 +536,7 @@ for res in output:
 <li><b>float</b>：大于 <code>0</code> 的任意浮点数
     <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.3</code></li></li></ul></td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_det_box_thresh</code></td>
 <td>检测框阈值，检测结果边框内，所有像素点的平均得分大于该阈值时，该结果会被认为是文字区域</td>
 <td><code>float|None</code></td>
@@ -597,6 +545,7 @@ for res in output:
 <li><b>float</b>：大于 <code>0</code> 的任意浮点数
     <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.6</code></li></li></ul></td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_det_unclip_ratio</code></td>
 <td>文本检测扩张系数，使用该方法对文字区域进行扩张，该值越大，扩张的面积越大</td>
 <td><code>float|None</code></td>
@@ -605,6 +554,7 @@ for res in output:
 <li><b>float</b>：大于 <code>0</code> 的任意浮点数
     <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>2.0</code></li></li></ul></td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_rec_score_thresh</code></td>
 <td>文本识别阈值，得分大于该阈值的文本结果会被保留</td>
 <td><code>float|None</code></td>
@@ -613,7 +563,8 @@ for res in output:
 <li><b>float</b>：大于 <code>0</code> 的任意浮点数
     <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.0</code>。即不设阈值</li></li></ul></td>
 <td><code>None</code></td>
-</table>
+
+</tr></table>
 
 （3）对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`xlsx`文件、保存为`HTML`文件、保存为`json`文件的操作:
 
@@ -733,10 +684,10 @@ for res in output:
     - `rec_boxes`: `(numpy.ndarray)` 检测框的矩形边界框数组，shape为(n, 4)，dtype为int16。每一行表示一个矩形框的[x_min, y_min, x_max, y_max]坐标
     ，其中(x_min, y_min)为左上角坐标，(x_max, y_max)为右下角坐标
 
-- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
+- 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
 - 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_ocr_res_img.{your_img_extension}`，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)
-- 调用`save_to_html()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}.html`，如果指定为文件，则直接保存到该文件中。在通用表格识别产线中，将会把图像中表格的HTML形式写入到指定的html文件中。
-- 调用`save_to_xlsx()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}.xlsx`，如果指定为文件，则直接保存到该文件中。在通用表格识别产线中，将会把图像中表格的Excel表格形式写入到指定的xlsx文件中。
+- 调用`save_to_html()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_table_1.html`，如果指定为文件，则直接保存到该文件中。在通用表格识别v2产线中，将会把图像中表格的HTML形式写入到指定的html文件中。
+- 调用`save_to_xlsx()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.xlsx`，如果指定为文件，则直接保存到该文件中。在通用表格识别v2产线中，将会把图像中表格的Excel表格形式写入到指定的xlsx文件中。
 
 * 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
 
@@ -1030,7 +981,7 @@ for res in output:
 <tr>
 <td><code>outputImages</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>输入图像和预测结果图像的键值对。图像为JPEG格式，使用Base64编码。</td>
+<td>参见产线预测结果中的 <code>img</code> 属性说明。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
