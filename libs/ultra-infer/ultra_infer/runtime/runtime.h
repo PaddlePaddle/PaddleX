@@ -119,6 +119,7 @@ private:
   void CreateSophgoNPUBackend();
   void CreatePorosBackend();
   void CreateTVMBackend();
+  void CreateOMBackend();
   std::unique_ptr<BaseBackend> backend_;
   std::vector<FDTensor> input_tensors_;
   std::vector<FDTensor> output_tensors_;
