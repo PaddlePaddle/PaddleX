@@ -319,8 +319,8 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             last_label = None
             seg_start_flag = None
             seg_end_flag = None
-            page_start_flag = None
-            page_end_flag = None
+            page_first_element_seg_start_flag = None
+            page_last_element_seg_end_flag = None
             parsing_res_list = sorted(
                 parsing_res_list,
                 key=lambda x: x.get("sub_index", 999),
@@ -331,10 +331,10 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             ):
                 label = block.get("block_label")
                 seg_start_flag = block.get("seg_start_flag")
-                page_start_flag = (
+                page_first_element_seg_start_flag = (
                     seg_start_flag
-                    if (page_start_flag is None and label == "text")
-                    else page_start_flag
+                    if (page_first_element_seg_start_flag is None)
+                    else page_first_element_seg_start_flag
                 )
                 handler = handlers.get(label)
                 if handler:
@@ -366,15 +366,22 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                         )
                     last_label = label
                     seg_end_flag = block.get("seg_end_flag")
-            page_end_flag = seg_end_flag
+            page_last_element_seg_end_flag = seg_end_flag
 
-            return markdown_content, (page_start_flag, page_end_flag)
+            return markdown_content, (
+                page_first_element_seg_start_flag,
+                page_last_element_seg_end_flag,
+            )
 
         markdown_info = dict()
-        markdown_info["markdown_texts"], (page_start_flag, page_end_flag) = (
-            _format_data(self)
+        markdown_info["markdown_texts"], (
+            page_first_element_seg_start_flag,
+            page_last_element_seg_end_flag,
+        ) = _format_data(self)
+        markdown_info["page_continuation_flags"] = (
+            page_first_element_seg_start_flag,
+            page_last_element_seg_end_flag,
         )
-        markdown_info["page_content_flag"] = (page_start_flag, page_end_flag)
         markdown_info["markdown_images"] = dict()
         for block in self["parsing_res_list"]:
             if block["block_label"] in ["image", "chart"]:
