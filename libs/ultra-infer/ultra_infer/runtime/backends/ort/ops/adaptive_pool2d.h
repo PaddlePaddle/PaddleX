@@ -49,6 +49,8 @@ public:
 
   void Compute(OrtKernelContext *context);
 
+  OrtStatusPtr ComputeV2(OrtKernelContext *context);
+
   void CpuAdaptivePool(const std::vector<int64_t> &input_size,
                        const std::vector<int64_t> &output_size,
                        const float *input_data, float *output_data);
@@ -59,6 +61,12 @@ struct AdaptivePool2dOp
   explicit AdaptivePool2dOp(const char *provider) : provider_(provider) {}
   void *CreateKernel(OrtApi api, const OrtKernelInfo *info) const {
     return new AdaptivePool2dKernel(api, info, provider_);
+  }
+
+  OrtStatusPtr CreateKernelV2(OrtApi api, const OrtKernelInfo *info,
+                              void **op_kernel) const {
+    *op_kernel = new AdaptivePool2dKernel(api, info, provider_);
+    return nullptr;
   }
 
   const char *GetName() const { return "AdaptivePool2d"; }

@@ -156,6 +156,11 @@ int MultiClassNmsKernel::NMSForEachSample(
   return num_det;
 }
 
+OrtStatusPtr MultiClassNmsKernel::ComputeV2(OrtKernelContext *context) {
+  Compute(context);
+  return nullptr;
+}
+
 void MultiClassNmsKernel::Compute(OrtKernelContext *context) {
 #if ORT_API_VERSION >= 14
   Ort::KernelContext ort_context{context};
