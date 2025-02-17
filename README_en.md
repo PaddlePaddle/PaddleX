@@ -10,7 +10,7 @@
 </p>
 
 <h4 align="center">
-  <a href=#-why-paddlex->🌟 Features</a> | <a href=https://aistudio.baidu.com/application/center/app?tag=%E5%85%A8%E9%83%A8&flod=86503>>🌐  Online Experience</a>｜<a href=#️-quick-start>🚀  Quick Start</a> | <a href=https://addlepaddle.github.io/PaddleX/latest/en/index.html> 📖 Documentation</a> | <a href=#-what-can-paddlex-do> 🔥Capabilities</a> | <a href=https://paddlepaddle.github.io/PaddleX/latest/en/support_list/models_list.html> 📋 Models</a>
+  <a href=#-why-paddlex->🌟 Features</a> | <a href=https://aistudio.baidu.com/application/center/app?tag=%E5%85%A8%E9%83%A8&flod=86503>>🌐  Online Experience</a>｜<a href=#️-quick-start>🚀  Quick Start</a> | <a href=https://paddlepaddle.github.io/PaddleX/latest/en/index.html> 📖 Documentation</a> | <a href=#-what-can-paddlex-do> 🔥Capabilities</a> | <a href=https://paddlepaddle.github.io/PaddleX/latest/en/support_list/models_list.html> 📋 Models</a>
 </h4>
 
 <h5 align="center">
@@ -210,7 +210,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute.html">Pedestrian Attribute Recognition</a></td>
+        <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute_recognition.html">Pedestrian Attribute Recognition</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/387978/webUI?source=appCenter">Link</a></td>
         <td>✅</td>
         <td>🚧</td>
@@ -220,7 +220,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
     </tr>
     <tr>
-        <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/vehicle_attribute.html">Vehicle Attribute Recognition</a></td>
+        <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/vehicle_attribute_recognition.html">Vehicle Attribute Recognition</a></td>
         <td><a href="https://aistudio.baidu.com/community/app/387979/webUI?source=appCenter">Link</a></td>
         <td>✅</td>
         <td>🚧</td>
@@ -674,8 +674,8 @@ To use the Python script for other pipelines, simply adjust the `pipeline` param
 | Image Anomaly Detection       | `image_classification` | [Image Anomaly Detection Pipeline Python Script Usage Instructions](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/image_anomaly_detection.html) |
 | Image Recognition       | `PP-ShiTuV2`                | [Image Recognition Pipeline Python Script Usage Instructions](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/general_image_recognition.html)                              |
 | Face Recognition       | `face_recognition`                | [Face Recognition Pipeline Python Script Usage Instructions](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/face_recognition.html)                              |
-| Pedestrian Attribute Recognition       | `pedestrian_attribute`                | [Pedestrian Attribute Recognition Pipeline Python Script Usage Instructions](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute.html)                              |
-|Vehicle Attribute Recognition       | `vehicle_attribute`                | [Vehicle Attribute Recognition Pipeline Python Script Usage Instructions](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/vehicle_attribute.html)                              |
+| Pedestrian Attribute Recognition       | `pedestrian_attribute`                | [Pedestrian Attribute Recognition Pipeline Python Script Usage Instructions](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute_recognition.html)                              |
+|Vehicle Attribute Recognition       | `vehicle_attribute`                | [Vehicle Attribute Recognition Pipeline Python Script Usage Instructions](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/vehicle_attribute_recognition.html)                              |
 | 3D Multi-modal Fusion Detection | `3d_bev_detection` | [Instructions for Using the 3D Multi-modal Fusion Detection Pipeline Python Script](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/3d_bev_detection.html#222-python-script-integration) |
 | Human Keypoint Detection | `human_keypoint_detection` | [Instructions for Using the Human Keypoint Detection Pipeline Python Script](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.html#222-python-script-integration) |
 | Open Vocabulary Detection | `open_vocabulary_detection` | [Instructions for Using the Open Vocabulary Detection Pipeline Python Script](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_detection.html#212-python-script-integration) |
