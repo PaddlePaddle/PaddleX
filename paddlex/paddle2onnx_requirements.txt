@@ -1,1 +1,1 @@
-paddle2onnx>=1.3
+paddle2onnx>=2

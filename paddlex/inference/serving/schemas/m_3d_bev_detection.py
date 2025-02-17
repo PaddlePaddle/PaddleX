@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict, Final, List, Optional
+from typing import Final, List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from typing_extensions import Annotated
 
 from ..infra.models import PrimaryOperations
-from .shared import object_detection
 
 __all__ = [
     "INFER_ENDPOINT",
@@ -27,24 +27,21 @@ __all__ = [
     "PRIMARY_OPERATIONS",
 ]
 
-INFER_ENDPOINT: Final[str] = "/open-vocabulary-detection"
+INFER_ENDPOINT: Final[str] = "/bev-3d-object-detection"
 
 
 class InferRequest(BaseModel):
-    image: str
-    prompt: str
-    thresholds: Optional[Dict[str, float]] = None
+    tar: str
 
 
 class DetectedObject(BaseModel):
-    bbox: object_detection.BoundingBox
-    categoryName: str
+    bbox: Annotated[List[float], Field(min_length=9, max_length=9)]
+    categoryId: int
     score: float
 
 
 class InferResult(BaseModel):
     detectedObjects: List[DetectedObject]
-    image: Optional[str] = None
 
 
 PRIMARY_OPERATIONS: Final[PrimaryOperations] = {

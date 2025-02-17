@@ -15,7 +15,6 @@
 from typing import Dict, Final, List, Optional
 
 from pydantic import BaseModel
-from typing_extensions import Literal
 
 from ..infra.models import DataInfo, PrimaryOperations
 from .shared import ocr
@@ -28,6 +27,9 @@ __all__ = [
     "BUILD_VECTOR_STORE_ENDPOINT",
     "BuildVectorStoreRequest",
     "BuildVectorStoreResult",
+    "INVOKE_MLLM_ENDPOINT",
+    "InvokeMLLMRequest",
+    "InvokeMLLMResult",
     "CHAT_ENDPOINT",
     "ChatRequest",
     "ChatResult",
@@ -44,13 +46,13 @@ class AnalyzeImagesRequest(ocr.BaseInferRequest):
     useSealRecognition: Optional[bool] = None
     useTableRecognition: Optional[bool] = None
     textDetLimitSideLen: Optional[int] = None
-    textDetLimitType: Optional[Literal["min", "max"]] = None
+    textDetLimitType: Optional[str] = None
     textDetThresh: Optional[float] = None
     textDetBoxThresh: Optional[float] = None
     textDetUnclipRatio: Optional[float] = None
     textRecScoreThresh: Optional[float] = None
     sealDetLimitSideLen: Optional[int] = None
-    sealDetLimitType: Optional[Literal["min", "max"]] = None
+    sealDetLimitType: Optional[str] = None
     sealDetThresh: Optional[float] = None
     sealDetBoxThresh: Optional[float] = None
     sealDetUnclipRatio: Optional[float] = None
@@ -65,8 +67,6 @@ class LayoutParsingResult(BaseModel):
 
 class AnalyzeImagesResult(BaseModel):
     layoutParsingResults: List[LayoutParsingResult]
-    # `visualInfo` is made a separate field to facilitate its use in subsequent
-    # steps.
     visualInfo: List[dict]
     dataInfo: DataInfo
 
@@ -77,11 +77,25 @@ BUILD_VECTOR_STORE_ENDPOINT: Final[str] = "/chatocr-vector"
 class BuildVectorStoreRequest(BaseModel):
     visualInfo: List[dict]
     minCharacters: Optional[int] = None
-    llmRequestInterval: Optional[float] = None
+    blockSize: Optional[int] = None
+    retrieverConfig: Optional[dict] = None
 
 
 class BuildVectorStoreResult(BaseModel):
     vectorInfo: dict
+
+
+INVOKE_MLLM_ENDPOINT: Final[str] = "/chatocr-mllm"
+
+
+class InvokeMLLMRequest(BaseModel):
+    image: str
+    keyList: List[str]
+    mllmChatBotConfig: Optional[dict] = None
+
+
+class InvokeMLLMResult(BaseModel):
+    mllmPredictInfo: dict
 
 
 CHAT_ENDPOINT: Final[str] = "/chatocr-chat"
@@ -95,11 +109,7 @@ class ChatRequest(BaseModel):
     minCharacters: Optional[int] = None
     textTaskDescription: Optional[str] = None
     textOutputFormat: Optional[str] = None
-    # Is the "Str" in the name unnecessary? Keep the names consistent with the
-    # parameters of the wrapped function though.
     textRulesStr: Optional[str] = None
-    # Should this be just "text" instead of "text content", given that there is
-    # no container?
     textFewShotDemoTextContent: Optional[str] = None
     textFewShotDemoKeyValueList: Optional[str] = None
     tableTaskDescription: Optional[str] = None
@@ -107,6 +117,10 @@ class ChatRequest(BaseModel):
     tableRulesStr: Optional[str] = None
     tableFewShotDemoTextContent: Optional[str] = None
     tableFewShotDemoKeyValueList: Optional[str] = None
+    mllmPredictInfo: Optional[dict] = None
+    mllmIntegrationStrategy: Optional[str] = None
+    chatBotConfig: Optional[dict] = None
+    retrieverConfig: Optional[dict] = None
 
 
 class ChatResult(BaseModel):
@@ -123,6 +137,11 @@ PRIMARY_OPERATIONS: Final[PrimaryOperations] = {
         BUILD_VECTOR_STORE_ENDPOINT,
         BuildVectorStoreRequest,
         BuildVectorStoreResult,
+    ),
+    "invokeMllm": (
+        INVOKE_MLLM_ENDPOINT,
+        InvokeMLLMRequest,
+        InvokeMLLMResult,
     ),
     "chat": (CHAT_ENDPOINT, ChatRequest, ChatResult),
 }

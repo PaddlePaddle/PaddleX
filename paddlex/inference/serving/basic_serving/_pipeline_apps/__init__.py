@@ -21,7 +21,12 @@ from ...infra.config import create_app_config
 
 
 def _pipeline_name_to_mod_name(pipeline_name: str) -> str:
-    return pipeline_name.lower().replace("-", "_")
+    if not pipeline_name:
+        raise ValueError("Empty pipeline name")
+    mod_name = pipeline_name.lower().replace("-", "_")
+    if mod_name[0].isdigit():
+        return "m_" + mod_name
+    return mod_name
 
 
 # XXX: A dynamic approach is used here for writing fewer lines of code, at the
