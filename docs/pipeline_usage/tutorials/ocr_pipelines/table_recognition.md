@@ -313,6 +313,8 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 
 ```bash
 paddlex --pipeline table_recognition \
+        --use_doc_orientation_classify=False \
+        --use_doc_unwarping=False \
         --input table_recognition.jpg \
         --save_path ./output \
         --device gpu:0
@@ -1136,9 +1138,11 @@ PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多�
 
 ```bash
 paddlex --pipeline table_recognition \
+        --use_doc_orientation_classify=False \
+        --use_doc_unwarping=False \
         --input table_recognition.jpg \
         --save_path ./output \
-        --device npu:0
+        --device gpu:0
 ```
 
 当然，您也可以在 Python 脚本中 `create_pipeline()` 时或者 `predict()` 时指定硬件设备。
