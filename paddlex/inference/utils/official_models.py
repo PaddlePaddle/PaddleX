@@ -343,7 +343,7 @@ class OfficialModelsDict(dict):
         url = super().__getitem__(key)
         save_dir = Path(CACHE_DIR) / "official_models"
         logging.info(
-            f"Using official model ({key}), the model files will be be automatically downloaded and saved in {save_dir}."
+            f"Using official model ({key}), the model files will be automatically downloaded and saved in {save_dir}."
         )
         download_and_extract(url, save_dir, f"{key}", overwrite=False)
         return save_dir / f"{key}"

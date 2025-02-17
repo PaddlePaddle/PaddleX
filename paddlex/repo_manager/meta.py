@@ -33,7 +33,7 @@ REPO_META = {
     "PaddleSeg": {
         "git_path": "/PaddlePaddle/PaddleSeg.git",
         "platform": "github",
-        "branch": "develop",
+        "branch": "release/2.10",
         "pkg_name": "paddleseg",
         "lib_name": "paddleseg",
         "pdx_pkg_name": "PaddleSeg_api",
@@ -44,7 +44,7 @@ REPO_META = {
     "PaddleClas": {
         "git_path": "/PaddlePaddle/PaddleClas.git",
         "platform": "github",
-        "branch": "develop",
+        "branch": "release/2.6",
         "pkg_name": "paddleclas",
         "lib_name": "paddleclas",
         "pdx_pkg_name": "PaddleClas_api",
@@ -56,7 +56,7 @@ REPO_META = {
     "PaddleDetection": {
         "git_path": "/PaddlePaddle/PaddleDetection.git",
         "platform": "github",
-        "branch": "develop",
+        "branch": "release/2.8.1",
         "pkg_name": "paddledet",
         "lib_name": "ppdet",
         "pdx_pkg_name": "PaddleDetection_api",

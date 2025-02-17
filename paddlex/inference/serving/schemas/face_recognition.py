@@ -61,7 +61,7 @@ ADD_IMAGES_TO_INDEX_ENDPOINT: Final[str] = "/face-recognition-index-add"
 
 class AddImagesToIndexRequest(BaseModel):
     imageLabelPairs: List[ImageLabelPair]
-    indexKey: Optional[str] = None
+    indexKey: str
 
 
 class AddImagesToIndexResult(BaseModel):
@@ -73,7 +73,7 @@ REMOVE_IMAGES_FROM_INDEX_ENDPOINT: Final[str] = "/face-recognition-index-remove"
 
 class RemoveImagesFromIndexRequest(BaseModel):
     ids: List[int]
-    indexKey: Optional[str] = None
+    indexKey: str
 
 
 class RemoveImagesFromIndexResult(BaseModel):

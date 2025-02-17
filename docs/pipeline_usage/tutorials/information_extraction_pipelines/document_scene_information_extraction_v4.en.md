@@ -85,8 +85,6 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 
 > ❗ The above list includes the <b>3 core models</b> that are key supported by the text recognition module. The module actually supports a total of <b>11 full models</b>, including several predefined models with different categories. The complete model list is as follows:
 
-<details><summary> 👉 Details of Model List</summary>
-
 * <b>Table Layout Detection Model</b>
 <table>
 <thead>
@@ -407,7 +405,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 The pre-trained pipelines provided by PaddleX allow for quick experience of their effects. You can locally use Python to experience the effects of the PP-ChatOCRv4-doc pipeline.
 
 ### 2.1 Local Experience
-Before using the PP-ChatOCRv4-doc pipeline locally, ensure you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Tutorial](../../../installation/installation_en.md).
+Before using the PP-ChatOCRv4-doc pipeline locally, ensure you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
 
 Before performing model inference, you first need to prepare the API key for the large language model. PP-ChatOCRv4 supports large model services on the [Baidu Cloud Qianfan Platform](https://console.bce.baidu.com/qianfan/ais/console/onlineService) or the locally deployed standard OpenAI interface. If using the Baidu Cloud Qianfan Platform, refer to [Authentication and Authorization](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Um2wxbaps_en) to obtain the API key. If using a locally deployed large model service, refer to the [PaddleNLP Large Model Deployment Documentation](https://github.com/PaddlePaddle/PaddleNLP/tree/develop/llm) for deployment of the dialogue interface and vectorization interface for large models, and fill in the corresponding `base_url` and `api_key`. If you need to use a multimodal large model for data fusion, refer to the OpenAI service deployment in the [PaddleMIX Model Documentation](https://github.com/PaddlePaddle/PaddleMIX/tree/develop/paddlemix/examples/ppdocbee) for multimodal large model deployment, and fill in the corresponding `base_url` and `api_key`.
 
@@ -1968,7 +1966,7 @@ print(result_chat["chatResult"])
 
 📱 **Edge Deployment**: Edge deployment is a method where computing and data processing functions are placed on the user's device itself. The device can directly process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed instructions on edge deployment, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.md).
 You can choose an appropriate deployment method for your pipeline based on your needs and proceed with subsequent AI application integration.
-``````markdown
+
 ## 4. Custom Development
 If the default model weights provided by the Document Scene Information Extraction v4 Pipeline do not meet your expectations in terms of accuracy or speed in your specific scenario, you can try to further **fine-tune** the existing models using **data from your specific domain or application scenario** to enhance the recognition performance of the General Table Recognition Pipeline in your context.
 
@@ -2069,4 +2067,4 @@ pipeline = create_pipeline(
     )
 ```
 
-If you want to use the General Document Scene Information Extraction v4 Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide_en.md).
+If you want to use the General Document Scene Information Extraction v4 Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).

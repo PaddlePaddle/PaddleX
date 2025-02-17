@@ -15,7 +15,7 @@
 from typing import Dict, Final, List, Optional, Union
 
 from pydantic import BaseModel, Field
-from typing_extensions import Annotated, Literal
+from typing_extensions import Annotated
 
 from ..infra.models import DataInfo, PrimaryOperations
 from .shared import ocr
@@ -34,18 +34,19 @@ INFER_ENDPOINT: Final[str] = "/layout-parsing"
 class InferRequest(ocr.BaseInferRequest):
     useDocOrientationClassify: Optional[bool] = None
     useDocUnwarping: Optional[bool] = None
+    useTextlineOrientation: Optional[bool] = None
     useGeneralOcr: Optional[bool] = None
     useSealRecognition: Optional[bool] = None
     useTableRecognition: Optional[bool] = None
     useFormulaRecognition: Optional[bool] = None
     textDetLimitSideLen: Optional[int] = None
-    textDetLimitType: Optional[Literal["min", "max"]] = None
+    textDetLimitType: Optional[str] = None
     textDetThresh: Optional[float] = None
     textDetBoxThresh: Optional[float] = None
     textDetUnclipRatio: Optional[float] = None
     textRecScoreThresh: Optional[float] = None
     sealDetLimitSideLen: Optional[int] = None
-    sealDetLimitType: Optional[Literal["min", "max"]] = None
+    sealDetLimitType: Optional[str] = None
     sealDetThresh: Optional[float] = None
     sealDetBoxThresh: Optional[float] = None
     sealDetUnclipRatio: Optional[float] = None
@@ -55,7 +56,7 @@ class InferRequest(ocr.BaseInferRequest):
     layoutUnclipRatio: Optional[
         Union[float, Annotated[List[float], Field(min_length=2, max_length=2)]]
     ] = None
-    layoutMergeBboxesMode: Optional[Literal["union", "large", "small"]] = None
+    layoutMergeBboxesMode: Optional[str] = None
 
 
 class LayoutParsingResult(BaseModel):
