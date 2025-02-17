@@ -42,9 +42,9 @@ from ..infra.config import AppConfig
 from ..infra.models import NoResultResponse
 from ..infra.utils import call_async, generate_log_id
 
-_PipelineT = TypeVar("_PipelineT", bound=BasePipeline)
-_P = ParamSpec("_P")
-_R = TypeVar("_R")
+PipelineT = TypeVar("PipelineT", bound=BasePipeline)
+P = ParamSpec("P")
+R = TypeVar("R")
 
 
 class _Error(TypedDict):
@@ -64,14 +64,14 @@ def _is_error(obj: object) -> TypeGuard[_Error]:
 # for type hinting. However, I would stick with the current design, as it does
 # not introduce runtime overhead at the moment and may prove useful in the
 # future.
-class PipelineWrapper(Generic[_PipelineT]):
-    def __init__(self, pipeline: _PipelineT) -> None:
+class PipelineWrapper(Generic[PipelineT]):
+    def __init__(self, pipeline: PipelineT) -> None:
         super().__init__()
         self._pipeline = pipeline
         self._lock = asyncio.Lock()
 
     @property
-    def pipeline(self) -> _PipelineT:
+    def pipeline(self) -> PipelineT:
         return self._pipeline
 
     async def infer(self, *args: Any, **kwargs: Any) -> List[Any]:
@@ -89,19 +89,17 @@ class PipelineWrapper(Generic[_PipelineT]):
 
         return await self.call(_infer)
 
-    async def call(
-        self, func: Callable[_P, _R], *args: _P.args, **kwargs: _P.kwargs
-    ) -> _R:
+    async def call(self, func: Callable[P, R], *args: P.args, **kwargs: P.kwargs) -> R:
         async with self._lock:
             return await call_async(func, *args, **kwargs)
 
 
-class AppContext(Generic[_PipelineT]):
+class AppContext(Generic[PipelineT]):
     def __init__(self, *, config: AppConfig) -> None:
         super().__init__()
         self._config = config
         self.extra: Dict[str, Any] = {}
-        self._pipeline: Optional[PipelineWrapper[_PipelineT]] = None
+        self._pipeline: Optional[PipelineWrapper[PipelineT]] = None
         self._aiohttp_session: Optional[aiohttp.ClientSession] = None
 
     @property
@@ -109,13 +107,13 @@ class AppContext(Generic[_PipelineT]):
         return self._config
 
     @property
-    def pipeline(self) -> PipelineWrapper[_PipelineT]:
+    def pipeline(self) -> PipelineWrapper[PipelineT]:
         if not self._pipeline:
             raise AttributeError("`pipeline` has not been set.")
         return self._pipeline
 
     @pipeline.setter
-    def pipeline(self, val: PipelineWrapper[_PipelineT]) -> None:
+    def pipeline(self, val: PipelineWrapper[PipelineT]) -> None:
         self._pipeline = val
 
     @property
@@ -130,11 +128,11 @@ class AppContext(Generic[_PipelineT]):
 
 
 def create_app(
-    *, pipeline: _PipelineT, app_config: AppConfig, app_aiohttp_session: bool = True
-) -> Tuple[fastapi.FastAPI, AppContext[_PipelineT]]:
+    *, pipeline: PipelineT, app_config: AppConfig, app_aiohttp_session: bool = True
+) -> Tuple[fastapi.FastAPI, AppContext[PipelineT]]:
     @contextlib.asynccontextmanager
     async def _app_lifespan(app: fastapi.FastAPI) -> AsyncGenerator[None, None]:
-        ctx.pipeline = PipelineWrapper[_PipelineT](pipeline)
+        ctx.pipeline = PipelineWrapper[PipelineT](pipeline)
         if app_aiohttp_session:
             async with aiohttp.ClientSession(
                 cookie_jar=aiohttp.DummyCookieJar()
@@ -146,7 +144,7 @@ def create_app(
 
     # Should we control API versions?
     app = fastapi.FastAPI(lifespan=_app_lifespan)
-    ctx = AppContext[_PipelineT](config=app_config)
+    ctx = AppContext[PipelineT](config=app_config)
     app.state.context = ctx
 
     @app.get("/health", operation_id="checkHealth")

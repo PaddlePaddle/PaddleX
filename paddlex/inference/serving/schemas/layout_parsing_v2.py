@@ -23,40 +23,57 @@ from .shared import ocr
 __all__ = [
     "INFER_ENDPOINT",
     "InferRequest",
-    "SealRecResult",
+    "MarkdownData",
+    "LayoutParsingResult",
     "InferResult",
     "PRIMARY_OPERATIONS",
 ]
 
-INFER_ENDPOINT: Final[str] = "/seal-recognition"
+INFER_ENDPOINT: Final[str] = "/layout-parsing"
 
 
 class InferRequest(ocr.BaseInferRequest):
     useDocOrientationClassify: Optional[bool] = None
     useDocUnwarping: Optional[bool] = None
-    useLayoutDetection: Optional[bool] = None
-    layoutThreshold: Optional[float] = None
-    layoutNms: Optional[bool] = None
-    layoutUnclipRatio: Optional[
-        Union[float, Annotated[List[float], Field(min_length=2, max_length=2)]]
-    ] = None
-    layoutMergeBboxesMode: Optional[str] = None
+    useTextlineOrientation: Optional[bool] = None
+    useGeneralOcr: Optional[bool] = None
+    useSealRecognition: Optional[bool] = None
+    useTableRecognition: Optional[bool] = None
+    useFormulaRecognition: Optional[bool] = None
+    textDetLimitSideLen: Optional[int] = None
+    textDetLimitType: Optional[str] = None
+    textDetThresh: Optional[float] = None
+    textDetBoxThresh: Optional[float] = None
+    textDetUnclipRatio: Optional[float] = None
+    textRecScoreThresh: Optional[float] = None
     sealDetLimitSideLen: Optional[int] = None
     sealDetLimitType: Optional[str] = None
     sealDetThresh: Optional[float] = None
     sealDetBoxThresh: Optional[float] = None
     sealDetUnclipRatio: Optional[float] = None
     sealRecScoreThresh: Optional[float] = None
+    layoutThreshold: Optional[float] = None
+    layoutNms: Optional[bool] = None
+    layoutUnclipRatio: Optional[
+        Union[float, Annotated[List[float], Field(min_length=2, max_length=2)]]
+    ] = None
+    layoutMergeBboxesMode: Optional[str] = None
 
 
-class SealRecResult(BaseModel):
+class MarkdownData(BaseModel):
+    text: str
+    images: Dict[str, str]
+
+
+class LayoutParsingResult(BaseModel):
     prunedResult: dict
+    markdown: MarkdownData
     outputImages: Optional[Dict[str, str]] = None
     inputImage: Optional[str] = None
 
 
 class InferResult(BaseModel):
-    sealRecResults: List[SealRecResult]
+    layoutParsingResults: List[LayoutParsingResult]
     dataInfo: DataInfo
 
 

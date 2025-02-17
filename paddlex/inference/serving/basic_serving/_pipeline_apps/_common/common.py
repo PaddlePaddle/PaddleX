@@ -17,7 +17,6 @@ from typing import Dict, Optional, Tuple, Union
 
 import cv2
 import numpy as np
-from numpy.typing import ArrayLike
 from PIL.Image import Image
 
 from ....infra import utils as serving_utils
@@ -41,7 +40,7 @@ def prune_result(result: dict) -> dict:
 
 
 def postprocess_image(
-    image: ArrayLike,
+    image: np.ndarray,
     log_id: str,
     filename: str,
     *,
@@ -59,7 +58,6 @@ def postprocess_image(
 
     key = f"{log_id}/{filename}"
     ext = os.path.splitext(filename)[1]
-    image = np.asarray(image)
     h, w = image.shape[0:2]
     if max_img_size is not None:
         if w > max_img_size[1] or h > max_img_size[0]:
@@ -78,7 +76,7 @@ def postprocess_image(
 
 
 def postprocess_images(
-    images: Dict[str, Union[Image, ArrayLike]],
+    images: Dict[str, Union[Image, np.ndarray]],
     log_id: str,
     filename_template: str = "{key}.jpg",
     file_storage: Optional[Storage] = None,

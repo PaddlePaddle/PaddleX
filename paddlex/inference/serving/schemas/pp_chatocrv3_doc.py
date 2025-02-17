@@ -15,7 +15,6 @@
 from typing import Dict, Final, List, Optional
 
 from pydantic import BaseModel
-from typing_extensions import Literal
 
 from ..infra.models import DataInfo, PrimaryOperations
 from .shared import ocr
@@ -44,13 +43,13 @@ class AnalyzeImagesRequest(ocr.BaseInferRequest):
     useSealRecognition: Optional[bool] = None
     useTableRecognition: Optional[bool] = None
     textDetLimitSideLen: Optional[int] = None
-    textDetLimitType: Optional[Literal["min", "max"]] = None
+    textDetLimitType: Optional[str] = None
     textDetThresh: Optional[float] = None
     textDetBoxThresh: Optional[float] = None
     textDetUnclipRatio: Optional[float] = None
     textRecScoreThresh: Optional[float] = None
     sealDetLimitSideLen: Optional[int] = None
-    sealDetLimitType: Optional[Literal["min", "max"]] = None
+    sealDetLimitType: Optional[str] = None
     sealDetThresh: Optional[float] = None
     sealDetBoxThresh: Optional[float] = None
     sealDetUnclipRatio: Optional[float] = None
@@ -77,7 +76,8 @@ BUILD_VECTOR_STORE_ENDPOINT: Final[str] = "/chatocr-vector"
 class BuildVectorStoreRequest(BaseModel):
     visualInfo: List[dict]
     minCharacters: Optional[int] = None
-    llmRequestInterval: Optional[float] = None
+    blockSize: Optional[int] = None
+    retrieverConfig: Optional[dict] = None
 
 
 class BuildVectorStoreResult(BaseModel):
@@ -107,6 +107,8 @@ class ChatRequest(BaseModel):
     tableRulesStr: Optional[str] = None
     tableFewShotDemoTextContent: Optional[str] = None
     tableFewShotDemoKeyValueList: Optional[str] = None
+    chatBotConfig: Optional[dict] = None
+    retrieverConfig: Optional[dict] = None
 
 
 class ChatResult(BaseModel):

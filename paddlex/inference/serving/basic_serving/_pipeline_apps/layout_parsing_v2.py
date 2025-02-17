@@ -19,7 +19,7 @@ from fastapi import FastAPI
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
 from ...infra.models import ResultResponse
-from ...schemas.layout_parsing import INFER_ENDPOINT, InferRequest, InferResult
+from ...schemas.layout_parsing_v2 import INFER_ENDPOINT, InferRequest, InferResult
 from .._app import create_app, primary_operation
 from ._common import common
 from ._common import ocr as ocr_common
@@ -75,6 +75,17 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
         layout_parsing_results: List[Dict[str, Any]] = []
         for i, (img, item) in enumerate(zip(images, result)):
             pruned_res = common.prune_result(item.json["res"])
+            md_data = item.markdown
+            md_text = md_data["markdown_texts"]
+            md_imgs = await serving_utils.call_async(
+                common.postprocess_images,
+                md_data["markdown_images"],
+                log_id,
+                filename_template=f"markdown_{i}/{{key}}",
+                file_storage=ctx.extra["file_storage"],
+                return_urls=ctx.extra["return_img_urls"],
+                max_img_size=ctx.extra["max_output_img_size"],
+            )
             if ctx.config.visualize:
                 imgs = {
                     "input_img": img,
@@ -94,6 +105,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             layout_parsing_results.append(
                 dict(
                     prunedResult=pruned_res,
+                    markdown=dict(text=md_text, images=md_imgs),
                     outputImages=(
                         {k: v for k, v in imgs.items() if k != "input_img"}
                         if imgs

@@ -765,9 +765,6 @@ The prediction result for each sample is of type `dict`, containing two fields: 
 
 Of course, you can also obtain the layout parsing results through `layout_parsing_result`, which contains tables, text, images, etc., contained in the file or image, and supports printing, saving as an image, and saving as a `json` file:
 
-```markdown
-```
-``````markdown
 ```python
 ......
 for res in visual_predict_res:
@@ -1139,6 +1136,562 @@ Below are the parameters and their descriptions for the `chat()` method:
 
 </details>
 
+## 3. Development Integration/Deployment
+If the pipeline meets your requirements for inference speed and accuracy in production, you can proceed directly with development integration/deployment.
+
+If you need to apply the pipeline directly in your Python project, you can refer to the sample code in [2.2 Local Experience](#22-local-experience).
+
+Additionally, PaddleX provides three other deployment methods, detailed as follows:
+
+🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides a high-performance inference plugin designed to deeply optimize model inference and pre/post-processing, achieving significant speedups in the end-to-end process. For detailed instructions on high-performance inference, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.md).
+
+☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating the inference functionality as a service, clients can access these services through network requests to obtain inference results. PaddleX supports multiple service-oriented deployment solutions for pipelines. For detailed instructions on service-oriented deployment, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving.md).
+
+Below are the API references for basic service-oriented deployment and multi-language service invocation examples:
+
+<details><summary>API Reference</summary>
+<p>For the main operations provided by the service:</p>
+<ul>
+<li>The HTTP request method is POST.</li>
+<li>Both the request body and response body are JSON data (JSON objects).</li>
+<li>When the request is successfully processed, the response status code is <code>200</code>, and the response body has the following attributes:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>UUID of the request.</td>
+</tr>
+<tr>
+<td><code>errorCode</code></td>
+<td><code>integer</code></td>
+<td>Error code. Fixed as <code>0</code>.</td>
+</tr>
+<tr>
+<td><code>errorMsg</code></td>
+<td><code>string</code></td>
+<td>Error description. Fixed as <code>"Success"</code>.</td>
+</tr>
+<tr>
+<td><code>result</code></td>
+<td><code>object</code></td>
+<td>Operation result.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>When the request is not successfully processed, the response body has the following attributes:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>UUID of the request.</td>
+</tr>
+<tr>
+<td><code>errorCode</code></td>
+<td><code>integer</code></td>
+<td>Error code. Same as the response status code.</td>
+</tr>
+<tr>
+<td><code>errorMsg</code></td>
+<td><code>string</code></td>
+<td>Error description.</td>
+</tr>
+</tbody>
+</table>
+<p>The main operations provided by the service are as follows:</p>
+<ul>
+<li><b><code>analyzeImages</code></b></li>
+</ul>
+<p>Uses computer vision models to analyze images, obtain OCR, table recognition results, etc., and extract key information from the images.</p>
+<p><code>POST /chatocr-visual</code></p>
+<ul>
+<li>Attributes of the request body:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>file</code></td>
+<td><code>string</code></td>
+<td>URL of an image file or PDF file accessible to the server, or Base64 encoded result of the content of the above file types. For PDF files exceeding 10 pages, only the content of the first 10 pages will be used.</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>fileType</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>File type. <code>0</code> represents a PDF file, <code>1</code> represents an image file. If this attribute is not present in the request body, the file type will be inferred based on the URL.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>use_doc_orientation_classify</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useDocUnwarping</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>use_doc_unwarping</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useGeneralOcr</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>use_general_ocr</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useSealRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>use_seal_recognition</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useTableRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>use_table_recognition</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>text_det_limit_side_len</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>text_det_limit_type</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>text_det_thresh</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>text_det_box_thresh</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>text_det_unclip_ratio</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>text_rec_score_thresh</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>seal_det_limit_side_len</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>seal_det_limit_type</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>seal_det_thresh</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>seal_det_box_thresh</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>seal_det_unclip_ratio</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>seal_rec_score_thresh</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>When the request is successfully processed, the <code>result</code> of the response body has the following attributes:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>layoutParsingResults</code></td>
+<td><code>array</code></td>
+<td>Analysis results obtained using computer vision models. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file in sequence.</td>
+</tr>
+<tr>
+<td><code>visualInfo</code></td>
+<td><code>array</code></td>
+<td>Key information in the image, which can be used as input for other operations.</td>
+</tr>
+<tr>
+<td><code>dataInfo</code></td>
+<td><code>object</code></td>
+<td>Input data information.</td>
+</tr>
+</tbody>
+</table>
+<p>Each element in <code>layoutParsingResults</code> is an <code>object</code> with the following attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>A simplified version of the <code>res</code> field in the JSON representation of the results generated by the pipeline's <code>predict</code> method, with the <code>input_path</code> field removed.</td>
+</tr>
+<tr>
+<td><code>outputImages</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>img</code> in the pipeline's visual prediction results.</td>
+</tr>
+<tr>
+<td><code>inputImage</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Input image. The image is in JPEG format and encoded using Base64.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><b><code>buildVectorStore</code></b></li>
+</ul>
+<p>Builds a vector database.</p>
+<p><code>POST /chatocr-vector</code></p>
+<ul>
+<li>Attributes of the request body:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>visualInfo</code></td>
+<td><code>array</code></td>
+<td>Key information in the image. Provided by the <code>analyzeImages</code> operation.</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>minCharacters</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>Minimum data length to enable the vector database.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>blockSize</code></td>
+<td><code>int</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>block_size</code> in the pipeline's <code>build_vector</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>retrieverConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>retriever_config</code> in the pipeline's <code>build_vector</code> method.</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>When the request is successfully processed, the <code>result</code> of the response body has the following attributes:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vectorInfo</code></td>
+<td><code>object</code></td>
+<td>Serialized result of the vector database, which can be used as input for other operations.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><b><code>chat</code></b></li>
+</ul>
+<p>Interacts with large language models to extract key information using them.</p>
+<p><code>POST /chatocr-chat</code></p>
+<ul>
+<li>Attributes of the request body:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>keyList</code></td>
+<td><code>array</code></td>
+<td>List of keywords.</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>visualInfo</code></td>
+<td><code>object</code></td>
+<td>Key information in the image. Provided by the <code>analyzeImages</code> operation.</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>useVectorRetrieval</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>use_vector_retrieval</code> in the pipeline's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>vectorInfo</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Serialized result of the vector database. Provided by the <code>buildVectorStore</code> operation.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>minCharacters</code></td>
+<td><code>integer</code></td>
+<td>Minimum data length to enable the vector database.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textTaskDescription</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>text_task_description</code> in the pipeline's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textOutputFormat</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>text_output_format</code> in the pipeline's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textRulesStr</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>text_rules_str</code> in the pipeline's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textFewShotDemoTextContent</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>text_few_shot_demo_text_content</code> in the pipeline's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textFewShotDemoKeyValueList</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>text_few_shot_demo_key_value_list</code> in the pipeline's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableTaskDescription</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>table_task_description</code> in the pipeline's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableOutputFormat</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>table_output_format</code> in the pipeline's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableRulesStr</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>table_rules_str</code> in the pipeline's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableFewShotDemoTextContent</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>table_few_shot_demo_text_content</code> in the pipeline's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableFewShotDemoKeyValueList</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>table_few_shot_demo_key_value_list</code> in the pipeline's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>chatBotConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>chat_bot_config</code> in the pipeline's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>retrieverConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>retriever_config</code> in the pipeline's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>When the request is successfully processed, the <code>result</code> of the response body has the following attributes:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>chatResult</code></td>
+<td><code>object</code></td>
+<td>Key information extraction result.</td>
+</tr>
+</tbody>
+</table></details>
+<details><summary>Multi-language Service Invocation Examples</summary>
+<details>
+<summary>Python</summary>
+
+<pre><code class="language-python">import base64
+import pprint
+import sys
+
+import requests
+
+
+API_BASE_URL = "http://0.0.0.0:8080"
+
+file_path = "./demo.jpg"
+keys = ["Name"]
+
+with open(file_path, "rb") as file:
+    file_bytes = file.read()
+    file_data = base64.b64encode(file_bytes).decode("ascii")
+
+payload = {
+    "file": file_data,
+    "fileType": 1,
+}
+resp_visual = requests.post(url=f"{API_BASE_URL}/chatocr-visual", json=payload)
+if resp_visual.status_code != 200:
+    print(
+        f"Request to chatocr-visual failed with status code {resp_visual.status_code}.",
+        file=sys.stderr,
+    )
+    pprint.pp(resp_visual.json())
+    sys.exit(1)
+result_visual = resp_visual.json()["result"]
+
+for i, res in enumerate(result_visual["layoutParsingResults"]):
+    print(res["prunedResult"])
+    for img_name, img in res["outputImages"].items():
+        img_path = f"{img_name}_{i}.jpg"
+        with open(img_path, "wb") as f:
+            f.write(base64.b64decode(img))
+        print(f"Output image saved at {img_path}")
+
+payload = {
+    "visualInfo": result_visual["visualInfo"],
+}
+resp_vector = requests.post(url=f"{API_BASE_URL}/chatocr-vector", json=payload)
+if resp_vector.status_code != 200:
+    print(
+        f"Request to chatocr-vector failed with status code {resp_vector.status_code}.",
+        file=sys.stderr,
+    )
+    pprint.pp(resp_vector.json())
+    sys.exit(1)
+result_vector = resp_vector.json()["result"]
+
+payload = {
+    "keyList": keys,
+    "visualInfo": result_visual["visualInfo"],
+    "useVectorRetrieval": True,
+    "vectorInfo": result_vector["vectorInfo"],
+}
+
+resp_chat = requests.post(url=f"{API_BASE_URL}/chatocr-chat", json=payload)
+if resp_chat.status_code != 200:
+    print(
+        f"Request to chatocr-chat failed with status code {resp_chat.status_code}.",
+        file=sys.stderr,
+    )
+    pprint.pp(resp_chat.json())
+    sys.exit(1)
+result_chat = resp_chat.json()["result"]
+print("Final result:")
+print(result_chat["chatResult"])
+</code></pre>
+<b>Note</b>: Please fill in your API key and secret key at `API_KEY` and `SECRET_KEY`.</details>
+</details>
+<br/>
+
+📱 **Edge Deployment**: Edge deployment is a method where computing and data processing functions are placed on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed instructions on edge deployment, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.md).
+You can choose the appropriate deployment method for your pipeline based on your needs, and proceed with subsequent AI application integration.
+
 ## 4. Custom Development
 
 If the default model weights provided by the PP-ChatOCRv3-doc Pipeline do not meet your requirements in terms of accuracy or speed for your specific scenario, you can attempt to further <b>fine-tune</b> the existing models using <b>your own domain-specific or application-specific data</b> to enhance the recognition performance of the general table recognition pipeline in your scenario.
@@ -1192,9 +1745,7 @@ At this point, if you wish to switch the hardware to Ascend NPU, simply modify t
 from paddlex import create_pipeline
 pipeline = create_pipeline(
     pipeline="PP-ChatOCRv3-doc",
-    llm_name="ernie-3.5",
-    llm_params={"api_type": "qianfan", "ak": "", "sk": ""},
-    device="npu:0" # gpu:0 --> npu:0
+    device="npu:0" # gpu:0 -->npu:0
     )
 ```
 

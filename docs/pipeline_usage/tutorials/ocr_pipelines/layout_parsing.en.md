@@ -82,8 +82,6 @@ The <b>General Layout Parsing Pipeline</b> includes modules for table structure 
 
 > ❗ The above list includes the <b>3 core models</b> that are key supported by the text recognition module. The module actually supports a total of <b>11 full models</b>, including several predefined models with different categories. The complete model list is as follows:
 
-<details><summary> 👉 Details of Model List</summary>
-
 * <b>Table Layout Detection Model</b>
 <table>
 <thead>
@@ -1279,7 +1277,7 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>outputImages</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>A key-value pair of the input image and the prediction result image. The images are in JPEG format and encoded in Base64.</td>
+<td>See the description of the <code>img</code> attribute in the result of the pipeline prediction. The images are in JPEG format and encoded in Base64.</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
