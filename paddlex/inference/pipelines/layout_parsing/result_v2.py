@@ -252,7 +252,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     if "." in content_value
                     else 1
                 )
-                return f"{'#' * level} {content_value}".replace("-\n", "").replace(
+                return f"#{'#' * level} {content_value}".replace("-\n", "").replace(
                     "\n",
                     " ",
                 )
@@ -331,7 +331,24 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                         label == last_label == "text"
                         and seg_start_flag == seg_end_flag == False
                     ):
-                        markdown_content += " " + handler()
+                        last_char_of_markdown = (
+                            markdown_content[-1] if markdown_content else ""
+                        )
+                        first_char_of_handler = handler()[0] if handler() else ""
+                        last_is_chinese_char = (
+                            re.match(r"[\u4e00-\u9fff]", last_char_of_markdown)
+                            if last_char_of_markdown
+                            else False
+                        )
+                        first_is_chinese_char = (
+                            re.match(r"[\u4e00-\u9fff]", first_char_of_handler)
+                            if first_char_of_handler
+                            else False
+                        )
+                        if not (last_is_chinese_char or first_is_chinese_char):
+                            markdown_content += " " + handler()
+                        else:
+                            markdown_content += handler()
                     else:
                         markdown_content += "\n\n" + handler()
                     last_label = label
