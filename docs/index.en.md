@@ -12,11 +12,10 @@ hide:
 
 <p align="center">
     <a href=""><img src="https://img.shields.io/badge/License-Apache%202-red.svg"></a>
-    <a href=""><img src="https://img.shields.io/badge/Python-3.8%2C%203.9%2C%203.10-blue.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/Python-3.8~3.12-blue.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/OS-Linux%2C%20Windows%2C%20Mac-orange.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/Hardware-CPU%2C%20GPU%2C%20XPU%2C%20NPU%2C%20MLU%2C%20DCU-yellow.svg"></a>
 </p>
-
 
 
 ## 🔍 Introduction
@@ -100,24 +99,25 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 ## 🛠️ Installation
 
 !!! warning
-    Please ensure you have a basic <b>Python runtime environment</b> before installing PaddleX (Note: Currently supports Python 3.8 to Python 3.10, with more Python versions being adapted).
+    Before installing PaddleX, please ensure that you have a basic <b>Python runtime environment</b> (Note: Currently supports <b>Python 3.8 to Python 3.12</b>). The PaddleX 3.0-rc0 version depends on PaddlePaddle version <b>3.0.0rc0</b>.
 
 ### Installing PaddlePaddle
 
-=== "CPU"
+=== "CPU version"
     ```bash
     python -m pip install paddlepaddle==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
     ```
-=== "CUDA 11.8"
+=== "GPU version, requiring a GPU driver version ≥450.80.02 (Linux) or ≥452.39 (Windows)."
     ```bash
     python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
     ```
-=== "CUDA 12.3"
+=== "GPU version, requiring a GPU driver version ≥545.23.06 (Linux) or ≥545.84 (Windows)."
     ```bash
     python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
     ```
 
-> ❗ For more PaddlePaddle Wheel versions, please refer to the [PaddlePaddle official website](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation./docs/zh/install/pip/linux-pip.html).
+!!! tip
+    There is no need to pay attention to the CUDA version on the physical machine; just focus on the GPU driver version. For more information on PaddlePaddle Wheel versions, please refer to the [PaddlePaddle Official Website](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation./docs/zh/install/pip/linux-pip.html).
 
 
 ### Installing PaddleX
@@ -136,11 +136,11 @@ A single command can quickly experience the production line effect, with a unifi
 paddlex --pipeline [production line name] --input [input image] --device [running device]
 ```
 
-You only need to specify three parameters:
+Each pipeline in PaddleX corresponds to specific parameters. You can find detailed parameter descriptions in the respective production line documentation. Each production line requires three essential parameters:
 
-* `pipeline`: The name of the production line
-* `input`: The local path or URL of the input file to be processed (e.g., an image)
-* `device`: The GPU number used (for example, `gpu:0` indicates using the 0th GPU), or you can choose to use CPU (`cpu`)
+* `pipeline`: The name of the production line or the path to the production line configuration file.
+* `input`: The local path, directory, or URL of the input file to be processed (e.g., an image).
+* `device`: The hardware device and its index to be used (e.g., `gpu:0` indicates using the first GPU). You can also choose to use NPU (`npu:0`), XPU (`xpu:0`), CPU (`cpu`), etc.
 
 
 !!! example "OCR-related Pipelines CLI"

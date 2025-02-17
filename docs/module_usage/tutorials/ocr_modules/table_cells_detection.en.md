@@ -34,7 +34,21 @@ The table cell detection module is a key component of table recognition tasks, r
 </tr>
 </table>
 
-<p><b>Note: The above accuracy metrics are measured from the internal table cell detection dataset of PaddleX. All model GPU inference times are based on an NVIDIA Tesla T4 machine, with precision type FP32. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32. Considering that the table cell detection module needs to be integrated into the table recognition production line v2 for practical applications, the table cell detection results output from the table recognition production line v2 are used to calculate the mAP accuracy.</b></p>
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**: PaddleX Internal Self-built Evaluation Dataset.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package first. For details, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
@@ -241,7 +255,7 @@ The following is the explanation of the methods, parameters, etc.:
 </table>
 
 * Additionally, it also supports obtaining visualized images with results and prediction results through attributes, as follows:
-  
+
 <table>
 <thead>
 <tr>
@@ -482,12 +496,17 @@ Similar to model training and evaluation, the following steps are required:
 Other related parameters can be set by modifying the fields under `Global` and `Predict` in the `.yaml` configuration file. For details, please refer to [PaddleX General Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
 
 #### 4.4.2 Model Integration
-The model can be directly integrated into the PaddleX production line or into your own project.
+The model can be directly integrated into the PaddleX pipeline or into your own project.
 
-1.<b>Production Line Integration</b>
+1.<b>pipeline Integration</b>
 
-The table cell detection module can be integrated into the PaddleX production line [General Table Recognition Production Line v2](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.en.md). Simply replacing the model path will complete the model update for the table cell detection module in the relevant production line. In production line integration, you can deploy your model using high-performance deployment and service-oriented deployment.
+The table cell detection module can be integrated into the PaddleX pipeline [General Table Recognition pipeline v2](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.en.md). Simply replacing the model path will complete the model update for the table cell detection module in the relevant pipeline. In pipeline integration, you can deploy your model using high-performance deployment and service-oriented deployment.
 
 2.<b>Module Integration</b>
 
 The weights you generate can be directly integrated into the table cell detection module. You can refer to the Python example code in [Quick Integration](#3-Quick-Integration). Simply replace the model with the path of the model you have trained.
+<<<<<<< HEAD
+
+You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
+=======
+>>>>>>> update docs of benchmark

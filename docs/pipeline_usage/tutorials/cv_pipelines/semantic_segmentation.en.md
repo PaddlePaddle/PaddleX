@@ -192,7 +192,24 @@ Semantic segmentation is a computer vision technique that aims to assign each pi
 </tr>
 </tbody>
 </table>
-<p><b>The accuracy metrics of the SeaFormer series models are measured on the <a href="https://groups.csail.mit.edu/vision/datasets/ADE20K/">ADE20k</a> dataset. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p></details>
+
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**: <a href="https://groups.csail.mit.edu/vision/datasets/ADE20K/">ADE20k</a> dataset and <a href="https://www.cityscapes-dataset.com/">Cityscapes</a>dataset.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+
+</details>
 
 ## 2. Quick Start
 PaddleX's pre-trained model pipelines can be quickly experienced. You can experience the effects of the General Semantic Segmentation Pipeline online or locally using command line or Python.
@@ -571,6 +588,12 @@ Below are the API references for basic service deployment and examples of multi-
 <td>The URL of the image file accessible by the server or the Base64 encoded content of the image file.</td>
 <td>Yes</td>
 </tr>
+<tr>
+<td><code>targetSize</code></td>
+<td><code>integer</code> | <code>array</code> | <code>null</code></td>
+<td>Refer to the <code>target_size</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -597,7 +620,7 @@ Below are the API references for basic service deployment and examples of multi-
 </tr>
 <tr>
 <td><code>image</code></td>
-<td><code>string</code></td>
+<td><code>string</code>| <code>null</code></td>
 <td>Semantic segmentation result image. The image is in JPEG format and encoded using Base64.</td>
 </tr>
 </tbody>
@@ -1010,4 +1033,4 @@ paddlex --pipeline semantic_segmentation \
         --device npu:0
 ```
 
-If you want to use the general semantic segmentation production line on a wider variety of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+If you want to use the general semantic segmentation pipeline on a wider variety of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).

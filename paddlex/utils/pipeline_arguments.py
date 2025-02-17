@@ -570,4 +570,5 @@ PIPELINE_ARGUMENTS = {
         },
     ],
     "3d_bev_detection": None,
+    "multilingual_speech_recognition": None,
 }
