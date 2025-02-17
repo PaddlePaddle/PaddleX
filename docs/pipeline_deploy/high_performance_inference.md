@@ -300,17 +300,53 @@ python -m pip install ../../python/dist/ultra_infer*.whl
 ```
 
 编译时可根据需求修改如下选项：
-| 选项 | 说明 |
-|:------------------------|:------------------------------------|
-| http_proxy             | 在下载三方库时使用具体的http代理，默认空 |
-| PYTHON_VERSION | Python版本，默认 `3.10.0` |
-| WITH_GPU | 是否编译支持Nvidia-GPU，默认 `ON` |
-| ENABLE_ORT_BACKEND      | 是否编译集成ONNX Runtime后端，默认 `ON` |
-| ENABLE_PADDLE_BACKEND   | 是否编译集成Paddle Inference后端，默认 `ON` |
-| ENABLE_TRT_BACKEND   | 是否编译集成TensorRT后端，默认 `ON` |
-| ENABLE_OPENVINO_BACKEND | 是否编译集成OpenVINO后端(仅支持CPU)，默认 `ON` |
-| ENABLE_VISION           | 是否编译集成视觉模型的部署模块，默认 `ON` |
-| ENABLE_TEXT             | 是否编译集成文本NLP模型的部署模块，默认 `ON` |
+
+<table>
+    <thead>
+        <tr>
+            <th>选项</th>
+            <th>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>http_proxy</td>
+            <td>在下载三方库时使用具体的http代理，默认空</td>
+        </tr>
+        <tr>
+            <td>PYTHON_VERSION</td>
+            <td>Python版本，默认 <code>3.10.0</code></td>
+        </tr>
+        <tr>
+            <td>WITH_GPU</td>
+            <td>是否编译支持Nvidia-GPU，默认 <code>ON</code></td>
+        </tr>
+        <tr>
+            <td>ENABLE_ORT_BACKEND</td>
+            <td>是否编译集成ONNX Runtime后端，默认 <code>ON</code></td>
+        </tr>
+        <tr>
+            <td>ENABLE_PADDLE_BACKEND</td>
+            <td>是否编译集成Paddle Inference后端，默认 <code>ON</code></td>
+        </tr>
+        <tr>
+            <td>ENABLE_TRT_BACKEND</td>
+            <td>是否编译集成TensorRT后端，默认 <code>ON</code></td>
+        </tr>
+        <tr>
+            <td>ENABLE_OPENVINO_BACKEND</td>
+            <td>是否编译集成OpenVINO后端(仅支持CPU)，默认 <code>ON</code></td>
+        </tr>
+        <tr>
+            <td>ENABLE_VISION</td>
+            <td>是否编译集成视觉模型的部署模块，默认 <code>ON</code></td>
+        </tr>
+        <tr>
+            <td>ENABLE_TEXT</td>
+            <td>是否编译集成文本NLP模型的部署模块，默认 <code>ON</code></td>
+        </tr>
+    </tbody>
+</table>
 
 ## 3. 支持使用高性能推理插件的产线与模型
 

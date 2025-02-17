@@ -80,7 +80,6 @@ class ImageBatchSampler(BaseBatchSampler):
         if not isinstance(inputs, list):
             inputs = [inputs]
 
-        batch = {"instances": [], "input_paths": [], "page_indexes": []}
         batch = ImgInstance()
         for input in inputs:
             if isinstance(input, np.ndarray):

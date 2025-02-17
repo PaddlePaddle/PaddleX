@@ -33,7 +33,22 @@ comments: true
 </tr>
 </tbody>
 </table>
-<b>注：以上精度指标的评估集是自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
+
+**测试环境说明：**
+
+- **性能测试环境**
+  - **测试数据集**：PaddleX 自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。
+  - **硬件配置**：
+    - GPU：NVIDIA Tesla T4
+    - CPU：Intel Xeon Gold 6271C @ 2.60GHz
+    - 其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **推理模式说明**
+
+| 模式        | GPU配置                          | CPU配置          | 加速技术组合                                |
+|-------------|----------------------------------|------------------|---------------------------------------------|
+| 常规模式    | FP32精度 / 无TRT加速             | FP32精度 / 8线程       | PaddleInference                             |
+| 高性能模式  | 选择先验精度类型和加速策略的最优组合         | FP32精度 / 8线程       | 选择先验最优后端（Paddle/OpenVINO/TRT等） |
 
 ## 三、快速集成
 
@@ -58,6 +73,7 @@ for res in output:
 
 运行结果参数含义如下：
 - `input_path`：表示输入图片的路径。
+- `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
 - `class_ids`：表示预测结果的类别 id，含有两个类别，即0度和180度。
 - `scores`：表示预测结果的置信度。
 - `label_names`：表示预测结果的类别名。
@@ -413,7 +429,7 @@ python main.py -c paddlex/configs/modules/textline_orientation/PP-LCNet_x0_25_te
 
 1.<b>产线集成</b>
 
-文本行方向分类模块可以集成的PaddleX产线有[通用OCR产线](../../../pipeline_usage/tutorials/ocr_pipelines/OCR.md)和[文档场景信息抽取v3产线（PP-ChatOCRv3-doc）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.md)，只需要替换模型路径即可完成文本行方向分类模块的模型更新。
+文本行方向分类模块可以集成的PaddleX产线有[通用OCR产线](../../../pipeline_usage/tutorials/ocr_pipelines/OCR.md)、[通用版面解析产线](../../../pipeline_usage/tutorials/ocr_pipelines/layout_parsing.md)、[通用版面解析v2产线](../../../pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.md)和[文档场景信息抽取v3产线（PP-ChatOCRv3-doc）](../../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.md)，只需要替换模型路径即可完成文本行方向分类模块的模型更新。
 
 2.<b>模块集成</b>
 

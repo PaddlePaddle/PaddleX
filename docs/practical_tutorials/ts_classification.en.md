@@ -309,7 +309,7 @@ SubModules:
   TSClassification:
     module_name: ts_classification
     model_name: TimesNet_cls
-    model_dir: ./output/inference  # 此处替换为您训练后得到的模型权重本地路径
+    model_dir: ./output/inference  # Fine-tuned model weights path
     batch_size: 1
 ```
 
@@ -321,8 +321,8 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="my_path/ts_classification.yaml")
 output = pipeline.predict("pre_ts.csv")
 for res in output:
-    res.print() # 打印预测的结构化输出
-    res.save_to_csv("./output/") # 保存csv格式结果
+    res.print() 
+    res.save_to_csv("./output/")
 ```
 
 For more parameters, please refer to the [Time Series Classification Pipeline Usage Tutorial](../pipeline_usage/tutorials/time_series_pipelines/time_series_classification.en.md)

@@ -107,7 +107,7 @@ SubPipelines:
             module_name: text_recognition
             model_name: PP-OCRv4_server_rec
             model_dir: null
-            batch_size: 1
+            batch_size: 6
             score_thresh: 0
 
       TableRecognition:

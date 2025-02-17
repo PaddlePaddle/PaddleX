@@ -32,7 +32,23 @@ BEVFusion is a multi-modal 3D object detection model that fuses surround camera 
 <tr>
 </table>
 
-<p>Note: The above accuracy metrics are for the <a href="https://www.nuscenes.org/nuscenes">nuscenes</a> validation set with mAP(0.5:0.95) and NDS 60.9, with an accuracy type of FP32.</p></details>
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**: <a href="https://www.nuscenes.org/nuscenes">nuscenes</a> validation set
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+
+</details>
 
 ## 2. Quick Start
 
@@ -142,7 +158,7 @@ for res in output:
     res.visualize(save_path="./output/", show=True) ## 3D result visualization. If the runtime environment has a graphical interface, set `show=True`; otherwise, set it to `False`.
 ```
 
-<b>Note: </b>  
+<b>Note: </b>
 1、To visualize 3D detection results, you need to install the open3d package first. The installation command is as follows:
 ```bash
 pip install open3d
@@ -271,6 +287,177 @@ In addition, PaddleX also provides three other deployment methods, detailed as f
 🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have stringent performance indicators (especially response speed) for deployment strategies to ensure efficient system operation and smooth user experience. Therefore, PaddleX provides a high-performance inference plugin aimed at deeply optimizing model inference and pre/post-processing to achieve significant speedups in the end-to-end process. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.md).
 
 ☁️ <b>Service Deployment</b>: Service deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports multiple pipeline service deployment solutions. For detailed pipeline service deployment procedures, please refer to the [PaddleX Service Deployment Guide](../../../pipeline_deploy/serving.md).
+
+<details><summary>API Reference</summary>
+
+<p>For the main operations provided by the service:</p>
+<ul>
+<li>The HTTP request method is POST.</li>
+<li>Both the request body and response body are JSON data (JSON objects).</li>
+<li>When the request is processed successfully, the response status code is <code>200</code>, and the attributes of the response body are as follows:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>The UUID of the request.</td>
+</tr>
+<tr>
+<td><code>errorCode</code></td>
+<td><code>integer</code></td>
+<td>Error code. Fixed as <code>0</code>.</td>
+</tr>
+<tr>
+<td><code>errorMsg</code></td>
+<td><code>string</code></td>
+<td>Error message. Fixed as <code>"Success"</code>.</td>
+</tr>
+<tr>
+<td><code>result</code></td>
+<td><code>object</code></td>
+<td>The result of the operation.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>When the request is not processed successfully, the attributes of the response body are as follows:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>The UUID of the request.</td>
+</tr>
+<tr>
+<td><code>errorCode</code></td>
+<td><code>integer</code></td>
+<td>Error code. Same as the response status code.</td>
+</tr>
+<tr>
+<td><code>errorMsg</code></td>
+<td><code>string</code></td>
+<td>Error message.</td>
+</tr>
+</tbody>
+</table>
+<p>The main operations provided by the service are as follows:</p>
+<ul>
+<li><b><code>infer</code></b></li>
+</ul>
+<p>Perform 3D multi-modal fusion detection.</p>
+<p><code>POST /bev-3d-object-detection</code></p>
+<ul>
+<li>The attributes of the request body are as follows:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tar</code></td>
+<td><code>string</code></td>
+<td>The URL or path of the tar file accessible by the server.</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>When the request is processed successfully, the <code>result</code> in the response body has the following attributes:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>detectedObjects</code></td>
+<td><code>array</code></td>
+<td>Information about the location, category, and other details of the detected objects.</td>
+</tr>
+</tbody>
+</table>
+<p>Each element in <code>detectedObjects</code> is an <code>object</code> with the following attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bbox</code></td>
+<td><code>array</code></td>
+<td>A list of length 9: 0: x-coordinate of the center point, 1: y-coordinate of the center point, 2: z-coordinate of the center point, 3: width of the detection box, 4: length of the detection box, 5: height of the detection box, 6: rotation angle, 7: velocity in the x-direction of the coordinate system, 8: velocity in the y-direction of the coordinate system</td>
+</tr>
+<tr>
+<td><code>categoryId</code></td>
+<td><code>integer</code></td>
+<td>The category ID of the detected object.</td>
+</tr>
+<tr>
+<td><code>score</code></td>
+<td><code>number</code></td>
+<td>The score of the detected object.</td>
+</tr>
+</tbody>
+</table>
+</details>
+
+<details><summary>Multi-language Service Invocation Examples</summary>
+
+<details>
+<summary>Python</summary>
+
+<pre><code class="language-python">
+import requests
+
+API_URL = &quot;http://localhost:8080/bev-3d-object-detection&quot; # Service URL
+tar_path = &quot;./nuscenes_demo_infer.tar&quot;
+
+payload = {&quot;tar&quot;: tar_path}
+
+# Call the API
+response = requests.post(API_URL, json=payload)
+
+# Process the response data
+assert response.status_code == 200
+result = response.json()[&quot;result&quot;]
+with open(output_image_path, &quot;wb&quot;) as file:
+    file.write(base64.b64decode(result[&quot;image&quot;]))
+print(f&quot;Output image saved at {output_image_path}&quot;)
+print(&quot;Detected objects:&quot;)
+print(result[&quot;detectedObjects&quot;])
+</code></pre></details>
+</details>
+<br/>
 
 📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing functions on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.md).
 

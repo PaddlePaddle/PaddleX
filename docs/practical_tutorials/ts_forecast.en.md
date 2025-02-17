@@ -491,7 +491,7 @@ SubModules:
   TSForecast:
     module_name: ts_forecast
     model_name: ./output/inference
-    model_dir: null # 此处替换为您训练后得到的模型权重本地路径
+    model_dir: null # fine-tuned model path
     batch_size: 1
 ```
 

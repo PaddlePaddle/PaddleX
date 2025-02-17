@@ -2,9 +2,9 @@
 comments: true
 ---
 
-# Multilingual Speech Recognition Production Line User Guide
+# Multilingual Speech Recognition pipeline User Guide
 
-## 1. Introduction to Multilingual Speech Recognition Production Line
+## 1. Introduction to Multilingual Speech Recognition pipeline
 Speech recognition is an advanced tool that can automatically convert spoken languages into corresponding text or commands. This technology plays an important role in various fields such as intelligent customer service, voice assistants, and meeting records. Multilingual speech recognition supports automatic language detection and recognition of multiple languages.
 
 <p><b>Multilingual Speech Recognition Models (Optional):</b></p>
@@ -56,14 +56,14 @@ Speech recognition is an advanced tool that can automatically convert spoken lan
  </table>
 
 ## 2. Quick Start
-PaddleX supports experiencing the multilingual speech recognition production line locally using the command line or Python.
+PaddleX supports experiencing the multilingual speech recognition pipeline locally using the command line or Python.
 
-Before using the multilingual speech recognition production line locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+Before using the multilingual speech recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 
 ### 2.1 Local Experience
 
 #### 2.1.1 Command Line Experience
-You can quickly experience the effect of the document image preprocessing production line with a single command. Use the [example audio](https://paddlespeech.bj.bcebos.com/PaddleAudio/zh.wav) and replace `--input` with the local path for prediction.
+You can quickly experience the effect of the document image preprocessing pipeline with a single command. Use the [example audio](https://paddlespeech.bj.bcebos.com/PaddleAudio/zh.wav) and replace `--input` with the local path for prediction.
 
 ```bash
 paddlex --pipeline multilingual_speech_recognition \
@@ -84,7 +84,7 @@ The explanation of the result parameters can refer to the result explanation in 
 
 #### 2.1.2 Integration with Python Script
 
-The above command line is for quickly experiencing and viewing the effect. Generally speaking, in a project, it is often necessary to integrate through code. You can complete the rapid inference of the production line with just a few lines of code. The inference code is as follows:
+The above command line is for quickly experiencing and viewing the effect. Generally speaking, in a project, it is often necessary to integrate through code. You can complete the rapid inference of the pipeline with just a few lines of code. The inference code is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -262,7 +262,7 @@ In the above Python script, the following steps are executed:
 
 - The prediction result obtained by the `json` attribute is a dict type of data, with content consistent with the content saved by calling the `save_to_json()` method.
 
-In addition, you can obtain the multilingual_speech_recognition production line configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
+In addition, you can obtain the multilingual_speech_recognition pipeline configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
 
 ```
 paddlex --get_pipeline_config multilingual_speech_recognition --save_path ./my_path
@@ -283,7 +283,7 @@ for res in output:
     res.save_to_json(save_path="./output/")
 ```
 
-<b>Note:</b> The parameters in the configuration file are the initialization parameters for the production line. If you want to change the initialization parameters of the <code>multilingual_speech_recognition</code> production line, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in a configuration file, simply specify the path of the configuration file with <code>--pipeline</code>.
+<b>Note:</b> The parameters in the configuration file are the initialization parameters for the pipeline. If you want to change the initialization parameters of the <code>multilingual_speech_recognition</code> pipeline, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in a configuration file, simply specify the path of the configuration file with <code>--pipeline</code>.
 
 <details><summary>Multilingual Service Call Examples</summary>
 
@@ -648,6 +648,236 @@ print_r($result[&quot;categories&quot;]);
 📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on the user's device, allowing it to process data locally without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed procedures on edge deployment, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
 You can choose the appropriate method to deploy the model pipeline according to your needs and proceed with subsequent AI application integration.
 
+## 3. Development Integration/Deployment
+
+If the pipeline meets your requirements for inference speed and accuracy, you can directly proceed with development integration/deployment.
+
+If you need to apply the pipeline directly in your Python project, you can refer to the example code in [2.2.2 Python Script Method](#222-python脚本方式集成).
+
+In addition, PaddleX also provides three other deployment methods, which are detailed as follows:
+
+🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have strict performance requirements for deployment strategies, especially in terms of response speed, to ensure the efficient operation of the system and the smoothness of the user experience. To this end, PaddleX provides a high-performance inference plugin, which aims to deeply optimize the performance of model inference and pre/post-processing to achieve significant acceleration of the end-to-end process. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
+
+☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports multiple pipeline service-oriented deployment solutions. For detailed pipeline service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving.en.md).
+
+Below are the API references for basic service-oriented deployment and examples of multi-language service calls:
+
+<details><summary>API Reference</summary>
+
+<p>For the main operations provided by the service:</p>
+<ul>
+<li>The HTTP request method is POST.</li>
+<li>Both the request body and response body are JSON data (JSON objects).</li>
+<li>When the request is processed successfully, the response status code is <code>200</code>, and the properties of the response body are as follows:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>The UUID of the request.</td>
+</tr>
+<tr>
+<td><code>errorCode</code></td>
+<td><code>integer</code></td>
+<td>Error code. Fixed as <code>0</code>.</td>
+</tr>
+<tr>
+<td><code>errorMsg</code></td>
+<td><code>string</code></td>
+<td>Error message. Fixed as <code>"Success"</code>.</td>
+</tr>
+<tr>
+<td><code>result</code></td>
+<td><code>object</code></td>
+<td>The result of the operation.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>When the request is not processed successfully, the properties of the response body are as follows:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logId</code></td>
+<td><code>string</code></td>
+<td>The UUID of the request.</td>
+</tr>
+<tr>
+<td><code>errorCode</code></td>
+<td><code>integer</code></td>
+<td>Error code. Same as the response status code.</td>
+</tr>
+<tr>
+<td><code>errorMsg</code></td>
+<td><code>string</code></td>
+<td>Error message.</td>
+</tr>
+</tbody>
+</table>
+<p>The main operations provided by the service are as follows:</p>
+<ul>
+<li><b><code>infer</code></b></li>
+</ul>
+<p>Perform multilingual speech recognition on audio.</p>
+<p><code>POST /multilingual-speech-recognition</code></p>
+
+<ul>
+<li>The properties of the request body are as follows:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>audio</code></td>
+<td><code>string</code></td>
+<td>The URL or path of the audio file accessible by the server.</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>When the request is processed successfully, the <code>result</code> of the response body has the following properties:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text</code></td>
+<td><code>string</code></td>
+<td>The text result of speech recognition.</td>
+</tr>
+<tr>
+<td><code>segments</code></td>
+<td><code>array</code></td>
+<td>The result text with timestamps.</td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td><code>string</code></td>
+<td>The recognized language.</td>
+</tr>
+</tbody>
+</table>
+<p>Each element in <code>segments</code> is an <code>object</code> with the following properties:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>integer</code></td>
+<td>The ID of the audio segment.</td>
+</tr>
+<tr>
+<td><code>seek</code></td>
+<td><code>integer</code></td>
+<td>The pointer of the audio segment.</td>
+</tr>
+<tr>
+<td><code>start</code></td>
+<td><code>number</code></td>
+<td>The start time of the audio segment.</td>
+</tr>
+<tr>
+<td><code>end</code></td>
+<td><code>number</code></td>
+<td>The end time of the audio segment.</td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td><code>string</code></td>
+<td>The recognized text of the audio segment.</td>
+</tr>
+<tr>
+<td><code>tokens</code></td>
+<td><code>array</code></td>
+<td>The token IDs of the audio segment.</td>
+</tr>
+<tr>
+<td><code>temperature</code></td>
+<td><code>number</code></td>
+<td>The speed change ratio.</td>
+</tr>
+<tr>
+<td><code>avgLogProb</code></td>
+<td><code>number</code></td>
+<td>The average log probability.</td>
+</tr>
+<tr>
+<td><code>compressionRatio</code></td>
+<td><code>number</code></td>
+<td>The compression ratio.</td>
+</tr>
+<tr>
+<td><code>noSpeechProb</code></td>
+<td><code>number</code></td>
+<td>The probability of no speech.</td>
+</tr>
+</tbody>
+</table>
+</details>
+
+<details><summary>Example of Multilingual Service Invocation</summary>
+
+<details>
+<summary>Python</summary>
+
+<pre><code class="language-python">
+import requests
+
+API_URL = &quot;http://localhost:8080/multilingual-speech-recognition&quot; # Service URL
+audio_path = &quot;./zh.wav&quot;
+
+payload = {&quot;audio&quot;: audio_path}
+
+# Invoke API
+response = requests.post(API_URL, json=payload)
+
+# Process API response
+assert response.status_code == 200
+result = response.json()[&quot;result&quot;]
+print(result)
+</code></pre></details>
+</details>
+<br/>
+
+📱 <b>Edge Deployment</b>: Edge deployment is a method that places computational and data processing capabilities directly on user devices, allowing them to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
+You can choose the appropriate deployment method based on your needs to integrate the model into your pipeline and proceed with subsequent AI application integration.
+
 ## 4. Secondary Development
 If the default model weights provided by the general video classification pipeline are not satisfactory in terms of accuracy or speed for your specific scenario, you can attempt to <b>fine-tune</b> the existing model using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the general video classification pipeline in your scenario.
 
@@ -688,9 +918,9 @@ for res in output:
     res.save_to_json("./output/")
 ```
 
-Subsequently, refer to the command-line method or Python script method in the local experience to load the modified production line configuration file.
+Subsequently, refer to the command-line method or Python script method in the local experience to load the modified pipeline configuration file.
 
 ## 5. Multi-Hardware Support
 PaddleX supports a variety of mainstream hardware devices, including NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware devices.
 
-For example, if you use Ascend NPU for video classification in the production line, the Python command used is:
+For example, if you use Ascend NPU for video classification in the pipeline, the Python command used is:

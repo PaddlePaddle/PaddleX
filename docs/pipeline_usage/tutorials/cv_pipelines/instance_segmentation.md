@@ -37,7 +37,6 @@ comments: true
 <td>113.6 M</td>
 </tr>
 </table>
-<p><b>注：以上精度指标为<a href="https://cocodataset.org/#home">COCO2017</a>验证集 Mask AP。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
 
 > ❗ 以上列出的是实例分割模块重点支持的<b>2个核心模型</b>，该模块总共支持<b>15个模型</b>，完整的模型列表如下：
 
@@ -163,7 +162,24 @@ comments: true
 <td> SOLOv2 是一种按位置分割物体的实时实例分割算法。该模型是SOLO的改进版本，通过引入掩码学习和掩码NMS，实现了精度和速度上取得良好平衡。</td>
 </tr>
 </table>
-<p><b>注：以上精度指标为<a href="https://cocodataset.org/#home">COCO2017</a>验证集 Mask AP。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p></details>
+
+**测试环境说明：**
+
+- **性能测试环境**
+  - **测试数据集**：<a href="https://cocodataset.org/#home">COCO2017</a>验证集。
+  - **硬件配置**：
+    - GPU：NVIDIA Tesla T4
+    - CPU：Intel Xeon Gold 6271C @ 2.60GHz
+    - 其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **推理模式说明**
+
+| 模式        | GPU配置                          | CPU配置          | 加速技术组合                                |
+|-------------|----------------------------------|------------------|---------------------------------------------|
+| 常规模式    | FP32精度 / 无TRT加速             | FP32精度 / 8线程       | PaddleInference                             |
+| 高性能模式  | 选择先验精度类型和加速策略的最优组合         | FP32精度 / 8线程       | 选择先验最优后端（Paddle/OpenVINO/TRT等） |
+
+</details>
 
 ## 2. 快速开始
 PaddleX 所提供的模型产线均可以快速体验效果，你可以在星河社区线体验通用 实例分割 产线的效果，也可以在本地使用命令行或 Python 体验通用 实例分割 产线的效果。

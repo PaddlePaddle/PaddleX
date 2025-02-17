@@ -502,16 +502,25 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         """
 
         llm_result = chat_bot.generate_chat_results(prompt)
-        if llm_result is None:
+        llm_result_content = llm_result["content"]
+        llm_result_reasoning_content = llm_result["reasoning_content"]
+
+        if llm_result_reasoning_content is not None:
+            if "reasoning_content" not in final_results:
+                final_results["reasoning_content"] = [llm_result_reasoning_content]
+            else:
+                final_results["reasoning_content"].append(llm_result_reasoning_content)
+
+        if llm_result_content is None:
             logging.error(
                 "chat bot error: \n [prompt:]\n %s\n [result:] %s\n"
-                % (prompt, self.chat_bot.ERROR_MASSAGE)
+                % (prompt, chat_bot.ERROR_MASSAGE)
             )
             return
 
-        llm_result = self.chat_bot.fix_llm_result_format(llm_result)
+        llm_result_content = chat_bot.fix_llm_result_format(llm_result_content)
 
-        for key, value in llm_result.items():
+        for key, value in llm_result_content.items():
             if value not in failed_results and key in key_list:
                 key_list.remove(key)
                 final_results[key] = value
@@ -629,7 +638,6 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         """
 
         key_list = self.format_key(key_list)
-        key_list_ori = key_list.copy()
         if len(key_list) == 0:
             return {"chat_res": "Error:输入的key_list无效！"}
 
