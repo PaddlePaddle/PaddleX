@@ -41,6 +41,8 @@ PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了�
 
 ## 📣 近期更新
 
+🔥🔥《PP-ChatOCRv3思考能力新升级》支持基于标准OpenAI接口的大语言模型切换，方便调用热门模型；升级自定义提示词工程能力，KEY从单一关键词到涵盖问题描述、提取规则及少样本学习等多类，支持根据实际问题灵活选择；提供数据缓存加载方法并集成向量检索技术，有效避免频繁的视觉推理与建立索引库过程。2月20日（周四）19：00直播为您深度解析 PP-ChatOCRv3在部署方面的功能、优势与技巧。报名链接：https://www.wjx.top/vm/wFZcC0n.aspx?udsid=745777
+
 🔥🔥 **2025.2.14**，PaddleX v3.0.0rc0 重磅升级。本次版本全面适配 PaddlePaddle 3.0rc0，核心升级如下：
 
 - 新增 12 条高价值产线，重磅推出自研 **[版面解析v2产线](docs/pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.md)**、**[PP-ChatOCRv4-doc产线](docs/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.md)**、**[表格识别v2产线](docs/pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.md)**。此外新增了文档处理、旋转框检测、开放词汇检测/分割、视频分析、多语种语音识别、3D 等场景的产线。
