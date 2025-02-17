@@ -953,7 +953,7 @@ In the above Python script, the following steps are executed:
         - `boxes`: `(List[Dict])` List of detection boxes for layout seal regions, each element in the list contains the following fields
             - `cls_id`: `(int)` The class ID of the detection box
             - `score`: `(float)` The confidence score of the detection box
-            - `coordinate`: `(List[float])` The coordinates of the four corners of the detection box, in the order of x1, y1, x2, y2, representing the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner  
+            - `coordinate`: `(List[float])` The coordinates of the four corners of the detection box, in the order of x1, y1, x2, y2, representing the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner
     - `doc_preprocessor_res`: `(Dict[str, Union[str, Dict[str, bool], int]])` The output result of the document preprocessing sub-pipeline. Exists only when `use_doc_preprocessor=True`
         - `input_path`: `(Union[str, None])` The image path accepted by the image preprocessing sub-pipeline, saved as `None` when the input is `numpy.ndarray`
         - `model_settings`: `(Dict)` Model configuration parameters for the preprocessing sub-pipeline
@@ -1258,7 +1258,7 @@ Below are the API references and multi-language service call examples for basic 
 <tr>
 <td><code>outputImages</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>A key-value pair of input images and prediction result images. Images are in JPEG format and encoded with Base64.</td>
+<td>See the description of the <code>img</code> attribute in the result of the pipeline prediction. Images are in JPEG format and encoded with Base64.</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
@@ -1454,4 +1454,3 @@ paddlex --pipeline table_recognition_v2 \
 ```
 
 If you want to use the General Table Recognition pipeline v2 on a wider variety of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
-

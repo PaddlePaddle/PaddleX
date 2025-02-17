@@ -605,7 +605,7 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>outputImages</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>A key-value pair of the input image and the predicted result image. The images are in JPEG format and encoded in Base64.</td>
+<td>See the description of the <code>img</code> attribute in the result of the pipeline prediction. The images are in JPEG format and encoded in Base64.</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>

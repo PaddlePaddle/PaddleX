@@ -855,7 +855,7 @@ Below are the API references for basic service-based deployment and multi-langua
 <tr>
 <td><code>outputImages</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>A key-value pair of input images and predicted result images. The images are in JPEG format and are Base64-encoded.</td>
+<td>See the description of the <code>img</code> attribute in the result of the pipeline prediction. The images are in JPEG format and are Base64-encoded.</td>
 </tr>
 <tr>
 <td><code>inputImage</code> | <code>null</code></td>
