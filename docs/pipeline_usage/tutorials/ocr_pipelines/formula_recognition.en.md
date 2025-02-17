@@ -11,6 +11,7 @@ Formula recognition is a technology that automatically identifies and extracts L
 The formula recognition pipeline is designed to solve formula recognition tasks by extracting formula information from images and outputting it in LaTeX source code format. This pipeline integrates the advanced formula recognition model PP-FormulaNet developed by the PaddlePaddle Vision Team and the well-known formula recognition model UniMERNet. It is an end-to-end formula recognition system that supports the recognition of simple printed formulas, complex printed formulas, and handwritten formulas. Additionally, it includes functions for image orientation correction and distortion correction. Based on this pipeline, precise formula content prediction can be achieved, covering various application scenarios in education, research, finance, manufacturing, and other fields. The pipeline also provides flexible deployment options, supporting multiple hardware devices and programming languages. Moreover, it offers the capability for secondary development. You can train and optimize the pipeline on your own dataset, and the trained model can be seamlessly integrated.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/03.png" style="width: 70%"/>
+
 <b>The formula recognition pipeline includes a mandatory formula recognition module,</b> as well as optional layout detection, document image orientation classification, and text image unwarping modules. The document image orientation classification module and the text image unwarping module are integrated into the formula recognition pipeline as a document preprocessing sub-pipeline. Each module contains multiple models, and you can choose the model based on the benchmark test data below.
 
 <b>If you prioritize model accuracy, choose a model with higher precision; if you care more about inference speed, choose a faster model; if you are concerned about model storage size, choose a smaller model.</b>
@@ -37,6 +38,8 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 </tbody>
 </table>
+
+<p><b>Text Image Correction Module (Optional):</b></p>
 
 <table>
 <thead>
@@ -223,6 +226,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 </tbody>
 </table>
+</details>
 
 <p><b>Formula Recognition Module </b></p>
 <table>
@@ -282,7 +286,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 | Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
 | High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
-</details>
+
 
 ## 2. Quick Start
 All model pipelines provided by PaddleX can be quickly experienced. You can experience the effect of the formula recognition pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the formula recognition pipeline.
@@ -327,6 +331,7 @@ The explanation of the running result parameters can refer to the result interpr
 The visualization results are saved under `save_path`, where the visualization result of formula recognition is as follows:
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/04.png" style="width: 70%"/>
+
 <b>If you need to visualize the formula recognition pipeline, you need to run the following command to install the LaTeX rendering environment. Currently, visualization of the formula recognition pipeline only supports the Ubuntu environment, and other environments are not supported. For complex formulas, the LaTeX result may contain some advanced representations that may not be successfully displayed in environments such as Markdown:</b>
 
 ```bash

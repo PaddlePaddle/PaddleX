@@ -12,6 +12,7 @@ comments: true
 
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/03.png" style="width: 70%"/>
+
 <b>公式识别产线中包含必选的公式识别模块，</b>以及可选的版面区域检测模块、文档图像方向分类模块和文本图像矫正模块。其中，文档图像方向分类模块和文本图像矫正模块作为文档预处理子产线被集成到公式识别产线中。每个模块都包含多个模型，您可以根据下方的基准测试数据选择使用的模型。
 
 <b>如果您更注重模型的精度，请选择精度较高的模型；如果您更在意模型的推理速度，请选择推理速度较快的模型；如果您关注模型的存储大小，请选择存储体积较小的模型。</b>
@@ -226,6 +227,7 @@ comments: true
 </tr>
 </tbody>
 </table>
+</details>
 
 <p><b>公式识别模块：</b></p>
 <table>
@@ -285,7 +287,7 @@ comments: true
 | 常规模式    | FP32精度 / 无TRT加速             | FP32精度 / 8线程       | PaddleInference                             |
 | 高性能模式  | 选择先验精度类型和加速策略的最优组合         | FP32精度 / 8线程       | 选择先验最优后端（Paddle/OpenVINO/TRT等） |
 
-</details>
+
 
 ## 2. 快速开始
 PaddleX 所提供的模型产线均可以快速体验效果，你可以在星河社区线体验公式识别产线的效果，也可以在本地使用命令行或 Python 体验公式识别产线的效果。
@@ -329,7 +331,9 @@ paddlex --pipeline formula_recognition \
 可视化结果保存在`save_path`下，其中公式识别的可视化结果如下：
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/04.png" style="width: 70%"/>
+
 <b> 如果您需要对公式识别产线进行可视化，需要运行如下命令来对LaTeX渲染环境进行安装。目前公式识别产线可视化只支持Ubuntu环境，其他环境暂不支持。对于复杂公式，LaTeX 结果可能包含部分高级的表示，Markdown等环境中未必可以成功显示：</b>
+
 ```bash
 sudo apt-get update
 sudo apt-get install texlive texlive-latex-base texlive-latex-extra -y

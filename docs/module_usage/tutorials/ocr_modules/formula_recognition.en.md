@@ -126,6 +126,13 @@ The explanations for the methods, parameters, etc., are as follows:
 <td>None</td>
 <td>None</td>
 </tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>Whether to enable high-performance inference. </td>
+<td><code>bool</code></td>
+<td>None</td>
+<td><code>False</code></td>
+</tr>
 </table>
 
 * The `model_name` must be specified. After specifying `model_name`, the default model parameters built into PaddleX are used. If `model_dir` is specified, the user-defined model is used.
@@ -455,7 +462,7 @@ Other related parameters can be set by modifying the `Global` and `Evaluate` fie
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
 
 <p>When evaluating the model, you need to specify the model weights file path. Each configuration file has a default weight save path built-in. If you need to change it, simply set it by appending a command line parameter, such as <code>-o Evaluate.weight_path=./output/best_accuracy/best_accuracy.pdparams</code>.</p>
-<p>After completing the model evaluation, an <code>evaluate_result.json</code> file will be produced, which records the evaluation results, specifically, whether the evaluation task was completed successfully and the model's evaluation metrics, including recall1、recall5、mAP；</p></details>
+<p>After completing the model evaluation, an <code>evaluate_result.json</code> file will be produced, which records the evaluation results, specifically, whether the evaluation task was completed successfully and the model's evaluation metrics, including exp_rate；</p></details>
 
 
 ### <b>4.4 Model Inference and Integration</b>
