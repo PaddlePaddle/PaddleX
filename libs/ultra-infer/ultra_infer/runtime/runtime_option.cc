@@ -234,6 +234,14 @@ void RuntimeOption::UseHorizonNPUBackend() {
 #endif
 }
 
+void RuntimeOption::UseOMBackend() {
+#ifdef ENABLE_OM_BACKEND
+  backend = Backend::OMONNPU;
+#else
+  FDASSERT(false, "The FastDeploy didn't compile with npu om");
+#endif
+}
+
 void RuntimeOption::SetPaddleMKLDNN(bool pd_mkldnn) {
   FDWARNING << "`RuntimeOption::SetPaddleMKLDNN` will be removed in v1.2.0, "
                "please modify its member variable directly, e.g "

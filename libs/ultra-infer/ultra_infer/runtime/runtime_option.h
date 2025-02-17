@@ -277,6 +277,7 @@ struct ULTRAINFER_DECL RuntimeOption {
   void UseLiteBackend();
   void UseHorizonNPUBackend();
   void UseTVMBackend();
+  void UseOMBackend();
 };
 
 } // namespace ultra_infer

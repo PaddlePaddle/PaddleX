@@ -321,6 +321,10 @@ class RuntimeOption:
         """Wrapper function of use_lite_backend(), use Paddle Lite backend, support inference Paddle model on ARM CPU."""
         return self.use_lite_backend()
 
+    def use_om_backend(self):
+        """Use Om backend, support inference Om model on NPU"""
+        return self._option.use_om_backend()
+
     def set_lite_context_properties(self, context_properties):
         """Set nnadapter context properties for Paddle Lite backend."""
         logging.warning(
