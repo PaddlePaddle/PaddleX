@@ -198,7 +198,7 @@ In the above Python script, the following steps are performed:
 <td><code>None</code></td>
 </tr>
 <td><code>threshold</code></td>
-<td>Image resolution actually used during model inference</td>
+<td>Filtering threshold for low-confidence object</td>
 <td><code>None|float|dict[int, float]</code></td>
 <td>
 <ul>
