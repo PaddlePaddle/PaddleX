@@ -350,6 +350,7 @@ docker run \
 - It is necessary to ensure that the `/dev/disk/by-uuid` directory on the host machine exists and is not empty, and that this directory is correctly mounted in order to perform activation properly.
 - If you need to enter the container for debugging, you can replace ``./server.sh` in the command with `/bin/bash`. Then execute `./server.sh` inside the container.
 - If you want the server to run in the background, you can replace `-it` in the command with `-d`. After the container starts, you can view the container logs with `docker logs -f {container ID}`.
+- Add `-e PADDLEX_USE_HPIP=1` to use the PaddleX high-performance inference plugin to accelerate the pipeline inference process. However, please note that not all pipelines support using the high-performance inference plugin. Please refer to the [PaddleX High-Performance Inference Guide](./high_performance_inference.en.md) for more information.
 
 You may observe output similar to the following:
 
