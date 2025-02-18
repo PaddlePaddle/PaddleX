@@ -42,7 +42,7 @@ The text detection module is a crucial component in OCR (Optical Character Recog
 **Test Environment Description**:
 
 - **Performance Test Environment**
-  - **Test Dataset**: addleOCR Self-built Dataset for Chinese and English, Covering Various Scenarios
+  - **Test Dataset**: PaddleOCR Self-built Dataset for Chinese and English, Covering Various Scenarios
   - **Hardware Configuration**:
     - GPU: NVIDIA Tesla T4
     - CPU: Intel Xeon Gold 6271C @ 2.60GHz
