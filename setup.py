@@ -81,6 +81,7 @@ def packages_and_package_data():
     pkg_data.append("utils/fonts/PingFang-SC-Regular.ttf")
     pkg_data.append("repo_manager/requirements.txt")
     pkg_data.append("serving_requirements.txt")
+    pkg_data.append("paddle2onnx_requirements.txt")
     return pkgs, {"paddlex": pkg_data}
 
 

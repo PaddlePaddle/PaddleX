@@ -35,7 +35,7 @@ comments: true
 </tr>
 </tbody>
 </table>
-<b>注：以上精度指标的评估集是自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b>
+
 <p><b>文本图像矫正模块（可选）：</b></p>
 <table>
 <thead>
@@ -55,7 +55,7 @@ comments: true
 </tr>
 </tbody>
 </table>
-<b>注：模型的精度指标测量自 <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet benchmark</a>。</b>
+
 <p><b>版面区域检测模块模型（必选）：</b></p>
 <table>
 <thead>
@@ -72,24 +72,24 @@ comments: true
 <tr>
 <td>PP-DocLayout-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-L_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">训练模型</a></td>
 <td>90.4</td>
-<td>34.5252</td>
-<td>1454.27</td>
+<td>34.6244 / 10.3945</td>
+<td>510.57 / -</td>
 <td>123.76 M</td>
 <td>基于RT-DETR-L在包含中英文论文、杂志、合同、书本、试卷和研报等场景的自建数据集训练的高精度版面区域定位模型</td>
 </tr>
 <tr>
 <td>PP-DocLayout-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-M_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">训练模型</a></td>
 <td>75.2</td>
-<td>15.9</td>
-<td>160.1</td>
+<td>13.3259 / 4.8685</td>
+<td>44.0680 / 44.0680</td>
 <td>22.578</td>
 <td>基于PicoDet-L在包含中英文论文、杂志、合同、书本、试卷和研报等场景的自建数据集训练的精度效率平衡的版面区域定位模型</td>
 </tr>
 <tr>
 <td>PP-DocLayout-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-S_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">训练模型</a></td>
 <td>70.9</td>
-<td>13.8</td>
-<td>46.7</td>
+<td>8.3008 / 2.3794</td>
+<td>10.0623 / 9.9296</td>
 <td>4.834</td>
 <td>基于PicoDet-S在中英文论文、杂志、合同、书本、试卷和研报等场景上自建数据集训练的高效率版面区域定位模型</td>
 </tr>
@@ -159,7 +159,7 @@ comments: true
 </tr>
 </tbody>
 </table>
-<p><b>注：以上精度指标的评估集是 PaddleOCR 自建的版面区域分析数据集，包含中英文论文、杂志和研报等常见的 1w 张文档类型图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p>
+
 <p><b>表格结构识别模块（可选）：</b></p>
 <table>
 <tr>
@@ -187,7 +187,7 @@ comments: true
 <td>SLANet_plus 是百度飞桨视觉团队自研的表格结构识别模型SLANet的增强版。相较于SLANet，SLANet_plus 对无线表、复杂表格的识别能力得到了大幅提升，并降低了模型对表格定位准确性的敏感度，即使表格定位出现偏移，也能够较准确地进行识别。</td>
 </tr>
 </table>
-<p><b>注：以上精度指标测量PaddleX 内部自建英文表格识别数据集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
+
 <p><b>文本检测模块（必选）：</b></p>
 <table>
 <thead>
@@ -235,8 +235,6 @@ comments: true
 </tr>
 </tbody>
 </table>
-<p><b>注：以上精度指标的评估集是 PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中检测包含 500 张图片。以上所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
-<p><b>文本识别模块模型（必选）：</b></p>
 
 * <b>中文识别模型</b>
 <table>
@@ -283,7 +281,7 @@ PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模型</a></td>
 <td>PP-OCRv3的轻量级识别模型，推理效率高，可以部署在包含端侧设备的多种硬件设备中</td>
 </tr>
 </table>
-<p><b>注：以上精度指标的评估集是 PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中文本识别包含 8367 张图片。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
+
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
@@ -304,7 +302,7 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 </td>
 </tr>
 </table>
-<p><b>注：以上精度指标的评估集是 <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务</a>A榜。 所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
+
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
@@ -323,7 +321,7 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <td rowspan="1">    RepSVTR 文本识别模型是一种基于SVTRv2 的移动端文本识别模型，其在PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务中荣获一等奖，B榜端到端识别精度相比PP-OCRv4提升2.5%，推理速度持平。</td>
 </tr>
 </table>
-<p><b>注：以上精度指标的评估集是 <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务</a>B榜。 所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
+
 
 * <b>英文识别模型</b>
 <table>
@@ -456,7 +454,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td>基于PP-OCRv3识别模型训练得到的超轻量梵文字母识别模型，支持梵文字母、数字识别</td>
 </tr>
 </table>
-<p><b>注：以上精度指标的评估集是 PaddleX 自建的多语种数据集。 所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
+
 <p><b>文本行方向分类模块（可选）：</b></p>
 <table>
 <thead>
@@ -481,7 +479,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 </tr>
 </tbody>
 </table>
-<p><b>注：以上精度指标的评估集是自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p>
+
 <p><b>公式识别模块（可选）：</b></p>
 <table>
 <thead>
@@ -507,7 +505,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 </tr>
 </tbody>
 </table>
-<p><b>注：以上精度指标测量自 <a href="https://drive.google.com/drive/folders/13CA4vAmOmD_I_dSbvLp-Lf0s6KiaNfuO">LaTeX-OCR公式识别测试集</a>。以上所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
+
 <p><b>印章文本检测模块（可选）：</b></p>
 <table>
 <thead>
@@ -539,52 +537,36 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 </tr>
 </tbody>
 </table>
-<p><b>注：以上精度指标的评估集是自建的数据集，包含500张圆形印章图像。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p>
-<p><b>文本图像矫正模块模型：</b></p>
-<table>
-<thead>
-<tr>
-<th>模型</th><th>模型下载链接</th>
-<th>MS-SSIM （%）</th>
-<th>模型存储大小（M)</th>
-<th>介绍</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>UVDoc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/UVDoc_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">训练模型</a></td>
-<td>54.40</td>
-<td>30.3 M</td>
-<td>高精度文本图像矫正模型</td>
-</tr>
-</tbody>
-</table>
-<p><b>模型的精度指标测量自 <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet benchmark</a>。</b></p>
-<p><b>文档图像方向分类模块模型：</b></p>
-<table>
-<thead>
-<tr>
-<th>模型</th><th>模型下载链接</th>
-<th>Top-1 Acc（%）</th>
-<th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M)</th>
-<th>介绍</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">训练模型</a></td>
-<td>99.06</td>
-<td>2.31 / 0.43</td>
-<td>3.37 / 1.27</td>
-<td>7</td>
-<td>基于PP-LCNet_x1_0的文档图像分类模型，含有四个类别，即0度，90度，180度，270度</td>
-</tr>
-</tbody>
-</table>
-<p><b>注：以上精度指标的评估集是自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p></details>
-<b></b>
+
+**测试环境说明：**
+
+- **性能测试环境**
+  - **测试数据集**：
+    - 文档图像方向分类模型：PaddleX 自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。
+    - 文本图像矫正模型：<a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet</a>。
+    - 版面区域检测模型：PaddleOCR 自建的版面区域分析数据集，包含中英文论文、杂志和研报等常见的 1w 张文档类型图片。
+    - 表格结构识别模型：PaddleX 内部自建英文表格识别数据集。
+    - 文本检测模型：PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中检测包含 500 张图片。
+    - 中文识别模型： PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中文本识别包含 1.1w 张图片。
+    - ch_SVTRv2_rec：<a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务</a>A榜评估集。
+    - ch_RepSVTR_rec：<a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务</a>B榜评估集。
+    - 英文识别模型：PaddleX 自建的英文数据集。
+    - 多语言识别模型：PaddleX 自建的多语种数据集。
+    - 文本行方向分类模型：PaddleX 自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。
+    - 印章文本检测模型：PaddleX 自建的数据集，包含500张圆形印章图像。
+  - **硬件配置**：
+    - GPU：NVIDIA Tesla T4
+    - CPU：Intel Xeon Gold 6271C @ 2.60GHz
+    - 其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **推理模式说明**
+
+| 模式        | GPU配置                          | CPU配置          | 加速技术组合                                |
+|-------------|----------------------------------|------------------|---------------------------------------------|
+| 常规模式    | FP32精度 / 无TRT加速             | FP32精度 / 8线程       | PaddleInference                             |
+| 高性能模式  | 选择先验精度类型和加速策略的最优组合         | FP32精度 / 8线程       | 选择先验最优后端（Paddle/OpenVINO/TRT等） |
+
+</details>
 
 ## 2. 快速开始
 PaddleX 所提供的模型产线均可以快速体验效果，你可以在本地使用命令行或 Python 体验通用通用版面解析产线的效果。
@@ -592,11 +574,11 @@ PaddleX 所提供的模型产线均可以快速体验效果，你可以在本地
 在本地使用通用版面解析产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
 ### 2.1 命令行方式体验
-一行命令即可快速体验版面解析产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/demo_paper.png)，并将 `--input` 替换为本地路径，进行预测
+一行命令即可快速体验版面解析产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout_parsing_demo.png)，并将 `--input` 替换为本地路径，进行预测
 
 ```
 paddlex --pipeline layout_parsing \
-        --input demo_paper.png \
+        --input layout_parsing_demo.png \
         --use_doc_orientation_classify False \
         --use_doc_unwarping False \
         --use_textline_orientation False \
@@ -608,51 +590,25 @@ paddlex --pipeline layout_parsing \
 运行后，会将结果打印到终端上，结果如下：
 
 <details><summary> 👉点击展开</summary>
-<pre><code>{'res': {'input_path': 'demo_paper.png', 'model_settings': {'use_doc_preprocessor': True, 'use_general_ocr': True, 'use_seal_recognition': True, 'use_table_recognition': True, 'use_formula_recognition': True}, 'parsing_res_list': [{'layout_bbox': [46.905365, 44.05746, 565.6911, 217.74211], 'image': array([[[255, ..., 255],
+<pre><code>{'res': {'input_path': 'layout_parsing_demo.png', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_general_ocr': True, 'use_seal_recognition': True, 'use_table_recognition': True, 'use_formula_recognition': False}, 'parsing_res_list': [{'block_bbox': [133.37144, 40.12515, 1383.7618, 123.51433], 'block_label': 'text', 'block_content': '助力双方交往\n搭建友谊桥梁'}, {'block_bbox': [587.43024, 160.58405, 927.63995, 179.2846], 'block_label': 'figure_title', 'block_content': '本报记者沈小晓任彦黄培昭'}, {'block_bbox': [773.798, 200.63779, 1505.5233, 687.11847], 'block_label': 'image', 'block_content': ''}, {'block_bbox': [390.42462, 201.87276, 741.41675, 292.5969], 'block_label': 'text', 'block_content': '厄立特里亚高等教育与研究院合作建立，开\n设了中国语言课程和中国文化课程，注册学\n生2万余人次。10余年来，厄特孔院已成为\n当地民众了解中国的一扇窗口。'}, {'block_bbox': [9.70394, 202.7036, 359.6133, 340.30905], 'block_label': 'text', 'block_content': '身着中国传统民族服装的厄立特里亚青\n年依次登台表演中国民族舞、现代舞、扇子舞\n等，曼妙的舞姿赢得现场观众阵阵掌声。这\n是日前厄立特里亚高等教育与研究院孔子学\n院(以下简称"厄特孔院"举办“喜迎新年"中国\n歌舞比赛的场景。'}, {'block_bbox': [390.74887, 298.432, 740.7994, 436.79953], 'block_label': 'text', 'block_content': '黄鸣飞表示，随着来学习中文的人日益\n增多，阿斯马拉大学教学点已难以满足教学\n需要。2024年4月，由中企蜀道集团所属四\n川路桥承建的孔院教学楼项目在阿斯马拉开\n工建设，预计今年上半年峻工，建成后将为厄\n特孔院提供全新的办学场地。'}, {'block_bbox': [10.5880165, 346.2769, 359.125, 436.1819], 'block_label': 'text', 'block_content': '中国和厄立特里亚传统友谊深厚。近年\n来,在高质量共建“一带一路"框架下，中厄两\n国人文交流不断深化，互利合作的民意基础\n日益深厚。'}, {'block_bbox': [410.5304, 457.0797, 722.77606, 516.7847], 'block_label': 'text', 'block_content': '“在中国学习的经历\n让我看到更广阔的世界”'}, {'block_bbox': [30.340591, 457.54282, 341.95337, 516.82825], 'block_label': 'paragraph_title', 'block_content': '“学好中文，我们的\n未来不是梦"'}, {'block_bbox': [390.90765, 538.18097, 742.19904, 604.67365], 'block_label': 'text', 'block_content': '多年来，厄立特里亚广大赴华留学生和\n培训人员积极投身国家建设，成为助力该国\n发展的人才和厄中友好的见证者和推动者。'}, {'block_bbox': [9.953403, 538.3851, 359.45145, 652.02905], 'block_label': 'text', 'block_content': '“鲜花曾告诉我你怎样走过，大地知道你\n心中的每一个角落……"厄立特里亚阿斯马拉\n大学综合楼二层，一阵优美的歌声在走廊里回\n响。循着熟悉的旋律轻轻推开一间教室的门，\n学生们正跟着老师学唱中文歌曲《同一首歌》。'}, {'block_bbox': [390.89615, 610.6184, 741.1807, 747.9165], 'block_label': 'text', 'block_content': '在厄立特里亚全国妇女联盟工作的约翰\n娜·特韦尔德·凯莱塔就是其中一位。她曾在\n中华女子学院攻读硕士学位，研究方向是女\n性领导力与社会发展。其间，她实地走访中国\n多个地区，获得了观察中国社会发展的第一\n手资料。'}, {'block_bbox': [10.181939, 658.8049, 359.41302, 771.31146], 'block_label': 'text', 'block_content': '这是厄特孔院阿斯马拉大学教学点的一\n节中文歌曲课。为了让学生们更好地理解歌\n词大意，老师尤斯拉·穆罕默德萨尔·侯赛因逐\n字翻译和解释歌词。随着伴奏声响起，学生们\n边唱边随着节拍摇动身体，现场气氛热烈。'}, {'block_bbox': [809.68475, 705.4048, 1485.5435, 747.4364], 'block_label': 'figure_title', 'block_content': '在厄立特里亚不久前举办的第六届中国风筝文化节上，当地小学生体验风筝制作。\n中国驻厄立特里亚大使馆供图'}, {'block_bbox': [389.63492, 753.45245, 742.05634, 890.96497], 'block_label': 'text', 'block_content': '谈起在中国求学的经历，约翰娜记忆犹\n新：“中国的发展在当今世界是独一无二的。\n沿着中国特色社会主义道路坚定前行，中国\n创造了发展奇迹，这一切都离不开中国共产党\n的领导。中国的发展经验值得许多国家学习\n借鉴。”'}, {'block_bbox': [9.884867, 777.39636, 360.3998, 843.4287], 'block_label': 'text', 'block_content': '“这是中文歌曲初级班，共有32人。学\n生大部分来自首都阿斯马拉的中小学，年龄\n最小的仅有6岁。"尤斯拉告诉记者。'}, {'block_bbox': [9.801341, 850.1048, 359.61642, 1059.8444], 'block_label': 'text', 'block_content': '尤斯拉今年23岁，是厄立特里亚一所公立\n学校的艺术老师。她12岁开始在厄特孔院学\n习中文，在2017年第十届"汉语桥"世界中学生\n中文比赛中获得厄立特里亚赛区第一名，并和\n同伴代表厄立特里亚前往中国参加决赛，获得\n团体优胜奖。2022年起，尤斯拉开始在厄特孔\n院兼职教授中文歌曲，每周末两个课时。“中国\n文化博大精深，我希望我的学生们能够通过中\n文歌曲更好地理解中国文化。"她说。'}, {'block_bbox': [772.0007, 777.06, 1124.396, 1059.2354], 'block_label': 'text', 'block_content': '“不管远近都是客人，请不用客气；相约\n好了在一起，我们欢迎你…"在一场中厄青\n年联谊活动上，四川路桥中方员工同当地大\n学生合唱《北京欢迎你》。厄立特里亚技术学\n院计算机科学与工程专业学生鲁夫塔·谢拉\n是其中一名演唱者，她很早便在孔院学习中\n文，一直在为去中国留学作准备。“这句歌词\n是我们两国人民友谊的生动写照。无论是投\n身于厄立特里亚基础设施建设的中企员工，\n还是在中国留学的厄立特里亚学子，两国人\n民携手努力，必将推动两国关系不断向前发\n展。"鲁夫塔说。'}, {'block_bbox': [1155.9297, 777.71344, 1331.4728, 795.6411], 'block_label': 'text', 'block_content': '瓦的北红海省博物馆。'}, {'block_bbox': [1153.7091, 801.56256, 1504.5591, 987.63544], 'block_label': 'text', 'block_content': '博物馆二层陈列着一个发掘自阿杜利\n斯古城的中国古代陶制酒器，罐身上写着\n“万”“和"“禅"“山"等汉字。“这件文物证\n明，很早以前我们就通过海上丝绸之路进行\n贸易往来与文化交流。这也是厄立特里亚\n与中国友好交往历史的有力证明。"北红海\n省博物馆研究与文献部负责人伊萨亚斯·特\n斯法兹吉说。'}, {'block_bbox': [390.203, 897.60095, 742.03674, 1035.7938], 'block_label': 'text', 'block_content': '正在西南大学学习的厄立特里亚博士生\n穆卢盖塔·泽穆伊对中国怀有深厚感情。8\n盖塔在社交媒体上写下这样一段话：“这是我\n人生的重要一步，自此我拥有了一双坚固的\n鞋子，赋予我穿越荆棘的力量。"'}, {'block_bbox': [1154.4471, 993.4835, 1503.8441, 1107.7363], 'block_label': 'text', 'block_content': '厄立特里亚国家博物馆考古学和人类学\n研究员菲尔蒙·特韦尔德十分喜爱中国文\n化。他表示：“学习彼此的语言和文化，将帮\n助厄中两国人民更好地理解彼此，助力双方\n交往，搭建友谊桥梁。"'}, {'block_bbox': [391.17816, 1041.2622, 740.8725, 1131.4589], 'block_label': 'text', 'block_content': '穆卢盖塔密切关注中国在经济、科技、教\n育等领域的发展，“中国在科研等方面的实力\n与日俱增。在中国学习的经历让我看到更广\n阔的世界，从中受益匪浅。”'}, {'block_bbox': [9.486691, 1065.2955, 360.2089, 1180.0446], 'block_label': 'text', 'block_content': '“姐姐，你想去中国吗？"“非常想！我想\n去看故宫、爬长城。"尤斯拉的学生中有一对\n能歌善舞的姐妹，姐姐露娅今年15岁，妹妹\n莉娅14岁，两人都已在厄特孔院学习多年，\n中文说得格外流利。'}, {'block_bbox': [771.51514, 1065.1091, 1123.4568, 1179.5624], 'block_label': 'text', 'block_content': '厄立特里亚高等教育委员会主任助理萨\n马瑞表示：“每年我们都会组织学生到中国访\n问学习，目前有超过5000名厄立特里亚学生\n在中国留学。学习中国的教育经验，有助于\n提升厄立特里亚的教育水平。"'}, {'block_bbox': [1153.9272, 1114.0178, 1503.9585, 1347.0802], 'block_label': 'text', 'block_content': '厄立特里亚国家博物馆馆长塔吉丁·努\n里达姆·优素福曾多次访问中国，对中华文明\n的传承与创新、现代化博物馆的建设与发展\n印象深刻。“中国博物馆不仅有许多保存完好\n的文物，还充分运用先进科技手段进行展示，\n帮助人们更好理解中华文明。"塔吉丁说，“厄\n立特里亚与中国都拥有悠久的文明，始终相\n互理解、相互尊重。我希望未来与中国同行\n加强合作，共同向世界展示非洲和亚洲的灿\n烂文明。”'}, {'block_bbox': [390.8594, 1137.4973, 741.0567, 1346.7653], 'block_label': 'text', 'block_content': '23岁的莉迪亚·埃斯蒂法诺斯已在厄特\n孔院学习3年，在中国书法、中国画等方面表\n现十分优秀，在2024年厄立特里亚赛区的\n“汉语桥"比赛中获得一等奖。莉迪亚说：“学\n习中国书法让我的内心变得安宁和纯粹。我\n也喜欢中国的服饰，希望未来能去中国学习，\n把中国不同民族元素融入服装设计中，创作\n出更多精美作品，也把厄特文化分享给更多\n的中国朋友。”'}, {'block_bbox': [8.70449, 1186.1178, 359.8176, 1299.481], 'block_label': 'text', 'block_content': '露娅对记者说：“这些年来，怀着对中文\n和中国文化的热爱，我们姐妹俩始终相互鼓\n励，一起学习。我们的中文一天比一天好，还\n学会了中文歌和中国舞。我们一定要到中国\n去。学好中文，我们的未来不是梦！”'}, {'block_bbox': [9.666538, 1305.0905, 359.62704, 1347.939], 'block_label': 'text', 'block_content': '据厄特孔院中方院长黄鸣飞介绍，这所\n孔院成立于2013年3月，由贵州财经大学和'}, {'block_bbox': [791.9397, 1201.0502, 1104.4906, 1260.1833], 'block_label': 'text', 'block_content': '“共同向世界展示非\n洲和亚洲的灿烂文明”'}, {'block_bbox': [772.51917, 1281.01, 1123.4009, 1348.0028], 'block_label': 'text', 'block_content': '从阿斯马拉出发，沿着蜿蜓曲折的盘山\n公路一路向东寻找丝路印迹。驱车两个小\n时，记者来到位于厄立特里亚港口城市马萨'}], 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 1, 'label': 'image', 'score': 0.9853348731994629, 'coordinate': [773.798, 200.63779, 1505.5233, 687.11847]}, {'cls_id': 2, 'label': 'text', 'score': 0.9780634045600891, 'coordinate': [772.0007, 777.06, 1124.396, 1059.2354]}, {'cls_id': 2, 'label': 'text', 'score': 0.9771724343299866, 'coordinate': [1153.9272, 1114.0178, 1503.9585, 1347.0802]}, {'cls_id': 2, 'label': 'text', 'score': 0.9763692021369934, 'coordinate': [390.74887, 298.432, 740.7994, 436.79953]}, {'cls_id': 2, 'label': 'text', 'score': 0.9752321839332581, 'coordinate': [9.70394, 202.7036, 359.6133, 340.30905]}, {'cls_id': 2, 'label': 'text', 'score': 0.9751048684120178, 'coordinate': [1153.7091, 801.56256, 1504.5591, 987.63544]}, {'cls_id': 2, 'label': 'text', 'score': 0.9741119742393494, 'coordinate': [9.801341, 850.1048, 359.61642, 1059.8444]}, {'cls_id': 2, 'label': 'text', 'score': 0.9722761511802673, 'coordinate': [390.42462, 201.87276, 741.41675, 292.5969]}, {'cls_id': 2, 'label': 'text', 'score': 0.9718317985534668, 'coordinate': [390.8594, 1137.4973, 741.0567, 1346.7653]}, {'cls_id': 2, 'label': 'text', 'score': 0.9703624844551086, 'coordinate': [390.89615, 610.6184, 741.1807, 747.9165]}, {'cls_id': 2, 'label': 'text', 'score': 0.9677473306655884, 'coordinate': [8.70449, 1186.1178, 359.8176, 1299.481]}, {'cls_id': 2, 'label': 'text', 'score': 0.9674075841903687, 'coordinate': [390.203, 897.60095, 742.03674, 1035.7938]}, {'cls_id': 2, 'label': 'text', 'score': 0.9671176075935364, 'coordinate': [389.63492, 753.45245, 742.05634, 890.96497]}, {'cls_id': 2, 'label': 'text', 'score': 0.9656032919883728, 'coordinate': [10.5880165, 346.2769, 359.125, 436.1819]}, {'cls_id': 2, 'label': 'text', 'score': 0.9655402898788452, 'coordinate': [771.51514, 1065.1091, 1123.4568, 1179.5624]}, {'cls_id': 2, 'label': 'text', 'score': 0.96494060754776, 'coordinate': [1154.4471, 993.4835, 1503.8441, 1107.7363]}, {'cls_id': 2, 'label': 'text', 'score': 0.9630844593048096, 'coordinate': [772.51917, 1281.01, 1123.4009, 1348.0028]}, {'cls_id': 2, 'label': 'text', 'score': 0.9615732431411743, 'coordinate': [9.486691, 1065.2955, 360.2089, 1180.0446]}, {'cls_id': 2, 'label': 'text', 'score': 0.9598038792610168, 'coordinate': [10.181939, 658.8049, 359.41302, 771.31146]}, {'cls_id': 2, 'label': 'text', 'score': 0.9591749310493469, 'coordinate': [391.17816, 1041.2622, 740.8725, 1131.4589]}, {'cls_id': 2, 'label': 'text', 'score': 0.9563097953796387, 'coordinate': [9.953403, 538.3851, 359.45145, 652.02905]}, {'cls_id': 2, 'label': 'text', 'score': 0.95261549949646, 'coordinate': [390.90765, 538.18097, 742.19904, 604.67365]}, {'cls_id': 2, 'label': 'text', 'score': 0.9493226408958435, 'coordinate': [9.884867, 777.39636, 360.3998, 843.4287]}, {'cls_id': 2, 'label': 'text', 'score': 0.9399433135986328, 'coordinate': [9.666538, 1305.0905, 359.62704, 1347.939]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.9254537224769592, 'coordinate': [809.68475, 705.4048, 1485.5435, 747.4364]}, {'cls_id': 2, 'label': 'text', 'score': 0.9046457409858704, 'coordinate': [1155.9297, 777.71344, 1331.4728, 795.6411]}, {'cls_id': 2, 'label': 'text', 'score': 0.8674532771110535, 'coordinate': [410.5304, 457.0797, 722.77606, 516.7847]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.7949447631835938, 'coordinate': [30.340591, 457.54282, 341.95337, 516.82825]}, {'cls_id': 2, 'label': 'text', 'score': 0.7313820719718933, 'coordinate': [791.9397, 1201.0502, 1104.4906, 1260.1833]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.6073322892189026, 'coordinate': [587.43024, 160.58405, 927.63995, 179.2846]}, {'cls_id': 2, 'label': 'text', 'score': 0.5846534967422485, 'coordinate': [133.37144, 40.12515, 1383.7618, 123.51433]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[ 122,   28],
         ...,
-        [188, ..., 175]],
+        [ 122,  135]],
 
        ...,
 
-       [[255, ..., 255],
+       [[1156, 1330],
         ...,
-        [255, ..., 255]]], dtype=uint8), 'image_text': 'Efficient Hybrid Encoder\nCaevIst s1\nCaaveJs2\nCCFF\n\nFusion\n00□0□000000', 'layout': 'single'}, {'layout_bbox': [42.178703, 227.34215, 570.1248, 284.377], 'text': 'Figure 4, Overview of RT-DETR. We feed the features from the last three stages of the backbone into the encoder. The eficient hybrid\nencoder transforms multi-scale features into a sequence of image features through the Attention-based Intra-scale Feature Interaction (AIFI)\nfeatures to serve as initial object queries for the decoder, Finaly, the decoder with auxiliary prediction heads iteratively optimizes object\nand the CNN-based Cross-scale Feature Fusion (CCFF), Then, the uncertainty-minimal query selection selects a fixed number of encoder\nqueries to generate categories and boxes.', 'layout': 'single'}, {'layout_bbox': [53.227856, 294.16644, 283.854, 396.24164], 'image': array([[[255, ..., 255],
+        [1156, 1351]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['助力双方交往', '搭建友谊桥梁', '西', '本报记者沈小晓任彦黄培昭', '身着中国传统民族服装的厄立特里亚青', '厄立特里亚高等教育与研究院合作建立，开', '年依次登台表演中国民族舞、现代舞、扇子舞', '设了中国语言课程和中国文化课程，注册学', '等，曼妙的舞姿赢得现场观众阵阵掌声。这', '生2万余人次。10余年来，厄特孔院已成为', '是日前厄立特里亚高等教育与研究院孔子学', '当地民众了解中国的一扇窗口。', '院(以下简称"厄特孔院"举办“喜迎新年"中国', '黄鸣飞表示，随着来学习中文的人日益', '歌舞比赛的场景。', '增多，阿斯马拉大学教学点已难以满足教学', '中国和厄立特里亚传统友谊深厚。近年', '需要。2024年4月，由中企蜀道集团所属四', '来,在高质量共建“一带一路"框架下，中厄两', '川路桥承建的孔院教学楼项目在阿斯马拉开', '国人文交流不断深化，互利合作的民意基础', '工建设，预计今年上半年峻工，建成后将为厄', '日益深厚。', '特孔院提供全新的办学场地。', '“学好中文，我们的', '“在中国学习的经历', '未来不是梦"', '让我看到更广阔的世界”', '“鲜花曾告诉我你怎样走过，大地知道你', '多年来，厄立特里亚广大赴华留学生和', '心中的每一个角落……"厄立特里亚阿斯马拉', '培训人员积极投身国家建设，成为助力该国', '大学综合楼二层，一阵优美的歌声在走廊里回', '发展的人才和厄中友好的见证者和推动者。', '响。循着熟悉的旋律轻轻推开一间教室的门，', '在厄立特里亚全国妇女联盟工作的约翰', '学生们正跟着老师学唱中文歌曲《同一首歌》。', '娜·特韦尔德·凯莱塔就是其中一位。她曾在', '这是厄特孔院阿斯马拉大学教学点的一', '中华女子学院攻读硕士学位，研究方向是女', '节中文歌曲课。为了让学生们更好地理解歌', '性领导力与社会发展。其间，她实地走访中国', '词大意，老师尤斯拉·穆罕默德萨尔·侯赛因逐', '多个地区，获得了观察中国社会发展的第一', '在厄立特里亚不久前举办的第六届中国风筝文化节上，当地小学生体验风筝制作。', '字翻译和解释歌词。随着伴奏声响起，学生们', '手资料。', '中国驻厄立特里亚大使馆供图', '边唱边随着节拍摇动身体，现场气氛热烈。', '谈起在中国求学的经历，约翰娜记忆犹', '“这是中文歌曲初级班，共有32人。学', '新：“中国的发展在当今世界是独一无二的。', '“不管远近都是客人，请不用客气；相约', '瓦的北红海省博物馆。', '生大部分来自首都阿斯马拉的中小学，年龄', '沿着中国特色社会主义道路坚定前行，中国', '好了在一起，我们欢迎你………"在一场中厄青', '博物馆二层陈列着一个发掘自阿杜利', '最小的仅有6岁。"尤斯拉告诉记者。', '创造了发展奇迹，这一切都离不开中国共产党', '年联谊活动上，四川路桥中方员工同当地大', '斯古城的中国古代陶制酒器，罐身上写着', '尤斯拉今年23岁，是厄立特里亚一所公立', '的领导。中国的发展经验值得许多国家学习', '学生合唱《北京欢迎你》。厄立特里亚技术学', '“万”“和”“禅”“山"等汉字。“这件文物证', '学校的艺术老师。她12岁开始在厄特孔院学', '借鉴。”', '院计算机科学与工程专业学生鲁夫塔·谢拉', '明，很早以前我们就通过海上丝绸之路进行', '习中文，在2017年第十届"汉语桥"世界中学生', '正在西南大学学习的厄立特里亚博士生', '是其中一名演唱者，她很早便在孔院学习中', '贸易往来与文化交流。这也是厄立特里亚', '中文比赛中获得厄立特里亚赛区第一名，并和', '穆卢盖塔·泽穆伊对中国怀有深厚感情。8', '文，一直在为去中国留学作准备。“这句歌词', '与中国友好交往历史的有力证明。"北红海', '同伴代表厄立特里亚前往中国参加决赛，获得', '是我们两国人民友谊的生动写照。无论是投', '省博物馆研究与文献部负责人伊萨亚斯·特', '团体优胜奖。2022年起，尤斯拉开始在厄特孔', '盖塔在社交媒体上写下这样一段话：“这是我', '身于厄立特里亚基础设施建设的中企员工，', '斯法兹吉说。', '院兼职教授中文歌曲，每周末两个课时。“中国', '人生的重要一步，自此我拥有了一双坚固的', '还是在中国留学的厄立特里亚学子，两国人', '厄立特里亚国家博物馆考古学和人类学', '文化博大精深，我希望我的学生们能够通过中', '鞋子，赋予我穿越荆棘的力量。"', '民携手努力，必将推动两国关系不断向前发', '研究员菲尔蒙·特韦尔德十分喜爱中国文', '文歌曲更好地理解中国文化。"她说。', '穆卢盖塔密切关注中国在经济、科技、教', '展。"鲁夫塔说。', '化。他表示：“学习彼此的语言和文化，将帮', '“姐姐，你想去中国吗？"“非常想！我想', '育等领域的发展，“中国在科研等方面的实力', '厄立特里亚高等教育委员会主任助理萨', '助厄中两国人民更好地理解彼此，助力双方', '去看故宫、爬长城。"尤斯拉的学生中有一对', '与日俱增。在中国学习的经历让我看到更广', '马瑞表示：“每年我们都会组织学生到中国访', '交往，搭建友谊桥梁。"', '能歌善舞的姐妹，姐姐露娅今年15岁，妹妹', '阔的世界，从中受益匪浅。”', '问学习，目前有超过5000名厄立特里亚学生', '厄立特里亚国家博物馆馆长塔吉丁·努', '莉娅14岁，两人都已在厄特孔院学习多年，', '23岁的莉迪亚·埃斯蒂法诺斯已在厄特', '在中国留学。学习中国的教育经验，有助于', '里达姆·优素福曾多次访问中国，对中华文明', '中文说得格外流利。', '孔院学习3年，在中国书法、中国画等方面表', '提升厄立特里亚的教育水平。"', '的传承与创新、现代化博物馆的建设与发展', '露娅对记者说：“这些年来，怀着对中文', '现十分优秀，在2024年厄立特里亚赛区的', '印象深刻。“中国博物馆不仅有许多保存完好', '“共同向世界展示非', '和中国文化的热爱，我们姐妹俩始终相互鼓', '“汉语桥"比赛中获得一等奖。莉迪亚说：“学', '的文物，还充分运用先进科技手段进行展示，', '励，一起学习。我们的中文一天比一天好，还', '习中国书法让我的内心变得安宁和纯粹。我', '洲和亚洲的灿烂文明”', '帮助人们更好理解中华文明。"塔吉丁说，“厄', '学会了中文歌和中国舞。我们一定要到中国', '也喜欢中国的服饰，希望未来能去中国学习，', '立特里亚与中国都拥有悠久的文明，始终相', '去。学好中文，我们的未来不是梦！”', '把中国不同民族元素融入服装设计中，创作', '从阿斯马拉出发，沿着蜿蜓曲折的盘山', '互理解、相互尊重。我希望未来与中国同行', '据厄特孔院中方院长黄鸣飞介绍，这所', '出更多精美作品，也把厄特文化分享给更多', '公路一路向东寻找丝路印迹。驱车两个小', '加强合作，共同向世界展示非洲和亚洲的灿', '孔院成立于2013年3月，由贵州财经大学和', '的中国朋友。”', '时，记者来到位于厄立特里亚港口城市马萨', '烂文明。”'], 'rec_scores': array([0.99982363, ..., 0.93620157]), 'rec_polys': array([[[ 122,   28],
         ...,
-        [255, ..., 255]],
+        [ 122,  135]],
 
        ...,
 
-       [[255, ..., 255],
+       [[1156, 1330],
         ...,
-        [255, ..., 255]]], dtype=uint8), 'image_text': '1x1Conv\nFusion\nC\nNX\n1x1Conv\nRepBlock\nCConcatenate\nElement-wise add\nFlatten', 'layout': 'double'}, {'layout_bbox': [99.52045, 401.63477, 240.27536, 411.01334], 'text': 'Figure 5. The fusion block in CCFF', 'layout': 'double'}, {'layout_bbox': [41.776196, 418.61166, 296.82672, 554.4149], 'text': 'D, Ds, not only significantly reduces latency (35% faster),\nbut also improves accuracy (0.4% AP higher). CCFF is opti-\nmized based on the cross-scale fusion module, which inserts\nseveral fusion blocks consisting of convolutional layers into\nthe fusion path. The role of the fusion block is to fuse two\nadjacent scale features into a new feature, and its structure is\nillustrated in Figure 5. The fusion block contains two 1 × 1\nconvolutions to adjust the number of channels, N RepBlocks\ncomposed of RepConv [8] are used for feature fusion, and\nthe two-path outputs are fused by element-wise add. We\nformulate the calculation of the hybrid encoder as:', 'layout': 'double'}, {'layout_bbox': [92.092064, 563.1221, 297.57217, 607.2598], 'formula': '\\begin{array}{r l}{\\mathcal{Q}}&amp;{=\\mathcal{K}=\\mathcal{V}=\\mathtt{F l a t t e r n}(\\mathcal{S}_{5}),}\\\\ {\\mathcal{F}_{5}}&amp;{=\\mathtt{R e s h a p e}(\\mathtt{A I F I}(\\mathcal{Q},\\mathcal{K},\\mathcal{V})),\\qquad\\quad(1)}\\\\ {\\mathcal{O}}&amp;{=\\mathtt{C C F F}(\\{\\mathcal{S}_{3},\\mathcal{S}_{4},\\mathcal{F}_{5}\\}),}\\end{array}', 'layout': 'double'}, {'layout_bbox': [41.275124, 613.64154, 298.0696, 636.9947], 'text': 'where Reshape represents restoring the shape of the flat-\ntened feature to the same shape as S5', 'layout': 'double'}, {'layout_bbox': [41.01993, 645.3085, 253.87302, 656.61505], 'text': '4.3.Uncertainty-minimal Ouery Selection', 'layout': 'double'}, {'layout_bbox': [39.780045, 664.1547, 296.5302, 724.974], 'text': 'To reduce the difficulty of optimizing object queries in\nDETR, several subsequent works [42, 44, 45] propose query\nselection schemes, which have in common that they use the\nconfidence score to select the top K features from the en-\ncoder to initialize object queries (or just position queries).', 'layout': 'double'}, {'layout_bbox': [316.3008, 289.54156, 573.4635, 415.4659], 'text': 'The confidence score represents the likelihood that the fea-\nture includes foreground objects. Nevertheless, the detector\nare required to simultaneously model the category and loca-\ntion of objects, both of which determine the quality of the\nfeatures. Hence, the performance score of the feature is a la-\ntent variable that is jointly correlated with both classification\nand localization. Based on the analysis, the current query\nselection lead to a considerable level of uncertainty in the\nselected features, resulting in sub-optimal initialization for\nthe decoder and hindering the performance of the detector.', 'layout': 'double'}, {'layout_bbox': [316.1587, 417.67807, 575.0031, 541.93054], 'text': 'To address this problem, we propose the uncertainty mini-\nmal query selection scheme, which explicitly constructs and\noptimizes the epistemic uncertainty to model the joint latent\nvariable of encoder features, thereby providing high-quality\nqueries for the decoder. Specifically, the feature uncertainty\nL/ is defined as the discrepancy between the predicted dis-\ntributions of localization P and classification C in Eq. (2).\nTo minimize the uncertainty of the queries, we integrate\nthe uncertainty into the loss function for the gradient-based\noptimization in Eq. (3).', 'layout': 'double'}, {'layout_bbox': [343.82712, 551.06995, 573.45465, 589.9438], 'formula': '\\begin{array}{r l r}{\\mathcal{U}(\\hat{\\mathcal{X}})=\\|\\mathcal{P}(\\hat{\\mathcal{X}})-\\mathcal{C}(\\hat{\\mathcal{X}})\\|,\\hat{\\mathcal{X}}\\in\\mathbb{R}^{D}}&amp;{{}(2)}&amp;{}\\\\ {\\mathcal{L}(\\hat{\\mathcal{X}},\\hat{\\mathcal{Y}},\\mathcal{Y})=\\mathcal{L}_{t o x}(\\hat{\\mathbf{b}},\\mathbf{b})+\\mathcal{L}_{c l s}(\\mathcal{U}(\\hat{\\mathcal{X}}),\\hat{\\mathbf{c}},\\mathbf{c})}&amp;{{}(3)}\\end{array}', 'layout': 'double'}, {'layout_bbox': [316.74704, 598.45776, 573.39526, 636.35236], 'text': 'where  and y denote the prediction and ground truth.\n= (e, b), C and b represent the category and bounding\nbox respectively, X represent the encoder feature.', 'layout': 'double'}, {'layout_bbox': [315.35437, 638.09393, 572.0008, 724.53687], 'text': 'Effectiveness analysis. To analyze the effectiveness of thc\nuncertainty-minimal query selection, we visualize the clas-\nsification scores and IoU scores of the selected features on\nCOCO va1.2017, Figure 6. We draw the scatterplot with\nclassification scores greater than 0.5. The purple and green\nwith uncertainty-minimal query selection and vanilla query\ndots represent the selected features from the model trained', 'layout': 'double'}], 'doc_preprocessor_res': {'input_path': None, 'model_settings': {'use_doc_orientation_classify': True, 'use_doc_unwarping': True}, 'angle': 0}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 1, 'label': 'image', 'score': 0.9874590635299683, 'coordinate': [46.905365, 44.05746, 565.6911, 217.74211]}, {'cls_id': 2, 'label': 'text', 'score': 0.9869957566261292, 'coordinate': [41.776196, 418.61166, 296.82672, 554.4149]}, {'cls_id': 2, 'label': 'text', 'score': 0.9792540073394775, 'coordinate': [39.780045, 664.1547, 296.5302, 724.974]}, {'cls_id': 2, 'label': 'text', 'score': 0.9792136549949646, 'coordinate': [316.3008, 289.54156, 573.4635, 415.4659]}, {'cls_id': 2, 'label': 'text', 'score': 0.9789648652076721, 'coordinate': [316.1587, 417.67807, 575.0031, 541.93054]}, {'cls_id': 1, 'label': 'image', 'score': 0.9786934852600098, 'coordinate': [53.227856, 294.16644, 283.854, 396.24164]}, {'cls_id': 2, 'label': 'text', 'score': 0.9765349626541138, 'coordinate': [315.35437, 638.09393, 572.0008, 724.53687]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.9575827717781067, 'coordinate': [42.178703, 227.34215, 570.1248, 284.377]}, {'cls_id': 2, 'label': 'text', 'score': 0.9554654359817505, 'coordinate': [41.275124, 613.64154, 298.0696, 636.9947]}, {'cls_id': 7, 'label': 'formula', 'score': 0.951255738735199, 'coordinate': [92.092064, 563.1221, 297.57217, 607.2598]}, {'cls_id': 7, 'label': 'formula', 'score': 0.9501133561134338, 'coordinate': [343.82712, 551.06995, 573.45465, 589.9438]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.9381633400917053, 'coordinate': [99.52045, 401.63477, 240.27536, 411.01334]}, {'cls_id': 2, 'label': 'text', 'score': 0.9283379316329956, 'coordinate': [316.74704, 598.45776, 573.39526, 636.35236]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9257320761680603, 'coordinate': [41.01993, 645.3085, 253.87302, 656.61505]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[169,  50],
-        ...,
-        [169,  62]],
-
+        [1156, 1351]]], dtype=int16), 'rec_boxes': array([[ 122, ...,  135],
        ...,
-
-       [[ 39, 711],
-        ...,
-        [ 39, 726]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['Efficient Hybrid Encoder', 'CaevIst s1', 'CaaveJs2', 'CCFF', '', 'Fusion', '00□0□000000', 'Figure 4, Overview of RT-DETR. We feed the features from the last three stages of the backbone into the encoder. The eficient hybrid', 'encoder transforms multi-scale features into a sequence of image features through the Attention-based Intra-scale Feature Interaction (AIFI)', 'features to serve as initial object queries for the decoder, Finaly, the decoder with auxiliary prediction heads iteratively optimizes object', 'and the CNN-based Cross-scale Feature Fusion (CCFF), Then, the uncertainty-minimal query selection selects a fixed number of encoder', 'queries to generate categories and boxes.', '1x1Conv', 'Fusion', 'The confidence score represents the likelihood that the fea-', 'C', 'ture includes foreground objects. Nevertheless, the detector', 'are required to simultaneously model the category and loca-', 'NX', 'tion of objects, both of which determine the quality of the', '1x1Conv', 'features. Hence, the performance score of the feature is a la-', 'RepBlock', 'tent variable that is jointly correlated with both classification', 'and localization. Based on the analysis, the current query', 'CConcatenate', 'Element-wise add', 'Flatten', 'selection lead to a considerable level of uncertainty in the', 'selected features, resulting in sub-optimal initialization for', 'Figure 5. The fusion block in CCFF', 'the decoder and hindering the performance of the detector.', 'D, Ds, not only significantly reduces latency (35% faster),', 'To address this problem, we propose the uncertainty mini-', 'but also improves accuracy (0.4% AP higher). CCFF is opti-', 'mal query selection scheme, which explicitly constructs and', 'mized based on the cross-scale fusion module, which inserts', 'optimizes the epistemic uncertainty to model the joint latent', 'several fusion blocks consisting of convolutional layers into', 'variable of encoder features, thereby providing high-quality', 'the fusion path. The role of the fusion block is to fuse two', 'queries for the decoder. Specifically, the feature uncertainty', 'adjacent scale features into a new feature, and its structure is', 'L/ is defined as the discrepancy between the predicted dis-', 'illustrated in Figure 5. The fusion block contains two 1 × 1', 'tributions of localization P and classification C in Eq. (2).', 'convolutions to adjust the number of channels, N RepBlocks', 'To minimize the uncertainty of the queries, we integrate', 'composed of RepConv [8] are used for feature fusion, and', 'the uncertainty into the loss function for the gradient-based', 'the two-path outputs are fused by element-wise add. We', 'optimization in Eq. (3).', 'formulate the calculation of the hybrid encoder as:', 'u(x)=P(x）-C(x）,x∈RD', '(2)', '=K =V =F1atten(Ss),', 'F = Reshape(AIFI(Q,K,V)),', '(1)', 'C(x.y)= Lo（b,b）+Cc(u(x）,e,c)（3)', 'O=CCFF（{S,S,F}）', 'where  and y denote the prediction and ground truth.', 'where Reshape represents restoring the shape of the flat-', '= (e, b), C and b represent the category and bounding', 'tened feature to the same shape as S5', 'box respectively, X represent the encoder feature.', '4.3.Uncertainty-minimal Ouery Selection', 'Effectiveness analysis. To analyze the effectiveness of thc', 'uncertainty-minimal query selection, we visualize the clas-', 'To reduce the difficulty of optimizing object queries in', 'sification scores and IoU scores of the selected features on', 'DETR, several subsequent works [42, 44, 45] propose query', 'COCO va1.2017, Figure 6. We draw the scatterplot with', 'selection schemes, which have in common that they use the', 'classification scores greater than 0.5. The purple and green', 'confidence score to select the top K features from the en-', 'with uncertainty-minimal query selection and vanilla query', 'dots represent the selected features from the model trained', 'coder to initialize object queries (or just position queries).'], 'rec_scores': array([0.95921248, ..., 0.99757016]), 'rec_polys': array([[[169,  50],
-        ...,
-        [169,  62]],
-
-       ...,
-
-       [[ 39, 711],
-        ...,
-        [ 39, 726]]], dtype=int16), 'rec_boxes': array([[169, ...,  62],
-       ...,
-       [ 39, ..., 726]], dtype=int16)}, 'text_paragraphs_ocr_res': {'rec_polys': array([[[169,  50],
-        ...,
-        [169,  62]],
-
-       ...,
-
-       [[ 39, 711],
-        ...,
-        [ 39, 726]]], dtype=int16), 'rec_texts': ['Efficient Hybrid Encoder', 'CaevIst s1', 'CaaveJs2', 'CCFF', '', 'Fusion', '00□0□000000', 'Figure 4, Overview of RT-DETR. We feed the features from the last three stages of the backbone into the encoder. The eficient hybrid', 'encoder transforms multi-scale features into a sequence of image features through the Attention-based Intra-scale Feature Interaction (AIFI)', 'features to serve as initial object queries for the decoder, Finaly, the decoder with auxiliary prediction heads iteratively optimizes object', 'and the CNN-based Cross-scale Feature Fusion (CCFF), Then, the uncertainty-minimal query selection selects a fixed number of encoder', 'queries to generate categories and boxes.', '1x1Conv', 'Fusion', 'The confidence score represents the likelihood that the fea-', 'C', 'ture includes foreground objects. Nevertheless, the detector', 'are required to simultaneously model the category and loca-', 'NX', 'tion of objects, both of which determine the quality of the', '1x1Conv', 'features. Hence, the performance score of the feature is a la-', 'RepBlock', 'tent variable that is jointly correlated with both classification', 'and localization. Based on the analysis, the current query', 'CConcatenate', 'Element-wise add', 'Flatten', 'selection lead to a considerable level of uncertainty in the', 'selected features, resulting in sub-optimal initialization for', 'Figure 5. The fusion block in CCFF', 'the decoder and hindering the performance of the detector.', 'D, Ds, not only significantly reduces latency (35% faster),', 'To address this problem, we propose the uncertainty mini-', 'but also improves accuracy (0.4% AP higher). CCFF is opti-', 'mal query selection scheme, which explicitly constructs and', 'mized based on the cross-scale fusion module, which inserts', 'optimizes the epistemic uncertainty to model the joint latent', 'several fusion blocks consisting of convolutional layers into', 'variable of encoder features, thereby providing high-quality', 'the fusion path. The role of the fusion block is to fuse two', 'queries for the decoder. Specifically, the feature uncertainty', 'adjacent scale features into a new feature, and its structure is', 'L/ is defined as the discrepancy between the predicted dis-', 'illustrated in Figure 5. The fusion block contains two 1 × 1', 'tributions of localization P and classification C in Eq. (2).', 'convolutions to adjust the number of channels, N RepBlocks', 'To minimize the uncertainty of the queries, we integrate', 'composed of RepConv [8] are used for feature fusion, and', 'the uncertainty into the loss function for the gradient-based', 'the two-path outputs are fused by element-wise add. We', 'optimization in Eq. (3).', 'formulate the calculation of the hybrid encoder as:', 'where  and y denote the prediction and ground truth.', 'where Reshape represents restoring the shape of the flat-', '= (e, b), C and b represent the category and bounding', 'tened feature to the same shape as S5', 'box respectively, X represent the encoder feature.', '4.3.Uncertainty-minimal Ouery Selection', 'Effectiveness analysis. To analyze the effectiveness of thc', 'uncertainty-minimal query selection, we visualize the clas-', 'To reduce the difficulty of optimizing object queries in', 'sification scores and IoU scores of the selected features on', 'DETR, several subsequent works [42, 44, 45] propose query', 'COCO va1.2017, Figure 6. We draw the scatterplot with', 'selection schemes, which have in common that they use the', 'classification scores greater than 0.5. The purple and green', 'confidence score to select the top K features from the en-', 'with uncertainty-minimal query selection and vanilla query', 'dots represent the selected features from the model trained', 'coder to initialize object queries (or just position queries).'], 'rec_scores': array([0.95921248, ..., 0.99757016]), 'rec_boxes': array([[169, ...,  62],
-       ...,
-       [ 39, ..., 726]], dtype=int16)}, 'formula_res_list': [{'input_path': None, 'page_index': None, 'rec_formula': '\\begin{array}{r l}{\\mathcal{Q}}&amp;{=\\mathcal{K}=\\mathcal{V}=\\mathtt{F l a t t e r n}(\\mathcal{S}_{5}),}\\\\ {\\mathcal{F}_{5}}&amp;{=\\mathtt{R e s h a p e}(\\mathtt{A I F I}(\\mathcal{Q},\\mathcal{K},\\mathcal{V})),\\qquad\\quad(1)}\\\\ {\\mathcal{O}}&amp;{=\\mathtt{C C F F}(\\{\\mathcal{S}_{3},\\mathcal{S}_{4},\\mathcal{F}_{5}\\}),}\\end{array}', 'formula_region_id': 1, 'dt_polys': [92.092064, 563.1221, 297.57217, 607.2598]}, {'input_path': None, 'page_index': None, 'rec_formula': '\\begin{array}{r l r}{\\mathcal{U}(\\hat{\\mathcal{X}})=\\|\\mathcal{P}(\\hat{\\mathcal{X}})-\\mathcal{C}(\\hat{\\mathcal{X}})\\|,\\hat{\\mathcal{X}}\\in\\mathbb{R}^{D}}&amp;{{}(2)}&amp;{}\\\\ {\\mathcal{L}(\\hat{\\mathcal{X}},\\hat{\\mathcal{Y}},\\mathcal{Y})=\\mathcal{L}_{t o x}(\\hat{\\mathbf{b}},\\mathbf{b})+\\mathcal{L}_{c l s}(\\mathcal{U}(\\hat{\\mathcal{X}}),\\hat{\\mathbf{c}},\\mathbf{c})}&amp;{{}(3)}\\end{array}', 'formula_region_id': 2, 'dt_polys': [343.82712, 551.06995, 573.45465, 589.9438]}]}}
+       [1156, ..., 1351]], dtype=int16)}}}
 </code></pre></details>
 
 运行结果参数说明可以参考[2.2.2 Python脚本方式集成](#222-python脚本方式集成)中的结果解释。
@@ -668,7 +624,7 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="layout_parsing")
 
 output = pipeline.predict(
-    input="./demo_paper.png",
+    input="./layout_parsing_demo.png",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
     use_textline_orientation=False,
@@ -1122,9 +1078,9 @@ for res in output:
         - `use_formula_recognition`: `(bool)` 控制是否启用公式识别子产线
 
     - `parsing_res_list`: `(List[Dict])` 解析结果的列表，每个元素为一个字典，列表顺序为解析后的阅读顺序。
-        - `layout_bbox`: `(np.ndarray)` 版面区域的边界框。
-        - `{label}`: `(str)` key 为版面区域的标签，例如`text`, `table`等，内容为版面区域内的内容。
-        - `layout`: `(str)` 版面排版类型，例如 `double`, `single` 等。
+        - `block_bbox`: `(np.ndarray)` 版面区域的边界框。
+        - `block_label`: `(str)` 版面区域的标签，例如`text`, `table`等。
+        - `block_content`: `(str)` 内容为版面区域内的内容。
 
     - `overall_ocr_res`: `(Dict[str, Union[List[str], List[float], numpy.ndarray]])` 全局 OCR 结果的字典
       -  `input_path`: `(Union[str, None])` 图像OCR子产线接受的图像路径，当输入为`numpy.ndarray`时，保存为`None`
@@ -1145,12 +1101,6 @@ for res in output:
       - `rec_texts`: `(List[str])` 文本识别结果列表，仅包含置信度超过`text_rec_score_thresh`的文本
       - `rec_scores`: `(List[float])` 文本识别的置信度列表，已按`text_rec_score_thresh`过滤
       - `rec_polys`: `(List[numpy.ndarray])` 经过置信度过滤的文本检测框列表，格式同`dt_polys`
-
-    - `text_paragraphs_ocr_res`: `(Dict[str, Union[List[str], List[float], numpy.ndarray]])` 段落OCR结果，版面类型非表格、印章和公式类型的段落OCR结果
-        - `rec_polys`: `(List[numpy.ndarray])` 文本检测框列表，格式同`dt_polys`
-        - `rec_texts`: `(List[str])` 文本识别结果列表
-        - `rec_scores`: `(List[float])` 文本识别结果的置信度列表
-        - `rec_boxes`: `(numpy.ndarray)` 检测框的矩形边界框数组，shape为(n, 4)，dtype为int16。每一行表示一个
 
     - `formula_res_list`: `(List[Dict[str, Union[numpy.ndarray, List[float], str]]])` 公式识别结果列表，每个元素为一个字典
         - `rec_formula`: `(str)` 公式识别结果
@@ -1517,7 +1467,7 @@ for res in output:
 <tr>
 <td><code>outputImages</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>输入图像和预测结果图像的键值对。图像为JPEG格式，使用Base64编码。</td>
+<td>参见产线预测结果中的 <code>img</code> 属性说明。图像为JPEG格式，使用Base64编码。</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
@@ -1529,6 +1479,7 @@ for res in output:
 <details><summary>多语言调用服务示例</summary>
 <details>
 <summary>Python</summary>
+
 <pre><code class="language-python">import base64
 import requests
 

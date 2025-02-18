@@ -49,7 +49,22 @@ comments: true
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANeXt_wireless_infer.tar">推理模型</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANeXt_wireless_pretrained.pdparams">训练模型</a></td>
 </tr>
 </table>
-<b>注：以上精度指标测量自 PaddleX 内部自建高难度中文表格识别数据集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b>
+
+**测试环境说明：**
+
+- **性能测试环境**
+  - **测试数据集**：PaddleX 内部自建高难度中文表格识别数据集。
+  - **硬件配置**：
+    - GPU：NVIDIA Tesla T4
+    - CPU：Intel Xeon Gold 6271C @ 2.60GHz
+    - 其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **推理模式说明**
+
+| 模式        | GPU配置                          | CPU配置          | 加速技术组合                                |
+|-------------|----------------------------------|------------------|---------------------------------------------|
+| 常规模式    | FP32精度 / 无TRT加速             | FP32精度 / 8线程       | PaddleInference                             |
+| 高性能模式  | 选择先验精度类型和加速策略的最优组合         | FP32精度 / 8线程       | 选择先验最优后端（Paddle/OpenVINO/TRT等） |
 
 
 ## 三、快速集成
@@ -66,12 +81,13 @@ for res in output:
 
 <details><summary>👉 <b>运行后，得到的结果为：（点击展开）</b></summary>
 
-```json
-{'res': {'input_path': 'table_recognition.jpg', 'bbox': [array([ 42,   2, 390,   2, 388,  27,  40,  26]), array([11, 35, 89, 35, 87, 63, 11, 63]), array([113,  34, 192,  34, 186,  64, 109,  64]), array([219,  33, 399,  33, 393,  62, 212,  62]), array([413,  33, 544,  33, 544,  64, 407,  64]), array([12, 67, 98, 68, 96, 93, 12, 93]), array([115,  66, 205,  66, 200,  91, 111,  91]), array([234,  65, 390,  65, 385,  92, 227,  92]), array([414,  66, 537,  67, 537,  95, 409,  95]), array([  7,  97, 106,  97, 104, 128,   7, 128]), array([113,  96, 206,  95, 201, 127, 109, 127]), array([236,  96, 386,  96, 381, 128, 230, 128]), array([413,  96, 534,  95, 533, 127, 408, 127])], 'structure': ['<html>', '<body>', '<table>', '<tr>', '<td', '="" ',="" colspan="4">', '', '</td',></tr>', '<tr>', '<td></td>', '<td></td>', '<td></td>', '<td></td>', '</tr>', '<tr>', '<td></td>', '<td></td>', '<td></td>', '<td></td>', '</tr>', '<tr>', '<td></td>', '<td></td>', '<td></td>', '<td></td>', '</tr>', '</table>', '</body>', '</html>'], 'structure_score': 0.99948007}}
+```
+{'res': {'input_path': 'table_recognition.jpg', 'page_index': None, 'bbox': [array([ 42,   2, 390,   2, 388,  27,  40,  26]), array([11, 35, 89, 35, 87, 63, 11, 63]), array([113,  34, 192,  34, 186,  64, 109,  64]), array([219,  33, 399,  33, 393,  62, 212,  62]), array([413,  33, 544,  33, 544,  64, 407,  64]), array([12, 67, 98, 68, 96, 93, 12, 93]), array([115,  66, 205,  66, 200,  91, 111,  91]), array([234,  65, 390,  65, 385,  92, 227,  92]), array([414,  66, 537,  67, 537,  95, 409,  95]), array([  7,  97, 106,  97, 104, 128,   7, 128]), array([113,  96, 206,  95, 201, 127, 109, 127]), array([236,  96, 386,  96, 381, 128, 230, 128]), array([413,  96, 534,  95, 533, 127, 408, 127])], 'structure': ['<html>', '<body>', '<table>', '<tr>', '<td', ' colspan="4"', '>', '</td>', '</tr>', '<tr>', '<td></td>', '<td></td>', '<td></td>', '<td></td>', '</tr>', '<tr>', '<td></td>', '<td></td>', '<td></td>', '<td></td>', '</tr>', '<tr>', '<td></td>', '<td></td>', '<td></td>', '<td></td>', '</tr>', '</table>', '</body>', '</html>'], 'structure_score': 0.99948007}}
 ```
 
 参数含义如下：
-- `input_path`：输入的待预测图像的路径
+- `input_path`：输入的待预测表格图像的路径
+- `page_index`：如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
 - `boxes`：预测的表格单元格信息，一个列表，由预测的若干表格单元格坐标组成。特别地， SLANeXt 系列模型预测的表格单元格无效
 - `structure`：预测的表格结构Html表达式，一个列表，由预测的若干Html关键字按顺序组成
 - `structure_score`：预测表格结构的置信度
@@ -131,7 +147,7 @@ for res in output:
 <tr>
 <td><code>input</code></td>
 <td>待预测数据，支持多种输入类型</td>
-<td><code>Python Var</code>/<code>str</code>/<code>dict</code>/<code>list</code></td>
+<td><code>Python Var</code>/<code>str</code>/<code>list</code></td>
 <td>
 <ul>
   <li><b>Python变量</b>，如<code>numpy.ndarray</code>表示的图像数据</li>
@@ -207,7 +223,7 @@ for res in output:
 </tr>
 </table>
 
-* 此外，也支持通过属性获取带结果的可视化图像，具体如下：
+* 此外，也支持通过属性获取结果，具体如下：
 
 <table>
 <thead>
@@ -256,29 +272,19 @@ python main.py -c paddlex/configs/modules/table_structure_recognition/SLANet.yam
   "attributes": {
     "train_samples": 2000,
     "train_sample_paths": [
-      "check_dataset\/demo_img\/border_right_7384_X9UFEPKVMLALY7DDB11A.jpg",
-      "check_dataset\/demo_img\/border_top_13708_VE2DGBD4DCQU2ITLBTEA.jpg",
-      "check_dataset\/demo_img\/border_top_6490_14Z6ZN6G52GG4XA0K4XU.jpg",
-      "check_dataset\/demo_img\/border_top_14236_DG96EX0EDKIIDK8P6ENG.jpg",
-      "check_dataset\/demo_img\/border_19648_SV8B7X34RTYRAT2T5CPI.jpg",
-      "check_dataset\/demo_img\/border_bottom_7186_HODBC25HISMCSVKY0HJ9.jpg",
-      "check_dataset\/demo_img\/head_border_bottom_5773_4K4H9OVK9X9YVHE4Y1BQ.jpg",
-      "check_dataset\/demo_img\/border_7760_8C62CCH5T57QUGE0NTHZ.jpg",
-      "check_dataset\/demo_img\/border_bottom_15707_B1YVOU3X4NHHB6TL269O.jpg",
-      "check_dataset\/demo_img\/no_border_5223_HLG406UK35UD5EUYC2AV.jpg"
+      "check_dataset/demo_img/border_right_7384_X9UFEPKVMLALY7DDB11A.jpg",
+      "check_dataset/demo_img/border_top_13708_VE2DGBD4DCQU2ITLBTEA.jpg",
+      "check_dataset/demo_img/border_top_6490_14Z6ZN6G52GG4XA0K4XU.jpg",
+      "check_dataset/demo_img/border_top_14236_DG96EX0EDKIIDK8P6ENG.jpg",
+      "check_dataset/demo_img/border_19648_SV8B7X34RTYRAT2T5CPI.jpg",
     ],
     "val_samples": 100,
     "val_sample_paths": [
-      "check_dataset\/demo_img\/border_2945_L7MSRHBZRW6Y347G39O6.jpg",
-      "check_dataset\/demo_img\/head_border_bottom_4825_LH9WI6X104CP3VFXPSON.jpg",
-      "check_dataset\/demo_img\/head_border_bottom_16837_79KHWU9WDM9ZQHNBGQAL.jpg",
-      "check_dataset\/demo_img\/border_bottom_10107_9ENLLC29SQ6XI8WZY53E.jpg",
-      "check_dataset\/demo_img\/border_top_16668_JIS0YFDZKTKETZIEKCKX.jpg",
-      "check_dataset\/demo_img\/border_18653_J9SSKHLFTRJD4J8W17OW.jpg",
-      "check_dataset\/demo_img\/border_bottom_8396_VJ3QJ3I0DP63P4JR77FE.jpg",
-      "check_dataset\/demo_img\/border_9017_K2V7QBWSU2BA4R3AJSO7.jpg",
-      "check_dataset\/demo_img\/border_top_19494_SDFMWP92NOB2OT7109FI.jpg",
-      "check_dataset\/demo_img\/no_border_288_6LK683JUCMOQ38V5BV29.jpg"
+      "check_dataset/demo_img/border_18653_J9SSKHLFTRJD4J8W17OW.jpg",
+      "check_dataset/demo_img/border_bottom_8396_VJ3QJ3I0DP63P4JR77FE.jpg",
+      "check_dataset/demo_img/border_9017_K2V7QBWSU2BA4R3AJSO7.jpg",
+      "check_dataset/demo_img/border_top_19494_SDFMWP92NOB2OT7109FI.jpg",
+      "check_dataset/demo_img/no_border_288_6LK683JUCMOQ38V5BV29.jpg"
     ]
   },
   "analysis": {},

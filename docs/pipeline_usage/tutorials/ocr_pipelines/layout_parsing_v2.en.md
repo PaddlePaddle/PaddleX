@@ -2,12 +2,12 @@
 comments: true
 ---
 
-# Universal Layout Analysis v2 Production Line User Guide
+# Universal Layout Analysis v2 pipeline User Guide
 
-## 1. Introduction to Universal Layout Analysis v2 Production Line
-Layout analysis is a technology that extracts structured information from document images, primarily used to convert complex document layouts into machine-readable data formats. This technology is widely applied in document management, information extraction, and data digitization. By combining Optical Character Recognition (OCR), image processing, and machine learning algorithms, layout analysis can identify and extract text blocks, headings, paragraphs, images, tables, and other layout elements from documents. The process typically involves three main steps: layout analysis, element analysis, and data formatting, ultimately generating structured document data to improve the efficiency and accuracy of data processing. <b>The Universal Layout Analysis v2 production line, based on the v1 production line, enhances the capabilities of layout region detection, table recognition, and formula recognition, and adds the ability to restore multi-column reading order and convert results into Markdown files. It performs excellently on various document data and can handle more complex document data.</b> This production line also provides flexible service-oriented deployment options, supporting the use of multiple programming languages on various hardware. Moreover, this production line offers the capability for secondary development; you can train and optimize models on your own dataset based on this production line, and the trained models can be seamlessly integrated.
+## 1. Introduction to Universal Layout Analysis v2 pipeline
+Layout analysis is a technology that extracts structured information from document images, primarily used to convert complex document layouts into machine-readable data formats. This technology is widely applied in document management, information extraction, and data digitization. By combining Optical Character Recognition (OCR), image processing, and machine learning algorithms, layout analysis can identify and extract text blocks, headings, paragraphs, images, tables, and other layout elements from documents. The process typically involves three main steps: layout analysis, element analysis, and data formatting, ultimately generating structured document data to improve the efficiency and accuracy of data processing. <b>The Universal Layout Analysis v2 pipeline, based on the v1 pipeline, enhances the capabilities of layout region detection, table recognition, and formula recognition, and adds the ability to restore multi-column reading order and convert results into Markdown files. It performs excellently on various document data and can handle more complex document data.</b> This pipeline also provides flexible service-oriented deployment options, supporting the use of multiple programming languages on various hardware. Moreover, this pipeline offers the capability for secondary development; you can train and optimize models on your own dataset based on this pipeline, and the trained models can be seamlessly integrated.
 
-<b>The Universal Layout Analysis v2 production line includes a mandatory layout region analysis module and a general OCR sub-production line,</b> as well as optional sub-production lines for document image preprocessing, table recognition, seal recognition, and formula recognition.
+<b>The Universal Layout Analysis v2 pipeline includes a mandatory layout region analysis module and a general OCR sub-pipeline,</b> as well as optional sub-pipelines for document image preprocessing, table recognition, seal recognition, and formula recognition.
 
 <b>If you prioritize model accuracy, choose a high-accuracy model; if you prioritize model inference speed, choose a faster inference model; if you prioritize model storage size, choose a smaller storage model.</b>
 <details><summary>👉 Model List Details</summary>
@@ -34,7 +34,7 @@ Layout analysis is a technology that extracts structured information from docume
 </tr>
 </tbody>
 </table>
-<b>Note: The evaluation set for the above accuracy metrics is a self-built dataset covering various scenarios including identification documents and documents, with 1000 images. The GPU inference time is based on an NVIDIA Tesla T4 machine, with a precision type of FP32. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and a precision type of FP32.</b>
+
 <p><b>Text Image Rectification Module (Optional):</b></p>
 <table>
 <thead>
@@ -54,7 +54,7 @@ Layout analysis is a technology that extracts structured information from docume
 </tr>
 </tbody>
 </table>
-<b>Note: The model's accuracy metrics are measured from the <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet benchmark</a>.</b>
+
 <p><b>Layout Detection Module Model (Required):</b></p>
 <table>
 <thead>
@@ -71,24 +71,24 @@ Layout analysis is a technology that extracts structured information from docume
 <tr>
 <td>PP-DocLayout-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">Training Model</a></td>
 <td>90.4</td>
-<td>34.5252</td>
-<td>1454.27</td>
+<td>34.6244 / 10.3945</td>
+<td>510.57 / -</td>
 <td>123.76 M</td>
 <td>A high-precision layout region detection model trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exam papers, and research reports, based on RT-DETR-L.</td>
 </tr>
 <tr>
 <td>PP-DocLayout-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">Training Model</a></td>
 <td>75.2</td>
-<td>15.9</td>
-<td>160.1</td>
+<td>13.3259 / 4.8685</td>
+<td>44.0680 / 44.0680</td>
 <td>22.578</td>
 <td>A layout region detection model with balanced precision and efficiency, trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exam papers, and research reports, based on PicoDet-L.</td>
 </tr>
 <tr>
 <td>PP-DocLayout-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">Training Model</a></td>
 <td>70.9</td>
-<td>13.8</td>
-<td>46.7</td>
+<td>8.3008 / 2.3794</td>
+<td>10.0623 / 9.9296</td>
 <td>4.834</td>
 <td>A high-efficiency layout region detection model trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exam papers, and research reports, based on PicoDet-S.</td>
 </tr>
@@ -158,7 +158,7 @@ Layout analysis is a technology that extracts structured information from docume
 </tr>
 </tbody>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is a self-built layout region analysis dataset by PaddleOCR, containing 10,000 common document-type images of Chinese and English papers, magazines, and research reports. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+
 <p><b>Table Structure Recognition Module (Optional):</b></p>
 <table>
 <tr>
@@ -186,7 +186,7 @@ Layout analysis is a technology that extracts structured information from docume
 <td>SLANet_plus is the enhanced version of the SLANet table structure recognition model independently developed by the Baidu PaddlePaddle Vision Team. Compared to SLANet, SLANet_plus has significantly improved the ability to recognize wireless and complex tables and reduced the model's sensitivity to table positioning accuracy. Even if there is a deviation in table positioning, it can still recognize accurately.</td>
 </tr>
 </table>
-<p><b>Note: The above accuracy metrics are measured on an internal English table recognition dataset built by PaddleX. All model GPU inference times are based on an NVIDIA Tesla T4 machine, with precision type FP32. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32.</b></p>
+
 <p><b>Text Detection Module (Required):</b></p>
 <table>
 <thead>
@@ -234,7 +234,7 @@ Layout analysis is a technology that extracts structured information from docume
 </tr>
 </tbody>
 </table>
-<p><b>Note: The above accuracy metrics are evaluated on a Chinese dataset built by PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 500 images for detection. All model GPU inference times are based on an NVIDIA Tesla T4 machine, with precision type FP32. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32.</b></p>
+
 <p><b>Text Recognition Module Model (Required):</b></p>
 
 * <b>Chinese Text Recognition Model</b>
@@ -280,7 +280,7 @@ Layout analysis is a technology that extracts structured information from docume
 <td>The lightweight recognition model of PP-OCRv3, with high inference efficiency, can be deployed on various hardware devices, including edge devices.</td>
 </tr>
 </table>
-<p><b>Note: The evaluation dataset for the above accuracy metrics is the self-built Chinese dataset of PaddleOCR, covering multiple scenarios such as street views, web images, documents, and handwriting, with 8,367 images for text recognition. The GPU inference time for all models is based on an NVIDIA Tesla T4 machine, with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and FP32 precision type.</b></p>
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -301,7 +301,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </td>
 </tr>
 </table>
-<p><b>Note: The evaluation dataset for the above accuracy metrics is the leaderboard A of the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a> - Task 1: OCR End-to-End Recognition Task. The GPU inference time for all models is based on an NVIDIA Tesla T4 machine, with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and FP32 precision type.</b></p>
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -320,7 +320,6 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <td rowspan="1">RepSVTR is a mobile text recognition model based on SVTRv2. It won the first prize in the PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task, with a 2.5% improvement in end-to-end recognition accuracy compared to PP-OCRv4 and comparable inference speed.</td>
 </tr>
 </table>
-<p><b>Note: The evaluation dataset for the above accuracy metrics is the leaderboard B of the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a> - Task 1: OCR End-to-End Recognition Task. The GPU inference time for all models is based on an NVIDIA Tesla T4 machine, with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and FP32 precision type.</b></p>
 
 * <b>English Recognition Model</b>
 <table>
@@ -440,7 +439,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <td>An ultra-lightweight Devanagari letter recognition model trained based on the PP-OCRv3 recognition model, supporting recognition of Devanagari letters and numbers.</td>
 </tr>
 </table>
-<p><b>Note: The evaluation datasets for the above accuracy metrics are multi-language datasets built by PaddleX. The GPU inference time for all models is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+
 <p><b>Text Line Orientation Classification Module (Optional):</b></p>
 <table>
 <thead>
@@ -465,7 +464,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </tr>
 </tbody>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is a self-built dataset covering multiple scenarios such as certificates and documents, containing 1,000 images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+
 <p><b>Formula Recognition Module (Optional):</b></p>
 <table>
 <thead>
@@ -491,7 +490,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </tr>
 </tbody>
 </table>
-<p><b>Note: The above accuracy metrics are measured from the <a href="https://drive.google.com/drive/folders/13CA4vAmOmD_I_dSbvLp-Lf0s6KiaNfuO">LaTeX-OCR Formula Recognition Test Set</a>. All models have GPU inference time based on an NVIDIA Tesla T4 machine with FP32 precision type. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+
 <p><b>Seal Text Detection Module (Optional):</b></p>
 <table>
 <thead>
@@ -523,7 +522,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </tr>
 </tbody>
 </table>
-<p><b>Note: The evaluation dataset for the above precision metrics is a self-built dataset containing 500 circular seal images. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+
 <p><b>Text Image Rectification Module Model:</b></p>
 <table>
 <thead>
@@ -567,17 +566,44 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 </tr>
 </tbody>
 </table>
-<p><b>Note: The evaluation dataset for the above precision metrics is a self-built dataset covering various scenarios such as ID cards and documents, containing 1000 images. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision type. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**:
+    - Text Image Rectification Model: [DocUNet](https://www3.cs.stonybrook.edu/~cvl/docunet.html).
+    - Layout Region Detection Model: A self-built layout analysis dataset using PaddleOCR, containing 10,000 images of common document types such as Chinese and English papers, magazines, and research reports.
+    - Table Structure Recognition Model: A self-built English table recognition dataset using PaddleX.
+    - Text Detection Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 500 images for detection.
+    - Chinese Recognition Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.
+    - ch_SVTRv2_rec: Evaluation set A for "OCR End-to-End Recognition Task" in the [PaddleOCR Algorithm Model Challenge](https://aistudio.baidu.com/competition/detail/1131/0/introduction).
+    - ch_RepSVTR_rec: Evaluation set B for "OCR End-to-End Recognition Task" in the [PaddleOCR Algorithm Model Challenge](https://aistudio.baidu.com/competition/detail/1131/0/introduction).
+    - English Recognition Model: A self-built English dataset using PaddleX.
+    - Multilingual Recognition Model: A self-built multilingual dataset using PaddleX.
+    - Text Line Orientation Classification Model: A self-built dataset using PaddleX, covering various scenarios such as ID cards and documents, containing 1000 images.
+    - Seal Text Detection Model: A self-built dataset using PaddleX, containing 500 images of circular seal textures.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+
 </details>
 
 ## 2. Quick Start
-All the model production lines provided by PaddleX can be quickly experienced. You can use the command line or Python on your local machine to experience the effect of the General Layout Parsing v2 production line.
+All the model pipelines provided by PaddleX can be quickly experienced. You can use the command line or Python on your local machine to experience the effect of the General Layout Parsing v2 pipeline.
 
-Before using the General Layout Parsing v2 production line locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+Before using the General Layout Parsing v2 pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 
 ### 2.1 Experiencing via Command Line
 
-You can quickly experience the layout parsing production line with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout_parsing_v2_demo.png) and replace `--input` with the local path to perform prediction.
+You can quickly experience the layout parsing pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout_parsing_v2_demo.png) and replace `--input` with the local path to perform prediction.
 
 ```
 paddlex --pipeline layout_parsing_v2 \
@@ -630,10 +656,10 @@ After running, the result will be printed to the terminal, as follows:
 
 The result parameter description can be found in the result interpretation in [2.2.2 Python Script Integration](#222-python-script-integration).
 
-<b>Note:</b> Since the default model of the production line is relatively large, the inference speed may be slow. You can refer to the model list in Section 1 and replace it with a model that has faster inference speed.
+<b>Note:</b> Since the default model of the pipeline is relatively large, the inference speed may be slow. You can refer to the model list in Section 1 and replace it with a model that has faster inference speed.
 
 ### 2.2 Python Script Integration
-Just a few lines of code can complete the quick inference of the production line. Taking the General Layout Analysis v2 production line as an example:
+Just a few lines of code can complete the quick inference of the pipeline. Taking the General Layout Analysis v2 pipeline as an example:
 
 ```python
 from paddlex import create_pipeline
@@ -766,7 +792,7 @@ In the above Python script, the following steps are executed:
 <li><b>XPU</b>: <code>xpu:0</code> indicates using the first XPU for inference;</li>
 <li><b>MLU</b>: <code>mlu:0</code> indicates using the first MLU for inference;</li>
 <li><b>DCU</b>: <code>dcu:0</code> indicates using the first DCU for inference;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used. During initialization, the local GPU device 0 will be prioritized; if unavailable, the CPU device will be used;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the pipeline will be used. During initialization, the local GPU device 0 will be prioritized; if unavailable, the CPU device will be used;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -778,7 +804,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>True</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the pipeline will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -790,7 +816,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>True</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the pipeline will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -802,7 +828,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>True</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the pipeline will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -814,7 +840,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>True</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the pipeline will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -826,7 +852,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>True</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the pipeline will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -838,7 +864,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>True</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the pipeline will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -850,7 +876,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>True</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the pipeline will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -863,7 +889,7 @@ In the above Python script, the following steps are executed:
 <ul>
 <li><b>float</b>: Any floating-point number between <code>0</code> and <code>1</code>;</li>
 <li><b>dict</b>: <code>{0:0.1}</code> where the key is the category ID and the value is the threshold for that category;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>0.5</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the pipeline will be used, initialized as <code>0.5</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -875,7 +901,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>True</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the pipeline will be used, initialized as <code>True</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -888,7 +914,7 @@ In the above Python script, the following steps are executed:
 <ul>
 <li><b>float</b>: Any floating-point number greater than <code>0</code>;</li>
 <li><b>Tuple[float,float]</b>: The expansion ratios in the horizontal and vertical directions, respectively;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>1.0</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the pipeline will be used, initialized as <code>1.0</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -900,7 +926,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>str</b>: <code>large</code>, <code>small</code>, <code>union</code>, representing whether to retain the larger box, the smaller box, or both during overlap box filtering;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>large</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the pipeline will be used, initialized as <code>large</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -912,7 +938,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>int</b>: Any integer greater than <code>0</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the production line will be used, initialized as <code>960</code>;</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the pipeline will be used, initialized as <code>960</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -924,7 +950,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>str</b>: Supports <code>min</code> and <code>max</code>. <code>min</code> ensures that the shortest side of the image is not less than <code>det_limit_side_len</code>, and <code>max</code> ensures that the longest side of the image is not greater than <code>limit_side_len</code>.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>max</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the pipeline will be used, initialized as <code>max</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -936,7 +962,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>float</b>: Any floating-point number greater than <code>0</code>.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, which is <code>0.3</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the pipeline will be used, which is <code>0.3</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -948,7 +974,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>float</b>: Any floating-point number greater than <code>0</code>.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, which is <code>0.6</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the pipeline will be used, which is <code>0.6</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -960,7 +986,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>float</b>: Any floating-point number greater than <code>0</code>.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, which is <code>2.0</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the pipeline will be used, which is <code>2.0</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -1143,7 +1169,7 @@ In the above Python script, the following steps are executed:
 
     - `page_index`: `(Union[int, None])` If the input is a PDF file, this indicates which page of the PDF it is; otherwise, it is `None`.
 
-    - `model_settings`: `(Dict[str, bool])` Model parameters required for configuring the production line.
+    - `model_settings`: `(Dict[str, bool])` Model parameters required for configuring the pipeline.
 
         - `use_doc_preprocessor`: `(bool)` Controls whether to enable the document preprocessor sub-line.
         - `use_general_ocr`: `(bool)` Controls whether to enable the OCR sub-line.
@@ -1209,7 +1235,7 @@ In the above Python script, the following steps are executed:
             - `rec_boxes`: `(numpy.ndarray)` An array of rectangular bounding boxes for detection boxes, with a shape of (n, 4) and a dtype of int16. Each row represents a rectangle.
 
 - Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the save path will be `save_path/{your_img_basename}_res.json`. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving NumPy arrays, `numpy.array` types will be converted to lists.
-- Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If a directory is specified, it will save images such as layout detection visualization, global OCR visualization, and layout reading order visualization. If a file is specified, it will be saved directly to that file. (The production line usually contains many result images, so it is not recommended to specify a specific file path directly; otherwise, multiple images will be overwritten, and only the last image will be retained.)
+- Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If a directory is specified, it will save images such as layout detection visualization, global OCR visualization, and layout reading order visualization. If a file is specified, it will be saved directly to that file. (The pipeline usually contains many result images, so it is not recommended to specify a specific file path directly; otherwise, multiple images will be overwritten, and only the last image will be retained.)
 - Calling the `save_to_markdown()` method will save the converted Markdown file to the specified `save_path`. The save path will be `save_path/{your_img_basename}.md`. If the input is a PDF file, it is recommended to specify a directory directly; otherwise, multiple Markdown files will be overwritten.
 
 In addition, it also supports obtaining visualized images with results and prediction results through attributes, as follows:
@@ -1284,18 +1310,18 @@ for res in output:
     res.save_to_markdown(save_path="output") ## Save the result of the current image in Markdown format
 ```
 
-<b>Note:</b> The parameters in the configuration file are the production line initialization parameters. If you wish to change the initialization parameters of the General Layout Parsing v2 production line, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in a configuration file, simply specify the path of the configuration file with `--pipeline`.
+<b>Note:</b> The parameters in the configuration file are the pipeline initialization parameters. If you wish to change the initialization parameters of the General Layout Parsing v2 pipeline, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in a configuration file, simply specify the path of the configuration file with `--pipeline`.
 
 ## 3. Development Integration/Deployment
-If the production line meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
+If the pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
-If you need to integrate the production line directly into your Python project, you can refer to the example code in [2.2 Python Script Method](#22-python脚本方式集成).
+If you need to integrate the pipeline directly into your Python project, you can refer to the example code in [2.2 Python Script Method](#22-python脚本方式集成).
 
 In addition, PaddleX also provides three other deployment methods, which are detailed as follows:
 
 🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have strict performance requirements (especially response speed) for deployment strategies to ensure efficient system operation and smooth user experience. To this end, PaddleX provides a high-performance inference plugin aimed at deeply optimizing the performance of model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common form of deployment in actual production environments. By encapsulating the inference functionality into a service, clients can access these services through network requests to obtain inference results. PaddleX supports various service-oriented deployment solutions for production lines. For detailed procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving.en.md).
+☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common form of deployment in actual production environments. By encapsulating the inference functionality into a service, clients can access these services through network requests to obtain inference results. PaddleX supports various service-oriented deployment solutions for pipelines. For detailed procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
 Below is the API reference for basic service-oriented deployment and examples of service calls in multiple languages:
 
@@ -1304,7 +1330,7 @@ Below is the API reference for basic service-oriented deployment and examples of
 <ul>
 <li>The HTTP request method is POST.</li>
 <li>Both the request body and response body are JSON data (JSON objects).</li>
-<li>When the request is processed successfully, the response status code is <code>200</code>, and the properties of the response body are as follows:</li>
+<li>When the request is processed successfully, the response status code is <code>200</code>, and the attributes of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
@@ -1338,7 +1364,7 @@ Below is the API reference for basic service-oriented deployment and examples of
 </tbody>
 </table>
 <ul>
-<li>When the request is not processed successfully, the properties of the response body are as follows:</li>
+<li>When the request is not processed successfully, the attributes of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
@@ -1373,7 +1399,7 @@ Below is the API reference for basic service-oriented deployment and examples of
 <p>Perform layout parsing.</p>
 <p><code>POST /layout-parsing</code></p>
 <ul>
-<li>The properties of the request body are as follows:</li>
+<li>The attributes of the request body are as follows:</li>
 </ul>
 <table>
 <thead>
@@ -1388,37 +1414,157 @@ Below is the API reference for basic service-oriented deployment and examples of
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>The URL of an image file or PDF file accessible by the server, or the Base64-encoded content of the above file types. For PDF files with more than 10 pages, only the content of the first 10 pages will be used.</td>
+<td>The URL of an image or PDF file accessible by the server, or the Base64-encoded content of the above file types. For PDF files with more than 10 pages, only the content of the first 10 pages will be used.</td>
 <td>Yes</td>
 </tr>
 <tr>
 <td><code>fileType</code></td>
-<td><code>integer</code></td>
-<td>The type of file. <code>0</code> indicates a PDF file, <code>1</code> indicates an image file. If this attribute is not present in the request body, the file type will be inferred based on the URL.</td>
+<td><code>integer</code>｜<code>null</code></td>
+<td>File type. <code>0</code> represents a PDF file, and <code>1</code> represents an image file. If this attribute is missing from the request body, the file type will be inferred based on the URL.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useImgOrientationCls</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable the document image orientation classification function. This function is enabled by default.</td>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the <code>use_doc_orientation_classify</code> parameter description in the pipeline <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useImgUnwarping</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable the text image correction function. This function is enabled by default.</td>
+<td><code>useDocUnwarping</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the <code>use_doc_unwarping</code> parameter description in the pipeline <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useSealTextDet</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable the seal text detection function. This function is enabled by default.</td>
+<td><code>useTextlineOrientation</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the <code>use_textline_orientation</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useGeneralOcr</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the <code>use_general_ocr</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useSealRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the <code>use_seal_recognition</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useTableRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the <code>use_table_recognition</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useFormulaRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>use_formula_recognition</code> in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>text_det_limit_side_len</code> in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>text_det_limit_type</code> in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>text_det_thresh</code> in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>text_det_box_thresh</code> in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>text_det_unclip_ratio</code> in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>text_rec_score_thresh</code> in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>seal_det_limit_side_len</code> in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>seal_det_limit_type</code> in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>seal_det_thresh</code> in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>seal_det_box_thresh</code> in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>seal_det_unclip_ratio</code> in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>seal_rec_score_thresh</code> in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>layout_threshold</code> in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutNms</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>layout_nms</code> in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutUnclipRatio</code></td>
+<td><code>number</code> | <code>array</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>layout_unclip_ratio</code> in the <code>predict</code> method of the pipeline.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutMergeBboxesMode</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Refer to the parameter description of <code>layout_merge_bboxes_mode</code> in the <code>predict</code> method of the pipeline.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>When the request is processed successfully, the <code>result</code> in the response body has the following properties:</li>
+<li>When the request is processed successfully, the <code>result</code> in the response body has the following attributes:</li>
 </ul>
 <table>
 <thead>
@@ -1432,7 +1578,7 @@ Below is the API reference for basic service-oriented deployment and examples of
 <tr>
 <td><code>layoutParsingResults</code></td>
 <td><code>array</code></td>
-<td>The results of layout parsing. The length of the array is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
+<td>The layout parsing results. The length of the array is 1 (for image input) or the minimum of the document page count and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
 </tr>
 <tr>
 <td><code>dataInfo</code></td>
@@ -1441,7 +1587,7 @@ Below is the API reference for basic service-oriented deployment and examples of
 </tr>
 </tbody>
 </table>
-<p>Each element in <code>layoutParsingResults</code> is an <code>object</code> with the following properties:</p>
+<p>Each element in <code>layoutParsingResults</code> is an <code>object</code> with the following attributes:</p>
 <table>
 <thead>
 <tr>
@@ -1452,13 +1598,28 @@ Below is the API reference for basic service-oriented deployment and examples of
 </thead>
 <tbody>
 <tr>
-<td><code>layoutElements</code></td>
-<td><code>array</code></td>
-<td>Information about layout elements.</td>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>A simplified version of the <code>res</code> field in the JSON representation of the result generated by the <code>predict</code> method of the pipeline object, with the <code>input_path</code> field removed.</td>
+</tr>
+<tr>
+<td><code>markdown</code></td>
+<td><code>object</code></td>
+<td>The Markdown result.</td>
+</tr>
+<tr>
+<td><code>outputImages</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>See the description of the <code>img</code> attribute in the result of the pipeline prediction. The images are in JPEG format and are Base64-encoded.</td>
+</tr>
+<tr>
+<td><code>inputImage</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>The input image. The image is in JPEG format and is Base64-encoded.</td>
 </tr>
 </tbody>
 </table>
-<p>Each element in <code>layoutElements</code> is an <code>object</code> with the following properties:</p>
+<p><code>markdown</code> is an <code>object</code> with the following attributes:</p>
 <table>
 <thead>
 <tr>
@@ -1469,35 +1630,22 @@ Below is the API reference for basic service-oriented deployment and examples of
 </thead>
 <tbody>
 <tr>
-<td><code>bbox</code></td>
-<td><code>array</code></td>
-<td>The position of the layout element. The elements in the array are the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner of the bounding box.</td>
-</tr>
-<tr>
-<td><code>label</code></td>
-<td><code>string</code></td>
-<td>The label of the layout element.</td>
-</tr>
-<tr>
 <td><code>text</code></td>
 <td><code>string</code></td>
-<td>The text contained in the layout element.</td>
+<td>The Markdown text.</td>
 </tr>
 <tr>
-<td><code>layoutType</code></td>
-<td><code>string</code></td>
-<td>The arrangement of the layout element.</td>
-</tr>
-<tr>
-<td><code>image</code></td>
-<td><code>string</code></td>
-<td>The image of the layout element, in JPEG format, encoded with Base64.</td>
+<td><code>images</code></td>
+<td><code>object</code></td>
+<td>A key-value pair of relative paths of Markdown images and Base64-encoded images.</td>
 </tr>
 </tbody>
 </table></details>
-<details><summary>Multi-language Service Invocation Example</summary>
+
+<details><summary>Multi-language Service Call Example</summary>
 <details>
 <summary>Python</summary>
+
 <pre><code class="language-python">import base64
 import requests
 
@@ -1512,39 +1660,44 @@ with open(image_path, "rb") as file:
 
 payload = {
     "file": image_data, # Base64-encoded file content or file URL
-    "fileType": 1,
-    "useImgOrientationCls": True,
-    "useImgUnwarping": True,
-    "useSealTextDet": True,
 }
 
 # Call the API
 response = requests.post(API_URL, json=payload)
 
-# Process the returned data from the API
+# Process the response data
 assert response.status_code == 200
 result = response.json()["result"]
 print("\nDetected layout elements:")
 for res in result["layoutParsingResults"]:
-    for ele in res["layoutElements"]:
-        print("===============================")
-        print("bbox:", ele["bbox"])
-        print("label:", ele["label"])
-        print("text:", repr(ele["text"]))
+    print(res["prunedResult"])
+    md_dir = pathlib.Path(f"markdown_{i}")
+    md_dir.mkdir(exist_ok=True)
+    (md_dir / "doc.md").write_text(res["markdown"]["text"])
+    for img_path, img in res["markdown"]["images"].items():
+        img_path = md_dir / img_path
+        img_path.parent.mkdir(parents=True, exist_ok=True)
+        img_path.write_bytes(base64.b64decode(img))
+    print(f"Markdown document saved at {md_dir / 'doc.md'}")
+    for img_name, img in res["outputImages"].items():
+        img_path = f"{img_name}_{i}.jpg"
+        with open(img_path, "wb") as f:
+            f.write(base64.b64decode(img))
+        print(f"Output image saved at {img_path}")
 </code></pre></details>
 </details>
 <br/>
 
 📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on user devices, allowing the device to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
-You can choose the appropriate deployment method based on your needs to integrate the model into your production line and proceed with subsequent AI application integration.
+You can choose the appropriate deployment method based on your needs to integrate the model into your pipeline and proceed with subsequent AI application integration.
 
 ## 4. Secondary Development
-If the default model weights provided by the General Layout Parsing v2 production line do not meet your requirements in terms of accuracy or speed, you can try to <b>fine-tune</b> the existing model using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the General Layout Parsing v2 production line in your scenario.
+If the default model weights provided by the General Layout Parsing v2 pipeline do not meet your requirements in terms of accuracy or speed, you can try to <b>fine-tune</b> the existing model using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the General Layout Parsing v2 pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the General Layout Parsing v2 production line consists of 7 modules, the unsatisfactory performance of the production line may originate from any one of these modules.
+Since the General Layout Parsing v2 pipeline consists of 7 modules, the unsatisfactory performance of the pipeline may originate from any one of these modules.
 
-Since the General Layout Parsing v2 production line includes several modules, the unsatisfactory performance of the production line may originate from any one of these modules. You can analyze the cases with poor extraction results, identify which module is problematic through visualizing the images, and refer to the corresponding fine-tuning tutorial links in the table below to fine-tune the model.
+Since the General Layout Parsing v2 pipeline includes several modules, the unsatisfactory performance of the pipeline may originate from any one of these modules. You can analyze the cases with poor extraction results, identify which module is problematic through visualizing the images, and refer to the corresponding fine-tuning tutorial links in the table below to fine-tune the model.
 
 <table>
 <thead>
@@ -1614,7 +1767,7 @@ SubModules:
   LayoutDetection:
     module_name: layout_detection
     model_name: PP-DocLayout-L
-    model_dir: null 
+    model_dir: null
 ......
 SubPipelines:
   GeneralOCR:
@@ -1626,7 +1779,7 @@ SubPipelines:
       TextDetection:
         module_name: text_detection
         model_name: PP-OCRv4_server_rec_doc
-        model_dir: null 
+        model_dir: null
         limit_side_len: 960
         limit_type: max
         thresh: 0.3
@@ -1642,12 +1795,12 @@ SubPipelines:
 ......
 ```
 
-Subsequently, refer to the command-line method or Python script method in the local experience to load the modified production line configuration file.
+Subsequently, refer to the command-line method or Python script method in the local experience to load the modified pipeline configuration file.
 
 ## 5. Multi-Hardware Support
 PaddleX supports a variety of mainstream hardware devices such as NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware devices.
 
-For example, if you use Ascend NPU for layout analysis production line inference, the CLI command you use is:
+For example, if you use Ascend NPU for layout analysis pipeline inference, the CLI command you use is:
 
 ```bash
 paddlex --pipeline layout_parsing_v2 \

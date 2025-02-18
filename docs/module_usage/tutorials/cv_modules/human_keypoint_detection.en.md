@@ -43,7 +43,21 @@ Keypoint detection algorithms mainly include two approaches: Top-Down and Bottom
   </tr>
 </table>
 
-**Note: The above accuracy metrics are based on the COCO dataset AP(0.5:0.95) using ground truth annotations for bounding boxes. All GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision, while CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.**
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**: The above accuracy metrics are based on the COCO dataset AP(0.5:0.95) using ground truth annotations for bounding boxes.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## III. Quick Integration
 > ❗ Before quick integration, please install the PaddleX wheel package first. For details, please refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
@@ -62,10 +76,6 @@ for res in output:
     res.print(json_format=False)
     res.save_to_img("./output/")
     res.save_to_json("./output/res.json")
-```
-
-```bash
-{'res': {'input_path': 'keypoint_detection_002.jpg', 'kpts': [{'keypoints': [[175.2838134765625, 56.043609619140625, 0.6522828936576843], [181.32794189453125, 49.642051696777344, 0.7338210940361023], [169.46002197265625, 50.59111022949219, 0.6837076544761658], [193.3421173095703, 51.91969680786133, 0.8676544427871704], [164.50787353515625, 55.6519889831543, 0.8232858777046204], [219.7235870361328, 90.28710174560547, 0.8812915086746216], [152.90377807617188, 95.07806396484375, 0.9093065857887268], [233.1095733642578, 149.6704864501953, 0.7706904411315918], [139.5576629638672, 144.38327026367188, 0.7555014491081238], [245.22830200195312, 202.4243927001953, 0.706590473651886], [117.83794403076172, 188.56410217285156, 0.8892115950584412], [203.29542541503906, 200.2967071533203, 0.838330864906311], [172.00791931152344, 201.1993865966797, 0.7636935710906982], [181.18797302246094, 273.0669250488281, 0.8719099164009094], [185.1750030517578, 278.4797668457031, 0.6878190040588379], [171.55068969726562, 362.42730712890625, 0.7994316816329956], [201.6941375732422, 354.5953369140625, 0.6789217591285706]], 'kpt_score': 0.7831441760063171}]}}
 ```
 
 <details><summary>👉 <b>The result obtained after running is: (Click to expand)</b></summary>
@@ -266,7 +276,7 @@ A single command can complete the data validation:
 python main.py -c paddlex/configs/keypoint_detection/PP-TinyPose_128x96.yaml \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/keypoint_coco_examples
-````
+```
 
 After executing the above command, PaddleX will validate the dataset and summarize its basic information. If the command runs successfully, it will print `Check dataset passed !` in the log. The validation result file is saved at `./output/check_dataset_result.json`, and related outputs are saved in the `./output/check_dataset `directory under the current directory. This includes visualized sample images and sample distribution histograms.
 
@@ -425,3 +435,5 @@ The human keypoint detection module can be integrated into the PaddleX pipeline 
 2. <b>Module Integration</b>
 
 The weights you produced can be directly integrated into the face feature module. You can refer to the Python example code in [Quick Integration](#III.-Quick-Integration) and only need to replace the model with the path to the model you trained.
+
+You can also use the PaddleX high-performance inference plugin to optimize the inference process of your model and further improve efficiency. For detailed procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).

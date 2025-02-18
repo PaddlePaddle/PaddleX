@@ -12,7 +12,7 @@ hide:
 
 <p align="center">
     <a href=""><img src="https://img.shields.io/badge/License-Apache%202-red.svg"></a>
-    <a href=""><img src="https://img.shields.io/badge/Python-3.8%2C%203.9%2C%203.10-blue.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/Python-3.8~3.12-blue.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/OS-Linux%2C%20Windows%2C%20Mac-orange.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/Hardware-CPU%2C%20GPU%2C%20XPU%2C%20NPU%2C%20MLU%2C%20DCU-yellow.svg"></a>
 </p>
@@ -100,24 +100,26 @@ PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了�
 ## 🛠️ 安装
 
 !!! warning
-    安装 PaddleX 前请先确保您有基础的 <b>Python 运行环境</b>（注：当前支持Python 3.8 ～ Python 3.10下运行，更多Python版本适配中）。
+    在安装 PaddleX 之前，请确保您已具备基本的 <b>Python 运行环境</b>（注：目前支持 <b>Python 3.8 至 Python 3.12</b>）。PaddleX 3.0-rc0 版本依赖的 PaddlePaddle 版本为 <b>3.0.0rc0</b>。
 
 ### 安装 PaddlePaddle
 
-=== "CPU"
+=== "CPU 版本"
     ```bash
     python -m pip install paddlepaddle==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
     ```
-=== "CUDA 11.8"
+=== "GPU 版本，需显卡驱动程序版本 ≥450.80.02（Linux）或 ≥452.39（Windows）"
     ```bash
     python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu118/
     ```
-=== "CUDA 12.3"
+=== "GPU 版本，需显卡驱动程序版本 ≥545.23.06（Linux）或 ≥545.84（Windows）"
     ```bash
     python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
     ```
 
-> ❗ 更多飞桨 Wheel 版本请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation./docs/zh/install/pip/linux-pip.html)。
+!!!tip
+    无需关注物理机上的 CUDA 版本，只需关注显卡驱动程序版本。更多飞桨 Wheel 版本信息，请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation./docs/zh/install/pip/linux-pip.html)。
+
 
 
 ### 安装PaddleX
@@ -136,11 +138,11 @@ pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0
 paddlex --pipeline [产线名称] --input [输入图片] --device [运行设备]
 ```
 
-只需指定三个参数：
+PaddleX的每一条产线对应特定的参数，您可以在各自的产线文档中查看具体的参数说明。每条产线需指定必要的三个参数：
 
-* `pipeline`：产线名称
-* `input`：待处理的输入文件（如图片）的本地路径或 URL
-* `device`: 使用的 GPU 序号（例如`gpu:0`表示使用第 0 块 GPU），也可选择使用 CPU（`cpu`）
+* `pipeline`：产线名称或产线配置文件
+* `input`：待处理的输入文件（如图片）的本地路径、目录或 URL
+* `device`: 使用的硬件设备及序号（例如`gpu:0`表示使用第 0 块 GPU），也可选择使用 NPU(`npu:0`)、 XPU(`xpu:0`)、CPU(`cpu`)等
 
 !!! example "OCR相关产线命令行使用"
 

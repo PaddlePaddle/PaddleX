@@ -310,7 +310,7 @@ comments: true
     <td rowspan = 2>General Image Recognition</td>
     <td>Subject Detection</td>
     <td rowspan = 2>None</td>
-    <td rowspan = 2>The general image recognition production line is designed to address open-domain target localization and recognition issues. It can effectively identify and differentiate various target objects in different environments and conditions, making it widely applicable in autonomous driving, intelligent security, medical image analysis, and industrial automation, among other fields.</td>
+    <td rowspan = 2>The general image recognition pipeline is designed to address open-domain target localization and recognition issues. It can effectively identify and differentiate various target objects in different environments and conditions, making it widely applicable in autonomous driving, intelligent security, medical image analysis, and industrial automation, among other fields.</td>
     <td rowspan = 2>
     <ul>
         <li>Automated Identity Verification</li>
@@ -369,6 +369,129 @@ comments: true
   <tr>
     <td>Face Features</td>
   </tr>
+  <tr>
+    <td>3D Multimodal Fusion Detection</td>
+    <td>3D Multimodal Fusion Detection</td>
+    <td>Not Available</td>
+    <td>3D multimodal fusion detection is a technology that combines multiple data modalities (such as LiDAR, cameras, and millimeter-wave radar) to detect targets in three-dimensional space. It leverages the strengths of different modalities to achieve more accurate target localization, classification, and tracking. Through deep learning algorithms, this technology can process complex 3D scenes, identify vehicles, pedestrians, obstacles, and other targets, and provide key support for fields such as autonomous driving, intelligent transportation, and robot navigation.</td>
+    <td>
+    <ul>
+        <li>Obstacle detection and avoidance in autonomous vehicles</li>
+        <li>Traffic flow monitoring in intelligent transportation systems</li>
+        <li>Object recognition and grasping in industrial robots</li>
+    </ul>
+    </td>
+</tr>
+<tr>
+    <td rowspan="2">Human Keypoint Detection</td>
+    <td>Pedestrian Detection</td>
+    <td rowspan="2">Not Available</td>
+    <td rowspan="2">Human keypoint detection is an important task in computer vision, aiming to locate specific parts of the human body (such as the head, shoulders, elbows, knees, etc.) through image or video data. By analyzing the geometric structure and appearance features of the human body, this technology can capture human posture and movements in real-time and is widely used in human-computer interaction, motion analysis, and virtual reality.</td>
+    <td rowspan="2">
+    <ul>
+        <li>Movement guidance in smart fitness applications</li>
+        <li>Character movement capture in virtual reality</li>
+        <li>Abnormal behavior analysis in security surveillance</li>
+      </ul>
+      </td>
+</tr>
+<tr>
+    <td>Keypoint Detection</td>
+</tr>
+<tr>
+    <td>Open-Vocabulary Detection</td>
+    <td>Open-Vocabulary Detection</td>
+    <td>Not Available</td>
+    <td>Open-vocabulary detection is an emerging computer vision technology aimed at enabling models to recognize and understand new categories or vocabulary not seen during training. Unlike traditional object detection, open-vocabulary detection does not rely on large amounts of labeled data but instead combines pre-trained language models and visual features to quickly recognize and understand unknown categories. This technology has broad application prospects in dynamic environment object detection, image classification, and intelligent robots.</td>
+    <td>
+    <ul>
+        <li>Recognition of unknown obstacles in autonomous driving</li>
+        <li>Abnormal behavior detection in intelligent security</li>
+        <li>Target exploration by intelligent robots in complex environments</li>
+    </ul>
+    </td>
+</tr>
+<tr>
+    <td>Open-Vocabulary Segmentation</td>
+    <td>Open-Vocabulary Segmentation</td>
+    <td>Not Available</td>
+    <td>Open-vocabulary segmentation is a cutting-edge computer vision technology aimed at performing pixel-level semantic segmentation of unknown categories in images. Unlike traditional segmentation methods limited to labeled categories, open-vocabulary segmentation combines pre-trained language models and visual features to dynamically recognize and segment new categories not seen during training. This technology excels in open-world scenarios and brings new possibilities to fields such as autonomous driving, intelligent robots, and dynamic environment perception.</td>
+    <td>
+    <ul>
+        <li>Segmentation and path planning of unknown objects in autonomous driving</li>
+        <li>Scene understanding by intelligent robots in unknown environments</li>
+        <li>Real-time semantic segmentation and analysis in dynamic scenes</li>
+    </ul>
+    </td>
+</tr>
+<tr>
+    <td>Rotated Object Detection</td>
+    <td>Rotated Object Detection</td>
+    <td>Not Available</td>
+    <td>Rotated object detection is an important technology in the field of computer vision, focusing on detecting and locating objects with arbitrary orientations in images. Unlike traditional object detection methods (which usually assume objects are horizontal or vertical), rotated object detection can handle objects at any rotation angle, thus more accurately identifying and locating targets. By introducing oriented bounding boxes (OBB) and improved deep learning algorithms, this technology performs well in complex scenes such as aerial images, satellite images, and traffic sign detection in autonomous driving.</td>
+    <td>
+    <ul>
+        <li>Target recognition and localization in aerial images</li>
+        <li>Rotated traffic sign detection in autonomous driving</li>
+        <li>Infrastructure detection in satellite images</li>
+    </ul>
+    </td>
+</tr>
+<tr>
+    <td rowspan="2">Document Image Preprocessing</td>
+    <td>Document Image Orientation Classification</td>
+    <td rowspan="2">Not Available</td>
+    <td rowspan="2">Document image preprocessing is a key step in document analysis and recognition, aiming to optimize document images through a series of technical means to improve the accuracy and efficiency of subsequent processing. Document image preprocessing includes operations such as orientation classification, text rectification, noise removal, and binarization, which can effectively improve image quality, correct document orientation, and remove interference factors. This technology is widely used in document scanning, OCR text recognition, and electronic document generation.</td>
+    <td rowspan="2">
+    <ul>
+        <li>Automatic orientation correction in document scanners</li>
+        <li>Text image optimization in OCR systems</li>
+        <li>Image restoration in historical document digitization</li>
+    </ul>
+    </td>
+</tr>
+<tr>
+    <td>Text Image Rectification</td>
+</tr>
+<tr>
+    <td>Multilingual Speech Recognition</td>
+    <td>Multilingual Speech Recognition</td>
+    <td>Not Available</td>
+    <td>Multilingual speech recognition is an advanced speech processing technology that aims to automatically identify and transcribe speech signals in multiple languages to achieve efficient information extraction and communication. Compared to single-language speech recognition, multilingual speech recognition needs to handle differences in pronunciation, grammar, and vocabulary across languages, thus requiring more powerful models and richer language resources. Through deep learning and large-scale multilingual data training, this technology can recognize speech content in multiple languages in real-time and is widely used in intelligent translation, voice assistants, and multilingual customer service.</td>
+    <td>
+    <ul>
+        <li>Multilingual interaction in intelligent voice assistants</li>
+        <li>Real-time speech translation in international conferences</li>
+        <li>Multilingual voice customer service systems</li>
+    </ul>
+    </td>
+</tr>
+<tr>
+    <td>General Video Classification</td>
+    <td>Video Classification</td>
+    <td>Not Available</td>
+    <td>Video classification is an important task in the field of computer vision, aiming to automatically analyze and identify the semantic categories of video content. Through deep learning models, video classification technology can extract spatiotemporal features from video frame sequences to accurately classify the themes, scenes, or activities in the video. This technology is widely used in video content recommendation, video surveillance analysis, intelligent media management, and video retrieval.</td>
+    <td>
+    <ul>
+        <li>Content recommendation and classification in video platforms</li>
+        <li>Abnormal behavior recognition in security surveillance</li>
+        <li>Automatic classification and management of intelligent media libraries</li>
+    </ul>
+    </td>
+</tr>
+<tr>
+    <td>General Video Detection</td>
+    <td>Video Detection</td>
+    <td>Not Available</td>
+    <td>Video detection is a key technology in the field of computer vision, focusing on real-time or offline analysis of video content to identify and locate target objects and events in the video. By combining deep learning and object detection algorithms, video detection technology can handle complex dynamic scenes, detecting objects, people, behaviors, and abnormal events in the video. This technology has broad application prospects in intelligent security, traffic monitoring, sports analysis, and video content review.</td>
+    <td>
+    <ul>
+        <li>Intrusion detection and alarm in intelligent security systems</li>
+        <li>Vehicle detection and violation recognition in traffic monitoring</li>
+        <li>Athlete behavior analysis in sports events</li>
+    </ul>
+    </td>
+</tr>
 </table>
 
 ## 2. Featured Pipelines

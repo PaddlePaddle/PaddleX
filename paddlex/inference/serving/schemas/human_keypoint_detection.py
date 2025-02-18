@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Final, List, Optional, TypeAlias, Annotated
+from typing import Final, List, Optional
 
 from pydantic import BaseModel, Field
+from typing_extensions import Annotated, TypeAlias
 
 from ..infra.models import PrimaryOperations
 from .shared import object_detection

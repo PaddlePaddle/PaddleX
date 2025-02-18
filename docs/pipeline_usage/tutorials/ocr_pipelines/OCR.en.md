@@ -2,15 +2,16 @@
 comments: true
 ---
 
-# General OCR Production Line Usage Guide
+# General OCR pipeline Usage Guide
 
-## 1. Introduction to the OCR Production Line
+## 1. Introduction to the OCR pipeline
 OCR (Optical Character Recognition) is a technology that converts text in images into editable text. It is widely used in document digitization, information extraction, and data processing. OCR can recognize printed text, handwritten text, and even certain types of fonts and symbols.
 
-The General OCR production line is designed to solve text recognition tasks, extracting text information from images and outputting it in text form. This production line integrates the well-known end-to-end OCR series systems, PP-OCRv3 and PP-OCRv4, supporting recognition of over 80 languages. Additionally, it includes functions for image orientation correction and distortion correction. Based on this production line, precise text content prediction at the millisecond level on CPUs can be achieved, covering a wide range of applications including general, manufacturing, finance, and transportation sectors. The production line also provides flexible deployment options, supporting calls in various programming languages on multiple hardware platforms. Moreover, it offers the capability for secondary development, allowing you to train and optimize on your own dataset. The trained models can also be seamlessly integrated.
+The General OCR pipeline is designed to solve text recognition tasks, extracting text information from images and outputting it in text form. This pipeline integrates the well-known end-to-end OCR series systems, PP-OCRv3 and PP-OCRv4, supporting recognition of over 80 languages. Additionally, it includes functions for image orientation correction and distortion correction. Based on this pipeline, precise text content prediction at the millisecond level on CPUs can be achieved, covering a wide range of applications including general, manufacturing, finance, and transportation sectors. The pipeline also provides flexible deployment options, supporting calls in various programming languages on multiple hardware platforms. Moreover, it offers the capability for secondary development, allowing you to train and optimize on your own dataset. The trained models can also be seamlessly integrated.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/01.png"/>
-<b>The General OCR production line includes mandatory text detection and text recognition modules, as well as optional document image orientation classification, text image correction, and text line orientation classification modules.</b> The document image orientation classification and text image correction modules are integrated as a document preprocessing sub-line into the General OCR production line. Each module contains multiple models, and you can choose the model based on the benchmark test data below.
+
+<b>The General OCR pipeline includes mandatory text detection and text recognition modules, as well as optional document image orientation classification, text image correction, and text line orientation classification modules.</b> The document image orientation classification and text image correction modules are integrated as a document preprocessing sub-line into the General OCR pipeline. Each module contains multiple models, and you can choose the model based on the benchmark test data below.
 
 <b>If you prioritize model accuracy, choose a high-accuracy model; if you prioritize inference speed, choose a faster inference model; if you care about model storage size, choose a smaller model.</b>
 <p><b>Document Image Orientation Classification Module (Optional):</b></p>
@@ -36,7 +37,7 @@ The General OCR production line is designed to solve text recognition tasks, ext
 </tr>
 </tbody>
 </table>
-<b>Note: The evaluation dataset for the above accuracy metrics is a self-built dataset covering multiple scenarios such as certificates and documents, with 1,000 images. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+
 <p><b>Text Image Correction Module (Optional):</b></p>
 <table>
 <thead>
@@ -56,7 +57,7 @@ The General OCR production line is designed to solve text recognition tasks, ext
 </tr>
 </tbody>
 </table>
-<b>Note: The accuracy metrics of the model are measured from the <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet benchmark</a>.</b>
+
 <p><b>Text Detection Module:</b></p>
 <table>
 <thead>
@@ -147,7 +148,6 @@ The General OCR production line is designed to solve text recognition tasks, ext
 <td>The ultra-lightweight English recognition model trained based on the PP-OCRv4 recognition model, supporting English and numeric recognition</td>
 </tr>
 </table>
-<b>Note: The evaluation dataset for the above accuracy metrics is a self-built Chinese dataset by PaddleOCR, covering multiple scenarios such as street view, web images, documents, and handwriting, with 11,000 images for text recognition. All model GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
 
 > ❗ The above list features the <b>4 core models</b> that the text recognition module primarily supports. In total, this module supports <b>18 models</b>. The complete list of models is as follows:
 
@@ -165,38 +165,38 @@ The General OCR production line is designed to solve text recognition tasks, ext
 </tr>
 <tr>
 <td>PP-OCRv4_server_rec_doc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_doc_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
+<td>81.53</td>
 <td>6.65 / 6.65</td>
 <td>32.92 / 32.92</td>
-<td></td>
+<td>74.7 M</td>
 <td>PP-OCRv4_server_rec_doc is trained on a mixed dataset of more Chinese document data and PP-OCR training data based on PP-OCRv4_server_rec. It has added the recognition capabilities for some traditional Chinese characters, Japanese, and special characters. The number of recognizable characters is over 15,000. In addition to the improvement in document-related text recognition, it also enhances the general text recognition capability.</td>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Training Model</a></td>
-<td>78.20</td>
+<td>78.74</td>
 <td>4.82 / 4.82</td>
 <td>16.74 / 4.64</td>
 <td>10.6 M</td>
-<td>The PP-OCRv4 recognition model is an upgrade from PP-OCRv3. Under comparable speed conditions, the effect in Chinese and English scenarios is further improved. The average recognition accuracy of the 80 multilingual models is increased by more than 8%.</td>
+<td>The lightweight recognition model of PP-OCRv4 has high inference efficiency and can be deployed on various hardware devices, including edge devices.</td>
 </tr>
 <tr>
 <td>PP-OCRv4_server_rec </td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Trained Model</a></td>
-<td>79.20</td>
+<td>80.61 </td>
 <td>6.58 / 6.58</td>
 <td>33.17 / 33.17</td>
 <td>71.2 M</td>
-<td>A high-precision server text recognition model, featuring high accuracy, fast speed, and multilingual support. It is suitable for text recognition tasks in various scenarios.</td>
+<td>The server-side model of PP-OCRv4 offers high inference accuracy and can be deployed on various types of servers.</td>
 </tr>
 <tr>
 <td>PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
+<td>72.96</td>
 <td>5.87 / 5.87</td>
 <td>9.07 / 4.28</td>
-<td></td>
-<td>An ultra-lightweight OCR model suitable for mobile applications. It adopts an encoder-decoder structure based on Transformer and enhances recognition accuracy and efficiency through techniques such as data augmentation and mixed precision training. The model size is 10.6M, making it suitable for deployment on resource-constrained devices. It can be used in scenarios such as mobile photo translation and business card recognition.</td>
+<td>9.2 M</td>
+<td>PP-OCRv3’s lightweight recognition model is designed for high inference efficiency and can be deployed on a variety of hardware devices, including edge devices.</td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy indicators is the Chinese dataset built by PaddleOCR, covering multiple scenarios such as street view, web images, documents, and handwriting. The text recognition includes 11,000 images. The GPU inference time for all models is based on NVIDIA Tesla T4 machines with FP32 precision type. The CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -209,15 +209,15 @@ The General OCR production line is designed to solve text recognition tasks, ext
 <tr>
 <td>ch_SVTRv2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_SVTRv2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">Training Model</a></td>
 <td>68.81</td>
-<td>8.36801</td>
-<td>165.706</td>
+<td>8.08 / 8.08</td>
+<td>50.17 / 42.50</td>
 <td>73.9 M</td>
 <td rowspan="1">
 SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan University's Visual and Learning Laboratory (FVL). It won the first prize in the PaddleOCR Algorithm Model Challenge - Task One: OCR End-to-End Recognition Task. The end-to-end recognition accuracy on the A list is 6% higher than that of PP-OCRv4.
 </td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy indicators is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a> - Task One: OCR End-to-End Recognition Task A list. The GPU inference time for all models is based on NVIDIA Tesla T4 machines with FP32 precision type. The CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -230,13 +230,12 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <tr>
 <td>ch_RepSVTR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_RepSVTR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">Training Model</a></td>
 <td>65.07</td>
-<td>10.5047</td>
-<td>51.5647</td>
+<td>5.93 / 5.93</td>
+<td>20.73 / 7.32</td>
 <td>22.1 M</td>
 <td rowspan="1">    The RepSVTR text recognition model is a mobile text recognition model based on SVTRv2. It won the first prize in the PaddleOCR Algorithm Model Challenge - Task One: OCR End-to-End Recognition Task. The end-to-end recognition accuracy on the B list is 2.5% higher than that of PP-OCRv4, with the same inference speed.</td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy indicators is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a> - Task One: OCR End-to-End Recognition Task B list. The GPU inference time for all models is based on NVIDIA Tesla T4 machines with FP32 precision type. The CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
 
 * <b>English Recognition Model</b>
 <table>
@@ -250,19 +249,19 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 </tr>
 <tr>
 <td>en_PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/en_PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>[Latest] Further upgraded based on PP-OCRv3, with improved accuracy under comparable speed conditions.</td>
+<td> 70.39</td>
+<td>4.81 / 4.81</td>
+<td>16.10 / 5.31</td>
+<td>6.8 M</td>
+<td>The ultra-lightweight English recognition model trained based on the PP-OCRv4 recognition model supports the recognition of English and numbers.</td>
 </tr>
 <tr>
 <td>en_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/en_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Ultra-lightweight model, supporting English and numeric recognition.</td>
+<td>70.69</td>
+<td>5.44 / 5.44</td>
+<td>8.65 / 5.57</td>
+<td>7.8 M </td>
+<td>The ultra-lightweight English recognition model trained based on the PP-OCRv3 recognition model supports the recognition of English and numbers.</td>
 </tr>
 </table>
 
@@ -278,86 +277,89 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 </tr>
 <tr>
 <td>korean_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/korean_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Korean Recognition</td>
+<td>60.21</td>
+<td>5.40 / 5.40</td>
+<td>9.11 / 4.05</td>
+<td>8.6 M</td>
+<td>The ultra-lightweight Korean recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Korean and numbers. </td>
 </tr>
 <tr>
 <td>japan_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/japan_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Japanese Recognition</td>
+<td>45.69</td>
+<td>5.70 / 5.70</td>
+<td>8.48 / 4.07</td>
+<td>8.8 M </td>
+<td>The ultra-lightweight Japanese recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Japanese and numbers.</td>
 </tr>
 <tr>
 <td>chinese_cht_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/chinese_cht_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Traditional Chinese Recognition</td>
+<td>82.06</td>
+<td>5.90 / 5.90</td>
+<td>9.28 / 4.34</td>
+<td>9.7 M </td>
+<td>The ultra-lightweight Traditional Chinese recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Traditional Chinese and numbers.</td>
 </tr>
 <tr>
 <td>te_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/te_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Telugu Recognition</td>
+<td>95.88</td>
+<td>5.42 / 5.42</td>
+<td>8.10 / 6.91</td>
+<td>7.8 M </td>
+<td>The ultra-lightweight Telugu recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Telugu and numbers.</td>
 </tr>
 <tr>
 <td>ka_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ka_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Kannada Recognition</td>
+<td>96.96</td>
+<td>5.25 / 5.25</td>
+<td>9.09 / 3.86</td>
+<td>8.0 M </td>
+<td>The ultra-lightweight Kannada recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Kannada and numbers.</td>
 </tr>
 <tr>
 <td>ta_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ta_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Tamil Recognition</td>
+<td>76.83</td>
+<td>5.23 / 5.23</td>
+<td>10.13 / 4.30</td>
+<td>8.0 M </td>
+<td>The ultra-lightweight Tamil recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Tamil and numbers.</td>
 </tr>
 <tr>
 <td>latin_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/latin_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Latin Recognition</td>
+<td>76.93</td>
+<td>5.20 / 5.20</td>
+<td>8.83 / 7.15</td>
+<td>7.8 M</td>
+<td>The ultra-lightweight Latin recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Latin script and numbers.</td>
 </tr>
 <tr>
 <td>arabic_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/arabic_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Arabic Script Recognition</td>
+<td>73.55</td>
+<td>5.35 / 5.35</td>
+<td>8.80 / 4.56</td>
+<td>7.8 M</td>
+<td>The ultra-lightweight Arabic script recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Arabic script and numbers.</td>
 </tr>
 <tr>
 <td>cyrillic_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/cyrillic_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Cyrillic Script Recognition</td>
+<td>94.28</td>
+<td>5.23 / 5.23</td>
+<td>8.89 / 3.88</td>
+<td>7.9 M  </td>
+<td>
+The ultra-lightweight cyrillic alphabet recognition model trained based on the PP-OCRv3 recognition model supports the recognition of cyrillic letters and numbers.</td>
 </tr>
 <tr>
 <td>devanagari_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/devanagari_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Devanagari Script Recognition</td>
+<td>96.44</td>
+<td>5.22 / 5.22</td>
+<td>8.56 / 4.06</td>
+<td>7.9 M  </td>
+<td>The ultra-lightweight Devanagari script recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Devanagari script and numbers.</td>
 </tr>
 </table>
+
 </details>
+
 <p><b>Text Line Orientation Classification Module (Optional):</b></p>
 <table>
 <thead>
@@ -386,23 +388,47 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 </tr>
 </tbody>
 </table>
-<b>Note: The evaluation dataset for the above accuracy metrics is a self-built dataset covering multiple scenarios such as certificates and documents, containing 1,000 images. GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**:
+    - Text Image Rectification Model: [DocUNet](https://www3.cs.stonybrook.edu/~cvl/docunet.html).
+    - Text Detection Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 500 images for detection.
+    - Chinese Recognition Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.
+    - ch_SVTRv2_rec: Evaluation set A for "OCR End-to-End Recognition Task" in the [PaddleOCR Algorithm Model Challenge](https://aistudio.baidu.com/competition/detail/1131/0/introduction).
+    - ch_RepSVTR_rec: Evaluation set B for "OCR End-to-End Recognition Task" in the [PaddleOCR Algorithm Model Challenge](https://aistudio.baidu.com/competition/detail/1131/0/introduction).
+    - English Recognition Model: A self-built English dataset using PaddleX.
+    - Multilingual Recognition Model: A self-built multilingual dataset using PaddleX.
+    - Text Line Orientation Classification Model: A self-built dataset using PaddleX, covering various scenarios such as ID cards and documents, containing 1000 images.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+
 
 ## 2. Quick Start
-All model production lines provided by PaddleX can be quickly experienced. You can experience the effect of the general OCR production line on the community platform, or you can use the command line or Python locally to experience the effect of the general OCR production line.
+All model pipelines provided by PaddleX can be quickly experienced. You can experience the effect of the general OCR pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the general OCR pipeline.
 
 ### 2.1 Online Experience
-You can [experience the general OCR production line online](https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent) by recognizing the demo images provided by the official platform, for example:
+You can [experience the general OCR pipeline online](https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent) by recognizing the demo images provided by the official platform, for example:
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/02.png"/>
 
-If you are satisfied with the performance of the production line, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the methods in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the production line using your private data</b>. If you have local hardware resources for training, you can start training directly on your local machine; if not, the Star River Zero-Code platform provides a one-click training service. You don't need to write any code—just upload your data and start the training task with one click.
+If you are satisfied with the performance of the pipeline, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the methods in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the pipeline using your private data</b>. If you have local hardware resources for training, you can start training directly on your local machine; if not, the Star River Zero-Code platform provides a one-click training service. You don't need to write any code—just upload your data and start the training task with one click.
 
 ### 2.2 Local Experience
-> ❗ Before using the general OCR production line locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
+> ❗ Before using the general OCR pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
 
 #### 2.2.1 Command Line Experience
-* You can quickly experience the OCR production line with a single command. Use the [test image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png), and replace `--input` with the local path for prediction.
+* You can quickly experience the OCR pipeline with a single command. Use the [test image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png), and replace `--input` with the local path for prediction.
 
 ```bash
 paddlex --pipeline OCR \
@@ -427,12 +453,13 @@ After running, the results will be printed to the terminal as follows:
        [82, 33],
        [ 3, 33]], dtype=int16), ...], 'rec_boxes': array([[  3,  10,  82,  33], ...], dtype=int16)}}
 ```
+The explanation of the running result parameters can refer to the result interpretation in [2.2.2 Python Script Integration](#222-python-script-integration).
 
 The visualized results are saved under `save_path`, and the OCR visualization results are as follows:
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/03.png"/>
 
 #### 2.2.2 Python Script Integration
-* The above command line is for quick experience and effect checking. Generally, in a project, integration through code is often required. You can complete the quick inference of the production line with just a few lines of code. The inference code is as follows:
+* The above command line is for quick experience and effect checking. Generally, in a project, integration through code is often required. You can complete the quick inference of the pipeline with just a few lines of code. The inference code is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -454,7 +481,7 @@ for res in output:
 
 In the above Python script, the following steps are executed:
 
-(1) The OCR production line object is instantiated via `create_pipeline()`, with specific parameter descriptions as follows:
+(1) The OCR pipeline object is instantiated via `create_pipeline()`, with specific parameter descriptions as follows:
 
 <table>
 <thead>
@@ -468,7 +495,7 @@ In the above Python script, the following steps are executed:
 <tbody>
 <tr>
 <td><code>pipeline</code></td>
-<td>The name of the production line or the path to the production line configuration file. If it is a production line name, it must be supported by PaddleX.</td>
+<td>The name of the pipeline or the path to the pipeline configuration file. If it is a pipeline name, it must be supported by PaddleX.</td>
 <td><code>str</code></td>
 <td><code>None</code></td>
 </tr>
@@ -481,20 +508,20 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The device used for production line inference. It supports specifying specific GPU card numbers, such as "gpu:0", other hardware card numbers, such as "npu:0", or CPU, such as "cpu".</td>
+<td>The device used for pipeline inference. It supports specifying specific GPU card numbers, such as "gpu:0", other hardware card numbers, such as "npu:0", or CPU, such as "cpu".</td>
 <td><code>str</code></td>
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference. This is only available if the production line supports high-performance inference.</td>
+<td>Whether to enable high-performance inference. This is only available if the pipeline supports high-performance inference.</td>
 <td><code>bool</code></td>
 <td><code>False</code></td>
 </tr>
 </tbody>
 </table>
 
-(2) The `predict()` method of the OCR production line object is called to perform inference. This method returns a `generator`. Below are the parameters and their descriptions for the `predict()` method:
+(2) The `predict()` method of the OCR pipeline object is called to perform inference. This method returns a `generator`. Below are the parameters and their descriptions for the `predict()` method:
 
 <table>
 <thead>
@@ -531,7 +558,7 @@ In the above Python script, the following steps are executed:
 <li><b>XPU</b>: Use the first XPU for inference, e.g., <code>xpu:0</code></li>
 <li><b>MLU</b>: Use the first MLU for inference, e.g., <code>mlu:0</code></li>
 <li><b>DCU</b>: Use the first DCU for inference, e.g., <code>dcu:0</code></li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used. During initialization, the local GPU 0 will be used if available; otherwise, the CPU will be used.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used. During initialization, the local GPU 0 will be used if available; otherwise, the CPU will be used.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -543,7 +570,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code></li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>True</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, which is <code>True</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -555,7 +582,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code></li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>True</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, which is <code>True</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -567,7 +594,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>bool</b>: <code>True</code> or <code>False</code></li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>True</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, which is <code>True</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -579,7 +606,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>int</b>: Any integer greater than <code>0</code></li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>960</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, which is <code>960</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -591,7 +618,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>str</b>: Supports <code>min</code> and <code>max</code>. <code>min</code> ensures that the shortest side of the image is not less than <code>det_limit_side_len</code>, while <code>max</code> ensures that the longest side is not greater than <code>limit_side_len</code></li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>max</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, which is <code>max</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -603,7 +630,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>float</b>: Any floating-point number greater than <code>0</code></li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>0.3</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, which is <code>0.3</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -615,7 +642,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>float</b>: Any floating-point number greater than <code>0</code></li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>0.6</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, which is <code>0.6</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -627,7 +654,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>float</b>: Any floating-point number greater than <code>0</code></li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>2.0</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, which is <code>2.0</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -639,7 +666,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>float</b>: Any floating-point number greater than <code>0</code></li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the production line initialization will be used, which is <code>0.0</code> (i.e., no threshold)</li>
+<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, which is <code>0.0</code> (i.e., no threshold)</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -713,7 +740,9 @@ In the above Python script, the following steps are executed:
 
     - `input_path`: `(str)` The input path of the image to be predicted
 
-    - `model_settings`: `(Dict[str, bool])` The model parameters required for the production line configuration
+    - `page_index`: `(Union[int, None])` If the input is a PDF file, this indicates the current page number of the PDF. Otherwise, it is `None`
+
+    - `model_settings`: `(Dict[str, bool])` The model parameters required for the pipeline configuration
 
         - `use_doc_preprocessor`: `(bool)` Controls whether to enable the document preprocessing sub-line
         - `use_textline_orientation`: `(bool)` Controls whether to enable text line orientation classification
@@ -749,9 +778,9 @@ In the above Python script, the following steps are executed:
 
     - `rec_boxes`: `(numpy.ndarray)` An array of rectangular bounding boxes for detection boxes, with a shape of (n, 4) and dtype int16. Each row represents the [x_min, y_min, x_max, y_max] coordinates of a rectangle, where (x_min, y_min) is the top-left corner and (x_max, y_max) is the bottom-right corner
 
-- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}.json`. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` type will be converted to a list format.
+- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.json`. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` type will be converted to a list format.
 
-- Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_ocr_res_img.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (Since the production line usually contains multiple result images, it is not recommended to specify a specific file path directly, as multiple images will be overwritten and only the last image will be retained)
+- Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_ocr_res_img.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (Since the pipeline usually contains multiple result images, it is not recommended to specify a specific file path directly, as multiple images will be overwritten and only the last image will be retained)
 
 * Additionally, it also supports obtaining the visualization image with results and the prediction results through attributes, as follows:
 
@@ -775,13 +804,13 @@ In the above Python script, the following steps are executed:
 - The prediction results obtained through the `json` attribute are of type `dict`, and the content is consistent with the data saved by calling the `save_to_json()` method.
 - The prediction results returned by the `img` attribute are of type `dict`. The keys are `ocr_res_img` and `preprocessed_img`, and the corresponding values are two `Image.Image` objects: one for displaying the visualization image of OCR results, and the other for showing the visualization image of image preprocessing. If the image preprocessing sub-module is not used, the dictionary will only contain `ocr_res_img`.
 
-Additionally, you can obtain the OCR production line configuration file and load the configuration file for prediction. You can execute the following command to save the results in `my_path`:
+Additionally, you can obtain the OCR pipeline configuration file and load the configuration file for prediction. You can execute the following command to save the results in `my_path`:
 
 ```
 paddlex --get_pipeline_config OCR --save_path ./my_path
 ```
 
-If you have obtained the configuration file, you can customize the configurations of the OCR production line. You just need to modify the `pipeline` parameter value in the `create_pipeline` method to the path of the production line configuration file. The example is as follows:
+If you have obtained the configuration file, you can customize the configurations of the OCR pipeline. You just need to modify the `pipeline` parameter value in the `create_pipeline` method to the path of the pipeline configuration file. The example is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -801,12 +830,12 @@ for res in output:
 
 ```
 
-<b>Note:</b> The parameters in the configuration file are initialization parameters for the production line. If you want to change the general OCR production line initialization parameters, you can directly modify the parameters in the configuration file and load the configuration file for prediction. In addition, CLI prediction also supports passing in a configuration file, just specify the path of the configuration file with `--pipeline`.
+<b>Note:</b> The parameters in the configuration file are initialization parameters for the pipeline. If you want to change the general OCR pipeline initialization parameters, you can directly modify the parameters in the configuration file and load the configuration file for prediction. In addition, CLI prediction also supports passing in a configuration file, just specify the path of the configuration file with `--pipeline`.
 
 ## 3. Development Integration/Deployment
-If the general OCR production line meets your requirements for inference speed and accuracy, you can proceed with development integration/deployment directly.
+If the general OCR pipeline meets your requirements for inference speed and accuracy, you can proceed with development integration/deployment directly.
 
-If you need to apply the general OCR production line directly in your Python project, you can refer to the example code in [2.2.2 Python Script Method](#222-python-script-method).
+If you need to apply the general OCR pipeline directly in your Python project, you can refer to the example code in [2.2.2 Python Script Method](#222-python-script-method).
 
 In addition, PaddleX also provides three other deployment methods, which are detailed as follows:
 
@@ -818,11 +847,11 @@ In addition, PaddleX also provides three other deployment methods, which are det
 Below are the API reference and multi-language service invocation examples for the basic serving solution:
 
 <details><summary>API Reference</summary>
-<p>For primary operations provided by the service:</p>
+<p>For the main operations provided by the service:</p>
 <ul>
 <li>The HTTP request method is POST.</li>
 <li>Both the request body and response body are JSON data (JSON objects).</li>
-<li>When the request is processed successfully, the response status code is <code>200</code>, and the properties of the response body are as follows:</li>
+<li>When the request is processed successfully, the response status code is <code>200</code>, and the attributes of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
@@ -856,7 +885,7 @@ Below are the API reference and multi-language service invocation examples for t
 </tbody>
 </table>
 <ul>
-<li>When the request is not processed successfully, the properties of the response body are as follows:</li>
+<li>When the request is not processed successfully, the attributes of the response body are as follows:</li>
 </ul>
 <table>
 <thead>
@@ -884,14 +913,14 @@ Below are the API reference and multi-language service invocation examples for t
 </tr>
 </tbody>
 </table>
-<p>Primary operations provided by the service:</p>
+<p>The main operations provided by the service are as follows:</p>
 <ul>
 <li><b><code>infer</code></b></li>
 </ul>
-<p>Get the OCR result of an image.</p>
+<p>Obtain OCR results from images.</p>
 <p><code>POST /ocr</code></p>
 <ul>
-<li>The properties of the request body are as follows:</li>
+<li>The attributes of the request body are as follows:</li>
 </ul>
 <table>
 <thead>
@@ -906,58 +935,88 @@ Below are the API reference and multi-language service invocation examples for t
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>The URL of an image file or PDF file accessible by the server, or the Base64 encoded result of the content of the above-mentioned file types. For PDF files with more than 10 pages, only the content of the first 10 pages will be used.</td>
+<td>The URL of an image or PDF file accessible by the server, or the Base64-encoded content of the file. For PDF files exceeding 10 pages, only the first 10 pages will be used.</td>
 <td>Yes</td>
 </tr>
 <tr>
 <td><code>fileType</code></td>
-<td><code>integer</code></td>
-<td>File type. <code>0</code> indicates a PDF file, and <code>1</code> indicates an image file. If this property is not present in the request body, the file type will be inferred based on the URL.</td>
+<td><code>integer</code> | <code>null</code></td>
+<td>The type of the file. <code>0</code> for PDF files, <code>1</code> for image files. If this attribute is missing, the file type will be inferred from the URL.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>inferenceParams</code></td>
-<td><code>object</code></td>
-<td>Inference parameters.</td>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the <code>use_doc_orientation_classify</code> parameter description in the pipeline <code>predict</code> method.</td>
 <td>No</td>
 </tr>
-</tbody>
-</table>
-<p>The properties of <code>inferenceParams</code> are as follows:</p>
-<table>
-<thead>
 <tr>
-<th>Name</th>
-<th>Type</th>
-<th>Meaning</th>
-<th>Required</th>
+<td><code>useDocUnwarping</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the <code>use_doc_unwarping</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
 </tr>
-</thead>
-<tbody>
 <tr>
-<td><code>maxLongSide</code></td>
-<td><code>integer</code></td>
-<td>If the longer side of the input image for the text detection model exceeds <code>maxLongSide</code> during inference, the image will be scaled down so that its longer side equals <code>maxLongSide</code>.</td>
+<td><code>useTextlineOrientation</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Refer to the <code>use_textline_orientation</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>Refer to the <code>text_det_limit_side_len</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Refer to the <code>text_det_limit_type</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>text_det_thresh</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>text_det_box_thresh</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>text_det_unclip_ratio</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Refer to the <code>text_rec_score_thresh</code> parameter description in the pipeline <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>When the request is processed successfully, the <code>result</code> in the response body has the following properties:</li>
+<li>When the request is processed successfully, the response body has the following properties for <code>result</code>:</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
-<th>Meaning</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
+<tr>
 <td><code>ocrResults</code></td>
-<td><code>array</code></td>
-<td>OCR results. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
-
+<td><code>object</code></td>
+<td>OCR results. The array length is 1 (for image input) or the smaller of the document page count and 10 (for PDF input). For PDF input, each element in the array represents the processing result for each page of the PDF file.</td>
+</tr>
 <tr>
 <td><code>dataInfo</code></td>
 <td><code>object</code></td>
@@ -976,47 +1035,32 @@ Below are the API reference and multi-language service invocation examples for t
 </thead>
 <tbody>
 <tr>
-<td><code>texts</code></td>
-<td><code>array</code></td>
-<td>Text locations, content, and scores.</td>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>The simplified version of the <code>res</code> field in the JSON representation generated by the <code>predict</code> method of the production object, with the <code>input_path</code> field removed.</td>
 </tr>
 <tr>
-<td><code>image</code></td>
-<td><code>string</code></td>
-<td>The OCR result image with annotated text locations. The image is in JPEG format and Base64-encoded.</td>
+<td><code>ocrImage</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>The OCR result image, which marks the detected text positions. The image is in JPEG format and encoded in Base64.</td>
+</tr>
+<tr>
+<td><code>docPreprocessingImage</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>The visualization result image. The image is in JPEG format and encoded in Base64.</td>
+</tr>
+<tr>
+<td><code>inputImage</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>The input image. The image is in JPEG format and encoded in Base64.</td>
 </tr>
 </tbody>
 </table>
-<p>Each element in <code>texts</code> is an <code>object</code> with the following properties:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>poly</code></td>
-<td><code>array</code></td>
-<td>Text location. The elements in the array are the coordinates of the vertices of the polygon surrounding the text.</td>
-</tr>
-<tr>
-<td><code>text</code></td>
-<td><code>string</code></td>
-<td>Text content.</td>
-</tr>
-<tr>
-<td><code>score</code></td>
-<td><code>number</code></td>
-<td>Text recognition score.</td>
-</tr>
-</tbody>
-</table>
-<details><summary>Multi-language Service Call Examples</summary>
+</details>
+<details><summary>Multi-language Service Call Example</summary>
 <details>
 <summary>Python</summary>
+
 <pre><code class="language-python">import base64
 import requests
 
@@ -1029,34 +1073,28 @@ with open(file_path, "rb") as file:
 
 payload = {"file": file_data, "fileType": 1}
 
-
-# Call the API
 response = requests.post(API_URL, json=payload)
 
-# Process the response data
 assert response.status_code == 200
-
 result = response.json()["result"]
 for i, res in enumerate(result["ocrResults"]):
-    print("Detected texts:")
-    print(res["texts"])
-    output_img_path = f"out_{i}.jpg"
-    with open(output_img_path, "wb") as f:
-        f.write(base64.b64decode(res["image"]))
-    print(f"Output image saved at {output_img_path}")
-
+    print(res["prunedResult"])
+    ocr_img_path = f"ocr_{i}.jpg"
+    with open(ocr_img_path, "wb") as f:
+        f.write(base64.b64decode(res["ocrImage"]))
+    print(f"Output image saved at {ocr_img_path}")
 </code></pre></details>
 </details>
 <br/>
 
 📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on user devices, allowing them to process data locally without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed instructions, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
-You can choose the appropriate deployment method based on your needs to integrate the model production line into your AI applications.
+You can choose the appropriate deployment method based on your needs to integrate the model pipeline into your AI applications.
 
 ## 4. Secondary Development
-If the default model weights provided by the General OCR production line do not meet your requirements in terms of accuracy or speed, you can attempt to <b>fine-tune</b> the existing models using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the General OCR production line in your scenario.
+If the default model weights provided by the General OCR pipeline do not meet your requirements in terms of accuracy or speed, you can attempt to <b>fine-tune</b> the existing models using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the General OCR pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the General OCR production line consists of several modules, the unsatisfactory performance of the production line may originate from any one of these modules. You can analyze the images with poor recognition results to identify which module is problematic and refer to the corresponding fine-tuning tutorial links in the table below for model fine-tuning.
+Since the General OCR pipeline consists of several modules, the unsatisfactory performance of the pipeline may originate from any one of these modules. You can analyze the images with poor recognition results to identify which module is problematic and refer to the corresponding fine-tuning tutorial links in the table below for model fine-tuning.
 
 <table>
 <thead>
@@ -1098,7 +1136,7 @@ Since the General OCR production line consists of several modules, the unsatisfa
 ### 4.2 Model Application
 After fine-tuning with your private dataset, you will obtain the local model weight files.
 
-If you need to use the fine-tuned model weights, simply modify the production line configuration file by replacing the local paths of the fine-tuned model weights into the corresponding positions in the configuration file:
+If you need to use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local paths of the fine-tuned model weights into the corresponding positions in the configuration file:
 
 ```yaml
 SubPipelines:
@@ -1108,33 +1146,33 @@ SubPipelines:
       DocOrientationClassify:
         module_name: doc_text_orientation
         model_name: PP-LCNet_x1_0_doc_ori
-        model_dir: null # 替换为微调后的文档图像方向分类模型权重路径
+        model_dir: null # Replace with the path to the fine-tuned document image orientation classification model weights.
     ...
 
 SubModules:
   TextDetection:
     module_name: text_detection
     model_name: PP-OCRv4_mobile_det
-    model_dir: null # 替换为微调后的文本检测模型权重路径
+    model_dir: null # Replace with the path to the fine-tuned text detection model weights.
     ...
   TextLineOrientation:
     module_name: textline_orientation
     model_name: PP-LCNet_x0_25_textline_ori
-    model_dir: null  # 替换为微调后的文本行方向分类模型权重路径
+    model_dir: null  # Replace with the path to the fine-tuned textline orientation classification model weights.
     batch_size: 1
   TextRecognition:
     module_name: text_recognition
     model_name: PP-OCRv4_mobile_rec
-    model_dir: null  # 替换为微调后的文本识别模型权重路径
+    model_dir: null  # Replace with the path to the fine-tuned text recognition model weights.
     batch_size: 1
 ```
 
-Subsequently, refer to the command-line or Python script methods in [2.2 Local Experience](#22-local-experience) to load the modified production line configuration file.
+Subsequently, refer to the command-line or Python script methods in [2.2 Local Experience](#22-local-experience) to load the modified pipeline configuration file.
 
 ## 5. Multi-Hardware Support
 PaddleX supports a variety of mainstream hardware devices, including NVIDIA GPUs, Kunlunxin XPUs, Ascend NPUs, and Cambricon MLUs. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware devices.
 
-For example, if you are using an NVIDIA GPU for OCR production line inference, the Python command is:
+For example, if you are using an NVIDIA GPU for OCR pipeline inference, the Python command is:
 
 ```bash
 paddlex --pipeline OCR \
@@ -1145,6 +1183,7 @@ paddlex --pipeline OCR \
         --save_path ./output \
         --device npu:0
 ```
+Of course, you can also specify the hardware device when calling `create_pipeline()` or `predict()` in a Python script.
 
-If you want to use the General OCR production line on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+If you want to use the General OCR pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
 </details>

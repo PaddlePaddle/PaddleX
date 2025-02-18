@@ -26,7 +26,7 @@ docker run -it --name paddle-dcu-dev -v `pwd`:/work \
 
 ```
 # 下载并安装 wheel 包
-pip install paddlepaddle-rocm -i https://www.paddlepaddle.org.cn/packages/nightly/dcu
+pip install paddlepaddle-dcu -i https://www.paddlepaddle.org.cn/packages/nightly/dcu
 ```
 验证安装包 安装完成之后，运行如下命令
 

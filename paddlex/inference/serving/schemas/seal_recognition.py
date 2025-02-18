@@ -15,7 +15,7 @@
 from typing import Dict, Final, List, Optional, Union
 
 from pydantic import BaseModel, Field
-from typing_extensions import Annotated, Literal
+from typing_extensions import Annotated
 
 from ..infra.models import DataInfo, PrimaryOperations
 from .shared import ocr
@@ -40,9 +40,9 @@ class InferRequest(ocr.BaseInferRequest):
     layoutUnclipRatio: Optional[
         Union[float, Annotated[List[float], Field(min_length=2, max_length=2)]]
     ] = None
-    layoutMergeBboxesMode: Optional[Literal["union", "large", "small"]] = None
+    layoutMergeBboxesMode: Optional[str] = None
     sealDetLimitSideLen: Optional[int] = None
-    sealDetLimitType: Optional[Literal["min", "max"]] = None
+    sealDetLimitType: Optional[str] = None
     sealDetThresh: Optional[float] = None
     sealDetBoxThresh: Optional[float] = None
     sealDetUnclipRatio: Optional[float] = None

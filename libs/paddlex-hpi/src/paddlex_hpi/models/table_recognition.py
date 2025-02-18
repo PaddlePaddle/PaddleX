@@ -18,7 +18,7 @@ from typing import Any, Dict, List
 import ultra_infer as ui
 import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.models_new.table_structure_recognition.result import (
+from paddlex.inference.models.table_structure_recognition.result import (
     TableRecResult,
 )
 from paddlex.modules.table_recognition.model_list import MODELS
@@ -59,7 +59,7 @@ class TablePredictor(CVPredictor):
         return TableRecResult
 
     def process(self, batch_data: List[Any]) -> Dict[str, List[Any]]:
-        batch_raw_imgs = self._data_reader(imgs=batch_data)
+        batch_raw_imgs = self._data_reader(imgs=batch_data.instances)
         imgs = [np.ascontiguousarray(img) for img in batch_raw_imgs]
         ui_results = self._ui_model.batch_predict(imgs)
 
@@ -72,7 +72,8 @@ class TablePredictor(CVPredictor):
             structure_score_list.append(0.0)
 
         return {
-            "input_path": batch_data,
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
             "input_img": batch_raw_imgs,
             "bbox": bbox_list,
             "structure": structure_list,
