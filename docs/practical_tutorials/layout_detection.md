@@ -316,9 +316,7 @@ for res in output:
     res.save_to_json("./output/")
 ```
 
-可以发现在右上角有错误的`text`类别框识别出来：
-
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/layout_detection/layout_test_2_res.jpg">
+可以发现下左图在右上角有错误的`text`类别框识别出来
 
 这时可以开启`threshold={2: 0.6}`，针对类别`text`，类别id是2，设置检测得分阈值为0.6，可以把错误的text框过滤掉，其余类别沿用默认阈值0.5。执行下面的代码:
 
@@ -333,37 +331,31 @@ for res in output:
     res.save_to_json("./output/")
 ```
 
-在保存目录查看可视化结果如下，可以发现右上角多余框已经被过滤，只保留了最优的检测结果:
+在保存目录查看可视化结果如下，可以发现下有图的右上角多余框已经被阈值过滤，只保留了最优的检测结果:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/layout_detection/layout_test_2_res_thred.jpg">
+<div style="display: flex; justify-content: space-around;">
+  <div style="text-align: center;">
+    <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/layout_detection/layout_test_2_res.jpg" alt="Image 1" style="width:800;">
+    <p>不设置</p>
+  </div>
+  <div style="text-align: center;">
+    <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/layout_detection/layout_test_2_res_thred.jpg" alt="Image 2" style="width:800;">
+    <p>layout_nms=threshold={2: 0.6}</p>
+  </div>
+</div>
 
 
 ### 4.2 重叠框过滤 —— 消除多余框干扰
 
 `layout_nms`参数用于重叠框过滤，布尔类型，用于指定是否使用NMS（非极大值抑制）过滤重叠框，启用该功能，可以自动筛选最优的检测结果，消除多余干扰框；重叠框过滤功能，在默认情况下是关闭的，如果要开启该功能，需要在`predict`方法中传入参数`layout_nms=True`。执行下面的代码，`layout_nms=False`不开启重叠框过滤功能，执行下面的代码，查看结果。
 
-```python
-from paddlex import create_pipeline
-
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
-output = pipeline.predict("layout_test_2.jpg", threshold=0.5)  # 默认不开启重叠框过滤功能
-for res in output:
-    res.print()
-    res.save_to_img("./output/")
-    res.save_to_json("./output/")
-
-```
-
-在保存目录查看可视化结果如下:
-
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/layout_detection/layout_test_2_res.jpg">
-
-可以发现在右上角有重叠框干扰，那么这时可以开启`layout_nms=True`过滤多余框:
+在不开启重叠框过滤功能时，可以发现下左图在右上角有重叠框干扰，那么这时可以开启`layout_nms=True`过滤多余框，可以发现下右图的右上角多余框已经被过滤，只保留了最优的检测结果。分别执行不开启和开启过滤功能的代码，查看对比结果:
 
 ```python
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+# output = pipeline.predict("layout_test_2.jpg", threshold=0.5)  # 不开启重叠框过滤功能
 output = pipeline.predict("layout_test_2.jpg", threshold=0.5, layout_nms=True)  # 开启重叠框过滤功能
 for res in output:
     res.print()
@@ -372,10 +364,18 @@ for res in output:
 
 ```
 
-在保存目录查看可视化结果如下，可以发现右上角多余框已经被过滤，只保留了最优的检测结果。
+查看对比的可视化结果如下：
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/layout_detection/layout_test_2_res_post.jpg">
-
+<div style="display: flex; justify-content: space-around;">
+  <div style="text-align: center;">
+    <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/layout_detection/layout_test_2_res.jpg" alt="Image 1" style="width:800;">
+    <p>不设置</p>
+  </div>
+  <div style="text-align: center;">
+    <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/layout_detection/layout_test_2_res_post.jpg" alt="Image 2" style="width:800;">
+    <p>layout_nms=True</p>
+  </div>
+</div>
 
 ### 4.3 可调框边长 —— 获取完整区块
 
@@ -385,7 +385,8 @@ for res in output:
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
-output = pipeline.predict("layout_test_2.jpg",  threshold={2: 0.6}, layout_unclip_ratio=(1.0, 1.05))  # 在保持中心点不变的情况下,调整检测框边的缩放倍数。
+# output = pipeline.predict("layout_test_2.jpg",  threshold={2: 0.6})  # 不调整检测框边的缩放倍数
+output = pipeline.predict("layout_test_2.jpg",  threshold={2: 0.6}, layout_unclip_ratio=(1.0, 1.05))  # 调整检测框的高的缩放倍数为1.05
 for res in output:
     res.print()
     res.save_to_img("./output/")
@@ -504,7 +505,7 @@ if __name__ == "__main__":
 
 如果版面检测效果可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
 
-1. 直接后处理调整好的产线应用在您的 Python 项目中，可以参考如下示例代码：
+### 6.1 直接后处理调整好的产线应用在您的 Python 项目中，可以参考如下示例代码：
 ```python
 from paddlex import create_pipeline
 
@@ -518,10 +519,109 @@ for res in output:
 更多参数请参考 [目标检测产线使用教程](../pipeline_usage/tutorials/cv_pipelines/object_detection.md)。
 
 
-2. 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
+### 6.2 以高稳定性服务化部署作为教程实践内容，具体可以参考 [PaddleX 服务化部署指南](../pipeline_deploy/serving.md) 进行实践。
+
+**请注意，当前高稳定性服务化部署方案仅支持 Linux 系统。**
+
+#### 6.2.1 获取SDK
+
+下载目标检测高稳定性服务化部署 SDK <a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_object_detection_sdk.tar.gz>paddlex_hps_object_detection_sdk.tar.gz</a>，解压 SDK 并运行部署脚本，如下：
+
+```bash
+tar -xvf paddlex_hps_object_detection_sdk.tar.gz
+```
+
+#### 6.2.2 获取序列号
+
+- 获取序列号，在 [飞桨 AI Studio 星河社区-人工智能学习与实训社区](https://aistudio.baidu.com/paddlex/commercialization) 的“开源模型产线部署序列号咨询与获取”部分选择“立即获取”，如下图所示：
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-1.png"> 
+
+选择目标检测产线，并点击“获取”。之后，可以在页面下方的“开源产线部署SDK序列号管理”部分找到获取到的序列号：
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-2.png">
+
+**请注意**：每个序列号只能绑定到唯一的设备指纹，且只能绑定一次。这意味着用户如果使用不同的机器部署产线，则必须为每台机器准备单独的序列号。
+
+#### 6.2.3 调整配置和运行服务
+
+调整配置可以参考[PaddleX 服务化部署指南](../pipeline_deploy/serving.md)中的高稳定性部署的配置调整部分。
+
+在配置调整完成后，运行服务：
+
+用于部署的机器上需要安装有 19.03 或更高版本的 Docker Engine。
+
+首先，根据需要拉取 Docker 镜像：
+
+- 支持使用 NVIDIA GPU 部署的镜像（机器上需要安装有支持 CUDA 11.8 的 NVIDIA 驱动）：
+
+    ```bash
+    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0b2-gpu
+    ```
+
+- CPU-only 镜像：
+
+    ```bash
+    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0b2-cpu
+    ```
+
+准备好镜像后，执行如下命令运行服务器：
+
+```bash
+docker run \
+    -it \
+    -v "$(pwd)":/workspace \
+    -v "${HOME}/.baidu/paddlex/licenses":/root/.baidu/paddlex/licenses \
+    -v /dev/disk/by-uuid:/dev/disk/by-uuid \
+    -w /workspace \
+    -e PADDLEX_HPS_DEVICE_TYPE={部署设备类型} \
+    -e PADDLEX_HPS_SERIAL_NUMBER={序列号} \
+    --rm \
+    --gpus all \
+    --network host \
+    --shm-size 8g \
+    {镜像名称} \
+    ./server.sh
+```
+
+- 部署设备类型可以为 `cpu` 或 `gpu`，CPU-only 镜像仅支持 `cpu`。
+- 如果希望使用 CPU 部署，则不需要指定 `--gpus`。
+- 以上命令必须在激活成功后才可以正常执行。PaddleX 提供两种激活方式：离线激活和在线激活。具体说明如下：
+
+    - 联网激活：在命令中添加 `-e PADDLEX_HPS_UPDATE_LICENSE=1`，使程序自动完成激活。
+    - 离线激活：按照序列号管理部分中的指引，获取机器的设备指纹，并将序列号与设备指纹绑定以获取证书，完成激活。使用这种激活方式，需要手动将证书存放在机器的 `${HOME}/.baidu/paddlex/licenses` 目录中（如果目录不存在，需要创建目录）。
+
+- 必须确保宿主机的 `/dev/disk/by-uuid` 存在且非空，并正确挂载该目录，才能正常执行激活。
+- 如果需要进入容器内部调试，可以将命令中的 `./server.sh` 替换为 `/bin/bash`，在容器中执行 `./server.sh`。
+- 如果希望服务器在后台运行，可以将命令中的 `-it` 替换为 `-d`。容器启动后，可通过 `docker logs -f {容器 ID}` 查看容器日志。
+
+可观察到类似下面的输出信息：
+
+```text
+I1216 11:37:21.601943 35 grpc_server.cc:4117] Started GRPCInferenceService at 0.0.0.0:8001
+I1216 11:37:21.602333 35 http_server.cc:2815] Started HTTPService at 0.0.0.0:8000
+I1216 11:37:21.643494 35 http_server.cc:167] Started Metrics Service at 0.0.0.0:8002
+```
+
+#### 6.2.4 调用服务
+
+目前，仅支持使用 Python 客户端调用服务。支持的 Python 版本为 3.8、3.9 和 3.10。
+
+切换到高稳定性服务化部署 SDK 的 `client` 目录，执行如下命令安装依赖：
+
+```bash
+# 建议在虚拟环境中安装
+python -m pip install paddlex_hps_client-*.whl
+python -m pip install -r requirements.txt
+```
+
+`client` 目录的 `client.py` 脚本包含服务的调用示例，执行该脚本，获取[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout_test_0.jpg)服务返回的推理结果。
+
+
+### 6.3 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
 
 * 高性能部署：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能部署流程请参考 [PaddleX 高性能推理指南](../pipeline_deploy/high_performance_inference.md)。
-* 服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考 [PaddleX 服务化部署指南](../pipeline_deploy/serving.md)。
+* 基础服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考 [PaddleX 服务化部署指南](../pipeline_deploy/serving.md)。
 * 端侧部署：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考 [PaddleX端侧部署指南](../pipeline_deploy/edge_deploy.md)。
 
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
