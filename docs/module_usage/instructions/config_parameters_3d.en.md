@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# PaddleX 3D Task Model Configuration File Parameters Explanation
+# PaddleX 3d Task Model Configuration File Parameters Explanation
 
 # Global
 
@@ -61,7 +61,7 @@ comments: true
 <tr>
 <td>datart_prefix</td>
 <td>bool</td>
-<td>Whether the data set path is prefixed</td>
+<td>Whether to add the root path to the dataset_dir</td>
 <td>True</td>
 </tr>
 <tr>
@@ -88,38 +88,21 @@ comments: true
 <tr>
 <td>convert.enable</td>
 <td>bool</td>
-<td>Whether to convert the dataset format;</td>
-<td>False</td>
-</tr>
-<tr>
-<td>convert.src_dataset_type</td>
-<td>str</td>
-<td>The source dataset format to be converted</td>
-<td>null</td>
+<td>Whether to convert the dataset format</td>
+<td>False (Currently not supported)</td>
 </tr>
 <tr>
 <td>split.enable</td>
 <td>bool</td>
 <td>Whether to re-split the dataset</td>
-<td>False</td>
+<td>False (Currently not supported)</td>
 </tr>
-<tr>
-<td>split.train_percent</td>
-<td>int</td>
-<td>Sets the percentage of the training set, an integer between 0-100, ensuring the sum with val_percent is 100;</td>
-<td>null</td>
-</tr>
-<tr>
-<td>split.val_percent</td>
-<td>int</td>
-<td>Sets the percentage of the validation set, an integer between 0-100, ensuring the sum with train_percent is 100;</td>
-<td>null</td>
-</tr>
+
 </tbody>
 </table>
 
 # Train
-### Common Parameters for 3D Tasks
+### Common Parameters for 3d Tasks
 <table>
 <thead>
 <tr>
