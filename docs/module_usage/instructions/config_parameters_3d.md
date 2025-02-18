@@ -216,8 +216,8 @@ comments: true
 <tr>
 <td>kernel_option.run_mode</td>
 <td>str</td>
-<td>算子的底层实现方法</td>
-<td>yaml文件中指定的底层实现方法</td>
+<td>推理引擎设置，如: "paddle"</td>
+<td>paddle</td>
 </tr>
 </tbody>
 </table>
