@@ -41,7 +41,7 @@ comments: true
 <td>SLANet_plus 是百度飞桨视觉团队自研的表格结构识别模型SLANet的增强版。相较于SLANet，SLANet_plus 对无线表、复杂表格的识别能力得到了大幅提升，并降低了模型对表格定位准确性的敏感度，即使表格定位出现偏移，也能够较准确地进行识别。</td>
 </tr>
 </table>
-<p><b>注：以上精度指标测量PaddleX 内部自建英文表格识别数据集。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
+
 <p><b>版面区域检测模块模型：</b></p>
 <table>
 <thead>
@@ -121,7 +121,7 @@ comments: true
 </tr>
 </tbody>
 </table>
-<p><b>注：以上精度指标的评估集是 PaddleOCR 自建的版面区域分析数据集，包含中英文论文、杂志和研报等常见的 1w 张文档类型图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p>
+
 <p><b>文本检测模块模型：</b></p>
 <table>
 <thead>
@@ -153,7 +153,7 @@ comments: true
 </tr>
 </tbody>
 </table>
-<p><b>注：以上精度指标的评估集是 PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中检测包含 500 张图片。以上所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
+
 <p><b>文本识别模块模型：</b></p>
 <table>
 <tr>
@@ -180,7 +180,7 @@ comments: true
 <td>71.2 M</td>
 </tr>
 </table>
-<p><b>注：以上精度指标的评估集是 PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中文本识别包含 1.1w 张图片。所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
+
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
@@ -201,7 +201,7 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 </td>
 </tr>
 </table>
-<p><b>注：以上精度指标的评估集是 <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务</a>A榜。 所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
+
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
@@ -220,7 +220,7 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 <td rowspan="1">    RepSVTR 文本识别模型是一种基于SVTRv2 的移动端文本识别模型，其在PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务中荣获一等奖，B榜端到端识别精度相比PP-OCRv4提升2.5%，推理速度持平。</td>
 </tr>
 </table>
-<p><b>注：以上精度指标的评估集是 <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务</a>B榜。 所有模型 GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为8，精度类型为 FP32。</b></p>
+
 <p><b>印章文本检测模块模型：</b></p>
 <table>
 <thead>
@@ -252,7 +252,7 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 </tr>
 </tbody>
 </table>
-<p><b>注：以上精度指标的评估集是自建的数据集，包含500张圆形印章图像。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p>
+
 <p><b>文本图像矫正模块模型：</b></p>
 <table>
 <thead>
@@ -296,8 +296,34 @@ SVTRv2 是一种由复旦大学视觉与学习实验室（FVL）的OpenOCR团队
 </tr>
 </tbody>
 </table>
-<p><b>注：以上精度指标的评估集是自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。GPU 推理耗时基于 NVIDIA Tesla T4 机器，精度类型为 FP32， CPU 推理速度基于 Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz，线程数为 8，精度类型为 FP32。</b></p></details>
-<b></b>
+
+**测试环境说明：**
+
+- **性能测试环境**
+  - **测试数据集**：
+    - 表格结构识别模型：PaddleX 内部自建英文表格识别数据集。
+    - 版面区域检测模型：PaddleOCR 自建的版面区域分析数据集，包含中英文论文、杂志和研报等常见的 1w 张文档类型图片。
+    - 文本检测模型：PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中检测包含 500 张图片。
+    - 文本识别模型：PaddleOCR 自建的中文数据集，覆盖街景、网图、文档、手写多个场景，其中文本识别包含 1.1w 张。
+    - ch_SVTRv2_rec：<a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务</a>A榜评估集。
+    - ch_RepSVTR_rec：<a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR算法模型挑战赛 - 赛题一：OCR端到端识别任务</a>B榜评估集。
+    - 英文识别模型：PaddleX 自建的英文数据集。
+    - 多语言识别模型：PaddleX 自建的多语种数据集。
+    - 文本行方向分类模型：PaddleX 自建的数据集，覆盖证件和文档等多个场景，包含 1000 张图片。
+    - 文本图像矫正模型：<a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet</a>。
+  - **硬件配置**：
+    - GPU：NVIDIA Tesla T4
+    - CPU：Intel Xeon Gold 6271C @ 2.60GHz
+    - 其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **推理模式说明**
+
+| 模式        | GPU配置                          | CPU配置          | 加速技术组合                                |
+|-------------|----------------------------------|------------------|---------------------------------------------|
+| 常规模式    | FP32精度 / 无TRT加速             | FP32精度 / 8线程       | PaddleInference                             |
+| 高性能模式  | 选择先验精度类型和加速策略的最优组合         | FP32精度 / 8线程       | 选择先验最优后端（Paddle/OpenVINO/TRT等） |
+
+</details>
 
 ## 2. 快速开始
 PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可以在线体验文档场景信息抽取v3产线的效果，也可以在本地使用  Python 体验文档场景信息抽取v3产线的效果。
@@ -312,40 +338,14 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 ### 2.2 本地体验
 在本地使用文档场景信息抽取v3产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
-首先需要配置获取 `PP-ChatOCRv3-doc` 产线的配置文件，可以通过以下命令获取：
-```bash
-paddlex --get_pipeline_config PP-ChatOCRv3-doc ./
-```
-
-执行上述命令后，配置文件会存储在当前路径下，打开配置文件，填写大语言模型的 ak/sk(access_token)，如下所示：
-
-```yaml
-......
-SubModules:
-  LLM_Chat:
-    module_name: chat_bot
-    model_name: ernie-3.5
-    api_type: qianfan
-    ak: "" # Your LLM API key
-    sk: ""  # Your LLM secret key
-
-  LLM_Retriever:
-    module_name: retriever
-    model_name: ernie-3.5
-    api_type: qianfan
-    ak: "" # Your LLM API key
-    sk: ""  # Your LLM secret key
-......
-```
-
-PP-ChatOCRv3-doc 仅支持文心大模型，支持在[百度云千帆平台](https://console.bce.baidu.com/qianfan/ais/console/onlineService)或者[星河社区 AIStudio](https://aistudio.baidu.com/)上获取相关的 ak/sk(access_token)。如果使用百度云千帆平台，可以参考[AK和SK鉴权调用API流程](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Hlwerugt8) 获取ak/sk，如果使用星河社区 AIStudio，可以在[星河社区 AIStudio 访问令牌](https://aistudio.baidu.com/account/accessToken)中获取 access_token。
+在进行模型推理之前，首先需要准备大语言模型的 api_key，PP-ChatOCRv3 支持调用 [百度云千帆平台](https://console.bce.baidu.com/qianfan/ais/console/onlineService) 提供的大模型推理服务，您可以参考[认证鉴权](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Um2wxbaps) 获取千帆平台的 api_key。
 
 更新配置文件后，即可使用几行Python代码完成快速推理，可以使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_certificate-1.png)测试：
 
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./PP-ChatOCRv3-doc.yaml")
+pipeline = create_pipeline(pipeline="PP-ChatOCRv3-doc",initial_predictor=False)
 
 visual_predict_res = pipeline.visual_predict(input="vehicle_certificate-1.png",
     use_doc_orientation_classify=False,
@@ -359,8 +359,32 @@ for res in visual_predict_res:
     visual_info_list.append(res["visual_info"])
     layout_parsing_result = res["layout_parsing_result"]
 
-vector_info = pipeline.build_vector(visual_info_list, flag_save_bytes_vector=True)
-chat_result = pipeline.chat(key_list=["驾驶室准乘人数"], visual_info=visual_info_list, vector_info=vector_info)
+vector_info = pipeline.build_vector(visual_info_list, flag_save_bytes_vector=True,retriever_config={
+    "module_name": "retriever",
+    "model_name": "embedding-v1",
+    "base_url": "https://qianfan.baidubce.com/v2",
+    "api_type": "qianfan",
+    "api_key": "api_key" # your api_key
+})
+chat_result = pipeline.chat(
+    key_list=["驾驶室准乘人数"],
+    visual_info=visual_info_list,
+    vector_info=vector_info,
+    chat_bot_config={
+      "module_name": "chat_bot",
+      "model_name": "ernie-3.5-8k",
+      "base_url": "https://qianfan.baidubce.com/v2",
+      "api_type": "openai",
+      "api_key": "api_key" # your api_key
+    },
+    retriever_config={
+        "module_name": "retriever",
+        "model_name": "embedding-v1",
+        "base_url": "https://qianfan.baidubce.com/v2",
+        "api_type": "qianfan",
+        "api_key": "api_key" # your api_key
+    }
+)
 print(chat_result)
 
 ```
@@ -410,6 +434,12 @@ PP-ChatOCRv3-doc 预测的流程、API说明、产出说明如下：
 <td>是否启用高性能推理，仅当该产线支持高性能推理时可用。</td>
 <td><code>bool</code></td>
 <td><code>False</code></td>
+</tr>
+<tr>
+<td><code>initial_predictor</code></td>
+<td>是否初始化推理模块（如果为<code>False</code>则在首次使用相关推理模块的时候进行初始化）</td>
+<td><code>bool</code></td>
+<td><code>True</code></td>
 </tr>
 </tbody>
 </table>
@@ -821,9 +851,9 @@ for res in visual_predict_res:
         - `use_formula_recognition`: `(bool)` 控制是否启用公式识别子产线
 
     - `parsing_res_list`: `(List[Dict])` 解析结果的列表，每个元素为一个字典，列表顺序为解析后的阅读顺序。
-        - `layout_bbox`: `(np.ndarray)` 版面区域的边界框。
-        - `{label}`: `(str)` key 为版面区域的标签，例如`text`, `table`等，内容为版面区域内的内容。
-        - `layout`: `(str)` 版面排版类型，例如 `double`, `single` 等。
+        - `block_bbox`: `(np.ndarray)` 版面区域的边界框。
+        - `block_label`: `(str)` 版面区域的标签，例如`text`, `table`等。
+        - `block_content`: `(str)` 内容为版面区域内的内容。
 
     - `overall_ocr_res`: `(Dict[str, Union[List[str], List[float], numpy.ndarray]])` 全局 OCR 结果的字典
       -  `input_path`: `(Union[str, None])` 图像OCR子产线接受的图像路径，当输入为`numpy.ndarray`时，保存为`None`
@@ -844,12 +874,6 @@ for res in visual_predict_res:
       - `rec_texts`: `(List[str])` 文本识别结果列表，仅包含置信度超过`text_rec_score_thresh`的文本
       - `rec_scores`: `(List[float])` 文本识别的置信度列表，已按`text_rec_score_thresh`过滤
       - `rec_polys`: `(List[numpy.ndarray])` 经过置信度过滤的文本检测框列表，格式同`dt_polys`
-
-    - `text_paragraphs_ocr_res`: `(Dict[str, Union[List[str], List[float], numpy.ndarray]])` 段落OCR结果，版面类型非表格、印章和公式类型的段落OCR结果
-        - `rec_polys`: `(List[numpy.ndarray])` 文本检测框列表，格式同`dt_polys`
-        - `rec_texts`: `(List[str])` 文本识别结果列表
-        - `rec_scores`: `(List[float])` 文本识别结果的置信度列表
-        - `rec_boxes`: `(numpy.ndarray)` 检测框的矩形边界框数组，shape为(n, 4)，dtype为int16。每一行表示一个
 
     - `formula_res_list`: `(List[Dict[str, Union[numpy.ndarray, List[float], str]]])` 公式识别结果列表，每个元素为一个字典
         - `rec_formula`: `(str)` 公式识别结果
@@ -879,8 +903,6 @@ for res in visual_predict_res:
 
 - 调用`save_to_json()` 方法会将上述内容保存到指定的`save_path`中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.json`，如果指定为文件，则直接保存到该文件中。由于json文件不支持保存numpy数组，因此会将其中的`numpy.array`类型转换为列表形式。
 - 调用`save_to_img()` 方法会将可视化结果保存到指定的`save_path`中，如果指定为目录，则会将版面区域检测可视化图像、全局OCR可视化图像、版面阅读顺序可视化图像等内容保存，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)
-
-
 
 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
 <table>
@@ -938,6 +960,14 @@ for res in visual_predict_res:
 <td><code>3500</code></td>
 </tr>
 <tr>
+<td><code>block_size</code></td>
+<td>长文本建立向量库时分块大小</td>
+<td><code>int</code></td>
+<td>
+大于0的正整数，可以根据大语言模型支持的token长度来决定
+</td>
+<td><code>300</code></td>
+</tr>
 <tr>
 <td><code>flag_save_bytes_vector</code></td>
 <td>文字是否保存为二进制文件</td>
@@ -947,7 +977,16 @@ for res in visual_predict_res:
 </td>
 <td><code>False</code></td>
 </tr>
-</tr></table>
+<tr>
+<td><code>retriever_config</code></td>
+<td>向量检索大模型配置参数,内容参考配置文件中的“LLM_Retriever”字段</td>
+<td><code>dict</code></td>
+<td>
+<code>None</code>
+</td>
+<td><code>None</code></td>
+</tr>
+</table>
 该方法会返回一个包含视觉文本信息的字典，字典的内容如下：
 
 - `flag_save_bytes_vector`：`(bool)`是否将结果保存为二进制文件
@@ -1075,6 +1114,24 @@ for res in visual_predict_res:
 <td><code>None</code></td>
 <td><code>None</code></td>
 </tr>
+<tr>
+<td><code>chat_bot_config</code></td>
+<td>大语言模型配置信息，内容参考产线配置文件“LLM_Chat”字段</td>
+<td><code>dict</code></td>
+<td>
+<code>None</code>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>retriever_config</code></td>
+<td>向量检索大模型配置参数,内容参考配置文件中的“LLM_Retriever”字段</td>
+<td><code>dict</code></td>
+<td>
+<code>None</code>
+</td>
+<td><code>None</code></td>
+</tr>
 </tbody>
 </table>
 
@@ -1197,103 +1254,103 @@ for res in visual_predict_res:
 <tr>
 <td><code>useDocOrientationClassify</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>use_doc_orientation_classify</code> 参数说明。</td>
+<td>参见产线 <code>visual_predict</code> 方法中的 <code>use_doc_orientation_classify</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>useDocUnwarping</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>use_doc_unwarping</code> 参数说明。</td>
+<td>参见产线 <code>visual_predict</code> 方法中的 <code>use_doc_unwarping</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>useGeneralOcr</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>use_general_ocr</code> 参数说明。</td>
+<td>参见产线 <code>visual_predict</code> 方法中的 <code>use_general_ocr</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>useSealRecognition</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>use_seal_recognition</code> 参数说明。</td>
+<td>参见产线 <code>visual_predict</code> 方法中的 <code>use_seal_recognition</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>useTableRecognition</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>use_table_recognition</code> 参数说明。</td>
+<td>参见产线 <code>visual_predict</code> 方法中的 <code>use_table_recognition</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textDetLimitSideLen</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>text_det_limit_side_len</code> 参数说明。</td>
+<td>参见产线 <code>visual_predict</code> 方法中的 <code>text_det_limit_side_len</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textDetLimitType</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>text_det_limit_type</code> 参数说明。</td>
+<td>参见产线 <code>visual_predict</code> 方法中的 <code>text_det_limit_type</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textDetThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>text_det_thresh</code> 参数说明。</td>
+<td>参见产线 <code>visual_predict</code> 方法中的 <code>text_det_thresh</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textDetBoxThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>text_det_box_thresh</code> 参数说明。</td>
+<td>参见产线 <code>visual_predict</code> 方法中的 <code>text_det_box_thresh</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textDetUnclipRatio</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>text_det_unclip_ratio</code> 参数说明。</td>
+<td>参见产线 <code>visual_predict</code> 方法中的 <code>text_det_unclip_ratio</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textRecScoreThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>text_rec_score_thresh</code> 参数说明。</td>
+<td>参见产线 <code>visual_predict</code> 方法中的 <code>text_rec_score_thresh</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>sealDetLimitSideLen</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>seal_det_limit_side_len</code> 参数说明。</td>
+<td>参见产线 <code>visual_predict</code> 方法中的 <code>seal_det_limit_side_len</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>sealDetLimitType</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>seal_det_limit_type</code> 参数说明。</td>
+<td>参见产线 <code>visual_predict</code> 方法中的 <code>seal_det_limit_type</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>sealDetThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>seal_det_thresh</code> 参数说明。</td>
+<td>参见产线 <code>visual_predict</code> 方法中的 <code>seal_det_thresh</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>sealDetBoxThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>seal_det_box_thresh</code> 参数说明。</td>
+<td>参见产线 <code>visual_predict</code> 方法中的 <code>seal_det_box_thresh</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>sealDetUnclipRatio</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>seal_det_unclip_ratio</code> 参数说明。</td>
+<td>参见产线 <code>visual_predict</code> 方法中的 <code>seal_det_unclip_ratio</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>sealRecScoreThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>seal_rec_score_thresh</code> 参数说明。</td>
+<td>参见产线 <code>visual_predict</code> 方法中的 <code>seal_rec_score_thresh</code> 参数说明。</td>
 <td>否</td>
 </tr>
 </tbody>
@@ -1345,7 +1402,7 @@ for res in visual_predict_res:
 <tr>
 <td><code>outputImages</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>输入图像和预测结果图像的键值对。图像为JPEG格式，使用Base64编码。</td>
+<td>参见产线视觉预测结果中的 <code>img</code> 参数说明。</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
@@ -1385,9 +1442,15 @@ for res in visual_predict_res:
 <td>否</td>
 </tr>
 <tr>
-<td><code>llmRequestInterval</code></td>
-<td><code>number</code> | <code>null</code></td>
-<td>调用大语言模型API的间隔时间。</td>
+<td><code>blockSize</code></td>
+<td><code>int</code> | <code>null</code></td>
+<td>参见产线 <code>build_vector</code> 方法中的 <code>block_size</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>retrieverConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>参见产线 <code>build_vector</code> 方法中的 <code>retriever_config</code> 参数说明。</td>
 <td>否</td>
 </tr>
 </tbody>
@@ -1444,7 +1507,7 @@ for res in visual_predict_res:
 <tr>
 <td><code>useVectorRetrieval</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>use_vector_retrieval</code> 参数说明。</td>
+<td>参见产线 <code>chat</code> 方法中的 <code>use_vector_retrieval</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
@@ -1462,61 +1525,73 @@ for res in visual_predict_res:
 <tr>
 <td><code>textTaskDescription</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>text_task_description</code> 参数说明。</td>
+<td>参见产线 <code>chat</code> 方法中的 <code>text_task_description</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textOutputFormat</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>text_output_format</code> 参数说明。</td>
+<td>参见产线 <code>chat</code> 方法中的 <code>text_output_format</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textRulesStr</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>text_rules_str</code> 参数说明。</td>
+<td>参见产线 <code>chat</code> 方法中的 <code>text_rules_str</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textFewShotDemoTextContent</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>text_few_shot_demo_text_content</code> 参数说明。</td>
+<td>参见产线 <code>chat</code> 方法中的 <code>text_few_shot_demo_text_content</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textFewShotDemoKeyValueList</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>text_few_shot_demo_key_value_list</code> 参数说明。</td>
+<td>参见产线 <code>chat</code> 方法中的 <code>text_few_shot_demo_key_value_list</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>tableTaskDescription</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>table_task_description</code> 参数说明。</td>
+<td>参见产线 <code>chat</code> 方法中的 <code>table_task_description</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>tableOutputFormat</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>table_output_format</code> 参数说明。</td>
+<td>参见产线 <code>chat</code> 方法中的 <code>table_output_format</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>tableRulesStr</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>table_rules_str</code> 参数说明。</td>
+<td>参见产线 <code>chat</code> 方法中的 <code>table_rules_str</code> 参数说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>tableFewShotDemoTextContent</code></td>
 <td><code>string</code> | <code>null</code></td>
 <td></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>table_few_shot_demo_text_content</code> 参数说明。</td>
+<td>参见产线 <code>chat</code> 方法中的 <code>table_few_shot_demo_text_content</code> 参数说明。</td>
 </tr>
 <tr>
 <td><code>tableFewShotDemoKeyValueList</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>table_few_shot_demo_key_value_list</code> 参数说明。</td>
+<td>参见产线 <code>chat</code> 方法中的 <code>table_few_shot_demo_key_value_list</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>chatBotConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>参见产线 <code>chat</code> 方法中的 <code>chat_bot_config</code> 参数说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>retrieverConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>参见产线 <code>chat</code> 方法中的 <code>retriever_config</code> 参数说明。</td>
 <td>否</td>
 </tr>
 </tbody>

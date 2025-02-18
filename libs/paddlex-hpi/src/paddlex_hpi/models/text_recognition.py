@@ -18,7 +18,7 @@ from typing import Any, Dict, List
 import ultra_infer as ui
 import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.models_new.text_recognition.result import TextRecResult
+from paddlex.inference.models.text_recognition.result import TextRecResult
 from paddlex.modules.text_recognition.model_list import MODELS
 
 from paddlex_hpi.models.base import CVPredictor
@@ -49,7 +49,7 @@ class TextRecPredictor(CVPredictor):
         return model
 
     def process(self, batch_data: List[Any]) -> Dict[str, List[Any]]:
-        batch_raw_imgs = self._data_reader(imgs=batch_data)
+        batch_raw_imgs = self._data_reader(imgs=batch_data.instances)
         imgs = [np.ascontiguousarray(img) for img in batch_raw_imgs]
         ui_results = self._ui_model.batch_predict(imgs)
 
@@ -57,7 +57,8 @@ class TextRecPredictor(CVPredictor):
         rec_score_list = ui_results.rec_scores
 
         return {
-            "input_path": batch_data,
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
             "input_img": batch_raw_imgs,
             "rec_text": texts_list,
             "rec_score": rec_score_list,

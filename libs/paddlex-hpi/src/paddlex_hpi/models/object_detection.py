@@ -13,13 +13,14 @@
 # limitations under the License.
 
 import os
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import ultra_infer as ui
 import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.models_new.object_detection.result import DetResult
+from paddlex.inference.models.object_detection.result import DetResult
 from paddlex.modules.object_detection.model_list import MODELS
+from paddlex.utils import logging
 from pydantic import BaseModel
 
 from paddlex_hpi.models.base import CVPredictor, HPIParams
@@ -38,17 +39,35 @@ class DetPredictor(CVPredictor):
         model_dir: Union[str, os.PathLike],
         config: Optional[Dict[str, Any]] = None,
         device: Optional[str] = None,
+        batch_size: int = 1,
         hpi_params: Optional[HPIParams] = None,
+        img_size: Optional[Union[int, Tuple[int, int]]] = None,
         threshold: Optional[float] = None,
+        layout_nms: Optional[bool] = None,
+        layout_unclip_ratio: Optional[Union[float, Tuple[float, float]]] = None,
+        layout_merge_bboxes_mode: Optional[str] = None,
     ) -> None:
         super().__init__(
             model_dir=model_dir,
             config=config,
             device=device,
+            batch_size=batch_size,
             hpi_params=hpi_params,
         )
         self._pp_params = self._get_pp_params()
         self._threshold = threshold or self._pp_params.threshold
+
+        unsupported_params = {
+            "img_size": img_size,
+            "layout_nms": layout_nms,
+            "layout_unclip_ratio": layout_unclip_ratio,
+            "layout_merge_bboxes_mode": layout_merge_bboxes_mode,
+        }
+        for param_name, param_value in unsupported_params.items():
+            if param_value:
+                logging.warning(
+                    f"`{param_name}` is not supported for multilabel classification in PaddleX HPI"
+                )
 
     def _build_ui_model(
         self, option: ui.RuntimeOption
@@ -68,9 +87,27 @@ class DetPredictor(CVPredictor):
         return DetResult
 
     def process(
-        self, batch_data: List[Any], threshold: Optional[float] = None
+        self,
+        batch_data: List[Any],
+        img_size: Optional[Union[int, Tuple[int, int]]] = None,
+        threshold: Optional[float] = None,
+        layout_nms: Optional[bool] = None,
+        layout_unclip_ratio: Optional[Union[float, Tuple[float, float]]] = None,
+        layout_merge_bboxes_mode: Optional[str] = None,
     ) -> Dict[str, List[Any]]:
-        batch_raw_imgs = self._data_reader(imgs=batch_data)
+        unsupported_params = {
+            "img_size": img_size,
+            "layout_nms": layout_nms,
+            "layout_unclip_ratio": layout_unclip_ratio,
+            "layout_merge_bboxes_mode": layout_merge_bboxes_mode,
+        }
+        for param_name, param_value in unsupported_params.items():
+            if param_value:
+                logging.warning(
+                    f"`{param_name}` is not supported for multilabel classification in PaddleX HPI"
+                )
+
+        batch_raw_imgs = self._data_reader(imgs=batch_data.instances)
         imgs = [np.ascontiguousarray(img) for img in batch_raw_imgs]
         threshold = threshold or self._threshold
         ui_results = self._ui_model.batch_predict(imgs)
@@ -99,7 +136,8 @@ class DetPredictor(CVPredictor):
             boxes_list.append(boxes)
 
         return {
-            "input_path": batch_data,
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
             "input_img": batch_raw_imgs,
             "boxes": boxes_list,
         }

@@ -24,6 +24,7 @@ __all__ = [
 import numpy as np
 from PIL import Image
 import uuid
+import re
 from pathlib import Path
 from typing import Optional, Union, List, Tuple, Dict, Any
 from ..ocr.result import OCRResult
@@ -363,6 +364,59 @@ def _sort_ocr_res_by_y_projection(
     return ocr_res
 
 
+def _process_text(input_text: str) -> str:
+    """
+    Process the input text to handle spaces.
+
+    The function removes multiple consecutive spaces between Chinese characters and ensures that
+    only a single space is retained between Chinese and non-Chinese characters.
+
+    Args:
+        input_text (str): The text to be processed.
+
+    Returns:
+        str: The processed text with properly formatted spaces.
+    """
+
+    def handle_spaces_(text: str) -> str:
+        """
+        Handle spaces in the text by removing multiple consecutive spaces and inserting a single space
+        between Chinese and non-Chinese characters.
+
+        Args:
+            text (str): The text to handle spaces for.
+
+        Returns:
+            str: The text with properly formatted spaces.
+        """
+        spaces = re.finditer(r"\s+", text)
+        processed_text = list(text)
+
+        for space in reversed(list(spaces)):
+            start, end = space.span()
+            prev_char = processed_text[start - 1] if start > 0 else ""
+            next_char = processed_text[end] if end < len(processed_text) else ""
+
+            is_prev_chinese = (
+                re.match(r"[\u4e00-\u9fff]", prev_char) if prev_char else False
+            )
+            is_next_chinese = (
+                re.match(r"[\u4e00-\u9fff]", next_char) if next_char else False
+            )
+
+            if is_prev_chinese and is_next_chinese:
+                processed_text[start:end] = []
+            else:
+                processed_text[start:end] = [" "]
+
+        return "".join(processed_text)
+
+    text_without_spaces = handle_spaces_(input_text)
+
+    final_text = re.sub(r"\s+", " ", text_without_spaces).strip()
+    return final_text
+
+
 def get_single_block_parsing_res(
     overall_ocr_res: OCRResult,
     layout_det_res: DetResult,
@@ -428,8 +482,8 @@ def get_single_block_parsing_res(
                 single_block_layout_parsing_res.append(
                     {
                         "block_label": label,
-                        "block_content": ", ".join(
-                            seal_res_list[seal_index]["rec_texts"]
+                        "block_content": _process_text(
+                            ", ".join(seal_res_list[seal_index]["rec_texts"])
                         ),
                         "block_bbox": block_bbox,
                         "seg_start_flag": seg_start_flag,
@@ -470,7 +524,7 @@ def get_single_block_parsing_res(
                 single_block_layout_parsing_res.append(
                     {
                         "block_label": label,
-                        "block_content": "".join(rec_res["rec_texts"]),
+                        "block_content": _process_text("".join(rec_res["rec_texts"])),
                         "block_image": input_img[
                             int(block_bbox[1]) : int(block_bbox[3]),
                             int(block_bbox[0]) : int(block_bbox[2]),
@@ -484,7 +538,7 @@ def get_single_block_parsing_res(
                 single_block_layout_parsing_res.append(
                     {
                         "block_label": label,
-                        "block_content": "".join(rec_res["rec_texts"]),
+                        "block_content": _process_text("".join(rec_res["rec_texts"])),
                         "block_bbox": block_bbox,
                         "seg_start_flag": seg_start_flag,
                         "seg_end_flag": seg_end_flag,

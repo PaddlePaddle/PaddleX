@@ -40,7 +40,22 @@ PP-TSM is a video classification model developed by Baidu PaddlePaddle's Vision 
 
 </table>
 
-<p><b>Note: The above accuracy metrics refer to Top-1 Accuracy on the <a href="https://github.com/PaddlePaddle/PaddleVideo/blob/develop/docs/zh-CN/dataset/k400.md">K400</a> validation set. </b></p></details>
+**Test Environment Description**:
+
+- **Performance Test Environment**
+  - **Test Dataset**: <a href="https://github.com/PaddlePaddle/PaddleVideo/blob/develop/docs/zh-CN/dataset/k400.md">K400</a> validation set.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+</details>
 
 ## III. Quick Integration
 
@@ -104,7 +119,7 @@ The Python script above performs the following steps:
 </tr>
 <tr>
 <td><code> topk</code></td>
-<td>The top `topk` categories and corresponding classification probabilities of the prediction result；if not specified, the default configuration of the PaddleX official model will be used</td>
+<td>The top <code> topk</code> categories and corresponding classification probabilities of the prediction result；if not specified, the default configuration of the PaddleX official model will be used</td>
 <td><code>int</code></td>
 <td>None</td>
 <td><code>1</code></td>
@@ -147,7 +162,7 @@ The Python script above performs the following steps:
 </tr>
 <tr>
 <td><code>topk</code></td>
-<td>The top `topk` categories and corresponding classification probabilities of the prediction result</td>
+<td>The <code>topk</code> predicted classes and their corresponding probabilities; if not specified, the <code>topk</code> parameter specified in create_model will be used by default. If create_model also does not specify it, the default will be the PaddleX official model configuration.</td>
 <td><code>int</code></td>
 <td>None</td>
 <td><code>1</code></td>
@@ -217,7 +232,7 @@ The Python script above performs the following steps:
 </tr>
 </table>
 
-* Additionally, the prediction results can also be obtained through attributes, as follows:
+* Additionally, it also supports obtaining result visualization videos and <code>json</code> results through attributes, as follows:
 
 <table>
 <thead>

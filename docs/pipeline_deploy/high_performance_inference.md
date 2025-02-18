@@ -22,6 +22,8 @@ comments: true
 
 ### 1.1 安装高性能推理插件
 
+* 注意：若您使用的是 Windows 系统，请参考[PaddleX本地安装教程——2.1基于Docker获取PaddleX](../installation/installation.md#21-基于docker获取paddlex) 使用 Docker 启动 PaddleX 容器。启动容器后，您可以继续阅读本指南以使用高性能推理。
+
 根据设备类型，执行如下指令，安装高性能推理插件：
 
 如果你的设备是 CPU，请使用以下命令安装 PaddleX 的 CPU 版本：
@@ -105,12 +107,12 @@ output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/im
 from paddlex import create_model
 
 model = create_model(
-    "ResNet18",
+    model_name="ResNet18",
     device="gpu",
     use_hpip=True
 )
 
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg")
+output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg")
 ```
 
 启用高性能推理插件得到的推理结果与未启用插件时一致。对于部分模型，在首次启用高性能推理插件时，可能需要花费较长时间完成推理引擎的构建。PaddleX 将在推理引擎的第一次构建完成后将相关信息缓存在模型目录，并在后续复用缓存中的内容以提升初始化速度。
@@ -298,17 +300,53 @@ python -m pip install ../../python/dist/ultra_infer*.whl
 ```
 
 编译时可根据需求修改如下选项：
-| 选项 | 说明 |
-|:------------------------|:------------------------------------|
-| http_proxy             | 在下载三方库时使用具体的http代理，默认空 |
-| PYTHON_VERSION | Python版本，默认 `3.10.0` |
-| WITH_GPU | 是否编译支持Nvidia-GPU，默认 `ON` |
-| ENABLE_ORT_BACKEND      | 是否编译集成ONNX Runtime后端，默认 `ON` |
-| ENABLE_PADDLE_BACKEND   | 是否编译集成Paddle Inference后端，默认 `ON` |
-| ENABLE_TRT_BACKEND   | 是否编译集成TensorRT后端，默认 `ON` |
-| ENABLE_OPENVINO_BACKEND | 是否编译集成OpenVINO后端(仅支持CPU)，默认 `ON` |
-| ENABLE_VISION           | 是否编译集成视觉模型的部署模块，默认 `ON` |
-| ENABLE_TEXT             | 是否编译集成文本NLP模型的部署模块，默认 `ON` |
+
+<table>
+    <thead>
+        <tr>
+            <th>选项</th>
+            <th>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>http_proxy</td>
+            <td>在下载三方库时使用具体的http代理，默认空</td>
+        </tr>
+        <tr>
+            <td>PYTHON_VERSION</td>
+            <td>Python版本，默认 <code>3.10.0</code></td>
+        </tr>
+        <tr>
+            <td>WITH_GPU</td>
+            <td>是否编译支持Nvidia-GPU，默认 <code>ON</code></td>
+        </tr>
+        <tr>
+            <td>ENABLE_ORT_BACKEND</td>
+            <td>是否编译集成ONNX Runtime后端，默认 <code>ON</code></td>
+        </tr>
+        <tr>
+            <td>ENABLE_PADDLE_BACKEND</td>
+            <td>是否编译集成Paddle Inference后端，默认 <code>ON</code></td>
+        </tr>
+        <tr>
+            <td>ENABLE_TRT_BACKEND</td>
+            <td>是否编译集成TensorRT后端，默认 <code>ON</code></td>
+        </tr>
+        <tr>
+            <td>ENABLE_OPENVINO_BACKEND</td>
+            <td>是否编译集成OpenVINO后端(仅支持CPU)，默认 <code>ON</code></td>
+        </tr>
+        <tr>
+            <td>ENABLE_VISION</td>
+            <td>是否编译集成视觉模型的部署模块，默认 <code>ON</code></td>
+        </tr>
+        <tr>
+            <td>ENABLE_TEXT</td>
+            <td>是否编译集成文本NLP模型的部署模块，默认 <code>ON</code></td>
+        </tr>
+    </tbody>
+</table>
 
 ## 3. 支持使用高性能推理插件的产线与模型
 
@@ -323,38 +361,44 @@ python -m pip install ../../python/dist/ultra_infer*.whl
   <tr>
     <td rowspan="2">通用OCR</td>
     <td>文本检测</td>
-    <td><b>2</b> / 2 </td>
+    <td><b>4</b> / 4 </td>
     <td>无 </td>
   </tr>
 
   <tr>
     <td>文本识别</td>
-    <td><b>2</b> / 2 </td>
+    <td><b>4</b> / 4 </td>
     <td>无 </td>
   </tr>
 
   <tr>
     <td rowspan="7">文档场景信息抽取v3</td>
-    <td>表格识别</td>
-    <td><b>2</b> / 2 </td>
-    <td>无 </td>
+    <td>表格结构识别</td>
+    <td><b>2</b> / 4 </td>
+    <td>
+      <details>
+        <summary>查看详情</summary>
+        SLANeXt_wired</br>
+        SLANeXt_wireless</br>
+      </details>
+    </td>
   </tr>
 
   <tr>
     <td>版面区域检测</td>
-    <td><b>8</b> / 8 </td>
-    <td>无 </td>
+    <td><b>11</b> / 11 </td>
+    <td>无</td>
   </tr>
 
   <tr>
     <td>文本检测</td>
-    <td><b>2</b> / 2 </td>
+    <td><b>4</b> / 4 </td>
     <td>无 </td>
   </tr>
 
   <tr>
     <td>文本识别</td>
-    <td><b>2</b> / 2 </td>
+    <td><b>4</b> / 4 </td>
     <td>无 </td>
   </tr>
 
@@ -379,38 +423,48 @@ python -m pip install ../../python/dist/ultra_infer*.whl
   <tr>
     <td rowspan="4">通用表格识别</td>
     <td>版面区域检测</td>
-    <td><b>8</b> / 8 </td>
-    <td>无 </td>
+    <td><b>11</b> / 11 </td>
+    <td>无</td>
   </tr>
 
   <tr>
-    <td>表格识别</td>
-    <td><b>2</b> / 2 </td>
-    <td>无 </td>
+    <td>表格结构识别</td>
+    <td><b>2</b> / 4 </td>
+    <td>
+      <details>
+        <summary>查看详情</summary>
+        SLANeXt_wired</br>
+        SLANeXt_wireless</br>
+      </details>
+    </td>
   </tr>
 
   <tr>
     <td>文本检测</td>
-    <td><b>2</b> / 2 </td>
+    <td><b>4</b> / 4 </td>
     <td>无 </td>
   </tr>
 
   <tr>
     <td>文本识别</td>
-    <td><b>2</b> / 2 </td>
+    <td><b>4</b> / 4 </td>
     <td>无</td>
   </tr>
 
   <tr>
     <td>通用目标检测</td>
     <td>目标检测</td>
-    <td><b>34</b> / 37</td>
+    <td><b>34</b> / 41</td>
     <td>
       <details>
         <summary>查看详情</summary>
         FasterRCNN-Swin-Tiny-FPN<br>
         CenterNet-DLA-34<br>
-        CenterNet-ResNet50
+        CenterNet-ResNet50<br>
+        Co-DINO-R50<br>
+        Co-DINO-Swin-L<br>
+        Co-Deformable-DETR-R50<br>
+        Co-Deformable-DETR-Swin-T<br>
       </details>
     </td>
   </tr>
@@ -439,7 +493,7 @@ python -m pip install ../../python/dist/ultra_infer*.whl
   <tr>
     <td>通用语义分割</td>
     <td>语义分割</td>
-    <td><b>14</b> / 14 </td>
+    <td><b>20</b> / 20 </td>
     <td>无</td>
   </tr>
 
@@ -493,25 +547,31 @@ python -m pip install ../../python/dist/ultra_infer*.whl
   <tr>
     <td rowspan="8">通用版面解析</td>
     <td>表格结构识别</td>
-    <td><b>2</b> / 2 </td>
-    <td>无 </td>
+    <td><b>2</b> / 4 </td>
+    <td>
+      <details>
+        <summary>查看详情</summary>
+        SLANeXt_wired</br>
+        SLANeXt_wireless</br>
+      </details>
+    </td>
   </tr>
 
   <tr>
-    <td>版面区域分析</td>
-    <td><b>8</b> / 8 </td>
-    <td>无 </td>
+    <td>版面区域检测</td>
+    <td><b>11</b> / 11 </td>
+    <td>无</td>
   </tr>
 
   <tr>
     <td>文本检测</td>
-    <td><b>2</b> / 2 </td>
+    <td><b>4</b> / 4 </td>
     <td>无 </td>
   </tr>
 
   <tr>
     <td>文本识别</td>
-    <td><b>2</b> / 2 </td>
+    <td><b>4</b> / 4 </td>
     <td>无 </td>
   </tr>
 
@@ -542,8 +602,8 @@ python -m pip install ../../python/dist/ultra_infer*.whl
   <tr>
     <td rowspan="2">公式识别</td>
     <td>版面区域检测</td>
-    <td><b>8</b> / 8 </td>
-    <td>无 </td>
+    <td><b>11</b> / 11 </td>
+    <td>无</td>
   </tr>
 
   <tr>
@@ -561,9 +621,9 @@ python -m pip install ../../python/dist/ultra_infer*.whl
 
   <tr>
     <td rowspan="3">印章文本识别</td>
-    <td>版面区域分析</td>
-    <td><b>8</b> / 8 </td>
-    <td>无 </td>
+    <td>版面区域检测</td>
+    <td><b>11</b> / 11 </td>
+    <td>无</td>
   </tr>
 
   <tr>
@@ -574,7 +634,7 @@ python -m pip install ../../python/dist/ultra_infer*.whl
 
   <tr>
     <td>文本识别</td>
-    <td><b>2</b> / 2 </td>
+    <td><b>4</b> / 4 </td>
     <td>无 </td>
   </tr>
 

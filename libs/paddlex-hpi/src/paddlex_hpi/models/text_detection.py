@@ -18,8 +18,9 @@ from typing import Any, Dict, List, Optional, Union
 import ultra_infer as ui
 import numpy as np
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.models_new.text_detection.result import TextDetResult
+from paddlex.inference.models.text_detection.result import TextDetResult
 from paddlex.modules.text_detection.model_list import CURVE_MODELS, MODELS
+from paddlex.utils import logging
 
 from paddlex_hpi._utils.misc import parse_scale
 from paddlex_hpi.models.base import CVPredictor, HPIParams
@@ -33,6 +34,7 @@ class TextDetPredictor(CVPredictor):
         model_dir: Union[str, os.PathLike],
         config: Optional[Dict[str, Any]] = None,
         device: Optional[str] = None,
+        batch_size: int = 1,
         hpi_params: Optional[HPIParams] = None,
         limit_side_len: Union[int, None] = None,
         limit_type: Union[str, None] = None,
@@ -43,17 +45,18 @@ class TextDetPredictor(CVPredictor):
         use_dilation: Union[bool, None] = None,
     ) -> None:
         if limit_type is not None:
-            raise TypeError(
+            logging.warning(
                 "The default value for `limit_type` is max, and cannot be set in PaddleX HPI."
             )
         if max_candidates is not None:
-            raise TypeError(
+            logging.warning(
                 "The default value for `max_candidates` is 1000, and cannot be set in PaddleX HPI."
             )
         super().__init__(
             model_dir=model_dir,
             config=config,
             device=device,
+            batch_size=batch_size,
             hpi_params=hpi_params,
         )
         self._limit_side_len = limit_side_len or self._max_side_len
@@ -104,11 +107,11 @@ class TextDetPredictor(CVPredictor):
         use_dilation: Union[bool, None] = None,
     ) -> Dict[str, List[Any]]:
         if limit_type is not None:
-            raise TypeError(
+            logging.warning(
                 "The default value for `limit_type` is max, and cannot be set in PaddleX HPI."
             )
         if max_candidates is not None:
-            raise TypeError(
+            logging.warning(
                 "The default value for `max_candidates` is 1000, and cannot be set in PaddleX HPI."
             )
         self._ui_model.preprocessor.set_normalize(self._mean, self._std, True)
@@ -129,14 +132,14 @@ class TextDetPredictor(CVPredictor):
             else:
                 postprocessor.det_db_box_type = "poly"
 
-        batch_raw_imgs = self._data_reader(imgs=batch_data)
+        batch_raw_imgs = self._data_reader(imgs=batch_data.instances)
         imgs = [np.ascontiguousarray(img) for img in batch_raw_imgs]
         ui_results = self._ui_model.batch_predict(imgs)
 
         dt_polys_list = []
         dt_scores_list = []
         for ui_result in ui_results:
-            polys = [list(zip(*([iter(box)] * 2))) for box in ui_result.boxes]
+            polys = [np.array(list(zip(*([iter(box)] * 2)))) for box in ui_result.boxes]
             dt_polys_list.append(polys)
             # XXX: Currently, we cannot get scores from `ui_result`, so we
             # temporarily use dummy scores here.
@@ -144,7 +147,8 @@ class TextDetPredictor(CVPredictor):
             dt_scores_list.append(dummy_scores)
         # breakpoint()
         return {
-            "input_path": batch_data,
+            "input_path": batch_data.input_paths,
+            "page_index": batch_data.page_indexes,
             "input_img": batch_raw_imgs,
             "dt_polys": dt_polys_list,
             "dt_scores": dt_scores_list,
