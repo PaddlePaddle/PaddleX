@@ -82,7 +82,7 @@ After running, the result is:
 
 The meanings of the parameters are as follows:
 - `input_path`: represents the path of the input image to be predicted
-- `dt_polys`: represents the predicted text detection boxes, where each text detection box contains multiple vertices of a polygon. Each vertex is a tuple of two elements, representing the x and y coordinates of the vertex respectively
+- `dt_polys`: represents the predicted text detection boxes, where each text detection box contains multiple vertices of a polygon. Each vertex is a list of two elements, representing the x and y coordinates of the vertex respectively
 - `dt_scores`: represents the confidence scores of the predicted text detection boxes
 
 The visualization image is as follows:

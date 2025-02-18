@@ -79,7 +79,7 @@ After running, the result obtained is:
 The meanings of the running result parameters are as follows:
 - `input_path`: Indicates the path of the input image to be predicted.
 - `page_index`: If the input is a PDF file, it indicates which page of the PDF it is; otherwise, it is `None`.
-- `dt_polys`: Indicates the predicted text detection boxes, where each text detection box contains four vertices of a quadrilateral. Each vertex is a tuple representing the x and y coordinates of the vertex.
+- `dt_polys`: Indicates the predicted text detection boxes, where each text detection box contains four vertices of a quadrilateral. Each vertex is a list representing the x and y coordinates of the vertex.
 - `dt_scores`: Indicates the confidence scores of the predicted text detection boxes.
 
 The visualization image is as follows:

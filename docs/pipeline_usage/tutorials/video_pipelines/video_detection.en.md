@@ -8,7 +8,7 @@ comments: true
 
 Video detection is a technology that identifies and locates specific objects or events in video content. It is widely used in fields such as security surveillance, traffic management, and behavior analysis. This technology can capture and analyze dynamic changes in videos in real-time, such as human activities, vehicle movements, and abnormal events. Through deep learning models, video detection can efficiently extract spatial and temporal features from videos, achieving accurate recognition and localization. Video detection not only enhances the intelligence of surveillance systems but also provides important support for improving safety and operational efficiency. With the development of technology, video detection will play a key role in more scenarios.
 
-<img src="https://github.com/PaddlePaddle/PaddleVideo/blob/develop/docs/images/yowo.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/video_detection/yowo.jpg">
 
 <b>The video detection pipeline</b><b> includes a video detection module</b> with the following models.
 
