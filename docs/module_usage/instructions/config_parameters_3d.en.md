@@ -220,8 +220,8 @@ comments: true
 <tr>
 <td>kernel_option.run_mode</td>
 <td>str</td>
-<td>The low-level implementation method of the operator</td>
-<td>The underlying implementation method specified in the yaml file</td>
+<td>Inference engine setting, such as: "paddle"</td>
+<td>paddle</td>
 </tr>
 </tbody>
 </table>
