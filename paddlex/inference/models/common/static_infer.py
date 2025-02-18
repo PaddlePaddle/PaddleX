@@ -15,6 +15,7 @@
 from typing import Union, Tuple, List, Dict, Any, Iterator
 import os
 import shutil
+import threading
 from pathlib import Path
 import lazy_paddle as paddle
 import numpy as np
@@ -122,34 +123,23 @@ class StaticInfer:
         super().__init__()
         self.model_dir = model_dir
         self.model_prefix = model_prefix
-        self._update_option(option)
-
-    def _update_option(self, option: PaddlePredictorOption) -> None:
-        if self.option and option == self.option:
-            return
-        self._option = option
-        self._reset()
-
-    @property
-    def option(self) -> PaddlePredictorOption:
-        return self._option if hasattr(self, "_option") else None
-
-    @option.setter
-    def option(self, option: Union[None, PaddlePredictorOption]) -> None:
-        if option:
-            self._update_option(option)
+        self.option = option
+        self.option.changed = True
+        self._lock = threading.Lock()
 
     def _reset(self) -> None:
-        logging.debug(f"Env: {self.option}")
-        (
-            predictor,
-            input_handlers,
-            output_handlers,
-        ) = self._create()
+        with self._lock:
+            self.option.changed = False
+            logging.debug(f"Env: {self.option}")
+            (
+                predictor,
+                input_handlers,
+                output_handlers,
+            ) = self._create()
+
         self.copy2gpu = Copy2GPU(input_handlers)
         self.copy2cpu = Copy2CPU(output_handlers)
         self.infer = Infer(predictor)
-        self.option.changed = False
 
     def _create(
         self,
