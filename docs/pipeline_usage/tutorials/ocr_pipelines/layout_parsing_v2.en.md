@@ -1639,6 +1639,16 @@ Below is the API reference for basic service-oriented deployment and examples of
 <td><code>object</code></td>
 <td>A key-value pair of relative paths of Markdown images and Base64-encoded images.</td>
 </tr>
+<tr>
+<td><code>isStart</code></td>
+<td><code>boolean</code></td>
+<td>Whether the first element on the current page is the start of a segment.</td>
+</tr>
+<tr>
+<td><code>isEnd</code></td>
+<td><code>boolean</code></td>
+<td>Whether the last element on the current page is the end of a segment.</td>
+</tr>
 </tbody>
 </table></details>
 
