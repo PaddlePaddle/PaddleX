@@ -60,7 +60,7 @@ comments: true
 <tr>
 <td>datart_prefix</td>
 <td>bool</td>
-<td>数据集路径是否加前缀</td>
+<td>数据集路径是否需要加上根路径</td>
 <td>True</td>
 </tr>
 <tr>
@@ -87,31 +87,13 @@ comments: true
 <td>convert.enable</td>
 <td>bool</td>
 <td>是否进行数据集格式转换</td>
-<td>False</td>
-</tr>
-<tr>
-<td>convert.src_dataset_type</td>
-<td>str</td>
-<td>需要转换的源数据集格式</td>
-<td>null</td>
+<td>False (当前不支持)</td>
 </tr>
 <tr>
 <td>split.enable</td>
 <td>bool</td>
 <td>是否重新划分数据集</td>
-<td>False</td>
-</tr>
-<tr>
-<td>split.train_percent</td>
-<td>int</td>
-<td>设置训练集的百分比，类型为0-100之间的任意整数，需要保证和val_percent值加和为100；</td>
-<td>null</td>
-</tr>
-<tr>
-<td>split.val_percent</td>
-<td>int</td>
-<td>设置验证集的百分比，类型为0-100之间的任意整数，需要保证和train_percent值加和为100；</td>
-<td>null</td>
+<td>False (当前不支持)</td>
 </tr>
 </tbody>
 </table>
