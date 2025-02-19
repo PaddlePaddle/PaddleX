@@ -2178,6 +2178,9 @@ PaddleX includes multiple production lines, each containing several modules, and
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/en_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
 </tr>
 </table>
+
+<p><b>Note: The evaluation set for the above accuracy metrics is an English dataset built by PaddleX. All model GPU inference times are based on NVIDIA Tesla T4 machines, with precision type FP32. CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads, and precision type FP32.</b></p>
+
 <b>Multilingual Recognition Model</b>
 <table>
 <tr>
@@ -2287,36 +2290,41 @@ PaddleX includes multiple production lines, each containing several modules, and
 <table>
 <tr>
 <th>Model</th>
-<th>Avg-BLEU</th>
-<th>GPU Inference Time (ms)</th>
+<th>Avg-BLEU(%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>yaml File</th>
 <th>Model Download Link</th>
 </tr>
 <td>UniMERNet</td>
-<td>0.8613</td>
-<td>2266.96</td>
+<td>86.13</td>
+<td>2266.96/-</td>
+<td>-/-</td>
 <td>1.4 G</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/formula_recognition/UniMERNet.yaml">UniMERNet.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/UniMERNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UniMERNet_pretrained.pdparams">Training Model</a></td>
 <tr>
 <td>PP-FormulaNet-S</td>
-<td>0.8712</td>
-<td>202.25</td>
+<td>87.12</td>
+<td>202.25/-</td>
+<td>-/-</td>
 <td>167.9 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/formula_recognition/PP-FormulaNet-S.yaml">PP-FormulaNet-S.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-FormulaNet-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-S_pretrained.pdparams">Training Model</a></td>
 </tr>
 <td>PP-FormulaNet-L</td>
-<td>0.9213</td>
-<td>1976.52</td>
+<td>92.13</td>
+<td>1976.52/-</td>
+<td>-/-</td>
 <td>535.2 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/formula_recognition/PP-FormulaNet-L.yaml">PP-FormulaNet-L.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-FormulaNet-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-FormulaNet-L_pretrained.pdparams">Training Model</a></td>
 <tr>
 <td>LaTeX_OCR_rec</td>
-<td>0.7163</td>
-<td>-</td>
+<td>71.63</td>
+<td>-/-</td>
+<td>-/-</td>
 <td>89.7 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/formula_recognition/LaTeX_OCR_rec.yaml">LaTeX_OCR_rec.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/LaTeX_OCR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">Training Model</a></td>

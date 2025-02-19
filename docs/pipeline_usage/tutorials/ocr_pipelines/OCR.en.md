@@ -10,6 +10,7 @@ OCR (Optical Character Recognition) is a technology that converts text in images
 The General OCR pipeline is designed to solve text recognition tasks, extracting text information from images and outputting it in text form. This pipeline integrates the well-known end-to-end OCR series systems, PP-OCRv3 and PP-OCRv4, supporting recognition of over 80 languages. Additionally, it includes functions for image orientation correction and distortion correction. Based on this pipeline, precise text content prediction at the millisecond level on CPUs can be achieved, covering a wide range of applications including general, manufacturing, finance, and transportation sectors. The pipeline also provides flexible deployment options, supporting calls in various programming languages on multiple hardware platforms. Moreover, it offers the capability for secondary development, allowing you to train and optimize on your own dataset. The trained models can also be seamlessly integrated.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/01.png"/>
+
 <b>The General OCR pipeline includes mandatory text detection and text recognition modules, as well as optional document image orientation classification, text image correction, and text line orientation classification modules.</b> The document image orientation classification and text image correction modules are integrated as a document preprocessing sub-line into the General OCR pipeline. Each module contains multiple models, and you can choose the model based on the benchmark test data below.
 
 <b>If you prioritize model accuracy, choose a high-accuracy model; if you prioritize inference speed, choose a faster inference model; if you care about model storage size, choose a smaller model.</b>
@@ -164,35 +165,35 @@ The General OCR pipeline is designed to solve text recognition tasks, extracting
 </tr>
 <tr>
 <td>PP-OCRv4_server_rec_doc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_doc_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
+<td>81.53</td>
 <td>6.65 / 6.65</td>
 <td>32.92 / 32.92</td>
-<td></td>
+<td>74.7 M</td>
 <td>PP-OCRv4_server_rec_doc is trained on a mixed dataset of more Chinese document data and PP-OCR training data based on PP-OCRv4_server_rec. It has added the recognition capabilities for some traditional Chinese characters, Japanese, and special characters. The number of recognizable characters is over 15,000. In addition to the improvement in document-related text recognition, it also enhances the general text recognition capability.</td>
 </tr>
 <tr>
 <td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Training Model</a></td>
-<td>78.20</td>
+<td>78.74</td>
 <td>4.82 / 4.82</td>
 <td>16.74 / 4.64</td>
 <td>10.6 M</td>
-<td>The PP-OCRv4 recognition model is an upgrade from PP-OCRv3. Under comparable speed conditions, the effect in Chinese and English scenarios is further improved. The average recognition accuracy of the 80 multilingual models is increased by more than 8%.</td>
+<td>The lightweight recognition model of PP-OCRv4 has high inference efficiency and can be deployed on various hardware devices, including edge devices.</td>
 </tr>
 <tr>
 <td>PP-OCRv4_server_rec </td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Trained Model</a></td>
-<td>79.20</td>
+<td>80.61 </td>
 <td>6.58 / 6.58</td>
 <td>33.17 / 33.17</td>
 <td>71.2 M</td>
-<td>A high-precision server text recognition model, featuring high accuracy, fast speed, and multilingual support. It is suitable for text recognition tasks in various scenarios.</td>
+<td>The server-side model of PP-OCRv4 offers high inference accuracy and can be deployed on various types of servers.</td>
 </tr>
 <tr>
 <td>PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
+<td>72.96</td>
 <td>5.87 / 5.87</td>
 <td>9.07 / 4.28</td>
-<td></td>
-<td>An ultra-lightweight OCR model suitable for mobile applications. It adopts an encoder-decoder structure based on Transformer and enhances recognition accuracy and efficiency through techniques such as data augmentation and mixed precision training. The model size is 10.6M, making it suitable for deployment on resource-constrained devices. It can be used in scenarios such as mobile photo translation and business card recognition.</td>
+<td>9.2 M</td>
+<td>PP-OCRv3’s lightweight recognition model is designed for high inference efficiency and can be deployed on a variety of hardware devices, including edge devices.</td>
 </tr>
 </table>
 
@@ -208,8 +209,8 @@ The General OCR pipeline is designed to solve text recognition tasks, extracting
 <tr>
 <td>ch_SVTRv2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_SVTRv2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">Training Model</a></td>
 <td>68.81</td>
-<td>8.36801</td>
-<td>165.706</td>
+<td>8.08 / 8.08</td>
+<td>50.17 / 42.50</td>
 <td>73.9 M</td>
 <td rowspan="1">
 SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan University's Visual and Learning Laboratory (FVL). It won the first prize in the PaddleOCR Algorithm Model Challenge - Task One: OCR End-to-End Recognition Task. The end-to-end recognition accuracy on the A list is 6% higher than that of PP-OCRv4.
@@ -229,8 +230,8 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <tr>
 <td>ch_RepSVTR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_RepSVTR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">Training Model</a></td>
 <td>65.07</td>
-<td>10.5047</td>
-<td>51.5647</td>
+<td>5.93 / 5.93</td>
+<td>20.73 / 7.32</td>
 <td>22.1 M</td>
 <td rowspan="1">    The RepSVTR text recognition model is a mobile text recognition model based on SVTRv2. It won the first prize in the PaddleOCR Algorithm Model Challenge - Task One: OCR End-to-End Recognition Task. The end-to-end recognition accuracy on the B list is 2.5% higher than that of PP-OCRv4, with the same inference speed.</td>
 </tr>
@@ -248,19 +249,19 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 </tr>
 <tr>
 <td>en_PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/en_PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>[Latest] Further upgraded based on PP-OCRv3, with improved accuracy under comparable speed conditions.</td>
+<td> 70.39</td>
+<td>4.81 / 4.81</td>
+<td>16.10 / 5.31</td>
+<td>6.8 M</td>
+<td>The ultra-lightweight English recognition model trained based on the PP-OCRv4 recognition model supports the recognition of English and numbers.</td>
 </tr>
 <tr>
 <td>en_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/en_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Ultra-lightweight model, supporting English and numeric recognition.</td>
+<td>70.69</td>
+<td>5.44 / 5.44</td>
+<td>8.65 / 5.57</td>
+<td>7.8 M </td>
+<td>The ultra-lightweight English recognition model trained based on the PP-OCRv3 recognition model supports the recognition of English and numbers.</td>
 </tr>
 </table>
 
@@ -276,85 +277,89 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 </tr>
 <tr>
 <td>korean_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/korean_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Korean Recognition</td>
+<td>60.21</td>
+<td>5.40 / 5.40</td>
+<td>9.11 / 4.05</td>
+<td>8.6 M</td>
+<td>The ultra-lightweight Korean recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Korean and numbers. </td>
 </tr>
 <tr>
 <td>japan_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/japan_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Japanese Recognition</td>
+<td>45.69</td>
+<td>5.70 / 5.70</td>
+<td>8.48 / 4.07</td>
+<td>8.8 M </td>
+<td>The ultra-lightweight Japanese recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Japanese and numbers.</td>
 </tr>
 <tr>
 <td>chinese_cht_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/chinese_cht_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Traditional Chinese Recognition</td>
+<td>82.06</td>
+<td>5.90 / 5.90</td>
+<td>9.28 / 4.34</td>
+<td>9.7 M </td>
+<td>The ultra-lightweight Traditional Chinese recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Traditional Chinese and numbers.</td>
 </tr>
 <tr>
 <td>te_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/te_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Telugu Recognition</td>
+<td>95.88</td>
+<td>5.42 / 5.42</td>
+<td>8.10 / 6.91</td>
+<td>7.8 M </td>
+<td>The ultra-lightweight Telugu recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Telugu and numbers.</td>
 </tr>
 <tr>
 <td>ka_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ka_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Kannada Recognition</td>
+<td>96.96</td>
+<td>5.25 / 5.25</td>
+<td>9.09 / 3.86</td>
+<td>8.0 M </td>
+<td>The ultra-lightweight Kannada recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Kannada and numbers.</td>
 </tr>
 <tr>
 <td>ta_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ta_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Tamil Recognition</td>
+<td>76.83</td>
+<td>5.23 / 5.23</td>
+<td>10.13 / 4.30</td>
+<td>8.0 M </td>
+<td>The ultra-lightweight Tamil recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Tamil and numbers.</td>
 </tr>
 <tr>
 <td>latin_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/latin_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Latin Recognition</td>
+<td>76.93</td>
+<td>5.20 / 5.20</td>
+<td>8.83 / 7.15</td>
+<td>7.8 M</td>
+<td>The ultra-lightweight Latin recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Latin script and numbers.</td>
 </tr>
 <tr>
 <td>arabic_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/arabic_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Arabic Script Recognition</td>
+<td>73.55</td>
+<td>5.35 / 5.35</td>
+<td>8.80 / 4.56</td>
+<td>7.8 M</td>
+<td>The ultra-lightweight Arabic script recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Arabic script and numbers.</td>
 </tr>
 <tr>
 <td>cyrillic_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/cyrillic_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Cyrillic Script Recognition</td>
+<td>94.28</td>
+<td>5.23 / 5.23</td>
+<td>8.89 / 3.88</td>
+<td>7.9 M  </td>
+<td>
+The ultra-lightweight cyrillic alphabet recognition model trained based on the PP-OCRv3 recognition model supports the recognition of cyrillic letters and numbers.</td>
 </tr>
 <tr>
 <td>devanagari_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/devanagari_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>Devanagari Script Recognition</td>
+<td>96.44</td>
+<td>5.22 / 5.22</td>
+<td>8.56 / 4.06</td>
+<td>7.9 M  </td>
+<td>The ultra-lightweight Devanagari script recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Devanagari script and numbers.</td>
 </tr>
 </table>
+
+</details>
+
 <p><b>Text Line Orientation Classification Module (Optional):</b></p>
 <table>
 <thead>
@@ -408,7 +413,6 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 | Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
 | High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
-</details>
 
 ## 2. Quick Start
 All model pipelines provided by PaddleX can be quickly experienced. You can experience the effect of the general OCR pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the general OCR pipeline.
@@ -449,6 +453,7 @@ After running, the results will be printed to the terminal as follows:
        [82, 33],
        [ 3, 33]], dtype=int16), ...], 'rec_boxes': array([[  3,  10,  82,  33], ...], dtype=int16)}}
 ```
+The explanation of the running result parameters can refer to the result interpretation in [2.2.2 Python Script Integration](#222-python-script-integration).
 
 The visualized results are saved under `save_path`, and the OCR visualization results are as follows:
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/03.png"/>
@@ -735,6 +740,8 @@ In the above Python script, the following steps are executed:
 
     - `input_path`: `(str)` The input path of the image to be predicted
 
+    - `page_index`: `(Union[int, None])` If the input is a PDF file, this indicates the current page number of the PDF. Otherwise, it is `None`
+
     - `model_settings`: `(Dict[str, bool])` The model parameters required for the pipeline configuration
 
         - `use_doc_preprocessor`: `(bool)` Controls whether to enable the document preprocessing sub-line
@@ -771,7 +778,7 @@ In the above Python script, the following steps are executed:
 
     - `rec_boxes`: `(numpy.ndarray)` An array of rectangular bounding boxes for detection boxes, with a shape of (n, 4) and dtype int16. Each row represents the [x_min, y_min, x_max, y_max] coordinates of a rectangle, where (x_min, y_min) is the top-left corner and (x_max, y_max) is the bottom-right corner
 
-- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}.json`. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` type will be converted to a list format.
+- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_res.json`. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` type will be converted to a list format.
 
 - Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_ocr_res_img.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (Since the pipeline usually contains multiple result images, it is not recommended to specify a specific file path directly, as multiple images will be overwritten and only the last image will be retained)
 
@@ -1139,24 +1146,24 @@ SubPipelines:
       DocOrientationClassify:
         module_name: doc_text_orientation
         model_name: PP-LCNet_x1_0_doc_ori
-        model_dir: null # 替换为微调后的文档图像方向分类模型权重路径
+        model_dir: null # Replace with the path to the fine-tuned document image orientation classification model weights.
     ...
 
 SubModules:
   TextDetection:
     module_name: text_detection
     model_name: PP-OCRv4_mobile_det
-    model_dir: null # 替换为微调后的文本检测模型权重路径
+    model_dir: null # Replace with the path to the fine-tuned text detection model weights.
     ...
   TextLineOrientation:
     module_name: textline_orientation
     model_name: PP-LCNet_x0_25_textline_ori
-    model_dir: null  # 替换为微调后的文本行方向分类模型权重路径
+    model_dir: null  # Replace with the path to the fine-tuned textline orientation classification model weights.
     batch_size: 1
   TextRecognition:
     module_name: text_recognition
     model_name: PP-OCRv4_mobile_rec
-    model_dir: null  # 替换为微调后的文本识别模型权重路径
+    model_dir: null  # Replace with the path to the fine-tuned text recognition model weights.
     batch_size: 1
 ```
 
@@ -1176,6 +1183,7 @@ paddlex --pipeline OCR \
         --save_path ./output \
         --device npu:0
 ```
+Of course, you can also specify the hardware device when calling `create_pipeline()` or `predict()` in a Python script.
 
 If you want to use the General OCR pipeline on more types of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
 </details>
