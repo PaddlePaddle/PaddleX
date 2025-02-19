@@ -68,11 +68,7 @@ class OVDetPredictor(BasePredictor):
                 pre_ops.append(op)
 
         # build infer
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         # build postprocess op
         post_op = self.build_postprocess(pre_ops=pre_ops)

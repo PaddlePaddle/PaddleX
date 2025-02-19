@@ -62,11 +62,7 @@ class OVSegPredictor(BasePredictor):
                 pre_ops.append(op)
 
         # build infer
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         # build model specific processor, it's required for a OV model.
         processor_cfg = self.config["Processor"]

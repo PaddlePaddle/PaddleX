@@ -102,11 +102,7 @@ class BEVDet3DPredictor(BasePredictor):
                 pre_tfs[name] = op
         pre_tfs["GetInferInput"] = GetInferInput()
 
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         return pre_tfs, infer
 

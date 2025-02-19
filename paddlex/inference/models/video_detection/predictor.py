@@ -62,11 +62,7 @@ class VideoDetPredictor(BasePredictor):
             if op:
                 pre_tfs[name] = op
 
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
         post_op = {}
         for cfg in self.config["PostProcess"]["transform_ops"]:
             tf_key = list(cfg.keys())[0]
