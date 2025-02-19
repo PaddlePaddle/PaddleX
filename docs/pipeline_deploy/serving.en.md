@@ -128,7 +128,7 @@ Find the high-stability serving SDK corresponding to the pipeline in the table b
 </tr>
 <tr>
 <td>General image classification</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0rc0/paddlex_hps_image_classification.tar.gz">paddlex_hps_image_classification.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0rc0/paddlex_hps_image_classification_sdk.tar.gz">paddlex_hps_image_classification_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>General object detection</td>
@@ -312,13 +312,13 @@ First, pull the Docker image as needed:
 - Image supporting deployment with NVIDIA GPU (the machine must have NVIDIA drivers that support CUDA 11.8 installed):
 
     ```bash
-    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0b2-gpu
+    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0rc0-gpu
     ```
 
 - CPU-only Image:
 
     ```bash
-    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0b2-cpu
+    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0rc0-cpu
     ```
 
 With the image prepared, execute the following command to run the server:
@@ -326,29 +326,30 @@ With the image prepared, execute the following command to run the server:
 ```bash
 docker run \
     -it \
+    -e PADDLEX_HPS_DEVICE_TYPE={deployment device type} \
+    -e PADDLEX_HPS_SERIAL_NUMBER={serial number} \
+    -e PADDLEX_HPS_UPDATE_LICENSE=1 \
     -v "$(pwd)":/workspace \
     -v "${HOME}/.baidu/paddlex/licenses":/root/.baidu/paddlex/licenses \
     -v /dev/disk/by-uuid:/dev/disk/by-uuid \
     -w /workspace \
-    -e PADDLEX_HPS_DEVICE_TYPE={deployment device type} \
-    -e PADDLEX_HPS_SERIAL_NUMBER={serial number} \
     --rm \
     --gpus all \
     --network host \
     --shm-size 8g \
     {image name} \
-    ./server.sh
+    /bin/bash server.sh
 ```
 
 - The deployment device type can be `cpu` or `gpu`, and the CPU-only image supports only `cpu`.
 - If CPU deployment is required, there is no need to specify `--gpus`.
 - The above commands can only be executed properly after successful activation. PaddleX offers two activation methods: online activation and offline activation. They are detailed as follows:
 
-    - Online activation: Add `-e PADDLEX_HPS_UPDATE_LICENSE=1` to the command to enable the program to complete activation automatically.
+    - Online activation: Set `PADDLEX_HPS_UPDATE_LICENSE` to `1` for the first execution to enable the program to complete activation automatically.
     - Offline Activation: Follow the instructions in the serial number management section to obtain the machine’s device fingerprint. Bind the serial number with the device fingerprint to obtain the certificate and complete the activation. For this activation method, you need to manually place the certificate in the `${HOME}/.baidu/paddlex/licenses` directory on the machine (if the directory does not exist, you will need to create it).
 
 - It is necessary to ensure that the `/dev/disk/by-uuid` directory on the host machine exists and is not empty, and that this directory is correctly mounted in order to perform activation properly.
-- If you need to enter the container for debugging, you can replace ``./server.sh` in the command with `/bin/bash`. Then execute `./server.sh` inside the container.
+- If you need to enter the container for debugging, you can replace `/bin/bash server.sh` in the command with `/bin/bash`. Then execute `/bin/bash server.sh` inside the container.
 - If you want the server to run in the background, you can replace `-it` in the command with `-d`. After the container starts, you can view the container logs with `docker logs -f {container ID}`.
 - Add `-e PADDLEX_USE_HPIP=1` to use the PaddleX high-performance inference plugin to accelerate the pipeline inference process. However, please note that not all pipelines support using the high-performance inference plugin. Please refer to the [PaddleX High-Performance Inference Guide](./high_performance_inference.en.md) for more information.
 
@@ -368,8 +369,8 @@ Navigate to the `client` directory of the high-stability serving SDK, and run th
 
 ```bash
 # It is recommended to install in a virtual environment
-python -m pip install paddlex_hps_client-*.whl
 python -m pip install -r requirements.txt
+python -m pip install paddlex_hps_client-*.whl
 ```
 
 The `client.py` script in the `client` directory contains examples of how to call the service and provides a command-line interface.

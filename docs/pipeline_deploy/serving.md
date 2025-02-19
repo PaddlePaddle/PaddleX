@@ -128,7 +128,7 @@ paddlex --serve --pipeline image_classification --use_hpip
 </tr>
 <tr>
 <td>通用图像分类</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0rc0/paddlex_hps_image_classification.tar.gz">paddlex_hps_image_classification.tar.gz</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0rc0/paddlex_hps_image_classification_sdk.tar.gz">paddlex_hps_image_classification_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>通用目标检测</td>
@@ -327,29 +327,30 @@ PaddleX 高稳定性服务化部署方案基于 NVIDIA Triton Inference Server �
 ```bash
 docker run \
     -it \
+    -e PADDLEX_HPS_DEVICE_TYPE={部署设备类型} \
+    -e PADDLEX_HPS_SERIAL_NUMBER={序列号} \
+    -e PADDLEX_HPS_UPDATE_LICENSE=1 \
     -v "$(pwd)":/workspace \
     -v "${HOME}/.baidu/paddlex/licenses":/root/.baidu/paddlex/licenses \
     -v /dev/disk/by-uuid:/dev/disk/by-uuid \
     -w /workspace \
-    -e PADDLEX_HPS_DEVICE_TYPE={部署设备类型} \
-    -e PADDLEX_HPS_SERIAL_NUMBER={序列号} \
     --rm \
     --gpus all \
     --network host \
     --shm-size 8g \
     {镜像名称} \
-    ./server.sh
+    /bin/bash server.sh
 ```
 
 - 部署设备类型可以为 `cpu` 或 `gpu`，CPU-only 镜像仅支持 `cpu`。
 - 如果希望使用 CPU 部署，则不需要指定 `--gpus`。
 - 以上命令必须在激活成功后才可以正常执行。PaddleX 提供两种激活方式：离线激活和在线激活。具体说明如下：
 
-    - 联网激活：在命令中添加 `-e PADDLEX_HPS_UPDATE_LICENSE=1`，使程序自动完成激活。
+    - 联网激活：在第一次执行时设置 `PADDLEX_HPS_UPDATE_LICENSE` 为 `1`，使程序自动完成激活。
     - 离线激活：按照序列号管理部分中的指引，获取机器的设备指纹，并将序列号与设备指纹绑定以获取证书，完成激活。使用这种激活方式，需要手动将证书存放在机器的 `${HOME}/.baidu/paddlex/licenses` 目录中（如果目录不存在，需要创建目录）。
 
 - 必须确保宿主机的 `/dev/disk/by-uuid` 存在且非空，并正确挂载该目录，才能正常执行激活。
-- 如果需要进入容器内部调试，可以将命令中的 `./server.sh` 替换为 `/bin/bash`，在容器中执行 `./server.sh`。
+- 如果需要进入容器内部调试，可以将命令中的 `/bin/bash server.sh` 替换为 `/bin/bash`，然后在容器中执行 `/bin/bash server.sh`。
 - 如果希望服务器在后台运行，可以将命令中的 `-it` 替换为 `-d`。容器启动后，可通过 `docker logs -f {容器 ID}` 查看容器日志。
 - 在命令中添加 `-e PADDLEX_USE_HPIP=1` 可以使用 PaddleX 高性能推理插件加速产线推理过程。但请注意，并非所有产线都支持使用高性能推理插件。请参考 [PaddleX 高性能推理指南](./high_performance_inference.md) 获取更多信息。
 
@@ -369,8 +370,8 @@ I1216 11:37:21.643494 35 http_server.cc:167] Started Metrics Service at 0.0.0.0:
 
 ```bash
 # 建议在虚拟环境中安装
-python -m pip install paddlex_hps_client-*.whl
 python -m pip install -r requirements.txt
+python -m pip install paddlex_hps_client-*.whl
 ```
 
 `client` 目录的 `client.py` 脚本包含服务的调用示例，并提供命令行接口。
