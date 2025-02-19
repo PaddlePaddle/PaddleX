@@ -193,7 +193,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
         objs: List[Dict[str, Any]] = []
         for obj in result["boxes"]:
             rec_results: List[Dict[str, Any]] = []
-            if obj["rec_scores"] is not None:
+            if obj["rec_scores"] != [None]:
                 for label, score in zip(obj["labels"], obj["rec_scores"]):
                     rec_results.append(
                         dict(
