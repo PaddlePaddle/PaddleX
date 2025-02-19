@@ -891,6 +891,7 @@ for res in output:
   * [📝 PaddleX 单模型 Python 脚本使用说明](https://paddlepaddle.github.io/PaddleX/latest/module_usage/instructions/model_python_API.html)
   * [📝 PaddleX 通用模型配置文件参数说明](https://paddlepaddle.github.io/PaddleX/latest/module_usage/instructions/config_parameters_common.html)
   * [📝 PaddleX 时序任务模型配置文件参数说明](https://paddlepaddle.github.io/PaddleX/latest/module_usage/instructions/config_parameters_time_series.html)
+  * [📝 PaddleX 3d任务模型配置文件参数说明](https://paddlepaddle.github.io/PaddleX/latest/module_usage/instructions/config_parameters_3d.html)
   </details>
 
 </details>

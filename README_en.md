@@ -889,6 +889,7 @@ To use the Python script for other pipelines, simply adjust the `pipeline` param
   * [📝 PaddleX Single Model Python Script Instruction](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/instructions/model_python_API.html)
   * [📝 PaddleX General Model Configuration File Parameter Instruction](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/instructions/config_parameters_common.html)
   * [📝 PaddleX Time Series Task Model Configuration File Parameter Instruction](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/instructions/config_parameters_time_series.html)
+  * [📝 PaddleX 3D Task Model Configuration File Parameter Instruction](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/instructions/config_parameters_3d.html)
   </details>
 
 </details>
