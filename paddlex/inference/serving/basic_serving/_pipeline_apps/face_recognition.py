@@ -76,7 +76,9 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
 
         return ResultResponse[schema.BuildIndexResult](
             logId=serving_utils.generate_log_id(),
-            result=schema.BuildIndexResult(indexKey=index_key, idMap=index_data.id_map),
+            result=schema.BuildIndexResult(
+                indexKey=index_key, imageCount=len(index_data.id_map)
+            ),
         )
 
     @primary_operation(
@@ -116,7 +118,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
 
         return ResultResponse[schema.AddImagesToIndexResult](
             logId=serving_utils.generate_log_id(),
-            result=schema.AddImagesToIndexResult(idMap=index_data.id_map),
+            result=schema.AddImagesToIndexResult(imageCount=len(index_data.id_map)),
         )
 
     @primary_operation(
@@ -146,7 +148,9 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
 
         return ResultResponse[schema.RemoveImagesFromIndexResult](
             logId=serving_utils.generate_log_id(),
-            result=schema.RemoveImagesFromIndexResult(idMap=index_data.id_map),
+            result=schema.RemoveImagesFromIndexResult(
+                imageCount=len(index_data.id_map)
+            ),
         )
 
     @primary_operation(
