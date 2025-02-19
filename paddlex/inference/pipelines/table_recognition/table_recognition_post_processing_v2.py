@@ -121,31 +121,27 @@ def compute_iou(rec1: list, rec2: list) -> float:
         return (intersect / (sum_area - intersect)) * 1.0
 
 def compute_inter(rec1, rec2):
-    # 解包矩形框的坐标
-    x1_1, y1_1, x2_1, y2_1 = rec1  # 第一个矩形框的坐标
-    x1_2, y1_2, x2_2, y2_2 = rec2  # 第二个矩形框的坐标
-
-    # 计算交集的坐标
+    """
+    computing intersection over rec2_area
+    Args:
+        rec1 (list): (x1, y1, x2, y2)
+        rec2 (list): (x1, y1, x2, y2)
+    Returns:
+        float: Intersection over rec2_area
+    """
+    x1_1, y1_1, x2_1, y2_1 = rec1
+    x1_2, y1_2, x2_2, y2_2 = rec2
     x_left = max(x1_1, x1_2)
     y_top = max(y1_1, y1_2)
     x_right = min(x2_1, x2_2)
     y_bottom = min(y2_1, y2_2)
-
-    # 计算交集的宽度和高度
     inter_width = max(0, x_right - x_left)
     inter_height = max(0, y_bottom - y_top)
-
-    # 计算交集的面积
     inter_area = inter_width * inter_height
-
-    # 计算第二个矩形框的面积
     rec2_area = (x2_2 - x1_2) * (y2_2 - y1_2)
-
-    # 计算 IoU
     if rec2_area == 0:
-        return 0  # 避免除以零的情况
+        return 0 
     iou = inter_area / rec2_area
-
     return iou
 
 def match_table_and_ocr(cell_box_list: list, ocr_dt_boxes: list) -> dict:
