@@ -19,7 +19,7 @@ The <b>PP-ChatOCRv3-doc</b> pipeline includes modules for <b>Table Structure Rec
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -48,7 +48,7 @@ The <b>PP-ChatOCRv3-doc</b> pipeline includes modules for <b>Table Structure Rec
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -128,7 +128,7 @@ The <b>PP-ChatOCRv3-doc</b> pipeline includes modules for <b>Table Structure Rec
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Detection Hmean (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -159,7 +159,7 @@ The <b>PP-ChatOCRv3-doc</b> pipeline includes modules for <b>Table Structure Rec
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -185,7 +185,7 @@ The <b>PP-ChatOCRv3-doc</b> pipeline includes modules for <b>Table Structure Rec
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -206,7 +206,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team at 
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -229,7 +229,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Detection Hmean (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -281,7 +281,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top-1 Acc (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>

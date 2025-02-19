@@ -19,7 +19,7 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 <th>Model</th>
 <th>mAP(0.5:0.95)</th>
 <th>mAP(0.5)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Description</th>
@@ -50,7 +50,7 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 <th>Solution</th>
 <th>Input Size</th>
 <th>AP(0.5:0.95)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Description</th>

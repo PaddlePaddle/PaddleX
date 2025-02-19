@@ -1728,7 +1728,7 @@ The following steps were executed:
         ```python
         from paddlex import create_pipeline
 
-        pipeline = create_pipeline(pipeline="ts_cls")
+        pipeline = create_pipeline(pipeline="ts_classification")
         output = pipeline.predict("ts_cls.csv")
         for res in output:
             res.print() ## Print the structured prediction output

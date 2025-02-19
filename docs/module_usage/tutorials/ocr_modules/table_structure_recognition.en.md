@@ -14,7 +14,7 @@ Table structure recognition is a crucial component in table recognition systems,
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>

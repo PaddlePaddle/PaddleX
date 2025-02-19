@@ -17,7 +17,7 @@ Pedestrian attribute recognition is a key function in computer vision systems, u
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5:0.95)</th>
 <th>mAP(0.5)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -46,7 +46,7 @@ Pedestrian attribute recognition is a key function in computer vision systems, u
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>

@@ -17,7 +17,7 @@ Layout analysis is a technology that extracts structured information from docume
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top-1 Acc (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -61,7 +61,7 @@ Layout analysis is a technology that extracts structured information from docume
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -164,7 +164,7 @@ Layout analysis is a technology that extracts structured information from docume
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -193,7 +193,7 @@ Layout analysis is a technology that extracts structured information from docume
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Detection Hmean (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -242,7 +242,7 @@ Layout analysis is a technology that extracts structured information from docume
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy(%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -447,7 +447,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <th>Model</th>
 <th>Model Download Link</th>
 <th>Top-1 Acc (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -473,7 +473,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <th>BLEU Score</th>
 <th>Normed Edit Distance</th>
 <th>ExpRate (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size</th>
 </tr>
@@ -497,7 +497,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Detection Hmean (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -549,7 +549,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top-1 Acc (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>

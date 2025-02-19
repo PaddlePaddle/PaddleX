@@ -12,7 +12,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Description</th>
@@ -71,7 +71,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>

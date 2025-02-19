@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# PP-ChatOCRv4-doc Pipeline utorial
+# PP-ChatOCRv4-doc Pipeline Tutorial
 
 ## 1. Introduction to PP-ChatOCRv4-doc Pipeline
 PP-ChatOCRv4-doc is a unique document and image intelligent analysis solution from PaddlePaddle, combining LLM, MLLM, and OCR technologies to address complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. Integrated with ERNIE Bot, it fuses massive data and knowledge, achieving high accuracy and wide applicability. This pipeline also provides flexible service deployment options, supporting deployment on various hardware. Furthermore, it offers secondary development capabilities, allowing you to train and fine-tune models on your own datasets, with seamless integration of trained models.
@@ -19,7 +19,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -48,7 +48,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -91,7 +91,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -115,7 +115,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -155,7 +155,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -179,7 +179,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -219,7 +219,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Detection Hmean (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -250,7 +250,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -276,7 +276,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -297,7 +297,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team at 
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -322,7 +322,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 <th>BLEU Score</th>
 <th>Normed Edit Distance</th>
 <th>ExpRate (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size</th>
 </tr>
@@ -346,7 +346,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Detection Hmean (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>

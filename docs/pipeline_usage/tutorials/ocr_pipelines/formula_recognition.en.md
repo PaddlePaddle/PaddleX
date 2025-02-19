@@ -21,7 +21,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top-1 Acc (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -66,7 +66,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -108,7 +108,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -131,7 +131,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -170,7 +170,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -193,7 +193,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>

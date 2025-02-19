@@ -13,7 +13,7 @@ Image classification is a technique that assigns images to predefined categories
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top1 Acc(%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Description</th>
@@ -97,7 +97,7 @@ Image classification is a technique that assigns images to predefined categories
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top-1 Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>

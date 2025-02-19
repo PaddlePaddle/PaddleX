@@ -20,7 +20,7 @@ PP-ShiTuV2 is a practical general image recognition system mainly composed of th
 <th>Model</th>
 <th>mAP(0.5:0.95)</th>
 <th>mAP(0.5)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -42,7 +42,7 @@ PP-ShiTuV2 is a practical general image recognition system mainly composed of th
 <tr>
 <th>Model</th>
 <th>Recall@1 (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>

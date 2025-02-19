@@ -15,7 +15,7 @@ The document image orientation classification module is aim to distinguish the o
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top-1 Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>

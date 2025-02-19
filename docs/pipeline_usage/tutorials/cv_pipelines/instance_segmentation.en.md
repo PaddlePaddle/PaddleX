@@ -13,7 +13,7 @@ Instance segmentation is a computer vision task that not only identifies the obj
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Mask AP</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -42,7 +42,7 @@ Instance segmentation is a computer vision task that not only identifies the obj
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Mask AP</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>

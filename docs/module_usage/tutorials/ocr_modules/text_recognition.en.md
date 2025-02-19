@@ -13,7 +13,7 @@ The text recognition module is the core component of an OCR (Optical Character R
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy(%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -62,7 +62,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy(%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>

@@ -15,7 +15,7 @@ The seal text detection module typically outputs multi-point bounding boxes arou
 <tr>
 <th>Model Name</th><th>Model Download Link</th>
 <th>Hmean（%）</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>

@@ -21,7 +21,7 @@ The seal text recognition pipeline is used to recognize the text content of seal
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -66,7 +66,7 @@ The seal text recognition pipeline is used to recognize the text content of seal
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -90,7 +90,7 @@ The seal text recognition pipeline is used to recognize the text content of seal
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -129,7 +129,7 @@ The seal text recognition pipeline is used to recognize the text content of seal
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -153,7 +153,7 @@ The seal text recognition pipeline is used to recognize the text content of seal
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -194,7 +194,7 @@ The seal text recognition pipeline is used to recognize the text content of seal
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top-1 Acc (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Description</th>
@@ -237,7 +237,7 @@ The seal text recognition pipeline is used to recognize the text content of seal
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Detection Hmean (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Description</th>
@@ -268,7 +268,7 @@ The seal text recognition pipeline is used to recognize the text content of seal
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy(%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Description</th>

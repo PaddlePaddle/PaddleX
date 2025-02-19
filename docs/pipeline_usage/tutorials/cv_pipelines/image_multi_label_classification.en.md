@@ -56,7 +56,7 @@ Image multi-label classification is a technique that assigns multiple relevant c
 **Test Environment Description**:
 
 - **Performance Test Environment**
-  - **Test Dataset**: multi-label classification task on </b><a href="https://cocodataset.org/#home">COCO2017</a><b>.
+  - **Test Dataset**: multi-label classification task on <b><a href="https://cocodataset.org/#home">COCO2017</a></b>.
   - **Hardware Configuration**:
     - GPU: NVIDIA Tesla T4
     - CPU: Intel Xeon Gold 6271C @ 2.60GHz
