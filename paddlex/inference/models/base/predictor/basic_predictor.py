@@ -65,6 +65,15 @@ class BasicPredictor(
         )
         if trt_dynamic_shapes:
             pp_option.trt_dynamic_shapes = trt_dynamic_shapes
+        trt_dynamic_shape_input_data = (
+            self.config.get("Hpi", {})
+            .get("backend_configs", {})
+            .get("paddle_infer", {})
+            .get("trt_dynamic_shape_input_data", None)
+        )
+        if trt_dynamic_shape_input_data:
+            pp_option.trt_dynamic_shape_input_data = trt_dynamic_shape_input_data
+
         self.pp_option = pp_option
         self.pp_option.batch_size = batch_size
         self.batch_sampler.batch_size = batch_size
