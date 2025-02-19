@@ -34,8 +34,9 @@ class TextRecPredictor(BasePredictor):
     _FUNC_MAP = {}
     register = FuncRegister(_FUNC_MAP)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, input_shape=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.input_shape = input_shape
         self.pre_tfs, self.infer, self.post_op = self._build()
 
     def _build_batch_sampler(self):
@@ -82,7 +83,9 @@ class TextRecPredictor(BasePredictor):
 
     @register("RecResizeImg")
     def build_resize(self, image_shape):
-        return "ReisizeNorm", OCRReisizeNormImg(rec_image_shape=image_shape)
+        return "ReisizeNorm", OCRReisizeNormImg(
+            rec_image_shape=image_shape, input_shape=self.input_shape
+        )
 
     def build_postprocess(self, **kwargs):
         if kwargs.get("name") == "CTCLabelDecode":

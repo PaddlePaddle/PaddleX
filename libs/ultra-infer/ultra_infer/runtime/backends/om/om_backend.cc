@@ -144,7 +144,7 @@ bool OmBackend::Infer(std::vector<FDTensor> &inputs,
                     inputs[i].Nbytes(), ACL_MEMCPY_DEVICE_TO_DEVICE);
     if (aclRet != ACL_SUCCESS) {
       FDERROR << "memcpy d2d failed. buffer size is " << modelInputSize
-              << "inputs[i].Nbytes() is " << inputs[i].Nbytes()
+              << ", inputs[i].Nbytes() is " << inputs[i].Nbytes()
               << ", errorCode is " << static_cast<int32_t>(aclRet);
       return false;
     }

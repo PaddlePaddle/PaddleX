@@ -32,9 +32,10 @@ from ....utils import logging
 class OCRReisizeNormImg:
     """for ocr image resize and normalization"""
 
-    def __init__(self, rec_image_shape=[3, 48, 320]):
+    def __init__(self, rec_image_shape=[3, 48, 320], input_shape=None):
         super().__init__()
         self.rec_image_shape = rec_image_shape
+        self.input_shape = input_shape
 
     def resize_norm_img(self, img, max_wh_ratio):
         """resize and normalize the img"""
@@ -59,7 +60,10 @@ class OCRReisizeNormImg:
 
     def __call__(self, imgs):
         """apply"""
-        return [self.resize(img) for img in imgs]
+        if self.input_shape is None:
+            return [self.resize(img) for img in imgs]
+        else:
+            return [self.staticResize(img) for img in imgs]
 
     def resize(self, img):
         imgC, imgH, imgW = self.rec_image_shape
@@ -69,6 +73,14 @@ class OCRReisizeNormImg:
         max_wh_ratio = max(max_wh_ratio, wh_ratio)
         img = self.resize_norm_img(img, max_wh_ratio)
         return img
+
+    def staticResize(self, img):
+        imgC, imgH, imgW = self.input_shape
+        resized_image = cv2.resize(img, (int(imgW), int(imgH)))
+        resized_image = resized_image.transpose((2, 0, 1)) / 255
+        resized_image -= 0.5
+        resized_image /= 0.5
+        return resized_image
 
 
 class BaseRecLabelDecode:

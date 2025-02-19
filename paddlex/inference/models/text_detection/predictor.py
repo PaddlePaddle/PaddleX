@@ -45,6 +45,7 @@ class TextDetPredictor(BasePredictor):
         thresh: Union[float, None] = None,
         box_thresh: Union[float, None] = None,
         unclip_ratio: Union[float, None] = None,
+        input_shape=None,
         *args,
         **kwargs
     ):
@@ -55,6 +56,7 @@ class TextDetPredictor(BasePredictor):
         self.thresh = thresh
         self.box_thresh = box_thresh
         self.unclip_ratio = unclip_ratio
+        self.input_shape = input_shape
         self.pre_tfs, self.infer, self.post_op = self._build()
 
     def _build_batch_sampler(self):
@@ -142,7 +144,10 @@ class TextDetPredictor(BasePredictor):
             limit_type = self.limit_type or kwargs.get("limit_type", "min")
 
         return "Resize", DetResizeForTest(
-            limit_side_len=limit_side_len, limit_type=limit_type, **kwargs
+            limit_side_len=limit_side_len,
+            limit_type=limit_type,
+            input_shape=self.input_shape,
+            **kwargs
         )
 
     @register("NormalizeImage")
