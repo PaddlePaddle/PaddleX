@@ -12,33 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any
+import os
+from typing import Any, Dict, List
 
-import numpy as np
-import pycocotools.mask as mask_util
 from fastapi import FastAPI
 
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
 from ...infra.models import ResultResponse
-from ...schemas.open_vocabulary_segmentation import (
-    INFER_ENDPOINT,
-    InferRequest,
-    InferResult,
-)
+from ...schemas.m_3d_bev_detection import INFER_ENDPOINT, InferRequest, InferResult
 from .._app import create_app, primary_operation
-
-
-def _rle(mask: np.ndarray) -> str:
-    rle_res = mask_util.encode(np.asarray(mask[..., None], order="F", dtype="uint8"))[0]
-    return rle_res["counts"].decode("utf-8")
 
 
 def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
     app, ctx = create_app(
-        pipeline=pipeline,
-        app_config=app_config,
-        app_aiohttp_session=True,
+        pipeline=pipeline, app_config=app_config, app_aiohttp_session=True
     )
 
     @primary_operation(
@@ -51,35 +39,38 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
         aiohttp_session = ctx.aiohttp_session
 
         file_bytes = await serving_utils.get_raw_bytes_async(
-            request.image, aiohttp_session
+            request.tar, aiohttp_session
         )
-        image = serving_utils.image_bytes_to_array(file_bytes)
+        tar_path = await serving_utils.call_async(
+            serving_utils.write_to_temp_file,
+            file_bytes,
+            suffix=".tar",
+        )
 
-        result = (
-            await pipeline.infer(
-                image,
-                prompt=request.prompt,
-                prompt_type=request.promptType,
+        try:
+            result = (
+                await pipeline.infer(
+                    tar_path,
+                )
+            )[0]
+        finally:
+            await serving_utils.call_async(os.unlink, tar_path)
+
+        objects: List[Dict[str, Any]] = []
+        for box, label, score in zip(
+            result["boxes_3d"], result["labels_3d"], result["scores_3d"]
+        ):
+            objects.append(
+                dict(
+                    bbox=box,
+                    categoryId=label,
+                    score=score,
+                )
             )
-        )[0]
-
-        rle_masks = [
-            dict(rleResult=_rle(mask), size=mask.shape) for mask in result["masks"]
-        ]
-        mask_infos = result["mask_infos"]
-
-        if ctx.config.visualize:
-            output_image_base64 = serving_utils.base64_encode(
-                serving_utils.image_to_bytes(result.img["res"])
-            )
-        else:
-            output_image_base64 = None
 
         return ResultResponse[InferResult](
             logId=serving_utils.generate_log_id(),
-            result=InferResult(
-                masks=rle_masks, maskInfos=mask_infos, image=output_image_base64
-            ),
+            result=InferResult(detectedObjects=objects),
         )
 
     return app

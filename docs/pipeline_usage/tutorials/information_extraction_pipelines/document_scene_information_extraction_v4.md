@@ -617,7 +617,7 @@ mllm_predict_res= pipeline.mllm_pred(input="vehicle_certificate-1.png",key_list=
 mllm_predict_info = mllm_predict_res["mllm_res"]
 chat_result = pipeline.chat(
     key_list=["驾驶室准乘人数"],
-    visual_info_list=visual_info_list,
+    visual_info=visual_info_list,
     vector_info=vector_info,
     mllm_predict_info=mllm_predict_info,
     chat_bot_config={

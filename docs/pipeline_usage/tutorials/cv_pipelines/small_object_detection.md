@@ -195,7 +195,7 @@ for res in output:
 <td><code>None</code></td>
 </tr>
 <td><code>threshold</code></td>
-<td>模型推理时实际使用的图像分辨率</td>
+<td>低置信度object过滤阈值</td>
 <td><code>None|float|dict[int, float]</code></td>
 <td>
 <ul>

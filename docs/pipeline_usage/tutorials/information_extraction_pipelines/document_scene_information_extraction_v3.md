@@ -368,7 +368,7 @@ vector_info = pipeline.build_vector(visual_info_list, flag_save_bytes_vector=Tru
 })
 chat_result = pipeline.chat(
     key_list=["驾驶室准乘人数"],
-    visual_info_list=visual_info_list,
+    visual_info=visual_info_list,
     vector_info=vector_info,
     chat_bot_config={
       "module_name": "chat_bot",
