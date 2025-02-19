@@ -1566,7 +1566,6 @@ PaddleX includes multiple production lines, each containing several modules, and
 </table>
 <b>Note: The above precision metrics are the average anomaly scores on the validation set of </b>[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)<b>.</b>
 
-## [Human Keypoint Detection Module](../module_usage/tutorials//cv_modules/human_keypoint_detection.en.md)
 
 ## [Human Keypoint Detection Module](../module_usage/tutorials//cv_modules/human_keypoint_detection.md)
 
