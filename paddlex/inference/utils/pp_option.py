@@ -18,7 +18,6 @@ from typing import Dict, List
 from ...utils import logging
 from ...utils.device import (
     check_supported_device_type,
-    constr_device,
     get_default_device,
     parse_device,
     set_env_for_device,
@@ -125,32 +124,6 @@ class PaddlePredictorOption(object):
     @device_id.setter
     def device_id(self, device_id):
         self._update("device_id", device_id)
-
-    @property
-    def device(self):
-        return constr_device(self.device_type, [self.device_id])
-
-    @device.setter
-    def device(self, device: str):
-        """set device"""
-        if not device:
-            return
-        device_type, device_ids = parse_device(device)
-        if device_type not in self.SUPPORT_DEVICE:
-            support_run_mode_str = ", ".join(self.SUPPORT_DEVICE)
-            raise ValueError(
-                f"The device type must be one of {support_run_mode_str}, but received {repr(device_type)}."
-            )
-        self.device_type = device_type
-        device_id = device_ids[0] if device_ids is not None else None
-        self.device_id = device_id
-        set_env_for_device(device)
-        if device_type not in ("cpu"):
-            if device_ids is None or len(device_ids) > 1:
-                logging.debug(f"The device ID has been set to {device_id}.")
-        # XXX(gaotingquan): set flag to accelerate inference in paddle 3.0b2
-        if device_type in ("gpu", "cpu"):
-            os.environ["FLAGS_enable_pir_api"] = "1"
 
     @property
     def cpu_threads(self):
@@ -322,6 +295,27 @@ class PaddlePredictorOption(object):
     @batch_size.setter
     def batch_size(self, batch_size):
         self.trt_max_batch_size = batch_size
+
+    def set_device(self, device: str):
+        """set device"""
+        if not device:
+            return
+        device_type, device_ids = parse_device(device)
+        if device_type not in self.SUPPORT_DEVICE:
+            support_run_mode_str = ", ".join(self.SUPPORT_DEVICE)
+            raise ValueError(
+                f"The device type must be one of {support_run_mode_str}, but received {repr(device_type)}."
+            )
+        self.device_type = device_type
+        device_id = device_ids[0] if device_ids is not None else None
+        self.device_id = device_id
+        set_env_for_device(device)
+        if device_type not in ("cpu"):
+            if device_ids is None or len(device_ids) > 1:
+                logging.debug(f"The device ID has been set to {device_id}.")
+        # XXX(gaotingquan): set flag to accelerate inference in paddle 3.0b2
+        if device_type in ("gpu", "cpu"):
+            os.environ["FLAGS_enable_pir_api"] = "1"
 
     def get_support_run_mode(self):
         """get supported run mode"""

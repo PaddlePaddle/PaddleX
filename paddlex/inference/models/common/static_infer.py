@@ -301,7 +301,7 @@ class PaddleInfer(StaticInfer):
 
         # for TRT
         if run_mode.startswith("trt"):
-            assert self.option.device == "gpu"
+            assert self.option.device_type == "gpu"
             cache_dir = self.model_dir / CACHE_DIR / "paddle"
             config = self._configure_trt(
                 run_mode,
@@ -312,7 +312,7 @@ class PaddleInfer(StaticInfer):
         else:
             config = Config(str(model_file), str(params_file))
 
-        if self.option.device == "gpu":
+        if self.option.device_type == "gpu":
             config.exp_disable_mixed_precision_ops({"feed", "fetch"})
             config.enable_use_gpu(100, self.option.device_id or 0)
             if not run_mode.startswith("trt"):
@@ -321,13 +321,13 @@ class PaddleInfer(StaticInfer):
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
                 config.set_optimization_level(3)
-        elif self.option.device == "npu":
+        elif self.option.device_type == "npu":
             config.enable_custom_device("npu")
         elif self.option.device_type == "xpu":
             pass
         elif self.option.device_type == "mlu":
             config.enable_custom_device("mlu")
-        elif self.option.device == "dcu":
+        elif self.option.device_type == "dcu":
             config.enable_use_gpu(100, self.option.device_id or 0)
             # XXX: is_compiled_with_rocm() must be True on dcu platform ?
             if paddle.is_compiled_with_rocm():
