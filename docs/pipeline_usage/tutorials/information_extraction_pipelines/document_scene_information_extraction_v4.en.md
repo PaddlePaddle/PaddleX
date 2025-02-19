@@ -416,54 +416,62 @@ After updating the configuration file, you can complete quick inference using ju
 ```python
 from paddlex import create_pipeline
 
+chat_bot_config = {
+    "module_name": "chat_bot",
+    "model_name": "ernie-3.5-8k",
+    "base_url": "https://qianfan.baidubce.com/v2",
+    "api_type": "openai",
+    "api_key": "api_key",  # your api_key
+}
+
+retriever_config = {
+    "module_name": "retriever",
+    "model_name": "embedding-v1",
+    "base_url": "https://qianfan.baidubce.com/v2",
+    "api_type": "qianfan",
+    "api_key": "api_key",  # your api_key
+}
+
+mllm_chat_bot_config = {
+    "module_name": "chat_bot",
+    "model_name": "PP-DocBee",
+    "base_url": "http://172.0.0.1:8080/v1/chat/completions",  # your local mllm service url
+    "api_type": "openai",
+    "api_key": "api_key",  # your api_key
+}
+
 pipeline = create_pipeline(pipeline="PP-ChatOCRv4-doc", initial_predictor=False)
 
-visual_predict_res = pipeline.visual_predict(input="vehicle_certificate-1.png",
+visual_predict_res = pipeline.visual_predict(
+    input="vehicle_certificate-1.png",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
     use_common_ocr=True,
     use_seal_recognition=True,
-    use_table_recognition=True)
+    use_table_recognition=True,
+)
 
 visual_info_list = []
 for res in visual_predict_res:
     visual_info_list.append(res["visual_info"])
     layout_parsing_result = res["layout_parsing_result"]
 
-vector_info = pipeline.build_vector(visual_info_list, flag_save_bytes_vector=True, retriever_config={
-    "module_name": "retriever",
-    "model_name": "embedding-v1",
-    "base_url": "https://qianfan.baidubce.com/v2",
-    "api_type": "qianfan",
-    "api_key": "api_key" # your api_key
-})
-mllm_predict_res = pipeline.mllm_pred(input="vehicle_certificate-1.png", key_list=["Driver Compartment Occupancy"], mllm_chat_bot_config={
-    "module_name": "chat_bot",
-    "model_name": "PP-DocBee",
-    "base_url": "http://172.0.0.1:8080/v1/chat/completions", # your local mllm service url
-    "api_type": "openai",
-    "api_key": "api_key" # your api_key
-})
+vector_info = pipeline.build_vector(
+    visual_info_list, flag_save_bytes_vector=True, retriever_config=retriever_config
+)
+mllm_predict_res = pipeline.mllm_pred(
+    input="vehicle_certificate-1.png",
+    key_list=["驾驶室准乘人数"],
+    mllm_chat_bot_config=mllm_chat_bot_config,
+)
 mllm_predict_info = mllm_predict_res["mllm_res"]
 chat_result = pipeline.chat(
     key_list=["驾驶室准乘人数"],
-    visual_info_list=visual_info_list,
+    visual_info=visual_info_list,
     vector_info=vector_info,
     mllm_predict_info=mllm_predict_info,
-    chat_bot_config={
-      "module_name": "chat_bot",
-      "model_name": "ernie-3.5-8k",
-      "base_url": "https://qianfan.baidubce.com/v2",
-      "api_type": "openai",
-      "api_key": "api_key" # your api_key
-    },
-    retriever_config={
-      "module_name": "retriever",
-      "model_name": "embedding-v1",
-      "base_url": "https://qianfan.baidubce.com/v2",
-      "api_type": "qianfan",
-      "api_key": "api_key" # your api_key
-    }
+    chat_bot_config=chat_bot_config,
+    retriever_config=retriever_config,
 )
 print(chat_result)
 
@@ -1277,9 +1285,9 @@ Additionally, PaddleX provides three other deployment methods, detailed as follo
 
 🚀 **High-Performance Inference**: In actual production environments, many applications have stringent standards for the performance metrics of deployment strategies (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides a high-performance inference plugin aimed at deeply optimizing model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed instructions on high-performance inference, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.md).
 
-☁️ **Service-Oriented Deployment**: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating the inference functionality as a service, clients can access these services through network requests to obtain inference results. PaddleX supports multiple service-oriented deployment solutions for pipelines. For detailed instructions on service-oriented deployment, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving.md).
+☁️ **Serving**: Serving is a common deployment form in actual production environments. By encapsulating the inference functionality as a service, clients can access these services through network requests to obtain inference results. PaddleX supports multiple serving solutions for pipelines. For detailed instructions on serving, please refer to the [PaddleX Serving Guide](../../../pipeline_deploy/serving.md).
 
-Below are the API references for basic service-oriented deployment and multi-language service invocation examples:
+Below are the API references for basic serving and multi-language service invocation examples:
 
 <details><summary>API Reference</summary>
 
