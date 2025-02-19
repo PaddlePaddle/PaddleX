@@ -615,10 +615,9 @@ class LayoutParsingPipelineV2(BasePipeline):
             markdown_list (list): A list containing Markdown data for each page.
 
         Returns:
-            tuple: A tuple containing the processed Markdown text and a list of images.
+            tuple: A tuple containing the processed Markdown text.
         """
         markdown_texts = ""
-        markdown_images = []
         previous_page_last_element_paragraph_end_flag = True
 
         for res in markdown_list:
@@ -660,6 +659,5 @@ class LayoutParsingPipelineV2(BasePipeline):
             previous_page_last_element_paragraph_end_flag = (
                 page_last_element_paragraph_end_flag
             )
-            markdown_images.append(res.get("markdown_images", {}))
 
-        return markdown_texts, markdown_images
+        return markdown_texts

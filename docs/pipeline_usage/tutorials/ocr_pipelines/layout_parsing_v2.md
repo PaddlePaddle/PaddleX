@@ -93,7 +93,6 @@ comments: true
 </tr>
 </tbody>
 </table>
-
 <p><b>表格结构识别模块（可选）：</b></p>
 <table>
 <tr>
@@ -599,11 +598,13 @@ output = pipeline.predict(
     use_textline_orientation=False)
 
 markdown_list = []
+markdown_images = []
 
 for res in output:
     markdown_list.append(res.markdown)
+    markdown_images.append(res.get("markdown_images", {}))
 
-markdown_texts,markdown_images = pipeline.concatenate_markdown_pages(markdown_list)
+markdown_texts = pipeline.concatenate_markdown_pages(markdown_list)
 
 mkd_file_path = output_path / f"{Path(input_file).stem}.md"
 mkd_file_path.parent.mkdir(parents=True, exist_ok=True)
@@ -1149,7 +1150,7 @@ for item in markdown_images:
 - 调用`save_to_json()` 方法会将上述内容保存到指定的 `save_path` 中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.json`，如果指定为文件，则直接保存到该文件中。由于 json 文件不支持保存numpy数组，因此会将其中的 `numpy.array` 类型转换为列表形式。
 - 调用`save_to_img()` 方法会将可视化结果保存到指定的 `save_path` 中，如果指定为目录，则会将版面区域检测可视化图像、全局OCR可视化图像、版面阅读顺序可视化图像等内容保存，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)
 - 调用`save_to_markdown()` 方法会将转化后的 Markdown 文件保存到指定的 `save_path` 中，保存的文件路径为`save_path/{your_img_basename}.md`，如果输入是 PDF 文件，建议直接指定目录，否责多个 markdown 文件会被覆盖。
-- 调用 `concatenate_markdown_pages()` 方法将 `layout parsing pipeline` 输出的多页Markdown内容`markdown_list`合并为单个完整文档，并返回合并后的Markdown内容以及图像列表。
+- 调用 `concatenate_markdown_pages()` 方法将 `layout parsing pipeline` 输出的多页Markdown内容`markdown_list`合并为单个完整文档，并返回合并后的Markdown内容。
 
 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
 <table>
