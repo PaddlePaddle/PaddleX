@@ -128,7 +128,7 @@ class PaddlePredictorOption(object):
 
     @property
     def device(self):
-        return constr_device(self.device_type, self.device_id)
+        return constr_device(self.device_type, [self.device_id])
 
     @device.setter
     def device(self, device: str):
