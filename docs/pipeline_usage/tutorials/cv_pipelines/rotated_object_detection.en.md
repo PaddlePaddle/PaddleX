@@ -47,7 +47,7 @@ Rotated object detection is a variant of the object detection module, specifical
 
 | Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
 |-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
 | High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## 2. Quick Start
@@ -180,7 +180,7 @@ In the above Python script, the following steps were executed:
 </tr>
 <tr>
 <td><code>threshold</code></td>
-<td>The actual image resolution used during model inference</td>
+<td>Filtering threshold for low-confidence object</td>
 <td><code>None|float|dict[int, float]</code></td>
 <td>
 <ul>

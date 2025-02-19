@@ -144,24 +144,29 @@ class JsonMixin:
             mime_type, _ = mimetypes.guess_type(file_path)
             return mime_type is not None and mime_type == "application/json"
 
-        json = self._to_json()
+        json_data = self._to_json()
         if not _is_json_file(save_path):
             fn = Path(self._get_input_fn())
             stem = fn.stem
             base_save_path = Path(save_path)
-            for key in json:
+            for key in json_data:
                 save_path = base_save_path / f"{stem}_{key}.json"
                 self._json_writer.write(
-                    save_path.as_posix(), json[key], *args, **kwargs
+                    save_path.as_posix(),
+                    json_data[key],
+                    indent=indent,
+                    ensure_ascii=ensure_ascii,
+                    *args,
+                    **kwargs,
                 )
         else:
-            if len(json) > 1:
+            if len(json_data) > 1:
                 logging.warning(
                     f"The result has multiple json files need to be saved. But the `save_path` has been specfied as `{save_path}`!"
                 )
             self._json_writer.write(
                 save_path,
-                json[list(json.keys())[0]],
+                json_data[list(json_data.keys())[0]],
                 indent=indent,
                 ensure_ascii=ensure_ascii,
                 *args,

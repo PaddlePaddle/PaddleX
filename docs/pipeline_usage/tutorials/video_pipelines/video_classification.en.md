@@ -56,7 +56,7 @@ PP-TSM is a video classification model developed by Baidu PaddlePaddle's Vision 
 
 | Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
 |-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
 | High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 </details>
@@ -515,9 +515,9 @@ print(result["categories"])
 <details><summary>C++</summary>
 
 <pre><code class="language-cpp">#include &lt;iostream&gt;
-#include "cpp-httplib/httplib.h" // <url id="cun16s4432eblpu24trg" type="url" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" wc="15064">https://github.com/Huiyicc/cpp-httplib</url> 
-#include "nlohmann/json.hpp" // <url id="cun16s4432eblpu24ts0" type="url" status="parsed" title="GitHub - nlohmann/json: JSON for Modern C++" wc="80311">https://github.com/nlohmann/json</url> 
-#include "base64.hpp" // <url id="cun16s4432eblpu24tsg" type="url" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" wc="2293">https://github.com/tobiaslocker/base64</url> 
+#include "cpp-httplib/httplib.h" // <url id="cun16s4432eblpu24trg" type="url" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" wc="15064">https://github.com/Huiyicc/cpp-httplib</url>
+#include "nlohmann/json.hpp" // <url id="cun16s4432eblpu24ts0" type="url" status="parsed" title="GitHub - nlohmann/json: JSON for Modern C++" wc="80311">https://github.com/nlohmann/json</url>
+#include "base64.hpp" // <url id="cun16s4432eblpu24tsg" type="url" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" wc="2293">https://github.com/tobiaslocker/base64</url>
 
 int main() {
     httplib::Client client("localhost:8080");

@@ -252,7 +252,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     if "." in content_value
                     else 1
                 )
-                return f"{'#' * level} {content_value}".replace("-\n", "").replace(
+                return f"#{'#' * level} {content_value}".replace("-\n", "").replace(
                     "\n",
                     " ",
                 )
@@ -319,28 +319,69 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             last_label = None
             seg_start_flag = None
             seg_end_flag = None
+            page_first_element_seg_start_flag = None
+            page_last_element_seg_end_flag = None
+            parsing_res_list = sorted(
+                parsing_res_list,
+                key=lambda x: x.get("sub_index", 999),
+            )
             for block in sorted(
                 parsing_res_list,
                 key=lambda x: x.get("sub_index", 999),
             ):
                 label = block.get("block_label")
                 seg_start_flag = block.get("seg_start_flag")
+                page_first_element_seg_start_flag = (
+                    seg_start_flag
+                    if (page_first_element_seg_start_flag is None)
+                    else page_first_element_seg_start_flag
+                )
                 handler = handlers.get(label)
                 if handler:
                     if (
                         label == last_label == "text"
                         and seg_start_flag == seg_end_flag == False
                     ):
-                        markdown_content += " " + handler()
+                        last_char_of_markdown = (
+                            markdown_content[-1] if markdown_content else ""
+                        )
+                        first_char_of_handler = handler()[0] if handler() else ""
+                        last_is_chinese_char = (
+                            re.match(r"[\u4e00-\u9fff]", last_char_of_markdown)
+                            if last_char_of_markdown
+                            else False
+                        )
+                        first_is_chinese_char = (
+                            re.match(r"[\u4e00-\u9fff]", first_char_of_handler)
+                            if first_char_of_handler
+                            else False
+                        )
+                        if not (last_is_chinese_char or first_is_chinese_char):
+                            markdown_content += " " + handler()
+                        else:
+                            markdown_content += handler()
                     else:
-                        markdown_content += "\n\n" + handler()
+                        markdown_content += (
+                            "\n\n" + handler() if markdown_content else handler()
+                        )
                     last_label = label
                     seg_end_flag = block.get("seg_end_flag")
+            page_last_element_seg_end_flag = seg_end_flag
 
-            return markdown_content
+            return markdown_content, (
+                page_first_element_seg_start_flag,
+                page_last_element_seg_end_flag,
+            )
 
         markdown_info = dict()
-        markdown_info["markdown_texts"] = _format_data(self)
+        markdown_info["markdown_texts"], (
+            page_first_element_seg_start_flag,
+            page_last_element_seg_end_flag,
+        ) = _format_data(self)
+        markdown_info["page_continuation_flags"] = (
+            page_first_element_seg_start_flag,
+            page_last_element_seg_end_flag,
+        )
         markdown_info["markdown_images"] = dict()
         for block in self["parsing_res_list"]:
             if block["block_label"] in ["image", "chart"]:

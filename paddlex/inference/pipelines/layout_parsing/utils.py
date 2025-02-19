@@ -760,6 +760,7 @@ def sort_by_xycut(
     block_bboxes: Union[np.ndarray, List[List[int]]],
     direction: int = 0,
     min_gap: int = 1,
+    pre_cuts: Optional[Dict[str, List[int]]] = None,
 ) -> List[int]:
     """
     Sort bounding boxes using recursive XY cut method based on the specified direction.
@@ -771,27 +772,55 @@ def sort_by_xycut(
         direction (int): Direction for the initial cut. Use 1 for Y-axis first and 0 for X-axis first.
                          Defaults to 0.
         min_gap (int): Minimum gap width to consider a separation between segments. Defaults to 1.
+        pre_cuts (Optional[Dict[str, List[int]]]): A dictionary specifying pre-cut points along the axes.
+                                                  The keys are 'x' or 'y', representing the axis to pre-cut,
+                                                  and the values are lists of integers specifying the cut points.
+                                                  For example, {'y': [100, 200]} will pre-cut the y-axis at
+                                                  positions 100 and 200 before applying the main XY cut algorithm.
+                                                  Defaults to None.
 
     Returns:
         List[int]: A list of indices representing the order of sorted bounding boxes.
     """
     block_bboxes = np.asarray(block_bboxes).astype(int)
     res = []
-
-    if direction == 1:
-        _recursive_yx_cut(
-            block_bboxes,
-            np.arange(len(block_bboxes)),
-            res,
-            min_gap,
-        )
+    axis = "x" if direction == 1 else "y"
+    if len(pre_cuts[axis]) > 0:
+        cuts = sorted(pre_cuts[axis])
+        axis_index = 1 if axis == "y" else 0
+        max_val = block_bboxes[:, 3].max() if axis == "y" else block_bboxes[:, 2].max()
+        intervals = []
+        prev = 0
+        for cut in cuts:
+            intervals.append((prev, cut))
+            prev = cut
+        intervals.append((prev, max_val))
+        for start, end in intervals:
+            mask = (block_bboxes[:, axis_index] >= start) & (
+                block_bboxes[:, axis_index] < end
+            )
+            sub_boxes = block_bboxes[mask]
+            sub_indices = np.arange(len(block_bboxes))[mask].tolist()
+            if len(sub_boxes) > 0:
+                if direction == 1:
+                    _recursive_yx_cut(sub_boxes, sub_indices, res, min_gap)
+                else:
+                    _recursive_xy_cut(sub_boxes, sub_indices, res, min_gap)
     else:
-        _recursive_xy_cut(
-            block_bboxes,
-            np.arange(len(block_bboxes)),
-            res,
-            min_gap,
-        )
+        if direction == 1:
+            _recursive_yx_cut(
+                block_bboxes,
+                np.arange(len(block_bboxes)).tolist(),
+                res,
+                min_gap,
+            )
+        else:
+            _recursive_xy_cut(
+                block_bboxes,
+                np.arange(len(block_bboxes)).tolist(),
+                res,
+                min_gap,
+            )
 
     return res
 
@@ -1090,9 +1119,9 @@ def _get_projection_iou(
 
 def _get_sub_category(
     blocks: List[Dict[str, Any]], title_labels: List[str]
-) -> List[Dict[str, Any]]:
+) -> Tuple[List[Dict[str, Any]], List[float]]:
     """
-    Determine the layout of title and text blocks.
+    Determine the layout of title and text blocks and collect pre_cuts.
 
     Args:
         blocks (List[Dict[str, Any]]): List of block dictionaries.
@@ -1100,10 +1129,29 @@ def _get_sub_category(
 
     Returns:
         List[Dict[str, Any]]: Updated list of blocks with title-text layout information.
+        List[float]: List of pre_cuts coordinates.
     """
 
     sub_title_labels = ["paragraph_title"]
     vision_labels = ["image", "table", "chart", "figure"]
+    vision_title_labels = ["figure_title", "chart_title", "table_title"]
+    all_labels = title_labels + sub_title_labels + vision_labels + vision_title_labels
+
+    relevant_blocks = [block for block in blocks if block["block_label"] in all_labels]
+
+    region_bbox = None
+    if relevant_blocks:
+        min_x = min(block["block_bbox"][0] for block in relevant_blocks)
+        min_y = min(block["block_bbox"][1] for block in relevant_blocks)
+        max_x = max(block["block_bbox"][2] for block in relevant_blocks)
+        max_y = max(block["block_bbox"][3] for block in relevant_blocks)
+        region_bbox = (min_x, min_y, max_x, max_y)
+        region_x_center = (region_bbox[0] + region_bbox[2]) / 2
+        region_y_center = (region_bbox[1] + region_bbox[3]) / 2
+        region_width = region_bbox[2] - region_bbox[0]
+        region_height = region_bbox[3] - region_bbox[1]
+
+    pre_cuts = []
 
     for i, block1 in enumerate(blocks):
         block1.setdefault("title_text", [])
@@ -1111,11 +1159,7 @@ def _get_sub_category(
         block1.setdefault("vision_footnote", [])
         block1.setdefault("sub_label", block1["block_label"])
 
-        if (
-            block1["block_label"] not in title_labels
-            and block1["block_label"] not in sub_title_labels
-            and block1["block_label"] not in vision_labels
-        ):
+        if block1["block_label"] not in all_labels:
             continue
 
         bbox1 = block1["block_bbox"]
@@ -1127,6 +1171,64 @@ def _get_sub_category(
         right_down_title_text_distance = float("inf")
         right_down_title_text_index = -1
         right_down_title_text_direction = None
+
+        # pre-cuts
+        # Condition 1: Length is greater than half of the layout region
+        if is_horizontal_1:
+            block_length = x2 - x1
+            required_length = region_width / 2
+        else:
+            block_length = y2 - y1
+            required_length = region_height / 2
+        length_condition = block_length > required_length
+
+        # Condition 2: Centered check (must be within ±20 in both horizontal and vertical directions)
+        block_x_center = (x1 + x2) / 2
+        block_y_center = (y1 + y2) / 2
+        tolerance_len = block_length // 5
+        is_centered = (
+            abs(block_x_center - region_x_center) <= tolerance_len
+            and abs(block_y_center - region_y_center) <= tolerance_len
+        )
+
+        # Condition 3: Check for surrounding text
+        has_left_text = False
+        has_right_text = False
+        has_above_text = False
+        has_below_text = False
+        for block2 in blocks:
+            if block2["block_label"] != "text":
+                continue
+            bbox2 = block2["block_bbox"]
+            x1_2, y1_2, x2_2, y2_2 = bbox2
+            if is_horizontal_1:
+                if x2_2 <= x1 and not (y2_2 <= y1 or y1_2 >= y2):
+                    has_left_text = True
+                if x1_2 >= x2 and not (y2_2 <= y1 or y1_2 >= y2):
+                    has_right_text = True
+            else:
+                if y2_2 <= y1 and not (x2_2 <= x1 or x1_2 >= x2):
+                    has_above_text = True
+                if y1_2 >= y2 and not (x2_2 <= x1 or x1_2 >= x2):
+                    has_below_text = True
+
+            if (is_horizontal_1 and has_left_text and has_right_text) or (
+                not is_horizontal_1 and has_above_text and has_below_text
+            ):
+                break
+
+        no_text_on_sides = (
+            not (has_left_text or has_right_text)
+            if is_horizontal_1
+            else not (has_above_text or has_below_text)
+        )
+
+        # Add coordinates if all conditions are met
+        if is_centered and length_condition and no_text_on_sides:
+            if is_horizontal_1:
+                pre_cuts.append(y1)
+            else:
+                pre_cuts.append(x1)
 
         for j, block2 in enumerate(blocks):
             if i == j:
@@ -1315,7 +1417,7 @@ def _get_sub_category(
             if blocks[i].get("vision_footnote") == []:
                 blocks[i]["vision_footnote"] = vision_footnote
 
-    return blocks
+    return blocks, pre_cuts
 
 
 def get_layout_ordering(
@@ -1343,7 +1445,7 @@ def get_layout_ordering(
         threshold=0.5,
         smaller=True,
     )
-    parsing_res_list = _get_sub_category(parsing_res_list, title_text_labels)
+    parsing_res_list, pre_cuts = _get_sub_category(parsing_res_list, title_text_labels)
 
     doc_flag = False
     median_width = _get_text_median_width(parsing_res_list)
@@ -1414,18 +1516,14 @@ def get_layout_ordering(
             )
             block_bboxes = np.array(block_bboxes)
             sorted_indices = sort_by_xycut(
-                block_bboxes,
-                direction=1,
-                min_gap=1,
+                block_bboxes, direction=1, min_gap=1, pre_cuts={"x": pre_cuts}
             )
         else:
             block_bboxes = [block["block_bbox"] for block in parsing_res_list]
             block_bboxes.sort(key=lambda x: (x[0] // 20, x[1]))
             block_bboxes = np.array(block_bboxes)
             sorted_indices = sort_by_xycut(
-                block_bboxes,
-                direction=0,
-                min_gap=20,
+                block_bboxes, direction=0, min_gap=20, pre_cuts={"y": pre_cuts}
             )
 
         sorted_boxes = block_bboxes[sorted_indices].tolist()

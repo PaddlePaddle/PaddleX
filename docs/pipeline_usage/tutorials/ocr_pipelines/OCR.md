@@ -58,7 +58,7 @@ OCR（光学字符识别，Optical Character Recognition）是一种将图像中
 </tr>
 </tbody>
 </table>
-<b>注：模型的精度指标测量自 <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet benchmark</a>。</b>
+
 <p><b>文本检测模块：</b></p>
 <table>
 <thead>
@@ -373,7 +373,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 <td>基于PP-OCRv3识别模型训练得到的超轻量梵文字母识别模型，支持梵文字母、数字识别</td>
 </tr>
 </table>
-
+</details>
 <p><b>文本行方向分类模块（可选）：</b></p>
 <table>
 <thead>
@@ -424,7 +424,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 | 常规模式    | FP32精度 / 无TRT加速             | FP32精度 / 8线程       | PaddleInference                             |
 | 高性能模式  | 选择先验精度类型和加速策略的最优组合         | FP32精度 / 8线程       | 选择先验最优后端（Paddle/OpenVINO/TRT等） |
 
-</details>
+
 
 ## 2. 快速开始
 PaddleX 所提供的模型产线均可以快速体验效果，你可以在星河社区线体验通用 OCR 产线的效果，也可以在本地使用命令行或 Python 体验通用 OCR 产线的效果。

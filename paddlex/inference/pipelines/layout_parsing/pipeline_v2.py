@@ -13,8 +13,9 @@
 # limitations under the License.
 from __future__ import annotations
 
-from typing import Optional, Union, Tuple
+from typing import Optional, Union, Tuple, Iterator
 import numpy as np
+import re
 
 from ....utils import logging
 from ...common.batch_sampler import ImageBatchSampler
@@ -605,3 +606,58 @@ class LayoutParsingPipelineV2(BasePipeline):
                 "model_settings": model_settings,
             }
             yield LayoutParsingResultV2(single_img_res)
+
+    def concatenate_markdown_pages(self, markdown_list: list) -> tuple:
+        """
+        Concatenate Markdown content from multiple pages into a single document.
+
+        Args:
+            markdown_list (list): A list containing Markdown data for each page.
+
+        Returns:
+            tuple: A tuple containing the processed Markdown text.
+        """
+        markdown_texts = ""
+        previous_page_last_element_paragraph_end_flag = True
+
+        for res in markdown_list:
+            # Get the paragraph flags for the current page
+            page_first_element_paragraph_start_flag: bool = res[
+                "page_continuation_flags"
+            ][0]
+            page_last_element_paragraph_end_flag: bool = res["page_continuation_flags"][
+                1
+            ]
+
+            # Determine whether to add a space or a newline
+            if (
+                not page_first_element_paragraph_start_flag
+                and not previous_page_last_element_paragraph_end_flag
+            ):
+                last_char_of_markdown = markdown_texts[-1] if markdown_texts else ""
+                first_char_of_handler = (
+                    res["markdown_texts"][0] if res["markdown_texts"] else ""
+                )
+
+                # Check if the last character and the first character are Chinese characters
+                last_is_chinese_char = (
+                    re.match(r"[\u4e00-\u9fff]", last_char_of_markdown)
+                    if last_char_of_markdown
+                    else False
+                )
+                first_is_chinese_char = (
+                    re.match(r"[\u4e00-\u9fff]", first_char_of_handler)
+                    if first_char_of_handler
+                    else False
+                )
+                if not (last_is_chinese_char or first_is_chinese_char):
+                    markdown_texts += " " + res["markdown_texts"]
+                else:
+                    markdown_texts += res["markdown_texts"]
+            else:
+                markdown_texts += "\n\n" + res["markdown_texts"]
+            previous_page_last_element_paragraph_end_flag = (
+                page_last_element_paragraph_end_flag
+            )
+
+        return markdown_texts

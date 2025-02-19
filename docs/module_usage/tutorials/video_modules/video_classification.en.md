@@ -53,7 +53,7 @@ PP-TSM is a video classification model developed by Baidu PaddlePaddle's Vision 
 
 | Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
 |-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
 | High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 </details>
 
@@ -119,7 +119,7 @@ The Python script above performs the following steps:
 </tr>
 <tr>
 <td><code> topk</code></td>
-<td>The top `topk` categories and corresponding classification probabilities of the prediction result；if not specified, the default configuration of the PaddleX official model will be used</td>
+<td>The top <code> topk</code> categories and corresponding classification probabilities of the prediction result；if not specified, the default configuration of the PaddleX official model will be used</td>
 <td><code>int</code></td>
 <td>None</td>
 <td><code>1</code></td>
@@ -162,7 +162,7 @@ The Python script above performs the following steps:
 </tr>
 <tr>
 <td><code>topk</code></td>
-<td>The top `topk` categories and corresponding classification probabilities of the prediction result</td>
+<td>The <code>topk</code> predicted classes and their corresponding probabilities; if not specified, the <code>topk</code> parameter specified in create_model will be used by default. If create_model also does not specify it, the default will be the PaddleX official model configuration.</td>
 <td><code>int</code></td>
 <td>None</td>
 <td><code>1</code></td>
@@ -232,7 +232,7 @@ The Python script above performs the following steps:
 </tr>
 </table>
 
-* Additionally, the prediction results can also be obtained through attributes, as follows:
+* Additionally, it also supports obtaining result visualization videos and <code>json</code> results through attributes, as follows:
 
 <table>
 <thead>

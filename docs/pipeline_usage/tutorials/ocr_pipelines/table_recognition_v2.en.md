@@ -2,16 +2,19 @@
 comments: true
 ---
 
-# General Table Recognition Pipeline v2 User Guide
+# General Table Recognition v2 Pipeline User Guide
 
-## 1. Introduction to General Table Recognition Pipeline v2
+## 1. Introduction to General Table Recognition v2 Pipeline
 Table recognition is a technology that automatically identifies and extracts table content and its structure from documents or images. It is widely used in data entry, information retrieval, and document analysis. By using computer vision and machine learning algorithms, table recognition can convert complex table information into an editable format, making it easier for users to further process and analyze data.
 
-The General Table Recognition Pipeline v2 is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. Unlike the General Table Recognition Pipeline, this pipeline introduces two additional modules: table classification and table cell detection, which are linked with the table structure recognition module to complete the table recognition task. This pipeline can achieve accurate table predictions and is applicable in various fields such as general, manufacturing, finance, and transportation. It also provides flexible service deployment options, supporting multiple programming languages on various hardware. Additionally, it offers secondary development capabilities, allowing you to train and fine-tune models on your own dataset, with seamless integration of the trained models.
+The General Table Recognition v2 Pipeline is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. Unlike the General Table Recognition Pipeline, this pipeline introduces two additional modules: table classification and table cell detection, which are linked with the table structure recognition module to complete the table recognition task. This pipeline can achieve accurate table predictions and is applicable in various fields such as general, manufacturing, finance, and transportation. It also provides flexible service deployment options, supporting multiple programming languages on various hardware. Additionally, it offers secondary development capabilities, allowing you to train and fine-tune models on your own dataset, with seamless integration of the trained models.
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/01.png"/>
+<b>❗ The General Table Recognition v2 Pipeline is still being optimized and the final version will be released in the next version of PaddleX. In order to maintain the stability of use, you can use the General Table Recognition Pipeline for table processing first, and we will release a notice when the final version of v2 is open-sourced, so please stay tuned!</b>
 
-<b>The General Table Recognition Pipeline v2 includes mandatory modules such as table structure recognition, table classification, table cell localization, text detection, and text recognition, as well as optional modules like layout area detection, document image orientation classification, and text image correction.</b>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/01.png"/>
+
+<b>The General Table Recognition v2 Pipeline includes mandatory modules such as table structure recognition, table classification, table cell localization, text detection, and text recognition, as well as optional modules like layout area detection, document image orientation classification, and text image correction.</b>
+
 <b>If you prioritize model accuracy, choose a model with higher accuracy; if you care more about inference speed, choose a model with faster inference speed; if you are concerned about model storage size, choose a model with a smaller storage size.</b>
 
 <details><summary> 👉Model List Details</summary>
@@ -427,20 +430,22 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team fro
 
 | Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
 |-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
 | High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+
+</details>
 
 </details>
 
 
 ## 2. Quick Start
-All model pipelines provided by PaddleX can be quickly experienced. You can use the command line or Python locally to experience the effect of the general table recognition pipeline v2.
+All model pipelines provided by PaddleX can be quickly experienced. You can use the command line or Python locally to experience the effect of the General Table Recognition v2 Pipeline.
 
 ### 2.1 Online Experience
 Online experience is not supported at the moment.
 
 ### 2.2 Local Experience
-Before using the General Table Recognition pipeline v2 locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
+Before using the General Table Recognition v2 Pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
 
 ### 2.1 Command Line Experience
 You can quickly experience the effect of the table recognition pipeline with one command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg), and replace `--input` with the local path for prediction.
@@ -594,7 +599,7 @@ The explanation of the running result parameters can refer to the result interpr
 
 The visualization results are saved under `save_path`, where the visualization result of table recognition is as follows:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/01.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/02.jpg">
 
 </details>
 
@@ -622,7 +627,7 @@ for res in output:
 
 In the above Python script, the following steps are executed:
 
-(1) The `create_pipeline()` function is used to instantiate a General Table Recognition Pipeline v2 object. The specific parameter descriptions are as follows:
+(1) The `create_pipeline()` function is used to instantiate a General Table Recognition v2 Pipeline object. The specific parameter descriptions are as follows:
 
 <table>
 <thead>
@@ -661,7 +666,7 @@ In the above Python script, the following steps are executed:
 </tbody>
 </table>
 
-(2) Call the `predict()` method of the general table recognition pipeline v2 object for inference prediction. This method will return a `generator`. The parameters of the `predict()` method and their descriptions are as follows:
+(2) Call the `predict()` method of the General Table Recognition v2 Pipeline object for inference prediction. This method will return a `generator`. The parameters of the `predict()` method and their descriptions are as follows:
 
 <table>
 <thead>
@@ -987,9 +992,9 @@ In the above Python script, the following steps are executed:
 
 - Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}_ocr_res_img.{your_img_extension}`; if specified as a file, it will be saved directly to that file. (The pipeline usually contains many result images, it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, leaving only the last image)
 
-- Calling the `save_to_html()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}.html`; if specified as a file, it will be saved directly to that file. In the general table recognition pipeline v2, the HTML form of the table in the image will be written to the specified HTML file.
+- Calling the `save_to_html()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}.html`; if specified as a file, it will be saved directly to that file. In the General Table Recognition v2 Pipeline, the HTML form of the table in the image will be written to the specified HTML file.
 
-- Calling the `save_to_xlsx()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}.xlsx`; if specified as a file, it will be saved directly to that file. In the general table recognition pipeline v2, the Excel form of the table in the image will be written to the specified XLSX file.
+- Calling the `save_to_xlsx()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}.xlsx`; if specified as a file, it will be saved directly to that file. In the General Table Recognition v2 Pipeline, the Excel form of the table in the image will be written to the specified XLSX file.
 
 * Additionally, it also supports obtaining visualized images and prediction results through attributes, as follows:
 
@@ -1013,13 +1018,13 @@ In the above Python script, the following steps are executed:
 - The prediction result obtained by the `json` attribute is a dict type of data, with content consistent with the content saved by calling the `save_to_json()` method.
 - The prediction result returned by the `img` attribute is a dictionary type of data. The keys are `table_res_img`, `ocr_res_img`, `layout_res_img`, and `preprocessed_img`, and the corresponding values are four `Image.Image` objects, in order: visualized image of table recognition result, visualized image of OCR result, visualized image of layout region detection result, and visualized image of image preprocessing. If a sub-module is not used, the corresponding result image is not included in the dictionary.
 
-In addition, you can obtain the general table recognition pipeline v2 configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
+In addition, you can obtain the General Table Recognition v2 Pipeline configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
 
 ```
 paddlex --get_pipeline_config table_recognition_v2 --save_path ./my_path
 ```
 
-If you have obtained the configuration file, you can customize the settings for the General Table Recognition Pipeline v2. Simply modify the `pipeline` parameter value in the `create_pipeline` method to the path of the pipeline configuration file. The example is as follows:
+If you have obtained the configuration file, you can customize the settings for the General Table Recognition v2 Pipeline. Simply modify the `pipeline` parameter value in the `create_pipeline` method to the path of the pipeline configuration file. The example is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -1041,7 +1046,7 @@ for res in output:
 
 ```
 
-<b>Note:</b> The parameters in the configuration file are the initialization parameters for the pipeline. If you want to change the initialization parameters of the General Table Recognition Pipeline v2, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in the configuration file by specifying the path with `--pipeline`.
+<b>Note:</b> The parameters in the configuration file are the initialization parameters for the pipeline. If you want to change the initialization parameters of the General Table Recognition v2 Pipeline, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in the configuration file by specifying the path with `--pipeline`.
 
 ## 3. Development Integration/Deployment
 If the pipeline meets your requirements for inference speed and accuracy, you can proceed with development integration/deployment.
@@ -1305,10 +1310,10 @@ for i, res in enumerate(result["tableRecResults"]):
 You can choose the appropriate deployment method based on your needs to integrate the model pipeline into subsequent AI applications.
 
 ## 4. Custom Development
-If the default model weights provided by the General Table Recognition pipeline v2 do not meet your requirements in terms of accuracy or speed, you can try to further <b>fine-tune</b> the existing models using <b>your own domain-specific or application data</b> to improve the recognition performance of the General Table Recognition pipeline v2 in your specific scenario.
+If the default model weights provided by the General Table Recognition v2 Pipeline do not meet your requirements in terms of accuracy or speed, you can try to further <b>fine-tune</b> the existing models using <b>your own domain-specific or application data</b> to improve the recognition performance of the General Table Recognition v2 Pipeline in your specific scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the General Table Recognition pipeline v2 consists of several modules, if the overall performance is not satisfactory, the issue may lie in any one of these modules. You can analyze the images with poor recognition results to identify which module is problematic and refer to the corresponding fine-tuning tutorial links in the table below.
+Since the General Table Recognition v2 Pipeline consists of several modules, if the overall performance is not satisfactory, the issue may lie in any one of these modules. You can analyze the images with poor recognition results to identify which module is problematic and refer to the corresponding fine-tuning tutorial links in the table below.
 
 <table>
 <thead>
@@ -1453,4 +1458,4 @@ paddlex --pipeline table_recognition_v2 \
         --device npu:0
 ```
 
-If you want to use the General Table Recognition pipeline v2 on a wider variety of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+If you want to use the General Table Recognition v2 Pipeline on a wider variety of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
