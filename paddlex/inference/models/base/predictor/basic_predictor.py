@@ -98,8 +98,9 @@ class BasicPredictor(
                 list(benchmark.watch_generator(self.apply(input, **kwargs), "warmup"))
                 benchmark.start_timing()
 
-            list(self.apply(input, **kwargs))
+            output = list(self.apply(input, **kwargs))
             benchmark.collect(batch_size)
+            yield from output
         else:
             yield from self.apply(input, **kwargs)
 

@@ -83,7 +83,7 @@ class Benchmark(metaclass=Singleton):
         self.enabled = False
 
     def gather(self, batch_size):
-        logs = {k.replace(".__call__", ""): v for k, v in self.logs.items()}
+        logs = {k.split(".")[0]: v for k, v in self.logs.items()}
 
         iters = len(logs["Infer"])
         instances = len(logs["Infer"]) * batch_size
