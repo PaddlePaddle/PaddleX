@@ -32,7 +32,6 @@ premailer
 PyMuPDF
 ujson
 Pillow
-importlib_resources>=6.4
 ######## For Chatocrv3 #######
 langchain==0.2.17
 langchain-community==0.2.17
