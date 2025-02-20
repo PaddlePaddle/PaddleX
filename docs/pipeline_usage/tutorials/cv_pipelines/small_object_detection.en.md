@@ -14,7 +14,7 @@ Small object detection is a specialized technique for identifying tiny objects w
 <tr>
 <th>Model Name</th><th>Model Download Link</th>
 <th>mAP (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 </tr>

@@ -1831,13 +1831,13 @@ for res in output:
 
 <div class="grid cards" markdown>
 
-- **文档信息抽取**
+- **文档信息抽取v4**
 
     ---
 
-    文档场景信息抽取v3（PP-ChatOCRv3-doc）是飞桨特色的文档和图像智能分析解决方案，结合了 LLM 和 OCR 技术，一站式解决版面分析、生僻字、多页 pdf、表格、印章识别等常见的复杂文档信息抽取难点问题。
+    文档场景信息抽取v4（PP-ChatOCRv4）是飞桨特色的文档和图像智能分析解决方案，结合了 LLM、MLLM 和 OCR 技术，一站式解决版面分析、生僻字、多页 pdf、表格、印章识别等常见的复杂文档信息抽取难点问题。
 
-    [:octicons-arrow-right-24: 教程](pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.md)
+    [:octicons-arrow-right-24: 教程](pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.md)
 
 - **通用OCR**
 
@@ -1847,21 +1847,21 @@ for res in output:
 
     [:octicons-arrow-right-24: 教程](pipeline_usage/tutorials/ocr_pipelines/OCR.md)
 
-- **通用图像分类**
+- **通用版面解析v2**
 
     ---
 
-    图像分类能够自动提取图像特征并进行准确分类，可以识别各种物体，如动物、植物、交通标志等，广泛应用于物体识别、场景理解和自动标注等领域。
+    通用版面解析v2产线在通用版面解析v1产线的基础上，强化了版面区域检测、表格识别、公式识别的能力，增加了多栏阅读顺序的恢复能力、结果转换 Markdown 文件的能力，在多种文档数据中，表现优异，可以处理较复杂的文档数据。
 
-    [:octicons-arrow-right-24: 教程](pipeline_usage/tutorials/cv_pipelines/image_classification.md)
+    [:octicons-arrow-right-24: 教程](pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.md)
 
-- **通用目标检测**
+- **通用表格识别产线v2**
 
     ---
 
-    目标检测旨在识别图像或视频中多个对象的类别及其位置，通过生成边界框来标记这些对象。该技术广泛应用于自动驾驶、监控系统和智能相册等领域。
+    通用表格识别产线v2用于解决表格识别任务，对图片中的表格进行识别，并以HTML格式输出。基于本产线，可实现对表格的精准预测，使用场景覆盖通用、制造、金融、交通等各个领域。
 
-    [:octicons-arrow-right-24: 教程](pipeline_usage/tutorials/cv_pipelines/object_detection.md)
+    [:octicons-arrow-right-24: 教程](pipeline_usage/tutorials/cv_pipelines/table_recognition_v2.md)
 
 - **小目标检测**
 

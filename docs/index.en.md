@@ -1852,13 +1852,13 @@ The following steps were executed:
 
 <div class="grid cards" markdown>
 
-- **Document Information Extraction**
+- **PP-ChatOCRv4**
 
     ---
 
-    Document scene information extraction v3 (PP-ChatOCRv3-doc) is a document and image intelligent analysis solution with PaddlePaddle features, combining LLM and OCR technologies to solve complex document information extraction challenges such as layout analysis, rare character recognition, multi-page PDF, table, and seal recognition in one stop.
+    Document Scene Information Extraction v4 (PP-ChatOCRv4) is a PaddlePaddle-based intelligent document and image analysis solution that integrates LLM (Large Language Model), MLLM (Multimodal Large Language Model), and OCR (Optical Character Recognition) technologies. It provides a one-stop solution for common challenges in complex document information extraction, such as layout analysis, rare character recognition, multi-page PDFs, table extraction, and seal detection.
 
-    [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.en.md)
+    [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.en.md)
 
 - **OCR**
 
@@ -1868,21 +1868,21 @@ The following steps were executed:
 
     [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/ocr_pipelines/OCR.en.md)
 
-- **Image Classification**
+- **General Layout Parsing v2**
 
     ---
 
-    Image classification can automatically extract image features and classify them accurately, recognizing various objects such as animals, plants, traffic signs, etc., and is widely used in object recognition, scene understanding, and automatic tagging fields.
+    The General Layout Parsing v2 pipeline enhances the capabilities of layout area detection, table recognition, and formula recognition based on the General Layout Parsing v1 pipeline. It also adds the ability to restore multi-column reading order and convert results to Markdown files. It performs well on various document datasets and can handle more complex document data.
 
-    [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/cv_pipelines/image_classification.en.md)
+    [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.en.md)
 
-- **Object Detection**
+- **General Table Recognition Pipeline v2**
 
     ---
 
-    Object detection aims to identify the categories and locations of multiple objects in images or videos by generating bounding boxes to mark these objects. This technology is widely used in fields such as autonomous driving, surveillance systems, and smart photo albums.
+    General Table Recognition Pipeline v2 is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. This pipeline enables precise table prediction and is applicable across various fields, including general, manufacturing, finance, and transportation.
 
-    [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/cv_pipelines/object_detection.en.md)
+    [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/cv_pipelines/table_recognition_v2.en.md)
 
 - **Small Object Detection**
 
