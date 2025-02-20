@@ -118,12 +118,11 @@ class StaticInfer:
         self._lock = threading.Lock()
 
     def _reset(self) -> None:
-        logging.debug(f"Env: {self.option}")
-        (
-            predictor,
-            input_handlers,
-            output_handlers,
-        ) = self._create()
+        with self._lock:
+            self.option.changed = False
+            logging.debug(f"Env: {self.option}")
+            predictor = self._create()
+
         self.copy2gpu = Copy2GPU()
         self.copy2cpu = Copy2CPU()
         self.infer = Infer(predictor)
@@ -271,16 +270,8 @@ class StaticInfer:
         # Get input and output handlers
         input_names = predictor.get_input_names()
         input_names.sort()
-        input_handlers = []
-        output_handlers = []
-        for input_name in input_names:
-            input_handler = predictor.get_input_handle(input_name)
-            input_handlers.append(input_handler)
-        output_names = predictor.get_output_names()
-        for output_name in output_names:
-            output_handler = predictor.get_output_handle(output_name)
-            output_handlers.append(output_handler)
-        return predictor, input_handlers, output_handlers
+
+        return predictor
 
     def __call__(self, x) -> List[Any]:
         if self.option.changed:
