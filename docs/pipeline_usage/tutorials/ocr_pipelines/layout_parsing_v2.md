@@ -1538,6 +1538,16 @@ for res in output:
 <td><code>object</code></td>
 <td>Markdown图片相对路径和base64编码图像的键值对。</td>
 </tr>
+<tr>
+<td><code>isStart</code></td>
+<td><code>boolean</code></td>
+<td>当前页面第一个元素是否为段开始。</td>
+</tr>
+<tr>
+<td><code>isEnd</code></td>
+<td><code>boolean</code></td>
+<td>当前页面最后一个元素是否为段结束。</td>
+</tr>
 </tbody>
 </table></details>
 <details><summary>多语言调用服务示例</summary>

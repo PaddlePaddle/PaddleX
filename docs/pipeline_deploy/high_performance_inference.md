@@ -691,14 +691,3 @@ python -m pip install ../../python/dist/ultra_infer*.whl
   </tr>
 
 </table>
-
-
-<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/hpi/ultra_infer/releases/3.0.0rc0/ultra_infer_python-1.0.0.3.0.0rc0-cp38-cp38-linux_x86_64.whl"></a>
-<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/hpi/ultra_infer/releases/3.0.0rc0/ultra_infer_python-1.0.0.3.0.0rc0-cp39-cp39-linux_x86_64.whl"></a>
-<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/hpi/ultra_infer/releases/3.0.0rc0/ultra_infer_python-1.0.0.3.0.0rc0-cp310-cp310-linux_x86_64.whl"></a>
-
-<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/hpi/ultra_infer/releases/3.0.0rc0/ultra_infer_gpu_python-1.0.0.3.0.0rc0-cp38-cp38-linux_x86_64.whl"></a>
-<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/hpi/ultra_infer/releases/3.0.0rc0/ultra_infer_gpu_python-1.0.0.3.0.0rc0-cp39-cp39-linux_x86_64.whl"></a>
-<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/hpi/ultra_infer/releases/3.0.0rc0/ultra_infer_gpu_python-1.0.0.3.0.0rc0-cp310-cp310-linux_x86_64.whl"></a>
-
-<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/hpi/ultra_infer/releases/3.0.0rc0/paddlex_hpi-3.0.0rc0-py3-none-any.whl"></a>
