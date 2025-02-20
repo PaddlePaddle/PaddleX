@@ -27,13 +27,14 @@ from ...utils import logging
 
 class Benchmark(metaclass=Singleton):
     def __init__(self, enabled):
-        self.enabled = enabled
+        self._enabled = enabled
         self._elapses = {}
+        self._warmup = False
 
     def timeit(self, func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            if not self.enabled:
+            if not self._enabled:
                 return func(*args, **kwargs)
 
             name = func.__qualname__
@@ -77,30 +78,26 @@ class Benchmark(metaclass=Singleton):
         return self._elapses
 
     def start_timing(self):
-        self.enabled = True
+        self._enabled = True
 
     def stop_timing(self):
-        self.enabled = False
+        self._enabled = False
+
+    def start_warmup(self):
+        self._warmup = True
+
+    def stop_warmup(self):
+        self._warmup = False
+        self.reset()
 
     def gather(self, batch_size):
         logs = {k.split(".")[0]: v for k, v in self.logs.items()}
 
         iters = len(logs["Infer"])
-        instances = len(logs["Infer"]) * batch_size
+        instances = iters * batch_size
         detail_list = []
         summary = {"preprocess": 0, "inference": 0, "postprocess": 0}
         op_tag = "preprocess"
-
-        warmup_iters = len(logs.get("warmup", []))
-        summary["warmup"] = np.mean(logs.pop("warmup", [0]))
-        warmup_info = (
-            warmup_iters,
-            batch_size,
-            warmup_iters * batch_size,
-            "WarmUp",
-            summary["warmup"],
-            summary["warmup"] / batch_size,
-        )
 
         for name, time_list in logs.items():
             avg = np.mean(time_list)
@@ -152,65 +149,74 @@ class Benchmark(metaclass=Singleton):
             ),
         ]
 
-        return (
-            warmup_info,
-            detail_list,
-            summary_list,
-        )
+        return detail_list, summary_list
 
     def collect(self, batch_size):
-        warmup_info, detail_list, summary_list = self.gather(batch_size)
+        detail_list, summary_list = self.gather(batch_size)
 
-        detail_head = [
-            "Iters",
-            "Batch Size",
-            "Instances",
-            "Component",
-            "Avg Time Per Iter (ms)",
-            "Avg Time Per Instance (ms)",
-        ]
-        table = PrettyTable(detail_head)
-        detail_list = [i[:4] + (f"{i[4]:.8f}", f"{i[5]:.8f}") for i in detail_list]
-        table.add_rows(detail_list)
-        logging.info(table)
+        if self._warmup:
+            summary_head = [
+                "Iters",
+                "Batch Size",
+                "Instances",
+                "Stage",
+                "Avg Time Per Iter (ms)",
+                "Avg Time Per Instance (ms)",
+            ]
+            table = PrettyTable(summary_head)
+            summary_list = [
+                i[:4] + (f"{i[4]:.8f}", f"{i[5]:.8f}") for i in summary_list
+            ]
+            table.add_rows(summary_list)
+            header = "WarmUp Data".center(len(str(table).split("\n")[0]), " ")
+            logging.info(header)
+            logging.info(table)
 
-        summary_head = [
-            "Iters",
-            "Batch Size",
-            "Instances",
-            "Stage",
-            "Avg Time Per Iter (ms)",
-            "Avg Time Per Instance (ms)",
-        ]
-        table = PrettyTable(summary_head)
-        summary_list = [i[:4] + (f"{i[4]:.8f}", f"{i[5]:.8f}") for i in summary_list]
-        table.add_rows(summary_list)
-        logging.info(table)
+        else:
+            detail_head = [
+                "Iters",
+                "Batch Size",
+                "Instances",
+                "Component",
+                "Avg Time Per Iter (ms)",
+                "Avg Time Per Instance (ms)",
+            ]
+            table = PrettyTable(detail_head)
+            detail_list = [i[:4] + (f"{i[4]:.8f}", f"{i[5]:.8f}") for i in detail_list]
+            table.add_rows(detail_list)
+            header = "Detail Data".center(len(str(table).split("\n")[0]), " ")
+            logging.info(header)
+            logging.info(table)
 
-        summary_head = [
-            "Iters",
-            "Batch Size",
-            "Instances",
-            "Stage",
-            "Avg Time Per Iter (ms)",
-            "Avg Time Per Instance (ms)",
-        ]
-        table = PrettyTable(summary_head)
-        table.add_rows([warmup_info])
-        logging.info(table)
+            summary_head = [
+                "Iters",
+                "Batch Size",
+                "Instances",
+                "Stage",
+                "Avg Time Per Iter (ms)",
+                "Avg Time Per Instance (ms)",
+            ]
+            table = PrettyTable(summary_head)
+            summary_list = [
+                i[:4] + (f"{i[4]:.8f}", f"{i[5]:.8f}") for i in summary_list
+            ]
+            table.add_rows(summary_list)
+            header = "Summary Data".center(len(str(table).split("\n")[0]), " ")
+            logging.info(header)
+            logging.info(table)
 
-        if INFER_BENCHMARK_OUTPUT:
-            save_dir = Path(INFER_BENCHMARK_OUTPUT)
-            save_dir.mkdir(parents=True, exist_ok=True)
-            csv_data = [detail_head, *detail_list]
-            with open(Path(save_dir) / "detail.csv", "w", newline="") as file:
-                writer = csv.writer(file)
-                writer.writerows(csv_data)
+            if INFER_BENCHMARK_OUTPUT:
+                save_dir = Path(INFER_BENCHMARK_OUTPUT)
+                save_dir.mkdir(parents=True, exist_ok=True)
+                csv_data = [detail_head, *detail_list]
+                with open(Path(save_dir) / "detail.csv", "w", newline="") as file:
+                    writer = csv.writer(file)
+                    writer.writerows(csv_data)
 
-            csv_data = [summary_head, *summary_list]
-            with open(Path(save_dir) / "summary.csv", "w", newline="") as file:
-                writer = csv.writer(file)
-                writer.writerows(csv_data)
+                csv_data = [summary_head, *summary_list]
+                with open(Path(save_dir) / "summary.csv", "w", newline="") as file:
+                    writer = csv.writer(file)
+                    writer.writerows(csv_data)
 
 
 if INFER_BENCHMARK:

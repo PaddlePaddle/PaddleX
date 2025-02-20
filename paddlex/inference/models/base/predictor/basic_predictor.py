@@ -94,16 +94,20 @@ class BasicPredictor(
         """
         self.set_predictor(batch_size, device, pp_option)
         if INFER_BENCHMARK:
-            benchmark.stop_timing()
-            for _ in range(INFER_BENCHMARK_WARMUP):
-                list(benchmark.watch_generator(self.apply(input, **kwargs), "warmup"))
+            # TODO(zhang-prog): Get metadata of input data
+            input = [input] * batch_size
 
-            benchmark.start_timing()
-            for _ in range(INFER_BENCHMARK_ITER):
-                output = list(self.apply(input, **kwargs))
+            if INFER_BENCHMARK_WARMUP > 0:
+                benchmark.start_warmup()
+                for _ in range(INFER_BENCHMARK_WARMUP):
+                    list(self.apply(input, **kwargs))
+                benchmark.collect(batch_size)
+                benchmark.stop_warmup()
 
-            benchmark.collect(batch_size)
-            yield from output
+            if INFER_BENCHMARK_ITER > 0:
+                for _ in range(INFER_BENCHMARK_ITER):
+                    list(self.apply(input, **kwargs))
+                benchmark.collect(batch_size)
         else:
             yield from self.apply(input, **kwargs)
 

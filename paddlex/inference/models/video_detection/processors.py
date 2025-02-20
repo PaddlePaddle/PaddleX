@@ -21,6 +21,8 @@ import numpy as np
 import cv2
 import lazy_paddle as paddle
 
+from ...utils.benchmark import benchmark
+
 
 class ResizeVideo:
     """Resizes frames of a video to a specified target size.
@@ -75,6 +77,7 @@ class ResizeVideo:
                 )
         return video
 
+    @benchmark.timeit
     def __call__(self, videos: List) -> List:
         """Resizes frames of multiple videos.
 
@@ -129,6 +132,7 @@ class Image2Array:
             video[i] = video_one
         return video
 
+    @benchmark.timeit
     def __call__(self, videos: List[List[np.ndarray]]) -> List[np.ndarray]:
         """
         Process videos by converting each video to a transposed numpy array.
@@ -177,6 +181,7 @@ class NormalizeVideo:
 
         return video
 
+    @benchmark.timeit
     def __call__(self, videos: List[List[np.ndarray]]) -> List[List[np.ndarray]]:
         """
         Apply normalization to a list of videos.
@@ -446,5 +451,6 @@ class DetVideoPostProcess:
             pred_all.append(preds)
         return pred_all
 
+    @benchmark.timeit
     def __call__(self, preds: List, nms_thresh, score_thresh) -> List:
         return [self.postprocess(pred, nms_thresh, score_thresh) for pred in preds]
