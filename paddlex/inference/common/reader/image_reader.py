@@ -16,6 +16,7 @@ import numpy as np
 import cv2
 
 from ...utils.io import ImageReader, PDFReader
+from ...utils.benchmark import benchmark
 
 
 class ReadImage:
@@ -40,6 +41,7 @@ class ReadImage:
         flags = self._FLAGS_DICT[self.format]
         self._img_reader = ImageReader(backend="opencv", flags=flags)
 
+    @benchmark.timeit
     def __call__(self, imgs):
         """apply"""
         return [self.read(img) for img in imgs]

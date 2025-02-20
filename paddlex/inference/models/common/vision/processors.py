@@ -23,6 +23,7 @@ import cv2
 from PIL import Image
 
 from . import funcs as F
+from ....utils.benchmark import benchmark
 
 
 class _BaseResize:
@@ -112,6 +113,7 @@ class Resize(_BaseResize):
 
         self.keep_ratio = keep_ratio
 
+    @benchmark.timeit
     def __call__(self, imgs):
         """apply"""
         return [self.resize(img) for img in imgs]
@@ -155,6 +157,7 @@ class ResizeByLong(_BaseResize):
         super().__init__(size_divisor=size_divisor, interp=interp, backend=backend)
         self.target_long_edge = target_long_edge
 
+    @benchmark.timeit
     def __call__(self, imgs):
         """apply"""
         return [self.resize(img) for img in imgs]
@@ -196,6 +199,7 @@ class ResizeByShort(_BaseResize):
         super().__init__(size_divisor=size_divisor, interp=interp, backend=backend)
         self.target_short_edge = target_short_edge
 
+    @benchmark.timeit
     def __call__(self, imgs):
         """apply"""
         return [self.resize(img) for img in imgs]
@@ -243,6 +247,7 @@ class Normalize:
         self.std = np.asarray(std).astype("float32")
         self.preserve_dtype = preserve_dtype
 
+    @benchmark.timeit
     def __call__(self, imgs):
         """apply"""
         old_type = imgs[0].dtype
@@ -260,11 +265,13 @@ class Normalize:
 class ToCHWImage:
     """Reorder the dimensions of the image from HWC to CHW."""
 
+    @benchmark.timeit
     def __call__(self, imgs):
         """apply"""
         return [img.transpose((2, 0, 1)) for img in imgs]
 
 
 class ToBatch:
+    @benchmark.timeit
     def __call__(self, imgs):
         return [np.stack(imgs, axis=0).astype(dtype=np.float32, copy=False)]

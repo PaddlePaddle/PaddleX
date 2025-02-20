@@ -21,6 +21,7 @@ from numpy import ndarray
 from ..common import Resize as CommonResize
 from ..common import Normalize as CommonNormalize
 from ...common.reader import ReadImage as CommonReadImage
+from ...utils.benchmark import benchmark
 
 Boxes = List[dict]
 Number = Union[int, float]
@@ -29,6 +30,7 @@ Number = Union[int, float]
 class ReadImage(CommonReadImage):
     """Reads images from a list of raw image data or file paths."""
 
+    @benchmark.timeit
     def __call__(self, raw_imgs: List[Union[ndarray, str, dict]]) -> List[dict]:
         """Processes the input list of raw image data or file paths and returns a list of dictionaries containing image information.
 
@@ -93,6 +95,7 @@ class ReadImage(CommonReadImage):
 
 
 class Resize(CommonResize):
+    @benchmark.timeit
     def __call__(self, datas: List[dict]) -> List[dict]:
         """
         Args:
@@ -138,6 +141,7 @@ class Normalize(CommonNormalize):
             img = img.astype(old_type, copy=False)
         return img
 
+    @benchmark.timeit
     def __call__(self, datas: List[dict]) -> List[dict]:
         """Normalizes images in a list of dictionaries. Iterates over each dictionary,
         applies normalization to the 'img' key, and returns the modified list.
@@ -150,6 +154,7 @@ class Normalize(CommonNormalize):
 class ToCHWImage:
     """Converts images in a list of dictionaries from HWC to CHW format."""
 
+    @benchmark.timeit
     def __call__(self, datas: List[dict]) -> List[dict]:
         """Converts the image data in the list of dictionaries from HWC to CHW format in-place.
 
@@ -207,6 +212,7 @@ class ToBatch:
                 dtype=dtype, copy=False
             )
 
+    @benchmark.timeit
     def __call__(self, datas: List[dict]) -> Sequence[ndarray]:
         return [self.apply(datas, key) for key in self.ordered_required_keys]
 
@@ -242,6 +248,7 @@ class DetPad:
         canvas[0:im_h, 0:im_w, :] = im.astype(np.float32)
         return canvas
 
+    @benchmark.timeit
     def __call__(self, datas: List[dict]) -> List[dict]:
         for data in datas:
             data["img"] = self.apply(data["img"])
@@ -276,6 +283,7 @@ class PadStride:
         padding_im[:, :im_h, :im_w] = im
         return padding_im
 
+    @benchmark.timeit
     def __call__(self, datas: List[dict]) -> List[dict]:
         for data in datas:
             data["img"] = self.apply(data["img"])
@@ -438,6 +446,7 @@ class WarpAffine:
 
         return inp
 
+    @benchmark.timeit
     def __call__(self, datas: List[dict]) -> List[dict]:
 
         for data in datas:
@@ -760,6 +769,7 @@ class DetPostProcess:
             )
         return boxes
 
+    @benchmark.timeit
     def __call__(
         self,
         batch_outputs: List[dict],

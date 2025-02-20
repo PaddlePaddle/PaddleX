@@ -17,6 +17,7 @@ from abc import ABC, abstractmethod
 
 from ....utils.flags import (
     INFER_BENCHMARK,
+    INFER_BENCHMARK_WARMUP,
     INFER_BENCHMARK_ITER,
     INFER_BENCHMARK_DATA_SIZE,
 )
@@ -34,6 +35,7 @@ class BaseBatchSampler:
         super().__init__()
         self._batch_size = batch_size
         self._benchmark = INFER_BENCHMARK
+        self._benchmark_warmup = INFER_BENCHMARK_WARMUP
         self._benchmark_iter = INFER_BENCHMARK_ITER
         self._benchmark_data_size = INFER_BENCHMARK_DATA_SIZE
 
@@ -70,8 +72,13 @@ class BaseBatchSampler:
             Iterator[List[Any]]: An iterator yielding the batch data.
         """
         if input is None and self._benchmark:
-            for _ in range(self._benchmark_iter):
-                yield self._rand_batch(self._benchmark_data_size)
+            if self._benchmark_warmup > 0:
+                for _ in range(self._benchmark_warmup):
+                    yield self._rand_batch(self._benchmark_data_size)
+                    self._benchmark_warmup -= 1
+            else:
+                for _ in range(self._benchmark_iter):
+                    yield self._rand_batch(self._benchmark_data_size)
         else:
             yield from self.sample(input)
 

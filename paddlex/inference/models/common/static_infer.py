@@ -21,6 +21,7 @@ import lazy_paddle as paddle
 import numpy as np
 
 from ....utils.flags import DEBUG, FLAGS_json_format_model, USE_PIR_TRT
+from ...utils.benchmark import benchmark
 from ....utils import logging
 from ...utils.pp_option import PaddlePredictorOption
 
@@ -79,29 +80,17 @@ def convert_trt(mode, pp_model_path, trt_save_path, trt_dynamic_shapes):
 
 
 class Copy2GPU:
-
-    def __init__(self, input_handlers):
-        super().__init__()
-        self.input_handlers = input_handlers
-
-    def __call__(self, x):
-        for idx in range(len(x)):
-            self.input_handlers[idx].reshape(x[idx].shape)
-            self.input_handlers[idx].copy_from_cpu(x[idx])
+    @benchmark.timeit
+    def __call__(self, arrs):
+        paddle_tensors = [paddle.to_tensor(i) for i in arrs]
+        return paddle_tensors
 
 
 class Copy2CPU:
-
-    def __init__(self, output_handlers):
-        super().__init__()
-        self.output_handlers = output_handlers
-
-    def __call__(self):
-        output = []
-        for out_tensor in self.output_handlers:
-            batch = out_tensor.copy_to_cpu()
-            output.append(batch)
-        return output
+    @benchmark.timeit
+    def __call__(self, paddle_tensors):
+        arrs = [i.numpy() for i in paddle_tensors]
+        return arrs
 
 
 class Infer:
@@ -110,8 +99,9 @@ class Infer:
         super().__init__()
         self.predictor = predictor
 
-    def __call__(self):
-        self.predictor.run()
+    @benchmark.timeit
+    def __call__(self, x):
+        return self.predictor.run(x)
 
 
 class StaticInfer:
@@ -128,17 +118,14 @@ class StaticInfer:
         self._lock = threading.Lock()
 
     def _reset(self) -> None:
-        with self._lock:
-            self.option.changed = False
-            logging.debug(f"Env: {self.option}")
-            (
-                predictor,
-                input_handlers,
-                output_handlers,
-            ) = self._create()
-
-        self.copy2gpu = Copy2GPU(input_handlers)
-        self.copy2cpu = Copy2CPU(output_handlers)
+        logging.debug(f"Env: {self.option}")
+        (
+            predictor,
+            input_handlers,
+            output_handlers,
+        ) = self._create()
+        self.copy2gpu = Copy2GPU()
+        self.copy2cpu = Copy2CPU()
         self.infer = Infer(predictor)
 
     def _create(
@@ -298,15 +285,7 @@ class StaticInfer:
     def __call__(self, x) -> List[Any]:
         if self.option.changed:
             self._reset()
-        self.copy2gpu(x)
-        self.infer()
-        pred = self.copy2cpu()
+        inputs = self.copy2gpu(x)
+        outputs = self.infer(inputs)
+        pred = self.copy2cpu(outputs)
         return pred
-
-    @property
-    def benchmark(self):
-        return {
-            "Copy2GPU": self.copy2gpu,
-            "Infer": self.infer,
-            "Copy2CPU": self.copy2cpu,
-        }
