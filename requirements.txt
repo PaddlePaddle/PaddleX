@@ -38,6 +38,7 @@ langchain==0.2.17
 langchain-community==0.2.17
 langchain-text-splitters==0.2.4
 transformers==4.40.0
+openai==1.63.2
 unstructured
 networkx
 faiss-cpu
