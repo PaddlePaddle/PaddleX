@@ -1,0 +1,2 @@
+include src/paddlex_hpi/py.typed
+include src/paddlex_hpi/model_info_collection.json
