@@ -71,16 +71,7 @@ class BaseBatchSampler:
         Yields:
             Iterator[List[Any]]: An iterator yielding the batch data.
         """
-        if input is None and self._benchmark:
-            if self._benchmark_warmup > 0:
-                for _ in range(self._benchmark_warmup):
-                    yield self._rand_batch(self._benchmark_data_size)
-                    self._benchmark_warmup -= 1
-            else:
-                for _ in range(self._benchmark_iter):
-                    yield self._rand_batch(self._benchmark_data_size)
-        else:
-            yield from self.sample(input)
+        yield from self.sample(input)
 
     @abstractmethod
     def sample(self, *args: Tuple[Any], **kwargs: Dict[str, Any]) -> Iterator[list]:

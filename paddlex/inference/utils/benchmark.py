@@ -91,15 +91,15 @@ class Benchmark(metaclass=Singleton):
         summary = {"preprocess": 0, "inference": 0, "postprocess": 0}
         op_tag = "preprocess"
 
-        warmup_instances = len(logs.get("warmup", []))
+        warmup_iters = len(logs.get("warmup", []))
         summary["warmup"] = np.mean(logs.pop("warmup", [0]))
         warmup_info = (
-            int(warmup_instances / batch_size),
+            warmup_iters,
             batch_size,
-            warmup_instances,
+            warmup_iters * batch_size,
             "WarmUp",
-            summary["warmup"] * batch_size,
             summary["warmup"],
+            summary["warmup"] / batch_size,
         )
 
         for name, time_list in logs.items():

@@ -19,6 +19,7 @@ from .....utils.subclass_register import AutoRegisterABCMetaClass
 from .....utils.flags import (
     INFER_BENCHMARK,
     INFER_BENCHMARK_WARMUP,
+    INFER_BENCHMARK_ITER,
 )
 from .....utils import logging
 from ....utils.pp_option import PaddlePredictorOption
@@ -93,12 +94,14 @@ class BasicPredictor(
         """
         self.set_predictor(batch_size, device, pp_option)
         if INFER_BENCHMARK:
-            if INFER_BENCHMARK_WARMUP > 0:
-                benchmark.stop_timing()
+            benchmark.stop_timing()
+            for _ in range(INFER_BENCHMARK_WARMUP):
                 list(benchmark.watch_generator(self.apply(input, **kwargs), "warmup"))
-                benchmark.start_timing()
 
-            output = list(self.apply(input, **kwargs))
+            benchmark.start_timing()
+            for _ in range(INFER_BENCHMARK_ITER):
+                output = list(self.apply(input, **kwargs))
+
             benchmark.collect(batch_size)
             yield from output
         else:
