@@ -345,8 +345,8 @@ docker run \
 - If CPU deployment is required, there is no need to specify `--gpus`.
 - The above commands can only be executed properly after successful activation. PaddleX offers two activation methods: online activation and offline activation. They are detailed as follows:
 
-    - Online activation: Set `PADDLEX_HPS_UPDATE_LICENSE` to `1` for the first execution to enable the program to complete activation automatically.
-    - Offline Activation: Follow the instructions in the serial number management section to obtain the machine’s device fingerprint. Bind the serial number with the device fingerprint to obtain the certificate and complete the activation. For this activation method, you need to manually place the certificate in the `${HOME}/.baidu/paddlex/licenses` directory on the machine (if the directory does not exist, you will need to create it).
+    - Online activation: Set `PADDLEX_HPS_UPDATE_LICENSE` to `1` for the first execution to enable the program to automatically update the license and complete activation. When executing the command again, you may set `PADDLEX_HPS_UPDATE_LICENSE` to `0` to avoid online license updates.
+    - Offline Activation: Follow the instructions in the serial number management section to obtain the machine’s device fingerprint. Bind the serial number with the device fingerprint to obtain the certificate and complete the activation. For this activation method, you need to manually place the certificate in the `${HOME}/.baidu/paddlex/licenses` directory on the machine (if the directory does not exist, you will need to create it). When using this method, set `PADDLEX_HPS_UPDATE_LICENSE` to `0` to avoid online license updates.
 
 - It is necessary to ensure that the `/dev/disk/by-uuid` directory on the host machine exists and is not empty, and that this directory is correctly mounted in order to perform activation properly.
 - If you need to enter the container for debugging, you can replace `/bin/bash server.sh` in the command with `/bin/bash`. Then execute `/bin/bash server.sh` inside the container.
