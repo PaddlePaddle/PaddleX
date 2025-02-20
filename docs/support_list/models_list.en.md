@@ -1568,8 +1568,6 @@ PaddleX includes multiple production lines, each containing several modules, and
 
 ## [Human Keypoint Detection Module](../module_usage/tutorials//cv_modules/human_keypoint_detection.en.md)
 
-## [Human Keypoint Detection Module](../module_usage/tutorials//cv_modules/human_keypoint_detection.md)
-
 <table>
 <tr>
 <th>Model</th>
@@ -2071,7 +2069,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <td>PP-OCRv4_server_rec_doc</td>
 <td>81.53</td>
-<td>6.65 / 6.65</td>
+<td>6.65 / 2.38</td>
 <td>32.92 / 32.92</td>
 <td>74.7 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/PP-OCRv4_server_rec_doc.yaml">PP-OCRv4_server_rec_doc.yaml</a></td>
@@ -2080,7 +2078,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <td>PP-OCRv4_mobile_rec</td>
 <td>78.74</td>
-<td>4.82 / 4.82</td>
+<td>4.82 / 1.20</td>
 <td>16.74 / 4.64</td>
 <td>10.6 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/PP-OCRv4_mobile_rec.yaml">PP-OCRv4_mobile_rec.yaml</a></td>
@@ -2089,7 +2087,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <td>PP-OCRv4_server_rec </td>
 <td>80.61 </td>
-<td>6.58 / 6.58</td>
+<td>6.58 / 2.43</td>
 <td>33.17 / 33.17</td>
 <td>71.2 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/PP-OCRv4_server_rec.yaml">PP-OCRv4_server_rec.yaml</a></td>
@@ -2098,7 +2096,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <td>PP-OCRv3_mobile_rec</td>
 <td>72.96</td>
-<td>5.87 / 5.87</td>
+<td>5.87 / 1.19</td>
 <td>9.07 / 4.28</td>
 <td>9.2 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/PP-OCRv3_mobile_rec.yaml">PP-OCRv3_mobile_rec.yaml</a></td>
@@ -2119,7 +2117,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <td>ch_SVTRv2_rec</td>
 <td>68.81</td>
-<td>8.08 / 8.08</td>
+<td>8.08 / 2.74</td>
 <td>50.17 / 42.50</td>
 <td>73.9 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/ch_SVTRv2_rec.yaml">ch_SVTRv2_rec.yaml</a></td>
@@ -2140,7 +2138,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <td>ch_RepSVTR_rec</td>
 <td>65.07</td>
-<td>5.93 / 5.93</td>
+<td>5.93 / 1.62</td>
 <td>20.73 / 7.32</td>
 <td>22.1 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/ch_RepSVTR_rec.yaml">ch_RepSVTR_rec.yaml</a></td>
@@ -2162,7 +2160,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <td>en_PP-OCRv4_mobile_rec</td>
 <td> 70.39</td>
-<td>4.81 / 4.81</td>
+<td>4.81 / 0.75</td>
 <td>16.10 / 5.31</td>
 <td>6.8 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/en_PP-OCRv4_mobile_rec.yaml">en_PP-OCRv4_mobile_rec.yaml</a></td>
@@ -2171,7 +2169,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <td>en_PP-OCRv3_mobile_rec</td>
 <td>70.69</td>
-<td>5.44 / 5.44</td>
+<td>5.44 / 0.75</td>
 <td>8.65 / 5.57</td>
 <td>7.8 M </td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/en_PP-OCRv3_mobile_rec.yaml">en_PP-OCRv3_mobile_rec.yaml</a></td>
@@ -2195,7 +2193,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <td>korean_PP-OCRv3_mobile_rec</td>
 <td>60.21</td>
-<td>5.40 / 5.40</td>
+<td>5.40 / 0.97</td>
 <td>9.11 / 4.05</td>
 <td>8.6 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/korean_PP-OCRv3_mobile_rec.yaml">korean_PP-OCRv3_mobile_rec.yaml</a></td>
@@ -2204,7 +2202,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <td>japan_PP-OCRv3_mobile_rec</td>
 <td>45.69</td>
-<td>5.70 / 5.70</td>
+<td>5.70 / 1.02</td>
 <td>8.48 / 4.07</td>
 <td>8.8 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/japan_PP-OCRv3_mobile_rec.yaml">japan_PP-OCRv3_mobile_rec.yaml</a></td>
@@ -2213,7 +2211,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <td>chinese_cht_PP-OCRv3_mobile_rec</td>
 <td>82.06</td>
-<td>5.90 / 5.90</td>
+<td>5.90 / 1.28</td>
 <td>9.28 / 4.34</td>
 <td>9.7 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/chinese_cht_PP-OCRv3_mobile_rec.yaml">chinese_cht_PP-OCRv3_mobile_rec.yaml</a></td>
@@ -2222,7 +2220,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <td>te_PP-OCRv3_mobile_rec</td>
 <td>95.88</td>
-<td>5.42 / 5.42</td>
+<td>5.42 / 0.82</td>
 <td>8.10 / 6.91</td>
 <td>7.8 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/te_PP-OCRv3_mobile_rec.yaml">te_PP-OCRv3_mobile_rec.yaml</a></td>
@@ -2231,7 +2229,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <td>ka_PP-OCRv3_mobile_rec</td>
 <td>96.96</td>
-<td>5.25 / 5.25</td>
+<td>5.25 / 0.79</td>
 <td>9.09 / 3.86</td>
 <td>8.0 M </td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/ka_PP-OCRv3_mobile_rec.yaml">ka_PP-OCRv3_mobile_rec.yaml</a></td>
@@ -2240,7 +2238,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <td>ta_PP-OCRv3_mobile_rec</td>
 <td>76.83</td>
-<td>5.23 / 5.23</td>
+<td>5.23 / 0.75</td>
 <td>10.13 / 4.30</td>
 <td>8.0 M </td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/ta_PP-OCRv3_mobile_rec.yaml">ta_PP-OCRv3_mobile_rec.yaml</a></td>
@@ -2249,7 +2247,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <td>latin_PP-OCRv3_mobile_rec</td>
 <td>76.93</td>
-<td>5.20 / 5.20</td>
+<td>5.20 / 0.79</td>
 <td>8.83 / 7.15</td>
 <td>7.8 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/latin_PP-OCRv3_mobile_rec.yaml">latin_PP-OCRv3_mobile_rec.yaml</a></td>
@@ -2258,7 +2256,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <td>arabic_PP-OCRv3_mobile_rec</td>
 <td>73.55</td>
-<td>5.35 / 5.35</td>
+<td>5.35 / 0.79</td>
 <td>8.80 / 4.56</td>
 <td>7.8 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/arabic_PP-OCRv3_mobile_rec.yaml">arabic_PP-OCRv3_mobile_rec.yaml</a></td>
@@ -2267,7 +2265,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <td>cyrillic_PP-OCRv3_mobile_rec</td>
 <td>94.28</td>
-<td>5.23 / 5.23</td>
+<td>5.23 / 0.76</td>
 <td>8.89 / 3.88</td>
 <td>7.9 M  </td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/cyrillic_PP-OCRv3_mobile_rec.yaml">cyrillic_PP-OCRv3_mobile_rec.yaml</a></td>
@@ -2276,7 +2274,7 @@ PaddleX includes multiple production lines, each containing several modules, and
 <tr>
 <td>devanagari_PP-OCRv3_mobile_rec</td>
 <td>96.44</td>
-<td>5.22 / 5.22</td>
+<td>5.22 / 0.79</td>
 <td>8.56 / 4.06</td>
 <td>7.9 M</td>
 <td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/text_recognition/devanagari_PP-OCRv3_mobile_rec.yaml">devanagari_PP-OCRv3_mobile_rec.yaml</a></td>
