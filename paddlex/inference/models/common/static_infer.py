@@ -86,7 +86,6 @@ class Copy2GPU:
         return paddle_tensors
 
 
-# TODO(zhang-prog): Paddle D2H execution time is short, requires attention.
 class Copy2CPU:
     @benchmark.timeit
     def __call__(self, paddle_tensors):
