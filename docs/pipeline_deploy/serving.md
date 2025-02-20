@@ -263,7 +263,7 @@ paddlex --serve --pipeline image_classification --use_hpip
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-2.png">
 
-**请注意**：每个序列号只能绑定到唯一的设备指纹，且只能绑定一次。这意味着用户如果使用不同的机器部署产线，则必须为每台机器准备单独的序列号。
+**请注意**：每个序列号只能绑定到唯一的设备指纹，且只能绑定一次。这意味着用户如果使用不同的机器部署产线，则必须为每台机器准备单独的序列号。**高稳定性服务化部署完全免费。**PaddleX 的鉴权机制核心在于统计各产线的部署数量，并通过数据建模为团队提供产线效能分析，以便进行资源的优化配置和重点产线效率的提升。需要特别说明的是，鉴权过程只使用硬盘分区 UUID 等非敏感信息，PaddleX 也并不采集设备遥测数据等敏感数据，因此理论上**鉴权服务器无法获取到任何敏感信息**。
 
 ### 2.3 调整配置
 

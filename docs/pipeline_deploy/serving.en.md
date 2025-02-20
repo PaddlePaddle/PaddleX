@@ -262,7 +262,7 @@ Select the pipeline you wish to deploy and click "获取" (acquire). Afterwards,
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-2.png"/>
 
-**Please note**: Each serial number can only be bound to a unique device fingerprint and can only be bound once. This means that if a user deploys a pipeline on different machines, a separate serial number must be prepared for each machine.
+**Please note**: Each serial number can only be bound to a unique device fingerprint and can only be bound once. This means that if a user deploys a pipeline on different machines, a separate serial number must be prepared for each machine. **The high-stability serving solution is completely free.** PaddleX's authentication mechanism is targeted to count the number of deployments across various pipelines and provide pipeline efficiency analysis for our team through data modeling, so as to optimize resource allocation and improve the efficiency of key pipelines. It is important to note that the authentication process only uses non-sensitive information such as disk partition UUIDs, and PaddleX does not collect sensitive data such as device telemetry data. Therefore, in theory, **the authentication server cannot obtain any sensitive information**.
 
 ### 2.3 Adjust Configurations
 
