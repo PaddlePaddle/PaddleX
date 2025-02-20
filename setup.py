@@ -17,6 +17,7 @@ import os
 import glob
 import itertools
 from pathlib import Path
+from functools import partial
 
 from setuptools import find_packages
 from setuptools import setup
@@ -48,6 +49,37 @@ def version():
     """get version"""
     with open(os.path.join("paddlex", ".version"), "r") as file:
         return file.read().rstrip()
+
+
+def get_all_files(directory: str):
+    all_files = []
+    for root, _, files in os.walk(directory):
+        root = os.path.relpath(root, directory)
+        for file in files:
+            filepath = os.path.join(root, file)
+            all_files.append(filepath)
+
+    return all_files
+
+
+def get_data_files(directory: str, data: list = None, filetypes: list = None):
+    all_files = []
+    data = data or []
+    filetypes = filetypes or []
+
+    for file in get_all_files(directory):
+        filetype = os.path.splitext(file)[1][1:]
+        filename = os.path.basename(file)
+        if file in data:
+            all_files.append(file)
+        elif filetype in filetypes:
+            all_files.append(file)
+
+    return all_files
+
+
+get_cpp_files = partial(
+    get_data_files, filetypes=['h', 'hpp', 'cpp', 'cc', 'cu'])
 
 
 def packages_and_package_data():
@@ -82,7 +114,7 @@ def packages_and_package_data():
     pkg_data.append("repo_manager/requirements.txt")
     pkg_data.append("serving_requirements.txt")
     pkg_data.append("paddle2onnx_requirements.txt")
-    return pkgs, {"paddlex": pkg_data}
+    return pkgs, {"paddlex.ops": get_cpp_files('paddlex/ops'), "paddlex": pkg_data}
 
 
 if __name__ == "__main__":
