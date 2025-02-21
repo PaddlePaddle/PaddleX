@@ -295,7 +295,7 @@ indicating that no pretrained model to be used."
         Args:
             dy2st (bool): whether or not to use the dynamic to static mode.
         """
-        self.update({"Global.to_static": dy2st})
+        self.update({"to_static": dy2st})
 
     def _update_use_vdl(self, use_vdl: bool):
         """update config to set VisualDL
