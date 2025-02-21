@@ -1863,7 +1863,7 @@ import requests
 API_BASE_URL = "http://0.0.0.0:8080"
 
 file_path = "./demo.jpg"
-keys = ["姓名"]
+keys = ["name"]
 
 with open(file_path, "rb") as file:
     file_bytes = file.read()
