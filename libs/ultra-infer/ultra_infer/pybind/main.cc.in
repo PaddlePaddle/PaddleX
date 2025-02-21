@@ -41,6 +41,8 @@ pybind11::dtype FDDataTypeToNumpyDataType(const FDDataType& fd_dtype) {
     dt = pybind11::dtype::of<int8_t>();
   } else if (fd_dtype == FDDataType::FP16) {
     dt = pybind11::dtype::of<float16>();
+  } else if (fd_dtype == FDDataType::BOOL) {
+    dt = pybind11::dtype::of<bool>();
   } else {
     FDASSERT(false, "The function doesn't support data type of %s.",
                         Str(fd_dtype).c_str());
