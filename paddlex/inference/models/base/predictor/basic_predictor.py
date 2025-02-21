@@ -95,19 +95,28 @@ class BasicPredictor(
         self.set_predictor(batch_size, device, pp_option)
         if INFER_BENCHMARK:
             # TODO(zhang-prog): Get metadata of input data
+            if not isinstance(input, str):
+                raise TypeError("Only support string as input")
             input = [input] * batch_size
+
+            if not (INFER_BENCHMARK_WARMUP > 0 or INFER_BENCHMARK_ITER > 0):
+                raise RuntimeError(
+                    "At least one of `INFER_BENCHMARK_WARMUP` and `INFER_BENCHMARK_ITER` must be greater than zero"
+                )
 
             if INFER_BENCHMARK_WARMUP > 0:
                 benchmark.start_warmup()
                 for _ in range(INFER_BENCHMARK_WARMUP):
-                    list(self.apply(input, **kwargs))
+                    output = list(self.apply(input, **kwargs))
                 benchmark.collect(batch_size)
                 benchmark.stop_warmup()
 
             if INFER_BENCHMARK_ITER > 0:
                 for _ in range(INFER_BENCHMARK_ITER):
-                    list(self.apply(input, **kwargs))
+                    output = list(self.apply(input, **kwargs))
                 benchmark.collect(batch_size)
+
+            yield output[0]
         else:
             yield from self.apply(input, **kwargs)
 

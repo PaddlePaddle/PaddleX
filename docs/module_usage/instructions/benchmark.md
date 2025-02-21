@@ -1,5 +1,13 @@
 # 模型推理 Benchmark
 
+## 目录
+
+- [1. 使用说明](#1.使用说明)
+- [2. 使用示例](#2.使用示例)
+  - [2.1 命令行方式](#2.1-命令行方式)
+  - [2.2 Python 脚本方式](#2.2-Python-脚本方式)
+- [3. 结果说明](#3.结果说明)
+
 ## 1.使用说明
 
 PaddleX 支持统计模型推理耗时，需通过环境变量进行设置，具体如下：
@@ -11,7 +19,73 @@ PaddleX 支持统计模型推理耗时，需通过环境变量进行设置，具
 
 在 Benchmark 结果中，会统计该模型全部组件（`Component`）和阶段（`Stage`）的每次迭代的平均执行时间（`Avg Time Per Iter (ms)`）和每个样本的平均执行时间（`Avg Time Per Instance (ms)`），单位为毫秒。
 
-具体字段说明如下：
+## 2.使用示例
+
+您可以通过以下两种方式来使用 benchmark：命令行方式和 Python 脚本方式。
+
+### 2.1 命令行方式
+
+**注意**：
+
+- 输入参数说明可参考 [PaddleX通用模型配置文件参数说明](./config_parameters_common.md)
+- `Predict.input` 在 Benchmark 只能被设置为输入数据的本地路径。如果 `batch_size` 大于 1，输入数据将被重复 `batch_size` 次以匹配 `batch_size` 的大小。
+
+执行命令：
+
+```bash
+PADDLE_PDX_INFER_BENCHMARK=True \
+PADDLE_PDX_INFER_BENCHMARK_WARMUP=5 \
+PADDLE_PDX_INFER_BENCHMARK_ITER=10 \
+PADDLE_PDX_INFER_BENCHMARK_OUTPUT=./benchmark \
+python main.py \
+    -c ./paddlex/configs/modules/object_detection/PicoDet-XS.yaml \
+    -o Global.mode=predict \
+    -o Predict.model_dir=None \
+    -o Predict.batch_size=2 \
+    -o Predict.input=./test.png
+
+# 使用pptrt推理后端
+#   -o Predict.kernel_option="{'run_mode': 'trt_fp32'}"
+```
+
+### 2.2 Python 脚本方式
+
+**注意**：
+
+- 输入参数说明可参考 [PaddleX单模型Python脚本使用说明](./model_python_API.md)
+- `input` 在 Benchmark 只能被设置为输入数据的本地路径。如果 `batch_size` 大于 1，输入数据将被重复 `batch_size` 次以匹配 `batch_size` 的大小。
+
+创建 `test_infer.py` 脚本：
+
+```python
+from paddlex import create_model
+
+model = create_model(model_name="PicoDet-XS", model_dir=None)
+output = list(model.predict(input="./test.png", batch_size=2))
+
+# 使用pptrt推理后端
+# from paddlex import create_model
+# from paddlex.inference.utils.pp_option import PaddlePredictorOption
+
+# pp_option = PaddlePredictorOption()
+# pp_option.run_mode = "trt_fp32"
+# model = create_model(model_name="PicoDet-XS", model_dir=None, pp_option=pp_option)
+# output = list(model.predict(input="./test.png", batch_size=2))
+```
+
+执行脚本：
+
+```bash
+PADDLE_PDX_INFER_BENCHMARK=True \
+PADDLE_PDX_INFER_BENCHMARK_WARMUP=5 \
+PADDLE_PDX_INFER_BENCHMARK_ITER=10 \
+PADDLE_PDX_INFER_BENCHMARK_OUTPUT=./benchmark \
+python test_infer.py
+```
+
+## 3.结果示例
+
+在开启 Benchmark 后，将自动打印 Benchmark 结果，具体说明如下：
 
 <table border="1">
     <thead>
@@ -52,28 +126,7 @@ PaddleX 支持统计模型推理耗时，需通过环境变量进行设置，具
     </tbody>
 </table>
 
-## 2.使用示例
-
-**注意**：
-
-- 输入参数说明可参考 [PaddleX通用模型配置文件参数说明](./config_parameters_common.md)
-- `Predict.input` 在 benchmark 中仅支持单一输入，如果 `batch_size` 大于 1，输入数据将被重复 `batch_size` 次以匹配 `batch_size` 的大小。
-
-```bash
-wget https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png -O ./test.png
-PADDLE_PDX_INFER_BENCHMARK=True \
-PADDLE_PDX_INFER_BENCHMARK_WARMUP=5 \
-PADDLE_PDX_INFER_BENCHMARK_ITER=10 \
-PADDLE_PDX_INFER_BENCHMARK_OUTPUT=./benchmark \
-python main.py \
-    -c ./paddlex/configs/modules/object_detection/PicoDet-XS.yaml \
-    -o Global.mode=predict \
-    -o Predict.model_dir=None \
-    -o Predict.batch_size=2 \
-    -o Predict.input=./test.png
-```
-
-在开启 Benchmark 后，将自动打印 benchmark 指标：
+运行第2节的示例程序所得到的 Benchmark 结果如下：
 
 ```
                                              WarmUp Data
@@ -110,7 +163,7 @@ python main.py \
 +-------+------------+-----------+-------------+------------------------+----------------------------+
 ```
 
-同时，由于设置了`PADDLE_PDX_INFER_BENCHMARK_OUTPUT=./benchmark`，所以上述指标会保存到到本地： `./benchmark/detail.csv` 和 `./benchmark/summary.csv`：
+同时，由于设置了`PADDLE_PDX_INFER_BENCHMARK_OUTPUT=./benchmark`，所以上述结果会保存到到本地： `./benchmark/detail.csv` 和 `./benchmark/summary.csv`：
 
 `detail.csv` 内容如下：
 

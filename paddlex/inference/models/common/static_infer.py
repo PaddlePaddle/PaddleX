@@ -14,8 +14,6 @@
 
 from typing import Union, Tuple, List, Dict, Any, Iterator
 import os
-import shutil
-import threading
 from pathlib import Path
 import lazy_paddle as paddle
 import numpy as np
@@ -114,15 +112,7 @@ class StaticInfer:
         self.model_dir = model_dir
         self.model_prefix = model_prefix
         self.option = option
-        self.option.changed = True
-        self._lock = threading.Lock()
-
-    def _reset(self) -> None:
-        with self._lock:
-            self.option.changed = False
-            logging.debug(f"Env: {self.option}")
-            self.predictor = self._create()
-
+        self.predictor = self._create()
         self.copy2gpu = Copy2GPU()
         self.copy2cpu = Copy2CPU()
         self.infer = Infer(self.predictor)
@@ -274,9 +264,6 @@ class StaticInfer:
         return predictor
 
     def __call__(self, x) -> List[Any]:
-        if self.option.changed:
-            self._reset()
-
         # NOTE: Adjust input tensors to match the sorted sequence.
         names = self.predictor.get_input_names()
         if len(names) != len(x):
