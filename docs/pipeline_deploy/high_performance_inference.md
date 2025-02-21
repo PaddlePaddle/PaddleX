@@ -48,28 +48,16 @@ paddlex --install hpi-gpu
     <th>Python 版本</th>
   </tr>
   <tr>
-    <td rowspan="7">x86-64</td>
-    <td rowspan="7">Linux</td>
-    <td rowspan="4">CPU</td>
+    <td rowspan="4">x86-64</td>
+    <td rowspan="4">Linux</td>
   </tr>
   <tr>
-    <td>3.8</td>
+    <td>CPU</td>
+    <td>3.8–3.12</td>
   </tr>
   <tr>
-    <td>3.9</td>
-  </tr>
-  <tr>
-    <td>3.10</td>
-  </tr>
-  <tr>
-    <td rowspan="3">GPU&nbsp;（CUDA&nbsp;11.8&nbsp;+&nbsp;cuDNN&nbsp;8.6）</td>
-    <td>3.8</td>
-  </tr>
-  <tr>
-    <td>3.9</td>
-  </tr>
-  <tr>
-    <td>3.10</td>
+    <td>GPU&nbsp;（CUDA&nbsp;11.8&nbsp;+&nbsp;cuDNN&nbsp;8.6）</td>
+    <td>3.8–3.12</td>
   </tr>
 </table>
 
@@ -691,14 +679,3 @@ python -m pip install ../../python/dist/ultra_infer*.whl
   </tr>
 
 </table>
-
-
-<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/hpi/ultra_infer/releases/3.0.0rc0/ultra_infer_python-1.0.0.3.0.0rc0-cp38-cp38-linux_x86_64.whl"></a>
-<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/hpi/ultra_infer/releases/3.0.0rc0/ultra_infer_python-1.0.0.3.0.0rc0-cp39-cp39-linux_x86_64.whl"></a>
-<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/hpi/ultra_infer/releases/3.0.0rc0/ultra_infer_python-1.0.0.3.0.0rc0-cp310-cp310-linux_x86_64.whl"></a>
-
-<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/hpi/ultra_infer/releases/3.0.0rc0/ultra_infer_gpu_python-1.0.0.3.0.0rc0-cp38-cp38-linux_x86_64.whl"></a>
-<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/hpi/ultra_infer/releases/3.0.0rc0/ultra_infer_gpu_python-1.0.0.3.0.0rc0-cp39-cp39-linux_x86_64.whl"></a>
-<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/hpi/ultra_infer/releases/3.0.0rc0/ultra_infer_gpu_python-1.0.0.3.0.0rc0-cp310-cp310-linux_x86_64.whl"></a>
-
-<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/hpi/ultra_infer/releases/3.0.0rc0/paddlex_hpi-3.0.0rc0-py3-none-any.whl"></a>

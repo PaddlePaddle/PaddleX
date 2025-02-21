@@ -10,7 +10,7 @@ Currently, PaddleX supports Haiguang Z100 series chips. Considering environmenta
 Pull the image. Note that this image is only for development environments and does not include pre-compiled PaddlePaddle installation packages.
 
 ```bash
-docker pull registry.baidubce.com/device/paddle-dcu:dtk23.10.1-kylinv10-gcc73-py310
+docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle-dcu:dtk24.04.1-kylinv10-gcc82
 ```
 
 Start the container with the following command as a reference:
@@ -19,7 +19,7 @@ Start the container with the following command as a reference:
 docker run -it --name paddle-dcu-dev -v `pwd`:/work \
   -w=/work --shm-size=128G --network=host --privileged  \
   --cap-add=SYS_PTRACE --security-opt seccomp=unconfined \
-  registry.baidubce.com/device/paddle-dcu:dtk23.10.1-kylinv10-gcc73-py310 /bin/bash
+  ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle-dcu:dtk24.04.1-kylinv10-gcc82 /bin/bash
 ```
 
 ## 2. Install PaddlePaddle Package

@@ -144,6 +144,7 @@ def args_cfg():
         default=8080,
         help="Port number to serve on (default: 8080).",
     )
+    # Serving also uses `--pipeline`, `--device`, and `--use_hpip`
 
     ################# paddle2onnx #################
     paddle2onnx_group.add_argument(
@@ -227,18 +228,22 @@ def install(args):
             sys.exit(2)
 
         if device_type == "cpu":
-            packages = ["ultra_infer_python", "paddlex_hpi"]
+            packages = ["ultra-infer-python", "paddlex-hpi"]
         elif device_type == "gpu":
-            packages = ["ultra_infer_gpu_python", "paddlex_hpi"]
+            packages = ["ultra-infer-gpu-python", "paddlex-hpi"]
 
-        return subprocess.check_call(
-            [sys.executable, "-m", "pip", "install"]
-            + packages
-            + [
-                "--find-links",
-                "https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/pipeline_deploy/high_performance_inference.md",
-            ]
-        )
+        with importlib.resources.path("paddlex", "hpip_links.html") as f:
+            return subprocess.check_call(
+                [
+                    sys.executable,
+                    "-m",
+                    "pip",
+                    "install",
+                    "--find-links",
+                    str(f),
+                    *packages,
+                ]
+            )
 
     # Enable debug info
     os.environ["PADDLE_PDX_DEBUG"] = "True"

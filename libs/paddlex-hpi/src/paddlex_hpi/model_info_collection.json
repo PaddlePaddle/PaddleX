@@ -8206,12 +8206,38 @@
           "backend_config_pairs": [
             [
               "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
               {}
             ]
           ]
         },
         "PP-OCRv4_server_rec": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
             [
               "paddle_infer",
               {}
@@ -8222,12 +8248,38 @@
           "backend_config_pairs": [
             [
               "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
               {}
             ]
           ]
         },
         "ch_RepSVTR_rec": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
             [
               "paddle_infer",
               {}
@@ -8238,12 +8290,38 @@
           "backend_config_pairs": [
             [
               "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
               {}
             ]
           ]
         },
         "ta_PP-OCRv3_mobile_rec": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
             [
               "paddle_infer",
               {}
@@ -8254,12 +8332,38 @@
           "backend_config_pairs": [
             [
               "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
               {}
             ]
           ]
         },
         "chinese_cht_PP-OCRv3_mobile_rec": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
             [
               "paddle_infer",
               {}
@@ -8270,12 +8374,38 @@
           "backend_config_pairs": [
             [
               "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
               {}
             ]
           ]
         },
         "PP-OCRv3_mobile_rec": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
             [
               "paddle_infer",
               {}
@@ -8286,12 +8416,38 @@
           "backend_config_pairs": [
             [
               "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
               {}
             ]
           ]
         },
         "en_PP-OCRv3_mobile_rec": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
             [
               "paddle_infer",
               {}
@@ -8302,12 +8458,38 @@
           "backend_config_pairs": [
             [
               "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
               {}
             ]
           ]
         },
         "te_PP-OCRv3_mobile_rec": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
             [
               "paddle_infer",
               {}
@@ -8318,12 +8500,38 @@
           "backend_config_pairs": [
             [
               "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
               {}
             ]
           ]
         },
         "arabic_PP-OCRv3_mobile_rec": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
             [
               "paddle_infer",
               {}
@@ -8334,12 +8542,38 @@
           "backend_config_pairs": [
             [
               "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
+            [
+              "paddle_infer",
               {}
             ]
           ]
         },
         "cyrillic_PP-OCRv3_mobile_rec": {
           "backend_config_pairs": [
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true,
+                "trt_precision": "FP16"
+              }
+            ],
+            [
+              "paddle_infer",
+              {
+                "enable_trt": true
+              }
+            ],
             [
               "paddle_infer",
               {}

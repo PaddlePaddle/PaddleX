@@ -142,8 +142,110 @@ PIPELINE_ARGUMENTS = {
             "help": "Sets the threshold for human detection.",
         },
     ],
-    "table_recognition": None,
-    "table_recognition_v2": None,
+    "table_recognition": [
+        {
+            "name": "--use_doc_orientation_classify",
+            "type": bool,
+            "help": "Determines whether to use document preprocessing",
+        },
+        {
+            "name": "--use_doc_unwarping",
+            "type": bool,
+            "help": "Determines whether to use document unwarping",
+        },
+        {
+            "name": "--use_layout_detection",
+            "type": bool,
+            "help": "Determines whether to use document layout detection",
+        },
+        {
+            "name": "--use_ocr_model",
+            "type": bool,
+            "help": "Determines whether to use OCR",
+        },
+        {
+            "name": "--text_det_limit_side_len",
+            "type": int,
+            "help": "Sets the side length limit for text detection.",
+        },
+        {
+            "name": "--text_det_limit_type",
+            "type": str,
+            "help": "Sets the limit type for text detection.",
+        },
+        {
+            "name": "--text_det_thresh",
+            "type": float,
+            "help": "Sets the threshold for text detection.",
+        },
+        {
+            "name": "--text_det_box_thresh",
+            "type": float,
+            "help": "Sets the box threshold for text detection.",
+        },
+        {
+            "name": "--text_det_unclip_ratio",
+            "type": float,
+            "help": "Sets the unclip ratio for text detection.",
+        },
+        {
+            "name": "--text_rec_score_thresh",
+            "type": float,
+            "help": "Sets the score threshold for text recognition.",
+        },
+    ],
+    "table_recognition_v2": [
+        {
+            "name": "--use_doc_orientation_classify",
+            "type": bool,
+            "help": "Determines whether to use document preprocessing",
+        },
+        {
+            "name": "--use_doc_unwarping",
+            "type": bool,
+            "help": "Determines whether to use document unwarping",
+        },
+        {
+            "name": "--use_layout_detection",
+            "type": bool,
+            "help": "Determines whether to use document layout detection",
+        },
+        {
+            "name": "--use_ocr_model",
+            "type": bool,
+            "help": "Determines whether to use OCR",
+        },
+        {
+            "name": "--text_det_limit_side_len",
+            "type": int,
+            "help": "Sets the side length limit for text detection.",
+        },
+        {
+            "name": "--text_det_limit_type",
+            "type": str,
+            "help": "Sets the limit type for text detection.",
+        },
+        {
+            "name": "--text_det_thresh",
+            "type": float,
+            "help": "Sets the threshold for text detection.",
+        },
+        {
+            "name": "--text_det_box_thresh",
+            "type": float,
+            "help": "Sets the box threshold for text detection.",
+        },
+        {
+            "name": "--text_det_unclip_ratio",
+            "type": float,
+            "help": "Sets the unclip ratio for text detection.",
+        },
+        {
+            "name": "--text_rec_score_thresh",
+            "type": float,
+            "help": "Sets the score threshold for text recognition.",
+        },
+    ],
     "seal_recognition": [
         {
             "name": "--use_doc_orientation_classify",
