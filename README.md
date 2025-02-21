@@ -41,6 +41,8 @@ PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了�
 
 ## 📣 近期更新
 
+🔥🔥《PP-DocLayout版面检测引擎》支持中英论文、研报、试卷、书籍、杂志、合同、报纸等类型文档图像的 23 类版面区域高精度识别与定位，mAP@0.5最高90.4%；提供高精度、均衡型、轻量级三档模型；基于50万数据进行模型知识蒸馏，增强泛化能力；优化伪标签质量，半监督学习技术提升精度；支持多模式后处理，灵活适配下游任务；基于PaddleX实现高性能推理与服务化部署；提供命令行微调工具，低代码门槛完成场景化数据迭代训练。2月27日（周四）19:00直播为您深度解析PP-DocLayout在部署方面的功能、优势与技巧，提供产业级实操项目手把手教学体验。报名链接:https://www.wjx.top/vm/eArkGEn.aspx?udsid=724504
+
 🔥🔥《PP-ChatOCRv3思考能力新升级》支持基于标准OpenAI接口的大语言模型切换，方便调用热门模型；升级自定义提示词工程能力，KEY从单一关键词到涵盖问题描述、提取规则及少样本学习等多类，支持根据实际问题灵活选择；提供数据缓存加载方法并集成向量检索技术，有效避免频繁的视觉推理与建立索引库过程。2月20日（周四）19：00直播为您深度解析 PP-ChatOCRv3在部署方面的功能、优势与技巧。报名链接：https://www.wjx.top/vm/wFZcC0n.aspx?udsid=745777
 
 🔥🔥 **2025.2.14**，PaddleX v3.0.0rc0 重磅升级。本次版本全面适配 PaddlePaddle 3.0rc0，核心升级如下：
@@ -266,8 +268,8 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.html">人体关键点检测</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -276,8 +278,8 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_detection.html">开放词汇检测</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>🚧</td>
@@ -286,8 +288,8 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_segmentation.html">开放词汇分割</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>🚧</td>
@@ -296,8 +298,8 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/rotated_object_detection.html">旋转目标检测</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -306,8 +308,8 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/3d_bev_detection.html">3D多模态融合检测</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -316,8 +318,8 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.html">通用表格识别v2</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -336,8 +338,8 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.html">通用版面解析v2</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>🚧</td>
@@ -346,8 +348,8 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html">文档图像预处理</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -376,8 +378,8 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/speech_pipelines/multilingual_speech_recognition.html">多语种语音识别</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>🚧</td>
@@ -386,8 +388,8 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/video_pipelines/video_classification.html">通用视频分类</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -396,8 +398,8 @@ PaddleX的各个产线均支持本地**快速推理**，部分模型支持在[AI
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/video_pipelines/video_detection.html">通用视频检测</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>

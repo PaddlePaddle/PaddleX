@@ -262,8 +262,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.html">Human Keypoint Detection</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -272,8 +272,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_detection.html">Open Vocabulary Detection</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>🚧</td>
@@ -282,8 +282,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_segmentation.html">Open Vocabulary Segmentation</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>🚧</td>
@@ -292,8 +292,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/rotated_object_detection.html">Rotated Object Detection</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -302,8 +302,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/3d_bev_detection.html">3D Bev Detection</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -312,8 +312,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.html">Table Recognition v2</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -332,8 +332,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.html">Layout Parsing v2</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>🚧</td>
@@ -342,8 +342,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html">Document Image Preprocessing</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -353,7 +353,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/general_image_recognition.html">Image Recognition</a></td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -372,8 +372,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/speech_pipelines/multilingual_speech_recognition.html">Multilingual Speech Recognition</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>🚧</td>
@@ -382,8 +382,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/video_pipelines/video_classification.html">Video Classification</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -392,8 +392,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/video_pipelines/video_detection.html">Video Detection</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>

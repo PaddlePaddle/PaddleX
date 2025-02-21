@@ -14,12 +14,11 @@
 
 import os
 import argparse
+import importlib.resources
 import subprocess
 import sys
 import shutil
 from pathlib import Path
-
-from importlib_resources import files, as_file
 
 from . import create_pipeline
 from .inference.pipelines import load_pipeline_config
@@ -144,6 +143,7 @@ def args_cfg():
         default=8080,
         help="Port number to serve on (default: 8080).",
     )
+    # Serving also uses `--pipeline`, `--device`, and `--use_hpip`
 
     ################# paddle2onnx #################
     paddle2onnx_group.add_argument(
@@ -200,14 +200,16 @@ def install(args):
     """install paddlex"""
 
     def _install_serving_deps():
-        with as_file(files("paddlex").joinpath("serving_requirements.txt")) as req_file:
+        with importlib.resources.path(
+            "paddlex", "serving_requirements.txt"
+        ) as req_file:
             return subprocess.check_call(
                 [sys.executable, "-m", "pip", "install", "-r", str(req_file)]
             )
 
     def _install_paddle2onnx_deps():
-        with as_file(
-            files("paddlex").joinpath("paddle2onnx_requirements.txt")
+        with importlib.resources.path(
+            "paddlex", "paddle2onnx_requirements.txt"
         ) as req_file:
             return subprocess.check_call(
                 [sys.executable, "-m", "pip", "install", "-r", str(req_file)]
@@ -226,18 +228,22 @@ def install(args):
             sys.exit(2)
 
         if device_type == "cpu":
-            packages = ["ultra_infer_python", "paddlex_hpi"]
+            packages = ["ultra-infer-python", "paddlex-hpi"]
         elif device_type == "gpu":
-            packages = ["ultra_infer_gpu_python", "paddlex_hpi"]
+            packages = ["ultra-infer-gpu-python", "paddlex-hpi"]
 
-        return subprocess.check_call(
-            [sys.executable, "-m", "pip", "install"]
-            + packages
-            + [
-                "--find-links",
-                "https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/pipeline_deploy/high_performance_inference.md",
-            ]
-        )
+        with importlib.resources.path("paddlex", "hpip_links.html") as f:
+            return subprocess.check_call(
+                [
+                    sys.executable,
+                    "-m",
+                    "pip",
+                    "install",
+                    "--find-links",
+                    str(f),
+                    *packages,
+                ]
+            )
 
     # Enable debug info
     os.environ["PADDLE_PDX_DEBUG"] = "True"
