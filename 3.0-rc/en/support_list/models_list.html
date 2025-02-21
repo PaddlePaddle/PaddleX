@@ -796,6 +796,8 @@ You're not viewing the latest version.
       
         
       
+        
+      
     
     
       
@@ -839,11 +841,33 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md" class="md-nav__link">
+      <a href="../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
     PP-ChatOCRv3-doc
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PP-ChatOCRv4-doc
     
   </span>
   
@@ -4686,15 +4710,6 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
-  <a href="#human-keypoint-detection-module" class="md-nav__link">
-    <span class="md-ellipsis">
-      Human Keypoint Detection Module
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#3d-multi-modal-fusion-detection-module" class="md-nav__link">
     <span class="md-ellipsis">
       3D Multi-modal Fusion Detection Module
@@ -5532,15 +5547,6 @@ You're not viewing the latest version.
   <a href="#anomaly-detection-module" class="md-nav__link">
     <span class="md-ellipsis">
       Anomaly Detection Module
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#human-keypoint-detection-module" class="md-nav__link">
-    <span class="md-ellipsis">
-      Human Keypoint Detection Module
     </span>
   </a>
   
@@ -7300,7 +7306,6 @@ You're not viewing the latest version.
 </tbody>
 </table>
 <p><b>Note: The above precision metrics are the average anomaly scores on the validation set of </b><a href="https://www.mvtec.com/company/research/datasets/mvtec-ad">MVTec AD</a><b>.</b></p>
-<h2 id="human-keypoint-detection-module"><a href="../module_usage/tutorials/cv_modules/human_keypoint_detection.html">Human Keypoint Detection Module</a><a class="headerlink" href="#human-keypoint-detection-module" title="Permanent link">&para;</a></h2>
 <table>
 <tr>
 <th>Model</th>
@@ -8103,27 +8108,26 @@ You're not viewing the latest version.
 <h2 id="table-cell-detection-module"><a href="../module_usage/tutorials/ocr_modules/table_cells_detection.html">Table Cell Detection Module</a><a class="headerlink" href="#table-cell-detection-module" title="Permanent link">&para;</a></h2>
 <table>
 <tr>
-<th>Model</th>
+<th>Model</th><th>Model Download Link</th>
 <th>mAP(%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
-<th>yaml File</th>
-<th>Model Download Link</th>
+<th>Introduction</th>
 </tr>
 <tr>
 <td>RT-DETR-L_wired_table_cell_det</td>
-<td rowspan="2">--</td>
-<td rowspan="2">--</td>
-<td rowspan="2">--</td>
-<td rowspan="2">--</td>
-<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/table_cells_detection/RT-DETR-L_wired_table_cell_det.yaml">RT-DETR-L_wired_table_cell_det.yaml</a></td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_wired_table_cell_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wired_table_cell_det_pretrained.pdparams">Training Model</a></td>
+<td rowspan="2">82.7</td>
+<td rowspan="2">35.00 / 10.45</td>
+<td rowspan="2">495.51 / 495.51</td>
+<td rowspan="2">124M</td>
+<td rowspan="2">RT-DETR is the first real-time end-to-end object detection model. The Baidu PaddlePaddle Vision Team, based on RT-DETR-L as the base model, has completed pretraining on a self-built table cell detection dataset, achieving good performance for both wired and wireless table cell detection.
+</td>
 </tr>
 <tr>
 <td>RT-DETR-L_wireless_table_cell_det</td>
-<td><a href="https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/configs/modules/table_cells_detection/RT-DETR-L_wireless_table_cell_det.yaml">RT-DETR-L_wireless_table_cell_det.yaml</a></td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_wireless_table_cell_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wired_table_cell_det_pretrained.pdparams">Training Model</a></td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_wireless_table_cell_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wireless_table_cell_det_pretrained.pdparams">Training Model</a></td>
 </tr>
 </table>
 <p><b>Note: The above accuracy metrics are measured from the internal table cell detection dataset of PaddleX. All model GPU inference times are based on an NVIDIA Tesla T4 machine, with precision type FP32. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads, and precision type FP32.</b></p>
@@ -8657,7 +8661,7 @@ You're not viewing the latest version.
     </span>
     <nav>
       
-        <a href="mailto:116908874+jk4e@users.noreply.github.com">Jan Knobloch</a>
+        <a href="mailto:55582609+amberc0209@users.noreply.github.com">AmberC0209</a>
     </nav>
   </span>
 
