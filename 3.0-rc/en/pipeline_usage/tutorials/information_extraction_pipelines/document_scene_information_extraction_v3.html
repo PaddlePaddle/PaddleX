@@ -5043,48 +5043,6 @@ You're not viewing the latest version.
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#4-custom-development" class="md-nav__link">
-    <span class="md-ellipsis">
-      4. Custom Development
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="4. Custom Development">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#41-model-fine-tuning" class="md-nav__link">
-    <span class="md-ellipsis">
-      4.1 Model Fine-tuning
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#42-model-deployment" class="md-nav__link">
-    <span class="md-ellipsis">
-      4.2 Model Deployment
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-multi-hardware-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      5. Multi-hardware Support
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -6778,39 +6736,40 @@ result_chat = resp_chat.json()["result"]
 print("Final result:")
 print(result_chat["chatResult"])
 </code></pre>
-<b>Note</b>: Please fill in your API key and secret key at `API_KEY` and `SECRET_KEY`.</details>
 </details>
-<p><br/></p>
-<p>📱 <strong>Edge Deployment</strong>: Edge deployment is a method where computing and data processing functions are placed on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed instructions on edge deployment, please refer to the <a href="../../../pipeline_deploy/edge_deploy.html">PaddleX Edge Deployment Guide</a>.
-You can choose the appropriate deployment method for your pipeline based on your needs, and proceed with subsequent AI application integration.</p>
-<h2 id="4-custom-development">4. Custom Development<a class="headerlink" href="#4-custom-development" title="Permanent link">&para;</a></h2>
-<p>If the default model weights provided by the PP-ChatOCRv3-doc Pipeline do not meet your requirements in terms of accuracy or speed for your specific scenario, you can attempt to further <b>fine-tune</b> the existing models using <b>your own domain-specific or application-specific data</b> to enhance the recognition performance of the general table recognition pipeline in your scenario.</p>
-<h3 id="41-model-fine-tuning">4.1 Model Fine-tuning<a class="headerlink" href="#41-model-fine-tuning" title="Permanent link">&para;</a></h3>
-<p>Since the PP-ChatOCRv3-doc Pipeline comprises six modules, unsatisfactory performance may stem from any of these modules (note that the text image rectification module does not support customization at this time).</p>
-<p>You can analyze images with poor recognition results and follow the guidelines below for analysis and model fine-tuning:</p>
-<ul>
-<li>
-<p>Incorrect table structure detection (e.g., row/column misidentification, cell position errors) may indicate deficiencies in the table structure recognition module. You need to refer to the <b>Customization</b> section in the <a href="../../../module_usage/tutorials/ocr_modules/table_structure_recognition.html">Table Structure Recognition Module Development Tutorial</a> and fine-tune the table structure recognition model using your private dataset.</p>
-</li>
-<li>
-<p>Misplaced layout elements (e.g., incorrect positioning of tables or seals) may suggest issues with the layout detection module. Consult the <b>Customization</b> section in the <a href="../../../module_usage/tutorials/ocr_modules/layout_detection.html">Layout Detection Module Development Tutorial</a> and fine-tune the layout detection model with your private dataset.</p>
-</li>
-<li>
-<p>Frequent undetected text (i.e., text leakage) may indicate limitations in the text detection model. Refer to the <b>Customization</b> section in the <a href="../../../module_usage/tutorials/ocr_modules/text_detection.html">Text Detection Module Development Tutorial</a> and fine-tune the text detection model using your private dataset.</p>
-</li>
-<li>
-<p>High text recognition errors (i.e., recognized text content does not match the actual text) suggest that the text recognition model requires improvement. Follow the <b>Customization</b> section in the <a href="../../../module_usage/tutorials/ocr_modules/text_recognition.html">Text Recognition Module Development Tutorial</a> to fine-tune the text recognition model.</p>
-</li>
-<li>
-<p>Frequent recognition errors in detected seal text indicate that the seal text detection model needs further refinement. Consult the <b>Customization</b> section in the <a href="../../../module_usage/tutorials/ocr_modules/seal_text_detection.html">Seal Text Detection Module Development Tutorials</a> to fine-tune the seal text detection model.</p>
-</li>
-<li>
-<p>Frequent misidentifications of document or certificate orientations with text regions suggest that the document image orientation classification model requires improvement. Refer to the <b>Customization</b> section in the <a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html">Document Image Orientation Classification Module Development Tutorial</a> to fine-tune the document image orientation classification model.</p>
-</li>
-</ul>
-<h3 id="42-model-deployment">4.2 Model Deployment<a class="headerlink" href="#42-model-deployment" title="Permanent link">&para;</a></h3>
-<p>After fine-tuning your models using your private dataset, you will obtain local model weights files.</p>
-<p>To use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local paths of the default model weights with those of your fine-tuned models:</p>
+<br/>
+
+📱 **Edge Deployment**: Edge deployment is a method where computing and data processing functions are placed on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed instructions on edge deployment, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.md).
+You can choose the appropriate deployment method for your pipeline based on your needs, and proceed with subsequent AI application integration.
+
+## 4. Custom Development
+
+If the default model weights provided by the PP-ChatOCRv3-doc Pipeline do not meet your requirements in terms of accuracy or speed for your specific scenario, you can attempt to further <b>fine-tune</b> the existing models using <b>your own domain-specific or application-specific data</b> to enhance the recognition performance of the general table recognition pipeline in your scenario.
+
+### 4.1 Model Fine-tuning
+
+Since the PP-ChatOCRv3-doc Pipeline comprises six modules, unsatisfactory performance may stem from any of these modules (note that the text image rectification module does not support customization at this time).
+
+You can analyze images with poor recognition results and follow the guidelines below for analysis and model fine-tuning:
+
+* Incorrect table structure detection (e.g., row/column misidentification, cell position errors) may indicate deficiencies in the table structure recognition module. You need to refer to the <b>Customization</b> section in the [Table Structure Recognition Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/table_structure_recognition.en.md) and fine-tune the table structure recognition model using your private dataset.
+
+* Misplaced layout elements (e.g., incorrect positioning of tables or seals) may suggest issues with the layout detection module. Consult the <b>Customization</b> section in the [Layout Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/layout_detection.en.md) and fine-tune the layout detection model with your private dataset.
+
+* Frequent undetected text (i.e., text leakage) may indicate limitations in the text detection model. Refer to the <b>Customization</b> section in the [Text Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_detection.en.md) and fine-tune the text detection model using your private dataset.
+
+* High text recognition errors (i.e., recognized text content does not match the actual text) suggest that the text recognition model requires improvement. Follow the <b>Customization</b> section in the [Text Recognition Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_recognition.en.md) to fine-tune the text recognition model.
+
+* Frequent recognition errors in detected seal text indicate that the seal text detection model needs further refinement. Consult the <b>Customization</b> section in the [Seal Text Detection Module Development Tutorials](../../../module_usage/tutorials/ocr_modules/seal_text_detection.en.md) to fine-tune the seal text detection model.
+
+* Frequent misidentifications of document or certificate orientations with text regions suggest that the document image orientation classification model requires improvement. Refer to the <b>Customization</b> section in the [Document Image Orientation Classification Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md) to fine-tune the document image orientation classification model.
+
+### 4.2 Model Deployment
+
+After fine-tuning your models using your private dataset, you will obtain local model weights files.
+
+To use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local paths of the default model weights with those of your fine-tuned models:
+
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="l l-Scalar l-Scalar-Plain">......</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="l l-Scalar l-Scalar-Plain">Pipeline</span><span class="p p-Indicator">:</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">layout_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RT-DETR-H_layout_3cls</span><span class="w">  </span><span class="c1"># Replace with the local path of your fine-tuned model</span>
@@ -6822,18 +6781,23 @@ You can choose the appropriate deployment method for your pipeline based on your
 </span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="nt">doc_image_unwarp_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">   </span><span class="c1"># Replace with the local path of your fine-tuned model if applicable</span>
 </span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="l l-Scalar l-Scalar-Plain">......</span>
 </span></code></pre></div>
-<p>Subsequently, load the modified pipeline configuration file using the command-line interface or Python script as described in the local experience section.</p>
-<h2 id="5-multi-hardware-support">5. Multi-hardware Support<a class="headerlink" href="#5-multi-hardware-support" title="Permanent link">&para;</a></h2>
-<p>PaddleX supports various mainstream hardware devices such as NVIDIA GPUs, Kunlun XPU, Ascend NPU, and Cambricon MLU. <b>Seamless switching between different hardware can be achieved by simply setting the <code>--device</code> parameter</b>.</p>
-<p>For example, to perform inference using the PP-ChatOCRv3-doc Pipeline on an NVIDIA GPU.
-At this point, if you wish to switch the hardware to Ascend NPU, simply modify the <code>--device</code> in the script to <code>npu</code>:</p>
+
+Subsequently, load the modified pipeline configuration file using the command-line interface or Python script as described in the local experience section.
+
+## 5. Multi-hardware Support
+PaddleX supports various mainstream hardware devices such as NVIDIA GPUs, Kunlun XPU, Ascend NPU, and Cambricon MLU. <b>Seamless switching between different hardware can be achieved by simply setting the `--device` parameter</b>.
+
+For example, to perform inference using the PP-ChatOCRv3-doc Pipeline on an NVIDIA GPU.
+At this point, if you wish to switch the hardware to Ascend NPU, simply modify the `--device` in the script to `npu`:
+
 <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;PP-ChatOCRv3-doc&quot;</span><span class="p">,</span>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">device</span><span class="o">=</span><span class="s2">&quot;npu:0&quot;</span> <span class="c1"># gpu:0 --&gt;npu:0</span>
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="p">)</span>
 </span></code></pre></div>
-<p>If you want to use the PP-ChatOCRv3-doc Pipeline on more types of hardware, please refer to the <a href="../../../other_devices_support/multi_devices_use_guide.html">PaddleX Multi-Device Usage Guide</a>.</p>
+
+If you want to use the PP-ChatOCRv3-doc Pipeline on more types of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
 
 
 
