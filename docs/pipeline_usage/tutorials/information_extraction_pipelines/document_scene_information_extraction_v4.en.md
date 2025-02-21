@@ -1934,9 +1934,8 @@ result_chat = resp_chat.json()["result"]
 print("Final result:")
 print(result_chat["chatResult"])
 </code></pre>
-
-<b>Note</b>: Please fill in your API key and secret key in `API_KEY` and `SECRET_KEY`.
 </details>
+
 </details>
 <br/>
 
