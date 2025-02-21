@@ -121,11 +121,11 @@ class StaticInfer:
         with self._lock:
             self.option.changed = False
             logging.debug(f"Env: {self.option}")
-            predictor = self._create()
+            self.predictor = self._create()
 
         self.copy2gpu = Copy2GPU()
         self.copy2cpu = Copy2CPU()
-        self.infer = Infer(predictor)
+        self.infer = Infer(self.predictor)
 
     def _create(
         self,
@@ -276,6 +276,19 @@ class StaticInfer:
     def __call__(self, x) -> List[Any]:
         if self.option.changed:
             self._reset()
+
+        # NOTE: Adjust input tensors to match the sorted sequence.
+        names = self.predictor.get_input_names()
+        if len(names) != len(x):
+            raise ValueError(
+                f"The number of inputs does not match the model: {len(names)} vs {len(x)}"
+            )
+        indices = sorted(range(len(names)), key=names.__getitem__)
+        x = [x[indices.index(i)] for i in range(len(x))]
+        # TODO:
+        # Use Paddle's H2D and D2H operations to transfer data from CPU to GPU.
+        # Ensure that input tensors follow the model's input sequence without sorting.
+
         inputs = self.copy2gpu(x)
         outputs = self.infer(inputs)
         pred = self.copy2cpu(outputs)
