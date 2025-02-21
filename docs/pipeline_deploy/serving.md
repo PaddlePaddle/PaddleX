@@ -12,8 +12,8 @@ PaddleX 产线服务化部署示意图：
 
 针对用户的不同需求，PaddleX 提供多种产线服务化部署方案：
 
-- 基础服务化部署：简单易用的服务化部署方案，开发成本低。
-- 高稳定性服务化部署：基于 [NVIDIA Triton Inference Server](https://developer.nvidia.com/triton-inference-server) 打造。与基础服务化部署相比，该方案提供更高的稳定性，并允许用户调整配置以优化性能。
+- **基础服务化部署**：简单易用的服务化部署方案，开发成本低。
+- **高稳定性服务化部署**：基于 [NVIDIA Triton Inference Server](https://developer.nvidia.com/triton-inference-server) 打造。与基础服务化部署相比，该方案提供更高的稳定性，并允许用户调整配置以优化性能。
 
 **建议首先使用基础服务化部署方案进行快速验证**，然后根据实际需要，评估是否尝试更复杂的方案。
 

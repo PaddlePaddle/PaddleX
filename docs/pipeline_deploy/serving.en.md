@@ -12,8 +12,8 @@ Demonstration of PaddleX pipeline serving:
 
 To address different user needs, PaddleX offers multiple pipeline serving solutions:
 
-- Basic serving: A simple and easy-to-use serving solution with low development costs.
-- High-stability serving: Built on [NVIDIA Triton Inference Server](https://developer.nvidia.com/triton-inference-server). Compared to basic serving, this solution offers higher stability and allows users to adjust configurations to optimize performance.
+- **Basic serving**: A simple and easy-to-use serving solution with low development costs.
+- **High-stability serving**: Built on [NVIDIA Triton Inference Server](https://developer.nvidia.com/triton-inference-server). Compared to basic serving, this solution offers higher stability and allows users to adjust configurations to optimize performance.
 
 **It is recommended to first use the basic serving solution for quick verification**, and then evaluate whether to try more complex solutions based on actual needs.
 
