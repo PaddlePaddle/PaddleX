@@ -88,7 +88,7 @@ PaddleX provides 2 end-to-end seal text detection models, which can be reference
 <tr>
 <th>Model</th>
 <th>mAP(0.5) (%)</th>
-<th>GPU Inference Time (ms)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)</th>
 <th>Model Size (M)</th>
 <th>Description</th>

@@ -679,9 +679,9 @@ Below is the API reference for basic service deployment and multi-language servi
 <td>The key corresponding to the index, used to identify the created index. It can be used as input for other operations.</td>
 </tr>
 <tr>
-<td><code>idMap</code></td>
-<td><code>object</code></td>
-<td>Mapping from vector IDs to labels.</td>
+<td><code>imageCount</code></td>
+<td><code>integer</code></td>
+<td>The number of images indexed.</td>
 </tr>
 </tbody>
 </table>
@@ -752,9 +752,9 @@ Below is the API reference for basic service deployment and multi-language servi
 </thead>
 <tbody>
 <tr>
-<td><code>idMap</code></td>
-<td><code>object</code></td>
-<td>Mapping from vector IDs to labels.</td>
+<td><code>imageCount</code></td>
+<td><code>integer</code></td>
+<td>The number of images indexed.</td>
 </tr>
 </tbody>
 </table>
@@ -803,9 +803,9 @@ Below is the API reference for basic service deployment and multi-language servi
 </thead>
 <tbody>
 <tr>
-<td><code>idMap</code></td>
-<td><code>object</code></td>
-<td>Mapping from vector IDs to labels.</td>
+<td><code>imageCount</code></td>
+<td><code>integer</code></td>
+<td>The number of images indexed.</td>
 </tr>
 </tbody>
 </table>
@@ -975,7 +975,7 @@ if resp_index_build.status_code != 200:
     pprint.pp(resp_index_build.json())
     sys.exit(1)
 result_index_build = resp_index_build.json()["result"
-print(f"Number of images indexed: {len(result_index_build['idMap'])}")
+print(f"Number of images indexed: {result_index_build['imageCount']}")
 
 for pair in image_label_pairs_to_add:
     with open(pair["image"], "rb") as file:
@@ -990,7 +990,7 @@ if resp_index_add.status_code != 200:
     pprint.pp(resp_index_add.json())
     sys.exit(1)
 result_index_add = resp_index_add.json()["result"]
-print(f"Number of images indexed: {len(result_index_add['idMap'])}")
+print(f"Number of images indexed: {result_index_add['imageCount']}")
 
 payload = {"ids": ids_to_remove, "indexKey": result_index_build["indexKey"]}
 resp_index_remove = requests.post(f"{API_BASE_URL}/shitu-index-remove", json=payload)
@@ -999,7 +999,7 @@ if resp_index_remove.status_code != 200:
     pprint.pp(resp_index_remove.json())
     sys.exit(1)
 result_index_remove = resp_index_remove.json()["result"]
-print(f"Number of images indexed: {len(result_index_remove['idMap'])}")
+print(f"Number of images indexed: {result_index_remove['imageCount']}")
 
 with open(infer_image_path, "rb") as file:
     image_bytes = file.read()
