@@ -1693,7 +1693,6 @@ result_chat = resp_chat.json()["result"]
 print("Final result:")
 print(result_chat["chatResult"])
 </code></pre>
-<b>注</b>：请在 `API_KEY`、`SECRET_KEY` 处填入您的 API key 和 secret key。</details>
 </details>
 <br/>
 
