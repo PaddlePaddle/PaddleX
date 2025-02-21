@@ -1861,17 +1861,9 @@ import requests
 
 
 API_BASE_URL = "http://0.0.0.0:8080"
-API_KEY = "{API key of Qianfan Platform}"
-SECRET_KEY = "{Secret key of Qianfan Platform}"
-LLM_NAME = "ernie-3.5"
-LLM_PARAMS = {
-    "apiType": "qianfan",
-    "apiKey": API_KEY,
-    "secretKey": SECRET_KEY,
-}
 
 file_path = "./demo.jpg"
-keys = ["电话"]
+keys = ["name"]
 
 with open(file_path, "rb") as file:
     file_bytes = file.read()
@@ -1880,89 +1872,65 @@ with open(file_path, "rb") as file:
 payload = {
     "file": file_data,
     "fileType": 1,
-    "useImgOrientationCls": True,
-    "useImgUnwarping": True,
-    "useSealTextDet": True,
 }
+
 resp_visual = requests.post(url=f"{API_BASE_URL}/chatocr-visual", json=payload)
 if resp_visual.status_code != 200:
     print(
-        f"Request to chatocr-visual failed with status code {resp_visual.status_code}.",
-        file=sys.stderr,
+        f"Request to chatocr-visual failed with status code {resp_visual.status_code}."
     )
     pprint.pp(resp_visual.json())
     sys.exit(1)
 result_visual = resp_visual.json()["result"]
 
-for i, res in enumerate(result_visual["visualResults"]):
-    print("Texts:")
-    pprint.pp(res["texts"])
-    print("Tables:")
-    pprint.pp(res["tables"])
-    layout_img_path = f"layout_{i}.jpg"
-    with open(layout_img_path, "wb") as f:
-        f.write(base64.b64decode(res["layoutImage"]))
-    ocr_img_path = f"ocr_{i}.jpg"
-    with open(ocr_img_path, "wb") as f:
-        f.write(base64.b64decode(res["ocrImage"]))
-    print(f"Output images saved at {layout_img_path} and {ocr_img_path}")
+for i, res in enumerate(result_visual["layoutParsingResults"]):
+    print(res["prunedResult"])
+    for img_name, img in res["outputImages"].items():
+        img_path = f"{img_name}_{i}.jpg"
+        with open(img_path, "wb") as f:
+            f.write(base64.b64decode(img))
+        print(f"Output image saved at {img_path}")
 
 payload = {
     "visualInfo": result_visual["visualInfo"],
-    "minChars": 200,
-    "llmRequestInterval": 1000,
-    "llmName": LLM_NAME,
-    "llmParams": LLM_PARAMS,
 }
 resp_vector = requests.post(url=f"{API_BASE_URL}/chatocr-vector", json=payload)
 if resp_vector.status_code != 200:
     print(
-        f"Request to chatocr-vector failed with status code {resp_vector.status_code}.",
-        file=sys.stderr,
+        f"Request to chatocr-vector failed with status code {resp_vector.status_code}."
     )
     pprint.pp(resp_vector.json())
     sys.exit(1)
 result_vector = resp_vector.json()["result"]
 
 payload = {
-    "keys": keys,
-    "vectorStore": result_vector["vectorStore"],
-    "llmName": LLM_NAME,
-    "llmParams": LLM_PARAMS,
+    "image": image_url,
+    "keyList": keys,
 }
-resp_retrieval = requests.post(url=f"{API_BASE_URL}/chatocr-retrieval", json=payload)
-if resp_retrieval.status_code != 200:
+resp_mllm = requests.post(url=f"{API_BASE_URL}/chatocr-mllm", json=payload)
+if resp_mllm.status_code != 200:
     print(
-        f"Request to chatocr-retrieval failed with status code {resp_retrieval.status_code}.",
-        file=sys.stderr,
+        f"Request to chatocr-mllm failed with status code {resp_mllm.status_code}."
     )
-    pprint.pp(resp_retrieval.json())
+    pprint.pp(resp_mllm.json())
     sys.exit(1)
-result_retrieval = resp_retrieval.json()["result"]
+result_mllm = resp_mllm.json()["result"]
 
 payload = {
-    "keys": keys,
+    "keyList": keys,
     "visualInfo": result_visual["visualInfo"],
-    "vectorStore": result_vector["vectorStore"],
-    "retrievalResult": result_retrieval["retrievalResult"],
-    "taskDescription": "",
-    "rules": "",
-    "fewShot": "",
-    "llmName": LLM_NAME,
-    "llmParams": LLM_PARAMS,
-    "returnPrompts": True,
+    "useVectorRetrieval": True,
+    "vectorInfo": result_vector["vectorInfo"],
+    "mllmPredictInfo": result_mllm["mllmPredictInfo"],
 }
 resp_chat = requests.post(url=f"{API_BASE_URL}/chatocr-chat", json=payload)
 if resp_chat.status_code != 200:
     print(
-        f"Request to chatocr-chat failed with status code {resp_chat.status_code}.",
-        file=sys.stderr,
+        f"Request to chatocr-chat failed with status code {resp_chat.status_code}."
     )
     pprint.pp(resp_chat.json())
     sys.exit(1)
 result_chat = resp_chat.json()["result"]
-print("\nPrompts:")
-pprint.pp(result_chat["prompts"])
 print("Final result:")
 print(result_chat["chatResult"])
 </code></pre>

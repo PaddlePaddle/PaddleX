@@ -323,12 +323,19 @@ class PaddleInfer(StaticInfer):
                 config.set_optimization_level(3)
         elif self.option.device_type == "npu":
             config.enable_custom_device("npu")
+            if hasattr(config, "enable_new_executor"):
+                config.enable_new_executor()
         elif self.option.device_type == "xpu":
-            pass
+            if hasattr(config, "enable_new_executor"):
+                config.enable_new_executor()
         elif self.option.device_type == "mlu":
             config.enable_custom_device("mlu")
+            if hasattr(config, "enable_new_executor"):
+                config.enable_new_executor()
         elif self.option.device_type == "dcu":
-            config.enable_use_gpu(100, self.option.device_id or 0)
+            config.enable_use_gpu(100, self.option.device_id)
+            if hasattr(config, "enable_new_executor"):
+                config.enable_new_executor()
             # XXX: is_compiled_with_rocm() must be True on dcu platform ?
             if paddle.is_compiled_with_rocm():
                 # Delete unsupported passes in dcu
