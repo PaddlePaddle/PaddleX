@@ -48,28 +48,16 @@ paddlex --install hpi-gpu
     <th>Python 版本</th>
   </tr>
   <tr>
-    <td rowspan="7">x86-64</td>
-    <td rowspan="7">Linux</td>
-    <td rowspan="4">CPU</td>
+    <td rowspan="4">x86-64</td>
+    <td rowspan="4">Linux</td>
   </tr>
   <tr>
-    <td>3.8</td>
+    <td>CPU</td>
+    <td>3.8-3.12</td>
   </tr>
   <tr>
-    <td>3.9</td>
-  </tr>
-  <tr>
-    <td>3.10</td>
-  </tr>
-  <tr>
-    <td rowspan="3">GPU&nbsp;（CUDA&nbsp;11.8&nbsp;+&nbsp;cuDNN&nbsp;8.6）</td>
-    <td>3.8</td>
-  </tr>
-  <tr>
-    <td>3.9</td>
-  </tr>
-  <tr>
-    <td>3.10</td>
+    <td>GPU&nbsp;（CUDA&nbsp;11.8&nbsp;+&nbsp;cuDNN&nbsp;8.6）</td>
+    <td>3.8-3.12</td>
   </tr>
 </table>
 
