@@ -328,6 +328,9 @@ void OrtBackend::OrtValueToFDTensor(const Ort::Value &value, FDTensor *tensor,
   } else if (data_type == ONNX_TENSOR_ELEMENT_DATA_TYPE_INT8) {
     dtype = FDDataType::INT8;
     numel *= sizeof(int8_t);
+  } else if (data_type == ONNX_TENSOR_ELEMENT_DATA_TYPE_BOOL) {
+    dtype = FDDataType::BOOL;
+    numel *= sizeof(bool);
   } else {
     FDASSERT(
         false,
