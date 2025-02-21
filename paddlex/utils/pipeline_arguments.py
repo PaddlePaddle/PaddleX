@@ -93,7 +93,7 @@ PIPELINE_ARGUMENTS = {
     "object_detection": [
         {
             "name": "--threshold",
-            "type": custom_type(Optional[Union[float, dict[int, float]]]),
+            "type": custom_type(Optional[Union[float, Dict[int, float]]]),
             "help": "Sets the threshold for object detection.",
         },
     ],
@@ -502,7 +502,7 @@ PIPELINE_ARGUMENTS = {
     "small_object_detection": [
         {
             "name": "--threshold",
-            "type": custom_type(Optional[Union[float, dict[int, float]]]),
+            "type": custom_type(Optional[Union[float, Dict[int, float]]]),
             "help": "Sets the threshold for small object detection.",
         },
     ],
@@ -541,14 +541,14 @@ PIPELINE_ARGUMENTS = {
     "rotated_object_detection": [
         {
             "name": "--threshold",
-            "type": custom_type(Optional[Union[float, dict[int, float]]]),
+            "type": custom_type(Optional[Union[float, Dict[int, float]]]),
             "help": "Sets the threshold for rotated object detection.",
         },
     ],
     "open_vocabulary_detection": [
         {
             "name": "--thresholds",
-            "type": custom_type(dict[str, float]),
+            "type": custom_type(Dict[str, float]),
             "help": "Sets the thresholds for open vocabulary detection.",
         },
         {
@@ -565,7 +565,7 @@ PIPELINE_ARGUMENTS = {
         },
         {
             "name": "--prompt",
-            "type": custom_type(list[list[float]]),
+            "type": custom_type(List[List[float]]),
             "help": "Sets the prompt for open vocabulary segmentation.",
         },
     ],
