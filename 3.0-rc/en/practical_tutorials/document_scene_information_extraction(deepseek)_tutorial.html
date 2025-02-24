@@ -5035,27 +5035,27 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-new-model-can-quickly-adapt-to-multi-page-pdf-files-for-efficient-information-extraction" class="md-nav__link">
+  <a href="#3-new-model-can-quickly-adapt-to-multi-page-pdf-files-for-efficient-information-extraction" class="md-nav__link">
     <span class="md-ellipsis">
-      2. New Model Can Quickly Adapt to Multi-page PDF Files for Efficient Information Extraction
+      3. New Model Can Quickly Adapt to Multi-page PDF Files for Efficient Information Extraction
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-exploring-the-thinking-mode-of-large-models-in-text-and-image-information-extraction" class="md-nav__link">
+  <a href="#4-exploring-the-thinking-mode-of-large-models-in-text-and-image-information-extraction" class="md-nav__link">
     <span class="md-ellipsis">
-      3. Exploring the Thinking Mode of Large Models in Text and Image Information Extraction
+      4. Exploring the Thinking Mode of Large Models in Text and Image Information Extraction
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-supporting-custom-prompt-engineering-to-expand-the-functional-boundaries-of-large-language-models" class="md-nav__link">
+  <a href="#5-supporting-custom-prompt-engineering-to-expand-the-functional-boundaries-of-large-language-models" class="md-nav__link">
     <span class="md-ellipsis">
-      4. Supporting Custom Prompt Engineering to Expand the Functional Boundaries of Large Language Models
+      5. Supporting Custom Prompt Engineering to Expand the Functional Boundaries of Large Language Models
     </span>
   </a>
   
@@ -5132,7 +5132,7 @@ You're not viewing the latest version.
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{&#39;chat_res&#39;: {&#39;驾驶室准乘人数&#39;: &#39;2&#39;}}
 </span></code></pre></div>
 <p>The result shows that PP-ChatOCRv3 can extract text information from the image and pass the extracted text information to the DeepSeek-V3 large model for question understanding and information extraction, returning the required extraction result.</p>
-<h2 id="2-new-model-can-quickly-adapt-to-multi-page-pdf-files-for-efficient-information-extraction">2. New Model Can Quickly Adapt to Multi-page PDF Files for Efficient Information Extraction<a class="headerlink" href="#2-new-model-can-quickly-adapt-to-multi-page-pdf-files-for-efficient-information-extraction" title="Permanent link">&para;</a></h2>
+<h2 id="3-new-model-can-quickly-adapt-to-multi-page-pdf-files-for-efficient-information-extraction">3. New Model Can Quickly Adapt to Multi-page PDF Files for Efficient Information Extraction<a class="headerlink" href="#3-new-model-can-quickly-adapt-to-multi-page-pdf-files-for-efficient-information-extraction" title="Permanent link">&para;</a></h2>
 <p>In practical application scenarios, besides a large number of image files, more document information extraction tasks involve multi-page PDF files. Since multi-page PDF files often contain a vast amount of text information, passing all this text information to a large language model at once not only increases the invocation cost but also reduces the accuracy of text information extraction. To address this issue, the PP-ChatOCRv3 pipeline integrates vector retrieval technology, which stores the text information from multi-page PDF files in the form of a vector database and retrieves the most relevant fragments through vector retrieval technology to pass them to the large language model, significantly reducing the invocation cost of the large language model and improving the accuracy of text information extraction. The Baidu Cloud Qianfan platform provides four vector models for establishing vector databases of text information. For the specific model support list and their functional characteristics, refer to the vector model section in the <a href="https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Nlks5zkzu_en">API List</a>. Next, we will use the <code>embedding-v1</code> model to establish a vector database of text information and pass the most relevant fragments to the <code>DeepSeek-V3</code> large language model through vector retrieval technology, thereby efficiently extracting key information from multi-page PDF files.</p>
 <p>First, download the <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf">Test File 2</a>, then replace the <code>api_key</code> in the following code and execute it:</p>
 <p><strong>Note</strong>: Due to the large size of multi-page PDF files, the first execution requires a longer time for text information extraction and vector database establishment. The code saves the visual results of the model and the establishment results of the vector database locally, which can be loaded and used directly subsequently.</p>
@@ -5221,7 +5221,7 @@ After executing the above code, the result obtained is as follows:</p>
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Total Time: 6.9693s
 </span></code></pre></div>
 <p>By comparing the results of the two executions, it can be observed that during the first execution, the PP-ChatOCRv3 Pipeline extracts all text information from multi-page PDF files and establishes a vector library, which takes a longer time. During subsequent executions, the PP-ChatOCRv3 Pipeline only needs to load and retrieve the vector library, significantly reducing the overall time consumption. The PP-ChatOCRv3 Pipeline, combined with vector retrieval technology, effectively reduces the number of calls to large language models when extracting ultra-long text, achieving faster text information extraction speed and more accurate key information location. This provides a more efficient solution for us in actual multi-page PDF file information extraction scenarios.</p>
-<h2 id="3-exploring-the-thinking-mode-of-large-models-in-text-and-image-information-extraction">3. Exploring the Thinking Mode of Large Models in Text and Image Information Extraction<a class="headerlink" href="#3-exploring-the-thinking-mode-of-large-models-in-text-and-image-information-extraction" title="Permanent link">&para;</a></h2>
+<h2 id="4-exploring-the-thinking-mode-of-large-models-in-text-and-image-information-extraction">4. Exploring the Thinking Mode of Large Models in Text and Image Information Extraction<a class="headerlink" href="#4-exploring-the-thinking-mode-of-large-models-in-text-and-image-information-extraction" title="Permanent link">&para;</a></h2>
 <p>DeepSeek-R1 impresses with its exceptional text dialogue capabilities and in-depth problem-solving thinking abilities. When executing complex tasks or processing user instructions, in addition to normally completing dialogue tasks, the model can also demonstrate its thinking process during problem-solving. The PP-ChatOCRv3 Pipeline already supports the ability to adaptively return the output of thinking model results. For models that support returning the thinking process, PP-ChatOCRv3 can return the thinking process through an additional <code>reasoning_content</code> output field. This field is a list field containing the thinking results of the PP-ChatOCRv3 when calling the large language model multiple times. By observing these thinking results, we can gain insight into how the model gradually extracts the answer to the question from the given text information, and these thinking results can help us provide more improvement ideas for prompt optimization of the model. Next, we will take a specific legal document information extraction task as an example, using the <code>DeepSeek-R1</code> model as the large language model called in PP-ChatOCRv3 for key information extraction, and briefly explore the thinking process of the DeepSeek-R1 model.</p>
 <p>First, you need to download <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/legislation.jpg">Test File 3</a>, then replace the <code>api_key</code> in the following code and execute:</p>
 <p><div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
@@ -5256,7 +5256,7 @@ After executing the above code, the result obtained is as follows:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>{&#39;chat_res&#39;: {&#39;reasoning_content&#39;: [&#39;好的，我现在需要处理用户的查询，从OCR识别结果中提取指定关键词对应的信息。首先，用户提供的OCR文本是关于《勘察设计注册工程师管理规定》的内容，关键词列表是“该规定是何时公布的？”。我的任务是找到这个问题的答案，并以JSON格式返回。\n\n首先，我需要仔细阅读OCR文本，寻找与“公布时间”相关的信息。通常，这类法规文件会在开头部分提到公布日期。快速浏览OCR内容，开头部分确实有提到：“（2005年2月4日中华人民共和国建设部令第137号公布自2005年4月1日起施行）”。这里有两个日期，一个是公布的日期2005年2月4日，另一个是施行日期2005年4月1日。用户的问题是关于公布的日期，所以正确的答案应该是2005年2月4日。\n\n接下来，我需要确认OCR文本中是否有其他可能的日期或相关信息。继续查看后面的章节，比如第一章总则和后续条款，主要涉及注册工程师的管理规定，没有提到其他公布日期。因此，可以确定答案就是开头提到的2005年2月4日。\n\n然后，我需要确保答案格式正确。用户要求返回JSON，且每个关键词对应一个值。如果找不到答案，则设为“未知”。这里显然找到了，所以JSON应该是{&quot;该规定是何时公布的？&quot;: &quot;2005年2月4日&quot;}。\n\n最后，检查是否有其他可能的错误，比如OCR识别错误。例如，日期中的数字是否被正确识别。原文中的“2005年2月4日”看起来正确，没有明显的识别错误。因此，答案应该是准确的。\n&#39;], &#39;该规定是何时公布的？&#39;: &#39;2005年2月4日&#39;}}
 </span></code></pre></div>
 <p>The result shows that the use of the <code>DeepSeek-R1</code> model not only helps us complete the relationship information extraction task for the question 'When was this regulation announced?' but also returns its thinking process when solving the information extraction problem in the <code>reasoning_content</code> field. For example, when thinking, the model carefully distinguishes between the publication date and the implementation date of the regulation and rechecks the returned results.</p>
-<h2 id="4-supporting-custom-prompt-engineering-to-expand-the-functional-boundaries-of-large-language-models">4. Supporting Custom Prompt Engineering to Expand the Functional Boundaries of Large Language Models<a class="headerlink" href="#4-supporting-custom-prompt-engineering-to-expand-the-functional-boundaries-of-large-language-models" title="Permanent link">&para;</a></h2>
+<h2 id="5-supporting-custom-prompt-engineering-to-expand-the-functional-boundaries-of-large-language-models">5. Supporting Custom Prompt Engineering to Expand the Functional Boundaries of Large Language Models<a class="headerlink" href="#5-supporting-custom-prompt-engineering-to-expand-the-functional-boundaries-of-large-language-models" title="Permanent link">&para;</a></h2>
 <p>In document information extraction tasks, in addition to directly extracting key information from text information, we can also expand the functional boundaries of large language models through custom prompt engineering. For example, we can design new prompt rules to allow large language models to summarize these text information, thereby helping us quickly locate the key information we need from a large amount of text information, or allowing large language models to think and judge user questions based on the content in the text and give suggestions, etc. The PP-ChatOCRv3 Pipeline already supports custom prompt functionality, and the default prompts used by the Pipeline can be referred to in the Pipeline's <a href="../../paddlex/configs/pipelines/PP-ChatOCRv3-doc.yaml">configuration file</a>. We can refer to the prompt logic in the default configuration to customize and modify the prompts in the chat interface. Below is a brief introduction to the meaning of prompt parameters related to text content:</p>
 <ul>
 <li><code>text_task_description</code>: Description of the dialogue task, for example, "请根据提供的文本内容回答用户的问题".</li>
@@ -5353,7 +5353,7 @@ After executing the above code, the result obtained is as follows:</p>
     </span>
     <nav>
       
-        <a href="mailto:31413510@qq.com">a31413510</a>
+        <a href="mailto:zhouchangda@baidu.com">zhouchangda</a>
     </nav>
   </span>
 

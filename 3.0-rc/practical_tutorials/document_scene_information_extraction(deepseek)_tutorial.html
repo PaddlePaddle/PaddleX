@@ -5035,18 +5035,9 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-pdf" class="md-nav__link">
+  <a href="#3-pdf" class="md-nav__link">
     <span class="md-ellipsis">
-      2. 新模型可快速适配多页 PDF 文件，高效抽取信息。
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3" class="md-nav__link">
-    <span class="md-ellipsis">
-      3. 探究大模型对文本及图像信息抽取的思考方式
+      3. 新模型可快速适配多页 PDF 文件，高效抽取信息。
     </span>
   </a>
   
@@ -5055,7 +5046,16 @@ You're not viewing the latest version.
         <li class="md-nav__item">
   <a href="#4" class="md-nav__link">
     <span class="md-ellipsis">
-      4. 支持自定义提示词工程，拓展大语言模型的功能边界。
+      4. 探究大模型对文本及图像信息抽取的思考方式
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. 支持自定义提示词工程，拓展大语言模型的功能边界。
     </span>
   </a>
   
@@ -5132,7 +5132,7 @@ You're not viewing the latest version.
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{&#39;chat_res&#39;: {&#39;驾驶室准乘人数&#39;: &#39;2&#39;}}
 </span></code></pre></div>
 <p>通过结果可以看出，PP-ChatOCRv3 能够从图像中提取出文本信息，并将提取到的文本信息通过 DeepSeek-V3 大模型进行问题理解和信息抽取，返回需要抽取的问题结果。</p>
-<h2 id="2-pdf">2. 新模型可快速适配多页 PDF 文件，高效抽取信息。<a class="headerlink" href="#2-pdf" title="Permanent link">&para;</a></h2>
+<h2 id="3-pdf">3. 新模型可快速适配多页 PDF 文件，高效抽取信息。<a class="headerlink" href="#3-pdf" title="Permanent link">&para;</a></h2>
 <p>在实际的应用场景中，除了大量的图片文件外，更多的文档信息抽取任务会涉及到多页 PDF 文件的处理。由于多页 PDF 文件中往往包含大量的文本信息，而将大量的文本信息一次性传递给大语言模型，除了会增加大语言模型的调用成本外，还会降低大语言模型文本信息抽取的准确性。为了解决这一问题，PP-ChatOCRv3 产线中集成了向量检索技术，能够将多页 PDF 文件中的文本信息通过建立向量库的方式进行存储，并通过向量检索技术将文本信息检索到最相关的片段传递给大语言模型，从而大幅降低大语言模型的调用成本并提高文本信息抽取的准确性。在百度云千帆平台，提供了4个向量模型用于建立文本信息的向量库，具体的模型支持列表及其功能特点可参考 <a href="https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Nlks5zkzu">API列表</a> 中的向量模型部分。接下来我们将使用 <code>embedding-v1</code> 模型建立文本信息的向量库，并通过向量检索技术将最相关的片段传递给 <code>DeepSeek-V3</code> 大语言模型，从而实现高效抽取多页 PDF 文件中的关键信息。</p>
 <p>首先，您需要下载 <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf">测试文件2</a>，然后更换以下代码中的 <code>api_key</code> 并执行：</p>
 <p><strong>注</strong>：由于多页 PDF 文件较大，首次执行时需要较长时间进行文本信息抽取和向量库的建立，代码中已将模型的视觉结果和向量库的建立结果保存到本地，后续可以直接加载使用。</p>
@@ -5221,7 +5221,7 @@ You're not viewing the latest version.
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Total Time: 6.9693s
 </span></code></pre></div>
 <p>通过对比两次执行结果可以发现，在首次执行时，PP-ChatOCRv3 产线会对多页 PDF 文件中的所有文本信息进行抽取和向量库的建立，耗时较长。而在后续执行时，PP-ChatOCRv3 产线仅需要对向量库进行加载和检索操作，大幅降低了整体的耗时。结合了向量检索技术的 PP-ChatOCRv3 产线有效的降低了对于超长文本进行抽取时大语言模型调用的次数，实现了更加快速的文本信息抽取速度和更加精准的关键信息定位，为我们在实际的多页 PDF 文件信息抽取场景中提供了更加高效的解决方案。</p>
-<h2 id="3">3. 探究大模型对文本及图像信息抽取的思考方式<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
+<h2 id="4">4. 探究大模型对文本及图像信息抽取的思考方式<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
 <p>DeepSeek-R1 凭借其卓越的文本对话能力和深入的问题思考能力，令人印象深刻。在执行复杂任务或处理用户指令时，该模型除了正常完成对话任务外，还能够展示其解决问题时的思考过程。PP-ChatOCRv3 特色产线已经支持了思考模型结果自适应返回的输出能力，对于支持返回思考过程的模型，PP-ChatOCRv3 能够将思考过程通过额外的 <code>reasoning_content</code> 输出字段进行返回。该字段为一个列表字段，包含了
  PP-ChatOCRv3 多次调用大语言模型时的思考结果，通过观察这些思考结果，我们可以深入了解模型是如何一步步地从给定的文本信息中提取出问题的答案，并且利用这些思考结果可以帮助我们对模型的提示词优化提供更多的改进思路。接下来，我们将以一个具体的法律法规文档信息抽取任务为例，使用 <code>DeepSeek-R1</code> 模型作为调用大语言模型在 PP-ChatOCRv3 中进行关键信息抽取，并简单探究 DeepSeek-R1 模型的思考过程。</p>
 <p>首先，您需要下载 <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/legislation.jpg">测试文件3</a>，然后更换以下代码中的 <code>api_key</code> 并执行：</p>
@@ -5257,7 +5257,7 @@ You're not viewing the latest version.
 <div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>{&#39;chat_res&#39;: {&#39;reasoning_content&#39;: [&#39;好的，我现在需要处理用户的查询，从OCR识别结果中提取指定关键词对应的信息。首先，用户提供的OCR文本是关于《勘察设计注册工程师管理规定》的内容，关键词列表是“该规定是何时公布的？”。我的任务是找到这个问题的答案，并以JSON格式返回。\n\n首先，我需要仔细阅读OCR文本，寻找与“公布时间”相关的信息。通常，这类法规文件会在开头部分提到公布日期。快速浏览OCR内容，开头部分确实有提到：“（2005年2月4日中华人民共和国建设部令第137号公布自2005年4月1日起施行）”。这里有两个日期，一个是公布的日期2005年2月4日，另一个是施行日期2005年4月1日。用户的问题是关于公布的日期，所以正确的答案应该是2005年2月4日。\n\n接下来，我需要确认OCR文本中是否有其他可能的日期或相关信息。继续查看后面的章节，比如第一章总则和后续条款，主要涉及注册工程师的管理规定，没有提到其他公布日期。因此，可以确定答案就是开头提到的2005年2月4日。\n\n然后，我需要确保答案格式正确。用户要求返回JSON，且每个关键词对应一个值。如果找不到答案，则设为“未知”。这里显然找到了，所以JSON应该是{&quot;该规定是何时公布的？&quot;: &quot;2005年2月4日&quot;}。\n\n最后，检查是否有其他可能的错误，比如OCR识别错误。例如，日期中的数字是否被正确识别。原文中的“2005年2月4日”看起来正确，没有明显的识别错误。因此，答案应该是准确的。\n&#39;], &#39;该规定是何时公布的？&#39;: &#39;2005年2月4日&#39;}}
 </span></code></pre></div>
 <p>通过结果可以看出，<code>DeepSeek-R1</code> 模型的使用，除了帮助我们完成了'该规定是何时公布的？'这个问题的关系信息抽取任务外，还在 <code>reasoning_content</code> 字段返回了其在解决信息抽取问题时所经历的思考过程，例如模型在思考时对该法规的公布时间和实施时间进行了认真区分，对返回的结果进行再次检查等。</p>
-<h2 id="4">4. 支持自定义提示词工程，拓展大语言模型的功能边界。<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
+<h2 id="5">5. 支持自定义提示词工程，拓展大语言模型的功能边界。<a class="headerlink" href="#5" title="Permanent link">&para;</a></h2>
 <p>在文档信息抽取任务中，除了直接从文本信息中提取出关键信息外，我们还可以通过自定义提示词工程的方式，拓展大语言模型的功能边界。例如，我们可以设计全新的提示词规则，让大语言模型对这些文本信息进行归纳总结，从而帮助我们从大量的文本信息中快速定位到我们需要的关键信息，或者让大语言模型根据文本信息中的内容对用户的问题进行思考判断，给出建议等等。PP-ChatOCRv3 产线已经支持了提示词自定义功能，产线使用的默认提示词可以参考产线的 <a href="../../paddlex/configs/pipelines/PP-ChatOCRv3-doc.yaml">配置文件</a>，我们可以参考默认配置中的提示词逻辑在chat接口中对提示词进行自定义修改，下面简单介绍其中关于文本内容的相关提示词参数含义：</p>
 <ul>
 <li><code>text_task_description</code>：对话任务的描述，例如“请根据提供的文本内容回答用户的问题”。</li>
@@ -5353,7 +5353,7 @@ You're not viewing the latest version.
     </span>
     <nav>
       
-        <a href="mailto:31413510@qq.com">a31413510</a>
+        <a href="mailto:zhouchangda@baidu.com">zhouchangda</a>
     </nav>
   </span>
 
