@@ -1136,8 +1136,11 @@ def _get_sub_category(
     vision_labels = ["image", "table", "chart", "figure"]
     vision_title_labels = ["figure_title", "chart_title", "table_title"]
     all_labels = title_labels + sub_title_labels + vision_labels + vision_title_labels
+    pre_cut_labels = vision_labels + vision_title_labels
 
-    relevant_blocks = [block for block in blocks if block["block_label"] in all_labels]
+    relevant_blocks = [
+        block for block in blocks if block["block_label"] in pre_cut_labels
+    ]
 
     region_bbox = None
     if relevant_blocks:
@@ -1172,63 +1175,64 @@ def _get_sub_category(
         right_down_title_text_index = -1
         right_down_title_text_direction = None
 
-        # pre-cuts
-        # Condition 1: Length is greater than half of the layout region
-        if is_horizontal_1:
-            block_length = x2 - x1
-            required_length = region_width / 2
-        else:
-            block_length = y2 - y1
-            required_length = region_height / 2
-        length_condition = block_length > required_length
-
-        # Condition 2: Centered check (must be within ±20 in both horizontal and vertical directions)
-        block_x_center = (x1 + x2) / 2
-        block_y_center = (y1 + y2) / 2
-        tolerance_len = block_length // 5
-        is_centered = (
-            abs(block_x_center - region_x_center) <= tolerance_len
-            and abs(block_y_center - region_y_center) <= tolerance_len
-        )
-
-        # Condition 3: Check for surrounding text
-        has_left_text = False
-        has_right_text = False
-        has_above_text = False
-        has_below_text = False
-        for block2 in blocks:
-            if block2["block_label"] != "text":
-                continue
-            bbox2 = block2["block_bbox"]
-            x1_2, y1_2, x2_2, y2_2 = bbox2
+        if block1["block_label"] in pre_cut_labels:
+            # pre-cuts
+            # Condition 1: Length is greater than half of the layout region
             if is_horizontal_1:
-                if x2_2 <= x1 and not (y2_2 <= y1 or y1_2 >= y2):
-                    has_left_text = True
-                if x1_2 >= x2 and not (y2_2 <= y1 or y1_2 >= y2):
-                    has_right_text = True
+                block_length = x2 - x1
+                required_length = region_width / 2
             else:
-                if y2_2 <= y1 and not (x2_2 <= x1 or x1_2 >= x2):
-                    has_above_text = True
-                if y1_2 >= y2 and not (x2_2 <= x1 or x1_2 >= x2):
-                    has_below_text = True
+                block_length = y2 - y1
+                required_length = region_height / 2
+            length_condition = block_length > required_length
 
-            if (is_horizontal_1 and has_left_text and has_right_text) or (
-                not is_horizontal_1 and has_above_text and has_below_text
-            ):
-                break
+            # Condition 2: Centered check (must be within ±block_length//5 in both horizontal and vertical directions)
+            block_x_center = (x1 + x2) / 2
+            block_y_center = (y1 + y2) / 2
+            tolerance_len = block_length // 5
+            is_centered = (
+                abs(block_x_center - region_x_center) <= tolerance_len
+                and abs(block_y_center - region_y_center) <= tolerance_len
+            )
 
-        no_text_on_sides = (
-            not (has_left_text or has_right_text)
-            if is_horizontal_1
-            else not (has_above_text or has_below_text)
-        )
+            # Condition 3: Check for surrounding text
+            has_left_text = False
+            has_right_text = False
+            has_above_text = False
+            has_below_text = False
+            for block2 in blocks:
+                if block2["block_label"] != "text":
+                    continue
+                bbox2 = block2["block_bbox"]
+                x1_2, y1_2, x2_2, y2_2 = bbox2
+                if is_horizontal_1:
+                    if x2_2 <= x1 and not (y2_2 <= y1 or y1_2 >= y2):
+                        has_left_text = True
+                    if x1_2 >= x2 and not (y2_2 <= y1 or y1_2 >= y2):
+                        has_right_text = True
+                else:
+                    if y2_2 <= y1 and not (x2_2 <= x1 or x1_2 >= x2):
+                        has_above_text = True
+                    if y1_2 >= y2 and not (x2_2 <= x1 or x1_2 >= x2):
+                        has_below_text = True
 
-        # Add coordinates if all conditions are met
-        if is_centered and length_condition and no_text_on_sides:
-            if is_horizontal_1:
-                pre_cuts.append(y1)
-            else:
-                pre_cuts.append(x1)
+                if (is_horizontal_1 and has_left_text and has_right_text) or (
+                    not is_horizontal_1 and has_above_text and has_below_text
+                ):
+                    break
+
+            no_text_on_sides = (
+                not (has_left_text or has_right_text)
+                if is_horizontal_1
+                else not (has_above_text or has_below_text)
+            )
+
+            # Add coordinates if all conditions are met
+            if is_centered and length_condition and no_text_on_sides:
+                if is_horizontal_1:
+                    pre_cuts.append(y1)
+                else:
+                    pre_cuts.append(x1)
 
         for j, block2 in enumerate(blocks):
             if i == j:

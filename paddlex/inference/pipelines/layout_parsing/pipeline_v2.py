@@ -607,7 +607,7 @@ class LayoutParsingPipelineV2(BasePipeline):
             }
             yield LayoutParsingResultV2(single_img_res)
 
-    def concatenate_markdown_pages(self, markdown_list: list) -> tuple:
+    def concatenate_markdown_pages(self, markdown_list: list) -> str:
         """
         Concatenate Markdown content from multiple pages into a single document.
 
@@ -615,7 +615,7 @@ class LayoutParsingPipelineV2(BasePipeline):
             markdown_list (list): A list containing Markdown data for each page.
 
         Returns:
-            tuple: A tuple containing the processed Markdown text.
+            str: The concatenated Markdown text.
         """
         markdown_texts = ""
         previous_page_last_element_paragraph_end_flag = True
