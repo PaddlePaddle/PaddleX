@@ -273,7 +273,6 @@ class StaticInfer:
         indices = sorted(range(len(names)), key=names.__getitem__)
         x = [x[indices.index(i)] for i in range(len(x))]
         # TODO:
-        # Use Paddle's H2D and D2H operations to transfer data from CPU to GPU.
         # Ensure that input tensors follow the model's input sequence without sorting.
 
         inputs = self.copy2gpu(x)

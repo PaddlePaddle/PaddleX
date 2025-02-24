@@ -10,14 +10,18 @@
 
 ## 1.使用说明
 
-PaddleX 支持统计模型推理耗时，需通过环境变量进行设置，具体如下：
+Benchmark 会统计模型在端到端推理过程中，所有操作（`Operation`）和阶段（`Stage`）的每次迭代的平均执行时间（`Avg Time Per Iter (ms)`）和每个样本的平均执行时间（`Avg Time Per Instance (ms)`），单位为毫秒。
+
+需通过环境变量启用 Benchmark，具体如下：
 
 * `PADDLE_PDX_INFER_BENCHMARK`：设置为 `True` 时则开启 Benchmark，默认为 `False`；
 * `PADDLE_PDX_INFER_BENCHMARK_WARMUP`：设置 warm up，在开始测试前循环迭代 n 次，默认为 `0`；
 * `PADDLE_PDX_INFER_BENCHMARK_ITER`：进行 Benchmark 测试的循环次数，默认为 `0`；
 * `PADDLE_PDX_INFER_BENCHMARK_OUTPUT`：用于设置保存的目录，如 `./benchmark`，默认为 `None`，表示不保存 Benchmark 指标；
 
-在 Benchmark 结果中，会统计该模型全部组件（`Component`）和阶段（`Stage`）的每次迭代的平均执行时间（`Avg Time Per Iter (ms)`）和每个样本的平均执行时间（`Avg Time Per Instance (ms)`），单位为毫秒。
+**注意**：
+
+* `PADDLE_PDX_INFER_BENCHMARK_WARMUP` 或 `PADDLE_PDX_INFER_BENCHMARK_ITER` 需要至少设置一个大于零的值，否则无法启用 Benchmark。
 
 ## 2.使用示例
 

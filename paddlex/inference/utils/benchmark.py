@@ -21,11 +21,10 @@ import numpy as np
 from prettytable import PrettyTable
 
 from ...utils.flags import INFER_BENCHMARK, INFER_BENCHMARK_OUTPUT
-from ...utils.misc import Singleton
 from ...utils import logging
 
 
-class Benchmark(metaclass=Singleton):
+class Benchmark:
     def __init__(self, enabled):
         self._enabled = enabled
         self._elapses = {}
@@ -177,7 +176,7 @@ class Benchmark(metaclass=Singleton):
                 "Iters",
                 "Batch Size",
                 "Instances",
-                "Component",
+                "Operation",
                 "Avg Time Per Iter (ms)",
                 "Avg Time Per Instance (ms)",
             ]
