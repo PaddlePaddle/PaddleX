@@ -1854,7 +1854,7 @@ Below are the API references for basic serving and multi-language service invoca
 <summary>Python</summary>
 
 <pre><code class="language-python">
-# This script only shows the use case of images, other file type calls please see the API reference to adjust.
+# This script only shows the use case for images. For calling with other file types, please read the API reference and make adjustments.
 
 import base64
 import pprint
