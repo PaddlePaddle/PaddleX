@@ -2018,24 +2018,26 @@ for res in visual_predict_res:
 <summary>Python</summary>
 
 
-<pre><code class="language-python">import base64
+<pre><code class="language-python">
+# 此脚本只展示了图片的用例，其他文件类型的调用请查看API参考来调整
+
+import base64
 import pprint
 import sys
-
 import requests
 
 
 API_BASE_URL = "http://0.0.0.0:8080"
 
-file_path = "./demo.jpg"
+image_path = "./demo.jpg"
 keys = ["姓名"]
 
-with open(file_path, "rb") as file:
-    file_bytes = file.read()
-    file_data = base64.b64encode(file_bytes).decode("ascii")
+with open(image_path, "rb") as file:
+    image_bytes = file.read()
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
 payload = {
-    "file": file_data,
+    "file": image_data,
     "fileType": 1,
 }
 
@@ -2069,7 +2071,7 @@ if resp_vector.status_code != 200:
 result_vector = resp_vector.json()["result"]
 
 payload = {
-    "image": image_url,
+    "image": image_data,
     "keyList": keys,
 }
 resp_mllm = requests.post(url=f"{API_BASE_URL}/chatocr-mllm", json=payload)
@@ -2099,9 +2101,7 @@ result_chat = resp_chat.json()["result"]
 print("Final result:")
 print(result_chat["chatResult"])
 </code></pre>
-
-
-<b>注</b>：请在 `API_KEY`、`SECRET_KEY` 处填入您的 API key 和 secret key。</details>
+</details>
 </details>
 <br/>
 
