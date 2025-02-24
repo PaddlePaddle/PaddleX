@@ -1937,7 +1937,6 @@ print("Final result:")
 print(result_chat["chatResult"])
 </code></pre>
 </details>
-
 </details>
 <br/>
 
