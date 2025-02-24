@@ -19,7 +19,7 @@ The document image preprocessing pipeline integrates two major functions: docume
 <tr>
 <th>Model</th><th>Model download link</th>
 <th>Top-1 Acc（%）</th>
-<th>GPU inference time (ms)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU inference time (ms)</th>
 <th>Model storage size（M)</th>
 <th>Introduction</th>
@@ -73,7 +73,7 @@ The document image preprocessing pipeline integrates two major functions: docume
 
 | Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
 |-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
 | High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## 2. Quick Start

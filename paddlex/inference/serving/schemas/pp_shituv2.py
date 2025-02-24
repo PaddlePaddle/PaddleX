@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict, Final, List, Optional
+from typing import Final, List, Optional
 
 from pydantic import BaseModel
 
@@ -53,7 +53,7 @@ class BuildIndexRequest(BaseModel):
 
 class BuildIndexResult(BaseModel):
     indexKey: str
-    idMap: Dict[int, str]
+    imageCount: int
 
 
 ADD_IMAGES_TO_INDEX_ENDPOINT: Final[str] = "/shitu-index-add"
@@ -65,7 +65,7 @@ class AddImagesToIndexRequest(BaseModel):
 
 
 class AddImagesToIndexResult(BaseModel):
-    idMap: Dict[int, str]
+    imageCount: int
 
 
 REMOVE_IMAGES_FROM_INDEX_ENDPOINT: Final[str] = "/shitu-index-remove"
@@ -77,7 +77,7 @@ class RemoveImagesFromIndexRequest(BaseModel):
 
 
 class RemoveImagesFromIndexResult(BaseModel):
-    idMap: Dict[int, str]
+    imageCount: int
 
 
 INFER_ENDPOINT: Final[str] = "/shitu-infer"
