@@ -12,8 +12,8 @@ Demonstration of PaddleX pipeline serving:
 
 To address different user needs, PaddleX offers multiple pipeline serving solutions:
 
-- Basic serving: A simple and easy-to-use serving solution with low development costs.
-- High-stability serving: Built on [NVIDIA Triton Inference Server](https://developer.nvidia.com/triton-inference-server). Compared to basic serving, this solution offers higher stability and allows users to adjust configurations to optimize performance.
+- **Basic serving**: A simple and easy-to-use serving solution with low development costs.
+- **High-stability serving**: Built on [NVIDIA Triton Inference Server](https://developer.nvidia.com/triton-inference-server). Compared to basic serving, this solution offers higher stability and allows users to adjust configurations to optimize performance.
 
 **It is recommended to first use the basic serving solution for quick verification**, and then evaluate whether to try more complex solutions based on actual needs.
 
@@ -268,7 +268,7 @@ Select the pipeline you wish to deploy and click "获取" (acquire). Afterwards,
 
 The PaddleX high-stability serving solution is built on NVIDIA Triton Inference Server, allowing users to modify the configuration files of Triton Inference Server.
 
-In the `model_repo/{endpoint name}` directory of the high-stability serving SDK, you can find one or more `config*.pbtxt` files. If a `config_{device type}.pbtxt` file exists in the directory, please modify the configuration file corresponding to the desired device type. Otherwise, please modify `config.pbtxt`.
+In the `server/model_repo/{endpoint name}` directory of the high-stability serving SDK, you can find one or more `config*.pbtxt` files. If a `config_{device type}.pbtxt` file exists in the directory, please modify the configuration file corresponding to the desired device type. Otherwise, please modify `config.pbtxt`.
 
 A common requirement is to adjust the number of execution instances for horizontal scaling. To achieve this, you need to modify the `instance_group` setting in the configuration file, using `count` to specify the number of instances placed on each device, `kind` to specify the device type, and `gpus` to specify the GPU IDs. An example is as follows:
 
@@ -321,7 +321,7 @@ First, pull the Docker image as needed:
     docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0rc0-cpu
     ```
 
-With the image prepared, execute the following command to run the server:
+With the image prepared, navigate to the `server` directory and execute the following command to run the server:
 
 ```bash
 docker run \

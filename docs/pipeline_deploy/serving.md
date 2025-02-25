@@ -12,8 +12,8 @@ PaddleX 产线服务化部署示意图：
 
 针对用户的不同需求，PaddleX 提供多种产线服务化部署方案：
 
-- 基础服务化部署：简单易用的服务化部署方案，开发成本低。
-- 高稳定性服务化部署：基于 [NVIDIA Triton Inference Server](https://developer.nvidia.com/triton-inference-server) 打造。与基础服务化部署相比，该方案提供更高的稳定性，并允许用户调整配置以优化性能。
+- **基础服务化部署**：简单易用的服务化部署方案，开发成本低。
+- **高稳定性服务化部署**：基于 [NVIDIA Triton Inference Server](https://developer.nvidia.com/triton-inference-server) 打造。与基础服务化部署相比，该方案提供更高的稳定性，并允许用户调整配置以优化性能。
 
 **建议首先使用基础服务化部署方案进行快速验证**，然后根据实际需要，评估是否尝试更复杂的方案。
 
@@ -263,13 +263,13 @@ paddlex --serve --pipeline image_classification --use_hpip
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-2.png">
 
-**请注意**：每个序列号只能绑定到唯一的设备指纹，且只能绑定一次。这意味着用户如果使用不同的机器部署产线，则必须为每台机器准备单独的序列号。**高稳定性服务化部署完全免费。**PaddleX 的鉴权机制核心在于统计各产线的部署数量，并通过数据建模为团队提供产线效能分析，以便进行资源的优化配置和重点产线效率的提升。需要特别说明的是，鉴权过程只使用硬盘分区 UUID 等非敏感信息，PaddleX 也并不采集设备遥测数据等敏感数据，因此理论上**鉴权服务器无法获取到任何敏感信息**。
+**请注意**：每个序列号只能绑定到唯一的设备指纹，且只能绑定一次。这意味着用户如果使用不同的机器部署产线，则必须为每台机器准备单独的序列号。**高稳定性服务化部署完全免费。** PaddleX 的鉴权机制核心在于统计各产线的部署数量，并通过数据建模为团队提供产线效能分析，以便进行资源的优化配置和重点产线效率的提升。需要特别说明的是，鉴权过程只使用硬盘分区 UUID 等非敏感信息，PaddleX 也并不采集设备遥测数据等敏感数据，因此理论上**鉴权服务器无法获取到任何敏感信息**。
 
 ### 2.3 调整配置
 
 PaddleX 高稳定性服务化部署方案基于 NVIDIA Triton Inference Server 打造，支持用户修改 Triton Inference Server 的配置文件。
 
-在高稳定性服务化部署 SDK 的 `model_repo/{端点名称}` 目录中，可以找到一个或多个 `config*.pbtxt` 文件。如果目录中存在 `config_{设备类型}.pbtxt` 文件，请修改期望使用的设备类型对应的配置文件；否则，请修改 `config.pbtxt`。
+在高稳定性服务化部署 SDK 的 `server/model_repo/{端点名称}` 目录中，可以找到一个或多个 `config*.pbtxt` 文件。如果目录中存在 `config_{设备类型}.pbtxt` 文件，请修改期望使用的设备类型对应的配置文件；否则，请修改 `config.pbtxt`。
 
 一个常见的需求是调整执行实例数量，以进行水平扩展。为了实现这一点，需要修改配置文件中的 `instance_group` 配置，使用 `count` 指定每一设备上放置的实例数量，使用 `kind` 指定设备类型，使用 `gpus` 指定 GPU 编号。示例如下：
 
@@ -322,7 +322,7 @@ PaddleX 高稳定性服务化部署方案基于 NVIDIA Triton Inference Server �
     docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0rc0-cpu
     ```
 
-准备好镜像后，执行如下命令运行服务器：
+准备好镜像后，切换到 `server` 目录，执行如下命令运行服务器：
 
 ```bash
 docker run \
