@@ -5308,8 +5308,8 @@ You're not viewing the latest version.
 <p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/serving_en.png" width="300"/></p>
 <p>To address different user needs, PaddleX offers multiple pipeline serving solutions:</p>
 <ul>
-<li>Basic serving: A simple and easy-to-use serving solution with low development costs.</li>
-<li>High-stability serving: Built on <a href="https://developer.nvidia.com/triton-inference-server">NVIDIA Triton Inference Server</a>. Compared to basic serving, this solution offers higher stability and allows users to adjust configurations to optimize performance.</li>
+<li><strong>Basic serving</strong>: A simple and easy-to-use serving solution with low development costs.</li>
+<li><strong>High-stability serving</strong>: Built on <a href="https://developer.nvidia.com/triton-inference-server">NVIDIA Triton Inference Server</a>. Compared to basic serving, this solution offers higher stability and allows users to adjust configurations to optimize performance.</li>
 </ul>
 <p><strong>It is recommended to first use the basic serving solution for quick verification</strong>, and then evaluate whether to try more complex solutions based on actual needs.</p>
 <p><b>Note</b></p>
@@ -5525,7 +5525,7 @@ You're not viewing the latest version.
 <p><strong>Please note</strong>: Each serial number can only be bound to a unique device fingerprint and can only be bound once. This means that if a user deploys a pipeline on different machines, a separate serial number must be prepared for each machine. <strong>The high-stability serving solution is completely free.</strong> PaddleX's authentication mechanism is targeted to count the number of deployments across various pipelines and provide pipeline efficiency analysis for our team through data modeling, so as to optimize resource allocation and improve the efficiency of key pipelines. It is important to note that the authentication process only uses non-sensitive information such as disk partition UUIDs, and PaddleX does not collect sensitive data such as device telemetry data. Therefore, in theory, <strong>the authentication server cannot obtain any sensitive information</strong>.</p>
 <h3 id="23-adjust-configurations">2.3 Adjust Configurations<a class="headerlink" href="#23-adjust-configurations" title="Permanent link">&para;</a></h3>
 <p>The PaddleX high-stability serving solution is built on NVIDIA Triton Inference Server, allowing users to modify the configuration files of Triton Inference Server.</p>
-<p>In the <code>model_repo/{endpoint name}</code> directory of the high-stability serving SDK, you can find one or more <code>config*.pbtxt</code> files. If a <code>config_{device type}.pbtxt</code> file exists in the directory, please modify the configuration file corresponding to the desired device type. Otherwise, please modify <code>config.pbtxt</code>.</p>
+<p>In the <code>server/model_repo/{endpoint name}</code> directory of the high-stability serving SDK, you can find one or more <code>config*.pbtxt</code> files. If a <code>config_{device type}.pbtxt</code> file exists in the directory, please modify the configuration file corresponding to the desired device type. Otherwise, please modify <code>config.pbtxt</code>.</p>
 <p>A common requirement is to adjust the number of execution instances for horizontal scaling. To achieve this, you need to modify the <code>instance_group</code> setting in the configuration file, using <code>count</code> to specify the number of instances placed on each device, <code>kind</code> to specify the device type, and <code>gpus</code> to specify the GPU IDs. An example is as follows:</p>
 <ul>
 <li>
@@ -5572,7 +5572,7 @@ You're not viewing the latest version.
 </span></code></pre></div>
 </li>
 </ul>
-<p>With the image prepared, execute the following command to run the server:</p>
+<p>With the image prepared, navigate to the <code>server</code> directory and execute the following command to run the server:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>docker<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">    </span>-it<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span>-e<span class="w"> </span><span class="nv">PADDLEX_HPS_DEVICE_TYPE</span><span class="o">={</span>deployment<span class="w"> </span>device<span class="w"> </span>type<span class="o">}</span><span class="w"> </span><span class="se">\</span>
@@ -5667,7 +5667,7 @@ You're not viewing the latest version.
     </span>
     <nav>
       
-        <a href="mailto:94225063+zhangyubo0722@users.noreply.github.com">zhangyubo0722</a>
+        <a href="mailto:bob1998425@hotmail.com">Lin Manhui</a>
     </nav>
   </span>
 
