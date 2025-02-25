@@ -535,10 +535,13 @@ def get_single_block_parsing_res(
                     },
                 )
             else:
+                content = "".join(rec_res["rec_texts"])
+                if label != "reference":
+                    content = _process_text(content)
                 single_block_layout_parsing_res.append(
                     {
                         "block_label": label,
-                        "block_content": _process_text("".join(rec_res["rec_texts"])),
+                        "block_content": content,
                         "block_bbox": block_bbox,
                         "seg_start_flag": seg_start_flag,
                         "seg_end_flag": seg_end_flag,
