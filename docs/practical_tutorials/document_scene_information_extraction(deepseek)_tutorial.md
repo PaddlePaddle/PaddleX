@@ -16,7 +16,7 @@ comments: true
 
 ## 2. 快速体验基于 DeepSeek 大模型的文档信息抽取
 
-PaddleX 提供了简单的 Python API，在完成环境准备并下载 [测试文件1](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_certificate-1.png) 后，更换以下代码中的 `api_key` 即可快速体验基于 DeepSeek-V3 大模型的文档信息抽取。
+PaddleX 提供了简单的 Python API，在完成环境准备并下载 [测试文件1](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_certificate-1.png) 后，更换以下代码中的 `api_key` 即可快速体验基于 DeepSeek-R1 大模型的文档信息抽取。
 
 ```python
 from paddlex import create_pipeline
