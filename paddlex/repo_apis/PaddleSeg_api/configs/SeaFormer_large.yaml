@@ -36,6 +36,10 @@ val_dataset:
   val_path: datasets/Cityscapes/val.txt
   num_classes: 150
   transforms:
+    - type: Resize
+      target_size: [2048, 512]
+      keep_ratio: True
+      size_divisor: 32
     - type: Normalize
   mode: val
 
@@ -64,3 +68,12 @@ loss:
   types:
     - type: CrossEntropyLoss
   coef: [1]
+
+test_config:
+  crop_size:
+  - 512
+  - 512
+  is_slide: true
+  stride:
+  - 512
+  - 512
