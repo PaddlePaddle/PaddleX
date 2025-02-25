@@ -741,12 +741,12 @@ echo &quot;label: &quot; . $result[&quot;label&quot;] . &quot;, score: &quot; . 
 You can choose the appropriate deployment method based on your needs to integrate the model pipeline into subsequent AI applications.
 
 
-## 4. Secondary Development
+## 4. Custom Development
 If the default model weights provided by the time-series classification pipeline do not meet your requirements in terms of accuracy or speed, you can try to <b>fine-tune</b> the existing model using <b>your own domain-specific or application data</b> to improve the performance of the time-series classification pipeline in your scenario.
 
 
 ### 4.1 Model Fine-Tuning
-Since the time-series classification pipeline includes a time-series classification module, if the pipeline's performance is not satisfactory, you need to refer to the [Secondary Development](../../../module_usage/tutorials/time_series_modules/time_series_classification.en.md#four-secondary-development) section in the [Time-Series Classification Module Development Tutorial](../../../module_usage/tutorials/time_series_modules/time_series_classification.en.md) and fine-tune the time-series classification model using your private dataset.
+Since the time-series classification pipeline includes a time-series classification module, if the pipeline's performance is not satisfactory, you need to refer to the [Custom Development](../../../module_usage/tutorials/time_series_modules/time_series_classification.en.md#four-secondary-development) section in the [Time-Series Classification Module Development Tutorial](../../../module_usage/tutorials/time_series_modules/time_series_classification.en.md) and fine-tune the time-series classification model using your private dataset.
 
 ### 4.2 Model Application
 After you have completed fine-tuning training with your private dataset, you will obtain a local model weight file.

@@ -5,7 +5,7 @@ comments: true
 # PP-ChatOCRv4-doc Pipeline Tutorial
 
 ## 1. Introduction to PP-ChatOCRv4-doc Pipeline
-PP-ChatOCRv4-doc is a unique document and image intelligent analysis solution from PaddlePaddle, combining LLM, MLLM, and OCR technologies to address complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. Integrated with ERNIE Bot, it fuses massive data and knowledge, achieving high accuracy and wide applicability. This pipeline also provides flexible service deployment options, supporting deployment on various hardware. Furthermore, it offers secondary development capabilities, allowing you to train and fine-tune models on your own datasets, with seamless integration of trained models.
+PP-ChatOCRv4-doc is a unique document and image intelligent analysis solution from PaddlePaddle, combining LLM, MLLM, and OCR technologies to address complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. Integrated with ERNIE Bot, it fuses massive data and knowledge, achieving high accuracy and wide applicability. This pipeline also provides flexible service deployment options, supporting deployment on various hardware. Furthermore, it offers custom development capabilities, allowing you to train and fine-tune models on your own datasets, with seamless integration of trained models.
 
 <img src="https://github.com/user-attachments/assets/0870cdec-1909-4247-9004-d9efb4ab9635">
 

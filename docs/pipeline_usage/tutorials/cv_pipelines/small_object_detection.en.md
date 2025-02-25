@@ -890,7 +890,7 @@ print_r($result["detectedObjects"]);
 📱 <b>Edge Deployment</b>: Edge deployment is a method that places computing and data processing functions on the user's device itself. The device can process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
 You can choose the appropriate deployment method based on your needs to integrate the model into your AI application.
 
-## 4. Secondary Development
+## 4. Custom Development
 If the default model weights provided by the general small object detection pipeline are not satisfactory in terms of accuracy or speed for your specific scenario, you can try to <b>fine-tune</b> the existing model using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the small object detection pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning

@@ -81,7 +81,7 @@ comments: true
 </td>
   </tr>
   <tr>
-    <td>Layout Area Detection</td>
+    <td>Layout Detection</td>
   </tr>
   <tr>
     <td>Text Detection</td>
@@ -93,7 +93,7 @@ comments: true
     <td>Seal Text Detection</td>
   </tr>
   <tr>
-    <td>Text Image Correction</td>
+    <td>Text Image Un ra p ping</td>
   </tr>
   <tr>
     <td>Document Image Orientation Classification</td>
@@ -116,13 +116,13 @@ comments: true
     <td>Text Recognition</td>
 </tr>
 <tr>
-    <td>Document Image Orientation Classification (Optional)</td>
+    <td>Document Image Orientation Classification </td>
 </tr>
 <tr>
-    <td>Text Image Correction (Optional)</td>
+    <td>Text Image Unwarping </td>
 </tr>
 <tr>
-    <td>Text Line Orientation Classification (Optional)</td>
+    <td>Text Line Orientation Classification </td>
 </tr>
 <tr>
     <td rowspan="6">General Table Recognition</td>
@@ -144,13 +144,13 @@ comments: true
     <td>Text Recognition</td>
 </tr>
 <tr>
-    <td>Layout Area Detection (Optional)</td>
+    <td>Layout Detection </td>
 </tr>
 <tr>
-    <td>Document Image Orientation Classification (Optional)</td>
+    <td>Doc Img Orientation Classification </td>
 </tr>
 <tr>
-    <td>Text Image Correction (Optional)</td>
+    <td>Text Image Unrapping </td>
 </tr>
     <tr>
         <td>Time Series Forecasting</td>
@@ -252,7 +252,7 @@ comments: true
   </tr>
   <tr>
     <td rowspan="10">General Layout Parsing</td>
-    <td>Layout Area Detection</td>
+    <td>Layout Detection</td>
     <td rowspan="10">None</td>
     <td rowspan="10">Layout parsing is a technology that extracts structured information from document images, primarily used to convert complex document layouts into machine-readable data formats. This technology is widely applied in document management, information extraction, and data digitization. By combining Optical Character Recognition (OCR), image processing, and machine learning algorithms, layout parsing can identify and extract text blocks, headings, paragraphs, images, tables, and other layout elements from documents. The process typically includes three main steps: layout analysis, element analysis, and data formatting, ultimately generating structured document data to enhance the efficiency and accuracy of data processing.</td>
     <td rowspan="10">
@@ -265,7 +265,7 @@ comments: true
     </td>
 </tr>
 <tr>
-    <td>Layout Area Detection Module</td>
+    <td>Layout Detection Module</td>
 </tr>
 <tr>
     <td>Text Detection Module</td>
@@ -274,26 +274,26 @@ comments: true
     <td>Text Recognition Module</td>
 </tr>
 <tr>
-    <td>Document Image Orientation Classification Module (Optional)</td>
+    <td>Doc Img Orientation Classification</td>
 </tr>
 <tr>
-    <td>Text Image Correction Module (Optional)</td>
+    <td>Text Image Unrapping</td>
 </tr>
 <tr>
-    <td>Table Structure Recognition Module (Optional)</td>
+    <td>Table Structure Recognition</td>
 </tr>
 <tr>
-    <td>Text Line Orientation Classification Module (Optional)</td>
+    <td>Text Line Orientation Classification</td>
 </tr>
 <tr>
-    <td>Formula Recognition Module (Optional)</td>
+    <td>Formula Recognition</td>
 </tr>
 <tr>
-    <td>Seal Text Detection Module (Optional)</td>
+    <td>Seal Text Detection</td>
 </tr>
 <tr>
     <td rowspan="4">Formula Recognition</td>
-    <td>Formula Recognition Module</td>
+    <td>Formula Recognition</td>
     <td rowspan="4"><a href="https://aistudio.baidu.com/community/app/387976/webUI?source=appCenter">Online Experience</a></td>
     <td rowspan="4">Formula recognition is a technology that automatically identifies and extracts LaTeX formula content and structure from documents or images. It is widely used in document editing and data analysis in fields such as mathematics, physics, and computer science. By using computer vision and machine learning algorithms, formula recognition can convert complex mathematical formula information into editable LaTeX format, facilitating further processing and analysis by users.</td>
     <td rowspan="4">
@@ -306,13 +306,13 @@ comments: true
     </td>
 </tr>
 <tr>
-    <td>Layout Area Detection Module (Optional)</td>
+    <td>Layout Detection Module </td>
 </tr>
 <tr>
-    <td>Document Image Orientation Classification Module (Optional)</td>
+    <td>Doc Img Orientation Classification </td>
 </tr>
 <tr>
-    <td>Text Image Correction Module (Optional)</td>
+    <td>Text Image Unrapping</td>
 </tr>
 <tr>
     <td rowspan="5">Seal Text Recognition</td>
@@ -332,17 +332,17 @@ comments: true
     <td>Text Recognition</td>
 </tr>
 <tr>
-    <td>Layout Area Detection (Optional)</td>
+    <td>Layout Detection </td>
 </tr>
 <tr>
-    <td>Document Image Orientation Classification (Optional)</td>
+    <td>Doc Img Orientation Classification </td>
 </tr>
 <tr>
-    <td>Text Image Correction (Optional)</td>
+    <td>Text Image Unrapping</td>
 </tr>
 <tr>
     <td rowspan = 2>General Image Recognition</td>
-    <td>Subject Detection</td>
+    <td>Mainbody Detection</td>
     <td rowspan = 2>None</td>
     <td rowspan = 2>The general image recognition pipeline is designed to address open-domain target localization and recognition issues. It can effectively identify and differentiate various target objects in different environments and conditions, making it widely applicable in autonomous driving, intelligent security, medical image analysis, and industrial automation, among other fields.</td>
     <td rowspan = 2>
@@ -473,7 +473,7 @@ comments: true
 </tr>
 <tr>
     <td rowspan="2">Document Image Preprocessing</td>
-    <td>Document Image Orientation Classification</td>
+    <td>Doc Img Orientation Classification</td>
     <td rowspan="2">Not Available</td>
     <td rowspan="2">Document image preprocessing is a key step in document analysis and recognition, aiming to optimize document images through a series of technical means to improve the accuracy and efficiency of subsequent processing. Document image preprocessing includes operations such as orientation classification, text rectification, noise removal, and binarization, which can effectively improve image quality, correct document orientation, and remove interference factors. This technology is widely used in document scanning, OCR text recognition, and electronic document generation.</td>
     <td rowspan="2">
@@ -485,7 +485,7 @@ comments: true
     </td>
 </tr>
 <tr>
-    <td>Text Image Rectification</td>
+    <td>Text Image Unrapping</td>
 </tr>
 <tr>
     <td>Multilingual Speech Recognition</td>

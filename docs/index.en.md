@@ -1514,8 +1514,8 @@ The following steps were executed:
             use_textline_orientation=False,
         )
         for res in output:
-            res.print() 
-            res.save_to_json(save_path="output") 
+            res.print()
+            res.save_to_json(save_path="output")
             res.save_to_markdown(save_path="output")
         ```
 
@@ -1852,11 +1852,11 @@ The following steps were executed:
 
 <div class="grid cards" markdown>
 
-- **PP-ChatOCRv4**
+- **PP-ChatOCRv4-doc**
 
     ---
 
-    Document Scene Information Extraction v4 (PP-ChatOCRv4) is a PaddlePaddle-based intelligent document and image analysis solution that integrates LLM (Large Language Model), MLLM (Multimodal Large Language Model), and OCR (Optical Character Recognition) technologies. It provides a one-stop solution for common challenges in complex document information extraction, such as layout analysis, rare character recognition, multi-page PDFs, table extraction, and seal detection.
+    Document Scene Information Extraction v4 (PP-ChatOCRv4-doc) is a PaddlePaddle-based intelligent document and image analysis solution that integrates LLM (Large Language Model), MLLM (Multimodal Large Language Model), and OCR (Optical Character Recognition) technologies. It provides a one-stop solution for common challenges in complex document information extraction, such as layout analysis, rare character recognition, multi-page PDFs, table extraction, and seal detection.
 
     [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.en.md)
 

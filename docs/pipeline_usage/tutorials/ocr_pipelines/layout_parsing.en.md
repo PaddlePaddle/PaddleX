@@ -314,8 +314,8 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <th>Recognition Avg Accuracy (%)</th>
 <th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
-<th>Introduction</th>
+<th>Model Size (M)</th>
+<th>Description</th>
 </tr>
 <tr>
 <td>ch_RepSVTR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_RepSVTR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">Training Model</a></td>

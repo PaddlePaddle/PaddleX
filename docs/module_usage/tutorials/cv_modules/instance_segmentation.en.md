@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Instance Segmentation Module Development Tutorial
+# Instance Segmentation Module Tutorial
 
 ## I. Overview
 The instance segmentation module is a crucial component in computer vision systems, responsible for identifying and marking pixels that contain specific object instances in images or videos. The performance of this module directly impacts the accuracy and efficiency of the entire computer vision system. The instance segmentation module typically outputs pixel-level masks (masks) for each target instance, which are then passed as input to the object recognition module for subsequent processing.

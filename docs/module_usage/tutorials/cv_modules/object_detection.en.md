@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Object Detection Module Development Tutorial
+# Object Detection Module Tutorial
 
 ## I. Overview
 The object detection module is a crucial component in computer vision systems, responsible for locating and marking regions containing specific objects in images or videos. The performance of this module directly impacts the accuracy and efficiency of the entire computer vision system. The object detection module typically outputs bounding boxes for the target regions, which are then passed as input to the object recognition module for further processing.

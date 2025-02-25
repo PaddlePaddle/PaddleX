@@ -7,7 +7,7 @@ comments: true
 ## 1. Introduction to General Table Recognition Pipeline
 Table recognition is a technology that automatically identifies and extracts table content and structure from documents or images. It is widely used in data entry, information retrieval, and document analysis. By using computer vision and machine learning algorithms, table recognition can convert complex table information into editable formats, facilitating further processing and analysis of data.
 
-The General Table Recognition Pipeline is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. This pipeline integrates the well-known SLANet and SLANet_plus table recognition models. Based on this pipeline, precise predictions of tables can be achieved, covering a wide range of applications in general, manufacturing, finance, transportation, and other fields. The pipeline also provides flexible service deployment options, supporting various hardware and programming languages for integration. Moreover, it offers secondary development capabilities, allowing you to train and optimize models on your own dataset, which can then be seamlessly integrated.
+The General Table Recognition Pipeline is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. This pipeline integrates the well-known SLANet and SLANet_plus table recognition models. Based on this pipeline, precise predictions of tables can be achieved, covering a wide range of applications in general, manufacturing, finance, transportation, and other fields. The pipeline also provides flexible service deployment options, supporting various hardware and programming languages for integration. Moreover, it offers custom development capabilities, allowing you to train and optimize models on your own dataset, which can then be seamlessly integrated.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/01.png"/>
 <b>The General Table Recognition Pipeline includes essential modules for table structure recognition, text detection, and text recognition, as well as optional modules for layout area detection, document image orientation classification, and text image correction.</b>
@@ -29,7 +29,7 @@ The General Table Recognition Pipeline is designed to solve table recognition ta
 <td>103.08 / 103.08</td>
 <td>197.99 / 197.99</td>
 <td>6.9 M</td>
-<td rowspan="2">SLANet is a self-developed table structure recognition model by the PaddlePaddle Vision Team. This model significantly improves the accuracy and inference speed of table structure recognition by using a CPU-friendly lightweight backbone network PP-LCNet, a high-low feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structure and position information.</td>
+<td rowspan="2">SLANet is a self-developed table structure recognition model by the Baidu PaddleX Team. This model significantly improves the accuracy and inference speed of table structure recognition by using a CPU-friendly lightweight backbone network PP-LCNet, a high-low feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structure and position information.</td>
 </tr>
 <tr>
 <td>SLANet_plus</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_plus_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">Training Model</a></td>
@@ -54,7 +54,7 @@ The General Table Recognition Pipeline is designed to solve table recognition ta
 </thead>
 <tbody>
 <tr>
-<td>PP-OCRv4_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">Training Model</a></td>
+<td>PP-OCRv4_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">Trained Model</a></td>
 <td>82.69</td>
 <td>83.34 / 80.91</td>
 <td>442.58 / 442.58</td>
@@ -62,7 +62,7 @@ The General Table Recognition Pipeline is designed to solve table recognition ta
 <td>The server text detection model of PP-OCRv4, with higher accuracy, suitable for deployment on high-performance servers.</td>
 </tr>
 <tr>
-<td>PP-OCRv4_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">Training Model</a></td>
+<td>PP-OCRv4_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">Trained Model</a></td>
 <td>77.79</td>
 <td>8.79 / 3.13</td>
 <td>51.00 / 28.58</td>
@@ -83,7 +83,7 @@ The General Table Recognition Pipeline is designed to solve table recognition ta
 <th>Introduction</th>
 </tr>
 <tr>
-<td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Training Model</a></td>
+<td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Trained Model</a></td>
 <td>78.20</td>
 <td>4.82 / 4.82</td>
 <td>16.74 / 4.64</td>
@@ -91,7 +91,7 @@ The General Table Recognition Pipeline is designed to solve table recognition ta
 <td rowspan="2">PP-OCRv4 is the next version of the self-developed text recognition model PP-OCRv3 by the PaddlePaddle Vision Team. By introducing data augmentation and GTC-NRTR guidance branches, it further improves text recognition accuracy without changing the model inference speed. This model provides both server and mobile versions to meet industrial needs in different scenarios.</td>
 </tr>
 <tr>
-<td>PP-OCRv4_server_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Training Model</a></td>
+<td>PP-OCRv4_server_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Trained Model</a></td>
 <td>79.20</td>
 <td>6.58 / 6.58</td>
 <td>33.17 / 33.17</td>
@@ -109,7 +109,7 @@ The General Table Recognition Pipeline is designed to solve table recognition ta
 <th>Introduction</th>
 </tr>
 <tr>
-<td>ch_SVTRv2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_SVTRv2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">Training Model</a></td>
+<td>ch_SVTRv2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_SVTRv2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">Trained Model</a></td>
 <td>68.81</td>
 <td>8.08 / 8.08</td>
 <td>50.17 / 42.50</td>
@@ -124,13 +124,13 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team from the
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy(%)</th>
-<th>GPU Inference Time (ms)<br/>[Regular Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)<br/>[Regular Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
 <tr>
-<td>ch_RepSVTR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_RepSVTR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">Training Model</a></td>
+<td>ch_RepSVTR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_RepSVTR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">Trained Model</a></td>
 <td>65.07</td>
 <td>5.93 / 5.93</td>
 <td>20.73 / 7.32</td>
@@ -139,14 +139,53 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team from the
 </tr>
 </table>
 
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>mAP(0.5)（%）</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (M)</th>
+<th>Introduction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-DocLayout-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">Trained Model</a></td>
+<td>90.4</td>
+<td>34.6244 / 10.3945</td>
+<td>510.57 / -</td>
+<td>123.76 M</td>
+<td>A high-precision layout region localization model trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exams, and research reports, based on RT-DETR-L.</td>
+</tr>
+<tr>
+<td>PP-DocLayout-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">Trained Model</a></td>
+<td>75.2</td>
+<td>13.3259 / 4.8685</td>
+<td>44.0680 / 44.0680</td>
+<td>22.578</td>
+<td>A layout region localization model with balanced accuracy and efficiency, trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exams, and research reports, based on PicoDet-L.</td>
+</tr>
+<tr>
+<td>PP-DocLayout-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">Trained Model</a></td>
+<td>70.9</td>
+<td>8.3008 / 2.3794</td>
+<td>10.0623 / 9.9296</td>
+<td>4.834</td>
+<td>A high-efficiency layout region localization model trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exams, and research reports, based on PicoDet-S.</td>
+</tr>
+</tbody>
+</table>
+
 <p><b>Layout Detection Module Models (Optional):</b></p>
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>GPU Inference Time (ms)<br/>[Regular Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)<br/>[Regular Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -219,20 +258,25 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team from the
 </tbody>
 </table>
 
+
 <p><b>Text Image Rectification Module Models (Optional):</b></p>
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>MS-SSIM (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>UVDoc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/UVDoc_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">Training Model</a></td>
+<td>UVDoc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/UVDoc_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">Trained Model</a></td>
 <td>54.40</td>
+<td>-/-</td>
+<td>-/-</td>
 <td>30.3 M</td>
 <td>High-precision text image rectification model.</td>
 </tr>
@@ -245,15 +289,15 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team from the
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top-1 Acc (%)</th>
-<th>GPU Inference Time (ms)<br/>[Regular Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)<br/>[Regular Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Training Model</a></td>
+<td>PP-LCNet_x1_0_doc_ori</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_doc_ori_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_doc_ori_pretrained.pdparams">Trained Model</a></td>
 <td>99.06</td>
 <td>2.31 / 0.43</td>
 <td>3.37 / 1.27</td>
@@ -274,7 +318,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team from the
 <th>Introduction</th>
 </tr>
 <tr>
-<td>PP-OCRv4_server_rec_doc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_doc_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>PP-OCRv4_server_rec_doc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_doc_infer.tar">Inference Model</a>/<a href="">Trained Model</a></td>
 <td>81.53</td>
 <td>6.65 / 2.38</td>
 <td>32.92 / 32.92</td>
@@ -282,7 +326,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team from the
 <td>PP-OCRv4_server_rec_doc is trained on a mixed dataset of more Chinese document data and PP-OCR training data based on PP-OCRv4_server_rec. It has added the ability to recognize some traditional Chinese characters, Japanese, and special characters, and can support the recognition of more than 15,000 characters. In addition to improving the text recognition capability related to documents, it also enhances the general text recognition capability.</td>
 </tr>
 <tr>
-<td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Training Model</a></td>
+<td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Trained Model</a></td>
 <td>78.74</td>
 <td>4.82 / 1.20</td>
 <td>16.74 / 4.64</td>
@@ -291,7 +335,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team from the
 The lightweight recognition model of PP-OCRv4 has high inference efficiency and can be deployed on various hardware devices, including edge devices.</td>
 </tr>
 <tr>
-<td>PP-OCRv4_server_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Training Model</a></td>
+<td>PP-OCRv4_server_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Trained Model</a></td>
 <td>80.61 </td>
 <td>6.58 / 2.43</td>
 <td>33.17 / 33.17</td>
@@ -299,7 +343,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>The server-side model of PP-OCRv4 offers high inference accuracy and can be deployed on various types of servers.</td>
 </tr>
 <tr>
-<td>en_PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/en_PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>en_PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/en_PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="">Trained Model</a></td>
 <td>70.39</td>
 <td>4.81 / 0.75</td>
 <td>16.10 / 5.31</td>
@@ -323,7 +367,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <th>Introduction</th>
 </tr>
 <tr>
-<td>PP-OCRv4_server_rec_doc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_doc_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>PP-OCRv4_server_rec_doc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_doc_infer.tar">Inference Model</a>/<a href="">Trained Model</a></td>
 <td>81.53</td>
 <td>6.65 / 2.38</td>
 <td>32.92 / 32.92</td>
@@ -331,7 +375,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>PP-OCRv4_server_rec_doc is trained on a mixed dataset of more Chinese document data and PP-OCR training data based on PP-OCRv4_server_rec. It has added the recognition capabilities for some traditional Chinese characters, Japanese, and special characters. The number of recognizable characters is over 15,000. In addition to the improvement in document-related text recognition, it also enhances the general text recognition capability.</td>
 </tr>
 <tr>
-<td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Training Model</a></td>
+<td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Trained Model</a></td>
 <td>78.74</td>
 <td>4.82 / 1.20</td>
 <td>16.74 / 4.64</td>
@@ -347,7 +391,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>The server-side model of PP-OCRv4 offers high inference accuracy and can be deployed on various types of servers.</td>
 </tr>
 <tr>
-<td>PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Trained Model</a></td>
 <td>72.96</td>
 <td>5.87 / 1.19</td>
 <td>9.07 / 4.28</td>
@@ -366,7 +410,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <th>Introduction</th>
 </tr>
 <tr>
-<td>ch_SVTRv2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_SVTRv2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">Training Model</a></td>
+<td>ch_SVTRv2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_SVTRv2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">Trained Model</a></td>
 <td>68.81</td>
 <td>8.08 / 2.74</td>
 <td>50.17 / 42.50</td>
@@ -387,7 +431,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <th>Introduction</th>
 </tr>
 <tr>
-<td>ch_RepSVTR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_RepSVTR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">Training Model</a></td>
+<td>ch_RepSVTR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_RepSVTR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">Trained Model</a></td>
 <td>65.07</td>
 <td>5.93 / 1.62</td>
 <td>20.73 / 7.32</td>
@@ -407,7 +451,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <th>Introduction</th>
 </tr>
 <tr>
-<td>en_PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/en_PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>en_PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/en_PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="">Trained Model</a></td>
 <td> 70.39</td>
 <td>4.81 / 0.75</td>
 <td>16.10 / 5.31</td>
@@ -415,7 +459,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>The ultra-lightweight English recognition model trained based on the PP-OCRv4 recognition model supports the recognition of English and numbers.</td>
 </tr>
 <tr>
-<td>en_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/en_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>en_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/en_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Trained Model</a></td>
 <td>70.69</td>
 <td>5.44 / 0.75</td>
 <td>8.65 / 5.57</td>
@@ -435,7 +479,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <th>Introduction</th>
 </tr>
 <tr>
-<td>korean_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/korean_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>korean_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/korean_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Trained Model</a></td>
 <td>60.21</td>
 <td>5.40 / 0.97</td>
 <td>9.11 / 4.05</td>
@@ -443,7 +487,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>The ultra-lightweight Korean recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Korean and numbers. </td>
 </tr>
 <tr>
-<td>japan_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/japan_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>japan_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/japan_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Trained Model</a></td>
 <td>45.69</td>
 <td>5.70 / 1.02</td>
 <td>8.48 / 4.07</td>
@@ -451,7 +495,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>The ultra-lightweight Japanese recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Japanese and numbers.</td>
 </tr>
 <tr>
-<td>chinese_cht_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/chinese_cht_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>chinese_cht_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/chinese_cht_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Trained Model</a></td>
 <td>82.06</td>
 <td>5.90 / 1.28</td>
 <td>9.28 / 4.34</td>
@@ -459,7 +503,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>The ultra-lightweight Traditional Chinese recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Traditional Chinese and numbers.</td>
 </tr>
 <tr>
-<td>te_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/te_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>te_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/te_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Trained Model</a></td>
 <td>95.88</td>
 <td>5.42 / 0.82</td>
 <td>8.10 / 6.91</td>
@@ -467,7 +511,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>The ultra-lightweight Telugu recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Telugu and numbers.</td>
 </tr>
 <tr>
-<td>ka_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ka_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>ka_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ka_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Trained Model</a></td>
 <td>96.96</td>
 <td>5.25 / 0.79</td>
 <td>9.09 / 3.86</td>
@@ -475,7 +519,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>The ultra-lightweight Kannada recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Kannada and numbers.</td>
 </tr>
 <tr>
-<td>ta_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ta_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>ta_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ta_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Trained Model</a></td>
 <td>76.83</td>
 <td>5.23 / 0.75</td>
 <td>10.13 / 4.30</td>
@@ -483,7 +527,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>The ultra-lightweight Tamil recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Tamil and numbers.</td>
 </tr>
 <tr>
-<td>latin_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/latin_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>latin_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/latin_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Trained Model</a></td>
 <td>76.93</td>
 <td>5.20 / 0.79</td>
 <td>8.83 / 7.15</td>
@@ -491,7 +535,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>The ultra-lightweight Latin recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Latin script and numbers.</td>
 </tr>
 <tr>
-<td>arabic_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/arabic_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>arabic_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/arabic_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Trained Model</a></td>
 <td>73.55</td>
 <td>5.35 / 0.79</td>
 <td>8.80 / 4.56</td>
@@ -499,7 +543,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 <td>The ultra-lightweight Arabic script recognition model trained based on the PP-OCRv3 recognition model supports the recognition of Arabic script and numbers.</td>
 </tr>
 <tr>
-<td>cyrillic_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/cyrillic_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>cyrillic_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/cyrillic_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Trained Model</a></td>
 <td>94.28</td>
 <td>5.23 / 0.76</td>
 <td>8.89 / 3.88</td>
@@ -508,7 +552,7 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team of Fudan
 The ultra-lightweight cyrillic alphabet recognition model trained based on the PP-OCRv3 recognition model supports the recognition of cyrillic letters and numbers.</td>
 </tr>
 <tr>
-<td>devanagari_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/devanagari_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
+<td>devanagari_PP-OCRv3_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/devanagari_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Trained Model</a></td>
 <td>96.44</td>
 <td>5.22 / 0.79</td>
 <td>8.56 / 4.06</td>
@@ -518,7 +562,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </table>
 </details>
 
-**Test Environment Description**:
+**Test Environment Description:**
 
 - **Performance Test Environment**
   - **Test Dataset**
@@ -547,23 +591,25 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </details>
 
 ## 2. Quick Start
-The pre-trained models provided by PaddleX can be quickly experienced. You can experience the effect of the general table recognition production line online on the Galaxy Community, or you can experience it locally using the command line or Python.
+The pre-trained models provided by PaddleX can be quickly experienced. You can experience the effect of the general table recognition pipeline online on the Baidu AIStudio Community, or you can experience it locally using the command line or Python.
 
 ### 2.1 Online Experience
-You can [experience online](https://aistudio.baidu.com/community/app/91661/webUI) the effect of the general table recognition production line using the official demo images, for example:
+You can [experience online](https://aistudio.baidu.com/community/app/91661/webUI) the effect of the general table recognition pipeline using the official demo images, for example:
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/02.png"/>
 
-If you are satisfied with the performance of the production line, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the method in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the production line using private data</b>. If you have local training hardware resources, you can start training directly on your local machine; if not, the Galaxy Zero-Code platform provides a one-click training service. No code is required; simply upload your data to start the training task.
+If you are satisfied with the performance of the pipeline, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the method in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the pipeline using private data</b>. If you have local training hardware resources, you can start training directly on your local machine; if not, the Galaxy Zero-Code platform provides a one-click training service. No code is required; simply upload your data to start the training task.
 
 ### 2.2 Local Experience
 Before using the general table recognition production line locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 
 ### 2.1 Command Line Experience
-You can quickly experience the table recognition production line with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg), and replace `--input` with your local path for prediction.
+You can quickly experience the table recognition pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg), and replace `--input` with your local path for prediction.
 
 ```bash
 paddlex --pipeline table_recognition \
+        --use_doc_orientation_classify=False \
+        --use_doc_unwarping=False \
         --input table_recognition.jpg \
         --save_path ./output \
         --device gpu:0
@@ -574,138 +620,37 @@ The content of the parameters can refer to the parameter description in [2.2 Pyt
 After running, the result will be printed to the terminal, as follows:
 
 ```bash
-{'res': {'input_path': 'table_recognition.jpg', 'model_settings': {'use_doc_preprocessor': True, 'use_layout_detection': True, 'use_ocr_model': True}, 'doc_preprocessor_res': {'input_path': '0.jpg', 'model_settings': {'use_doc_orientation_classify': True, 'use_doc_unwarping': True}, 'angle': 0}, 'layout_det_res': {'input_path': None, 'boxes': [{'cls_id': 0, 'label': 'Table', 'score': 0.9196816086769104, 'coordinate': [0, 8.614925, 550.9877, 132]}]}, 'overall_ocr_res': {'input_path': '0.jpg', 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': [array([[232,   0],
-       [318,   1],
-       [318,  24],
-       [232,  21]], dtype=int16), array([[32, 38],
-       [67, 38],
-       [67, 55],
-       [32, 55]], dtype=int16), array([[119,  34],
-       [196,  34],
-       [196,  57],
-       [119,  57]], dtype=int16), array([[222,  29],
-       [396,  31],
-       [396,  60],
-       [222,  58]], dtype=int16), array([[420,  30],
-       [542,  32],
-       [542,  61],
-       [419,  59]], dtype=int16), array([[29, 71],
-       [72, 71],
-       [72, 92],
-       [29, 92]], dtype=int16), array([[287,  72],
-       [329,  72],
-       [329,  93],
-       [287,  93]], dtype=int16), array([[458,  68],
-       [501,  71],
-       [499,  94],
-       [456,  91]], dtype=int16), array([[  9, 101],
-       [ 89, 103],
-       [ 89, 130],
-       [  8, 128]], dtype=int16), array([[139, 105],
-       [172, 105],
-       [172, 126],
-       [139, 126]], dtype=int16), array([[274, 103],
-       [339, 101],
-       [340, 128],
-       [275, 130]], dtype=int16), array([[451, 103],
-       [508, 103],
-       [508, 126],
-       [451, 126]], dtype=int16)], 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], 'text_rec_score_thresh': 0, 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上，没想', '江、江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': [0.9943075180053711, 0.9951075315475464, 0.9907732009887695, 0.9975494146347046, 0.9974043369293213, 0.9983242750167847, 0.991967499256134, 0.9898287653923035, 0.9961177110671997, 0.9975040555000305, 0.9986456632614136, 0.9987970590591431], 'rec_polys': [array([[232,   0],
-       [318,   1],
-       [318,  24],
-       [232,  21]], dtype=int16), array([[32, 38],
-       [67, 38],
-       [67, 55],
-       [32, 55]], dtype=int16), array([[119,  34],
-       [196,  34],
-       [196,  57],
-       [119,  57]], dtype=int16), array([[222,  29],
-       [396,  31],
-       [396,  60],
-       [222,  58]], dtype=int16), array([[420,  30],
-       [542,  32],
-       [542,  61],
-       [419,  59]], dtype=int16), array([[29, 71],
-       [72, 71],
-       [72, 92],
-       [29, 92]], dtype=int16), array([[287,  72],
-       [329,  72],
-       [329,  93],
-       [287,  93]], dtype=int16), array([[458,  68],
-       [501,  71],
-       [499,  94],
-       [456,  91]], dtype=int16), array([[  9, 101],
-       [ 89, 103],
-       [ 89, 130],
-       [  8, 128]], dtype=int16), array([[139, 105],
-       [172, 105],
-       [172, 126],
-       [139, 126]], dtype=int16), array([[274, 103],
-       [339, 101],
-       [340, 128],
-       [275, 130]], dtype=int16), array([[451, 103],
-       [508, 103],
-       [508, 126],
-       [451, 126]], dtype=int16)], 'rec_boxes': array([[232,   0, 318,  24],
-       [ 32,  38,  67,  55],
-       [119,  34, 196,  57],
-       [222,  29, 396,  60],
-       [419,  30, 542,  61],
-       [ 29,  71,  72,  92],
-       [287,  72, 329,  93],
-       [456,  68, 501,  94],
-       [  8, 101,  89, 130],
-       [139, 105, 172, 126],
-       [274, 101, 340, 130],
-       [451, 103, 508, 126]], dtype=int16)}, 'table_res_list': [{'cell_box_list': array([[  8.        ,   9.61492538, 532.        ,  26.61492538],
-       [  3.        ,  27.61492538, 104.        ,  65.61492538],
-       [109.        ,  28.61492538, 215.        ,  66.61492538],
-       [219.        ,  28.61492538, 396.        ,  64.61492538],
-       [396.        ,  29.61492538, 546.        ,  66.61492538],
-       [  1.        ,  65.61492538, 110.        ,  93.61492538],
-       [111.        ,  65.61492538, 215.        ,  94.61492538],
-       [220.        ,  66.61492538, 397.        ,  94.61492538],
-       [398.        ,  67.61492538, 544.        ,  94.61492538],
-       [  2.        ,  98.61492538, 111.        , 131.61492538],
-       [113.        ,  98.61492538, 216.        , 131.61492538],
-       [219.        ,  98.61492538, 400.        , 131.61492538],
-       [403.        ,  99.61492538, 545.        , 130.61492538]]), 'pred_html': '<html><body><table><tr><td colspan="4">CRuncover</td></tr><tr><td>Dres</td><td>连续工作3</td><td>取出来放在网上，没想</td><td>江、江等八大</td></tr><tr><td>Abstr</td><td></td><td>rSrivi</td><td>$709.</td></tr><tr><td>cludingGiv</td><td>2.72</td><td>Ingcubic</td><td>$744.78</td></tr></table></body></html>', 'table_ocr_pred': {'rec_polys': [array([[232,   0],
-       [318,   1],
-       [318,  24],
-       [232,  21]], dtype=int16), array([[32, 38],
-       [67, 38],
-       [67, 55],
-       [32, 55]], dtype=int16), array([[119,  34],
-       [196,  34],
-       [196,  57],
-       [119,  57]], dtype=int16), array([[222,  29],
-       [396,  31],
-       [396,  60],
-       [222,  58]], dtype=int16), array([[420,  30],
-       [542,  32],
-       [542,  61],
-       [419,  59]], dtype=int16), array([[29, 71],
-       [72, 71],
-       [72, 92],
-       [29, 92]], dtype=int16), array([[287,  72],
-       [329,  72],
-       [329,  93],
-       [287,  93]], dtype=int16), array([[458,  68],
-       [501,  71],
-       [499,  94],
-       [456,  91]], dtype=int16), array([[  9, 101],
-       [ 89, 103],
-       [ 89, 130],
-       [  8, 128]], dtype=int16), array([[139, 105],
-       [172, 105],
-       [172, 126],
-       [139, 126]], dtype=int16), array([[274, 103],
-       [339, 101],
-       [340, 128],
-       [275, 130]], dtype=int16), array([[451, 103],
-       [508, 103],
-       [508, 126],
-       [451, 126]], dtype=int16)], 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上，没想', '江、江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': [0.9943075180053711, 0.9951075315475464, 0.9907732009887695, 0.9975494146347046, 0.9974043369293213, 0.9983242750167847, 0.991967499256134, 0.9898287653923035, 0.9961177110671997, 0.9975040555000305, 0.9986456632614136, 0.9987970590591431], 'rec_boxes': [array([232,   0, 318,  24], dtype=int16), array([32, 38, 67, 55], dtype=int16), array([119,  34, 196,  57], dtype=int16), array([222,  29, 396,  60], dtype=int16), array([419,  30, 542,  61], dtype=int16), array([29, 71, 72, 92], dtype=int16), array([287,  72, 329,  93], dtype=int16), array([456,  68, 501,  94], dtype=int16), array([  8, 101,  89, 130], dtype=int16), array([139, 105, 172, 126], dtype=int16), array([274, 101, 340, 130], dtype=int16), array([451, 103, 508, 126], dtype=int16)]}}]}}
+{'res': {'input_path': 'table_recognition.jpg', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True, 'use_ocr_model': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 0, 'label': 'Table', 'score': 0.9922188520431519, 'coordinate': [3.0127392, 0.14648987, 547.5102, 127.72023]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[234,   6],
+        ...,
+        [234,  25]],
+
+       ...,
+
+       [[448, 101],
+        ...,
+        [448, 121]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': array([0.99512607, ..., 0.99844509]), 'rec_polys': array([[[234,   6],
+        ...,
+        [234,  25]],
+
+       ...,
+
+       [[448, 101],
+        ...,
+        [448, 121]]], dtype=int16), 'rec_boxes': array([[234, ...,  25],
+       ...,
+       [448, ..., 121]], dtype=int16)}, 'table_res_list': [{'cell_box_list': array([[  5.01273918, ...,  32.14648987],
+       ...,
+       [405.01273918, ..., 124.14648987]]), 'pred_html': '<html><body><table><tbody><tr><td colspan="4">CRuncover</td></tr><tr><td>Dres</td><td>连续工作3</td><td>取出来放在网上 没想</td><td>江、整江等八大</td></tr><tr><td>Abstr</td><td></td><td>rSrivi</td><td>$709.</td></tr><tr><td>cludingGiv</td><td>2.72</td><td>Ingcubic</td><td>$744.78</td></tr></tbody></table></body></html>', 'table_ocr_pred': {'rec_polys': array([[[234,   6],
+        ...,
+        [234,  25]],
+
+       ...,
+
+       [[448, 101],
+        ...,
+        [448, 121]]], dtype=int16), 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': array([0.99512607, ..., 0.99844509]), 'rec_boxes': array([[234, ...,  25],
+       ...,
+       [448, ..., 121]], dtype=int16)}}]}}
 ```
 
 The running result parameters can be referred to the result explanation in [2.2 Python Script Integration](#22-python-script-integration).
@@ -714,7 +659,7 @@ The visualization results are saved under `save_path`, where the visualization r
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/03.png" />
 
 ### 2.2 Python Script Integration
-* The above command line is for a quick experience to view the results. Generally, in a project, it is often necessary to integrate through code. You can complete the fast inference of the production line with just a few lines of code. The inference code is as follows:
+* The above command line is for a quick experience to view the results. Generally, in a project, it is often necessary to integrate through code. You can complete the fast inference of the pipeline with just a few lines of code. The inference code is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -989,7 +934,7 @@ In the above Python script, the following steps are executed:
 
     - `page_index`: `(Union[int, None])` If the input is a PDF file, it indicates which page of the PDF is currently being processed; otherwise, it is `None`
 
-    - `model_settings`: `(Dict[str, bool])` Model parameters required for the production line configuration
+    - `model_settings`: `(Dict[str, bool])` Model parameters required for the pipeline configuration
 
         - `use_doc_preprocessor`: `(bool)` Controls whether to enable the document preprocessor sub-line
     - `doc_preprocessor_res`: `(Dict[str, Union[str, Dict[str, bool], int]])` Output result of the document preprocessor sub-line. It exists only when `use_doc_preprocessor=True`
@@ -1022,9 +967,9 @@ In the above Python script, the following steps are executed:
     - `rec_boxes`: `(numpy.ndarray)` An array of rectangular bounding boxes for detection boxes, with a shape of (n, 4) and a dtype of int16. Each row represents the coordinates [x_min, y_min, x_max, y_max] of a rectangular box, where (x_min, y_min) is the top-left corner and (x_max, y_max) is the bottom-right corner
 
 - Calling the `save_to_json()` method will save the above content to the specified `save_path`. If it is a directory, the saved path will be `save_path/{your_img_basename}.json`; if it is a file, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` type will be converted to a list format.
-- Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If it is a directory, the saved path will be `save_path/{your_img_basename}_ocr_res_img.{your_img_extension}`; if it is a file, it will be saved directly to that file. (The production line usually contains many result images, so it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten and only the last one will be retained)
-- Calling the `save_to_html()` method will save the above content to the specified `save_path`. If it is a directory, the saved path will be `save_path/{your_img_basename}.html`; if it is a file, it will be saved directly to that file. In the general table recognition production line, the HTML form of the table in the image will be written to the specified HTML file.
-- Calling the `save_to_xlsx()` method will save the above content to the specified `save_path`. If it is a directory, the saved path will be `save_path/{your_img_basename}.xlsx`; if it is a file, it will be saved directly to that file. In the general table recognition production line, the Excel table form of the table in the image will be written to the specified xlsx file.
+- Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If it is a directory, the saved path will be `save_path/{your_img_basename}_ocr_res_img.{your_img_extension}`; if it is a file, it will be saved directly to that file. (The pipeline usually contains many result images, so it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten and only the last one will be retained)
+- Calling the `save_to_html()` method will save the above content to the specified `save_path`. If it is a directory, the saved path will be `save_path/{your_img_basename}.html`; if it is a file, it will be saved directly to that file. In the general table recognition pipeline, the HTML form of the table in the image will be written to the specified HTML file.
+- Calling the `save_to_xlsx()` method will save the above content to the specified `save_path`. If it is a directory, the saved path will be `save_path/{your_img_basename}.xlsx`; if it is a file, it will be saved directly to that file. In the general table recognition pipeline, the Excel table form of the table in the image will be written to the specified xlsx file.
 
 * In addition, it also supports obtaining visualized images with results and prediction results through attributes, as follows:
 
@@ -1048,13 +993,13 @@ In the above Python script, the following steps are executed:
 - The prediction result obtained through the `json` attribute is data of the dict type, and its content is consistent with the content saved by calling the `save_to_json()` method.
 - The prediction result returned by the `img` attribute is data of the dictionary type. The keys are `table_res_img`, `ocr_res_img`, `layout_res_img`, and `preprocessed_img`, and the corresponding values are four `Image.Image` objects, in order: the visualized image of table recognition results, the visualized image of OCR results, the visualized image of layout area detection results, and the visualized image of image preprocessing. If a sub-module is not used, the corresponding result image will not be included in the dictionary.
 
-In addition, you can obtain the configuration file for the general table recognition production line and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
+In addition, you can obtain the configuration file for the general table recognition pipeline and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
 
 ```
 paddlex --get_pipeline_config table_recognition --save_path ./my_path
 ```
 
-If you have obtained the configuration file, you can customize the settings for the general table recognition production line. You just need to modify the value of the `pipeline` parameter in the `create_pipeline` method to the path of the production line configuration file. The example is as follows:
+If you have obtained the configuration file, you can customize the settings for the general table recognition pipeline. You just need to modify the value of the `pipeline` parameter in the `create_pipeline` method to the path of the pipeline configuration file. The example is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -1076,18 +1021,18 @@ for res in output:
 
 ```
 
-<b>Note:</b> The parameters in the configuration file are the initialization parameters for the production line. If you want to change the general table recognition production line initialization parameters, you can directly modify the parameters in the configuration file and load the configuration file for prediction. At the same time, CLI prediction also supports passing in a configuration file, and you can specify the path of the configuration file with `--pipeline`.
+<b>Note:</b> The parameters in the configuration file are the initialization parameters for the pipeline. If you want to change the general table recognition pipeline initialization parameters, you can directly modify the parameters in the configuration file and load the configuration file for prediction. At the same time, CLI prediction also supports passing in a configuration file, and you can specify the path of the configuration file with `--pipeline`.
 
 ## 3. Development Integration/Deployment
-If the production line meets your requirements for inference speed and accuracy, you can directly proceed with development integration/deployment.
+If the pipeline meets your requirements for inference speed and accuracy, you can directly proceed with development integration/deployment.
 
-If you need to apply the production line directly in your Python project, you can refer to the example code in [2.2 Python Script Method](#22-python-script-method).
+If you need to apply the pipeline directly in your Python project, you can refer to the example code in [2.2 Python Script Method](#22-python-script-method).
 
 In addition, PaddleX also provides three other deployment methods, which are detailed as follows:
 
 🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have strict performance requirements (especially response speed) for deployment strategies to ensure efficient system operation and smooth user experience. To this end, PaddleX provides a high-performance inference plugin, which aims to deeply optimize the performance of model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common form of deployment in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports multiple production line service-oriented deployment solutions. For detailed production line service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving.en.md).
+☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common form of deployment in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports multiple pipeline service-oriented deployment solutions. For detailed pipeline service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
 Below are the API references for basic service-oriented deployment and multi-language service invocation examples:
 
@@ -1362,13 +1307,13 @@ for i, res in enumerate(result["tableRecResults"]):
 <br/>
 
 📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
-You can choose the appropriate deployment method for your model production line according to your needs, and then proceed with the subsequent AI application integration.
+You can choose the appropriate deployment method for your model pipeline according to your needs, and then proceed with the subsequent AI application integration.
 
-## 4. Secondary Development
-If the default model weights provided by the general table recognition production line are not satisfactory in terms of accuracy or speed in your scenario, you can try to further <b>fine-tune</b> the existing model using <b>your own specific domain or application scenario data</b> to improve the recognition performance of the general table recognition production line in your scenario.
+## 4. Custom Development
+If the default model weights provided by the general table recognition pipeline are not satisfactory in terms of accuracy or speed in your scenario, you can try to further <b>fine-tune</b> the existing model using <b>your own specific domain or application scenario data</b> to improve the recognition performance of the general table recognition pipeline in your scenario.
 
 ### 4.1 Model Fine-tuning
-Since the general table recognition production line consists of several modules, if the performance of the model production line does not meet expectations, the issue may originate from any one of these modules. You can analyze the images with poor recognition results to determine which module is problematic, and then refer to the corresponding fine-tuning tutorial links in the table below for model fine-tuning.
+Since the general table recognition pipeline consists of several modules, if the performance of the model pipeline does not meet expectations, the issue may originate from any one of these modules. You can analyze the images with poor recognition results to determine which module is problematic, and then refer to the corresponding fine-tuning tutorial links in the table below for model fine-tuning.
 
 <table>
 <thead>
@@ -1473,14 +1418,17 @@ Subsequently, refer to the command line method or Python script method in [2.2 L
 ## 5. Multi-Hardware Support
 PaddleX supports a variety of mainstream hardware devices such as NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware.
 
-For example, if you use Ascend NPU for OCR production inference, the CLI command is:
+For example, if you use Ascend NPU for table recognition production inference, the CLI command is:
 
 ```bash
 paddlex --pipeline table_recognition \
+        --use_doc_orientation_classify=False \
+        --use_doc_unwarping=False \
         --input table_recognition.jpg \
         --save_path ./output \
         --device npu:0
 ```
+
 Of course, you can also specify the hardware device when calling `create_pipeline()` or `predict()` in the Python script.
 
 If you want to use the universal table recognition pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).

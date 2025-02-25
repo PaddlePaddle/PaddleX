@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Time Series Anomaly Detection Module Development Tutorial
+# Time Series Anomaly Detection Module Tutorial
 
 ## I. Overview
 Time series anomaly detection focuses on identifying abnormal points or periods in time series data that do not conform to expected patterns, trends, or periodic regularities. These anomalies can be caused by system failures, external shocks, data entry errors, or rare events, and are of great significance for timely response, risk assessment, and business decision-making.

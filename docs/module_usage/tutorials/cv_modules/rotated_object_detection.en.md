@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Rotated Object Detection Module Usage Tutorial
+# Rotated Object Detection Module Tutorial
 
 ## I. Overview
 Rotated object detection is a derivative of the object detection module, specifically designed for detecting rotated objects. Rotated bounding boxes (Rotated Bounding Boxes) are commonly used for detecting rectangles with angle information, where the width and height of the rectangle are no longer parallel to the image coordinate axes. Compared to horizontal bounding boxes, rotated bounding boxes generally include less background information. Rotated box detection is often used in scenarios such as remote sensing.

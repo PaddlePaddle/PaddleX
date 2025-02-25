@@ -2,10 +2,10 @@
 comments: true
 ---
 
-# Open Vocabulary Detection Pipeline User Guide
+# Open Vocabulary Detection Pipeline Tutorial
 
 ## 1. Introduction to Open Vocabulary Detection Pipeline
-Open vocabulary object detection is an advanced object detection technology that aims to overcome the limitations of traditional object detection. Traditional methods can only recognize objects of predefined categories, while open vocabulary object detection allows the model to recognize objects that did not appear during training. By combining natural language processing techniques, new categories can be defined using text descriptions, enabling the model to recognize and locate these new objects. This makes object detection more flexible and generalizable, with significant application prospects. This pipeline also provides flexible service deployment options, supporting multiple programming languages on various hardware. Currently, this pipeline does not support secondary development of the model, but it is planned to be supported in the future.
+Open vocabulary object detection is an advanced object detection technology that aims to overcome the limitations of traditional object detection. Traditional methods can only recognize objects of predefined categories, while open vocabulary object detection allows the model to recognize objects that did not appear during training. By combining natural language processing techniques, new categories can be defined using text descriptions, enabling the model to recognize and locate these new objects. This makes object detection more flexible and generalizable, with significant application prospects. This pipeline also provides flexible service deployment options, supporting multiple programming languages on various hardware. Currently, this pipeline does not support custom development of the model, but it is planned to be supported in the future.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/open_vocabulary_detection/open_vocabulary_detection_res.jpg">
 
@@ -897,7 +897,7 @@ print_r($result[&quot;detectedObjects&quot;]);
 📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.md).
 You can choose the appropriate method to deploy the model pipeline according to your needs, and then proceed with subsequent AI application integration.
 
-## 4. Secondary Development
+## 4. Custom Development
 The current pipeline temporarily does not support fine-tuning training, only inference integration is supported. Fine-tuning training for this pipeline is planned to be supported in the future.
 
 ## 5. Multi-Hardware Support

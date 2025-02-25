@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Semantic Segmentation Module Development Tutorial
+# Semantic Segmentation Module Tutorial
 
 ## I. Overview
 Semantic segmentation is a technique in computer vision that classifies each pixel in an image, dividing the image into distinct semantic regions, with each region corresponding to a specific category. This technique generates detailed segmentation maps, clearly revealing objects and their boundaries in the image, providing powerful support for image analysis and understanding.

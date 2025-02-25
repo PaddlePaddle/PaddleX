@@ -1066,13 +1066,13 @@ pprint.pp(result_infer["faces"])
 You can choose the appropriate method to deploy the model pipeline according to your needs, and then proceed with subsequent AI application integration.
 
 
-## 4. Secondary Development
+## 4. Custom Development
 If the default model weights provided by the face recognition pipeline do not meet your accuracy or speed requirements in your scenario, you can try further <b>fine-tuning</b> the existing model using <b>your own specific domain or application data</b> to improve the recognition performance of the pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
 Since the face recognition pipeline includes two modules (face detection and face feature), the unsatisfactory performance of the model pipeline may come from either module.
 
-You can analyze the images with poor recognition performance. If you find that many faces are not detected during the analysis, it may indicate a deficiency in the face detection model. You need to refer to the [Face Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/face_detection.en.md) and the [Secondary Development](../../../module_usage/tutorials/cv_modules/face_detection.en.md) section to fine-tune the face detection model using your private dataset. If there are matching errors in the detected faces, it indicates that the face feature module needs further improvement. You need to refer to the [Face Feature Module Development Tutorial](../../../module_usage/tutorials/cv_modules/face_feature.md) and the [Secondary Development](../../../module_usage/tutorials/cv_modules/face_feature.md) section to fine-tune the face feature module.
+You can analyze the images with poor recognition performance. If you find that many faces are not detected during the analysis, it may indicate a deficiency in the face detection model. You need to refer to the [Face Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/face_detection.en.md) and the [Custom Development](../../../module_usage/tutorials/cv_modules/face_detection.en.md) section to fine-tune the face detection model using your private dataset. If there are matching errors in the detected faces, it indicates that the face feature module needs further improvement. You need to refer to the [Face Feature Module Development Tutorial](../../../module_usage/tutorials/cv_modules/face_feature.md) and the [Custom Development](../../../module_usage/tutorials/cv_modules/face_feature.md) section to fine-tune the face feature module.
 
 ### 4.2 Model Application
 After completing the fine-tuning training with your private dataset, you will obtain the local model weight file.

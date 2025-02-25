@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Tutorial for Multilingual Speech Recognition Module
+# Multilingual Speech Recognition Module Tutorial
 
 ## I. Overview
 Speech recognition is an advanced tool that can automatically convert human-spoken multiple languages into corresponding texts. This technology also plays an important role in various fields such as intelligent customer service, voice assistants, and meeting minutes. Multilingual speech recognition can support automatic language retrieval and recognize speech in multiple different languages.

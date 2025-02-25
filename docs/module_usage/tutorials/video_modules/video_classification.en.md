@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Video Classification Module Development Tutorial
+# Video Classification Module Tutorial
 
 ## I. Overview
 The Video Classification Module is a crucial component in a computer vision system, responsible for categorizing input videos. The performance of this module directly impacts the accuracy and efficiency of the entire computer vision system. The Video Classification Module typically receives videos as input and then, through deep learning or other machine learning algorithms, classifies them into predefined categories based on their characteristics and content. For example, in an action recognition system, the Video Classification Module may need to classify input videos into categories such as "Abseiling," "Air Drumming," "Answering Questions," etc. The classification results of the Video Classification Module are output for use by other modules or systems.

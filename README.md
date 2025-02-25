@@ -669,7 +669,7 @@ for res in output:
 
 | 产线名称           | 对应参数                           | 详细说明                                                                                                                                                         |
 |--------------------|------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 文档场景信息抽取v4   | `PP-ChatOCRv4-doc`                 | [文档场景信息抽取v3产线Python脚本使用说明](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.html#22-本地体验) |
+| 文档场景信息抽取v4   | `PP-ChatOCRv4-doc`                 | [文档场景信息抽取v4产线Python脚本使用说明](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.html#22-本地体验) |
 | 文档场景信息抽取v3   | `PP-ChatOCRv3-doc`                 | [文档场景信息抽取v3产线Python脚本使用说明](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.html#22-本地体验) |
 | 通用图像分类       | `image_classification`             | [通用图像分类产线Python脚本使用说明](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/image_classification.html#222-python脚本方式集成)                                |
 | 通用目标检测       | `object_detection`                 | [通用目标检测产线Python脚本使用说明](https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/cv_pipelines/object_detection.html#222-python脚本方式集成)                                    |

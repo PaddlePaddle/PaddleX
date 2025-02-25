@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Vehicle Attribute Recognition Module Development Tutorial
+# Vehicle Attribute Recognition Module Tutorial
 
 ## I. Overview
 Vehicle attribute recognition is a crucial component in computer vision systems. Its primary task is to locate and label specific attributes of vehicles in images or videos, such as vehicle type, color, license plate number, etc. The performance of this module directly impacts the accuracy and efficiency of the entire computer vision system. The vehicle attribute recognition module typically outputs bounding boxes (Bounding Boxes) containing vehicle attribute information, which are then passed as input to other modules (e.g., vehicle tracking, vehicle re-identification) for subsequent processing.

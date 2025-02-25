@@ -465,12 +465,12 @@ print(result["detectedObjects"])
 
 You can choose an appropriate deployment method for your model pipeline based on your needs, and then proceed with subsequent AI application integration.
 
-## 4. Secondary Development
+## 4. Custom Development
 If the default model weights provided by the 3D multi-modal fusion detection pipeline do not meet your requirements for accuracy or speed in your scenario, you can attempt to further <b>fine-tune</b> the existing model using <b>your own data from specific domains or application scenarios</b> to improve the recognition performance of the 3D multi-modal fusion detection pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
 
-Refer to the [Secondary Development](../../../module_usage/tutorials/cv_modules/3d_bev_detection.md#四二次开发) section in the [3D Multi-modal Fusion Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/3d_bev_detection.md) and use your private dataset to fine-tune the model.
+Refer to the [Custom Development](../../../module_usage/tutorials/cv_modules/3d_bev_detection.md#四二次开发) section in the [3D Multi-modal Fusion Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/3d_bev_detection.md) and use your private dataset to fine-tune the model.
 
 ### 4.2 Model Application
 After completing fine-tuning training using your private dataset, you will obtain local model weight files.

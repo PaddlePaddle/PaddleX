@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Text Image Unwarping Module Development Tutorial
+# Text Image Unwarping Module Tutorial
 
 ## I. Overview
 The primary purpose of Text Image Unwarping is to perform geometric transformations on images in order to correct issues such as document distortion, tilt, perspective deformation, etc., enabling more accurate recognition by subsequent text recognition modules.

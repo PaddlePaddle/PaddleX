@@ -2,12 +2,12 @@
 comments: true
 ---
 
-# General OCR pipeline Usage Guide
+# General OCR Pipeline Tutorial
 
 ## 1. Introduction to the OCR pipeline
 OCR (Optical Character Recognition) is a technology that converts text in images into editable text. It is widely used in document digitization, information extraction, and data processing. OCR can recognize printed text, handwritten text, and even certain types of fonts and symbols.
 
-The General OCR pipeline is designed to solve text recognition tasks, extracting text information from images and outputting it in text form. This pipeline integrates the well-known end-to-end OCR series systems, PP-OCRv3 and PP-OCRv4, supporting recognition of over 80 languages. Additionally, it includes functions for image orientation correction and distortion correction. Based on this pipeline, precise text content prediction at the millisecond level on CPUs can be achieved, covering a wide range of applications including general, manufacturing, finance, and transportation sectors. The pipeline also provides flexible deployment options, supporting calls in various programming languages on multiple hardware platforms. Moreover, it offers the capability for secondary development, allowing you to train and optimize on your own dataset. The trained models can also be seamlessly integrated.
+The General OCR pipeline is designed to solve text recognition tasks, extracting text information from images and outputting it in text form. This pipeline integrates the well-known end-to-end OCR series systems, PP-OCRv3 and PP-OCRv4, supporting recognition of over 80 languages. Additionally, it includes functions for image orientation correction and distortion correction. Based on this pipeline, precise text content prediction at the millisecond level on CPUs can be achieved, covering a wide range of applications including general, manufacturing, finance, and transportation sectors. The pipeline also provides flexible deployment options, supporting calls in various programming languages on multiple hardware platforms. Moreover, it offers the capability for custom development, allowing you to train and optimize on your own dataset. The trained models can also be seamlessly integrated.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/ocr/01.png"/>
 
@@ -1090,7 +1090,7 @@ for i, res in enumerate(result["ocrResults"]):
 📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on user devices, allowing them to process data locally without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed instructions, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
 You can choose the appropriate deployment method based on your needs to integrate the model pipeline into your AI applications.
 
-## 4. Secondary Development
+## 4. Custom Development
 If the default model weights provided by the General OCR pipeline do not meet your requirements in terms of accuracy or speed, you can attempt to <b>fine-tune</b> the existing models using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the General OCR pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning

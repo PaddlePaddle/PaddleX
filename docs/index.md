@@ -1493,9 +1493,9 @@ for res in output:
             use_textline_orientation=False,
         )
         for res in output:
-            res.print() 
-            res.save_to_json(save_path="output") 
-            res.save_to_markdown(save_path="output") 
+            res.print()
+            res.save_to_json(save_path="output")
+            res.save_to_markdown(save_path="output")
 
         ```
 
@@ -1835,7 +1835,7 @@ for res in output:
 
     ---
 
-    文档场景信息抽取v4（PP-ChatOCRv4）是飞桨特色的文档和图像智能分析解决方案，结合了 LLM、MLLM 和 OCR 技术，一站式解决版面分析、生僻字、多页 pdf、表格、印章识别等常见的复杂文档信息抽取难点问题。
+    文档场景信息抽取v4（PP-ChatOCRv4-doc）是飞桨特色的文档和图像智能分析解决方案，结合了 LLM、MLLM 和 OCR 技术，一站式解决版面分析、生僻字、多页 pdf、表格、印章识别等常见的复杂文档信息抽取难点问题。
 
     [:octicons-arrow-right-24: 教程](pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.md)
 

@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Time Series Forecasting Module Development Tutorial
+# Time Series Forecasting Module Tutorial
 
 ## I. Overview
 Time series forecasting aims to predict the possible values or states at a future point in time or within a future time period by analyzing patterns, trends, periodicity, and other characteristics in historical data. This helps enterprises and organizations make more accurate decisions, optimize resource allocation, reduce risks, and seize potential market opportunities. These time series data typically originate from various sensors, economic activities, social behaviors, and other real-world application scenarios. For example, stock prices, temperature changes, website traffic, sales data, and the like are all typical examples of time series data.
