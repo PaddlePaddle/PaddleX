@@ -310,7 +310,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                     del overall_ocr_res["rec_polys"][matched_idx]
                     del overall_ocr_res["rec_scores"][matched_idx]
 
-                if sub_ocr_res["rec_boxes"] != []:
+                if sub_ocr_res["rec_boxes"] is not []:
                     overall_ocr_res["dt_polys"].extend(sub_ocr_res["dt_polys"])
                     overall_ocr_res["rec_texts"].extend(sub_ocr_res["rec_texts"])
                     overall_ocr_res["rec_boxes"] = np.concatenate(
