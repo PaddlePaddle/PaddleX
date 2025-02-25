@@ -13,6 +13,7 @@ SubModules:
     model_name: PP-DocLayout-L
     model_dir: null
     threshold: 
+      0: 0.3
       7: 0.3
     layout_nms: True
     layout_unclip_ratio: 1.0
