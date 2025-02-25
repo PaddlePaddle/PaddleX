@@ -103,29 +103,7 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 > ❗ The above list includes the <b>3 core models</b> that are key supported by the text recognition module. The module actually supports a total of <b>6 full models</b>, including several predefined models with different categories. The complete model list is as follows:
 
 <details><summary> 👉 Details of Model List</summary>
-<table>
-<thead>
-<tr>
-<th>Model</th><th>Model Download Link</th>
-<th>mAP(0.5) (%)</th>
-<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
-<th>Introduction</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PicoDet_layout_1x_table</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_table_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">Training Model</a></td>
-<td>97.5</td>
-<td>8.02 / 3.09</td>
-<td>23.70 / 20.41</td>
-<td>7.4 M</td>
-<td>A high-efficiency layout area localization model trained on a self-built dataset using PicoDet-1x, capable of detecting table regions.</td>
-</tr>
-</tbody></table>
 
-* <b>3-Class Layout Detection Model, including Table, Image, and Stamp</b>
 <table>
 <thead>
 <tr>
