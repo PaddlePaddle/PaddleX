@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Tutorial on Using the Human Keypoint Detection Module
+# Human Keypoint Detection Module Tutorial
 
 ## I. Overview
 Human keypoint detection is an important task in the field of computer vision, aiming to identify the specific keypoint locations of the human body in images or videos. By detecting these keypoints, various applications such as pose estimation, action recognition, human-computer interaction, and animation generation can be achieved. Human keypoint detection has a wide range of applications in augmented reality, virtual reality, motion capture, and other fields.

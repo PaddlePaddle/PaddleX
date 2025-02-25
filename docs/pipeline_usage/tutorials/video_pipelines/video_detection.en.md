@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# General Video Detection Pipeline User Guide
+# General Video Detection Pipeline Tutorial
 
 ## 1. Introduction to General Video Detection Pipeline
 
@@ -548,11 +548,11 @@ print(result["frames"])
 📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on the user's device, allowing it to process data locally without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed procedures on edge deployment, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
 You can choose the appropriate method to deploy the model pipeline according to your needs and proceed with subsequent AI application integration.
 
-## 4. Secondary Development
+## 4. Custom Development
 If the default model weights provided by the general video detection pipeline are not satisfactory in terms of accuracy or speed for your specific scenario, you can attempt to <b>fine-tune</b> the existing model using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the general video detection pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the general video detection pipeline includes a video detection module, if the performance of the pipeline does not meet your expectations, you need to refer to the [Secondary Development](../../../module_usage/tutorials/video_modules/video_detection.en.md) section in the [Video Detection Module Development Tutorial](../../../module_usage/tutorials/video_modules/video_detection.en.md) and fine-tune the video detection model using your private dataset.
+Since the general video detection pipeline includes a video detection module, if the performance of the pipeline does not meet your expectations, you need to refer to the [Custom Development](../../../module_usage/tutorials/video_modules/video_detection.en.md) section in the [Video Detection Module Development Tutorial](../../../module_usage/tutorials/video_modules/video_detection.en.md) and fine-tune the video detection model using your private dataset.
 
 ### 4.2 Model Application
 After completing the fine-tuning with your private dataset, you will obtain the local model weight file.

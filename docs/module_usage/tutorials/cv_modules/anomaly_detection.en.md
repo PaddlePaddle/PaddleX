@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Unsupervised Anomaly Detection Module Development Tutorial
+# Unsupervised Anomaly Detection Module Tutorial
 
 ## I. Overview
 Unsupervised anomaly detection is a technology that automatically identifies and detects anomalies or rare samples that are significantly different from the majority of data in a dataset, without labels or with a small amount of labeled data. This technology is widely used in many fields such as industrial manufacturing quality control and medical diagnosis.

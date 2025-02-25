@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Document Image Orientation Classification Module Development Tutorial
+# Document Image Orientation Classification Module Tutorial
 
 ## I. Overview
 The document image orientation classification module is aim to distinguish the orientation of document images and correct them through post-processing. In processes such as document scanning and ID card photography, capturing devices are sometimes rotated to obtain clearer images, resulting in images with varying orientations. Standard OCR pipelines cannot effectively handle such data. By utilizing image classification technology, we can pre-judge the orientation of document or ID card images containing text regions and adjust their orientations, thereby enhancing the accuracy of OCR processing.
@@ -15,7 +15,7 @@ The document image orientation classification module is aim to distinguish the o
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top-1 Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>

@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Table Classification Module Usage Tutorial
+# Table Classification Module Tutorial
 
 ## I. Overview
 The table classification module is a key component of a computer vision system, responsible for classifying input table images. The performance of this module directly affects the accuracy and efficiency of the entire table recognition process. The table classification module typically receives table images as input and then, through deep learning algorithms, classifies them into predefined categories based on the characteristics and content of the images, such as wired tables and wireless tables. The classification results of the table classification module are provided as output for use in table recognition-related pipelines.

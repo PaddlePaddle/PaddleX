@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Seal Text Detection Module Development Tutorial
+# Seal Text Detection Module Tutorial
 
 ## I. Overview
 The seal text detection module typically outputs multi-point bounding boxes around text regions, which are then passed as inputs to the distortion correction and text recognition modules for subsequent processing to identify the textual content of the seal. Recognizing seal text is an integral part of document processing and finds applications in various scenarios such as contract comparison, inventory access auditing, and invoice reimbursement verification. The seal text detection module serves as a subtask within OCR (Optical Character Recognition), responsible for locating and marking the regions containing seal text within an image. The performance of this module directly impacts the accuracy and efficiency of the entire seal text OCR system.
@@ -15,7 +15,7 @@ The seal text detection module typically outputs multi-point bounding boxes arou
 <tr>
 <th>Model Name</th><th>Model Download Link</th>
 <th>Hmean（%）</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>

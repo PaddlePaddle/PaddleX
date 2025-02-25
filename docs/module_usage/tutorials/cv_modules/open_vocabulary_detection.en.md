@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Open-Vocabulary Object Detection Module Usage Tutorial
+# Open-Vocabulary Object Detection Module Tutorial
 
 ## I. Overview
 Open-vocabulary object detection is an advanced object detection technology aimed at overcoming the limitations of traditional object detection. Traditional methods can only recognize objects within predefined categories, while open-vocabulary object detection allows models to identify objects not seen during training. By integrating natural language processing techniques and using text descriptions to define new categories, the model can recognize and locate these new objects. This makes object detection more flexible and generalizable, with significant application potential.

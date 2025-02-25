@@ -12,7 +12,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Description</th>
@@ -71,7 +71,7 @@ Object detection aims to identify the categories and locations of multiple objec
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -1230,11 +1230,11 @@ print_r($result["detectedObjects"]);
 📱 <b>Edge Deployment</b>: Edge deployment is a method where computation and data processing functions are placed on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment processes, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
 You can choose the appropriate method to deploy the model pipeline based on your needs for subsequent AI application integration.
 
-## 4. Secondary Development
+## 4. Custom Development
 If the default model weights provided by the general object detection pipeline do not meet your accuracy or speed requirements in your scenario, you can try further <b>fine-tuning</b> the existing model using <b>your own specific domain or application scenario data</b> to improve the recognition performance of the general object detection pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the general object detection pipeline includes an object detection module, if the performance of the model pipeline is not as expected, you need to refer to the [Secondary Development](../../../module_usage/tutorials/cv_modules/object_detection.en.md#iv-custom-development) section in the [Object Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/object_detection.en.md) to fine-tune the object detection model using your private dataset.
+Since the general object detection pipeline includes an object detection module, if the performance of the model pipeline is not as expected, you need to refer to the [Custom Development](../../../module_usage/tutorials/cv_modules/object_detection.en.md#iv-custom-development) section in the [Object Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/object_detection.en.md) to fine-tune the object detection model using your private dataset.
 
 ### 4.2 Model Application
 After completing the fine-tuning training with your private dataset, you will obtain a local model weight file.

@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Multilingual Speech Recognition pipeline User Guide
+# Multilingual Speech Recognition pipeline Tutorial
 
 ## 1. Introduction to Multilingual Speech Recognition pipeline
 Speech recognition is an advanced tool that can automatically convert spoken languages into corresponding text or commands. This technology plays an important role in various fields such as intelligent customer service, voice assistants, and meeting records. Multilingual speech recognition supports automatic language detection and recognition of multiple languages.
@@ -320,9 +320,9 @@ print(result[&quot;categories&quot;])
 <details><summary>C++</summary>
 
 <pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &quot;cpp-httplib/httplib.h&quot; // <url id="cu9qjr7f2ena5466v3o0" type="url" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" wc="15064">https://github.com/Huiyicc/cpp-httplib</url> 
-#include &quot;nlohmann/json.hpp&quot; // <url id="cu9qjr7f2ena5466v3og" type="url" status="parsed" title="GitHub - nlohmann/json: JSON for Modern C++" wc="80311">https://github.com/nlohmann/json</url> 
-#include &quot;base64.hpp&quot; // <url id="cu9qjr7f2ena5466v3p0" type="url" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" wc="2293">https://github.com/tobiaslocker/base64</url> 
+#include &quot;cpp-httplib/httplib.h&quot; // <url id="cu9qjr7f2ena5466v3o0" type="url" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" wc="15064">https://github.com/Huiyicc/cpp-httplib</url>
+#include &quot;nlohmann/json.hpp&quot; // <url id="cu9qjr7f2ena5466v3og" type="url" status="parsed" title="GitHub - nlohmann/json: JSON for Modern C++" wc="80311">https://github.com/nlohmann/json</url>
+#include &quot;base64.hpp&quot; // <url id="cu9qjr7f2ena5466v3p0" type="url" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" wc="2293">https://github.com/tobiaslocker/base64</url>
 
 int main() {
     httplib::Client client(&quot;localhost:8080&quot;);
@@ -878,7 +878,7 @@ print(result)
 📱 <b>Edge Deployment</b>: Edge deployment is a method that places computational and data processing capabilities directly on user devices, allowing them to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
 You can choose the appropriate deployment method based on your needs to integrate the model into your pipeline and proceed with subsequent AI application integration.
 
-## 4. Secondary Development
+## 4. Custom Development
 If the default model weights provided by the general video classification pipeline are not satisfactory in terms of accuracy or speed for your specific scenario, you can attempt to <b>fine-tune</b> the existing model using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the general video classification pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning

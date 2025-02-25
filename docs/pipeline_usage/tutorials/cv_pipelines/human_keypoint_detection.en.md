@@ -1,7 +1,7 @@
 ---
 comments: true
 ---
-# Human Keypoint Detection Pipeline User Guide
+# Human Keypoint Detection Pipeline Tutorial
 
 ## 1. Introduction to Human Keypoint Detection Pipeline
 
@@ -19,7 +19,7 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 <th>Model</th>
 <th>mAP(0.5:0.95)</th>
 <th>mAP(0.5)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Description</th>
@@ -50,7 +50,7 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 <th>Solution</th>
 <th>Input Size</th>
 <th>AP(0.5:0.95)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Description</th>
@@ -719,7 +719,7 @@ print(result["persons"])
 You can choose the appropriate deployment method based on your needs to integrate the AI application subsequently.
 
 
-## 4. Secondary Development
+## 4. Custom Development
 
 If the default model weights provided by the human keypoint detection pipeline do not meet your accuracy or speed requirements in your scenario, you can try further <b>fine-tuning</b> the existing model using <b>your own specific domain or application data</b> to improve the recognition performance of the pipeline in your scenario.
 
@@ -727,7 +727,7 @@ If the default model weights provided by the human keypoint detection pipeline d
 
 Since the human keypoint detection pipeline consists of two modules (pedestrian detection module and human keypoint detection module), the suboptimal performance of the model pipeline may stem from either module.
 
-You can analyze the images with poor recognition performance. If you find that many pedestrian targets are not detected during the analysis, it may indicate a deficiency in the pedestrian detection model. You need to refer to the [Pedestrian Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/human_detection.en.md) in the [Secondary Development](../../../module_usage/tutorials/cv_modules/human_detection.en.md) section to fine-tune the pedestrian detection model using your private dataset. If keypoint detection errors occur in detected pedestrians, it indicates that the keypoint detection model needs further improvement. You need to refer to the [Keypoint Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/human_keypoint_detection.en.md) in the [Secondary Development](../../../module_usage/tutorials/cv_modules/human_keypoint_detection.en.md#secondary-development) section to fine-tune the keypoint detection model.
+You can analyze the images with poor recognition performance. If you find that many pedestrian targets are not detected during the analysis, it may indicate a deficiency in the pedestrian detection model. You need to refer to the [Pedestrian Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/human_detection.en.md) in the [Custom Development](../../../module_usage/tutorials/cv_modules/human_detection.en.md) section to fine-tune the pedestrian detection model using your private dataset. If keypoint detection errors occur in detected pedestrians, it indicates that the keypoint detection model needs further improvement. You need to refer to the [Keypoint Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/human_keypoint_detection.en.md) in the [Custom Development](../../../module_usage/tutorials/cv_modules/human_keypoint_detection.en.md#secondary-development) section to fine-tune the keypoint detection model.
 
 ### 4.2 Model Application
 

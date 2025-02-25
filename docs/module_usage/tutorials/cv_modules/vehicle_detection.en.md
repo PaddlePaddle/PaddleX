@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Vehicle Detection Module Development Tutorial
+# Vehicle Detection Module Tutorial
 
 ## I. Overview
 Vehicle detection is a subtask of object detection, specifically referring to the use of computer vision technology to determine the presence of vehicles in images or videos and provide specific location information for each vehicle (such as the coordinates of the bounding box). This information is of great significance for various fields such as intelligent transportation systems, autonomous driving, and video surveillance.

@@ -13,7 +13,7 @@ Semantic segmentation is a computer vision technique that aims to assign each pi
 <tr>
 <th>Model Name</th><th>Model Download Link</th>
 <th>mIoU (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 </tr>
@@ -44,7 +44,7 @@ Semantic segmentation is a computer vision technique that aims to assign each pi
 <tr>
 <th>Model Name</th><th>Model Download Link</th>
 <th>mIoU (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 </tr>

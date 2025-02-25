@@ -15,7 +15,7 @@ Face detection is a fundamental task in object detection, aiming to automaticall
 <tr>
 <th style="text-align: center;">Model</th><th>Model Download Link</th>
 <th style="text-align: center;">AP (%)<br/>Easy/Medium/Hard</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th style="text-align: center;">Model Size (M)</th>
 <th style="text-align: center;">Description</th>

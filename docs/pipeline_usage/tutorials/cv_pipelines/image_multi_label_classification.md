@@ -56,7 +56,7 @@ comments: true
 **测试环境说明：**
 
 - **性能测试环境**
-  - **测试数据集**：<a href="https://cocodataset.org/#home">COCO2017</a><b> 的多标签分类任务
+  - **测试数据集**：<a href="https://cocodataset.org/#home">COCO2017</a><b> 的多标签分类任务</b>
   - **硬件配置**：
     - GPU：NVIDIA Tesla T4
     - CPU：Intel Xeon Gold 6271C @ 2.60GHz

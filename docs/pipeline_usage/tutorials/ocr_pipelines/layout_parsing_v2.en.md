@@ -2,10 +2,10 @@
 comments: true
 ---
 
-# Universal Layout Analysis v2 pipeline User Guide
+# Universal Layout Analysis v2 Pipeline Tutorial
 
 ## 1. Introduction to Universal Layout Analysis v2 pipeline
-Layout analysis is a technology that extracts structured information from document images, primarily used to convert complex document layouts into machine-readable data formats. This technology is widely applied in document management, information extraction, and data digitization. By combining Optical Character Recognition (OCR), image processing, and machine learning algorithms, layout analysis can identify and extract text blocks, headings, paragraphs, images, tables, and other layout elements from documents. The process typically involves three main steps: layout analysis, element analysis, and data formatting, ultimately generating structured document data to improve the efficiency and accuracy of data processing. <b>The Universal Layout Analysis v2 pipeline, based on the v1 pipeline, enhances the capabilities of layout region detection, table recognition, and formula recognition, and adds the ability to restore multi-column reading order and convert results into Markdown files. It performs excellently on various document data and can handle more complex document data.</b> This pipeline also provides flexible service-oriented deployment options, supporting the use of multiple programming languages on various hardware. Moreover, this pipeline offers the capability for secondary development; you can train and optimize models on your own dataset based on this pipeline, and the trained models can be seamlessly integrated.
+Layout analysis is a technology that extracts structured information from document images, primarily used to convert complex document layouts into machine-readable data formats. This technology is widely applied in document management, information extraction, and data digitization. By combining Optical Character Recognition (OCR), image processing, and machine learning algorithms, layout analysis can identify and extract text blocks, headings, paragraphs, images, tables, and other layout elements from documents. The process typically involves three main steps: layout analysis, element analysis, and data formatting, ultimately generating structured document data to improve the efficiency and accuracy of data processing. <b>The Universal Layout Analysis v2 pipeline, based on the v1 pipeline, enhances the capabilities of layout region detection, table recognition, and formula recognition, and adds the ability to restore multi-column reading order and convert results into Markdown files. It performs excellently on various document data and can handle more complex document data.</b> This pipeline also provides flexible service-oriented deployment options, supporting the use of multiple programming languages on various hardware. Moreover, this pipeline offers the capability for custom development; you can train and optimize models on your own dataset based on this pipeline, and the trained models can be seamlessly integrated.
 
 <b>The Universal Layout Analysis v2 pipeline includes a mandatory layout region analysis module and a general OCR sub-pipeline,</b> as well as optional sub-pipelines for document image preprocessing, table recognition, seal recognition, and formula recognition.
 
@@ -17,7 +17,7 @@ Layout analysis is a technology that extracts structured information from docume
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top-1 Acc (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -61,7 +61,7 @@ Layout analysis is a technology that extracts structured information from docume
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -164,7 +164,7 @@ Layout analysis is a technology that extracts structured information from docume
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -193,7 +193,7 @@ Layout analysis is a technology that extracts structured information from docume
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Detection Hmean (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -242,7 +242,7 @@ Layout analysis is a technology that extracts structured information from docume
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy(%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -449,7 +449,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <th>Model</th>
 <th>Model Download Link</th>
 <th>Top-1 Acc (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -475,7 +475,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <th>BLEU Score</th>
 <th>Normed Edit Distance</th>
 <th>ExpRate (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size</th>
 </tr>
@@ -499,7 +499,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Detection Hmean (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -551,7 +551,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top-1 Acc (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -1703,7 +1703,7 @@ for res in result["layoutParsingResults"]:
 📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on user devices, allowing the device to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
 You can choose the appropriate deployment method based on your needs to integrate the model into your pipeline and proceed with subsequent AI application integration.
 
-## 4. Secondary Development
+## 4. Custom Development
 If the default model weights provided by the General Layout Parsing v2 pipeline do not meet your requirements in terms of accuracy or speed, you can try to <b>fine-tune</b> the existing model using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the General Layout Parsing v2 pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning

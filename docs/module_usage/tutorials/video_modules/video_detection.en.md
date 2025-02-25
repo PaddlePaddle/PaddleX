@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Video Detection Module Development Tutorial
+# Video Detection Module Tutorial
 
 ## I. Overview
 Video detection tasks are a critical component of computer vision systems, focusing on identifying and locating objects or events within video sequences. Video detection involves decomposing the video into individual frame sequences and then analyzing these frames to recognize detected objects or actions, such as detecting pedestrians in surveillance videos or identifying specific activities like "running," "jumping," or "playing guitar" in sports or entertainment videos.

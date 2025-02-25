@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Image Feature Module Development Tutorial
+# Image Feature Module Tutorial
 
 ## I. Overview
 The image feature module is one of the important tasks in computer vision, primarily referring to the automatic extraction of useful features from image data using deep learning methods, to facilitate subsequent image retrieval tasks. The performance of this module directly affects the accuracy and efficiency of the subsequent tasks. In practical applications, image features typically output a set of feature vectors, which can effectively represent the content, structure, texture, and other information of the image, and will be passed as input to the subsequent retrieval module for processing.
@@ -14,7 +14,7 @@ The image feature module is one of the important tasks in computer vision, prima
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recall@1 (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>

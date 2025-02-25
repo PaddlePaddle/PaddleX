@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Pedestrian Attribute Recognition Module Development Tutorial
+# Pedestrian Attribute Recognition Module Tutorial
 
 ## I. Overview
 Pedestrian attribute recognition is a crucial component in computer vision systems, responsible for locating and labeling specific attributes of pedestrians in images or videos, such as gender, age, clothing color, and type. The performance of this module directly impacts the accuracy and efficiency of the entire computer vision system. The pedestrian attribute recognition module typically outputs attribute information for each pedestrian, which is then passed as input to other modules (e.g., pedestrian tracking, pedestrian re-identification) for subsequent processing.

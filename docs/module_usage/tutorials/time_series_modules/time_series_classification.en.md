@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Time Series Classification Module Development Tutorial
+# Time Series Classification Module Tutorial
 
 ## I. Overview
 Time series classification involves identifying and categorizing different patterns in time series data by analyzing trends, periodicity, seasonality, and other factors that vary over time. This technique is widely used in medical diagnosis and other fields, effectively classifying key information in time series data to provide robust support for decision-making.

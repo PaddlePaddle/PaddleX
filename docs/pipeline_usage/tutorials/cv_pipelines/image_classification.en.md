@@ -13,7 +13,7 @@ Image classification is a technique that assigns images to predefined categories
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top1 Acc(%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Description</th>
@@ -97,7 +97,7 @@ Image classification is a technique that assigns images to predefined categories
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top-1 Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -1678,7 +1678,7 @@ print_r($result["categories"]);
 📱 <b>Edge Deployment</b>: Edge deployment is a method that places computing and data processing capabilities directly on the user's device, allowing the device to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
 You can choose the appropriate deployment method according to your needs to integrate the model pipeline into subsequent AI applications.
 
-## 4. Secondary Development
+## 4. Custom Development
 If the default model weights provided by the general image classification pipeline are not satisfactory in terms of accuracy or speed in your scenario, you can try to <b>fine-tune</b> the existing model using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the general image classification pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning

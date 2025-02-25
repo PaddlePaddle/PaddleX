@@ -810,11 +810,11 @@ echo &quot;Output time-series data saved at &quot; . $output_csv_path . &quot;\n
 📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
 You can choose the appropriate method to deploy the model production line according to your needs, and then proceed with subsequent AI application integration.
 
-## 4. Secondary Development
+## 4. Custom Development
 If the default model weights provided by the general time-series anomaly detection production line do not meet your accuracy or speed requirements in your scenario, you can try to further <b>fine-tune</b> the existing model using <b>your own specific domain or application scenario data</b> to improve the recognition effect of the general time-series anomaly detection production line in your scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the general time-series anomaly detection production line includes a time-series anomaly detection module, if the effect of the model production line is not as expected, you need to refer to the [Secondary Development](../../../module_usage/tutorials/time_series_modules/time_series_anomaly_detection.en.md#四二次开发) section in the [Time-Series Prediction Module Development Tutorial](../../../module_usage/tutorials/time_series_modules/time_series_anomaly_detection.en.md) to fine-tune the time-series anomaly detection model using your private dataset.
+Since the general time-series anomaly detection production line includes a time-series anomaly detection module, if the effect of the model production line is not as expected, you need to refer to the [Custom Development](../../../module_usage/tutorials/time_series_modules/time_series_anomaly_detection.en.md#四二次开发) section in the [Time-Series Prediction Module Development Tutorial](../../../module_usage/tutorials/time_series_modules/time_series_anomaly_detection.en.md) to fine-tune the time-series anomaly detection model using your private dataset.
 
 ### 4.2 Model Application
 After you complete the fine-tuning training with your private dataset, you can obtain the local model weight file.
