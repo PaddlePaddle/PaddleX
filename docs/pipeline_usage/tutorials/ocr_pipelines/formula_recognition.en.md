@@ -104,7 +104,6 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 
 <details><summary> 👉 Details of Model List</summary>
 
-* <b>17-Class Area Detection Model, including 17 common layout categories: Paragraph Title, Image, Text, Number, Abstract, Content, Figure Caption, Formula, Table, Table Caption, References, Document Title, Footnote, Header, Algorithm, Footer, and Stamp</b>
 <table>
 <thead>
 <tr>
