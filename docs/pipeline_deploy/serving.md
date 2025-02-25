@@ -336,6 +336,7 @@ docker run \
     -w /workspace \
     --rm \
     --gpus all \
+    --init \
     --network host \
     --shm-size 8g \
     {镜像名称} \

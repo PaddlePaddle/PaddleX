@@ -437,24 +437,26 @@ In addition, PaddleX also provides three other deployment methods, detailed as f
 <summary>Python</summary>
 
 <pre><code class="language-python">
+import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/bev-3d-object-detection&quot; # Service URL
-tar_path = &quot;./nuscenes_demo_infer.tar&quot;
+API_URL = "http://localhost:8080/bev-3d-object-detection" # Service URL
+tar_path = "./nuscenes_demo_infer.tar"
 
-payload = {&quot;tar&quot;: tar_path}
+with open(tar_path, "rb") as file:
+    tar_bytes = file.read()
+    tar_data = base64.b64encode(tar_bytes).decode("ascii")
+
+payload = {"tar": tar_data}
 
 # Call the API
 response = requests.post(API_URL, json=payload)
 
 # Process the response data
 assert response.status_code == 200
-result = response.json()[&quot;result&quot;]
-with open(output_image_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result[&quot;image&quot;]))
-print(f&quot;Output image saved at {output_image_path}&quot;)
-print(&quot;Detected objects:&quot;)
-print(result[&quot;detectedObjects&quot;])
+result = response.json()["result"]
+print("Detected objects:")
+print(result["detectedObjects"])
 </code></pre></details>
 </details>
 <br/>

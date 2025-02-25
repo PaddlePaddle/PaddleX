@@ -429,24 +429,26 @@ for res in output:
 
 
 <pre><code class="language-python">
+import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/bev-3d-object-detection&quot; # 服务URL
-tar_path = &quot;./nuscenes_demo_infer.tar&quot;
+API_URL = "http://localhost:8080/bev-3d-object-detection" # 服务URL
+tar_path = "./nuscenes_demo_infer.tar"
 
-payload = {&quot;tar&quot;: tar_path}
+with open(tar_path, "rb") as file:
+    tar_bytes = file.read()
+    tar_data = base64.b64encode(tar_bytes).decode("ascii")
+
+payload = {"tar": tar_data}
 
 # 调用API
 response = requests.post(API_URL, json=payload)
 
 # 处理接口返回数据
 assert response.status_code == 200
-result = response.json()[&quot;result&quot;]
-with open(output_image_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result[&quot;image&quot;]))
-print(f&quot;Output image saved at {output_image_path}&quot;)
-print(&quot;Detected objects:&quot;)
-print(result[&quot;detectedObjects&quot;])
+result = response.json()["result"]
+print("Detected objects:")
+print(result["detectedObjects"])
 </code></pre></details>
 </details>
 <br/>
