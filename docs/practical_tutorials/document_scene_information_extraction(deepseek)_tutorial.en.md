@@ -58,9 +58,9 @@ The result shows that PP-ChatOCRv3 can extract text information from the image a
 
 In practical application scenarios, besides a large number of image files, more document information extraction tasks involve multi-page PDF files. Since multi-page PDF files often contain a vast amount of text information, passing all this text information to a large language model at once not only increases the invocation cost but also reduces the accuracy of text information extraction. To address this issue, the PP-ChatOCRv3 pipeline integrates vector retrieval technology, which stores the text information from multi-page PDF files in the form of a vector database and retrieves the most relevant fragments through vector retrieval technology to pass them to the large language model, significantly reducing the invocation cost of the large language model and improving the accuracy of text information extraction. The Baidu Cloud Qianfan platform provides four vector models for establishing vector databases of text information. For the specific model support list and their functional characteristics, refer to the vector model section in the [API List](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Nlks5zkzu_en). Next, we will use the `embedding-v1` model to establish a vector database of text information and pass the most relevant fragments to the `DeepSeek-V3` large language model through vector retrieval technology, thereby efficiently extracting key information from multi-page PDF files.
 
-First, download the [Test File 2](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf), then replace the `api_key` in the following code and execute it:
+First, download the [Test File 2](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract2.pdf), then replace the `api_key` in the following code and execute it:
 
-**Note**: Due to the large size of multi-page PDF files, the first execution requires a longer time for text information extraction and vector database establishment. The code saves the visual results of the model and the establishment results of the vector database locally, which can be loaded and used directly subsequently.
+**Note**: Due to the large size of multi-page PDF files, the free service provided by the Qianfan platform currently experiences a high volume of calls. As a result, there is a limit on the number of tokens per minute. If you test with your own PDF files that have too many pages, you may encounter a TPM (Tokens Per Minute) limit error. This limitation does not apply to other forms of deployed large model services or to Qianfan’s paid users.
 
 ```python
 import os
@@ -90,7 +90,7 @@ pipeline = create_pipeline(pipeline="PP-ChatOCRv3-doc", initial_predictor=False)
 
 if not os.path.exists(visual_predict_res_path):
     visual_predict_res = pipeline.visual_predict(
-        input="contract.pdf",
+        input="contract2.pdf",
         use_doc_orientation_classify=False,
         use_doc_unwarping=False,
     )
@@ -138,20 +138,20 @@ After executing the above code, the result obtained is as follows:
 
 ```
 {'chat_res': {'甲方开户行': '日照银行股份有限公司开发区支行'}}
-Visual Predict Time: 18.6519s
-Vector Build Time: 6.1515s
-Chat Time: 7.0352s
-Total Time: 31.8385s
+Visual Predict Time: 15.3429s
+Vector Build Time: 4.8302s
+Chat Time: 3.457s
+Total Time: 23.6301s
 ```
 
 When we execute the above code again, the result obtained is as follows:
 
 ```
 {'chat_res': {'甲方开户行': '日照银行股份有限公司开发区支行'}}
-Visual Predict Time: 0.0161s
-Vector Build Time: 0.0016s
-Chat Time: 6.9516s
-Total Time: 6.9693s
+Visual Predict Time: 0.0104s
+Vector Build Time: 0.0006s
+Chat Time: 4.4056s
+Total Time: 4.4167s
 ```
 
 By comparing the results of the two executions, it can be observed that during the first execution, the PP-ChatOCRv3 Pipeline extracts all text information from multi-page PDF files and establishes a vector library, which takes a longer time. During subsequent executions, the PP-ChatOCRv3 Pipeline only needs to load and retrieve the vector library, significantly reducing the overall time consumption. The PP-ChatOCRv3 Pipeline, combined with vector retrieval technology, effectively reduces the number of calls to large language models when extracting ultra-long text, achieving faster text information extraction speed and more accurate key information location. This provides a more efficient solution for us in actual multi-page PDF file information extraction scenarios.
