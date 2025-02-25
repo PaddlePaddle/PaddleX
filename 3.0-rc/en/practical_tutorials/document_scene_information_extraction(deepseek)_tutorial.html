@@ -5134,8 +5134,8 @@ You're not viewing the latest version.
 <p>The result shows that PP-ChatOCRv3 can extract text information from the image and pass the extracted text information to the DeepSeek-V3 large model for question understanding and information extraction, returning the required extraction result.</p>
 <h2 id="3-new-model-can-quickly-adapt-to-multi-page-pdf-files-for-efficient-information-extraction">3. New Model Can Quickly Adapt to Multi-page PDF Files for Efficient Information Extraction<a class="headerlink" href="#3-new-model-can-quickly-adapt-to-multi-page-pdf-files-for-efficient-information-extraction" title="Permanent link">&para;</a></h2>
 <p>In practical application scenarios, besides a large number of image files, more document information extraction tasks involve multi-page PDF files. Since multi-page PDF files often contain a vast amount of text information, passing all this text information to a large language model at once not only increases the invocation cost but also reduces the accuracy of text information extraction. To address this issue, the PP-ChatOCRv3 pipeline integrates vector retrieval technology, which stores the text information from multi-page PDF files in the form of a vector database and retrieves the most relevant fragments through vector retrieval technology to pass them to the large language model, significantly reducing the invocation cost of the large language model and improving the accuracy of text information extraction. The Baidu Cloud Qianfan platform provides four vector models for establishing vector databases of text information. For the specific model support list and their functional characteristics, refer to the vector model section in the <a href="https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Nlks5zkzu_en">API List</a>. Next, we will use the <code>embedding-v1</code> model to establish a vector database of text information and pass the most relevant fragments to the <code>DeepSeek-V3</code> large language model through vector retrieval technology, thereby efficiently extracting key information from multi-page PDF files.</p>
-<p>First, download the <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf">Test File 2</a>, then replace the <code>api_key</code> in the following code and execute it:</p>
-<p><strong>Note</strong>: Due to the large size of multi-page PDF files, the first execution requires a longer time for text information extraction and vector database establishment. The code saves the visual results of the model and the establishment results of the vector database locally, which can be loaded and used directly subsequently.</p>
+<p>First, download the <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract2.pdf">Test File 2</a>, then replace the <code>api_key</code> in the following code and execute it:</p>
+<p><strong>Note</strong>: Due to the large size of multi-page PDF files, the free service provided by the Qianfan platform currently experiences a high volume of calls. As a result, there is a limit on the number of tokens per minute. If you test with your own PDF files that have too many pages, you may encounter a TPM (Tokens Per Minute) limit error. This limitation does not apply to other forms of deployed large model services or to Qianfan’s paid users.</p>
 <p><div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
@@ -5163,7 +5163,7 @@ You're not viewing the latest version.
 </span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
 </span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">visual_predict_res_path</span><span class="p">):</span>
 </span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>    <span class="n">visual_predict_res</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">visual_predict</span><span class="p">(</span>
-</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>        <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;contract.pdf&quot;</span><span class="p">,</span>
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>        <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;contract2.pdf&quot;</span><span class="p">,</span>
 </span><span id="__span-2-29"><a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>        <span class="n">use_doc_orientation_classify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-2-30"><a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>        <span class="n">use_doc_unwarping</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-2-31"><a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>    <span class="p">)</span>
@@ -5208,17 +5208,17 @@ You're not viewing the latest version.
 </span></code></pre></div>
 After executing the above code, the result obtained is as follows:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{&#39;chat_res&#39;: {&#39;甲方开户行&#39;: &#39;日照银行股份有限公司开发区支行&#39;}}
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Visual Predict Time: 18.6519s
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Vector Build Time: 6.1515s
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Chat Time: 7.0352s
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Total Time: 31.8385s
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Visual Predict Time: 15.3429s
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Vector Build Time: 4.8302s
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Chat Time: 3.457s
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Total Time: 23.6301s
 </span></code></pre></div>
 <p>When we execute the above code again, the result obtained is as follows:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>{&#39;chat_res&#39;: {&#39;甲方开户行&#39;: &#39;日照银行股份有限公司开发区支行&#39;}}
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Visual Predict Time: 0.0161s
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Vector Build Time: 0.0016s
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Chat Time: 6.9516s
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Total Time: 6.9693s
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Visual Predict Time: 0.0104s
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Vector Build Time: 0.0006s
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Chat Time: 4.4056s
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Total Time: 4.4167s
 </span></code></pre></div>
 <p>By comparing the results of the two executions, it can be observed that during the first execution, the PP-ChatOCRv3 Pipeline extracts all text information from multi-page PDF files and establishes a vector library, which takes a longer time. During subsequent executions, the PP-ChatOCRv3 Pipeline only needs to load and retrieve the vector library, significantly reducing the overall time consumption. The PP-ChatOCRv3 Pipeline, combined with vector retrieval technology, effectively reduces the number of calls to large language models when extracting ultra-long text, achieving faster text information extraction speed and more accurate key information location. This provides a more efficient solution for us in actual multi-page PDF file information extraction scenarios.</p>
 <h2 id="4-exploring-the-thinking-mode-of-large-models-in-text-and-image-information-extraction">4. Exploring the Thinking Mode of Large Models in Text and Image Information Extraction<a class="headerlink" href="#4-exploring-the-thinking-mode-of-large-models-in-text-and-image-information-extraction" title="Permanent link">&para;</a></h2>
@@ -5328,7 +5328,7 @@ After executing the above code, the result obtained is as follows:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 24, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 25, 2025</span>
   </span>
 
     
@@ -5338,7 +5338,7 @@ After executing the above code, the result obtained is as follows:</p>
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 24, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 25, 2025</span>
   </span>
 
     
@@ -5353,7 +5353,7 @@ After executing the above code, the result obtained is as follows:</p>
     </span>
     <nav>
       
-        <a href="mailto:gaotingquan@baidu.com">gaotingquan</a>
+        <a href="mailto:142379845+changdazhou@users.noreply.github.com">changdazhou</a>
     </nav>
   </span>
 
