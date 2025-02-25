@@ -494,7 +494,6 @@ import requests
 
 API_URL = "http://localhost:8080/video-classification" # Service URL
 video_path = "./demo.mp4"
-output_video_path = "./out.mp4"
 
 # Encode the local video using Base64
 with open(video_path, "rb") as file:
