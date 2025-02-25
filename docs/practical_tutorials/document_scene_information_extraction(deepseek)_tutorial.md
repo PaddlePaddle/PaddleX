@@ -58,9 +58,9 @@ print(chat_result)
 
 在实际的应用场景中，除了大量的图片文件外，更多的文档信息抽取任务会涉及到多页 PDF 文件的处理。由于多页 PDF 文件中往往包含大量的文本信息，而将大量的文本信息一次性传递给大语言模型，除了会增加大语言模型的调用成本外，还会降低大语言模型文本信息抽取的准确性。为了解决这一问题，PP-ChatOCRv3 产线中集成了向量检索技术，能够将多页 PDF 文件中的文本信息通过建立向量库的方式进行存储，并通过向量检索技术将文本信息检索到最相关的片段传递给大语言模型，从而大幅降低大语言模型的调用成本并提高文本信息抽取的准确性。在百度云千帆平台，提供了4个向量模型用于建立文本信息的向量库，具体的模型支持列表及其功能特点可参考 [API列表](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Nlks5zkzu) 中的向量模型部分。接下来我们将使用 `embedding-v1` 模型建立文本信息的向量库，并通过向量检索技术将最相关的片段传递给 `DeepSeek-V3` 大语言模型，从而实现高效抽取多页 PDF 文件中的关键信息。
 
-首先，您需要下载 [测试文件2](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract.pdf)，然后更换以下代码中的 `api_key` 并执行：
+首先，您需要下载 [测试文件2](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/contract2.pdf)，然后更换以下代码中的 `api_key` 并执行：
 
-**注**：由于多页 PDF 文件较大，首次执行时需要较长时间进行文本信息抽取和向量库的建立，代码中已将模型的视觉结果和向量库的建立结果保存到本地，后续可以直接加载使用。
+**注**：由于多页 PDF 文件较大，千帆平台提供的免费服务目前调用量极大，故对每分钟 token 数进行了限制，所以如果您测试自己准备的PDF文件且页数过多时，可能会出现 TPM 超出限制报错，对于其他形式部署的大模型服务或千帆付费用户不存在此限制。
 
 ```python
 import os
@@ -90,7 +90,7 @@ pipeline = create_pipeline(pipeline="PP-ChatOCRv3-doc", initial_predictor=False)
 
 if not os.path.exists(visual_predict_res_path):
     visual_predict_res = pipeline.visual_predict(
-        input="contract.pdf",
+        input="contract2.pdf",
         use_doc_orientation_classify=False,
         use_doc_unwarping=False,
     )
@@ -138,20 +138,20 @@ print(f"Total Time: {round((end_time - start_time), 4)}s")
 
 ```
 {'chat_res': {'甲方开户行': '日照银行股份有限公司开发区支行'}}
-Visual Predict Time: 18.6519s
-Vector Build Time: 6.1515s
-Chat Time: 7.0352s
-Total Time: 31.8385s
+Visual Predict Time: 15.3429s
+Vector Build Time: 4.8302s
+Chat Time: 3.457s
+Total Time: 23.6301s
 ```
 
 当我们再次执行上述代码时，可以得到的结果如下：
 
 ```
 {'chat_res': {'甲方开户行': '日照银行股份有限公司开发区支行'}}
-Visual Predict Time: 0.0161s
-Vector Build Time: 0.0016s
-Chat Time: 6.9516s
-Total Time: 6.9693s
+Visual Predict Time: 0.0104s
+Vector Build Time: 0.0006s
+Chat Time: 4.4056s
+Total Time: 4.4167s
 ```
 
 通过对比两次执行结果可以发现，在首次执行时，PP-ChatOCRv3 产线会对多页 PDF 文件中的所有文本信息进行抽取和向量库的建立，耗时较长。而在后续执行时，PP-ChatOCRv3 产线仅需要对向量库进行加载和检索操作，大幅降低了整体的耗时。结合了向量检索技术的 PP-ChatOCRv3 产线有效的降低了对于超长文本进行抽取时大语言模型调用的次数，实现了更加快速的文本信息抽取速度和更加精准的关键信息定位，为我们在实际的多页 PDF 文件信息抽取场景中提供了更加高效的解决方案。
