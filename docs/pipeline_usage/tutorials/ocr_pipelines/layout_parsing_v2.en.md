@@ -1672,6 +1672,7 @@ with open(image_path, "rb") as file:
 
 payload = {
     "file": image_data, # Base64-encoded file content or file URL
+    "fileType": 1, # file type, 1 represents image file
 }
 
 # Call the API

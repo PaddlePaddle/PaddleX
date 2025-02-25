@@ -1568,6 +1568,7 @@ with open(image_path, "rb") as file:
 
 payload = {
     "file": image_data, # Base64编码的文件内容或者文件URL
+    "fileType": 1, # 文件类型，1表示图像文件
 }
 
 # 调用API
