@@ -89,9 +89,12 @@ def convert_trt(model_name, mode, pp_model_path, trt_save_path, trt_dynamic_shap
 
 
 class Copy2GPU:
+    def __init__(self, device_type):
+        self.device_type = device_type
+
     @benchmark.timeit
     def __call__(self, arrs):
-        paddle_tensors = [paddle.to_tensor(i) for i in arrs]
+        paddle_tensors = [paddle.to_tensor(i, place=self.device_type) for i in arrs]
         return paddle_tensors
 
 
@@ -124,7 +127,7 @@ class StaticInfer:
         self.model_prefix = model_prefix
         self.option = option
         self.predictor = self._create()
-        self.copy2gpu = Copy2GPU()
+        self.copy2gpu = Copy2GPU(self.option.device_type)
         self.copy2cpu = Copy2CPU()
         self.infer = Infer(self.predictor)
 
