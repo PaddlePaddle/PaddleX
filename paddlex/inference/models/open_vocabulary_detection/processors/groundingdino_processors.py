@@ -22,6 +22,7 @@ import paddle.vision.transforms as T
 import PIL
 
 from ...common.tokenizer.bert_tokenizer import BertTokenizer
+from ....utils.benchmark import benchmark
 
 
 def _max_by_axis(the_list):
@@ -114,6 +115,7 @@ class GroundingDINOPostProcessor(object):
         self.box_threshold = box_threshold
         self.text_threshold = text_threshold
 
+    @benchmark.timeit
     def __call__(
         self,
         pred_boxes,
@@ -231,6 +233,7 @@ class GroundingDINOProcessor(object):
         assert os.path.isdir(tokenizer_dir), f"{tokenizer_dir} not exists."
         self.tokenizer = BertTokenizer.from_pretrained(tokenizer_dir)
 
+    @benchmark.timeit
     def __call__(
         self,
         images: List[PIL.Image.Image],
@@ -267,6 +270,7 @@ class GroundingDinoTextProcessor(object):
     ):
         self.max_words = max_words
 
+    @benchmark.timeit
     def __call__(
         self,
         input_ids,
@@ -384,6 +388,7 @@ class GroundingDinoImageProcessor(object):
         self.image_std = image_std
         self.do_nested = do_nested
 
+    @benchmark.timeit
     def __call__(self, images, **kwargs):
         """Preprocess an image or a batch of images."""
         return self.preprocess(images, **kwargs)

@@ -1853,24 +1853,26 @@ Below are the API references for basic serving and multi-language service invoca
 <details>
 <summary>Python</summary>
 
-<pre><code class="language-python">import base64
+<pre><code class="language-python">
+# This script only shows the use case for images. For calling with other file types, please read the API reference and make adjustments.
+
+import base64
 import pprint
 import sys
-
 import requests
 
 
 API_BASE_URL = "http://0.0.0.0:8080"
 
-file_path = "./demo.jpg"
+image_path = "./demo.jpg"
 keys = ["name"]
 
-with open(file_path, "rb") as file:
-    file_bytes = file.read()
-    file_data = base64.b64encode(file_bytes).decode("ascii")
+with open(image_path, "rb") as file:
+    image_bytes = file.read()
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
 payload = {
-    "file": file_data,
+    "file": image_data,
     "fileType": 1,
 }
 
@@ -1904,7 +1906,7 @@ if resp_vector.status_code != 200:
 result_vector = resp_vector.json()["result"]
 
 payload = {
-    "image": image_url,
+    "image": image_data,
     "keyList": keys,
 }
 resp_mllm = requests.post(url=f"{API_BASE_URL}/chatocr-mllm", json=payload)
@@ -1934,8 +1936,6 @@ result_chat = resp_chat.json()["result"]
 print("Final result:")
 print(result_chat["chatResult"])
 </code></pre>
-
-<b>Note</b>: Please fill in your API key and secret key in `API_KEY` and `SECRET_KEY`.
 </details>
 </details>
 <br/>

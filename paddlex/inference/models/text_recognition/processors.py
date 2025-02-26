@@ -27,6 +27,7 @@ import tempfile
 from tokenizers import Tokenizer as TokenizerFast
 
 from ....utils import logging
+from ...utils.benchmark import benchmark
 
 
 class OCRReisizeNormImg:
@@ -58,6 +59,7 @@ class OCRReisizeNormImg:
         padding_im[:, :, 0:resized_w] = resized_image
         return padding_im
 
+    @benchmark.timeit
     def __call__(self, imgs):
         """apply"""
         if self.input_shape is None:
@@ -158,6 +160,7 @@ class BaseRecLabelDecode:
         """get_ignored_tokens"""
         return [0]  # for ctc blank
 
+    @benchmark.timeit
     def __call__(self, pred):
         """apply"""
         preds = np.array(pred)
@@ -180,6 +183,7 @@ class CTCLabelDecode(BaseRecLabelDecode):
     def __init__(self, character_list=None, use_space_char=True):
         super().__init__(character_list, use_space_char=use_space_char)
 
+    @benchmark.timeit
     def __call__(self, pred):
         """apply"""
         preds = np.array(pred[0])
@@ -225,6 +229,7 @@ class ToBatch:
             padded_imgs.append(padded_img)
         return padded_imgs
 
+    @benchmark.timeit
     def __call__(self, imgs: List[np.ndarray]) -> List[np.ndarray]:
         """Call method to pad images and stack them into a batch.
 

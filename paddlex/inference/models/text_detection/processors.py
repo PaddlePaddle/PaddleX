@@ -26,6 +26,7 @@ from shapely.geometry import Polygon
 
 from ...utils.io import ImageReader
 from ....utils import logging
+from ...utils.benchmark import benchmark
 
 
 class DetResizeForTest:
@@ -53,6 +54,7 @@ class DetResizeForTest:
             self.limit_side_len = 736
             self.limit_type = "min"
 
+    @benchmark.timeit
     def __call__(
         self,
         imgs,
@@ -210,6 +212,7 @@ class NormalizeImage:
         self.mean = np.array(mean).reshape(shape).astype("float32")
         self.std = np.array(std).reshape(shape).astype("float32")
 
+    @benchmark.timeit
     def __call__(self, imgs):
         """apply"""
 
@@ -426,6 +429,7 @@ class DBPostProcess:
         cv2.fillPoly(mask, contour.reshape(1, -1, 2).astype(np.int32), 1)
         return cv2.mean(bitmap[ymin : ymax + 1, xmin : xmax + 1], mask)[0]
 
+    @benchmark.timeit
     def __call__(
         self,
         preds,

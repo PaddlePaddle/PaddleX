@@ -23,8 +23,8 @@ import numpy as np
 from paddle.inference import Config, create_predictor
 
 from ....utils import logging
+from ...utils.benchmark import benchmark
 from ....utils.flags import DEBUG, USE_PIR_TRT
-from ...utils.pp_option import PaddlePredictorOption
 from ...utils.hpi import (
     HPIConfig,
     ONNXRuntimeConfig,
@@ -34,6 +34,8 @@ from ...utils.hpi import (
     get_model_paths,
     suggest_inference_backend_and_config,
 )
+from ...utils.pp_option import PaddlePredictorOption
+from ...utils.trt_config import TRT_CFG
 
 
 CACHE_DIR = ".cache"
@@ -57,6 +59,7 @@ def _pd_dtype_to_np_dtype(pd_dtype):
         raise TypeError(f"Unsupported data type: {pd_dtype}")
 
 
+# old trt
 def _collect_trt_shape_range_info(
     model_file,
     model_params,
@@ -65,6 +68,7 @@ def _collect_trt_shape_range_info(
     dynamic_shapes,
     dynamic_shape_input_data,
 ):
+
     dynamic_shape_input_data = dynamic_shape_input_data or {}
 
     config = paddle.inference.Config(model_file, model_params)
@@ -127,9 +131,22 @@ def _collect_trt_shape_range_info(
     # handle this?
 
 
+# pir trt
 def _convert_trt(
-    mode, pp_model_file, pp_params_file, trt_save_path, trt_dynamic_shapes
+    model_name,
+    mode,
+    pp_model_file,
+    pp_params_file,
+    trt_save_path,
+    trt_dynamic_shapes,
 ):
+    def _set_trt_config():
+        if settings := TRT_CFG.get(model_name):
+            for attr_name in settings:
+                if not hasattr(trt_config, attr_name):
+                    logging.warning(f"The TensorRTConfig don't have the `{attr_name}`!")
+                setattr(trt_config, attr_name, settings[attr_name])
+
     from paddle.tensorrt.export import (
         Input,
         TensorRTConfig,
@@ -173,6 +190,7 @@ def _convert_trt(
 
     # Create TensorRTConfig
     trt_config = TensorRTConfig(inputs=trt_inputs)
+    _set_trt_config()
     trt_config.precision_mode = precision_map[mode]
     trt_config.save_model_dir = str(trt_save_path)
     pp_model_path = str(pp_model_file.with_suffix(""))
@@ -180,27 +198,17 @@ def _convert_trt(
 
 
 class PaddleCopy2GPU:
-    def __init__(self, input_handlers):
-        super().__init__()
-        self.input_handlers = input_handlers
-
-    def __call__(self, x):
-        for idx in range(len(x)):
-            self.input_handlers[idx].reshape(x[idx].shape)
-            self.input_handlers[idx].copy_from_cpu(x[idx])
+    @benchmark.timeit
+    def __call__(self, arrs):
+        paddle_tensors = [paddle.to_tensor(i) for i in arrs]
+        return paddle_tensors
 
 
 class PaddleCopy2CPU:
-    def __init__(self, output_handlers):
-        super().__init__()
-        self.output_handlers = output_handlers
-
-    def __call__(self):
-        output = []
-        for out_tensor in self.output_handlers:
-            batch = out_tensor.copy_to_cpu()
-            output.append(batch)
-        return output
+    @benchmark.timeit
+    def __call__(self, paddle_tensors):
+        arrs = [i.numpy() for i in paddle_tensors]
+        return arrs
 
 
 class PaddleModelInfer:
@@ -208,8 +216,9 @@ class PaddleModelInfer:
         super().__init__()
         self.predictor = predictor
 
-    def __call__(self):
-        self.predictor.run()
+    @benchmark.timeit
+    def __call__(self, x):
+        return self.predictor.run(x)
 
 
 class StaticInfer(metaclass=abc.ABCMeta):
@@ -250,9 +259,20 @@ class PaddleInfer(StaticInfer):
         }
 
     def __call__(self, x: Sequence[np.ndarray]) -> List[np.ndarray]:
-        self.copy2gpu(x)
-        self.infer()
-        pred = self.copy2cpu()
+        # NOTE: Adjust input tensors to match the sorted sequence.
+        names = self.predictor.get_input_names()
+        if len(names) != len(x):
+            raise ValueError(
+                f"The number of inputs does not match the model: {len(names)} vs {len(x)}"
+            )
+        indices = sorted(range(len(names)), key=names.__getitem__)
+        x = [x[indices.index(i)] for i in range(len(x))]
+        # TODO:
+        # Ensure that input tensors follow the model's input sequence without sorting.
+
+        inputs = self.copy2gpu(x)
+        outputs = self.infer(inputs)
+        pred = self.copy2cpu(outputs)
         return pred
 
     def _update_option(self, option: PaddlePredictorOption) -> None:
@@ -378,21 +398,14 @@ class PaddleInfer(StaticInfer):
         # Get input and output handlers
         input_names = predictor.get_input_names()
         input_names.sort()
-        input_handlers = []
-        output_handlers = []
-        for input_name in input_names:
-            input_handler = predictor.get_input_handle(input_name)
-            input_handlers.append(input_handler)
-        output_names = predictor.get_output_names()
-        for output_name in output_names:
-            output_handler = predictor.get_output_handle(output_name)
-            output_handlers.append(output_handler)
-        return predictor, input_handlers, output_handlers
+
+        return predictor
 
     def _configure_trt(self, run_mode, model_file, params_file, cache_dir):
         if USE_PIR_TRT:
             trt_save_path = cache_dir / "trt" / self.model_file_prefix
             _convert_trt(
+                self.option.model_name,
                 run_mode,
                 model_file,
                 params_file,

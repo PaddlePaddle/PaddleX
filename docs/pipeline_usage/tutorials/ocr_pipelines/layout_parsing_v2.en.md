@@ -1658,8 +1658,10 @@ Below is the API reference for basic service-oriented deployment and examples of
 <details>
 <summary>Python</summary>
 
-<pre><code class="language-python">import base64
+<pre><code class="language-python">
+import base64
 import requests
+import pathlib
 
 API_URL = "http://localhost:8080/layout-parsing" # Service URL
 
@@ -1672,6 +1674,7 @@ with open(image_path, "rb") as file:
 
 payload = {
     "file": image_data, # Base64-encoded file content or file URL
+    "fileType": 1, # file type, 1 represents image file
 }
 
 # Call the API
@@ -1681,7 +1684,7 @@ response = requests.post(API_URL, json=payload)
 assert response.status_code == 200
 result = response.json()["result"]
 print("\nDetected layout elements:")
-for res in result["layoutParsingResults"]:
+for i, res in enumerate(result["layoutParsingResults"]):
     print(res["prunedResult"])
     md_dir = pathlib.Path(f"markdown_{i}")
     md_dir.mkdir(exist_ok=True)

@@ -20,7 +20,7 @@ import numpy as np
 import pandas as pd
 
 from .funcs import load_from_dataframe, time_feature
-
+from ....utils.benchmark import benchmark
 
 __all__ = [
     "BuildTSDataset",
@@ -53,6 +53,7 @@ class TSCutOff:
         super().__init__()
         self.size = size
 
+    @benchmark.timeit
     def __call__(self, ts_list: List) -> List:
         """Applies the cut off operation to a list of time series.
 
@@ -111,6 +112,7 @@ class TSNormalize:
         self.scaler = joblib.load(scale_path)
         self.params_info = params_info
 
+    @benchmark.timeit
     def __call__(self, ts_list: List[pd.DataFrame]) -> List[pd.DataFrame]:
         """Applies normalization to a list of time series data frames.
 
@@ -158,6 +160,7 @@ class BuildTSDataset:
         super().__init__()
         self.params_info = params_info
 
+    @benchmark.timeit
     def __call__(self, ts_list: List) -> List:
         """Applies the dataset construction to a list of time series.
 
@@ -200,6 +203,7 @@ class TimeFeature:
         self.size = size
         self.holiday = holiday
 
+    @benchmark.timeit
     def __call__(self, ts_list: List) -> List:
         """Applies time feature extraction to a list of time series.
 
@@ -258,6 +262,7 @@ class TStoArray:
         super().__init__()
         self.input_data = input_data
 
+    @benchmark.timeit
     def __call__(self, ts_list: List[Dict[str, Any]]) -> List[List[np.ndarray]]:
         """Converts a list of time series data frames into arrays.
 
@@ -295,6 +300,7 @@ class TStoBatch:
     equal-length arrays or DataFrames.
     """
 
+    @benchmark.timeit
     def __call__(self, ts_list: List[np.ndarray]) -> List[np.ndarray]:
         """Convert a list of time series into batches.
 

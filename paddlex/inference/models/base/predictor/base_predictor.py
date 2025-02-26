@@ -23,7 +23,11 @@ from ..... import constants
 from ....common.batch_sampler import BaseBatchSampler
 from .....utils import logging
 from .....utils.device import get_default_device, parse_device
-from .....utils.flags import INFER_BENCHMARK_WARMUP
+from .....utils.flags import (
+    INFER_BENCHMARK,
+    INFER_BENCHMARK_WARMUP,
+    INFER_BENCHMARK_ITER,
+)
 from .....utils.subclass_register import AutoRegisterABCMetaClass
 from ....utils.benchmark import benchmark
 from ....utils.hpi import HPIInfo, HPIConfig
@@ -109,7 +113,6 @@ class BasePredictor(
 
         # alias predict() to the __call__()
         self.predict = self.__call__
-        self.benchmark = None
 
         self.batch_sampler.batch_size = batch_size
         self._use_hpip = use_hpip
@@ -121,7 +124,6 @@ class BasePredictor(
             self._hpi_config = self._prepare_hpi_config(hpi_config, device)
 
         logging.debug(f"{self.__class__.__name__}: {self.model_dir}")
-        self.benchmark = benchmark
 
     @property
     def config_path(self) -> str:
@@ -177,23 +179,30 @@ class BasePredictor(
             Iterator[Any]: An iterator yielding the prediction output.
         """
         self.set_predictor(batch_size)
-        if self.benchmark:
-            self.benchmark.start()
+        if INFER_BENCHMARK:
+            # TODO(zhang-prog): Get metadata of input data
+            if not isinstance(input, str):
+                raise TypeError("Only support string as input")
+            input = [input] * batch_size
+
+            if not (INFER_BENCHMARK_WARMUP > 0 or INFER_BENCHMARK_ITER > 0):
+                raise RuntimeError(
+                    "At least one of `INFER_BENCHMARK_WARMUP` and `INFER_BENCHMARK_ITER` must be greater than zero"
+                )
+
             if INFER_BENCHMARK_WARMUP > 0:
-                output = self.apply(input, **kwargs)
-                warmup_num = 0
+                benchmark.start_warmup()
                 for _ in range(INFER_BENCHMARK_WARMUP):
-                    try:
-                        next(output)
-                        warmup_num += 1
-                    except StopIteration:
-                        logging.warning(
-                            f"There are only {warmup_num} batches in input data, but `INFER_BENCHMARK_WARMUP` has been set to {INFER_BENCHMARK_WARMUP}."
-                        )
-                        break
-                self.benchmark.warmup_stop(warmup_num)
-            output = list(self.apply(input, **kwargs))
-            self.benchmark.collect(len(output))
+                    output = list(self.apply(input, **kwargs))
+                benchmark.collect(batch_size)
+                benchmark.stop_warmup()
+
+            if INFER_BENCHMARK_ITER > 0:
+                for _ in range(INFER_BENCHMARK_ITER):
+                    output = list(self.apply(input, **kwargs))
+                benchmark.collect(batch_size)
+
+            yield output[0]
         else:
             yield from self.apply(input, **kwargs)
 

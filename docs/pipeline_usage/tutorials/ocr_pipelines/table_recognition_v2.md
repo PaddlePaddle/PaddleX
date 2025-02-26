@@ -1328,15 +1328,12 @@ response = requests.post(API_URL, json=payload)
 assert response.status_code == 200
 result = response.json()["result"]
 for i, res in enumerate(result["tableRecResults"]):
-    print("Detected tables:")
-    print(res["tables"])
-    layout_img_path = f"layout_{i}.jpg"
-    with open(layout_img_path, "wb") as f:
-        f.write(base64.b64decode(res["layoutImage"]))
-    ocr_img_path = f"ocr_{i}.jpg"
-    with open(ocr_img_path, "wb") as f:
-        f.write(base64.b64decode(res["ocrImage"]))
-    print(f"Output images saved at {layout_img_path} and {ocr_img_path}")
+    print(res["prunedResult"])
+    for img_name, img in res["outputImages"].items():
+        img_path = f"{img_name}_{i}.jpg"
+        with open(img_path, "wb") as f:
+            f.write(base64.b64decode(img))
+        print(f"Output image saved at {img_path}")
 </code></pre></details>
 </details>
 <br/>

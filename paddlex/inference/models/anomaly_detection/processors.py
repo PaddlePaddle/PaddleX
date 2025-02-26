@@ -15,6 +15,8 @@
 import numpy as np
 from skimage import measure, morphology
 
+from ...utils.benchmark import benchmark
+
 
 class MapToMask:
     """Map_to_mask"""
@@ -25,6 +27,7 @@ class MapToMask:
         """
         super().__init__()
 
+    @benchmark.timeit
     def __call__(self, preds, *args):
         """apply"""
         return [self.apply(pred) for pred in preds]

@@ -12,21 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import numpy as np
-
-from ...utils.benchmark import benchmark
-
-
-class NormalizeFeatures:
-    """Normalize Features Transform"""
-
-    def _normalize(self, preds):
-        """normalize"""
-        feas_norm = np.sqrt(np.sum(np.square(preds[0]), axis=0, keepdims=True))
-        features = np.divide(preds[0], feas_norm)
-        return features
-
-    @benchmark.timeit
-    def __call__(self, preds):
-        normalized_features = [self._normalize(feature) for feature in preds]
-        return normalized_features
+TRT_CFG = {
+    "DETR-R50": {"optimization_level": 4, "workspace_size": 1 << 32},
+    "SegFormer-B0": {"optimization_level": 4, "workspace_size": 1 << 32},
+    "SegFormer-B1": {"optimization_level": 4, "workspace_size": 1 << 32},
+    "SegFormer-B2": {"optimization_level": 4, "workspace_size": 1 << 32},
+    "SegFormer-B3": {"optimization_level": 4, "workspace_size": 1 << 32},
+    "SegFormer-B4": {"optimization_level": 4, "workspace_size": 1 << 32},
+    "SegFormer-B5": {"optimization_level": 4, "workspace_size": 1 << 32},
+}
