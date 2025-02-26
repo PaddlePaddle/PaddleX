@@ -94,7 +94,13 @@ class Copy2GPU:
 
     @benchmark.timeit
     def __call__(self, arrs):
-        paddle_tensors = [paddle.to_tensor(i, place=self.device_type) for i in arrs]
+        # XXX
+        old_device = paddle.device.get_device()
+        paddle.device.set_device(self.device_type)
+        try:
+            paddle_tensors = [paddle.to_tensor(i) for i in arrs]
+        finally:
+            paddle.device.set_device(old_device)
         return paddle_tensors
 
 
