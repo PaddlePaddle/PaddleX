@@ -27,6 +27,8 @@ import paddle
 
 from ...utils.benchmark import benchmark
 
+from ...utils.benchmark import benchmark
+
 
 class Scale:
     """Scale images."""

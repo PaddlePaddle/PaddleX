@@ -23,6 +23,8 @@ import paddle
 
 from ...utils.benchmark import benchmark
 
+from ...utils.benchmark import benchmark
+
 
 class ResizeVideo:
     """Resizes frames of a video to a specified target size.
