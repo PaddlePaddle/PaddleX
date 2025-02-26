@@ -113,7 +113,7 @@ python test_infer.py
         </tr>
         <tr>
             <td>Operation</td>
-            <td>操作名称，指在推理过程中用到的自定义操作，如 Resize、Normalize 等。</td>
+            <td>操作名称，如 Resize、Normalize 等。</td>
         </tr>
         <tr>
             <td>Stage</td>
