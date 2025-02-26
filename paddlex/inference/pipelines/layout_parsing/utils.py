@@ -1632,6 +1632,12 @@ def get_layout_ordering(
                             distance = _manhattan_distance(bbox, match_bbox) * iou
                         else:
                             distance = float("inf")
+                    # when reference block cross mulitple columns, its order should be after the blocks above it.
+                    elif distance_type == "append":
+                        if match_bbox[3] <= bbox[1]:
+                            distance = -(match_bbox[2] * 10 + match_bbox[3])
+                        else:
+                            distance = float("inf")
                     else:
                         raise NotImplementedError
 
@@ -1657,9 +1663,22 @@ def get_layout_ordering(
                 x["block_bbox"][1] ** 2 + x["block_bbox"][0] ** 2,
             ),
         )
+        # filter the reference blocks from all blocks that cross mulitple columns.
+        # they should be ordered using "append".
+        double_text_reference_blocks = []
+        i = 0
+        while i < len(double_text_blocks):
+            if double_text_blocks[i]["block_label"] == "reference":
+                double_text_reference_blocks.append(double_text_blocks.pop(i))
+            else:
+                i += 1
         nearest_match_(
             double_text_blocks,
             distance_type="nearest_iou_edge_distance",
+        )
+        nearest_match_(
+            double_text_reference_blocks,
+            distance_type="append",
         )
         parsing_res_by_pre_cuts.sort(
             key=lambda x: (x["index"], x["block_bbox"][1], x["block_bbox"][0]),
