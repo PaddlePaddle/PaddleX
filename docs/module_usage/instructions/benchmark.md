@@ -109,11 +109,11 @@ python test_infer.py
         </tr>
         <tr>
             <td>Instances</td>
-            <td>总样本数量，计算方式为 Iters 乘以 Batch Size。</td>
+            <td>总样本数量，计算方式为 <code>Iters</code> 乘以 <code>Batch Size</code>。</td>
         </tr>
         <tr>
             <td>Operation</td>
-            <td>操作名称，如 Resize、Normalize 等。</td>
+            <td>操作名称，如 <code>Resize</code>、<code>Normalize</code> 等。</td>
         </tr>
         <tr>
             <td>Stage</td>
