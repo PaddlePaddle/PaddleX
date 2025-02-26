@@ -112,8 +112,8 @@ python test_infer.py
             <td>总样本数量，计算方式为 Iters 乘以 Batch Size。</td>
         </tr>
         <tr>
-            <td>Component</td>
-            <td>组件名称，指在推理过程中用到的自定义操作。</td>
+            <td>Operation</td>
+            <td>操作名称，指在推理过程中用到的自定义操作，如 Resize、Normalize 等。</td>
         </tr>
         <tr>
             <td>Stage</td>
@@ -144,7 +144,7 @@ python test_infer.py
 +-------+------------+-----------+-------------+------------------------+----------------------------+
                                                Detail Data
 +-------+------------+-----------+----------------+------------------------+----------------------------+
-| Iters | Batch Size | Instances |   Component    | Avg Time Per Iter (ms) | Avg Time Per Instance (ms) |
+| Iters | Batch Size | Instances |   Operation    | Avg Time Per Iter (ms) | Avg Time Per Instance (ms) |
 +-------+------------+-----------+----------------+------------------------+----------------------------+
 |   10  |     2      |     20    |   ReadImage    |      77.00567245       |        38.50283623         |
 |   10  |     2      |     20    |     Resize     |      11.97342873       |         5.98671436         |
@@ -172,7 +172,7 @@ python test_infer.py
 `detail.csv` 内容如下：
 
 ```csv
-Iters,Batch Size,Instances,Component,Avg Time Per Iter (ms),Avg Time Per Instance (ms)
+Iters,Batch Size,Instances,Operation,Avg Time Per Iter (ms),Avg Time Per Instance (ms)
 10,2,20,ReadImage,77.00567245,38.50283623
 10,2,20,Resize,11.97342873,5.98671436
 10,2,20,Normalize,6.09791279,3.04895639
