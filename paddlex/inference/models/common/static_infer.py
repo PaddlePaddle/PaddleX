@@ -89,19 +89,14 @@ def convert_trt(model_name, mode, pp_model_path, trt_save_path, trt_dynamic_shap
 
 
 class Copy2GPU:
-    def __init__(self, device_type):
-        self.device_type = device_type
+    def __init__(self, device):
+        self.device = device
 
     @benchmark.timeit
     def __call__(self, arrs):
         # NOTE: A tailored solution for DCU, MLU, and NPU support.
         old_device = paddle.device.get_device()
-
-        if self.device_type == "dcu":
-            paddle.device.set_device("gpu")
-        else:
-            paddle.device.set_device(self.device_type)
-
+        paddle.device.set_device(self.device)
         try:
             paddle_tensors = [paddle.to_tensor(i) for i in arrs]
         finally:
@@ -139,7 +134,11 @@ class StaticInfer:
         self.model_prefix = model_prefix
         self.option = option
         self.predictor = self._create()
-        self.copy2gpu = Copy2GPU(self.option.device_type)
+        device = self.option.device
+        if self.option.device_type == "dcu":
+            device = device.replace("dcu", "gpu")
+
+        self.copy2gpu = Copy2GPU(device)
         self.copy2cpu = Copy2CPU()
         self.infer = Infer(self.predictor)
 
