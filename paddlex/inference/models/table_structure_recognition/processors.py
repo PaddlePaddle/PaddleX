@@ -17,6 +17,7 @@ import cv2
 import numpy as np
 from numpy import ndarray
 from ..common.vision import funcs as F
+from ...utils.benchmark import benchmark
 
 
 class Pad:
@@ -55,6 +56,7 @@ class Pad:
 
         return [img, [img.shape[1], img.shape[0]]]
 
+    @benchmark.timeit
     def __call__(self, imgs):
         """apply"""
         return [self.apply(img) for img in imgs]
@@ -119,6 +121,7 @@ class TableLabelDecode:
             assert False, "unsupported type %s in get_beg_end_flag_idx" % beg_or_end
         return idx
 
+    @benchmark.timeit
     def __call__(self, pred, img_size, ori_img_size):
         """apply"""
         bbox_preds, structure_probs = [], []

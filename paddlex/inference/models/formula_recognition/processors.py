@@ -28,6 +28,7 @@ from tokenizers import AddedToken
 from typing import List, Tuple, Optional, Any, Dict, Union
 
 from ....utils import logging
+from ...utils.benchmark import benchmark
 
 
 class MinMaxResize:
@@ -142,6 +143,7 @@ class MinMaxResize:
             img = np.dstack((img, img, img))
             return img
 
+    @benchmark.timeit
     def __call__(self, imgs: List[np.ndarray]) -> List[np.ndarray]:
         """Applies the resize method to a list of images.
 
@@ -181,6 +183,7 @@ class LatexTestTransform:
         squeezed = np.squeeze(grayscale_image)
         return cv2.merge([squeezed] * self.num_output_channels)
 
+    @benchmark.timeit
     def __call__(self, imgs: List[np.ndarray]) -> List[np.ndarray]:
         """
         Apply the transform to a list of images.
@@ -220,6 +223,7 @@ class LatexImageFormat:
         img_expanded = img[:, :, np.newaxis].transpose(2, 0, 1)
         return img_expanded[np.newaxis, :]
 
+    @benchmark.timeit
     def __call__(self, imgs: List[np.ndarray]) -> List[np.ndarray]:
         """Applies the format method to a list of images.
 
@@ -275,6 +279,7 @@ class NormalizeImage(object):
         img = (img.astype("float32") * self.scale - self.mean) / self.std
         return img
 
+    @benchmark.timeit
     def __call__(self, imgs: List[Union[np.ndarray, Image.Image]]) -> List[np.ndarray]:
         """Apply normalization to a list of images."""
         return [self.normalize(img) for img in imgs]
@@ -287,6 +292,7 @@ class ToBatch(object):
         """Initializes the ToBatch object."""
         super(ToBatch, self).__init__()
 
+    @benchmark.timeit
     def __call__(self, imgs: List[np.ndarray]) -> List[np.ndarray]:
         """Concatenates a list of images into a single batch.
 
@@ -371,6 +377,7 @@ class LaTeXOCRDecode(object):
         ]
         return [self.post_process(dec_str) for dec_str in dec_str_list]
 
+    @benchmark.timeit
     def __call__(
         self,
         preds: np.ndarray,
@@ -543,6 +550,7 @@ class UniMERNetImgDecode(object):
         )
         return np.array(ImageOps.expand(img, padding))
 
+    @benchmark.timeit
     def __call__(self, imgs: List[np.ndarray]) -> List[Optional[np.ndarray]]:
         """Calls the img_decode method on a list of images.
 
@@ -871,6 +879,7 @@ class UniMERNetDecode(object):
         text = self.normalize(text)
         return text
 
+    @benchmark.timeit
     def __call__(
         self,
         preds: np.ndarray,
@@ -934,6 +943,7 @@ class UniMERNetTestTransform:
         img = cv2.merge([squeezed] * self.num_output_channels)
         return img
 
+    @benchmark.timeit
     def __call__(self, imgs: List[np.ndarray]) -> List[np.ndarray]:
         """
         Applies the transform to a list of images.
@@ -974,6 +984,7 @@ class UniMERNetImageFormat:
         img_expanded = img[:, :, np.newaxis].transpose(2, 0, 1)
         return img_expanded[np.newaxis, :]
 
+    @benchmark.timeit
     def __call__(self, imgs: List[np.ndarray]) -> List[np.ndarray]:
         """Applies the format method to a list of images.
 

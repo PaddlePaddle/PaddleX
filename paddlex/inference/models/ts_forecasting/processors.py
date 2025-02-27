@@ -17,6 +17,8 @@ import joblib
 import numpy as np
 import pandas as pd
 
+from ...utils.benchmark import benchmark
+
 
 class TSDeNormalize:
     """A class to de-normalize time series prediction data using a pre-fitted scaler."""
@@ -33,6 +35,7 @@ class TSDeNormalize:
         self.scaler = joblib.load(scale_path)
         self.params_info = params_info
 
+    @benchmark.timeit
     def __call__(self, preds_list: List[pd.DataFrame]) -> List[pd.DataFrame]:
         """
         Applies de-normalization to a list of prediction DataFrames.
@@ -73,6 +76,7 @@ class ArraytoTS:
         super().__init__()
         self.info_params = info_params
 
+    @benchmark.timeit
     def __call__(
         self, ori_ts_list: List[Dict[str, Any]], pred_list: List[np.ndarray]
     ) -> List[pd.DataFrame]:

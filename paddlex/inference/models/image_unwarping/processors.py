@@ -15,6 +15,8 @@
 import numpy as np
 from typing import List, Union, Tuple
 
+from ...utils.benchmark import benchmark
+
 
 class DocTrPostProcess:
     """
@@ -44,6 +46,7 @@ class DocTrPostProcess:
             np.float32(scale) if isinstance(scale, (str, float)) else np.float32(255.0)
         )
 
+    @benchmark.timeit
     def __call__(
         self, imgs: List[Union[np.ndarray, Tuple[np.ndarray, ...]]]
     ) -> List[np.ndarray]:

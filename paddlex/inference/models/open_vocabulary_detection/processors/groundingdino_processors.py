@@ -20,6 +20,7 @@ import PIL
 
 from ...common.tokenizer.bert_tokenizer import BertTokenizer
 from .....utils.lazy_loader import LazyLoader
+from ....utils.benchmark import benchmark
 
 # NOTE: LazyLoader is used to avoid conflicts between ultra-infer and Paddle
 paddle = LazyLoader("lazy_paddle", globals(), "paddle")
@@ -117,6 +118,7 @@ class GroundingDINOPostProcessor(object):
         self.box_threshold = box_threshold
         self.text_threshold = text_threshold
 
+    @benchmark.timeit
     def __call__(
         self,
         pred_boxes,
@@ -234,6 +236,7 @@ class GroundingDINOProcessor(object):
         assert os.path.isdir(tokenizer_dir), f"{tokenizer_dir} not exists."
         self.tokenizer = BertTokenizer.from_pretrained(tokenizer_dir)
 
+    @benchmark.timeit
     def __call__(
         self,
         images: List[PIL.Image.Image],
@@ -270,6 +273,7 @@ class GroundingDinoTextProcessor(object):
     ):
         self.max_words = max_words
 
+    @benchmark.timeit
     def __call__(
         self,
         input_ids,
@@ -387,6 +391,7 @@ class GroundingDinoImageProcessor(object):
         self.image_std = image_std
         self.do_nested = do_nested
 
+    @benchmark.timeit
     def __call__(self, images, **kwargs):
         """Preprocess an image or a batch of images."""
         return self.preprocess(images, **kwargs)

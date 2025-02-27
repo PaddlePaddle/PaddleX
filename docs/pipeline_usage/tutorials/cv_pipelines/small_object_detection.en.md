@@ -539,6 +539,8 @@ Below is the API reference for basic service deployment and multi-language servi
 <details><summary>Multi-language Service Call Examples</summary>
 <details>
 <summary>Python</summary>
+
+
 <pre><code class="language-python">import base64
 import requests
 

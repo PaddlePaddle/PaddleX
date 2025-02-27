@@ -16,6 +16,7 @@ import numpy as np
 
 from ....utils import logging
 from ..common.vision import F
+from ...utils.benchmark import benchmark
 
 
 class Crop:
@@ -41,6 +42,7 @@ class Crop:
             raise ValueError("Unsupported interpolation method")
         self.mode = mode
 
+    @benchmark.timeit
     def __call__(self, imgs):
         """apply"""
         return [self.crop(img) for img in imgs]
@@ -78,6 +80,7 @@ class Topk:
         class_id_map = {id: str(lb) for id, lb in enumerate(class_ids)}
         return class_id_map
 
+    @benchmark.timeit
     def __call__(self, preds, topk=5):
         indexes = preds[0].argsort(axis=1)[:, -topk:][:, ::-1].astype("int32")
         scores = [

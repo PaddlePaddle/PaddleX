@@ -18,6 +18,7 @@ from typing import List, Sequence, Tuple, Union, Optional
 import numpy as np
 from ....utils import logging
 from ..object_detection.processors import restructured_boxes
+from ...utils.benchmark import benchmark
 
 import cv2
 
@@ -78,6 +79,7 @@ class InstanceSegPostProcess(object):
 
         return result
 
+    @benchmark.timeit
     def __call__(
         self,
         batch_outputs: List[dict],

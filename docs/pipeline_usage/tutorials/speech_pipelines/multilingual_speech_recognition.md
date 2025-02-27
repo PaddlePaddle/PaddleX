@@ -493,19 +493,22 @@ for res in output:
 
 
 <pre><code class="language-python">
+import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/multilingual-speech-recognition&quot; # 服务URL
-audio_path = &quot;./zh.wav&quot;
+API_URL = "http://localhost:8080/multilingual-speech-recognition" # 服务URL
+audio_path = "./zh.wav"
 
-payload = {&quot;audio&quot;: audio_path}
+with open(audio_path, "rb") as file:
+    audio_bytes = file.read()
+    audio_data = base64.b64encode(audio_bytes).decode("ascii")
 
-# 调用API
+payload = {"audio": audio_data}
+
 response = requests.post(API_URL, json=payload)
 
-# 处理接口返回数据
 assert response.status_code == 200
-result = response.json()[&quot;result&quot;]
+result = response.json()["result"]
 print(result)
 </code></pre></details>
 </details>
