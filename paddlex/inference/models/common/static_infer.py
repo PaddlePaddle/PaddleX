@@ -92,20 +92,13 @@ def convert_trt(model_name, mode, pp_model_path, trt_save_path, trt_dynamic_shap
 class Copy2GPU:
     def __init__(self, device_type, device_id):
         self.device_type = device_type
-        if isinstance(device_id, int):
-            device_id = [device_id]
         self.device_id = device_id
 
     @benchmark.timeit
     def __call__(self, arrs):
         # HACK: A tailored solution for DCU, MLU, and NPU support.
-        old_device = paddle.device.get_device()
-        new_device = constr_device(self.device_type, self.device_id)
-        paddle.device.set_device(new_device)
-        try:
-            paddle_tensors = [paddle.to_tensor(i) for i in arrs]
-        finally:
-            paddle.device.set_device(old_device)
+        device = constr_device(self.device_type, [self.device_id])
+        paddle_tensors = [paddle.to_tensor(i, place=device) for i in arrs]
 
         return paddle_tensors
 
