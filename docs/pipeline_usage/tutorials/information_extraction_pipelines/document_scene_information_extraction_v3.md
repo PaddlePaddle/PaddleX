@@ -1620,7 +1620,7 @@ for res in visual_predict_res:
 </tbody>
 </table>
 <li><b>注意：</b></li>
-在请求体中包含大模型调用的API key等敏感参数可能存在安全风险，如无必要，请在配置文件中设置这些参数，在请求时不传递。
+在请求体中包含大模型调用的API key等敏感参数可能存在安全风险。如无必要，请在配置文件中设置这些参数，在请求时不传递。
 <br/><br/>
 </details>
 <details><summary>多语言调用服务示例</summary>
@@ -1696,7 +1696,8 @@ if resp_chat.status_code != 200:
 result_chat = resp_chat.json()["result"]
 print("Final result:")
 print(result_chat["chatResult"])
-</code></pre></details>
+</code></pre>
+</details>
 </details>
 <br/>
 
