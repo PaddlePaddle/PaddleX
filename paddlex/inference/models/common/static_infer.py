@@ -94,6 +94,15 @@ class Copy2GPU:
         self.device_type = device_type
         self.device_id = device_id
 
+        if self.device_type not in ("gpu", "dcu"):
+            if self.device_id is not None:
+                logging.warning(
+                    "The %r device does not support specifying device IDs. The default device will be used.",
+                    self.option.device_type,
+                )
+                self.device_id = None
+                logging.debug("`device_id` updated to `None`.")
+
     @benchmark.timeit
     def __call__(self, arrs):
         # HACK: A tailored solution for DCU, MLU, and NPU support.
@@ -112,7 +121,6 @@ class Copy2CPU:
 
 
 class Infer:
-
     def __init__(self, predictor):
         super().__init__()
         self.predictor = predictor
@@ -162,15 +170,6 @@ class StaticInfer:
                     self.model_dir / f"{self.model_prefix}.pdmodel"
                 ).as_posix()
         params_file = (self.model_dir / f"{self.model_prefix}.pdiparams").as_posix()
-
-        if self.option.device_type not in ("gpu", "dcu"):
-            if self.option.device_id is not None:
-                logging.warning(
-                    "The %r device does not support specifying device IDs. The default device will be used.",
-                    self.option.device_type,
-                )
-                self.option.device_id = None
-                logging.debug("`device_id` updated to `None`.")
 
         # for TRT
         if self.option.run_mode.startswith("trt"):
