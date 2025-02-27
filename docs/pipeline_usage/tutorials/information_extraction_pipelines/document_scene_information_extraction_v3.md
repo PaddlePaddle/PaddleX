@@ -1692,7 +1692,7 @@ if resp_chat.status_code != 200:
 result_chat = resp_chat.json()["result"]
 print("Final result:")
 print(result_chat["chatResult"])
-</code></pre>
+</code></pre></details>
 </details>
 <br/>
 
