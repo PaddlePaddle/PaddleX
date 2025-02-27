@@ -130,15 +130,15 @@ pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0
 
 ## 💻 Command Line Usage
 
-A single command can quickly experience the production line effect, with a unified command line format as follows:
+A single command can quickly experience the pipeline effect, with a unified command line format as follows:
 
 ```bash
-paddlex --pipeline [production line name] --input [input image] --device [running device]
+paddlex --pipeline [pipeline name] --input [input image] --device [running device]
 ```
 
-Each pipeline in PaddleX corresponds to specific parameters. You can find detailed parameter descriptions in the respective production line documentation. Each production line requires three essential parameters:
+Each pipeline in PaddleX corresponds to specific parameters. You can find detailed parameter descriptions in the respective pipeline documentation. Each pipeline requires three essential parameters:
 
-* `pipeline`: The name of the production line or the path to the production line configuration file.
+* `pipeline`: The name of the pipeline or the path to the pipeline configuration file.
 * `input`: The local path, directory, or URL of the input file to be processed (e.g., an image).
 * `device`: The hardware device and its index to be used (e.g., `gpu:0` indicates using the first GPU). You can also choose to use NPU (`npu:0`), XPU (`xpu:0`), CPU (`cpu`), etc.
 
@@ -1397,12 +1397,12 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
 
 ## 📝 Python Usage
 
-A few lines of code can complete the quick inference of the production line, with a unified Python script format as follows:
+A few lines of code can complete the quick inference of the pipeline, with a unified Python script format as follows:
 
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline=[production line name])
+pipeline = create_pipeline(pipeline=[pipeline name])
 output = pipeline.predict([input image name])
 for res in output:
     res.print()
@@ -1411,8 +1411,8 @@ for res in output:
 ```
 The following steps were executed:
 
-* `create_pipeline()` instantiates the production line object
-* Pass in the image and call the `predict` method of the production line object for inference prediction
+* `create_pipeline()` instantiates the pipeline object
+* Pass in the image and call the `predict` method of the pipeline object for inference prediction
 * Process the prediction results
 
 
@@ -1762,7 +1762,7 @@ The following steps were executed:
             res.save_to_json(save_path="./output/")
         ```
 
-!!! example "Command Line Usage for Time Series Production Lines"
+!!! example "Command Line Usage for Time Series pipelines"
 
     === "Time Series Forecasting"
 
@@ -1804,7 +1804,7 @@ The following steps were executed:
             res.save_to_json(save_path="./output/") ## Save results in JSON format
         ```
 
-!!! example "Command Line Usage for Speech Production Lines"
+!!! example "Command Line Usage for Speech pipelines"
 
     === "Multilingual Speech Recognition"
 
@@ -1819,7 +1819,7 @@ The following steps were executed:
             res.save_to_json(save_path="./output/")
         ```
 
-!!! example "Command Line Usage for Video Production Lines"
+!!! example "Command Line Usage for Video pipelines"
 
     === "General Video Classification"
 
@@ -1864,7 +1864,7 @@ The following steps were executed:
 
     ---
 
-    The general OCR production line is used to solve text recognition tasks, extract text information from images, and output it in text form. Based on the end-to-end OCR system, it can achieve millisecond-level precise text content prediction on CPUs and reach open-source SOTA in general scenarios.
+    The general OCR pipeline is used to solve text recognition tasks, extract text information from images, and output it in text form. Based on the end-to-end OCR system, it can achieve millisecond-level precise text content prediction on CPUs and reach open-source SOTA in general scenarios.
 
     [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/ocr_pipelines/OCR.en.md)
 

@@ -453,7 +453,7 @@ The model can be directly integrated into the PaddleX pipeline or directly into 
 
 1.<b>Pipeline Integration</b>
 
-The vehicle attribute recognition module can be integrated into the [Vehicle Attribute Recognition Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/vehicle_attribute_recognition.en.md) of PaddleX. Simply replace the model path to update the vehicle attribute recognition module of the relevant pipeline. In pipeline integration, you can use high-performance inference and service-oriented deployment to deploy your model.
+The vehicle attribute recognition module can be integrated into the [Vehicle Attribute Recognition Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/vehicle_attribute_recognition.en.md) of PaddleX. Simply replace the model path to update the vehicle attribute recognition module of the relevant pipeline. In pipeline integration, you can use high-performance inference and serving deployment to deploy your model.
 
 2.<b>Module Integration</b>
 

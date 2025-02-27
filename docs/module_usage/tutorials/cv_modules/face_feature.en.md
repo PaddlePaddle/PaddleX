@@ -426,7 +426,7 @@ The model can be directly integrated into the PaddleX pipeline or into your own 
 
 1. <b>Pipeline Integration</b>
 
-The face feature module can be integrated into the PaddleX pipeline for [<b>Face Recognition</b>](../../../pipeline_usage/tutorials/face_recognition_pipelines/face_recognition.en.md). You only need to replace the model path to update the face feature module of the relevant pipeline. In pipeline integration, you can use high-performance deployment and service-oriented deployment to deploy the model you obtained.
+The face feature module can be integrated into the PaddleX pipeline for [<b>Face Recognition</b>](../../../pipeline_usage/tutorials/face_recognition_pipelines/face_recognition.en.md). You only need to replace the model path to update the face feature module of the relevant pipeline. In pipeline integration, you can use high-performance deployment and serving deployment to deploy the model you obtained.
 
 2. <b>Module Integration</b>
 

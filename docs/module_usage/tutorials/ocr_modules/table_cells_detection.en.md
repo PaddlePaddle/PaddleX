@@ -500,7 +500,7 @@ The model can be directly integrated into the PaddleX pipeline or into your own 
 
 1.<b>pipeline Integration</b>
 
-The table cell detection module can be integrated into the PaddleX pipeline [General Table Recognition pipeline v2](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.en.md). Simply replacing the model path will complete the model update for the table cell detection module in the relevant pipeline. In pipeline integration, you can deploy your model using high-performance deployment and service-oriented deployment.
+The table cell detection module can be integrated into the PaddleX pipeline [General Table Recognition pipeline v2](../../../pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.en.md). Simply replacing the model path will complete the model update for the table cell detection module in the relevant pipeline. In pipeline integration, you can deploy your model using high-performance deployment and serving deployment.
 
 2.<b>Module Integration</b>
 

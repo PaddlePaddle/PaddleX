@@ -139,7 +139,7 @@ In addition, PaddleX provides detailed tutorials for preparing private datasets 
 
 After fine-tuning your model with a private dataset, you will obtain local model weight files.
 
-To use the fine-tuned model weights, simply modify the production line configuration file by replacing the local paths of the fine-tuned model weights with the corresponding paths in the configuration file:
+To use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local paths of the fine-tuned model weights with the corresponding paths in the configuration file:
 
 ```bash
 ......

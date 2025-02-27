@@ -446,7 +446,7 @@ The model can be directly integrated into the PaddleX pipelines or directly into
 1.<b>Pipeline Integration</b>
 
 
-The video classification module can be integrated into the [General Video Classification Pipeline](../../../pipeline_usage/tutorials/video_pipelines/video_classification.en.md) of PaddleX. Simply replace the model path to update the video classification module of the relevant pipeline. In pipeline integration, you can use high-performance inference and service-oriented deployment to deploy your obtained model.
+The video classification module can be integrated into the [General Video Classification Pipeline](../../../pipeline_usage/tutorials/video_pipelines/video_classification.en.md) of PaddleX. Simply replace the model path to update the video classification module of the relevant pipeline. In pipeline integration, you can use high-performance inference and serving deployment to deploy your obtained model.
 
 2.<b>Module Integration</b>
 

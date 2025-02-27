@@ -579,7 +579,7 @@ After running, the results will be printed to the terminal, as shown below:
 </code></pre></details>
 
 ### 2.2 Integrating via Python Script
-A few lines of code suffice for rapid inference on the production line, taking the general layout parsing pipeline as an example:
+A few lines of code suffice for rapid inference on the pipeline, taking the general layout parsing pipeline as an example:
 
 ```python
 from paddlex import create_pipeline
@@ -1076,7 +1076,7 @@ In the above Python script, the following steps are executed:
 **AI and Computer Vision Tutorial**
 
 - Calling the `save_to_json()` method will save the aforementioned content to the specified `save_path`. If a directory is specified, the save path will be `save_path/{your_img_basename}.json`. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, `numpy.array` types will be converted to list form.
-- Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If a directory is specified, the save path will be `save_path/{your_img_basename}_ocr_res_img.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (Production lines often contain many result images, so it is not recommended to specify a specific file path directly, as multiple images will be overwritten, leaving only the last one.)
+- Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If a directory is specified, the save path will be `save_path/{your_img_basename}_ocr_res_img.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (pipelines often contain many result images, so it is not recommended to specify a specific file path directly, as multiple images will be overwritten, leaving only the last one.)
 
 In addition, attributes are also supported for obtaining visual images with results and prediction results, specifically as follows:
 <table>

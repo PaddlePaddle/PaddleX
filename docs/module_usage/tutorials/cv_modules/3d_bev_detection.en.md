@@ -417,7 +417,7 @@ The model can be directly integrated into the PaddleX pipeline or into your own 
 
 1.<b>pipeline Integration</b>
 
-The 3D multimodal fusion detection module can be integrated into the 3D detection pipeline of PaddleX. Simply replacing the model path will complete the model update for the target detection module in the relevant pipeline. In pipeline integration, you can deploy your model using high-performance deployment and service-oriented deployment.
+The 3D multimodal fusion detection module can be integrated into the 3D detection pipeline of PaddleX. Simply replacing the model path will complete the model update for the target detection module in the relevant pipeline. In pipeline integration, you can deploy your model using high-performance deployment and serving deployment.
 
 2.<b>Module Integration</b>
 
