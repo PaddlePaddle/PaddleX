@@ -48,9 +48,6 @@ python main.py \
     -o Predict.model_dir=None \
     -o Predict.batch_size=2 \
     -o Predict.input=./test.png
-
-# To use the pptrt inference backend:
-#   -o Predict.kernel_option="{'run_mode': 'trt_fp32'}"
 ```
 
 ### 2.2 Python Script Method
@@ -67,15 +64,6 @@ from paddlex import create_model
 
 model = create_model(model_name="PicoDet-XS", model_dir=None)
 output = list(model.predict(input="./test.png", batch_size=2))
-
-# To use the pptrt inference backend:
-# from paddlex import create_model
-# from paddlex.inference.utils.pp_option import PaddlePredictorOption
-#
-# pp_option = PaddlePredictorOption()
-# pp_option.run_mode = "trt_fp32"
-# model = create_model(model_name="PicoDet-XS", model_dir=None, pp_option=pp_option)
-# output = list(model.predict(input="./test.png", batch_size=2))
 ```
 
 Run the script:

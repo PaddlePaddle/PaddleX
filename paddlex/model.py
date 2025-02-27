@@ -84,7 +84,7 @@ class _ModelBasedConfig(_BaseModel):
         model_dir = predict_kwargs.pop("model_dir", None)
 
         device = self._config.Global.get("device")
-        kernel_option = predict_kwargs.pop("kernel_option", None)
+        kernel_option = predict_kwargs.pop("kernel_option", {})
         pp_option = PaddlePredictorOption(self._model_name, **kernel_option)
 
         predictor = create_predictor(
