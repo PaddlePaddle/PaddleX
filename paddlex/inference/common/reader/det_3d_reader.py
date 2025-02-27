@@ -18,6 +18,8 @@ import os
 from typing import Generic, List, Optional, Any, Dict
 import pickle
 
+from ...utils.benchmark import benchmark
+
 
 class _EasyDict(dict):
     def __getattr__(self, key: str):
@@ -235,5 +237,6 @@ class ReadNuscenesData:
         sample["seg_fields"] = []
         return sample
 
+    @benchmark.timeit
     def __call__(self, batch_data):
         return [self.prepare_test_data(data_info) for data_info in batch_data]

@@ -117,7 +117,7 @@ python test_infer.py
         </tr>
         <tr>
             <td>Stage</td>
-            <td>阶段名称，包括预处理（PreProcess）、推理（Inference）、后处理（PostProcess）、以及端到端（End2End）。</td>
+            <td>阶段名称，包括预处理（PreProcess）、推理（Inference）、后处理（PostProcess）、其他（Others）（如格式化输出、封装结果等）以及端到端（End2End）。</td>
         </tr>
         <tr>
             <td>Avg Time Per Iter (ms)</td>

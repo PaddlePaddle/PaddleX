@@ -16,6 +16,7 @@ from typing import List, Dict, Any, Iterator
 from pathlib import Path
 from abc import abstractmethod, ABC
 
+from ....utils.benchmark import benchmark
 from ....utils.io import YAMLReader
 from ....common.batch_sampler import BaseBatchSampler
 
@@ -127,6 +128,7 @@ class BasePredictor(ABC):
         """Sets up the predictor."""
         raise NotImplementedError
 
+    @benchmark.timeit
     def apply(self, input: Any, **kwargs) -> Iterator[Any]:
         """
         Do predicting with the input data and yields predictions.

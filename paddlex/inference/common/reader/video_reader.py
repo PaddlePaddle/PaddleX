@@ -16,6 +16,7 @@ import numpy as np
 import cv2
 
 from ...utils.io import VideoReader
+from ...utils.benchmark import benchmark
 
 
 class ReadVideo:
@@ -28,6 +29,7 @@ class ReadVideo:
             backend=backend, num_seg=num_seg, seg_len=seg_len, sample_type=sample_type
         )
 
+    @benchmark.timeit
     def __call__(self, videos):
         """apply"""
         return [self._read(video) for video in videos]

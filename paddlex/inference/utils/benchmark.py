@@ -92,12 +92,13 @@ class Benchmark:
     def gather(self, batch_size):
         logs = {k.split(".")[0]: v for k, v in self.logs.items()}
 
-        iters = len(logs["Infer"])
-        instances = iters * batch_size
-        detail_list = []
         summary = {"preprocess": 0, "inference": 0, "postprocess": 0}
+        summary["end2end_wall_clock"] = np.mean(logs.pop("BasePredictor"))
+        detail_list = []
         op_tag = "preprocess"
 
+        iters = len(logs["Infer"])
+        instances = iters * batch_size
         for name, time_list in logs.items():
             avg = np.mean(time_list)
             detail_list.append(
@@ -113,6 +114,8 @@ class Benchmark:
         summary["end2end"] = (
             summary["preprocess"] + summary["inference"] + summary["postprocess"]
         )
+        summary["others"] = summary["end2end_wall_clock"] - summary["end2end"]
+
         summary_list = [
             (
                 iters,
@@ -142,9 +145,17 @@ class Benchmark:
                 iters,
                 batch_size,
                 instances,
+                "Others",
+                summary["others"],
+                summary["others"] / batch_size,
+            ),
+            (
+                iters,
+                batch_size,
+                instances,
                 "End2End",
-                summary["end2end"],
-                summary["end2end"] / batch_size,
+                summary["end2end_wall_clock"],
+                summary["end2end_wall_clock"] / batch_size,
             ),
         ]
 

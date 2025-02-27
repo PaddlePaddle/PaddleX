@@ -16,6 +16,7 @@ import numpy as np
 import pandas as pd
 
 from ...utils.io import CSVReader
+from ...utils.benchmark import benchmark
 
 
 class ReadTS:
@@ -24,6 +25,7 @@ class ReadTS:
         super().__init__()
         self._reader = CSVReader(backend="pandas")
 
+    @benchmark.timeit
     def __call__(self, ts_list):
         """apply"""
         return [self.read(ts) for ts in ts_list]
