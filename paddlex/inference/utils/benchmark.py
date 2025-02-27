@@ -23,6 +23,9 @@ from prettytable import PrettyTable
 from ...utils.flags import INFER_BENCHMARK, INFER_BENCHMARK_OUTPUT
 from ...utils import logging
 
+# XXX: Global mutable state
+_inference_operations = []
+
 
 class Benchmark:
     def __init__(self, enabled):
@@ -92,35 +95,35 @@ class Benchmark:
     def gather(self, batch_size):
         logs = {k.split(".")[0]: v for k, v in self.logs.items()}
 
-        iters = len(logs["Infer"])
-        instances = iters * batch_size
         detail_list = []
-        summary = {"preprocess": 0, "inference": 0, "postprocess": 0}
-        op_tag = "preprocess"
+        summary = {"preprocessing": 0, "inference": 0, "postprocessing": 0}
+        op_tag = "preprocessing"
 
         for name, time_list in logs.items():
+            iters = len(time_list)
+            instances = iters * batch_size
             avg = np.mean(time_list)
             detail_list.append(
                 (iters, batch_size, instances, name, avg, avg / batch_size)
             )
 
-            if name in ["Copy2GPU", "Infer", "Copy2CPU"]:
+            if name in _inference_operations:
                 summary["inference"] += avg
-                op_tag = "postprocess"
+                op_tag = "postprocessing"
             else:
                 summary[op_tag] += avg
 
-        summary["end2end"] = (
-            summary["preprocess"] + summary["inference"] + summary["postprocess"]
+        summary["end_to_end"] = (
+            summary["preprocessing"] + summary["inference"] + summary["postprocessing"]
         )
         summary_list = [
             (
                 iters,
                 batch_size,
                 instances,
-                "PreProcess",
-                summary["preprocess"],
-                summary["preprocess"] / batch_size,
+                "Preprocessing",
+                summary["preprocessing"],
+                summary["preprocessing"] / batch_size,
             ),
             (
                 iters,
@@ -134,17 +137,17 @@ class Benchmark:
                 iters,
                 batch_size,
                 instances,
-                "PostProcess",
-                summary["postprocess"],
-                summary["postprocess"] / batch_size,
+                "Postprocessing",
+                summary["postprocessing"],
+                summary["postprocessing"] / batch_size,
             ),
             (
                 iters,
                 batch_size,
                 instances,
-                "End2End",
-                summary["end2end"],
-                summary["end2end"] / batch_size,
+                "End-to-End",
+                summary["end_to_end"],
+                summary["end_to_end"] / batch_size,
             ),
         ]
 
@@ -216,6 +219,15 @@ class Benchmark:
                 with open(Path(save_dir) / "summary.csv", "w", newline="") as file:
                     writer = csv.writer(file)
                     writer.writerows(csv_data)
+
+
+def get_inference_operations():
+    return _inference_operations
+
+
+def set_inference_operations(val):
+    global _inference_operations
+    _inference_operations = val
 
 
 if INFER_BENCHMARK:
