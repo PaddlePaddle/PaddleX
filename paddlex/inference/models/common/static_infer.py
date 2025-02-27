@@ -89,19 +89,26 @@ def convert_trt(model_name, mode, pp_model_path, trt_save_path, trt_dynamic_shap
     convert(pp_model_path, trt_config)
 
 
+def _sort_inputs(inputs, names):
+    # NOTE: Adjust input tensors to match the sorted sequence.
+    indices = sorted(range(len(names)), key=names.__getitem__)
+    inputs = [inputs[indices.index(i)] for i in range(len(inputs))]
+    return inputs
+
+
+def _make_sequence(*components):
+    def _run(x):
+        for component in components:
+            x = component(x)
+        return x
+
+    return _run
+
+
 class Copy2GPU:
     def __init__(self, device_type, device_id):
         self.device_type = device_type
         self.device_id = device_id
-
-        if self.device_type not in ("gpu", "dcu"):
-            if self.device_id is not None:
-                logging.warning(
-                    "The %r device does not support specifying device IDs. The default device will be used.",
-                    self.device_type,
-                )
-                self.device_id = None
-                logging.debug("`device_id` updated to `None`.")
 
     @benchmark.timeit
     def __call__(self, arrs):
@@ -118,6 +125,30 @@ class Copy2CPU:
     def __call__(self, paddle_tensors):
         arrs = [i.numpy() for i in paddle_tensors]
         return arrs
+
+
+class LegacyInfer:
+    def __init__(self, predictor):
+        self.predictor = predictor
+        input_names = self.predictor.get_input_names()
+        self.input_handles = []
+        self.output_handles = []
+        for input_name in input_names:
+            input_handle = self.predictor.get_input_handle(input_name)
+            self.input_handles.append(input_handle)
+        output_names = self.predictor.get_output_names()
+        for output_name in output_names:
+            output_handle = self.predictor.get_output_handle(output_name)
+            self.output_handles.append(output_handle)
+
+    @benchmark.timeit
+    def __call__(self, x):
+        for input_, input_handle in zip(x, self.input_handles):
+            input_handle.reshape(input_.shape)
+            input_handle.copy_from_cpu(input_)
+        self.predictor.run()
+        outputs = [o.copy_to_cpu() for o in self.output_handles]
+        return outputs
 
 
 class Infer:
@@ -141,11 +172,19 @@ class StaticInfer:
         self.model_prefix = model_prefix
         self.option = option
         self.predictor = self._create()
-        device_type = self.option.device_type
-        device_type = "gpu" if device_type == "dcu" else device_type
-        self.copy2gpu = Copy2GPU(device_type, self.option.device_id)
-        self.copy2cpu = Copy2CPU()
-        self.infer = Infer(self.predictor)
+        if self.use_legacy_infer:
+            self.infer = LegacyInfer(self.predictor)
+        else:
+            device_type = self.option.device_type
+            device_type = "gpu" if device_type == "dcu" else device_type
+            copy2gpu = Copy2GPU(device_type, self.option.device_id)
+            copy2cpu = Copy2CPU()
+            infer = Infer(self.predictor)
+            self.infer = _make_sequence(copy2gpu, infer, copy2cpu)
+
+    @property
+    def use_legacy_infer(self):
+        return self.option.device_type not in ("cpu", "gpu", "dcu")
 
     def _create(
         self,
@@ -295,25 +334,17 @@ class StaticInfer:
 
         predictor = create_predictor(config)
 
-        # Get input and output handlers
-        input_names = predictor.get_input_names()
-        input_names.sort()
-
         return predictor
 
     def __call__(self, x) -> List[Any]:
-        # NOTE: Adjust input tensors to match the sorted sequence.
         names = self.predictor.get_input_names()
         if len(names) != len(x):
             raise ValueError(
                 f"The number of inputs does not match the model: {len(names)} vs {len(x)}"
             )
-        indices = sorted(range(len(names)), key=names.__getitem__)
-        x = [x[indices.index(i)] for i in range(len(x))]
         # TODO:
         # Ensure that input tensors follow the model's input sequence without sorting.
+        x = _sort_inputs(x, names)
+        pred = self.infer(x)
 
-        inputs = self.copy2gpu(x)
-        outputs = self.infer(inputs)
-        pred = self.copy2cpu(outputs)
         return pred
