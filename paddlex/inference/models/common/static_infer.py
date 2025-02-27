@@ -140,9 +140,7 @@ class StaticInfer:
         self.option = option
         self.predictor = self._create()
         device_type = self.option.device_type
-        if self.option.device_type == "dcu":
-            device_type = "gpu"
-
+        device_type = "gpu" if device_type == "dcu" else device_type
         self.copy2gpu = Copy2GPU(device_type, self.option.device_id)
         self.copy2cpu = Copy2CPU()
         self.infer = Infer(self.predictor)
