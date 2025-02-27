@@ -19,6 +19,7 @@ from .utils.result_saver import try_except_decorator
 from .utils.config import parse_args, get_config
 from .utils.errors import raise_unsupported_api_error
 from .model import _ModelBasedConfig
+from .utils.flags import INFER_BENCHMARK
 
 
 class Engine(object):
@@ -47,6 +48,8 @@ class Engine(object):
             return self._model.export()
         elif self._mode == "predict":
             for res in self._model.predict():
+                if INFER_BENCHMARK:
+                    continue
                 res.print()
                 if self._output:
                     res.save_all(save_path=self._output)

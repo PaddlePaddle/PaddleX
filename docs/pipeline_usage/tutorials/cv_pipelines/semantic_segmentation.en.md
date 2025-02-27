@@ -643,6 +643,8 @@ Below are the API references for basic service deployment and examples of multi-
 <details><summary>Multi-language Service Call Example</summary>
 <details>
 <summary>Python</summary>
+
+
 <pre><code class="language-python">import base64
 import requests
 

@@ -23,6 +23,7 @@ import numpy as np
 from ..common.vision.processors import _BaseResize
 
 from ..common.vision import funcs as F
+from ...utils.benchmark import benchmark
 
 
 class Resize(_BaseResize):
@@ -52,6 +53,7 @@ class Resize(_BaseResize):
 
         self.keep_ratio = keep_ratio
 
+    @benchmark.timeit
     def __call__(self, imgs, target_size=None):
         """apply"""
         target_size = self.target_size if target_size is None else target_size
@@ -88,6 +90,7 @@ class SegPostProcess:
     restoring the prediction segmentation map to the original image size for now.
     """
 
+    @benchmark.timeit
     def __call__(self, imgs, src_images):
         assert len(imgs) == len(src_images)
 

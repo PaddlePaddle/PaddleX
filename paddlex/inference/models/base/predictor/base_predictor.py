@@ -71,7 +71,6 @@ class BasePredictor(ABC):
 
         # alias predict() to the __call__()
         self.predict = self.__call__
-        self.benchmark = None
 
     @property
     def config_path(self) -> str:

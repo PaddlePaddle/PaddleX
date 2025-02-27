@@ -2010,7 +2010,11 @@ for res in visual_predict_res:
 <td>关键信息抽取结果。</td>
 </tr>
 </tbody>
-</table></details>
+</table>
+<li><b>注意：</b></li>
+在请求体中包含大模型调用的API key等敏感参数可能存在安全风险。如无必要，请在配置文件中设置这些参数，在请求时不传递。
+<br/><br/>
+</details>
 
 <details><summary>多语言调用服务示例</summary>
 

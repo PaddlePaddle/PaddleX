@@ -20,6 +20,7 @@ import PIL
 from copy import deepcopy
 
 from .....utils.lazy_loader import LazyLoader
+from ....utils.benchmark import benchmark
 
 # NOTE: LazyLoader is used to avoid conflicts between ultra-infer and Paddle
 paddle = LazyLoader("lazy_paddle", globals(), "paddle")
@@ -159,6 +160,7 @@ class SamPromptProcessor(object):
         boxes = self.apply_coords(boxes.reshape([-1, 2, 2]), original_size)
         return boxes.reshape([-1, 4])
 
+    @benchmark.timeit
     def __call__(
         self,
         original_size,
@@ -213,6 +215,7 @@ class SamImageProcessor(object):
 
         return np.array(T.resize(image, target_size))
 
+    @benchmark.timeit
     def __call__(self, images, **kwargs):
         if not isinstance(images, (list, tuple)):
             images = [images]

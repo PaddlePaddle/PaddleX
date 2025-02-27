@@ -18,6 +18,7 @@ import argparse
 import yaml
 from . import logging
 from .errors import raise_key_not_found_error
+from .file_interface import custom_open
 
 __all__ = ["get_config"]
 
@@ -61,7 +62,7 @@ def create_attr_dict(yaml_config):
 
 def parse_config(cfg_file):
     """Load a config file into AttrDict"""
-    with open(cfg_file, "r") as fopen:
+    with custom_open(cfg_file, "r") as fopen:
         yaml_config = AttrDict(yaml.load(fopen, Loader=yaml.SafeLoader))
     create_attr_dict(yaml_config)
     return yaml_config

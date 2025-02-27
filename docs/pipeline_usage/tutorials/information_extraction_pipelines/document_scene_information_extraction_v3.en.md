@@ -1614,7 +1614,11 @@ Below are the API references for basic serving and multi-language service invoca
 <td>Key information extraction result.</td>
 </tr>
 </tbody>
-</table></details>
+</table>
+<li><b>Note:</b></li>
+Including sensitive parameters such as API key for large model calls in the request body can be a security risk. If not necessary, set these parameters in the configuration file and do not pass them on request.
+<br/><br/>
+</details>
 <details><summary>Multi-language Service Invocation Examples</summary>
 <details>
 <summary>Python</summary>
@@ -1689,6 +1693,7 @@ result_chat = resp_chat.json()["result"]
 print("Final result:")
 print(result_chat["chatResult"])
 </code></pre>
+</details>
 </details>
 <br/>
 

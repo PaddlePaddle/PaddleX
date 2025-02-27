@@ -14,17 +14,18 @@
 
 from typing import Union, Tuple, List, Dict, Any, Iterator
 import os
-import shutil
-import threading
 from pathlib import Path
 import lazy_paddle as paddle
 import numpy as np
 
 from ....utils.flags import DEBUG, FLAGS_json_format_model, USE_PIR_TRT
+from ...utils.benchmark import benchmark
 from ....utils import logging
 from ...utils.pp_option import PaddlePredictorOption
+from ...utils.trt_config import TRT_CFG
 
 
+# old trt
 def collect_trt_shapes(
     model_file, model_params, gpu_id, shape_range_info_path, trt_dynamic_shapes
 ):
@@ -48,7 +49,15 @@ def collect_trt_shapes(
         predictor.run()
 
 
-def convert_trt(mode, pp_model_path, trt_save_path, trt_dynamic_shapes):
+# pir trt
+def convert_trt(model_name, mode, pp_model_path, trt_save_path, trt_dynamic_shapes):
+    def _set_trt_config():
+        if settings := TRT_CFG.get(model_name):
+            for attr_name in settings:
+                if not hasattr(trt_config, attr_name):
+                    logging.warning(f"The TensorRTConfig don't have the `{attr_name}`!")
+                setattr(trt_config, attr_name, settings[attr_name])
+
     from lazy_paddle.tensorrt.export import (
         Input,
         TensorRTConfig,
@@ -73,35 +82,24 @@ def convert_trt(mode, pp_model_path, trt_save_path, trt_dynamic_shapes):
 
     # Create TensorRTConfig
     trt_config = TensorRTConfig(inputs=trt_inputs)
+    _set_trt_config()
     trt_config.precision_mode = precision_map[mode]
     trt_config.save_model_dir = trt_save_path
     convert(pp_model_path, trt_config)
 
 
 class Copy2GPU:
-
-    def __init__(self, input_handlers):
-        super().__init__()
-        self.input_handlers = input_handlers
-
-    def __call__(self, x):
-        for idx in range(len(x)):
-            self.input_handlers[idx].reshape(x[idx].shape)
-            self.input_handlers[idx].copy_from_cpu(x[idx])
+    @benchmark.timeit
+    def __call__(self, arrs):
+        paddle_tensors = [paddle.to_tensor(i) for i in arrs]
+        return paddle_tensors
 
 
 class Copy2CPU:
-
-    def __init__(self, output_handlers):
-        super().__init__()
-        self.output_handlers = output_handlers
-
-    def __call__(self):
-        output = []
-        for out_tensor in self.output_handlers:
-            batch = out_tensor.copy_to_cpu()
-            output.append(batch)
-        return output
+    @benchmark.timeit
+    def __call__(self, paddle_tensors):
+        arrs = [i.numpy() for i in paddle_tensors]
+        return arrs
 
 
 class Infer:
@@ -110,8 +108,9 @@ class Infer:
         super().__init__()
         self.predictor = predictor
 
-    def __call__(self):
-        self.predictor.run()
+    @benchmark.timeit
+    def __call__(self, x):
+        return self.predictor.run(x)
 
 
 class StaticInfer:
@@ -124,22 +123,10 @@ class StaticInfer:
         self.model_dir = model_dir
         self.model_prefix = model_prefix
         self.option = option
-        self.option.changed = True
-        self._lock = threading.Lock()
-
-    def _reset(self) -> None:
-        with self._lock:
-            self.option.changed = False
-            logging.debug(f"Env: {self.option}")
-            (
-                predictor,
-                input_handlers,
-                output_handlers,
-            ) = self._create()
-
-        self.copy2gpu = Copy2GPU(input_handlers)
-        self.copy2cpu = Copy2CPU(output_handlers)
-        self.infer = Infer(predictor)
+        self.predictor = self._create()
+        self.copy2gpu = Copy2GPU()
+        self.copy2cpu = Copy2CPU()
+        self.infer = Infer(self.predictor)
 
     def _create(
         self,
@@ -197,6 +184,7 @@ class StaticInfer:
                 ).as_posix()
                 pp_model_path = (Path(self.model_dir) / self.model_prefix).as_posix()
                 convert_trt(
+                    self.option.model_name,
                     self.option.run_mode,
                     pp_model_path,
                     trt_save_path,
@@ -291,29 +279,22 @@ class StaticInfer:
         # Get input and output handlers
         input_names = predictor.get_input_names()
         input_names.sort()
-        input_handlers = []
-        output_handlers = []
-        for input_name in input_names:
-            input_handler = predictor.get_input_handle(input_name)
-            input_handlers.append(input_handler)
-        output_names = predictor.get_output_names()
-        for output_name in output_names:
-            output_handler = predictor.get_output_handle(output_name)
-            output_handlers.append(output_handler)
-        return predictor, input_handlers, output_handlers
+
+        return predictor
 
     def __call__(self, x) -> List[Any]:
-        if self.option.changed:
-            self._reset()
-        self.copy2gpu(x)
-        self.infer()
-        pred = self.copy2cpu()
-        return pred
+        # NOTE: Adjust input tensors to match the sorted sequence.
+        names = self.predictor.get_input_names()
+        if len(names) != len(x):
+            raise ValueError(
+                f"The number of inputs does not match the model: {len(names)} vs {len(x)}"
+            )
+        indices = sorted(range(len(names)), key=names.__getitem__)
+        x = [x[indices.index(i)] for i in range(len(x))]
+        # TODO:
+        # Ensure that input tensors follow the model's input sequence without sorting.
 
-    @property
-    def benchmark(self):
-        return {
-            "Copy2GPU": self.copy2gpu,
-            "Infer": self.infer,
-            "Copy2CPU": self.copy2cpu,
-        }
+        inputs = self.copy2gpu(x)
+        outputs = self.infer(inputs)
+        pred = self.copy2cpu(outputs)
+        return pred

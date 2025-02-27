@@ -23,6 +23,7 @@ from ...utils.device import (
 )
 from ...utils import logging
 from .new_ir_blacklist import NEWIR_BLOCKLIST
+from .trt_blacklist import TRT_BLOCKLIST
 
 
 class PaddlePredictorOption(object):
@@ -100,6 +101,13 @@ class PaddlePredictorOption(object):
             raise ValueError(
                 f"`run_mode` must be {support_run_mode_str}, but received {repr(run_mode)}."
             )
+        # TRT Blocklist
+        if run_mode.startswith("trt") and self.model_name in TRT_BLOCKLIST:
+            logging.warning(
+                f"The model({self.model_name}) is not supported to run in trt mode! Using `paddle` instead!"
+            )
+            run_mode = "paddle"
+
         self._update("run_mode", run_mode)
 
     @property

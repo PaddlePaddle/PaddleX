@@ -128,9 +128,11 @@ class ImageBatchSampler(BaseBatchSampler):
                 assert all(isinstance(item, int) for item in res)
                 return res
 
+        rand_batch = ImgInstance()
         size = parse_size(data_size)
-        rand_batch = [
-            np.random.randint(0, 256, (*size, 3), dtype=np.uint8)
-            for _ in range(self.batch_size)
-        ]
+        for _ in range(self.batch_size):
+            rand_batch.append(
+                np.random.randint(0, 256, (*size, 3), dtype=np.uint8), None, None
+            )
+
         return rand_batch
