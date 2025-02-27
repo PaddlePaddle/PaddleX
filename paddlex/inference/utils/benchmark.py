@@ -42,12 +42,13 @@ class Benchmark:
             if name is None:
                 name = func_or_cls.__qualname__
 
-            if not callable(func_or_cls):
-                raise TypeError("Only callable objects are supported")
-
             if isinstance(func_or_cls, type):
+                if not hasattr(func_or_cls, "__call__"):
+                    raise TypeError
                 func = func_or_cls.__call__
             else:
+                if not callable(func_or_cls):
+                    raise TypeError
                 func = func_or_cls
 
             @functools.wraps(func)
