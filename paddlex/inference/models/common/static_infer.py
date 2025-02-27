@@ -94,13 +94,19 @@ class Copy2GPU:
 
     @benchmark.timeit
     def __call__(self, arrs):
-        # XXX
+        # NOTE: A tailored solution for DCU, MLU, and NPU support.
         old_device = paddle.device.get_device()
-        paddle.device.set_device(self.device_type)
+
+        if self.device_type == "dcu":
+            paddle.device.set_device("gpu")
+        else:
+            paddle.device.set_device(self.device_type)
+
         try:
             paddle_tensors = [paddle.to_tensor(i) for i in arrs]
         finally:
             paddle.device.set_device(old_device)
+
         return paddle_tensors
 
 
