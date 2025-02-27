@@ -100,8 +100,6 @@ class Copy2GPU:
     def __call__(self, arrs):
         # HACK: A tailored solution for DCU, MLU, and NPU support.
         old_device = paddle.device.get_device()
-        if self.device_type == "dcu":
-            old_device.replace("gpu", "dcu")
         new_device = constr_device(self.device_type, self.device_id)
         paddle.device.set_device(new_device)
         try:
@@ -141,7 +139,11 @@ class StaticInfer:
         self.model_prefix = model_prefix
         self.option = option
         self.predictor = self._create()
-        self.copy2gpu = Copy2GPU(self.option.device_type, self.option.device_id)
+        device_type = self.option.device_type
+        if self.option.device_type == "dcu":
+            device_type = "gpu"
+
+        self.copy2gpu = Copy2GPU(device_type, self.option.device_id)
         self.copy2cpu = Copy2CPU()
         self.infer = Infer(self.predictor)
 
