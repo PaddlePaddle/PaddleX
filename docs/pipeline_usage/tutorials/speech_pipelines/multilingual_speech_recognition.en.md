@@ -307,6 +307,7 @@ payload = {"audio": audio_data}
 response = requests.post(API_URL, json=payload)
 
 assert response.status_code == 200
+
 result = response.json()["result"]
 print(result)
 </code></pre></details>
