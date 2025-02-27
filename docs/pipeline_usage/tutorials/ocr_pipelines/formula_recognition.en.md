@@ -142,29 +142,6 @@ The formula recognition pipeline is designed to solve formula recognition tasks 
 </tr>
 </tbody></table>
 
-* <b>5-Class English Document Area Detection Model, including Text, Title, Table, Image, and List</b>
-<table>
-<thead>
-<tr>
-<th>Model</th><th>Model Download Link</th>
-<th>mAP(0.5) (%)</th>
-<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
-<th>Model Storage Size (M)</th>
-<th>Introduction</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PicoDet_layout_1x</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">Training Model</a></td>
-<td>97.8</td>
-<td>9.03 / 3.10</td>
-<td>25.82 / 20.70</td>
-<td>7.4</td>
-<td>A high-efficiency English document layout area localization model trained on the PubLayNet dataset using PicoDet-1x.</td>
-</tr>
-</tbody></table>
-
 * <b>17-Class Area Detection Model, including 17 common layout categories: Paragraph Title, Image, Text, Number, Abstract, Content, Figure Caption, Formula, Table, Table Caption, References, Document Title, Footnote, Header, Algorithm, Footer, and Stamp</b>
 <table>
 <thead>

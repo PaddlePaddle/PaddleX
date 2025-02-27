@@ -4,7 +4,7 @@ comments: true
 
 # PaddleX Model List (CPU/GPU)
 
-PaddleX includes multiple production lines, each containing several modules, and each module includes several models. You can choose which models to use based on the benchmark data below. If you prioritize model accuracy, choose models with higher accuracy. If you prioritize model inference speed, choose models with faster inference speed. If you prioritize model storage size, choose models with smaller storage size.
+PaddleX includes multiple pipelines, each containing several modules, and each module includes several models. You can choose which models to use based on the benchmark data below. If you prioritize model accuracy, choose models with higher accuracy. If you prioritize model inference speed, choose models with faster inference speed. If you prioritize model storage size, choose models with smaller storage size.
 
 ## [Image Classification Module](../module_usage/tutorials/cv_modules/image_classification.en.md)
 <table>

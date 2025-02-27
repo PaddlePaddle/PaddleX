@@ -13,6 +13,9 @@ The General Table Recognition Pipeline is designed to solve table recognition ta
 <b>The General Table Recognition Pipeline includes essential modules for table structure recognition, text detection, and text recognition, as well as optional modules for layout area detection, document image orientation classification, and text image correction.</b>
 
 <b>If you prioritize model accuracy, choose a high-accuracy model; if you prioritize inference speed, choose a faster model; if you care about model size, choose a smaller model.</b>
+
+<details><summary>👉Model List Details</summary>
+
 <p><b>Table Recognition Module Models:</b></p>
 <table>
 <tr>
@@ -598,7 +601,7 @@ You can [experience online](https://aistudio.baidu.com/community/app/91661/webUI
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/02.png"/>
 
-If you are satisfied with the performance of the pipeline, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the method in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the pipeline using private data</b>. If you have local training hardware resources, you can start training directly on your local machine; if not, the Galaxy Zero-Code platform provides a one-click training service. No code is required; simply upload your data to start the training task.
+If you are satisfied with the performance of the pipeline, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the method in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the pipeline using private data</b>. If you have local training hardware resources, you can start training directly on your local machine; if not, the Baidu AI Studio provides a one-click training service. No code is required; simply upload your data to start the training task.
 
 ### 2.2 Local Experience
 Before using the General Table Recognition pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
@@ -727,38 +730,38 @@ In the above Python script, the following steps are executed:
 <thead>
 <tr>
 <th>Parameter</th>
-<th>Parameter Description</th>
-<th>Parameter Type</th>
+<th>Description</th>
+<th>Type</th>
 <th>Options</th>
 <th>Default Value</th>
 </tr>
 </thead>
 <tr>
 <td><code>input</code></td>
-<td>Data to be predicted, supporting multiple input types (required).</td>
+<td>Data to be predicted, supports multiple input types, required.</td>
 <td><code>Python Var|str|list</code></td>
 <td>
 <ul>
 <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code>.</li>
-<li><b>str</b>: Local path of an image file or a PDF file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the network URL of an image or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">example</a>; <b>local directory</b>, which must contain images to be predicted, such as the local path <code>/root/data/</code> (currently, prediction of PDF files in a directory is not supported; PDF files must be specified with an exact file path).</li>
-<li><b>List</b>: The elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, or <code>[\"/root/data1\", \"/root/data2\"]</code>.</li>
+<li><b>str</b>: Local path of image or PDF files, e.g., <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the network URL of an image or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">Example</a>; <b>Local directory</b>, the directory should contain images to be predicted, e.g., <code>/root/data/</code> (currently, prediction for PDF files in directories is not supported; PDF files must specify the exact file path).</li>
+<li><b>List</b>: List elements must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[“/root/data/img1.jpg”, “/root/data/img2.jpg”]</code>, <code>[“/root/data1”, “/root/data2”]</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The inference device for the pipeline.</td>
+<td>Inference device.</td>
 <td><code>str|None</code></td>
 <td>
 <ul>
-<li><b>CPU</b>: <code>cpu</code> indicates using the CPU for inference;</li>
-<li><b>GPU</b>: <code>gpu:0</code> indicates using the first GPU for inference;</li>
-<li><b>NPU</b>: <code>npu:0</code> indicates using the first NPU for inference;</li>
-<li><b>XPU</b>: <code>xpu:0</code> indicates using the first XPU for inference;</li>
-<li><b>MLU</b>: <code>mlu:0</code> indicates using the first MLU for inference;</li>
-<li><b>DCU</b>: <code>dcu:0</code> indicates using the first DCU for inference;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used. During initialization, the local GPU 0 will be prioritized; if unavailable, the CPU will be used.</li>
+<li><b>CPU</b>: Use CPU for inference, e.g., <code>cpu</code>.</li>
+<li><b>GPU</b>: Use the first GPU for inference, e.g., <code>gpu:0</code>.</li>
+<li><b>NPU</b>: Use the first NPU for inference, e.g., <code>npu:0</code>.</li>
+<li><b>XPU</b>: Use the first XPU for inference, e.g., <code>xpu:0</code>.</li>
+<li><b>MLU</b>: Use the first MLU for inference, e.g., <code>mlu:0</code>.</li>
+<li><b>DCU</b>: Use the first DCU for inference, e.g., <code>dcu:0</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used. During initialization, the local GPU 0 will be prioritized; if unavailable, the CPU will be used.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -769,20 +772,32 @@ In the above Python script, the following steps are executed:
 <td><code>bool|None</code></td>
 <td>
 <ul>
-<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>True</code>.</li>
+<li><b>bool</b>: <code>True</code> or <code>False</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
 </tr>
 <tr>
 <td><code>use_doc_unwarping</code></td>
-<td>Whether to use the document unwarping module</td>
+<td>Whether to use the document unwarping module.</td>
 <td><code>bool|None</code></td>
 <td>
 <ul>
-<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>True</code>.</li>
+<li><b>bool</b>: <code>True</code> or <code>False</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>.</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>use_layout_detection</code></td>
+<td>Whether to use the layout detection module.</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -793,71 +808,77 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>int</b>: Any integer greater than <code>0</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>960</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>960</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_det_limit_type</code></td>
 <td>Type of image side length limit for text detection</td>
 <td><code>str|None</code></td>
 <td>
 <ul>
-<li><b>str</b>: Supports <code>min</code> and <code>max</code>. <code>min</code> ensures that the shortest side of the image is not less than <code>det_limit_side_len</code>, and <code>max</code> ensures that the longest side of the image is not greater than <code>limit_side_len</code>.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>max</code>.</li>
+<li><b>str</b>: Supports <code>min</code> and <code>max</code>. <code>min</code> ensures the shortest side of the image is not less than <code>det_limit_side_len</code>, <code>max</code> ensures the longest side of the image is not greater than <code>limit_side_len</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>max</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_det_thresh</code></td>
-<td>Pixel detection threshold; pixels with scores greater than this threshold in the output probability map will be considered as text pixels</td>
+<td>Detection pixel threshold, in the output probability map, pixels with scores greater than this threshold will be considered as text pixels</td>
 <td><code>float|None</code></td>
 <td>
 <ul>
-<li><b>float</b>: Any floating-point number greater than <code>0</code>.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>0.3</code>.</li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>0.3</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_det_box_thresh</code></td>
-<td>Detection box threshold; the detection result will be considered as a text region if the average score of all pixels within the detection box is greater than this threshold</td>
+<td>Detection box threshold, for a detection result, if the average score of all pixels within the bounding box is greater than this threshold, it will be considered as a text area</td>
 <td><code>float|None</code></td>
 <td>
 <ul>
-<li><b>float</b>: Any floating-point number greater than <code>0</code>.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>0.6</code>.</li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>0.6</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_det_unclip_ratio</code></td>
-<td>Expansion ratio for text detection; the larger this value, the larger the expanded area of the text region</td>
+<td>Text detection expansion ratio, this value determines how much the text area will be expanded, the larger the value, the larger the expansion area</td>
 <td><code>float|None</code></td>
 <td>
 <ul>
-<li><b>float</b>: Any floating-point number greater than <code>0</code>.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>2.0</code>.</li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>2.0</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_rec_score_thresh</code></td>
-<td>Text recognition threshold; text results with scores greater than this threshold will be retained</td>
+<td>Text recognition threshold, text results with scores greater than this threshold will be retained</td>
 <td><code>float|None</code></td>
 <td>
 <ul>
-<li><b>float</b>: Any floating-point number greater than <code>0</code>.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>0.0</code> (i.e., no threshold).</li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>0.0</code>, meaning no threshold is set</li>
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
 </table>
 
-(3) Process the prediction results. Each sample's prediction result is a corresponding Result object, and it supports operations such as printing, saving as an image, saving as an `xlsx` file, saving as an `HTML` file, and saving as a `json` file:
+(3) Process the prediction results. Each sample's prediction result is represented as a corresponding Result object, and supports operations such as printing, saving as an image, saving as an `xlsx` file, saving as an `HTML` file, and saving as a `json` file.
 
 <table>
 <thead>
 <tr>
 <th>Method</th>
-<th>Method Description</th>
+<th>Description</th>
 <th>Parameter</th>
-<th>Parameter Type</th>
+<th>Type</th>
 <th>Parameter Description</th>
 <th>Default Value</th>
 </tr>
@@ -873,13 +894,13 @@ In the above Python script, the following steps are executed:
 <tr>
 <td><code>indent</code></td>
 <td><code>int</code></td>
-<td>Specify the indentation level to beautify the output <code>JSON</code> data for better readability, effective only when <code>format_json</code> is <code>True</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data and make it more readable. Only effective when <code>format_json</code> is <code>True</code></td>
 <td>4</td>
 </tr>
 <tr>
 <td><code>ensure_ascii</code></td>
 <td><code>bool</code></td>
-<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. If set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters, effective only when <code>format_json</code> is <code>True</code></td>
+<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. Only effective when <code>format_json</code> is <code>True</code></td>
 <td><code>False</code></td>
 </tr>
 <tr>
@@ -887,19 +908,19 @@ In the above Python script, the following steps are executed:
 <td rowspan="3">Save the result as a JSON file</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
-<td>The file path for saving. When it is a directory, the saved file name is consistent with the input file type</td>
+<td>The path where the file will be saved. If it is a directory, the saved file name will match the input file name</td>
 <td>None</td>
 </tr>
 <tr>
 <td><code>indent</code></td>
 <td><code>int</code></td>
-<td>Specify the indentation level to beautify the output <code>JSON</code> data for better readability, effective only when <code>format_json</code> is <code>True</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data and make it more readable. Only effective when <code>format_json</code> is <code>True</code></td>
 <td>4</td>
 </tr>
 <tr>
 <td><code>ensure_ascii</code></td>
 <td><code>bool</code></td>
-<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. If set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters, effective only when <code>format_json</code> is <code>True</code></td>
+<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. Only effective when <code>format_json</code> is <code>True</code></td>
 <td><code>False</code></td>
 </tr>
 <tr>
@@ -907,7 +928,7 @@ In the above Python script, the following steps are executed:
 <td>Save the result as an image file</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
-<td>The file path for saving, supporting both directory and file paths</td>
+<td>The path where the file will be saved, supporting both directory and file paths</td>
 <td>None</td>
 </tr>
 <tr>
@@ -915,18 +936,20 @@ In the above Python script, the following steps are executed:
 <td>Save the result as an xlsx file</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
-<td>The file path for saving, supporting both directory and file paths</td>
+<td>The path where the file will be saved, supporting both directory and file paths</td>
 <td>None</td>
 </tr>
 <tr>
 <td><code>save_to_html()</code></td>
-<td>Save the result as an HTML file</td>
+<td>Save the result as an html file</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
-<td>The file path for saving, supporting both directory and file paths</td>
+<td>The path where the file will be saved, supporting both directory and file paths</td>
 <td>None</td>
 </tr>
 </table>
+
+
 
 - Calling the `print()` method will print the result to the terminal, and the content printed to the terminal is explained as follows:
 
@@ -1032,9 +1055,9 @@ In addition, PaddleX also provides three other deployment methods, which are det
 
 🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have strict performance requirements (especially response speed) for deployment strategies to ensure efficient system operation and smooth user experience. To this end, PaddleX provides a high-performance inference plugin, which aims to deeply optimize the performance of model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common form of deployment in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports multiple pipeline service-oriented deployment solutions. For detailed pipeline service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving.en.md).
+☁️ <b>Serving Deployment</b>: Serving Deployment is a common form of deployment in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports multiple pipeline serving deployment solutions. For detailed pipeline serving deployment procedures, please refer to the [PaddleX Serving Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
-Below are the API references for basic service-oriented deployment and multi-language service invocation examples:
+Below are the API references for basic serving deployment and multi-language service invocation examples:
 
 <details><summary>API Reference</summary>
 <p>For the main operations provided by the service:</p>

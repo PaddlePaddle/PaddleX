@@ -493,7 +493,7 @@ The model can be directly integrated into the PaddleX pipeline or directly into 
 
 1.<b>Pipeline Integration</b>
 
-The image multi-label classification module can be integrated into the [General Image Multi-label Classification Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.en.md) of PaddleX. Simply replace the model path to update the image multi-label classification module of the relevant pipeline. In pipeline integration, you can use high-performance inference and service-oriented deployment to deploy your model.
+The image multi-label classification module can be integrated into the [General Image Multi-label Classification Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/image_multi_label_classification.en.md) of PaddleX. Simply replace the model path to update the image multi-label classification module of the relevant pipeline. In pipeline integration, you can use high-performance inference and serving deployment to deploy your model.
 
 2.<b>Module Integration</b>
 

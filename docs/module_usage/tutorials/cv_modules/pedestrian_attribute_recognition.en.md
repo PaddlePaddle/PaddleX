@@ -470,7 +470,7 @@ The model can be directly integrated into the PaddleX pipeline or directly into 
 
 1.<b>Pipeline Integration</b>
 
-The pedestrian attribute recognition module can be integrated into the [Pedestrian Attribute Recognition Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute_recognition.en.md) of PaddleX. Simply replace the model path to update the pedestrian attribute recognition module of the relevant pipeline. In pipeline integration, you can use high-performance inference and service-oriented deployment to deploy your model.
+The pedestrian attribute recognition module can be integrated into the [Pedestrian Attribute Recognition Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute_recognition.en.md) of PaddleX. Simply replace the model path to update the pedestrian attribute recognition module of the relevant pipeline. In pipeline integration, you can use high-performance inference and serving deployment to deploy your model.
 
 2.<b>Module Integration</b>
 

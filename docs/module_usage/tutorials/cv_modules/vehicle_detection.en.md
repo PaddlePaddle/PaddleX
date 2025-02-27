@@ -422,7 +422,7 @@ The model can be directly integrated into the PaddleX pipeline or into your own 
 
 1. <b>Pipeline Integration</b>
 
-The object detection module can be integrated into the [General Object Detection Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/object_detection.en.md) of PaddleX. Simply replace the model path to update the object detection module of the relevant pipeline. In pipeline integration, you can use high-performance inference and service-oriented deployment to deploy your trained model.
+The object detection module can be integrated into the [General Object Detection Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/object_detection.en.md) of PaddleX. Simply replace the model path to update the object detection module of the relevant pipeline. In pipeline integration, you can use high-performance inference and serving deployment to deploy your trained model.
 
 2. <b>Module Integration</b>
 

@@ -999,9 +999,9 @@ In addition, PaddleX also provides three other deployment methods, which are det
 
 🚀 <b>High-Performance Deployment</b>: In practical production environments, many applications have strict performance requirements (especially response speed) for deployment strategies to ensure efficient system operation and smooth user experience. To this end, PaddleX provides a high-performance inference plugin that aims to deeply optimize the performance of model inference and pre/post-processing, significantly speeding up the end-to-end process. For detailed high-performance deployment procedures, please refer to the [PaddleX High-Performance Deployment Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common form of deployment in practical production environments. By encapsulating inference capabilities as services, clients can access these services via network requests to obtain inference results. PaddleX supports various pipeline service-oriented deployment solutions. For detailed pipeline service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving.en.md).
+☁️ <b>Serving Deployment</b>: Serving Deployment is a common form of deployment in practical production environments. By encapsulating inference capabilities as services, clients can access these services via network requests to obtain inference results. PaddleX supports various pipeline serving deployment solutions. For detailed pipeline serving deployment procedures, please refer to the [PaddleX Serving Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
-Below are the API references for basic service-oriented deployment and multi-language service invocation examples:
+Below are the API references for basic serving deployment and multi-language service invocation examples:
 
 <details><summary>API Reference</summary>
 <p>For the main operations provided by the service:</p>

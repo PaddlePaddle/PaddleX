@@ -243,9 +243,9 @@ Changing Epoch Results:
 
 **Note: This tutorial is designed for 4 GPUs. If you have only 1 GPU, you can adjust the number of training GPUs to complete the experiment, but the final metrics may not align with the above indicators, which is normal.**
 
-## 6. Production Line Testing
+## 6. pipeline Testing
 
-Replace the model in the production line with the fine-tuned model for testing. You can obtain the anomaly_detection production configuration file and load the configuration file for prediction. You can execute the following command to save the configuration in `my_path`:
+Replace the model in the pipeline with the fine-tuned model for testing. You can obtain the anomaly_detection production configuration file and load the configuration file for prediction. You can execute the following command to save the configuration in `my_path`:
 
 ```
 paddlex --get_pipeline_config anomaly_detection --save_path ./my_path
@@ -264,7 +264,7 @@ SubModules:
     batch_size: 1
 ```
 
-Subsequently, in the Python code, you can call the production line as follows:
+Subsequently, in the Python code, you can call the pipeline as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -284,7 +284,7 @@ The prediction results will be generated under `./output`, where the prediction 
 </center>
 
 ## 7. Development Integration/Deployment
-If the anomaly detection pipeline meets your requirements for inference speed and accuracy in the production line, you can proceed directly with development integration/deployment.
+If the anomaly detection pipeline meets your requirements for inference speed and accuracy in the pipeline, you can proceed directly with development integration/deployment.
 1. Directly apply the trained model in your Python project. You can refer to the following example:
 
 ```python
@@ -301,7 +301,7 @@ For more parameters, please refer to [Anomaly Detection Pipeline Usage Tutorial]
 1. Additionally, PaddleX offers three other deployment methods, detailed as follows:
 
 * high-performance inference: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugins aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../pipeline_deploy/high_performance_inference.en.md).
-* Service-Oriented Deployment: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving cost-effective service-oriented deployment of production lines. For detailed service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../pipeline_deploy/serving.en.md).
+* Serving Deployment: Serving Deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving cost-effective serving deployment of pipelines. For detailed serving deployment procedures, please refer to the [PaddleX Serving Deployment Guide](../pipeline_deploy/serving.en.md).
 * Edge Deployment: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../pipeline_deploy/edge_deploy.en.md).
 
 You can select the appropriate deployment method for your model pipeline according to your needs, and proceed with subsequent AI application integration.
