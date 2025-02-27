@@ -18,6 +18,7 @@ from pathlib import Path
 import lazy_paddle as paddle
 import numpy as np
 
+from ....utils.device import constr_device
 from ....utils.flags import DEBUG, FLAGS_json_format_model, USE_PIR_TRT
 from ...utils.benchmark import benchmark
 from ....utils import logging
@@ -89,14 +90,20 @@ def convert_trt(model_name, mode, pp_model_path, trt_save_path, trt_dynamic_shap
 
 
 class Copy2GPU:
-    def __init__(self, device):
-        self.device = device
+    def __init__(self, device_type, device_id):
+        self.device_type = device_type
+        if isinstance(device_id, int):
+            device_id = [device_id]
+        self.device_id = device_id
 
     @benchmark.timeit
     def __call__(self, arrs):
-        # NOTE: A tailored solution for DCU, MLU, and NPU support.
+        # HACK: A tailored solution for DCU, MLU, and NPU support.
         old_device = paddle.device.get_device()
-        paddle.device.set_device(self.device)
+        if self.device_type == "dcu":
+            old_device.replace("gpu", "dcu")
+        new_device = constr_device(self.device_type, self.device_id)
+        paddle.device.set_device(new_device)
         try:
             paddle_tensors = [paddle.to_tensor(i) for i in arrs]
         finally:
@@ -134,11 +141,7 @@ class StaticInfer:
         self.model_prefix = model_prefix
         self.option = option
         self.predictor = self._create()
-        device = self.option.device
-        if self.option.device_type == "dcu":
-            device = device.replace("dcu", "gpu")
-
-        self.copy2gpu = Copy2GPU(device)
+        self.copy2gpu = Copy2GPU(self.option.device_type, self.option.device_id)
         self.copy2cpu = Copy2CPU()
         self.infer = Infer(self.predictor)
 
