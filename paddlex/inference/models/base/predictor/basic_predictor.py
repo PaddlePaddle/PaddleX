@@ -56,7 +56,7 @@ class BasicPredictor(
         if not pp_option:
             pp_option = PaddlePredictorOption(model_name=self.model_name)
         if device:
-            pp_option.device = device
+            pp_option.set_device(device)
         trt_dynamic_shapes = (
             self.config.get("Hpi", {})
             .get("backend_configs", {})
@@ -145,6 +145,6 @@ class BasicPredictor(
             self.batch_sampler.batch_size = batch_size
             self.pp_option.batch_size = batch_size
         if device and device != self.pp_option.device:
-            self.pp_option.device = device
+            self.pp_option.set_device(device)
         if pp_option and pp_option != self.pp_option:
             self.pp_option = pp_option

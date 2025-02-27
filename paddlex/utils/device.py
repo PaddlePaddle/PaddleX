@@ -129,6 +129,10 @@ def check_supported_device(device, model_name):
         )
         return
     device_type, device_ids = parse_device(device)
+    return check_supported_device_type(device_type, model_name)
+
+
+def check_supported_device_type(device_type, model_name):
     if device_type == "dcu":
         assert (
             model_name in DCU_WHITELIST
