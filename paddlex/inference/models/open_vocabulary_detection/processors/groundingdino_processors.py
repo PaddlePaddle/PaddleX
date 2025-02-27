@@ -98,6 +98,7 @@ def _text_pad_batch_data(
     return return_list if len(return_list) > 1 else return_list[0]
 
 
+@benchmark.timeit
 class GroundingDINOPostProcessor(object):
     """PostProcessors for GroundingDINO"""
 
@@ -118,7 +119,6 @@ class GroundingDINOPostProcessor(object):
         self.box_threshold = box_threshold
         self.text_threshold = text_threshold
 
-    @benchmark.timeit
     def __call__(
         self,
         pred_boxes,
@@ -208,6 +208,7 @@ class GroundingDINOPostProcessor(object):
             raise NotImplementedError("posmap must be 1-dim")
 
 
+@benchmark.timeit
 class GroundingDINOProcessor(object):
     """Image and Text Processors for GroundingDINO"""
 
@@ -236,7 +237,6 @@ class GroundingDINOProcessor(object):
         assert os.path.isdir(tokenizer_dir), f"{tokenizer_dir} not exists."
         self.tokenizer = BertTokenizer.from_pretrained(tokenizer_dir)
 
-    @benchmark.timeit
     def __call__(
         self,
         images: List[PIL.Image.Image],
@@ -264,6 +264,7 @@ class GroundingDINOProcessor(object):
         return [arr.numpy() for arr in paddle_rst]
 
 
+@benchmark.timeit
 class GroundingDinoTextProcessor(object):
     """Constructs a GroundingDino text processor."""
 
@@ -273,7 +274,6 @@ class GroundingDinoTextProcessor(object):
     ):
         self.max_words = max_words
 
-    @benchmark.timeit
     def __call__(
         self,
         input_ids,
@@ -367,6 +367,7 @@ class GroundingDinoTextProcessor(object):
         return attention_mask, position_ids.cast(paddle.int64), cate_to_token_mask_list
 
 
+@benchmark.timeit
 class GroundingDinoImageProcessor(object):
     """Constructs a GroundingDino image processor."""
 
@@ -391,7 +392,6 @@ class GroundingDinoImageProcessor(object):
         self.image_std = image_std
         self.do_nested = do_nested
 
-    @benchmark.timeit
     def __call__(self, images, **kwargs):
         """Preprocess an image or a batch of images."""
         return self.preprocess(images, **kwargs)

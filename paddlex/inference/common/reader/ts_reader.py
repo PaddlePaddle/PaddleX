@@ -19,13 +19,13 @@ from ...utils.io import CSVReader
 from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class ReadTS:
 
     def __init__(self):
         super().__init__()
         self._reader = CSVReader(backend="pandas")
 
-    @benchmark.timeit
     def __call__(self, ts_list):
         """apply"""
         return [self.read(ts) for ts in ts_list]

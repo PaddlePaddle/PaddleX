@@ -2,45 +2,46 @@
 
 ## Table of Contents
 
-- [1. Usage Instructions](#1-usage-instructions)
-- [2. Usage Examples](#2-usage-examples)
-  - [2.1 Command Line Method](#21-command-line-method)
-  - [2.2 Python Script Method](#22-python-script-method)
-- [3. Result Interpretation](#3-result-interpretation)
+- [1. Instructions](#1.-Instructions)
+- [2. Usage Examples](#2.-Usage-Examples)
+  - [2.1 Command Line Method](#2.1-Command-Line-Method)
+  - [2.2 Python Script Method](#2.2-Python-Script-Method)
+- [3. Explanation of Results](#3.-Explanation-of-Results)
 
-## 1. Usage Instructions
+## 1. Instructions
 
-The Benchmark will measure the average execution time per iteration (`Avg Time Per Iter (ms)`) and the average execution time per instance (`Avg Time Per Instance (ms)`) for all operations (`Operation`) and stages (`Stage`) in the end-to-end inference process, with milliseconds as the unit.
+The benchmark feature collects the average execution time per iteration for each operation in the end-to-end model inference process as well as the average execution time per instance, and provides summary information. The time measurements are in milliseconds.
 
-The Benchmark needs to be enabled through environment variables, specifically as follows:
+To enable the benchmark feature, you must set the following environment variables:
 
-* `PADDLE_PDX_INFER_BENCHMARK`: Set to `True` to enable the Benchmark, default is `False`;
-* `PADDLE_PDX_INFER_BENCHMARK_WARMUP`: Sets the warm-up phase, iterating n times before starting the test, default is `0`;
-* `PADDLE_PDX_INFER_BENCHMARK_ITER`: The number of iterations for the Benchmark test, default is `0`;
-* `PADDLE_PDX_INFER_BENCHMARK_OUTPUT`: Sets the directory for saving results, e.g., `./benchmark`, default is `None`, meaning Benchmark metrics will not be saved;
+* `PADDLE_PDX_INFER_BENCHMARK`: When set to `True`, the benchmark feature is enabled (default is `False`);
+* `PADDLE_PDX_INFER_BENCHMARK_WARMUP`: The number of warm-up iterations before testing (default is `0`);
+* `PADDLE_PDX_INFER_BENCHMARK_ITERS`: The number of iterations for testing (default is `0`);
+* `PADDLE_PDX_INFER_BENCHMARK_OUTPUT_DIR`: The directory where the metrics are saved (e.g., `./benchmark`). The default is `None`, meaning the benchmark metrics will not be saved.
 
 **Note**:
 
-* Either `PADDLE_PDX_INFER_BENCHMARK_WARMUP` or `PADDLE_PDX_INFER_BENCHMARK_ITER` needs to be set to a value greater than zero to enable the Benchmark.
+* At least one of `PADDLE_PDX_INFER_BENCHMARK_WARMUP` or `PADDLE_PDX_INFER_BENCHMARK_ITERS` must be set to a value greater than zero; otherwise, the benchmark feature cannot be used.
+* The benchmark feature does not currently apply to model pipelines.
 
 ## 2. Usage Examples
 
-You can use the benchmark in the following two ways: command line method and Python script method.
+You can use the benchmark feature by either the command line method or the Python script method.
 
 ### 2.1 Command Line Method
 
 **Note**:
 
-- For input parameter descriptions, refer to [PaddleX Common Configuration Parameters for Models](./config_parameters_common_en.md)
-- `Predict.input` in Benchmark can only be set to the local path of the input data. If `batch_size` is greater than 1, the input data will be repeated `batch_size` times to match the `batch_size`.
+- For a description of the input parameters, please refer to the [PaddleX Common Model Configuration File Parameter Explanation](./config_parameters_common.en.md).
+- If `batch_size` is greater than 1, the input data will be duplicated `batch_size` times to match the size of `batch_size`.
 
-Execution command:
+Execute the command:
 
 ```bash
 PADDLE_PDX_INFER_BENCHMARK=True \
 PADDLE_PDX_INFER_BENCHMARK_WARMUP=5 \
-PADDLE_PDX_INFER_BENCHMARK_ITER=10 \
-PADDLE_PDX_INFER_BENCHMARK_OUTPUT=./benchmark \
+PADDLE_PDX_INFER_BENCHMARK_ITERS=10 \
+PADDLE_PDX_INFER_BENCHMARK_OUTPUT_DIR=./benchmark \
 python main.py \
     -c ./paddlex/configs/modules/object_detection/PicoDet-XS.yaml \
     -o Global.mode=predict \
@@ -48,7 +49,7 @@ python main.py \
     -o Predict.batch_size=2 \
     -o Predict.input=./test.png
 
-# Using the PaddlePaddle Inference backend
+# To use the pptrt inference backend:
 #   -o Predict.kernel_option="{'run_mode': 'trt_fp32'}"
 ```
 
@@ -56,10 +57,10 @@ python main.py \
 
 **Note**:
 
-- For input parameter descriptions, refer to [PaddleX Single Model Python Script Usage Instructions](./model_python_API_en.md)
-- `input` in Benchmark can only be set to the local path of the input data. If `batch_size` is greater than 1, the input data will be repeated `batch_size` times to match the `batch_size`.
+- For a description of the input parameters, please refer to the [PaddleX Single Model Python Usage Instructions](./model_python_API.en.md).
+- If `batch_size` is greater than 1, the input data will be duplicated `batch_size` times to match the size of `batch_size`.
 
-Create a `test_infer.py` script:
+Create the script `test_infer.py`:
 
 ```python
 from paddlex import create_model
@@ -67,57 +68,57 @@ from paddlex import create_model
 model = create_model(model_name="PicoDet-XS", model_dir=None)
 output = list(model.predict(input="./test.png", batch_size=2))
 
-# Using the PaddlePaddle Inference backend
+# To use the pptrt inference backend:
 # from paddlex import create_model
 # from paddlex.inference.utils.pp_option import PaddlePredictorOption
-
+#
 # pp_option = PaddlePredictorOption()
 # pp_option.run_mode = "trt_fp32"
 # model = create_model(model_name="PicoDet-XS", model_dir=None, pp_option=pp_option)
 # output = list(model.predict(input="./test.png", batch_size=2))
 ```
 
-Execute the script:
+Run the script:
 
 ```bash
 PADDLE_PDX_INFER_BENCHMARK=True \
 PADDLE_PDX_INFER_BENCHMARK_WARMUP=5 \
-PADDLE_PDX_INFER_BENCHMARK_ITER=10 \
-PADDLE_PDX_INFER_BENCHMARK_OUTPUT=./benchmark \
+PADDLE_PDX_INFER_BENCHMARK_ITERS=10 \
+PADDLE_PDX_INFER_BENCHMARK_OUTPUT_DIR=./benchmark \
 python test_infer.py
 ```
 
-## 3. Result Example
+## 3. Explanation of Results
 
-After enabling the Benchmark, the Benchmark results will be automatically printed, with specific descriptions as follows:
+After enabling the benchmark feature, the benchmark results will be automatically printed. The details are as follows:
 
 <table border="1">
     <thead>
         <tr>
             <th>Field Name</th>
-            <th>Field Meaning</th>
+            <th>Field Description</th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td>Iters</td>
-            <td>Number of iterations, referring to the number of loops for model inference execution.</td>
+            <td>Number of iterations, i.e., the number of times inference is executed in a loop.</td>
         </tr>
         <tr>
             <td>Batch Size</td>
-            <td>Batch size, referring to the number of samples processed in each iteration.</td>
+            <td>Batch size, i.e., the number of instances processed in each iteration.</td>
         </tr>
         <tr>
             <td>Instances</td>
-            <td>Total number of samples, calculated as <code>Iters</code> multiplied by <code>Batch Size</code>.</td>
+            <td>Total number of instances, calculated as <code>Iters</code> multiplied by <code>Batch Size</code>.</td>
         </tr>
         <tr>
             <td>Operation</td>
-            <td>Operation name, such as <code>Resize</code>, <code>Normalize</code>, etc.</td>
+            <td>Name of the operation, such as <code>Resize</code>, <code>Normalize</code>, etc.</td>
         </tr>
         <tr>
-            <td>Stage</td>
-            <td>Stage name, including PreProcess, Inference, PostProcess, Others(such as formatting output, packaging results, etc), and End2End.</td>
+            <td>Type</td>
+            <td>Type of time consumption, including preprocessing time (<code>Preprocessing</code>), model inference time (<code>Inference</code>), postprocessing time (<code>Postprocessing</code>), core time (<code>Core</code>, i.e., Preprocessing + Inference + Postprocessing), other time (<code>Other</code>), and end-to-end time (<code>End-to-End</code>, i.e., Core + Other).</td>
         </tr>
         <tr>
             <td>Avg Time Per Iter (ms)</td>
@@ -125,71 +126,77 @@ After enabling the Benchmark, the Benchmark results will be automatically printe
         </tr>
         <tr>
             <td>Avg Time Per Instance (ms)</td>
-            <td>Average execution time per sample, in milliseconds.</td>
+            <td>Average execution time per instance, in milliseconds.</td>
         </tr>
     </tbody>
 </table>
 
-The Benchmark results obtained by running the example programs in Section 2 are as follows:
+Below is an example of the benchmark results obtained by running the example program in Section 2:
 
 ```
-                                             WarmUp Data
-+-------+------------+-----------+-------------+------------------------+----------------------------+
-| Iters | Batch Size | Instances |    Stage    | Avg Time Per Iter (ms) | Avg Time Per Instance (ms) |
-+-------+------------+-----------+-------------+------------------------+----------------------------+
-|   5   |     2      |     10    |  PreProcess |      98.70615005       |        49.35307503         |
-|   5   |     2      |     10    |  Inference  |      68.70298386       |        34.35149193         |
-|   5   |     2      |     10    | PostProcess |       0.22978783       |         0.11489391         |
-|   5   |     2      |     10    |   End2End   |      167.63892174      |        83.81946087         |
-+-------+------------+-----------+-------------+------------------------+----------------------------+
-                                               Detail Data
+                                               WarmUp Data
 +-------+------------+-----------+----------------+------------------------+----------------------------+
-| Iters | Batch Size | Instances |   Operation    | Avg Time Per Iter (ms) | Avg Time Per Instance (ms) |
+| Iters | Batch Size | Instances |      Type      | Avg Time Per Iter (ms) | Avg Time Per Instance (ms) |
 +-------+------------+-----------+----------------+------------------------+----------------------------+
-|   10  |     2      |     20    |   ReadImage    |      77.00567245       |        38.50283623         |
-|   10  |     2      |     20    |     Resize     |      11.97342873       |         5.98671436         |
-|   10  |     2      |     20    |   Normalize    |       6.09791279       |         3.04895639         |
-|   10  |     2      |     20    |   ToCHWImage   |       0.00574589       |         0.00287294         |
-|   10  |     2      |     20    |    ToBatch     |       0.72050095       |         0.36025047         |
-|   10  |     2      |     20    |    Copy2GPU    |       3.15101147       |         1.57550573         |
-|   10  |     2      |     20    |     Infer      |       9.58673954       |         4.79336977         |
-|   10  |     2      |     20    |    Copy2CPU    |       0.07462502       |         0.03731251         |
-|   10  |     2      |     20    | DetPostProcess |       0.22695065       |         0.11347532         |
+|   5   |     2      |     10    | Preprocessing  |      97.89338876       |        48.94669438         |
+|   5   |     2      |     10    |   Inference    |      66.70711380       |        33.35355690         |
+|   5   |     2      |     10    | Postprocessing |       0.20138482       |         0.10069241         |
+|   5   |     2      |     10    |      Core      |      164.80188738      |        82.40094369         |
+|   5   |     2      |     10    |     Other      |       3.41097047       |         1.70548523         |
+|   5   |     2      |     10    |   End-to-End   |      168.21285784      |        84.10642892         |
 +-------+------------+-----------+----------------+------------------------+----------------------------+
-                                             Summary Data
-+-------+------------+-----------+-------------+------------------------+----------------------------+
-| Iters | Batch Size | Instances |    Stage    | Avg Time Per Iter (ms) | Avg Time Per Instance (ms) |
-+-------+------------+-----------+-------------+------------------------+----------------------------+
-|   10  |     2      |     20    |  PreProcess |      95.80326080       |        47.90163040         |
-|   10  |     2      |     20    |  Inference  |      12.81237602       |         6.40618801         |
-|   10  |     2      |     20    | PostProcess |       0.22695065       |         0.11347532         |
-|   10  |     2      |     20    |   End2End   |      108.84258747      |        54.42129374         |
-+-------+------------+-----------+-------------+------------------------+----------------------------+
+                                                 Detail Data
++-------+------------+-----------+--------------------+------------------------+----------------------------+
+| Iters | Batch Size | Instances |     Operation      | Avg Time Per Iter (ms) | Avg Time Per Instance (ms) |
++-------+------------+-----------+--------------------+------------------------+----------------------------+
+|   10  |     2      |     20    |     ReadImage      |      76.22221033       |        38.11110517         |
+|   10  |     2      |     20    |       Resize       |      12.02824502       |         6.01412251         |
+|   10  |     2      |     20    |     Normalize      |       6.14072606       |         3.07036303         |
+|   10  |     2      |     20    |     ToCHWImage     |       0.00533939       |         0.00266969         |
+|   10  |     2      |     20    |      ToBatch       |       0.93134162       |         0.46567081         |
+|   10  |     2      |     20    | PaddleCopyToDevice |       0.92240779       |         0.46120390         |
+|   10  |     2      |     20    |  PaddleModelInfer  |       9.66330138       |         4.83165069         |
+|   10  |     2      |     20    |  PaddleCopyToHost  |       0.06802108       |         0.03401054         |
+|   10  |     2      |     20    |   DetPostProcess   |       0.18665448       |         0.09332724         |
++-------+------------+-----------+--------------------+------------------------+----------------------------+
+                                               Summary Data
++-------+------------+-----------+----------------+------------------------+----------------------------+
+| Iters | Batch Size | Instances |      Type      | Avg Time Per Iter (ms) | Avg Time Per Instance (ms) |
++-------+------------+-----------+----------------+------------------------+----------------------------+
+|   10  |     2      |     20    | Preprocessing  |      95.32786242       |        47.66393121         |
+|   10  |     2      |     20    |   Inference    |      10.65373025       |         5.32686512         |
+|   10  |     2      |     20    | Postprocessing |       0.18665448       |         0.09332724         |
+|   10  |     2      |     20    |      Core      |      106.16824715      |        53.08412358         |
+|   10  |     2      |     20    |     Other      |       2.74794563       |         1.37397281         |
+|   10  |     2      |     20    |   End-to-End   |      108.91619278      |        54.45809639         |
++-------+------------+-----------+----------------+------------------------+----------------------------+
 ```
 
-Meanwhile, due to setting `PADDLE_PDX_INFER_BENCHMARK_OUTPUT=./benchmark`, the aforementioned results will be saved locally to: `./benchmark/detail.csv` and `./benchmark/summary.csv`:
+Additionally, since `PADDLE_PDX_INFER_BENCHMARK_OUTPUT_DIR=./benchmark` is set, the above results will be saved locally in `./benchmark/detail.csv` and `./benchmark/summary.csv`.
 
-The content of `detail.csv` is as follows:
+The contents of `detail.csv` are as follows:
 
 ```csv
 Iters,Batch Size,Instances,Operation,Avg Time Per Iter (ms),Avg Time Per Instance (ms)
-10,2,20,ReadImage,77.00567245,38.50283623
-10,2,20,Resize,11.97342873,5.98671436
-10,2,20,Normalize,6.09791279,3.04895639
-10,2,20,ToCHWImage,0.00574589,0.00287294
-10,2,20,ToBatch,0.72050095,0.36025047
-10,2,20,Copy2GPU,3.15101147,1.57550573
-10,2,20,Infer,9.58673954,4.79336977
-10,2,20,Copy2CPU,0.07462502,0.03731251
-10,2,20,DetPostProcess,0.22695065,0.11347532
+10,2,20,ReadImage,76.22221033,38.11110517
+10,2,20,Resize,12.02824502,6.01412251
+10,2,20,Normalize,6.14072606,3.07036303
+10,2,20,ToCHWImage,0.00533939,0.00266969
+10,2,20,ToBatch,0.93134162,0.46567081
+10,2,20,PaddleCopyToDevice,0.92240779,0.46120390
+10,2,20,PaddleModelInfer,9.66330138,4.83165069
+10,2,20,PaddleCopyToHost,0.06802108,0.03401054
+10,2,20,DetPostProcess,0.18665448,0.09332724
 ```
 
-The content of `summary.csv` is as follows:
+The contents of `summary.csv` are as follows:
 
 ```csv
-Iters,Batch Size,Instances,Stage,Avg Time Per Iter (ms),Avg Time Per Instance (ms)
-10,2,20,PreProcess,95.80326080,47.90163040
-10,2,20,Inference,12.81237602,6.40618801
-10,2,20,PostProcess,0.22695065,0.11347532
-10,2,20,End2End,108.84258747,54.42129374
+Iters,Batch Size,Instances,Type,Avg Time Per Iter (ms),Avg Time Per Instance (ms)
+10,2,20,Preprocessing,95.32786242,47.66393121
+10,2,20,Inference,10.65373025,5.32686512
+10,2,20,Postprocessing,0.18665448,0.09332724
+10,2,20,Core,106.16824715,53.08412358
+10,2,20,Other,2.74794563,1.37397281
+10,2,20,End-to-End,108.91619278,54.45809639
 ```

@@ -81,6 +81,7 @@ class Sample(_EasyDict):
         self.attrs = None
 
 
+@benchmark.timeit
 class ReadNuscenesData:
 
     def __init__(
@@ -237,6 +238,5 @@ class ReadNuscenesData:
         sample["seg_fields"] = []
         return sample
 
-    @benchmark.timeit
     def __call__(self, batch_data):
         return [self.prepare_test_data(data_info) for data_info in batch_data]

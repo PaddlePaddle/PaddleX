@@ -19,6 +19,7 @@ from ...utils.io import ImageReader, PDFReader
 from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class ReadImage:
     """Load image from the file."""
 
@@ -41,7 +42,6 @@ class ReadImage:
         flags = self._FLAGS_DICT[self.format]
         self._img_reader = ImageReader(backend="opencv", flags=flags)
 
-    @benchmark.timeit
     def __call__(self, imgs):
         """apply"""
         return [self.read(img) for img in imgs]

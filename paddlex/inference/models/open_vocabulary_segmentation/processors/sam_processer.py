@@ -127,6 +127,7 @@ class SAMProcessor(object):
         return [masks]
 
 
+@benchmark.timeit
 class SamPromptProcessor(object):
     """Constructs a Sam prompt processor."""
 
@@ -160,7 +161,6 @@ class SamPromptProcessor(object):
         boxes = self.apply_coords(boxes.reshape([-1, 2, 2]), original_size)
         return boxes.reshape([-1, 4])
 
-    @benchmark.timeit
     def __call__(
         self,
         original_size,
@@ -182,6 +182,7 @@ class SamPromptProcessor(object):
             return box.astype(np.float32)
 
 
+@benchmark.timeit
 class SamImageProcessor(object):
     """Constructs a Sam image processor."""
 
@@ -215,7 +216,6 @@ class SamImageProcessor(object):
 
         return np.array(T.resize(image, target_size))
 
-    @benchmark.timeit
     def __call__(self, images, **kwargs):
         if not isinstance(images, (list, tuple)):
             images = [images]

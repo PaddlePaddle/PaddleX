@@ -30,6 +30,7 @@ from ....utils import logging
 from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class OCRReisizeNormImg:
     """for ocr image resize and normalization"""
 
@@ -58,7 +59,6 @@ class OCRReisizeNormImg:
         padding_im[:, :, 0:resized_w] = resized_image
         return padding_im
 
-    @benchmark.timeit
     def __call__(self, imgs):
         """apply"""
         return [self.resize(img) for img in imgs]
@@ -73,6 +73,7 @@ class OCRReisizeNormImg:
         return img
 
 
+@benchmark.timeit
 class BaseRecLabelDecode:
     """Convert between text-label and text-index"""
 
@@ -148,7 +149,6 @@ class BaseRecLabelDecode:
         """get_ignored_tokens"""
         return [0]  # for ctc blank
 
-    @benchmark.timeit
     def __call__(self, pred):
         """apply"""
         preds = np.array(pred)
@@ -165,13 +165,13 @@ class BaseRecLabelDecode:
         return texts, scores
 
 
+@benchmark.timeit
 class CTCLabelDecode(BaseRecLabelDecode):
     """Convert between text-label and text-index"""
 
     def __init__(self, character_list=None, use_space_char=True):
         super().__init__(character_list, use_space_char=use_space_char)
 
-    @benchmark.timeit
     def __call__(self, pred):
         """apply"""
         preds = np.array(pred[0])
@@ -191,6 +191,7 @@ class CTCLabelDecode(BaseRecLabelDecode):
         return character_list
 
 
+@benchmark.timeit
 class ToBatch:
     """A class for batching and padding images to a uniform width."""
 
@@ -217,7 +218,6 @@ class ToBatch:
             padded_imgs.append(padded_img)
         return padded_imgs
 
-    @benchmark.timeit
     def __call__(self, imgs: List[np.ndarray]) -> List[np.ndarray]:
         """Call method to pad images and stack them into a batch.
 

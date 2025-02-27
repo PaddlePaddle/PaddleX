@@ -29,6 +29,7 @@ from ....utils import logging
 from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class DetResizeForTest:
     """DetResizeForTest"""
 
@@ -51,7 +52,6 @@ class DetResizeForTest:
             self.limit_side_len = 736
             self.limit_type = "min"
 
-    @benchmark.timeit
     def __call__(
         self,
         imgs,
@@ -183,6 +183,7 @@ class DetResizeForTest:
         return img, [ratio_h, ratio_w]
 
 
+@benchmark.timeit
 class NormalizeImage:
     """normalize image such as substract mean, divide std"""
 
@@ -198,7 +199,6 @@ class NormalizeImage:
         self.mean = np.array(mean).reshape(shape).astype("float32")
         self.std = np.array(std).reshape(shape).astype("float32")
 
-    @benchmark.timeit
     def __call__(self, imgs):
         """apply"""
 
@@ -208,6 +208,7 @@ class NormalizeImage:
         return [norm(img) for img in imgs]
 
 
+@benchmark.timeit
 class DBPostProcess:
     """
     The post process for Differentiable Binarization (DB).
@@ -415,7 +416,6 @@ class DBPostProcess:
         cv2.fillPoly(mask, contour.reshape(1, -1, 2).astype(np.int32), 1)
         return cv2.mean(bitmap[ymin : ymax + 1, xmin : xmax + 1], mask)[0]
 
-    @benchmark.timeit
     def __call__(
         self,
         preds,

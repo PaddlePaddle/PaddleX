@@ -24,6 +24,7 @@ import lazy_paddle as paddle
 from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class ResizeVideo:
     """Resizes frames of a video to a specified target size.
 
@@ -77,7 +78,6 @@ class ResizeVideo:
                 )
         return video
 
-    @benchmark.timeit
     def __call__(self, videos: List) -> List:
         """Resizes frames of multiple videos.
 
@@ -91,6 +91,7 @@ class ResizeVideo:
         return [self.resize(video) for video in videos]
 
 
+@benchmark.timeit
 class Image2Array:
     """Convert a sequence of images to a numpy array with optional transposition."""
 
@@ -132,7 +133,6 @@ class Image2Array:
             video[i] = video_one
         return video
 
-    @benchmark.timeit
     def __call__(self, videos: List[List[np.ndarray]]) -> List[np.ndarray]:
         """
         Process videos by converting each video to a transposed numpy array.
@@ -147,6 +147,7 @@ class Image2Array:
         return [self.img2array(video) for video in videos]
 
 
+@benchmark.timeit
 class NormalizeVideo:
     """
     A class to normalize video frames by scaling the pixel values.
@@ -181,7 +182,6 @@ class NormalizeVideo:
 
         return video
 
-    @benchmark.timeit
     def __call__(self, videos: List[List[np.ndarray]]) -> List[List[np.ndarray]]:
         """
         Apply normalization to a list of videos.
@@ -404,6 +404,7 @@ def bbox_iou(box1, box2, x1y1x2y2=True):
     return carea / uarea
 
 
+@benchmark.timeit
 class DetVideoPostProcess:
     """
     A class used to perform post-processing on detection results in videos.
@@ -451,6 +452,5 @@ class DetVideoPostProcess:
             pred_all.append(preds)
         return pred_all
 
-    @benchmark.timeit
     def __call__(self, preds: List, nms_thresh, score_thresh) -> List:
         return [self.postprocess(pred, nms_thresh, score_thresh) for pred in preds]

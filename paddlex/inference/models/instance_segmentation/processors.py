@@ -41,6 +41,7 @@ def extract_masks_from_boxes(boxes, masks):
     return new_masks
 
 
+@benchmark.timeit
 class InstanceSegPostProcess(object):
     """Save Result Transform"""
 
@@ -79,7 +80,6 @@ class InstanceSegPostProcess(object):
 
         return result
 
-    @benchmark.timeit
     def __call__(
         self,
         batch_outputs: List[dict],

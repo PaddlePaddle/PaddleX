@@ -13,9 +13,7 @@
 # limitations under the License.
 
 import os
-import ast
 from pathlib import Path
-import numpy as np
 
 from ....utils import logging
 from ....utils.download import download
@@ -74,21 +72,3 @@ class VideoBatchSampler(BaseBatchSampler):
                 )
         if len(batch) > 0:
             yield batch
-
-    def _rand_batch(self, data_size):
-        def parse_size(s):
-            res = ast.literal_eval(s)
-            if isinstance(res, int):
-                return (res, res)
-            else:
-                assert isinstance(res, (tuple, list))
-                assert len(res) == 2
-                assert all(isinstance(item, int) for item in res)
-                return res
-
-        size = parse_size(data_size)
-        rand_batch = [
-            np.random.randint(0, 256, (*size, 3), dtype=np.uint8)
-            for _ in range(self.batch_size)
-        ]
-        return rand_batch

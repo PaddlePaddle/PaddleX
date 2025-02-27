@@ -27,10 +27,10 @@ Boxes = List[dict]
 Number = Union[int, float]
 
 
+@benchmark.timeit
 class ReadImage(CommonReadImage):
     """Reads images from a list of raw image data or file paths."""
 
-    @benchmark.timeit
     def __call__(self, raw_imgs: List[Union[ndarray, str, dict]]) -> List[dict]:
         """Processes the input list of raw image data or file paths and returns a list of dictionaries containing image information.
 
@@ -94,8 +94,8 @@ class ReadImage(CommonReadImage):
             )
 
 
+@benchmark.timeit
 class Resize(CommonResize):
-    @benchmark.timeit
     def __call__(self, datas: List[dict]) -> List[dict]:
         """
         Args:
@@ -125,6 +125,7 @@ class Resize(CommonResize):
         return datas
 
 
+@benchmark.timeit
 class Normalize(CommonNormalize):
     """Normalizes images in a list of dictionaries containing image data"""
 
@@ -141,7 +142,6 @@ class Normalize(CommonNormalize):
             img = img.astype(old_type, copy=False)
         return img
 
-    @benchmark.timeit
     def __call__(self, datas: List[dict]) -> List[dict]:
         """Normalizes images in a list of dictionaries. Iterates over each dictionary,
         applies normalization to the 'img' key, and returns the modified list.
@@ -151,10 +151,10 @@ class Normalize(CommonNormalize):
         return datas
 
 
+@benchmark.timeit
 class ToCHWImage:
     """Converts images in a list of dictionaries from HWC to CHW format."""
 
-    @benchmark.timeit
     def __call__(self, datas: List[dict]) -> List[dict]:
         """Converts the image data in the list of dictionaries from HWC to CHW format in-place.
 
@@ -169,6 +169,7 @@ class ToCHWImage:
         return datas
 
 
+@benchmark.timeit
 class ToBatch:
     """
     Class for batch processing of data dictionaries.
@@ -212,11 +213,11 @@ class ToBatch:
                 dtype=dtype, copy=False
             )
 
-    @benchmark.timeit
     def __call__(self, datas: List[dict]) -> Sequence[ndarray]:
         return [self.apply(datas, key) for key in self.ordered_required_keys]
 
 
+@benchmark.timeit
 class DetPad:
     """
     Pad image to a specified size.
@@ -248,13 +249,13 @@ class DetPad:
         canvas[0:im_h, 0:im_w, :] = im.astype(np.float32)
         return canvas
 
-    @benchmark.timeit
     def __call__(self, datas: List[dict]) -> List[dict]:
         for data in datas:
             data["img"] = self.apply(data["img"])
         return datas
 
 
+@benchmark.timeit
 class PadStride:
     """padding image for model with FPN , instead PadBatch(pad_to_stride, pad_gt) in original config
     Args:
@@ -283,7 +284,6 @@ class PadStride:
         padding_im[:, :im_h, :im_w] = im
         return padding_im
 
-    @benchmark.timeit
     def __call__(self, datas: List[dict]) -> List[dict]:
         for data in datas:
             data["img"] = self.apply(data["img"])
@@ -382,6 +382,7 @@ def get_affine_transform(
     return trans
 
 
+@benchmark.timeit
 class WarpAffine:
     """Apply warp affine transformation to the image based on the given parameters.
 
@@ -446,7 +447,6 @@ class WarpAffine:
 
         return inp
 
-    @benchmark.timeit
     def __call__(self, datas: List[dict]) -> List[dict]:
 
         for data in datas:
@@ -661,6 +661,7 @@ def check_containment(boxes, formula_index=None):
     return contains_other, contained_by_other
 
 
+@benchmark.timeit
 class DetPostProcess:
     """Save Result Transform
 
@@ -769,7 +770,6 @@ class DetPostProcess:
             )
         return boxes
 
-    @benchmark.timeit
     def __call__(
         self,
         batch_outputs: List[dict],

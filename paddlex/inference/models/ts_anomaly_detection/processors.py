@@ -19,6 +19,7 @@ import pandas as pd
 from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class GetAnomaly:
     """A class to detect anomalies in time series data based on a model threshold."""
 
@@ -34,7 +35,6 @@ class GetAnomaly:
         self.model_threshold = model_threshold
         self.info_params = info_params
 
-    @benchmark.timeit
     def __call__(
         self, ori_ts_list: List[Dict[str, Any]], pred_list: List[np.ndarray]
     ) -> List[pd.DataFrame]:
