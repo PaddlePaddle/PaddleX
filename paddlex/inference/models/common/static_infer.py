@@ -98,7 +98,7 @@ class Copy2GPU:
             if self.device_id is not None:
                 logging.warning(
                     "The %r device does not support specifying device IDs. The default device will be used.",
-                    self.option.device_type,
+                    self.device_type,
                 )
                 self.device_id = None
                 logging.debug("`device_id` updated to `None`.")
