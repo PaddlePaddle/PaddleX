@@ -120,10 +120,12 @@ class Benchmark:
         # NOTE: The gathering logic here is based on the following assumptions:
         # 1. The operations are performed sequentially.
         # 2. An operation is performed only once at each iteration.
-        # 3. The input batch size for each operation is `batch_size`.
-        # 4. Inference operations are always performed, while preprocessing and
+        # 3. Operations do not nest, except that the entry point operation
+        #    contains all other operations.
+        # 4. The input batch size for each operation is `batch_size`.
+        # 5. Inference operations are always performed, while preprocessing and
         #    postprocessing operations are optional.
-        # 5. If present, preprocessing operations are always performed before
+        # 6. If present, preprocessing operations are always performed before
         #    inference operations, and inference operations are completed before
         #    any postprocessing operations. There is no interleaving among these
         #    stages.
