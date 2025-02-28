@@ -66,6 +66,7 @@ def get_warp_matrix(
     return matrix
 
 
+@benchmark.timeit
 class TopDownAffine:
     """refer to https://github.com/open-mmlab/mmpose/blob/71ec36ebd63c475ab589afc817868e749a61491f/mmpose/datasets/transforms/topdown_transforms.py#L13
     Get the bbox image as the model input by affine transform.
@@ -137,7 +138,6 @@ class TopDownAffine:
 
         return img, center, scale
 
-    @benchmark.timeit
     def __call__(self, datas: List[dict]) -> List[dict]:
         for data in datas:
             ori_img = data["img"]
@@ -198,6 +198,7 @@ def transform_preds(
     return target_coords
 
 
+@benchmark.timeit
 class KptPostProcess:
     """Save Result Transform"""
 
@@ -218,7 +219,6 @@ class KptPostProcess:
             for kpt, score in zip(keypoints, scores)
         ]
 
-    @benchmark.timeit
     def __call__(self, batch_outputs: List[dict], datas: List[dict]) -> List[Kpts]:
         """Apply the post-processing to a batch of outputs.
 
