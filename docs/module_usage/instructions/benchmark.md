@@ -111,8 +111,11 @@ python test_infer.py
             <li>预处理耗时（<code>Preprocessing</code>）</li>
             <li>模型推理耗时（<code>Inference</code>）</li>
             <li>后处理耗时（<code>Postprocessing</code>）</li>
-            <li>核心耗时（<code>Core</code>，即预处理耗时+模型推理耗时+后处理耗时）、其他耗时（<code>Other</code>）</li>
-            <li>端到端耗时（<code>End-to-End</code>，即核心耗时+其他耗时）。</li></td>
+            <li>核心耗时（<code>Core</code>，即预处理耗时+模型推理耗时+后处理耗时）</li>
+            <li>其他耗时（<code>Other</code>）</li>
+            <li>端到端耗时（<code>End-to-End</code>，即核心耗时+其他耗时）</li>
+            </ul>
+            </td>
         </tr>
         <tr>
             <td>Avg Time Per Iter (ms)</td>

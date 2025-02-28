@@ -106,7 +106,16 @@ After enabling the benchmark feature, the benchmark results will be automaticall
         </tr>
         <tr>
             <td>Type</td>
-            <td>Type of time consumption, including preprocessing time (<code>Preprocessing</code>), model inference time (<code>Inference</code>), postprocessing time (<code>Postprocessing</code>), core time (<code>Core</code>, i.e., Preprocessing + Inference + Postprocessing), other time (<code>Other</code>), and end-to-end time (<code>End-to-End</code>, i.e., Core + Other).</td>
+            <td>Type of time consumption, including:
+            <ul>
+            <li>preprocessing time (<code>Preprocessing</code>)</li>
+            <li>model inference time (<code>Inference</code>)</li>
+            <li>postprocessing time (<code>Postprocessing</code>)</li>
+            <li>core time (<code>Core</code>, i.e., Preprocessing + Inference + Postprocessing)</li>
+            <li>other time (<code>Other</code>)</li>
+            <li>end-to-end time (<code>End-to-End</code>, i.e., Core + Other)</li>
+            </ul>
+            </td>
         </tr>
         <tr>
             <td>Avg Time Per Iter (ms)</td>
