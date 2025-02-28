@@ -8,7 +8,7 @@ use_ocr_model: True
 SubModules:
   LayoutDetection:
     module_name: layout_detection
-    model_name: PicoDet_layout_1x_table
+    model_name: PP-DocLayout-L
     model_dir: null
   
   TableClassification:
@@ -70,7 +70,7 @@ SubPipelines:
         
       TextRecognition:
         module_name: text_recognition
-        model_name: PP-OCRv4_server_rec
+        model_name: PP-OCRv4_server_rec_doc
         model_dir: null
         batch_size: 1
         score_thresh: 0

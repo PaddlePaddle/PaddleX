@@ -144,7 +144,68 @@ def compute_inter(rec1, rec2):
     iou = inter_area / rec2_area
     return iou
 
-def match_table_and_ocr(cell_box_list: list, ocr_dt_boxes: list) -> dict:
+
+
+# def match_table_and_ocr(cell_box_list: list, ocr_dt_boxes: list) -> dict:
+#     """
+#     match table and ocr
+
+#     Args:
+#         cell_box_list (list): bbox for table cell, 2 points, [left, top, right, bottom]
+#         ocr_dt_boxes (list): bbox for ocr, 2 points, [left, top, right, bottom]
+
+#     Returns:
+#         dict: matched dict, key is table index, value is ocr index
+#     """
+#     matched = {}
+#     del_ocr = []
+#     for i, table_box in enumerate(cell_box_list):
+#         if len(table_box) == 8:
+#             table_box = [
+#                 np.min(table_box[0::2]),
+#                 np.min(table_box[1::2]),
+#                 np.max(table_box[0::2]),
+#                 np.max(table_box[1::2]),
+#             ]
+#         for j, ocr_box in enumerate(np.array(ocr_dt_boxes)):
+#             if compute_inter(table_box, ocr_box) > 0.8:
+#                 if i not in matched.keys():
+#                     matched[i] = [j]
+#                 else:
+#                     matched[i].append(j)
+#                 del_ocr.append(j)
+#     miss_ocr = []
+#     miss_ocr_index = []
+#     for m in range(len(ocr_dt_boxes)):
+#         if m not in del_ocr:
+#             miss_ocr.append(ocr_dt_boxes[m])
+#             miss_ocr_index.append(m)
+#     if len(miss_ocr) != 0:
+#         for k, miss_ocr_box in enumerate(miss_ocr):
+#             distances = []
+#             for q, table_box in enumerate(cell_box_list):
+#                 if len(table_box) == 0:
+#                     continue
+#                 if len(table_box) == 8:
+#                     table_box = [
+#                         np.min(table_box[0::2]),
+#                         np.min(table_box[1::2]),
+#                         np.max(table_box[0::2]),
+#                         np.max(table_box[1::2]),
+#                     ]
+#                 distances.append(
+#                     (distance(table_box, miss_ocr_box), 1.0 - compute_iou(table_box, miss_ocr_box))
+#                 )  # compute iou and l1 distance
+#             sorted_distances = distances.copy()
+#             # select det box by iou and l1 distance
+#             sorted_distances = sorted(sorted_distances, key=lambda item: (item[1], item[0]))
+#             if distances.index(sorted_distances[0]) not in matched.keys():
+#                 matched[distances.index(sorted_distances[0])] = [miss_ocr_index[k]]
+#             else:
+#                 matched[distances.index(sorted_distances[0])].append(miss_ocr_index[k])
+#     # print(matched)
+#     return matched
+def match_table_and_ocr(cell_box_list, ocr_dt_boxes, table_cells_flag, row_start_index):
     """
     match table and ocr
 
@@ -155,57 +216,50 @@ def match_table_and_ocr(cell_box_list: list, ocr_dt_boxes: list) -> dict:
     Returns:
         dict: matched dict, key is table index, value is ocr index
     """
-    matched = {}
-    del_ocr = []
-    for i, table_box in enumerate(cell_box_list):
-        if len(table_box) == 8:
-            table_box = [
-                np.min(table_box[0::2]),
-                np.min(table_box[1::2]),
-                np.max(table_box[0::2]),
-                np.max(table_box[1::2]),
-            ]
-        for j, ocr_box in enumerate(np.array(ocr_dt_boxes)):
-            if compute_inter(table_box, ocr_box) > 0.8:
-                if i not in matched.keys():
-                    matched[i] = [j]
-                else:
-                    matched[i].append(j)
-                del_ocr.append(j)
-    miss_ocr = []
-    miss_ocr_index = []
-    for m in range(len(ocr_dt_boxes)):
-        if m not in del_ocr:
-            miss_ocr.append(ocr_dt_boxes[m])
-            miss_ocr_index.append(m)
-    if len(miss_ocr) != 0:
-        for k, miss_ocr_box in enumerate(miss_ocr):
-            distances = []
-            for q, table_box in enumerate(cell_box_list):
-                if len(table_box) == 0:
-                    continue
-                if len(table_box) == 8:
-                    table_box = [
-                        np.min(table_box[0::2]),
-                        np.min(table_box[1::2]),
-                        np.max(table_box[0::2]),
-                        np.max(table_box[1::2]),
-                    ]
-                distances.append(
-                    (distance(table_box, miss_ocr_box), 1.0 - compute_iou(table_box, miss_ocr_box))
-                )  # compute iou and l1 distance
-            sorted_distances = distances.copy()
-            # select det box by iou and l1 distance
-            sorted_distances = sorted(sorted_distances, key=lambda item: (item[1], item[0]))
-            if distances.index(sorted_distances[0]) not in matched.keys():
-                matched[distances.index(sorted_distances[0])] = [miss_ocr_index[k]]
-            else:
-                matched[distances.index(sorted_distances[0])].append(miss_ocr_index[k])
-    # print(matched)
-    return matched
+    all_matched = []
+    for k in range(len(table_cells_flag)-1):
+        matched = {}
+        for i, table_box in enumerate(cell_box_list[table_cells_flag[k]:table_cells_flag[k+1]]):
+            if len(table_box) == 8:
+                table_box = [
+                    np.min(table_box[0::2]),
+                    np.min(table_box[1::2]),
+                    np.max(table_box[0::2]),
+                    np.max(table_box[1::2]),
+                ]
+            for j, ocr_box in enumerate(np.array(ocr_dt_boxes)):
+                if compute_inter(table_box, ocr_box) > 0.7:
+                    if i not in matched.keys():
+                        matched[i] = [j]
+                    else:
+                        matched[i].append(j)
+        # try:
+        #     real_len = max(matched.keys())+1
+        # except Exception as e:
+        #     print(e)
+        #     print(matched)
+        #     print(all_matched)
+        #     continue
+        real_len=max(matched.keys())+1 if len(matched)!=0 else 0
+        if table_cells_flag[k+1] < row_start_index[k+1]:
+            # print(table_cells_flag[k], table_cells_flag[k+1])
+            # print(row_start_index[k], row_start_index[k+1])
+            # print(matched)
+            for s in range(row_start_index[k+1]-table_cells_flag[k+1]):
+                # print(s, real_len, real_len+s)
+                matched[real_len+s] = []
+            # print(matched)
+            # print("*"*100)
+        elif table_cells_flag[k+1] > row_start_index[k+1]:
+            for s in range(table_cells_flag[k+1]-row_start_index[k+1]):
+                matched[real_len-1].append(matched[real_len+s])
+        all_matched.append(matched)
+    return all_matched
+
+
 
 def get_html_result(
-    matched_index: dict, ocr_contents: dict, pred_structures: list
+    all_matched_index: dict, ocr_contents: dict, pred_structures: list, table_cells_flag
 ) -> str:
     """
     Generates HTML content based on the matched index, OCR contents, and predicted structures.
@@ -220,10 +274,13 @@ def get_html_result(
     """
     pred_html = []
     td_index = 0
+    td_count = 0
+    matched_list_index = 0
     head_structure = pred_structures[0:3]
     html = "".join(head_structure)
     table_structure = pred_structures[3:-3]
     for tag in table_structure:
+        matched_index = all_matched_index[matched_list_index]
         if "</td>" in tag:
             if "<td></td>" == tag:
                 pred_html.extend("<td>")
@@ -260,6 +317,15 @@ def get_html_result(
             else:
                 pred_html.append(tag)
             td_index += 1
+            td_count += 1
+            # print(td_index, td_count)
+            if td_count>=table_cells_flag[matched_list_index+1] and matched_list_index<len(all_matched_index)-1:
+                # print("="*50)
+                # print(table_cells_flag[matched_list_index], table_cells_flag[matched_list_index+1])
+                # print(matched_list_index, len(all_matched_index))
+                # print("*"*100)
+                matched_list_index += 1
+                td_index = 0
         else:
             pred_html.append(tag)
     html += "".join(pred_html)
@@ -267,6 +333,41 @@ def get_html_result(
     html += "".join(end_structure)
     return html
 
+
+# def sort_table_cells_boxes(boxes):
+#     """
+#     Sort the input list of bounding boxes.
+
+#     Args:
+#         boxes (list of lists): The input list of bounding boxes, where each bounding box is formatted as [x1, y1, x2, y2].
+
+#     Returns:
+#         sorted_boxes (list of lists): The list of bounding boxes sorted.
+#     """
+
+#     boxes_sorted_by_y = sorted(boxes, key=lambda box: box[1])
+#     rows = []
+#     current_row = []
+#     current_y = None
+#     tolerance = 10
+#     for box in boxes_sorted_by_y:
+#         x1, y1, x2, y2 = box
+#         if current_y is None:
+#             current_row.append(box)
+#             current_y = y1
+#         else:
+#             if abs(y1 - current_y) <= tolerance:
+#                 current_row.append(box)
+#             else:
+#                 current_row.sort(key=lambda x: x[0])
+#                 rows.append(current_row)
+#                 current_row = [box]
+#                 current_y = y1
+#     if current_row:
+#         current_row.sort(key=lambda x: x[0])
+#         rows.append(current_row)
+#     sorted_boxes = [box for row in rows for box in row] 
+#     return sorted_boxes
 def sort_table_cells_boxes(boxes):
     """
     Sort the input list of bounding boxes.
@@ -299,8 +400,15 @@ def sort_table_cells_boxes(boxes):
     if current_row:
         current_row.sort(key=lambda x: x[0])
         rows.append(current_row)
-    sorted_boxes = [box for row in rows for box in row] 
-    return sorted_boxes
+    sorted_boxes = []
+    flag = [0]
+    for i in range(len(rows)):
+        sorted_boxes.extend(rows[i])
+        # flag.extend([0] * (len(rows[i])))
+        # flag.append(1)
+        if i < len(rows):
+            flag.append(flag[i] + len(rows[i]))
+    return sorted_boxes, flag
 
 def convert_to_four_point_coordinates(boxes):
     """
@@ -342,6 +450,106 @@ def convert_to_four_point_coordinates(boxes):
     return converted_boxes
 
 
+def find_row_start_index(html_list):
+    """
+        find the index of the first cell in each row
+
+        Args:
+            html_list (list): list for html results
+
+        Returns:
+            row_start_indices (list): list for the index of the first cell in each row
+    """
+    # Initialize an empty list to store the indices of row start positions
+    row_start_indices = []
+    # Variable to track the current index in the flattened HTML content
+    current_index = 0
+    # Flag to check if we are inside a table row
+    inside_row = False
+    # Iterate through the HTML tags
+    for keyword in html_list:
+        # If a new row starts, set the inside_row flag to True
+        if keyword == "<tr>":
+            inside_row = True
+        # If we encounter a closing row tag, set the inside_row flag to False
+        elif keyword == "</tr>":
+            inside_row = False
+        # If we encounter a cell and we are inside a row
+        elif (keyword == "<td></td>" or keyword == "</td>") and inside_row:
+            # Append the current index as the starting index of the row
+            row_start_indices.append(current_index)
+            # Set the flag to ensure we only record the first cell of the current row
+            inside_row = False
+        # Increment the current index if we encounter a cell regardless of being inside a row or not
+        if keyword == "<td></td>" or keyword == "</td>":
+            current_index += 1
+    # Return the computed starting indices of each row
+    return row_start_indices
+
+def process_cell_boxes(ori_cell_box_list, row_start_indices, table_cells_flag):
+    cell_box_list = []
+    for row_index in range(len(table_cells_flag)):
+        row_start_index = table_cells_flag[row_index]
+        if row_index + 1 < len(table_cells_flag):
+            row_end_index = table_cells_flag[row_index + 1]
+        else:
+            row_end_index = len(ori_cell_box_list)
+        current_row_boxes = ori_cell_box_list[row_start_index:row_end_index]   
+        if row_index + 1 < len(row_start_indices):
+            num_real_boxes = row_start_indices[row_index + 1] - row_start_indices[row_index]
+        else:
+            num_real_boxes = len(ori_cell_box_list) - row_start_indices[row_index]
+        num_detected_boxes = len(current_row_boxes)
+        if num_detected_boxes == num_real_boxes:
+            cell_box_list.extend(current_row_boxes)
+        elif num_detected_boxes < num_real_boxes:
+            # 将原来的框保留，同时补充空白框以达到需求数量
+            cell_box_list.extend(current_row_boxes)
+            cell_box_list.extend([[-1, -1, -1, -1]] * (num_real_boxes - num_detected_boxes))
+        else:
+            # 合并额外的框以达到所需数量，并设计为较合适位置的框
+            merged_boxes = []
+            index = 0
+            while len(merged_boxes) < num_real_boxes and index < len(current_row_boxes):
+                if len(merged_boxes) + (num_detected_boxes - index) == num_real_boxes:
+                    merged_boxes.extend(current_row_boxes[index:])
+                    break
+                if index < len(current_row_boxes) - 1:
+                    x1 = min(current_row_boxes[index][0], current_row_boxes[index + 1][0])
+                    y1 = min(current_row_boxes[index][1], current_row_boxes[index + 1][1])
+                    x2 = max(current_row_boxes[index][2], current_row_boxes[index + 1][2])
+                    y2 = max(current_row_boxes[index][3], current_row_boxes[index + 1][3])
+                    merged_boxes.append([x1, y1, x2, y2])
+                    index += 2
+                else:
+                    merged_boxes.append(current_row_boxes[index])
+                    index += 1
+            cell_box_list.extend(merged_boxes)
+    return cell_box_list
+
+def map_and_get_max(table_cells_flag, row_start_index):
+    # 初始化结果列表，与 row_start_index 等长
+    max_values = []
+    
+    # 指针初始化
+    i = 0
+    max_value = None  # 当前最大值
+
+    # 遍历 row_start_index 中的每个元素
+    for j in range(len(row_start_index)):
+        # 更新当前指针 i，直到找到符合条件的值
+        while i < len(table_cells_flag) and table_cells_flag[i] <= row_start_index[j]:
+            # 记录当前的最大值
+            if max_value is None or table_cells_flag[i] > max_value:
+                max_value = table_cells_flag[i]
+            i += 1
+        
+        # 将最大值添加到结果列表
+        max_values.append(max_value if max_value is not None else row_start_index[j])
+    
+    return max_values
+
+
 def get_table_recognition_res(
     table_box: list,
     table_structure_result: list,
@@ -376,10 +584,28 @@ def get_table_recognition_res(
     ocr_dt_boxes = table_ocr_pred["rec_boxes"]
     ocr_texts_res = table_ocr_pred["rec_texts"]
 
-    table_cells_result = sort_table_cells_boxes(table_cells_result)
+    table_cells_result, table_cells_flag = sort_table_cells_boxes(table_cells_result)
+    # print(len(table_cells_result))
+    row_start_index = find_row_start_index(table_structure_result)
 
-    matched_index = match_table_and_ocr(table_cells_result, ocr_dt_boxes)
-    pred_html = get_html_result(matched_index, ocr_texts_res, table_structure_result)
+    table_cells_flag = map_and_get_max(table_cells_flag, row_start_index)
+
+    table_cells_flag.append(len(table_cells_result))
+    row_start_index.append(len(table_cells_result))
+    # table_cells_result_process = process_cell_boxes(table_cells_result, row_start_index, table_cells_flag)
+    # print(row_start_index)
+    # print(table_cells_flag)
+    # import pdb
+    # pdb.set_trace()
+
+    # matched_index = match_table_and_ocr(table_cells_result, ocr_dt_boxes)
+    # matched_index = match_table_and_ocr(table_cells_result, ocr_dt_boxes, table_cells_flag, row_start_index)
+    matched_index = match_table_and_ocr(table_cells_result, ocr_dt_boxes, table_cells_flag, table_cells_flag)
+    # for i in range(len(matched_index)):
+    #     print(matched_index[i])
+    # print(matched_index)
+    # raise ValueError
+    pred_html = get_html_result(matched_index, ocr_texts_res, table_structure_result, row_start_index)
 
     single_img_res = {
         "cell_box_list": table_cells_result,
