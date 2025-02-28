@@ -106,7 +106,13 @@ python test_infer.py
         </tr>
         <tr>
             <td>Type</td>
-            <td>耗时类型，包括预处理耗时（<code>Preprocessing</code>）、模型推理耗时（<code>Inference</code>）、后处理耗时（<code>Postprocessing</code>）、核心耗时（<code>Core</code>，即预处理耗时+模型推理耗时+后处理耗时）、其他耗时（<code>Other</code>）以及端到端耗时（<code>End-to-End</code>，即核心耗时+其他耗时）。</td>
+            <td>耗时类型，包括：
+            <ul>
+            <li>预处理耗时（<code>Preprocessing</code>）</li>
+            <li>模型推理耗时（<code>Inference</code>）</li>
+            <li>后处理耗时（<code>Postprocessing</code>）</li>
+            <li>核心耗时（<code>Core</code>，即预处理耗时+模型推理耗时+后处理耗时）、其他耗时（<code>Other</code>）</li>
+            <li>端到端耗时（<code>End-to-End</code>，即核心耗时+其他耗时）。</li></td>
         </tr>
         <tr>
             <td>Avg Time Per Iter (ms)</td>
@@ -157,8 +163,6 @@ python test_infer.py
 |   10  |     2      |     20    |      Core      |      106.16824715      |        53.08412358         |
 |   10  |     2      |     20    |     Other      |       2.74794563       |         1.37397281         |
 |   10  |     2      |     20    |   End-to-End   |      108.91619278      |        54.45809639         |
-+-------+------------+-----------+----------------+------------------------+----------------------------+
-| Iters | Batch Size | Instances |      Type      | Avg Time Per Iter (ms) | Avg Time Per Instance (ms) |
 +-------+------------+-----------+----------------+------------------------+----------------------------+
 ```
 
