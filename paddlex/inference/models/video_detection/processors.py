@@ -23,8 +23,6 @@ import paddle
 
 from ...utils.benchmark import benchmark
 
-from ...utils.benchmark import benchmark
-
 
 @benchmark.timeit
 class ResizeVideo:

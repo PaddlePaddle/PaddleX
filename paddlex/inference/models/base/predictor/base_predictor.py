@@ -335,10 +335,6 @@ class BasePredictor(
             device_info = None
         if pp_option is None:
             pp_option = PaddlePredictorOption(model_name=self.model_name)
-        else:
-            # FIXME: The original input might get mutated
-            if pp_option.model_name is None:
-                pp_option.model_name = self.model_name
         if device_info:
             pp_option.device_type = device_info[0]
             pp_option.device_id = device_info[1]
