@@ -2,10 +2,10 @@
 comments: true
 ---
 
-# Tutorial on Using the Rotated Object Detection Pipeline
+# Rotated Object Detection Pipeline Tutorial
 
 ## 1. Introduction to the Rotated Object Detection Pipeline
-Rotated object detection is a variant of the object detection module, specifically designed for detecting rotated objects. Rotated bounding boxes are often used to detect rectangular boxes with angular information, where the width and height of the box are no longer parallel to the image coordinate axes. Compared to horizontal rectangular boxes, rotated rectangular boxes generally include less background information. Rotated object detection has important applications in remote sensing scenarios. This pipeline also provides flexible service deployment options, supporting multiple programming languages on various hardware. Moreover, this pipeline offers secondary development capabilities, allowing you to train and fine-tune models on your own dataset, with seamless integration of the trained models.
+Rotated object detection is a variant of the object detection module, specifically designed for detecting rotated objects. Rotated bounding boxes are often used to detect rectangular boxes with angular information, where the width and height of the box are no longer parallel to the image coordinate axes. Compared to horizontal rectangular boxes, rotated rectangular boxes generally include less background information. Rotated object detection has important applications in remote sensing scenarios. This pipeline also provides flexible service deployment options, supporting multiple programming languages on various hardware. Moreover, this pipeline offers custom development capabilities, allowing you to train and fine-tune models on your own dataset, with seamless integration of the trained models.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/rotated_object_detection/rotated_object_detection_001_res.png">
 
@@ -900,7 +900,7 @@ print_r($result["detectedObjects"]);
 You can choose the appropriate deployment method based on your needs to integrate the model pipeline into subsequent AI applications.
 
 
-## 4. Secondary Development
+## 4. Custom Development
 If the default model weights provided by the Rotated Object Detection Pipeline do not meet your requirements in terms of accuracy or speed, you can attempt to <b>fine-tune</b> the existing models using <b>your own domain-specific or application-specific data</b> to improve the detection performance in your scenario.
 
 ### 4.1 Model Fine-Tuning
@@ -966,7 +966,7 @@ print_r($result["detectedObjects"]);
 You can choose the appropriate deployment method based on your needs to integrate the model pipeline into subsequent AI applications.
 
 
-## 4. Secondary Development
+## 4. Custom Development
 If the default model weights provided by the Rotated Object Detection Pipeline do not meet your requirements in terms of accuracy or speed, you can attempt to <b>fine-tune</b> the existing models using <b>your own domain-specific or application-specific data</b> to improve the detection performance in your scenario.
 
 ### 4.1 Model Fine-Tuning

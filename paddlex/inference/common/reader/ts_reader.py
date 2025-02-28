@@ -16,8 +16,10 @@ import numpy as np
 import pandas as pd
 
 from ...utils.io import CSVReader
+from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class ReadTS:
 
     def __init__(self):

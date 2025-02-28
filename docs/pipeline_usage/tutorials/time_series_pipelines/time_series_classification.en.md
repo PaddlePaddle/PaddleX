@@ -21,7 +21,7 @@ Time series classification is a technique that categorizes time-series data into
 </thead>
 <tbody>
 <tr>
-<td>TimesNet_cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/TimesNet_cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_cls_pretrained.pdparams">Trained Model</a></td>
+<td>TimesNet_cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/TimesNet_cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_cls_pretrained.pdparams">Training Model</a></td>
 <td>87.5</td>
 <td>792K</td>
 </tr>
@@ -81,7 +81,7 @@ The explanation of the result parameters can be found in the result interpretati
 The time-series file results are saved under `save_path`.
 
 #### 2.2.2 Python Script Integration
-The above command line is for quickly experiencing and viewing the results. Generally, in a project, you often need to integrate through code. You can complete the production line's fast inference with just a few lines of code. The inference code is as follows:
+The above command line is for quickly experiencing and viewing the results. Generally, in a project, you often need to integrate through code. You can complete the pipeline's fast inference with just a few lines of code. The inference code is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -116,13 +116,13 @@ In the above Python script, the following steps are executed:
 </tr>
 <tr>
 <td><code>config</code></td>
-<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it takes precedence over <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td>Specific configuration information for the pipeline (if set simultaneously with <code>pipeline</code>, it takes precedence over <code>pipeline</code>, and the pipeline name must be consistent with <code>pipeline</code>).</td>
 <td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
 <td><code>config</code></td>
-<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it takes precedence over <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td>Specific configuration information for the pipeline (if set simultaneously with <code>pipeline</code>, it takes precedence over <code>pipeline</code>, and the pipeline name must be consistent with <code>pipeline</code>).</td>
 <td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
@@ -279,7 +279,7 @@ In the above Python script, the following steps are executed:
 - The prediction result obtained through the `json` attribute is of type `dict`, with content consistent with what is saved by calling the `save_to_json()` method.
 - The `csv` attribute returns a `Pandas.DataFrame` type data, which contains the time-series classification results.
 
-Additionally, you can obtain the ts_classification production line configuration file and load it for prediction. You can run the following command to save the results in `my_path`:
+Additionally, you can obtain the ts_classification pipeline configuration file and load it for prediction. You can run the following command to save the results in `my_path`:
 
 ```
 paddlex --get_pipeline_config ts_classification --save_path ./my_path
@@ -308,9 +308,9 @@ Additionally, PaddleX offers three other deployment methods, detailed as follows
 
 🚀 <b>High-Performance Inference</b>: In practical production environments, many applications have stringent performance requirements for deployment strategies, especially in terms of response speed, to ensure efficient system operation and a smooth user experience. To address this, PaddleX provides a high-performance inference plugin aimed at deeply optimizing the performance of model inference and pre/post-processing, significantly speeding up the end-to-end process. For detailed instructions, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common form of deployment in practical production environments. By encapsulating inference functionality into a service, clients can access these services via network requests to obtain inference results. PaddleX supports various pipeline service-oriented deployment solutions. For detailed instructions, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving.en.md).
+☁️ <b>Serving Deployment</b>: Serving Deployment is a common form of deployment in practical production environments. By encapsulating inference functionality into a service, clients can access these services via network requests to obtain inference results. PaddleX supports various pipeline serving deployment solutions. For detailed instructions, please refer to the [PaddleX Serving Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
-Below are the API references for basic service-oriented deployment and multi-language service call examples:
+Below are the API references for basic serving deployment and multi-language service call examples:
 
 <details><summary>API Reference</summary>
 
@@ -741,12 +741,12 @@ echo &quot;label: &quot; . $result[&quot;label&quot;] . &quot;, score: &quot; . 
 You can choose the appropriate deployment method based on your needs to integrate the model pipeline into subsequent AI applications.
 
 
-## 4. Secondary Development
+## 4. Custom Development
 If the default model weights provided by the time-series classification pipeline do not meet your requirements in terms of accuracy or speed, you can try to <b>fine-tune</b> the existing model using <b>your own domain-specific or application data</b> to improve the performance of the time-series classification pipeline in your scenario.
 
 
 ### 4.1 Model Fine-Tuning
-Since the time-series classification pipeline includes a time-series classification module, if the pipeline's performance is not satisfactory, you need to refer to the [Secondary Development](../../../module_usage/tutorials/time_series_modules/time_series_classification.en.md#four-secondary-development) section in the [Time-Series Classification Module Development Tutorial](../../../module_usage/tutorials/time_series_modules/time_series_classification.en.md) and fine-tune the time-series classification model using your private dataset.
+Since the time-series classification pipeline includes a time-series classification module, if the pipeline's performance is not satisfactory, you need to refer to the [Custom Development](../../../module_usage/tutorials/time_series_modules/time_series_classification.en.md#four-secondary-development) section in the [Time-Series Classification Module Development Tutorial](../../../module_usage/tutorials/time_series_modules/time_series_classification.en.md) and fine-tune the time-series classification model using your private dataset.
 
 ### 4.2 Model Application
 After you have completed fine-tuning training with your private dataset, you will obtain a local model weight file.
@@ -775,4 +775,4 @@ For example, if you are using Ascend NPU for inference in the time-series classi
 paddlex --pipeline ts_classification --input ts_cls.csv --device npu:0
 ```
 
-If you want to use the general time-series classification production line on a wider range of hardware devices, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+If you want to use the general time-series classification pipeline on a wider range of hardware devices, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).

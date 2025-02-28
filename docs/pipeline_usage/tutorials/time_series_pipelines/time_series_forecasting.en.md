@@ -22,43 +22,43 @@ Time series forecasting is a technique that utilizes historical data to predict 
 </thead>
 <tbody>
 <tr>
-<td>DLinear</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/DLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_pretrained.pdparams">Trained Model</a></td>
+<td>DLinear</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/DLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_pretrained.pdparams">Training Model</a></td>
 <td>0.382</td>
 <td>0.394</td>
 <td>72K</td>
 </tr>
 <tr>
-<td>NLinear</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/NLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/NLinear_pretrained.pdparams">Trained Model</a></td>
+<td>NLinear</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/NLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/NLinear_pretrained.pdparams">Training Model</a></td>
 <td>0.386</td>
 <td>0.392</td>
 <td>40K</td>
 </tr>
 <tr>
-<td>Nonstationary</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Nonstationary_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_pretrained.pdparams">Trained Model</a></td>
+<td>Nonstationary</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Nonstationary_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_pretrained.pdparams">Training Model</a></td>
 <td>0.600</td>
 <td>0.515</td>
 <td>55.5 M</td>
 </tr>
 <tr>
-<td>PatchTST</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PatchTST_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_pretrained.pdparams">Trained Model</a></td>
+<td>PatchTST</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PatchTST_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_pretrained.pdparams">Training Model</a></td>
 <td>0.385</td>
 <td>0.397</td>
 <td>2.0M</td>
 </tr>
 <tr>
-<td>RLinear</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RLinear_pretrained.pdparams">Trained Model</a></td>
+<td>RLinear</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RLinear_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RLinear_pretrained.pdparams">Training Model</a></td>
 <td>0.384</td>
 <td>0.392</td>
 <td>40K</td>
 </tr>
 <tr>
-<td>TiDE</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/TiDE_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TiDE_pretrained.pdparams">Trained Model</a></td>
+<td>TiDE</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/TiDE_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TiDE_pretrained.pdparams">Training Model</a></td>
 <td>0.405</td>
 <td>0.412</td>
 <td>31.7M</td>
 </tr>
 <tr>
-<td>TimesNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/TimesNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_pretrained.pdparams">Trained Model</a></td>
+<td>TimesNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/TimesNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_pretrained.pdparams">Training Model</a></td>
 <td>0.417</td>
 <td>0.431</td>
 <td>4.9M</td>
@@ -137,7 +137,7 @@ The time-series file results are saved under `save_path`.
 
 
 #### 2.2.2 Python Script Integration
-The above command line is for quickly experiencing and viewing the results. Generally, in a project, it is often necessary to integrate through code. You can complete the fast inference of the production line with just a few lines of code. The inference code is as follows:
+The above command line is for quickly experiencing and viewing the results. Generally, in a project, it is often necessary to integrate through code. You can complete the fast inference of the pipeline with just a few lines of code. The inference code is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -334,7 +334,7 @@ In the above Python script, the following steps are executed:
 - The prediction result obtained through the `json` attribute is of type `dict`, and its content is consistent with the result saved by the `save_to_json()` method.
 - The `csv` attribute returns a `Pandas.DataFrame` type data, which contains the time-series prediction results.
 
-In addition, you can obtain the ts_forecast production line configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
+In addition, you can obtain the ts_forecast pipeline configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
 
 ```bash
 paddlex --get_pipeline_config ts_forecast --save_path ./my_path
@@ -354,20 +354,20 @@ for res in output:
     res.save_to_json("./output/") ## 保存json格式结果
 ```
 
-<b>Note:</b> The parameters in the configuration file are the initialization parameters for the production line. If you wish to change the initialization parameters for the `ts_forecasts` production line, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in a configuration file, simply specify the path to the configuration file with `--pipeline`.
+<b>Note:</b> The parameters in the configuration file are the initialization parameters for the pipeline. If you wish to change the initialization parameters for the `ts_forecasts` pipeline, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in a configuration file, simply specify the path to the configuration file with `--pipeline`.
 
 ## 3. Development Integration/Deployment
-If the production line meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
+If the pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
-If you need to integrate the production line directly into your Python project, you can refer to the example code in [2.2.2 Python Script Integration](#222-python脚本方式集成).
+If you need to integrate the pipeline directly into your Python project, you can refer to the example code in [2.2.2 Python Script Integration](#222-python脚本方式集成).
 
 In addition, PaddleX also provides three other deployment methods, which are detailed as follows:
 
 🚀 <b>High-Performance Inference</b>: In practical production environments, many applications have strict performance requirements for deployment strategies, especially in terms of response speed, to ensure the efficient operation of the system and a smooth user experience. To this end, PaddleX provides a high-performance inference plugin, which aims to deeply optimize the performance of model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed information on high-performance inference, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common form of deployment in practical production environments. By encapsulating the inference functionality into a service, clients can access these services via network requests to obtain inference results. PaddleX supports multiple service-oriented deployment solutions for production lines. For detailed information on service-oriented deployment, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving.en.md).
+☁️ <b>Serving Deployment</b>: Serving Deployment is a common form of deployment in practical production environments. By encapsulating the inference functionality into a service, clients can access these services via network requests to obtain inference results. PaddleX supports multiple serving deployment solutions for pipelines. For detailed information on serving deployment, please refer to the [PaddleX Serving Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
-Below are the API references for basic service-oriented deployment and examples of multi-language service calls:
+Below are the API references for basic serving deployment and examples of multi-language service calls:
 
 <details><summary>API Reference</summary>
 
@@ -861,12 +861,12 @@ SubModules:
     batch_size: 1
 ```
 
-Subsequently, refer to the command line method or Python script method in the local experience section to load the modified production line configuration file.
+Subsequently, refer to the command line method or Python script method in the local experience section to load the modified pipeline configuration file.
 
 ## 5. Multi-Hardware Support
 PaddleX supports a variety of mainstream hardware devices, including NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware devices.
 
-For example, if you are using Ascend NPU for inference in the time-series forecasting production line, the Python command you would use is:
+For example, if you are using Ascend NPU for inference in the time-series forecasting pipeline, the Python command you would use is:
 
 ```bash
 paddlex --pipeline ts_forecast --input ts_fc.csv --device npu:0

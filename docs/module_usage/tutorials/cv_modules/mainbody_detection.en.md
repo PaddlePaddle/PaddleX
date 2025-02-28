@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Mainbody detection Module Development Tutorial
+# Mainbody detection Module Tutorial
 
 ## I. Overview
 Mainbody detection is a fundamental task in object detection, aiming to identify and extract the location and size of specific target objects, people, or entities from images and videos. By constructing deep neural network models, mainbody detection learns the feature representations of image subjects to achieve efficient and accurate detection.
@@ -15,13 +15,13 @@ Mainbody detection is a fundamental task in object detection, aiming to identify
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5:0.95)</th>
 <th>mAP(0.5)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>PP-ShiTuV2_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-ShiTuV2_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-ShiTuV2_det_pretrained.pdparams">Trained Model</a></td>
+<td>PP-ShiTuV2_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-ShiTuV2_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-ShiTuV2_det_pretrained.pdparams">Training Model</a></td>
 <td>41.5</td>
 <td>62.0</td>
 <td>12.79 / 4.51</td>
@@ -434,7 +434,7 @@ The model can be directly integrated into the PaddleX pipeline or directly into 
 
 1. <b>Pipeline Integration</b>
 
-The main body detection module can be integrated into PaddleX pipelines such as <b>General Object Detection</b> (comming soon). Simply replace the model path to update the main body detection module of the relevant pipeline. In pipeline integration, you can use high-performance inference and service-oriented deployment to deploy your trained model.
+The main body detection module can be integrated into PaddleX pipelines such as <b>General Object Detection</b> (comming soon). Simply replace the model path to update the main body detection module of the relevant pipeline. In pipeline integration, you can use high-performance inference and serving deployment to deploy your trained model.
 
 2. <b>Module Integration</b>
 

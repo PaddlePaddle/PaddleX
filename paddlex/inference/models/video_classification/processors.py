@@ -30,6 +30,7 @@ from ...utils.benchmark import benchmark
 from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class Scale:
     """Scale images."""
 
@@ -125,7 +126,6 @@ class Scale:
         imgs = resized_imgs
         return imgs
 
-    @benchmark.timeit
     def __call__(self, videos: List[np.ndarray]) -> List[np.ndarray]:
         """
         Apply the scaling operation to a list of videos.
@@ -140,6 +140,7 @@ class Scale:
         return [self.scale(video) for video in videos]
 
 
+@benchmark.timeit
 class CenterCrop:
     """Center crop images."""
 
@@ -186,7 +187,6 @@ class CenterCrop:
                 crop_imgs.append(img[y1 : y1 + th, x1 : x1 + tw])
         return crop_imgs
 
-    @benchmark.timeit
     def __call__(self, videos: List[np.ndarray]) -> List[np.ndarray]:
         """
         Apply the center crop operation to a list of videos.
@@ -200,6 +200,7 @@ class CenterCrop:
         return [self.center_crop(video) for video in videos]
 
 
+@benchmark.timeit
 class Image2Array:
     """Convert a sequence of images to a numpy array with optional transposition."""
 
@@ -240,7 +241,6 @@ class Image2Array:
                 t_imgs = t_imgs.transpose([3, 0, 1, 2])  # cthw
         return t_imgs
 
-    @benchmark.timeit
     def __call__(self, videos: List[np.ndarray]) -> List[np.ndarray]:
         """
         Apply the image to array conversion to a list of videos.
@@ -254,6 +254,7 @@ class Image2Array:
         return [self.img2array(video) for video in videos]
 
 
+@benchmark.timeit
 class NormalizeVideo:
     """
     Normalize video frames by subtracting the mean and dividing by the standard deviation.
@@ -318,7 +319,6 @@ class NormalizeVideo:
         imgs = np.expand_dims(imgs, axis=0).copy()
         return imgs
 
-    @benchmark.timeit
     def __call__(self, videos: List[np.ndarray]) -> List[np.ndarray]:
         """
         Apply normalization to a list of videos.
@@ -332,6 +332,7 @@ class NormalizeVideo:
         return [self.normalize_video(video) for video in videos]
 
 
+@benchmark.timeit
 class VideoClasTopk:
     """Applies a top-k transformation on video classification predictions."""
 
@@ -376,7 +377,6 @@ class VideoClasTopk:
         class_id_map = {id: str(lb) for id, lb in enumerate(class_ids)}
         return class_id_map
 
-    @benchmark.timeit
     def __call__(
         self, preds: np.ndarray, topk: int = 5
     ) -> Tuple[np.ndarray, List[np.ndarray], List[List[str]]]:
@@ -403,10 +403,10 @@ class VideoClasTopk:
         return indexes, scores, label_names
 
 
+@benchmark.timeit
 class ToBatch:
     """A class for batching videos."""
 
-    @benchmark.timeit
     def __call__(self, videos: List[np.ndarray]) -> List[np.ndarray]:
         """Call method to stack videos into a batch.
 

@@ -6,7 +6,7 @@ comments: true
 
 ## 1. Introduction to Image Anomaly Detection Pipeline
 Image anomaly detection is an image processing technique that identifies images that stand out or do not conform to normal patterns by analyzing the content within the images. It can automatically detect potential defects, anomalies, or abnormal behaviors in images, thereby helping us to identify problems in a timely manner and take appropriate measures.
-This pipeline integrates the high-precision anomaly detection model STFPM, which extracts regions of anomalies or defects from images. The application scenarios cover various fields, including industrial manufacturing, food appearance quality inspection, and medical image analysis. The pipeline also offers flexible service-oriented deployment options, supporting the use of multiple programming languages on various hardware platforms. Moreover, it provides the capability for secondary development. You can train and fine-tune models on your own dataset based on this pipeline, and the trained models can be seamlessly integrated.
+This pipeline integrates the high-precision anomaly detection model STFPM, which extracts regions of anomalies or defects from images. The application scenarios cover various fields, including industrial manufacturing, food appearance quality inspection, and medical image analysis. The pipeline also offers flexible serving deployment options, supporting the use of multiple programming languages on various hardware platforms. Moreover, it provides the capability for custom development. You can train and fine-tune models on your own dataset based on this pipeline, and the trained models can be seamlessly integrated.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/image_anomaly_detection/01.png">
 
@@ -22,7 +22,7 @@ This pipeline integrates the high-precision anomaly detection model STFPM, which
 </thead>
 <tbody>
 <tr>
-<td>STFPM</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/STFPM_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/STFPM_pretrained.pdparams">Trained Model</a></td>
+<td>STFPM</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/STFPM_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/STFPM_pretrained.pdparams">Training Model</a></td>
 <td>96.2</td>
 <td>21.5 M</td>
 </tr>

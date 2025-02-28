@@ -10,7 +10,7 @@ PaddleX offers a rich set of pipelines, each consisting of one or more models th
 
 Seal information extraction is a part of document processing and has applications in many scenarios, such as contract comparison, inventory review, and invoice reimbursement review. Using artificial intelligence technology for automatic seal recognition can effectively save labor costs and improve efficiency for enterprises.
 
-Firstly, it is necessary to select the corresponding PaddleX production line based on the task scenario. This section is about the seal information extraction task, and it is not difficult to find that the seal information extraction task is closely related to the document scenario information extraction task. Document scene information extraction, which extracts text information from documents or images, is a classic problem in the field of computer vision. Corresponding to PaddleX's document scene information extraction v3 production line. If you are unable to determine the correspondence between tasks and production lines, you can learn about the capabilities of the relevant production lines in [PaddleX Supported Pipelines List](../support_list/pipelines_list.en.md).
+Firstly, it is necessary to select the corresponding PaddleX pipeline based on the task scenario. This section is about the seal information extraction task, and it is not difficult to find that the seal information extraction task is closely related to the document scenario information extraction task. Document scene information extraction, which extracts text information from documents or images, is a classic problem in the field of computer vision. Corresponding to PaddleX's document scene information extraction v3 pipeline. If you are unable to determine the correspondence between tasks and pipelines, you can learn about the capabilities of the relevant pipelines in [PaddleX Supported Pipelines List](../support_list/pipelines_list.en.md).
 
 ## 2. Quick Start
 
@@ -69,7 +69,7 @@ Among them, the visualization of the seal_recognition results is as follows:
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/PP-ChatOCRv3_doc/seal_01.png">
 
-Through the online experience of the document scene information extraction, a Badcase analysis can be conducted to identify issues with the official model of the document scene information extraction pipeline. The official model of the document scene information extraction production line has been found to have the following issues in the current demand scenario: in the visualization of OCR recognition, there is a deviation in the text bending detection box of the seal, resulting in incorrect seal text recognition; The information on the seal was not correctly extracted. The results for these in `{'chat_res': {'seal': 'unknown'}, 'prompt': ''}` are unknown. Therefore, this section focuses on the scenario of Seal Text Recognitions. Utilizing a dataset of Seal Text Recognition, with the extraction of seal information as examples, the seal text detection model within the document scene information extraction pipeline is fine-tuned to achieve the ability to accurately extract seal information from the document.
+Through the online experience of the document scene information extraction, a Badcase analysis can be conducted to identify issues with the official model of the document scene information extraction pipeline. The official model of the document scene information extraction pipeline has been found to have the following issues in the current demand scenario: in the visualization of OCR recognition, there is a deviation in the text bending detection box of the seal, resulting in incorrect seal text recognition; The information on the seal was not correctly extracted. The results for these in `{'chat_res': {'seal': 'unknown'}, 'prompt': ''}` are unknown. Therefore, this section focuses on the scenario of Seal Text Recognitions. Utilizing a dataset of Seal Text Recognition, with the extraction of seal information as examples, the seal text detection model within the document scene information extraction pipeline is fine-tuned to achieve the ability to accurately extract seal information from the document.
 
 
 ### 2.2 Online Experience
@@ -366,7 +366,7 @@ python main.py -c paddlex/configs/seal_text_detection/PP-OCRv4_server_seal_det.y
 
 ## 6. Pipeline Inference
 
-Replace the model in the production line with the fine-tuned model for testing, and use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/test.png) to perform predictions.
+Replace the model in the pipeline with the fine-tuned model for testing, and use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/test.png) to perform predictions.
 
 
 First, obtain and update the configuration file for the Document Information Extraction v3. Execute the following command to retrieve the configuration file (assuming a custom save location of `./my_path`):
@@ -394,7 +394,7 @@ Pipeline:
     sk:
 ```
 
-After making the modifications, you only need to change the value of the `pipeline` parameter in the `create_pipeline` method to the path of the production line configuration file to apply the configuration.
+After making the modifications, you only need to change the value of the `pipeline` parameter in the `create_pipeline` method to the path of the pipeline configuration file to apply the configuration.
 
 ```python
 from paddlex import create_pipeline
@@ -437,9 +437,9 @@ The visualization result of the seal is as follows, with the correctly added abi
 
 ## 7. Development Integration/Deployment
 
-If the Document Scene Information Extraction v3 production line meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
+If the Document Scene Information Extraction v3 pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
-1. Directly apply the trained model production line in your Python project, as shown in the following code:
+1. Directly apply the trained model pipeline in your Python project, as shown in the following code:
 
 
 ```python
@@ -473,7 +473,7 @@ For more parameters, please refer to the [Document Scene Information Extraction 
 2. Additionally, PaddleX offers three other deployment methods, detailed as follows:
 
 * high-performance inference: In actual production environments, many applications have stringent standards for deployment strategy performance metrics (especially response speed) to ensure efficient system operation and smooth user experience. To this end, PaddleX provides high-performance inference plugin aimed at deeply optimizing model inference and pre/post-processing for significant end-to-end process acceleration. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../pipeline_deploy/high_performance_inference.en.md).
-* Service-Oriented Deployment: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving cost-effective service-oriented deployment of production lines. For detailed service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../pipeline_deploy/serving.en.md).
+* Serving Deployment: Serving Deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving cost-effective serving deployment of pipelines. For detailed serving deployment procedures, please refer to the [PaddleX Serving Deployment Guide](../pipeline_deploy/serving.en.md).
 * Edge Deployment: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../pipeline_deploy/edge_deploy.en.md).
 
 You can select the appropriate deployment method for your model pipeline according to your needs, and proceed with subsequent AI application integration.

@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Tutorial on Using the Open-Vocabulary Segmentation Module
+# Open-Vocabulary Segmentation Module Tutorial
 
 ## I. Overview
 Open-vocabulary segmentation is an image segmentation task that aims to segment objects in an image based on additional information such as text descriptions, bounding boxes, keypoints, etc., rather than just the image itself. It allows the model to handle a wide range of object categories without a predefined list. This technology combines visual and multimodal techniques, significantly enhancing the flexibility and accuracy of image processing. Open-vocabulary segmentation has important applications in the field of computer vision, especially in object segmentation tasks in complex scenes.

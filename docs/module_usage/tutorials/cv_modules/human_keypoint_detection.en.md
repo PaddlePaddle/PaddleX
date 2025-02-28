@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Tutorial on Using the Human Keypoint Detection Module
+# Human Keypoint Detection Module Tutorial
 
 ## I. Overview
 Human keypoint detection is an important task in the field of computer vision, aiming to identify the specific keypoint locations of the human body in images or videos. By detecting these keypoints, various applications such as pose estimation, action recognition, human-computer interaction, and animation generation can be achieved. Human keypoint detection has a wide range of applications in augmented reality, virtual reality, motion capture, and other fields.
@@ -430,7 +430,7 @@ The model can be directly integrated into the PaddleX pipeline or into your own 
 
 1. <b>Pipeline Integration</b>
 
-The human keypoint detection module can be integrated into the PaddleX pipeline for [**human keypoint detection**](../../../pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.en.md). Simply replacing the model path will update the human keypoint detection module in the relevant pipeline. In pipeline integration, you can deploy your model using high-performance deployment or service-oriented deployment.
+The human keypoint detection module can be integrated into the PaddleX pipeline for [**human keypoint detection**](../../../pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.en.md). Simply replacing the model path will update the human keypoint detection module in the relevant pipeline. In pipeline integration, you can deploy your model using high-performance deployment or serving deployment.
 
 2. <b>Module Integration</b>
 

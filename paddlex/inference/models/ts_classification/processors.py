@@ -19,6 +19,7 @@ from typing import List, Any, Dict
 from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class GetCls:
     """A class to process prediction outputs and return class IDs and scores."""
 
@@ -26,7 +27,6 @@ class GetCls:
         """Initializes the GetCls instance."""
         super().__init__()
 
-    @benchmark.timeit
     def __call__(self, pred_list: List[Any]) -> List[pd.DataFrame]:
         """
         Processes a list of predictions and returns a list of DataFrames with class IDs and scores.
@@ -59,6 +59,7 @@ class GetCls:
         return result
 
 
+@benchmark.timeit
 class BuildPadMask:
     """A class to build padding masks for time series data."""
 
@@ -73,7 +74,6 @@ class BuildPadMask:
         super().__init__()
         self.input_data = input_data
 
-    @benchmark.timeit
     def __call__(self, ts_list: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
         Applies padding mask to a list of time series data.

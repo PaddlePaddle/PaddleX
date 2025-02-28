@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Tutorial on Using the 3D Multimodal Fusion Detection Module
+# 3D Multimodal Fusion Detection Module Tutorial
 
 ## I. Overview
 The 3D multimodal fusion detection module is a key component in the fields of computer vision and autonomous driving, responsible for locating and marking the 3D coordinates and detection box information of regions containing specific targets in images or videos. The performance of this module directly affects the accuracy and efficiency of the entire vision or autonomous driving perception system. The 3D multimodal fusion detection module typically outputs 3D bounding boxes of target regions, which are then passed as inputs to the target recognition module for further processing.
@@ -417,7 +417,7 @@ The model can be directly integrated into the PaddleX pipeline or into your own 
 
 1.<b>pipeline Integration</b>
 
-The 3D multimodal fusion detection module can be integrated into the 3D detection pipeline of PaddleX. Simply replacing the model path will complete the model update for the target detection module in the relevant pipeline. In pipeline integration, you can deploy your model using high-performance deployment and service-oriented deployment.
+The 3D multimodal fusion detection module can be integrated into the 3D detection pipeline of PaddleX. Simply replacing the model path will complete the model update for the target detection module in the relevant pipeline. In pipeline integration, you can deploy your model using high-performance deployment and serving deployment.
 
 2.<b>Module Integration</b>
 

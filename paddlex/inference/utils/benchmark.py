@@ -20,8 +20,10 @@ from pathlib import Path
 import numpy as np
 from prettytable import PrettyTable
 
-from ...utils.flags import INFER_BENCHMARK, INFER_BENCHMARK_OUTPUT
+from ...utils.flags import INFER_BENCHMARK, INFER_BENCHMARK_OUTPUT_DIR
 from ...utils import logging
+
+ENTRY_POINT_NAME = "_entry_point_"
 
 # XXX: Global mutable state
 _inference_operations = []
@@ -33,32 +35,54 @@ class Benchmark:
         self._elapses = {}
         self._warmup = False
 
-    def timeit(self, func):
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            if not self._enabled:
-                return func(*args, **kwargs)
+    def timeit_with_name(self, name=None):
+        # TODO: Refactor
+        def _deco(func_or_cls):
+            nonlocal name
+            if name is None:
+                name = func_or_cls.__qualname__
 
-            name = func.__qualname__
-
-            tic = time.time()
-            output = func(*args, **kwargs)
-            if isinstance(output, GeneratorType):
-                return self.watch_generator(output, name)
+            if isinstance(func_or_cls, type):
+                if not hasattr(func_or_cls, "__call__"):
+                    raise TypeError
+                func = func_or_cls.__call__
             else:
-                self._update(time.time() - tic, name)
-                return output
+                if not callable(func_or_cls):
+                    raise TypeError
+                func = func_or_cls
 
-        return wrapper
+            @functools.wraps(func)
+            def _wrapper(*args, **kwargs):
+                if not self._enabled:
+                    return func(*args, **kwargs)
+
+                tic = time.perf_counter()
+                output = func(*args, **kwargs)
+                if isinstance(output, GeneratorType):
+                    return self.watch_generator(output, name)
+                else:
+                    self._update(time.perf_counter() - tic, name)
+                    return output
+
+            if isinstance(func_or_cls, type):
+                func_or_cls.__call__ = _wrapper
+                return func_or_cls
+            else:
+                return _wrapper
+
+        return _deco
+
+    def timeit(self, func_or_cls):
+        return self.timeit_with_name(None)(func_or_cls)
 
     def watch_generator(self, generator, name):
         @functools.wraps(generator)
         def wrapper():
             while True:
                 try:
-                    tic = time.time()
+                    tic = time.perf_counter()
                     item = next(generator)
-                    self._update(time.time() - tic, name)
+                    self._update(time.perf_counter() - tic, name)
                     yield item
                 except StopIteration:
                     break
@@ -93,15 +117,30 @@ class Benchmark:
         self.reset()
 
     def gather(self, batch_size):
-        logs = {k.split(".")[0]: v for k, v in self.logs.items()}
+        # NOTE: The gathering logic here is based on the following assumptions:
+        # 1. The operations are performed sequentially.
+        # 2. An operation is performed only once at each iteration.
+        # 3. Operations do not nest, except that the entry point operation
+        #    contains all other operations.
+        # 4. The input batch size for each operation is `batch_size`.
+        # 5. Preprocessing operations are always performed before inference
+        #    operations, and inference operations are completed before
+        #    postprocessing operations. There is no interleaving among these
+        #    stages.
+
+        logs = {k: v for k, v in self.logs.items()}
+
+        summary = {"preprocessing": 0, "inference": 0, "postprocessing": 0}
+        base_predictor_time_list = logs.pop(ENTRY_POINT_NAME)
+        iters = len(base_predictor_time_list)
+        instances = iters * batch_size
+        summary["end_to_end"] = np.mean(base_predictor_time_list)
 
         detail_list = []
-        summary = {"preprocessing": 0, "inference": 0, "postprocessing": 0}
         op_tag = "preprocessing"
 
         for name, time_list in logs.items():
-            iters = len(time_list)
-            instances = iters * batch_size
+            assert len(time_list) == iters
             avg = np.mean(time_list)
             detail_list.append(
                 (iters, batch_size, instances, name, avg, avg / batch_size)
@@ -113,9 +152,12 @@ class Benchmark:
             else:
                 summary[op_tag] += avg
 
-        summary["end_to_end"] = (
+        summary["core"] = (
             summary["preprocessing"] + summary["inference"] + summary["postprocessing"]
         )
+
+        summary["other"] = summary["end_to_end"] - summary["core"]
+
         summary_list = [
             (
                 iters,
@@ -145,6 +187,22 @@ class Benchmark:
                 iters,
                 batch_size,
                 instances,
+                "Core",
+                summary["core"],
+                summary["core"] / batch_size,
+            ),
+            (
+                iters,
+                batch_size,
+                instances,
+                "Other",
+                summary["other"],
+                summary["other"] / batch_size,
+            ),
+            (
+                iters,
+                batch_size,
+                instances,
                 "End-to-End",
                 summary["end_to_end"],
                 summary["end_to_end"] / batch_size,
@@ -161,7 +219,7 @@ class Benchmark:
                 "Iters",
                 "Batch Size",
                 "Instances",
-                "Stage",
+                "Type",
                 "Avg Time Per Iter (ms)",
                 "Avg Time Per Instance (ms)",
             ]
@@ -194,7 +252,7 @@ class Benchmark:
                 "Iters",
                 "Batch Size",
                 "Instances",
-                "Stage",
+                "Type",
                 "Avg Time Per Iter (ms)",
                 "Avg Time Per Instance (ms)",
             ]
@@ -207,8 +265,8 @@ class Benchmark:
             logging.info(header)
             logging.info(table)
 
-            if INFER_BENCHMARK_OUTPUT:
-                save_dir = Path(INFER_BENCHMARK_OUTPUT)
+            if INFER_BENCHMARK_OUTPUT_DIR:
+                save_dir = Path(INFER_BENCHMARK_OUTPUT_DIR)
                 save_dir.mkdir(parents=True, exist_ok=True)
                 csv_data = [detail_head, *detail_list]
                 with open(Path(save_dir) / "detail.csv", "w", newline="") as file:

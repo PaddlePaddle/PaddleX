@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import os
-import ast
 from pathlib import Path
 import numpy as np
 
@@ -86,7 +85,7 @@ class ImageBatchSampler(BaseBatchSampler):
                 batch.append(input, None, None)
                 if len(batch) == self.batch_size:
                     yield batch
-                    batch.reset()
+                    batch = ImgInstance()
             elif isinstance(input, str) and input.split(".")[-1] in ("PDF", "pdf"):
                 file_path = (
                     self._download_from_url(input)
@@ -97,7 +96,7 @@ class ImageBatchSampler(BaseBatchSampler):
                     batch.append(page_img, file_path, page_idx)
                     if len(batch) == self.batch_size:
                         yield batch
-                        batch.reset()
+                        batch = ImgInstance()
             elif isinstance(input, str):
                 file_path = (
                     self._download_from_url(input)
@@ -109,30 +108,10 @@ class ImageBatchSampler(BaseBatchSampler):
                     batch.append(file_path, file_path, None)
                     if len(batch) == self.batch_size:
                         yield batch
-                        batch.reset()
+                        batch = ImgInstance()
             else:
                 logging.warning(
                     f"Not supported input data type! Only `numpy.ndarray` and `str` are supported! So has been ignored: {input}."
                 )
         if len(batch) > 0:
             yield batch
-
-    def _rand_batch(self, data_size):
-        def parse_size(s):
-            res = ast.literal_eval(s)
-            if isinstance(res, int):
-                return (res, res)
-            else:
-                assert isinstance(res, (tuple, list))
-                assert len(res) == 2
-                assert all(isinstance(item, int) for item in res)
-                return res
-
-        rand_batch = ImgInstance()
-        size = parse_size(data_size)
-        for _ in range(self.batch_size):
-            rand_batch.append(
-                np.random.randint(0, 256, (*size, 3), dtype=np.uint8), None, None
-            )
-
-        return rand_batch

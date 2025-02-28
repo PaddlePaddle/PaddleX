@@ -20,16 +20,16 @@ from typing import Any, List, Dict, Iterator, Optional, Union
 from pydantic import ValidationError
 
 from ..... import constants
-from ....common.batch_sampler import BaseBatchSampler
 from .....utils import logging
 from .....utils.device import get_default_device, parse_device
 from .....utils.flags import (
     INFER_BENCHMARK,
     INFER_BENCHMARK_WARMUP,
-    INFER_BENCHMARK_ITER,
+    INFER_BENCHMARK_ITERS,
 )
 from .....utils.subclass_register import AutoRegisterABCMetaClass
-from ....utils.benchmark import benchmark
+from ....common.batch_sampler import BaseBatchSampler
+from ....utils.benchmark import benchmark, ENTRY_POINT_NAME
 from ....utils.hpi import HPIInfo, HPIConfig
 from ....utils.io import YAMLReader
 from ....utils.pp_option import PaddlePredictorOption
@@ -181,25 +181,29 @@ class BasePredictor(
         self.set_predictor(batch_size)
         if INFER_BENCHMARK:
             # TODO(zhang-prog): Get metadata of input data
-            if not isinstance(input, str):
-                raise TypeError("Only support string as input")
+            @benchmark.timeit_with_name(ENTRY_POINT_NAME)
+            def _apply(input, **kwargs):
+                return list(self.apply(input, **kwargs))
+
+            if isinstance(input, list):
+                raise TypeError("`input` cannot be a list in benchmark mode")
             input = [input] * batch_size
 
-            if not (INFER_BENCHMARK_WARMUP > 0 or INFER_BENCHMARK_ITER > 0):
+            if not (INFER_BENCHMARK_WARMUP > 0 or INFER_BENCHMARK_ITERS > 0):
                 raise RuntimeError(
-                    "At least one of `INFER_BENCHMARK_WARMUP` and `INFER_BENCHMARK_ITER` must be greater than zero"
+                    "At least one of `INFER_BENCHMARK_WARMUP` and `INFER_BENCHMARK_ITERS` must be greater than zero"
                 )
 
             if INFER_BENCHMARK_WARMUP > 0:
                 benchmark.start_warmup()
                 for _ in range(INFER_BENCHMARK_WARMUP):
-                    output = list(self.apply(input, **kwargs))
+                    output = _apply(input, **kwargs)
                 benchmark.collect(batch_size)
                 benchmark.stop_warmup()
 
-            if INFER_BENCHMARK_ITER > 0:
-                for _ in range(INFER_BENCHMARK_ITER):
-                    output = list(self.apply(input, **kwargs))
+            if INFER_BENCHMARK_ITERS > 0:
+                for _ in range(INFER_BENCHMARK_ITERS):
+                    output = _apply(input, **kwargs)
                 benchmark.collect(batch_size)
 
             yield output[0]
@@ -251,7 +255,15 @@ class BasePredictor(
         Yields:
             Iterator[Any]: An iterator yielding prediction results.
         """
-        for batch_data in self.batch_sampler(input):
+        if INFER_BENCHMARK:
+            if not isinstance(input, list):
+                raise TypeError("In benchmark mode, `input` must be a list")
+            batches = list(self.batch_sampler(input))
+            if len(batches) != 1 or len(batches[0]) != len(input):
+                raise ValueError("Unexpected number of instances")
+        else:
+            batches = self.batch_sampler(input)
+        for batch_data in batches:
             prediction = self.process(batch_data, **kwargs)
             prediction = PredictionWrap(prediction, len(batch_data))
             for idx in range(len(batch_data)):

@@ -87,7 +87,7 @@ PaddleX 3.0 Beta2 is fully compatible with the PaddlePaddle 3.0b2 version. <b>Th
 
 
 ### PaddleX v3.0.0beta1 (9.30/2024)
-PaddleX 3.0 Beta1 offers over 200 models accessible through a streamlined Python API for one-click deployment; realizes full-process model development based on unified commands, and opens source the foundational capabilities of the PP-ChatOCRv3-doc special model pipeline; supports high-performance inference and service-oriented deployment for over 100 models, as well as edge deployment for 7 key vision models; and fully adapts the development process of over 70 models to Huawei Ascend 910B, and over 15 models to XPU and MLU.
+PaddleX 3.0 Beta1 offers over 200 models accessible through a streamlined Python API for one-click deployment; realizes full-process model development based on unified commands, and opens source the foundational capabilities of the PP-ChatOCRv3-doc special model pipeline; supports high-performance inference and serving deployment for over 100 models, as well as edge deployment for 7 key vision models; and fully adapts the development process of over 70 models to Huawei Ascend 910B, and over 15 models to XPU and MLU.
 
 - <b>Rich Models with One-click Deployment</b>: Integrates over 200 PaddlePaddle models across key domains such as document image intelligent analysis, OCR, object detection, and time series prediction into 13 model pipelines, enabling rapid model experience through a streamlined Python API. Additionally, supports over 20 individual functional modules for convenient model combination.
 - <b>Enhanced Efficiency and Lowered Thresholds</b>: Implements full-process model development based on a graphical interface and unified commands, creating 8 special model pipelines that combine large and small models, leverage large model semi-supervised learning, and multi-model fusion, significantly reducing iteration costs.
@@ -144,7 +144,7 @@ Added lightweight Python-based service deployment. Experience it now!
     * Supports deployment of models from PaddleDetection, PaddleSeg, PaddleClas, and PaddleX
     * Added multi-GPU prediction based on PaddleInference [(Usage Documentation)](https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/deploy/cpp/docs/demo/multi_gpu_model_infer.md)
     * GPU deployment added TensorRT high-performance acceleration engine deployment method based on ONNX
-    * GPU deployment added Triton service-oriented deployment method based on ONNX [(Docker Usage Documentation)](https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/deploy/cpp/docs/compile/triton/docker.md)
+    * GPU deployment added Triton serving deployment method based on ONNX [(Docker Usage Documentation)](https://github.com/PaddlePaddle/PaddleX/blob/release/2.0-rc/deploy/cpp/docs/compile/triton/docker.md)
 
 
 ### PaddleX v1.3.0 (12.19/2020)

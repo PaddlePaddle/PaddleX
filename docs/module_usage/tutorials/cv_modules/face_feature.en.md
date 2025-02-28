@@ -23,7 +23,7 @@ Face feature models typically take standardized face images processed through de
 </thead>
 <tbody>
 <tr>
-<td>MobileFaceNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MobileFaceNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileFaceNet_pretrained.pdparams">Trained Model</a></td>
+<td>MobileFaceNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MobileFaceNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileFaceNet_pretrained.pdparams">Training Model</a></td>
 <td>128</td>
 <td>96.28/96.71/99.58</td>
 <td>3.16 / 0.48</td>
@@ -32,7 +32,7 @@ Face feature models typically take standardized face images processed through de
 <td>Face feature model trained on MobileFaceNet with MS1Mv3 dataset</td>
 </tr>
 <tr>
-<td>ResNet50_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ResNet50_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_face_pretrained.pdparams">Trained Model</a></td>
+<td>ResNet50_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ResNet50_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_face_pretrained.pdparams">Training Model</a></td>
 <td>512</td>
 <td>98.12/98.56/99.77</td>
 <td>5.68 / 1.09</td>
@@ -426,7 +426,7 @@ The model can be directly integrated into the PaddleX pipeline or into your own 
 
 1. <b>Pipeline Integration</b>
 
-The face feature module can be integrated into the PaddleX pipeline for [<b>Face Recognition</b>](../../../pipeline_usage/tutorials/face_recognition_pipelines/face_recognition.en.md). You only need to replace the model path to update the face feature module of the relevant pipeline. In pipeline integration, you can use high-performance deployment and service-oriented deployment to deploy the model you obtained.
+The face feature module can be integrated into the PaddleX pipeline for [<b>Face Recognition</b>](../../../pipeline_usage/tutorials/face_recognition_pipelines/face_recognition.en.md). You only need to replace the model path to update the face feature module of the relevant pipeline. In pipeline integration, you can use high-performance deployment and serving deployment to deploy the model you obtained.
 
 2. <b>Module Integration</b>
 

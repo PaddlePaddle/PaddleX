@@ -20,6 +20,7 @@ from ..common.vision import funcs as F
 from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class Pad:
     """Pad the image."""
 
@@ -56,12 +57,12 @@ class Pad:
 
         return [img, [img.shape[1], img.shape[0]]]
 
-    @benchmark.timeit
     def __call__(self, imgs):
         """apply"""
         return [self.apply(img) for img in imgs]
 
 
+@benchmark.timeit
 class TableLabelDecode:
     """decode the table model outputs(probs) to character str"""
 
@@ -121,7 +122,6 @@ class TableLabelDecode:
             assert False, "unsupported type %s in get_beg_end_flag_idx" % beg_or_end
         return idx
 
-    @benchmark.timeit
     def __call__(self, pred, img_size, ori_img_size):
         """apply"""
         bbox_preds, structure_probs = [], []

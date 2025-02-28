@@ -23,35 +23,35 @@ Time series anomaly detection is a technique for identifying abnormal patterns o
 </thead>
 <tbody>
 <tr>
-<td>AutoEncoder_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/AutoEncoder_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/AutoEncoder_ad_pretrained.pdparams">Trained Model</a></td>
+<td>AutoEncoder_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/AutoEncoder_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/AutoEncoder_ad_pretrained.pdparams">Training Model</a></td>
 <td>99.36</td>
 <td>84.36</td>
 <td>91.25</td>
 <td>52K</td>
 </tr>
 <tr>
-<td>DLinear_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/DLinear_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_ad_pretrained.pdparams">Trained Model</a></td>
+<td>DLinear_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/DLinear_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/DLinear_ad_pretrained.pdparams">Training Model</a></td>
 <td>98.98</td>
 <td>93.96</td>
 <td>96.41</td>
 <td>112K</td>
 </tr>
 <tr>
-<td>Nonstationary_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Nonstationary_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_ad_pretrained.pdparams">Trained Model</a></td>
+<td>Nonstationary_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/Nonstationary_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/Nonstationary_ad_pretrained.pdparams">Training Model</a></td>
 <td>98.55</td>
 <td>88.95</td>
 <td>93.51</td>
 <td>1.8M</td>
 </tr>
 <tr>
-<td>PatchTST_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PatchTST_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_ad_pretrained.pdparams">Trained Model</a></td>
+<td>PatchTST_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PatchTST_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PatchTST_ad_pretrained.pdparams">Training Model</a></td>
 <td>98.78</td>
 <td>90.70</td>
 <td>94.57</td>
 <td>320K</td>
 </tr>
 <tr>
-<td>TimesNet_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/TimesNet_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_ad_pretrained.pdparams">Trained Model</a></td>
+<td>TimesNet_ad</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/TimesNet_ad_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_ad_pretrained.pdparams">Training Model</a></td>
 <td>98.37</td>
 <td>94.80</td>
 <td>96.56</td>
@@ -89,10 +89,10 @@ If you are satisfied with the pipeline's performance, you can directly integrate
 <b>Note</b>: Due to the close relationship between time series data and scenarios, the official built-in models for online experience of time series tasks are only model solutions for a specific scenario and are not universal. They are not applicable to other scenarios. Therefore, the experience mode does not support using arbitrary files to experience the effects of the official model solutions. However, after training a model for your own scenario data, you can select your trained model solution and use data from the corresponding scenario for online experience.
 
 ### 2.2 Local Experience
-Before using the general time-series anomaly detection production line locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+Before using the general time-series anomaly detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 
 #### 2.2.1 Command Line Experience
-You can quickly experience the time-series anomaly detection production line with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.csv) and replace `--input` with the local path for prediction.
+You can quickly experience the time-series anomaly detection pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.csv) and replace `--input` with the local path for prediction.
 
 ```bash
 paddlex --pipeline ts_anomaly_detection --input ts_ad.csv --device gpu:0 --save_path ./output
@@ -123,7 +123,7 @@ timestamp
 The result of the time series file is saved under `save_path`.
 
 #### 2.2.2 Integration via Python Script
-The above command line is for a quick experience to view the results. Generally, in a project, it is often necessary to integrate through code. You can complete the fast inference of the production line with just a few lines of code. The inference code is as follows:
+The above command line is for a quick experience to view the results. Generally, in a project, it is often necessary to integrate through code. You can complete the fast inference of the pipeline with just a few lines of code. The inference code is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -138,7 +138,7 @@ for res in output:
 
 In the above Python script, the following steps are performed:
 
-(1) Instantiate the production line object through `create_pipeline()`: The specific parameter descriptions are as follows:
+(1) Instantiate the pipeline object through `create_pipeline()`: The specific parameter descriptions are as follows:
 
 <table>
 <thead>
@@ -152,32 +152,32 @@ In the above Python script, the following steps are performed:
 <tbody>
 <tr>
 <td><code>pipeline</code></td>
-<td>The name of the production line or the path to the production line configuration file. If it is the name of the production line, it must be a production line supported by PaddleX.</td>
+<td>The name of the pipeline or the path to the pipeline configuration file. If it is the name of the pipeline, it must be a pipeline supported by PaddleX.</td>
 <td><code>str</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
 <td><code>config</code></td>
-<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it takes precedence over <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td>Specific configuration information for the pipeline (if set simultaneously with <code>pipeline</code>, it takes precedence over <code>pipeline</code>, and the pipeline name must be consistent with <code>pipeline</code>).</td>
 <td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The inference device for the production line. It supports specifying the specific card number of the hardware, such as "gpu:0" for GPU, "npu:0" for NPU, or "cpu" for CPU.</td>
+<td>The inference device for the pipeline. It supports specifying the specific card number of the hardware, such as "gpu:0" for GPU, "npu:0" for NPU, or "cpu" for CPU.</td>
 <td><code>str</code></td>
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
 <td><code>use_hpip</code></td>
-<td>Whether to enable high-performance inference. This is only available if the production line supports high-performance inference.</td>
+<td>Whether to enable high-performance inference. This is only available if the pipeline supports high-performance inference.</td>
 <td><code>bool</code></td>
 <td><code>False</code></td>
 </tr>
 </tbody>
 </table>
 
-(2) Call the `predict()` method of the `ts_anomaly_detection` production line object for inference prediction. This method returns a `generator`. The parameters and their descriptions for the `predict()` method are as follows:
+(2) Call the `predict()` method of the `ts_anomaly_detection` pipeline object for inference prediction. This method returns a `generator`. The parameters and their descriptions for the `predict()` method are as follows:
 
 <table>
 <thead>
@@ -205,7 +205,7 @@ In the above Python script, the following steps are performed:
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The inference device for the production line.</td>
+<td>The inference device for the pipeline.</td>
 <td><code>str|None</code></td>
 <td>
 <ul>
@@ -215,7 +215,7 @@ In the above Python script, the following steps are performed:
   <li><b>XPU</b>: <code>xpu:0</code> indicates using the first XPU for inference;</li>
   <li><b>MLU</b>: <code>mlu:0</code> indicates using the first MLU for inference;</li>
   <li><b>DCU</b>: <code>dcu:0</code> indicates using the first DCU for inference;</li>
-  <li><b>None</b>: If set to <code>None</code>, the value initialized for the production line will be used by default. During initialization, the local GPU device 0 will be prioritized. If not available, the CPU device will be used.</li>
+  <li><b>None</b>: If set to <code>None</code>, the value initialized for the pipeline will be used by default. During initialization, the local GPU device 0 will be prioritized. If not available, the CPU device will be used.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -245,7 +245,7 @@ In the above Python script, the following steps are performed:
 - The prediction result obtained through the `json` attribute is of dict type, and its content is consistent with the content saved by calling the `save_to_json()` method.
 - The `csv` attribute returns a `Pandas.DataFrame` type data, which contains the time series anomaly detection results.
 
-In addition, you can obtain the configuration file of the ts_anomaly_detection production line and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
+In addition, you can obtain the configuration file of the ts_anomaly_detection pipeline and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
 
 ```
 paddlex --get_pipeline_config ts_anomaly_detection --save_path ./my_path
@@ -266,15 +266,15 @@ for res in output:
 ```
 
 ## 3. Development Integration/Deployment
-If the production line meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
+If the pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
 
-If you need to apply the production line directly in your Python project, you can refer to the example code in [2.2.2 Python Script Method](#222-python脚本方式集成).
+If you need to apply the pipeline directly in your Python project, you can refer to the example code in [2.2.2 Python Script Method](#222-python脚本方式集成).
 
 In addition, PaddleX also provides three other deployment methods, which are detailed as follows:
 
 🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have strict performance requirements for deployment strategies, especially in terms of response speed, to ensure efficient system operation and smooth user experience. To this end, PaddleX provides a high-performance inference plugin, which aims to deeply optimize the performance of model inference and pre/post-processing to significantly speed up the end-to-end process. For details on high-performance inference, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service-based Deployment</b>: Service-based deployment is a common form of deployment in actual production environments. By encapsulating the inference function as a service, clients can access these services through network requests to obtain inference results. PaddleX supports various service-based deployment solutions for production lines. For details on service-based deployment, please refer to the [PaddleX Service-based Deployment Guide](../../../pipeline_deploy/serving.en.md).
+☁️ <b>Service-based Deployment</b>: Service-based deployment is a common form of deployment in actual production environments. By encapsulating the inference function as a service, clients can access these services through network requests to obtain inference results. PaddleX supports various service-based deployment solutions for pipelines. For details on service-based deployment, please refer to the [PaddleX Service-based Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
 Below are the API references for basic service-based deployment and examples of multi-language service calls:
 
@@ -808,18 +808,18 @@ echo &quot;Output time-series data saved at &quot; . $output_csv_path . &quot;\n
 <br/>
 
 📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
-You can choose the appropriate method to deploy the model production line according to your needs, and then proceed with subsequent AI application integration.
+You can choose the appropriate method to deploy the model pipeline according to your needs, and then proceed with subsequent AI application integration.
 
-## 4. Secondary Development
-If the default model weights provided by the general time-series anomaly detection production line do not meet your accuracy or speed requirements in your scenario, you can try to further <b>fine-tune</b> the existing model using <b>your own specific domain or application scenario data</b> to improve the recognition effect of the general time-series anomaly detection production line in your scenario.
+## 4. Custom Development
+If the default model weights provided by the general time-series anomaly detection pipeline do not meet your accuracy or speed requirements in your scenario, you can try to further <b>fine-tune</b> the existing model using <b>your own specific domain or application scenario data</b> to improve the recognition effect of the general time-series anomaly detection pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the general time-series anomaly detection production line includes a time-series anomaly detection module, if the effect of the model production line is not as expected, you need to refer to the [Secondary Development](../../../module_usage/tutorials/time_series_modules/time_series_anomaly_detection.en.md#四二次开发) section in the [Time-Series Prediction Module Development Tutorial](../../../module_usage/tutorials/time_series_modules/time_series_anomaly_detection.en.md) to fine-tune the time-series anomaly detection model using your private dataset.
+Since the general time-series anomaly detection pipeline includes a time-series anomaly detection module, if the effect of the model pipeline is not as expected, you need to refer to the [Custom Development](../../../module_usage/tutorials/time_series_modules/time_series_anomaly_detection.en.md#四二次开发) section in the [Time-Series Prediction Module Development Tutorial](../../../module_usage/tutorials/time_series_modules/time_series_anomaly_detection.en.md) to fine-tune the time-series anomaly detection model using your private dataset.
 
 ### 4.2 Model Application
 After you complete the fine-tuning training with your private dataset, you can obtain the local model weight file.
 
-If you need to use the fine-tuned model weights, simply modify the production line configuration file by filling in the local path of the fine-tuned model weights in the `model_dir` of the production line configuration file:
+If you need to use the fine-tuned model weights, simply modify the pipeline configuration file by filling in the local path of the fine-tuned model weights in the `model_dir` of the pipeline configuration file:
 
 ```yaml
 pipeline_name: ts_anomaly_detection

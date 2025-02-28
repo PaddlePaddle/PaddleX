@@ -19,7 +19,7 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>AP (%)<br/>Easy/Medium/Hard</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -27,7 +27,7 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 </thead>
 <tbody>
 <tr>
-<td>BlazeFace</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace_pretrained.pdparams">Trained Model</a></td>
+<td>BlazeFace</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace_pretrained.pdparams">Training Model</a></td>
 <td>77.7/73.4/49.5</td>
 <td>60.34 / 54.76</td>
 <td>84.18 / 84.18</td>
@@ -35,7 +35,7 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 <td>A lightweight and efficient face detection model</td>
 </tr>
 <tr>
-<td>BlazeFace-FPN-SSH</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace-FPN-SSH_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace-FPN-SSH_pretrained.pdparams">Trained Model</a></td>
+<td>BlazeFace-FPN-SSH</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace-FPN-SSH_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace-FPN-SSH_pretrained.pdparams">Training Model</a></td>
 <td>83.2/80.5/60.5</td>
 <td>69.29 / 63.42</td>
 <td>86.96 / 86.96</td>
@@ -43,7 +43,7 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 <td>Improved BlazeFace with FPN and SSH structures</td>
 </tr>
 <tr>
-<td>PicoDet_LCNet_x2_5_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_LCNet_x2_5_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_LCNet_x2_5_face_pretrained.pdparams">Trained Model</a></td>
+<td>PicoDet_LCNet_x2_5_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_LCNet_x2_5_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_LCNet_x2_5_face_pretrained.pdparams">Training Model</a></td>
 <td>93.7/90.7/68.1</td>
 <td>35.37 / 12.88</td>
 <td>126.24 / 126.24</td>
@@ -51,7 +51,7 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 <td>Face detection model based on PicoDet_LCNet_x2_5</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus-S_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-S_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_face_pretrained.pdparams">Trained Model</a></td>
+<td>PP-YOLOE_plus-S_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-S_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_face_pretrained.pdparams">Training Model</a></td>
 <td>93.9/91.8/79.8</td>
 <td>22.54 / 8.33</td>
 <td>138.67 / 138.67</td>
@@ -76,7 +76,7 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 </thead>
 <tbody>
 <tr>
-<td>MobileFaceNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MobileFaceNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileFaceNet_pretrained.pdparams">Trained Model</a></td>
+<td>MobileFaceNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MobileFaceNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileFaceNet_pretrained.pdparams">Training Model</a></td>
 <td>128</td>
 <td>96.28/96.71/99.58</td>
 <td>5.7</td>
@@ -85,7 +85,7 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 <td>Face recognition model trained on MS1Mv3 based on MobileFaceNet</td>
 </tr>
 <tr>
-<td>ResNet50_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ResNet50_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_face_pretrained.pdparams">Trained Model</a></td>
+<td>ResNet50_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ResNet50_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_face_pretrained.pdparams">Training Model</a></td>
 <td>512</td>
 <td>98.12/98.56/99.77</td>
 <td>8.7</td>
@@ -1066,13 +1066,13 @@ pprint.pp(result_infer["faces"])
 You can choose the appropriate method to deploy the model pipeline according to your needs, and then proceed with subsequent AI application integration.
 
 
-## 4. Secondary Development
+## 4. Custom Development
 If the default model weights provided by the face recognition pipeline do not meet your accuracy or speed requirements in your scenario, you can try further <b>fine-tuning</b> the existing model using <b>your own specific domain or application data</b> to improve the recognition performance of the pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
 Since the face recognition pipeline includes two modules (face detection and face feature), the unsatisfactory performance of the model pipeline may come from either module.
 
-You can analyze the images with poor recognition performance. If you find that many faces are not detected during the analysis, it may indicate a deficiency in the face detection model. You need to refer to the [Face Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/face_detection.en.md) and the [Secondary Development](../../../module_usage/tutorials/cv_modules/face_detection.en.md) section to fine-tune the face detection model using your private dataset. If there are matching errors in the detected faces, it indicates that the face feature module needs further improvement. You need to refer to the [Face Feature Module Development Tutorial](../../../module_usage/tutorials/cv_modules/face_feature.md) and the [Secondary Development](../../../module_usage/tutorials/cv_modules/face_feature.md) section to fine-tune the face feature module.
+You can analyze the images with poor recognition performance. If you find that many faces are not detected during the analysis, it may indicate a deficiency in the face detection model. You need to refer to the [Face Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/face_detection.en.md) and the [Custom Development](../../../module_usage/tutorials/cv_modules/face_detection.en.md) section to fine-tune the face detection model using your private dataset. If there are matching errors in the detected faces, it indicates that the face feature module needs further improvement. You need to refer to the [Face Feature Module Development Tutorial](../../../module_usage/tutorials/cv_modules/face_feature.md) and the [Custom Development](../../../module_usage/tutorials/cv_modules/face_feature.md) section to fine-tune the face feature module.
 
 ### 4.2 Model Application
 After completing the fine-tuning training with your private dataset, you will obtain the local model weight file.

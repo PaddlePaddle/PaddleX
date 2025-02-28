@@ -17,6 +17,7 @@ import numpy as np
 from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class NormalizeFeatures:
     """Normalize Features Transform"""
 
@@ -26,7 +27,6 @@ class NormalizeFeatures:
         features = np.divide(preds[0], feas_norm)
         return features
 
-    @benchmark.timeit
     def __call__(self, preds):
         normalized_features = [self._normalize(feature) for feature in preds]
         return normalized_features

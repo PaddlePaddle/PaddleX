@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Time Series Classification Module Development Tutorial
+# Time Series Classification Module Tutorial
 
 ## I. Overview
 Time series classification involves identifying and categorizing different patterns in time series data by analyzing trends, periodicity, seasonality, and other factors that vary over time. This technique is widely used in medical diagnosis and other fields, effectively classifying key information in time series data to provide robust support for decision-making.
@@ -20,7 +20,7 @@ Time series classification involves identifying and categorizing different patte
 </thead>
 <tbody>
 <tr>
-<td>TimesNet_cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/TimesNet_cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_cls_pretrained.pdparams">Trained Model</a></td>
+<td>TimesNet_cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/TimesNet_cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_cls_pretrained.pdparams">Training Model</a></td>
 <td>87.5</td>
 <td>792K</td>
 <td>TimesNet is an adaptive and high-accuracy time series classification model through multi-period analysis</td>

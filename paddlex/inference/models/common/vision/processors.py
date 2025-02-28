@@ -81,6 +81,7 @@ class _BaseResize:
         return rescaled_size, scale
 
 
+@benchmark.timeit
 class Resize(_BaseResize):
     """Resize the image."""
 
@@ -113,7 +114,6 @@ class Resize(_BaseResize):
 
         self.keep_ratio = keep_ratio
 
-    @benchmark.timeit
     def __call__(self, imgs):
         """apply"""
         return [self.resize(img) for img in imgs]
@@ -135,6 +135,7 @@ class Resize(_BaseResize):
         return img
 
 
+@benchmark.timeit
 class ResizeByLong(_BaseResize):
     """
     Proportionally resize the image by specifying the target length of the
@@ -157,7 +158,6 @@ class ResizeByLong(_BaseResize):
         super().__init__(size_divisor=size_divisor, interp=interp, backend=backend)
         self.target_long_edge = target_long_edge
 
-    @benchmark.timeit
     def __call__(self, imgs):
         """apply"""
         return [self.resize(img) for img in imgs]
@@ -177,6 +177,7 @@ class ResizeByLong(_BaseResize):
         return img
 
 
+@benchmark.timeit
 class ResizeByShort(_BaseResize):
     """
     Proportionally resize the image by specifying the target length of the
@@ -199,7 +200,6 @@ class ResizeByShort(_BaseResize):
         super().__init__(size_divisor=size_divisor, interp=interp, backend=backend)
         self.target_short_edge = target_short_edge
 
-    @benchmark.timeit
     def __call__(self, imgs):
         """apply"""
         return [self.resize(img) for img in imgs]
@@ -219,6 +219,7 @@ class ResizeByShort(_BaseResize):
         return img
 
 
+@benchmark.timeit
 class Normalize:
     """Normalize the image."""
 
@@ -247,7 +248,6 @@ class Normalize:
         self.std = np.asarray(std).astype("float32")
         self.preserve_dtype = preserve_dtype
 
-    @benchmark.timeit
     def __call__(self, imgs):
         """apply"""
         old_type = imgs[0].dtype
@@ -262,16 +262,16 @@ class Normalize:
         return list(imgs)
 
 
+@benchmark.timeit
 class ToCHWImage:
     """Reorder the dimensions of the image from HWC to CHW."""
 
-    @benchmark.timeit
     def __call__(self, imgs):
         """apply"""
         return [img.transpose((2, 0, 1)) for img in imgs]
 
 
+@benchmark.timeit
 class ToBatch:
-    @benchmark.timeit
     def __call__(self, imgs):
         return [np.stack(imgs, axis=0).astype(dtype=np.float32, copy=False)]

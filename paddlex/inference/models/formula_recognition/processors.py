@@ -31,6 +31,7 @@ from ....utils import logging
 from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class MinMaxResize:
     """Class for resizing images to be within specified minimum and maximum dimensions, with padding and normalization."""
 
@@ -143,7 +144,6 @@ class MinMaxResize:
             img = np.dstack((img, img, img))
             return img
 
-    @benchmark.timeit
     def __call__(self, imgs: List[np.ndarray]) -> List[np.ndarray]:
         """Applies the resize method to a list of images.
 
@@ -156,6 +156,7 @@ class MinMaxResize:
         return [self.resize(img) for img in imgs]
 
 
+@benchmark.timeit
 class LatexTestTransform:
     """
     A transform class for processing images according to Latex test requirements.
@@ -183,7 +184,6 @@ class LatexTestTransform:
         squeezed = np.squeeze(grayscale_image)
         return cv2.merge([squeezed] * self.num_output_channels)
 
-    @benchmark.timeit
     def __call__(self, imgs: List[np.ndarray]) -> List[np.ndarray]:
         """
         Apply the transform to a list of images.
@@ -197,6 +197,7 @@ class LatexTestTransform:
         return [self.transform(img) for img in imgs]
 
 
+@benchmark.timeit
 class LatexImageFormat:
     """Class for formatting images to a specific format suitable for LaTeX."""
 
@@ -223,7 +224,6 @@ class LatexImageFormat:
         img_expanded = img[:, :, np.newaxis].transpose(2, 0, 1)
         return img_expanded[np.newaxis, :]
 
-    @benchmark.timeit
     def __call__(self, imgs: List[np.ndarray]) -> List[np.ndarray]:
         """Applies the format method to a list of images.
 
@@ -236,6 +236,7 @@ class LatexImageFormat:
         return [self.format(img) for img in imgs]
 
 
+@benchmark.timeit
 class NormalizeImage(object):
     """Normalize an image by subtracting the mean and dividing by the standard deviation.
 
@@ -279,12 +280,12 @@ class NormalizeImage(object):
         img = (img.astype("float32") * self.scale - self.mean) / self.std
         return img
 
-    @benchmark.timeit
     def __call__(self, imgs: List[Union[np.ndarray, Image.Image]]) -> List[np.ndarray]:
         """Apply normalization to a list of images."""
         return [self.normalize(img) for img in imgs]
 
 
+@benchmark.timeit
 class ToBatch(object):
     """A class for batching images."""
 
@@ -292,7 +293,6 @@ class ToBatch(object):
         """Initializes the ToBatch object."""
         super(ToBatch, self).__init__()
 
-    @benchmark.timeit
     def __call__(self, imgs: List[np.ndarray]) -> List[np.ndarray]:
         """Concatenates a list of images into a single batch.
 
@@ -308,6 +308,7 @@ class ToBatch(object):
         return x
 
 
+@benchmark.timeit
 class LaTeXOCRDecode(object):
     """Class for decoding LaTeX OCR tokens based on a provided character list."""
 
@@ -377,7 +378,6 @@ class LaTeXOCRDecode(object):
         ]
         return [self.post_process(dec_str) for dec_str in dec_str_list]
 
-    @benchmark.timeit
     def __call__(
         self,
         preds: np.ndarray,
@@ -409,6 +409,7 @@ class LaTeXOCRDecode(object):
         return text, label
 
 
+@benchmark.timeit
 class UniMERNetImgDecode(object):
     """Class for decoding images for UniMERNet, including cropping margins, resizing, and padding."""
 
@@ -550,7 +551,6 @@ class UniMERNetImgDecode(object):
         )
         return np.array(ImageOps.expand(img, padding))
 
-    @benchmark.timeit
     def __call__(self, imgs: List[np.ndarray]) -> List[Optional[np.ndarray]]:
         """Calls the img_decode method on a list of images.
 
@@ -562,6 +562,7 @@ class UniMERNetImgDecode(object):
         return [self.img_decode(img) for img in imgs]
 
 
+@benchmark.timeit
 class UniMERNetDecode(object):
     """Class for decoding tokenized inputs using UniMERNet tokenizer.
 
@@ -879,7 +880,6 @@ class UniMERNetDecode(object):
         text = self.normalize(text)
         return text
 
-    @benchmark.timeit
     def __call__(
         self,
         preds: np.ndarray,
@@ -909,6 +909,7 @@ class UniMERNetDecode(object):
         return text, label
 
 
+@benchmark.timeit
 class UniMERNetTestTransform:
     """
     A class for transforming images according to UniMERNet test specifications.
@@ -943,7 +944,6 @@ class UniMERNetTestTransform:
         img = cv2.merge([squeezed] * self.num_output_channels)
         return img
 
-    @benchmark.timeit
     def __call__(self, imgs: List[np.ndarray]) -> List[np.ndarray]:
         """
         Applies the transform to a list of images.
@@ -957,6 +957,7 @@ class UniMERNetTestTransform:
         return [self.transform(img) for img in imgs]
 
 
+@benchmark.timeit
 class UniMERNetImageFormat:
     """Class for formatting images to UniMERNet's required format."""
 
@@ -984,7 +985,6 @@ class UniMERNetImageFormat:
         img_expanded = img[:, :, np.newaxis].transpose(2, 0, 1)
         return img_expanded[np.newaxis, :]
 
-    @benchmark.timeit
     def __call__(self, imgs: List[np.ndarray]) -> List[np.ndarray]:
         """Applies the format method to a list of images.
 

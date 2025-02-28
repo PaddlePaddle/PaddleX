@@ -34,6 +34,7 @@ cv2_interp_codes = {
 }
 
 
+@benchmark.timeit
 class LoadPointsFromFile:
     """Load points from a file and process them according to specified parameters."""
 
@@ -71,7 +72,6 @@ class LoadPointsFromFile:
         points = np.fromfile(pts_filename, dtype=np.float32)
         return points
 
-    @benchmark.timeit
     def __call__(self, results):
         """Call function to load points data from file and process it.
 
@@ -114,6 +114,7 @@ class LoadPointsFromFile:
         return results
 
 
+@benchmark.timeit
 class LoadPointsFromMultiSweeps(object):
     """Load points from multiple sweeps.This is usually used for nuScenes dataset to utilize previous sweeps."""
 
@@ -221,7 +222,6 @@ class LoadPointsFromMultiSweeps(object):
         )
         return points[filt]
 
-    @benchmark.timeit
     def __call__(self, results):
         """Call function to load multi-sweep point clouds from files.
 
@@ -278,6 +278,7 @@ class LoadPointsFromMultiSweeps(object):
         return results
 
 
+@benchmark.timeit
 class LoadMultiViewImageFromFiles:
     """Load multi-view images from files."""
 
@@ -308,7 +309,6 @@ class LoadMultiViewImageFromFiles:
         self.constant_std = constant_std
         self.imread_flag = imread_flag
 
-    @benchmark.timeit
     def __call__(self, sample):
         """
         Call method to load multi-view image from files and update the sample dictionary.
@@ -345,6 +345,7 @@ class LoadMultiViewImageFromFiles:
         return sample
 
 
+@benchmark.timeit
 class ResizeImage:
     """Resize images & bbox & mask."""
 
@@ -640,7 +641,6 @@ class ResizeImage:
         """Resize semantic segmentation map with ``results['scale']``."""
         raise NotImplementedError
 
-    @benchmark.timeit
     def __call__(self, results):
         """Call function to resize images, bounding boxes, masks, and semantic segmentation maps according to the provided scale or scale factor.
 
@@ -676,6 +676,7 @@ class ResizeImage:
         return results
 
 
+@benchmark.timeit
 class NormalizeImage:
     """Normalize the image."""
 
@@ -714,7 +715,6 @@ class NormalizeImage:
         cv2.multiply(img, stdinv, img)  # inplace
         return img
 
-    @benchmark.timeit
     def __call__(self, results):
         """Call method to normalize images in the results dictionary.
 
@@ -735,6 +735,7 @@ class NormalizeImage:
         return results
 
 
+@benchmark.timeit
 class PadImage(object):
     """Pad the image & mask."""
 
@@ -859,13 +860,13 @@ class PadImage(object):
         """Pad semantic segmentation map according to ``results['pad_shape']``."""
         raise NotImplementedError
 
-    @benchmark.timeit
     def __call__(self, results):
         """Call function to pad images, masks, semantic segmentation maps."""
         self._pad_img(results)
         return results
 
 
+@benchmark.timeit
 class SampleFilterByKey:
     """Collect data from the loader relevant to the specific task."""
 
@@ -897,7 +898,6 @@ class SampleFilterByKey:
         self.keys = keys
         self.meta_keys = meta_keys
 
-    @benchmark.timeit
     def __call__(self, sample):
         """Call function to filter sample by keys. The keys in `meta_keys` are used to filter metadata from the input sample.
 
@@ -922,6 +922,7 @@ class SampleFilterByKey:
         return filtered_sample
 
 
+@benchmark.timeit
 class GetInferInput:
     """Collect infer input data from transformed sample"""
 
@@ -952,7 +953,6 @@ class GetInferInput:
                 collated_batch[k] = [elem[k] for elem in batch]
         return collated_batch
 
-    @benchmark.timeit
     def __call__(self, sample):
         """Call function to infer input data from transformed sample
 

@@ -15,7 +15,7 @@ Face detection is a fundamental task in object detection, aiming to automaticall
 <tr>
 <th style="text-align: center;">Model</th><th>Model Download Link</th>
 <th style="text-align: center;">AP (%)<br/>Easy/Medium/Hard</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th style="text-align: center;">Model Size (M)</th>
 <th style="text-align: center;">Description</th>
@@ -23,7 +23,7 @@ Face detection is a fundamental task in object detection, aiming to automaticall
 </thead>
 <tbody>
 <tr>
-<td style="text-align: center;">BlazeFace</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace_pretrained.pdparams">Trained Model</a></td>
+<td style="text-align: center;">BlazeFace</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace_pretrained.pdparams">Training Model</a></td>
 <td style="text-align: center;">77.7/73.4/49.5</td>
 <td style="text-align: center;">60.34 / 54.76</td>
 <td style="text-align: center;">84.18 / 84.18</td>
@@ -31,7 +31,7 @@ Face detection is a fundamental task in object detection, aiming to automaticall
 <td style="text-align: center;">A lightweight and efficient face detection model</td>
 </tr>
 <tr>
-<td style="text-align: center;">BlazeFace-FPN-SSH</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace-FPN-SSH_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace-FPN-SSH_pretrained.pdparams">Trained Model</a></td>
+<td style="text-align: center;">BlazeFace-FPN-SSH</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace-FPN-SSH_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace-FPN-SSH_pretrained.pdparams">Training Model</a></td>
 <td style="text-align: center;">83.2/80.5/60.5</td>
 <td style="text-align: center;">69.29 / 63.42</td>
 <td style="text-align: center;">86.96 / 86.96</td>
@@ -39,7 +39,7 @@ Face detection is a fundamental task in object detection, aiming to automaticall
 <td style="text-align: center;">An improved model of BlazeFace, incorporating FPN and SSH structures</td>
 </tr>
 <tr>
-<td style="text-align: center;">PicoDet_LCNet_x2_5_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_LCNet_x2_5_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_LCNet_x2_5_face_pretrained.pdparams">Trained Model</a></td>
+<td style="text-align: center;">PicoDet_LCNet_x2_5_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_LCNet_x2_5_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_LCNet_x2_5_face_pretrained.pdparams">Training Model</a></td>
 <td style="text-align: center;">93.7/90.7/68.1</td>
 <td style="text-align: center;">35.37 / 12.88</td>
 <td style="text-align: center;">126.24 / 126.24</td>
@@ -47,7 +47,7 @@ Face detection is a fundamental task in object detection, aiming to automaticall
 <td style="text-align: center;">Face Detection model based on PicoDet_LCNet_x2_5</td>
 </tr>
 <tr>
-<td style="text-align: center;">PP-YOLOE_plus-S_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-S_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_face_pretrained.pdparams">Trained Model</a></td>
+<td style="text-align: center;">PP-YOLOE_plus-S_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-S_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_face_pretrained.pdparams">Training Model</a></td>
 <td style="text-align: center;">93.9/91.8/79.8</td>
 <td style="text-align: center;">22.54 / 8.33</td>
 <td style="text-align: center;">138.67 / 138.67</td>
@@ -473,7 +473,7 @@ The model can be directly integrated into the PaddleX pipeline or into your own 
 
 1. <b>Pipeline Integration</b>
 
-The face detection module can be integrated into PaddleX pipelines such as [<b>Face Recognition</b>](../../../pipeline_usage/tutorials/cv_pipelines/face_recognition.en.md). Simply replace the model path to update the face detection module of the relevant pipeline. In pipeline integration, you can use high-performance inference and service-oriented deployment to deploy your model.
+The face detection module can be integrated into PaddleX pipelines such as [<b>Face Recognition</b>](../../../pipeline_usage/tutorials/cv_pipelines/face_recognition.en.md). Simply replace the model path to update the face detection module of the relevant pipeline. In pipeline integration, you can use high-performance inference and serving deployment to deploy your model.
 
 2. <b>Module Integration</b>
 

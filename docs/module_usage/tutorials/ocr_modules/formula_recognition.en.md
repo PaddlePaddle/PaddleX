@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Formula Recognition Module Development Tutorial
+# Formula Recognition Module Tutorial
 
 ## I. Overview
 The formula recognition module is a crucial component of OCR (Optical Character Recognition) systems, responsible for converting mathematical formulas in images into editable text or computer-readable formats. The performance of this module directly impacts the accuracy and efficiency of the entire OCR system. The module typically outputs LaTeX or MathML codes of mathematical formulas, which are then passed on to the text understanding module for further processing.

@@ -18,6 +18,8 @@ import os
 from typing import Generic, List, Optional, Any, Dict
 import pickle
 
+from ...utils.benchmark import benchmark
+
 
 class _EasyDict(dict):
     def __getattr__(self, key: str):
@@ -79,6 +81,7 @@ class Sample(_EasyDict):
         self.attrs = None
 
 
+@benchmark.timeit
 class ReadNuscenesData:
 
     def __init__(

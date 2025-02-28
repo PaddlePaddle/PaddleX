@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Video Classification Module Development Tutorial
+# Video Classification Module Tutorial
 
 ## I. Overview
 The Video Classification Module is a crucial component in a computer vision system, responsible for categorizing input videos. The performance of this module directly impacts the accuracy and efficiency of the entire computer vision system. The Video Classification Module typically receives videos as input and then, through deep learning or other machine learning algorithms, classifies them into predefined categories based on their characteristics and content. For example, in an action recognition system, the Video Classification Module may need to classify input videos into categories such as "Abseiling," "Air Drumming," "Answering Questions," etc. The classification results of the Video Classification Module are output for use by other modules or systems.
@@ -18,7 +18,7 @@ The Video Classification Module is a crucial component in a computer vision syst
 <th>Description</th>
 </tr>
 <tr>
-<td>PP-TSM-R50_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSM-R50_8frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSM-R50_8frames_uniform_pretrained.pdparams">Trained Model</a></td>
+<td>PP-TSM-R50_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSM-R50_8frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSM-R50_8frames_uniform_pretrained.pdparams">Training Model</a></td>
 <td>74.36</td>
 <td>93.4 M</td>
 <td rowspan="1">
@@ -27,13 +27,13 @@ PP-TSM is a video classification model developed by Baidu PaddlePaddle's Vision 
 </tr>
 
 <tr>
-<td>PP-TSMv2-LCNetV2_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_8frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_8frames_uniform_pretrained.pdparams">Trained Model</a></td>
+<td>PP-TSMv2-LCNetV2_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_8frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_8frames_uniform_pretrained.pdparams">Training Model</a></td>
 <td>71.71</td>
 <td>22.5 M</td>
 <td rowspan="2">PP-TSMv2 is a lightweight video classification model optimized based on the CPU-oriented model PP-LCNetV2. It undergoes model tuning in seven aspects: backbone network and pre-trained model selection, data augmentation, TSM module tuning, input frame number optimization, decoding speed optimization, DML distillation, and LTA module. Under the center crop evaluation method, it achieves an accuracy of 75.16%, with an inference speed of only 456ms on the CPU for a 10-second video input.</td>
 </tr>
 <tr>
-<td>PP-TSMv2-LCNetV2_16frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_16frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_16frames_uniform_pretrained.pdparams">Trained Model</a></td>
+<td>PP-TSMv2-LCNetV2_16frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_16frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_16frames_uniform_pretrained.pdparams">Training Model</a></td>
 <td>73.11</td>
 <td>22.5 M</td>
 </tr>
@@ -446,7 +446,7 @@ The model can be directly integrated into the PaddleX pipelines or directly into
 1.<b>Pipeline Integration</b>
 
 
-The video classification module can be integrated into the [General Video Classification Pipeline](../../../pipeline_usage/tutorials/video_pipelines/video_classification.en.md) of PaddleX. Simply replace the model path to update the video classification module of the relevant pipeline. In pipeline integration, you can use high-performance inference and service-oriented deployment to deploy your obtained model.
+The video classification module can be integrated into the [General Video Classification Pipeline](../../../pipeline_usage/tutorials/video_pipelines/video_classification.en.md) of PaddleX. Simply replace the model path to update the video classification module of the relevant pipeline. In pipeline integration, you can use high-performance inference and serving deployment to deploy your obtained model.
 
 2.<b>Module Integration</b>
 

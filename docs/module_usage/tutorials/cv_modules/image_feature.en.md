@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Image Feature Module Development Tutorial
+# Image Feature Module Tutorial
 
 ## I. Overview
 The image feature module is one of the important tasks in computer vision, primarily referring to the automatic extraction of useful features from image data using deep learning methods, to facilitate subsequent image retrieval tasks. The performance of this module directly affects the accuracy and efficiency of the subsequent tasks. In practical applications, image features typically output a set of feature vectors, which can effectively represent the content, structure, texture, and other information of the image, and will be passed as input to the subsequent retrieval module for processing.
@@ -14,13 +14,13 @@ The image feature module is one of the important tasks in computer vision, prima
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recall@1 (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>PP-ShiTuV2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-ShiTuV2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-ShiTuV2_rec_pretrained.pdparams">Trained Model</a></td>
+<td>PP-ShiTuV2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-ShiTuV2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-ShiTuV2_rec_pretrained.pdparams">Training Model</a></td>
 <td>84.2</td>
 <td>3.48 / 0.55</td>
 <td>8.04 / 4.04</td>
@@ -28,14 +28,14 @@ The image feature module is one of the important tasks in computer vision, prima
 <td rowspan="3">PP-ShiTuV2 is a general image feature system consisting of three modules: object detection, feature extraction, and vector retrieval. These models are part of the feature extraction module and can be selected based on system requirements.</td>
 </tr>
 <tr>
-<td>PP-ShiTuV2_rec_CLIP_vit_base</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-ShiTuV2_rec_CLIP_vit_base_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-ShiTuV2_rec_CLIP_vit_base_pretrained.pdparams">Trained Model</a></td>
+<td>PP-ShiTuV2_rec_CLIP_vit_base</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-ShiTuV2_rec_CLIP_vit_base_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-ShiTuV2_rec_CLIP_vit_base_pretrained.pdparams">Training Model</a></td>
 <td>88.69</td>
 <td>12.94 / 2.88</td>
 <td>58.36 / 58.36</td>
 <td>306.6 M</td>
 </tr>
 <tr>
-<td>PP-ShiTuV2_rec_CLIP_vit_large</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-ShiTuV2_rec_CLIP_vit_large_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-ShiTuV2_rec_CLIP_vit_large_pretrained.pdparams">Trained Model</a></td>
+<td>PP-ShiTuV2_rec_CLIP_vit_large</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-ShiTuV2_rec_CLIP_vit_large_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-ShiTuV2_rec_CLIP_vit_large_pretrained.pdparams">Training Model</a></td>
 <td>91.03</td>
 <td>51.65 / 11.18</td>
 <td>255.78 / 255.78</td>
@@ -463,7 +463,7 @@ The model can be directly integrated into the PaddleX pipeline or directly into 
 
 1.<b>Pipeline Integration</b>
 
-The image feature module can be integrated into the <b>General Image Recognition Pipeline</b> (comming soon) of PaddleX. Simply replace the model path to update the image feature module of the relevant pipeline. In pipeline integration, you can use service-oriented deployment to deploy your trained model.
+The image feature module can be integrated into the <b>General Image Recognition Pipeline</b> (comming soon) of PaddleX. Simply replace the model path to update the image feature module of the relevant pipeline. In pipeline integration, you can use serving deployment to deploy your trained model.
 
 2.<b>Module Integration</b>
 

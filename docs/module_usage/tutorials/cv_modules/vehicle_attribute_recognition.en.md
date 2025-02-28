@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Vehicle Attribute Recognition Module Development Tutorial
+# Vehicle Attribute Recognition Module Tutorial
 
 ## I. Overview
 Vehicle attribute recognition is a crucial component in computer vision systems. Its primary task is to locate and label specific attributes of vehicles in images or videos, such as vehicle type, color, license plate number, etc. The performance of this module directly impacts the accuracy and efficiency of the entire computer vision system. The vehicle attribute recognition module typically outputs bounding boxes (Bounding Boxes) containing vehicle attribute information, which are then passed as input to other modules (e.g., vehicle tracking, vehicle re-identification) for subsequent processing.
@@ -15,7 +15,7 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mA (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -23,7 +23,7 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 </thead>
 <tbody>
 <tr>
-<td>PP-LCNet_x1_0_vehicle_attribute</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_vehicle_attribute_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_vehicle_attribute_pretrained.pdparams">Trained Model</a></td>
+<td>PP-LCNet_x1_0_vehicle_attribute</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_vehicle_attribute_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_vehicle_attribute_pretrained.pdparams">Training Model</a></td>
 <td>91.7</td>
 <td>2.32 / 0.52</td>
 <td>3.22 / 1.26</td>
@@ -453,7 +453,7 @@ The model can be directly integrated into the PaddleX pipeline or directly into 
 
 1.<b>Pipeline Integration</b>
 
-The vehicle attribute recognition module can be integrated into the [Vehicle Attribute Recognition Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/vehicle_attribute_recognition.en.md) of PaddleX. Simply replace the model path to update the vehicle attribute recognition module of the relevant pipeline. In pipeline integration, you can use high-performance inference and service-oriented deployment to deploy your model.
+The vehicle attribute recognition module can be integrated into the [Vehicle Attribute Recognition Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/vehicle_attribute_recognition.en.md) of PaddleX. Simply replace the model path to update the vehicle attribute recognition module of the relevant pipeline. In pipeline integration, you can use high-performance inference and serving deployment to deploy your model.
 
 2.<b>Module Integration</b>
 

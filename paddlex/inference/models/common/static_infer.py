@@ -19,8 +19,8 @@ from typing import Sequence, List
 from pathlib import Path
 
 import paddle
+import paddle.inference
 import numpy as np
-from paddle.inference import Config, create_predictor
 
 from ....utils import logging
 from ....utils.device import constr_device
@@ -45,6 +45,7 @@ INFERENCE_OPERATIONS = [
     "PaddleCopyToDevice",
     "PaddleCopyToHost",
     "PaddleModelInfer",
+    "PaddleInferChainLegacy",
     "MultiBackendInfer",
 ]
 set_inference_operations(INFERENCE_OPERATIONS)
@@ -165,9 +166,9 @@ def _convert_trt(
 
     def _get_input_names(model_file, params_file):
         # HACK
-        config = Config(str(model_file), str(params_file))
+        config = paddle.inference.Config(str(model_file), str(params_file))
         config.disable_glog_info()
-        predictor = create_predictor(config)
+        predictor = paddle.inference.create_predictor(config)
         return predictor.get_input_names()
 
     input_names = _get_input_names(pp_model_file, pp_params_file)
@@ -222,12 +223,12 @@ def _concatenate(*callables):
     return _chain
 
 
+@benchmark.timeit
 class PaddleCopyToDevice:
     def __init__(self, device_type, device_id):
         self.device_type = device_type
         self.device_id = device_id
 
-    @benchmark.timeit
     def __call__(self, arrs):
         device_id = [self.device_id] if self.device_id is not None else self.device_id
         device = constr_device(self.device_type, device_id)
@@ -235,24 +236,25 @@ class PaddleCopyToDevice:
         return paddle_tensors
 
 
+@benchmark.timeit
 class PaddleCopyToHost:
-    @benchmark.timeit
     def __call__(self, paddle_tensors):
         arrs = [i.numpy() for i in paddle_tensors]
         return arrs
 
 
+@benchmark.timeit
 class PaddleModelInfer:
     def __init__(self, predictor):
         super().__init__()
         self.predictor = predictor
 
-    @benchmark.timeit
     def __call__(self, x):
         return self.predictor.run(x)
 
 
 # FIXME: Name might be misleading
+@benchmark.timeit
 class PaddleInferChainLegacy:
     def __init__(self, predictor):
         self.predictor = predictor
@@ -267,7 +269,6 @@ class PaddleInferChainLegacy:
             output_handle = self.predictor.get_output_handle(output_name)
             self.output_handles.append(output_handle)
 
-    @benchmark.timeit
     def __call__(self, x):
         for input_, input_handle in zip(x, self.input_handles):
             input_handle.reshape(input_.shape)
@@ -361,7 +362,7 @@ class PaddleInfer(StaticInfer):
                 cache_dir,
             )
         else:
-            config = Config(str(model_file), str(params_file))
+            config = paddle.inference.Config(str(model_file), str(params_file))
 
         if self._option.device_type == "gpu":
             config.exp_disable_mixed_precision_ops({"feed", "fetch"})
@@ -424,7 +425,7 @@ class PaddleInfer(StaticInfer):
         if not DEBUG:
             config.disable_glog_info()
 
-        predictor = create_predictor(config)
+        predictor = paddle.inference.create_predictor(config)
 
         return predictor
 
@@ -442,15 +443,15 @@ class PaddleInfer(StaticInfer):
             )
             model_file = trt_save_path.with_suffix(".json")
             params_file = trt_save_path.with_suffix(".pdiparams")
-            config = Config(str(model_file), str(params_file))
+            config = paddle.inference.Config(str(model_file), str(params_file))
         else:
             PRECISION_MAP = {
-                "trt_int8": Config.Precision.Int8,
-                "trt_fp32": Config.Precision.Float32,
-                "trt_fp16": Config.Precision.Half,
+                "trt_int8": paddle.inference.Config.Precision.Int8,
+                "trt_fp32": paddle.inference.Config.Precision.Float32,
+                "trt_fp16": paddle.inference.Config.Precision.Half,
             }
 
-            config = Config(str(model_file), str(params_file))
+            config = paddle.inference.Config(str(model_file), str(params_file))
 
             config.set_optim_cache_dir(str(cache_dir / "optim_cache"))
 
@@ -522,13 +523,13 @@ class PaddleInfer(StaticInfer):
         return config
 
 
+@benchmark.timeit
 class MultiBackendInfer(object):
     def __init__(self, ui_runtime):
         super().__init__()
         self.ui_runtime = ui_runtime
 
     # The time consumed by the wrapper code will also be taken into account.
-    @benchmark.timeit
     def __call__(self, x):
         outputs = self.ui_runtime.infer(x)
         return outputs

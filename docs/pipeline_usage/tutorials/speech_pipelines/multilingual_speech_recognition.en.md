@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Multilingual Speech Recognition pipeline User Guide
+# Multilingual Speech Recognition pipeline Tutorial
 
 ## 1. Introduction to Multilingual Speech Recognition pipeline
 Speech recognition is an advanced tool that can automatically convert spoken languages into corresponding text or commands. This technology plays an important role in various fields such as intelligent customer service, voice assistants, and meeting records. Multilingual speech recognition supports automatic language detection and recognition of multiple languages.
@@ -307,6 +307,7 @@ payload = {"audio": audio_data}
 response = requests.post(API_URL, json=payload)
 
 assert response.status_code == 200
+
 result = response.json()["result"]
 print(result)
 </code></pre></details>
@@ -326,9 +327,9 @@ In addition, PaddleX also provides three other deployment methods, which are det
 
 🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have strict performance requirements for deployment strategies, especially in terms of response speed, to ensure the efficient operation of the system and the smoothness of the user experience. To this end, PaddleX provides a high-performance inference plugin, which aims to deeply optimize the performance of model inference and pre/post-processing to achieve significant acceleration of the end-to-end process. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports multiple pipeline service-oriented deployment solutions. For detailed pipeline service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving.en.md).
+☁️ <b>Serving Deployment</b>: Serving Deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports multiple pipeline serving deployment solutions. For detailed pipeline serving deployment procedures, please refer to the [PaddleX Serving Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
-Below are the API references for basic service-oriented deployment and examples of multi-language service calls:
+Below are the API references for basic serving deployment and examples of multi-language service calls:
 
 <details><summary>API Reference</summary>
 
@@ -546,7 +547,7 @@ print(result)
 📱 <b>Edge Deployment</b>: Edge deployment is a method that places computational and data processing capabilities directly on user devices, allowing them to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
 You can choose the appropriate deployment method based on your needs to integrate the model into your pipeline and proceed with subsequent AI application integration.
 
-## 4. Secondary Development
+## 4. Custom Development
 If the default model weights provided by the general video classification pipeline are not satisfactory in terms of accuracy or speed for your specific scenario, you can attempt to <b>fine-tune</b> the existing model using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the general video classification pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning

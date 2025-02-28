@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Pedestrian Attribute Recognition Module Development Tutorial
+# Pedestrian Attribute Recognition Module Tutorial
 
 ## I. Overview
 Pedestrian attribute recognition is a crucial component in computer vision systems, responsible for locating and labeling specific attributes of pedestrians in images or videos, such as gender, age, clothing color, and type. The performance of this module directly impacts the accuracy and efficiency of the entire computer vision system. The pedestrian attribute recognition module typically outputs attribute information for each pedestrian, which is then passed as input to other modules (e.g., pedestrian tracking, pedestrian re-identification) for subsequent processing.
@@ -23,7 +23,7 @@ Pedestrian attribute recognition is a crucial component in computer vision syste
 </thead>
 <tbody>
 <tr>
-<td>PP-LCNet_x1_0_pedestrian_attribute</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_pedestrian_attribute_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_pedestrian_attribute_pretrained.pdparams">Trained Model</a></td>
+<td>PP-LCNet_x1_0_pedestrian_attribute</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-LCNet_x1_0_pedestrian_attribute_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_pedestrian_attribute_pretrained.pdparams">Training Model</a></td>
 <td>92.2</td>
 <td>2.35 / 0.49</td>
 <td>3.17 / 1.25</td>
@@ -470,7 +470,7 @@ The model can be directly integrated into the PaddleX pipeline or directly into 
 
 1.<b>Pipeline Integration</b>
 
-The pedestrian attribute recognition module can be integrated into the [Pedestrian Attribute Recognition Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute_recognition.en.md) of PaddleX. Simply replace the model path to update the pedestrian attribute recognition module of the relevant pipeline. In pipeline integration, you can use high-performance inference and service-oriented deployment to deploy your model.
+The pedestrian attribute recognition module can be integrated into the [Pedestrian Attribute Recognition Pipeline](../../../pipeline_usage/tutorials/cv_pipelines/pedestrian_attribute_recognition.en.md) of PaddleX. Simply replace the model path to update the pedestrian attribute recognition module of the relevant pipeline. In pipeline integration, you can use high-performance inference and serving deployment to deploy your model.
 
 2.<b>Module Integration</b>
 

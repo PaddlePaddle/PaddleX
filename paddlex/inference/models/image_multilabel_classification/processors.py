@@ -18,6 +18,7 @@ from typing import Union
 from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class MultiLabelThreshOutput:
     """MultiLabelThresh Transform"""
 
@@ -33,7 +34,6 @@ class MultiLabelThreshOutput:
         class_id_map = {id: str(lb) for id, lb in enumerate(class_ids)}
         return class_id_map
 
-    @benchmark.timeit
     def __call__(self, preds, threshold: Union[float, dict, list]):
         threshold_list = []
         num_classes = preds[0].shape[-1]
