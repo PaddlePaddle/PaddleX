@@ -149,6 +149,8 @@ def _convert_trt(
     def _get_input_names(model_file, params_file):
         # HACK
         config = lazy_paddle.inference.Config(str(model_file), str(params_file))
+        # NOTE: Disable oneDNN to circumvent a bug in Paddle Inference
+        config.disable_mkldnn()
         config.disable_glog_info()
         predictor = lazy_paddle.inference.create_predictor(config)
         return predictor.get_input_names()
