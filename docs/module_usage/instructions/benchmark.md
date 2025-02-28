@@ -112,7 +112,7 @@ python test_infer.py
             <li>模型推理耗时（<code>Inference</code>）</li>
             <li>后处理耗时（<code>Postprocessing</code>）</li>
             <li>核心耗时（<code>Core</code>，即预处理耗时+模型推理耗时+后处理耗时）</li>
-            <li>其他耗时（<code>Other</code>）</li>
+            <li>其他耗时（<code>Other</code>，如开启 benchmark 功能所产生的观测时间、统计时间等）</li>
             <li>端到端耗时（<code>End-to-End</code>，即核心耗时+其他耗时）</li>
             </ul>
             </td>
@@ -142,6 +142,20 @@ python test_infer.py
 |   5   |     2      |     10    |     Other      |       3.41097047       |         1.70548523         |
 |   5   |     2      |     10    |   End-to-End   |      168.21285784      |        84.10642892         |
 +-------+------------+-----------+----------------+------------------------+----------------------------+
+                                           Operation Data
++--------------------+----------------------------------------------------------------------+
+|     Operation      |                                  Location                            |
++--------------------+----------------------------------------------------------------------+
+|     ReadImage      | /PaddleX/paddlex/inference/models/object_detection/processors.py:34  |
+|       Resize       | /PaddleX/paddlex/inference/models/object_detection/processors.py:99  |
+|     Normalize      | /PaddleX/paddlex/inference/models/object_detection/processors.py:145 |
+|     ToCHWImage     | /PaddleX/paddlex/inference/models/object_detection/processors.py:158 |
+|      ToBatch       | /PaddleX/paddlex/inference/models/object_detection/processors.py:216 |
+| PaddleCopyToDevice |     /PaddleX/paddlex/inference/models/common/static_infer.py:214     |
+|  PaddleModelInfer  |     /PaddleX/paddlex/inference/models/common/static_infer.py:234     |
+|  PaddleCopyToHost  |     /PaddleX/paddlex/inference/models/common/static_infer.py:223     |
+|   DetPostProcess   | /PaddleX/paddlex/inference/models/object_detection/processors.py:773 |
++--------------------+----------------------------------------------------------------------+
                                                  Detail Data
 +-------+------------+-----------+--------------------+------------------------+----------------------------+
 | Iters | Batch Size | Instances |     Operation      | Avg Time Per Iter (ms) | Avg Time Per Instance (ms) |
