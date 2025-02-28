@@ -2,10 +2,10 @@
 comments: true
 ---
 
-# PP-ChatOCRv4-doc Pipeline utorial
+# PP-ChatOCRv4-doc Pipeline Tutorial
 
 ## 1. Introduction to PP-ChatOCRv4-doc Pipeline
-PP-ChatOCRv4-doc is a unique document and image intelligent analysis solution from PaddlePaddle, combining LLM, MLLM, and OCR technologies to address complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. Integrated with ERNIE Bot, it fuses massive data and knowledge, achieving high accuracy and wide applicability. This pipeline also provides flexible service deployment options, supporting deployment on various hardware. Furthermore, it offers secondary development capabilities, allowing you to train and fine-tune models on your own datasets, with seamless integration of trained models.
+PP-ChatOCRv4-doc is a unique document and image intelligent analysis solution from PaddlePaddle, combining LLM, MLLM, and OCR technologies to address complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. Integrated with ERNIE Bot, it fuses massive data and knowledge, achieving high accuracy and wide applicability. This pipeline also provides flexible service deployment options, supporting deployment on various hardware. Furthermore, it offers custom development capabilities, allowing you to train and fine-tune models on your own datasets, with seamless integration of trained models.
 
 <img src="https://github.com/user-attachments/assets/0870cdec-1909-4247-9004-d9efb4ab9635">
 
@@ -19,13 +19,13 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>SLANet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_pretrained.pdparams">Trained Model</a></td>
+<td>SLANet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_pretrained.pdparams">Training Model</a></td>
 <td>59.52</td>
 <td>103.08 / 103.08</td>
 <td>197.99 / 197.99</td>
@@ -33,7 +33,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <td>SLANet is a table structure recognition model developed by Baidu PaddleX Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
 </tr>
 <tr>
-<td>SLANet_plus</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_plus_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">Trained Model</a></td>
+<td>SLANet_plus</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_plus_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">Training Model</a></td>
 <td>63.69</td>
 <td>140.29 / 140.29</td>
 <td>195.39 / 195.39</td>
@@ -48,7 +48,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -91,7 +91,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -115,7 +115,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -155,7 +155,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -179,7 +179,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -219,7 +219,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Detection Hmean (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -227,7 +227,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 </thead>
 <tbody>
 <tr>
-<td>PP-OCRv4_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">Trained Model</a></td>
+<td>PP-OCRv4_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">Training Model</a></td>
 <td>82.69</td>
 <td>83.34 / 80.91</td>
 <td>442.58 / 442.58</td>
@@ -235,7 +235,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <td>PP-OCRv4's server-side text detection model, featuring higher accuracy, suitable for deployment on high-performance servers</td>
 </tr>
 <tr>
-<td>PP-OCRv4_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">Trained Model</a></td>
+<td>PP-OCRv4_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">Training Model</a></td>
 <td>77.79</td>
 <td>8.79 / 3.13</td>
 <td>51.00 / 28.58</td>
@@ -250,13 +250,13 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Trained Model</a></td>
+<td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Training Model</a></td>
 <td>78.20</td>
 <td>4.82 / 4.82</td>
 <td>16.74 / 4.64</td>
@@ -264,7 +264,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <td rowspan="2">PP-OCRv4 is the next version of Baidu PaddlePaddle's self-developed text recognition model PP-OCRv3. By introducing data augmentation schemes and GTC-NRTR guidance branches, it further improves text recognition accuracy without compromising inference speed. The model offers both server (server) and mobile (mobile) versions to meet industrial needs in different scenarios.</td>
 </tr>
 <tr>
-<td>PP-OCRv4_server_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Trained Model</a></td>
+<td>PP-OCRv4_server_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Training Model</a></td>
 <td>79.20</td>
 <td>6.58 / 6.58</td>
 <td>33.17 / 33.17</td>
@@ -276,13 +276,13 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>ch_SVTRv2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_SVTRv2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">Trained Model</a></td>
+<td>ch_SVTRv2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_SVTRv2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">Training Model</a></td>
 <td>68.81</td>
 <td>8.08 / 8.08</td>
 <td>50.17 / 42.50</td>
@@ -297,13 +297,13 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team at 
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>ch_RepSVTR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_RepSVTR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">Trained Model</a></td>
+<td>ch_RepSVTR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_RepSVTR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">Training Model</a></td>
 <td>65.07</td>
 <td>5.93 / 5.93</td>
 <td>20.73 / 7.32</td>
@@ -322,14 +322,14 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 <th>BLEU Score</th>
 <th>Normed Edit Distance</th>
 <th>ExpRate (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>LaTeX_OCR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/LaTeX_OCR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">Trained Model</a></td>
+<td>LaTeX_OCR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/LaTeX_OCR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">Training Model</a></td>
 <td>0.8821</td>
 <td>0.0823</td>
 <td>40.01</td>
@@ -346,7 +346,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Detection Hmean (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -354,7 +354,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 </thead>
 <tbody>
 <tr>
-<td>PP-OCRv4_server_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_seal_det_pretrained.pdparams">Trained Model</a></td>
+<td>PP-OCRv4_server_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_seal_det_pretrained.pdparams">Training Model</a></td>
 <td>98.21</td>
 <td>74.75 / 67.72</td>
 <td>382.55 / 382.55</td>
@@ -362,7 +362,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 <td>PP-OCRv4's server-side seal text detection model, featuring higher accuracy, suitable for deployment on better-equipped servers</td>
 </tr>
 <tr>
-<td>PP-OCRv4_mobile_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_seal_det_pretrained.pdparams">Trained Model</a></td>
+<td>PP-OCRv4_mobile_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_seal_det_pretrained.pdparams">Training Model</a></td>
 <td>96.47</td>
 <td>7.82 / 3.09</td>
 <td>48.28 / 23.97</td>
@@ -396,7 +396,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 
 | Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
 |-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
 | High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 </details>
@@ -416,54 +416,62 @@ After updating the configuration file, you can complete quick inference using ju
 ```python
 from paddlex import create_pipeline
 
+chat_bot_config = {
+    "module_name": "chat_bot",
+    "model_name": "ernie-3.5-8k",
+    "base_url": "https://qianfan.baidubce.com/v2",
+    "api_type": "openai",
+    "api_key": "api_key",  # your api_key
+}
+
+retriever_config = {
+    "module_name": "retriever",
+    "model_name": "embedding-v1",
+    "base_url": "https://qianfan.baidubce.com/v2",
+    "api_type": "qianfan",
+    "api_key": "api_key",  # your api_key
+}
+
+mllm_chat_bot_config = {
+    "module_name": "chat_bot",
+    "model_name": "PP-DocBee",
+    "base_url": "http://172.0.0.1:8080/v1/chat/completions",  # your local mllm service url
+    "api_type": "openai",
+    "api_key": "api_key",  # your api_key
+}
+
 pipeline = create_pipeline(pipeline="PP-ChatOCRv4-doc", initial_predictor=False)
 
-visual_predict_res = pipeline.visual_predict(input="vehicle_certificate-1.png",
+visual_predict_res = pipeline.visual_predict(
+    input="vehicle_certificate-1.png",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
     use_common_ocr=True,
     use_seal_recognition=True,
-    use_table_recognition=True)
+    use_table_recognition=True,
+)
 
 visual_info_list = []
 for res in visual_predict_res:
     visual_info_list.append(res["visual_info"])
     layout_parsing_result = res["layout_parsing_result"]
 
-vector_info = pipeline.build_vector(visual_info_list, flag_save_bytes_vector=True, retriever_config={
-    "module_name": "retriever",
-    "model_name": "embedding-v1",
-    "base_url": "https://qianfan.baidubce.com/v2",
-    "api_type": "qianfan",
-    "api_key": "api_key" # your api_key
-})
-mllm_predict_res = pipeline.mllm_pred(input="vehicle_certificate-1.png", key_list=["Driver Compartment Occupancy"], mllm_chat_bot_config={
-    "module_name": "chat_bot",
-    "model_name": "PP-DocBee",
-    "base_url": "http://172.0.0.1:8080/v1/chat/completions", # your local mllm service url
-    "api_type": "openai",
-    "api_key": "api_key" # your api_key
-})
+vector_info = pipeline.build_vector(
+    visual_info_list, flag_save_bytes_vector=True, retriever_config=retriever_config
+)
+mllm_predict_res = pipeline.mllm_pred(
+    input="vehicle_certificate-1.png",
+    key_list=["驾驶室准乘人数"],
+    mllm_chat_bot_config=mllm_chat_bot_config,
+)
 mllm_predict_info = mllm_predict_res["mllm_res"]
 chat_result = pipeline.chat(
     key_list=["驾驶室准乘人数"],
     visual_info=visual_info_list,
     vector_info=vector_info,
     mllm_predict_info=mllm_predict_info,
-    chat_bot_config={
-      "module_name": "chat_bot",
-      "model_name": "ernie-3.5-8k",
-      "base_url": "https://qianfan.baidubce.com/v2",
-      "api_type": "openai",
-      "api_key": "api_key" # your api_key
-    },
-    retriever_config={
-      "module_name": "retriever",
-      "model_name": "embedding-v1",
-      "base_url": "https://qianfan.baidubce.com/v2",
-      "api_type": "qianfan",
-      "api_key": "api_key" # your api_key
-    }
+    chat_bot_config=chat_bot_config,
+    retriever_config=retriever_config,
 )
 print(chat_result)
 
@@ -1838,128 +1846,100 @@ Below are the API references for basic serving and multi-language service invoca
 <td>HTML prompts.</td>
 </tr>
 </tbody>
-</table></details>
+</table>
+<li><b>Note:</b></li>
+Including sensitive parameters such as API key for large model calls in the request body can be a security risk. If not necessary, set these parameters in the configuration file and do not pass them on request.
+<br/><br/>
+</details>
 
 <details><summary>Multi-language Service Invocation Examples</summary>
 
 <details>
 <summary>Python</summary>
 
-<pre><code class="language-python">import base64
+<pre><code class="language-python">
+# This script only shows the use case for images. For calling with other file types, please read the API reference and make adjustments.
+
+import base64
 import pprint
 import sys
-
 import requests
 
 
 API_BASE_URL = "http://0.0.0.0:8080"
-API_KEY = "{API key of Qianfan Platform}"
-SECRET_KEY = "{Secret key of Qianfan Platform}"
-LLM_NAME = "ernie-3.5"
-LLM_PARAMS = {
-    "apiType": "qianfan",
-    "apiKey": API_KEY,
-    "secretKey": SECRET_KEY,
-}
 
-file_path = "./demo.jpg"
-keys = ["电话"]
+image_path = "./demo.jpg"
+keys = ["name"]
 
-with open(file_path, "rb") as file:
-    file_bytes = file.read()
-    file_data = base64.b64encode(file_bytes).decode("ascii")
+with open(image_path, "rb") as file:
+    image_bytes = file.read()
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
 payload = {
-    "file": file_data,
+    "file": image_data,
     "fileType": 1,
-    "useImgOrientationCls": True,
-    "useImgUnwarping": True,
-    "useSealTextDet": True,
 }
+
 resp_visual = requests.post(url=f"{API_BASE_URL}/chatocr-visual", json=payload)
 if resp_visual.status_code != 200:
     print(
-        f"Request to chatocr-visual failed with status code {resp_visual.status_code}.",
-        file=sys.stderr,
+        f"Request to chatocr-visual failed with status code {resp_visual.status_code}."
     )
     pprint.pp(resp_visual.json())
     sys.exit(1)
 result_visual = resp_visual.json()["result"]
 
-for i, res in enumerate(result_visual["visualResults"]):
-    print("Texts:")
-    pprint.pp(res["texts"])
-    print("Tables:")
-    pprint.pp(res["tables"])
-    layout_img_path = f"layout_{i}.jpg"
-    with open(layout_img_path, "wb") as f:
-        f.write(base64.b64decode(res["layoutImage"]))
-    ocr_img_path = f"ocr_{i}.jpg"
-    with open(ocr_img_path, "wb") as f:
-        f.write(base64.b64decode(res["ocrImage"]))
-    print(f"Output images saved at {layout_img_path} and {ocr_img_path}")
+for i, res in enumerate(result_visual["layoutParsingResults"]):
+    print(res["prunedResult"])
+    for img_name, img in res["outputImages"].items():
+        img_path = f"{img_name}_{i}.jpg"
+        with open(img_path, "wb") as f:
+            f.write(base64.b64decode(img))
+        print(f"Output image saved at {img_path}")
 
 payload = {
     "visualInfo": result_visual["visualInfo"],
-    "minChars": 200,
-    "llmRequestInterval": 1000,
-    "llmName": LLM_NAME,
-    "llmParams": LLM_PARAMS,
 }
 resp_vector = requests.post(url=f"{API_BASE_URL}/chatocr-vector", json=payload)
 if resp_vector.status_code != 200:
     print(
-        f"Request to chatocr-vector failed with status code {resp_vector.status_code}.",
-        file=sys.stderr,
+        f"Request to chatocr-vector failed with status code {resp_vector.status_code}."
     )
     pprint.pp(resp_vector.json())
     sys.exit(1)
 result_vector = resp_vector.json()["result"]
 
 payload = {
-    "keys": keys,
-    "vectorStore": result_vector["vectorStore"],
-    "llmName": LLM_NAME,
-    "llmParams": LLM_PARAMS,
+    "image": image_data,
+    "keyList": keys,
 }
-resp_retrieval = requests.post(url=f"{API_BASE_URL}/chatocr-retrieval", json=payload)
-if resp_retrieval.status_code != 200:
+resp_mllm = requests.post(url=f"{API_BASE_URL}/chatocr-mllm", json=payload)
+if resp_mllm.status_code != 200:
     print(
-        f"Request to chatocr-retrieval failed with status code {resp_retrieval.status_code}.",
-        file=sys.stderr,
+        f"Request to chatocr-mllm failed with status code {resp_mllm.status_code}."
     )
-    pprint.pp(resp_retrieval.json())
+    pprint.pp(resp_mllm.json())
     sys.exit(1)
-result_retrieval = resp_retrieval.json()["result"]
+result_mllm = resp_mllm.json()["result"]
 
 payload = {
-    "keys": keys,
+    "keyList": keys,
     "visualInfo": result_visual["visualInfo"],
-    "vectorStore": result_vector["vectorStore"],
-    "retrievalResult": result_retrieval["retrievalResult"],
-    "taskDescription": "",
-    "rules": "",
-    "fewShot": "",
-    "llmName": LLM_NAME,
-    "llmParams": LLM_PARAMS,
-    "returnPrompts": True,
+    "useVectorRetrieval": True,
+    "vectorInfo": result_vector["vectorInfo"],
+    "mllmPredictInfo": result_mllm["mllmPredictInfo"],
 }
 resp_chat = requests.post(url=f"{API_BASE_URL}/chatocr-chat", json=payload)
 if resp_chat.status_code != 200:
     print(
-        f"Request to chatocr-chat failed with status code {resp_chat.status_code}.",
-        file=sys.stderr,
+        f"Request to chatocr-chat failed with status code {resp_chat.status_code}."
     )
     pprint.pp(resp_chat.json())
     sys.exit(1)
 result_chat = resp_chat.json()["result"]
-print("\nPrompts:")
-pprint.pp(result_chat["prompts"])
 print("Final result:")
 print(result_chat["chatResult"])
 </code></pre>
-
-<b>Note</b>: Please fill in your API key and secret key in `API_KEY` and `SECRET_KEY`.
 </details>
 </details>
 <br/>

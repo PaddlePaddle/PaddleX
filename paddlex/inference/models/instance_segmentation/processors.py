@@ -18,6 +18,7 @@ from typing import List, Sequence, Tuple, Union, Optional
 import numpy as np
 from ....utils import logging
 from ..object_detection.processors import restructured_boxes
+from ...utils.benchmark import benchmark
 
 import cv2
 
@@ -40,6 +41,7 @@ def extract_masks_from_boxes(boxes, masks):
     return new_masks
 
 
+@benchmark.timeit
 class InstanceSegPostProcess(object):
     """Save Result Transform"""
 

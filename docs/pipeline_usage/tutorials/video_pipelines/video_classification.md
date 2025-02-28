@@ -494,7 +494,6 @@ import requests
 
 API_URL = &quot;http://localhost:8080/video-classification&quot; # 服务URL
 video_path = &quot;./demo.mp4&quot;
-output_video_path = &quot;./out.mp4&quot;
 
 # 对本地视频进行Base64编码
 with open(video_path, &quot;rb&quot;) as file:

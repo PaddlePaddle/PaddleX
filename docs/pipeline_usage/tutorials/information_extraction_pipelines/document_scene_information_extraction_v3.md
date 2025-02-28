@@ -345,45 +345,49 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="PP-ChatOCRv3-doc",initial_predictor=False)
+chat_bot_config={
+    "module_name": "chat_bot",
+    "model_name": "ernie-3.5-8k",
+    "base_url": "https://qianfan.baidubce.com/v2",
+    "api_type": "openai",
+    "api_key": "api_key" # your api_key
+}
 
-visual_predict_res = pipeline.visual_predict(input="vehicle_certificate-1.png",
+retriever_config={
+    "module_name": "retriever",
+    "model_name": "embedding-v1",
+    "base_url": "https://qianfan.baidubce.com/v2",
+    "api_type": "qianfan",
+    "api_key": "api_key" # your api_key
+}
+
+pipeline = create_pipeline(pipeline="PP-ChatOCRv3-doc", initial_predictor=False)
+
+visual_predict_res = pipeline.visual_predict(
+    input="vehicle_certificate-1.png",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
     use_common_ocr=True,
     use_seal_recognition=True,
-    use_table_recognition=True)
+    use_table_recognition=True,
+)
 
 visual_info_list = []
 for res in visual_predict_res:
     visual_info_list.append(res["visual_info"])
     layout_parsing_result = res["layout_parsing_result"]
 
-vector_info = pipeline.build_vector(visual_info_list, flag_save_bytes_vector=True,retriever_config={
-    "module_name": "retriever",
-    "model_name": "embedding-v1",
-    "base_url": "https://qianfan.baidubce.com/v2",
-    "api_type": "qianfan",
-    "api_key": "api_key" # your api_key
-})
+vector_info = pipeline.build_vector(
+    visual_info_list,
+    flag_save_bytes_vector=True,
+    retriever_config=retriever_config,
+)
 chat_result = pipeline.chat(
     key_list=["驾驶室准乘人数"],
     visual_info=visual_info_list,
     vector_info=vector_info,
-    chat_bot_config={
-      "module_name": "chat_bot",
-      "model_name": "ernie-3.5-8k",
-      "base_url": "https://qianfan.baidubce.com/v2",
-      "api_type": "openai",
-      "api_key": "api_key" # your api_key
-    },
-    retriever_config={
-        "module_name": "retriever",
-        "model_name": "embedding-v1",
-        "base_url": "https://qianfan.baidubce.com/v2",
-        "api_type": "qianfan",
-        "api_key": "api_key" # your api_key
-    }
+    chat_bot_config=chat_bot_config,
+    retriever_config=retriever_config,
 )
 print(chat_result)
 
@@ -1614,7 +1618,11 @@ for res in visual_predict_res:
 <td>关键信息抽取结果。</td>
 </tr>
 </tbody>
-</table></details>
+</table>
+<li><b>注意：</b></li>
+在请求体中包含大模型调用的API key等敏感参数可能存在安全风险。如无必要，请在配置文件中设置这些参数，在请求时不传递。
+<br/><br/>
+</details>
 <details><summary>多语言调用服务示例</summary>
 <details>
 <summary>Python</summary>
@@ -1689,7 +1697,7 @@ result_chat = resp_chat.json()["result"]
 print("Final result:")
 print(result_chat["chatResult"])
 </code></pre>
-<b>注</b>：请在 `API_KEY`、`SECRET_KEY` 处填入您的 API key 和 secret key。</details>
+</details>
 </details>
 <br/>
 

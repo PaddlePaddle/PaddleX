@@ -21,7 +21,10 @@ import numpy as np
 import cv2
 import lazy_paddle as paddle
 
+from ...utils.benchmark import benchmark
 
+
+@benchmark.timeit
 class ResizeVideo:
     """Resizes frames of a video to a specified target size.
 
@@ -88,6 +91,7 @@ class ResizeVideo:
         return [self.resize(video) for video in videos]
 
 
+@benchmark.timeit
 class Image2Array:
     """Convert a sequence of images to a numpy array with optional transposition."""
 
@@ -143,6 +147,7 @@ class Image2Array:
         return [self.img2array(video) for video in videos]
 
 
+@benchmark.timeit
 class NormalizeVideo:
     """
     A class to normalize video frames by scaling the pixel values.
@@ -399,6 +404,7 @@ def bbox_iou(box1, box2, x1y1x2y2=True):
     return carea / uarea
 
 
+@benchmark.timeit
 class DetVideoPostProcess:
     """
     A class used to perform post-processing on detection results in videos.

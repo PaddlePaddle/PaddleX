@@ -19,7 +19,7 @@ Train:
   num_classes: 2
   batch_size: 2
   learning_rate: 0.01
-  pretrain_weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_base_pretrained.pdparams
+  pretrain_weight_path: https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SeaFormer_base_backbone_imagenet_pretrained.pdparams
   warmup_steps: 0
   resume_path: null
   log_interval: 10

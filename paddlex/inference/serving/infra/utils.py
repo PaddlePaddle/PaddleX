@@ -113,7 +113,7 @@ def infer_file_ext(file: str) -> Optional[str]:
         return mimetypes.guess_extension(mime_type)
     else:
         bytes_ = base64.b64decode(file)
-        return filetype.guess_extension(bytes_)
+        return "." + filetype.guess_extension(bytes_)
 
 
 def image_bytes_to_array(data: bytes) -> np.ndarray:

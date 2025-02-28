@@ -20,6 +20,7 @@ import numpy as np
 from numpy import ndarray
 
 from ..object_detection.processors import get_affine_transform
+from ...utils.benchmark import benchmark
 
 Number = Union[int, float]
 Kpts = List[dict]
@@ -65,6 +66,7 @@ def get_warp_matrix(
     return matrix
 
 
+@benchmark.timeit
 class TopDownAffine:
     """refer to https://github.com/open-mmlab/mmpose/blob/71ec36ebd63c475ab589afc817868e749a61491f/mmpose/datasets/transforms/topdown_transforms.py#L13
     Get the bbox image as the model input by affine transform.
@@ -196,6 +198,7 @@ def transform_preds(
     return target_coords
 
 
+@benchmark.timeit
 class KptPostProcess:
     """Save Result Transform"""
 

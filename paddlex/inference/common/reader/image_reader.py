@@ -16,8 +16,10 @@ import numpy as np
 import cv2
 
 from ...utils.io import ImageReader, PDFReader
+from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class ReadImage:
     """Load image from the file."""
 

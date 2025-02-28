@@ -2,12 +2,12 @@
 comments: true
 ---
 
-# General Video Classification Pipeline User Guide
+# General Video Classification Pipeline Tutorial
 
 ## 1. Introduction to General Video Classification Pipeline
 Video classification is a technology that assigns video clips to predefined categories. It is widely used in action recognition, event detection, and content recommendation. Video classification can identify various dynamic events and scenes, such as sports activities, natural phenomena, traffic conditions, etc., and classify them based on their characteristics. By using deep learning models, especially the combination of Convolutional Neural Networks (CNN) and Recurrent Neural Networks (RNN), video classification can automatically extract spatiotemporal features from videos and perform accurate classification. This technology has important applications in video surveillance, media retrieval, and personalized recommendation systems.
 
-The general video classification pipeline is used to solve video classification tasks by extracting theme and category information from videos and outputting them as labels. This pipeline integrates the industry-renowned PP-TSM and PP-TSMv2 video classification systems, supporting the recognition of 400 video categories. Based on this pipeline, accurate classification of video content can be achieved, covering various fields such as media, security, education, and transportation. This pipeline also provides flexible service deployment options, supporting multiple programming languages on various hardware. Additionally, this pipeline offers secondary development capabilities, allowing you to train and fine-tune models on your own dataset, with seamless integration of the trained models.
+The general video classification pipeline is used to solve video classification tasks by extracting theme and category information from videos and outputting them as labels. This pipeline integrates the industry-renowned PP-TSM and PP-TSMv2 video classification systems, supporting the recognition of 400 video categories. Based on this pipeline, accurate classification of video content can be achieved, covering various fields such as media, security, education, and transportation. This pipeline also provides flexible service deployment options, supporting multiple programming languages on various hardware. Additionally, this pipeline offers custom development capabilities, allowing you to train and fine-tune models on your own dataset, with seamless integration of the trained models.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/video_classification/01.jpg">
 
@@ -21,7 +21,7 @@ The general video classification pipeline is used to solve video classification 
 <th>Description</th>
 </tr>
 <tr>
-<td>PP-TSM-R50_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSM-R50_8frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSM-R50_8frames_uniform_pretrained.pdparams">Trained Model</a></td>
+<td>PP-TSM-R50_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSM-R50_8frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSM-R50_8frames_uniform_pretrained.pdparams">Training Model</a></td>
 <td>74.36</td>
 <td>93.4 M</td>
 <td rowspan="1">
@@ -30,13 +30,13 @@ PP-TSM is a video classification model developed by Baidu PaddlePaddle's Vision 
 </tr>
 
 <tr>
-<td>PP-TSMv2-LCNetV2_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_8frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_8frames_uniform_pretrained.pdparams">Trained Model</a></td>
+<td>PP-TSMv2-LCNetV2_8frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_8frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_8frames_uniform_pretrained.pdparams">Training Model</a></td>
 <td>71.71</td>
 <td>22.5 M</td>
 <td rowspan="2">PP-TSMv2 is a lightweight video classification model optimized based on the CPU-oriented model PP-LCNetV2. It undergoes model tuning in seven aspects: backbone network and pre-trained model selection, data augmentation, TSM module tuning, input frame number optimization, decoding speed optimization, DML distillation, and LTA module. Under the center crop evaluation method, it achieves an accuracy of 75.16%, with an inference speed of only 456ms on the CPU for a 10-second video input.</td>
 </tr>
 <tr>
-<td>PP-TSMv2-LCNetV2_16frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_16frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_16frames_uniform_pretrained.pdparams">Trained Model</a></td>
+<td>PP-TSMv2-LCNetV2_16frames_uniform</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-TSMv2-LCNetV2_16frames_uniform_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-TSMv2-LCNetV2_16frames_uniform_pretrained.pdparams">Training Model</a></td>
 <td>73.11</td>
 <td>22.5 M</td>
 </tr>
@@ -56,7 +56,7 @@ PP-TSM is a video classification model developed by Baidu PaddlePaddle's Vision 
 
 | Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
 |-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
 | High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 </details>
@@ -494,7 +494,6 @@ import requests
 
 API_URL = "http://localhost:8080/video-classification" # Service URL
 video_path = "./demo.mp4"
-output_video_path = "./out.mp4"
 
 # Encode the local video using Base64
 with open(video_path, "rb") as file:
@@ -515,9 +514,9 @@ print(result["categories"])
 <details><summary>C++</summary>
 
 <pre><code class="language-cpp">#include &lt;iostream&gt;
-#include "cpp-httplib/httplib.h" // <url id="cun16s4432eblpu24trg" type="url" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" wc="15064">https://github.com/Huiyicc/cpp-httplib</url> 
-#include "nlohmann/json.hpp" // <url id="cun16s4432eblpu24ts0" type="url" status="parsed" title="GitHub - nlohmann/json: JSON for Modern C++" wc="80311">https://github.com/nlohmann/json</url> 
-#include "base64.hpp" // <url id="cun16s4432eblpu24tsg" type="url" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" wc="2293">https://github.com/tobiaslocker/base64</url> 
+#include "cpp-httplib/httplib.h" // <url id="cun16s4432eblpu24trg" type="url" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" wc="15064">https://github.com/Huiyicc/cpp-httplib</url>
+#include "nlohmann/json.hpp" // <url id="cun16s4432eblpu24ts0" type="url" status="parsed" title="GitHub - nlohmann/json: JSON for Modern C++" wc="80311">https://github.com/nlohmann/json</url>
+#include "base64.hpp" // <url id="cun16s4432eblpu24tsg" type="url" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" wc="2293">https://github.com/tobiaslocker/base64</url>
 
 int main() {
     httplib::Client client("localhost:8080");
@@ -794,7 +793,7 @@ print_r($result["categories"]);
 📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on the user's device, allowing it to process data locally without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed procedures on edge deployment, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
 You can choose the appropriate method to deploy the model pipeline according to your needs and proceed with subsequent AI application integration.
 
-## 4. Secondary Development
+## 4. Custom Development
 If the default model weights provided by the general video classification pipeline are not satisfactory in terms of accuracy or speed for your specific scenario, you can attempt to <b>fine-tune</b> the existing model using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the general video classification pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning

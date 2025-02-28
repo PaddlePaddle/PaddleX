@@ -16,7 +16,10 @@ import numpy as np
 import pandas as pd
 from typing import List, Any, Dict
 
+from ...utils.benchmark import benchmark
 
+
+@benchmark.timeit
 class GetCls:
     """A class to process prediction outputs and return class IDs and scores."""
 
@@ -56,6 +59,7 @@ class GetCls:
         return result
 
 
+@benchmark.timeit
 class BuildPadMask:
     """A class to build padding masks for time series data."""
 

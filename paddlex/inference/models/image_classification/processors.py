@@ -16,8 +16,10 @@ import numpy as np
 
 from ....utils import logging
 from ..common.vision import F
+from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class Crop:
     """Crop region from the image."""
 
@@ -64,6 +66,7 @@ class Crop:
         return img
 
 
+@benchmark.timeit
 class Topk:
     """Topk Transform"""
 

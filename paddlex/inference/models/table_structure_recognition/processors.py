@@ -17,8 +17,10 @@ import cv2
 import numpy as np
 from numpy import ndarray
 from ..common.vision import funcs as F
+from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class Pad:
     """Pad the image."""
 
@@ -60,6 +62,7 @@ class Pad:
         return [self.apply(img) for img in imgs]
 
 
+@benchmark.timeit
 class TableLabelDecode:
     """decode the table model outputs(probs) to character str"""
 

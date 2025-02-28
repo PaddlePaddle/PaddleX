@@ -586,54 +586,62 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="PP-ChatOCRv4-doc",initial_predictor=False)
+chat_bot_config = {
+    "module_name": "chat_bot",
+    "model_name": "ernie-3.5-8k",
+    "base_url": "https://qianfan.baidubce.com/v2",
+    "api_type": "openai",
+    "api_key": "api_key",  # your api_key
+}
 
-visual_predict_res = pipeline.visual_predict(input="vehicle_certificate-1.png",
+retriever_config = {
+    "module_name": "retriever",
+    "model_name": "embedding-v1",
+    "base_url": "https://qianfan.baidubce.com/v2",
+    "api_type": "qianfan",
+    "api_key": "api_key",  # your api_key
+}
+
+mllm_chat_bot_config = {
+    "module_name": "chat_bot",
+    "model_name": "PP-DocBee",
+    "base_url": "http://172.0.0.1:8080/v1/chat/completions",  # your local mllm service url
+    "api_type": "openai",
+    "api_key": "api_key",  # your api_key
+}
+
+pipeline = create_pipeline(pipeline="PP-ChatOCRv4-doc", initial_predictor=False)
+
+visual_predict_res = pipeline.visual_predict(
+    input="vehicle_certificate-1.png",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
     use_common_ocr=True,
     use_seal_recognition=True,
-    use_table_recognition=True)
+    use_table_recognition=True,
+)
 
 visual_info_list = []
 for res in visual_predict_res:
     visual_info_list.append(res["visual_info"])
     layout_parsing_result = res["layout_parsing_result"]
 
-vector_info = pipeline.build_vector(visual_info_list, flag_save_bytes_vector=True,retriever_config={
-    "module_name": "retriever",
-    "model_name": "embedding-v1",
-    "base_url": "https://qianfan.baidubce.com/v2",
-    "api_type": "qianfan",
-    "api_key": "api_key" # your api_key
-})
-mllm_predict_res= pipeline.mllm_pred(input="vehicle_certificate-1.png",key_list=["驾驶室准乘人数"],mllm_chat_bot_config={
-    "module_name": "chat_bot",
-    "model_name": "PP-DocBee",
-    "base_url": "http://172.0.0.1:8080/v1/chat/completions", # your local mllm service url
-    "api_type": "openai",
-    "api_key": "api_key" # your api_key
-})
+vector_info = pipeline.build_vector(
+    visual_info_list, flag_save_bytes_vector=True, retriever_config=retriever_config
+)
+mllm_predict_res = pipeline.mllm_pred(
+    input="vehicle_certificate-1.png",
+    key_list=["驾驶室准乘人数"],
+    mllm_chat_bot_config=mllm_chat_bot_config,
+)
 mllm_predict_info = mllm_predict_res["mllm_res"]
 chat_result = pipeline.chat(
     key_list=["驾驶室准乘人数"],
     visual_info=visual_info_list,
     vector_info=vector_info,
     mllm_predict_info=mllm_predict_info,
-    chat_bot_config={
-      "module_name": "chat_bot",
-      "model_name": "ernie-3.5-8k",
-      "base_url": "https://qianfan.baidubce.com/v2",
-      "api_type": "openai",
-      "api_key": "api_key" # your api_key
-    },
-    retriever_config={
-      "module_name": "retriever",
-      "model_name": "embedding-v1",
-      "base_url": "https://qianfan.baidubce.com/v2",
-      "api_type": "qianfan",
-      "api_key": "api_key" # your api_key
-    }
+    chat_bot_config=chat_bot_config,
+    retriever_config=retriever_config,
 )
 print(chat_result)
 
@@ -2002,7 +2010,11 @@ for res in visual_predict_res:
 <td>关键信息抽取结果。</td>
 </tr>
 </tbody>
-</table></details>
+</table>
+<li><b>注意：</b></li>
+在请求体中包含大模型调用的API key等敏感参数可能存在安全风险。如无必要，请在配置文件中设置这些参数，在请求时不传递。
+<br/><br/>
+</details>
 
 <details><summary>多语言调用服务示例</summary>
 
@@ -2010,122 +2022,90 @@ for res in visual_predict_res:
 <summary>Python</summary>
 
 
-<pre><code class="language-python">import base64
+<pre><code class="language-python">
+# 此脚本只展示了图片的用例，其他文件类型的调用请查看API参考来调整
+
+import base64
 import pprint
 import sys
-
 import requests
 
 
-API_BASE_URL = &quot;http://0.0.0.0:8080&quot;
-API_KEY = &quot;{千帆平台API key}&quot;
-SECRET_KEY = &quot;{千帆平台secret key}&quot;
-LLM_NAME = &quot;ernie-3.5&quot;
-LLM_PARAMS = {
-    &quot;apiType&quot;: &quot;qianfan&quot;,
-    &quot;apiKey&quot;: API_KEY,
-    &quot;secretKey&quot;: SECRET_KEY,
-}
+API_BASE_URL = "http://0.0.0.0:8080"
 
-file_path = &quot;./demo.jpg&quot;
-keys = [&quot;电话&quot;]
+image_path = "./demo.jpg"
+keys = ["姓名"]
 
-with open(file_path, &quot;rb&quot;) as file:
-    file_bytes = file.read()
-    file_data = base64.b64encode(file_bytes).decode(&quot;ascii&quot;)
+with open(image_path, "rb") as file:
+    image_bytes = file.read()
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
 payload = {
-    &quot;file&quot;: file_data,
-    &quot;fileType&quot;: 1,
-    &quot;useImgOrientationCls&quot;: True,
-    &quot;useImgUnwarping&quot;: True,
-    &quot;useSealTextDet&quot;: True,
+    "file": image_data,
+    "fileType": 1,
 }
-resp_visual = requests.post(url=f&quot;{API_BASE_URL}/chatocr-visual&quot;, json=payload)
+
+resp_visual = requests.post(url=f"{API_BASE_URL}/chatocr-visual", json=payload)
 if resp_visual.status_code != 200:
     print(
-        f&quot;Request to chatocr-visual failed with status code {resp_visual.status_code}.&quot;,
-        file=sys.stderr,
+        f"Request to chatocr-visual failed with status code {resp_visual.status_code}."
     )
     pprint.pp(resp_visual.json())
     sys.exit(1)
-result_visual = resp_visual.json()[&quot;result&quot;]
+result_visual = resp_visual.json()["result"]
 
-for i, res in enumerate(result_visual[&quot;visualResults&quot;]):
-    print(&quot;Texts:&quot;)
-    pprint.pp(res[&quot;texts&quot;])
-    print(&quot;Tables:&quot;)
-    pprint.pp(res[&quot;tables&quot;])
-    layout_img_path = f&quot;layout_{i}.jpg&quot;
-    with open(layout_img_path, &quot;wb&quot;) as f:
-        f.write(base64.b64decode(res[&quot;layoutImage&quot;]))
-    ocr_img_path = f&quot;ocr_{i}.jpg&quot;
-    with open(ocr_img_path, &quot;wb&quot;) as f:
-        f.write(base64.b64decode(res[&quot;ocrImage&quot;]))
-    print(f&quot;Output images saved at {layout_img_path} and {ocr_img_path}&quot;)
+for i, res in enumerate(result_visual["layoutParsingResults"]):
+    print(res["prunedResult"])
+    for img_name, img in res["outputImages"].items():
+        img_path = f"{img_name}_{i}.jpg"
+        with open(img_path, "wb") as f:
+            f.write(base64.b64decode(img))
+        print(f"Output image saved at {img_path}")
 
 payload = {
-    &quot;visualInfo&quot;: result_visual[&quot;visualInfo&quot;],
-    &quot;minChars&quot;: 200,
-    &quot;llmRequestInterval&quot;: 1000,
-    &quot;llmName&quot;: LLM_NAME,
-    &quot;llmParams&quot;: LLM_PARAMS,
+    "visualInfo": result_visual["visualInfo"],
 }
-resp_vector = requests.post(url=f&quot;{API_BASE_URL}/chatocr-vector&quot;, json=payload)
+resp_vector = requests.post(url=f"{API_BASE_URL}/chatocr-vector", json=payload)
 if resp_vector.status_code != 200:
     print(
-        f&quot;Request to chatocr-vector failed with status code {resp_vector.status_code}.&quot;,
-        file=sys.stderr,
+        f"Request to chatocr-vector failed with status code {resp_vector.status_code}."
     )
     pprint.pp(resp_vector.json())
     sys.exit(1)
-result_vector = resp_vector.json()[&quot;result&quot;]
+result_vector = resp_vector.json()["result"]
 
 payload = {
-    &quot;keys&quot;: keys,
-    &quot;vectorStore&quot;: result_vector[&quot;vectorStore&quot;],
-    &quot;llmName&quot;: LLM_NAME,
-    &quot;llmParams&quot;: LLM_PARAMS,
+    "image": image_data,
+    "keyList": keys,
 }
-resp_retrieval = requests.post(url=f&quot;{API_BASE_URL}/chatocr-retrieval&quot;, json=payload)
-if resp_retrieval.status_code != 200:
+resp_mllm = requests.post(url=f"{API_BASE_URL}/chatocr-mllm", json=payload)
+if resp_mllm.status_code != 200:
     print(
-        f&quot;Request to chatocr-retrieval failed with status code {resp_retrieval.status_code}.&quot;,
-        file=sys.stderr,
+        f"Request to chatocr-mllm failed with status code {resp_mllm.status_code}."
     )
-    pprint.pp(resp_retrieval.json())
+    pprint.pp(resp_mllm.json())
     sys.exit(1)
-result_retrieval = resp_retrieval.json()[&quot;result&quot;]
+result_mllm = resp_mllm.json()["result"]
 
 payload = {
-    &quot;keys&quot;: keys,
-    &quot;visualInfo&quot;: result_visual[&quot;visualInfo&quot;],
-    &quot;vectorStore&quot;: result_vector[&quot;vectorStore&quot;],
-    &quot;retrievalResult&quot;: result_retrieval[&quot;retrievalResult&quot;],
-    &quot;taskDescription&quot;: &quot;&quot;,
-    &quot;rules&quot;: &quot;&quot;,
-    &quot;fewShot&quot;: &quot;&quot;,
-    &quot;llmName&quot;: LLM_NAME,
-    &quot;llmParams&quot;: LLM_PARAMS,
-    &quot;returnPrompts&quot;: True,
+    "keyList": keys,
+    "visualInfo": result_visual["visualInfo"],
+    "useVectorRetrieval": True,
+    "vectorInfo": result_vector["vectorInfo"],
+    "mllmPredictInfo": result_mllm["mllmPredictInfo"],
 }
-resp_chat = requests.post(url=f&quot;{API_BASE_URL}/chatocr-chat&quot;, json=payload)
+resp_chat = requests.post(url=f"{API_BASE_URL}/chatocr-chat", json=payload)
 if resp_chat.status_code != 200:
     print(
-        f&quot;Request to chatocr-chat failed with status code {resp_chat.status_code}.&quot;,
-        file=sys.stderr,
+        f"Request to chatocr-chat failed with status code {resp_chat.status_code}."
     )
     pprint.pp(resp_chat.json())
     sys.exit(1)
-result_chat = resp_chat.json()[&quot;result&quot;]
-print(&quot;\nPrompts:&quot;)
-pprint.pp(result_chat[&quot;prompts&quot;])
-print(&quot;Final result:&quot;)
-print(result_chat[&quot;chatResult&quot;])
+result_chat = resp_chat.json()["result"]
+print("Final result:")
+print(result_chat["chatResult"])
 </code></pre>
-
-
-<b>注</b>：请在 `API_KEY`、`SECRET_KEY` 处填入您的 API key 和 secret key。</details>
+</details>
 </details>
 <br/>
 

@@ -20,7 +20,7 @@ import numpy as np
 import pandas as pd
 
 from .funcs import load_from_dataframe, time_feature
-
+from ....utils.benchmark import benchmark
 
 __all__ = [
     "BuildTSDataset",
@@ -32,6 +32,7 @@ __all__ = [
 ]
 
 
+@benchmark.timeit
 class TSCutOff:
     """Truncates time series data to a specified length for training.
 
@@ -90,6 +91,7 @@ class TSCutOff:
         return ts_data
 
 
+@benchmark.timeit
 class TSNormalize:
     """Normalizes time series data using a pre-fitted scaler.
 
@@ -145,6 +147,7 @@ class TSNormalize:
         return ts
 
 
+@benchmark.timeit
 class BuildTSDataset:
     """Constructs a time series dataset from a list of time series data frames."""
 
@@ -182,6 +185,7 @@ class BuildTSDataset:
         return ts_data
 
 
+@benchmark.timeit
 class TimeFeature:
     """Extracts time features from time series data for forecasting."""
 
@@ -246,6 +250,7 @@ class TimeFeature:
         return ts
 
 
+@benchmark.timeit
 class TStoArray:
     """Converts time series data into arrays for model input."""
 
@@ -287,6 +292,7 @@ class TStoArray:
         return ts_list
 
 
+@benchmark.timeit
 class TStoBatch:
     """Convert a list of time series into batches for processing.
 

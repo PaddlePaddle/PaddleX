@@ -15,7 +15,10 @@
 import numpy as np
 from skimage import measure, morphology
 
+from ...utils.benchmark import benchmark
 
+
+@benchmark.timeit
 class MapToMask:
     """Map_to_mask"""
 

@@ -21,11 +21,13 @@ from numpy import ndarray
 from ..common import Resize as CommonResize
 from ..common import Normalize as CommonNormalize
 from ...common.reader import ReadImage as CommonReadImage
+from ...utils.benchmark import benchmark
 
 Boxes = List[dict]
 Number = Union[int, float]
 
 
+@benchmark.timeit
 class ReadImage(CommonReadImage):
     """Reads images from a list of raw image data or file paths."""
 
@@ -92,6 +94,7 @@ class ReadImage(CommonReadImage):
             )
 
 
+@benchmark.timeit
 class Resize(CommonResize):
     def __call__(self, datas: List[dict]) -> List[dict]:
         """
@@ -122,6 +125,7 @@ class Resize(CommonResize):
         return datas
 
 
+@benchmark.timeit
 class Normalize(CommonNormalize):
     """Normalizes images in a list of dictionaries containing image data"""
 
@@ -147,6 +151,7 @@ class Normalize(CommonNormalize):
         return datas
 
 
+@benchmark.timeit
 class ToCHWImage:
     """Converts images in a list of dictionaries from HWC to CHW format."""
 
@@ -164,6 +169,7 @@ class ToCHWImage:
         return datas
 
 
+@benchmark.timeit
 class ToBatch:
     """
     Class for batch processing of data dictionaries.
@@ -211,6 +217,7 @@ class ToBatch:
         return [self.apply(datas, key) for key in self.ordered_required_keys]
 
 
+@benchmark.timeit
 class DetPad:
     """
     Pad image to a specified size.
@@ -248,6 +255,7 @@ class DetPad:
         return datas
 
 
+@benchmark.timeit
 class PadStride:
     """padding image for model with FPN , instead PadBatch(pad_to_stride, pad_gt) in original config
     Args:
@@ -374,6 +382,7 @@ def get_affine_transform(
     return trans
 
 
+@benchmark.timeit
 class WarpAffine:
     """Apply warp affine transformation to the image based on the given parameters.
 
@@ -652,6 +661,7 @@ def check_containment(boxes, formula_index=None):
     return contains_other, contained_by_other
 
 
+@benchmark.timeit
 class DetPostProcess:
     """Save Result Transform
 

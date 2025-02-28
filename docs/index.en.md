@@ -130,15 +130,15 @@ pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0
 
 ## 💻 Command Line Usage
 
-A single command can quickly experience the production line effect, with a unified command line format as follows:
+A single command can quickly experience the pipeline effect, with a unified command line format as follows:
 
 ```bash
-paddlex --pipeline [production line name] --input [input image] --device [running device]
+paddlex --pipeline [pipeline name] --input [input image] --device [running device]
 ```
 
-Each pipeline in PaddleX corresponds to specific parameters. You can find detailed parameter descriptions in the respective production line documentation. Each production line requires three essential parameters:
+Each pipeline in PaddleX corresponds to specific parameters. You can find detailed parameter descriptions in the respective pipeline documentation. Each pipeline requires three essential parameters:
 
-* `pipeline`: The name of the production line or the path to the production line configuration file.
+* `pipeline`: The name of the pipeline or the path to the pipeline configuration file.
 * `input`: The local path, directory, or URL of the input file to be processed (e.g., an image).
 * `device`: The hardware device and its index to be used (e.g., `gpu:0` indicates using the first GPU). You can also choose to use NPU (`npu:0`), XPU (`xpu:0`), CPU (`cpu`), etc.
 
@@ -477,6 +477,7 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
         ```
 
         ??? question "What's the result"
+            === "output"
             ```bash
                 {'res': {'input_path': 'demo_paper.png', 'model_settings': {'use_doc_preprocessor': True, 'use_general_ocr': True, 'use_seal_recognition': True, 'use_table_recognition': True, 'use_formula_recognition': True}, 'parsing_res_list': [{'layout_bbox': [46.905365, 44.05746, 565.6911, 217.74211], 'image': array([[[255, ..., 255],
                         ...,
@@ -524,6 +525,53 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
                     ...,
                     [ 39, ..., 726]], dtype=int16)}, 'formula_res_list': [{'input_path': None, 'page_index': None, 'rec_formula': '\\begin{array}{r l}{\\mathcal{Q}}&{=\\mathcal{K}=\\mathcal{V}=\\mathtt{F l a t t e r n}(\\mathcal{S}_{5}),}\\\\ {\\mathcal{F}_{5}}&{=\\mathtt{R e s h a p e}(\\mathtt{A I F I}(\\mathcal{Q},\\mathcal{K},\\mathcal{V})),\\qquad\\quad(1)}\\\\ {\\mathcal{O}}&{=\\mathtt{C C F F}(\\{\\mathcal{S}_{3},\\mathcal{S}_{4},\\mathcal{F}_{5}\\}),}\\end{array}', 'formula_region_id': 1, 'dt_polys': [92.092064, 563.1221, 297.57217, 607.2598]}, {'input_path': None, 'page_index': None, 'rec_formula': '\\begin{array}{r l r}{\\mathcal{U}(\\hat{\\mathcal{X}})=\\|\\mathcal{P}(\\hat{\\mathcal{X}})-\\mathcal{C}(\\hat{\\mathcal{X}})\\|,\\hat{\\mathcal{X}}\\in\\mathbb{R}^{D}}&{{}(2)}&{}\\\\ {\\mathcal{L}(\\hat{\\mathcal{X}},\\hat{\\mathcal{Y}},\\mathcal{Y})=\\mathcal{L}_{t o x}(\\hat{\\mathbf{b}},\\mathbf{b})+\\mathcal{L}_{c l s}(\\mathcal{U}(\\hat{\\mathcal{X}}),\\hat{\\mathbf{c}},\\mathbf{c})}&{{}(3)}\\end{array}', 'formula_region_id': 2, 'dt_polys': [343.82712, 551.06995, 573.45465, 589.9438]}]}}
                 ```
+
+    === "Layout Parsing v2"
+
+        ```bash
+        paddlex --pipeline layout_parsing_v2 \
+                --input layout_parsing_v2_demo.png \
+                --use_doc_orientation_classify False \
+                --use_doc_unwarping False \
+                --use_textline_orientation False \
+                --save_path ./output \
+                --device gpu:0
+        ```
+
+        ??? question "What's the result"
+            === "output"
+
+            ```bash
+            {'res': {'input_path': 'layout_parsing_v2_demo.png', 'model_settings': {'use_doc_preprocessor': False, 'use_general_ocr': True, 'use_seal_recognition': True, 'use_table_recognition': True, 'use_formula_recognition': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 2, 'label': 'text', 'score': 0.9853514432907104, 'coordinate': [770.9531, 776.6814, 1122.6057, 1058.7322]}, {'cls_id': 1, 'label': 'image', 'score': 0.9848673939704895, 'coordinate': [775.7434, 202.27979, 1502.8113, 686.02136]}, {'cls_id': 2, 'label': 'text', 'score': 0.983731746673584, 'coordinate': [1152.3197, 1113.3275, 1503.3029, 1346.586]}, {'cls_id': 2, 'label': 'text', 'score': 0.9832221865653992, 'coordinate': [1152.5602, 801.431, 1503.8436, 986.3563]}, {'cls_id': 2, 'label': 'text', 'score': 0.9829439520835876, 'coordinate': [9.549545, 849.5713, 359.1173, 1058.7488]}, {'cls_id': 2, 'label': 'text', 'score': 0.9811657667160034, 'coordinate': [389.58298, 1137.2659, 740.66235, 1346.7488]}, {'cls_id': 2, 'label': 'text', 'score': 0.9775941371917725, 'coordinate': [9.1302185, 201.85, 359.0409, 339.05692]}, {'cls_id': 2, 'label': 'text', 'score': 0.9750366806983948, 'coordinate': [389.71454, 752.96924, 740.544, 889.92456]}, {'cls_id': 2, 'label': 'text', 'score': 0.9738152027130127, 'coordinate': [389.94565, 298.55988, 740.5585, 435.5124]}, {'cls_id': 2, 'label': 'text', 'score': 0.9737328290939331, 'coordinate': [771.50256, 1065.4697, 1122.2582, 1178.7324]}, {'cls_id': 2, 'label': 'text', 'score': 0.9728517532348633, 'coordinate': [1152.5154, 993.3312, 1503.2349, 1106.327]}, {'cls_id': 2, 'label': 'text', 'score': 0.9725610017776489, 'coordinate': [9.372787, 1185.823, 359.31738, 1298.7227]}, {'cls_id': 2, 'label': 'text', 'score': 0.9724331498146057, 'coordinate': [389.62848, 610.7389, 740.83234, 746.2377]}, {'cls_id': 2, 'label': 'text', 'score': 0.9720287322998047, 'coordinate': [389.29898, 897.0936, 741.41516, 1034.6616]}, {'cls_id': 2, 'label': 'text', 'score': 0.9713053703308105, 'coordinate': [10.323685, 1065.4663, 359.6786, 1178.8872]}, {'cls_id': 2, 'label': 'text', 'score': 0.9689728021621704, 'coordinate': [9.336395, 537.6609, 359.2901, 652.1881]}, {'cls_id': 2, 'label': 'text', 'score': 0.9684857130050659, 'coordinate': [10.7608185, 345.95068, 358.93616, 434.64087]}, {'cls_id': 2, 'label': 'text', 'score': 0.9681928753852844, 'coordinate': [9.674866, 658.89075, 359.56528, 770.4319]}, {'cls_id': 2, 'label': 'text', 'score': 0.9634978175163269, 'coordinate': [770.9464, 1281.1785, 1122.6522, 1346.7156]}, {'cls_id': 2, 'label': 'text', 'score': 0.96304851770401, 'coordinate': [390.0113, 201.28055, 740.1684, 291.53073]}, {'cls_id': 2, 'label': 'text', 'score': 0.962053120136261, 'coordinate': [391.21393, 1040.952, 740.5046, 1130.32]}, {'cls_id': 2, 'label': 'text', 'score': 0.9565253853797913, 'coordinate': [10.113251, 777.1482, 359.439, 842.437]}, {'cls_id': 2, 'label': 'text', 'score': 0.9497362375259399, 'coordinate': [390.31357, 537.86285, 740.47595, 603.9285]}, {'cls_id': 2, 'label': 'text', 'score': 0.9371236562728882, 'coordinate': [10.2034, 1305.9753, 359.5958, 1346.7295]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9338151216506958, 'coordinate': [791.6062, 1200.8479, 1103.3257, 1259.9324]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9326773285865784, 'coordinate': [408.0737, 457.37024, 718.9509, 516.63464]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9274250864982605, 'coordinate': [29.448685, 456.6762, 340.99194, 515.6999]}, {'cls_id': 2, 'label': 'text', 'score': 0.8742568492889404, 'coordinate': [1154.7095, 777.3624, 1330.3086, 794.5853]}, {'cls_id': 2, 'label': 'text', 'score': 0.8442489504814148, 'coordinate': [586.49316, 160.15454, 927.468, 179.64203]}, {'cls_id': 11, 'label': 'doc_title', 'score': 0.8332607746124268, 'coordinate': [133.80017, 37.41908, 1380.8601, 124.1429]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.6770150661468506, 'coordinate': [812.1718, 705.1199, 1484.6973, 747.1692]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[ 133,   35],
+                    ...,
+                    [ 133,  131]],
+
+                ...,
+
+                [[1154, 1323],
+                    ...,
+                    [1152, 1355]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0.0, 'rec_texts': ['助力双方交往', '搭建友谊桥梁', '本报记者', '沈小晓', '任', '彦', '黄培昭', '身着中国传统民族服装的厄立特里亚青', '厄立特里亚高等教育与研究院合作建立，开', '年依次登台表演中国民族舞、现代舞、扇子舞', '设了中国语言课程和中国文化课程，注册学', '等,曼妙的舞姿赢得现场观众阵阵掌声。这', '生2万余人次。10余年来，厄特孔院已成为', '是日前厄立特里亚高等教育与研究院孔子学', '当地民众了解中国的一扇窗口。', '院(以下简称"厄特孔院")举办"喜迎新年"中国', '黄鸣飞表示，随着来学习中文的人日益', '歌舞比赛的场景。', '增多，阿斯马拉大学教学点已难以满足教学', '中国和厄立特里亚传统友谊深厚。近年', '需要。2024年4月，由中企蜀道集团所属四', '来,在高质量共建"一带一路"框架下，中厄两', '川路桥承建的孔院教学楼项目在阿斯马拉开', '国人文交流不断深化，互利合作的民意基础', '工建设，预计今年上半年峻工，建成后将为厄', '日益深厚。', '特孔院提供全新的办学场地。', '“学好中文，我们的', '“在中国学习的经历', '未来不是梦”', '让我看到更广阔的世界”', '“鲜花曾告诉我你怎样走过，大地知道你', '多年来，厄立特里亚广大赴华留学生和', '心中的每一个角落…"厄立特里亚阿斯马拉', '培训人员积极投身国家建设，成为助力该国', '大学综合楼二层，一阵优美的歌声在走廊里回', '发展的人才和厄中友好的见证者和推动者。', '响。循着熟悉的旋律轻轻推开一间教室的门，', '在厄立特里亚全国妇女联盟工作的约翰', '学生们正跟着老师学唱中文歌曲《同一首歌》。', '娜·特韦尔德·凯莱塔就是其中一位。她曾在', '这是厄特孔院阿斯马拉大学教学点的一', '中华女子学院攻读硕士学位，研究方向是女', '节中文歌曲课。为了让学生们更好地理解歌', '性领导力与社会发展。其间，她实地走访中国', '词大意，老师尤斯拉·穆罕默德萨尔·侯赛因逐', '多个地区，获得了观察中国社会发展的第一', '在厄立特里亚不久前举办的第六届中国风筝文化节上，当地小学生体验风筝制作。', '字翻译和解释歌词。随着伴奏声响起，学生们', '手资料。', '中国驻厄立特里亚大使馆供图', '边唱边随着节拍摇动身体，现场气氛热烈。', '谈起在中国求学的经历，约翰娜记忆犹', '“这是中文歌曲初级班，共有32人。学', '新："中国的发展在当今世界是独一无二的。', '“不管远近都是客人，请不用客气；相约', '瓦的北红海省博物馆。', '生大部分来自首都阿斯马拉的中小学，年龄', '沿着中国特色社会主义道路坚定前行，中国', '好了在一起我们欢迎你"在一场中厄青', '博物馆二层陈列着一个发掘自阿杜利', '最小的仅有6岁。”尤斯拉告诉记者。', '创造了发展奇迹，这一切都离不开中国共产党', '年联谊活动上，四川路桥中方员工同当地大', '斯古城的中国古代陶制酒器，罐身上写着', '尤斯拉今年23岁，是厄立特里亚一所公立', '的领导。中国的发展经验值得许多国家学习', '学生合唱《北京欢迎你》。厄立特里亚技术学', '“万""和""禅"“山"等汉字。“这件文物证', '学校的艺术老师。她12岁开始在厄特孔院学', '借鉴。”', '院计算机科学与工程专业学生鲁夫塔·谢拉', '明,很早以前我们就通过海上丝绸之路进行', '习中文,在2017年第十届"汉语桥"世界中学生', '正在西南大学学习的厄立特里亚博士生', '是其中一名演唱者，她很早便在孔院学习中', '贸易往来与文化交流。这也是厄立特里亚', '中文比赛中获得厄立特里亚赛区第一名，并和', '穆卢盖塔·泽穆伊对中国怀有深厚感情。8', '文，一直在为去中国留学作准备。"这句歌词', '与中国友好交往历史的有力证明。"北红海', '同伴代表厄立特里亚前往中国参加决赛，获得', '年前，在北京师范大学获得硕士学位后，穆卢', '是我们两国人民友谊的生动写照。无论是投', '省博物馆研究与文献部负责人伊萨亚斯·特', '团体优胜奖。2022年起，尤斯拉开始在厄特孔', '盖塔在社交媒体上写下这样一段话："这是我', '身于厄立特里亚基础设施建设的中企员工，', '斯法兹吉说。', '院兼职教授中文歌曲，每周末两个课时。“中国', '人生的重要一步，自此我拥有了一双坚固的', '还是在中国留学的厄立特里亚学子，两国人', '厄立特里亚国家博物馆考古学和人类学', '文化博大精深，我希望我的学生们能够通过中', '鞋子，赋予我穿越荆棘的力量。”', '民携手努力，必将推动两国关系不断向前发', '研究员菲尔蒙·特韦尔德十分喜爱中国文', '文歌曲更好地理解中国文化。"她说。', '穆卢盖塔密切关注中国在经济、科技、教', '展。"鲁夫塔说。', '化。他表示：“学习彼此的语言和文化，将帮', '“姐姐，你想去中国吗？""非常想！我想', '育等领域的发展，中国在科研等方面的实力', '厄立特里亚高等教育委员会主任助理萨', '助厄中两国人民更好地理解彼此，助力双方', '去看故宫、爬长城。"尤斯拉的学生中有一对', '与日俱增。在中国学习的经历让我看到更广', '马瑞表示："每年我们都会组织学生到中国访', '交往，搭建友谊桥梁。"', '能歌善舞的姐妹，姐姐露娅今年15岁，妹妹', '阔的世界，从中受益匪浅。', '问学习，目前有超过5000名厄立特里亚学生', '厄立特里亚国家博物馆馆长塔吉丁·努', '莉娅14岁，两人都已在厄特孔院学习多年，', '23岁的莉迪亚·埃斯蒂法诺斯已在厄特', '在中国留学。学习中国的教育经验，有助于', '里达姆·优素福曾多次访问中国，对中华文明', '中文说得格外流利。', '孔院学习3年，在中国书法、中国画等方面表', '提升厄立特里亚的教育水平。”', '的传承与创新、现代化博物馆的建设与发展', '露娅对记者说："这些年来，怀着对中文', '现十分优秀，在2024年厄立特里亚赛区的', '“共同向世界展示非', '印象深刻。“中国博物馆不仅有许多保存完好', '和中国文化的热爱，我们姐妹俩始终相互鼓', '“汉语桥"比赛中获得一等奖。莉迪亚说："学', '的文物，还充分运用先进科技手段进行展示，', '励，一起学习。我们的中文一天比一天好，还', '习中国书法让我的内心变得安宁和纯粹。我', '洲和亚洲的灿烂文明”', '帮助人们更好理解中华文明。"塔吉丁说，"厄', '学会了中文歌和中国舞。我们一定要到中国', '也喜欢中国的服饰,希望未来能去中国学习，', '立特里亚与中国都拥有悠久的文明，始终相', '去。学好中文，我们的未来不是梦！"', '把中国不同民族元素融入服装设计中，创作', '从阿斯马拉出发，沿着蜿蜓曲折的盘山', '互理解、相互尊重。我希望未来与中国同行', '据厄特孔院中方院长黄鸣飞介绍，这所', '出更多精美作品，也把厄特文化分享给更多', '公路一路向东寻找丝路印迹。驱车两个小', '加强合作，共同向世界展示非洲和亚洲的灿', '孔院成立于2013年3月，由贵州财经大学和', '的中国朋友。”', '时，记者来到位于厄立特里亚港口城市马萨', '烂文明。”'], 'rec_scores': array([0.99943757, ..., 0.98181838]), 'rec_polys': array([[[ 133,   35],
+                    ...,
+                    [ 133,  131]],
+
+                ...,
+
+                [[1154, 1323],
+                    ...,
+                    [1152, 1355]]], dtype=int16), 'rec_boxes': array([[ 133, ...,  131],
+                ...,
+                [1152, ..., 1359]], dtype=int16)}, 'text_paragraphs_ocr_res': {'rec_polys': array([[[ 133,   35],
+                    ...,
+                    [ 133,  131]],
+
+                ...,
+
+                [[1154, 1323],
+                    ...,
+                    [1152, 1355]]], dtype=int16), 'rec_texts': ['助力双方交往', '搭建友谊桥梁', '本报记者', '沈小晓', '任', '彦', '黄培昭', '身着中国传统民族服装的厄立特里亚青', '厄立特里亚高等教育与研究院合作建立，开', '年依次登台表演中国民族舞、现代舞、扇子舞', '设了中国语言课程和中国文化课程，注册学', '等,曼妙的舞姿赢得现场观众阵阵掌声。这', '生2万余人次。10余年来，厄特孔院已成为', '是日前厄立特里亚高等教育与研究院孔子学', '当地民众了解中国的一扇窗口。', '院(以下简称"厄特孔院")举办"喜迎新年"中国', '黄鸣飞表示，随着来学习中文的人日益', '歌舞比赛的场景。', '增多，阿斯马拉大学教学点已难以满足教学', '中国和厄立特里亚传统友谊深厚。近年', '需要。2024年4月，由中企蜀道集团所属四', '来,在高质量共建"一带一路"框架下，中厄两', '川路桥承建的孔院教学楼项目在阿斯马拉开', '国人文交流不断深化，互利合作的民意基础', '工建设，预计今年上半年峻工，建成后将为厄', '日益深厚。', '特孔院提供全新的办学场地。', '“学好中文，我们的', '“在中国学习的经历', '未来不是梦”', '让我看到更广阔的世界”', '“鲜花曾告诉我你怎样走过，大地知道你', '多年来，厄立特里亚广大赴华留学生和', '心中的每一个角落…"厄立特里亚阿斯马拉', '培训人员积极投身国家建设，成为助力该国', '大学综合楼二层，一阵优美的歌声在走廊里回', '发展的人才和厄中友好的见证者和推动者。', '响。循着熟悉的旋律轻轻推开一间教室的门，', '在厄立特里亚全国妇女联盟工作的约翰', '学生们正跟着老师学唱中文歌曲《同一首歌》。', '娜·特韦尔德·凯莱塔就是其中一位。她曾在', '这是厄特孔院阿斯马拉大学教学点的一', '中华女子学院攻读硕士学位，研究方向是女', '节中文歌曲课。为了让学生们更好地理解歌', '性领导力与社会发展。其间，她实地走访中国', '词大意，老师尤斯拉·穆罕默德萨尔·侯赛因逐', '多个地区，获得了观察中国社会发展的第一', '在厄立特里亚不久前举办的第六届中国风筝文化节上，当地小学生体验风筝制作。', '字翻译和解释歌词。随着伴奏声响起，学生们', '手资料。', '中国驻厄立特里亚大使馆供图', '边唱边随着节拍摇动身体，现场气氛热烈。', '谈起在中国求学的经历，约翰娜记忆犹', '“这是中文歌曲初级班，共有32人。学', '新："中国的发展在当今世界是独一无二的。', '“不管远近都是客人，请不用客气；相约', '瓦的北红海省博物馆。', '生大部分来自首都阿斯马拉的中小学，年龄', '沿着中国特色社会主义道路坚定前行，中国', '好了在一起我们欢迎你"在一场中厄青', '博物馆二层陈列着一个发掘自阿杜利', '最小的仅有6岁。”尤斯拉告诉记者。', '创造了发展奇迹，这一切都离不开中国共产党', '年联谊活动上，四川路桥中方员工同当地大', '斯古城的中国古代陶制酒器，罐身上写着', '尤斯拉今年23岁，是厄立特里亚一所公立', '的领导。中国的发展经验值得许多国家学习', '学生合唱《北京欢迎你》。厄立特里亚技术学', '“万""和""禅"“山"等汉字。“这件文物证', '学校的艺术老师。她12岁开始在厄特孔院学', '借鉴。”', '院计算机科学与工程专业学生鲁夫塔·谢拉', '明,很早以前我们就通过海上丝绸之路进行', '习中文,在2017年第十届"汉语桥"世界中学生', '正在西南大学学习的厄立特里亚博士生', '是其中一名演唱者，她很早便在孔院学习中', '贸易往来与文化交流。这也是厄立特里亚', '中文比赛中获得厄立特里亚赛区第一名，并和', '穆卢盖塔·泽穆伊对中国怀有深厚感情。8', '文，一直在为去中国留学作准备。"这句歌词', '与中国友好交往历史的有力证明。"北红海', '同伴代表厄立特里亚前往中国参加决赛，获得', '年前，在北京师范大学获得硕士学位后，穆卢', '是我们两国人民友谊的生动写照。无论是投', '省博物馆研究与文献部负责人伊萨亚斯·特', '团体优胜奖。2022年起，尤斯拉开始在厄特孔', '盖塔在社交媒体上写下这样一段话："这是我', '身于厄立特里亚基础设施建设的中企员工，', '斯法兹吉说。', '院兼职教授中文歌曲，每周末两个课时。“中国', '人生的重要一步，自此我拥有了一双坚固的', '还是在中国留学的厄立特里亚学子，两国人', '厄立特里亚国家博物馆考古学和人类学', '文化博大精深，我希望我的学生们能够通过中', '鞋子，赋予我穿越荆棘的力量。”', '民携手努力，必将推动两国关系不断向前发', '研究员菲尔蒙·特韦尔德十分喜爱中国文', '文歌曲更好地理解中国文化。"她说。', '穆卢盖塔密切关注中国在经济、科技、教', '展。"鲁夫塔说。', '化。他表示：“学习彼此的语言和文化，将帮', '“姐姐，你想去中国吗？""非常想！我想', '育等领域的发展，中国在科研等方面的实力', '厄立特里亚高等教育委员会主任助理萨', '助厄中两国人民更好地理解彼此，助力双方', '去看故宫、爬长城。"尤斯拉的学生中有一对', '与日俱增。在中国学习的经历让我看到更广', '马瑞表示："每年我们都会组织学生到中国访', '交往，搭建友谊桥梁。"', '能歌善舞的姐妹，姐姐露娅今年15岁，妹妹', '阔的世界，从中受益匪浅。', '问学习，目前有超过5000名厄立特里亚学生', '厄立特里亚国家博物馆馆长塔吉丁·努', '莉娅14岁，两人都已在厄特孔院学习多年，', '23岁的莉迪亚·埃斯蒂法诺斯已在厄特', '在中国留学。学习中国的教育经验，有助于', '里达姆·优素福曾多次访问中国，对中华文明', '中文说得格外流利。', '孔院学习3年，在中国书法、中国画等方面表', '提升厄立特里亚的教育水平。”', '的传承与创新、现代化博物馆的建设与发展', '露娅对记者说："这些年来，怀着对中文', '现十分优秀，在2024年厄立特里亚赛区的', '“共同向世界展示非', '印象深刻。“中国博物馆不仅有许多保存完好', '和中国文化的热爱，我们姐妹俩始终相互鼓', '“汉语桥"比赛中获得一等奖。莉迪亚说："学', '的文物，还充分运用先进科技手段进行展示，', '励，一起学习。我们的中文一天比一天好，还', '习中国书法让我的内心变得安宁和纯粹。我', '洲和亚洲的灿烂文明”', '帮助人们更好理解中华文明。"塔吉丁说，"厄', '学会了中文歌和中国舞。我们一定要到中国', '也喜欢中国的服饰,希望未来能去中国学习，', '立特里亚与中国都拥有悠久的文明，始终相', '去。学好中文，我们的未来不是梦！"', '把中国不同民族元素融入服装设计中，创作', '从阿斯马拉出发，沿着蜿蜓曲折的盘山', '互理解、相互尊重。我希望未来与中国同行', '据厄特孔院中方院长黄鸣飞介绍，这所', '出更多精美作品，也把厄特文化分享给更多', '公路一路向东寻找丝路印迹。驱车两个小', '加强合作，共同向世界展示非洲和亚洲的灿', '孔院成立于2013年3月，由贵州财经大学和', '的中国朋友。”', '时，记者来到位于厄立特里亚港口城市马萨', '烂文明。”'], 'rec_scores': array([0.99943757, ..., 0.98181838]), 'rec_boxes': array([[ 133, ...,  131],
+                ...,
+                [1152, ..., 1359]], dtype=int16)}}}
+       ```
 
     === "Formula Recognition"
 
@@ -1349,12 +1397,12 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
 
 ## 📝 Python Usage
 
-A few lines of code can complete the quick inference of the production line, with a unified Python script format as follows:
+A few lines of code can complete the quick inference of the pipeline, with a unified Python script format as follows:
 
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline=[production line name])
+pipeline = create_pipeline(pipeline=[pipeline name])
 output = pipeline.predict([input image name])
 for res in output:
     res.print()
@@ -1363,8 +1411,8 @@ for res in output:
 ```
 The following steps were executed:
 
-* `create_pipeline()` instantiates the production line object
-* Pass in the image and call the `predict` method of the production line object for inference prediction
+* `create_pipeline()` instantiates the pipeline object
+* Pass in the image and call the `predict` method of the pipeline object for inference prediction
 * Process the prediction results
 
 
@@ -1451,6 +1499,26 @@ The following steps were executed:
             res.save_to_xlsx(save_path="./output/") ## Save the result in table format
             res.save_to_html(save_path="./output/") ## Save the result in html format
         ```
+
+    === "General Layout Parsing v2"
+
+        ```python
+        from paddlex import create_pipeline
+
+        pipeline = create_pipeline(pipeline="layout_parsing_v2")
+
+        output = pipeline.predict(
+            input="./layout_parsing_v2_demo.png",
+            use_doc_orientation_classify=False,
+            use_doc_unwarping=False,
+            use_textline_orientation=False,
+        )
+        for res in output:
+            res.print()
+            res.save_to_json(save_path="output")
+            res.save_to_markdown(save_path="output")
+        ```
+
 
     === "Formula Recognition"
 
@@ -1694,7 +1762,7 @@ The following steps were executed:
             res.save_to_json(save_path="./output/")
         ```
 
-!!! example "Command Line Usage for Time Series Production Lines"
+!!! example "Command Line Usage for Time Series pipelines"
 
     === "Time Series Forecasting"
 
@@ -1728,7 +1796,7 @@ The following steps were executed:
         ```python
         from paddlex import create_pipeline
 
-        pipeline = create_pipeline(pipeline="ts_cls")
+        pipeline = create_pipeline(pipeline="ts_classification")
         output = pipeline.predict("ts_cls.csv")
         for res in output:
             res.print() ## Print the structured prediction output
@@ -1736,7 +1804,7 @@ The following steps were executed:
             res.save_to_json(save_path="./output/") ## Save results in JSON format
         ```
 
-!!! example "Command Line Usage for Speech Production Lines"
+!!! example "Command Line Usage for Speech pipelines"
 
     === "Multilingual Speech Recognition"
 
@@ -1751,7 +1819,7 @@ The following steps were executed:
             res.save_to_json(save_path="./output/")
         ```
 
-!!! example "Command Line Usage for Video Production Lines"
+!!! example "Command Line Usage for Video pipelines"
 
     === "General Video Classification"
 
@@ -1784,37 +1852,37 @@ The following steps were executed:
 
 <div class="grid cards" markdown>
 
-- **Document Information Extraction**
+- **PP-ChatOCRv4-doc**
 
     ---
 
-    Document scene information extraction v3 (PP-ChatOCRv3-doc) is a document and image intelligent analysis solution with PaddlePaddle features, combining LLM and OCR technologies to solve complex document information extraction challenges such as layout analysis, rare character recognition, multi-page PDF, table, and seal recognition in one stop.
+    Document Scene Information Extraction v4 (PP-ChatOCRv4-doc) is a PaddlePaddle-based intelligent document and image analysis solution that integrates LLM (Large Language Model), MLLM (Multimodal Large Language Model), and OCR (Optical Character Recognition) technologies. It provides a one-stop solution for common challenges in complex document information extraction, such as layout analysis, rare character recognition, multi-page PDFs, table extraction, and seal detection.
 
-    [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.en.md)
+    [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.en.md)
 
 - **OCR**
 
     ---
 
-    The general OCR production line is used to solve text recognition tasks, extract text information from images, and output it in text form. Based on the end-to-end OCR system, it can achieve millisecond-level precise text content prediction on CPUs and reach open-source SOTA in general scenarios.
+    The general OCR pipeline is used to solve text recognition tasks, extract text information from images, and output it in text form. Based on the end-to-end OCR system, it can achieve millisecond-level precise text content prediction on CPUs and reach open-source SOTA in general scenarios.
 
     [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/ocr_pipelines/OCR.en.md)
 
-- **Image Classification**
+- **General Layout Parsing v2**
 
     ---
 
-    Image classification can automatically extract image features and classify them accurately, recognizing various objects such as animals, plants, traffic signs, etc., and is widely used in object recognition, scene understanding, and automatic tagging fields.
+    The General Layout Parsing v2 pipeline enhances the capabilities of layout area detection, table recognition, and formula recognition based on the General Layout Parsing v1 pipeline. It also adds the ability to restore multi-column reading order and convert results to Markdown files. It performs well on various document datasets and can handle more complex document data.
 
-    [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/cv_pipelines/image_classification.en.md)
+    [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.en.md)
 
-- **Object Detection**
+- **General Table Recognition Pipeline v2**
 
     ---
 
-    Object detection aims to identify the categories and locations of multiple objects in images or videos by generating bounding boxes to mark these objects. This technology is widely used in fields such as autonomous driving, surveillance systems, and smart photo albums.
+    General Table Recognition Pipeline v2 is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. This pipeline enables precise table prediction and is applicable across various fields, including general, manufacturing, finance, and transportation.
 
-    [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/cv_pipelines/object_detection.en.md)
+    [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/cv_pipelines/table_recognition_v2.en.md)
 
 - **Small Object Detection**
 

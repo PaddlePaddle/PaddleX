@@ -75,7 +75,7 @@ for res in output:
   <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/face_recognition/01.jpg" width=600>
 </center>
 <p>
-After experiencing the production line, it is necessary to determine whether the production line meets expectations (including accuracy, speed, etc.), and whether the models included in the production line need further fine-tuning. If the speed or accuracy of the model does not meet expectations, alternative models should be selected for continued testing to determine if the results are satisfactory. If the final results are still unsatisfactory, the models need to be fine-tuned.
+After experiencing the pipeline, it is necessary to determine whether the pipeline meets expectations (including accuracy, speed, etc.), and whether the models included in the pipeline need further fine-tuning. If the speed or accuracy of the model does not meet expectations, alternative models should be selected for continued testing to determine if the results are satisfactory. If the final results are still unsatisfactory, the models need to be fine-tuned.
 </p>
 <p>
 This tutorial aims to achieve cartoon face recognition. From the quick experience results above, it can be observed that the official default model performs well in real face scenarios, but it fails to meet practical application requirements when inferring cartoon data, resulting in missed detections of cartoon faces and misidentifications of faces. Therefore, we need to conduct secondary development to train and fine-tune the face detection and face feature models.
@@ -698,17 +698,17 @@ Margin exploration experiment results:
 
 Note: This tutorial is designed for a 4-GPU setup. If you only have 1 GPU, you can adjust the number of training GPUs to complete the experiment. However, the final metrics may not align with the above metrics, which is a normal situation.
 
-## 7. Production Line Integration
+## 7. pipeline Integration
 
-After fine-tuning the face detection model and face feature model with cartoon scene data, you can select the high-precision model weights to integrate into the PaddleX face recognition production line.
+After fine-tuning the face detection model and face feature model with cartoon scene data, you can select the high-precision model weights to integrate into the PaddleX face recognition pipeline.
 
-First, obtain the face_recognition production line configuration file and load the configuration file for prediction. You can execute the following command to save the results in `my_path`:
+First, obtain the face_recognition pipeline configuration file and load the configuration file for prediction. You can execute the following command to save the results in `my_path`:
 
 ```bash
 paddlex --get_pipeline_config face_recognition --save_path ./my_path
 ```
 
-Modify `SubModules.Detection.model_dir` and `SubModules.Recognition.model_dir` in the configuration file to the paths of your fine-tuned face detection model and face feature model, respectively. If you need to directly integrate the face recognition production line into your Python project, you can refer to the following example:
+Modify `SubModules.Detection.model_dir` and `SubModules.Recognition.model_dir` in the configuration file to the paths of your fine-tuned face detection model and face feature model, respectively. If you need to directly integrate the face recognition pipeline into your Python project, you can refer to the following example:
 
 ```yaml
 pipeline_name: face_recognition
@@ -731,7 +731,7 @@ SubModules:
     batch_size: 1
 ```
 
-Subsequently, in your Python code, you can use the production line as follows:
+Subsequently, in your Python code, you can use the pipeline as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -748,14 +748,14 @@ for res in output:
 
 If there is a case where a cartoon face can be detected but is recognized as "Unknown0.00", you can modify the `rec_thresholds` in the configuration file and try again after lowering the retrieval threshold. If there are cases of face recognition errors, please replace the optimal weights with the weights from the last training round, or replace the recognition model weights trained with different hyperparameters and try again.
 
-## 8. Production Line Service Deployment
+## 8. pipeline Service Deployment
 
-In addition to the Python API integration development method mentioned earlier, PaddleX also provides high-performance deployment and service-oriented deployment capabilities, which are detailed as follows:
+In addition to the Python API integration development method mentioned earlier, PaddleX also provides high-performance deployment and serving deployment capabilities, which are detailed as follows:
 * High-performance deployment: In actual production environments, many applications have strict standards for the performance metrics of deployment strategies (especially response speed) to ensure the efficient operation of the system and the smoothness of user experience. To this end, PaddleX provides a high-performance inference plugin, which aims to deeply optimize the performance of model inference and pre- and post-processing, achieving significant acceleration of the end-to-end process. For detailed high-performance deployment procedures, please refer to the [PaddleX High-Performance Inference Guide](../pipeline_deploy/high_performance_inference.md).
-* Service-oriented deployment: Service-oriented deployment is a common form of deployment in actual production environments. By encapsulating the inference function as a service, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving service-oriented deployment of the production line at a low cost. For detailed service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../pipeline_deploy/serving.md).
+* Serving Deployment: Serving Deployment is a common form of deployment in actual production environments. By encapsulating the inference function as a service, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving serving deployment of the pipeline at a low cost. For detailed serving deployment procedures, please refer to the [PaddleX Serving Deployment Guide](../pipeline_deploy/serving.md).
 
-You can choose the appropriate method to deploy the production line according to your needs, and then proceed with subsequent AI application integration.
-This section takes service-oriented deployment as an example and guides you through the service-oriented deployment of the production line and API calls, which can be completed in just 5 simple steps:
+You can choose the appropriate method to deploy the pipeline according to your needs, and then proceed with subsequent AI application integration.
+This section takes serving deployment as an example and guides you through the serving deployment of the pipeline and API calls, which can be completed in just 5 simple steps:
 
 (1) Execute the following Python script to save the feature database of the cartoon face demonstration data.
 
@@ -769,13 +769,13 @@ index_data = pipeline.build_index(gallery_imgs="cartoonface_demo_gallery", galle
 index_data.save("cartoonface_index")
 ```
 
-(2) Execute the following command in the command line to install the service-oriented deployment plugin
+(2) Execute the following command in the command line to install the serving deployment plugin
 
 ```bash
 paddlex --install serving
 ```
 
-(3) Obtain the face recognition production line configuration file
+(3) Obtain the face recognition pipeline configuration file
 
 ```bash
 paddlex --get_pipeline_config face_recognition --save_path ./

@@ -19,10 +19,11 @@ from .....utils.subclass_register import AutoRegisterABCMetaClass
 from .....utils.flags import (
     INFER_BENCHMARK,
     INFER_BENCHMARK_WARMUP,
+    INFER_BENCHMARK_ITERS,
 )
 from .....utils import logging
 from ....utils.pp_option import PaddlePredictorOption
-from ....utils.benchmark import benchmark
+from ....utils.benchmark import benchmark, ENTRY_POINT_NAME
 from .base_predictor import BasePredictor
 
 
@@ -55,7 +56,7 @@ class BasicPredictor(
         if not pp_option:
             pp_option = PaddlePredictorOption(model_name=self.model_name)
         if device:
-            pp_option.device = device
+            pp_option.set_device(device)
         trt_dynamic_shapes = (
             self.config.get("Hpi", {})
             .get("backend_configs", {})
@@ -69,7 +70,6 @@ class BasicPredictor(
         self.batch_sampler.batch_size = batch_size
 
         logging.debug(f"{self.__class__.__name__}: {self.model_dir}")
-        self.benchmark = benchmark
 
     def __call__(
         self,
@@ -93,23 +93,34 @@ class BasicPredictor(
             Iterator[Any]: An iterator yielding the prediction output.
         """
         self.set_predictor(batch_size, device, pp_option)
-        if self.benchmark:
-            self.benchmark.start()
+        if INFER_BENCHMARK:
+            # TODO(zhang-prog): Get metadata of input data
+            @benchmark.timeit_with_name(ENTRY_POINT_NAME)
+            def _apply(input, **kwargs):
+                return list(self.apply(input, **kwargs))
+
+            if isinstance(input, list):
+                raise TypeError("`input` cannot be a list in benchmark mode")
+            input = [input] * batch_size
+
+            if not (INFER_BENCHMARK_WARMUP > 0 or INFER_BENCHMARK_ITERS > 0):
+                raise RuntimeError(
+                    "At least one of `INFER_BENCHMARK_WARMUP` and `INFER_BENCHMARK_ITERS` must be greater than zero"
+                )
+
             if INFER_BENCHMARK_WARMUP > 0:
-                output = self.apply(input, **kwargs)
-                warmup_num = 0
+                benchmark.start_warmup()
                 for _ in range(INFER_BENCHMARK_WARMUP):
-                    try:
-                        next(output)
-                        warmup_num += 1
-                    except StopIteration:
-                        logging.warning(
-                            f"There are only {warmup_num} batches in input data, but `INFER_BENCHMARK_WARMUP` has been set to {INFER_BENCHMARK_WARMUP}."
-                        )
-                        break
-                self.benchmark.warmup_stop(warmup_num)
-            output = list(self.apply(input, **kwargs))
-            self.benchmark.collect(len(output))
+                    output = _apply(input, **kwargs)
+                benchmark.collect(batch_size)
+                benchmark.stop_warmup()
+
+            if INFER_BENCHMARK_ITERS > 0:
+                for _ in range(INFER_BENCHMARK_ITERS):
+                    output = _apply(input, **kwargs)
+                benchmark.collect(batch_size)
+
+            yield output[0]
         else:
             yield from self.apply(input, **kwargs)
 
@@ -134,6 +145,6 @@ class BasicPredictor(
             self.batch_sampler.batch_size = batch_size
             self.pp_option.batch_size = batch_size
         if device and device != self.pp_option.device:
-            self.pp_option.device = device
+            self.pp_option.set_device(device)
         if pp_option and pp_option != self.pp_option:
             self.pp_option = pp_option

@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Video Detection Module Development Tutorial
+# Video Detection Module Tutorial
 
 ## I. Overview
 Video detection tasks are a critical component of computer vision systems, focusing on identifying and locating objects or events within video sequences. Video detection involves decomposing the video into individual frame sequences and then analyzing these frames to recognize detected objects or actions, such as detecting pedestrians in surveillance videos or identifying specific activities like "running," "jumping," or "playing guitar" in sports or entertainment videos.
@@ -43,7 +43,7 @@ YOWO is a single-stage network with two branches. One branch extracts spatial fe
 
 | Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
 |-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
 | High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## <span id="lable">III. Quick Integration</span>
@@ -430,7 +430,7 @@ The model can be directly integrated into the PaddleX pipelines or directly into
 1.<b>Pipeline Integration</b>
 
 
-The video Detection module can be integrated into the [General Video Detection Pipeline](../../../pipeline_usage/tutorials/video_pipelines/video_detection.en.md) of PaddleX. Simply replace the model path to update the video Detection module of the relevant pipeline. In pipeline integration, you can use high-performance inference and service-oriented deployment to deploy your obtained model.
+The video Detection module can be integrated into the [General Video Detection Pipeline](../../../pipeline_usage/tutorials/video_pipelines/video_detection.en.md) of PaddleX. Simply replace the model path to update the video Detection module of the relevant pipeline. In pipeline integration, you can use high-performance inference and serving deployment to deploy your obtained model.
 
 2.<b>Module Integration</b>
 

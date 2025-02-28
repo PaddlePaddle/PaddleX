@@ -45,7 +45,7 @@ BEVFusion is a multi-modal 3D object detection model that fuses surround camera 
 
 | Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
 |-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
 | High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 </details>
@@ -437,24 +437,26 @@ In addition, PaddleX also provides three other deployment methods, detailed as f
 <summary>Python</summary>
 
 <pre><code class="language-python">
+import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/bev-3d-object-detection&quot; # Service URL
-tar_path = &quot;./nuscenes_demo_infer.tar&quot;
+API_URL = "http://localhost:8080/bev-3d-object-detection" # Service URL
+tar_path = "./nuscenes_demo_infer.tar"
 
-payload = {&quot;tar&quot;: tar_path}
+with open(tar_path, "rb") as file:
+    tar_bytes = file.read()
+    tar_data = base64.b64encode(tar_bytes).decode("ascii")
+
+payload = {"tar": tar_data}
 
 # Call the API
 response = requests.post(API_URL, json=payload)
 
 # Process the response data
 assert response.status_code == 200
-result = response.json()[&quot;result&quot;]
-with open(output_image_path, &quot;wb&quot;) as file:
-    file.write(base64.b64decode(result[&quot;image&quot;]))
-print(f&quot;Output image saved at {output_image_path}&quot;)
-print(&quot;Detected objects:&quot;)
-print(result[&quot;detectedObjects&quot;])
+result = response.json()["result"]
+print("Detected objects:")
+print(result["detectedObjects"])
 </code></pre></details>
 </details>
 <br/>
@@ -463,12 +465,12 @@ print(result[&quot;detectedObjects&quot;])
 
 You can choose an appropriate deployment method for your model pipeline based on your needs, and then proceed with subsequent AI application integration.
 
-## 4. Secondary Development
+## 4. Custom Development
 If the default model weights provided by the 3D multi-modal fusion detection pipeline do not meet your requirements for accuracy or speed in your scenario, you can attempt to further <b>fine-tune</b> the existing model using <b>your own data from specific domains or application scenarios</b> to improve the recognition performance of the 3D multi-modal fusion detection pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
 
-Refer to the [Secondary Development](../../../module_usage/tutorials/cv_modules/3d_bev_detection.md#四二次开发) section in the [3D Multi-modal Fusion Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/3d_bev_detection.md) and use your private dataset to fine-tune the model.
+Refer to the [Custom Development](../../../module_usage/tutorials/cv_modules/3d_bev_detection.md#四二次开发) section in the [3D Multi-modal Fusion Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/3d_bev_detection.md) and use your private dataset to fine-tune the model.
 
 ### 4.2 Model Application
 After completing fine-tuning training using your private dataset, you will obtain local model weight files.

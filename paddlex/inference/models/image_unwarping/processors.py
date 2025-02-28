@@ -15,7 +15,10 @@
 import numpy as np
 from typing import List, Union, Tuple
 
+from ...utils.benchmark import benchmark
 
+
+@benchmark.timeit
 class DocTrPostProcess:
     """
     Post-processing class for cropping regions from images (though currently only performs scaling and color channel adjustments).

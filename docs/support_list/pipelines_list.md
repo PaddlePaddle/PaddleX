@@ -99,11 +99,11 @@ comments: true
     <td>文档图像方向分类</td>
   </tr>
   <tr>
-    <td rowspan = 2>通用OCR</td>
+    <td rowspan = 5>通用OCR</td>
     <td>文本检测</td>
-    <td rowspan = 2><a href="https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">在线体验</a></td>
-    <td rowspan = 2>OCR（光学字符识别，Optical Character Recognition）是一种将图像中的文字转换为可编辑文本的技术。它广泛应用于文档数字化、信息提取和数据处理等领域。OCR 可以识别印刷文本、手写文本，甚至某些类型的字体和符号。 通用 OCR 产线用于解决文字识别任务，提取图片中的文字信息以文本形式输出，PP-OCRv4 是一个端到端 OCR 串联系统，可实现 CPU 上毫秒级的文本内容精准预测，在通用场景上达到开源SOTA。基于该项目，产学研界多方开发者已快速落地多个 OCR 应用，使用场景覆盖通用、制造、金融、交通等各个领域。</td>
-    <td rowspan = 2>
+    <td rowspan = 5><a href="https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">在线体验</a></td>
+    <td rowspan = 5>OCR（光学字符识别，Optical Character Recognition）是一种将图像中的文字转换为可编辑文本的技术。它广泛应用于文档数字化、信息提取和数据处理等领域。OCR 可以识别印刷文本、手写文本，甚至某些类型的字体和符号。 通用 OCR 产线用于解决文字识别任务，提取图片中的文字信息以文本形式输出，PP-OCRv4 是一个端到端 OCR 串联系统，可实现 CPU 上毫秒级的文本内容精准预测，在通用场景上达到开源SOTA。基于该项目，产学研界多方开发者已快速落地多个 OCR 应用，使用场景覆盖通用、制造、金融、交通等各个领域。</td>
+    <td rowspan = 5>
     <ul>
         <li>智能安防中车牌号</li>
         <li>门牌号等信息的识别</li>
@@ -115,11 +115,20 @@ comments: true
   <tr>
     <td>文本识别</td>
   </tr>
-    <td rowspan = 4>通用表格识别</td>
-    <td>版面区域检测</td>
-    <td rowspan = 4><a href="https://aistudio.baidu.com/community/app/91661/webUI">在线体验</a></td>
-    <td rowspan = 4>表格识别是一种自动从文档或图像中识别和提取表格内容及其结构的技术，广泛应用于数据录入、信息检索和文档分析等领域。通过使用计算机视觉和机器学习算法，表格识别能够将复杂的表格信息转换为可编辑的格式，方便用户进一步处理和分析数据。</td>
-    <td rowspan = 4>
+  <tr>
+    <td>文档图像方向分类</td>
+  </tr>
+  <tr>
+    <td>文本图像矫正</td>
+  </tr>
+  <tr>
+    <td>文本行方向分类</td>
+  </tr>
+    <td rowspan = 6>通用表格识别</td>
+    <td>表格结构识别</td>
+    <td rowspan = 6><a href="https://aistudio.baidu.com/community/app/91661/webUI">在线体验</a></td>
+    <td rowspan = 6>表格识别是一种自动从文档或图像中识别和提取表格内容及其结构的技术，广泛应用于数据录入、信息检索和文档分析等领域。通过使用计算机视觉和机器学习算法，表格识别能够将复杂的表格信息转换为可编辑的格式，方便用户进一步处理和分析数据。</td>
+    <td rowspan = 6>
     <ul>
         <li>银行账单的处理</li>
         <li>医疗报告中各项指标的识别和提取</li>
@@ -128,13 +137,19 @@ comments: true
       </td>
    </tr>
   <tr>
-    <td>表格结构识别</td>
-  </tr>
-  <tr>
     <td>文本检测</td>
   </tr>
   <tr>
     <td>文本识别</td>
+  </tr>
+  <tr>
+    <td>版面区域检测</td>
+  </tr>
+  <tr>
+    <td>文档图像方向分类</td>
+  </tr>
+  <tr>
+    <td>文本图像矫正</td>
   </tr>
   <tr>
     <td>时序预测</td>
@@ -189,7 +204,7 @@ comments: true
    <tr>
     <td>图像多标签分类</td>
     <td>图像多标签分类</td>
-    <td>暂无</td>
+    <td><a href="https://aistudio.baidu.com/community/app/387974/webUI?source=appCenter">在线体验</a></td>
     <td>图像多标签分类是一种将一张图像同时分配到多个相关类别的技术，广泛应用于图像标注、内容推荐和社交媒体分析等领域。它能够识别图像中存在的多个物体或特征，例如一张图片中同时包含“狗”和“户外”这两个标签。通过使用深度学习模型，图像多标签分类能够自动提取图像特征并进行准确分类，以便为用户提供更加全面的信息。这项技术在智能搜索引擎和自动内容生成等应用中具有重要意义。</td>
     <td>
     <ul>
@@ -206,7 +221,7 @@ comments: true
   <tr>
     <td>小目标检测</td>
     <td>小目标检测</td>
-    <td>暂无</td>
+    <td><a href="https://aistudio.baidu.com/community/app/387975/webUI?source=appCenter">在线体验</a></td>
     <td>小目标检测是一种专门识别图像中体积较小物体的技术，广泛应用于监控、无人驾驶和卫星图像分析等领域。它能够从复杂场景中准确找到并分类像行人、交通标志或小动物等小尺寸物体。通过使用深度学习算法和优化的卷积神经网络，小目标检测可以有效提升对小物体的识别能力，确保在实际应用中不遗漏重要信息。这项技术在提高安全性和自动化水平方面发挥着重要作用。</td>
     <td>
   <ul>
@@ -236,11 +251,11 @@ comments: true
   </ul></td>
   </tr>
   <tr>
-    <td rowspan = 8>通用版面解析</td>
-    <td>表格结构识别</td>
-    <td rowspan = 8>暂无</td>
-    <td rowspan = 8>版面解析是一种从文档图像中提取结构化信息的技术，主要用于将复杂的文档版面转换为机器可读的数据格式。这项技术在文档管理、信息提取和数据数字化等领域具有广泛的应用。版面解析通过结合光学字符识别（OCR）、图像处理和机器学习算法，能够识别和提取文档中的文本块、标题、段落、图片、表格以及其他版面元素。此过程通常包括版面分析、元素分析和数据格式化三个主要步骤，最终生成结构化的文档数据，提升数据处理的效率和准确性。</td>
-    <td rowspan="8">
+    <td rowspan = 10>通用版面解析</td>
+    <td>版面区域检测</td>
+    <td rowspan = 10>暂无</td>
+    <td rowspan = 10>版面解析是一种从文档图像中提取结构化信息的技术，主要用于将复杂的文档版面转换为机器可读的数据格式。这项技术在文档管理、信息提取和数据数字化等领域具有广泛的应用。版面解析通过结合光学字符识别（OCR）、图像处理和机器学习算法，能够识别和提取文档中的文本块、标题、段落、图片、表格以及其他版面元素。此过程通常包括版面分析、元素分析和数据格式化三个主要步骤，最终生成结构化的文档数据，提升数据处理的效率和准确性。</td>
+    <td rowspan="10">
   <ul>
     <li>金融与法律文档分析</li>
     <li>历史文献和档案数字化</li>
@@ -250,32 +265,38 @@ comments: true
 </td>
   </tr>
   <tr>
-    <td>版面区域检测</td>
+    <td>版面区域检测模块</td>
   </tr>
   <tr>
-    <td>文本检测</td>
+    <td>文本检测模块</td>
   </tr>
   <tr>
-    <td>文本识别</td>
+    <td>文本识别模块</td>
   </tr>
   <tr>
-    <td>公式识别</td>
+    <td>文档图像方向分类模块</td>
   </tr>
   <tr>
-    <td>印章文本检测</td>
+    <td>文本图像矫正模块</td>
   </tr>
   <tr>
-    <td>文本图像矫正</td>
+    <td>表格结构识别模块</td>
   </tr>
   <tr>
-    <td>文档图像方向分类</td>
+    <td>文本行方向分类模块</td>
   </tr>
   <tr>
-    <td rowspan = 2>公式识别</td>
-    <td>版面区域检测</td>
-    <td rowspan = 2>暂无</td>
-    <td rowspan = 2>公式识别是一种自动从文档或图像中识别和提取LaTeX公式内容及其结构的技术，广泛应用于数学、物理、计算机科学等领域的文档编辑和数据分析。通过使用计算机视觉和机器学习算法，公式识别能够将复杂的数学公式信息转换为可编辑的LaTeX格式，方便用户进一步处理和分析数据。</td>
-    <td rowspan = 2>
+    <td>公式识别模块</td>
+  </tr>
+  <tr>
+    <td>印章文本检测模块</td>
+  </tr>
+  <tr>
+    <td rowspan = 4>公式识别</td>
+    <td>公式识别模块</td>
+    <td rowspan = 4><a href="https://aistudio.baidu.com/community/app/387976/webUI?source=appCenter">在线体验</a></td>
+    <td rowspan = 4>公式识别是一种自动从文档或图像中识别和提取LaTeX公式内容及其结构的技术，广泛应用于数学、物理、计算机科学等领域的文档编辑和数据分析。通过使用计算机视觉和机器学习算法，公式识别能够将复杂的数学公式信息转换为可编辑的LaTeX格式，方便用户进一步处理和分析数据。</td>
+    <td rowspan = 4>
     <ul>
         <li>文档数字化与检索</li>
         <li>公式搜索引擎</li>
@@ -285,14 +306,20 @@ comments: true
       </td>
   </tr>
   <tr>
-    <td>公式识别</td>
+    <td>版面区域检测模块</td>
   </tr>
   <tr>
-    <td rowspan = 3>印章文本识别</td>
-    <td>版面区域检测</td>
-    <td rowspan = 3>暂无</td>
-    <td rowspan = 3>印章文本识别是一种自动从文档或图像中提取和识别印章内容的技术，印章文本的识别是文档处理的一部分，在很多场景都有用途，例如合同比对，出入库审核以及发票报销审核等场景。</td>
-    <td rowspan = 3>
+    <td>文档图像方向分类模块</td>
+  </tr>
+  <tr>
+    <td>文本图像矫正模块</td>
+  </tr>
+  <tr>
+    <td rowspan = 5>印章文本识别</td>
+    <td>印章文本检测</td>
+    <td rowspan = 5><a href="https://aistudio.baidu.com/community/app/387977/webUI?source=appCenter">在线体验</a></td>
+    <td rowspan = 5>印章文本识别是一种自动从文档或图像中提取和识别印章内容的技术，印章文本的识别是文档处理的一部分，在很多场景都有用途，例如合同比对，出入库审核以及发票报销审核等场景。</td>
+    <td rowspan = 5>
     <ul>
         <li>合同和协议验证</li>
         <li>支票处理</li>
@@ -302,10 +329,16 @@ comments: true
       </td>
   </tr>
   <tr>
-    <td>印章文本检测</td>
+    <td>文本识别</td>
   </tr>
   <tr>
-    <td>文本识别</td>
+    <td>版面区域检测</td>
+  </tr>
+  <tr>
+    <td>文档图像方向分类</td>
+  </tr>
+  <tr>
+    <td>文本图像矫正</td>
   </tr>
   <tr>
   <tr>
@@ -327,7 +360,7 @@ comments: true
   <tr>
     <td rowspan = 2>行人属性识别</td>
     <td>行人检测</td>
-    <td rowspan = 2>暂无</td>
+    <td rowspan = 2><a href="https://aistudio.baidu.com/community/app/387978/webUI?source=appCenter">在线体验</a></td>
     <td rowspan = 2>行人属性识别是计算机视觉系统中的关键功能，用于在图像或视频中定位并标记行人的特定特征，如性别、年龄、衣物颜色和款式等。</td>
     <td rowspan = 2>
     <ul>
@@ -342,7 +375,7 @@ comments: true
   <tr>
     <td rowspan = 2>车辆属性识别</td>
     <td>车辆检测</td>
-    <td rowspan = 2>暂无</td>
+    <td rowspan = 2><a href="https://aistudio.baidu.com/community/app/387979/webUI?source=appCenter">在线体验</a></td>
     <td rowspan = 2>车辆属性识别是计算机视觉系统中的重要组成部分，其主要任务是在图像或视频中定位并标记出车辆的特定属性，如车辆类型、颜色、车牌号等。该任务不仅要求准确检测出车辆，还需识别每辆车的详细属性信息。</td>
     <td rowspan = 2>
     <ul>

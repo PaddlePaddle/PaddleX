@@ -27,8 +27,10 @@ import tempfile
 from tokenizers import Tokenizer as TokenizerFast
 
 from ....utils import logging
+from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class OCRReisizeNormImg:
     """for ocr image resize and normalization"""
 
@@ -71,6 +73,7 @@ class OCRReisizeNormImg:
         return img
 
 
+@benchmark.timeit
 class BaseRecLabelDecode:
     """Convert between text-label and text-index"""
 
@@ -162,6 +165,7 @@ class BaseRecLabelDecode:
         return texts, scores
 
 
+@benchmark.timeit
 class CTCLabelDecode(BaseRecLabelDecode):
     """Convert between text-label and text-index"""
 
@@ -187,6 +191,7 @@ class CTCLabelDecode(BaseRecLabelDecode):
         return character_list
 
 
+@benchmark.timeit
 class ToBatch:
     """A class for batching and padding images to a uniform width."""
 

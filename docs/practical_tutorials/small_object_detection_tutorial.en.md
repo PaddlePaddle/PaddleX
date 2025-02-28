@@ -45,7 +45,7 @@ PaddleX provides 3 high-precision and high-efficiency end-to-end small object de
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5:0.95)</th>
 <th>mAP(0.5)</th>
-<th>GPU Inference Time (ms)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)</th>
 <th>Model Storage Size (M)</th>
 <th>Description</th>

@@ -26,8 +26,10 @@ from shapely.geometry import Polygon
 
 from ...utils.io import ImageReader
 from ....utils import logging
+from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class DetResizeForTest:
     """DetResizeForTest"""
 
@@ -181,6 +183,7 @@ class DetResizeForTest:
         return img, [ratio_h, ratio_w]
 
 
+@benchmark.timeit
 class NormalizeImage:
     """normalize image such as substract mean, divide std"""
 
@@ -205,6 +208,7 @@ class NormalizeImage:
         return [norm(img) for img in imgs]
 
 
+@benchmark.timeit
 class DBPostProcess:
     """
     The post process for Differentiable Binarization (DB).

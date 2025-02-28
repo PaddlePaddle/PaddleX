@@ -15,7 +15,10 @@
 import numpy as np
 from typing import Union
 
+from ...utils.benchmark import benchmark
 
+
+@benchmark.timeit
 class MultiLabelThreshOutput:
     """MultiLabelThresh Transform"""
 
