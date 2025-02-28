@@ -760,19 +760,43 @@ Below are the API references for basic service-based deployment and multi-langua
 <tr>
 <td><code>useDocOrientationClassify</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>Refer to the <code>use_doc_orientation_classify</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>use_doc_orientation_classify</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useDocUnwarping</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>Refer to the <code>use_doc_unwarping</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>use_doc_unwarping</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useLayoutDetection</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>Refer to the <code>use_layout_detection</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>use_layout_detection</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>layout_threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutNms</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>layout_nms</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutUnclipRatio</code></td>
+<td><code>number</code> | <code>array</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>layout_unclip_ratio</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutMergeBboxesMode</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>layout_merge_bboxes_mode</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
@@ -819,7 +843,7 @@ Below are the API references for basic service-based deployment and multi-langua
 <tr>
 <td><code>outputImages</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>See the description of the <code>img</code> attribute in the result of the pipeline prediction. The images are in JPEG format and are Base64-encoded.</td>
+<td>See the description of the <code>img</code> attribute of the result of the pipeline prediction. The images are in JPEG format and are Base64-encoded.</td>
 </tr>
 <tr>
 <td><code>inputImage</code> | <code>null</code></td>

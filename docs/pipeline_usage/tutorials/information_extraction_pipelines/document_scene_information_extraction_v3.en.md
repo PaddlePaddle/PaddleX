@@ -1254,103 +1254,103 @@ Below are the API references for basic serving and multi-language service invoca
 <tr>
 <td><code>useDocOrientationClassify</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>use_doc_orientation_classify</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>Please refer to the description of the <code>use_doc_orientation_classify</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useDocUnwarping</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>use_doc_unwarping</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>Please refer to the description of the <code>use_doc_unwarping</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useGeneralOcr</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>use_general_ocr</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>Please refer to the description of the <code>use_general_ocr</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useSealRecognition</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>use_seal_recognition</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>Please refer to the description of the <code>use_seal_recognition</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useTableRecognition</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>use_table_recognition</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>Please refer to the description of the <code>use_table_recognition</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textDetLimitSideLen</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>text_det_limit_side_len</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>Please refer to the description of the <code>text_det_limit_side_len</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textDetLimitType</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>text_det_limit_type</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>Please refer to the description of the <code>text_det_limit_type</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textDetThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>text_det_thresh</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>Please refer to the description of the <code>text_det_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textDetBoxThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>text_det_box_thresh</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>Please refer to the description of the <code>text_det_box_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textDetUnclipRatio</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>text_det_unclip_ratio</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>Please refer to the description of the <code>text_det_unclip_ratio</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textRecScoreThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>text_rec_score_thresh</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>Please refer to the description of the <code>text_rec_score_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>sealDetLimitSideLen</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>seal_det_limit_side_len</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>Please refer to the description of the <code>seal_det_limit_side_len</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>sealDetLimitType</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>seal_det_limit_type</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>Please refer to the description of the <code>seal_det_limit_type</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>sealDetThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>seal_det_thresh</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>Please refer to the description of the <code>seal_det_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>sealDetBoxThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>seal_det_box_thresh</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>Please refer to the description of the <code>seal_det_box_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>sealDetUnclipRatio</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>seal_det_unclip_ratio</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>Please refer to the description of the <code>seal_det_unclip_ratio</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>sealRecScoreThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>seal_rec_score_thresh</code> in the pipeline's <code>visual_predict</code> method.</td>
+<td>Please refer to the description of the <code>seal_rec_score_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
@@ -1397,12 +1397,12 @@ Below are the API references for basic serving and multi-language service invoca
 <tr>
 <td><code>prunedResult</code></td>
 <td><code>object</code></td>
-<td>A simplified version of the <code>res</code> field in the JSON representation of the results generated by the pipeline's <code>predict</code> method, with the <code>input_path</code> field removed.</td>
+<td>A simplified version of the <code>res</code> field in the JSON representation of the results generated by the pipeline's <code>visual_predict</code> method, with the <code>input_path</code> field removed.</td>
 </tr>
 <tr>
 <td><code>outputImages</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>img</code> in the pipeline's visual prediction results.</td>
+<td>Refer to the description of <code>img</code> attribute of the pipeline's visual prediction result.</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
@@ -1444,13 +1444,13 @@ Below are the API references for basic serving and multi-language service invoca
 <tr>
 <td><code>blockSize</code></td>
 <td><code>int</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>block_size</code> in the pipeline's <code>build_vector</code> method.</td>
+<td>Please refer to the description of the <code>block_size</code> parameter of the pipeline object's <code>build_vector</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>retrieverConfig</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>retriever_config</code> in the pipeline's <code>build_vector</code> method.</td>
+<td>Please refer to the description of the <code>retriever_config</code> parameter of the pipeline object's <code>build_vector</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
@@ -1495,7 +1495,7 @@ Below are the API references for basic serving and multi-language service invoca
 <tr>
 <td><code>keyList</code></td>
 <td><code>array</code></td>
-<td>List of keywords.</td>
+<td>List of keys.</td>
 <td>Yes</td>
 </tr>
 <tr>
@@ -1507,7 +1507,7 @@ Below are the API references for basic serving and multi-language service invoca
 <tr>
 <td><code>useVectorRetrieval</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>use_vector_retrieval</code> in the pipeline's <code>chat</code> method.</td>
+<td>Please refer to the description of the <code>use_vector_retrieval</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
@@ -1525,73 +1525,73 @@ Below are the API references for basic serving and multi-language service invoca
 <tr>
 <td><code>textTaskDescription</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>text_task_description</code> in the pipeline's <code>chat</code> method.</td>
+<td>Please refer to the description of the <code>text_task_description</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textOutputFormat</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>text_output_format</code> in the pipeline's <code>chat</code> method.</td>
+<td>Please refer to the description of the <code>text_output_format</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textRulesStr</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>text_rules_str</code> in the pipeline's <code>chat</code> method.</td>
+<td>Please refer to the description of the <code>text_rules_str</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textFewShotDemoTextContent</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>text_few_shot_demo_text_content</code> in the pipeline's <code>chat</code> method.</td>
+<td>Please refer to the description of the <code>text_few_shot_demo_text_content</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textFewShotDemoKeyValueList</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>text_few_shot_demo_key_value_list</code> in the pipeline's <code>chat</code> method.</td>
+<td>Please refer to the description of the <code>text_few_shot_demo_key_value_list</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>tableTaskDescription</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>table_task_description</code> in the pipeline's <code>chat</code> method.</td>
+<td>Please refer to the description of the <code>table_task_description</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>tableOutputFormat</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>table_output_format</code> in the pipeline's <code>chat</code> method.</td>
+<td>Please refer to the description of the <code>table_output_format</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>tableRulesStr</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>table_rules_str</code> in the pipeline's <code>chat</code> method.</td>
+<td>Please refer to the description of the <code>table_rules_str</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>tableFewShotDemoTextContent</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>table_few_shot_demo_text_content</code> in the pipeline's <code>chat</code> method.</td>
+<td>Please refer to the description of the <code>table_few_shot_demo_text_content</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>tableFewShotDemoKeyValueList</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>table_few_shot_demo_key_value_list</code> in the pipeline's <code>chat</code> method.</td>
+<td>Please refer to the description of the <code>table_few_shot_demo_key_value_list</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>chatBotConfig</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>chat_bot_config</code> in the pipeline's <code>chat</code> method.</td>
+<td>Please refer to the description of the <code>chat_bot_config</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>retrieverConfig</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>Refer to the parameter description of <code>retriever_config</code> in the pipeline's <code>chat</code> method.</td>
+<td>Please refer to the description of the <code>retriever_config</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>

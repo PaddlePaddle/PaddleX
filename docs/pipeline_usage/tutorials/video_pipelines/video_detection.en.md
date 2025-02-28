@@ -434,13 +434,13 @@ Below are the API references and multi-language service invocation examples for 
 <tr>
 <td><code>nmsThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the <code>nms_thresh</code> parameter description in the production <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>nms_thresh</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>scoreThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the <code>score_thresh</code> parameter description in the production <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>score_thresh</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>

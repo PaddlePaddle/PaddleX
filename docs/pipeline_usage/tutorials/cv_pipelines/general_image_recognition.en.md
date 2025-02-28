@@ -842,25 +842,25 @@ Below is the API reference for basic service deployment and multi-language servi
 <tr>
 <td><code>detThreshold</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the <code>det_threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>det_threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>recThreshold</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the <code>rec_threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>rec_threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>hammingRadius</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the <code>hamming_radius</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>hamming_radius</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>topk</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>Refer to the <code>topk</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>topk</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>

@@ -1255,7 +1255,7 @@ Below are the API references for basic service deployment and examples of multi-
 <tr>
 <td><code>topk</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>See the <code>topk</code> parameter description in the <code>predict</code> method documentation.</td>
+<td>Pleaser to ription of the <code>topk</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
