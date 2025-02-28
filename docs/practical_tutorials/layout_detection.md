@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# PaddleX 3.0 版面区域检测（layout_detection）模型产线教程 ———— 大模型训练数据构建教程
+# PaddleX 3.0 版面区域检测（layout_detection）模型产线教程 —— 大模型训练数据构建教程
 
 PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组合实现，每个模型产线都能够解决特定的场景任务问题。PaddleX 所提供的模型产线均支持快速体验，如果效果不及预期，也同样支持使用私有数据微调模型，并且 PaddleX 提供了 Python API，方便将产线集成到个人项目中。在使用之前，您首先需要安装 PaddleX， 安装方式请参考 [PaddleX本地安装教程](../installation/installation.md)。此处以版面区域检测任务为例子，介绍该模型产线在为大模型提供结构化文本语料的实际场景中的使用流程。
 
@@ -501,6 +501,9 @@ if __name__ == "__main__":
 可见，已经正确抽取出了段落标题的文字内容, 形成结构化数据，可以作为训练数据提供给大模型训练文字内容理解、摘要生成等任务使用。
 
 
+<b>注：这部分主要是演示如何将版面检测和OCR识别组合到一起，实际PaddleX官方已经提供了多种功能丰富的产线, 可以查看[PaddleX产线列表](../support_list/pipelines_list.md)。 </b>
+
+
 ## 6. 开发集成/部署
 
 如果版面检测效果可以达到您对产线推理速度和精度的要求，您可以直接进行开发集成/部署。
@@ -519,13 +522,13 @@ for res in output:
 更多参数请参考 [目标检测产线使用教程](../pipeline_usage/tutorials/cv_pipelines/object_detection.md)。
 
 
-### 6.2 以高稳定性服务化部署作为教程实践内容，具体可以参考 [PaddleX 服务化部署指南](../pipeline_deploy/serving.md) 进行实践。
+### 6.2 以高稳定性服务化部署作为本教程的实践内容，具体可以参考 [PaddleX 服务化部署指南](../pipeline_deploy/serving.md) 进行实践。
 
 **请注意，当前高稳定性服务化部署方案仅支持 Linux 系统。**
 
 #### 6.2.1 获取SDK
 
-下载目标检测高稳定性服务化部署 SDK <a href=https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0b2/paddlex_hps_object_detection_sdk.tar.gz>paddlex_hps_object_detection_sdk.tar.gz</a>，解压 SDK 并运行部署脚本，如下：
+下载目标检测高稳定性服务化部署 SDK <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0rc0/paddlex_hps_object_detection_sdk.tar.gz">paddlex_hps_object_detection_sdk.tar.gz</a>，解压 SDK 并运行部署脚本，如下：
 
 ```bash
 tar -xvf paddlex_hps_object_detection_sdk.tar.gz
@@ -533,7 +536,7 @@ tar -xvf paddlex_hps_object_detection_sdk.tar.gz
 
 #### 6.2.2 获取序列号
 
-- 获取序列号，在 [飞桨 AI Studio 星河社区-人工智能学习与实训社区](https://aistudio.baidu.com/paddlex/commercialization) 的“开源模型产线部署序列号咨询与获取”部分选择“立即获取”，如下图所示：
+- 在 [飞桨 AI Studio 星河社区-人工智能学习与实训社区](https://aistudio.baidu.com/paddlex/commercialization) 的“开源模型产线部署序列号咨询与获取”部分选择“立即获取”，如下图所示：
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-1.png"> 
 
@@ -543,57 +546,54 @@ tar -xvf paddlex_hps_object_detection_sdk.tar.gz
 
 **请注意**：每个序列号只能绑定到唯一的设备指纹，且只能绑定一次。这意味着用户如果使用不同的机器部署产线，则必须为每台机器准备单独的序列号。
 
-#### 6.2.3 调整配置和运行服务
+#### 6.2.3 运行服务
 
-调整配置可以参考[PaddleX 服务化部署指南](../pipeline_deploy/serving.md)中的高稳定性部署的配置调整部分。
-
-在配置调整完成后，运行服务：
-
-用于部署的机器上需要安装有 19.03 或更高版本的 Docker Engine。
-
-首先，根据需要拉取 Docker 镜像：
+运行服务：
 
 - 支持使用 NVIDIA GPU 部署的镜像（机器上需要安装有支持 CUDA 11.8 的 NVIDIA 驱动）：
 
     ```bash
-    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0b2-gpu
+    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0rc0-gpu
     ```
 
 - CPU-only 镜像：
 
     ```bash
-    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0b2-cpu
+    docker pull ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/hps:paddlex3.0.0rc0-cpu
     ```
 
-准备好镜像后，执行如下命令运行服务器：
+准备好镜像后，切换到 `server` 目录，执行如下命令运行服务器：
 
 ```bash
 docker run \
     -it \
+    -e PADDLEX_HPS_DEVICE_TYPE={部署设备类型} \
+    -e PADDLEX_HPS_SERIAL_NUMBER={序列号} \
+    -e PADDLEX_HPS_UPDATE_LICENSE=1 \
     -v "$(pwd)":/workspace \
     -v "${HOME}/.baidu/paddlex/licenses":/root/.baidu/paddlex/licenses \
     -v /dev/disk/by-uuid:/dev/disk/by-uuid \
     -w /workspace \
-    -e PADDLEX_HPS_DEVICE_TYPE={部署设备类型} \
-    -e PADDLEX_HPS_SERIAL_NUMBER={序列号} \
     --rm \
     --gpus all \
+    --init \
     --network host \
     --shm-size 8g \
     {镜像名称} \
-    ./server.sh
+    /bin/bash server.sh
 ```
 
 - 部署设备类型可以为 `cpu` 或 `gpu`，CPU-only 镜像仅支持 `cpu`。
 - 如果希望使用 CPU 部署，则不需要指定 `--gpus`。
 - 以上命令必须在激活成功后才可以正常执行。PaddleX 提供两种激活方式：离线激活和在线激活。具体说明如下：
 
-    - 联网激活：在命令中添加 `-e PADDLEX_HPS_UPDATE_LICENSE=1`，使程序自动完成激活。
-    - 离线激活：按照序列号管理部分中的指引，获取机器的设备指纹，并将序列号与设备指纹绑定以获取证书，完成激活。使用这种激活方式，需要手动将证书存放在机器的 `${HOME}/.baidu/paddlex/licenses` 目录中（如果目录不存在，需要创建目录）。
+    - 联网激活：在第一次执行时设置 `PADDLEX_HPS_UPDATE_LICENSE` 为 `1`，使程序自动更新证书并完成激活。再次执行命令时可以将 `PADDLEX_HPS_UPDATE_LICENSE` 设置为 `0` 以避免联网更新证书。
+    - 离线激活：按照序列号管理部分中的指引，获取机器的设备指纹，并将序列号与设备指纹绑定以获取证书，完成激活。使用这种激活方式，需要手动将证书存放在机器的 `${HOME}/.baidu/paddlex/licenses` 目录中（如果目录不存在，需要创建目录）。使用这种方式时，将 `PADDLEX_HPS_UPDATE_LICENSE` 设置为 `0` 以避免联网更新证书。
 
 - 必须确保宿主机的 `/dev/disk/by-uuid` 存在且非空，并正确挂载该目录，才能正常执行激活。
-- 如果需要进入容器内部调试，可以将命令中的 `./server.sh` 替换为 `/bin/bash`，在容器中执行 `./server.sh`。
+- 如果需要进入容器内部调试，可以将命令中的 `/bin/bash server.sh` 替换为 `/bin/bash`，然后在容器中执行 `/bin/bash server.sh`。
 - 如果希望服务器在后台运行，可以将命令中的 `-it` 替换为 `-d`。容器启动后，可通过 `docker logs -f {容器 ID}` 查看容器日志。
+- 在命令中添加 `-e PADDLEX_USE_HPIP=1` 可以使用 PaddleX 高性能推理插件加速产线推理过程。但请注意，并非所有产线都支持使用高性能推理插件。请参考 [PaddleX 高性能推理指南](./high_performance_inference.md) 获取更多信息。
 
 可观察到类似下面的输出信息：
 
@@ -605,20 +605,20 @@ I1216 11:37:21.643494 35 http_server.cc:167] Started Metrics Service at 0.0.0.0:
 
 #### 6.2.4 调用服务
 
-目前，仅支持使用 Python 客户端调用服务。支持的 Python 版本为 3.8、3.9 和 3.10。
+目前，仅支持使用 Python 客户端调用服务。支持的 Python 版本为 3.8 至 3.12。
 
 切换到高稳定性服务化部署 SDK 的 `client` 目录，执行如下命令安装依赖：
 
 ```bash
 # 建议在虚拟环境中安装
-python -m pip install paddlex_hps_client-*.whl
 python -m pip install -r requirements.txt
+python -m pip install paddlex_hps_client-*.whl
 ```
 
-`client` 目录的 `client.py` 脚本包含服务的调用示例，执行该脚本，获取[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout_test_0.jpg)服务返回的推理结果。
+`client` 目录的 `client.py` 脚本包含服务的调用示例，并提供命令行接口。
 
 
-### 6.3 此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
+### 6.3 此外，PaddleX 也提供了其他三种部署方式，说明如下：
 
 * 高性能部署：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能部署流程请参考 [PaddleX 高性能推理指南](../pipeline_deploy/high_performance_inference.md)。
 * 基础服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考 [PaddleX 服务化部署指南](../pipeline_deploy/serving.md)。
