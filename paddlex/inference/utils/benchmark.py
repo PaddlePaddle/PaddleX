@@ -166,7 +166,7 @@ class Benchmark:
             )
             operation_list.append((operation_name, location))
 
-            if name in _inference_operations:
+            if operation_name in _inference_operations:
                 summary["inference"] += avg
                 op_tag = "postprocessing"
             else:
