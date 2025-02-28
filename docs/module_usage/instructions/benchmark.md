@@ -112,7 +112,7 @@ python test_infer.py
             <li>模型推理耗时（<code>Inference</code>）</li>
             <li>后处理耗时（<code>Postprocessing</code>）</li>
             <li>核心耗时（<code>Core</code>，即预处理耗时+模型推理耗时+后处理耗时）</li>
-            <li>其他耗时（<code>Other</code>，如开启 benchmark 功能所产生的观测时间、统计时间等）</li>
+            <li>其他耗时（<code>Other</code>，例如运行用于编排操作的代码所花费的时间以及由基准测试功能引入的额外开销）</li>
             <li>端到端耗时（<code>End-to-End</code>，即核心耗时+其他耗时）</li>
             </ul>
             </td>
@@ -144,7 +144,7 @@ python test_infer.py
 +-------+------------+-----------+----------------+------------------------+----------------------------+
                                            Operation Data
 +--------------------+----------------------------------------------------------------------+
-|     Operation      |                                  Location                            |
+|     Operation      |                         Source Code Location                         |
 +--------------------+----------------------------------------------------------------------+
 |     ReadImage      | /PaddleX/paddlex/inference/models/object_detection/processors.py:34  |
 |       Resize       | /PaddleX/paddlex/inference/models/object_detection/processors.py:99  |

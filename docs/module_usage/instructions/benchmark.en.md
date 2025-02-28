@@ -112,7 +112,7 @@ After enabling the benchmark feature, the benchmark results will be automaticall
             <li>model inference time (<code>Inference</code>)</li>
             <li>postprocessing time (<code>Postprocessing</code>)</li>
             <li>core time (<code>Core</code>, i.e., Preprocessing + Inference + Postprocessing)</li>
-            <li>other time (<code>Other</code>, such as the observation and statistical times generated when enabling the benchmark feature)</li>
+            <li>other time (<code>Other</code>, e.g., the time taken to run the code that orchestrates the operations, and the extra overhead introduced by the benchmark feature)</li>
             <li>end-to-end time (<code>End-to-End</code>, i.e., Core + Other)</li>
             </ul>
             </td>
@@ -144,7 +144,7 @@ Below is an example of the benchmark results obtained by running the example pro
 +-------+------------+-----------+----------------+------------------------+----------------------------+
                                            Operation Data
 +--------------------+----------------------------------------------------------------------+
-|     Operation      |                                  Location                            |
+|     Operation      |                         Source Code Location                         |
 +--------------------+----------------------------------------------------------------------+
 |     ReadImage      | /PaddleX/paddlex/inference/models/object_detection/processors.py:34  |
 |       Resize       | /PaddleX/paddlex/inference/models/object_detection/processors.py:99  |

@@ -52,20 +52,25 @@ class Benchmark:
                     raise TypeError
                 func = func_or_cls
 
+            location = None
+
             @functools.wraps(func)
             def _wrapper(*args, **kwargs):
+                nonlocal location
+
                 if not self._enabled:
                     return func(*args, **kwargs)
 
-                try:
-                    source_file = inspect.getsourcefile(func)
-                    source_line = inspect.getsourcelines(func)[1]
-                    location = f"{source_file}:{source_line}"
-                except (TypeError, OSError) as e:
-                    location = "Unknown"
-                    logging.debug(
-                        f"Benchmark: failed to get source file and line number: {e}"
-                    )
+                if location is None:
+                    try:
+                        source_file = inspect.getsourcefile(func)
+                        source_line = inspect.getsourcelines(func)[1]
+                        location = f"{source_file}:{source_line}"
+                    except (TypeError, OSError) as e:
+                        location = "Unknown"
+                        logging.debug(
+                            f"Benchmark: failed to get source file and line number: {e}"
+                        )
 
                 tic = time.perf_counter()
                 output = func(*args, **kwargs)
@@ -145,7 +150,7 @@ class Benchmark:
 
         summary = {"preprocessing": 0, "inference": 0, "postprocessing": 0}
         for key in logs:
-            if ENTRY_POINT_NAME in key:
+            if key.startswith(f"{ENTRY_POINT_NAME}@"):
                 base_predictor_time_list = logs.pop(key)
                 break
         iters = len(base_predictor_time_list)
@@ -255,11 +260,11 @@ class Benchmark:
         else:
             operation_head = [
                 "Operation",
-                "Location",
+                "Source Code Location",
             ]
             table = PrettyTable(operation_head)
             table.add_rows(operation_list)
-            header = "Operation Data".center(len(str(table).split("\n")[0]), " ")
+            header = "Operation Info".center(len(str(table).split("\n")[0]), " ")
             logging.info(header)
             logging.info(table)
 
