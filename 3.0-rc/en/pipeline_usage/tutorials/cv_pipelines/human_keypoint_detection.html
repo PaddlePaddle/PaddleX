@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
     
     
       
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#human-keypoint-detection-pipeline-user-guide" class="md-skip">
+        <a href="#human-keypoint-detection-pipeline-tutorial" class="md-skip">
           Skip to content
         </a>
       
@@ -1526,13 +1526,13 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-secondary-development" class="md-nav__link">
+  <a href="#4-custom-development" class="md-nav__link">
     <span class="md-ellipsis">
-      4. Secondary Development
+      4. Custom Development
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4. Secondary Development">
+    <nav class="md-nav" aria-label="4. Custom Development">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -5280,13 +5280,13 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-secondary-development" class="md-nav__link">
+  <a href="#4-custom-development" class="md-nav__link">
     <span class="md-ellipsis">
-      4. Secondary Development
+      4. Custom Development
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4. Secondary Development">
+    <nav class="md-nav" aria-label="4. Custom Development">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -5353,7 +5353,7 @@ You're not viewing the latest version.
   
 
 
-<h1 id="human-keypoint-detection-pipeline-user-guide">Human Keypoint Detection Pipeline User Guide<a class="headerlink" href="#human-keypoint-detection-pipeline-user-guide" title="Permanent link">&para;</a></h1>
+<h1 id="human-keypoint-detection-pipeline-tutorial">Human Keypoint Detection Pipeline Tutorial<a class="headerlink" href="#human-keypoint-detection-pipeline-tutorial" title="Permanent link">&para;</a></h1>
 <h2 id="1-introduction-to-human-keypoint-detection-pipeline">1. Introduction to Human Keypoint Detection Pipeline<a class="headerlink" href="#1-introduction-to-human-keypoint-detection-pipeline" title="Permanent link">&para;</a></h2>
 <p>Human keypoint detection aims to analyze human posture and movements by identifying and locating specific joints and parts of the human body. This task requires not only detecting humans in images but also accurately obtaining the positions of keypoints such as shoulders, elbows, knees, etc., for pose estimation and behavior recognition. Human keypoint detection is widely used in sports analysis, health monitoring, animation production, and human-computer interaction.</p>
 <p>PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of pedestrian detection and keypoint detection modules, optimized for mobile devices. It can accurately and smoothly perform multi-person pose estimation tasks on mobile devices.</p>
@@ -6041,11 +6041,11 @@ print(result["persons"])
 <p><br /></p>
 <p>📱 <b>Edge Deployment</b>: Edge deployment is a method where computation and data processing functions are placed on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to <a href="../../../pipeline_deploy/edge_deploy.html">PaddleX Edge Deployment Guide</a>.
 You can choose the appropriate deployment method based on your needs to integrate the AI application subsequently.</p>
-<h2 id="4-secondary-development">4. Secondary Development<a class="headerlink" href="#4-secondary-development" title="Permanent link">&para;</a></h2>
+<h2 id="4-custom-development">4. Custom Development<a class="headerlink" href="#4-custom-development" title="Permanent link">&para;</a></h2>
 <p>If the default model weights provided by the human keypoint detection pipeline do not meet your accuracy or speed requirements in your scenario, you can try further <b>fine-tuning</b> the existing model using <b>your own specific domain or application data</b> to improve the recognition performance of the pipeline in your scenario.</p>
 <h3 id="41-model-fine-tuning">4.1 Model Fine-Tuning<a class="headerlink" href="#41-model-fine-tuning" title="Permanent link">&para;</a></h3>
 <p>Since the human keypoint detection pipeline consists of two modules (pedestrian detection module and human keypoint detection module), the suboptimal performance of the model pipeline may stem from either module.</p>
-<p>You can analyze the images with poor recognition performance. If you find that many pedestrian targets are not detected during the analysis, it may indicate a deficiency in the pedestrian detection model. You need to refer to the <a href="../../../module_usage/tutorials/cv_modules/human_detection.html">Pedestrian Detection Module Development Tutorial</a> in the <a href="../../../module_usage/tutorials/cv_modules/human_detection.html">Secondary Development</a> section to fine-tune the pedestrian detection model using your private dataset. If keypoint detection errors occur in detected pedestrians, it indicates that the keypoint detection model needs further improvement. You need to refer to the <a href="../../../module_usage/tutorials/cv_modules/human_keypoint_detection.html">Keypoint Detection Module Development Tutorial</a> in the <a href="../../../module_usage/tutorials/cv_modules/human_keypoint_detection.html#secondary-development">Secondary Development</a> section to fine-tune the keypoint detection model.</p>
+<p>You can analyze the images with poor recognition performance. If you find that many pedestrian targets are not detected during the analysis, it may indicate a deficiency in the pedestrian detection model. You need to refer to the <a href="../../../module_usage/tutorials/cv_modules/human_detection.html">Pedestrian Detection Module Development Tutorial</a> in the <a href="../../../module_usage/tutorials/cv_modules/human_detection.html">Custom Development</a> section to fine-tune the pedestrian detection model using your private dataset. If keypoint detection errors occur in detected pedestrians, it indicates that the keypoint detection model needs further improvement. You need to refer to the <a href="../../../module_usage/tutorials/cv_modules/human_keypoint_detection.html">Keypoint Detection Module Development Tutorial</a> in the <a href="../../../module_usage/tutorials/cv_modules/human_keypoint_detection.html#secondary-development">Custom Development</a> section to fine-tune the keypoint detection model.</p>
 <h3 id="42-model-application">4.2 Model Application<a class="headerlink" href="#42-model-application" title="Permanent link">&para;</a></h3>
 <p>After completing the fine-tuning training with your private dataset, you will obtain a local model weight file.</p>
 <p>If you need to use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local path of the fine-tuned model weights in the corresponding position of the pipeline configuration file:</p>
@@ -6100,7 +6100,7 @@ You can choose the appropriate deployment method based on your needs to integrat
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 27, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 2, 2025</span>
   </span>
 
     
@@ -6110,7 +6110,7 @@ You can choose the appropriate deployment method based on your needs to integrat
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 27, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 2, 2025</span>
   </span>
 
     
@@ -6125,7 +6125,7 @@ You can choose the appropriate deployment method based on your needs to integrat
     </span>
     <nav>
       
-        <a href="mailto:142379845+changdazhou@users.noreply.github.com">changdazhou</a>
+        <a href="mailto:bob1998425@hotmail.com">Lin Manhui</a>
     </nav>
   </span>
 
@@ -6291,7 +6291,7 @@ You can choose the appropriate deployment method based on your needs to integrat
     <script id="__config" type="application/json">{"base": "../../../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.c8b220af.min.js"></script>
       
         <script src="../../../../javascripts/katex.min.js"></script>
       

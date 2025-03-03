@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
     
     
       
@@ -1102,13 +1102,13 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-secondary-development" class="md-nav__link">
+  <a href="#4-custom-development" class="md-nav__link">
     <span class="md-ellipsis">
-      4. Secondary Development
+      4. Custom Development
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4. Secondary Development">
+    <nav class="md-nav" aria-label="4. Custom Development">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -5268,13 +5268,13 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-secondary-development" class="md-nav__link">
+  <a href="#4-custom-development" class="md-nav__link">
     <span class="md-ellipsis">
-      4. Secondary Development
+      4. Custom Development
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4. Secondary Development">
+    <nav class="md-nav" aria-label="4. Custom Development">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -5344,10 +5344,12 @@ You're not viewing the latest version.
 <h1 id="general-table-recognition-pipeline-user-guide">General Table Recognition Pipeline User Guide<a class="headerlink" href="#general-table-recognition-pipeline-user-guide" title="Permanent link">&para;</a></h1>
 <h2 id="1-introduction-to-general-table-recognition-pipeline">1. Introduction to General Table Recognition Pipeline<a class="headerlink" href="#1-introduction-to-general-table-recognition-pipeline" title="Permanent link">&para;</a></h2>
 <p>Table recognition is a technology that automatically identifies and extracts table content and structure from documents or images. It is widely used in data entry, information retrieval, and document analysis. By using computer vision and machine learning algorithms, table recognition can convert complex table information into editable formats, facilitating further processing and analysis of data.</p>
-<p>The General Table Recognition Pipeline is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. This pipeline integrates the well-known SLANet and SLANet_plus table recognition models. Based on this pipeline, precise predictions of tables can be achieved, covering a wide range of applications in general, manufacturing, finance, transportation, and other fields. The pipeline also provides flexible service deployment options, supporting various hardware and programming languages for integration. Moreover, it offers secondary development capabilities, allowing you to train and optimize models on your own dataset, which can then be seamlessly integrated.</p>
+<p>The General Table Recognition Pipeline is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. This pipeline integrates the well-known SLANet and SLANet_plus table recognition models. Based on this pipeline, precise predictions of tables can be achieved, covering a wide range of applications in general, manufacturing, finance, transportation, and other fields. The pipeline also provides flexible service deployment options, supporting various hardware and programming languages for integration. Moreover, it offers custom development capabilities, allowing you to train and optimize models on your own dataset, which can then be seamlessly integrated.</p>
 <p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/01.png"/>
 <b>The General Table Recognition Pipeline includes essential modules for table structure recognition, text detection, and text recognition, as well as optional modules for layout area detection, document image orientation classification, and text image correction.</b></p>
 <p><b>If you prioritize model accuracy, choose a high-accuracy model; if you prioritize inference speed, choose a faster model; if you care about model size, choose a smaller model.</b></p>
+<details><summary>👉Model List Details</summary>
+
 <p><b>Table Recognition Module Models:</b></p>
 <table>
 <tr>
@@ -5364,7 +5366,7 @@ You're not viewing the latest version.
 <td>103.08 / 103.08</td>
 <td>197.99 / 197.99</td>
 <td>6.9 M</td>
-<td rowspan="2">SLANet is a self-developed table structure recognition model by the PaddlePaddle Vision Team. This model significantly improves the accuracy and inference speed of table structure recognition by using a CPU-friendly lightweight backbone network PP-LCNet, a high-low feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structure and position information.</td>
+<td rowspan="2">SLANet is a self-developed table structure recognition model by the Baidu PaddleX Team. This model significantly improves the accuracy and inference speed of table structure recognition by using a CPU-friendly lightweight backbone network PP-LCNet, a high-low feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structure and position information.</td>
 </tr>
 <tr>
 <td>SLANet_plus</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_plus_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">Training Model</a></td>
@@ -5459,8 +5461,8 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team from the
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy(%)</th>
-<th>GPU Inference Time (ms)<br/>[Regular Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)<br/>[Regular Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -5474,14 +5476,53 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team from the
 </tr>
 </table>
 
+<table>
+<thead>
+<tr>
+<th>Model</th><th>Model Download Link</th>
+<th>mAP(0.5)（%）</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>Model Storage Size (M)</th>
+<th>Introduction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PP-DocLayout-L</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-L_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-L_pretrained.pdparams">Training Model</a></td>
+<td>90.4</td>
+<td>34.6244 / 10.3945</td>
+<td>510.57 / -</td>
+<td>123.76 M</td>
+<td>A high-precision layout region localization model trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exams, and research reports, based on RT-DETR-L.</td>
+</tr>
+<tr>
+<td>PP-DocLayout-M</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-M_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-M_pretrained.pdparams">Training Model</a></td>
+<td>75.2</td>
+<td>13.3259 / 4.8685</td>
+<td>44.0680 / 44.0680</td>
+<td>22.578</td>
+<td>A layout region localization model with balanced accuracy and efficiency, trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exams, and research reports, based on PicoDet-L.</td>
+</tr>
+<tr>
+<td>PP-DocLayout-S</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-S_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-DocLayout-S_pretrained.pdparams">Training Model</a></td>
+<td>70.9</td>
+<td>8.3008 / 2.3794</td>
+<td>10.0623 / 9.9296</td>
+<td>4.834</td>
+<td>A high-efficiency layout region localization model trained on a self-built dataset containing Chinese and English papers, magazines, contracts, books, exams, and research reports, based on PicoDet-S.</td>
+</tr>
+</tbody>
+</table>
+
 <p><b>Layout Detection Module Models (Optional):</b></p>
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>GPU Inference Time (ms)<br/>[Regular Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)<br/>[Regular Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -5554,12 +5595,15 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team from the
 </tbody>
 </table>
 
+
 <p><b>Text Image Rectification Module Models (Optional):</b></p>
 <table>
 <thead>
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>MS-SSIM (%)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -5568,6 +5612,8 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team from the
 <tr>
 <td>UVDoc</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/UVDoc_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/UVDoc_pretrained.pdparams">Training Model</a></td>
 <td>54.40</td>
+<td>-/-</td>
+<td>-/-</td>
 <td>30.3 M</td>
 <td>High-precision text image rectification model.</td>
 </tr>
@@ -5580,8 +5626,8 @@ SVTRv2 is a server text recognition model developed by the OpenOCR team from the
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Top-1 Acc (%)</th>
-<th>GPU Inference Time (ms)<br/>[Regular Mode / High-Performance Mode]</th>
-<th>CPU Inference Time (ms)<br/>[Regular Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
 </tr>
@@ -5643,9 +5689,8 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 </tr>
 </table>
 
-<blockquote>
-<p>❗ The above list features the <b>4 core models</b> that the text recognition module primarily supports. In total, this module supports <b>18 models</b>. The complete list of models is as follows:</p>
-</blockquote>
+> ❗ The above list features the <b>4 core models</b> that the text recognition module primarily supports. In total, this module supports <b>18 models</b>. The complete list of models is as follows:
+
 <details><summary> 👉Model List Details</summary>
 
 * <b>Chinese Recognition Model</b>
@@ -5675,7 +5720,7 @@ The lightweight recognition model of PP-OCRv4 has high inference efficiency and 
 <td>The lightweight recognition model of PP-OCRv4 has high inference efficiency and can be deployed on various hardware devices, including edge devices.</td>
 </tr>
 <tr>
-<td>PP-OCRv4_server_rec </td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Trained Model</a></td>
+<td>PP-OCRv4_server_rec </td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Training Model</a></td>
 <td>80.61 </td>
 <td>6.58 / 2.43</td>
 <td>33.17 / 33.17</td>
@@ -5854,215 +5899,91 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </table>
 </details>
 
-<p><strong>Test Environment Description</strong>:</p>
-<ul>
-<li><strong>Performance Test Environment</strong></li>
-<li><strong>Test Dataset</strong><ul>
-<li>Document Image Orientation Classification Model: A dataset built by PaddleX, covering multiple scenarios such as certificates and documents, containing 1,000 images.</li>
-<li>Text Image Rectification Model: <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet</a>.</li>
-<li>Layout Region Detection Model: A layout region analysis dataset built by PaddleOCR, containing 10,000 images of common document types such as Chinese and English papers, magazines, and research reports.</li>
-<li>Table Structure Recognition Model: An internal English table recognition dataset built by PaddleX.</li>
-<li>Text Detection Model: A Chinese dataset built by PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 500 images for detection.</li>
-<li>Chinese Recognition Model: A Chinese dataset built by PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.</li>
-<li>ch_SVTRv2_rec: <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a> A-list evaluation set.</li>
-<li>ch_RepSVTR_rec: <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a> B-list evaluation set.</li>
-<li>English Recognition Model: An English dataset built by PaddleX.</li>
-<li>Multilingual Recognition Model: A multilingual dataset built by PaddleX.</li>
-</ul>
-</li>
-<li>
-<p><strong>Hardware Configuration</strong>:</p>
-<ul>
-<li>GPU: NVIDIA Tesla T4</li>
-<li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-<li>Other Environment: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
-</ul>
-</li>
-<li>
-<p><strong>Inference Mode Description</strong></p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Mode</th>
-<th>GPU Configuration</th>
-<th>CPU Configuration</th>
-<th>Acceleration Technology Combination</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Normal Mode</td>
-<td>FP32 Precision / No TRT Acceleration</td>
-<td>FP32 Precision / 8 Threads</td>
-<td>PaddleInference</td>
-</tr>
-<tr>
-<td>High-Performance Mode</td>
-<td>Optimal combination of pre-selected precision types and acceleration strategies</td>
-<td>FP32 Precision / 8 Threads</td>
-<td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
-</tr>
-</tbody>
-</table>
+**Test Environment Description:**
+
+- **Performance Test Environment**
+  - **Test Dataset**
+    - Document Image Orientation Classification Model: A dataset built by PaddleX, covering multiple scenarios such as certificates and documents, containing 1,000 images.
+    - Text Image Rectification Model: <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet</a>.
+    - Layout Region Detection Model: A layout region analysis dataset built by PaddleOCR, containing 10,000 images of common document types such as Chinese and English papers, magazines, and research reports.
+    - Table Structure Recognition Model: An internal English table recognition dataset built by PaddleX.
+    - Text Detection Model: A Chinese dataset built by PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 500 images for detection.
+    - Chinese Recognition Model: A Chinese dataset built by PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.
+    - ch_SVTRv2_rec: <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a> A-list evaluation set.
+    - ch_RepSVTR_rec: <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a> B-list evaluation set.
+    - English Recognition Model: An English dataset built by PaddleX.
+    - Multilingual Recognition Model: A multilingual dataset built by PaddleX.
+  - **Hardware Configuration**:
+    - GPU: NVIDIA Tesla T4
+    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
+    - Other Environment: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+
+- **Inference Mode Description**
+
+| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
+|-------------|----------------------------------------|-------------------|---------------------------------------------------|
+| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+
 </details>
+
 <h2 id="2-quick-start">2. Quick Start<a class="headerlink" href="#2-quick-start" title="Permanent link">&para;</a></h2>
-<p>The pre-trained models provided by PaddleX can be quickly experienced. You can experience the effect of the general table recognition production line online on the Galaxy Community, or you can experience it locally using the command line or Python.</p>
+<p>The pre-trained models provided by PaddleX can be quickly experienced. You can experience the effect of the general table recognition pipeline online on the Baidu AIStudio Community, or you can experience it locally using the command line or Python.</p>
 <h3 id="21-online-experience">2.1 Online Experience<a class="headerlink" href="#21-online-experience" title="Permanent link">&para;</a></h3>
-<p>You can <a href="https://aistudio.baidu.com/community/app/91661/webUI">experience online</a> the effect of the general table recognition production line using the official demo images, for example:</p>
+<p>You can <a href="https://aistudio.baidu.com/community/app/91661/webUI">experience online</a> the effect of the general table recognition pipeline using the official demo images, for example:</p>
 <p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/02.png"/></p>
-<p>If you are satisfied with the performance of the production line, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the method in <a href="#22-local-experience">Section 2.2 Local Experience</a> for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the production line using private data</b>. If you have local training hardware resources, you can start training directly on your local machine; if not, the Galaxy Zero-Code platform provides a one-click training service. No code is required; simply upload your data to start the training task.</p>
+<p>If you are satisfied with the performance of the pipeline, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the method in <a href="#22-local-experience">Section 2.2 Local Experience</a> for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the pipeline using private data</b>. If you have local training hardware resources, you can start training directly on your local machine; if not, the Baidu AI Studio provides a one-click training service. No code is required; simply upload your data to start the training task.</p>
 <h3 id="22-local-experience">2.2 Local Experience<a class="headerlink" href="#22-local-experience" title="Permanent link">&para;</a></h3>
 <p>Before using the general table recognition production line locally, please ensure that you have completed the installation of the PaddleX wheel package according to the <a href="../../../installation/installation.html">PaddleX Local Installation Guide</a>.</p>
 <h3 id="21-command-line-experience">2.1 Command Line Experience<a class="headerlink" href="#21-command-line-experience" title="Permanent link">&para;</a></h3>
-<p>You can quickly experience the table recognition production line with a single command. Use the <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">test file</a>, and replace <code>--input</code> with your local path for prediction.</p>
+<p>You can quickly experience the table recognition pipeline with a single command. Use the <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">test file</a>, and replace <code>--input</code> with your local path for prediction.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>paddlex<span class="w"> </span>--pipeline<span class="w"> </span>table_recognition<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">        </span>--input<span class="w"> </span>table_recognition.jpg<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">        </span>--save_path<span class="w"> </span>./output<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">        </span>--device<span class="w"> </span>gpu:0
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">        </span>--use_doc_orientation_classify<span class="o">=</span>False<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">        </span>--use_doc_unwarping<span class="o">=</span>False<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">        </span>--input<span class="w"> </span>table_recognition.jpg<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">        </span>--save_path<span class="w"> </span>./output<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">        </span>--device<span class="w"> </span>gpu:0
 </span></code></pre></div>
 <p>The content of the parameters can refer to the parameter description in <a href="#22-python-script-method-integration">2.2 Python Script Method</a>.</p>
 <p>After running, the result will be printed to the terminal, as follows:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="o">{</span><span class="s1">&#39;res&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;input_path&#39;</span>:<span class="w"> </span><span class="s1">&#39;table_recognition.jpg&#39;</span>,<span class="w"> </span><span class="s1">&#39;model_settings&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;use_doc_preprocessor&#39;</span>:<span class="w"> </span>True,<span class="w"> </span><span class="s1">&#39;use_layout_detection&#39;</span>:<span class="w"> </span>True,<span class="w"> </span><span class="s1">&#39;use_ocr_model&#39;</span>:<span class="w"> </span>True<span class="o">}</span>,<span class="w"> </span><span class="s1">&#39;doc_preprocessor_res&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;input_path&#39;</span>:<span class="w"> </span><span class="s1">&#39;0.jpg&#39;</span>,<span class="w"> </span><span class="s1">&#39;model_settings&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;use_doc_orientation_classify&#39;</span>:<span class="w"> </span>True,<span class="w"> </span><span class="s1">&#39;use_doc_unwarping&#39;</span>:<span class="w"> </span>True<span class="o">}</span>,<span class="w"> </span><span class="s1">&#39;angle&#39;</span>:<span class="w"> </span><span class="m">0</span><span class="o">}</span>,<span class="w"> </span><span class="s1">&#39;layout_det_res&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;input_path&#39;</span>:<span class="w"> </span>None,<span class="w"> </span><span class="s1">&#39;boxes&#39;</span>:<span class="w"> </span><span class="o">[{</span><span class="s1">&#39;cls_id&#39;</span>:<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="s1">&#39;label&#39;</span>:<span class="w"> </span><span class="s1">&#39;Table&#39;</span>,<span class="w"> </span><span class="s1">&#39;score&#39;</span>:<span class="w"> </span><span class="m">0</span>.9196816086769104,<span class="w"> </span><span class="s1">&#39;coordinate&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">8</span>.614925,<span class="w"> </span><span class="m">550</span>.9877,<span class="w"> </span><span class="m">132</span><span class="o">]}]}</span>,<span class="w"> </span><span class="s1">&#39;overall_ocr_res&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;input_path&#39;</span>:<span class="w"> </span><span class="s1">&#39;0.jpg&#39;</span>,<span class="w"> </span><span class="s1">&#39;model_settings&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;use_doc_preprocessor&#39;</span>:<span class="w"> </span>False,<span class="w"> </span><span class="s1">&#39;use_textline_orientation&#39;</span>:<span class="w"> </span>False<span class="o">}</span>,<span class="w"> </span><span class="s1">&#39;dt_polys&#39;</span>:<span class="w"> </span><span class="o">[</span>array<span class="o">([[</span><span class="m">232</span>,<span class="w">   </span><span class="m">0</span><span class="o">]</span>,
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">       </span><span class="o">[</span><span class="m">318</span>,<span class="w">   </span><span class="m">1</span><span class="o">]</span>,
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">       </span><span class="o">[</span><span class="m">318</span>,<span class="w">  </span><span class="m">24</span><span class="o">]</span>,
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">       </span><span class="o">[</span><span class="m">232</span>,<span class="w">  </span><span class="m">21</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">32</span>,<span class="w"> </span><span class="m">38</span><span class="o">]</span>,
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">       </span><span class="o">[</span><span class="m">67</span>,<span class="w"> </span><span class="m">38</span><span class="o">]</span>,
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">       </span><span class="o">[</span><span class="m">67</span>,<span class="w"> </span><span class="m">55</span><span class="o">]</span>,
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">       </span><span class="o">[</span><span class="m">32</span>,<span class="w"> </span><span class="m">55</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">119</span>,<span class="w">  </span><span class="m">34</span><span class="o">]</span>,
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">       </span><span class="o">[</span><span class="m">196</span>,<span class="w">  </span><span class="m">34</span><span class="o">]</span>,
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">       </span><span class="o">[</span><span class="m">196</span>,<span class="w">  </span><span class="m">57</span><span class="o">]</span>,
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">       </span><span class="o">[</span><span class="m">119</span>,<span class="w">  </span><span class="m">57</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">222</span>,<span class="w">  </span><span class="m">29</span><span class="o">]</span>,
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">       </span><span class="o">[</span><span class="m">396</span>,<span class="w">  </span><span class="m">31</span><span class="o">]</span>,
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">       </span><span class="o">[</span><span class="m">396</span>,<span class="w">  </span><span class="m">60</span><span class="o">]</span>,
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">       </span><span class="o">[</span><span class="m">222</span>,<span class="w">  </span><span class="m">58</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">420</span>,<span class="w">  </span><span class="m">30</span><span class="o">]</span>,
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">       </span><span class="o">[</span><span class="m">542</span>,<span class="w">  </span><span class="m">32</span><span class="o">]</span>,
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">       </span><span class="o">[</span><span class="m">542</span>,<span class="w">  </span><span class="m">61</span><span class="o">]</span>,
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">       </span><span class="o">[</span><span class="m">419</span>,<span class="w">  </span><span class="m">59</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">29</span>,<span class="w"> </span><span class="m">71</span><span class="o">]</span>,
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">       </span><span class="o">[</span><span class="m">72</span>,<span class="w"> </span><span class="m">71</span><span class="o">]</span>,
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">       </span><span class="o">[</span><span class="m">72</span>,<span class="w"> </span><span class="m">92</span><span class="o">]</span>,
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">       </span><span class="o">[</span><span class="m">29</span>,<span class="w"> </span><span class="m">92</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">287</span>,<span class="w">  </span><span class="m">72</span><span class="o">]</span>,
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">       </span><span class="o">[</span><span class="m">329</span>,<span class="w">  </span><span class="m">72</span><span class="o">]</span>,
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">       </span><span class="o">[</span><span class="m">329</span>,<span class="w">  </span><span class="m">93</span><span class="o">]</span>,
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">       </span><span class="o">[</span><span class="m">287</span>,<span class="w">  </span><span class="m">93</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">458</span>,<span class="w">  </span><span class="m">68</span><span class="o">]</span>,
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">       </span><span class="o">[</span><span class="m">501</span>,<span class="w">  </span><span class="m">71</span><span class="o">]</span>,
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">       </span><span class="o">[</span><span class="m">499</span>,<span class="w">  </span><span class="m">94</span><span class="o">]</span>,
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">       </span><span class="o">[</span><span class="m">456</span>,<span class="w">  </span><span class="m">91</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="w">  </span><span class="m">9</span>,<span class="w"> </span><span class="m">101</span><span class="o">]</span>,
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">       </span><span class="o">[</span><span class="w"> </span><span class="m">89</span>,<span class="w"> </span><span class="m">103</span><span class="o">]</span>,
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">       </span><span class="o">[</span><span class="w"> </span><span class="m">89</span>,<span class="w"> </span><span class="m">130</span><span class="o">]</span>,
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">       </span><span class="o">[</span><span class="w">  </span><span class="m">8</span>,<span class="w"> </span><span class="m">128</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">139</span>,<span class="w"> </span><span class="m">105</span><span class="o">]</span>,
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">       </span><span class="o">[</span><span class="m">172</span>,<span class="w"> </span><span class="m">105</span><span class="o">]</span>,
-</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">       </span><span class="o">[</span><span class="m">172</span>,<span class="w"> </span><span class="m">126</span><span class="o">]</span>,
-</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">       </span><span class="o">[</span><span class="m">139</span>,<span class="w"> </span><span class="m">126</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">274</span>,<span class="w"> </span><span class="m">103</span><span class="o">]</span>,
-</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">       </span><span class="o">[</span><span class="m">339</span>,<span class="w"> </span><span class="m">101</span><span class="o">]</span>,
-</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">       </span><span class="o">[</span><span class="m">340</span>,<span class="w"> </span><span class="m">128</span><span class="o">]</span>,
-</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">       </span><span class="o">[</span><span class="m">275</span>,<span class="w"> </span><span class="m">130</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">451</span>,<span class="w"> </span><span class="m">103</span><span class="o">]</span>,
-</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">       </span><span class="o">[</span><span class="m">508</span>,<span class="w"> </span><span class="m">103</span><span class="o">]</span>,
-</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">       </span><span class="o">[</span><span class="m">508</span>,<span class="w"> </span><span class="m">126</span><span class="o">]</span>,
-</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="w">       </span><span class="o">[</span><span class="m">451</span>,<span class="w"> </span><span class="m">126</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)]</span>,<span class="w"> </span><span class="s1">&#39;text_det_params&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;limit_side_len&#39;</span>:<span class="w"> </span><span class="m">960</span>,<span class="w"> </span><span class="s1">&#39;limit_type&#39;</span>:<span class="w"> </span><span class="s1">&#39;max&#39;</span>,<span class="w"> </span><span class="s1">&#39;thresh&#39;</span>:<span class="w"> </span><span class="m">0</span>.3,<span class="w"> </span><span class="s1">&#39;box_thresh&#39;</span>:<span class="w"> </span><span class="m">0</span>.6,<span class="w"> </span><span class="s1">&#39;unclip_ratio&#39;</span>:<span class="w"> </span><span class="m">2</span>.0<span class="o">}</span>,<span class="w"> </span><span class="s1">&#39;text_type&#39;</span>:<span class="w"> </span><span class="s1">&#39;general&#39;</span>,<span class="w"> </span><span class="s1">&#39;textline_orientation_angles&#39;</span>:<span class="w"> </span><span class="o">[</span>-1,<span class="w"> </span>-1,<span class="w"> </span>-1,<span class="w"> </span>-1,<span class="w"> </span>-1,<span class="w"> </span>-1,<span class="w"> </span>-1,<span class="w"> </span>-1,<span class="w"> </span>-1,<span class="w"> </span>-1,<span class="w"> </span>-1,<span class="w"> </span>-1<span class="o">]</span>,<span class="w"> </span><span class="s1">&#39;text_rec_score_thresh&#39;</span>:<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="s1">&#39;rec_texts&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="s1">&#39;CRuncover&#39;</span>,<span class="w"> </span><span class="s1">&#39;Dres&#39;</span>,<span class="w"> </span><span class="s1">&#39;连续工作3&#39;</span>,<span class="w"> </span><span class="s1">&#39;取出来放在网上，没想&#39;</span>,<span class="w"> </span><span class="s1">&#39;江、江等八大&#39;</span>,<span class="w"> </span><span class="s1">&#39;Abstr&#39;</span>,<span class="w"> </span><span class="s1">&#39;rSrivi&#39;</span>,<span class="w"> </span><span class="s1">&#39;$709.&#39;</span>,<span class="w"> </span><span class="s1">&#39;cludingGiv&#39;</span>,<span class="w"> </span><span class="s1">&#39;2.72&#39;</span>,<span class="w"> </span><span class="s1">&#39;Ingcubic&#39;</span>,<span class="w"> </span><span class="s1">&#39;$744.78&#39;</span><span class="o">]</span>,<span class="w"> </span><span class="s1">&#39;rec_scores&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>.9943075180053711,<span class="w"> </span><span class="m">0</span>.9951075315475464,<span class="w"> </span><span class="m">0</span>.9907732009887695,<span class="w"> </span><span class="m">0</span>.9975494146347046,<span class="w"> </span><span class="m">0</span>.9974043369293213,<span class="w"> </span><span class="m">0</span>.9983242750167847,<span class="w"> </span><span class="m">0</span>.991967499256134,<span class="w"> </span><span class="m">0</span>.9898287653923035,<span class="w"> </span><span class="m">0</span>.9961177110671997,<span class="w"> </span><span class="m">0</span>.9975040555000305,<span class="w"> </span><span class="m">0</span>.9986456632614136,<span class="w"> </span><span class="m">0</span>.9987970590591431<span class="o">]</span>,<span class="w"> </span><span class="s1">&#39;rec_polys&#39;</span>:<span class="w"> </span><span class="o">[</span>array<span class="o">([[</span><span class="m">232</span>,<span class="w">   </span><span class="m">0</span><span class="o">]</span>,
-</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="w">       </span><span class="o">[</span><span class="m">318</span>,<span class="w">   </span><span class="m">1</span><span class="o">]</span>,
-</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="w">       </span><span class="o">[</span><span class="m">318</span>,<span class="w">  </span><span class="m">24</span><span class="o">]</span>,
-</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="w">       </span><span class="o">[</span><span class="m">232</span>,<span class="w">  </span><span class="m">21</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">32</span>,<span class="w"> </span><span class="m">38</span><span class="o">]</span>,
-</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="w">       </span><span class="o">[</span><span class="m">67</span>,<span class="w"> </span><span class="m">38</span><span class="o">]</span>,
-</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="w">       </span><span class="o">[</span><span class="m">67</span>,<span class="w"> </span><span class="m">55</span><span class="o">]</span>,
-</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="w">       </span><span class="o">[</span><span class="m">32</span>,<span class="w"> </span><span class="m">55</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">119</span>,<span class="w">  </span><span class="m">34</span><span class="o">]</span>,
-</span><span id="__span-1-44"><a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="w">       </span><span class="o">[</span><span class="m">196</span>,<span class="w">  </span><span class="m">34</span><span class="o">]</span>,
-</span><span id="__span-1-45"><a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="w">       </span><span class="o">[</span><span class="m">196</span>,<span class="w">  </span><span class="m">57</span><span class="o">]</span>,
-</span><span id="__span-1-46"><a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="w">       </span><span class="o">[</span><span class="m">119</span>,<span class="w">  </span><span class="m">57</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">222</span>,<span class="w">  </span><span class="m">29</span><span class="o">]</span>,
-</span><span id="__span-1-47"><a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="w">       </span><span class="o">[</span><span class="m">396</span>,<span class="w">  </span><span class="m">31</span><span class="o">]</span>,
-</span><span id="__span-1-48"><a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="w">       </span><span class="o">[</span><span class="m">396</span>,<span class="w">  </span><span class="m">60</span><span class="o">]</span>,
-</span><span id="__span-1-49"><a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a><span class="w">       </span><span class="o">[</span><span class="m">222</span>,<span class="w">  </span><span class="m">58</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">420</span>,<span class="w">  </span><span class="m">30</span><span class="o">]</span>,
-</span><span id="__span-1-50"><a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a><span class="w">       </span><span class="o">[</span><span class="m">542</span>,<span class="w">  </span><span class="m">32</span><span class="o">]</span>,
-</span><span id="__span-1-51"><a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a><span class="w">       </span><span class="o">[</span><span class="m">542</span>,<span class="w">  </span><span class="m">61</span><span class="o">]</span>,
-</span><span id="__span-1-52"><a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a><span class="w">       </span><span class="o">[</span><span class="m">419</span>,<span class="w">  </span><span class="m">59</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">29</span>,<span class="w"> </span><span class="m">71</span><span class="o">]</span>,
-</span><span id="__span-1-53"><a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a><span class="w">       </span><span class="o">[</span><span class="m">72</span>,<span class="w"> </span><span class="m">71</span><span class="o">]</span>,
-</span><span id="__span-1-54"><a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a><span class="w">       </span><span class="o">[</span><span class="m">72</span>,<span class="w"> </span><span class="m">92</span><span class="o">]</span>,
-</span><span id="__span-1-55"><a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a><span class="w">       </span><span class="o">[</span><span class="m">29</span>,<span class="w"> </span><span class="m">92</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">287</span>,<span class="w">  </span><span class="m">72</span><span class="o">]</span>,
-</span><span id="__span-1-56"><a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a><span class="w">       </span><span class="o">[</span><span class="m">329</span>,<span class="w">  </span><span class="m">72</span><span class="o">]</span>,
-</span><span id="__span-1-57"><a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a><span class="w">       </span><span class="o">[</span><span class="m">329</span>,<span class="w">  </span><span class="m">93</span><span class="o">]</span>,
-</span><span id="__span-1-58"><a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a><span class="w">       </span><span class="o">[</span><span class="m">287</span>,<span class="w">  </span><span class="m">93</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">458</span>,<span class="w">  </span><span class="m">68</span><span class="o">]</span>,
-</span><span id="__span-1-59"><a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a><span class="w">       </span><span class="o">[</span><span class="m">501</span>,<span class="w">  </span><span class="m">71</span><span class="o">]</span>,
-</span><span id="__span-1-60"><a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a><span class="w">       </span><span class="o">[</span><span class="m">499</span>,<span class="w">  </span><span class="m">94</span><span class="o">]</span>,
-</span><span id="__span-1-61"><a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a><span class="w">       </span><span class="o">[</span><span class="m">456</span>,<span class="w">  </span><span class="m">91</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="w">  </span><span class="m">9</span>,<span class="w"> </span><span class="m">101</span><span class="o">]</span>,
-</span><span id="__span-1-62"><a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a><span class="w">       </span><span class="o">[</span><span class="w"> </span><span class="m">89</span>,<span class="w"> </span><span class="m">103</span><span class="o">]</span>,
-</span><span id="__span-1-63"><a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a><span class="w">       </span><span class="o">[</span><span class="w"> </span><span class="m">89</span>,<span class="w"> </span><span class="m">130</span><span class="o">]</span>,
-</span><span id="__span-1-64"><a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a><span class="w">       </span><span class="o">[</span><span class="w">  </span><span class="m">8</span>,<span class="w"> </span><span class="m">128</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">139</span>,<span class="w"> </span><span class="m">105</span><span class="o">]</span>,
-</span><span id="__span-1-65"><a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a><span class="w">       </span><span class="o">[</span><span class="m">172</span>,<span class="w"> </span><span class="m">105</span><span class="o">]</span>,
-</span><span id="__span-1-66"><a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a><span class="w">       </span><span class="o">[</span><span class="m">172</span>,<span class="w"> </span><span class="m">126</span><span class="o">]</span>,
-</span><span id="__span-1-67"><a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a><span class="w">       </span><span class="o">[</span><span class="m">139</span>,<span class="w"> </span><span class="m">126</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">274</span>,<span class="w"> </span><span class="m">103</span><span class="o">]</span>,
-</span><span id="__span-1-68"><a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a><span class="w">       </span><span class="o">[</span><span class="m">339</span>,<span class="w"> </span><span class="m">101</span><span class="o">]</span>,
-</span><span id="__span-1-69"><a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a><span class="w">       </span><span class="o">[</span><span class="m">340</span>,<span class="w"> </span><span class="m">128</span><span class="o">]</span>,
-</span><span id="__span-1-70"><a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a><span class="w">       </span><span class="o">[</span><span class="m">275</span>,<span class="w"> </span><span class="m">130</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">451</span>,<span class="w"> </span><span class="m">103</span><span class="o">]</span>,
-</span><span id="__span-1-71"><a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a><span class="w">       </span><span class="o">[</span><span class="m">508</span>,<span class="w"> </span><span class="m">103</span><span class="o">]</span>,
-</span><span id="__span-1-72"><a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a><span class="w">       </span><span class="o">[</span><span class="m">508</span>,<span class="w"> </span><span class="m">126</span><span class="o">]</span>,
-</span><span id="__span-1-73"><a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a><span class="w">       </span><span class="o">[</span><span class="m">451</span>,<span class="w"> </span><span class="m">126</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)]</span>,<span class="w"> </span><span class="s1">&#39;rec_boxes&#39;</span>:<span class="w"> </span>array<span class="o">([[</span><span class="m">232</span>,<span class="w">   </span><span class="m">0</span>,<span class="w"> </span><span class="m">318</span>,<span class="w">  </span><span class="m">24</span><span class="o">]</span>,
-</span><span id="__span-1-74"><a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a><span class="w">       </span><span class="o">[</span><span class="w"> </span><span class="m">32</span>,<span class="w">  </span><span class="m">38</span>,<span class="w">  </span><span class="m">67</span>,<span class="w">  </span><span class="m">55</span><span class="o">]</span>,
-</span><span id="__span-1-75"><a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a><span class="w">       </span><span class="o">[</span><span class="m">119</span>,<span class="w">  </span><span class="m">34</span>,<span class="w"> </span><span class="m">196</span>,<span class="w">  </span><span class="m">57</span><span class="o">]</span>,
-</span><span id="__span-1-76"><a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a><span class="w">       </span><span class="o">[</span><span class="m">222</span>,<span class="w">  </span><span class="m">29</span>,<span class="w"> </span><span class="m">396</span>,<span class="w">  </span><span class="m">60</span><span class="o">]</span>,
-</span><span id="__span-1-77"><a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a><span class="w">       </span><span class="o">[</span><span class="m">419</span>,<span class="w">  </span><span class="m">30</span>,<span class="w"> </span><span class="m">542</span>,<span class="w">  </span><span class="m">61</span><span class="o">]</span>,
-</span><span id="__span-1-78"><a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a><span class="w">       </span><span class="o">[</span><span class="w"> </span><span class="m">29</span>,<span class="w">  </span><span class="m">71</span>,<span class="w">  </span><span class="m">72</span>,<span class="w">  </span><span class="m">92</span><span class="o">]</span>,
-</span><span id="__span-1-79"><a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a><span class="w">       </span><span class="o">[</span><span class="m">287</span>,<span class="w">  </span><span class="m">72</span>,<span class="w"> </span><span class="m">329</span>,<span class="w">  </span><span class="m">93</span><span class="o">]</span>,
-</span><span id="__span-1-80"><a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a><span class="w">       </span><span class="o">[</span><span class="m">456</span>,<span class="w">  </span><span class="m">68</span>,<span class="w"> </span><span class="m">501</span>,<span class="w">  </span><span class="m">94</span><span class="o">]</span>,
-</span><span id="__span-1-81"><a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a><span class="w">       </span><span class="o">[</span><span class="w">  </span><span class="m">8</span>,<span class="w"> </span><span class="m">101</span>,<span class="w">  </span><span class="m">89</span>,<span class="w"> </span><span class="m">130</span><span class="o">]</span>,
-</span><span id="__span-1-82"><a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a><span class="w">       </span><span class="o">[</span><span class="m">139</span>,<span class="w"> </span><span class="m">105</span>,<span class="w"> </span><span class="m">172</span>,<span class="w"> </span><span class="m">126</span><span class="o">]</span>,
-</span><span id="__span-1-83"><a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a><span class="w">       </span><span class="o">[</span><span class="m">274</span>,<span class="w"> </span><span class="m">101</span>,<span class="w"> </span><span class="m">340</span>,<span class="w"> </span><span class="m">130</span><span class="o">]</span>,
-</span><span id="__span-1-84"><a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a><span class="w">       </span><span class="o">[</span><span class="m">451</span>,<span class="w"> </span><span class="m">103</span>,<span class="w"> </span><span class="m">508</span>,<span class="w"> </span><span class="m">126</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)}</span>,<span class="w"> </span><span class="s1">&#39;table_res_list&#39;</span>:<span class="w"> </span><span class="o">[{</span><span class="s1">&#39;cell_box_list&#39;</span>:<span class="w"> </span>array<span class="o">([[</span><span class="w">  </span><span class="m">8</span>.<span class="w">        </span>,<span class="w">   </span><span class="m">9</span>.61492538,<span class="w"> </span><span class="m">532</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">26</span>.61492538<span class="o">]</span>,
-</span><span id="__span-1-85"><a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a><span class="w">       </span><span class="o">[</span><span class="w">  </span><span class="m">3</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">27</span>.61492538,<span class="w"> </span><span class="m">104</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">65</span>.61492538<span class="o">]</span>,
-</span><span id="__span-1-86"><a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a><span class="w">       </span><span class="o">[</span><span class="m">109</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">28</span>.61492538,<span class="w"> </span><span class="m">215</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">66</span>.61492538<span class="o">]</span>,
-</span><span id="__span-1-87"><a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a><span class="w">       </span><span class="o">[</span><span class="m">219</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">28</span>.61492538,<span class="w"> </span><span class="m">396</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">64</span>.61492538<span class="o">]</span>,
-</span><span id="__span-1-88"><a id="__codelineno-1-88" name="__codelineno-1-88" href="#__codelineno-1-88"></a><span class="w">       </span><span class="o">[</span><span class="m">396</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">29</span>.61492538,<span class="w"> </span><span class="m">546</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">66</span>.61492538<span class="o">]</span>,
-</span><span id="__span-1-89"><a id="__codelineno-1-89" name="__codelineno-1-89" href="#__codelineno-1-89"></a><span class="w">       </span><span class="o">[</span><span class="w">  </span><span class="m">1</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">65</span>.61492538,<span class="w"> </span><span class="m">110</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">93</span>.61492538<span class="o">]</span>,
-</span><span id="__span-1-90"><a id="__codelineno-1-90" name="__codelineno-1-90" href="#__codelineno-1-90"></a><span class="w">       </span><span class="o">[</span><span class="m">111</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">65</span>.61492538,<span class="w"> </span><span class="m">215</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">94</span>.61492538<span class="o">]</span>,
-</span><span id="__span-1-91"><a id="__codelineno-1-91" name="__codelineno-1-91" href="#__codelineno-1-91"></a><span class="w">       </span><span class="o">[</span><span class="m">220</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">66</span>.61492538,<span class="w"> </span><span class="m">397</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">94</span>.61492538<span class="o">]</span>,
-</span><span id="__span-1-92"><a id="__codelineno-1-92" name="__codelineno-1-92" href="#__codelineno-1-92"></a><span class="w">       </span><span class="o">[</span><span class="m">398</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">67</span>.61492538,<span class="w"> </span><span class="m">544</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">94</span>.61492538<span class="o">]</span>,
-</span><span id="__span-1-93"><a id="__codelineno-1-93" name="__codelineno-1-93" href="#__codelineno-1-93"></a><span class="w">       </span><span class="o">[</span><span class="w">  </span><span class="m">2</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">98</span>.61492538,<span class="w"> </span><span class="m">111</span>.<span class="w">        </span>,<span class="w"> </span><span class="m">131</span>.61492538<span class="o">]</span>,
-</span><span id="__span-1-94"><a id="__codelineno-1-94" name="__codelineno-1-94" href="#__codelineno-1-94"></a><span class="w">       </span><span class="o">[</span><span class="m">113</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">98</span>.61492538,<span class="w"> </span><span class="m">216</span>.<span class="w">        </span>,<span class="w"> </span><span class="m">131</span>.61492538<span class="o">]</span>,
-</span><span id="__span-1-95"><a id="__codelineno-1-95" name="__codelineno-1-95" href="#__codelineno-1-95"></a><span class="w">       </span><span class="o">[</span><span class="m">219</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">98</span>.61492538,<span class="w"> </span><span class="m">400</span>.<span class="w">        </span>,<span class="w"> </span><span class="m">131</span>.61492538<span class="o">]</span>,
-</span><span id="__span-1-96"><a id="__codelineno-1-96" name="__codelineno-1-96" href="#__codelineno-1-96"></a><span class="w">       </span><span class="o">[</span><span class="m">403</span>.<span class="w">        </span>,<span class="w">  </span><span class="m">99</span>.61492538,<span class="w"> </span><span class="m">545</span>.<span class="w">        </span>,<span class="w"> </span><span class="m">130</span>.61492538<span class="o">]])</span>,<span class="w"> </span><span class="s1">&#39;pred_html&#39;</span>:<span class="w"> </span><span class="s1">&#39;&lt;html&gt;&lt;body&gt;&lt;table&gt;&lt;tr&gt;&lt;td colspan=&quot;4&quot;&gt;CRuncover&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Dres&lt;/td&gt;&lt;td&gt;连续工作3&lt;/td&gt;&lt;td&gt;取出来放在网上，没想&lt;/td&gt;&lt;td&gt;江、江等八大&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Abstr&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;rSrivi&lt;/td&gt;&lt;td&gt;$709.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;cludingGiv&lt;/td&gt;&lt;td&gt;2.72&lt;/td&gt;&lt;td&gt;Ingcubic&lt;/td&gt;&lt;td&gt;$744.78&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;&#39;</span>,<span class="w"> </span><span class="s1">&#39;table_ocr_pred&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;rec_polys&#39;</span>:<span class="w"> </span><span class="o">[</span>array<span class="o">([[</span><span class="m">232</span>,<span class="w">   </span><span class="m">0</span><span class="o">]</span>,
-</span><span id="__span-1-97"><a id="__codelineno-1-97" name="__codelineno-1-97" href="#__codelineno-1-97"></a><span class="w">       </span><span class="o">[</span><span class="m">318</span>,<span class="w">   </span><span class="m">1</span><span class="o">]</span>,
-</span><span id="__span-1-98"><a id="__codelineno-1-98" name="__codelineno-1-98" href="#__codelineno-1-98"></a><span class="w">       </span><span class="o">[</span><span class="m">318</span>,<span class="w">  </span><span class="m">24</span><span class="o">]</span>,
-</span><span id="__span-1-99"><a id="__codelineno-1-99" name="__codelineno-1-99" href="#__codelineno-1-99"></a><span class="w">       </span><span class="o">[</span><span class="m">232</span>,<span class="w">  </span><span class="m">21</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">32</span>,<span class="w"> </span><span class="m">38</span><span class="o">]</span>,
-</span><span id="__span-1-100"><a id="__codelineno-1-100" name="__codelineno-1-100" href="#__codelineno-1-100"></a><span class="w">       </span><span class="o">[</span><span class="m">67</span>,<span class="w"> </span><span class="m">38</span><span class="o">]</span>,
-</span><span id="__span-1-101"><a id="__codelineno-1-101" name="__codelineno-1-101" href="#__codelineno-1-101"></a><span class="w">       </span><span class="o">[</span><span class="m">67</span>,<span class="w"> </span><span class="m">55</span><span class="o">]</span>,
-</span><span id="__span-1-102"><a id="__codelineno-1-102" name="__codelineno-1-102" href="#__codelineno-1-102"></a><span class="w">       </span><span class="o">[</span><span class="m">32</span>,<span class="w"> </span><span class="m">55</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">119</span>,<span class="w">  </span><span class="m">34</span><span class="o">]</span>,
-</span><span id="__span-1-103"><a id="__codelineno-1-103" name="__codelineno-1-103" href="#__codelineno-1-103"></a><span class="w">       </span><span class="o">[</span><span class="m">196</span>,<span class="w">  </span><span class="m">34</span><span class="o">]</span>,
-</span><span id="__span-1-104"><a id="__codelineno-1-104" name="__codelineno-1-104" href="#__codelineno-1-104"></a><span class="w">       </span><span class="o">[</span><span class="m">196</span>,<span class="w">  </span><span class="m">57</span><span class="o">]</span>,
-</span><span id="__span-1-105"><a id="__codelineno-1-105" name="__codelineno-1-105" href="#__codelineno-1-105"></a><span class="w">       </span><span class="o">[</span><span class="m">119</span>,<span class="w">  </span><span class="m">57</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">222</span>,<span class="w">  </span><span class="m">29</span><span class="o">]</span>,
-</span><span id="__span-1-106"><a id="__codelineno-1-106" name="__codelineno-1-106" href="#__codelineno-1-106"></a><span class="w">       </span><span class="o">[</span><span class="m">396</span>,<span class="w">  </span><span class="m">31</span><span class="o">]</span>,
-</span><span id="__span-1-107"><a id="__codelineno-1-107" name="__codelineno-1-107" href="#__codelineno-1-107"></a><span class="w">       </span><span class="o">[</span><span class="m">396</span>,<span class="w">  </span><span class="m">60</span><span class="o">]</span>,
-</span><span id="__span-1-108"><a id="__codelineno-1-108" name="__codelineno-1-108" href="#__codelineno-1-108"></a><span class="w">       </span><span class="o">[</span><span class="m">222</span>,<span class="w">  </span><span class="m">58</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">420</span>,<span class="w">  </span><span class="m">30</span><span class="o">]</span>,
-</span><span id="__span-1-109"><a id="__codelineno-1-109" name="__codelineno-1-109" href="#__codelineno-1-109"></a><span class="w">       </span><span class="o">[</span><span class="m">542</span>,<span class="w">  </span><span class="m">32</span><span class="o">]</span>,
-</span><span id="__span-1-110"><a id="__codelineno-1-110" name="__codelineno-1-110" href="#__codelineno-1-110"></a><span class="w">       </span><span class="o">[</span><span class="m">542</span>,<span class="w">  </span><span class="m">61</span><span class="o">]</span>,
-</span><span id="__span-1-111"><a id="__codelineno-1-111" name="__codelineno-1-111" href="#__codelineno-1-111"></a><span class="w">       </span><span class="o">[</span><span class="m">419</span>,<span class="w">  </span><span class="m">59</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">29</span>,<span class="w"> </span><span class="m">71</span><span class="o">]</span>,
-</span><span id="__span-1-112"><a id="__codelineno-1-112" name="__codelineno-1-112" href="#__codelineno-1-112"></a><span class="w">       </span><span class="o">[</span><span class="m">72</span>,<span class="w"> </span><span class="m">71</span><span class="o">]</span>,
-</span><span id="__span-1-113"><a id="__codelineno-1-113" name="__codelineno-1-113" href="#__codelineno-1-113"></a><span class="w">       </span><span class="o">[</span><span class="m">72</span>,<span class="w"> </span><span class="m">92</span><span class="o">]</span>,
-</span><span id="__span-1-114"><a id="__codelineno-1-114" name="__codelineno-1-114" href="#__codelineno-1-114"></a><span class="w">       </span><span class="o">[</span><span class="m">29</span>,<span class="w"> </span><span class="m">92</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">287</span>,<span class="w">  </span><span class="m">72</span><span class="o">]</span>,
-</span><span id="__span-1-115"><a id="__codelineno-1-115" name="__codelineno-1-115" href="#__codelineno-1-115"></a><span class="w">       </span><span class="o">[</span><span class="m">329</span>,<span class="w">  </span><span class="m">72</span><span class="o">]</span>,
-</span><span id="__span-1-116"><a id="__codelineno-1-116" name="__codelineno-1-116" href="#__codelineno-1-116"></a><span class="w">       </span><span class="o">[</span><span class="m">329</span>,<span class="w">  </span><span class="m">93</span><span class="o">]</span>,
-</span><span id="__span-1-117"><a id="__codelineno-1-117" name="__codelineno-1-117" href="#__codelineno-1-117"></a><span class="w">       </span><span class="o">[</span><span class="m">287</span>,<span class="w">  </span><span class="m">93</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">458</span>,<span class="w">  </span><span class="m">68</span><span class="o">]</span>,
-</span><span id="__span-1-118"><a id="__codelineno-1-118" name="__codelineno-1-118" href="#__codelineno-1-118"></a><span class="w">       </span><span class="o">[</span><span class="m">501</span>,<span class="w">  </span><span class="m">71</span><span class="o">]</span>,
-</span><span id="__span-1-119"><a id="__codelineno-1-119" name="__codelineno-1-119" href="#__codelineno-1-119"></a><span class="w">       </span><span class="o">[</span><span class="m">499</span>,<span class="w">  </span><span class="m">94</span><span class="o">]</span>,
-</span><span id="__span-1-120"><a id="__codelineno-1-120" name="__codelineno-1-120" href="#__codelineno-1-120"></a><span class="w">       </span><span class="o">[</span><span class="m">456</span>,<span class="w">  </span><span class="m">91</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="w">  </span><span class="m">9</span>,<span class="w"> </span><span class="m">101</span><span class="o">]</span>,
-</span><span id="__span-1-121"><a id="__codelineno-1-121" name="__codelineno-1-121" href="#__codelineno-1-121"></a><span class="w">       </span><span class="o">[</span><span class="w"> </span><span class="m">89</span>,<span class="w"> </span><span class="m">103</span><span class="o">]</span>,
-</span><span id="__span-1-122"><a id="__codelineno-1-122" name="__codelineno-1-122" href="#__codelineno-1-122"></a><span class="w">       </span><span class="o">[</span><span class="w"> </span><span class="m">89</span>,<span class="w"> </span><span class="m">130</span><span class="o">]</span>,
-</span><span id="__span-1-123"><a id="__codelineno-1-123" name="__codelineno-1-123" href="#__codelineno-1-123"></a><span class="w">       </span><span class="o">[</span><span class="w">  </span><span class="m">8</span>,<span class="w"> </span><span class="m">128</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">139</span>,<span class="w"> </span><span class="m">105</span><span class="o">]</span>,
-</span><span id="__span-1-124"><a id="__codelineno-1-124" name="__codelineno-1-124" href="#__codelineno-1-124"></a><span class="w">       </span><span class="o">[</span><span class="m">172</span>,<span class="w"> </span><span class="m">105</span><span class="o">]</span>,
-</span><span id="__span-1-125"><a id="__codelineno-1-125" name="__codelineno-1-125" href="#__codelineno-1-125"></a><span class="w">       </span><span class="o">[</span><span class="m">172</span>,<span class="w"> </span><span class="m">126</span><span class="o">]</span>,
-</span><span id="__span-1-126"><a id="__codelineno-1-126" name="__codelineno-1-126" href="#__codelineno-1-126"></a><span class="w">       </span><span class="o">[</span><span class="m">139</span>,<span class="w"> </span><span class="m">126</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">274</span>,<span class="w"> </span><span class="m">103</span><span class="o">]</span>,
-</span><span id="__span-1-127"><a id="__codelineno-1-127" name="__codelineno-1-127" href="#__codelineno-1-127"></a><span class="w">       </span><span class="o">[</span><span class="m">339</span>,<span class="w"> </span><span class="m">101</span><span class="o">]</span>,
-</span><span id="__span-1-128"><a id="__codelineno-1-128" name="__codelineno-1-128" href="#__codelineno-1-128"></a><span class="w">       </span><span class="o">[</span><span class="m">340</span>,<span class="w"> </span><span class="m">128</span><span class="o">]</span>,
-</span><span id="__span-1-129"><a id="__codelineno-1-129" name="__codelineno-1-129" href="#__codelineno-1-129"></a><span class="w">       </span><span class="o">[</span><span class="m">275</span>,<span class="w"> </span><span class="m">130</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([[</span><span class="m">451</span>,<span class="w"> </span><span class="m">103</span><span class="o">]</span>,
-</span><span id="__span-1-130"><a id="__codelineno-1-130" name="__codelineno-1-130" href="#__codelineno-1-130"></a><span class="w">       </span><span class="o">[</span><span class="m">508</span>,<span class="w"> </span><span class="m">103</span><span class="o">]</span>,
-</span><span id="__span-1-131"><a id="__codelineno-1-131" name="__codelineno-1-131" href="#__codelineno-1-131"></a><span class="w">       </span><span class="o">[</span><span class="m">508</span>,<span class="w"> </span><span class="m">126</span><span class="o">]</span>,
-</span><span id="__span-1-132"><a id="__codelineno-1-132" name="__codelineno-1-132" href="#__codelineno-1-132"></a><span class="w">       </span><span class="o">[</span><span class="m">451</span>,<span class="w"> </span><span class="m">126</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)]</span>,<span class="w"> </span><span class="s1">&#39;rec_texts&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="s1">&#39;CRuncover&#39;</span>,<span class="w"> </span><span class="s1">&#39;Dres&#39;</span>,<span class="w"> </span><span class="s1">&#39;连续工作3&#39;</span>,<span class="w"> </span><span class="s1">&#39;取出来放在网上，没想&#39;</span>,<span class="w"> </span><span class="s1">&#39;江、江等八大&#39;</span>,<span class="w"> </span><span class="s1">&#39;Abstr&#39;</span>,<span class="w"> </span><span class="s1">&#39;rSrivi&#39;</span>,<span class="w"> </span><span class="s1">&#39;$709.&#39;</span>,<span class="w"> </span><span class="s1">&#39;cludingGiv&#39;</span>,<span class="w"> </span><span class="s1">&#39;2.72&#39;</span>,<span class="w"> </span><span class="s1">&#39;Ingcubic&#39;</span>,<span class="w"> </span><span class="s1">&#39;$744.78&#39;</span><span class="o">]</span>,<span class="w"> </span><span class="s1">&#39;rec_scores&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>.9943075180053711,<span class="w"> </span><span class="m">0</span>.9951075315475464,<span class="w"> </span><span class="m">0</span>.9907732009887695,<span class="w"> </span><span class="m">0</span>.9975494146347046,<span class="w"> </span><span class="m">0</span>.9974043369293213,<span class="w"> </span><span class="m">0</span>.9983242750167847,<span class="w"> </span><span class="m">0</span>.991967499256134,<span class="w"> </span><span class="m">0</span>.9898287653923035,<span class="w"> </span><span class="m">0</span>.9961177110671997,<span class="w"> </span><span class="m">0</span>.9975040555000305,<span class="w"> </span><span class="m">0</span>.9986456632614136,<span class="w"> </span><span class="m">0</span>.9987970590591431<span class="o">]</span>,<span class="w"> </span><span class="s1">&#39;rec_boxes&#39;</span>:<span class="w"> </span><span class="o">[</span>array<span class="o">([</span><span class="m">232</span>,<span class="w">   </span><span class="m">0</span>,<span class="w"> </span><span class="m">318</span>,<span class="w">  </span><span class="m">24</span><span class="o">]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([</span><span class="m">32</span>,<span class="w"> </span><span class="m">38</span>,<span class="w"> </span><span class="m">67</span>,<span class="w"> </span><span class="m">55</span><span class="o">]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([</span><span class="m">119</span>,<span class="w">  </span><span class="m">34</span>,<span class="w"> </span><span class="m">196</span>,<span class="w">  </span><span class="m">57</span><span class="o">]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([</span><span class="m">222</span>,<span class="w">  </span><span class="m">29</span>,<span class="w"> </span><span class="m">396</span>,<span class="w">  </span><span class="m">60</span><span class="o">]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([</span><span class="m">419</span>,<span class="w">  </span><span class="m">30</span>,<span class="w"> </span><span class="m">542</span>,<span class="w">  </span><span class="m">61</span><span class="o">]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([</span><span class="m">29</span>,<span class="w"> </span><span class="m">71</span>,<span class="w"> </span><span class="m">72</span>,<span class="w"> </span><span class="m">92</span><span class="o">]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([</span><span class="m">287</span>,<span class="w">  </span><span class="m">72</span>,<span class="w"> </span><span class="m">329</span>,<span class="w">  </span><span class="m">93</span><span class="o">]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([</span><span class="m">456</span>,<span class="w">  </span><span class="m">68</span>,<span class="w"> </span><span class="m">501</span>,<span class="w">  </span><span class="m">94</span><span class="o">]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([</span><span class="w">  </span><span class="m">8</span>,<span class="w"> </span><span class="m">101</span>,<span class="w">  </span><span class="m">89</span>,<span class="w"> </span><span class="m">130</span><span class="o">]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([</span><span class="m">139</span>,<span class="w"> </span><span class="m">105</span>,<span class="w"> </span><span class="m">172</span>,<span class="w"> </span><span class="m">126</span><span class="o">]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([</span><span class="m">274</span>,<span class="w"> </span><span class="m">101</span>,<span class="w"> </span><span class="m">340</span>,<span class="w"> </span><span class="m">130</span><span class="o">]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span>array<span class="o">([</span><span class="m">451</span>,<span class="w"> </span><span class="m">103</span>,<span class="w"> </span><span class="m">508</span>,<span class="w"> </span><span class="m">126</span><span class="o">]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)]}}]}}</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="o">{</span><span class="s1">&#39;res&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;input_path&#39;</span>:<span class="w"> </span><span class="s1">&#39;table_recognition.jpg&#39;</span>,<span class="w"> </span><span class="s1">&#39;page_index&#39;</span>:<span class="w"> </span>None,<span class="w"> </span><span class="s1">&#39;model_settings&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;use_doc_preprocessor&#39;</span>:<span class="w"> </span>False,<span class="w"> </span><span class="s1">&#39;use_layout_detection&#39;</span>:<span class="w"> </span>True,<span class="w"> </span><span class="s1">&#39;use_ocr_model&#39;</span>:<span class="w"> </span>True<span class="o">}</span>,<span class="w"> </span><span class="s1">&#39;layout_det_res&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;input_path&#39;</span>:<span class="w"> </span>None,<span class="w"> </span><span class="s1">&#39;page_index&#39;</span>:<span class="w"> </span>None,<span class="w"> </span><span class="s1">&#39;boxes&#39;</span>:<span class="w"> </span><span class="o">[{</span><span class="s1">&#39;cls_id&#39;</span>:<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="s1">&#39;label&#39;</span>:<span class="w"> </span><span class="s1">&#39;Table&#39;</span>,<span class="w"> </span><span class="s1">&#39;score&#39;</span>:<span class="w"> </span><span class="m">0</span>.9922188520431519,<span class="w"> </span><span class="s1">&#39;coordinate&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">3</span>.0127392,<span class="w"> </span><span class="m">0</span>.14648987,<span class="w"> </span><span class="m">547</span>.5102,<span class="w"> </span><span class="m">127</span>.72023<span class="o">]}]}</span>,<span class="w"> </span><span class="s1">&#39;overall_ocr_res&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;input_path&#39;</span>:<span class="w"> </span>None,<span class="w"> </span><span class="s1">&#39;page_index&#39;</span>:<span class="w"> </span>None,<span class="w"> </span><span class="s1">&#39;model_settings&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;use_doc_preprocessor&#39;</span>:<span class="w"> </span>False,<span class="w"> </span><span class="s1">&#39;use_textline_orientation&#39;</span>:<span class="w"> </span>False<span class="o">}</span>,<span class="w"> </span><span class="s1">&#39;dt_polys&#39;</span>:<span class="w"> </span>array<span class="o">([[[</span><span class="m">234</span>,<span class="w">   </span><span class="m">6</span><span class="o">]</span>,
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">        </span>...,
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">        </span><span class="o">[</span><span class="m">234</span>,<span class="w">  </span><span class="m">25</span><span class="o">]]</span>,
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">       </span>...,
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">       </span><span class="o">[[</span><span class="m">448</span>,<span class="w"> </span><span class="m">101</span><span class="o">]</span>,
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span>...,
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">        </span><span class="o">[</span><span class="m">448</span>,<span class="w"> </span><span class="m">121</span><span class="o">]]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span><span class="s1">&#39;text_det_params&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;limit_side_len&#39;</span>:<span class="w"> </span><span class="m">960</span>,<span class="w"> </span><span class="s1">&#39;limit_type&#39;</span>:<span class="w"> </span><span class="s1">&#39;max&#39;</span>,<span class="w"> </span><span class="s1">&#39;thresh&#39;</span>:<span class="w"> </span><span class="m">0</span>.3,<span class="w"> </span><span class="s1">&#39;box_thresh&#39;</span>:<span class="w"> </span><span class="m">0</span>.6,<span class="w"> </span><span class="s1">&#39;unclip_ratio&#39;</span>:<span class="w"> </span><span class="m">2</span>.0<span class="o">}</span>,<span class="w"> </span><span class="s1">&#39;text_type&#39;</span>:<span class="w"> </span><span class="s1">&#39;general&#39;</span>,<span class="w"> </span><span class="s1">&#39;textline_orientation_angles&#39;</span>:<span class="w"> </span>array<span class="o">([</span>-1,<span class="w"> </span>...,<span class="w"> </span>-1<span class="o">])</span>,<span class="w"> </span><span class="s1">&#39;text_rec_score_thresh&#39;</span>:<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="s1">&#39;rec_texts&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="s1">&#39;CRuncover&#39;</span>,<span class="w"> </span><span class="s1">&#39;Dres&#39;</span>,<span class="w"> </span><span class="s1">&#39;连续工作3&#39;</span>,<span class="w"> </span><span class="s1">&#39;取出来放在网上&#39;</span>,<span class="w"> </span><span class="s1">&#39;没想&#39;</span>,<span class="w"> </span><span class="s1">&#39;江、整江等八大&#39;</span>,<span class="w"> </span><span class="s1">&#39;Abstr&#39;</span>,<span class="w"> </span><span class="s1">&#39;rSrivi&#39;</span>,<span class="w"> </span><span class="s1">&#39;$709.&#39;</span>,<span class="w"> </span><span class="s1">&#39;cludingGiv&#39;</span>,<span class="w"> </span><span class="s1">&#39;2.72&#39;</span>,<span class="w"> </span><span class="s1">&#39;Ingcubic&#39;</span>,<span class="w"> </span><span class="s1">&#39;$744.78&#39;</span><span class="o">]</span>,<span class="w"> </span><span class="s1">&#39;rec_scores&#39;</span>:<span class="w"> </span>array<span class="o">([</span><span class="m">0</span>.99512607,<span class="w"> </span>...,<span class="w"> </span><span class="m">0</span>.99844509<span class="o">])</span>,<span class="w"> </span><span class="s1">&#39;rec_polys&#39;</span>:<span class="w"> </span>array<span class="o">([[[</span><span class="m">234</span>,<span class="w">   </span><span class="m">6</span><span class="o">]</span>,
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">        </span>...,
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">        </span><span class="o">[</span><span class="m">234</span>,<span class="w">  </span><span class="m">25</span><span class="o">]]</span>,
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">       </span>...,
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">       </span><span class="o">[[</span><span class="m">448</span>,<span class="w"> </span><span class="m">101</span><span class="o">]</span>,
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">        </span>...,
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">        </span><span class="o">[</span><span class="m">448</span>,<span class="w"> </span><span class="m">121</span><span class="o">]]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span><span class="s1">&#39;rec_boxes&#39;</span>:<span class="w"> </span>array<span class="o">([[</span><span class="m">234</span>,<span class="w"> </span>...,<span class="w">  </span><span class="m">25</span><span class="o">]</span>,
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">       </span>...,
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">       </span><span class="o">[</span><span class="m">448</span>,<span class="w"> </span>...,<span class="w"> </span><span class="m">121</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)}</span>,<span class="w"> </span><span class="s1">&#39;table_res_list&#39;</span>:<span class="w"> </span><span class="o">[{</span><span class="s1">&#39;cell_box_list&#39;</span>:<span class="w"> </span>array<span class="o">([[</span><span class="w">  </span><span class="m">5</span>.01273918,<span class="w"> </span>...,<span class="w">  </span><span class="m">32</span>.14648987<span class="o">]</span>,
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">       </span>...,
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">       </span><span class="o">[</span><span class="m">405</span>.01273918,<span class="w"> </span>...,<span class="w"> </span><span class="m">124</span>.14648987<span class="o">]])</span>,<span class="w"> </span><span class="s1">&#39;pred_html&#39;</span>:<span class="w"> </span><span class="s1">&#39;&lt;html&gt;&lt;body&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td colspan=&quot;4&quot;&gt;CRuncover&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Dres&lt;/td&gt;&lt;td&gt;连续工作3&lt;/td&gt;&lt;td&gt;取出来放在网上 没想&lt;/td&gt;&lt;td&gt;江、整江等八大&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Abstr&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;rSrivi&lt;/td&gt;&lt;td&gt;$709.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;cludingGiv&lt;/td&gt;&lt;td&gt;2.72&lt;/td&gt;&lt;td&gt;Ingcubic&lt;/td&gt;&lt;td&gt;$744.78&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;&#39;</span>,<span class="w"> </span><span class="s1">&#39;table_ocr_pred&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;rec_polys&#39;</span>:<span class="w"> </span>array<span class="o">([[[</span><span class="m">234</span>,<span class="w">   </span><span class="m">6</span><span class="o">]</span>,
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">        </span>...,
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">        </span><span class="o">[</span><span class="m">234</span>,<span class="w">  </span><span class="m">25</span><span class="o">]]</span>,
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">       </span>...,
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">       </span><span class="o">[[</span><span class="m">448</span>,<span class="w"> </span><span class="m">101</span><span class="o">]</span>,
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">        </span>...,
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">        </span><span class="o">[</span><span class="m">448</span>,<span class="w"> </span><span class="m">121</span><span class="o">]]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span><span class="s1">&#39;rec_texts&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="s1">&#39;CRuncover&#39;</span>,<span class="w"> </span><span class="s1">&#39;Dres&#39;</span>,<span class="w"> </span><span class="s1">&#39;连续工作3&#39;</span>,<span class="w"> </span><span class="s1">&#39;取出来放在网上&#39;</span>,<span class="w"> </span><span class="s1">&#39;没想&#39;</span>,<span class="w"> </span><span class="s1">&#39;江、整江等八大&#39;</span>,<span class="w"> </span><span class="s1">&#39;Abstr&#39;</span>,<span class="w"> </span><span class="s1">&#39;rSrivi&#39;</span>,<span class="w"> </span><span class="s1">&#39;$709.&#39;</span>,<span class="w"> </span><span class="s1">&#39;cludingGiv&#39;</span>,<span class="w"> </span><span class="s1">&#39;2.72&#39;</span>,<span class="w"> </span><span class="s1">&#39;Ingcubic&#39;</span>,<span class="w"> </span><span class="s1">&#39;$744.78&#39;</span><span class="o">]</span>,<span class="w"> </span><span class="s1">&#39;rec_scores&#39;</span>:<span class="w"> </span>array<span class="o">([</span><span class="m">0</span>.99512607,<span class="w"> </span>...,<span class="w"> </span><span class="m">0</span>.99844509<span class="o">])</span>,<span class="w"> </span><span class="s1">&#39;rec_boxes&#39;</span>:<span class="w"> </span>array<span class="o">([[</span><span class="m">234</span>,<span class="w"> </span>...,<span class="w">  </span><span class="m">25</span><span class="o">]</span>,
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">       </span>...,
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">       </span><span class="o">[</span><span class="m">448</span>,<span class="w"> </span>...,<span class="w"> </span><span class="m">121</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)}}]}}</span>
 </span></code></pre></div>
 <p>The running result parameters can be referred to the result explanation in <a href="#22-python-script-integration">2.2 Python Script Integration</a>.</p>
 <p>The visualization results are saved under <code>save_path</code>, where the visualization result of table recognition is as follows:
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/03.png" /></p>
 <h3 id="22-python-script-integration">2.2 Python Script Integration<a class="headerlink" href="#22-python-script-integration" title="Permanent link">&para;</a></h3>
 <ul>
-<li>The above command line is for a quick experience to view the results. Generally, in a project, it is often necessary to integrate through code. You can complete the fast inference of the production line with just a few lines of code. The inference code is as follows:</li>
+<li>The above command line is for a quick experience to view the results. Generally, in a project, it is often necessary to integrate through code. You can complete the fast inference of the pipeline with just a few lines of code. The inference code is as follows:</li>
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
@@ -6125,38 +6046,38 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <thead>
 <tr>
 <th>Parameter</th>
-<th>Parameter Description</th>
-<th>Parameter Type</th>
+<th>Description</th>
+<th>Type</th>
 <th>Options</th>
 <th>Default Value</th>
 </tr>
 </thead>
 <tr>
 <td><code>input</code></td>
-<td>Data to be predicted, supporting multiple input types (required).</td>
+<td>Data to be predicted, supports multiple input types, required.</td>
 <td><code>Python Var|str|list</code></td>
 <td>
 <ul>
 <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code>.</li>
-<li><b>str</b>: Local path of an image file or a PDF file, such as <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the network URL of an image or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">example</a>; <b>local directory</b>, which must contain images to be predicted, such as the local path <code>/root/data/</code> (currently, prediction of PDF files in a directory is not supported; PDF files must be specified with an exact file path).</li>
-<li><b>List</b>: The elements of the list must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>, or <code>[\"/root/data1\", \"/root/data2\"]</code>.</li>
+<li><b>str</b>: Local path of image or PDF files, e.g., <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the network URL of an image or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">Example</a>; <b>Local directory</b>, the directory should contain images to be predicted, e.g., <code>/root/data/</code> (currently, prediction for PDF files in directories is not supported; PDF files must specify the exact file path).</li>
+<li><b>List</b>: List elements must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[“/root/data/img1.jpg”, “/root/data/img2.jpg”]</code>, <code>[“/root/data1”, “/root/data2”]</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
 </tr>
 <tr>
 <td><code>device</code></td>
-<td>The inference device for the pipeline.</td>
+<td>Inference device.</td>
 <td><code>str|None</code></td>
 <td>
 <ul>
-<li><b>CPU</b>: <code>cpu</code> indicates using the CPU for inference;</li>
-<li><b>GPU</b>: <code>gpu:0</code> indicates using the first GPU for inference;</li>
-<li><b>NPU</b>: <code>npu:0</code> indicates using the first NPU for inference;</li>
-<li><b>XPU</b>: <code>xpu:0</code> indicates using the first XPU for inference;</li>
-<li><b>MLU</b>: <code>mlu:0</code> indicates using the first MLU for inference;</li>
-<li><b>DCU</b>: <code>dcu:0</code> indicates using the first DCU for inference;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used. During initialization, the local GPU 0 will be prioritized; if unavailable, the CPU will be used.</li>
+<li><b>CPU</b>: Use CPU for inference, e.g., <code>cpu</code>.</li>
+<li><b>GPU</b>: Use the first GPU for inference, e.g., <code>gpu:0</code>.</li>
+<li><b>NPU</b>: Use the first NPU for inference, e.g., <code>npu:0</code>.</li>
+<li><b>XPU</b>: Use the first XPU for inference, e.g., <code>xpu:0</code>.</li>
+<li><b>MLU</b>: Use the first MLU for inference, e.g., <code>mlu:0</code>.</li>
+<li><b>DCU</b>: Use the first DCU for inference, e.g., <code>dcu:0</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used. During initialization, the local GPU 0 will be prioritized; if unavailable, the CPU will be used.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -6167,20 +6088,32 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <td><code>bool|None</code></td>
 <td>
 <ul>
-<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>True</code>.</li>
+<li><b>bool</b>: <code>True</code> or <code>False</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
 </tr>
 <tr>
 <td><code>use_doc_unwarping</code></td>
-<td>Whether to use the document unwarping module</td>
+<td>Whether to use the document unwarping module.</td>
 <td><code>bool|None</code></td>
 <td>
 <ul>
-<li><b>bool</b>: <code>True</code> or <code>False</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>True</code>.</li>
+<li><b>bool</b>: <code>True</code> or <code>False</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>.</li>
+</ul>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>use_layout_detection</code></td>
+<td>Whether to use the layout detection module.</td>
+<td><code>bool|None</code></td>
+<td>
+<ul>
+<li><b>bool</b>: <code>True</code> or <code>False</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized by the production line will be used, initialized as <code>True</code>.</li>
 </ul>
 </td>
 <td><code>None</code></td>
@@ -6191,70 +6124,76 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <td>
 <ul>
 <li><b>int</b>: Any integer greater than <code>0</code>;</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>960</code>.</li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>960</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_det_limit_type</code></td>
 <td>Type of image side length limit for text detection</td>
 <td><code>str|None</code></td>
 <td>
 <ul>
-<li><b>str</b>: Supports <code>min</code> and <code>max</code>. <code>min</code> ensures that the shortest side of the image is not less than <code>det_limit_side_len</code>, and <code>max</code> ensures that the longest side of the image is not greater than <code>limit_side_len</code>.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>max</code>.</li>
+<li><b>str</b>: Supports <code>min</code> and <code>max</code>. <code>min</code> ensures the shortest side of the image is not less than <code>det_limit_side_len</code>, <code>max</code> ensures the longest side of the image is not greater than <code>limit_side_len</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>max</code>;</li>
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_det_thresh</code></td>
-<td>Pixel detection threshold; pixels with scores greater than this threshold in the output probability map will be considered as text pixels</td>
+<td>Detection pixel threshold, in the output probability map, pixels with scores greater than this threshold will be considered as text pixels</td>
 <td><code>float|None</code></td>
 <td>
 <ul>
-<li><b>float</b>: Any floating-point number greater than <code>0</code>.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>0.3</code>.</li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>0.3</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_det_box_thresh</code></td>
-<td>Detection box threshold; the detection result will be considered as a text region if the average score of all pixels within the detection box is greater than this threshold</td>
+<td>Detection box threshold, for a detection result, if the average score of all pixels within the bounding box is greater than this threshold, it will be considered as a text area</td>
 <td><code>float|None</code></td>
 <td>
 <ul>
-<li><b>float</b>: Any floating-point number greater than <code>0</code>.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>0.6</code>.</li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>0.6</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_det_unclip_ratio</code></td>
-<td>Expansion ratio for text detection; the larger this value, the larger the expanded area of the text region</td>
+<td>Text detection expansion ratio, this value determines how much the text area will be expanded, the larger the value, the larger the expansion area</td>
 <td><code>float|None</code></td>
 <td>
 <ul>
-<li><b>float</b>: Any floating-point number greater than <code>0</code>.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>2.0</code>.</li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>2.0</code></li>
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
 <td><code>text_rec_score_thresh</code></td>
-<td>Text recognition threshold; text results with scores greater than this threshold will be retained</td>
+<td>Text recognition threshold, text results with scores greater than this threshold will be retained</td>
 <td><code>float|None</code></td>
 <td>
 <ul>
-<li><b>float</b>: Any floating-point number greater than <code>0</code>.</li>
-<li><b>None</b>: If set to <code>None</code>, the default value from the pipeline initialization will be used, initialized as <code>0.0</code> (i.e., no threshold).</li>
+<li><b>float</b>: Any floating-point number greater than <code>0</code></li>
+<li><b>None</b>: If set to <code>None</code>, the default value initialized in the production line will be used, initialized as <code>0.0</code>, meaning no threshold is set</li>
 </ul>
 </td>
 <td><code>None</code></td>
+</tr>
 </table>
 
-<p>(3) Process the prediction results. Each sample's prediction result is a corresponding Result object, and it supports operations such as printing, saving as an image, saving as an <code>xlsx</code> file, saving as an <code>HTML</code> file, and saving as a <code>json</code> file:</p>
+<p>(3) Process the prediction results. Each sample's prediction result is represented as a corresponding Result object, and supports operations such as printing, saving as an image, saving as an <code>xlsx</code> file, saving as an <code>HTML</code> file, and saving as a <code>json</code> file.</p>
 <table>
 <thead>
 <tr>
 <th>Method</th>
-<th>Method Description</th>
+<th>Description</th>
 <th>Parameter</th>
-<th>Parameter Type</th>
+<th>Type</th>
 <th>Parameter Description</th>
 <th>Default Value</th>
 </tr>
@@ -6270,13 +6209,13 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <tr>
 <td><code>indent</code></td>
 <td><code>int</code></td>
-<td>Specify the indentation level to beautify the output <code>JSON</code> data for better readability, effective only when <code>format_json</code> is <code>True</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data and make it more readable. Only effective when <code>format_json</code> is <code>True</code></td>
 <td>4</td>
 </tr>
 <tr>
 <td><code>ensure_ascii</code></td>
 <td><code>bool</code></td>
-<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. If set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters, effective only when <code>format_json</code> is <code>True</code></td>
+<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. Only effective when <code>format_json</code> is <code>True</code></td>
 <td><code>False</code></td>
 </tr>
 <tr>
@@ -6284,19 +6223,19 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <td rowspan="3">Save the result as a JSON file</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
-<td>The file path for saving. When it is a directory, the saved file name is consistent with the input file type</td>
+<td>The path where the file will be saved. If it is a directory, the saved file name will match the input file name</td>
 <td>None</td>
 </tr>
 <tr>
 <td><code>indent</code></td>
 <td><code>int</code></td>
-<td>Specify the indentation level to beautify the output <code>JSON</code> data for better readability, effective only when <code>format_json</code> is <code>True</code></td>
+<td>Specify the indentation level to beautify the output <code>JSON</code> data and make it more readable. Only effective when <code>format_json</code> is <code>True</code></td>
 <td>4</td>
 </tr>
 <tr>
 <td><code>ensure_ascii</code></td>
 <td><code>bool</code></td>
-<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. If set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters, effective only when <code>format_json</code> is <code>True</code></td>
+<td>Control whether to escape non-<code>ASCII</code> characters to <code>Unicode</code>. When set to <code>True</code>, all non-<code>ASCII</code> characters will be escaped; <code>False</code> retains the original characters. Only effective when <code>format_json</code> is <code>True</code></td>
 <td><code>False</code></td>
 </tr>
 <tr>
@@ -6304,7 +6243,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <td>Save the result as an image file</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
-<td>The file path for saving, supporting both directory and file paths</td>
+<td>The path where the file will be saved, supporting both directory and file paths</td>
 <td>None</td>
 </tr>
 <tr>
@@ -6312,15 +6251,15 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <td>Save the result as an xlsx file</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
-<td>The file path for saving, supporting both directory and file paths</td>
+<td>The path where the file will be saved, supporting both directory and file paths</td>
 <td>None</td>
 </tr>
 <tr>
 <td><code>save_to_html()</code></td>
-<td>Save the result as an HTML file</td>
+<td>Save the result as an html file</td>
 <td><code>save_path</code></td>
 <td><code>str</code></td>
-<td>The file path for saving, supporting both directory and file paths</td>
+<td>The path where the file will be saved, supporting both directory and file paths</td>
 <td>None</td>
 </tr>
 </table>
@@ -6336,7 +6275,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <p><code>page_index</code>: <code>(Union[int, None])</code> If the input is a PDF file, it indicates which page of the PDF is currently being processed; otherwise, it is <code>None</code></p>
 </li>
 <li>
-<p><code>model_settings</code>: <code>(Dict[str, bool])</code> Model parameters required for the production line configuration</p>
+<p><code>model_settings</code>: <code>(Dict[str, bool])</code> Model parameters required for the pipeline configuration</p>
 <ul>
 <li><code>use_doc_preprocessor</code>: <code>(bool)</code> Controls whether to enable the document preprocessor sub-line<ul>
 <li><code>doc_preprocessor_res</code>: <code>(Dict[str, Union[str, Dict[str, bool], int]])</code> Output result of the document preprocessor sub-line. It exists only when <code>use_doc_preprocessor=True</code></li>
@@ -6388,10 +6327,10 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <li>
 <p>Calling the <code>save_to_json()</code> method will save the above content to the specified <code>save_path</code>. If it is a directory, the saved path will be <code>save_path/{your_img_basename}.json</code>; if it is a file, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the <code>numpy.array</code> type will be converted to a list format.</p>
 </li>
-<li>Calling the <code>save_to_img()</code> method will save the visualization results to the specified <code>save_path</code>. If it is a directory, the saved path will be <code>save_path/{your_img_basename}_ocr_res_img.{your_img_extension}</code>; if it is a file, it will be saved directly to that file. (The production line usually contains many result images, so it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten and only the last one will be retained)</li>
-<li>Calling the <code>save_to_html()</code> method will save the above content to the specified <code>save_path</code>. If it is a directory, the saved path will be <code>save_path/{your_img_basename}.html</code>; if it is a file, it will be saved directly to that file. In the general table recognition production line, the HTML form of the table in the image will be written to the specified HTML file.</li>
+<li>Calling the <code>save_to_img()</code> method will save the visualization results to the specified <code>save_path</code>. If it is a directory, the saved path will be <code>save_path/{your_img_basename}_ocr_res_img.{your_img_extension}</code>; if it is a file, it will be saved directly to that file. (The pipeline usually contains many result images, so it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten and only the last one will be retained)</li>
+<li>Calling the <code>save_to_html()</code> method will save the above content to the specified <code>save_path</code>. If it is a directory, the saved path will be <code>save_path/{your_img_basename}.html</code>; if it is a file, it will be saved directly to that file. In the general table recognition pipeline, the HTML form of the table in the image will be written to the specified HTML file.</li>
 <li>
-<p>Calling the <code>save_to_xlsx()</code> method will save the above content to the specified <code>save_path</code>. If it is a directory, the saved path will be <code>save_path/{your_img_basename}.xlsx</code>; if it is a file, it will be saved directly to that file. In the general table recognition production line, the Excel table form of the table in the image will be written to the specified xlsx file.</p>
+<p>Calling the <code>save_to_xlsx()</code> method will save the above content to the specified <code>save_path</code>. If it is a directory, the saved path will be <code>save_path/{your_img_basename}.xlsx</code>; if it is a file, it will be saved directly to that file. In the general table recognition pipeline, the Excel table form of the table in the image will be written to the specified xlsx file.</p>
 </li>
 <li>
 <p>In addition, it also supports obtaining visualized images with results and prediction results through attributes, as follows:</p>
@@ -6418,10 +6357,10 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <li>The prediction result obtained through the <code>json</code> attribute is data of the dict type, and its content is consistent with the content saved by calling the <code>save_to_json()</code> method.</li>
 <li>The prediction result returned by the <code>img</code> attribute is data of the dictionary type. The keys are <code>table_res_img</code>, <code>ocr_res_img</code>, <code>layout_res_img</code>, and <code>preprocessed_img</code>, and the corresponding values are four <code>Image.Image</code> objects, in order: the visualized image of table recognition results, the visualized image of OCR results, the visualized image of layout area detection results, and the visualized image of image preprocessing. If a sub-module is not used, the corresponding result image will not be included in the dictionary.</li>
 </ul>
-<p>In addition, you can obtain the configuration file for the general table recognition production line and load the configuration file for prediction. You can execute the following command to save the result in <code>my_path</code>:</p>
+<p>In addition, you can obtain the configuration file for the general table recognition pipeline and load the configuration file for prediction. You can execute the following command to save the result in <code>my_path</code>:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>paddlex --get_pipeline_config table_recognition --save_path ./my_path
 </span></code></pre></div>
-<p>If you have obtained the configuration file, you can customize the settings for the general table recognition production line. You just need to modify the value of the <code>pipeline</code> parameter in the <code>create_pipeline</code> method to the path of the production line configuration file. The example is as follows:</p>
+<p>If you have obtained the configuration file, you can customize the settings for the general table recognition pipeline. You just need to modify the value of the <code>pipeline</code> parameter in the <code>create_pipeline</code> method to the path of the pipeline configuration file. The example is as follows:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;./my_path/table_recognition.yaml&quot;</span><span class="p">)</span>
@@ -6439,14 +6378,14 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_html</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
 </span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<p><b>Note:</b> The parameters in the configuration file are the initialization parameters for the production line. If you want to change the general table recognition production line initialization parameters, you can directly modify the parameters in the configuration file and load the configuration file for prediction. At the same time, CLI prediction also supports passing in a configuration file, and you can specify the path of the configuration file with <code>--pipeline</code>.</p>
+<p><b>Note:</b> The parameters in the configuration file are the initialization parameters for the pipeline. If you want to change the general table recognition pipeline initialization parameters, you can directly modify the parameters in the configuration file and load the configuration file for prediction. At the same time, CLI prediction also supports passing in a configuration file, and you can specify the path of the configuration file with <code>--pipeline</code>.</p>
 <h2 id="3-development-integrationdeployment">3. Development Integration/Deployment<a class="headerlink" href="#3-development-integrationdeployment" title="Permanent link">&para;</a></h2>
-<p>If the production line meets your requirements for inference speed and accuracy, you can directly proceed with development integration/deployment.</p>
-<p>If you need to apply the production line directly in your Python project, you can refer to the example code in <a href="#22-python-script-method">2.2 Python Script Method</a>.</p>
+<p>If the pipeline meets your requirements for inference speed and accuracy, you can directly proceed with development integration/deployment.</p>
+<p>If you need to apply the pipeline directly in your Python project, you can refer to the example code in <a href="#22-python-script-method">2.2 Python Script Method</a>.</p>
 <p>In addition, PaddleX also provides three other deployment methods, which are detailed as follows:</p>
 <p>🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have strict performance requirements (especially response speed) for deployment strategies to ensure efficient system operation and smooth user experience. To this end, PaddleX provides a high-performance inference plugin, which aims to deeply optimize the performance of model inference and pre/post-processing to significantly speed up the end-to-end process. For detailed high-performance inference procedures, please refer to the <a href="../../../pipeline_deploy/high_performance_inference.html">PaddleX High-Performance Inference Guide</a>.</p>
-<p>☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common form of deployment in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports multiple production line service-oriented deployment solutions. For detailed production line service-oriented deployment procedures, please refer to the <a href="../../../pipeline_deploy/serving.html">PaddleX Service-Oriented Deployment Guide</a>.</p>
-<p>Below are the API references for basic service-oriented deployment and multi-language service invocation examples:</p>
+<p>☁️ <b>Serving Deployment</b>: Serving Deployment is a common form of deployment in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports multiple pipeline serving deployment solutions. For detailed pipeline serving deployment procedures, please refer to the <a href="../../../pipeline_deploy/serving.html">PaddleX Serving Deployment Guide</a>.</p>
+<p>Below are the API references for basic serving deployment and multi-language service invocation examples:</p>
 <details><summary>API Reference</summary>
 <p>For the main operations provided by the service:</p>
 <ul>
@@ -6549,85 +6488,85 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <tr>
 <td><code>useDocOrientationClassify</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>See the description of the <code>use_doc_orientation_classify</code> parameter in the production <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>use_doc_orientation_classify</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useDocUnwarping</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>See the description of the <code>use_doc_unwarping</code> parameter in the production <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>use_doc_unwarping</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useLayoutDetection</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>See the description of the <code>use_layout_detection</code> parameter in the production <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>use_layout_detection</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useOcrModel</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>See the description of the <code>use_ocr_model</code> parameter in the production <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>use_ocr_model</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>layoutThreshold</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>See the description of the <code>layout_threshold</code> parameter in the production <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>layout_threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>layoutNms</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>See the description of the <code>layout_nms</code> parameter in the production <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>layout_nms</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>layoutUnclipRatio</code></td>
 <td><code>number</code> | <code>array</code> | <code>null</code></td>
-<td>See the description of the <code>layout_unclip_ratio</code> parameter in the production <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>layout_unclip_ratio</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>layoutMergeBboxesMode</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>See the description of the <code>layout_merge_bboxes_mode</code> parameter in the production <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>layout_merge_bboxes_mode</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textDetLimitSideLen</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>See the description of the <code>text_det_limit_side_len</code> parameter in the production <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>text_det_limit_side_len</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textDetLimitType</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>See the description of the <code>text_det_limit_type</code> parameter in the production <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>text_det_limit_type</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textDetThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>See the description of the <code>text_det_thresh</code> parameter in the production <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>text_det_thresh</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textDetBoxThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>See the description of the <code>text_det_box_thresh</code> parameter in the production <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>text_det_box_thresh</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textDetUnclipRatio</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>See the description of the <code>text_det_unclip_ratio</code> parameter in the production <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>text_det_unclip_ratio</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>textRecScoreThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>See the description of the <code>text_rec_score_thresh</code> parameter in the production <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>text_rec_score_thresh</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
@@ -6675,7 +6614,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <tr>
 <td><code>outputImages</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>Refer to the description of the <code>img</code> attribute in the production prediction results. The image is in JPEG format and encoded in Base64.</td>
+<td>Refer to the description of the <code>img</code> attribute of the production prediction results. The image is in JPEG format and encoded in Base64.</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
@@ -6717,11 +6656,11 @@ for i, res in enumerate(result["tableRecResults"]):
 </details>
 <p><br/></p>
 <p>📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the <a href="../../../pipeline_deploy/edge_deploy.html">PaddleX Edge Deployment Guide</a>.
-You can choose the appropriate deployment method for your model production line according to your needs, and then proceed with the subsequent AI application integration.</p>
-<h2 id="4-secondary-development">4. Secondary Development<a class="headerlink" href="#4-secondary-development" title="Permanent link">&para;</a></h2>
-<p>If the default model weights provided by the general table recognition production line are not satisfactory in terms of accuracy or speed in your scenario, you can try to further <b>fine-tune</b> the existing model using <b>your own specific domain or application scenario data</b> to improve the recognition performance of the general table recognition production line in your scenario.</p>
+You can choose the appropriate deployment method for your model pipeline according to your needs, and then proceed with the subsequent AI application integration.</p>
+<h2 id="4-custom-development">4. Custom Development<a class="headerlink" href="#4-custom-development" title="Permanent link">&para;</a></h2>
+<p>If the default model weights provided by the general table recognition pipeline are not satisfactory in terms of accuracy or speed in your scenario, you can try to further <b>fine-tune</b> the existing model using <b>your own specific domain or application scenario data</b> to improve the recognition performance of the general table recognition pipeline in your scenario.</p>
 <h3 id="41-model-fine-tuning">4.1 Model Fine-tuning<a class="headerlink" href="#41-model-fine-tuning" title="Permanent link">&para;</a></h3>
-<p>Since the general table recognition production line consists of several modules, if the performance of the model production line does not meet expectations, the issue may originate from any one of these modules. You can analyze the images with poor recognition results to determine which module is problematic, and then refer to the corresponding fine-tuning tutorial links in the table below for model fine-tuning.</p>
+<p>Since the general table recognition pipeline consists of several modules, if the performance of the model pipeline does not meet expectations, the issue may originate from any one of these modules. You can analyze the images with poor recognition results to determine which module is problematic, and then refer to the corresponding fine-tuning tutorial links in the table below for model fine-tuning.</p>
 <table>
 <thead>
 <tr>
@@ -6819,13 +6758,15 @@ You can choose the appropriate deployment method for your model production line 
 <p>Subsequently, refer to the command line method or Python script method in <a href="#22-local-experience">2.2 Local Experience</a> to load the modified production configuration file.</p>
 <h2 id="5-multi-hardware-support">5. Multi-Hardware Support<a class="headerlink" href="#5-multi-hardware-support" title="Permanent link">&para;</a></h2>
 <p>PaddleX supports a variety of mainstream hardware devices such as NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the <code>--device</code> parameter</b> to seamlessly switch between different hardware.</p>
-<p>For example, if you use Ascend NPU for OCR production inference, the CLI command is:</p>
-<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>paddlex<span class="w"> </span>--pipeline<span class="w"> </span>table_recognition<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">        </span>--input<span class="w"> </span>table_recognition.jpg<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">        </span>--save_path<span class="w"> </span>./output<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">        </span>--device<span class="w"> </span>npu:0
+<p>For example, if you use Ascend NPU for table recognition production inference, the CLI command is:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>paddlex<span class="w"> </span>--pipeline<span class="w"> </span>table_recognition<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">        </span>--use_doc_orientation_classify<span class="o">=</span>False<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">        </span>--use_doc_unwarping<span class="o">=</span>False<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">        </span>--input<span class="w"> </span>table_recognition.jpg<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">        </span>--save_path<span class="w"> </span>./output<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">        </span>--device<span class="w"> </span>npu:0
 </span></code></pre></div>
-Of course, you can also specify the hardware device when calling <code>create_pipeline()</code> or <code>predict()</code> in the Python script.</p>
+<p>Of course, you can also specify the hardware device when calling <code>create_pipeline()</code> or <code>predict()</code> in the Python script.</p>
 <p>If you want to use the universal table recognition pipeline on a wider range of hardware, please refer to the <a href="../../../other_devices_support/multi_devices_use_guide.html">PaddleX Multi-Device Usage Guide</a>.</p>
 
 
@@ -6849,7 +6790,7 @@ Of course, you can also specify the hardware device when calling <code>create_pi
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 27, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 2, 2025</span>
   </span>
 
     
@@ -6859,7 +6800,7 @@ Of course, you can also specify the hardware device when calling <code>create_pi
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 27, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 2, 2025</span>
   </span>
 
     
@@ -6874,7 +6815,7 @@ Of course, you can also specify the hardware device when calling <code>create_pi
     </span>
     <nav>
       
-        <a href="mailto:142379845+changdazhou@users.noreply.github.com">changdazhou</a>
+        <a href="mailto:bob1998425@hotmail.com">Lin Manhui</a>
     </nav>
   </span>
 
@@ -7040,7 +6981,7 @@ Of course, you can also specify the hardware device when calling <code>create_pi
     <script id="__config" type="application/json">{"base": "../../../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.c8b220af.min.js"></script>
       
         <script src="../../../../javascripts/katex.min.js"></script>
       

@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
     
     
       
@@ -1808,13 +1808,13 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-secondary-development" class="md-nav__link">
+  <a href="#4-custom-development" class="md-nav__link">
     <span class="md-ellipsis">
-      4. Secondary Development
+      4. Custom Development
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4. Secondary Development">
+    <nav class="md-nav" aria-label="4. Custom Development">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -5280,13 +5280,13 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-secondary-development" class="md-nav__link">
+  <a href="#4-custom-development" class="md-nav__link">
     <span class="md-ellipsis">
-      4. Secondary Development
+      4. Custom Development
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4. Secondary Development">
+    <nav class="md-nav" aria-label="4. Custom Development">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -5368,7 +5368,7 @@ You're not viewing the latest version.
 </thead>
 <tbody>
 <tr>
-<td>TimesNet_cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/TimesNet_cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_cls_pretrained.pdparams">Trained Model</a></td>
+<td>TimesNet_cls</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/TimesNet_cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/TimesNet_cls_pretrained.pdparams">Training Model</a></td>
 <td>87.5</td>
 <td>792K</td>
 </tr>
@@ -5437,7 +5437,7 @@ You're not viewing the latest version.
 <p>The explanation of the result parameters can be found in the result interpretation section of <a href="#222-python脚本方式集成">2.2.2 Python Script Integration</a>.</p>
 <p>The time-series file results are saved under <code>save_path</code>.</p>
 <h4 id="222-python-script-integration">2.2.2 Python Script Integration<a class="headerlink" href="#222-python-script-integration" title="Permanent link">&para;</a></h4>
-<p>The above command line is for quickly experiencing and viewing the results. Generally, in a project, you often need to integrate through code. You can complete the production line's fast inference with just a few lines of code. The inference code is as follows:</p>
+<p>The above command line is for quickly experiencing and viewing the results. Generally, in a project, you often need to integrate through code. You can complete the pipeline's fast inference with just a few lines of code. The inference code is as follows:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;ts_classification&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;gpu:0&quot;</span><span class="p">)</span>
@@ -5467,13 +5467,13 @@ You're not viewing the latest version.
 </tr>
 <tr>
 <td><code>config</code></td>
-<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it takes precedence over <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td>Specific configuration information for the pipeline (if set simultaneously with <code>pipeline</code>, it takes precedence over <code>pipeline</code>, and the pipeline name must be consistent with <code>pipeline</code>).</td>
 <td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
 <td><code>config</code></td>
-<td>Specific configuration information for the production line (if set simultaneously with <code>pipeline</code>, it takes precedence over <code>pipeline</code>, and the production line name must be consistent with <code>pipeline</code>).</td>
+<td>Specific configuration information for the pipeline (if set simultaneously with <code>pipeline</code>, it takes precedence over <code>pipeline</code>, and the pipeline name must be consistent with <code>pipeline</code>).</td>
 <td><code>dict[str, Any]</code></td>
 <td><code>None</code></td>
 </tr>
@@ -5638,7 +5638,7 @@ You're not viewing the latest version.
 <li>The prediction result obtained through the <code>json</code> attribute is of type <code>dict</code>, with content consistent with what is saved by calling the <code>save_to_json()</code> method.</li>
 <li>The <code>csv</code> attribute returns a <code>Pandas.DataFrame</code> type data, which contains the time-series classification results.</li>
 </ul>
-<p>Additionally, you can obtain the ts_classification production line configuration file and load it for prediction. You can run the following command to save the results in <code>my_path</code>:</p>
+<p>Additionally, you can obtain the ts_classification pipeline configuration file and load it for prediction. You can run the following command to save the results in <code>my_path</code>:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>paddlex --get_pipeline_config ts_classification --save_path ./my_path
 </span></code></pre></div>
 <p>If you have obtained the configuration file, you can customize the settings for the time-series classification pipeline by simply modifying the <code>pipeline</code> parameter value in the <code>create_pipeline</code> method to the path of the pipeline configuration file.</p>
@@ -5656,8 +5656,8 @@ You're not viewing the latest version.
 <p>If you need to integrate the pipeline directly into your Python project, you can refer to the example code in <a href="#222-integration-via-python-script">Section 2.2.2 Integration via Python Script</a>.</p>
 <p>Additionally, PaddleX offers three other deployment methods, detailed as follows:</p>
 <p>🚀 <b>High-Performance Inference</b>: In practical production environments, many applications have stringent performance requirements for deployment strategies, especially in terms of response speed, to ensure efficient system operation and a smooth user experience. To address this, PaddleX provides a high-performance inference plugin aimed at deeply optimizing the performance of model inference and pre/post-processing, significantly speeding up the end-to-end process. For detailed instructions, please refer to the <a href="../../../pipeline_deploy/high_performance_inference.html">PaddleX High-Performance Inference Guide</a>.</p>
-<p>☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common form of deployment in practical production environments. By encapsulating inference functionality into a service, clients can access these services via network requests to obtain inference results. PaddleX supports various pipeline service-oriented deployment solutions. For detailed instructions, please refer to the <a href="../../../pipeline_deploy/serving.html">PaddleX Service-Oriented Deployment Guide</a>.</p>
-<p>Below are the API references for basic service-oriented deployment and multi-language service call examples:</p>
+<p>☁️ <b>Serving Deployment</b>: Serving Deployment is a common form of deployment in practical production environments. By encapsulating inference functionality into a service, clients can access these services via network requests to obtain inference results. PaddleX supports various pipeline serving deployment solutions. For detailed instructions, please refer to the <a href="../../../pipeline_deploy/serving.html">PaddleX Serving Deployment Guide</a>.</p>
+<p>Below are the API references for basic serving deployment and multi-language service call examples:</p>
 <details><summary>API Reference</summary>
 
 <p>For the main operations provided by the service:</p>
@@ -6084,10 +6084,10 @@ echo &quot;label: &quot; . $result[&quot;label&quot;] . &quot;, score: &quot; . 
 <p><br/></p>
 <p>📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on user devices, allowing them to process data locally without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed procedures, please refer to the <a href="../../../pipeline_deploy/edge_deploy.html">PaddleX Edge Deployment Guide</a>.
 You can choose the appropriate deployment method based on your needs to integrate the model pipeline into subsequent AI applications.</p>
-<h2 id="4-secondary-development">4. Secondary Development<a class="headerlink" href="#4-secondary-development" title="Permanent link">&para;</a></h2>
+<h2 id="4-custom-development">4. Custom Development<a class="headerlink" href="#4-custom-development" title="Permanent link">&para;</a></h2>
 <p>If the default model weights provided by the time-series classification pipeline do not meet your requirements in terms of accuracy or speed, you can try to <b>fine-tune</b> the existing model using <b>your own domain-specific or application data</b> to improve the performance of the time-series classification pipeline in your scenario.</p>
 <h3 id="41-model-fine-tuning">4.1 Model Fine-Tuning<a class="headerlink" href="#41-model-fine-tuning" title="Permanent link">&para;</a></h3>
-<p>Since the time-series classification pipeline includes a time-series classification module, if the pipeline's performance is not satisfactory, you need to refer to the <a href="../../../module_usage/tutorials/time_series_modules/time_series_classification.html#four-secondary-development">Secondary Development</a> section in the <a href="../../../module_usage/tutorials/time_series_modules/time_series_classification.html">Time-Series Classification Module Development Tutorial</a> and fine-tune the time-series classification model using your private dataset.</p>
+<p>Since the time-series classification pipeline includes a time-series classification module, if the pipeline's performance is not satisfactory, you need to refer to the <a href="../../../module_usage/tutorials/time_series_modules/time_series_classification.html#four-secondary-development">Custom Development</a> section in the <a href="../../../module_usage/tutorials/time_series_modules/time_series_classification.html">Time-Series Classification Module Development Tutorial</a> and fine-tune the time-series classification model using your private dataset.</p>
 <h3 id="42-model-application">4.2 Model Application<a class="headerlink" href="#42-model-application" title="Permanent link">&para;</a></h3>
 <p>After you have completed fine-tuning training with your private dataset, you will obtain a local model weight file.</p>
 <p>If you need to use the fine-tuned model weights, simply modify the pipeline configuration file and fill in the local path of the fine-tuned model weights to the <code>model_dir</code> in the pipeline configuration file:</p>
@@ -6106,7 +6106,7 @@ You can choose the appropriate deployment method based on your needs to integrat
 <p>For example, if you are using Ascend NPU for inference in the time-series classification pipeline, the Python command is as follows:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>paddlex<span class="w"> </span>--pipeline<span class="w"> </span>ts_classification<span class="w"> </span>--input<span class="w"> </span>ts_cls.csv<span class="w"> </span>--device<span class="w"> </span>npu:0
 </span></code></pre></div>
-<p>If you want to use the general time-series classification production line on a wider range of hardware devices, please refer to the <a href="../../../other_devices_support/multi_devices_use_guide.html">PaddleX Multi-Hardware Usage Guide</a>.</p>
+<p>If you want to use the general time-series classification pipeline on a wider range of hardware devices, please refer to the <a href="../../../other_devices_support/multi_devices_use_guide.html">PaddleX Multi-Hardware Usage Guide</a>.</p>
 
 
 
@@ -6129,7 +6129,7 @@ You can choose the appropriate deployment method based on your needs to integrat
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 27, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 2, 2025</span>
   </span>
 
     
@@ -6139,7 +6139,7 @@ You can choose the appropriate deployment method based on your needs to integrat
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 27, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 2, 2025</span>
   </span>
 
     
@@ -6154,7 +6154,7 @@ You can choose the appropriate deployment method based on your needs to integrat
     </span>
     <nav>
       
-        <a href="mailto:142379845+changdazhou@users.noreply.github.com">changdazhou</a>
+        <a href="mailto:bob1998425@hotmail.com">Lin Manhui</a>
     </nav>
   </span>
 
@@ -6320,7 +6320,7 @@ You can choose the appropriate deployment method based on your needs to integrat
     <script id="__config" type="application/json">{"base": "../../../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.c8b220af.min.js"></script>
       
         <script src="../../../../javascripts/katex.min.js"></script>
       

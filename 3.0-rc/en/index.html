@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
     
     
       
@@ -5371,12 +5371,12 @@ You're not viewing the latest version.
 <p>❗ For more installation methods, please refer to the <a href="https://paddlepaddle.github.io/PaddleX/latest/installation/installation.html">PaddleX Installation Guide</a></p>
 </blockquote>
 <h2 id="command-line-usage">💻 Command Line Usage<a class="headerlink" href="#command-line-usage" title="Permanent link">&para;</a></h2>
-<p>A single command can quickly experience the production line effect, with a unified command line format as follows:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>paddlex<span class="w"> </span>--pipeline<span class="w"> </span><span class="o">[</span>production<span class="w"> </span>line<span class="w"> </span>name<span class="o">]</span><span class="w"> </span>--input<span class="w"> </span><span class="o">[</span>input<span class="w"> </span>image<span class="o">]</span><span class="w"> </span>--device<span class="w"> </span><span class="o">[</span>running<span class="w"> </span>device<span class="o">]</span>
+<p>A single command can quickly experience the pipeline effect, with a unified command line format as follows:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>paddlex<span class="w"> </span>--pipeline<span class="w"> </span><span class="o">[</span>pipeline<span class="w"> </span>name<span class="o">]</span><span class="w"> </span>--input<span class="w"> </span><span class="o">[</span>input<span class="w"> </span>image<span class="o">]</span><span class="w"> </span>--device<span class="w"> </span><span class="o">[</span>running<span class="w"> </span>device<span class="o">]</span>
 </span></code></pre></div>
-<p>Each pipeline in PaddleX corresponds to specific parameters. You can find detailed parameter descriptions in the respective production line documentation. Each production line requires three essential parameters:</p>
+<p>Each pipeline in PaddleX corresponds to specific parameters. You can find detailed parameter descriptions in the respective pipeline documentation. Each pipeline requires three essential parameters:</p>
 <ul>
-<li><code>pipeline</code>: The name of the production line or the path to the production line configuration file.</li>
+<li><code>pipeline</code>: The name of the pipeline or the path to the pipeline configuration file.</li>
 <li><code>input</code>: The local path, directory, or URL of the input file to be processed (e.g., an image).</li>
 <li><code>device</code>: The hardware device and its index to be used (e.g., <code>gpu:0</code> indicates using the first GPU). You can also choose to use NPU (<code>npu:0</code>), XPU (<code>xpu:0</code>), CPU (<code>cpu</code>), etc.</li>
 </ul>
@@ -6698,10 +6698,10 @@ You're not viewing the latest version.
 </div>
 </div>
 <h2 id="python-usage">📝 Python Usage<a class="headerlink" href="#python-usage" title="Permanent link">&para;</a></h2>
-<p>A few lines of code can complete the quick inference of the production line, with a unified Python script format as follows:</p>
+<p>A few lines of code can complete the quick inference of the pipeline, with a unified Python script format as follows:</p>
 <p><div class="language-python highlight"><pre><span></span><code><span id="__span-57-1"><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
 </span><span id="__span-57-2"><a id="__codelineno-57-2" name="__codelineno-57-2" href="#__codelineno-57-2"></a>
-</span><span id="__span-57-3"><a id="__codelineno-57-3" name="__codelineno-57-3" href="#__codelineno-57-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="p">[</span><span class="n">production</span> <span class="n">line</span> <span class="n">name</span><span class="p">])</span>
+</span><span id="__span-57-3"><a id="__codelineno-57-3" name="__codelineno-57-3" href="#__codelineno-57-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="p">[</span><span class="n">pipeline</span> <span class="n">name</span><span class="p">])</span>
 </span><span id="__span-57-4"><a id="__codelineno-57-4" name="__codelineno-57-4" href="#__codelineno-57-4"></a><span class="n">output</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">([</span><span class="nb">input</span> <span class="n">image</span> <span class="n">name</span><span class="p">])</span>
 </span><span id="__span-57-5"><a id="__codelineno-57-5" name="__codelineno-57-5" href="#__codelineno-57-5"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
 </span><span id="__span-57-6"><a id="__codelineno-57-6" name="__codelineno-57-6" href="#__codelineno-57-6"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
@@ -6710,8 +6710,8 @@ You're not viewing the latest version.
 </span></code></pre></div>
 The following steps were executed:</p>
 <ul>
-<li><code>create_pipeline()</code> instantiates the production line object</li>
-<li>Pass in the image and call the <code>predict</code> method of the production line object for inference prediction</li>
+<li><code>create_pipeline()</code> instantiates the pipeline object</li>
+<li>Pass in the image and call the <code>predict</code> method of the pipeline object for inference prediction</li>
 <li>Process the prediction results</li>
 </ul>
 <div class="admonition example">
@@ -6804,8 +6804,8 @@ The following steps were executed:</p>
 </span><span id="__span-62-9"><a id="__codelineno-62-9" name="__codelineno-62-9" href="#__codelineno-62-9"></a>    <span class="n">use_textline_orientation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-62-10"><a id="__codelineno-62-10" name="__codelineno-62-10" href="#__codelineno-62-10"></a><span class="p">)</span>
 </span><span id="__span-62-11"><a id="__codelineno-62-11" name="__codelineno-62-11" href="#__codelineno-62-11"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
-</span><span id="__span-62-12"><a id="__codelineno-62-12" name="__codelineno-62-12" href="#__codelineno-62-12"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">()</span> 
-</span><span id="__span-62-13"><a id="__codelineno-62-13" name="__codelineno-62-13" href="#__codelineno-62-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;output&quot;</span><span class="p">)</span> 
+</span><span id="__span-62-12"><a id="__codelineno-62-12" name="__codelineno-62-12" href="#__codelineno-62-12"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+</span><span id="__span-62-13"><a id="__codelineno-62-13" name="__codelineno-62-13" href="#__codelineno-62-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;output&quot;</span><span class="p">)</span>
 </span><span id="__span-62-14"><a id="__codelineno-62-14" name="__codelineno-62-14" href="#__codelineno-62-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_markdown</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;output&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 </div>
@@ -7026,7 +7026,7 @@ The following steps were executed:</p>
 </div>
 </div>
 <div class="admonition example">
-<p class="admonition-title">Command Line Usage for Time Series Production Lines</p>
+<p class="admonition-title">Command Line Usage for Time Series pipelines</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="33:3"><input checked="checked" id="python-usage-time-series-forecasting" name="__tabbed_33" type="radio" /><input id="python-usage-time-series-anomaly-detection" name="__tabbed_33" type="radio" /><input id="python-usage-time-series-classification" name="__tabbed_33" type="radio" /><div class="tabbed-labels"><label for="python-usage-time-series-forecasting">Time Series Forecasting</label><label for="python-usage-time-series-anomaly-detection">Time Series Anomaly Detection</label><label for="python-usage-time-series-classification">Time Series Classification</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -7067,7 +7067,7 @@ The following steps were executed:</p>
 </div>
 </div>
 <div class="admonition example">
-<p class="admonition-title">Command Line Usage for Speech Production Lines</p>
+<p class="admonition-title">Command Line Usage for Speech pipelines</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="34:1"><input checked="checked" id="python-usage-multilingual-speech-recognition" name="__tabbed_34" type="radio" /><div class="tabbed-labels"><label for="python-usage-multilingual-speech-recognition">Multilingual Speech Recognition</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -7085,7 +7085,7 @@ The following steps were executed:</p>
 </div>
 </div>
 <div class="admonition example">
-<p class="admonition-title">Command Line Usage for Video Production Lines</p>
+<p class="admonition-title">Command Line Usage for Video pipelines</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="35:2"><input checked="checked" id="python-usage-general-video-classification" name="__tabbed_35" type="radio" /><input id="python-usage-general-video-detection" name="__tabbed_35" type="radio" /><div class="tabbed-labels"><label for="python-usage-general-video-classification">General Video Classification</label><label for="python-usage-general-video-detection">General Video Detection</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -7118,15 +7118,15 @@ The following steps were executed:</p>
 <div class="grid cards">
 <ul>
 <li>
-<p><strong>PP-ChatOCRv4</strong></p>
+<p><strong>PP-ChatOCRv4-doc</strong></p>
 <hr />
-<p>Document Scene Information Extraction v4 (PP-ChatOCRv4) is a PaddlePaddle-based intelligent document and image analysis solution that integrates LLM (Large Language Model), MLLM (Multimodal Large Language Model), and OCR (Optical Character Recognition) technologies. It provides a one-stop solution for common challenges in complex document information extraction, such as layout analysis, rare character recognition, multi-page PDFs, table extraction, and seal detection.</p>
+<p>Document Scene Information Extraction v4 (PP-ChatOCRv4-doc) is a PaddlePaddle-based intelligent document and image analysis solution that integrates LLM (Large Language Model), MLLM (Multimodal Large Language Model), and OCR (Optical Character Recognition) technologies. It provides a one-stop solution for common challenges in complex document information extraction, such as layout analysis, rare character recognition, multi-page PDFs, table extraction, and seal detection.</p>
 <p><a href="pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Tutorial</a></p>
 </li>
 <li>
 <p><strong>OCR</strong></p>
 <hr />
-<p>The general OCR production line is used to solve text recognition tasks, extract text information from images, and output it in text form. Based on the end-to-end OCR system, it can achieve millisecond-level precise text content prediction on CPUs and reach open-source SOTA in general scenarios.</p>
+<p>The general OCR pipeline is used to solve text recognition tasks, extract text information from images, and output it in text form. Based on the end-to-end OCR system, it can achieve millisecond-level precise text content prediction on CPUs and reach open-source SOTA in general scenarios.</p>
 <p><a href="pipeline_usage/tutorials/ocr_pipelines/OCR.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Tutorial</a></p>
 </li>
 <li>
@@ -7180,7 +7180,7 @@ The following steps were executed:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 27, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 2, 2025</span>
   </span>
 
     
@@ -7190,7 +7190,7 @@ The following steps were executed:</p>
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 27, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 2, 2025</span>
   </span>
 
     
@@ -7205,7 +7205,7 @@ The following steps were executed:</p>
     </span>
     <nav>
       
-        <a href="mailto:142379845+changdazhou@users.noreply.github.com">changdazhou</a>
+        <a href="mailto:bob1998425@hotmail.com">Lin Manhui</a>
     </nav>
   </span>
 
@@ -7359,7 +7359,7 @@ The following steps were executed:</p>
     <script id="__config" type="application/json">{"base": "..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
       
         <script src="../javascripts/katex.min.js"></script>
       

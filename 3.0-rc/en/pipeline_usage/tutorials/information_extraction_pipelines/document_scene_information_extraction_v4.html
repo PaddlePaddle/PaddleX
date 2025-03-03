@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
     
     
       
@@ -5289,7 +5289,7 @@ You're not viewing the latest version.
 
 <h1 id="pp-chatocrv4-doc-pipeline-tutorial">PP-ChatOCRv4-doc Pipeline Tutorial<a class="headerlink" href="#pp-chatocrv4-doc-pipeline-tutorial" title="Permanent link">&para;</a></h1>
 <h2 id="1-introduction-to-pp-chatocrv4-doc-pipeline">1. Introduction to PP-ChatOCRv4-doc Pipeline<a class="headerlink" href="#1-introduction-to-pp-chatocrv4-doc-pipeline" title="Permanent link">&para;</a></h2>
-<p>PP-ChatOCRv4-doc is a unique document and image intelligent analysis solution from PaddlePaddle, combining LLM, MLLM, and OCR technologies to address complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. Integrated with ERNIE Bot, it fuses massive data and knowledge, achieving high accuracy and wide applicability. This pipeline also provides flexible service deployment options, supporting deployment on various hardware. Furthermore, it offers secondary development capabilities, allowing you to train and fine-tune models on your own datasets, with seamless integration of trained models.</p>
+<p>PP-ChatOCRv4-doc is a unique document and image intelligent analysis solution from PaddlePaddle, combining LLM, MLLM, and OCR technologies to address complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. Integrated with ERNIE Bot, it fuses massive data and knowledge, achieving high accuracy and wide applicability. This pipeline also provides flexible service deployment options, supporting deployment on various hardware. Furthermore, it offers custom development capabilities, allowing you to train and fine-tune models on your own datasets, with seamless integration of trained models.</p>
 <p><img src="https://github.com/user-attachments/assets/0870cdec-1909-4247-9004-d9efb4ab9635"></p>
 <p>The Document Scene Information Extraction v4 pipeline includes modules for <strong>Layout Region Detection</strong>, <strong>Table Structure Recognition</strong>, <strong>Table Classification</strong>, <strong>Table Cell Localization</strong>, <strong>Text Detection</strong>, <strong>Text Recognition</strong>, <strong>Seal Text Detection</strong>, <strong>Text Image Rectification</strong>, and <strong>Document Image Orientation Classification</strong>. The relevant models are integrated as sub-pipelines, and you can view the model configurations of different modules through the <a href="../../../../paddlex/configs/pipelines/PP-ChatOCRv4-doc.yaml">pipeline configuration</a>.</p>
 <p><b>If you prioritize model accuracy, choose a model with higher accuracy. If you prioritize inference speed, select a model with faster inference. If you prioritize model storage size, choose a model with a smaller storage size.</b> Benchmarks for some models are as follows:</p>
@@ -5305,7 +5305,7 @@ You're not viewing the latest version.
 <th>Description</th>
 </tr>
 <tr>
-<td>SLANet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_pretrained.pdparams">Trained Model</a></td>
+<td>SLANet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_pretrained.pdparams">Training Model</a></td>
 <td>59.52</td>
 <td>103.08 / 103.08</td>
 <td>197.99 / 197.99</td>
@@ -5313,7 +5313,7 @@ You're not viewing the latest version.
 <td>SLANet is a table structure recognition model developed by Baidu PaddleX Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
 </tr>
 <tr>
-<td>SLANet_plus</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_plus_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">Trained Model</a></td>
+<td>SLANet_plus</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_plus_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">Training Model</a></td>
 <td>63.69</td>
 <td>140.29 / 140.29</td>
 <td>195.39 / 195.39</td>
@@ -5507,7 +5507,7 @@ You're not viewing the latest version.
 </thead>
 <tbody>
 <tr>
-<td>PP-OCRv4_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">Trained Model</a></td>
+<td>PP-OCRv4_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">Training Model</a></td>
 <td>82.69</td>
 <td>83.34 / 80.91</td>
 <td>442.58 / 442.58</td>
@@ -5515,7 +5515,7 @@ You're not viewing the latest version.
 <td>PP-OCRv4's server-side text detection model, featuring higher accuracy, suitable for deployment on high-performance servers</td>
 </tr>
 <tr>
-<td>PP-OCRv4_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">Trained Model</a></td>
+<td>PP-OCRv4_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">Training Model</a></td>
 <td>77.79</td>
 <td>8.79 / 3.13</td>
 <td>51.00 / 28.58</td>
@@ -5536,7 +5536,7 @@ You're not viewing the latest version.
 <th>Description</th>
 </tr>
 <tr>
-<td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Trained Model</a></td>
+<td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Training Model</a></td>
 <td>78.20</td>
 <td>4.82 / 4.82</td>
 <td>16.74 / 4.64</td>
@@ -5544,7 +5544,7 @@ You're not viewing the latest version.
 <td rowspan="2">PP-OCRv4 is the next version of Baidu PaddlePaddle's self-developed text recognition model PP-OCRv3. By introducing data augmentation schemes and GTC-NRTR guidance branches, it further improves text recognition accuracy without compromising inference speed. The model offers both server (server) and mobile (mobile) versions to meet industrial needs in different scenarios.</td>
 </tr>
 <tr>
-<td>PP-OCRv4_server_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Trained Model</a></td>
+<td>PP-OCRv4_server_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Training Model</a></td>
 <td>79.20</td>
 <td>6.58 / 6.58</td>
 <td>33.17 / 33.17</td>
@@ -5562,7 +5562,7 @@ You're not viewing the latest version.
 <th>Description</th>
 </tr>
 <tr>
-<td>ch_SVTRv2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_SVTRv2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">Trained Model</a></td>
+<td>ch_SVTRv2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_SVTRv2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">Training Model</a></td>
 <td>68.81</td>
 <td>8.08 / 8.08</td>
 <td>50.17 / 42.50</td>
@@ -5583,7 +5583,7 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team at 
 <th>Description</th>
 </tr>
 <tr>
-<td>ch_RepSVTR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_RepSVTR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">Trained Model</a></td>
+<td>ch_RepSVTR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_RepSVTR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">Training Model</a></td>
 <td>65.07</td>
 <td>5.93 / 5.93</td>
 <td>20.73 / 7.32</td>
@@ -5609,7 +5609,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 </thead>
 <tbody>
 <tr>
-<td>LaTeX_OCR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/LaTeX_OCR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">Trained Model</a></td>
+<td>LaTeX_OCR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/LaTeX_OCR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">Training Model</a></td>
 <td>0.8821</td>
 <td>0.0823</td>
 <td>40.01</td>
@@ -5634,7 +5634,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 </thead>
 <tbody>
 <tr>
-<td>PP-OCRv4_server_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_seal_det_pretrained.pdparams">Trained Model</a></td>
+<td>PP-OCRv4_server_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_seal_det_pretrained.pdparams">Training Model</a></td>
 <td>98.21</td>
 <td>74.75 / 67.72</td>
 <td>382.55 / 382.55</td>
@@ -5642,7 +5642,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 <td>PP-OCRv4's server-side seal text detection model, featuring higher accuracy, suitable for deployment on better-equipped servers</td>
 </tr>
 <tr>
-<td>PP-OCRv4_mobile_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_seal_det_pretrained.pdparams">Trained Model</a></td>
+<td>PP-OCRv4_mobile_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_seal_det_pretrained.pdparams">Training Model</a></td>
 <td>96.47</td>
 <td>7.82 / 3.09</td>
 <td>48.28 / 23.97</td>
@@ -6556,7 +6556,7 @@ This method will print the results to the terminal. The content printed to the t
 <ul>
 <li>The HTTP request method is POST.</li>
 <li>Both the request body and response body are JSON data (JSON objects).</li>
-<li>When the request is successfully processed, the response status code is <code>200</code>, and the response body has the following attributes:</li>
+<li>When the request is successfully processed, the response status code is <code>200</code>, and the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -6590,7 +6590,7 @@ This method will print the results to the terminal. The content printed to the t
 </tbody>
 </table>
 <ul>
-<li>When the request is not successfully processed, the response body has the following attributes:</li>
+<li>When the request is not successfully processed, the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -6625,7 +6625,7 @@ This method will print the results to the terminal. The content printed to the t
 <p>Uses computer vision models to analyze images, obtain OCR, table recognition results, etc., and extract key information from the images.</p>
 <p><code>POST /chatocr-visual</code></p>
 <ul>
-<li>Attributes of the request body:</li>
+<li>Properties of the request body:</li>
 </ul>
 <table>
 <thead>
@@ -6645,57 +6645,116 @@ This method will print the results to the terminal. The content printed to the t
 </tr>
 <tr>
 <td><code>fileType</code></td>
-<td><code>integer</code></td>
-<td>File type. <code>0</code> represents a PDF file, <code>1</code> represents an image file. If this attribute is not present in the request body, the file type will be inferred based on the URL.</td>
+<td><code>integer</code> | <code>null</code></td>
+<td>File type. <code>0</code> represents a PDF file, <code>1</code> represents an image file. If this property is not present in the request body, the file type will be inferred based on the URL.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useImgOrientationCls</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable document image orientation classification. This feature is enabled by default.</td>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_doc_orientation_classify</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useImgUnwarping</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable text image correction. This feature is enabled by default.</td>
+<td><code>useDocUnwarping</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_doc_unwarping</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useSealTextDet</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable seal text detection. This feature is enabled by default.</td>
+<td><code>useGeneralOcr</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_general_ocr</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>inferenceParams</code></td>
-<td><code>object</code></td>
-<td>Inference parameters.</td>
+<td><code>useSealRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_seal_recognition</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
-</tbody>
-</table>
-<p>Attributes of <code>inferenceParams</code>:</p>
-<table>
-<thead>
 <tr>
-<th>Name</th>
-<th>Type</th>
-<th>Meaning</th>
-<th>Required</th>
+<td><code>useTableRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_table_recognition</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
 </tr>
-</thead>
-<tbody>
 <tr>
-<td><code>maxLongSide</code></td>
-<td><code>integer</code></td>
-<td>During inference, if the length of the longer side of the input image to the text detection model is greater than <code>maxLongSide</code>, the image will be scaled so that the length of its longer side equals <code>maxLongSide</code>.</td>
+<td><code>textDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_det_limit_side_len</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_det_limit_type</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_det_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_det_box_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_det_unclip_ratio</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_rec_score_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_det_limit_side_len</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_det_limit_type</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_det_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_det_box_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_det_unclip_ratio</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_rec_score_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>When the request is successfully processed, the <code>result</code> of the response body has the following attributes:</li>
+<li>When the request is successfully processed, the <code>result</code> of the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -6707,13 +6766,13 @@ This method will print the results to the terminal. The content printed to the t
 </thead>
 <tbody>
 <tr>
-<td><code>visualResults</code></td>
+<td><code>layoutParsingResults</code></td>
 <td><code>array</code></td>
-<td>Analysis results obtained using computer vision models. The array length is 1 (for image input) or the smaller value between the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file in sequence.</td>
+<td>Analysis results obtained using computer vision models. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file in sequence.</td>
 </tr>
 <tr>
 <td><code>visualInfo</code></td>
-<td><code>object</code></td>
+<td><code>array</code></td>
 <td>Key information in the image, which can be used as input for other operations.</td>
 </tr>
 <tr>
@@ -6723,7 +6782,7 @@ This method will print the results to the terminal. The content printed to the t
 </tr>
 </tbody>
 </table>
-<p>Each element in <code>visualResults</code> is an <code>object</code> with the following attributes:</p>
+<p>Each element in <code>layoutParsingResults</code> is an <code>object</code> with the following properties:</p>
 <table>
 <thead>
 <tr>
@@ -6734,78 +6793,19 @@ This method will print the results to the terminal. The content printed to the t
 </thead>
 <tbody>
 <tr>
-<td><code>texts</code></td>
-<td><code>array</code></td>
-<td>Text positions, contents, and scores.</td>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>A simplified version of the <code>res</code> field in the JSON representation of the results generated by the pipeline's <code>visual_predict</code> method, with the <code>input_path</code> field removed.</td>
 </tr>
 <tr>
-<td><code>tables</code></td>
-<td><code>array</code></td>
-<td>Table positions and contents.</td>
+<td><code>outputImages</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Refer to the description of <code>img</code> attribute of the pipeline's visual prediction result.</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
-<td><code>string</code></td>
+<td><code>string</code> | <code>null</code></td>
 <td>Input image. The image is in JPEG format and encoded using Base64.</td>
-</tr>
-<tr>
-<td><code>layoutImage</code></td>
-<td><code>string</code></td>
-<td>Detection result image of the layout area. The image is in JPEG format and encoded using Base64.</td>
-</tr>
-<tr>
-<td><code>ocrImage</code></td>
-<td><code>string</code></td>
-<td>OCR result image. The image is in JPEG format and encoded using Base64.</td>
-</tr>
-</tbody>
-</table>
-<p>Each element in <code>texts</code> is an <code>object</code> with the following attributes:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>poly</code></td>
-<td><code>array</code></td>
-<td>Text position. The elements in the array are the vertex coordinates of the polygon enclosing the text in sequence.</td>
-</tr>
-<tr>
-<td><code>text</code></td>
-<td><code>string</code></td>
-<td>Text content.</td>
-</tr>
-<tr>
-<td><code>score</code></td>
-<td><code>number</code></td>
-<td>Text recognition score.</td>
-</tr>
-</tbody>
-</table>
-<p>Each element in <code>tables</code> is an <code>object</code> with the following attributes:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>bbox</code></td>
-<td><code>array</code></td>
-<td>Table position. The elements in the array are the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner of the bounding box in sequence.</td>
-</tr>
-<tr>
-<td><code>html</code></td>
-<td><code>string</code></td>
-<td>Table recognition result in HTML format.</td>
 </tr>
 </tbody>
 </table>
@@ -6815,7 +6815,7 @@ This method will print the results to the terminal. The content printed to the t
 <p>Builds a vector database.</p>
 <p><code>POST /chatocr-vector</code></p>
 <ul>
-<li>Attributes of the request body:</li>
+<li>Properties of the request body:</li>
 </ul>
 <table>
 <thead>
@@ -6829,50 +6829,32 @@ This method will print the results to the terminal. The content printed to the t
 <tbody>
 <tr>
 <td><code>visualInfo</code></td>
-<td><code>object</code></td>
+<td><code>array</code></td>
 <td>Key information in the image. Provided by the <code>analyzeImages</code> operation.</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code>minChars</code></td>
-<td><code>integer</code></td>
+<td><code>minCharacters</code></td>
+<td><code>integer</code> | <code>null</code></td>
 <td>Minimum data length to enable the vector database.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>llmRequestInterval</code></td>
-<td><code>number</code></td>
-<td>Interval time for calling the large language model API.</td>
+<td><code>blockSize</code></td>
+<td><code>int</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>block_size</code> parameter of the pipeline object's <code>build_vector</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>llmName</code></td>
-<td><code>string</code></td>
-<td>Name of the large language model.</td>
-<td>No</td>
-</tr>
-<tr>
-<td><code>llmParams</code></td>
-<td><code>object</code></td>
-<td>Parameters for the large language model API.</td>
+<td><code>retrieverConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>retriever_config</code> parameter of the pipeline object's <code>build_vector</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
-<p>Currently, <code>llmParams</code> can take one of the following forms:</p>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;qianfan&quot;,
-&quot;apiKey&quot;: &quot;{API key of Qianfan Platform}&quot;,
-&quot;secretKey&quot;: &quot;{Secret key of Qianfan Platform}&quot;
-}
-</code></pre>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;aistudio&quot;,
-&quot;accessToken&quot;: &quot;{Access token of Baidu AIStudio Community}&quot;
-}
-</code></pre>
 <ul>
-<li>When the request is successfully processed, the <code>result</code> of the response body has the following attribute:</li>
+<li>When the request is successfully processed, the <code>result</code> of the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -6884,19 +6866,18 @@ This method will print the results to the terminal. The content printed to the t
 </thead>
 <tbody>
 <tr>
-<td><code>vectorStore</code></td>
-<td><code>string</code></td>
+<td><code>vectorInfo</code></td>
+<td><code>object</code></td>
 <td>Serialized result of the vector database, which can be used as input for other operations.</td>
 </tr>
 </tbody>
 </table>
-<ul>
-<li><b><code>retrieveKnowledge</code></b></li>
+<li><b><code>invokeMLLM</code></b></li>
 </ul>
-<p>Performs knowledge retrieval.</p>
-<p><code>POST /chatocr-retrieval</code></p>
+<p>Invoke the MLLM.</p>
+<p><code>POST /chatocr-mllm</code></p>
 <ul>
-<li>Attributes of the request body:</li>
+<li>Properties of the request body:</li>
 </ul>
 <table>
 <thead>
@@ -6909,45 +6890,27 @@ This method will print the results to the terminal. The content printed to the t
 </thead>
 <tbody>
 <tr>
-<td><code>keys</code></td>
+<td><code>image</code></td>
+<td><code>string</code></td>
+<td>URL of an image file accessible by the server or the Base64-encoded content of the image file.</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>keyList</code></td>
 <td><code>array</code></td>
-<td>List of keywords.</td>
+<td>List of keys.</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code>vectorStore</code></td>
-<td><code>string</code></td>
-<td>Serialized result of the vector database. Provided by the <code>buildVectorStore</code> operation.</td>
-<td>Yes</td>
-</tr>
-<tr>
-<td><code>llmName</code></td>
-<td><code>string</code></td>
-<td>Name of the large language model.</td>
-<td>No</td>
-</tr>
-<tr>
-<td><code>llmParams</code></td>
-<td><code>object</code></td>
-<td>Parameters for the large language model API.</td>
+<td><code>mllmChatBotConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>mllm_chat_bot_config</code> parameter of the pipeline object's <code>mllm_pred</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
-<p>Currently, <code>llmParams</code> can take one of the following forms:</p>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;qianfan&quot;,
-&quot;apiKey&quot;: &quot;{API key of Qianfan Platform}&quot;,
-&quot;secretKey&quot;: &quot;{Secret key of Qianfan Platform}&quot;
-}
-</code></pre>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;aistudio&quot;,
-&quot;accessToken&quot;: &quot;{Access token of Baidu AIStudio Community}&quot;
-}
-</code></pre>
 <ul>
-<li>When the request is successfully processed, the <code>result</code> of the response body has the following attribute:</li>
+<li>When the request is successfully processed, the <code>result</code> of the response body has the following property:</li>
 </ul>
 <table>
 <thead>
@@ -6959,19 +6922,19 @@ This method will print the results to the terminal. The content printed to the t
 </thead>
 <tbody>
 <tr>
-<td><code>retrievalResult</code></td>
-<td><code>string</code></td>
-<td>Knowledge retrieval result, which can be used as input for other operations.</td>
+<td><code>mllmPredictInfo</code></td>
+<td><code>object</code></td>
+<td>MLLM invocation result.</td>
 </tr>
 </tbody>
 </table>
 <ul>
 <li><b><code>chat</code></b></li>
 </ul>
-<p>Interacts with the large language model to extract key information using it.</p>
+<p>Interacts with large language models to extract key information using them.</p>
 <p><code>POST /chatocr-chat</code></p>
 <ul>
-<li>Attributes of the request body:</li>
+<li>Properties of the request body:</li>
 </ul>
 <table>
 <thead>
@@ -6984,9 +6947,9 @@ This method will print the results to the terminal. The content printed to the t
 </thead>
 <tbody>
 <tr>
-<td><code>keys</code></td>
+<td><code>keyList</code></td>
 <td><code>array</code></td>
-<td>List of keywords.</td>
+<td>List of keys.</td>
 <td>Yes</td>
 </tr>
 <tr>
@@ -6996,69 +6959,111 @@ This method will print the results to the terminal. The content printed to the t
 <td>Yes</td>
 </tr>
 <tr>
-<td><code>vectorStore</code></td>
-<td><code>string</code></td>
+<td><code>useVectorRetrieval</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_vector_retrieval</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>vectorInfo</code></td>
+<td><code>object</code> | <code>null</code></td>
 <td>Serialized result of the vector database. Provided by the <code>buildVectorStore</code> operation.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>retrievalResult</code></td>
-<td><code>string</code></td>
-<td>Knowledge retrieval result. Provided by the <code>retrieveKnowledge</code> operation.</td>
+<td><code>minCharacters</code></td>
+<td><code>integer</code></td>
+<td>Minimum data length to enable the vector database.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>taskDescription</code></td>
-<td><code>string</code></td>
-<td>Task description for prompts.</td>
+<td><code>textTaskDescription</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_task_description</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>rules</code></td>
-<td><code>string</code></td>
-<td>Prompt rules. Used to customize information extraction rules, such as specifying the output format.</td>
+<td><code>textOutputFormat</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_output_format</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>fewShot</code></td>
-<td><code>string</code></td>
-<td>Prompt examples.</td>
+<td><code>textRulesStr</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_rules_str</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>llmName</code></td>
-<td><code>string</code></td>
-<td>Name of the large language model.</td>
+<td><code>textFewShotDemoTextContent</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_few_shot_demo_text_content</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>llmParams</code></td>
-<td><code>object</code></td>
-<td>Parameters for the large language model API.</td>
+<td><code>textFewShotDemoKeyValueList</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_few_shot_demo_key_value_list</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>returnPrompts</code></td>
-<td><code>boolean</code></td>
-<td>Whether to return the used prompts. Disabled by default.</td>
+<td><code>tableTaskDescription</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>table_task_description</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableOutputFormat</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>table_output_format</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableRulesStr</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>table_rules_str</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableFewShotDemoTextContent</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>table_few_shot_demo_text_content</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableFewShotDemoKeyValueList</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>table_few_shot_demo_key_value_list</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>mllmPredictInfo</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>MLLM invocation result. Provided by the <code>invokeMllm</code> operation.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>mllmIntegrationStrategy</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>mllm_integration_strategy</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>chatBotConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>chat_bot_config</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>retrieverConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>retriever_config</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
-<p>Currently, <code>llmParams</code> can take one of the following forms:</p>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;qianfan&quot;,
-&quot;apiKey&quot;: &quot;{API key of Qianfan Platform}&quot;,
-&quot;secretKey&quot;: &quot;{Secret key of Qianfan Platform}&quot;
-}
-</code></pre>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;aistudio&quot;,
-&quot;accessToken&quot;: &quot;{Access token of Baidu AIStudio Community}&quot;
-}
-</code></pre>
 <ul>
-<li>When the request is successfully processed, the <code>result</code> of the response body has the following attributes:</li>
+<li>When the request is successfully processed, the <code>result</code> of the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -7073,38 +7078,6 @@ This method will print the results to the terminal. The content printed to the t
 <td><code>chatResult</code></td>
 <td><code>object</code></td>
 <td>Key information extraction result.</td>
-</tr>
-<tr>
-<td><code>prompts</code></td>
-<td><code>object</code></td>
-<td>Used prompts.</td>
-</tr>
-</tbody>
-</table>
-<p>Attributes of <code>prompts</code>:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>ocr</code></td>
-<td><code>array</code></td>
-<td>OCR prompts.</td>
-</tr>
-<tr>
-<td><code>table</code></td>
-<td><code>array</code></td>
-<td>Table prompts.</td>
-</tr>
-<tr>
-<td><code>html</code></td>
-<td><code>array</code></td>
-<td>HTML prompts.</td>
 </tr>
 </tbody>
 </table>
@@ -7318,7 +7291,7 @@ You can choose an appropriate deployment method for your pipeline based on your 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 27, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 2, 2025</span>
   </span>
 
     
@@ -7328,7 +7301,7 @@ You can choose an appropriate deployment method for your pipeline based on your 
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 27, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 2, 2025</span>
   </span>
 
     
@@ -7343,7 +7316,7 @@ You can choose an appropriate deployment method for your pipeline based on your 
     </span>
     <nav>
       
-        <a href="mailto:142379845+changdazhou@users.noreply.github.com">changdazhou</a>
+        <a href="mailto:bob1998425@hotmail.com">Lin Manhui</a>
     </nav>
   </span>
 
@@ -7509,7 +7482,7 @@ You can choose an appropriate deployment method for your pipeline based on your 
     <script id="__config" type="application/json">{"base": "../../../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.c8b220af.min.js"></script>
       
         <script src="../../../../javascripts/katex.min.js"></script>
       

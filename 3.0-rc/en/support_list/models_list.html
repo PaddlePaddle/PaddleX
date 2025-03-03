@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
     
     
       
@@ -5765,7 +5765,7 @@ You're not viewing the latest version.
 
 
 <h1 id="paddlex-model-list-cpugpu">PaddleX Model List (CPU/GPU)<a class="headerlink" href="#paddlex-model-list-cpugpu" title="Permanent link">&para;</a></h1>
-<p>PaddleX includes multiple production lines, each containing several modules, and each module includes several models. You can choose which models to use based on the benchmark data below. If you prioritize model accuracy, choose models with higher accuracy. If you prioritize model inference speed, choose models with faster inference speed. If you prioritize model storage size, choose models with smaller storage size.</p>
+<p>PaddleX includes multiple pipelines, each containing several modules, and each module includes several models. You can choose which models to use based on the benchmark data below. If you prioritize model accuracy, choose models with higher accuracy. If you prioritize model inference speed, choose models with faster inference speed. If you prioritize model storage size, choose models with smaller storage size.</p>
 <h2 id="image-classification-module"><a href="../module_usage/tutorials/cv_modules/image_classification.html">Image Classification Module</a><a class="headerlink" href="#image-classification-module" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7120,7 +7120,7 @@ You're not viewing the latest version.
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/GroundingDINO-T_infer.tar">Inference Model</a></td>
 </tr>
 </table>
-<p><b>Note: The above accuracy metrics are based on the COCO val2017 validation set mAP(0.5:0.95). All models' GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+<p><b>Note: The above accuracy metrics are based on the COCO val2017 validation set mAP(0.5:0.95).</b></p>
 <h2 id="open-vocabulary-segmentation"><a href="../module_usage/tutorials/cv_modules/open_vocabulary_segmentation.html">Open Vocabulary Segmentation</a><a class="headerlink" href="#open-vocabulary-segmentation" title="Permanent link">&para;</a></h2>
 <table>
 <tr>
@@ -7145,7 +7145,7 @@ You're not viewing the latest version.
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SAM-H_point_infer.tar">Inference Model</a></td>
 </tr>
 </table>
-<p><b>Note: All model GPU inference times are based on NVIDIA Tesla T4, with precision type FP32. CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads, and precision type FP32.</b></p>
+
 <h2 id="rotated-object-detection"><a href="../module_usage/tutorials/cv_modules/rotated_object_detection.html">Rotated Object Detection</a><a class="headerlink" href="#rotated-object-detection" title="Permanent link">&para;</a></h2>
 <table>
 <tr>
@@ -7167,7 +7167,7 @@ You're not viewing the latest version.
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE-R-L_infer.tar">Inference Model</a>/<a href="https://paddledet.bj.bcebos.com/models/ppyoloe_r_crn_l_3x_dota.pdparams">Training Model</a></td>
 </tr>
 </table>
-<p><b>Note: The above accuracy metrics are based on the <a href="https://captain-whu.github.io/DOTA/">DOTA</a> validation set mAP(0.5:0.95). All model GPU inference times are based on NVIDIA TRX2080 Ti, with precision type F16. CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads, and precision type FP32.</b></p>
+<p><b>Note: The above accuracy metrics are based on the <a href="https://captain-whu.github.io/DOTA/">DOTA</a> validation set mAP(0.5:0.95). </b></p>
 
 <h2 id="pedestrian-detection-module"><a href="../module_usage/tutorials/cv_modules/human_detection.html">Pedestrian Detection Module</a><a class="headerlink" href="#pedestrian-detection-module" title="Permanent link">&para;</a></h2>
 <table>
@@ -7342,7 +7342,7 @@ You're not viewing the latest version.
 </tr>
 </table>
 
-<p><strong>Note: The above accuracy metrics are based on the COCO dataset AP(0.5:0.95), with detection boxes obtained from ground truth annotations. All GPU inference times are based on an NVIDIA Tesla T4 machine, with precision type FP32. CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads and precision type FP32.</strong></p>
+<p><strong>Note: The above accuracy metrics are based on the COCO dataset AP(0.5:0.95), with detection boxes obtained from ground truth annotations.</strong></p>
 <h2 id="3d-multi-modal-fusion-detection-module"><a href="../module_usage/tutorials/cv_modules/3d_bev_detection.html">3D Multi-modal Fusion Detection Module</a><a class="headerlink" href="#3d-multi-modal-fusion-detection-module" title="Permanent link">&para;</a></h2>
 <table>
 <tr>
@@ -7751,7 +7751,7 @@ You're not viewing the latest version.
 </tr>
 </tbody>
 </table>
-<p><b>Note: The evaluation dataset for the above accuracy metrics is the self-built Chinese and English dataset of PaddleOCR, covering multiple scenarios such as street view, web images, documents, and handwriting, with 593 images for text recognition. The GPU inference time for all models is based on an NVIDIA Tesla T4 machine with FP32 precision type, while the CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+<p><b>Note: The evaluation dataset for the above accuracy metrics is the self-built Chinese and English dataset of PaddleOCR, covering multiple scenarios such as street view, web images, documents, and handwriting, with 593 images for text recognition. </b></p>
 <h2 id="seal-text-detection-module"><a href="../module_usage/tutorials/ocr_modules/seal_text_detection.html">Seal Text Detection Module</a><a class="headerlink" href="#seal-text-detection-module" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7835,7 +7835,7 @@ You're not viewing the latest version.
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is a Chinese dataset built by PaddleOCR, covering multiple scenarios such as street view, web images, documents, and handwriting, with 8367 images for text recognition. All models' GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision, while CPU inference speeds are based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+<p><b>Note: The evaluation set for the above accuracy metrics is a Chinese dataset built by PaddleOCR, covering multiple scenarios such as street view, web images, documents, and handwriting, with 8367 images for text recognition. </b></p>
 <table>
 <tr>
 <th>Model</th>
@@ -7856,7 +7856,7 @@ You're not viewing the latest version.
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_SVTRv2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">Training Model</a></td>
 </tr>
 </table>
-<p><b>Note: The evaluation dataset for the above accuracy metrics is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a> Leaderboard A. All model GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+<p><b>Note: The evaluation dataset for the above accuracy metrics is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a> Leaderboard A. </b></p>
 <table>
 <tr>
 <th>Model</th>
@@ -7877,7 +7877,7 @@ You're not viewing the latest version.
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_RepSVTR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">Training Model</a></td>
 </tr>
 </table>
-<p><b>Note: The evaluation dataset for the above accuracy metrics is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a> Leaderboard B. All model GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+<p><b>Note: The evaluation dataset for the above accuracy metrics is the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a> Leaderboard B. </b></p>
 <p><b>English Recognition Model</b></p>
 <table>
 <tr>
@@ -7909,7 +7909,7 @@ You're not viewing the latest version.
 </tr>
 </table>
 
-<p><b>Note: The evaluation set for the above accuracy metrics is an English dataset built by PaddleX. All model GPU inference times are based on NVIDIA Tesla T4 machines, with precision type FP32. CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads, and precision type FP32.</b></p>
+<p><b>Note: The evaluation set for the above accuracy metrics is an English dataset built by PaddleX. </b></p>
 
 <p><b>Multilingual Recognition Model</b></p>
 <table>
@@ -8013,7 +8013,7 @@ You're not viewing the latest version.
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/devanagari_PP-OCRv3_mobile_rec_infer.tar">Inference Model</a>/<a href="">Training Model</a></td>
 </tr>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is a multi-language dataset built by PaddleX. All model GPU inference times are based on NVIDIA Tesla T4 machines, with precision type FP32. CPU inference speed is based on Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads, and precision type FP32.</b></p>
+<p><b>Note: The evaluation set for the above accuracy metrics is a multi-language dataset built by PaddleX.</b></p>
 
 <h2 id="formula-recognition-module"><a href="../module_usage/tutorials/ocr_modules/formula_recognition.html">Formula Recognition Module</a><a class="headerlink" href="#formula-recognition-module" title="Permanent link">&para;</a></h2>
 <table>
@@ -8104,7 +8104,7 @@ You're not viewing the latest version.
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANeXt_wireless_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANeXt_wireless_pretrained.pdparams">Training Model</a></td>
 </tr>
 </table>
-<p><b>Note: The above accuracy metrics are measured from the high-difficulty Chinese table recognition dataset built internally by PaddleX. All model GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision type. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision type.</b></p>
+<p><b>Note: The above accuracy metrics are measured from the high-difficulty Chinese table recognition dataset built internally by PaddleX. </b></p>
 <h2 id="table-cell-detection-module"><a href="../module_usage/tutorials/ocr_modules/table_cells_detection.html">Table Cell Detection Module</a><a class="headerlink" href="#table-cell-detection-module" title="Permanent link">&para;</a></h2>
 <table>
 <tr>
@@ -8130,7 +8130,7 @@ You're not viewing the latest version.
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-L_wireless_table_cell_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-L_wireless_table_cell_det_pretrained.pdparams">Training Model</a></td>
 </tr>
 </table>
-<p><b>Note: The above accuracy metrics are measured from the internal table cell detection dataset of PaddleX. All model GPU inference times are based on an NVIDIA Tesla T4 machine, with precision type FP32. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz, with 8 threads, and precision type FP32.</b></p>
+<p><b>Note: The above accuracy metrics are measured from the internal table cell detection dataset of PaddleX. </b></p>
 
 <h2 id="table-classification-module"><a href="../module_usage/tutorials/ocr_modules/table_classification.html">Table Classification Module</a><a class="headerlink" href="#table-classification-module" title="Permanent link">&para;</a></h2>
 <table>
@@ -8153,7 +8153,7 @@ You're not viewing the latest version.
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/CLIP_vit_base_patch16_224_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-LCNet_x1_0_table_cls_pretrained.pdparams">Training Model</a></td>
 </tr>
 </table>
-<p><b>Note: The above accuracy metrics are measured from the internal table classification dataset built by PaddleX. All model GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+<p><b>Note: The above accuracy metrics are measured from the internal table classification dataset built by PaddleX. </b></p>
 
 <h2 id="text-image-unwarping-module"><a href="../module_usage/tutorials/ocr_modules/text_image_unwarping.html">Text Image Unwarping Module</a><a class="headerlink" href="#text-image-unwarping-module" title="Permanent link">&para;</a></h2>
 <table>
@@ -8208,7 +8208,7 @@ You're not viewing the latest version.
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_table_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_table_pretrained.pdparams">Training Model</a></td>
 </tr>
 </tbody></table>
-<p><b>Note: The evaluation set for the above accuracy metrics is the layout table area detection dataset built by PaddleOCR, which contains 7835 images of document types with tables in both Chinese and English. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision, and the CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b>
+<p><b>Note: The evaluation set for the above accuracy metrics is the layout table area detection dataset built by PaddleOCR, which contains 7835 images of document types with tables in both Chinese and English. </b>
 <b>3 types of layout detection models, including tables, images, and seals</b></p>
 <table>
 <thead>
@@ -8251,7 +8251,7 @@ You're not viewing the latest version.
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_3cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_3cls_pretrained.pdparams">Training Model</a></td>
 </tr>
 </tbody></table>
-<p><b>Note: The evaluation dataset for the above accuracy metrics is the layout area detection dataset built by PaddleOCR, which includes 1,154 common types of document images such as Chinese and English papers, magazines, and research reports. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision, and the CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+<p><b>Note: The evaluation dataset for the above accuracy metrics is the layout area detection dataset built by PaddleOCR, which includes 1,154 common types of document images such as Chinese and English papers, magazines, and research reports. </b></p>
 <ul>
 <li><b>5-class English document layout detection model, including text, title, table, image, and list</b></li>
 </ul>
@@ -8278,7 +8278,7 @@ You're not viewing the latest version.
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_layout_1x_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_layout_1x_pretrained.pdparams">Training Model</a></td>
 </tr>
 </tbody></table>
-<p><b>Note: The evaluation dataset for the above accuracy metrics is the <a href="https://developer.ibm.com/exchanges/data/all/publaynet/">PubLayNet</a> evaluation dataset, which contains 11,245 images of English documents. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+<p><b>Note: The evaluation dataset for the above accuracy metrics is the <a href="https://developer.ibm.com/exchanges/data/all/publaynet/">PubLayNet</a> evaluation dataset, which contains 11,245 images of English documents. </b></p>
 <ul>
 <li><b>17-class layout detection model, including 17 common layout categories: paragraph title, image, text, number, abstract, content, figure title, formula, table, table title, reference, document title, footnote, header, algorithm, footer, and seal</b></li>
 </ul>
@@ -8324,7 +8324,7 @@ You're not viewing the latest version.
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/RT-DETR-H_layout_17cls_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/RT-DETR-H_layout_17cls_pretrained.pdparams">Training Model</a></td>
 </tr>
 
-<p><b>Note: The evaluation set for the above accuracy metrics is the layout area detection dataset built by PaddleOCR, which includes 892 images of common document types such as Chinese and English papers, magazines, and research reports. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+<p><b>Note: The evaluation set for the above accuracy metrics is the layout area detection dataset built by PaddleOCR, which includes 892 images of common document types such as Chinese and English papers, magazines, and research reports. </b></p>
 <h2 id="document-image-orientation-classification-module"><a href="../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html">Document Image Orientation Classification Module</a><a class="headerlink" href="#document-image-orientation-classification-module" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8350,7 +8350,7 @@ You're not viewing the latest version.
 </tr>
 </tbody>
 </table>
-<p><b>Note: The evaluation set for the above accuracy metrics is a self-built dataset covering multiple scenarios such as documents and certificates, with 1000 images. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+<p><b>Note: The evaluation set for the above accuracy metrics is a self-built dataset covering multiple scenarios such as documents and certificates, with 1000 images. </b></p>
 <h2 id="text-line-orientation-classification-module"><a href="../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html">Text Line Orientation Classification Module</a><a class="headerlink" href="#text-line-orientation-classification-module" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8377,7 +8377,7 @@ You're not viewing the latest version.
 </tbody>
 </table>
 
-<p><b>Note: The evaluation dataset for the above accuracy metrics is a self-built dataset covering multiple scenarios such as certificates and documents, with 1,000 images. The GPU inference time is based on an NVIDIA Tesla T4 machine with FP32 precision, and the CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+<p><b>Note: The evaluation dataset for the above accuracy metrics is a self-built dataset covering multiple scenarios such as certificates and documents, with 1,000 images.</b></p>
 <h2 id="time-series-forecasting-module"><a href="../module_usage/tutorials/time_series_modules/time_series_forecasting.html">Time Series Forecasting Module</a><a class="headerlink" href="#time-series-forecasting-module" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8510,7 +8510,6 @@ You're not viewing the latest version.
 </tbody>
 </table>
 <p><b>Note: The above accuracy metrics are measured from the <a href="https://paddlets.bj.bcebos.com/classification/UWaveGestureLibrary_TEST.csv">UWaveGestureLibrary</a> dataset.</b></p>
-<p>&gt;<b>Note: The GPU inference time for all models above is based on an NVIDIA Tesla T4 machine with FP32 precision. The CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
 <h2 id="multilingual-speech-recognition-module"><a href="../module_usage/tutorials/speech_modules/multilingual_speech_recognition.html">Multilingual Speech Recognition Module</a><a class="headerlink" href="#multilingual-speech-recognition-module" title="Permanent link">&para;</a></h2>
 <table>
 <tr>
@@ -8613,7 +8612,41 @@ You're not viewing the latest version.
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOWO_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOWO_pretrained.pdparams">Training Model</a></td>
 </tr>
 </table>
-<p><b>Note: The above accuracy metrics are based on the test dataset <a href="http://www.thumos.info/download.html">UCF101-24</a>, using the Frame-mAP (@ IoU 0.5) metric. All model GPU inference times are based on an NVIDIA Tesla T4 machine with FP32 precision. CPU inference speed is based on an Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz with 8 threads and FP32 precision.</b></p>
+<p><b>Note: The above accuracy metrics are based on the test dataset <a href="http://www.thumos.info/download.html">UCF101-24</a>, using the Frame-mAP (@ IoU 0.5) metric.</b></p>
+
+<p><strong>Test Environment Description:</strong></p>
+<ul>
+<li>
+<p><strong>Performance Test Environment</strong></p>
+</li>
+<li>
+<p><strong>Inference Mode Description</strong></p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>GPU Configuration</th>
+<th>CPU Configuration</th>
+<th>Acceleration Technology Combination</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Normal Mode</td>
+<td>FP32 Precision / No TRT Acceleration</td>
+<td>FP32 Precision / 8 Threads</td>
+<td>PaddleInference</td>
+</tr>
+<tr>
+<td>High-Performance Mode</td>
+<td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+<td>FP32 Precision / 8 Threads</td>
+<td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+</tr>
+</tbody>
+</table>
 
 
 
@@ -8636,7 +8669,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 27, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 2, 2025</span>
   </span>
 
     
@@ -8646,7 +8679,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 27, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 2, 2025</span>
   </span>
 
     
@@ -8661,7 +8694,7 @@ You're not viewing the latest version.
     </span>
     <nav>
       
-        <a href="mailto:142379845+changdazhou@users.noreply.github.com">changdazhou</a>
+        <a href="mailto:bob1998425@hotmail.com">Lin Manhui</a>
     </nav>
   </span>
 
@@ -8827,7 +8860,7 @@ You're not viewing the latest version.
     <script id="__config" type="application/json">{"base": "../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
       
         <script src="../../javascripts/katex.min.js"></script>
       

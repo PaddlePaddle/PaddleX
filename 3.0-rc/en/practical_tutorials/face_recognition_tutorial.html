@@ -14,7 +14,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
     
     
       
@@ -5245,22 +5245,22 @@ You're not viewing the latest version.
 </li>
       
         <li class="md-nav__item">
-  <a href="#7-production-line-integration" class="md-nav__link">
+  <a href="#7-pipeline-integration" class="md-nav__link">
     <span class="md-ellipsis">
-      7. Production Line Integration
+      7. pipeline Integration
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#8-production-line-service-deployment" class="md-nav__link">
+  <a href="#8-pipeline-service-deployment" class="md-nav__link">
     <span class="md-ellipsis">
-      8. Production Line Service Deployment
+      8. pipeline Service Deployment
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="8. Production Line Service Deployment">
+    <nav class="md-nav" aria-label="8. pipeline Service Deployment">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -5362,7 +5362,7 @@ You're not viewing the latest version.
   <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/face_recognition/01.jpg" width=600>
 </center></p>
 <p>
-After experiencing the production line, it is necessary to determine whether the production line meets expectations (including accuracy, speed, etc.), and whether the models included in the production line need further fine-tuning. If the speed or accuracy of the model does not meet expectations, alternative models should be selected for continued testing to determine if the results are satisfactory. If the final results are still unsatisfactory, the models need to be fine-tuned.
+After experiencing the pipeline, it is necessary to determine whether the pipeline meets expectations (including accuracy, speed, etc.), and whether the models included in the pipeline need further fine-tuning. If the speed or accuracy of the model does not meet expectations, alternative models should be selected for continued testing to determine if the results are satisfactory. If the final results are still unsatisfactory, the models need to be fine-tuned.
 </p>
 <p>
 This tutorial aims to achieve cartoon face recognition. From the quick experience results above, it can be observed that the official default model performs well in real face scenarios, but it fails to meet practical application requirements when inferring cartoon data, resulting in missed detections of cartoon faces and misidentifications of faces. Therefore, we need to conduct secondary development to train and fine-tune the face detection and face feature models.
@@ -5890,12 +5890,12 @@ When validating a dataset, only one command is needed:</p>
 </table>
 <p></center></p>
 <p>Note: This tutorial is designed for a 4-GPU setup. If you only have 1 GPU, you can adjust the number of training GPUs to complete the experiment. However, the final metrics may not align with the above metrics, which is a normal situation.</p>
-<h2 id="7-production-line-integration">7. Production Line Integration<a class="headerlink" href="#7-production-line-integration" title="Permanent link">&para;</a></h2>
-<p>After fine-tuning the face detection model and face feature model with cartoon scene data, you can select the high-precision model weights to integrate into the PaddleX face recognition production line.</p>
-<p>First, obtain the face_recognition production line configuration file and load the configuration file for prediction. You can execute the following command to save the results in <code>my_path</code>:</p>
+<h2 id="7-pipeline-integration">7. pipeline Integration<a class="headerlink" href="#7-pipeline-integration" title="Permanent link">&para;</a></h2>
+<p>After fine-tuning the face detection model and face feature model with cartoon scene data, you can select the high-precision model weights to integrate into the PaddleX face recognition pipeline.</p>
+<p>First, obtain the face_recognition pipeline configuration file and load the configuration file for prediction. You can execute the following command to save the results in <code>my_path</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>paddlex<span class="w"> </span>--get_pipeline_config<span class="w"> </span>face_recognition<span class="w"> </span>--save_path<span class="w"> </span>./my_path
 </span></code></pre></div>
-<p>Modify <code>SubModules.Detection.model_dir</code> and <code>SubModules.Recognition.model_dir</code> in the configuration file to the paths of your fine-tuned face detection model and face feature model, respectively. If you need to directly integrate the face recognition production line into your Python project, you can refer to the following example:</p>
+<p>Modify <code>SubModules.Detection.model_dir</code> and <code>SubModules.Recognition.model_dir</code> in the configuration file to the paths of your fine-tuned face detection model and face feature model, respectively. If you need to directly integrate the face recognition pipeline into your Python project, you can refer to the following example:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nt">pipeline_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">face_recognition</span>
 </span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>
 </span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="nt">index</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">None</span>
@@ -5915,7 +5915,7 @@ When validating a dataset, only one command is needed:</p>
 </span><span id="__span-22-17"><a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a><span class="w">    </span><span class="nt">model_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;path/to/your/rec_model&quot;</span><span class="w"> </span><span class="c1"># Face feature model fine-tuned with cartoon face data</span>
 </span><span id="__span-22-18"><a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a><span class="w">    </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 </span></code></pre></div>
-<p>Subsequently, in your Python code, you can use the production line as follows:</p>
+<p>Subsequently, in your Python code, you can use the pipeline as follows:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
 </span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="c1"># Create a face recognition pipeline</span>
 </span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;my_path/face_recognition.yaml&quot;</span><span class="p">)</span>
@@ -5928,12 +5928,12 @@ When validating a dataset, only one command is needed:</p>
 </span><span id="__span-23-10"><a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span> <span class="c1"># Save the result to an image</span>
 </span></code></pre></div>
 <p>If there is a case where a cartoon face can be detected but is recognized as "Unknown0.00", you can modify the <code>rec_thresholds</code> in the configuration file and try again after lowering the retrieval threshold. If there are cases of face recognition errors, please replace the optimal weights with the weights from the last training round, or replace the recognition model weights trained with different hyperparameters and try again.</p>
-<h2 id="8-production-line-service-deployment">8. Production Line Service Deployment<a class="headerlink" href="#8-production-line-service-deployment" title="Permanent link">&para;</a></h2>
-<p>In addition to the Python API integration development method mentioned earlier, PaddleX also provides high-performance deployment and service-oriented deployment capabilities, which are detailed as follows:
+<h2 id="8-pipeline-service-deployment">8. pipeline Service Deployment<a class="headerlink" href="#8-pipeline-service-deployment" title="Permanent link">&para;</a></h2>
+<p>In addition to the Python API integration development method mentioned earlier, PaddleX also provides high-performance deployment and serving deployment capabilities, which are detailed as follows:
 * High-performance deployment: In actual production environments, many applications have strict standards for the performance metrics of deployment strategies (especially response speed) to ensure the efficient operation of the system and the smoothness of user experience. To this end, PaddleX provides a high-performance inference plugin, which aims to deeply optimize the performance of model inference and pre- and post-processing, achieving significant acceleration of the end-to-end process. For detailed high-performance deployment procedures, please refer to the <a href="../pipeline_deploy/high_performance_inference.html">PaddleX High-Performance Inference Guide</a>.
-* Service-oriented deployment: Service-oriented deployment is a common form of deployment in actual production environments. By encapsulating the inference function as a service, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving service-oriented deployment of the production line at a low cost. For detailed service-oriented deployment procedures, please refer to the <a href="../pipeline_deploy/serving.html">PaddleX Service-Oriented Deployment Guide</a>.</p>
-<p>You can choose the appropriate method to deploy the production line according to your needs, and then proceed with subsequent AI application integration.
-This section takes service-oriented deployment as an example and guides you through the service-oriented deployment of the production line and API calls, which can be completed in just 5 simple steps:</p>
+* Serving Deployment: Serving Deployment is a common form of deployment in actual production environments. By encapsulating the inference function as a service, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving serving deployment of the pipeline at a low cost. For detailed serving deployment procedures, please refer to the <a href="../pipeline_deploy/serving.html">PaddleX Serving Deployment Guide</a>.</p>
+<p>You can choose the appropriate method to deploy the pipeline according to your needs, and then proceed with subsequent AI application integration.
+This section takes serving deployment as an example and guides you through the serving deployment of the pipeline and API calls, which can be completed in just 5 simple steps:</p>
 <p>(1) Execute the following Python script to save the feature database of the cartoon face demonstration data.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
 </span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="c1"># Create a face recognition pipeline</span>
@@ -5943,10 +5943,10 @@ This section takes service-oriented deployment as an example and guides you thro
 </span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="c1"># Save the cartoon face feature database</span>
 </span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="n">index_data</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;cartoonface_index&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<p>(2) Execute the following command in the command line to install the service-oriented deployment plugin</p>
+<p>(2) Execute the following command in the command line to install the serving deployment plugin</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>paddlex<span class="w"> </span>--install<span class="w"> </span>serving
 </span></code></pre></div>
-<p>(3) Obtain the face recognition production line configuration file</p>
+<p>(3) Obtain the face recognition pipeline configuration file</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>paddlex<span class="w"> </span>--get_pipeline_config<span class="w"> </span>face_recognition<span class="w"> </span>--save_path<span class="w"> </span>./
 </span></code></pre></div>
 <p>(4) Modify the configuration file to set the directory for the feature database.</p>
@@ -6027,7 +6027,7 @@ This section takes service-oriented deployment as an example and guides you thro
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 27, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 2, 2025</span>
   </span>
 
     
@@ -6037,7 +6037,7 @@ This section takes service-oriented deployment as an example and guides you thro
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 27, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 2, 2025</span>
   </span>
 
     
@@ -6052,7 +6052,7 @@ This section takes service-oriented deployment as an example and guides you thro
     </span>
     <nav>
       
-        <a href="mailto:142379845+changdazhou@users.noreply.github.com">changdazhou</a>
+        <a href="mailto:bob1998425@hotmail.com">Lin Manhui</a>
     </nav>
   </span>
 
@@ -6180,7 +6180,7 @@ This section takes service-oriented deployment as an example and guides you thro
     <script id="__config" type="application/json">{"base": "../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
       
         <script src="../../javascripts/katex.min.js"></script>
       
