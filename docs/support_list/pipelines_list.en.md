@@ -10,7 +10,7 @@ comments: true
   <tr>
     <th width="10%">Pipeline Name</th>
     <th width="10%">Pipeline Modules</th>
-    <th width="10%">Baidu AIStudio Community Experience URL</th>
+    <th width="10%">Baidu AI Studio Community Experience URL</th>
     <th width="50%">Pipeline Introduction</th>
     <th width="20%">Applicable Scenarios</th>
   </tr>
@@ -22,7 +22,7 @@ comments: true
     <td>
       <ul>
         <li>Automatic classification and recognition of product images</li>
-        <li>Real-time monitoring of defective products on production lines</li>
+        <li>Real-time monitoring of defective products on pipelines</li>
         <li>Personnel recognition in security surveillance</li>
       </ul>
     </td>
@@ -81,7 +81,7 @@ comments: true
 </td>
   </tr>
   <tr>
-    <td>Layout Area Detection</td>
+    <td>Layout Detection</td>
   </tr>
   <tr>
     <td>Text Detection</td>
@@ -93,49 +93,65 @@ comments: true
     <td>Seal Text Detection</td>
   </tr>
   <tr>
-    <td>Text Image Correction</td>
+    <td>Text Image Un ra p ping</td>
   </tr>
   <tr>
     <td>Document Image Orientation Classification</td>
   </tr>
   <tr>
-    <td rowspan = 2>OCR</td>
-    <td >Text Detection</td>
-    <td rowspan = 2><a href="https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">Online Experience</a></td>
-    <td rowspan = 2>OCR (Optical Character Recognition) is a technology that converts text in images into editable text. It is widely used in document digitization, information extraction, and data processing. OCR can recognize printed text, handwritten text, and even certain types of fonts and symbols. The General OCR Pipeline is designed to solve text recognition tasks, extracting text information from images and outputting it in text form. PP-OCRv4 is an end-to-end OCR system that achieves millisecond-level text content prediction on CPUs, achieving state-of-the-art (SOTA) performance in general scenarios. Based on this project, developers from academia, industry, and research have quickly implemented various OCR applications covering general, manufacturing, finance, transportation.</td>
-    <td rowspan = 2>
-      <ul>
-        <li>Document digitization</li>
-        <li>Information extraction</li>
-        <li>Data processing</li>
-      </ul>
+    <td rowspan="5">General OCR</td>
+    <td>Text Detection</td>
+    <td rowspan="5"><a href="https://aistudio.baidu.com/community/app/91660/webUI?source=appMineRecent">Online Experience</a></td>
+    <td rowspan="5">OCR (Optical Character Recognition) is a technology that converts text in images into editable text. It is widely used in document digitization, information extraction, and data processing. OCR can recognize printed text, handwritten text, and even certain types of fonts and symbols. General OCR is used to solve text recognition tasks, extracting text information from images and outputting it in text form. PP-OCRv4 is an end-to-end OCR system that can achieve millisecond-level accurate text prediction on CPUs, reaching open-source SOTA in general scenarios. Based on this project, many developers from academia, industry, and research have quickly implemented multiple OCR applications, covering various fields such as general, manufacturing, finance, and transportation.</td>
+    <td rowspan="5">
+    <ul>
+        <li>License plate recognition in intelligent security</li>
+        <li>Recognition of house numbers and other information</li>
+        <li>Digitization of paper documents</li>
+        <li>Recognition of ancient characters in cultural heritage</li>
+    </ul>
     </td>
-  </tr>
-    <tr>
-    <td>Text Recognition</td>
-  </tr>
+</tr>
 <tr>
-        <td rowspan = 4>Table Recognition</td>
-        <td>Layout Detection</td>
-        <td rowspan = 4><a href="https://aistudio.baidu.com/community/app/91661/webUI">Online Experience</a></td>
-        <td rowspan = 4>Table recognition is a technology that automatically identifies and extracts table content and its structure from documents or images. It is widely used in data entry, information retrieval, and document analysis. By leveraging computer vision and machine learning algorithms, table recognition can convert complex table information into editable formats, facilitating further data processing and analysis by users</td>
-<td rowspan = 4>
+    <td>Text Recognition</td>
+</tr>
+<tr>
+    <td>Document Image Orientation Classification </td>
+</tr>
+<tr>
+    <td>Text Image Unwarping </td>
+</tr>
+<tr>
+    <td>Text Line Orientation Classification </td>
+</tr>
+<tr>
+    <td rowspan="6">General Table Recognition</td>
+    <td>Table Structure Recognition</td>
+    <td rowspan="6"><a href="https://aistudio.baidu.com/community/app/91661/webUI">Online Experience</a></td>
+    <td rowspan="6">Table recognition is a technology that automatically identifies and extracts table content and structure from documents or images. It is widely used in data entry, information retrieval, and document analysis. By using computer vision and machine learning algorithms, table recognition can convert complex table information into an editable format, facilitating further processing and analysis by users.</td>
+    <td rowspan="6">
     <ul>
         <li>Processing of bank statements</li>
-        <li>recognition and extraction of various indicators in medical reports</li>
-        <li>extraction of tabular information from contracts</li>
-      </ul>
-      </td>
-   </tr>
-  <tr>
-    <td>Table Structure Recognition </td>
-  </tr>
-  <tr>
+        <li>Recognition and extraction of indicators in medical reports</li>
+        <li>Extraction of table information in contracts</li>
+    </ul>
+    </td>
+</tr>
+<tr>
     <td>Text Detection</td>
-  </tr>
-  <tr>
+</tr>
+<tr>
     <td>Text Recognition</td>
-  </tr>
+</tr>
+<tr>
+    <td>Layout Detection </td>
+</tr>
+<tr>
+    <td>Doc Img Orientation Classification </td>
+</tr>
+<tr>
+    <td>Text Image Unrapping </td>
+</tr>
     <tr>
         <td>Time Series Forecasting</td>
         <td>Time Series Forecasting Module</td>
@@ -188,7 +204,7 @@ comments: true
 <tr>
     <td>Multi-label Image Classification</td>
     <td>Multi-label Image Classification</td>
-    <td>None</td>
+    <td><a href="https://aistudio.baidu.com/community/app/387974/webUI?source=appCenter">Online Experience</a></td>
     <td>Image multi-label classification is a technology that assigns an image to multiple related categories simultaneously. It is widely used in image tagging, content recommendation, and social media analysis. It can identify multiple objects or features present in an image, such as both "dog" and "outdoor" labels in a single picture. By using deep learning models, image multi-label classification can automatically extract image features and perform accurate classification to provide more comprehensive information for users. This technology is significant in applications like intelligent search engines and automatic content generation.</td>
     <td>
     <ul>
@@ -205,7 +221,7 @@ comments: true
   <tr>
     <td>Small Object Detection</td>
     <td>Small Object Detection</td>
-    <td>None</td>
+    <td><a href="https://aistudio.baidu.com/community/app/387975/webUI?source=appCenter">Online Experience</a></td>
     <td>Small object detection is a technology specifically for identifying small objects in images. It is widely used in surveillance, autonomous driving, and satellite image analysis. It can accurately find and classify small-sized objects like pedestrians, traffic signs, or small animals in complex scenes. By using deep learning algorithms and optimized convolutional neural networks, small object detection can effectively enhance the recognition ability of small objects, ensuring that important information is not missed in practical applications. This technology plays an important role in improving safety and automation levels.</td>
     <td>
   <ul>
@@ -235,80 +251,98 @@ comments: true
   </ul></td>
   </tr>
   <tr>
-    <td rowspan = 8>Layout Parsing</td>
+    <td rowspan="10">General Layout Parsing</td>
+    <td>Layout Detection</td>
+    <td rowspan="10">None</td>
+    <td rowspan="10">Layout parsing is a technology that extracts structured information from document images, primarily used to convert complex document layouts into machine-readable data formats. This technology is widely applied in document management, information extraction, and data digitization. By combining Optical Character Recognition (OCR), image processing, and machine learning algorithms, layout parsing can identify and extract text blocks, headings, paragraphs, images, tables, and other layout elements from documents. The process typically includes three main steps: layout analysis, element analysis, and data formatting, ultimately generating structured document data to enhance the efficiency and accuracy of data processing.</td>
+    <td rowspan="10">
+        <ul>
+            <li>Analysis of financial and legal documents</li>
+            <li>Digitization of historical documents and archives</li>
+            <li>Automated form filling</li>
+            <li>Page structure parsing</li>
+        </ul>
+    </td>
+</tr>
+<tr>
+    <td>Layout Detection Module</td>
+</tr>
+<tr>
+    <td>Text Detection Module</td>
+</tr>
+<tr>
+    <td>Text Recognition Module</td>
+</tr>
+<tr>
+    <td>Doc Img Orientation Classification</td>
+</tr>
+<tr>
+    <td>Text Image Unrapping</td>
+</tr>
+<tr>
     <td>Table Structure Recognition</td>
-    <td rowspan = 8>None</td>
-    <td rowspan = 8>Layout analysis is a technology for extracting structured information from document images, primarily used to convert complex document layouts into machine-readable data formats. This technology has wide applications in document management, information extraction, and data digitization. By combining optical character recognition (OCR), image processing, and machine learning algorithms, layout analysis can identify and extract text blocks, titles, paragraphs, images, tables, and other layout elements from documents. This process typically includes three main steps: layout analysis, element analysis, and data formatting, ultimately generating structured document data that enhances data processing efficiency and accuracy.</td>
-    <td rowspan="8">
-  <ul>
-    <li>Financial and legal document analysis</li>
-    <li>Digitization of historical documents and archives</li>
-    <li>Automated form filling</li>
-    <li>Page structure analysis</li>
-  </ul>
-</td>
-  </tr>
-  <tr>
-    <td>Layout Area Detection</td>
-  </tr>
-  <tr>
-    <td>Text Detection</td>
-  </tr>
-  <tr>
-    <td>Text Recognition</td>
-  </tr>
-  <tr>
+</tr>
+<tr>
+    <td>Text Line Orientation Classification</td>
+</tr>
+<tr>
     <td>Formula Recognition</td>
-  </tr>
-  <tr>
+</tr>
+<tr>
     <td>Seal Text Detection</td>
-  </tr>
-  <tr>
-    <td>Text Image Correction</td>
-  </tr>
-  <tr>
-    <td>Document Image Orientation Classification</td>
-  </tr>
-    <tr>
-    <td rowspan = 2>Formula Recognition</td>
-    <td>Layout Area Detection</td>
-    <td rowspan = 2>None</td>
-    <td rowspan = 2>Formula recognition is a technology that automatically identifies and extracts LaTeX formula content and its structure from documents or images. It is widely used in document editing and data analysis in fields such as mathematics, physics, and computer science. By using computer vision and machine learning algorithms, formula recognition can convert complex mathematical formula information into an editable LaTeX format, facilitating further data processing and analysis by users.</td>
-    <td rowspan = 2>
-    <ul>
-        <li>Document digitization and retrieval</li>
-        <li>Formula search engine</li>
-        <li>Formula editor</li>
-        <li>Automated typesetting</li>
-      </ul>
-      </td>
-  </tr>
-  <tr>
+</tr>
+<tr>
+    <td rowspan="4">Formula Recognition</td>
     <td>Formula Recognition</td>
-  </tr>
-  <tr>
-    <td rowspan = 3>Seal Text Recognition</td>
-    <td>Layout Area Detection</td>
-    <td rowspan = 3>None</td>
-    <td rowspan = 3>Seal text recognition is a technology that automatically extracts and recognizes seal content from documents or images. Recognizing seal text is part of document processing and has applications in many scenarios, such as contract comparison, inventory audit, and invoice reimbursement audit.</td>
-    <td rowspan = 3>
-    <ul>
-        <li>Contract and agreement validation</li>
-        <li>Check processing</li>
-        <li>Loan approval</li>
-        <li>Legal document management</li>
-      </ul>
-      </td>
-  </tr>
-  <tr>
+    <td rowspan="4"><a href="https://aistudio.baidu.com/community/app/387976/webUI?source=appCenter">Online Experience</a></td>
+    <td rowspan="4">Formula recognition is a technology that automatically identifies and extracts LaTeX formula content and structure from documents or images. It is widely used in document editing and data analysis in fields such as mathematics, physics, and computer science. By using computer vision and machine learning algorithms, formula recognition can convert complex mathematical formula information into editable LaTeX format, facilitating further processing and analysis by users.</td>
+    <td rowspan="4">
+        <ul>
+            <li>Document digitization and retrieval</li>
+            <li>Formula search engine</li>
+            <li>Formula editor</li>
+            <li>Automated typesetting</li>
+        </ul>
+    </td>
+</tr>
+<tr>
+    <td>Layout Detection Module </td>
+</tr>
+<tr>
+    <td>Doc Img Orientation Classification </td>
+</tr>
+<tr>
+    <td>Text Image Unrapping</td>
+</tr>
+<tr>
+    <td rowspan="5">Seal Text Recognition</td>
     <td>Seal Text Detection</td>
-  </tr>
-  <tr>
+    <td rowspan="5"><a href="https://aistudio.baidu.com/community/app/387977/webUI?source=appCenter">Online Experience</a></td>
+    <td rowspan="5">Seal text recognition is a technology that automatically extracts and identifies seal content from documents or images. Seal text recognition is a part of document processing and is useful in many scenarios, such as contract comparison, inventory audit, and invoice reimbursement review.</td>
+    <td rowspan="5">
+        <ul>
+            <li>Contract and agreement verification</li>
+            <li>Check processing</li>
+            <li>Loan approval</li>
+            <li>Legal document management</li>
+        </ul>
+    </td>
+</tr>
+<tr>
     <td>Text Recognition</td>
-  </tr>
+</tr>
+<tr>
+    <td>Layout Detection </td>
+</tr>
+<tr>
+    <td>Doc Img Orientation Classification </td>
+</tr>
+<tr>
+    <td>Text Image Unrapping</td>
+</tr>
 <tr>
     <td rowspan = 2>General Image Recognition</td>
-    <td>Subject Detection</td>
+    <td>Mainbody Detection</td>
     <td rowspan = 2>None</td>
     <td rowspan = 2>The general image recognition pipeline is designed to address open-domain target localization and recognition issues. It can effectively identify and differentiate various target objects in different environments and conditions, making it widely applicable in autonomous driving, intelligent security, medical image analysis, and industrial automation, among other fields.</td>
     <td rowspan = 2>
@@ -439,7 +473,7 @@ comments: true
 </tr>
 <tr>
     <td rowspan="2">Document Image Preprocessing</td>
-    <td>Document Image Orientation Classification</td>
+    <td>Doc Img Orientation Classification</td>
     <td rowspan="2">Not Available</td>
     <td rowspan="2">Document image preprocessing is a key step in document analysis and recognition, aiming to optimize document images through a series of technical means to improve the accuracy and efficiency of subsequent processing. Document image preprocessing includes operations such as orientation classification, text rectification, noise removal, and binarization, which can effectively improve image quality, correct document orientation, and remove interference factors. This technology is widely used in document scanning, OCR text recognition, and electronic document generation.</td>
     <td rowspan="2">
@@ -451,7 +485,7 @@ comments: true
     </td>
 </tr>
 <tr>
-    <td>Text Image Rectification</td>
+    <td>Text Image Unrapping</td>
 </tr>
 <tr>
     <td>Multilingual Speech Recognition</td>

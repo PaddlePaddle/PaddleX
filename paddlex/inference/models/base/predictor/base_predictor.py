@@ -16,6 +16,7 @@ from typing import List, Dict, Any, Iterator
 from pathlib import Path
 from abc import abstractmethod, ABC
 
+from .....utils.flags import INFER_BENCHMARK
 from ....utils.io import YAMLReader
 from ....common.batch_sampler import BaseBatchSampler
 
@@ -71,7 +72,6 @@ class BasePredictor(ABC):
 
         # alias predict() to the __call__()
         self.predict = self.__call__
-        self.benchmark = None
 
     @property
     def config_path(self) -> str:
@@ -138,7 +138,15 @@ class BasePredictor(ABC):
         Yields:
             Iterator[Any]: An iterator yielding prediction results.
         """
-        for batch_data in self.batch_sampler(input):
+        if INFER_BENCHMARK:
+            if not isinstance(input, list):
+                raise TypeError("In benchmark mode, `input` must be a list")
+            batches = list(self.batch_sampler(input))
+            if len(batches) != 1 or len(batches[0]) != len(input):
+                raise ValueError("Unexpected number of instances")
+        else:
+            batches = self.batch_sampler(input)
+        for batch_data in batches:
             prediction = self.process(batch_data, **kwargs)
             prediction = PredictionWrap(prediction, len(batch_data))
             for idx in range(len(batch_data)):

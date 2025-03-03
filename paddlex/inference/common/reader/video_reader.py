@@ -16,8 +16,10 @@ import numpy as np
 import cv2
 
 from ...utils.io import VideoReader
+from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class ReadVideo:
     """Load video from the file."""
 

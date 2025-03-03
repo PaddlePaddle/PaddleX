@@ -23,6 +23,7 @@ import cv2
 from PIL import Image
 
 from . import funcs as F
+from ....utils.benchmark import benchmark
 
 
 class _BaseResize:
@@ -80,6 +81,7 @@ class _BaseResize:
         return rescaled_size, scale
 
 
+@benchmark.timeit
 class Resize(_BaseResize):
     """Resize the image."""
 
@@ -133,6 +135,7 @@ class Resize(_BaseResize):
         return img
 
 
+@benchmark.timeit
 class ResizeByLong(_BaseResize):
     """
     Proportionally resize the image by specifying the target length of the
@@ -174,6 +177,7 @@ class ResizeByLong(_BaseResize):
         return img
 
 
+@benchmark.timeit
 class ResizeByShort(_BaseResize):
     """
     Proportionally resize the image by specifying the target length of the
@@ -215,6 +219,7 @@ class ResizeByShort(_BaseResize):
         return img
 
 
+@benchmark.timeit
 class Normalize:
     """Normalize the image."""
 
@@ -257,6 +262,7 @@ class Normalize:
         return list(imgs)
 
 
+@benchmark.timeit
 class ToCHWImage:
     """Reorder the dimensions of the image from HWC to CHW."""
 
@@ -265,6 +271,7 @@ class ToCHWImage:
         return [img.transpose((2, 0, 1)) for img in imgs]
 
 
+@benchmark.timeit
 class ToBatch:
     def __call__(self, imgs):
         return [np.stack(imgs, axis=0).astype(dtype=np.float32, copy=False)]

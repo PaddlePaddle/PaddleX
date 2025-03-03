@@ -23,8 +23,10 @@ import numpy as np
 from ..common.vision.processors import _BaseResize
 
 from ..common.vision import funcs as F
+from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class Resize(_BaseResize):
     """Resize the image."""
 
@@ -81,6 +83,7 @@ class Resize(_BaseResize):
         return img
 
 
+@benchmark.timeit
 class SegPostProcess:
     """Semantic Segmentation PostProcess
 

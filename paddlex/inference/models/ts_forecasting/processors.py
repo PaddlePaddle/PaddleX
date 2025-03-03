@@ -17,7 +17,10 @@ import joblib
 import numpy as np
 import pandas as pd
 
+from ...utils.benchmark import benchmark
 
+
+@benchmark.timeit
 class TSDeNormalize:
     """A class to de-normalize time series prediction data using a pre-fitted scaler."""
 
@@ -60,6 +63,7 @@ class TSDeNormalize:
         return pred
 
 
+@benchmark.timeit
 class ArraytoTS:
     """A class to convert arrays of predictions into time series format."""
 

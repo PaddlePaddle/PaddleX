@@ -2,10 +2,10 @@
 comments: true
 ---
 
-# Open Vocabulary Segmentation Pipeline User Guide
+# Open Vocabulary Segmentation Pipeline Tutorial
 
 ## 1. Introduction to Open Vocabulary Segmentation Pipeline
-Open vocabulary segmentation is an image segmentation task that aims to segment objects in an image based on text descriptions, bounding boxes, key points, and other information besides the image itself. It allows the model to handle a wide range of object categories without a predefined category list. This technology combines visual and multimodal techniques, greatly enhancing the flexibility and accuracy of image processing. Open vocabulary segmentation has significant application value in the field of computer vision, especially in object segmentation tasks in complex scenarios. This pipeline also provides flexible service deployment options, supporting multiple programming languages on various hardware. Currently, this pipeline does not support secondary development of the model, but it is planned to be supported in the future.
+Open vocabulary segmentation is an image segmentation task that aims to segment objects in an image based on text descriptions, bounding boxes, key points, and other information besides the image itself. It allows the model to handle a wide range of object categories without a predefined category list. This technology combines visual and multimodal techniques, greatly enhancing the flexibility and accuracy of image processing. Open vocabulary segmentation has significant application value in the field of computer vision, especially in object segmentation tasks in complex scenarios. This pipeline also provides flexible service deployment options, supporting multiple programming languages on various hardware. Currently, this pipeline does not support custom development of the model, but it is planned to be supported in the future.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/open_vocabulary_segmentation/open_vocabulary_segmentation_res.jpg">
 
@@ -18,7 +18,7 @@ Open vocabulary segmentation is an image segmentation task that aims to segment 
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
-<th>GPU Inference Time (ms)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)</th>
 <th>Model Storage Size (M)</th>
 <th>Description</th>
@@ -50,7 +50,7 @@ Open vocabulary segmentation is an image segmentation task that aims to segment 
 
 | Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
 |-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
 | High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## 2. Quick Start
@@ -541,7 +541,7 @@ with open(image_path, "rb") as file:
 
 payload = {
     "image": image_data, # Base64-encoded file content or image URL
-    "prompt_type": "box",
+    "promptType": "box",
     "prompt": [[112.9,118.4,513.8,382.1],[4.6,263.6,92.2,336.6],[592.4,260.9,607.2,294.2]]
 }
 
@@ -556,8 +556,6 @@ image = base64.b64decode(image_base64)
 with open(output_image_path, "wb") as file:
     file.write(base64.b64decode(result["image"]))
 print(f"Output image saved at {output_image_path}")
-print("\nresult(with rle encoded binary mask):")
-print(result)
 </code></pre></details>
 
 </details>
@@ -566,7 +564,7 @@ print(result)
 📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
 You can choose the appropriate method to deploy the model pipeline according to your needs, and then proceed with subsequent AI application integration.
 
-## 4. Secondary Development
+## 4. Custom Development
 The current pipeline temporarily does not support fine-tuning training, only inference integration is supported. Fine-tuning training for this pipeline is planned to be supported in the future.
 
 ## 5. Multi-Hardware Support

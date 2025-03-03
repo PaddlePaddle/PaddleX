@@ -19,7 +19,7 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>AP (%)<br/>Easy/Medium/Hard</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -27,7 +27,7 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 </thead>
 <tbody>
 <tr>
-<td>BlazeFace</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace_pretrained.pdparams">Trained Model</a></td>
+<td>BlazeFace</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace_pretrained.pdparams">Training Model</a></td>
 <td>77.7/73.4/49.5</td>
 <td>60.34 / 54.76</td>
 <td>84.18 / 84.18</td>
@@ -35,7 +35,7 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 <td>A lightweight and efficient face detection model</td>
 </tr>
 <tr>
-<td>BlazeFace-FPN-SSH</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace-FPN-SSH_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace-FPN-SSH_pretrained.pdparams">Trained Model</a></td>
+<td>BlazeFace-FPN-SSH</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BlazeFace-FPN-SSH_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/BlazeFace-FPN-SSH_pretrained.pdparams">Training Model</a></td>
 <td>83.2/80.5/60.5</td>
 <td>69.29 / 63.42</td>
 <td>86.96 / 86.96</td>
@@ -43,7 +43,7 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 <td>Improved BlazeFace with FPN and SSH structures</td>
 </tr>
 <tr>
-<td>PicoDet_LCNet_x2_5_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_LCNet_x2_5_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_LCNet_x2_5_face_pretrained.pdparams">Trained Model</a></td>
+<td>PicoDet_LCNet_x2_5_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PicoDet_LCNet_x2_5_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PicoDet_LCNet_x2_5_face_pretrained.pdparams">Training Model</a></td>
 <td>93.7/90.7/68.1</td>
 <td>35.37 / 12.88</td>
 <td>126.24 / 126.24</td>
@@ -51,7 +51,7 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 <td>Face detection model based on PicoDet_LCNet_x2_5</td>
 </tr>
 <tr>
-<td>PP-YOLOE_plus-S_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-S_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_face_pretrained.pdparams">Trained Model</a></td>
+<td>PP-YOLOE_plus-S_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-YOLOE_plus-S_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-YOLOE_plus-S_face_pretrained.pdparams">Training Model</a></td>
 <td>93.9/91.8/79.8</td>
 <td>22.54 / 8.33</td>
 <td>138.67 / 138.67</td>
@@ -68,15 +68,15 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 <th>Model</th><th>Model Download Link</th>
 <th>Output Feature Dimension</th>
 <th>Acc (%)<br/>AgeDB-30/CFP-FP/LFW</th>
-<th>GPU Inference Time (ms)</th>
-<th>CPU Inference Time</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>MobileFaceNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MobileFaceNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileFaceNet_pretrained.pdparams">Trained Model</a></td>
+<td>MobileFaceNet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/MobileFaceNet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/MobileFaceNet_pretrained.pdparams">Training Model</a></td>
 <td>128</td>
 <td>96.28/96.71/99.58</td>
 <td>5.7</td>
@@ -85,7 +85,7 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 <td>Face recognition model trained on MS1Mv3 based on MobileFaceNet</td>
 </tr>
 <tr>
-<td>ResNet50_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ResNet50_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_face_pretrained.pdparams">Trained Model</a></td>
+<td>ResNet50_face</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ResNet50_face_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ResNet50_face_pretrained.pdparams">Training Model</a></td>
 <td>512</td>
 <td>98.12/98.56/99.77</td>
 <td>8.7</td>
@@ -111,7 +111,7 @@ The face recognition pipeline is an end-to-end system dedicated to solving face 
 
 | Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
 |-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
 | High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## 2. Quick Start
@@ -718,9 +718,9 @@ Below is the API reference for basic service deployment and multi-language servi
 <td>The key corresponding to the index, used to identify the created index. It can be used as input for other operations.</td>
 </tr>
 <tr>
-<td><code>idMap</code></td>
-<td><code>object</code></td>
-<td>Mapping from vector IDs to labels.</td>
+<td><code>imageCount</code></td>
+<td><code>integer</code></td>
+<td>The number of images indexed.</td>
 </tr>
 </tbody>
 </table>
@@ -791,9 +791,9 @@ Below is the API reference for basic service deployment and multi-language servi
 </thead>
 <tbody>
 <tr>
-<td><code>idMap</code></td>
-<td><code>object</code></td>
-<td>Mapping from vector IDs to labels.</td>
+<td><code>imageCount</code></td>
+<td><code>integer</code></td>
+<td>The number of images indexed.</td>
 </tr>
 </tbody>
 </table>
@@ -842,9 +842,9 @@ Below is the API reference for basic service deployment and multi-language servi
 </thead>
 <tbody>
 <tr>
-<td><code>idMap</code></td>
-<td><code>object</code></td>
-<td>Mapping from vector IDs to labels.</td>
+<td><code>imageCount</code></td>
+<td><code>integer</code></td>
+<td>The number of images indexed.</td>
 </tr>
 </tbody>
 </table>
@@ -881,25 +881,25 @@ Below is the API reference for basic service deployment and multi-language servi
 <tr>
 <td><code>detThreshold</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the <code>det_threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>Please refer to description of the <code>det_threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>recThreshold</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the <code>rec_threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>Please refer to description of the <code>rec_threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>hammingRadius</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the <code>hamming_radius</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>hamming_radius</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>topk</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>Refer to the <code>topk</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>Please refer to description of the <code>topk</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
@@ -1014,7 +1014,7 @@ if resp_index_build.status_code != 200:
     pprint.pp(resp_index_build.json())
     sys.exit(1)
 result_index_build = resp_index_build.json()["result"]
-print(f"Number of images indexed: {len(result_index_build['idMap'])}")
+print(f"Number of images indexed: {result_index_build['imageCount']}")
 
 for pair in image_label_pairs_to_add:
     with open(pair["image"], "rb") as file:
@@ -1029,7 +1029,7 @@ if resp_index_add.status_code != 200:
     pprint.pp(resp_index_add.json())
     sys.exit(1)
 result_index_add = resp_index_add.json()["result"]
-print(f"Number of images indexed: {len(result_index_add['idMap'])}")
+print(f"Number of images indexed: {result_index_add['imageCount']}")
 
 payload = {"ids": ids_to_remove, "indexKey": result_index_build["indexKey"]}
 resp_index_remove = requests.post(f"{API_BASE_URL}/face-recognition-index-remove", json=payload)
@@ -1038,7 +1038,7 @@ if resp_index_remove.status_code != 200:
     pprint.pp(resp_index_remove.json())
     sys.exit(1)
 result_index_remove = resp_index_remove.json()["result"]
-print(f"Number of images indexed: {len(result_index_remove['idMap'])}")
+print(f"Number of images indexed: {result_index_remove['imageCount']}")
 
 with open(infer_image_path, "rb") as file:
     image_bytes = file.read()
@@ -1066,13 +1066,13 @@ pprint.pp(result_infer["faces"])
 You can choose the appropriate method to deploy the model pipeline according to your needs, and then proceed with subsequent AI application integration.
 
 
-## 4. Secondary Development
+## 4. Custom Development
 If the default model weights provided by the face recognition pipeline do not meet your accuracy or speed requirements in your scenario, you can try further <b>fine-tuning</b> the existing model using <b>your own specific domain or application data</b> to improve the recognition performance of the pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
 Since the face recognition pipeline includes two modules (face detection and face feature), the unsatisfactory performance of the model pipeline may come from either module.
 
-You can analyze the images with poor recognition performance. If you find that many faces are not detected during the analysis, it may indicate a deficiency in the face detection model. You need to refer to the [Face Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/face_detection.en.md) and the [Secondary Development](../../../module_usage/tutorials/cv_modules/face_detection.en.md) section to fine-tune the face detection model using your private dataset. If there are matching errors in the detected faces, it indicates that the face feature module needs further improvement. You need to refer to the [Face Feature Module Development Tutorial](../../../module_usage/tutorials/cv_modules/face_feature.md) and the [Secondary Development](../../../module_usage/tutorials/cv_modules/face_feature.md) section to fine-tune the face feature module.
+You can analyze the images with poor recognition performance. If you find that many faces are not detected during the analysis, it may indicate a deficiency in the face detection model. You need to refer to the [Face Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/face_detection.en.md) and the [Custom Development](../../../module_usage/tutorials/cv_modules/face_detection.en.md) section to fine-tune the face detection model using your private dataset. If there are matching errors in the detected faces, it indicates that the face feature module needs further improvement. You need to refer to the [Face Feature Module Development Tutorial](../../../module_usage/tutorials/cv_modules/face_feature.md) and the [Custom Development](../../../module_usage/tutorials/cv_modules/face_feature.md) section to fine-tune the face feature module.
 
 ### 4.2 Model Application
 After completing the fine-tuning training with your private dataset, you will obtain the local model weight file.

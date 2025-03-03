@@ -20,6 +20,7 @@ import PIL
 from copy import deepcopy
 
 from .....utils.lazy_loader import LazyLoader
+from ....utils.benchmark import benchmark
 
 # NOTE: LazyLoader is used to avoid conflicts between ultra-infer and Paddle
 paddle = LazyLoader("lazy_paddle", globals(), "paddle")
@@ -126,6 +127,7 @@ class SAMProcessor(object):
         return [masks]
 
 
+@benchmark.timeit
 class SamPromptProcessor(object):
     """Constructs a Sam prompt processor."""
 
@@ -180,6 +182,7 @@ class SamPromptProcessor(object):
             return box.astype(np.float32)
 
 
+@benchmark.timeit
 class SamImageProcessor(object):
     """Constructs a Sam image processor."""
 

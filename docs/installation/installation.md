@@ -186,7 +186,7 @@ git clone https://gitee.com/paddlepaddle/PaddleX.git
 #### 2.2.2 安装PaddleX
 获取 PaddleX 最新源码之后，您可以选择Wheel包安装模式或插件安装模式。
 
-* <b>若您选择Wheel包安装模式</b>，请执行以下命令：
+<b>若您选择Wheel包安装模式</b>，请执行以下命令：
 
 ```bash
 cd PaddleX
@@ -195,7 +195,7 @@ cd PaddleX
 # -e：以可编辑模式安装，当前项目的代码更改，都会直接作用到已经安装的 PaddleX Wheel
 pip install -e .
 ```
-* <b>若您选择插件安装模式</b>，并且您需要的插件名称为 PaddleXXX（可以有多个），请执行以下命令：
+<b>若您选择插件安装模式</b>，并且您需要的插件名称为 PaddleXXX（可以有多个），请执行以下命令：
 
 ```bash
 cd PaddleX

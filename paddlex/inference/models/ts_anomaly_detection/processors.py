@@ -16,7 +16,10 @@ from typing import List, Dict, Any
 import numpy as np
 import pandas as pd
 
+from ...utils.benchmark import benchmark
 
+
+@benchmark.timeit
 class GetAnomaly:
     """A class to detect anomalies in time series data based on a model threshold."""
 

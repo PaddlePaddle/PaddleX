@@ -14,7 +14,10 @@
 
 import numpy as np
 
+from ...utils.benchmark import benchmark
 
+
+@benchmark.timeit
 class NormalizeFeatures:
     """Normalize Features Transform"""
 

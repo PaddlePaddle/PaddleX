@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Time Series Anomaly Detection Module Development Tutorial
+# Time Series Anomaly Detection Module Tutorial
 
 ## I. Overview
 Time series anomaly detection focuses on identifying abnormal points or periods in time series data that do not conform to expected patterns, trends, or periodic regularities. These anomalies can be caused by system failures, external shocks, data entry errors, or rare events, and are of great significance for timely response, risk assessment, and business decision-making.
@@ -69,7 +69,7 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
 
 | Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
 |-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
 | High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## III. Quick Integration

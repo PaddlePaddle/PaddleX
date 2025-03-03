@@ -56,7 +56,7 @@ comments: true
 **测试环境说明：**
 
 - **性能测试环境**
-  - **测试数据集**：<a href="https://cocodataset.org/#home">COCO2017</a><b> 的多标签分类任务
+  - **测试数据集**：<a href="https://cocodataset.org/#home">COCO2017</a><b> 的多标签分类任务</b>
   - **硬件配置**：
     - GPU：NVIDIA Tesla T4
     - CPU：Intel Xeon Gold 6271C @ 2.60GHz
@@ -446,7 +446,7 @@ for res in output:
 <tr>
 <td><code>threshold</code></td>
 <td><code>number</code> | <code>array</code> | <code>object</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>threshold</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>threshold</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 </tbody>

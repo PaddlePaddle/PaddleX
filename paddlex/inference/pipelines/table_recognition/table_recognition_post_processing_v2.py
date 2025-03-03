@@ -120,6 +120,29 @@ def compute_iou(rec1: list, rec2: list) -> float:
         intersect = (right_line - left_line) * (bottom_line - top_line)
         return (intersect / (sum_area - intersect)) * 1.0
 
+def compute_inter(rec1, rec2):
+    """
+    computing intersection over rec2_area
+    Args:
+        rec1 (list): (x1, y1, x2, y2)
+        rec2 (list): (x1, y1, x2, y2)
+    Returns:
+        float: Intersection over rec2_area
+    """
+    x1_1, y1_1, x2_1, y2_1 = rec1
+    x1_2, y1_2, x2_2, y2_2 = rec2
+    x_left = max(x1_1, x1_2)
+    y_top = max(y1_1, y1_2)
+    x_right = min(x2_1, x2_2)
+    y_bottom = min(y2_1, y2_2)
+    inter_width = max(0, x_right - x_left)
+    inter_height = max(0, y_bottom - y_top)
+    inter_area = inter_width * inter_height
+    rec2_area = (x2_2 - x1_2) * (y2_2 - y1_2)
+    if rec2_area == 0:
+        return 0 
+    iou = inter_area / rec2_area
+    return iou
 
 def match_table_and_ocr(cell_box_list: list, ocr_dt_boxes: list) -> dict:
     """
@@ -133,27 +156,52 @@ def match_table_and_ocr(cell_box_list: list, ocr_dt_boxes: list) -> dict:
         dict: matched dict, key is table index, value is ocr index
     """
     matched = {}
-    for i, ocr_box in enumerate(np.array(ocr_dt_boxes)):
-        ocr_box = ocr_box.astype(np.float32)
-        distances = []
-        for j, table_box in enumerate(cell_box_list):
-            if len(table_box) == 8:
-                table_box = [
-                    np.min(table_box[0::2]),
-                    np.min(table_box[1::2]),
-                    np.max(table_box[0::2]),
-                    np.max(table_box[1::2]),
-                ]
-            distances.append(
-                (distance(table_box, ocr_box), 1.0 - compute_iou(table_box, ocr_box))
-            )  # compute iou and l1 distance
-        sorted_distances = distances.copy()
-        # select det box by iou and l1 distance
-        sorted_distances = sorted(sorted_distances, key=lambda item: (item[1], item[0]))
-        if distances.index(sorted_distances[0]) not in matched.keys():
-            matched[distances.index(sorted_distances[0])] = [i]
-        else:
-            matched[distances.index(sorted_distances[0])].append(i)
+    del_ocr = []
+    for i, table_box in enumerate(cell_box_list):
+        if len(table_box) == 8:
+            table_box = [
+                np.min(table_box[0::2]),
+                np.min(table_box[1::2]),
+                np.max(table_box[0::2]),
+                np.max(table_box[1::2]),
+            ]
+        for j, ocr_box in enumerate(np.array(ocr_dt_boxes)):
+            if compute_inter(table_box, ocr_box) > 0.8:
+                if i not in matched.keys():
+                    matched[i] = [j]
+                else:
+                    matched[i].append(j)
+                del_ocr.append(j)
+    miss_ocr = []
+    miss_ocr_index = []
+    for m in range(len(ocr_dt_boxes)):
+        if m not in del_ocr:
+            miss_ocr.append(ocr_dt_boxes[m])
+            miss_ocr_index.append(m)
+    if len(miss_ocr) != 0:
+        for k, miss_ocr_box in enumerate(miss_ocr):
+            distances = []
+            for q, table_box in enumerate(cell_box_list):
+                if len(table_box) == 0:
+                    continue
+                if len(table_box) == 8:
+                    table_box = [
+                        np.min(table_box[0::2]),
+                        np.min(table_box[1::2]),
+                        np.max(table_box[0::2]),
+                        np.max(table_box[1::2]),
+                    ]
+                distances.append(
+                    (distance(table_box, miss_ocr_box), 1.0 - compute_iou(table_box, miss_ocr_box))
+                )  # compute iou and l1 distance
+            sorted_distances = distances.copy()
+            # select det box by iou and l1 distance
+            sorted_distances = sorted(sorted_distances, key=lambda item: (item[1], item[0]))
+            if distances.index(sorted_distances[0]) not in matched.keys():
+                matched[distances.index(sorted_distances[0])] = [miss_ocr_index[k]]
+            else:
+                matched[distances.index(sorted_distances[0])].append(miss_ocr_index[k])
+    # print(matched)
     return matched
 
 def get_html_result(
@@ -329,7 +377,6 @@ def get_table_recognition_res(
     ocr_texts_res = table_ocr_pred["rec_texts"]
 
     table_cells_result = sort_table_cells_boxes(table_cells_result)
-    ocr_dt_boxes = sort_table_cells_boxes(ocr_dt_boxes)
 
     matched_index = match_table_and_ocr(table_cells_result, ocr_dt_boxes)
     pred_html = get_html_result(matched_index, ocr_texts_res, table_structure_result)

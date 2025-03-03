@@ -30,7 +30,7 @@ from .custom_device_whitelist import (
 SUPPORTED_DEVICE_TYPE = ["cpu", "gpu", "xpu", "npu", "mlu", "gcu", "dcu"]
 
 
-def _constr_device(device_type, device_ids):
+def constr_device(device_type, device_ids):
     if device_ids:
         device_ids = ",".join(map(str, device_ids))
         return f"{device_type}:{device_ids}"
@@ -50,7 +50,7 @@ def get_default_device():
     if not avail_gpus:
         return "cpu"
     else:
-        return _constr_device("gpu", [avail_gpus[0]])
+        return constr_device("gpu", [avail_gpus[0]])
 
 
 def parse_device(device):
@@ -80,9 +80,9 @@ def update_device_num(device, num):
     device_type, device_ids = parse_device(device)
     if device_ids:
         assert len(device_ids) >= num
-        return _constr_device(device_type, device_ids[:num])
+        return constr_device(device_type, device_ids[:num])
     else:
-        return _constr_device(device_type, device_ids)
+        return constr_device(device_type, device_ids)
 
 
 def set_env_for_device(device):
@@ -129,6 +129,10 @@ def check_supported_device(device, model_name):
         )
         return
     device_type, device_ids = parse_device(device)
+    return check_supported_device_type(device_type, model_name)
+
+
+def check_supported_device_type(device_type, model_name):
     if device_type == "dcu":
         assert (
             model_name in DCU_WHITELIST

@@ -1071,7 +1071,7 @@ for res in output:
 <tr>
 <td><code>topk</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>topk</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>topk</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 </tbody>
@@ -1142,6 +1142,8 @@ for res in output:
 <details><summary>多语言调用服务示例</summary>
 <details>
 <summary>Python</summary>
+
+
 <pre><code class="language-python">import base64
 import requests
 

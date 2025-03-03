@@ -98,6 +98,7 @@ plugins:
             概述: Overview
             文本图像智能分析: Informatio Extraction
             文档场景信息抽取v3产线: PP-ChatOCRv3-doc
+            文档场景信息抽取v4产线: PP-ChatOCRv4-doc
             OCR: OCR
             通用OCR产线: OCR
             通用表格识别产线: General Table Recognition
@@ -215,7 +216,7 @@ plugins:
             FAQ: FAQ
             近期更新: Recently Update
       repository: PaddlePaddle/PaddleX #仓库名称
-      branch: release/3.0-beta2 #仓库分支
+      branch: release/3.0-rc #仓库分支
   - git-revision-date-localized: #显示更新时间
       enable_creation_date: true
 
@@ -300,7 +301,8 @@ nav:
   - 产线使用教程:
        - 概述: pipeline_usage/pipeline_develop_guide.md
        - 文本图像智能分析:
-         - 文档场景信息抽取v3产线: pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.md
+         - 文档场景信息抽取v3产线: pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.md
+         - 文档场景信息抽取v4产线: pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.md
        - OCR:
          - 通用OCR产线: pipeline_usage/tutorials/ocr_pipelines/OCR.md
          - 通用表格识别产线: pipeline_usage/tutorials/ocr_pipelines/table_recognition.md

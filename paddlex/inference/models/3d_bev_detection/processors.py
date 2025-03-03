@@ -22,6 +22,7 @@ import lazy_paddle as paddle
 from ...utils.io import ImageReader
 from ....utils import logging
 from ...common.reader.det_3d_reader import Sample
+from ...utils.benchmark import benchmark
 
 
 cv2_interp_codes = {
@@ -33,6 +34,7 @@ cv2_interp_codes = {
 }
 
 
+@benchmark.timeit
 class LoadPointsFromFile:
     """Load points from a file and process them according to specified parameters."""
 
@@ -112,6 +114,7 @@ class LoadPointsFromFile:
         return results
 
 
+@benchmark.timeit
 class LoadPointsFromMultiSweeps(object):
     """Load points from multiple sweeps.This is usually used for nuScenes dataset to utilize previous sweeps."""
 
@@ -275,6 +278,7 @@ class LoadPointsFromMultiSweeps(object):
         return results
 
 
+@benchmark.timeit
 class LoadMultiViewImageFromFiles:
     """Load multi-view images from files."""
 
@@ -341,6 +345,7 @@ class LoadMultiViewImageFromFiles:
         return sample
 
 
+@benchmark.timeit
 class ResizeImage:
     """Resize images & bbox & mask."""
 
@@ -671,6 +676,7 @@ class ResizeImage:
         return results
 
 
+@benchmark.timeit
 class NormalizeImage:
     """Normalize the image."""
 
@@ -729,6 +735,7 @@ class NormalizeImage:
         return results
 
 
+@benchmark.timeit
 class PadImage(object):
     """Pad the image & mask."""
 
@@ -859,6 +866,7 @@ class PadImage(object):
         return results
 
 
+@benchmark.timeit
 class SampleFilterByKey:
     """Collect data from the loader relevant to the specific task."""
 
@@ -914,6 +922,7 @@ class SampleFilterByKey:
         return filtered_sample
 
 
+@benchmark.timeit
 class GetInferInput:
     """Collect infer input data from transformed sample"""
 

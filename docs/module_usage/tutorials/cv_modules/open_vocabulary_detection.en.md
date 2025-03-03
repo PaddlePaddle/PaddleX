@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Open-Vocabulary Object Detection Module Usage Tutorial
+# Open-Vocabulary Object Detection Module Tutorial
 
 ## I. Overview
 Open-vocabulary object detection is an advanced object detection technology aimed at overcoming the limitations of traditional object detection. Traditional methods can only recognize objects within predefined categories, while open-vocabulary object detection allows models to identify objects not seen during training. By integrating natural language processing techniques and using text descriptions to define new categories, the model can recognize and locate these new objects. This makes object detection more flexible and generalizable, with significant application potential.
@@ -14,7 +14,7 @@ Open-vocabulary object detection is an advanced object detection technology aime
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5:0.95)</th>
 <th>mAP(0.5)</th>
-<th>GPU Inference Time (ms)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -43,7 +43,7 @@ Open-vocabulary object detection is an advanced object detection technology aime
 
 | Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
 |-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
 | High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## III. Quick Integration

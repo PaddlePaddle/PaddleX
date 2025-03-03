@@ -25,7 +25,10 @@ import json
 import tempfile
 import lazy_paddle
 
+from ...utils.benchmark import benchmark
 
+
+@benchmark.timeit
 class Scale:
     """Scale images."""
 
@@ -135,6 +138,7 @@ class Scale:
         return [self.scale(video) for video in videos]
 
 
+@benchmark.timeit
 class CenterCrop:
     """Center crop images."""
 
@@ -194,6 +198,7 @@ class CenterCrop:
         return [self.center_crop(video) for video in videos]
 
 
+@benchmark.timeit
 class Image2Array:
     """Convert a sequence of images to a numpy array with optional transposition."""
 
@@ -247,6 +252,7 @@ class Image2Array:
         return [self.img2array(video) for video in videos]
 
 
+@benchmark.timeit
 class NormalizeVideo:
     """
     Normalize video frames by subtracting the mean and dividing by the standard deviation.
@@ -324,6 +330,7 @@ class NormalizeVideo:
         return [self.normalize_video(video) for video in videos]
 
 
+@benchmark.timeit
 class VideoClasTopk:
     """Applies a top-k transformation on video classification predictions."""
 
@@ -394,6 +401,7 @@ class VideoClasTopk:
         return indexes, scores, label_names
 
 
+@benchmark.timeit
 class ToBatch:
     """A class for batching videos."""
 

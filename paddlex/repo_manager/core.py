@@ -99,6 +99,7 @@ def setup(
     platform=None,
     update_repos=False,
     use_local_repos=False,
+    deps_to_replace=None,
 ):
     """setup"""
     if update_repos and use_local_repos:
@@ -201,7 +202,12 @@ def setup(
         logging.info(installer.get_deps())
 
     logging.info("Now installing the packages...")
-    installer.install(force_reinstall=False, no_deps=no_deps, constraints=constraints)
+    installer.install(
+        force_reinstall=False,
+        no_deps=no_deps,
+        constraints=constraints,
+        deps_to_replace=deps_to_replace,
+    )
     install_deps_using_pip()
     logging.info("All packages are installed.")
 

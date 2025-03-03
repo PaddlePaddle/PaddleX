@@ -28,8 +28,10 @@ from tokenizers import AddedToken
 from typing import List, Tuple, Optional, Any, Dict, Union
 
 from ....utils import logging
+from ...utils.benchmark import benchmark
 
 
+@benchmark.timeit
 class MinMaxResize:
     """Class for resizing images to be within specified minimum and maximum dimensions, with padding and normalization."""
 
@@ -154,6 +156,7 @@ class MinMaxResize:
         return [self.resize(img) for img in imgs]
 
 
+@benchmark.timeit
 class LatexTestTransform:
     """
     A transform class for processing images according to Latex test requirements.
@@ -194,6 +197,7 @@ class LatexTestTransform:
         return [self.transform(img) for img in imgs]
 
 
+@benchmark.timeit
 class LatexImageFormat:
     """Class for formatting images to a specific format suitable for LaTeX."""
 
@@ -232,6 +236,7 @@ class LatexImageFormat:
         return [self.format(img) for img in imgs]
 
 
+@benchmark.timeit
 class NormalizeImage(object):
     """Normalize an image by subtracting the mean and dividing by the standard deviation.
 
@@ -280,6 +285,7 @@ class NormalizeImage(object):
         return [self.normalize(img) for img in imgs]
 
 
+@benchmark.timeit
 class ToBatch(object):
     """A class for batching images."""
 
@@ -302,6 +308,7 @@ class ToBatch(object):
         return x
 
 
+@benchmark.timeit
 class LaTeXOCRDecode(object):
     """Class for decoding LaTeX OCR tokens based on a provided character list."""
 
@@ -402,6 +409,7 @@ class LaTeXOCRDecode(object):
         return text, label
 
 
+@benchmark.timeit
 class UniMERNetImgDecode(object):
     """Class for decoding images for UniMERNet, including cropping margins, resizing, and padding."""
 
@@ -554,6 +562,7 @@ class UniMERNetImgDecode(object):
         return [self.img_decode(img) for img in imgs]
 
 
+@benchmark.timeit
 class UniMERNetDecode(object):
     """Class for decoding tokenized inputs using UniMERNet tokenizer.
 
@@ -900,6 +909,7 @@ class UniMERNetDecode(object):
         return text, label
 
 
+@benchmark.timeit
 class UniMERNetTestTransform:
     """
     A class for transforming images according to UniMERNet test specifications.
@@ -947,6 +957,7 @@ class UniMERNetTestTransform:
         return [self.transform(img) for img in imgs]
 
 
+@benchmark.timeit
 class UniMERNetImageFormat:
     """Class for formatting images to UniMERNet's required format."""
 
