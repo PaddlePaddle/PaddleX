@@ -1882,7 +1882,7 @@ The following steps were executed:
 
     General Table Recognition Pipeline v2 is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. This pipeline enables precise table prediction and is applicable across various fields, including general, manufacturing, finance, and transportation.
 
-    [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/cv_pipelines/table_recognition_v2.en.md)
+    [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.en.md)
 
 - **Small Object Detection**
 

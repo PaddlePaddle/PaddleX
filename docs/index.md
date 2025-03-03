@@ -1861,7 +1861,7 @@ for res in output:
 
     通用表格识别产线v2用于解决表格识别任务，对图片中的表格进行识别，并以HTML格式输出。基于本产线，可实现对表格的精准预测，使用场景覆盖通用、制造、金融、交通等各个领域。
 
-    [:octicons-arrow-right-24: 教程](pipeline_usage/tutorials/cv_pipelines/table_recognition_v2.md)
+    [:octicons-arrow-right-24: 教程](pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.md)
 
 - **小目标检测**
 
