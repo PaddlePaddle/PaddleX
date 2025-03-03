@@ -52,6 +52,9 @@ regex
 ######## For Speech #######
 soundfile
 shutil
+opencc
+onnxruntime
+pypinyin
 ######## For 3D BEVFusion #######
 nuscenes-devkit
 pyquaternion
