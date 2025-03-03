@@ -90,6 +90,7 @@ Related methods, parameters, and explanations are as follows:
 <ul>
   <li><b>File Path</b>, such as the local path of an audio file: <code>/root/data/audio.wav</code></li>
   <li><b>URL Link</b>, such as the network URL of an audio file: <a href="https://paddlespeech.bj.bcebos.com/PaddleAudio/zh.wav">Example</a></li>
+  <li><b>File type</b>, support wav and pcm audio file.</li>
 </ul>
 </td>
 <td>None</td>
