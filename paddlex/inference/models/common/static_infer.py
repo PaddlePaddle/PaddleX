@@ -122,6 +122,9 @@ def _collect_trt_shape_range_info(
     # a garbage collector. Is there a more explicit and deterministic way to
     # handle this?
 
+    # HACK: Manually delete the predictor to trigger its destructor, ensuring that the shape_range_info file would be saved.
+    del predictor
+
 
 # pir trt
 def _convert_trt(
