@@ -31,6 +31,8 @@ SUPPORTED_DEVICE_TYPE = ["cpu", "gpu", "xpu", "npu", "mlu", "gcu", "dcu"]
 
 
 def constr_device(device_type, device_ids):
+    if device_type == "cpu" and device_ids is not None:
+        raise ValueError("`device_ids` must be None for CPUs")
     if device_ids:
         device_ids = ",".join(map(str, device_ids))
         return f"{device_type}:{device_ids}"
@@ -73,6 +75,8 @@ def parse_device(device):
     device_type = device_type.lower()
     # raise_unsupported_device_error(device_type, SUPPORTED_DEVICE_TYPE)
     assert device_type.lower() in SUPPORTED_DEVICE_TYPE
+    if device_type == "cpu" and device_ids is not None:
+        raise ValueError("No Device ID should be specified for CPUs")
     return device_type, device_ids
 
 

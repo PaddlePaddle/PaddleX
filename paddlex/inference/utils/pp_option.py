@@ -321,9 +321,8 @@ class PaddlePredictorOption(object):
         self.device_type = device_type
         device_id = device_ids[0] if device_ids is not None else None
         self.device_id = device_id
-        if device_type not in ("cpu"):
-            if device_ids is None or len(device_ids) > 1:
-                logging.debug(f"The device ID has been set to {device_id}.")
+        if device_ids is None or len(device_ids) > 1:
+            logging.debug(f"The device ID has been set to {device_id}.")
 
     def get_support_run_mode(self):
         """get supported run mode"""
