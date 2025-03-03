@@ -1104,79 +1104,79 @@ Below are the API references for basic serving deployment and multi-language ser
 <tr>
 <td><code>useDocOrientationClassify</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>Refer to the description of the <code>use_doc_orientation_classify</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>Please refer to the description of the <code>use_doc_orientation_classify</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useDocUnwarping</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>Refer to the description of the <code>use_doc_unwarping</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>Please refer to the description of the <code>use_doc_unwarping</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>useLayoutDetection</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>Refer to the description of the <code>use_layout_detection</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>Please refer to the description of the <code>use_layout_detection</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>layoutThreshold</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the description of the <code>layout_threshold</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>Please refer to the description of the <code>layout_threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>layoutNms</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>Refer to the description of the <code>layout_nms</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>Please refer to the description of the <code>layout_nms</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>layoutUnclipRatio</code></td>
 <td><code>number</code> | <code>array</code> | <code>null</code></td>
-<td>Refer to the description of the <code>layout_unclip_ratio</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>Please refer to the description of the <code>layout_unclip_ratio</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>layoutMergeBboxesMode</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>Refer to the description of the <code>layout_merge_bboxes_mode</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>Please refer to the description of the <code>layout_merge_bboxes_mode</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>sealDetLimitSideLen</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>Refer to the description of the <code>seal_det_limit_side_len</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>Please refer to the description of the <code>seal_det_limit_side_len</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>sealDetLimitType</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>Refer to the description of the <code>seal_det_limit_type</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>Please refer to the description of the <code>seal_det_limit_type</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>sealDetThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the description of the <code>seal_det_thresh</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>Please refer to the description of the <code>seal_det_thresh</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>sealDetBoxThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the description of the <code>seal_det_box_thresh</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>Please refer to the description of the <code>seal_det_box_thresh</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>sealDetUnclipRatio</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the description of the <code>seal_det_unclip_ratio</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>Please refer to the description of the <code>seal_det_unclip_ratio</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>sealRecScoreThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the description of the <code>seal_rec_score_thresh</code> parameter in the <code>predict</code> method of the pipeline.</td>
+<td>Please refer to the description of the <code>seal_rec_score_thresh</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
@@ -1223,7 +1223,7 @@ Below are the API references for basic serving deployment and multi-language ser
 <tr>
 <td><code>outputImages</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>See the description of the <code>img</code> attribute in the result of the pipeline prediction. The images are in JPEG format and encoded in Base64.</td>
+<td>See the description of the <code>img</code> attribute of the result of the pipeline prediction. The images are in JPEG format and encoded in Base64.</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>

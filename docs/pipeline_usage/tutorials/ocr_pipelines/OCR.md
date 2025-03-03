@@ -941,56 +941,56 @@ for res in output:
 <tr>
 <td><code>useDocOrientationClassify</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>use_doc_orientation_classify</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_doc_orientation_classify</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>useDocUnwarping</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>use_doc_unwarping</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_doc_unwarping</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <tr>
 <td><code>useTextlineOrientation</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>use_textline_orientation</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_textline_orientation</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textDetLimitSideLen</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>text_det_limit_side_len</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>text_det_limit_side_len</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textDetLimitType</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>text_det_limit_type</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>text_det_limit_type</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textDetThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>text_det_thresh</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>text_det_thresh</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textDetBoxThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>text_det_box_thresh</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>text_det_box_thresh</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textDetUnclipRatio</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>text_det_unclip_ratio</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>text_det_unclip_ratio</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textRecScoreThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>text_rec_score_thresh</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>text_rec_score_thresh</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 </tbody>

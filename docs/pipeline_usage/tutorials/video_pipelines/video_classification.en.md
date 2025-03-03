@@ -421,7 +421,7 @@ Below are the API references and multi-language service invocation examples for 
 <tr>
 <td><code>topk</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>Refer to the <code>topk</code> parameter description in the <code>predict</code> method of the pipeline.</td>
+<td>Please refer to the description of the <code>topk</code> parameter of the pipeline object's <code>predict</code> mehod.</td>
 <td>No</td>
 </tr>
 </tbody>

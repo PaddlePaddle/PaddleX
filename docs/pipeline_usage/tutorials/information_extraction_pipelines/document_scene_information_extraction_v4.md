@@ -1593,103 +1593,103 @@ for res in visual_predict_res:
 <tr>
 <td><code>useDocOrientationClassify</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>use_doc_orientation_classify</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>use_doc_orientation_classify</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>useDocUnwarping</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>use_doc_unwarping</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>use_doc_unwarping</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>useGeneralOcr</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>use_general_ocr</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>use_general_ocr</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>useSealRecognition</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>use_seal_recognition</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>use_seal_recognition</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>useTableRecognition</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>use_table_recognition</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>use_table_recognition</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textDetLimitSideLen</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>text_det_limit_side_len</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>text_det_limit_side_len</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textDetLimitType</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>text_det_limit_type</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>text_det_limit_type</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textDetThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>text_det_thresh</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>text_det_thresh</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textDetBoxThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>text_det_box_thresh</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>text_det_box_thresh</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textDetUnclipRatio</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>text_det_unclip_ratio</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>text_det_unclip_ratio</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textRecScoreThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>text_rec_score_thresh</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>text_rec_score_thresh</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>sealDetLimitSideLen</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>seal_det_limit_side_len</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>seal_det_limit_side_len</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>sealDetLimitType</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>seal_det_limit_type</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>seal_det_limit_type</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>sealDetThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>seal_det_thresh</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>seal_det_thresh</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>sealDetBoxThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>seal_det_box_thresh</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>seal_det_box_thresh</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>sealDetUnclipRatio</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>seal_det_unclip_ratio</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>seal_det_unclip_ratio</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>sealRecScoreThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>seal_rec_score_thresh</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>seal_rec_score_thresh</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 </tbody>
@@ -1736,12 +1736,12 @@ for res in visual_predict_res:
 <tr>
 <td><code>prunedResult</code></td>
 <td><code>object</code></td>
-<td>产线对象的 <code>predict</code> 方法生成结果的 JSON 表示中 <code>res</code> 字段的简化版本，其中去除了 <code>input_path</code> 字段</td>
+<td>产线对象的 <code>visual_predict</code> 方法生成结果的 JSON 表示中 <code>res</code> 字段的简化版本，其中去除了 <code>input_path</code> 字段</td>
 </tr>
 <tr>
 <td><code>outputImages</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>参见产线视觉预测结果中的 <code>img</code> 参数说明。</td>
+<td>参见产线视觉预测结果的 <code>img</code> 属性说明。</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
@@ -1783,13 +1783,13 @@ for res in visual_predict_res:
 <tr>
 <td><code>blockSize</code></td>
 <td><code>int</code> | <code>null</code></td>
-<td>参见产线 <code>build_vector</code> 方法中的 <code>block_size</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>build_vector</code> 方法的 <code>block_size</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>retrieverConfig</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>参见产线 <code>build_vector</code> 方法中的 <code>retriever_config</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>build_vector</code> 方法的 <code>retriever_config</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 </tbody>
@@ -1816,7 +1816,7 @@ for res in visual_predict_res:
 <ul>
 <li><b><code>invokeMLLM</code></b></li>
 </ul>
-<p>获取多模态大模型抽取结果。</p>
+<p>调用多模态大模型。</p>
 <p><code>POST /chatocr-mllm</code></p>
 <ul>
 <li>请求体的属性如下：</li>
@@ -1834,19 +1834,19 @@ for res in visual_predict_res:
 <tr>
 <td><code>image</code></td>
 <td><code>string</code></code></td>
-<td>输入图像。</td>
+<td>服务器可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
 <td>是</td>
 </tr>
 <tr>
 <td><code>keyList</code></td>
 <td><code>array</code></td>
-<td>关键词列表。</td>
+<td>键列表。</td>
 <td>是</td>
 </tr>
 <tr>
 <td><code>mllmChatBotConfig</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>参见产线 <code>mllm_pred</code> 方法中的 <code>mllm_chat_bot_config</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>mllm_pred</code> 方法的 <code>mllm_chat_bot_config</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 </tbody>
@@ -1866,7 +1866,7 @@ for res in visual_predict_res:
 <tr>
 <td><code>mllmPredictInfo</code></td>
 <td><code>object</code></td>
-<td>多模态大模型抽取结果。</td>
+<td>多模态大模型调用结果。</td>
 </tr>
 </tbody>
 </table>
@@ -1891,7 +1891,7 @@ for res in visual_predict_res:
 <tr>
 <td><code>keyList</code></td>
 <td><code>array</code></td>
-<td>关键词列表。</td>
+<td>键列表。</td>
 <td>是</td>
 </tr>
 <tr>
@@ -1903,7 +1903,7 @@ for res in visual_predict_res:
 <tr>
 <td><code>useVectorRetrieval</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>use_vector_retrieval</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>use_vector_retrieval</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
@@ -1921,73 +1921,85 @@ for res in visual_predict_res:
 <tr>
 <td><code>textTaskDescription</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>text_task_description</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>text_task_description</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textOutputFormat</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>text_output_format</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>text_output_format</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textRulesStr</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>text_rules_str</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>text_rules_str</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textFewShotDemoTextContent</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>text_few_shot_demo_text_content</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>text_few_shot_demo_text_content</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textFewShotDemoKeyValueList</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>text_few_shot_demo_key_value_list</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>text_few_shot_demo_key_value_list</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>tableTaskDescription</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>table_task_description</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>table_task_description</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>tableOutputFormat</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>table_output_format</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>table_output_format</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>tableRulesStr</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>table_rules_str</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>table_rules_str</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>tableFewShotDemoTextContent</code></td>
 <td><code>string</code> | <code>null</code></td>
 <td></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>table_few_shot_demo_text_content</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>table_few_shot_demo_text_content</code> 参数相关说明。</td>
 </tr>
 <tr>
 <td><code>tableFewShotDemoKeyValueList</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>table_few_shot_demo_key_value_list</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>table_few_shot_demo_key_value_list</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>mllmPredictInfo</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>多模态大模型调用结果。由<code>invokeMllm</code>操作提供。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>mllmIntegrationStrategy</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>mllm_integration_strategy</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>chatBotConfig</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>chat_bot_config</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>chat_bot_config</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>retrieverConfig</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>retriever_config</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>retriever_config</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 </tbody>

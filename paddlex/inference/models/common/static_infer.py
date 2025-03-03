@@ -167,6 +167,8 @@ def _convert_trt(
     def _get_input_names(model_file, params_file):
         # HACK
         config = paddle.inference.Config(str(model_file), str(params_file))
+        # NOTE: Disable oneDNN to circumvent a bug in Paddle Inference
+        config.disable_mkldnn()
         config.disable_glog_info()
         predictor = paddle.inference.create_predictor(config)
         return predictor.get_input_names()
@@ -454,7 +456,7 @@ class PaddleInfer(StaticInfer):
             config = paddle.inference.Config(str(model_file), str(params_file))
 
             config.set_optim_cache_dir(str(cache_dir / "optim_cache"))
-
+            config.enable_use_gpu(100, self._option.device_id)
             config.enable_tensorrt_engine(
                 workspace_size=self._option.trt_max_workspace_size,
                 max_batch_size=self._option.trt_max_batch_size,
