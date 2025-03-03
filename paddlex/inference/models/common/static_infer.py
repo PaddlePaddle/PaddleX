@@ -182,7 +182,6 @@ def _convert_trt(
         "trt_fp16": PrecisionMode.FP16,
     }
     trt_inputs = []
-    # for name in input_names:
     for name, candidate_shapes in dynamic_shapes.items():
         # XXX: Currently we have no way to get the data type of the tensor
         # without creating an input handle.

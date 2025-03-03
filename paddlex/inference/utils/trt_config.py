@@ -21,4 +21,5 @@ TRT_CFG = {
     "SegFormer-B4": {"optimization_level": 4, "workspace_size": 1 << 32},
     "SegFormer-B5": {"optimization_level": 4, "workspace_size": 1 << 32},
     "LaTeX_OCR_rec": {"disable_ops": ["pd_op.slice"]},
+    "PP-YOLOE_seg-S": {"disable_ops": ["pd_op.slice", "pd_op.bilinear_interp"]},
 }
