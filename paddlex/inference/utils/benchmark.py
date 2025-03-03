@@ -71,7 +71,7 @@ class Benchmark:
 
             use_cache = is_read_operation and INFER_BENCHMARK_USE_CACHE_FOR_READ
             if use_cache:
-                func = functools.lru_cache(maxsize=None)(func)
+                func = functools.lru_cache(maxsize=128)(func)
 
             @functools.wraps(func)
             def _wrapper(*args, **kwargs):
@@ -85,7 +85,7 @@ class Benchmark:
                         k: tuple(v) if isinstance(v, list) else v
                         for k, v in kwargs.items()
                     }
-                    operation_name = "other"
+                    operation_name = None
 
                 tic = time.perf_counter()
                 output = func(*args, **kwargs)
@@ -124,6 +124,8 @@ class Benchmark:
         self._elapses = {}
 
     def _update(self, elapse, name):
+        if name is None:
+            return
         elapse = elapse * 1000
         if name in self._elapses:
             self._elapses[name].append(elapse)
@@ -168,11 +170,9 @@ class Benchmark:
             if key.startswith(f"{ENTRY_POINT_NAME}@"):
                 base_predictor_time_list = logs.pop(key)
                 break
-        other_time_list = logs.pop("other", [0])
         iters = len(base_predictor_time_list)
         instances = iters * batch_size
         summary["end_to_end"] = np.mean(base_predictor_time_list)
-        summary["other"] = np.mean(other_time_list)
         detail_list = []
         operation_list = []
         op_tag = "preprocessing"
@@ -197,7 +197,7 @@ class Benchmark:
             summary["preprocessing"] + summary["inference"] + summary["postprocessing"]
         )
 
-        summary["other"] += summary["end_to_end"] - summary["core"]
+        summary["other"] = summary["end_to_end"] - summary["core"]
 
         summary_list = [
             (
