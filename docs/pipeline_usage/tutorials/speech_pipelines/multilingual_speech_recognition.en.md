@@ -146,6 +146,7 @@ In the above Python script, the following steps are executed:
 <ul>
   <li><b>File path</b>, such as the local path of an audio file: <code>/root/data/audio.wav</code></li>
   <li><b>URL link</b>, such as the network URL of an audio file: <a href="https://paddlespeech.bj.bcebos.com/PaddleAudio/zh.wav">Example</a></li>
+  <li><b>File type</b>, support wav and pcm audio type.</li>
 </ul>
 </td>
 <td><code>None</code></td>

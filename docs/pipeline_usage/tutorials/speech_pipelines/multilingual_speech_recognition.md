@@ -146,6 +146,7 @@ for res in output:
 <ul>
   <li><b>文件路径</b>，如语音文件的本地路径：<code>/root/data/audio.wav</code></li>
   <li><b>URL链接</b>，如语音文件的网络URL：<a href = "https://paddlespeech.bj.bcebos.com/PaddleAudio/zh.wav">示例</a></li>
+  <li><b>文件类型</b>，目前支持 wav 和 pcm 类型的语音文件。</li>
 </ul>
 </td>
 <td><code>None</code></td>
