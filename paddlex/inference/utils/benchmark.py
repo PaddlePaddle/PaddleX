@@ -251,8 +251,8 @@ class Benchmark:
                 i[:4] + (f"{i[4]:.8f}", f"{i[5]:.8f}") for i in summary_list
             ]
             table.add_rows(summary_list)
-            table_name = "WarmUp Data".center(len(str(table).split("\n")[0]), " ")
-            logging.info(table_name)
+            table_title = "Warmup Data".center(len(str(table).split("\n")[0]), " ")
+            logging.info(table_title)
             logging.info(table)
 
         else:
@@ -262,8 +262,8 @@ class Benchmark:
             ]
             table = PrettyTable(operation_head)
             table.add_rows(operation_list)
-            table_name = "Operation Info".center(len(str(table).split("\n")[0]), " ")
-            logging.info(table_name)
+            table_title = "Operation Info".center(len(str(table).split("\n")[0]), " ")
+            logging.info(table_title)
             logging.info(table)
 
             detail_head = [
@@ -277,8 +277,8 @@ class Benchmark:
             table = PrettyTable(detail_head)
             detail_list = [i[:4] + (f"{i[4]:.8f}", f"{i[5]:.8f}") for i in detail_list]
             table.add_rows(detail_list)
-            table_name = "Detail Data".center(len(str(table).split("\n")[0]), " ")
-            logging.info(table_name)
+            table_title = "Detail Data".center(len(str(table).split("\n")[0]), " ")
+            logging.info(table_title)
             logging.info(table)
 
             summary_head = [
@@ -294,8 +294,8 @@ class Benchmark:
                 i[:4] + (f"{i[4]:.8f}", f"{i[5]:.8f}") for i in summary_list
             ]
             table.add_rows(summary_list)
-            table_name = "Summary Data".center(len(str(table).split("\n")[0]), " ")
-            logging.info(table_name)
+            table_title = "Summary Data".center(len(str(table).split("\n")[0]), " ")
+            logging.info(table_title)
             logging.info(table)
 
             if INFER_BENCHMARK_OUTPUT_DIR:
