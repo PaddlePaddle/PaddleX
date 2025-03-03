@@ -334,7 +334,10 @@ class PaddleInfer(StaticInfer):
             raise RuntimeError("No valid Paddle model found")
         model_file, params_file = model_paths["paddle"]
 
-        if self._option.model_name == "LaTeX_OCR_rec":
+        if (
+            self._option.model_name == "LaTeX_OCR_rec"
+            and self._option.device_type == "cpu"
+        ):
             import cpuinfo
 
             if (
@@ -346,6 +349,10 @@ class PaddleInfer(StaticInfer):
                 )
             self._option.run_mode = "mkldnn"
             logging.debug("`run_mode` updated to 'mkldnn'")
+
+        if self._option.device_type == "cpu" and self._option.device_id is not None:
+            self._option.device_id = None
+            logging.debug("`device_id` has been set to None")
 
         if (
             self._option.device_type in ("gpu", "dcu")

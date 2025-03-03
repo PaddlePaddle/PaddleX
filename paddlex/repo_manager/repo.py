@@ -111,9 +111,12 @@ class PPRepository(object):
                 continue
             dep_to_replace = next((dep for dep in deps_to_replace if dep in line), None)
             if dep_to_replace:
-                existing_deps.append(
-                    f"{dep_to_replace}=={deps_to_replace[dep_to_replace]}"
-                )
+                if deps_to_replace[dep_to_replace] == "None":
+                    continue
+                else:
+                    existing_deps.append(
+                        f"{dep_to_replace}=={deps_to_replace[dep_to_replace]}"
+                    )
             else:
                 existing_deps.append(line)
         with open(src_requirements, "w") as file:
