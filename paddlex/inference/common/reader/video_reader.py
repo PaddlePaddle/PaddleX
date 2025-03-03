@@ -19,7 +19,7 @@ from ...utils.io import VideoReader
 from ...utils.benchmark import benchmark
 
 
-@benchmark.timeit
+@benchmark.timeit_with_options(name=None, is_read_operation=True)
 class ReadVideo:
     """Load video from the file."""
 
