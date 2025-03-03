@@ -8,7 +8,7 @@ comments: true
 
 Video detection is a technology that identifies and locates specific objects or events in video content. It is widely used in fields such as security surveillance, traffic management, and behavior analysis. This technology can capture and analyze dynamic changes in videos in real-time, such as human activities, vehicle movements, and abnormal events. Through deep learning models, video detection can efficiently extract spatial and temporal features from videos, achieving accurate recognition and localization. Video detection not only enhances the intelligence of surveillance systems but also provides important support for improving safety and operational efficiency. With the development of technology, video detection will play a key role in more scenarios.
 
-<img src="https://github.com/PaddlePaddle/PaddleVideo/blob/develop/docs/images/yowo.jpg">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/video_detection/yowo.jpg">
 
 <b>The video detection pipeline</b><b> includes a video detection module</b> with the following models.
 
@@ -32,21 +32,8 @@ YOWO is a single-stage network with two branches. One branch extracts spatial fe
 
 </table>
 
-**Test Environment Description**:
+**Test Dataset**: <a href="http://www.thumos.info/download.html">UCF101-24</a> test dataset.
 
-- **Performance Test Environment**
-  - **Test Dataset**: <a href="http://www.thumos.info/download.html">UCF101-24</a> test dataset.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
-
-- **Inference Mode Description**
-
-| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
-|-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
-| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## 2. Quick Start
 
