@@ -51,6 +51,7 @@ jinja2
 regex
 ######## For Speech #######
 soundfile
+shutil
 ######## For 3D BEVFusion #######
 nuscenes-devkit
 pyquaternion
