@@ -51,7 +51,6 @@ jinja2
 regex
 ######## For Speech #######
 soundfile
-shutil
 opencc
 onnxruntime
 pypinyin
