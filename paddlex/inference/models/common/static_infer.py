@@ -432,7 +432,7 @@ class StaticInfer(object):
             config = lazy_paddle.inference.Config(str(model_file), str(params_file))
 
             config.set_optim_cache_dir(str(cache_dir / "optim_cache"))
-
+            config.enable_use_gpu(100, self._option.device_id)
             config.enable_tensorrt_engine(
                 workspace_size=self._option.trt_max_workspace_size,
                 max_batch_size=self._option.trt_max_batch_size,
