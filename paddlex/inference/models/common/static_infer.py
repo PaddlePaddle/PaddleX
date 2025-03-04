@@ -558,6 +558,7 @@ class PaddleInfer(StaticInfer):
         return config
 
 
+# FIXME: Name might be misleading
 @benchmark.timeit
 class MultiBackendInfer(object):
     def __init__(self, ui_runtime):
