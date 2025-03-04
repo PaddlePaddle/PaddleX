@@ -38,6 +38,7 @@ from .result import FormulaRecResult
 
 
 class FormulaRecPredictor(BasicPredictor):
+    """FormulaRecPredictor that inherits from BasicPredictor."""
 
     entities = MODELS
 
@@ -45,7 +46,23 @@ class FormulaRecPredictor(BasicPredictor):
     register = FuncRegister(_FUNC_MAP)
 
     def __init__(self, *args, **kwargs):
+        """Initializes FormulaRecPredictor.
+        Args:
+            *args: Arbitrary positional arguments passed to the superclass.
+            **kwargs: Arbitrary keyword arguments passed to the superclass.
+        """
         super().__init__(*args, **kwargs)
+
+        self.model_names_only_supports_batchsize_of_one = {
+            "LaTeX_OCR_rec",
+        }
+        if self.model_name in self.model_names_only_supports_batchsize_of_one:
+            logging.warning(
+                f"Formula Recognition Models: \"{', '.join(list(self.model_names_only_supports_batchsize_of_one))}\" only supports prediction with a batch_size of one, "
+                "if you set the predictor with a batch_size larger than one, no error will occur, however, it will actually inference with a batch_size of one, "
+                f"which will lead to a slower inference speed. You are now using {self.config['Global']['model_name']}."
+            )
+
         self.pre_tfs, self.infer, self.post_op = self._build()
 
     def _build_batch_sampler(self):
