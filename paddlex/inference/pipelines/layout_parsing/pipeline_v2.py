@@ -16,6 +16,7 @@ from __future__ import annotations
 from typing import Optional, Union, Tuple, Iterator
 import numpy as np
 import re
+import copy
 
 from ....utils import logging
 from ...common.batch_sampler import ImageBatchSampler
@@ -536,6 +537,25 @@ class LayoutParsingPipelineV2(BasePipeline):
                 overall_ocr_res = {}
 
             if model_settings["use_table_recognition"]:
+                table_overall_ocr_res = copy.deepcopy(overall_ocr_res)
+                for formula_res in formula_res_list:
+                    x_min, y_min, x_max, y_max = list(map(int, formula_res["dt_polys"]))
+                    poly_points = [
+                        (x_min, y_min),
+                        (x_max, y_min),
+                        (x_max, y_max),
+                        (x_min, y_max),
+                    ]
+                    table_overall_ocr_res["dt_polys"].append(poly_points)
+                    table_overall_ocr_res["rec_texts"].append(
+                        f"${formula_res['rec_formula']}$"
+                    )
+                    table_overall_ocr_res["rec_boxes"] = np.vstack(
+                        (table_overall_ocr_res["rec_boxes"], [formula_res["dt_polys"]])
+                    )
+                    table_overall_ocr_res["rec_polys"].append(poly_points)
+                    table_overall_ocr_res["rec_scores"].append(1)
+
                 table_res_all = next(
                     self.table_recognition_pipeline(
                         doc_preprocessor_image,
@@ -543,7 +563,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                         use_doc_unwarping=False,
                         use_layout_detection=False,
                         use_ocr_model=False,
-                        overall_ocr_res=overall_ocr_res,
+                        overall_ocr_res=table_overall_ocr_res,
                         layout_det_res=layout_det_res,
                         cell_sort_by_y_projection=True,
                     ),
