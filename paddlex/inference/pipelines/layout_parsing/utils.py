@@ -1105,7 +1105,16 @@ def _get_sub_category(
     vision_labels = ["image", "table", "chart", "figure"]
     vision_title_labels = ["figure_title", "chart_title", "table_title"]
     all_labels = title_labels + sub_title_labels + vision_labels + vision_title_labels
-    special_pre_cut_labels = title_labels + sub_title_labels
+    special_pre_cut_labels = sub_title_labels
+
+    # single doc title is irregular,pre cut not applicable
+    num_doc_title = 0
+    for block in blocks:
+        if block["block_label"] == "doc_title":
+            num_doc_title += 1
+            if num_doc_title == 2:
+                special_pre_cut_labels = title_labels + sub_title_labels
+                break
 
     min_x = min(block["block_bbox"][0] for block in blocks)
     min_y = min(block["block_bbox"][1] for block in blocks)
