@@ -73,11 +73,8 @@ class Benchmark:
             if use_cache:
                 func = functools.lru_cache(maxsize=128)(func)
 
-            @functools.wraps(func)
-            def _wrapper(*args, **kwargs):
-                operation_name = f"{name}@{location}"
-
-                if use_cache:
+                @functools.wraps(func)
+                def _wrapper(*args, **kwargs):
                     args = tuple(
                         tuple(arg) if isinstance(arg, list) else arg for arg in args
                     )
@@ -85,15 +82,27 @@ class Benchmark:
                         k: tuple(v) if isinstance(v, list) else v
                         for k, v in kwargs.items()
                     }
-                    operation_name = None
-
-                tic = time.perf_counter()
-                output = func(*args, **kwargs)
-                if isinstance(output, GeneratorType):
-                    return self.watch_generator(output, operation_name)
-                else:
-                    self._update(time.perf_counter() - tic, operation_name)
+                    output = func(*args, **kwargs)
+                    if isinstance(output, GeneratorType):
+                        raise RuntimeError(
+                            f"Cannot cache generator output from '{name}'. "
+                            f"Either: 1) Mark this operation as non-cached (is_read_operation=False), "
+                            f"or 2) Return a list instead of generator."
+                        )
                     return output
+
+            else:
+
+                @functools.wraps(func)
+                def _wrapper(*args, **kwargs):
+                    operation_name = f"{name}@{location}"
+                    tic = time.perf_counter()
+                    output = func(*args, **kwargs)
+                    if isinstance(output, GeneratorType):
+                        return self.watch_generator(output, operation_name)
+                    else:
+                        self._update(time.perf_counter() - tic, operation_name)
+                        return output
 
             if isinstance(func_or_cls, type):
                 func_or_cls.__call__ = _wrapper
@@ -124,8 +133,6 @@ class Benchmark:
         self._elapses = {}
 
     def _update(self, elapse, name):
-        if name is None:
-            return
         elapse = elapse * 1000
         if name in self._elapses:
             self._elapses[name].append(elapse)
