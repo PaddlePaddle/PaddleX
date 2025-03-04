@@ -50,7 +50,7 @@ class ShiTuV2Pipeline(BasePipeline):
         self.det_model = self.create_model(config["SubModules"]["Detection"])
         self.rec_model = self.create_model(config["SubModules"]["Recognition"])
         self.crop_by_boxes = CropByBoxes()
-        self.indexer = self._build_indexer(index=index) if index else None
+        self.indexer = FaissIndexer(index=index) if index else None
         self.batch_sampler = ImageBatchSampler(
             batch_size=self.det_model.batch_sampler.batch_size
         )
