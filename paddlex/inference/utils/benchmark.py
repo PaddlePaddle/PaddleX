@@ -71,6 +71,11 @@ class Benchmark:
 
             use_cache = is_read_operation and INFER_BENCHMARK_USE_CACHE_FOR_READ
             if use_cache:
+                if inspect.isgeneratorfunction(func):
+                    raise RuntimeError(
+                        "When `is_read_operation` is `True`, the wrapped function should not be a generator."
+                    )
+
                 func = functools.lru_cache(maxsize=128)(func)
 
                 @functools.wraps(func)
@@ -83,12 +88,6 @@ class Benchmark:
                         for k, v in kwargs.items()
                     }
                     output = func(*args, **kwargs)
-                    if isinstance(output, GeneratorType):
-                        raise RuntimeError(
-                            f"Cannot cache generator output from '{name}'. "
-                            f"Either: 1) Mark this operation as non-cached (is_read_operation=False), "
-                            f"or 2) Return a list instead of generator."
-                        )
                     return output
 
             else:
