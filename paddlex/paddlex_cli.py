@@ -235,9 +235,9 @@ def install(args):
             sys.exit(2)
 
         if device_type == "cpu":
-            packages = ["ultra-infer-python", "paddlex-hpi"]
+            packages = ["ultra-infer-python"]
         elif device_type == "gpu":
-            packages = ["ultra-infer-gpu-python", "paddlex-hpi"]
+            packages = ["ultra-infer-gpu-python"]
 
         with importlib.resources.path("paddlex", "hpip_links.html") as f:
             return subprocess.check_call(
