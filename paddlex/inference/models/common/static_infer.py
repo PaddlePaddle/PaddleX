@@ -23,8 +23,8 @@ from ....utils.device import constr_device
 from ....utils.flags import (
     DEBUG,
     USE_PIR_TRT,
-    INFER_BENCHMARK_USE_NEW_INFERENCE_API,
-    INFER_BENCHMARK_USE_NEW_INFERENCE_API,
+    INFER_BENCHMARK_USE_NEW_INFER_API,
+    INFER_BENCHMARK_USE_NEW_INFER_API,
 )
 from ...utils.benchmark import benchmark, set_inference_operations
 from ...utils.hpi import get_model_paths
@@ -34,7 +34,7 @@ from ...utils.trt_config import TRT_CFG
 
 CACHE_DIR = ".cache"
 
-if INFER_BENCHMARK_USE_NEW_INFERENCE_API:
+if INFER_BENCHMARK_USE_NEW_INFER_API:
     INFERENCE_OPERATIONS = [
         "PaddleCopyToDevice",
         "PaddleCopyToHost",
@@ -299,7 +299,7 @@ class StaticInfer(object):
     @property
     def _use_new_inference_api(self):
         # HACK: Temp fallback to legacy API via env var
-        return INFER_BENCHMARK_USE_NEW_INFERENCE_API
+        return INFER_BENCHMARK_USE_NEW_INFER_API
 
         # return self._option.device_type in ("cpu", "gpu", "dcu")
 
