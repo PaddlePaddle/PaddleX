@@ -93,7 +93,6 @@ comments: true
 </tr>
 </tbody>
 </table>
-
 <p><b>表格结构识别模块（可选）：</b></p>
 <table>
 <tr>
@@ -598,15 +597,18 @@ output = pipeline.predict(
     use_doc_unwarping=False,
     use_textline_orientation=False)
 
-markdown_texts = ""
+markdown_list = []
 markdown_images = []
 
 for res in output:
-    markdown_texts += res.markdown["markdown_texts"]
-    markdown_images.append(res.markdown["markdown_images"])
+    markdown_list.append(res.markdown)
+    markdown_images.append(res.get("markdown_images", {}))
+
+markdown_texts = pipeline.concatenate_markdown_pages(markdown_list)
 
 mkd_file_path = output_path / f"{Path(input_file).stem}.md"
 mkd_file_path.parent.mkdir(parents=True, exist_ok=True)
+
 with open(mkd_file_path, "w", encoding="utf-8") as f:
     f.write(markdown_texts)
 
@@ -1052,6 +1054,14 @@ for item in markdown_images:
 <td>保存的文件路径，支持目录或文件路径</td>
 <td>无</td>
 </tr>
+<tr>
+<td><code>concatenate_markdown_pages()</code></td>
+<td>将多页Markdown内容拼接为单一文档</td>
+<td><code>markdown_list</code></td>
+<td><code>list</code></td>
+<td>包含每一页Markdown数据的列表</td>
+<td>返回处理后的Markdown文本和图像列表</td>
+</tr>
 </table>
 
 - 调用`print()` 方法会将结果打印到终端，打印到终端的内容解释如下：
@@ -1140,6 +1150,7 @@ for item in markdown_images:
 - 调用`save_to_json()` 方法会将上述内容保存到指定的 `save_path` 中，如果指定为目录，则保存的路径为`save_path/{your_img_basename}_res.json`，如果指定为文件，则直接保存到该文件中。由于 json 文件不支持保存numpy数组，因此会将其中的 `numpy.array` 类型转换为列表形式。
 - 调用`save_to_img()` 方法会将可视化结果保存到指定的 `save_path` 中，如果指定为目录，则会将版面区域检测可视化图像、全局OCR可视化图像、版面阅读顺序可视化图像等内容保存，如果指定为文件，则直接保存到该文件中。(产线通常包含较多结果图片，不建议直接指定为具体的文件路径，否则多张图会被覆盖，仅保留最后一张图)
 - 调用`save_to_markdown()` 方法会将转化后的 Markdown 文件保存到指定的 `save_path` 中，保存的文件路径为`save_path/{your_img_basename}.md`，如果输入是 PDF 文件，建议直接指定目录，否责多个 markdown 文件会被覆盖。
+- 调用 `concatenate_markdown_pages()` 方法将 `layout parsing pipeline` 输出的多页Markdown内容`markdown_list`合并为单个完整文档，并返回合并后的Markdown内容。
 
 此外，也支持通过属性获取带结果的可视化图像和预测结果，具体如下：
 <table>
@@ -1173,7 +1184,7 @@ for item in markdown_images:
 
 - `json` 属性获取的预测结果为字典类型的数据，相关内容与调用 `save_to_json()` 方法保存的内容一致。
 - `img` 属性返回的预测结果是一个字典类型的数据。其中，键分别为 `layout_det_res`、`overall_ocr_res`、`text_paragraphs_ocr_res`、`formula_res_region1`、`table_cell_img` 和 `seal_res_region1`，对应的值是 `Image.Image` 对象：分别用于显示版面区域检测、OCR、OCR文本段落、公式、表格和印章结果的可视化图像。如果没有使用可选模块，则字典中只包含 `layout_det_res`。
-- `markdown` 属性返回的预测结果是一个字典类型的数据。其中，键分别为 `markdown_texts` 和 `markdown_images`，对应的值分别是 markdown 文本和用于在 Markdown 中显示的图像（`Image.Image` 对象）。
+- `markdown` 属性返回的预测结果是一个字典类型的数据。其中，键分别为 `markdown_texts` 、 `markdown_images`和`page_continuation_flags`，对应的值分别是 markdown 文本，在 Markdown 中显示的图像（`Image.Image` 对象）和用于标识当前页面第一个元素是否为段开始以及最后一个元素是否为段结束的bool元组。
 
 此外，您可以获取版面解析产线配置文件，并加载配置文件进行预测。可执行如下命令将结果保存在 `my_path` 中：
 ```
