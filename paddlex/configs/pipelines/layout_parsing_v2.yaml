@@ -15,9 +15,10 @@ SubModules:
     threshold: 
       0: 0.3
       7: 0.3
+      16: 0.3
     layout_nms: True
     layout_unclip_ratio: 1.0
-    layout_merge_bboxes_mode: "large"
+    layout_merge_bboxes_mode: "union"
 
 SubPipelines:
   DocPreprocessor:
