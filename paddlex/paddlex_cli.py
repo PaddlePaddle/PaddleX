@@ -417,7 +417,7 @@ def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
 
 # for CLI
 def main():
-    """API for commad line"""
+    """API for command line"""
     parser, pipeline_args = args_cfg()
     args = parser.parse_args()
 
