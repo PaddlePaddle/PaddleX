@@ -267,7 +267,9 @@ paddlex --serve --pipeline image_classification --use_hpip
 
 ### 2.3 调整配置
 
-PaddleX 高稳定性服务化部署方案基于 NVIDIA Triton Inference Server 打造，支持用户修改 Triton Inference Server 的配置文件。
+高稳定性服务化部署 SDK 的 `server/pipeline_config.yaml` 文件为产线配置文件。用户可以修改该文件以设置要使用的模型目录等。
+
+此外，PaddleX 高稳定性服务化部署方案基于 NVIDIA Triton Inference Server 打造，支持用户修改 Triton Inference Server 的配置文件。
 
 在高稳定性服务化部署 SDK 的 `server/model_repo/{端点名称}` 目录中，可以找到一个或多个 `config*.pbtxt` 文件。如果目录中存在 `config_{设备类型}.pbtxt` 文件，请修改期望使用的设备类型对应的配置文件；否则，请修改 `config.pbtxt`。
 
