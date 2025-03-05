@@ -54,10 +54,10 @@ class TextToPinyinPredictor(BasicPredictor):
         return TextToPinyinResult
 
     def _build(self):
-        """Build the model, audio reader based on the configuration.
+        """Build the model.
 
         Returns:
-            AudioReader: An instance of AudioReader.
+            G2PWOnnxConverter: An instance of G2PWOnnxConverter.
         """
         from .processors import (
             G2PWOnnxConverter,
@@ -74,13 +74,12 @@ class TextToPinyinPredictor(BasicPredictor):
         Process a batch of data through the preprocessing, inference, and postprocessing.
 
         Args:
-            batch_data (List[Union[str, np.ndarray], ...]): A batch of input data (e.g., audio file paths).
+            batch_data (List[Union[str], ...]): A batch of input text data.
 
         Returns:
-            dict: A dictionary containing the input path and result. The result include 'text', 'segments' and 'language'.
+            dict: A dictionary containing the input path and result. The result include the output pinyin dict.
         """
 
-        # load mel_filters from resource_dir and extract feature for audio
         result = self.model(batch_data[0])[0]
 
         return {
