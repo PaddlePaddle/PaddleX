@@ -81,7 +81,7 @@ class Sample(_EasyDict):
         self.attrs = None
 
 
-@benchmark.timeit
+@benchmark.timeit_with_options(name=None, is_read_operation=True)
 class ReadNuscenesData:
 
     def __init__(

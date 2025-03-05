@@ -14,10 +14,12 @@ The benchmark feature collects the average execution time per iteration for each
 
 To enable the benchmark feature, you must set the following environment variables:
 
-* `PADDLE_PDX_INFER_BENCHMARK`: When set to `True`, the benchmark feature is enabled (default is `False`);
-* `PADDLE_PDX_INFER_BENCHMARK_WARMUP`: The number of warm-up iterations before testing (default is `0`);
-* `PADDLE_PDX_INFER_BENCHMARK_ITERS`: The number of iterations for testing (default is `0`);
+* `PADDLE_PDX_INFER_BENCHMARK`: When set to `True`, the benchmark feature is enabled (default is `False`).
+* `PADDLE_PDX_INFER_BENCHMARK_WARMUP`: The number of warm-up iterations before testing (default is `0`).
+* `PADDLE_PDX_INFER_BENCHMARK_ITERS`: The number of iterations for testing (default is `0`).
 * `PADDLE_PDX_INFER_BENCHMARK_OUTPUT_DIR`: The directory where the metrics are saved (e.g., `./benchmark`). The default is `None`, meaning the benchmark metrics will not be saved.
+* `PADDLE_PDX_INFER_BENCHMARK_USE_CACHE_FOR_READ`: When set to `True`, the caching mechanism is applied to the operation of reading input data to avoid repetitive I/O overhead, and the time consumed by data read and cache is not recorded in the core time (default is `False`).
+* `PADDLE_PDX_INFER_BENCHMARK_USE_NEW_INFER_API`: When set to `True`,the new inference API is enabled, providing more detailed information for inference operations on benchmarks (default is `False`).
 
 **Note**:
 

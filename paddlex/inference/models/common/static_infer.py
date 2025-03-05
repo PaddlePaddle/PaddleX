@@ -20,7 +20,11 @@ import numpy as np
 
 from ....utils import logging
 from ....utils.device import constr_device
-from ....utils.flags import DEBUG, USE_PIR_TRT
+from ....utils.flags import (
+    DEBUG,
+    USE_PIR_TRT,
+    INFER_BENCHMARK_USE_NEW_INFER_API,
+)
 from ...utils.benchmark import benchmark, set_inference_operations
 from ...utils.hpi import get_model_paths
 from ...utils.pp_option import PaddlePredictorOption
@@ -29,7 +33,14 @@ from ...utils.trt_config import TRT_CFG
 
 CACHE_DIR = ".cache"
 
-INFERENCE_OPERATIONS = ["PaddleCopyToDevice", "PaddleCopyToHost", "PaddleModelInfer"]
+if INFER_BENCHMARK_USE_NEW_INFER_API:
+    INFERENCE_OPERATIONS = [
+        "PaddleCopyToDevice",
+        "PaddleCopyToHost",
+        "PaddleModelInfer",
+    ]
+else:
+    INFERENCE_OPERATIONS = ["PaddleInferChainLegacy"]
 set_inference_operations(INFERENCE_OPERATIONS)
 
 
@@ -299,7 +310,7 @@ class StaticInfer(object):
         self.model_file_prefix = model_prefix
         self._option = option
         self.predictor = self._create()
-        if not self._use_legacy_api:
+        if self._use_new_inference_api:
             device_type = self._option.device_type
             device_type = "gpu" if device_type == "dcu" else device_type
             copy_to_device = PaddleCopyToDevice(device_type, self._option.device_id)
@@ -310,8 +321,11 @@ class StaticInfer(object):
             self.infer = PaddleInferChainLegacy(self.predictor)
 
     @property
-    def _use_legacy_api(self):
-        return self._option.device_type not in ("cpu", "gpu", "dcu")
+    def _use_new_inference_api(self):
+        # HACK: Temp fallback to legacy API via env var
+        return INFER_BENCHMARK_USE_NEW_INFER_API
+
+        # return self._option.device_type in ("cpu", "gpu", "dcu")
 
     def __call__(self, x: Sequence[np.ndarray]) -> List[np.ndarray]:
         names = self.predictor.get_input_names()

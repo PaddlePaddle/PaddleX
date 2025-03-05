@@ -104,7 +104,7 @@ class BasicPredictor(
         self.set_predictor(batch_size, device, pp_option)
         if INFER_BENCHMARK:
             # TODO(zhang-prog): Get metadata of input data
-            @benchmark.timeit_with_name(ENTRY_POINT_NAME)
+            @benchmark.timeit_with_options(name=ENTRY_POINT_NAME)
             def _apply(input, **kwargs):
                 return list(self.apply(input, **kwargs))
 

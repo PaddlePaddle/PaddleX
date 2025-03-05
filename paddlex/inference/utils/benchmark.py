@@ -21,7 +21,11 @@ import inspect
 import numpy as np
 from prettytable import PrettyTable
 
-from ...utils.flags import INFER_BENCHMARK, INFER_BENCHMARK_OUTPUT_DIR
+from ...utils.flags import (
+    INFER_BENCHMARK,
+    INFER_BENCHMARK_OUTPUT_DIR,
+    INFER_BENCHMARK_USE_CACHE_FOR_READ,
+)
 from ...utils import logging
 
 ENTRY_POINT_NAME = "_entry_point_"
@@ -36,9 +40,12 @@ class Benchmark:
         self._elapses = {}
         self._warmup = False
 
-    def timeit_with_name(self, name=None):
+    def timeit_with_options(self, name=None, is_read_operation=False):
         # TODO: Refactor
         def _deco(func_or_cls):
+            if not self._enabled:
+                return func_or_cls
+
             nonlocal name
             if name is None:
                 name = func_or_cls.__qualname__
@@ -52,33 +59,49 @@ class Benchmark:
                     raise TypeError
                 func = func_or_cls
 
-            location = None
+            try:
+                source_file = inspect.getsourcefile(func)
+                source_line = inspect.getsourcelines(func)[1]
+                location = f"{source_file}:{source_line}"
+            except (TypeError, OSError) as e:
+                location = "Unknown"
+                logging.debug(
+                    f"Benchmark: failed to get source file and line number: {e}"
+                )
 
-            @functools.wraps(func)
-            def _wrapper(*args, **kwargs):
-                nonlocal location
+            use_cache = is_read_operation and INFER_BENCHMARK_USE_CACHE_FOR_READ
+            if use_cache:
+                if inspect.isgeneratorfunction(func):
+                    raise RuntimeError(
+                        "When `is_read_operation` is `True`, the wrapped function should not be a generator."
+                    )
 
-                if not self._enabled:
-                    return func(*args, **kwargs)
+                func = functools.lru_cache(maxsize=128)(func)
 
-                if location is None:
-                    try:
-                        source_file = inspect.getsourcefile(func)
-                        source_line = inspect.getsourcelines(func)[1]
-                        location = f"{source_file}:{source_line}"
-                    except (TypeError, OSError) as e:
-                        location = "Unknown"
-                        logging.debug(
-                            f"Benchmark: failed to get source file and line number: {e}"
-                        )
-
-                tic = time.perf_counter()
-                output = func(*args, **kwargs)
-                if isinstance(output, GeneratorType):
-                    return self.watch_generator(output, f"{name}@{location}")
-                else:
-                    self._update(time.perf_counter() - tic, f"{name}@{location}")
+                @functools.wraps(func)
+                def _wrapper(*args, **kwargs):
+                    args = tuple(
+                        tuple(arg) if isinstance(arg, list) else arg for arg in args
+                    )
+                    kwargs = {
+                        k: tuple(v) if isinstance(v, list) else v
+                        for k, v in kwargs.items()
+                    }
+                    output = func(*args, **kwargs)
                     return output
+
+            else:
+
+                @functools.wraps(func)
+                def _wrapper(*args, **kwargs):
+                    operation_name = f"{name}@{location}"
+                    tic = time.perf_counter()
+                    output = func(*args, **kwargs)
+                    if isinstance(output, GeneratorType):
+                        return self.watch_generator(output, operation_name)
+                    else:
+                        self._update(time.perf_counter() - tic, operation_name)
+                        return output
 
             if isinstance(func_or_cls, type):
                 func_or_cls.__call__ = _wrapper
@@ -89,7 +112,7 @@ class Benchmark:
         return _deco
 
     def timeit(self, func_or_cls):
-        return self.timeit_with_name(None)(func_or_cls)
+        return self.timeit_with_options()(func_or_cls)
 
     def watch_generator(self, generator, name):
         @functools.wraps(generator)
@@ -156,7 +179,6 @@ class Benchmark:
         iters = len(base_predictor_time_list)
         instances = iters * batch_size
         summary["end_to_end"] = np.mean(base_predictor_time_list)
-
         detail_list = []
         operation_list = []
         op_tag = "preprocessing"
