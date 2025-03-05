@@ -19,7 +19,7 @@ from ...utils.io import CSVReader
 from ...utils.benchmark import benchmark
 
 
-@benchmark.timeit
+@benchmark.timeit_with_options(name=None, is_read_operation=True)
 class ReadTS:
 
     def __init__(self):

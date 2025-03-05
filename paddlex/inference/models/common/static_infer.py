@@ -24,7 +24,11 @@ import numpy as np
 
 from ....utils import logging
 from ....utils.device import constr_device
-from ....utils.flags import DEBUG, USE_PIR_TRT
+from ....utils.flags import (
+    DEBUG,
+    USE_PIR_TRT,
+    INFER_BENCHMARK_USE_NEW_INFER_API,
+)
 from ...utils.benchmark import benchmark, set_inference_operations
 from ...utils.hpi import (
     HPIConfig,
@@ -323,7 +327,7 @@ class PaddleInfer(StaticInfer):
         self.model_file_prefix = model_file_prefix
         self._option = option
         self.predictor = self._create()
-        if not self._use_legacy_api:
+        if INFER_BENCHMARK_USE_NEW_INFER_API:
             device_type = self._option.device_type
             device_type = "gpu" if device_type == "dcu" else device_type
             copy_to_device = PaddleCopyToDevice(device_type, self._option.device_id)
@@ -332,10 +336,6 @@ class PaddleInfer(StaticInfer):
             self.infer = _concatenate(copy_to_device, model_infer, copy_to_host)
         else:
             self.infer = PaddleInferChainLegacy(self.predictor)
-
-    @property
-    def _use_legacy_api(self):
-        return self._option.device_type not in ("cpu", "gpu", "dcu")
 
     def __call__(self, x: Sequence[np.ndarray]) -> List[np.ndarray]:
         names = self.predictor.get_input_names()
