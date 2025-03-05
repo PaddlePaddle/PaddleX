@@ -24,7 +24,6 @@ from ....utils.flags import (
     DEBUG,
     USE_PIR_TRT,
     INFER_BENCHMARK_USE_NEW_INFER_API,
-    INFER_BENCHMARK_USE_NEW_INFER_API,
 )
 from ...utils.benchmark import benchmark, set_inference_operations
 from ...utils.hpi import get_model_paths
