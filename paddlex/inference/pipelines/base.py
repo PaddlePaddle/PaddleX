@@ -90,6 +90,7 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
             batch_size=config.get("batch_size", 1),
             pp_option=self.pp_option,
             use_hpip=self.use_hpip,
+            hpi_params=hpi_params,
             **kwargs,
         )
         return model

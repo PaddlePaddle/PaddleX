@@ -47,6 +47,8 @@ void BindPaddleOption(pybind11::module &m) {
       .def_readwrite("ipu_option", &PaddleBackendOption::ipu_option)
       .def_readwrite("xpu_option", &PaddleBackendOption::xpu_option)
       .def_readwrite("trt_option", &PaddleBackendOption::trt_option)
+      .def_readwrite("allow_build_trt_at_runtime",
+                     &PaddleBackendOption::allow_build_trt_at_runtime)
       .def_readwrite("collect_trt_shape",
                      &PaddleBackendOption::collect_trt_shape)
       .def_readwrite("collect_trt_shape_by_device",
