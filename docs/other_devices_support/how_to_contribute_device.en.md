@@ -34,7 +34,7 @@ If the relevant device has specific requirements for the PaddlePaddle version, y
 
 ### 2.1.2 Setting Environment Variables (Optional)
 
-If special environment variables need to be set when using the relevant device, you can modify the device environment setup code. The relevant code is located in the `set_env_for_device` function in [PaddleX Environment Variable Settings](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/utils/device.py).
+If special environment variables need to be set when using the relevant device, you can modify the device environment setup code. The relevant code is located in the `set_env_for_device_type` function in [PaddleX Environment Variable Settings](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/utils/device.py).
 
 ### 2.1.3 Creating a Predictor
 

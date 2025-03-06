@@ -20,7 +20,11 @@ import numpy as np
 
 from ....utils import logging
 from ....utils.device import constr_device
-from ....utils.flags import DEBUG, USE_PIR_TRT
+from ....utils.flags import (
+    DEBUG,
+    USE_PIR_TRT,
+    INFER_BENCHMARK_USE_NEW_INFER_API,
+)
 from ...utils.benchmark import benchmark, set_inference_operations
 from ...utils.hpi import get_model_paths
 from ...utils.pp_option import PaddlePredictorOption
@@ -29,7 +33,14 @@ from ...utils.trt_config import TRT_CFG
 
 CACHE_DIR = ".cache"
 
-INFERENCE_OPERATIONS = ["PaddleCopyToDevice", "PaddleCopyToHost", "PaddleModelInfer"]
+if INFER_BENCHMARK_USE_NEW_INFER_API:
+    INFERENCE_OPERATIONS = [
+        "PaddleCopyToDevice",
+        "PaddleCopyToHost",
+        "PaddleModelInfer",
+    ]
+else:
+    INFERENCE_OPERATIONS = ["PaddleInferChainLegacy"]
 set_inference_operations(INFERENCE_OPERATIONS)
 
 
@@ -122,6 +133,9 @@ def _collect_trt_shape_range_info(
     # a garbage collector. Is there a more explicit and deterministic way to
     # handle this?
 
+    # HACK: Manually delete the predictor to trigger its destructor, ensuring that the shape_range_info file would be saved.
+    del predictor
+
 
 # pir trt
 def _convert_trt(
@@ -130,15 +144,9 @@ def _convert_trt(
     pp_model_file,
     pp_params_file,
     trt_save_path,
-    trt_dynamic_shapes,
+    dynamic_shapes,
+    dynamic_shape_input_data,
 ):
-    def _set_trt_config():
-        if settings := TRT_CFG.get(model_name):
-            for attr_name in settings:
-                if not hasattr(trt_config, attr_name):
-                    logging.warning(f"The TensorRTConfig don't have the `{attr_name}`!")
-                setattr(trt_config, attr_name, settings[attr_name])
-
     from lazy_paddle.tensorrt.export import (
         Input,
         TensorRTConfig,
@@ -146,23 +154,37 @@ def _convert_trt(
         PrecisionMode,
     )
 
-    def _get_input_names(model_file, params_file):
+    def _set_trt_config():
+        if settings := TRT_CFG.get(model_name):
+            for attr_name in settings:
+                if not hasattr(trt_config, attr_name):
+                    logging.warning(f"The TensorRTConfig don't have the `{attr_name}`!")
+                setattr(trt_config, attr_name, settings[attr_name])
+
+    def _get_predictor(model_file, params_file):
         # HACK
         config = lazy_paddle.inference.Config(str(model_file), str(params_file))
+        # NOTE: Disable oneDNN to circumvent a bug in Paddle Inference
+        config.disable_mkldnn()
         config.disable_glog_info()
-        predictor = lazy_paddle.inference.create_predictor(config)
-        return predictor.get_input_names()
+        return lazy_paddle.inference.create_predictor(config)
 
-    input_names = _get_input_names(pp_model_file, pp_params_file)
-    for name in trt_dynamic_shapes:
+    dynamic_shape_input_data = dynamic_shape_input_data or {}
+
+    predictor = _get_predictor(pp_model_file, pp_params_file)
+    input_names = predictor.get_input_names()
+    for name in dynamic_shapes:
         if name not in input_names:
             raise ValueError(
-                f"Invalid input name {repr(name)} found in `trt_dynamic_shapes`"
+                f"Invalid input name {repr(name)} found in `dynamic_shapes`"
             )
     for name in input_names:
-        if name not in trt_dynamic_shapes:
+        if name not in dynamic_shapes:
+            raise ValueError(f"Input name {repr(name)} not found in `dynamic_shapes`")
+    for name in dynamic_shape_input_data:
+        if name not in input_names:
             raise ValueError(
-                f"Input name {repr(name)} not found in `trt_dynamic_shapes`"
+                f"Invalid input name {repr(name)} found in `dynamic_shape_input_data`"
             )
 
     precision_map = {
@@ -171,13 +193,29 @@ def _convert_trt(
         "trt_fp16": PrecisionMode.FP16,
     }
     trt_inputs = []
-    for name in input_names:
-        min_shape, opt_shape, max_shape = trt_dynamic_shapes[name]
-        trt_input = Input(
-            min_input_shape=min_shape,
-            optim_input_shape=opt_shape,
-            max_input_shape=max_shape,
-        )
+    for name, candidate_shapes in dynamic_shapes.items():
+        # XXX: Currently we have no way to get the data type of the tensor
+        # without creating an input handle.
+        handle = predictor.get_input_handle(name)
+        dtype = _pd_dtype_to_np_dtype(handle.type())
+        min_shape, opt_shape, max_shape = candidate_shapes
+        if name in dynamic_shape_input_data:
+            min_arr = np.array(dynamic_shape_input_data[name][0], dtype=dtype).reshape(
+                min_shape
+            )
+            opt_arr = np.array(dynamic_shape_input_data[name][1], dtype=dtype).reshape(
+                opt_shape
+            )
+            max_arr = np.array(dynamic_shape_input_data[name][2], dtype=dtype).reshape(
+                max_shape
+            )
+        else:
+            min_arr = np.ones(min_shape, dtype=dtype)
+            opt_arr = np.ones(opt_shape, dtype=dtype)
+            max_arr = np.ones(max_shape, dtype=dtype)
+
+        # refer to: https://github.com/PolaKuma/Paddle/blob/3347f225bc09f2ec09802a2090432dd5cb5b6739/test/tensorrt/test_converter_model_resnet50.py
+        trt_input = Input((min_arr, opt_arr, max_arr))
         trt_inputs.append(trt_input)
 
     # Create TensorRTConfig
@@ -272,7 +310,7 @@ class StaticInfer(object):
         self.model_file_prefix = model_prefix
         self._option = option
         self.predictor = self._create()
-        if not self._use_legacy_api:
+        if self._use_new_inference_api:
             device_type = self._option.device_type
             device_type = "gpu" if device_type == "dcu" else device_type
             copy_to_device = PaddleCopyToDevice(device_type, self._option.device_id)
@@ -283,8 +321,11 @@ class StaticInfer(object):
             self.infer = PaddleInferChainLegacy(self.predictor)
 
     @property
-    def _use_legacy_api(self):
-        return self._option.device_type not in ("cpu", "gpu", "dcu")
+    def _use_new_inference_api(self):
+        # HACK: Temp fallback to legacy API via env var
+        return INFER_BENCHMARK_USE_NEW_INFER_API
+
+        # return self._option.device_type in ("cpu", "gpu", "dcu")
 
     def __call__(self, x: Sequence[np.ndarray]) -> List[np.ndarray]:
         names = self.predictor.get_input_names()
@@ -308,7 +349,10 @@ class StaticInfer(object):
             raise RuntimeError("No valid Paddle model found")
         model_file, params_file = model_paths["paddle"]
 
-        if self._option.model_name == "LaTeX_OCR_rec":
+        if (
+            self._option.model_name == "LaTeX_OCR_rec"
+            and self._option.device_type == "cpu"
+        ):
             import cpuinfo
 
             if (
@@ -320,6 +364,10 @@ class StaticInfer(object):
                 )
             self._option.run_mode = "mkldnn"
             logging.debug("`run_mode` updated to 'mkldnn'")
+
+        if self._option.device_type == "cpu" and self._option.device_id is not None:
+            self._option.device_id = None
+            logging.debug("`device_id` has been set to None")
 
         if (
             self._option.device_type in ("gpu", "dcu")
@@ -416,6 +464,7 @@ class StaticInfer(object):
                 params_file,
                 trt_save_path,
                 self._option.trt_dynamic_shapes,
+                self._option.trt_dynamic_shape_input_data,
             )
             model_file = trt_save_path.with_suffix(".json")
             params_file = trt_save_path.with_suffix(".pdiparams")
@@ -430,7 +479,7 @@ class StaticInfer(object):
             config = lazy_paddle.inference.Config(str(model_file), str(params_file))
 
             config.set_optim_cache_dir(str(cache_dir / "optim_cache"))
-
+            config.enable_use_gpu(100, self._option.device_id)
             config.enable_tensorrt_engine(
                 workspace_size=self._option.trt_max_workspace_size,
                 max_batch_size=self._option.trt_max_batch_size,

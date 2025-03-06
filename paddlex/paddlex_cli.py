@@ -92,6 +92,13 @@ def args_cfg():
         default=False,
         help="Use local repositories if they exist.",
     )
+    install_group.add_argument(
+        "--deps_to_replace",
+        type=str,
+        nargs="+",
+        default=None,
+        help="Replace dependency version when installing from repositories.",
+    )
 
     ################# pipeline predict #################
     pipeline_group.add_argument(
@@ -296,6 +303,7 @@ def install(args):
         platform=args.platform,
         update_repos=args.update_repos,
         use_local_repos=args.use_local_repos,
+        deps_to_replace=args.deps_to_replace,
     )
     return
 

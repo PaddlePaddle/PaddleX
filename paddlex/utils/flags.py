@@ -51,7 +51,7 @@ USE_PIR_TRT = get_flag_from_env_var("PADDLE_PDX_USE_PIR_TRT", False)
 DISABLE_DEV_MODEL_WL = get_flag_from_env_var("PADDLE_PDX_DISABLE_DEV_MODEL_WL", False)
 
 # Inference Benchmark
-INFER_BENCHMARK = get_flag_from_env_var("PADDLE_PDX_INFER_BENCHMARK", None)
+INFER_BENCHMARK = get_flag_from_env_var("PADDLE_PDX_INFER_BENCHMARK", False)
 INFER_BENCHMARK_WARMUP = get_flag_from_env_var(
     "PADDLE_PDX_INFER_BENCHMARK_WARMUP", 0, int
 )
@@ -60,4 +60,10 @@ INFER_BENCHMARK_OUTPUT_DIR = get_flag_from_env_var(
 )
 INFER_BENCHMARK_ITERS = get_flag_from_env_var(
     "PADDLE_PDX_INFER_BENCHMARK_ITERS", 0, int
+)
+INFER_BENCHMARK_USE_CACHE_FOR_READ = get_flag_from_env_var(
+    "PADDLE_PDX_INFER_BENCHMARK_USE_CACHE_FOR_READ", False
+)
+INFER_BENCHMARK_USE_NEW_INFER_API = get_flag_from_env_var(
+    "PADDLE_PDX_INFER_BENCHMARK_USE_NEW_INFER_API", False
 )

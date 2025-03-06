@@ -34,7 +34,7 @@
 
 ### 2.1.2 设置环境变量（可忽略）
 
-如果相关硬件在使用时，需要设定特殊的环境变量，可以修改设备环境设置代码，相关代码位于 [PaddleX环境变量设置](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/utils/device.py)中的 `set_env_for_device`
+如果相关硬件在使用时，需要设定特殊的环境变量，可以修改设备环境设置代码，相关代码位于 [PaddleX环境变量设置](https://github.com/PaddlePaddle/PaddleX/blob/develop/paddlex/utils/device.py)中的 `set_env_for_device_type`
 
 ### 2.1.3 创建Predictor
 

@@ -66,15 +66,6 @@ class FormulaRecPredictor(BasicPredictor):
                 pre_tfs[name] = op
         pre_tfs["ToBatch"] = ToBatch()
 
-        if self.model_name in ("LaTeX_OCR_rec") and self.pp_option.device in ("cpu"):
-            import cpuinfo
-
-            if "GenuineIntel" in cpuinfo.get_cpu_info().get("vendor_id_raw", ""):
-                self.pp_option.run_mode = "mkldnn"
-                logging.warning(
-                    "Now, the `LaTeX_OCR_rec` model only support `mkldnn` mode when running on Intel CPU devices. So using `mkldnn` instead."
-                )
-
         infer = StaticInfer(
             model_dir=self.model_dir,
             model_prefix=self.MODEL_FILE_PREFIX,

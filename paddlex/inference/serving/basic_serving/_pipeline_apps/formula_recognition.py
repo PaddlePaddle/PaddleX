@@ -49,6 +49,10 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             use_layout_detection=request.useLayoutDetection,
             use_doc_orientation_classify=request.useDocOrientationClassify,
             use_doc_unwarping=request.useDocUnwarping,
+            layout_threshold=request.layoutThreshold,
+            layout_nms=request.layoutNms,
+            layout_unclip_ratio=request.layoutUnclipRatio,
+            layout_merge_bboxes_mode=request.layoutMergeBboxesMode,
         )
 
         formula_rec_results: List[Dict[str, Any]] = []

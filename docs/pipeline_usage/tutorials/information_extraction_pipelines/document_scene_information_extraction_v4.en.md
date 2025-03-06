@@ -1295,7 +1295,7 @@ Below are the API references for basic serving and multi-language service invoca
 <ul>
 <li>The HTTP request method is POST.</li>
 <li>Both the request body and response body are JSON data (JSON objects).</li>
-<li>When the request is successfully processed, the response status code is <code>200</code>, and the response body has the following attributes:</li>
+<li>When the request is successfully processed, the response status code is <code>200</code>, and the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -1329,7 +1329,7 @@ Below are the API references for basic serving and multi-language service invoca
 </tbody>
 </table>
 <ul>
-<li>When the request is not successfully processed, the response body has the following attributes:</li>
+<li>When the request is not successfully processed, the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -1364,7 +1364,7 @@ Below are the API references for basic serving and multi-language service invoca
 <p>Uses computer vision models to analyze images, obtain OCR, table recognition results, etc., and extract key information from the images.</p>
 <p><code>POST /chatocr-visual</code></p>
 <ul>
-<li>Attributes of the request body:</li>
+<li>Properties of the request body:</li>
 </ul>
 <table>
 <thead>
@@ -1384,57 +1384,116 @@ Below are the API references for basic serving and multi-language service invoca
 </tr>
 <tr>
 <td><code>fileType</code></td>
-<td><code>integer</code></td>
-<td>File type. <code>0</code> represents a PDF file, <code>1</code> represents an image file. If this attribute is not present in the request body, the file type will be inferred based on the URL.</td>
+<td><code>integer</code> | <code>null</code></td>
+<td>File type. <code>0</code> represents a PDF file, <code>1</code> represents an image file. If this property is not present in the request body, the file type will be inferred based on the URL.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useImgOrientationCls</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable document image orientation classification. This feature is enabled by default.</td>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_doc_orientation_classify</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useImgUnwarping</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable text image correction. This feature is enabled by default.</td>
+<td><code>useDocUnwarping</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_doc_unwarping</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useSealTextDet</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable seal text detection. This feature is enabled by default.</td>
+<td><code>useGeneralOcr</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_general_ocr</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>inferenceParams</code></td>
-<td><code>object</code></td>
-<td>Inference parameters.</td>
+<td><code>useSealRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_seal_recognition</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
-</tbody>
-</table>
-<p>Attributes of <code>inferenceParams</code>:</p>
-<table>
-<thead>
 <tr>
-<th>Name</th>
-<th>Type</th>
-<th>Meaning</th>
-<th>Required</th>
+<td><code>useTableRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_table_recognition</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
 </tr>
-</thead>
-<tbody>
 <tr>
-<td><code>maxLongSide</code></td>
-<td><code>integer</code></td>
-<td>During inference, if the length of the longer side of the input image to the text detection model is greater than <code>maxLongSide</code>, the image will be scaled so that the length of its longer side equals <code>maxLongSide</code>.</td>
+<td><code>textDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_det_limit_side_len</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_det_limit_type</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_det_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_det_box_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_det_unclip_ratio</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_rec_score_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_det_limit_side_len</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_det_limit_type</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_det_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_det_box_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_det_unclip_ratio</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_rec_score_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>When the request is successfully processed, the <code>result</code> of the response body has the following attributes:</li>
+<li>When the request is successfully processed, the <code>result</code> of the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -1446,13 +1505,13 @@ Below are the API references for basic serving and multi-language service invoca
 </thead>
 <tbody>
 <tr>
-<td><code>visualResults</code></td>
+<td><code>layoutParsingResults</code></td>
 <td><code>array</code></td>
-<td>Analysis results obtained using computer vision models. The array length is 1 (for image input) or the smaller value between the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file in sequence.</td>
+<td>Analysis results obtained using computer vision models. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file in sequence.</td>
 </tr>
 <tr>
 <td><code>visualInfo</code></td>
-<td><code>object</code></td>
+<td><code>array</code></td>
 <td>Key information in the image, which can be used as input for other operations.</td>
 </tr>
 <tr>
@@ -1462,7 +1521,7 @@ Below are the API references for basic serving and multi-language service invoca
 </tr>
 </tbody>
 </table>
-<p>Each element in <code>visualResults</code> is an <code>object</code> with the following attributes:</p>
+<p>Each element in <code>layoutParsingResults</code> is an <code>object</code> with the following properties:</p>
 <table>
 <thead>
 <tr>
@@ -1473,78 +1532,19 @@ Below are the API references for basic serving and multi-language service invoca
 </thead>
 <tbody>
 <tr>
-<td><code>texts</code></td>
-<td><code>array</code></td>
-<td>Text positions, contents, and scores.</td>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>A simplified version of the <code>res</code> field in the JSON representation of the results generated by the pipeline's <code>visual_predict</code> method, with the <code>input_path</code> field removed.</td>
 </tr>
 <tr>
-<td><code>tables</code></td>
-<td><code>array</code></td>
-<td>Table positions and contents.</td>
+<td><code>outputImages</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Refer to the description of <code>img</code> attribute of the pipeline's visual prediction result.</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
-<td><code>string</code></td>
+<td><code>string</code> | <code>null</code></td>
 <td>Input image. The image is in JPEG format and encoded using Base64.</td>
-</tr>
-<tr>
-<td><code>layoutImage</code></td>
-<td><code>string</code></td>
-<td>Detection result image of the layout area. The image is in JPEG format and encoded using Base64.</td>
-</tr>
-<tr>
-<td><code>ocrImage</code></td>
-<td><code>string</code></td>
-<td>OCR result image. The image is in JPEG format and encoded using Base64.</td>
-</tr>
-</tbody>
-</table>
-<p>Each element in <code>texts</code> is an <code>object</code> with the following attributes:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>poly</code></td>
-<td><code>array</code></td>
-<td>Text position. The elements in the array are the vertex coordinates of the polygon enclosing the text in sequence.</td>
-</tr>
-<tr>
-<td><code>text</code></td>
-<td><code>string</code></td>
-<td>Text content.</td>
-</tr>
-<tr>
-<td><code>score</code></td>
-<td><code>number</code></td>
-<td>Text recognition score.</td>
-</tr>
-</tbody>
-</table>
-<p>Each element in <code>tables</code> is an <code>object</code> with the following attributes:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>bbox</code></td>
-<td><code>array</code></td>
-<td>Table position. The elements in the array are the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner of the bounding box in sequence.</td>
-</tr>
-<tr>
-<td><code>html</code></td>
-<td><code>string</code></td>
-<td>Table recognition result in HTML format.</td>
 </tr>
 </tbody>
 </table>
@@ -1554,7 +1554,7 @@ Below are the API references for basic serving and multi-language service invoca
 <p>Builds a vector database.</p>
 <p><code>POST /chatocr-vector</code></p>
 <ul>
-<li>Attributes of the request body:</li>
+<li>Properties of the request body:</li>
 </ul>
 <table>
 <thead>
@@ -1568,50 +1568,32 @@ Below are the API references for basic serving and multi-language service invoca
 <tbody>
 <tr>
 <td><code>visualInfo</code></td>
-<td><code>object</code></td>
+<td><code>array</code></td>
 <td>Key information in the image. Provided by the <code>analyzeImages</code> operation.</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code>minChars</code></td>
-<td><code>integer</code></td>
+<td><code>minCharacters</code></td>
+<td><code>integer</code> | <code>null</code></td>
 <td>Minimum data length to enable the vector database.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>llmRequestInterval</code></td>
-<td><code>number</code></td>
-<td>Interval time for calling the large language model API.</td>
+<td><code>blockSize</code></td>
+<td><code>int</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>block_size</code> parameter of the pipeline object's <code>build_vector</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>llmName</code></td>
-<td><code>string</code></td>
-<td>Name of the large language model.</td>
-<td>No</td>
-</tr>
-<tr>
-<td><code>llmParams</code></td>
-<td><code>object</code></td>
-<td>Parameters for the large language model API.</td>
+<td><code>retrieverConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>retriever_config</code> parameter of the pipeline object's <code>build_vector</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
-<p>Currently, <code>llmParams</code> can take one of the following forms:</p>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;qianfan&quot;,
-&quot;apiKey&quot;: &quot;{API key of Qianfan Platform}&quot;,
-&quot;secretKey&quot;: &quot;{Secret key of Qianfan Platform}&quot;
-}
-</code></pre>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;aistudio&quot;,
-&quot;accessToken&quot;: &quot;{Access token of Baidu AIStudio Community}&quot;
-}
-</code></pre>
 <ul>
-<li>When the request is successfully processed, the <code>result</code> of the response body has the following attribute:</li>
+<li>When the request is successfully processed, the <code>result</code> of the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -1623,19 +1605,18 @@ Below are the API references for basic serving and multi-language service invoca
 </thead>
 <tbody>
 <tr>
-<td><code>vectorStore</code></td>
-<td><code>string</code></td>
+<td><code>vectorInfo</code></td>
+<td><code>object</code></td>
 <td>Serialized result of the vector database, which can be used as input for other operations.</td>
 </tr>
 </tbody>
 </table>
-<ul>
-<li><b><code>retrieveKnowledge</code></b></li>
+<li><b><code>invokeMLLM</code></b></li>
 </ul>
-<p>Performs knowledge retrieval.</p>
-<p><code>POST /chatocr-retrieval</code></p>
+<p>Invoke the MLLM.</p>
+<p><code>POST /chatocr-mllm</code></p>
 <ul>
-<li>Attributes of the request body:</li>
+<li>Properties of the request body:</li>
 </ul>
 <table>
 <thead>
@@ -1648,45 +1629,27 @@ Below are the API references for basic serving and multi-language service invoca
 </thead>
 <tbody>
 <tr>
-<td><code>keys</code></td>
+<td><code>image</code></td>
+<td><code>string</code></td>
+<td>URL of an image file accessible by the server or the Base64-encoded content of the image file.</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>keyList</code></td>
 <td><code>array</code></td>
-<td>List of keywords.</td>
+<td>List of keys.</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code>vectorStore</code></td>
-<td><code>string</code></td>
-<td>Serialized result of the vector database. Provided by the <code>buildVectorStore</code> operation.</td>
-<td>Yes</td>
-</tr>
-<tr>
-<td><code>llmName</code></td>
-<td><code>string</code></td>
-<td>Name of the large language model.</td>
-<td>No</td>
-</tr>
-<tr>
-<td><code>llmParams</code></td>
-<td><code>object</code></td>
-<td>Parameters for the large language model API.</td>
+<td><code>mllmChatBotConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>mllm_chat_bot_config</code> parameter of the pipeline object's <code>mllm_pred</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
-<p>Currently, <code>llmParams</code> can take one of the following forms:</p>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;qianfan&quot;,
-&quot;apiKey&quot;: &quot;{API key of Qianfan Platform}&quot;,
-&quot;secretKey&quot;: &quot;{Secret key of Qianfan Platform}&quot;
-}
-</code></pre>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;aistudio&quot;,
-&quot;accessToken&quot;: &quot;{Access token of Baidu AIStudio Community}&quot;
-}
-</code></pre>
 <ul>
-<li>When the request is successfully processed, the <code>result</code> of the response body has the following attribute:</li>
+<li>When the request is successfully processed, the <code>result</code> of the response body has the following property:</li>
 </ul>
 <table>
 <thead>
@@ -1698,19 +1661,19 @@ Below are the API references for basic serving and multi-language service invoca
 </thead>
 <tbody>
 <tr>
-<td><code>retrievalResult</code></td>
-<td><code>string</code></td>
-<td>Knowledge retrieval result, which can be used as input for other operations.</td>
+<td><code>mllmPredictInfo</code></td>
+<td><code>object</code></td>
+<td>MLLM invocation result.</td>
 </tr>
 </tbody>
 </table>
 <ul>
 <li><b><code>chat</code></b></li>
 </ul>
-<p>Interacts with the large language model to extract key information using it.</p>
+<p>Interacts with large language models to extract key information using them.</p>
 <p><code>POST /chatocr-chat</code></p>
 <ul>
-<li>Attributes of the request body:</li>
+<li>Properties of the request body:</li>
 </ul>
 <table>
 <thead>
@@ -1723,9 +1686,9 @@ Below are the API references for basic serving and multi-language service invoca
 </thead>
 <tbody>
 <tr>
-<td><code>keys</code></td>
+<td><code>keyList</code></td>
 <td><code>array</code></td>
-<td>List of keywords.</td>
+<td>List of keys.</td>
 <td>Yes</td>
 </tr>
 <tr>
@@ -1735,69 +1698,111 @@ Below are the API references for basic serving and multi-language service invoca
 <td>Yes</td>
 </tr>
 <tr>
-<td><code>vectorStore</code></td>
-<td><code>string</code></td>
+<td><code>useVectorRetrieval</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_vector_retrieval</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>vectorInfo</code></td>
+<td><code>object</code> | <code>null</code></td>
 <td>Serialized result of the vector database. Provided by the <code>buildVectorStore</code> operation.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>retrievalResult</code></td>
-<td><code>string</code></td>
-<td>Knowledge retrieval result. Provided by the <code>retrieveKnowledge</code> operation.</td>
+<td><code>minCharacters</code></td>
+<td><code>integer</code></td>
+<td>Minimum data length to enable the vector database.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>taskDescription</code></td>
-<td><code>string</code></td>
-<td>Task description for prompts.</td>
+<td><code>textTaskDescription</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_task_description</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>rules</code></td>
-<td><code>string</code></td>
-<td>Prompt rules. Used to customize information extraction rules, such as specifying the output format.</td>
+<td><code>textOutputFormat</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_output_format</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>fewShot</code></td>
-<td><code>string</code></td>
-<td>Prompt examples.</td>
+<td><code>textRulesStr</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_rules_str</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>llmName</code></td>
-<td><code>string</code></td>
-<td>Name of the large language model.</td>
+<td><code>textFewShotDemoTextContent</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_few_shot_demo_text_content</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>llmParams</code></td>
-<td><code>object</code></td>
-<td>Parameters for the large language model API.</td>
+<td><code>textFewShotDemoKeyValueList</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_few_shot_demo_key_value_list</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>returnPrompts</code></td>
-<td><code>boolean</code></td>
-<td>Whether to return the used prompts. Disabled by default.</td>
+<td><code>tableTaskDescription</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>table_task_description</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableOutputFormat</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>table_output_format</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableRulesStr</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>table_rules_str</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableFewShotDemoTextContent</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>table_few_shot_demo_text_content</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableFewShotDemoKeyValueList</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>table_few_shot_demo_key_value_list</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>mllmPredictInfo</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>MLLM invocation result. Provided by the <code>invokeMllm</code> operation.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>mllmIntegrationStrategy</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>mllm_integration_strategy</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>chatBotConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>chat_bot_config</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>retrieverConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>retriever_config</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
-<p>Currently, <code>llmParams</code> can take one of the following forms:</p>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;qianfan&quot;,
-&quot;apiKey&quot;: &quot;{API key of Qianfan Platform}&quot;,
-&quot;secretKey&quot;: &quot;{Secret key of Qianfan Platform}&quot;
-}
-</code></pre>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;aistudio&quot;,
-&quot;accessToken&quot;: &quot;{Access token of Baidu AIStudio Community}&quot;
-}
-</code></pre>
 <ul>
-<li>When the request is successfully processed, the <code>result</code> of the response body has the following attributes:</li>
+<li>When the request is successfully processed, the <code>result</code> of the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -1812,38 +1817,6 @@ Below are the API references for basic serving and multi-language service invoca
 <td><code>chatResult</code></td>
 <td><code>object</code></td>
 <td>Key information extraction result.</td>
-</tr>
-<tr>
-<td><code>prompts</code></td>
-<td><code>object</code></td>
-<td>Used prompts.</td>
-</tr>
-</tbody>
-</table>
-<p>Attributes of <code>prompts</code>:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>ocr</code></td>
-<td><code>array</code></td>
-<td>OCR prompts.</td>
-</tr>
-<tr>
-<td><code>table</code></td>
-<td><code>array</code></td>
-<td>Table prompts.</td>
-</tr>
-<tr>
-<td><code>html</code></td>
-<td><code>array</code></td>
-<td>HTML prompts.</td>
 </tr>
 </tbody>
 </table>

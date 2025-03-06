@@ -65,6 +65,15 @@ class BasicPredictor(
         )
         if trt_dynamic_shapes:
             pp_option.trt_dynamic_shapes = trt_dynamic_shapes
+        trt_dynamic_shape_input_data = (
+            self.config.get("Hpi", {})
+            .get("backend_configs", {})
+            .get("paddle_infer", {})
+            .get("trt_dynamic_shape_input_data", None)
+        )
+        if trt_dynamic_shape_input_data:
+            pp_option.trt_dynamic_shape_input_data = trt_dynamic_shape_input_data
+
         self.pp_option = pp_option
         self.pp_option.batch_size = batch_size
         self.batch_sampler.batch_size = batch_size
@@ -95,7 +104,7 @@ class BasicPredictor(
         self.set_predictor(batch_size, device, pp_option)
         if INFER_BENCHMARK:
             # TODO(zhang-prog): Get metadata of input data
-            @benchmark.timeit_with_name(ENTRY_POINT_NAME)
+            @benchmark.timeit_with_options(name=ENTRY_POINT_NAME)
             def _apply(input, **kwargs):
                 return list(self.apply(input, **kwargs))
 

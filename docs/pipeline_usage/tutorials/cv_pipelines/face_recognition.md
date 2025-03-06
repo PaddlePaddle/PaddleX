@@ -877,25 +877,25 @@ data_root             # 数据集根目录，目录名称可以改变
 <tr>
 <td><code>detThreshold</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>det_threshold</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>det_threshold</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>recThreshold</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>rec_threshold</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>rec_threshold</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>hammingRadius</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>hamming_radius</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>hamming_radius</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>topk</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>topk</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>topk</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 </tbody>

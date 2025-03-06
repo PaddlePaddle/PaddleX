@@ -564,7 +564,7 @@ Below are the API references for basic service deployment and examples of multi-
 <tr>
 <td><code>threshold</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the <code>threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>

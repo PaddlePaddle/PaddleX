@@ -19,7 +19,7 @@ from ...utils.io import ImageReader, PDFReader
 from ...utils.benchmark import benchmark
 
 
-@benchmark.timeit
+@benchmark.timeit_with_options(name=None, is_read_operation=True)
 class ReadImage:
     """Load image from the file."""
 

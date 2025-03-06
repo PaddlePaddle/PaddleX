@@ -20,7 +20,7 @@ from ...utils.device import (
     check_supported_device_type,
     get_default_device,
     parse_device,
-    set_env_for_device,
+    set_env_for_device_type,
 )
 from .new_ir_blacklist import NEWIR_BLOCKLIST
 from .trt_blacklist import TRT_BLOCKLIST
@@ -122,8 +122,17 @@ class PaddlePredictorOption(object):
 
     @device_type.setter
     def device_type(self, device_type):
+        if device_type not in self.SUPPORT_DEVICE:
+            support_run_mode_str = ", ".join(self.SUPPORT_DEVICE)
+            raise ValueError(
+                f"The device type must be one of {support_run_mode_str}, but received {repr(device_type)}."
+            )
         check_supported_device_type(device_type, self.model_name)
         self._update("device_type", device_type)
+        set_env_for_device_type(device_type)
+        # XXX(gaotingquan): set flag to accelerate inference in paddle 3.0b2
+        if device_type in ("gpu", "cpu"):
+            os.environ["FLAGS_enable_pir_api"] = "1"
 
     @property
     def device_id(self):
@@ -309,21 +318,11 @@ class PaddlePredictorOption(object):
         if not device:
             return
         device_type, device_ids = parse_device(device)
-        if device_type not in self.SUPPORT_DEVICE:
-            support_run_mode_str = ", ".join(self.SUPPORT_DEVICE)
-            raise ValueError(
-                f"The device type must be one of {support_run_mode_str}, but received {repr(device_type)}."
-            )
         self.device_type = device_type
         device_id = device_ids[0] if device_ids is not None else None
         self.device_id = device_id
-        set_env_for_device(device)
-        if device_type not in ("cpu"):
-            if device_ids is None or len(device_ids) > 1:
-                logging.debug(f"The device ID has been set to {device_id}.")
-        # XXX(gaotingquan): set flag to accelerate inference in paddle 3.0b2
-        if device_type in ("gpu", "cpu"):
-            os.environ["FLAGS_enable_pir_api"] = "1"
+        if device_ids is None or len(device_ids) > 1:
+            logging.debug(f"The device ID has been set to {device_id}.")
 
     def get_support_run_mode(self):
         """get supported run mode"""

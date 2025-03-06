@@ -266,7 +266,9 @@ Select the pipeline you wish to deploy and click "获取" (acquire). Afterwards,
 
 ### 2.3 Adjust Configurations
 
-The PaddleX high-stability serving solution is built on NVIDIA Triton Inference Server, allowing users to modify the configuration files of Triton Inference Server.
+The `server/pipeline_config.yaml` file of the the high-stability serving SDK is the pipeline configuration file. Users can modify this file to set the model directory to use, etc.
+
+In addition, the PaddleX high-stability serving solution is built on NVIDIA Triton Inference Server, allowing users to modify the configuration files of Triton Inference Server.
 
 In the `server/model_repo/{endpoint name}` directory of the high-stability serving SDK, you can find one or more `config*.pbtxt` files. If a `config_{device type}.pbtxt` file exists in the directory, please modify the configuration file corresponding to the desired device type. Otherwise, please modify `config.pbtxt`.
 

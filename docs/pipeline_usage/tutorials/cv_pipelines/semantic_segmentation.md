@@ -593,7 +593,7 @@ for res in output:
 <tr>
 <td><code>targetSize</code></td>
 <td><code>integer</code> | <code>array</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>target_size</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>target_size</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 </tbody>
