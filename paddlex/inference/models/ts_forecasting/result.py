@@ -70,7 +70,7 @@ class TSFcResult(BaseTSResult):
     def _to_img(self) -> Image.Image:
         """apply"""
         forecast = self["forecast"]
-        ts_input = pd.read_csv(self["input_path"])
+        ts_input = self["cutoff_ts"]
         return {"res": visualize(forecast, ts_input)}
     
     def _to_csv(self) -> Any:

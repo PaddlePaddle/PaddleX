@@ -65,7 +65,7 @@ class TSClsResult(BaseTSResult):
     def _to_img(self) -> Image.Image:
         """apply"""
         classification = self["classification"]
-        ts_input = pd.read_csv(self["input_path"])
+        ts_input = self["input_ts_data"]
         return {"res": visualize(classification, ts_input, self["target_cols"])}
     
     def _to_csv(self) -> Any:
