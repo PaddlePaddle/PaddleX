@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#general-table-recognition-pipeline-user-guide" class="md-skip">
+        <a href="#general-table-recognition-pipeline-tutorial" class="md-skip">
           Skip to content
         </a>
       
@@ -5341,7 +5341,7 @@ You're not viewing the latest version.
   
 
 
-<h1 id="general-table-recognition-pipeline-user-guide">General Table Recognition Pipeline User Guide<a class="headerlink" href="#general-table-recognition-pipeline-user-guide" title="Permanent link">&para;</a></h1>
+<h1 id="general-table-recognition-pipeline-tutorial">General Table Recognition Pipeline Tutorial<a class="headerlink" href="#general-table-recognition-pipeline-tutorial" title="Permanent link">&para;</a></h1>
 <h2 id="1-introduction-to-general-table-recognition-pipeline">1. Introduction to General Table Recognition Pipeline<a class="headerlink" href="#1-introduction-to-general-table-recognition-pipeline" title="Permanent link">&para;</a></h2>
 <p>Table recognition is a technology that automatically identifies and extracts table content and structure from documents or images. It is widely used in data entry, information retrieval, and document analysis. By using computer vision and machine learning algorithms, table recognition can convert complex table information into editable formats, facilitating further processing and analysis of data.</p>
 <p>The General Table Recognition Pipeline is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. This pipeline integrates the well-known SLANet and SLANet_plus table recognition models. Based on this pipeline, precise predictions of tables can be achieved, covering a wide range of applications in general, manufacturing, finance, transportation, and other fields. The pipeline also provides flexible service deployment options, supporting various hardware and programming languages for integration. Moreover, it offers custom development capabilities, allowing you to train and optimize models on your own dataset, which can then be seamlessly integrated.</p>
@@ -5934,7 +5934,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/02.png"/></p>
 <p>If you are satisfied with the performance of the pipeline, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the method in <a href="#22-local-experience">Section 2.2 Local Experience</a> for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the pipeline using private data</b>. If you have local training hardware resources, you can start training directly on your local machine; if not, the Baidu AI Studio provides a one-click training service. No code is required; simply upload your data to start the training task.</p>
 <h3 id="22-local-experience">2.2 Local Experience<a class="headerlink" href="#22-local-experience" title="Permanent link">&para;</a></h3>
-<p>Before using the general table recognition production line locally, please ensure that you have completed the installation of the PaddleX wheel package according to the <a href="../../../installation/installation.html">PaddleX Local Installation Guide</a>.</p>
+<p>Before using the General Table Recognition pipeline locally, ensure you have installed the PaddleX wheel package following the <a href="../../../installation/installation.html">PaddleX Local Installation Guide</a>.</p>
 <h3 id="21-command-line-experience">2.1 Command Line Experience<a class="headerlink" href="#21-command-line-experience" title="Permanent link">&para;</a></h3>
 <p>You can quickly experience the table recognition pipeline with a single command. Use the <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">test file</a>, and replace <code>--input</code> with your local path for prediction.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>paddlex<span class="w"> </span>--pipeline<span class="w"> </span>table_recognition<span class="w"> </span><span class="se">\</span>
@@ -6790,7 +6790,7 @@ You can choose the appropriate deployment method for your model pipeline accordi
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 6, 2025 08:43:02">March 6, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 6, 2025 11:03:32">March 6, 2025</span>
   </span>
 
     
@@ -6800,7 +6800,7 @@ You can choose the appropriate deployment method for your model pipeline accordi
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 6, 2025 08:43:02">March 6, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 6, 2025 11:03:32">March 6, 2025</span>
   </span>
 
     
@@ -6815,7 +6815,7 @@ You can choose the appropriate deployment method for your model pipeline accordi
     </span>
     <nav>
       
-        <a href="mailto:263037929@qq.com">Sunflower7788</a>
+        <a href="mailto:85537209+liu-jiaxuan@users.noreply.github.com">Liu Jiaxuan</a>
     </nav>
   </span>
 

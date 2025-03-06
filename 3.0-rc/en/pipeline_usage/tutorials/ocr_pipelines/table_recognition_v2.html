@@ -1055,9 +1055,9 @@ You're not viewing the latest version.
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-introduction-to-general-table-recognition-pipeline-v2" class="md-nav__link">
+  <a href="#1-introduction-to-general-table-recognition-v2-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
-      1. Introduction to General Table Recognition Pipeline v2
+      1. Introduction to General Table Recognition v2 Pipeline
     </span>
   </a>
   
@@ -5157,9 +5157,9 @@ You're not viewing the latest version.
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-introduction-to-general-table-recognition-pipeline-v2" class="md-nav__link">
+  <a href="#1-introduction-to-general-table-recognition-v2-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
-      1. Introduction to General Table Recognition Pipeline v2
+      1. Introduction to General Table Recognition v2 Pipeline
     </span>
   </a>
   
@@ -5258,14 +5258,15 @@ You're not viewing the latest version.
 
 
 <h1 id="general-table-recognition-v2-pipeline-tutorial">General Table Recognition v2 Pipeline Tutorial<a class="headerlink" href="#general-table-recognition-v2-pipeline-tutorial" title="Permanent link">&para;</a></h1>
-<h2 id="1-introduction-to-general-table-recognition-pipeline-v2">1. Introduction to General Table Recognition Pipeline v2<a class="headerlink" href="#1-introduction-to-general-table-recognition-pipeline-v2" title="Permanent link">&para;</a></h2>
-<p>Table recognition is a technology that automatically identifies and extracts table content and structure from documents or images. It is widely used in data entry, information retrieval, and document analysis. By using computer vision and machine learning algorithms, table recognition can convert complex table information into editable formats, facilitating further processing and analysis of data.</p>
-<p>The General Table Recognition v2 Pipeline is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. Unlike the General Table Recognition Pipeline, this pipeline introduces two additional modules: table classification and table cell detection, which are linked with the table structure recognition module to complete the table recognition task. This pipeline can achieve accurate table predictions and is applicable in various fields such as general, manufacturing, finance, and transportation. It also provides flexible service deployment options, supporting multiple programming languages on various hardware. Additionally, it offers custom development capabilities, allowing you to train and fine-tune models on your own dataset, with seamless integration of the trained models.</p>
+<h2 id="1-introduction-to-general-table-recognition-v2-pipeline">1. Introduction to General Table Recognition v2 Pipeline<a class="headerlink" href="#1-introduction-to-general-table-recognition-v2-pipeline" title="Permanent link">&para;</a></h2>
+<p>Table recognition is a technology that automatically identifies and extracts table content and its structure from documents or images. It is widely used in data entry, information retrieval, and document analysis. By using computer vision and machine learning algorithms, table recognition can convert complex table information into an editable format, making it easier for users to further process and analyze data.</p>
+<p>The General Table Recognition v2 Pipeline(PP-TableMagic) is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. Unlike the General Table Recognition Pipeline, this pipeline introduces two additional modules: table classification and table cell detection, which are linked with the table structure recognition module to complete the table recognition task. This pipeline can achieve accurate table predictions and is applicable in various fields such as general, manufacturing, finance, and transportation. It also provides flexible service deployment options, supporting multiple programming languages on various hardware. Additionally, it offers custom development capabilities, allowing you to train and fine-tune models on your own dataset, with seamless integration of the trained models.</p>
 <p><b>❗ The General Table Recognition v2 Pipeline is still being optimized and the final version will be released in the next version of PaddleX. In order to maintain the stability of use, you can use the General Table Recognition Pipeline for table processing first, and we will release a notice when the final version of v2 is open-sourced, so please stay tuned!</b></p>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/01.png"/>
-<b>The General Table Recognition Pipeline v2 includes essential modules for table structure recognition, table classification, table cell localization, text detection, and text recognition, as well as optional modules for layout area detection, document image orientation classification, and text image correction.</b></p>
-<p><b>If you prioritize model accuracy, choose a high-accuracy model; if you prioritize inference speed, choose a faster model; if you care about model size, choose a smaller model.</b></p>
-<details><summary> 👉 Model List Details</summary>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/01.png"/></p>
+<p><b>The General Table Recognition v2 Pipeline includes mandatory modules such as table structure recognition, table classification, table cell localization, text detection, and text recognition, as well as optional modules like layout area detection, document image orientation classification, and text image correction.</b></p>
+<p><b>If you prioritize model accuracy, choose a model with higher accuracy; if you care more about inference speed, choose a model with faster inference speed; if you are concerned about model storage size, choose a model with a smaller storage size.</b></p>
+<details><summary> 👉Model List Details</summary>
+
 <p><b>Table Recognition Module Models:</b></p>
 <table>
 <tr>
@@ -5664,7 +5665,6 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 > ❗ The above list includes the <b>3 core models</b> that are the focus of the layout detection module. The module supports a total of <b>11 full models</b>, including multiple predefined models with different categories. The complete list of models is as follows:
 <details><summary> 👉Model List Details</summary>
 * <b>Table Layout Detection Models</b>
-
 <table>
 <thead>
 <tr>
@@ -5790,7 +5790,6 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </table>
 </details>
 <p><b>Text Image Correction Module Model (Optional):</b></p>
-
 <table>
 <thead>
 <tr>
@@ -5865,59 +5864,63 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 | Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
 | High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
-
 </details>
 
+</details>
 <h2 id="2-quick-start">2. Quick Start<a class="headerlink" href="#2-quick-start" title="Permanent link">&para;</a></h2>
-<p>All models provided by PaddleX can be quickly experienced. You can use the command line or Python locally to experience the General Table Recognition Production Line v2.</p>
+<p>All model pipelines provided by PaddleX can be quickly experienced. You can use the command line or Python locally to experience the effect of the General Table Recognition v2 Pipeline.</p>
 <h3 id="21-online-experience">2.1 Online Experience<a class="headerlink" href="#21-online-experience" title="Permanent link">&para;</a></h3>
 <p>Online experience is not supported at the moment.</p>
 <h3 id="22-local-experience">2.2 Local Experience<a class="headerlink" href="#22-local-experience" title="Permanent link">&para;</a></h3>
-<p>Before using the General Table Recognition Production Line v2 locally, please ensure that you have completed the installation of the PaddleX wheel package according to the <a href="../../../installation/installation.html">PaddleX Local Installation Guide</a>.</p>
+<p>Before using the General Table Recognition v2 Pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the <a href="../../../installation/installation.html">PaddleX Local Installation Tutorial</a>.</p>
 <h3 id="23-command-line-experience">2.3 Command Line Experience<a class="headerlink" href="#23-command-line-experience" title="Permanent link">&para;</a></h3>
-<p>You can quickly experience the table recognition pipeline with a single command. Use the <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">test file</a> (Note: The link may not be accessible due to network issues or link validity. Please check the link and try again if necessary.) and replace <code>--input</code> with the local path for prediction.</p>
+<p>You can quickly experience the table recognition pipeline with a single command. Use the <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition_v2.jpg">test file</a> (Note: The link may not be accessible due to network issues or link validity. Please check the link and try again if necessary.) and replace <code>--input</code> with the local path for prediction.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>paddlex<span class="w"> </span>--pipeline<span class="w"> </span>table_recognition_v2<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">        </span>--use_doc_orientation_classify<span class="o">=</span>False<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">        </span>--use_doc_unwarping<span class="o">=</span>False<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">        </span>--input<span class="w"> </span>table_recognition.jpg<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">        </span>--input<span class="w"> </span>table_recognition_v2.jpg<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">        </span>--save_path<span class="w"> </span>./output<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">        </span>--device<span class="w"> </span>gpu:0
 </span></code></pre></div>
 <details><summary>👉 <b>After running, the result obtained is: (Click to expand)</b></summary>
 
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="o">{</span><span class="s1">&#39;res&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;input_path&#39;</span>:<span class="w"> </span><span class="s1">&#39;table_recognition.jpg&#39;</span>,<span class="w"> </span><span class="s1">&#39;page_index&#39;</span>:<span class="w"> </span>None,<span class="w"> </span><span class="s1">&#39;model_settings&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;use_doc_preprocessor&#39;</span>:<span class="w"> </span>False,<span class="w"> </span><span class="s1">&#39;use_layout_detection&#39;</span>:<span class="w"> </span>True,<span class="w"> </span><span class="s1">&#39;use_ocr_model&#39;</span>:<span class="w"> </span>True<span class="o">}</span>,<span class="w"> </span><span class="s1">&#39;layout_det_res&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;input_path&#39;</span>:<span class="w"> </span>None,<span class="w"> </span><span class="s1">&#39;page_index&#39;</span>:<span class="w"> </span>None,<span class="w"> </span><span class="s1">&#39;boxes&#39;</span>:<span class="w"> </span><span class="o">[{</span><span class="s1">&#39;cls_id&#39;</span>:<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="s1">&#39;label&#39;</span>:<span class="w"> </span><span class="s1">&#39;Table&#39;</span>,<span class="w"> </span><span class="s1">&#39;score&#39;</span>:<span class="w"> </span><span class="m">0</span>.9922188520431519,<span class="w"> </span><span class="s1">&#39;coordinate&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">3</span>.0127392,<span class="w"> </span><span class="m">0</span>.14648987,<span class="w"> </span><span class="m">547</span>.5102,<span class="w"> </span><span class="m">127</span>.72023<span class="o">]}]}</span>,<span class="w"> </span><span class="s1">&#39;overall_ocr_res&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;input_path&#39;</span>:<span class="w"> </span>None,<span class="w"> </span><span class="s1">&#39;page_index&#39;</span>:<span class="w"> </span>None,<span class="w"> </span><span class="s1">&#39;model_settings&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;use_doc_preprocessor&#39;</span>:<span class="w"> </span>False,<span class="w"> </span><span class="s1">&#39;use_textline_orientation&#39;</span>:<span class="w"> </span>False<span class="o">}</span>,<span class="w"> </span><span class="s1">&#39;dt_polys&#39;</span>:<span class="w"> </span>array<span class="o">([[[</span><span class="m">234</span>,<span class="w">   </span><span class="m">6</span><span class="o">]</span>,
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">        </span>...,
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">        </span><span class="o">[</span><span class="m">234</span>,<span class="w">  </span><span class="m">25</span><span class="o">]]</span>,
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{&#39;res&#39;: {&#39;input_path&#39;: &#39;table_recognition_v2.jpg&#39;, &#39;page_index&#39;: None, &#39;model_settings&#39;: {&#39;use_doc_preprocessor&#39;: False, &#39;use_layout_detection&#39;: True, &#39;use_ocr_model&#39;: True}, &#39;layout_det_res&#39;: {&#39;input_path&#39;: None, &#39;page_index&#39;: None, &#39;boxes&#39;: [{&#39;cls_id&#39;: 8, &#39;label&#39;: &#39;table&#39;, &#39;score&#39;: 0.86655592918396, &#39;coordinate&#39;: [0.0125130415, 0.41920784, 1281.3737, 585.3884]}]}, &#39;overall_ocr_res&#39;: {&#39;input_path&#39;: None, &#39;page_index&#39;: None, &#39;model_settings&#39;: {&#39;use_doc_preprocessor&#39;: False, &#39;use_textline_orientation&#39;: False}, &#39;dt_polys&#39;: array([[[   9,   21],
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>        ...,
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        [   9,   59]],
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">       </span>...,
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>       ...,
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">       </span><span class="o">[[</span><span class="m">448</span>,<span class="w"> </span><span class="m">101</span><span class="o">]</span>,
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span>...,
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">        </span><span class="o">[</span><span class="m">448</span>,<span class="w"> </span><span class="m">121</span><span class="o">]]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span><span class="s1">&#39;text_det_params&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;limit_side_len&#39;</span>:<span class="w"> </span><span class="m">960</span>,<span class="w"> </span><span class="s1">&#39;limit_type&#39;</span>:<span class="w"> </span><span class="s1">&#39;max&#39;</span>,<span class="w"> </span><span class="s1">&#39;thresh&#39;</span>:<span class="w"> </span><span class="m">0</span>.3,<span class="w"> </span><span class="s1">&#39;box_thresh&#39;</span>:<span class="w"> </span><span class="m">0</span>.6,<span class="w"> </span><span class="s1">&#39;unclip_ratio&#39;</span>:<span class="w"> </span><span class="m">2</span>.0<span class="o">}</span>,<span class="w"> </span><span class="s1">&#39;text_type&#39;</span>:<span class="w"> </span><span class="s1">&#39;general&#39;</span>,<span class="w"> </span><span class="s1">&#39;textline_orientation_angles&#39;</span>:<span class="w"> </span>array<span class="o">([</span>-1,<span class="w"> </span>...,<span class="w"> </span>-1<span class="o">])</span>,<span class="w"> </span><span class="s1">&#39;text_rec_score_thresh&#39;</span>:<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="s1">&#39;rec_texts&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="s1">&#39;CRuncover&#39;</span>,<span class="w"> </span><span class="s1">&#39;Dres&#39;</span>,<span class="w"> </span><span class="s1">&#39;连续工作3&#39;</span>,<span class="w"> </span><span class="s1">&#39;取出来放在网上&#39;</span>,<span class="w"> </span><span class="s1">&#39;没想&#39;</span>,<span class="w"> </span><span class="s1">&#39;江、整江等八大&#39;</span>,<span class="w"> </span><span class="s1">&#39;Abstr&#39;</span>,<span class="w"> </span><span class="s1">&#39;rSrivi&#39;</span>,<span class="w"> </span><span class="s1">&#39;$709.&#39;</span>,<span class="w"> </span><span class="s1">&#39;cludingGiv&#39;</span>,<span class="w"> </span><span class="s1">&#39;2.72&#39;</span>,<span class="w"> </span><span class="s1">&#39;Ingcubic&#39;</span>,<span class="w"> </span><span class="s1">&#39;$744.78&#39;</span><span class="o">]</span>,<span class="w"> </span><span class="s1">&#39;rec_scores&#39;</span>:<span class="w"> </span>array<span class="o">([</span><span class="m">0</span>.99512607,<span class="w"> </span>...,<span class="w"> </span><span class="m">0</span>.99844509<span class="o">])</span>,<span class="w"> </span><span class="s1">&#39;rec_polys&#39;</span>:<span class="w"> </span>array<span class="o">([[[</span><span class="m">234</span>,<span class="w">   </span><span class="m">6</span><span class="o">]</span>,
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">        </span>...,
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">        </span><span class="o">[</span><span class="m">234</span>,<span class="w">  </span><span class="m">25</span><span class="o">]]</span>,
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>       [[1046,  536],
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        ...,
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        [1046,  573]]], dtype=int16), &#39;text_det_params&#39;: {&#39;limit_side_len&#39;: 960, &#39;limit_type&#39;: &#39;max&#39;, &#39;thresh&#39;: 0.3, &#39;box_thresh&#39;: 0.6, &#39;unclip_ratio&#39;: 2.0}, &#39;text_type&#39;: &#39;general&#39;, &#39;textline_orientation_angles&#39;: array([-1, ..., -1]), &#39;text_rec_score_thresh&#39;: 0, &#39;rec_texts&#39;: [&#39;部门&#39;, &#39;报销人&#39;, &#39;报销事由&#39;, &#39;批准人：&#39;, &#39;单据&#39;, &#39;张&#39;, &#39;合计金额&#39;, &#39;元&#39;, &#39;车费票&#39;, &#39;其&#39;, &#39;火车费票&#39;, &#39;飞机票&#39;, &#39;中&#39;, &#39;旅住宿费&#39;, &#39;其他&#39;, &#39;补贴&#39;], &#39;rec_scores&#39;: array([0.99958128, ..., 0.99317062]), &#39;rec_polys&#39;: array([[[   9,   21],
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        ...,
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        [   9,   59]],
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">       </span>...,
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>       ...,
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">       </span><span class="o">[[</span><span class="m">448</span>,<span class="w"> </span><span class="m">101</span><span class="o">]</span>,
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">        </span>...,
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">        </span><span class="o">[</span><span class="m">448</span>,<span class="w"> </span><span class="m">121</span><span class="o">]]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span><span class="s1">&#39;rec_boxes&#39;</span>:<span class="w"> </span>array<span class="o">([[</span><span class="m">234</span>,<span class="w"> </span>...,<span class="w">  </span><span class="m">25</span><span class="o">]</span>,
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">       </span>...,
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">       </span><span class="o">[</span><span class="m">448</span>,<span class="w"> </span>...,<span class="w"> </span><span class="m">121</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)}</span>,<span class="w"> </span><span class="s1">&#39;table_res_list&#39;</span>:<span class="w"> </span><span class="o">[{</span><span class="s1">&#39;cell_box_list&#39;</span>:<span class="w"> </span><span class="o">[</span>array<span class="o">([</span><span class="w"> </span><span class="m">3</span>.18822289,<span class="w"> </span>...,<span class="w"> </span><span class="m">30</span>.87823655<span class="o">])</span>,<span class="w"> </span>array<span class="o">([</span><span class="w"> </span><span class="m">3</span>.21032453,<span class="w"> </span>...,<span class="w"> </span><span class="m">65</span>.14108063<span class="o">])</span>,<span class="w"> </span>array<span class="o">([</span><span class="m">110</span>.18174553,<span class="w"> </span>...,<span class="w">  </span><span class="m">65</span>.02860047<span class="o">])</span>,<span class="w"> </span>array<span class="o">([</span><span class="m">212</span>.96108818,<span class="w"> </span>...,<span class="w">  </span><span class="m">64</span>.99535157<span class="o">])</span>,<span class="w"> </span>array<span class="o">([</span><span class="m">404</span>.08112907,<span class="w"> </span>...,<span class="w">  </span><span class="m">65</span>.0847223<span class="w"> </span><span class="o">])</span>,<span class="w"> </span>array<span class="o">([</span><span class="w"> </span><span class="m">3</span>.21772957,<span class="w"> </span>...,<span class="w"> </span><span class="m">96</span>.07921387<span class="o">])</span>,<span class="w"> </span>array<span class="o">([</span><span class="m">110</span>.23703575,<span class="w"> </span>...,<span class="w">  </span><span class="m">96</span>.01378419<span class="o">])</span>,<span class="w"> </span>array<span class="o">([</span><span class="m">213</span>.06095695,<span class="w"> </span>...,<span class="w">  </span><span class="m">95</span>.97141816<span class="o">])</span>,<span class="w"> </span>array<span class="o">([</span><span class="m">404</span>.23704338,<span class="w"> </span>...,<span class="w">  </span><span class="m">96</span>.03654267<span class="o">])</span>,<span class="w"> </span>array<span class="o">([</span><span class="w">  </span><span class="m">3</span>.22793937,<span class="w"> </span>...,<span class="w"> </span><span class="m">127</span>.08698823<span class="o">])</span>,<span class="w"> </span>array<span class="o">([</span><span class="m">110</span>.40586662,<span class="w"> </span>...,<span class="w"> </span><span class="m">127</span>.07002045<span class="o">])</span>,<span class="w"> </span>array<span class="o">([</span><span class="m">213</span>.12627983,<span class="w"> </span>...,<span class="w"> </span><span class="m">127</span>.02842499<span class="o">])</span>,<span class="w"> </span>array<span class="o">([</span><span class="m">404</span>.33042717,<span class="w"> </span>...,<span class="w"> </span><span class="m">126</span>.45088746<span class="o">])]</span>,<span class="w"> </span><span class="s1">&#39;pred_html&#39;</span>:<span class="w"> </span><span class="s1">&#39;&lt;html&gt;&lt;body&gt;&lt;table&gt;&lt;tr&gt;&lt;td colspan=&quot;4&quot;&gt;CRuncover&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Dres&lt;/td&gt;&lt;td&gt;连续工作3&lt;/td&gt;&lt;td&gt;取出来放在网上 没想&lt;/td&gt;&lt;td&gt;江、整江等八大&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Abstr&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;rSrivi&lt;/td&gt;&lt;td&gt;$709.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;cludingGiv&lt;/td&gt;&lt;td&gt;2.72&lt;/td&gt;&lt;td&gt;Ingcubic&lt;/td&gt;&lt;td&gt;$744.78&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;&#39;</span>,<span class="w"> </span><span class="s1">&#39;table_ocr_pred&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;rec_polys&#39;</span>:<span class="w"> </span>array<span class="o">([[[</span><span class="m">234</span>,<span class="w">   </span><span class="m">6</span><span class="o">]</span>,
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">        </span>...,
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">        </span><span class="o">[</span><span class="m">234</span>,<span class="w">  </span><span class="m">25</span><span class="o">]]</span>,
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>       [[1046,  536],
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        ...,
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>        [1046,  573]]], dtype=int16), &#39;rec_boxes&#39;: array([[   9, ...,   59],
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>       ...,
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>       [1046, ...,  573]], dtype=int16)}, &#39;table_res_list&#39;: [{&#39;cell_box_list&#39;: [array([ 0.13052222, ..., 73.08310249]), array([104.43082511, ...,  73.27777413]), array([319.39041221, ...,  73.30439308]), array([424.2436837 , ...,  73.44736794]), array([580.75836265, ...,  73.24003914]), array([723.04370201, ...,  73.22717598]), array([984.67315757, ...,  73.20420387]), array([1.25130415e-02, ..., 5.85419208e+02]), array([984.37072837, ..., 137.02281502]), array([984.26586998, ..., 201.22290352]), array([984.24017417, ..., 585.30775765]), array([1039.90606773, ...,  265.44664314]), array([1039.69549644, ...,  329.30540779]), array([1039.66546714, ...,  393.57319954]), array([1039.5122689 , ...,  457.74644783]), array([1039.55535972, ...,  521.73030403]), array([1039.58612144, ...,  585.09468392])], &#39;pred_html&#39;: &#39;&lt;html&gt;&lt;body&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;部门&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;报销人&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;报销事由&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td colspan=&quot;2&quot;&gt;批准人：&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan=&quot;6&quot; rowspan=&quot;8&quot;&gt;&lt;/td&gt;&lt;td colspan=&quot;2&quot;&gt;单据 张&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan=&quot;2&quot;&gt;合计金额 元&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td rowspan=&quot;6&quot;&gt;其 中&lt;/td&gt;&lt;td&gt;车费票&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;火车费票&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;飞机票&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;旅住宿费&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;其他&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;补贴&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;&#39;, &#39;table_ocr_pred&#39;: {&#39;rec_polys&#39;: array([[[   9,   21],
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>        ...,
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>        [   9,   59]],
 </span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">       </span>...,
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>       ...,
 </span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">       </span><span class="o">[[</span><span class="m">448</span>,<span class="w"> </span><span class="m">101</span><span class="o">]</span>,
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">        </span>...,
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">        </span><span class="o">[</span><span class="m">448</span>,<span class="w"> </span><span class="m">121</span><span class="o">]]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)</span>,<span class="w"> </span><span class="s1">&#39;rec_texts&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="s1">&#39;CRuncover&#39;</span>,<span class="w"> </span><span class="s1">&#39;Dres&#39;</span>,<span class="w"> </span><span class="s1">&#39;连续工作3&#39;</span>,<span class="w"> </span><span class="s1">&#39;取出来放在网上&#39;</span>,<span class="w"> </span><span class="s1">&#39;没想&#39;</span>,<span class="w"> </span><span class="s1">&#39;江、整江等八大&#39;</span>,<span class="w"> </span><span class="s1">&#39;Abstr&#39;</span>,<span class="w"> </span><span class="s1">&#39;rSrivi&#39;</span>,<span class="w"> </span><span class="s1">&#39;$709.&#39;</span>,<span class="w"> </span><span class="s1">&#39;cludingGiv&#39;</span>,<span class="w"> </span><span class="s1">&#39;2.72&#39;</span>,<span class="w"> </span><span class="s1">&#39;Ingcubic&#39;</span>,<span class="w"> </span><span class="s1">&#39;$744.78&#39;</span><span class="o">]</span>,<span class="w"> </span><span class="s1">&#39;rec_scores&#39;</span>:<span class="w"> </span>array<span class="o">([</span><span class="m">0</span>.99512607,<span class="w"> </span>...,<span class="w"> </span><span class="m">0</span>.99844509<span class="o">])</span>,<span class="w"> </span><span class="s1">&#39;rec_boxes&#39;</span>:<span class="w"> </span>array<span class="o">([[</span><span class="m">234</span>,<span class="w"> </span>...,<span class="w">  </span><span class="m">25</span><span class="o">]</span>,
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">       </span>...,
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">       </span><span class="o">[</span><span class="m">448</span>,<span class="w"> </span>...,<span class="w"> </span><span class="m">121</span><span class="o">]]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int16<span class="o">)}}]}}</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>       [[1046,  536],
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>        ...,
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>        [1046,  573]]], dtype=int16), &#39;rec_texts&#39;: [&#39;部门&#39;, &#39;报销人&#39;, &#39;报销事由&#39;, &#39;批准人：&#39;, &#39;单据&#39;, &#39;张&#39;, &#39;合计金额&#39;, &#39;元&#39;, &#39;车费票&#39;, &#39;其&#39;, &#39;火车费票&#39;, &#39;飞机票&#39;, &#39;中&#39;, &#39;旅住宿费&#39;, &#39;其他&#39;, &#39;补贴&#39;], &#39;rec_scores&#39;: array([0.99958128, ..., 0.99317062]), &#39;rec_boxes&#39;: array([[   9, ...,   59],
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>       ...,
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>       [1046, ...,  573]], dtype=int16)}}]}}
 </span></code></pre></div>
 
-The result of the visualization is saved under `save_path`, and the visualization result of table recognition is as follows:
-<img src="<url id="curl1qgonf4r89jtks8g" type="url" status="failed" title="" wc="0">https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/01.jpg</url> ">
+The explanation of the running result parameters can refer to the result interpretation in [2.2.2 Python Script Integration](#222-python-script-integration).
+
+
+The visualization results are saved under `save_path`, where the visualization result of table recognition is as follows:
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/02.jpg">
 
 </details>
 
@@ -5930,7 +5933,7 @@ The result of the visualization is saved under `save_path`, and the visualizatio
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;table_recognition_v2&quot;</span><span class="p">)</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">output</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;table_recognition.jpg&quot;</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;table_recognition_v2.jpg&quot;</span><span class="p">,</span>
 </span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">use_doc_orientation_classify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">use_doc_unwarping</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">)</span>
@@ -5943,7 +5946,7 @@ The result of the visualization is saved under `save_path`, and the visualizatio
 </span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 <p>In the above Python script, the following steps are executed:</p>
-<p>(1) The <code>create_pipeline()</code> function is used to instantiate a Universal Table Recognition Pipeline v2 object. The specific parameter descriptions are as follows:</p>
+<p>(1) The <code>create_pipeline()</code> function is used to instantiate a General Table Recognition v2 Pipeline object. The specific parameter descriptions are as follows:</p>
 <table>
 <thead>
 <tr>
@@ -5981,7 +5984,7 @@ The result of the visualization is saved under `save_path`, and the visualizatio
 </tbody>
 </table>
 
-<p>(2) The <code>predict()</code> method of the Universal Table Recognition Pipeline v2 object is called to perform inference prediction. This method returns a <code>generator</code>. Below are the parameters and descriptions of the <code>predict()</code> method:</p>
+<p>(2) Call the <code>predict()</code> method of the General Table Recognition v2 Pipeline object for inference prediction. This method will return a <code>generator</code>. The parameters of the <code>predict()</code> method and their descriptions are as follows:</p>
 <table>
 <thead>
 <tr>
@@ -5999,7 +6002,7 @@ The result of the visualization is saved under `save_path`, and the visualizatio
 <td>
 <ul>
 <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code>.</li>
-<li><b>str</b>: Local path of image or PDF files, e.g., <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the network URL of an image or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">Example</a>; <b>Local directory</b>, the directory should contain images to be predicted, e.g., <code>/root/data/</code> (currently, prediction for PDF files in directories is not supported; PDF files must specify the exact file path).</li>
+<li><b>str</b>: Local path of image or PDF files, e.g., <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the network URL of an image or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition_v2.jpg">Example</a>; <b>Local directory</b>, the directory should contain images to be predicted, e.g., <code>/root/data/</code> (currently, prediction for PDF files in directories is not supported; PDF files must specify the exact file path).</li>
 <li><b>List</b>: List elements must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[“/root/data/img1.jpg”, “/root/data/img2.jpg”]</code>, <code>[“/root/data1”, “/root/data2”]</code>.</li>
 </ul>
 </td>
@@ -6277,12 +6280,16 @@ The result of the visualization is saved under `save_path`, and the visualizatio
 </ul>
 </li>
 <li>
-<p>Calling the <code>save_to_json()</code> method will save the above content to the specified <code>save_path</code>. If a directory is specified, the saved path will be <code>save_path/{your_img_basename}.json</code>. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the <code>numpy.array</code> type will be converted to list format.</p>
+<p>Calling the <code>save_to_json()</code> method will save the above content to the specified <code>save_path</code>. If specified as a directory, the saved path will be <code>save_path/{your_img_basename}.json</code>; if specified as a file, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the <code>numpy.array</code> types will be converted to lists.</p>
 </li>
-<li>Calling the <code>save_to_img()</code> method will save the visualization results to the specified <code>save_path</code>. If a directory is specified, the saved path will be <code>save_path/{your_img_basename}_ocr_res_img.{your_img_extension}</code>. If a file is specified, it will be saved directly to that file. (It is not recommended to specify a specific file path directly, as multiple result images will be overwritten and only the last image will be retained.)</li>
-<li>Calling the <code>save_to_html()</code> method will save the above content to the specified <code>save_path</code>. If a directory is specified, the saved path will be <code>save_path/{your_img_basename}.html</code>. If a file is specified, it will be saved directly to that file. In the General Table Recognition Line v2, the HTML format of tables in the image will be written to the specified HTML file.</li>
 <li>
-<p>Calling the <code>save_to_xlsx()</code> method will save the above content to the specified <code>save_path</code>. If a directory is specified, the saved path will be <code>save_path/{your_img_basename}.xlsx</code>. If a file is specified, it will be saved directly to that file. In the General Table Recognition Line v2, the Excel format of tables in the image will be written to the specified xlsx file.</p>
+<p>Calling the <code>save_to_img()</code> method will save the visualization results to the specified <code>save_path</code>. If specified as a directory, the saved path will be <code>save_path/{your_img_basename}_ocr_res_img.{your_img_extension}</code>; if specified as a file, it will be saved directly to that file. (The pipeline usually contains many result images, it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, leaving only the last image)</p>
+</li>
+<li>
+<p>Calling the <code>save_to_html()</code> method will save the above content to the specified <code>save_path</code>. If specified as a directory, the saved path will be <code>save_path/{your_img_basename}.html</code>; if specified as a file, it will be saved directly to that file. In the General Table Recognition v2 Pipeline, the HTML form of the table in the image will be written to the specified HTML file.</p>
+</li>
+<li>
+<p>Calling the <code>save_to_xlsx()</code> method will save the above content to the specified <code>save_path</code>. If specified as a directory, the saved path will be <code>save_path/{your_img_basename}.xlsx</code>; if specified as a file, it will be saved directly to that file. In the General Table Recognition v2 Pipeline, the Excel form of the table in the image will be written to the specified XLSX file.</p>
 </li>
 <li>
 <p>Additionally, it is also possible to obtain the visualization image with results and prediction results through attributes, as follows:</p>
@@ -6309,16 +6316,16 @@ The result of the visualization is saved under `save_path`, and the visualizatio
 <li>The prediction result obtained through the <code>json</code> attribute is of dict type, and the content is consistent with the content saved by calling the <code>save_to_json()</code> method.</li>
 <li>The prediction result returned by the <code>img</code> attribute is a dictionary. The keys are <code>table_res_img</code>, <code>ocr_res_img</code>, <code>layout_res_img</code>, and <code>preprocessed_img</code>, corresponding to four <code>Image.Image</code> objects in order: the visualization image of table recognition results, the visualization image of OCR results, the visualization image of layout detection results, and the visualization image of image preprocessing. If a sub-module is not used, the corresponding result image will not be included in the dictionary.</li>
 </ul>
-<p>Additionally, you can obtain the configuration file for the General Table Recognition Line v2 and load the configuration file for prediction. You can execute the following command to save the results in <code>my_path</code>:</p>
+<p>In addition, you can obtain the General Table Recognition v2 Pipeline configuration file and load the configuration file for prediction. You can execute the following command to save the result in <code>my_path</code>:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>paddlex --get_pipeline_config table_recognition_v2 --save_path ./my_path
 </span></code></pre></div>
-<p>If you have obtained the configuration file, you can customize the settings for the General Table Recognition Production Line v2. Simply modify the <code>pipeline</code> parameter value in the <code>create_pipeline</code> method to the path of the production line configuration file. The example is as follows:</p>
+<p>If you have obtained the configuration file, you can customize the settings for the General Table Recognition v2 Pipeline. Simply modify the <code>pipeline</code> parameter value in the <code>create_pipeline</code> method to the path of the pipeline configuration file. The example is as follows:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;./my_path/table_recognition_v2.yaml&quot;</span><span class="p">)</span>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">output</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;table_recognition.jpg&quot;</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;table_recognition_v2.jpg&quot;</span><span class="p">,</span>
 </span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">use_doc_orientation_classify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">use_doc_unwarping</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="p">)</span>
@@ -6330,7 +6337,7 @@ The result of the visualization is saved under `save_path`, and the visualizatio
 </span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_html</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
 </span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<p><b>Note:</b> The parameters in the configuration file are the initialization parameters for the production line. If you want to change the initialization parameters for the General Table Recognition Production Line v2, you can directly modify the parameters in the configuration file and load the configuration file for prediction. At the same time, CLI prediction also supports passing in a configuration file, just specify the path of the configuration file with <code>--pipeline</code>.</p>
+<p><b>Note:</b> The parameters in the configuration file are the initialization parameters for the pipeline. If you want to change the initialization parameters of the General Table Recognition v2 Pipeline, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in the configuration file by specifying the path with <code>--pipeline</code>.</p>
 <h2 id="3-development-integration-deployment">3. Development Integration / Deployment<a class="headerlink" href="#3-development-integration-deployment" title="Permanent link">&para;</a></h2>
 <p>If the pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration / deployment.</p>
 <p>If you need to apply the pipeline directly in your Python project, you can refer to the example code in <a href="#22-python脚本方式集成">2.2 Python Script Integration</a>.</p>
@@ -6584,11 +6591,11 @@ for i, res in enumerate(result["tableRecResults"]):
 📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on user devices, allowing the devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
 You can choose the appropriate deployment method according to your needs to integrate the model into your AI application.
 
-## 4. Secondary Development
-If the default model weights provided by the General Table Recognition Pipeline v2 do not meet your requirements in terms of accuracy or speed, you can try to <b>fine-tune</b> the existing model using <b>your own domain-specific or application data</b> to improve the recognition performance of the General Table Recognition Pipeline v2 in your scenario.
+## 4. Custom Development
+If the default model weights provided by the General Table Recognition v2 Pipeline do not meet your requirements in terms of accuracy or speed, you can try to further <b>fine-tune</b> the existing models using <b>your own domain-specific or application data</b> to improve the recognition performance of the General Table Recognition v2 Pipeline in your specific scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the General Table Recognition Pipeline v2 consists of several modules, if the pipeline's performance is not satisfactory, the issue may arise from any one of these modules. You can analyze the images with poor recognition results to identify which module is problematic and refer to the corresponding fine-tuning tutorial links in the table below for model fine-tuning.
+Since the General Table Recognition v2 Pipeline consists of several modules, if the overall performance is not satisfactory, the issue may lie in any one of these modules. You can analyze the images with poor recognition results to identify which module is problematic and refer to the corresponding fine-tuning tutorial links in the table below.
 
 <table>
 <thead>
@@ -6728,14 +6735,12 @@ For example, if you use Ascend NPU for OCR pipeline inference, the CLI command i
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>paddlex<span class="w"> </span>--pipeline<span class="w"> </span>table_recognition_v2<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">        </span>--use_doc_orientation_classify<span class="o">=</span>False<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">        </span>--use_doc_unwarping<span class="o">=</span>False<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">        </span>--input<span class="w"> </span>table_recognition.jpg<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">        </span>--input<span class="w"> </span>table_recognition_v2.jpg<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">        </span>--save_path<span class="w"> </span>./output<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">        </span>--device<span class="w"> </span>npu:0
 </span></code></pre></div>
 
 If you want to use the General Table Recognition v2 Pipeline on a wider variety of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
-
-If you want to use the Universal Table Recognition Pipeline v2 on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
 
 If you want to use the Universal Table Recognition Pipeline v2 on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
 
@@ -6760,7 +6765,7 @@ If you want to use the Universal Table Recognition Pipeline v2 on a wider range 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 6, 2025 08:43:02">March 6, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 6, 2025 11:03:32">March 6, 2025</span>
   </span>
 
     
@@ -6770,7 +6775,7 @@ If you want to use the Universal Table Recognition Pipeline v2 on a wider range 
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 6, 2025 08:43:02">March 6, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 6, 2025 11:03:32">March 6, 2025</span>
   </span>
 
     
@@ -6785,7 +6790,7 @@ If you want to use the Universal Table Recognition Pipeline v2 on a wider range 
     </span>
     <nav>
       
-        <a href="mailto:263037929@qq.com">Sunflower7788</a>
+        <a href="mailto:85537209+liu-jiaxuan@users.noreply.github.com">Liu Jiaxuan</a>
     </nav>
   </span>
 
