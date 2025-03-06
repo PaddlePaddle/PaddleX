@@ -539,7 +539,7 @@ with open(image_path, "rb") as file:
 
 payload = {
     "image": image_data, # Base64编码的文件内容或者图像URL
-    "prompt_type": "box",
+    "promptType": "box",
     "prompt": [[112.9,118.4,513.8,382.1],[4.6,263.6,92.2,336.6],[592.4,260.9,607.2,294.2]]
 }
 
@@ -554,8 +554,6 @@ image = base64.b64decode(image_base64)
 with open(output_image_path, "wb") as file:
     file.write(base64.b64decode(result["image"]))
 print(f"Output image saved at {output_image_path}")
-print("\nresult(with rle encoded binary mask):")
-print(result)
 </code></pre></details>
 </details>
 <br/>

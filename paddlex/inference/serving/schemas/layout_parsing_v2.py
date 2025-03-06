@@ -63,6 +63,8 @@ class InferRequest(ocr.BaseInferRequest):
 class MarkdownData(BaseModel):
     text: str
     images: Dict[str, str]
+    isStart: bool
+    isEnd: bool
 
 
 class LayoutParsingResult(BaseModel):

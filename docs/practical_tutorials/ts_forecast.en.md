@@ -455,8 +455,8 @@ After increasing the training epochs, Experiment 4 achieves the highest accuracy
 </tr>
 </tbody>
 </table>
-## 6. Production Line Testing
-Replace the model in the production line with the fine-tuned model and test using [this power test data](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_forecast/test.csv) for prediction:
+## 6. pipeline Testing
+Replace the model in the pipeline with the fine-tuned model and test using [this power test data](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_forecast/test.csv) for prediction:
 
 ```bash
 python main.py -c paddlex/configs/modules/ts_forecast/DLinear.yaml \
@@ -507,7 +507,7 @@ for res in output:
 ```
 For more parameters, please refer to the [Time Series forecast Pipeline Usage Tutorial](../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.en.md)
 
-1. Additionally, PaddleX's time series forecast pipeline also offers a service-oriented deployment method, detailed as follows:
+1. Additionally, PaddleX's time series forecast pipeline also offers a serving deployment method, detailed as follows:
 
-Service-Oriented Deployment: This is a common deployment form in actual production environments. By encapsulating the inference functionality as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving service-oriented deployment of pipelines at low cost. For detailed instructions on service-oriented deployment, please refer to the [PPaddleX Service-Oriented Deployment Guide](../pipeline_deploy/serving.en.md).
+Serving Deployment: This is a common deployment form in actual production environments. By encapsulating the inference functionality as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving serving deployment of pipelines at low cost. For detailed instructions on serving deployment, please refer to the [PPaddleX Serving Deployment Guide](../pipeline_deploy/serving.en.md).
 You can choose the appropriate method to deploy your model pipeline based on your needs, and proceed with subsequent AI application integration.

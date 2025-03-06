@@ -2,10 +2,10 @@
 comments: true
 ---
 
-# PP-ChatOCRv4-doc Pipeline utorial
+# PP-ChatOCRv4-doc Pipeline Tutorial
 
 ## 1. Introduction to PP-ChatOCRv4-doc Pipeline
-PP-ChatOCRv4-doc is a unique document and image intelligent analysis solution from PaddlePaddle, combining LLM, MLLM, and OCR technologies to address complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. Integrated with ERNIE Bot, it fuses massive data and knowledge, achieving high accuracy and wide applicability. This pipeline also provides flexible service deployment options, supporting deployment on various hardware. Furthermore, it offers secondary development capabilities, allowing you to train and fine-tune models on your own datasets, with seamless integration of trained models.
+PP-ChatOCRv4-doc is a unique document and image intelligent analysis solution from PaddlePaddle, combining LLM, MLLM, and OCR technologies to address complex document information extraction challenges such as layout analysis, rare characters, multi-page PDFs, tables, and seal recognition. Integrated with ERNIE Bot, it fuses massive data and knowledge, achieving high accuracy and wide applicability. This pipeline also provides flexible service deployment options, supporting deployment on various hardware. Furthermore, it offers custom development capabilities, allowing you to train and fine-tune models on your own datasets, with seamless integration of trained models.
 
 <img src="https://github.com/user-attachments/assets/0870cdec-1909-4247-9004-d9efb4ab9635">
 
@@ -19,13 +19,13 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>SLANet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_pretrained.pdparams">Trained Model</a></td>
+<td>SLANet</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_pretrained.pdparams">Training Model</a></td>
 <td>59.52</td>
 <td>103.08 / 103.08</td>
 <td>197.99 / 197.99</td>
@@ -33,7 +33,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <td>SLANet is a table structure recognition model developed by Baidu PaddleX Team. The model significantly improves the accuracy and inference speed of table structure recognition by adopting a CPU-friendly lightweight backbone network PP-LCNet, a high-low-level feature fusion module CSP-PAN, and a feature decoding module SLA Head that aligns structural and positional information.</td>
 </tr>
 <tr>
-<td>SLANet_plus</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_plus_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">Trained Model</a></td>
+<td>SLANet_plus</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SLANet_plus_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/SLANet_plus_pretrained.pdparams">Training Model</a></td>
 <td>63.69</td>
 <td>140.29 / 140.29</td>
 <td>195.39 / 195.39</td>
@@ -48,7 +48,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -91,7 +91,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -115,7 +115,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -155,7 +155,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -179,7 +179,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(0.5) (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -219,7 +219,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Detection Hmean (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -227,7 +227,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 </thead>
 <tbody>
 <tr>
-<td>PP-OCRv4_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">Trained Model</a></td>
+<td>PP-OCRv4_server_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_det_pretrained.pdparams">Training Model</a></td>
 <td>82.69</td>
 <td>83.34 / 80.91</td>
 <td>442.58 / 442.58</td>
@@ -235,7 +235,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <td>PP-OCRv4's server-side text detection model, featuring higher accuracy, suitable for deployment on high-performance servers</td>
 </tr>
 <tr>
-<td>PP-OCRv4_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">Trained Model</a></td>
+<td>PP-OCRv4_mobile_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_det_pretrained.pdparams">Training Model</a></td>
 <td>77.79</td>
 <td>8.79 / 3.13</td>
 <td>51.00 / 28.58</td>
@@ -250,13 +250,13 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Trained Model</a></td>
+<td>PP-OCRv4_mobile_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_rec_pretrained.pdparams">Training Model</a></td>
 <td>78.20</td>
 <td>4.82 / 4.82</td>
 <td>16.74 / 4.64</td>
@@ -264,7 +264,7 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <td rowspan="2">PP-OCRv4 is the next version of Baidu PaddlePaddle's self-developed text recognition model PP-OCRv3. By introducing data augmentation schemes and GTC-NRTR guidance branches, it further improves text recognition accuracy without compromising inference speed. The model offers both server (server) and mobile (mobile) versions to meet industrial needs in different scenarios.</td>
 </tr>
 <tr>
-<td>PP-OCRv4_server_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Trained Model</a></td>
+<td>PP-OCRv4_server_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_rec_pretrained.pdparams">Training Model</a></td>
 <td>79.20</td>
 <td>6.58 / 6.58</td>
 <td>33.17 / 33.17</td>
@@ -276,13 +276,13 @@ The Document Scene Information Extraction v4 pipeline includes modules for **Lay
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>ch_SVTRv2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_SVTRv2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">Trained Model</a></td>
+<td>ch_SVTRv2_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_SVTRv2_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_SVTRv2_rec_pretrained.pdparams">Training Model</a></td>
 <td>68.81</td>
 <td>8.08 / 8.08</td>
 <td>50.17 / 42.50</td>
@@ -297,13 +297,13 @@ SVTRv2 is a server-side text recognition model developed by the OpenOCR team at 
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Recognition Avg Accuracy (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>ch_RepSVTR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_RepSVTR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">Trained Model</a></td>
+<td>ch_RepSVTR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/ch_RepSVTR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/ch_RepSVTR_rec_pretrained.pdparams">Training Model</a></td>
 <td>65.07</td>
 <td>5.93 / 5.93</td>
 <td>20.73 / 7.32</td>
@@ -322,14 +322,14 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 <th>BLEU Score</th>
 <th>Normed Edit Distance</th>
 <th>ExpRate (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>LaTeX_OCR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/LaTeX_OCR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">Trained Model</a></td>
+<td>LaTeX_OCR_rec</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/LaTeX_OCR_rec_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/LaTeX_OCR_rec_pretrained.pdparams">Training Model</a></td>
 <td>0.8821</td>
 <td>0.0823</td>
 <td>40.01</td>
@@ -346,7 +346,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>Detection Hmean (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -354,7 +354,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 </thead>
 <tbody>
 <tr>
-<td>PP-OCRv4_server_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_seal_det_pretrained.pdparams">Trained Model</a></td>
+<td>PP-OCRv4_server_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_server_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_server_seal_det_pretrained.pdparams">Training Model</a></td>
 <td>98.21</td>
 <td>74.75 / 67.72</td>
 <td>382.55 / 382.55</td>
@@ -362,7 +362,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 <td>PP-OCRv4's server-side seal text detection model, featuring higher accuracy, suitable for deployment on better-equipped servers</td>
 </tr>
 <tr>
-<td>PP-OCRv4_mobile_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_seal_det_pretrained.pdparams">Trained Model</a></td>
+<td>PP-OCRv4_mobile_seal_det</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-OCRv4_mobile_seal_det_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/PP-OCRv4_mobile_seal_det_pretrained.pdparams">Training Model</a></td>
 <td>96.47</td>
 <td>7.82 / 3.09</td>
 <td>48.28 / 23.97</td>
@@ -396,7 +396,7 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 
 | Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
 |-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
 | High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 </details>
@@ -416,54 +416,62 @@ After updating the configuration file, you can complete quick inference using ju
 ```python
 from paddlex import create_pipeline
 
+chat_bot_config = {
+    "module_name": "chat_bot",
+    "model_name": "ernie-3.5-8k",
+    "base_url": "https://qianfan.baidubce.com/v2",
+    "api_type": "openai",
+    "api_key": "api_key",  # your api_key
+}
+
+retriever_config = {
+    "module_name": "retriever",
+    "model_name": "embedding-v1",
+    "base_url": "https://qianfan.baidubce.com/v2",
+    "api_type": "qianfan",
+    "api_key": "api_key",  # your api_key
+}
+
+mllm_chat_bot_config = {
+    "module_name": "chat_bot",
+    "model_name": "PP-DocBee",
+    "base_url": "http://172.0.0.1:8080/v1/chat/completions",  # your local mllm service url
+    "api_type": "openai",
+    "api_key": "api_key",  # your api_key
+}
+
 pipeline = create_pipeline(pipeline="PP-ChatOCRv4-doc", initial_predictor=False)
 
-visual_predict_res = pipeline.visual_predict(input="vehicle_certificate-1.png",
+visual_predict_res = pipeline.visual_predict(
+    input="vehicle_certificate-1.png",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
     use_common_ocr=True,
     use_seal_recognition=True,
-    use_table_recognition=True)
+    use_table_recognition=True,
+)
 
 visual_info_list = []
 for res in visual_predict_res:
     visual_info_list.append(res["visual_info"])
     layout_parsing_result = res["layout_parsing_result"]
 
-vector_info = pipeline.build_vector(visual_info_list, flag_save_bytes_vector=True, retriever_config={
-    "module_name": "retriever",
-    "model_name": "embedding-v1",
-    "base_url": "https://qianfan.baidubce.com/v2",
-    "api_type": "qianfan",
-    "api_key": "api_key" # your api_key
-})
-mllm_predict_res = pipeline.mllm_pred(input="vehicle_certificate-1.png", key_list=["Driver Compartment Occupancy"], mllm_chat_bot_config={
-    "module_name": "chat_bot",
-    "model_name": "PP-DocBee",
-    "base_url": "http://172.0.0.1:8080/v1/chat/completions", # your local mllm service url
-    "api_type": "openai",
-    "api_key": "api_key" # your api_key
-})
+vector_info = pipeline.build_vector(
+    visual_info_list, flag_save_bytes_vector=True, retriever_config=retriever_config
+)
+mllm_predict_res = pipeline.mllm_pred(
+    input="vehicle_certificate-1.png",
+    key_list=["驾驶室准乘人数"],
+    mllm_chat_bot_config=mllm_chat_bot_config,
+)
 mllm_predict_info = mllm_predict_res["mllm_res"]
 chat_result = pipeline.chat(
     key_list=["驾驶室准乘人数"],
     visual_info=visual_info_list,
     vector_info=vector_info,
     mllm_predict_info=mllm_predict_info,
-    chat_bot_config={
-      "module_name": "chat_bot",
-      "model_name": "ernie-3.5-8k",
-      "base_url": "https://qianfan.baidubce.com/v2",
-      "api_type": "openai",
-      "api_key": "api_key" # your api_key
-    },
-    retriever_config={
-      "module_name": "retriever",
-      "model_name": "embedding-v1",
-      "base_url": "https://qianfan.baidubce.com/v2",
-      "api_type": "qianfan",
-      "api_key": "api_key" # your api_key
-    }
+    chat_bot_config=chat_bot_config,
+    retriever_config=retriever_config,
 )
 print(chat_result)
 
@@ -1287,7 +1295,7 @@ Below are the API references for basic serving and multi-language service invoca
 <ul>
 <li>The HTTP request method is POST.</li>
 <li>Both the request body and response body are JSON data (JSON objects).</li>
-<li>When the request is successfully processed, the response status code is <code>200</code>, and the response body has the following attributes:</li>
+<li>When the request is successfully processed, the response status code is <code>200</code>, and the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -1321,7 +1329,7 @@ Below are the API references for basic serving and multi-language service invoca
 </tbody>
 </table>
 <ul>
-<li>When the request is not successfully processed, the response body has the following attributes:</li>
+<li>When the request is not successfully processed, the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -1356,7 +1364,7 @@ Below are the API references for basic serving and multi-language service invoca
 <p>Uses computer vision models to analyze images, obtain OCR, table recognition results, etc., and extract key information from the images.</p>
 <p><code>POST /chatocr-visual</code></p>
 <ul>
-<li>Attributes of the request body:</li>
+<li>Properties of the request body:</li>
 </ul>
 <table>
 <thead>
@@ -1376,57 +1384,116 @@ Below are the API references for basic serving and multi-language service invoca
 </tr>
 <tr>
 <td><code>fileType</code></td>
-<td><code>integer</code></td>
-<td>File type. <code>0</code> represents a PDF file, <code>1</code> represents an image file. If this attribute is not present in the request body, the file type will be inferred based on the URL.</td>
+<td><code>integer</code> | <code>null</code></td>
+<td>File type. <code>0</code> represents a PDF file, <code>1</code> represents an image file. If this property is not present in the request body, the file type will be inferred based on the URL.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useImgOrientationCls</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable document image orientation classification. This feature is enabled by default.</td>
+<td><code>useDocOrientationClassify</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_doc_orientation_classify</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useImgUnwarping</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable text image correction. This feature is enabled by default.</td>
+<td><code>useDocUnwarping</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_doc_unwarping</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>useSealTextDet</code></td>
-<td><code>boolean</code></td>
-<td>Whether to enable seal text detection. This feature is enabled by default.</td>
+<td><code>useGeneralOcr</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_general_ocr</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>inferenceParams</code></td>
-<td><code>object</code></td>
-<td>Inference parameters.</td>
+<td><code>useSealRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_seal_recognition</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
-</tbody>
-</table>
-<p>Attributes of <code>inferenceParams</code>:</p>
-<table>
-<thead>
 <tr>
-<th>Name</th>
-<th>Type</th>
-<th>Meaning</th>
-<th>Required</th>
+<td><code>useTableRecognition</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_table_recognition</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
 </tr>
-</thead>
-<tbody>
 <tr>
-<td><code>maxLongSide</code></td>
-<td><code>integer</code></td>
-<td>During inference, if the length of the longer side of the input image to the text detection model is greater than <code>maxLongSide</code>, the image will be scaled so that the length of its longer side equals <code>maxLongSide</code>.</td>
+<td><code>textDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_det_limit_side_len</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_det_limit_type</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_det_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_det_box_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_det_unclip_ratio</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>textRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_rec_score_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetLimitSideLen</code></td>
+<td><code>integer</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_det_limit_side_len</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetLimitType</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_det_limit_type</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_det_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetBoxThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_det_box_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealDetUnclipRatio</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_det_unclip_ratio</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sealRecScoreThresh</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>seal_rec_score_thresh</code> parameter of the pipeline object's <code>visual_predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>When the request is successfully processed, the <code>result</code> of the response body has the following attributes:</li>
+<li>When the request is successfully processed, the <code>result</code> of the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -1438,13 +1505,13 @@ Below are the API references for basic serving and multi-language service invoca
 </thead>
 <tbody>
 <tr>
-<td><code>visualResults</code></td>
+<td><code>layoutParsingResults</code></td>
 <td><code>array</code></td>
-<td>Analysis results obtained using computer vision models. The array length is 1 (for image input) or the smaller value between the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file in sequence.</td>
+<td>Analysis results obtained using computer vision models. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file in sequence.</td>
 </tr>
 <tr>
 <td><code>visualInfo</code></td>
-<td><code>object</code></td>
+<td><code>array</code></td>
 <td>Key information in the image, which can be used as input for other operations.</td>
 </tr>
 <tr>
@@ -1454,7 +1521,7 @@ Below are the API references for basic serving and multi-language service invoca
 </tr>
 </tbody>
 </table>
-<p>Each element in <code>visualResults</code> is an <code>object</code> with the following attributes:</p>
+<p>Each element in <code>layoutParsingResults</code> is an <code>object</code> with the following properties:</p>
 <table>
 <thead>
 <tr>
@@ -1465,78 +1532,19 @@ Below are the API references for basic serving and multi-language service invoca
 </thead>
 <tbody>
 <tr>
-<td><code>texts</code></td>
-<td><code>array</code></td>
-<td>Text positions, contents, and scores.</td>
+<td><code>prunedResult</code></td>
+<td><code>object</code></td>
+<td>A simplified version of the <code>res</code> field in the JSON representation of the results generated by the pipeline's <code>visual_predict</code> method, with the <code>input_path</code> field removed.</td>
 </tr>
 <tr>
-<td><code>tables</code></td>
-<td><code>array</code></td>
-<td>Table positions and contents.</td>
+<td><code>outputImages</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Refer to the description of <code>img</code> attribute of the pipeline's visual prediction result.</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
-<td><code>string</code></td>
+<td><code>string</code> | <code>null</code></td>
 <td>Input image. The image is in JPEG format and encoded using Base64.</td>
-</tr>
-<tr>
-<td><code>layoutImage</code></td>
-<td><code>string</code></td>
-<td>Detection result image of the layout area. The image is in JPEG format and encoded using Base64.</td>
-</tr>
-<tr>
-<td><code>ocrImage</code></td>
-<td><code>string</code></td>
-<td>OCR result image. The image is in JPEG format and encoded using Base64.</td>
-</tr>
-</tbody>
-</table>
-<p>Each element in <code>texts</code> is an <code>object</code> with the following attributes:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>poly</code></td>
-<td><code>array</code></td>
-<td>Text position. The elements in the array are the vertex coordinates of the polygon enclosing the text in sequence.</td>
-</tr>
-<tr>
-<td><code>text</code></td>
-<td><code>string</code></td>
-<td>Text content.</td>
-</tr>
-<tr>
-<td><code>score</code></td>
-<td><code>number</code></td>
-<td>Text recognition score.</td>
-</tr>
-</tbody>
-</table>
-<p>Each element in <code>tables</code> is an <code>object</code> with the following attributes:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>bbox</code></td>
-<td><code>array</code></td>
-<td>Table position. The elements in the array are the x-coordinate of the top-left corner, the y-coordinate of the top-left corner, the x-coordinate of the bottom-right corner, and the y-coordinate of the bottom-right corner of the bounding box in sequence.</td>
-</tr>
-<tr>
-<td><code>html</code></td>
-<td><code>string</code></td>
-<td>Table recognition result in HTML format.</td>
 </tr>
 </tbody>
 </table>
@@ -1546,7 +1554,7 @@ Below are the API references for basic serving and multi-language service invoca
 <p>Builds a vector database.</p>
 <p><code>POST /chatocr-vector</code></p>
 <ul>
-<li>Attributes of the request body:</li>
+<li>Properties of the request body:</li>
 </ul>
 <table>
 <thead>
@@ -1560,50 +1568,32 @@ Below are the API references for basic serving and multi-language service invoca
 <tbody>
 <tr>
 <td><code>visualInfo</code></td>
-<td><code>object</code></td>
+<td><code>array</code></td>
 <td>Key information in the image. Provided by the <code>analyzeImages</code> operation.</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code>minChars</code></td>
-<td><code>integer</code></td>
+<td><code>minCharacters</code></td>
+<td><code>integer</code> | <code>null</code></td>
 <td>Minimum data length to enable the vector database.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>llmRequestInterval</code></td>
-<td><code>number</code></td>
-<td>Interval time for calling the large language model API.</td>
+<td><code>blockSize</code></td>
+<td><code>int</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>block_size</code> parameter of the pipeline object's <code>build_vector</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>llmName</code></td>
-<td><code>string</code></td>
-<td>Name of the large language model.</td>
-<td>No</td>
-</tr>
-<tr>
-<td><code>llmParams</code></td>
-<td><code>object</code></td>
-<td>Parameters for the large language model API.</td>
+<td><code>retrieverConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>retriever_config</code> parameter of the pipeline object's <code>build_vector</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
-<p>Currently, <code>llmParams</code> can take one of the following forms:</p>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;qianfan&quot;,
-&quot;apiKey&quot;: &quot;{API key of Qianfan Platform}&quot;,
-&quot;secretKey&quot;: &quot;{Secret key of Qianfan Platform}&quot;
-}
-</code></pre>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;aistudio&quot;,
-&quot;accessToken&quot;: &quot;{Access token of Baidu AIStudio Community}&quot;
-}
-</code></pre>
 <ul>
-<li>When the request is successfully processed, the <code>result</code> of the response body has the following attribute:</li>
+<li>When the request is successfully processed, the <code>result</code> of the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -1615,19 +1605,18 @@ Below are the API references for basic serving and multi-language service invoca
 </thead>
 <tbody>
 <tr>
-<td><code>vectorStore</code></td>
-<td><code>string</code></td>
+<td><code>vectorInfo</code></td>
+<td><code>object</code></td>
 <td>Serialized result of the vector database, which can be used as input for other operations.</td>
 </tr>
 </tbody>
 </table>
-<ul>
-<li><b><code>retrieveKnowledge</code></b></li>
+<li><b><code>invokeMLLM</code></b></li>
 </ul>
-<p>Performs knowledge retrieval.</p>
-<p><code>POST /chatocr-retrieval</code></p>
+<p>Invoke the MLLM.</p>
+<p><code>POST /chatocr-mllm</code></p>
 <ul>
-<li>Attributes of the request body:</li>
+<li>Properties of the request body:</li>
 </ul>
 <table>
 <thead>
@@ -1640,45 +1629,27 @@ Below are the API references for basic serving and multi-language service invoca
 </thead>
 <tbody>
 <tr>
-<td><code>keys</code></td>
+<td><code>image</code></td>
+<td><code>string</code></td>
+<td>URL of an image file accessible by the server or the Base64-encoded content of the image file.</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>keyList</code></td>
 <td><code>array</code></td>
-<td>List of keywords.</td>
+<td>List of keys.</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code>vectorStore</code></td>
-<td><code>string</code></td>
-<td>Serialized result of the vector database. Provided by the <code>buildVectorStore</code> operation.</td>
-<td>Yes</td>
-</tr>
-<tr>
-<td><code>llmName</code></td>
-<td><code>string</code></td>
-<td>Name of the large language model.</td>
-<td>No</td>
-</tr>
-<tr>
-<td><code>llmParams</code></td>
-<td><code>object</code></td>
-<td>Parameters for the large language model API.</td>
+<td><code>mllmChatBotConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>mllm_chat_bot_config</code> parameter of the pipeline object's <code>mllm_pred</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
-<p>Currently, <code>llmParams</code> can take one of the following forms:</p>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;qianfan&quot;,
-&quot;apiKey&quot;: &quot;{API key of Qianfan Platform}&quot;,
-&quot;secretKey&quot;: &quot;{Secret key of Qianfan Platform}&quot;
-}
-</code></pre>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;aistudio&quot;,
-&quot;accessToken&quot;: &quot;{Access token of Baidu AIStudio Community}&quot;
-}
-</code></pre>
 <ul>
-<li>When the request is successfully processed, the <code>result</code> of the response body has the following attribute:</li>
+<li>When the request is successfully processed, the <code>result</code> of the response body has the following property:</li>
 </ul>
 <table>
 <thead>
@@ -1690,19 +1661,19 @@ Below are the API references for basic serving and multi-language service invoca
 </thead>
 <tbody>
 <tr>
-<td><code>retrievalResult</code></td>
-<td><code>string</code></td>
-<td>Knowledge retrieval result, which can be used as input for other operations.</td>
+<td><code>mllmPredictInfo</code></td>
+<td><code>object</code></td>
+<td>MLLM invocation result.</td>
 </tr>
 </tbody>
 </table>
 <ul>
 <li><b><code>chat</code></b></li>
 </ul>
-<p>Interacts with the large language model to extract key information using it.</p>
+<p>Interacts with large language models to extract key information using them.</p>
 <p><code>POST /chatocr-chat</code></p>
 <ul>
-<li>Attributes of the request body:</li>
+<li>Properties of the request body:</li>
 </ul>
 <table>
 <thead>
@@ -1715,9 +1686,9 @@ Below are the API references for basic serving and multi-language service invoca
 </thead>
 <tbody>
 <tr>
-<td><code>keys</code></td>
+<td><code>keyList</code></td>
 <td><code>array</code></td>
-<td>List of keywords.</td>
+<td>List of keys.</td>
 <td>Yes</td>
 </tr>
 <tr>
@@ -1727,69 +1698,111 @@ Below are the API references for basic serving and multi-language service invoca
 <td>Yes</td>
 </tr>
 <tr>
-<td><code>vectorStore</code></td>
-<td><code>string</code></td>
+<td><code>useVectorRetrieval</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>use_vector_retrieval</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>vectorInfo</code></td>
+<td><code>object</code> | <code>null</code></td>
 <td>Serialized result of the vector database. Provided by the <code>buildVectorStore</code> operation.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>retrievalResult</code></td>
-<td><code>string</code></td>
-<td>Knowledge retrieval result. Provided by the <code>retrieveKnowledge</code> operation.</td>
+<td><code>minCharacters</code></td>
+<td><code>integer</code></td>
+<td>Minimum data length to enable the vector database.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>taskDescription</code></td>
-<td><code>string</code></td>
-<td>Task description for prompts.</td>
+<td><code>textTaskDescription</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_task_description</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>rules</code></td>
-<td><code>string</code></td>
-<td>Prompt rules. Used to customize information extraction rules, such as specifying the output format.</td>
+<td><code>textOutputFormat</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_output_format</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>fewShot</code></td>
-<td><code>string</code></td>
-<td>Prompt examples.</td>
+<td><code>textRulesStr</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_rules_str</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>llmName</code></td>
-<td><code>string</code></td>
-<td>Name of the large language model.</td>
+<td><code>textFewShotDemoTextContent</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_few_shot_demo_text_content</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>llmParams</code></td>
-<td><code>object</code></td>
-<td>Parameters for the large language model API.</td>
+<td><code>textFewShotDemoKeyValueList</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>text_few_shot_demo_key_value_list</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>returnPrompts</code></td>
-<td><code>boolean</code></td>
-<td>Whether to return the used prompts. Disabled by default.</td>
+<td><code>tableTaskDescription</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>table_task_description</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableOutputFormat</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>table_output_format</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableRulesStr</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>table_rules_str</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableFewShotDemoTextContent</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>table_few_shot_demo_text_content</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tableFewShotDemoKeyValueList</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>table_few_shot_demo_key_value_list</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>mllmPredictInfo</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>MLLM invocation result. Provided by the <code>invokeMllm</code> operation.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>mllmIntegrationStrategy</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>mllm_integration_strategy</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>chatBotConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>chat_bot_config</code> parameter of the pipeline object's <code>chat</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>retrieverConfig</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>retriever_config</code> parameter of the pipeline object's <code>chat</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
-<p>Currently, <code>llmParams</code> can take one of the following forms:</p>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;qianfan&quot;,
-&quot;apiKey&quot;: &quot;{API key of Qianfan Platform}&quot;,
-&quot;secretKey&quot;: &quot;{Secret key of Qianfan Platform}&quot;
-}
-</code></pre>
-<pre><code class="language-json">{
-&quot;apiType&quot;: &quot;aistudio&quot;,
-&quot;accessToken&quot;: &quot;{Access token of Baidu AIStudio Community}&quot;
-}
-</code></pre>
 <ul>
-<li>When the request is successfully processed, the <code>result</code> of the response body has the following attributes:</li>
+<li>When the request is successfully processed, the <code>result</code> of the response body has the following properties:</li>
 </ul>
 <table>
 <thead>
@@ -1805,161 +1818,101 @@ Below are the API references for basic serving and multi-language service invoca
 <td><code>object</code></td>
 <td>Key information extraction result.</td>
 </tr>
-<tr>
-<td><code>prompts</code></td>
-<td><code>object</code></td>
-<td>Used prompts.</td>
-</tr>
 </tbody>
 </table>
-<p>Attributes of <code>prompts</code>:</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>ocr</code></td>
-<td><code>array</code></td>
-<td>OCR prompts.</td>
-</tr>
-<tr>
-<td><code>table</code></td>
-<td><code>array</code></td>
-<td>Table prompts.</td>
-</tr>
-<tr>
-<td><code>html</code></td>
-<td><code>array</code></td>
-<td>HTML prompts.</td>
-</tr>
-</tbody>
-</table></details>
+<li><b>Note:</b></li>
+Including sensitive parameters such as API key for large model calls in the request body can be a security risk. If not necessary, set these parameters in the configuration file and do not pass them on request.
+<br/><br/>
+</details>
 
 <details><summary>Multi-language Service Invocation Examples</summary>
 
 <details>
 <summary>Python</summary>
 
-<pre><code class="language-python">import base64
+<pre><code class="language-python">
+# This script only shows the use case for images. For calling with other file types, please read the API reference and make adjustments.
+
+import base64
 import pprint
 import sys
-
 import requests
 
 
 API_BASE_URL = "http://0.0.0.0:8080"
-API_KEY = "{API key of Qianfan Platform}"
-SECRET_KEY = "{Secret key of Qianfan Platform}"
-LLM_NAME = "ernie-3.5"
-LLM_PARAMS = {
-    "apiType": "qianfan",
-    "apiKey": API_KEY,
-    "secretKey": SECRET_KEY,
-}
 
-file_path = "./demo.jpg"
-keys = ["电话"]
+image_path = "./demo.jpg"
+keys = ["name"]
 
-with open(file_path, "rb") as file:
-    file_bytes = file.read()
-    file_data = base64.b64encode(file_bytes).decode("ascii")
+with open(image_path, "rb") as file:
+    image_bytes = file.read()
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
 payload = {
-    "file": file_data,
+    "file": image_data,
     "fileType": 1,
-    "useImgOrientationCls": True,
-    "useImgUnwarping": True,
-    "useSealTextDet": True,
 }
+
 resp_visual = requests.post(url=f"{API_BASE_URL}/chatocr-visual", json=payload)
 if resp_visual.status_code != 200:
     print(
-        f"Request to chatocr-visual failed with status code {resp_visual.status_code}.",
-        file=sys.stderr,
+        f"Request to chatocr-visual failed with status code {resp_visual.status_code}."
     )
     pprint.pp(resp_visual.json())
     sys.exit(1)
 result_visual = resp_visual.json()["result"]
 
-for i, res in enumerate(result_visual["visualResults"]):
-    print("Texts:")
-    pprint.pp(res["texts"])
-    print("Tables:")
-    pprint.pp(res["tables"])
-    layout_img_path = f"layout_{i}.jpg"
-    with open(layout_img_path, "wb") as f:
-        f.write(base64.b64decode(res["layoutImage"]))
-    ocr_img_path = f"ocr_{i}.jpg"
-    with open(ocr_img_path, "wb") as f:
-        f.write(base64.b64decode(res["ocrImage"]))
-    print(f"Output images saved at {layout_img_path} and {ocr_img_path}")
+for i, res in enumerate(result_visual["layoutParsingResults"]):
+    print(res["prunedResult"])
+    for img_name, img in res["outputImages"].items():
+        img_path = f"{img_name}_{i}.jpg"
+        with open(img_path, "wb") as f:
+            f.write(base64.b64decode(img))
+        print(f"Output image saved at {img_path}")
 
 payload = {
     "visualInfo": result_visual["visualInfo"],
-    "minChars": 200,
-    "llmRequestInterval": 1000,
-    "llmName": LLM_NAME,
-    "llmParams": LLM_PARAMS,
 }
 resp_vector = requests.post(url=f"{API_BASE_URL}/chatocr-vector", json=payload)
 if resp_vector.status_code != 200:
     print(
-        f"Request to chatocr-vector failed with status code {resp_vector.status_code}.",
-        file=sys.stderr,
+        f"Request to chatocr-vector failed with status code {resp_vector.status_code}."
     )
     pprint.pp(resp_vector.json())
     sys.exit(1)
 result_vector = resp_vector.json()["result"]
 
 payload = {
-    "keys": keys,
-    "vectorStore": result_vector["vectorStore"],
-    "llmName": LLM_NAME,
-    "llmParams": LLM_PARAMS,
+    "image": image_data,
+    "keyList": keys,
 }
-resp_retrieval = requests.post(url=f"{API_BASE_URL}/chatocr-retrieval", json=payload)
-if resp_retrieval.status_code != 200:
+resp_mllm = requests.post(url=f"{API_BASE_URL}/chatocr-mllm", json=payload)
+if resp_mllm.status_code != 200:
     print(
-        f"Request to chatocr-retrieval failed with status code {resp_retrieval.status_code}.",
-        file=sys.stderr,
+        f"Request to chatocr-mllm failed with status code {resp_mllm.status_code}."
     )
-    pprint.pp(resp_retrieval.json())
+    pprint.pp(resp_mllm.json())
     sys.exit(1)
-result_retrieval = resp_retrieval.json()["result"]
+result_mllm = resp_mllm.json()["result"]
 
 payload = {
-    "keys": keys,
+    "keyList": keys,
     "visualInfo": result_visual["visualInfo"],
-    "vectorStore": result_vector["vectorStore"],
-    "retrievalResult": result_retrieval["retrievalResult"],
-    "taskDescription": "",
-    "rules": "",
-    "fewShot": "",
-    "llmName": LLM_NAME,
-    "llmParams": LLM_PARAMS,
-    "returnPrompts": True,
+    "useVectorRetrieval": True,
+    "vectorInfo": result_vector["vectorInfo"],
+    "mllmPredictInfo": result_mllm["mllmPredictInfo"],
 }
 resp_chat = requests.post(url=f"{API_BASE_URL}/chatocr-chat", json=payload)
 if resp_chat.status_code != 200:
     print(
-        f"Request to chatocr-chat failed with status code {resp_chat.status_code}.",
-        file=sys.stderr,
+        f"Request to chatocr-chat failed with status code {resp_chat.status_code}."
     )
     pprint.pp(resp_chat.json())
     sys.exit(1)
 result_chat = resp_chat.json()["result"]
-print("\nPrompts:")
-pprint.pp(result_chat["prompts"])
 print("Final result:")
 print(result_chat["chatResult"])
 </code></pre>
-
-<b>Note</b>: Please fill in your API key and secret key in `API_KEY` and `SECRET_KEY`.
 </details>
 </details>
 <br/>

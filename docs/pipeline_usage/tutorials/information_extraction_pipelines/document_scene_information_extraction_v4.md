@@ -586,54 +586,62 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="PP-ChatOCRv4-doc",initial_predictor=False)
+chat_bot_config = {
+    "module_name": "chat_bot",
+    "model_name": "ernie-3.5-8k",
+    "base_url": "https://qianfan.baidubce.com/v2",
+    "api_type": "openai",
+    "api_key": "api_key",  # your api_key
+}
 
-visual_predict_res = pipeline.visual_predict(input="vehicle_certificate-1.png",
+retriever_config = {
+    "module_name": "retriever",
+    "model_name": "embedding-v1",
+    "base_url": "https://qianfan.baidubce.com/v2",
+    "api_type": "qianfan",
+    "api_key": "api_key",  # your api_key
+}
+
+mllm_chat_bot_config = {
+    "module_name": "chat_bot",
+    "model_name": "PP-DocBee",
+    "base_url": "http://172.0.0.1:8080/v1/chat/completions",  # your local mllm service url
+    "api_type": "openai",
+    "api_key": "api_key",  # your api_key
+}
+
+pipeline = create_pipeline(pipeline="PP-ChatOCRv4-doc", initial_predictor=False)
+
+visual_predict_res = pipeline.visual_predict(
+    input="vehicle_certificate-1.png",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
     use_common_ocr=True,
     use_seal_recognition=True,
-    use_table_recognition=True)
+    use_table_recognition=True,
+)
 
 visual_info_list = []
 for res in visual_predict_res:
     visual_info_list.append(res["visual_info"])
     layout_parsing_result = res["layout_parsing_result"]
 
-vector_info = pipeline.build_vector(visual_info_list, flag_save_bytes_vector=True,retriever_config={
-    "module_name": "retriever",
-    "model_name": "embedding-v1",
-    "base_url": "https://qianfan.baidubce.com/v2",
-    "api_type": "qianfan",
-    "api_key": "api_key" # your api_key
-})
-mllm_predict_res= pipeline.mllm_pred(input="vehicle_certificate-1.png",key_list=["驾驶室准乘人数"],mllm_chat_bot_config={
-    "module_name": "chat_bot",
-    "model_name": "PP-DocBee",
-    "base_url": "http://172.0.0.1:8080/v1/chat/completions", # your local mllm service url
-    "api_type": "openai",
-    "api_key": "api_key" # your api_key
-})
+vector_info = pipeline.build_vector(
+    visual_info_list, flag_save_bytes_vector=True, retriever_config=retriever_config
+)
+mllm_predict_res = pipeline.mllm_pred(
+    input="vehicle_certificate-1.png",
+    key_list=["驾驶室准乘人数"],
+    mllm_chat_bot_config=mllm_chat_bot_config,
+)
 mllm_predict_info = mllm_predict_res["mllm_res"]
 chat_result = pipeline.chat(
     key_list=["驾驶室准乘人数"],
     visual_info=visual_info_list,
     vector_info=vector_info,
     mllm_predict_info=mllm_predict_info,
-    chat_bot_config={
-      "module_name": "chat_bot",
-      "model_name": "ernie-3.5-8k",
-      "base_url": "https://qianfan.baidubce.com/v2",
-      "api_type": "openai",
-      "api_key": "api_key" # your api_key
-    },
-    retriever_config={
-      "module_name": "retriever",
-      "model_name": "embedding-v1",
-      "base_url": "https://qianfan.baidubce.com/v2",
-      "api_type": "qianfan",
-      "api_key": "api_key" # your api_key
-    }
+    chat_bot_config=chat_bot_config,
+    retriever_config=retriever_config,
 )
 print(chat_result)
 
@@ -1585,103 +1593,103 @@ for res in visual_predict_res:
 <tr>
 <td><code>useDocOrientationClassify</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>use_doc_orientation_classify</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>use_doc_orientation_classify</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>useDocUnwarping</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>use_doc_unwarping</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>use_doc_unwarping</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>useGeneralOcr</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>use_general_ocr</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>use_general_ocr</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>useSealRecognition</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>use_seal_recognition</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>use_seal_recognition</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>useTableRecognition</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>use_table_recognition</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>use_table_recognition</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textDetLimitSideLen</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>text_det_limit_side_len</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>text_det_limit_side_len</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textDetLimitType</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>text_det_limit_type</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>text_det_limit_type</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textDetThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>text_det_thresh</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>text_det_thresh</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textDetBoxThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>text_det_box_thresh</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>text_det_box_thresh</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textDetUnclipRatio</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>text_det_unclip_ratio</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>text_det_unclip_ratio</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textRecScoreThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>text_rec_score_thresh</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>text_rec_score_thresh</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>sealDetLimitSideLen</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>seal_det_limit_side_len</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>seal_det_limit_side_len</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>sealDetLimitType</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>seal_det_limit_type</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>seal_det_limit_type</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>sealDetThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>seal_det_thresh</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>seal_det_thresh</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>sealDetBoxThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>seal_det_box_thresh</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>seal_det_box_thresh</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>sealDetUnclipRatio</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>seal_det_unclip_ratio</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>seal_det_unclip_ratio</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>sealRecScoreThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>visual_predict</code> 方法中的 <code>seal_rec_score_thresh</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>visual_predict</code> 方法的 <code>seal_rec_score_thresh</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 </tbody>
@@ -1728,12 +1736,12 @@ for res in visual_predict_res:
 <tr>
 <td><code>prunedResult</code></td>
 <td><code>object</code></td>
-<td>产线对象的 <code>predict</code> 方法生成结果的 JSON 表示中 <code>res</code> 字段的简化版本，其中去除了 <code>input_path</code> 字段</td>
+<td>产线对象的 <code>visual_predict</code> 方法生成结果的 JSON 表示中 <code>res</code> 字段的简化版本，其中去除了 <code>input_path</code> 字段</td>
 </tr>
 <tr>
 <td><code>outputImages</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>参见产线视觉预测结果中的 <code>img</code> 参数说明。</td>
+<td>参见产线视觉预测结果的 <code>img</code> 属性说明。</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
@@ -1775,13 +1783,13 @@ for res in visual_predict_res:
 <tr>
 <td><code>blockSize</code></td>
 <td><code>int</code> | <code>null</code></td>
-<td>参见产线 <code>build_vector</code> 方法中的 <code>block_size</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>build_vector</code> 方法的 <code>block_size</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>retrieverConfig</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>参见产线 <code>build_vector</code> 方法中的 <code>retriever_config</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>build_vector</code> 方法的 <code>retriever_config</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 </tbody>
@@ -1808,7 +1816,7 @@ for res in visual_predict_res:
 <ul>
 <li><b><code>invokeMLLM</code></b></li>
 </ul>
-<p>获取多模态大模型抽取结果。</p>
+<p>调用多模态大模型。</p>
 <p><code>POST /chatocr-mllm</code></p>
 <ul>
 <li>请求体的属性如下：</li>
@@ -1826,19 +1834,19 @@ for res in visual_predict_res:
 <tr>
 <td><code>image</code></td>
 <td><code>string</code></code></td>
-<td>输入图像。</td>
+<td>服务器可访问的图像文件的URL或图像文件内容的Base64编码结果。</td>
 <td>是</td>
 </tr>
 <tr>
 <td><code>keyList</code></td>
 <td><code>array</code></td>
-<td>关键词列表。</td>
+<td>键列表。</td>
 <td>是</td>
 </tr>
 <tr>
 <td><code>mllmChatBotConfig</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>参见产线 <code>mllm_pred</code> 方法中的 <code>mllm_chat_bot_config</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>mllm_pred</code> 方法的 <code>mllm_chat_bot_config</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 </tbody>
@@ -1858,7 +1866,7 @@ for res in visual_predict_res:
 <tr>
 <td><code>mllmPredictInfo</code></td>
 <td><code>object</code></td>
-<td>多模态大模型抽取结果。</td>
+<td>多模态大模型调用结果。</td>
 </tr>
 </tbody>
 </table>
@@ -1883,7 +1891,7 @@ for res in visual_predict_res:
 <tr>
 <td><code>keyList</code></td>
 <td><code>array</code></td>
-<td>关键词列表。</td>
+<td>键列表。</td>
 <td>是</td>
 </tr>
 <tr>
@@ -1895,7 +1903,7 @@ for res in visual_predict_res:
 <tr>
 <td><code>useVectorRetrieval</code></td>
 <td><code>boolean</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>use_vector_retrieval</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>use_vector_retrieval</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
@@ -1913,73 +1921,85 @@ for res in visual_predict_res:
 <tr>
 <td><code>textTaskDescription</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>text_task_description</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>text_task_description</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textOutputFormat</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>text_output_format</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>text_output_format</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textRulesStr</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>text_rules_str</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>text_rules_str</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textFewShotDemoTextContent</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>text_few_shot_demo_text_content</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>text_few_shot_demo_text_content</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>textFewShotDemoKeyValueList</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>text_few_shot_demo_key_value_list</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>text_few_shot_demo_key_value_list</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>tableTaskDescription</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>table_task_description</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>table_task_description</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>tableOutputFormat</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>table_output_format</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>table_output_format</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>tableRulesStr</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>table_rules_str</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>table_rules_str</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>tableFewShotDemoTextContent</code></td>
 <td><code>string</code> | <code>null</code></td>
 <td></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>table_few_shot_demo_text_content</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>table_few_shot_demo_text_content</code> 参数相关说明。</td>
 </tr>
 <tr>
 <td><code>tableFewShotDemoKeyValueList</code></td>
 <td><code>string</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>table_few_shot_demo_key_value_list</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>table_few_shot_demo_key_value_list</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>mllmPredictInfo</code></td>
+<td><code>object</code> | <code>null</code></td>
+<td>多模态大模型调用结果。由<code>invokeMllm</code>操作提供。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>mllmIntegrationStrategy</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>mllm_integration_strategy</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>chatBotConfig</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>chat_bot_config</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>chat_bot_config</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>retrieverConfig</code></td>
 <td><code>object</code> | <code>null</code></td>
-<td>参见产线 <code>chat</code> 方法中的 <code>retriever_config</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>chat</code> 方法的 <code>retriever_config</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 </tbody>
@@ -2002,7 +2022,11 @@ for res in visual_predict_res:
 <td>关键信息抽取结果。</td>
 </tr>
 </tbody>
-</table></details>
+</table>
+<li><b>注意：</b></li>
+在请求体中包含大模型调用的API key等敏感参数可能存在安全风险。如无必要，请在配置文件中设置这些参数，在请求时不传递。
+<br/><br/>
+</details>
 
 <details><summary>多语言调用服务示例</summary>
 
@@ -2010,122 +2034,90 @@ for res in visual_predict_res:
 <summary>Python</summary>
 
 
-<pre><code class="language-python">import base64
+<pre><code class="language-python">
+# 此脚本只展示了图片的用例，其他文件类型的调用请查看API参考来调整
+
+import base64
 import pprint
 import sys
-
 import requests
 
 
-API_BASE_URL = &quot;http://0.0.0.0:8080&quot;
-API_KEY = &quot;{千帆平台API key}&quot;
-SECRET_KEY = &quot;{千帆平台secret key}&quot;
-LLM_NAME = &quot;ernie-3.5&quot;
-LLM_PARAMS = {
-    &quot;apiType&quot;: &quot;qianfan&quot;,
-    &quot;apiKey&quot;: API_KEY,
-    &quot;secretKey&quot;: SECRET_KEY,
-}
+API_BASE_URL = "http://0.0.0.0:8080"
 
-file_path = &quot;./demo.jpg&quot;
-keys = [&quot;电话&quot;]
+image_path = "./demo.jpg"
+keys = ["姓名"]
 
-with open(file_path, &quot;rb&quot;) as file:
-    file_bytes = file.read()
-    file_data = base64.b64encode(file_bytes).decode(&quot;ascii&quot;)
+with open(image_path, "rb") as file:
+    image_bytes = file.read()
+    image_data = base64.b64encode(image_bytes).decode("ascii")
 
 payload = {
-    &quot;file&quot;: file_data,
-    &quot;fileType&quot;: 1,
-    &quot;useImgOrientationCls&quot;: True,
-    &quot;useImgUnwarping&quot;: True,
-    &quot;useSealTextDet&quot;: True,
+    "file": image_data,
+    "fileType": 1,
 }
-resp_visual = requests.post(url=f&quot;{API_BASE_URL}/chatocr-visual&quot;, json=payload)
+
+resp_visual = requests.post(url=f"{API_BASE_URL}/chatocr-visual", json=payload)
 if resp_visual.status_code != 200:
     print(
-        f&quot;Request to chatocr-visual failed with status code {resp_visual.status_code}.&quot;,
-        file=sys.stderr,
+        f"Request to chatocr-visual failed with status code {resp_visual.status_code}."
     )
     pprint.pp(resp_visual.json())
     sys.exit(1)
-result_visual = resp_visual.json()[&quot;result&quot;]
+result_visual = resp_visual.json()["result"]
 
-for i, res in enumerate(result_visual[&quot;visualResults&quot;]):
-    print(&quot;Texts:&quot;)
-    pprint.pp(res[&quot;texts&quot;])
-    print(&quot;Tables:&quot;)
-    pprint.pp(res[&quot;tables&quot;])
-    layout_img_path = f&quot;layout_{i}.jpg&quot;
-    with open(layout_img_path, &quot;wb&quot;) as f:
-        f.write(base64.b64decode(res[&quot;layoutImage&quot;]))
-    ocr_img_path = f&quot;ocr_{i}.jpg&quot;
-    with open(ocr_img_path, &quot;wb&quot;) as f:
-        f.write(base64.b64decode(res[&quot;ocrImage&quot;]))
-    print(f&quot;Output images saved at {layout_img_path} and {ocr_img_path}&quot;)
+for i, res in enumerate(result_visual["layoutParsingResults"]):
+    print(res["prunedResult"])
+    for img_name, img in res["outputImages"].items():
+        img_path = f"{img_name}_{i}.jpg"
+        with open(img_path, "wb") as f:
+            f.write(base64.b64decode(img))
+        print(f"Output image saved at {img_path}")
 
 payload = {
-    &quot;visualInfo&quot;: result_visual[&quot;visualInfo&quot;],
-    &quot;minChars&quot;: 200,
-    &quot;llmRequestInterval&quot;: 1000,
-    &quot;llmName&quot;: LLM_NAME,
-    &quot;llmParams&quot;: LLM_PARAMS,
+    "visualInfo": result_visual["visualInfo"],
 }
-resp_vector = requests.post(url=f&quot;{API_BASE_URL}/chatocr-vector&quot;, json=payload)
+resp_vector = requests.post(url=f"{API_BASE_URL}/chatocr-vector", json=payload)
 if resp_vector.status_code != 200:
     print(
-        f&quot;Request to chatocr-vector failed with status code {resp_vector.status_code}.&quot;,
-        file=sys.stderr,
+        f"Request to chatocr-vector failed with status code {resp_vector.status_code}."
     )
     pprint.pp(resp_vector.json())
     sys.exit(1)
-result_vector = resp_vector.json()[&quot;result&quot;]
+result_vector = resp_vector.json()["result"]
 
 payload = {
-    &quot;keys&quot;: keys,
-    &quot;vectorStore&quot;: result_vector[&quot;vectorStore&quot;],
-    &quot;llmName&quot;: LLM_NAME,
-    &quot;llmParams&quot;: LLM_PARAMS,
+    "image": image_data,
+    "keyList": keys,
 }
-resp_retrieval = requests.post(url=f&quot;{API_BASE_URL}/chatocr-retrieval&quot;, json=payload)
-if resp_retrieval.status_code != 200:
+resp_mllm = requests.post(url=f"{API_BASE_URL}/chatocr-mllm", json=payload)
+if resp_mllm.status_code != 200:
     print(
-        f&quot;Request to chatocr-retrieval failed with status code {resp_retrieval.status_code}.&quot;,
-        file=sys.stderr,
+        f"Request to chatocr-mllm failed with status code {resp_mllm.status_code}."
     )
-    pprint.pp(resp_retrieval.json())
+    pprint.pp(resp_mllm.json())
     sys.exit(1)
-result_retrieval = resp_retrieval.json()[&quot;result&quot;]
+result_mllm = resp_mllm.json()["result"]
 
 payload = {
-    &quot;keys&quot;: keys,
-    &quot;visualInfo&quot;: result_visual[&quot;visualInfo&quot;],
-    &quot;vectorStore&quot;: result_vector[&quot;vectorStore&quot;],
-    &quot;retrievalResult&quot;: result_retrieval[&quot;retrievalResult&quot;],
-    &quot;taskDescription&quot;: &quot;&quot;,
-    &quot;rules&quot;: &quot;&quot;,
-    &quot;fewShot&quot;: &quot;&quot;,
-    &quot;llmName&quot;: LLM_NAME,
-    &quot;llmParams&quot;: LLM_PARAMS,
-    &quot;returnPrompts&quot;: True,
+    "keyList": keys,
+    "visualInfo": result_visual["visualInfo"],
+    "useVectorRetrieval": True,
+    "vectorInfo": result_vector["vectorInfo"],
+    "mllmPredictInfo": result_mllm["mllmPredictInfo"],
 }
-resp_chat = requests.post(url=f&quot;{API_BASE_URL}/chatocr-chat&quot;, json=payload)
+resp_chat = requests.post(url=f"{API_BASE_URL}/chatocr-chat", json=payload)
 if resp_chat.status_code != 200:
     print(
-        f&quot;Request to chatocr-chat failed with status code {resp_chat.status_code}.&quot;,
-        file=sys.stderr,
+        f"Request to chatocr-chat failed with status code {resp_chat.status_code}."
     )
     pprint.pp(resp_chat.json())
     sys.exit(1)
-result_chat = resp_chat.json()[&quot;result&quot;]
-print(&quot;\nPrompts:&quot;)
-pprint.pp(result_chat[&quot;prompts&quot;])
-print(&quot;Final result:&quot;)
-print(result_chat[&quot;chatResult&quot;])
+result_chat = resp_chat.json()["result"]
+print("Final result:")
+print(result_chat["chatResult"])
 </code></pre>
-
-
-<b>注</b>：请在 `API_KEY`、`SECRET_KEY` 处填入您的 API key 和 secret key。</details>
+</details>
 </details>
 <br/>
 

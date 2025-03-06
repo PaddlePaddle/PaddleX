@@ -411,20 +411,31 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
             vector_info["vector"] = all_items
         return vector_info
 
-    def save_vector(self, vector_info: dict, save_path: str) -> None:
+    def save_vector(
+        self, vector_info: dict, save_path: str, retriever_config: dict = None
+    ) -> None:
         directory = os.path.dirname(save_path)
         if not os.path.exists(directory):
             os.makedirs(directory)
-        if self.retriever is None:
-            logging.warning("The retriever is not initialized,will initialize it now.")
-            self.inintial_retriever_predictor(self.config)
+
+        if retriever_config is not None:
+            from .. import create_retriever
+
+            retriever = create_retriever(retriever_config)
+        else:
+            if self.retriever is None:
+                logging.warning(
+                    "The retriever is not initialized,will initialize it now."
+                )
+                self.inintial_retriever_predictor(self.config)
+            retriever = self.retriever
 
         vector_info_data = copy.deepcopy(vector_info)
         if (
             not vector_info["flag_too_short_text"]
             and not vector_info["flag_save_bytes_vector"]
         ):
-            vector_info_data["vector"] = self.retriever.encode_vector_store_to_bytes(
+            vector_info_data["vector"] = retriever.encode_vector_store_to_bytes(
                 vector_info_data["vector"]
             )
             vector_info_data["flag_save_bytes_vector"] = True
@@ -433,11 +444,20 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
             fout.write(json.dumps(vector_info_data, ensure_ascii=False) + "\n")
         return
 
-    def load_vector(self, data_path: str) -> dict:
+    def load_vector(self, data_path: str, retriever_config: dict = None) -> dict:
         vector_info = None
-        if self.retriever is None:
-            logging.warning("The retriever is not initialized,will initialize it now.")
-            self.inintial_retriever_predictor(self.config)
+
+        if retriever_config is not None:
+            from .. import create_retriever
+
+            retriever = create_retriever(retriever_config)
+        else:
+            if self.retriever is None:
+                logging.warning(
+                    "The retriever is not initialized,will initialize it now."
+                )
+                self.inintial_retriever_predictor(self.config)
+            retriever = self.retriever
 
         with open(data_path, "r") as fin:
             data = fin.readline()
@@ -450,7 +470,7 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
                 logging.error("Invalid vector info.")
                 return {"error": "Invalid vector info when load vector!"}
             if vector_info["flag_save_bytes_vector"]:
-                vector_info["vector"] = self.retriever.decode_vector_store_from_bytes(
+                vector_info["vector"] = retriever.decode_vector_store_from_bytes(
                     vector_info["vector"]
                 )
                 vector_info["flag_save_bytes_vector"] = False

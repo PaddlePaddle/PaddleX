@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Rotated Object Detection Module Usage Tutorial
+# Rotated Object Detection Module Tutorial
 
 ## I. Overview
 Rotated object detection is a derivative of the object detection module, specifically designed for detecting rotated objects. Rotated bounding boxes (Rotated Bounding Boxes) are commonly used for detecting rectangles with angle information, where the width and height of the rectangle are no longer parallel to the image coordinate axes. Compared to horizontal bounding boxes, rotated bounding boxes generally include less background information. Rotated box detection is often used in scenarios such as remote sensing.
@@ -13,7 +13,7 @@ Rotated object detection is a derivative of the object detection module, specifi
 <tr>
 <th>Model</th><th>Model Download Link</th>
 <th>mAP(%)</th>
-<th>GPU Inference Time (ms)</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)</th>
 <th>Model Storage Size (M)</th>
 <th>Introduction</th>
@@ -41,7 +41,7 @@ Rotated object detection is a derivative of the object detection module, specifi
 
 | Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
 |-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
 | High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 

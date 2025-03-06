@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# General Image Recognition Pipeline Usage Tutorial
+# General Image Recognition Pipeline Tutorial
 
 ## 1. Introduction to the General Image Recognition Pipeline
 
@@ -20,7 +20,7 @@ PP-ShiTuV2 is a practical general image recognition system mainly composed of th
 <th>Model</th>
 <th>mAP(0.5:0.95)</th>
 <th>mAP(0.5)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -42,7 +42,7 @@ PP-ShiTuV2 is a practical general image recognition system mainly composed of th
 <tr>
 <th>Model</th>
 <th>Recall@1 (%)</th>
-<th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
+<th>GPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>CPU Inference Time (ms)<br/>[Normal Mode / High-Performance Mode]</th>
 <th>Model Size (M)</th>
 <th>Description</th>
@@ -86,7 +86,7 @@ PP-ShiTuV2 is a practical general image recognition system mainly composed of th
 
 | Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
 |-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Regular Mode| FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
+| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
 | High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 ## 2. Quick Start
@@ -679,9 +679,9 @@ Below is the API reference for basic service deployment and multi-language servi
 <td>The key corresponding to the index, used to identify the created index. It can be used as input for other operations.</td>
 </tr>
 <tr>
-<td><code>idMap</code></td>
-<td><code>object</code></td>
-<td>Mapping from vector IDs to labels.</td>
+<td><code>imageCount</code></td>
+<td><code>integer</code></td>
+<td>The number of images indexed.</td>
 </tr>
 </tbody>
 </table>
@@ -752,9 +752,9 @@ Below is the API reference for basic service deployment and multi-language servi
 </thead>
 <tbody>
 <tr>
-<td><code>idMap</code></td>
-<td><code>object</code></td>
-<td>Mapping from vector IDs to labels.</td>
+<td><code>imageCount</code></td>
+<td><code>integer</code></td>
+<td>The number of images indexed.</td>
 </tr>
 </tbody>
 </table>
@@ -803,9 +803,9 @@ Below is the API reference for basic service deployment and multi-language servi
 </thead>
 <tbody>
 <tr>
-<td><code>idMap</code></td>
-<td><code>object</code></td>
-<td>Mapping from vector IDs to labels.</td>
+<td><code>imageCount</code></td>
+<td><code>integer</code></td>
+<td>The number of images indexed.</td>
 </tr>
 </tbody>
 </table>
@@ -842,25 +842,25 @@ Below is the API reference for basic service deployment and multi-language servi
 <tr>
 <td><code>detThreshold</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the <code>det_threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>det_threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>recThreshold</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the <code>rec_threshold</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>rec_threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>hammingRadius</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>Refer to the <code>hamming_radius</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>hamming_radius</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>topk</code></td>
 <td><code>integer</code> | <code>null</code></td>
-<td>Refer to the <code>topk</code> parameter description in the pipeline <code>predict</code> method.</td>
+<td>Please refer to the description of the <code>topk</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
@@ -975,7 +975,7 @@ if resp_index_build.status_code != 200:
     pprint.pp(resp_index_build.json())
     sys.exit(1)
 result_index_build = resp_index_build.json()["result"
-print(f"Number of images indexed: {len(result_index_build['idMap'])}")
+print(f"Number of images indexed: {result_index_build['imageCount']}")
 
 for pair in image_label_pairs_to_add:
     with open(pair["image"], "rb") as file:
@@ -990,7 +990,7 @@ if resp_index_add.status_code != 200:
     pprint.pp(resp_index_add.json())
     sys.exit(1)
 result_index_add = resp_index_add.json()["result"]
-print(f"Number of images indexed: {len(result_index_add['idMap'])}")
+print(f"Number of images indexed: {result_index_add['imageCount']}")
 
 payload = {"ids": ids_to_remove, "indexKey": result_index_build["indexKey"]}
 resp_index_remove = requests.post(f"{API_BASE_URL}/shitu-index-remove", json=payload)
@@ -999,7 +999,7 @@ if resp_index_remove.status_code != 200:
     pprint.pp(resp_index_remove.json())
     sys.exit(1)
 result_index_remove = resp_index_remove.json()["result"]
-print(f"Number of images indexed: {len(result_index_remove['idMap'])}")
+print(f"Number of images indexed: {result_index_remove['imageCount']}")
 
 with open(infer_image_path, "rb") as file:
     image_bytes = file.read()
@@ -1025,7 +1025,7 @@ pprint.pp(result_infer["detectedObjects"])
 📱 <b>Edge Deployment</b>: Edge deployment is a method where computation and data processing functions are placed on the user's device itself, allowing the device to process data directly without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment processes, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
 You can choose the appropriate method to deploy the model pipeline based on your needs for subsequent AI application integration.
 
-## 4. Secondary Development
+## 4. Custom Development
 
 If the default model weights provided by the general image recognition pipeline do not meet your accuracy or speed requirements in your scenario, you can try further <b>fine-tuning</b> the existing model using <b>your own specific domain or application scenario data</b> to improve the recognition performance of the pipeline in your scenario.
 
@@ -1033,7 +1033,7 @@ If the default model weights provided by the general image recognition pipeline 
 
 Since the general image recognition pipeline includes two modules (main body detection module and image feature module), the suboptimal performance of the model pipeline may come from either module.
 
-You can analyze the images with poor recognition results. If you find that many main body targets are not detected during the analysis, it may be due to the inadequacy of the main body detection model. You need to refer to the [Main Body Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/mainbody_detection.en.md) in the [Secondary Development](../../../module_usage/tutorials/cv_modules/mainbody_detection.en.md) section to fine-tune the main body detection model using your private dataset. If there are matching errors in the detected main bodies, it indicates that the image feature model needs further improvement. You need to refer to the [Image Feature Module Development Tutorial](../../../module_usage/tutorials/cv_modules/image_feature.en.md) in the [Secondary Development](../../../module_usage/tutorials/cv_modules/image_feature.en.md) section to fine-tune the image feature model.
+You can analyze the images with poor recognition results. If you find that many main body targets are not detected during the analysis, it may be due to the inadequacy of the main body detection model. You need to refer to the [Main Body Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/mainbody_detection.en.md) in the [Custom Development](../../../module_usage/tutorials/cv_modules/mainbody_detection.en.md) section to fine-tune the main body detection model using your private dataset. If there are matching errors in the detected main bodies, it indicates that the image feature model needs further improvement. You need to refer to the [Image Feature Module Development Tutorial](../../../module_usage/tutorials/cv_modules/image_feature.en.md) in the [Custom Development](../../../module_usage/tutorials/cv_modules/image_feature.en.md) section to fine-tune the image feature model.
 
 ### 4.2 Model Application
 

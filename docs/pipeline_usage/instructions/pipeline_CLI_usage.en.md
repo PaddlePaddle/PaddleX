@@ -40,7 +40,7 @@ paddlex --get_pipeline_config image_classification
 # The pipeline config has been saved to: configs/image_classification.yaml
 ```
 
-After modifying the production line configuration file `configs/image_classification.yaml`, such as the content for the image classification configuration file:
+After modifying the pipeline configuration file `configs/image_classification.yaml`, such as the content for the image classification configuration file:
 
 ```yaml
 pipeline_name: image_classification

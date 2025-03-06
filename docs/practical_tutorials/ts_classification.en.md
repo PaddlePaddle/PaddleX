@@ -273,7 +273,7 @@ Results of Increasing Training Epochs:
 </tr>
 </tbody>
 </table>
-## 6. Production Line Testing
+## 6. pipeline Testing
 Set the model directory to the trained model for testing, using the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_classification/test.csv) to perform predictions:
 
 ```bash
@@ -327,7 +327,7 @@ for res in output:
 
 For more parameters, please refer to the [Time Series Classification Pipeline Usage Tutorial](../pipeline_usage/tutorials/time_series_pipelines/time_series_classification.en.md)
 
-2. Additionally, PaddleX's time series classification pipeline also offers a service-oriented deployment method, detailed as follows:
+2. Additionally, PaddleX's time series classification pipeline also offers a serving deployment method, detailed as follows:
 
-Service-Oriented Deployment: This is a common deployment form in actual production environments. By encapsulating the inference functionality as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving service-oriented deployment of pipelines at low cost. For detailed instructions on service-oriented deployment, please refer to the [PaddleX Service-Oriented Deployment Guide](../pipeline_deploy/serving.en.md).
+Serving Deployment: This is a common deployment form in actual production environments. By encapsulating the inference functionality as services, clients can access these services through network requests to obtain inference results. PaddleX supports users in achieving serving deployment of pipelines at low cost. For detailed instructions on serving deployment, please refer to the [PaddleX Serving Deployment Guide](../pipeline_deploy/serving.en.md).
 You can choose the appropriate method to deploy your model pipeline based on your needs, and proceed with subsequent AI application integration.

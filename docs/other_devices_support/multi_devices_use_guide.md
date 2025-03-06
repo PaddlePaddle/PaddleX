@@ -170,7 +170,7 @@ All packages are installed.
 ```bash
 paddlex --pipeline OCR --input general_ocr_002.png --device npu:0 # 将设备名修改为 npu、mlu、xpu、dcu 或 gcu
 ```
-* Python脚本方式
+<b> Python脚本方式 </b>
 
 ```python
 from paddlex import create_pipeline

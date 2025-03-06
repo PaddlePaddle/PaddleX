@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Multilingual Speech Recognition pipeline User Guide
+# Multilingual Speech Recognition pipeline Tutorial
 
 ## 1. Introduction to Multilingual Speech Recognition pipeline
 Speech recognition is an advanced tool that can automatically convert spoken languages into corresponding text or commands. This technology plays an important role in various fields such as intelligent customer service, voice assistants, and meeting records. Multilingual speech recognition supports automatic language detection and recognition of multiple languages.
@@ -291,24 +291,21 @@ for res in output:
 <summary>Python</summary>
 
 
-<pre><code class="language-python">import base64
+<pre><code class="language-python">
+import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/video-classification&quot; # Service URL
-video_path = &quot;./demo.mp4&quot;
-output_video_path = &quot;./out.mp4&quot;
+API_URL = "http://localhost:8080/multilingual-speech-recognition"
+audio_path = "./zh.wav"
 
-# Encode local video to Base64
-with open(video_path, &quot;rb&quot;) as file:
-    video_bytes = file.read()
-    video_data = base64.b64encode(video_bytes).decode(&quot;ascii&quot;)
+with open(audio_path, "rb") as file:
+    audio_bytes = file.read()
+    audio_data = base64.b64encode(audio_bytes).decode("ascii")
 
-payload = {&quot;video&quot;: video_data}  # Base64 encoded file content or video URL
+payload = {"audio": audio_data}
 
-# Call API
 response = requests.post(API_URL, json=payload)
 
-# Process API response
 assert response.status_code == 200
 result = response.json()[&quot;result&quot;]
 with open(output_video_path, &quot;wb&quot;) as file:
@@ -320,9 +317,9 @@ print(result[&quot;categories&quot;])
 <details><summary>C++</summary>
 
 <pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &quot;cpp-httplib/httplib.h&quot; // <url id="cu9qjr7f2ena5466v3o0" type="url" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" wc="15064">https://github.com/Huiyicc/cpp-httplib</url> 
-#include &quot;nlohmann/json.hpp&quot; // <url id="cu9qjr7f2ena5466v3og" type="url" status="parsed" title="GitHub - nlohmann/json: JSON for Modern C++" wc="80311">https://github.com/nlohmann/json</url> 
-#include &quot;base64.hpp&quot; // <url id="cu9qjr7f2ena5466v3p0" type="url" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" wc="2293">https://github.com/tobiaslocker/base64</url> 
+#include &quot;cpp-httplib/httplib.h&quot; // <url id="cu9qjr7f2ena5466v3o0" type="url" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" wc="15064">https://github.com/Huiyicc/cpp-httplib</url>
+#include &quot;nlohmann/json.hpp&quot; // <url id="cu9qjr7f2ena5466v3og" type="url" status="parsed" title="GitHub - nlohmann/json: JSON for Modern C++" wc="80311">https://github.com/nlohmann/json</url>
+#include &quot;base64.hpp&quot; // <url id="cu9qjr7f2ena5466v3p0" type="url" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" wc="2293">https://github.com/tobiaslocker/base64</url>
 
 int main() {
     httplib::Client client(&quot;localhost:8080&quot;);
@@ -658,9 +655,9 @@ In addition, PaddleX also provides three other deployment methods, which are det
 
 🚀 <b>High-Performance Inference</b>: In actual production environments, many applications have strict performance requirements for deployment strategies, especially in terms of response speed, to ensure the efficient operation of the system and the smoothness of the user experience. To this end, PaddleX provides a high-performance inference plugin, which aims to deeply optimize the performance of model inference and pre/post-processing to achieve significant acceleration of the end-to-end process. For detailed high-performance inference procedures, please refer to the [PaddleX High-Performance Inference Guide](../../../pipeline_deploy/high_performance_inference.en.md).
 
-☁️ <b>Service-Oriented Deployment</b>: Service-oriented deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports multiple pipeline service-oriented deployment solutions. For detailed pipeline service-oriented deployment procedures, please refer to the [PaddleX Service-Oriented Deployment Guide](../../../pipeline_deploy/serving.en.md).
+☁️ <b>Serving Deployment</b>: Serving Deployment is a common deployment form in actual production environments. By encapsulating inference functions as services, clients can access these services through network requests to obtain inference results. PaddleX supports multiple pipeline serving deployment solutions. For detailed pipeline serving deployment procedures, please refer to the [PaddleX Serving Deployment Guide](../../../pipeline_deploy/serving.en.md).
 
-Below are the API references for basic service-oriented deployment and examples of multi-language service calls:
+Below are the API references for basic serving deployment and examples of multi-language service calls:
 
 <details><summary>API Reference</summary>
 
@@ -878,7 +875,7 @@ print(result)
 📱 <b>Edge Deployment</b>: Edge deployment is a method that places computational and data processing capabilities directly on user devices, allowing them to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
 You can choose the appropriate deployment method based on your needs to integrate the model into your pipeline and proceed with subsequent AI application integration.
 
-## 4. Secondary Development
+## 4. Custom Development
 If the default model weights provided by the general video classification pipeline are not satisfactory in terms of accuracy or speed for your specific scenario, you can attempt to <b>fine-tune</b> the existing model using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the general video classification pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning

@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict, Final, List, Optional
+from typing import Dict, Final, List, Optional, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from typing_extensions import Annotated
 
 from ..infra.models import DataInfo, PrimaryOperations
 from .shared import ocr
@@ -34,6 +35,12 @@ class InferRequest(ocr.BaseInferRequest):
     useLayoutDetection: Optional[bool] = None
     useDocOrientationClassify: Optional[bool] = None
     useDocUnwarping: Optional[bool] = None
+    layoutThreshold: Optional[float] = None
+    layoutNms: Optional[bool] = None
+    layoutUnclipRatio: Optional[
+        Union[float, Annotated[List[float], Field(min_length=2, max_length=2)]]
+    ] = None
+    layoutMergeBboxesMode: Optional[str] = None
 
 
 class FormulaRecResult(BaseModel):

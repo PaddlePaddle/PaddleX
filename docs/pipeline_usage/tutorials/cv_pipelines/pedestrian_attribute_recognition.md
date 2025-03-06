@@ -473,13 +473,13 @@ for res in output:
 <tr>
 <td><code>detThreshold</code></td>
 <td><code>number</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>det_threshold</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>det_threshold</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>clsThreshold</code></td>
 <td><code>number</code> | <code>array</code> | <code>object</code> | <code>null</code></td>
-<td>参见产线 <code>predict</code> 方法中的 <code>cls_threshold</code> 参数说明。</td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>cls_threshold</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 </tbody>

@@ -155,7 +155,7 @@ PaddleLabel 启动后会自动在浏览器中打开网页，接下来可以根�
 </tr>
 <tr>
 <td><code>val.json</code></td>
-<td><code>instance_train.json</code></td>
+<td><code>instance_val.json</code></td>
 </tr>
 <tr>
 <td><code>test.json</code></td>

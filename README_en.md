@@ -66,7 +66,7 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 
 🔥 **6.27, 2024**, PaddleX 3.0 Beta open source version is officially released, supporting the use of various mainstream hardware for pipeline and model development in a low-code manner on the local side.
 
-🔥 **3.25, 2024**, PaddleX 3.0 cloud release, supporting the creation of pipelines in the AI Studio Galaxy Community in a zero-code manner.
+🔥 **3.25, 2024**, PaddleX 3.0 cloud release, supporting the creation of pipelines in the AI Studio  Community in a zero-code manner.
 
 ## 🔠 Explanation of Pipeline
 PaddleX is dedicated to achieving pipeline-level model training, inference, and deployment. A pipeline refers to a series of predefined development processes for specific AI tasks, which includes a combination of single models (single-function modules) capable of independently completing a certain type of task.
@@ -262,8 +262,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.html">Human Keypoint Detection</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -272,8 +272,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_detection.html">Open Vocabulary Detection</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>🚧</td>
@@ -282,8 +282,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/open_vocabulary_segmentation.html">Open Vocabulary Segmentation</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>🚧</td>
@@ -292,8 +292,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/rotated_object_detection.html">Rotated Object Detection</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -302,8 +302,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/3d_bev_detection.html">3D Bev Detection</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -312,8 +312,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.html">Table Recognition v2</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -332,8 +332,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.html">Layout Parsing v2</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>🚧</td>
@@ -342,8 +342,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html">Document Image Preprocessing</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -353,7 +353,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/general_image_recognition.html">Image Recognition</a></td>
         <td>🚧</td>
         <td>✅</td>
-        <td>🚧</td>
+        <td>✅</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -372,8 +372,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/speech_pipelines/multilingual_speech_recognition.html">Multilingual Speech Recognition</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>🚧</td>
@@ -382,8 +382,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/video_pipelines/video_classification.html">Video Classification</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -392,8 +392,8 @@ In addition, PaddleX provides developers with a full-process efficient model tra
     <tr>
         <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/video_pipelines/video_detection.html">Video Detection</a></td>
         <td>🚧</td>
-        <td>🚧</td>
         <td>✅</td>
+        <td>🚧</td>
         <td>✅</td>
         <td>🚧</td>
         <td>✅</td>
@@ -664,7 +664,8 @@ To use the Python script for other pipelines, simply adjust the `pipeline` param
 
 | pipeline Name           | Corresponding Parameter               | Detailed Explanation                                                                                                      |
 |-------------------------------|-------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| PP-ChatOCRv3-doc   | `PP-ChatOCRv3-doc` | [PP-ChatOCRv3-doc Pipeline Python Script Usage Instructions](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction.html) |
+| PP-ChatOCRv4-doc | `PP-ChatOCRv4-doc` | [PP-ChatOCRv4-doc Pipeline Python Script Usage Instructions](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.html) |
+| PP-ChatOCRv3-doc   | `PP-ChatOCRv3-doc` | [PP-ChatOCRv3-doc Pipeline Python Script Usage Instructions](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v3.html) |
 |  Image Classification       | `image_classification` | [ Image Classification Pipeline Python Script Usage Instructions](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/image_classification.html) |
 |  Object Detection       | `object_detection` | [ Object Detection Pipeline Python Script Usage Instructions](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/object_detection.html) |
 |  Instance Segmentation       | `instance_segmentation` | [ Instance Segmentation Pipeline Python Script Usage Instructions](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/cv_pipelines/instance_segmentation.html) |
@@ -888,6 +889,7 @@ To use the Python script for other pipelines, simply adjust the `pipeline` param
   * [📝 PaddleX Single Model Python Script Instruction](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/instructions/model_python_API.html)
   * [📝 PaddleX General Model Configuration File Parameter Instruction](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/instructions/config_parameters_common.html)
   * [📝 PaddleX Time Series Task Model Configuration File Parameter Instruction](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/instructions/config_parameters_time_series.html)
+  * [📝 PaddleX 3D Task Model Configuration File Parameter Instruction](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/instructions/config_parameters_3d.html)
   </details>
 
 </details>

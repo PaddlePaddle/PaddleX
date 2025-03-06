@@ -18,7 +18,7 @@ docker run --name paddle-gcu-dev -v /home:/home \
     --network=host --ipc=host -it --privileged \
     ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-gcu:topsrider3.2.109-ubuntu20-x86_64-gcc84 /bin/bash
 ```
-* **容器外**安装驱动程序。可以参考[飞桨自定义接入硬件后端(GCU)](https://github.com/PaddlePaddle/PaddleCustomDevice/blob/develop/backends/gcu/README_cn.md)环境准备章节。
+**容器外**安装驱动程序。可以参考[飞桨自定义接入硬件后端(GCU)](https://github.com/PaddlePaddle/PaddleCustomDevice/blob/develop/backends/gcu/README_cn.md)环境准备章节。
 ```bash
 bash TopsRider_i3x_*_deb_amd64.run --driver --no-auto-load
 ```
