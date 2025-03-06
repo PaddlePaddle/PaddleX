@@ -102,6 +102,8 @@ struct PaddleBackendOption {
    */
   XpuOption xpu_option;
 
+  /// Wenable_tuned_tensorrt_dynamic_shapeDynamicShape, default true
+  bool allow_build_trt_at_runtime = true;
   /// Collect shape for model while enable_trt is true
   bool collect_trt_shape = false;
   /// Collect shape for model by device (for some custom ops)

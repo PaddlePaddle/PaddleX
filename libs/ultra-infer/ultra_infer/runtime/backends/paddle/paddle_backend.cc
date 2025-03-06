@@ -93,7 +93,9 @@ void PaddleBackend::BuildOption(const PaddleBackendOption &option) {
                                    option.trt_min_subgraph_size, precision,
                                    use_static);
 
-      SetTRTDynamicShapeToConfig(option);
+      if (!option.collect_trt_shape) {
+        SetTRTDynamicShapeToConfig(option);
+      }
       if (option_.enable_fixed_size_opt) {
         paddle_infer::experimental::InternalUtils::SetTransformerMaskid(
             &config_, "opt");
@@ -320,7 +322,8 @@ bool PaddleBackend::InitFromPaddle(const std::string &model,
     }
     FDINFO << "Start loading shape range info file " << shape_range_info
            << " to set TensorRT dynamic shape." << std::endl;
-    config_.EnableTunedTensorRtDynamicShape(shape_range_info, true);
+    config_.EnableTunedTensorRtDynamicShape(shape_range_info,
+                                            option.allow_build_trt_at_runtime);
   }
   // Note(zhoushunjie): The pass deletion should be executed just before
   // creating predictor.
