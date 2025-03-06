@@ -13,12 +13,55 @@
 # limitations under the License.
 
 from typing import Any
+import io
+import pandas as pd
+import matplotlib.pyplot as plt
+from PIL import Image
+
 from ...common.result import BaseTSResult
+
+
+def visualize(forecast: pd.DataFrame) -> Image.Image:
+    """
+    Visualizes both the time series forecast and actual results, returning them as a Pillow image.
+
+    Args:
+        forecast (pd.DataFrame): The DataFrame containing the forecast data.
+
+    Returns:
+        Image.Image: The visualized result as a Pillow image.
+    """
+    plt.figure(figsize=(12, 6))
+    forecast_columns = forecast.columns
+    index_name = forecast.index.name
+    forecast.index = forecast.index.astype(str)
+
+    plt.step(forecast.index, forecast[forecast_columns[0]], where='post', label='Anomaly', color='red')
+    plt.title('Time Series Anomaly Detection')
+    plt.xlabel('Time')
+    plt.ylabel(forecast_columns[0])
+    plt.legend()
+    plt.grid(True)
+    plt.xticks(ticks=range(0, len(forecast), 10))
+    plt.xticks(rotation=45)
+
+    buf = io.BytesIO()
+    plt.savefig(buf, bbox_inches='tight')
+    buf.seek(0)
+    plt.close()
+    image = Image.open(buf)
+
+    return image
 
 
 class TSAdResult(BaseTSResult):
     """A class representing the result of a time series anomaly detection task."""
 
+    def _to_img(self) -> Image.Image:
+        """apply"""
+        anomaly = self["anomaly"]
+        return {"res": visualize(anomaly)}
+    
     def _to_csv(self) -> Any:
         """
         Converts the anomaly detection results to a CSV format.
