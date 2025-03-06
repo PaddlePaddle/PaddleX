@@ -822,8 +822,13 @@ class HPInfer(StaticInfer):
                     "TensorRT static shape inference is currently not supported"
                 )
             if backend_config.dynamic_shapes is not None:
-                for name, shapes in backend_config.dynamic_shapes.items():
-                    ui_option.trt_option.set_shape(name, *shapes)
+                if not Path(ui_option.trt_option.serialize_file).exists():
+                    for name, shapes in backend_config.dynamic_shapes.items():
+                        ui_option.trt_option.set_shape(name, *shapes)
+                else:
+                    logging.warning(
+                        "TensorRT dynamic shapes will be loaded from the file."
+                    )
         elif backend == "om":
             backend_config = OMConfig.model_validate(backend_config)
             ui_option.use_om_backend()
