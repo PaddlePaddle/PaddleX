@@ -30,6 +30,7 @@ class InferRequest(BaseModel):
 class InferResult(BaseModel):
     label: str
     score: float
+    image: str
 
 
 PRIMARY_OPERATIONS: Final[PrimaryOperations] = {

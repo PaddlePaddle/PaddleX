@@ -29,6 +29,7 @@ class InferRequest(BaseModel):
 
 class InferResult(BaseModel):
     csv: str
+    image: str
 
 
 PRIMARY_OPERATIONS: Final[PrimaryOperations] = {

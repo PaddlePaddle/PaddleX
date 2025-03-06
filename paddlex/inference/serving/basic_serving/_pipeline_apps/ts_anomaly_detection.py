@@ -47,10 +47,16 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
         output_csv = serving_utils.base64_encode(
             serving_utils.data_frame_to_bytes(result["anomaly"])
         )
+        if ctx.config.visualize:
+            output_image = serving_utils.base64_encode(
+                serving_utils.image_to_bytes(result.img["res"].convert("RGB"))
+            )
+        else:
+            output_image = None
 
         return ResultResponse[InferResult](
             logId=serving_utils.generate_log_id(),
-            result=InferResult(csv=output_csv),
+            result=InferResult(csv=output_csv, image=output_image),
         )
 
     return app
