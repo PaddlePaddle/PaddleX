@@ -16,6 +16,7 @@ from typing import Any, Union, Dict, List, Tuple
 import numpy as np
 import pandas as pd
 import os
+import copy
 
 from ....modules.ts_forecast.model_list import MODELS
 from ...common.batch_sampler import TSBatchSampler
@@ -122,6 +123,7 @@ class TSFcPredictor(BasicPredictor):
         """
 
         batch_raw_ts = self.preprocessors["ReadTS"](ts_list=batch_data)
+        batch_raw_ts_ori = copy.deepcopy(batch_raw_ts)
         batch_cutoff_ts = self.preprocessors["TSCutOff"](ts_list=batch_raw_ts)
 
         if "TSNormalize" in self.preprocessors:
@@ -152,6 +154,6 @@ class TSFcPredictor(BasicPredictor):
         return {
             "input_path": batch_data,
             "input_ts": batch_raw_ts,
-            "cutoff_ts": batch_raw_ts,
+            "cutoff_ts": batch_raw_ts_ori,
             "forecast": batch_ts_preds,
         }
