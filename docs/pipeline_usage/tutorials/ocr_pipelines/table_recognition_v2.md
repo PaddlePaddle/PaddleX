@@ -7,7 +7,7 @@ comments: true
 ## 1. 通用表格识别v2产线介绍
 表格识别是一种自动从文档或图像中识别和提取表格内容及其结构的技术，广泛应用于数据录入、信息检索和文档分析等领域。通过使用计算机视觉和机器学习算法，表格识别能够将复杂的表格信息转换为可编辑的格式，方便用户进一步处理和分析数据。
 
-通用表格识别v2产线用于解决表格识别任务，对图片中的表格进行识别，并以HTML格式输出。与通用表格识别产线不同，本产线新引入了表格分类和表格单元格检测两个模块，通过采用“表格分类+表格结构识别+单元格检测”多模型串联组网方案，实现了相比通用表格识别产线更好的端到端表格识别性能。除此之外，通用表格识别v2产线原生支持针对性地模型微调，各类开发者均能对通用表格识别v2产线进行不同程度的自定义微调，使其在不同应用场景下都能得到令人满意的性能。
+通用表格识别v2产线（PP-TableMagic）用于解决表格识别任务，对图片中的表格进行识别，并以HTML格式输出。与通用表格识别产线不同，本产线新引入了表格分类和表格单元格检测两个模块，通过采用“表格分类+表格结构识别+单元格检测”多模型串联组网方案，实现了相比通用表格识别产线更好的端到端表格识别性能。除此之外，通用表格识别v2产线原生支持针对性地模型微调，各类开发者均能对通用表格识别v2产线进行不同程度的自定义微调，使其在不同应用场景下都能得到令人满意的性能。
 
 本产线的使用场景覆盖通用、制造、金融、交通等各个领域。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
 
@@ -642,13 +642,13 @@ PaddleX 所提供的模型产线均可以快速体验效果，你可以在本地
 在本地使用通用表格识别v2产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
 
 ### 2.1 命令行方式体验
-一行命令即可快速体验表格识别产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg)，并将 `--input` 替换为本地路径，进行预测
+一行命令即可快速体验表格识别产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition_v2.jpg)，并将 `--input` 替换为本地路径，进行预测
 
 ```bash
 paddlex --pipeline table_recognition_v2 \
         --use_doc_orientation_classify=False \
         --use_doc_unwarping=False \
-        --input table_recognition.jpg \
+        --input table_recognition_v2.jpg \
         --save_path ./output \
         --device gpu:0
 ```
@@ -657,36 +657,36 @@ paddlex --pipeline table_recognition_v2 \
 
 <details><summary>👉 <b>运行后，得到的结果为：（点击展开）</b></summary>
 
-```bash
-{'res': {'input_path': 'table_recognition.jpg', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True, 'use_ocr_model': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 0, 'label': 'Table', 'score': 0.9922188520431519, 'coordinate': [3.0127392, 0.14648987, 547.5102, 127.72023]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[234,   6],
+```
+{'res': {'input_path': 'table_recognition_v2.jpg', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True, 'use_ocr_model': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 8, 'label': 'table', 'score': 0.86655592918396, 'coordinate': [0.0125130415, 0.41920784, 1281.3737, 585.3884]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[   9,   21],
         ...,
-        [234,  25]],
+        [   9,   59]],
 
        ...,
 
-       [[448, 101],
+       [[1046,  536],
         ...,
-        [448, 121]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': array([0.99512607, ..., 0.99844509]), 'rec_polys': array([[[234,   6],
+        [1046,  573]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['部门', '报销人', '报销事由', '批准人：', '单据', '张', '合计金额', '元', '车费票', '其', '火车费票', '飞机票', '中', '旅住宿费', '其他', '补贴'], 'rec_scores': array([0.99958128, ..., 0.99317062]), 'rec_polys': array([[[   9,   21],
         ...,
-        [234,  25]],
+        [   9,   59]],
 
        ...,
 
-       [[448, 101],
+       [[1046,  536],
         ...,
-        [448, 121]]], dtype=int16), 'rec_boxes': array([[234, ...,  25],
+        [1046,  573]]], dtype=int16), 'rec_boxes': array([[   9, ...,   59],
        ...,
-       [448, ..., 121]], dtype=int16)}, 'table_res_list': [{'cell_box_list': [array([ 3.18822289, ..., 30.87823655]), array([ 3.21032453, ..., 65.14108063]), array([110.18174553, ...,  65.02860047]), array([212.96108818, ...,  64.99535157]), array([404.08112907, ...,  65.0847223 ]), array([ 3.21772957, ..., 96.07921387]), array([110.23703575, ...,  96.01378419]), array([213.06095695, ...,  95.97141816]), array([404.23704338, ...,  96.03654267]), array([  3.22793937, ..., 127.08698823]), array([110.40586662, ..., 127.07002045]), array([213.12627983, ..., 127.02842499]), array([404.33042717, ..., 126.45088746])], 'pred_html': '<html><body><table><tr><td colspan="4">CRuncover</td></tr><tr><td>Dres</td><td>连续工作3</td><td>取出来放在网上 没想</td><td>江、整江等八大</td></tr><tr><td>Abstr</td><td></td><td>rSrivi</td><td>$709.</td></tr><tr><td>cludingGiv</td><td>2.72</td><td>Ingcubic</td><td>$744.78</td></tr></table></body></html>', 'table_ocr_pred': {'rec_polys': array([[[234,   6],
+       [1046, ...,  573]], dtype=int16)}, 'table_res_list': [{'cell_box_list': [array([ 0.13052222, ..., 73.08310249]), array([104.43082511, ...,  73.27777413]), array([319.39041221, ...,  73.30439308]), array([424.2436837 , ...,  73.44736794]), array([580.75836265, ...,  73.24003914]), array([723.04370201, ...,  73.22717598]), array([984.67315757, ...,  73.20420387]), array([1.25130415e-02, ..., 5.85419208e+02]), array([984.37072837, ..., 137.02281502]), array([984.26586998, ..., 201.22290352]), array([984.24017417, ..., 585.30775765]), array([1039.90606773, ...,  265.44664314]), array([1039.69549644, ...,  329.30540779]), array([1039.66546714, ...,  393.57319954]), array([1039.5122689 , ...,  457.74644783]), array([1039.55535972, ...,  521.73030403]), array([1039.58612144, ...,  585.09468392])], 'pred_html': '<html><body><table><tbody><tr><td>部门</td><td></td><td>报销人</td><td></td><td>报销事由</td><td></td><td colspan="2">批准人：</td></tr><tr><td colspan="6" rowspan="8"></td><td colspan="2">单据 张</td></tr><tr><td colspan="2">合计金额 元</td></tr><tr><td rowspan="6">其 中</td><td>车费票</td></tr><tr><td>火车费票</td></tr><tr><td>飞机票</td></tr><tr><td>旅住宿费</td></tr><tr><td>其他</td></tr><tr><td>补贴</td></tr></tbody></table></body></html>', 'table_ocr_pred': {'rec_polys': array([[[   9,   21],
         ...,
-        [234,  25]],
+        [   9,   59]],
 
        ...,
 
-       [[448, 101],
+       [[1046,  536],
         ...,
-        [448, 121]]], dtype=int16), 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': array([0.99512607, ..., 0.99844509]), 'rec_boxes': array([[234, ...,  25],
+        [1046,  573]]], dtype=int16), 'rec_texts': ['部门', '报销人', '报销事由', '批准人：', '单据', '张', '合计金额', '元', '车费票', '其', '火车费票', '飞机票', '中', '旅住宿费', '其他', '补贴'], 'rec_scores': array([0.99958128, ..., 0.99317062]), 'rec_boxes': array([[   9, ...,   59],
        ...,
-       [448, ..., 121]], dtype=int16)}}]}}
+       [1046, ...,  573]], dtype=int16)}}]}}
 ```
 运行结果参数说明可以参考[2.2 Python脚本方式集成](#22-python脚本方式集成)中的结果解释。
 
@@ -705,7 +705,7 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="table_recognition_v2")
 
 output = pipeline.predict(
-    input="table_recognition.jpg",
+    input="table_recognition_v2.jpg",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
 )
@@ -778,7 +778,7 @@ for res in output:
 <td>
 <ul>
 <li><b>Python Var</b>：如 <code>numpy.ndarray</code> 表示的图像数据</li>
-<li><b>str</b>：如图像文件或者PDF文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件或PDF文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code>(当前不支持目录中包含PDF文件的预测，PDF文件需要指定到具体文件路径)</li>
+<li><b>str</b>：如图像文件或者PDF文件的本地路径：<code>/root/data/img.jpg</code>；<b>如URL链接</b>，如图像文件或PDF文件的网络URL：<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition_v2.jpg">示例</a>；<b>如本地目录</b>，该目录下需包含待预测图像，如本地路径：<code>/root/data/</code>(当前不支持目录中包含PDF文件的预测，PDF文件需要指定到具体文件路径)</li>
 <li><b>List</b>：列表元素需为上述类型数据，如<code>[numpy.ndarray, numpy.ndarray]</code>，<code>[\"/root/data/img1.jpg\", \"/root/data/img2.jpg\"]</code>，<code>[\"/root/data1\", \"/root/data2\"]</code></li>
 </ul>
 </td>
@@ -1066,7 +1066,7 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/table_recognition_v2.yaml")
 
 output = pipeline.predict(
-    input="table_recognition.jpg",
+    input="table_recognition_v2.jpg",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
 )
@@ -1486,7 +1486,7 @@ PaddleX 支持英伟达 GPU、昆仑芯 XPU、昇腾 NPU和寒武纪 MLU 等多�
 paddlex --pipeline table_recognition_v2 \
         --use_doc_orientation_classify=False \
         --use_doc_unwarping=False \
-        --input table_recognition.jpg \
+        --input table_recognition_v2.jpg \
         --save_path ./output \
         --device npu:0
 ```

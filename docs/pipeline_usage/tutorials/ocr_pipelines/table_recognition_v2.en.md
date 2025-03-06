@@ -7,7 +7,7 @@ comments: true
 ## 1. Introduction to General Table Recognition v2 Pipeline
 Table recognition is a technology that automatically identifies and extracts table content and its structure from documents or images. It is widely used in data entry, information retrieval, and document analysis. By using computer vision and machine learning algorithms, table recognition can convert complex table information into an editable format, making it easier for users to further process and analyze data.
 
-The General Table Recognition v2 Pipeline is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. Unlike the General Table Recognition Pipeline, this pipeline introduces two additional modules: table classification and table cell detection, which are linked with the table structure recognition module to complete the table recognition task. This pipeline can achieve accurate table predictions and is applicable in various fields such as general, manufacturing, finance, and transportation. It also provides flexible service deployment options, supporting multiple programming languages on various hardware. Additionally, it offers custom development capabilities, allowing you to train and fine-tune models on your own dataset, with seamless integration of the trained models.
+The General Table Recognition v2 Pipeline(PP-TableMagic) is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. Unlike the General Table Recognition Pipeline, this pipeline introduces two additional modules: table classification and table cell detection, which are linked with the table structure recognition module to complete the table recognition task. This pipeline can achieve accurate table predictions and is applicable in various fields such as general, manufacturing, finance, and transportation. It also provides flexible service deployment options, supporting multiple programming languages on various hardware. Additionally, it offers custom development capabilities, allowing you to train and fine-tune models on your own dataset, with seamless integration of the trained models.
 
 <b>❗ The General Table Recognition v2 Pipeline is still being optimized and the final version will be released in the next version of PaddleX. In order to maintain the stability of use, you can use the General Table Recognition Pipeline for table processing first, and we will release a notice when the final version of v2 is open-sourced, so please stay tuned!</b>
 
@@ -630,49 +630,49 @@ Online experience is not supported at the moment.
 Before using the General Table Recognition v2 Pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
 
 ### 2.3 Command Line Experience
-You can quickly experience the table recognition pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg) (Note: The link may not be accessible due to network issues or link validity. Please check the link and try again if necessary.) and replace `--input` with the local path for prediction.
+You can quickly experience the table recognition pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition_v2.jpg) (Note: The link may not be accessible due to network issues or link validity. Please check the link and try again if necessary.) and replace `--input` with the local path for prediction.
 
 ```bash
 paddlex --pipeline table_recognition_v2 \
         --use_doc_orientation_classify=False \
         --use_doc_unwarping=False \
-        --input table_recognition.jpg \
+        --input table_recognition_v2.jpg \
         --save_path ./output \
         --device gpu:0
 ```
 
 <details><summary>👉 <b>After running, the result obtained is: (Click to expand)</b></summary>
 
-```bash
-{'res': {'input_path': 'table_recognition.jpg', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True, 'use_ocr_model': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 0, 'label': 'Table', 'score': 0.9922188520431519, 'coordinate': [3.0127392, 0.14648987, 547.5102, 127.72023]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[234,   6],
+```
+{'res': {'input_path': 'table_recognition_v2.jpg', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True, 'use_ocr_model': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 8, 'label': 'table', 'score': 0.86655592918396, 'coordinate': [0.0125130415, 0.41920784, 1281.3737, 585.3884]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[   9,   21],
         ...,
-        [234,  25]],
+        [   9,   59]],
 
        ...,
 
-       [[448, 101],
+       [[1046,  536],
         ...,
-        [448, 121]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': array([0.99512607, ..., 0.99844509]), 'rec_polys': array([[[234,   6],
+        [1046,  573]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['部门', '报销人', '报销事由', '批准人：', '单据', '张', '合计金额', '元', '车费票', '其', '火车费票', '飞机票', '中', '旅住宿费', '其他', '补贴'], 'rec_scores': array([0.99958128, ..., 0.99317062]), 'rec_polys': array([[[   9,   21],
         ...,
-        [234,  25]],
+        [   9,   59]],
 
        ...,
 
-       [[448, 101],
+       [[1046,  536],
         ...,
-        [448, 121]]], dtype=int16), 'rec_boxes': array([[234, ...,  25],
+        [1046,  573]]], dtype=int16), 'rec_boxes': array([[   9, ...,   59],
        ...,
-       [448, ..., 121]], dtype=int16)}, 'table_res_list': [{'cell_box_list': [array([ 3.18822289, ..., 30.87823655]), array([ 3.21032453, ..., 65.14108063]), array([110.18174553, ...,  65.02860047]), array([212.96108818, ...,  64.99535157]), array([404.08112907, ...,  65.0847223 ]), array([ 3.21772957, ..., 96.07921387]), array([110.23703575, ...,  96.01378419]), array([213.06095695, ...,  95.97141816]), array([404.23704338, ...,  96.03654267]), array([  3.22793937, ..., 127.08698823]), array([110.40586662, ..., 127.07002045]), array([213.12627983, ..., 127.02842499]), array([404.33042717, ..., 126.45088746])], 'pred_html': '<html><body><table><tr><td colspan="4">CRuncover</td></tr><tr><td>Dres</td><td>连续工作3</td><td>取出来放在网上 没想</td><td>江、整江等八大</td></tr><tr><td>Abstr</td><td></td><td>rSrivi</td><td>$709.</td></tr><tr><td>cludingGiv</td><td>2.72</td><td>Ingcubic</td><td>$744.78</td></tr></table></body></html>', 'table_ocr_pred': {'rec_polys': array([[[234,   6],
+       [1046, ...,  573]], dtype=int16)}, 'table_res_list': [{'cell_box_list': [array([ 0.13052222, ..., 73.08310249]), array([104.43082511, ...,  73.27777413]), array([319.39041221, ...,  73.30439308]), array([424.2436837 , ...,  73.44736794]), array([580.75836265, ...,  73.24003914]), array([723.04370201, ...,  73.22717598]), array([984.67315757, ...,  73.20420387]), array([1.25130415e-02, ..., 5.85419208e+02]), array([984.37072837, ..., 137.02281502]), array([984.26586998, ..., 201.22290352]), array([984.24017417, ..., 585.30775765]), array([1039.90606773, ...,  265.44664314]), array([1039.69549644, ...,  329.30540779]), array([1039.66546714, ...,  393.57319954]), array([1039.5122689 , ...,  457.74644783]), array([1039.55535972, ...,  521.73030403]), array([1039.58612144, ...,  585.09468392])], 'pred_html': '<html><body><table><tbody><tr><td>部门</td><td></td><td>报销人</td><td></td><td>报销事由</td><td></td><td colspan="2">批准人：</td></tr><tr><td colspan="6" rowspan="8"></td><td colspan="2">单据 张</td></tr><tr><td colspan="2">合计金额 元</td></tr><tr><td rowspan="6">其 中</td><td>车费票</td></tr><tr><td>火车费票</td></tr><tr><td>飞机票</td></tr><tr><td>旅住宿费</td></tr><tr><td>其他</td></tr><tr><td>补贴</td></tr></tbody></table></body></html>', 'table_ocr_pred': {'rec_polys': array([[[   9,   21],
         ...,
-        [234,  25]],
+        [   9,   59]],
 
        ...,
 
-       [[448, 101],
+       [[1046,  536],
         ...,
-        [448, 121]]], dtype=int16), 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': array([0.99512607, ..., 0.99844509]), 'rec_boxes': array([[234, ...,  25],
+        [1046,  573]]], dtype=int16), 'rec_texts': ['部门', '报销人', '报销事由', '批准人：', '单据', '张', '合计金额', '元', '车费票', '其', '火车费票', '飞机票', '中', '旅住宿费', '其他', '补贴'], 'rec_scores': array([0.99958128, ..., 0.99317062]), 'rec_boxes': array([[   9, ...,   59],
        ...,
-       [448, ..., 121]], dtype=int16)}}]}}
+       [1046, ...,  573]], dtype=int16)}}]}}
 ```
 
 The explanation of the running result parameters can refer to the result interpretation in [2.2.2 Python Script Integration](#222-python-script-integration).
@@ -693,7 +693,7 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="table_recognition_v2")
 
 output = pipeline.predict(
-    input="table_recognition.jpg",
+    input="table_recognition_v2.jpg",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
 )
@@ -767,7 +767,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code>.</li>
-<li><b>str</b>: Local path of image or PDF files, e.g., <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the network URL of an image or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">Example</a>; <b>Local directory</b>, the directory should contain images to be predicted, e.g., <code>/root/data/</code> (currently, prediction for PDF files in directories is not supported; PDF files must specify the exact file path).</li>
+<li><b>str</b>: Local path of image or PDF files, e.g., <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the network URL of an image or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition_v2.jpg">Example</a>; <b>Local directory</b>, the directory should contain images to be predicted, e.g., <code>/root/data/</code> (currently, prediction for PDF files in directories is not supported; PDF files must specify the exact file path).</li>
 <li><b>List</b>: List elements must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[“/root/data/img1.jpg”, “/root/data/img2.jpg”]</code>, <code>[“/root/data1”, “/root/data2”]</code>.</li>
 </ul>
 </td>
@@ -1065,7 +1065,7 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/table_recognition_v2.yaml")
 
 output = pipeline.predict(
-    input="table_recognition.jpg",
+    input="table_recognition_v2.jpg",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
 )
@@ -1486,7 +1486,7 @@ For example, if you use Ascend NPU for OCR pipeline inference, the CLI command i
 paddlex --pipeline table_recognition_v2 \
         --use_doc_orientation_classify=False \
         --use_doc_unwarping=False \
-        --input table_recognition.jpg \
+        --input table_recognition_v2.jpg \
         --save_path ./output \
         --device npu:0
 ```
