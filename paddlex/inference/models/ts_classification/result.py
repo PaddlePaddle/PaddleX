@@ -13,12 +13,61 @@
 # limitations under the License.
 
 from typing import Any
+import io
+import pandas as pd
+import matplotlib.pyplot as plt
+from PIL import Image
+
 from ...common.result import BaseTSResult
+
+
+def visualize(predicted_label, input_ts, target_cols):
+    """
+    Visualize time series data and its prediction results.
+
+    Parameters:
+    - input_ts: A DataFrame containing the input_ts.
+    - predicted_label: A list of predicted class labels.
+
+    Returns:
+    - image: An image object containing the visualization result.
+    """
+    # 设置图形大小
+    plt.figure(figsize=(12, 6))
+    input_ts_columns = input_ts.columns
+    input_ts.index = input_ts.index.astype(str)
+    length = len(input_ts)
+    value = predicted_label.loc[0, 'classid']
+    plt.plot(input_ts.index, input_ts[target_cols[0]], label=f'Predicted classid: {value}', color='blue')
+
+    # 设置图形标题和标签
+    plt.title('Time Series input_ts with Predicted Labels')
+    plt.xlabel('Time')
+    plt.ylabel('Value')
+    plt.legend()
+    plt.grid(True)
+    plt.xticks(ticks=range(0, length, 10))
+    plt.xticks(rotation=45)
+
+    # 保存图像到内存
+    buf = io.BytesIO()
+    plt.savefig(buf, bbox_inches='tight')
+    buf.seek(0)
+    plt.close()
+    image = Image.open(buf)
+
+    return image
 
 
 class TSClsResult(BaseTSResult):
     """A class representing the result of a time series classification task."""
 
+    def _to_img(self) -> Image.Image:
+        """apply"""
+        classification = self["classification"]
+        ts_input = pd.read_csv(self["input_path"])
+        return {"res": visualize(classification, ts_input, self["target_cols"])}
+    
     def _to_csv(self) -> Any:
         """
         Converts the classification results to a CSV format.

@@ -128,4 +128,5 @@ class TSClsPredictor(BasicPredictor):
             "input_path": batch_data,
             "input_ts": batch_raw_ts,
             "classification": batch_ts_preds,
+            "target_cols": [self.config["info_params"]["target_cols"]]
         }
