@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# General Table Recognition Pipeline User Guide
+# General Table Recognition Pipeline Tutorial
 
 ## 1. Introduction to General Table Recognition Pipeline
 Table recognition is a technology that automatically identifies and extracts table content and structure from documents or images. It is widely used in data entry, information retrieval, and document analysis. By using computer vision and machine learning algorithms, table recognition can convert complex table information into editable formats, facilitating further processing and analysis of data.
@@ -604,7 +604,7 @@ You can [experience online](https://aistudio.baidu.com/community/app/91661/webUI
 If you are satisfied with the performance of the pipeline, you can directly integrate and deploy it. You can choose to download the deployment package from the cloud, or refer to the method in [Section 2.2 Local Experience](#22-local-experience) for local deployment. If you are not satisfied with the effect, you can <b>fine-tune the models in the pipeline using private data</b>. If you have local training hardware resources, you can start training directly on your local machine; if not, the Baidu AI Studio provides a one-click training service. No code is required; simply upload your data to start the training task.
 
 ### 2.2 Local Experience
-Before using the general table recognition production line locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+Before using the General Table Recognition pipeline locally, ensure you have installed the PaddleX wheel package following the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 
 ### 2.1 Command Line Experience
 You can quickly experience the table recognition pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg), and replace `--input` with your local path for prediction.

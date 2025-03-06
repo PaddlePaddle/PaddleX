@@ -174,23 +174,10 @@ def match_table_and_ocr(cell_box_list, ocr_dt_boxes, table_cells_flag, row_start
                         matched[i] = [j]
                     else:
                         matched[i].append(j)
-        # try:
-        #     real_len = max(matched.keys())+1
-        # except Exception as e:
-        #     print(e)
-        #     print(matched)
-        #     print(all_matched)
-        #     continue
         real_len=max(matched.keys())+1 if len(matched)!=0 else 0
         if table_cells_flag[k+1] < row_start_index[k+1]:
-            # print(table_cells_flag[k], table_cells_flag[k+1])
-            # print(row_start_index[k], row_start_index[k+1])
-            # print(matched)
             for s in range(row_start_index[k+1]-table_cells_flag[k+1]):
-                # print(s, real_len, real_len+s)
                 matched[real_len+s] = []
-            # print(matched)
-            # print("*"*100)
         elif table_cells_flag[k+1] > row_start_index[k+1]:
             for s in range(table_cells_flag[k+1]-row_start_index[k+1]):
                 matched[real_len-1].append(matched[real_len+s])

@@ -4,18 +4,21 @@ comments: true
 
 # General Table Recognition v2 Pipeline Tutorial
 
-## 1. Introduction to General Table Recognition Pipeline v2
-Table recognition is a technology that automatically identifies and extracts table content and structure from documents or images. It is widely used in data entry, information retrieval, and document analysis. By using computer vision and machine learning algorithms, table recognition can convert complex table information into editable formats, facilitating further processing and analysis of data.
+## 1. Introduction to General Table Recognition v2 Pipeline
+Table recognition is a technology that automatically identifies and extracts table content and its structure from documents or images. It is widely used in data entry, information retrieval, and document analysis. By using computer vision and machine learning algorithms, table recognition can convert complex table information into an editable format, making it easier for users to further process and analyze data.
 
-The General Table Recognition v2 Pipeline is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. Unlike the General Table Recognition Pipeline, this pipeline introduces two additional modules: table classification and table cell detection, which are linked with the table structure recognition module to complete the table recognition task. This pipeline can achieve accurate table predictions and is applicable in various fields such as general, manufacturing, finance, and transportation. It also provides flexible service deployment options, supporting multiple programming languages on various hardware. Additionally, it offers custom development capabilities, allowing you to train and fine-tune models on your own dataset, with seamless integration of the trained models.
+The General Table Recognition v2 Pipeline(PP-TableMagic) is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. Unlike the General Table Recognition Pipeline, this pipeline introduces two additional modules: table classification and table cell detection, which are linked with the table structure recognition module to complete the table recognition task. This pipeline can achieve accurate table predictions and is applicable in various fields such as general, manufacturing, finance, and transportation. It also provides flexible service deployment options, supporting multiple programming languages on various hardware. Additionally, it offers custom development capabilities, allowing you to train and fine-tune models on your own dataset, with seamless integration of the trained models.
 
 <b>❗ The General Table Recognition v2 Pipeline is still being optimized and the final version will be released in the next version of PaddleX. In order to maintain the stability of use, you can use the General Table Recognition Pipeline for table processing first, and we will release a notice when the final version of v2 is open-sourced, so please stay tuned!</b>
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/01.png"/>
-<b>The General Table Recognition Pipeline v2 includes essential modules for table structure recognition, table classification, table cell localization, text detection, and text recognition, as well as optional modules for layout area detection, document image orientation classification, and text image correction.</b>
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/01.png"/>
 
-<b>If you prioritize model accuracy, choose a high-accuracy model; if you prioritize inference speed, choose a faster model; if you care about model size, choose a smaller model.</b>
-<details><summary> 👉 Model List Details</summary>
+<b>The General Table Recognition v2 Pipeline includes mandatory modules such as table structure recognition, table classification, table cell localization, text detection, and text recognition, as well as optional modules like layout area detection, document image orientation classification, and text image correction.</b>
+
+<b>If you prioritize model accuracy, choose a model with higher accuracy; if you care more about inference speed, choose a model with faster inference speed; if you are concerned about model storage size, choose a model with a smaller storage size.</b>
+
+<details><summary> 👉Model List Details</summary>
+
 <p><b>Table Recognition Module Models:</b></p>
 <table>
 <tr>
@@ -414,7 +417,6 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 > ❗ The above list includes the <b>3 core models</b> that are the focus of the layout detection module. The module supports a total of <b>11 full models</b>, including multiple predefined models with different categories. The complete list of models is as follows:
 <details><summary> 👉Model List Details</summary>
 * <b>Table Layout Detection Models</b>
-
 <table>
 <thead>
 <tr>
@@ -540,7 +542,6 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </table>
 </details>
 <p><b>Text Image Correction Module Model (Optional):</b></p>
-
 <table>
 <thead>
 <tr>
@@ -615,66 +616,71 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 | Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
 | High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
+</details>
 
 </details>
 
 ## 2. Quick Start
-All models provided by PaddleX can be quickly experienced. You can use the command line or Python locally to experience the General Table Recognition Production Line v2.
+All model pipelines provided by PaddleX can be quickly experienced. You can use the command line or Python locally to experience the effect of the General Table Recognition v2 Pipeline.
 
 ### 2.1 Online Experience
 Online experience is not supported at the moment.
 
 ### 2.2 Local Experience
-Before using the General Table Recognition Production Line v2 locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+Before using the General Table Recognition v2 Pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
 
 ### 2.3 Command Line Experience
-You can quickly experience the table recognition pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg) (Note: The link may not be accessible due to network issues or link validity. Please check the link and try again if necessary.) and replace `--input` with the local path for prediction.
+You can quickly experience the table recognition pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition_v2.jpg) (Note: The link may not be accessible due to network issues or link validity. Please check the link and try again if necessary.) and replace `--input` with the local path for prediction.
 
 ```bash
 paddlex --pipeline table_recognition_v2 \
         --use_doc_orientation_classify=False \
         --use_doc_unwarping=False \
-        --input table_recognition.jpg \
+        --input table_recognition_v2.jpg \
         --save_path ./output \
         --device gpu:0
 ```
 
 <details><summary>👉 <b>After running, the result obtained is: (Click to expand)</b></summary>
 
-```bash
-{'res': {'input_path': 'table_recognition.jpg', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True, 'use_ocr_model': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 0, 'label': 'Table', 'score': 0.9922188520431519, 'coordinate': [3.0127392, 0.14648987, 547.5102, 127.72023]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[234,   6],
+```
+{'res': {'input_path': 'table_recognition_v2.jpg', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True, 'use_ocr_model': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 8, 'label': 'table', 'score': 0.86655592918396, 'coordinate': [0.0125130415, 0.41920784, 1281.3737, 585.3884]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[   9,   21],
         ...,
-        [234,  25]],
+        [   9,   59]],
 
        ...,
 
-       [[448, 101],
+       [[1046,  536],
         ...,
-        [448, 121]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': array([0.99512607, ..., 0.99844509]), 'rec_polys': array([[[234,   6],
+        [1046,  573]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['部门', '报销人', '报销事由', '批准人：', '单据', '张', '合计金额', '元', '车费票', '其', '火车费票', '飞机票', '中', '旅住宿费', '其他', '补贴'], 'rec_scores': array([0.99958128, ..., 0.99317062]), 'rec_polys': array([[[   9,   21],
         ...,
-        [234,  25]],
+        [   9,   59]],
 
        ...,
 
-       [[448, 101],
+       [[1046,  536],
         ...,
-        [448, 121]]], dtype=int16), 'rec_boxes': array([[234, ...,  25],
+        [1046,  573]]], dtype=int16), 'rec_boxes': array([[   9, ...,   59],
        ...,
-       [448, ..., 121]], dtype=int16)}, 'table_res_list': [{'cell_box_list': [array([ 3.18822289, ..., 30.87823655]), array([ 3.21032453, ..., 65.14108063]), array([110.18174553, ...,  65.02860047]), array([212.96108818, ...,  64.99535157]), array([404.08112907, ...,  65.0847223 ]), array([ 3.21772957, ..., 96.07921387]), array([110.23703575, ...,  96.01378419]), array([213.06095695, ...,  95.97141816]), array([404.23704338, ...,  96.03654267]), array([  3.22793937, ..., 127.08698823]), array([110.40586662, ..., 127.07002045]), array([213.12627983, ..., 127.02842499]), array([404.33042717, ..., 126.45088746])], 'pred_html': '<html><body><table><tr><td colspan="4">CRuncover</td></tr><tr><td>Dres</td><td>连续工作3</td><td>取出来放在网上 没想</td><td>江、整江等八大</td></tr><tr><td>Abstr</td><td></td><td>rSrivi</td><td>$709.</td></tr><tr><td>cludingGiv</td><td>2.72</td><td>Ingcubic</td><td>$744.78</td></tr></table></body></html>', 'table_ocr_pred': {'rec_polys': array([[[234,   6],
+       [1046, ...,  573]], dtype=int16)}, 'table_res_list': [{'cell_box_list': [array([ 0.13052222, ..., 73.08310249]), array([104.43082511, ...,  73.27777413]), array([319.39041221, ...,  73.30439308]), array([424.2436837 , ...,  73.44736794]), array([580.75836265, ...,  73.24003914]), array([723.04370201, ...,  73.22717598]), array([984.67315757, ...,  73.20420387]), array([1.25130415e-02, ..., 5.85419208e+02]), array([984.37072837, ..., 137.02281502]), array([984.26586998, ..., 201.22290352]), array([984.24017417, ..., 585.30775765]), array([1039.90606773, ...,  265.44664314]), array([1039.69549644, ...,  329.30540779]), array([1039.66546714, ...,  393.57319954]), array([1039.5122689 , ...,  457.74644783]), array([1039.55535972, ...,  521.73030403]), array([1039.58612144, ...,  585.09468392])], 'pred_html': '<html><body><table><tbody><tr><td>部门</td><td></td><td>报销人</td><td></td><td>报销事由</td><td></td><td colspan="2">批准人：</td></tr><tr><td colspan="6" rowspan="8"></td><td colspan="2">单据 张</td></tr><tr><td colspan="2">合计金额 元</td></tr><tr><td rowspan="6">其 中</td><td>车费票</td></tr><tr><td>火车费票</td></tr><tr><td>飞机票</td></tr><tr><td>旅住宿费</td></tr><tr><td>其他</td></tr><tr><td>补贴</td></tr></tbody></table></body></html>', 'table_ocr_pred': {'rec_polys': array([[[   9,   21],
         ...,
-        [234,  25]],
+        [   9,   59]],
 
        ...,
 
-       [[448, 101],
+       [[1046,  536],
         ...,
-        [448, 121]]], dtype=int16), 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': array([0.99512607, ..., 0.99844509]), 'rec_boxes': array([[234, ...,  25],
+        [1046,  573]]], dtype=int16), 'rec_texts': ['部门', '报销人', '报销事由', '批准人：', '单据', '张', '合计金额', '元', '车费票', '其', '火车费票', '飞机票', '中', '旅住宿费', '其他', '补贴'], 'rec_scores': array([0.99958128, ..., 0.99317062]), 'rec_boxes': array([[   9, ...,   59],
        ...,
-       [448, ..., 121]], dtype=int16)}}]}}
+       [1046, ...,  573]], dtype=int16)}}]}}
 ```
 
-The result of the visualization is saved under `save_path`, and the visualization result of table recognition is as follows:
-<img src="<url id="curl1qgonf4r89jtks8g" type="url" status="failed" title="" wc="0">https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/01.jpg</url> ">
+The explanation of the running result parameters can refer to the result interpretation in [2.2.2 Python Script Integration](#222-python-script-integration).
+
+
+The visualization results are saved under `save_path`, where the visualization result of table recognition is as follows:
+
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/02.jpg">
 
 </details>
 
@@ -687,7 +693,7 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="table_recognition_v2")
 
 output = pipeline.predict(
-    input="table_recognition.jpg",
+    input="table_recognition_v2.jpg",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
 )
@@ -702,7 +708,7 @@ for res in output:
 
 In the above Python script, the following steps are executed:
 
-(1) The `create_pipeline()` function is used to instantiate a Universal Table Recognition Pipeline v2 object. The specific parameter descriptions are as follows:
+(1) The `create_pipeline()` function is used to instantiate a General Table Recognition v2 Pipeline object. The specific parameter descriptions are as follows:
 
 <table>
 <thead>
@@ -741,7 +747,7 @@ In the above Python script, the following steps are executed:
 </tbody>
 </table>
 
-(2) The `predict()` method of the Universal Table Recognition Pipeline v2 object is called to perform inference prediction. This method returns a `generator`. Below are the parameters and descriptions of the `predict()` method:
+(2) Call the `predict()` method of the General Table Recognition v2 Pipeline object for inference prediction. This method will return a `generator`. The parameters of the `predict()` method and their descriptions are as follows:
 
 
 <table>
@@ -761,7 +767,7 @@ In the above Python script, the following steps are executed:
 <td>
 <ul>
 <li><b>Python Var</b>: Image data represented by <code>numpy.ndarray</code>.</li>
-<li><b>str</b>: Local path of image or PDF files, e.g., <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the network URL of an image or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">Example</a>; <b>Local directory</b>, the directory should contain images to be predicted, e.g., <code>/root/data/</code> (currently, prediction for PDF files in directories is not supported; PDF files must specify the exact file path).</li>
+<li><b>str</b>: Local path of image or PDF files, e.g., <code>/root/data/img.jpg</code>; <b>URL link</b>, such as the network URL of an image or PDF file: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition_v2.jpg">Example</a>; <b>Local directory</b>, the directory should contain images to be predicted, e.g., <code>/root/data/</code> (currently, prediction for PDF files in directories is not supported; PDF files must specify the exact file path).</li>
 <li><b>List</b>: List elements must be of the above types, such as <code>[numpy.ndarray, numpy.ndarray]</code>, <code>[“/root/data/img1.jpg”, “/root/data/img2.jpg”]</code>, <code>[“/root/data1”, “/root/data2”]</code>.</li>
 </ul>
 </td>
@@ -1015,10 +1021,13 @@ In the above Python script, the following steps are executed:
 
     - `rec_boxes`: `(numpy.ndarray)` An array of rectangular bounding boxes for detection boxes, with shape (n, 4) and dtype int16. Each row represents the [x_min, y_min, x_max, y_max] coordinates of a rectangular box, where (x_min, y_min) is the top-left corner and (x_max, y_max) is the bottom-right corner.
 
-- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}.json`. If a file is specified, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` type will be converted to list format.
-- Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}_ocr_res_img.{your_img_extension}`. If a file is specified, it will be saved directly to that file. (It is not recommended to specify a specific file path directly, as multiple result images will be overwritten and only the last image will be retained.)
-- Calling the `save_to_html()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}.html`. If a file is specified, it will be saved directly to that file. In the General Table Recognition Line v2, the HTML format of tables in the image will be written to the specified HTML file.
-- Calling the `save_to_xlsx()` method will save the above content to the specified `save_path`. If a directory is specified, the saved path will be `save_path/{your_img_basename}.xlsx`. If a file is specified, it will be saved directly to that file. In the General Table Recognition Line v2, the Excel format of tables in the image will be written to the specified xlsx file.
+- Calling the `save_to_json()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}.json`; if specified as a file, it will be saved directly to that file. Since JSON files do not support saving numpy arrays, the `numpy.array` types will be converted to lists.
+
+- Calling the `save_to_img()` method will save the visualization results to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}_ocr_res_img.{your_img_extension}`; if specified as a file, it will be saved directly to that file. (The pipeline usually contains many result images, it is not recommended to specify a specific file path directly, otherwise multiple images will be overwritten, leaving only the last image)
+
+- Calling the `save_to_html()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}.html`; if specified as a file, it will be saved directly to that file. In the General Table Recognition v2 Pipeline, the HTML form of the table in the image will be written to the specified HTML file.
+
+- Calling the `save_to_xlsx()` method will save the above content to the specified `save_path`. If specified as a directory, the saved path will be `save_path/{your_img_basename}.xlsx`; if specified as a file, it will be saved directly to that file. In the General Table Recognition v2 Pipeline, the Excel form of the table in the image will be written to the specified XLSX file.
 
 * Additionally, it is also possible to obtain the visualization image with results and prediction results through attributes, as follows:
 
@@ -1042,13 +1051,13 @@ In the above Python script, the following steps are executed:
 - The prediction result obtained through the `json` attribute is of dict type, and the content is consistent with the content saved by calling the `save_to_json()` method.
 - The prediction result returned by the `img` attribute is a dictionary. The keys are `table_res_img`, `ocr_res_img`, `layout_res_img`, and `preprocessed_img`, corresponding to four `Image.Image` objects in order: the visualization image of table recognition results, the visualization image of OCR results, the visualization image of layout detection results, and the visualization image of image preprocessing. If a sub-module is not used, the corresponding result image will not be included in the dictionary.
 
-Additionally, you can obtain the configuration file for the General Table Recognition Line v2 and load the configuration file for prediction. You can execute the following command to save the results in `my_path`:
+In addition, you can obtain the General Table Recognition v2 Pipeline configuration file and load the configuration file for prediction. You can execute the following command to save the result in `my_path`:
 
 ```
 paddlex --get_pipeline_config table_recognition_v2 --save_path ./my_path
 ```
 
-If you have obtained the configuration file, you can customize the settings for the General Table Recognition Production Line v2. Simply modify the `pipeline` parameter value in the `create_pipeline` method to the path of the production line configuration file. The example is as follows:
+If you have obtained the configuration file, you can customize the settings for the General Table Recognition v2 Pipeline. Simply modify the `pipeline` parameter value in the `create_pipeline` method to the path of the pipeline configuration file. The example is as follows:
 
 ```python
 from paddlex import create_pipeline
@@ -1056,7 +1065,7 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/table_recognition_v2.yaml")
 
 output = pipeline.predict(
-    input="table_recognition.jpg",
+    input="table_recognition_v2.jpg",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
 )
@@ -1070,7 +1079,7 @@ for res in output:
 
 ```
 
-<b>Note:</b> The parameters in the configuration file are the initialization parameters for the production line. If you want to change the initialization parameters for the General Table Recognition Production Line v2, you can directly modify the parameters in the configuration file and load the configuration file for prediction. At the same time, CLI prediction also supports passing in a configuration file, just specify the path of the configuration file with `--pipeline`.
+<b>Note:</b> The parameters in the configuration file are the initialization parameters for the pipeline. If you want to change the initialization parameters of the General Table Recognition v2 Pipeline, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in the configuration file by specifying the path with `--pipeline`.
 
 ## 3. Development Integration / Deployment
 If the pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration / deployment.
@@ -1331,11 +1340,11 @@ for i, res in enumerate(result["tableRecResults"]):
 📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on user devices, allowing the devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
 You can choose the appropriate deployment method according to your needs to integrate the model into your AI application.
 
-## 4. Secondary Development
-If the default model weights provided by the General Table Recognition Pipeline v2 do not meet your requirements in terms of accuracy or speed, you can try to <b>fine-tune</b> the existing model using <b>your own domain-specific or application data</b> to improve the recognition performance of the General Table Recognition Pipeline v2 in your scenario.
+## 4. Custom Development
+If the default model weights provided by the General Table Recognition v2 Pipeline do not meet your requirements in terms of accuracy or speed, you can try to further <b>fine-tune</b> the existing models using <b>your own domain-specific or application data</b> to improve the recognition performance of the General Table Recognition v2 Pipeline in your specific scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the General Table Recognition Pipeline v2 consists of several modules, if the pipeline's performance is not satisfactory, the issue may arise from any one of these modules. You can analyze the images with poor recognition results to identify which module is problematic and refer to the corresponding fine-tuning tutorial links in the table below for model fine-tuning.
+Since the General Table Recognition v2 Pipeline consists of several modules, if the overall performance is not satisfactory, the issue may lie in any one of these modules. You can analyze the images with poor recognition results to identify which module is problematic and refer to the corresponding fine-tuning tutorial links in the table below.
 
 <table>
 <thead>
@@ -1477,13 +1486,11 @@ For example, if you use Ascend NPU for OCR pipeline inference, the CLI command i
 paddlex --pipeline table_recognition_v2 \
         --use_doc_orientation_classify=False \
         --use_doc_unwarping=False \
-        --input table_recognition.jpg \
+        --input table_recognition_v2.jpg \
         --save_path ./output \
         --device npu:0
 ```
 
 If you want to use the General Table Recognition v2 Pipeline on a wider variety of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
-
-If you want to use the Universal Table Recognition Pipeline v2 on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
 
 If you want to use the Universal Table Recognition Pipeline v2 on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
