@@ -152,5 +152,6 @@ class TSFcPredictor(BasicPredictor):
         return {
             "input_path": batch_data,
             "input_ts": batch_raw_ts,
+            "cutoff_ts": batch_raw_ts,
             "forecast": batch_ts_preds,
         }
