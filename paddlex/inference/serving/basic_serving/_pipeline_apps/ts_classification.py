@@ -48,7 +48,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
         score = float(result["classification"].at[0, "score"])
         if ctx.config.visualize:
             output_image = serving_utils.base64_encode(
-                serving_utils.image_to_bytes(result.img["res"])
+                serving_utils.image_to_bytes(result.img["res"].convert("RGB"))
             )
         else:
             output_image = None
