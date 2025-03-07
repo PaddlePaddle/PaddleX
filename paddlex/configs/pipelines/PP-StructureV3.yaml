@@ -1,5 +1,5 @@
 
-pipeline_name: layout_parsing_v2
+pipeline_name: PP-StructureV3
 
 use_doc_preprocessor: True
 use_general_ocr: True

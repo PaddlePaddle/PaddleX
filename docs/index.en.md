@@ -529,7 +529,7 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
     === "Layout Parsing v2"
 
         ```bash
-        paddlex --pipeline layout_parsing_v2 \
+        paddlex --pipeline PP-StructureV3 \
                 --input layout_parsing_v2_demo.png \
                 --use_doc_orientation_classify False \
                 --use_doc_unwarping False \
@@ -1505,7 +1505,7 @@ The following steps were executed:
         ```python
         from paddlex import create_pipeline
 
-        pipeline = create_pipeline(pipeline="layout_parsing_v2")
+        pipeline = create_pipeline(pipeline="PP-StructureV3")
 
         output = pipeline.predict(
             input="./layout_parsing_v2_demo.png",
@@ -1874,7 +1874,7 @@ The following steps were executed:
 
     The General Layout Parsing v2 pipeline enhances the capabilities of layout area detection, table recognition, and formula recognition based on the General Layout Parsing v1 pipeline. It also adds the ability to restore multi-column reading order and convert results to Markdown files. It performs well on various document datasets and can handle more complex document data.
 
-    [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.en.md)
+    [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.en.md)
 
 - **General Table Recognition Pipeline v2**
 
