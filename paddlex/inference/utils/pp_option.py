@@ -73,7 +73,9 @@ class PaddlePredictorOption(object):
         # for trt
         if self.run_mode in TRT_PRECISION_MAP:
             trt_cfg = TRT_CFG[self.model_name]
-            trt_cfg["precision_mode"] = TRT_PRECISION_MAP[self.run_mode]
+            trt_cfg["enable_tensorrt_engine"]["precision_mode"] = TRT_PRECISION_MAP[
+                self.run_mode
+            ]
             self.trt_cfg = trt_cfg
 
     def _get_default_config(self):

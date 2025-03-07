@@ -472,7 +472,12 @@ class StaticInfer(object):
 
             config.set_optim_cache_dir(str(cache_dir / "optim_cache"))
             config.enable_use_gpu(100, self._option.device_id)
-            config.enable_tensorrt_engine(**self._option.trt_cfg)
+            for func_name in self._option.trt_cfg:
+                assert hasattr(
+                    config, func_name
+                ), f"The `{type(config)}` don't have function `{func_name}`!"
+                kwargs = self._option.trt_cfg[func_name]
+                getattr(config, func_name)(**kwargs)
 
             if self._option.trt_use_dynamic_shapes:
                 if self._option.trt_collect_shape_range_info:
