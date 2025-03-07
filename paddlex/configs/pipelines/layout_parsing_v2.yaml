@@ -13,12 +13,14 @@ SubModules:
     model_name: PP-DocLayout-L
     model_dir: null
     threshold: 
-      0: 0.3
-      7: 0.3
-      16: 0.3
+      0: 0.3  # paragraph_title
+      7: 0.3  # formula
+      16: 0.3 # seal
     layout_nms: True
     layout_unclip_ratio: 1.0
-    layout_merge_bboxes_mode: "union"
+    layout_merge_bboxes_mode: 
+      1: "large"  # image
+      18: "large" # chart
 
 SubPipelines:
   DocPreprocessor:
