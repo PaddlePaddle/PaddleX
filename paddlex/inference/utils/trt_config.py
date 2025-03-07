@@ -64,7 +64,7 @@ class PIR_TRT_PRECISION_MAP_CLASS(LazyLoadDict):
 ############ old ir trt ############
 OLD_IR_TRT_PRECISION_MAP = OLD_IR_TRT_PRECISION_MAP_CLASS()
 
-OLD_IR_TRT_DEFAULT_CFG = {
+OLD_IR_TRT_CFG_DEFAULT_SETTING = {
     "workspace_size": 1 << 30,
     "max_batch_size": 32,
     "min_subgraph_size": 3,
@@ -72,20 +72,31 @@ OLD_IR_TRT_DEFAULT_CFG = {
     "use_calib_mode": False,
 }
 
-OLD_IR_TRT_CFG = {
+OLD_IR_TRT_CFG_SETTING = {
     "SegFormer-B3": {
-        "enable_tensorrt_engine": {**OLD_IR_TRT_DEFAULT_CFG, "workspace_size": 1 << 31}
+        "enable_tensorrt_engine": {
+            **OLD_IR_TRT_CFG_DEFAULT_SETTING,
+            "workspace_size": 1 << 31,
+        }
     },
     "SegFormer-B4": {
-        "enable_tensorrt_engine": {**OLD_IR_TRT_DEFAULT_CFG, "workspace_size": 1 << 31}
+        "enable_tensorrt_engine": {
+            **OLD_IR_TRT_CFG_DEFAULT_SETTING,
+            "workspace_size": 1 << 31,
+        }
     },
     "SegFormer-B5": {
-        "enable_tensorrt_engine": {**OLD_IR_TRT_DEFAULT_CFG, "workspace_size": 1 << 31}
+        "enable_tensorrt_engine": {
+            **OLD_IR_TRT_CFG_DEFAULT_SETTING,
+            "workspace_size": 1 << 31,
+        }
     },
     "SLANeXt_wired": {
-        "enable_tensorrt_engine": OLD_IR_TRT_DEFAULT_CFG,
-        "exp_disable_tensorrt_ops": {
-            "ops": [
+        "enable_tensorrt_engine": OLD_IR_TRT_CFG_DEFAULT_SETTING,
+        # the exp_disable_tensorrt_ops() func don't support to be pass argument by keyword
+        # therefore, using list instead of dict
+        "exp_disable_tensorrt_ops": [
+            [
                 "linear_0.tmp_0",
                 "linear_4.tmp_0",
                 "linear_12.tmp_0",
@@ -95,12 +106,12 @@ OLD_IR_TRT_CFG = {
                 "linear_36.tmp_0",
                 "linear_40.tmp_0",
             ]
-        },
+        ],
     },
     "SLANeXt_wireless": {
-        "enable_tensorrt_engine": OLD_IR_TRT_DEFAULT_CFG,
-        "exp_disable_tensorrt_ops": {
-            "ops": [
+        "enable_tensorrt_engine": OLD_IR_TRT_CFG_DEFAULT_SETTING,
+        "exp_disable_tensorrt_ops": [
+            [
                 "linear_0.tmp_0",
                 "linear_4.tmp_0",
                 "linear_12.tmp_0",
@@ -110,20 +121,20 @@ OLD_IR_TRT_CFG = {
                 "linear_36.tmp_0",
                 "linear_40.tmp_0",
             ]
-        },
+        ],
     },
     "PP-YOLOE_seg-S": {
-        "enable_tensorrt_engine": OLD_IR_TRT_DEFAULT_CFG,
-        "exp_disable_tensorrt_ops": {
-            "ops": ["bilinear_interp_v2_1.tmp_0", "bilinear_interp_v2_1.tmp_0_slice_0"]
-        },
+        "enable_tensorrt_engine": OLD_IR_TRT_CFG_DEFAULT_SETTING,
+        "exp_disable_tensorrt_ops": [
+            ["bilinear_interp_v2_1.tmp_0", "bilinear_interp_v2_1.tmp_0_slice_0"]
+        ],
     },
 }
 
 ############ pir trt ############
 PIR_TRT_PRECISION_MAP = PIR_TRT_PRECISION_MAP_CLASS()
 
-PIR_TRT_CFG = {
+PIR_TRT_CFG_SETTING = {
     "DETR-R50": {"optimization_level": 4, "workspace_size": 1 << 32},
     "SegFormer-B0": {"optimization_level": 4, "workspace_size": 1 << 32},
     "SegFormer-B1": {"optimization_level": 4, "workspace_size": 1 << 32},
@@ -146,9 +157,10 @@ PIR_TRT_CFG = {
 
 if USE_PIR_TRT:
     TRT_PRECISION_MAP = PIR_TRT_PRECISION_MAP
-    TRT_CFG = defaultdict(dict, PIR_TRT_CFG)
+    TRT_CFG_SETTING = defaultdict(dict, PIR_TRT_CFG_SETTING)
 else:
     TRT_PRECISION_MAP = OLD_IR_TRT_PRECISION_MAP
-    TRT_CFG = defaultdict(
-        lambda: {"enable_tensorrt_engine": OLD_IR_TRT_DEFAULT_CFG}, OLD_IR_TRT_CFG
+    TRT_CFG_SETTING = defaultdict(
+        lambda: {"enable_tensorrt_engine": OLD_IR_TRT_CFG_DEFAULT_SETTING},
+        OLD_IR_TRT_CFG_SETTING,
     )

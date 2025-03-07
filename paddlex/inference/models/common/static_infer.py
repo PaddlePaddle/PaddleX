@@ -28,7 +28,6 @@ from ....utils.flags import (
 from ...utils.benchmark import benchmark, set_inference_operations
 from ...utils.hpi import get_model_paths
 from ...utils.pp_option import PaddlePredictorOption
-from ...utils.trt_config import TRT_CFG
 
 
 CACHE_DIR = ".cache"
@@ -139,7 +138,7 @@ def _collect_trt_shape_range_info(
 
 # pir trt
 def _convert_trt(
-    trt_cfg,
+    trt_cfg_setting,
     pp_model_file,
     pp_params_file,
     trt_save_path,
@@ -153,10 +152,11 @@ def _convert_trt(
     )
 
     def _set_trt_config():
-        for attr_name in trt_cfg:
-            if not hasattr(trt_config, attr_name):
-                logging.warning(f"The TensorRTConfig don't have the `{attr_name}`!")
-            setattr(trt_config, attr_name, trt_cfg[attr_name])
+        for attr_name in trt_cfg_setting:
+            assert hasattr(
+                trt_config, attr_name
+            ), f"The `{type(trt_config)}` don't have the attribute `{attr_name}`!"
+            setattr(trt_config, attr_name, trt_cfg_setting[attr_name])
 
     def _get_predictor(model_file, params_file):
         # HACK
@@ -457,7 +457,7 @@ class StaticInfer(object):
         if USE_PIR_TRT:
             trt_save_path = cache_dir / "trt" / self.model_file_prefix
             _convert_trt(
-                self._option.trt_cfg,
+                self._option.trt_cfg_setting,
                 model_file,
                 params_file,
                 trt_save_path,
@@ -472,12 +472,15 @@ class StaticInfer(object):
 
             config.set_optim_cache_dir(str(cache_dir / "optim_cache"))
             config.enable_use_gpu(100, self._option.device_id)
-            for func_name in self._option.trt_cfg:
+            for func_name in self._option.trt_cfg_setting:
                 assert hasattr(
                     config, func_name
                 ), f"The `{type(config)}` don't have function `{func_name}`!"
-                kwargs = self._option.trt_cfg[func_name]
-                getattr(config, func_name)(**kwargs)
+                args = self._option.trt_cfg_setting[func_name]
+                if isinstance(args, list):
+                    getattr(config, func_name)(*args)
+                else:
+                    getattr(config, func_name)(**args)
 
             if self._option.trt_use_dynamic_shapes:
                 if self._option.trt_collect_shape_range_info:

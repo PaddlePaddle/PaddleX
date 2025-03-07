@@ -15,6 +15,7 @@
 import os
 from typing import Dict, List
 
+from ...utils.flags import USE_PIR_TRT
 from ...utils import logging
 from ...utils.device import (
     check_supported_device_type,
@@ -24,7 +25,7 @@ from ...utils.device import (
 )
 from .new_ir_blacklist import NEWIR_BLOCKLIST
 from .trt_blacklist import TRT_BLOCKLIST
-from .trt_config import TRT_PRECISION_MAP, TRT_CFG
+from .trt_config import TRT_PRECISION_MAP, TRT_CFG_SETTING
 
 
 class PaddlePredictorOption(object):
@@ -72,11 +73,14 @@ class PaddlePredictorOption(object):
 
         # for trt
         if self.run_mode in TRT_PRECISION_MAP:
-            trt_cfg = TRT_CFG[self.model_name]
-            trt_cfg["enable_tensorrt_engine"]["precision_mode"] = TRT_PRECISION_MAP[
-                self.run_mode
-            ]
-            self.trt_cfg = trt_cfg
+            trt_cfg_setting = TRT_CFG_SETTING[self.model_name]
+            if USE_PIR_TRT:
+                trt_cfg_setting["precision_mode"] = TRT_PRECISION_MAP[self.run_mode]
+            else:
+                trt_cfg_setting["enable_tensorrt_engine"]["precision_mode"] = (
+                    TRT_PRECISION_MAP[self.run_mode]
+                )
+            self.trt_cfg_setting = trt_cfg_setting
 
     def _get_default_config(self):
         """get default config"""
@@ -89,7 +93,7 @@ class PaddlePredictorOption(object):
             "cpu_threads": 8,
             "delete_pass": [],
             "enable_new_ir": True if self.model_name not in NEWIR_BLOCKLIST else False,
-            "trt_cfg": {},
+            "trt_cfg_setting": {},
             "trt_use_dynamic_shapes": True,  # only for trt
             "trt_collect_shape_range_info": True,  # only for trt
             "trt_discard_cached_shape_range_info": False,  # only for trt
@@ -180,16 +184,16 @@ class PaddlePredictorOption(object):
         self._update("enable_new_ir", enable_new_ir)
 
     @property
-    def trt_cfg(self):
-        return self._cfg["trt_cfg"]
+    def trt_cfg_setting(self):
+        return self._cfg["trt_cfg_setting"]
 
-    @trt_cfg.setter
-    def trt_cfg(self, config: Dict):
+    @trt_cfg_setting.setter
+    def trt_cfg_setting(self, config: Dict):
         """set trt config"""
         assert isinstance(
             config, dict
-        ), f"The trt_cfg must be `dict` type, but recived `{type(config)}` type!"
-        self._update("trt_cfg", config)
+        ), f"The trt_cfg_setting must be `dict` type, but recived `{type(config)}` type!"
+        self._update("trt_cfg_setting", config)
 
     @property
     def trt_use_dynamic_shapes(self):
