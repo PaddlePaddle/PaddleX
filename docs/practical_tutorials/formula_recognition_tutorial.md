@@ -356,7 +356,7 @@ paddlex --pipeline ./my_path/formula_recognition.yaml \
 
 </details>
 
-在`output`目录中，保存了公式识别的可视化和json格式保存的结果。版面区域定位结果可视化如下：
+在`output`目录中，保存了公式识别的可视化和json格式保存的结果。公式识别结果可视化如下：
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/formula_recognition/04.png" style="width: 70%"/>
 
