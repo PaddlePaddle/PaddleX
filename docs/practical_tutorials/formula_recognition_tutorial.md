@@ -2,9 +2,9 @@
 comments: true
 ---
 
-# PaddleX 3.0 公式识别（formula_recognition）模型产线教程 —— 大模型训练数据构建教程
+# PaddleX 3.0 公式识别（formula_recognition）模型产线教程
 
-PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组合实现，每个模型产线都能够解决特定的场景任务问题。PaddleX 所提供的模型产线均支持快速体验，如果效果不及预期，也同样支持使用私有数据微调模型，并且 PaddleX 提供了 Python API，方便将产线集成到个人项目中。在使用之前，您首先需要安装 PaddleX， 安装方式请参考 [PaddleX本地安装教程](../installation/installation.md)。此处以公式识别任务为例子，介绍该模型产线在为大模型提供结构化科研语料的实际场景中的使用流程。
+PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组合实现，每个模型产线都能够解决特定的场景任务问题。PaddleX 所提供的模型产线均支持快速体验，如果效果不及预期，也同样支持使用私有数据微调模型，并且 PaddleX 提供了 Python API，方便将产线集成到个人项目中。在使用之前，您首先需要安装 PaddleX， 安装方式请参考 [PaddleX本地安装教程](../installation/installation.md)。此处以公式识别任务为例子，介绍该模型产线的使用流程。
 
 
 ## 1. 选择模型产线
@@ -327,32 +327,32 @@ paddlex --pipeline ./my_path/formula_recognition.yaml \
 ```
 
 参数含义如下：
-- `input_path`: `(str)` 待预测图像的输入路径
+- `input_path`: `(str)` 待预测图像的输入路径。
 
-- `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`
+- `page_index`: `(Union[int, None])` 如果输入是PDF文件，则表示当前是PDF的第几页，否则为 `None`。
 
-- `model_settings`: `(Dict[str, bool])` 配置产线所需的模型参数
+- `model_settings`: `(Dict[str, bool])` 配置产线所需的模型参数。
 
-    - `use_doc_preprocessor`: `(bool)` 控制是否启用文档预处理子产线
-    - `use_layout_detection`: `(bool)` 控制是否启用版面区域检测模块
+    - `use_doc_preprocessor`: `(bool)` 控制是否启用文档预处理子产线。
+    - `use_layout_detection`: `(bool)` 控制是否启用版面区域检测模块。
 
-- `doc_preprocessor_res`: `(Dict[str, Union[str, Dict[str, bool], int]])` 文档预处理子产线的输出结果。仅当`use_doc_preprocessor=True`时存在
-    - `input_path`: `(Union[str, None])` 图像预处理子产线接受的图像路径，当输入为`numpy.ndarray`时，保存为`None`
-    - `model_settings`: `(Dict)` 预处理子产线的模型配置参数
-        - `use_doc_orientation_classify`: `(bool)` 控制是否启用文档方向分类
-        - `use_doc_unwarping`: `(bool)` 控制是否启用文档扭曲矫正
-    - `angle`: `(int)` 文档方向分类的预测结果。启用时取值为[0,1,2,3]，分别对应[0°,90°,180°,270°]；未启用时为-1
-- `layout_det_res`: `(Dict[str, List[Dict]])` 版面区域检测模块的输出结果。仅当`use_layout_detection=True`时存在
-    - `input_path`: `(Union[str, None])` 版面区域检测模块接收的图像路径，当输入为`numpy.ndarray`时，保存为`None`
-    - `boxes`: `(List[Dict[int, str, float, List[float]]])` 版面区域检测预测结果列表
-        - `cls_id`: `(int)` 版面区域检测预测的类别id
-        - `label`: `(str)` 版面区域检测预测的类别
-        - `score`: `(float)` 版面区域检测预测的类别置信度分数
-        - `coordinate`: `(List[float])` 版面区域检测预测的边界框坐标，格式为[x_min, y_min, x_max, y_max]，其中(x_min, y_min)为左上角坐标，(x_max, y_max) 为右上角坐标
-- `formula_res_list`:  `(List[Dict[str, int, List[float]]])` 公式识别的预测结果列表
-    - `rec_formula`: `(str)` 公式识别预测的LaTeX源码
-    - `formula_region_id`: `(int)` 公式识别预测的id编号
-    - `dt_polys`:  `(List[float])` 公式识别预测的边界框坐标，格式为[x_min, y_min, x_max, y_max]，其中(x_min, y_min)为左上角坐标，(x_max, y_max) 为右上角坐标
+- `doc_preprocessor_res`: `(Dict[str, Union[str, Dict[str, bool], int]])` 文档预处理子产线的输出结果。仅当`use_doc_preprocessor=True`时存在。
+    - `input_path`: `(Union[str, None])` 图像预处理子产线接受的图像路径，当输入为`numpy.ndarray`时，保存为`None`。
+    - `model_settings`: `(Dict)` 预处理子产线的模型配置参数。
+        - `use_doc_orientation_classify`: `(bool)` 控制是否启用文档方向分类。
+        - `use_doc_unwarping`: `(bool)` 控制是否启用文档扭曲矫正。
+    - `angle`: `(int)` 文档方向分类的预测结果。启用时取值为[0,1,2,3]，分别对应[0°,90°,180°,270°]；未启用时为-1。
+- `layout_det_res`: `(Dict[str, List[Dict]])` 版面区域检测模块的输出结果。仅当`use_layout_detection=True`时存在。
+    - `input_path`: `(Union[str, None])` 版面区域检测模块接收的图像路径，当输入为`numpy.ndarray`时，保存为`None`。
+    - `boxes`: `(List[Dict[int, str, float, List[float]]])` 版面区域检测预测结果列表。
+        - `cls_id`: `(int)` 版面区域检测预测的类别id。
+        - `label`: `(str)` 版面区域检测预测的类别。
+        - `score`: `(float)` 版面区域检测预测的类别置信度分数。
+        - `coordinate`: `(List[float])` 版面区域检测预测的边界框坐标，格式为[x_min, y_min, x_max, y_max]，其中(x_min, y_min)为左上角坐标，(x_max, y_max) 为右上角坐标。
+- `formula_res_list`:  `(List[Dict[str, int, List[float]]])` 公式识别的预测结果列表。
+    - `rec_formula`: `(str)` 公式识别预测的LaTeX源码。
+    - `formula_region_id`: `(int)` 公式识别预测的id编号。
+    - `dt_polys`:  `(List[float])` 公式识别预测的边界框坐标，格式为[x_min, y_min, x_max, y_max]，其中(x_min, y_min)为左上角坐标，(x_max, y_max) 为右上角坐标。
 
 </details>
 
@@ -403,7 +403,7 @@ for res in output:
 'figure_title': 6, 'formula': 7, 'table': 8, 'table_title': 9, 'reference': 10, 'doc_title': 11, 'footnote': 12, 'header': 13, 'algorithm': 14, 'footer': 15, 'seal': 16, 'chart_title': 17, 'chart': 18, 'formula_number': 19, 'header_image': 20, 'footer_image': 21, 'aside_text': 22}
 ```
 
-运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/formula_rec_test_001.jpg)到本地
+运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/formula_rec_test_001.jpg)到本地。
 
 
 ```python
@@ -417,7 +417,14 @@ for res in output:
     res.save_to_json("./output/")
 ```
 
-可以发现左图的左上角有很多公式被漏检
+可以发现左图的左上角有很多公式被漏检。
+
+<div style="display: flex; justify-content: flex-start;">
+  <div style="text-align: center;width:70%;">
+    <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/formula_recognition/formula_rec_test_001_formula_res_img.jpg" alt="Image 1" style="width:100%;">
+    <p>不设置layout_threshold, 默认所有类别的检测阈值均为0.5</p>
+  </div>
+</div>
 
 这时可以开启`layout_threshold={7: 0.3}`，针对类别`formula`，类别id是7，设置检测得分阈值为0.3，可以检测出更多的formula框，其余类别沿用默认阈值0.5。执行下面的代码:
 
@@ -434,12 +441,8 @@ for res in output:
 
 在保存目录查看可视化结果如下，可以发现左图的左上角漏检的公式框已经被检测出来了，只保留了最优的检测结果:
 
-<div style="display: flex; justify-content: space-around;">
-  <div style="text-align: center;width:50%;">
-    <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/formula_recognition/formula_rec_test_001_formula_res_img.jpg" alt="Image 1" style="width:100%;">
-    <p>不设置layout_threshold, 默认所有类别的检测阈值均为0.5</p>
-  </div>
-  <div style="text-align: center;width:50%;">
+<div style="display: flex; justify-content: flex-start;">
+  <div style="text-align: center;width:70%;">
     <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/formula_recognition/formula_rec_test_001_formula_res_img_threshold.jpg" alt="Image 2" style="width:100%;">
     <p>设置layout_threshold={7: 0.3}, 针对类别7formula，设置检测得分阈值为0.3，其余类别沿用默认阈值0.5</p>
   </div>
@@ -447,35 +450,50 @@ for res in output:
 
 
 
-### 4.2 可调框边长 —— 获取完整区块
+### 4.2 可调框边长 —— 去除公式中不需要的字符
 
-`layout_unclip_ratio`参数，可调框边长，不再局限于固定的框大小，通过调整检测框的缩放倍数，在保持中心点不变的情况下，自由扩展或收缩框边长，便于输出正确完整的版面区域内容。
+`layout_unclip_ratio`参数，可调框边长，不再局限于固定的框大小，通过调整检测框的缩放倍数，在保持中心点不变的情况下，自由扩展或收缩框边长，便于去除公式中不需要的字符。
 
 
-运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/formula_rec_test_002.jpg)到本地
+运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/formula_rec_test_002.jpg)到本地。
 
 ```python
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="./my_path/formula_recognition.yaml") 
-# output = pipeline.predict("formula_rec_test_002.jpg")  # 不调整检测框边的缩放倍数
-output = pipeline.predict("formula_rec_test_002.jpg", layout_unclip_ratio=(1.0, 1.2))  # 调整检测框的高的缩放倍数为1.2
+output = pipeline.predict("formula_rec_test_002.jpg")  # 不调整检测框边的缩放倍数
+for res in output:
+    res.print()
+    res.save_to_img("./output/")
+    res.save_to_json("./output/")
+```
+可以发现右图中部分公式的识别结果包含一些不必要的标点符号。这些标点符号可能影响后续大模型对于公式的解析和理解。
+<div style="display: flex; justify-content: flex-start;">
+  <div style="text-align: center;width:70%;">
+    <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/formula_recognition/formula_rec_test_002_formula_res_img.jpg" alt="Image 1" style="width:100%;">
+    <p>不设置layout_unclip_ratio, 默认边界框的宽高不进行缩放</p>
+  </div>
+</div>
+
+这时可以执行 layout_unclip_ratio=(0.97, 1.0)，调整检测框的宽的缩放倍数为0.97。执行下面的代码:
+
+```python
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(pipeline="./my_path/formula_recognition.yaml") 
+output = pipeline.predict("formula_rec_test_002.jpg", layout_unclip_ratio=(0.97, 1.0))  # 调整检测框的宽的缩放倍数为0.97
 for res in output:
     res.print()
     res.save_to_img("./output/")
     res.save_to_json("./output/")
 ```
 
-在保存目录查看可视化结果如下，可以观察到，通过调整检测框的倍数为`layout_unclip_ratio=(1.0, 1.2)`时，可以获取高度更大的区域。
+在保存目录查看可视化结果如下，可以观察到，通过调整检测框的倍数为`layout_unclip_ratio=(0.97, 1.0)`时，可以有效去除公式识别结果中多余的标点符号。
 
-<div style="display: flex; justify-content: space-around;">
-  <div style="text-align: center;width:50%;">
-    <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/formula_recognition/formula_rec_test_002_formula_res_img.jpg" alt="Image 1" style="width:100%;">
-    <p>不设置layout_unclip_ratio, 默认边界框的宽高不进行缩放</p>
-  </div>
-  <div style="text-align: center;width:50%;">
+<div style="display: flex; justify-content: flex-start;">
+  <div style="text-align: center;width:70%;">
     <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/formula_recognition/formula_rec_test_002_formula_unclip_res_img.jpg" alt="Image 2" style="width:100%;">
-    <p>设置layout_unclip_ratio=(1.0, 1.2), 调整检测框的高的缩放倍数为1.2</p>
+    <p>设置layout_unclip_ratio=(0.97, 1.0), 调整检测框的宽的缩放倍数为0.97</p>
   </div>
 </div>
 
@@ -490,7 +508,7 @@ for res in output:
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="./my_path/formula_recognition.yaml") 
-output = pipeline.predict("formula_rec_test_002.jpg")  
+output = pipeline.predict("formula_rec_test_002.jpg", layout_unclip_ratio=(0.97, 1.0))  # 调整检测框的宽的缩放倍数为0.97
 for res in output:
     res.print()
     res.save_to_img("./output/")
