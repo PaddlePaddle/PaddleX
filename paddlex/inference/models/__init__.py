@@ -38,7 +38,7 @@ from .image_multilabel_classification import MLClasPredictor
 from .face_feature import FaceFeaturePredictor
 from .open_vocabulary_detection import OVDetPredictor
 from .open_vocabulary_segmentation import OVSegPredictor
-
+from .text_to_pinyin import TextToPinyinPredictor
 
 # from .table_recognition import TablePredictor
 # from .general_recognition import ShiTuRecPredictor

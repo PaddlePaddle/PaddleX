@@ -12,10 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .base_batch_sampler import BaseBatchSampler
-from .image_batch_sampler import ImageBatchSampler
-from .video_batch_sampler import VideoBatchSampler
-from .ts_batch_sampler import TSBatchSampler
-from .det_3d_batch_sampler import Det3DBatchSampler
-from .audio_batch_sampler import AudioBatchSampler
-from .text_batch_sampler import TextBatchSampler
+from .model_list import MODELS
+from ..base import BaseExportor
+from ...utils.errors import UnsupportedAPIError
+
+
+class TextToPinyinExportor(BaseExportor):
+    """Instance G2PWModel Model Exportor"""
+
+    entities = MODELS
+
+    def __init__(self, config):
+        # not support for now
+        raise UnsupportedAPIError("G2PWModel model not support export for now.")

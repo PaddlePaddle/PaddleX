@@ -333,6 +333,7 @@ PP-LCNet_x1_0_vehicle_attribute_infer.tar",
     "PP-DocLayout-M": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-M_infer.tar",
     "PP-DocLayout-S": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-S_infer.tar",
     "BEVFusion": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BEVFusion_infer.tar",
+    "G2PWModel": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/G2PWModel_1.1.tar",
 }
 
 

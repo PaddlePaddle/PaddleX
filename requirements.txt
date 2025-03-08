@@ -50,5 +50,8 @@ jinja2
 regex
 ######## For Speech #######
 soundfile
+opencc
+onnxruntime
+pypinyin
 ######## For 3D BEVFusion #######
 pyquaternion
