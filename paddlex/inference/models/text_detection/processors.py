@@ -398,7 +398,7 @@ class DBPostProcess:
         return cv2.mean(bitmap[ymin : ymax + 1, xmin : xmax + 1], mask)[0]
 
     def box_score_slow(self, bitmap, contour):
-        """box_score_slow: use polyon mean score as the mean score"""
+        """box_score_slow: use polygon mean score as the mean score"""
         h, w = bitmap.shape[:2]
         contour = contour.copy()
         contour = np.reshape(contour, (-1, 2))

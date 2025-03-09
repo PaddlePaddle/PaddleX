@@ -403,7 +403,7 @@ class DecordVideoReaderBackend(_VideoReaderBackend):
         return self._cap.get_avg_fps()
 
     def read_file(self, in_path):
-        """read vidio file from path"""
+        """read video file from path"""
         self._cap = self.decord_module.VideoReader(in_path)
         frame_len = len(self._cap)
         if self.sample_type == "uniform":
