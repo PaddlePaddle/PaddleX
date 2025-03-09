@@ -308,7 +308,7 @@ SubPipelines:
 随后，加载自定义配置文件 `./my_path/formula_recognition.yaml`，参考以下本地体验中的命令行方式或 Python 脚本方式进行在线体验。
 
 
-### 2.1 本地体验 ———— 命令行方式
+### 3.1 本地体验 ———— 命令行方式
 
 
 运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/pipelines/general_formula_recognition_001.png)到本地。自定义配置文件保存在 `./my_path/formula_recognition.yaml` ，则只需执行：
@@ -370,7 +370,7 @@ sudo apt-get install texlive texlive-latex-base texlive-latex-extra -y
 <b>备注</b>： 由于公式识别可视化过程中需要对每张公式图片进行渲染，因此耗时较长，请您耐心等待。
 
 
-### 2.2 本地体验 ———— Python 方式
+### 3.2 本地体验 ———— Python 方式
 
 通过上述命令行方式可快速体验查看效果，在项目中往往需要代码集成，您可以通过如下几行代码完成产线的快速推理：
 
@@ -409,7 +409,7 @@ for res in output:
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/formula_recognition.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/formula_recognition.yaml")
 output = pipeline.predict("formula_rec_test_001.jpg") # 阈值参数不设置时，默认为0.5
 for res in output:
     res.print()
@@ -431,7 +431,7 @@ for res in output:
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/formula_recognition.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/formula_recognition.yaml")
 output = pipeline.predict("formula_rec_test_001.jpg", layout_threshold={7: 0.3})  # 针对类别7formula，设置检测得分阈值为0.3，其余类别沿用默认阈值0.5
 for res in output:
     res.print()
@@ -460,7 +460,7 @@ for res in output:
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/formula_recognition.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/formula_recognition.yaml")
 output = pipeline.predict("formula_rec_test_002.jpg")  # 不调整检测框边的缩放倍数
 for res in output:
     res.print()
@@ -480,7 +480,7 @@ for res in output:
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/formula_recognition.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/formula_recognition.yaml")
 output = pipeline.predict("formula_rec_test_002.jpg", layout_unclip_ratio=(0.97, 1.0))  # 调整检测框的宽的缩放倍数为0.97
 for res in output:
     res.print()
@@ -507,7 +507,7 @@ for res in output:
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/formula_recognition.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/formula_recognition.yaml")
 output = pipeline.predict("formula_rec_test_002.jpg", layout_unclip_ratio=(0.97, 1.0))  # 调整检测框的宽的缩放倍数为0.97
 for res in output:
     res.print()
@@ -517,11 +517,11 @@ for res in output:
 更多参数请参考 [公式识别产线使用教程](../pipeline_usage/tutorials/ocr_pipelines/formula_recognition.md)。
 
 
-### 6.2 以高稳定性服务化部署作为本教程的实践内容，具体可以参考 [PaddleX 服务化部署指南](../pipeline_deploy/serving.md) 进行实践。
+### 5.2 以高稳定性服务化部署作为本教程的实践内容，具体可以参考 [PaddleX 服务化部署指南](../pipeline_deploy/serving.md) 进行实践。
 
 **请注意，当前高稳定性服务化部署方案仅支持 Linux 系统。**
 
-#### 6.2.1 获取SDK
+#### 5.2.1 获取SDK
 
 下载公式识别高稳定性服务化部署 SDK <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0rc0/paddlex_hps_formula_recognition_sdk.tar.gz">paddlex_hps_formula_recognition_sdk.tar.gz</a>，解压 SDK 并运行部署脚本，如下：
 
@@ -529,11 +529,11 @@ for res in output:
 tar -xvf paddlex_hps_formula_recognition_sdk.tar.gz
 ```
 
-#### 6.2.2 获取序列号
+#### 5.2.2 获取序列号
 
 - 在 [飞桨 AI Studio 星河社区-人工智能学习与实训社区](https://aistudio.baidu.com/paddlex/commercialization) 的“开源模型产线部署序列号咨询与获取”部分选择“立即获取”，如下图所示：
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-1.png"> 
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-1.png">
 
 选择公式识别产线，并点击“获取”。之后，可以在页面下方的“开源产线部署SDK序列号管理”部分找到获取到的序列号：
 
@@ -541,7 +541,7 @@ tar -xvf paddlex_hps_formula_recognition_sdk.tar.gz
 
 **请注意**：每个序列号只能绑定到唯一的设备指纹，且只能绑定一次。这意味着用户如果使用不同的机器部署产线，则必须为每台机器准备单独的序列号。
 
-#### 6.2.3 运行服务
+#### 5.2.3 运行服务
 
 运行服务：
 
@@ -598,7 +598,7 @@ I1216 11:37:21.602333 35 http_server.cc:2815] Started HTTPService at 0.0.0.0:800
 I1216 11:37:21.643494 35 http_server.cc:167] Started Metrics Service at 0.0.0.0:8002
 ```
 
-#### 6.2.4 调用服务
+#### 5.2.4 调用服务
 
 目前，仅支持使用 Python 客户端调用服务。支持的 Python 版本为 3.8 至 3.12。
 
@@ -613,12 +613,10 @@ python -m pip install paddlex_hps_client-*.whl
 `client` 目录的 `client.py` 脚本包含服务的调用示例，并提供命令行接口。
 
 
-### 6.3 此外，PaddleX 也提供了其他三种部署方式，说明如下：
+### 5.3 此外，PaddleX 也提供了其他三种部署方式，说明如下：
 
 * 高性能部署：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能部署流程请参考 [PaddleX 高性能推理指南](../pipeline_deploy/high_performance_inference.md)。
 * 基础服务化部署：服务化部署是实际生产环境中常见的一种部署形式。通过将推理功能封装为服务，客户端可以通过网络请求来访问这些服务，以获取推理结果。PaddleX 支持用户以低成本实现产线的服务化部署，详细的服务化部署流程请参考 [PaddleX 服务化部署指南](../pipeline_deploy/serving.md)。
 * 端侧部署：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考 [PaddleX端侧部署指南](../pipeline_deploy/edge_deploy.md)。
 
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
-
-
