@@ -32,6 +32,8 @@ class PaddlePredictorOption(object):
     # NOTE: TRT modes start with `trt_`
     SUPPORT_RUN_MODE = (
         "paddle",
+        "paddle_fp32",
+        "paddle_fp16",
         "trt_fp32",
         "trt_fp16",
         "trt_int8",

@@ -477,6 +477,11 @@ Below are the API references for basic serving deployment and examples of multi-
 </thead>
 <tbody>
 <tr>
+<td><code>image</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>The image of time series forecasting result. The image is in JPEG format and encoded in Base64.</td>
+</tr>
+<tr>
 <td><code>csv</code></td>
 <td><code>string</code></td>
 <td>The time-series forecasting result in CSV format. Encoded in UTF-8+Base64.</td>
@@ -485,7 +490,8 @@ Below are the API references for basic serving deployment and examples of multi-
 </table>
 <p>An example of <code>result</code> is as follows:</p>
 <pre><code class="language-json">{
-&quot;csv&quot;: &quot;xxxxxx&quot;
+"csv": "xxxxxx",
+"image": "xxxxxx"
 }
 </code></pre></details>
 
@@ -499,6 +505,7 @@ import requests
 
 API_URL = "http://localhost:8080/time-series-forecasting"  # Service URL
 csv_path = "./test.csv"
+output_image_path = "./out.jpg"
 output_csv_path = "./out.csv"
 
 # Encode the local CSV file using Base64
@@ -514,6 +521,9 @@ response = requests.post(API_URL, json=payload)
 # Process the returned data
 assert response.status_code == 200
 result = response.json()["result"]
+with open(output_image_path, "wb") as f:
+    f.write(base64.b64decode(result["image"]))
+print(f"Output image saved at  {output_image_path}")
 with open(output_csv_path, "wb") as f:
     f.write(base64.b64decode(result["csv"]))
 print(f"Output time-series data saved at {output_csv_path}")
@@ -529,6 +539,7 @@ print(f"Output time-series data saved at {output_csv_path}")
 int main() {
     httplib::Client client("localhost:8080");
     const std::string csvPath = "./test.csv";
+    const std::string outputImagePath = "./out.jpg";
     const std::string outputCsvPath = "./out.csv";
 
     httplib::Headers headers = {
@@ -560,6 +571,18 @@ int main() {
         auto result = jsonResponse["result"];
 
         // Save the data
+        std::string encodedImage = result["image"];
+        std::string decodedString = base64::from_base64(encodedImage);
+        std::vector<unsigned char> decodedImage(decodedString.begin(), decodedString.end());
+        std::ofstream outputImage(outputImagePath, std::ios::binary | std::ios::out);
+        if (outputImage.is_open()) {
+            outputImage.write(reinterpret_cast<char*>(decodedImage.data()), decodedImage.size());
+            outputImage.close();
+            std::cout << "Output image data saved at " << outputImagePath << std::endl;
+        } else {
+            std::cerr << "Unable to open file for writing: " << outputImagePath << std::endl;
+        }
+
         std::string decodedString;
         encodedCsv = result["csv"];
         decodedString = base64::from_base64(encodedCsv);
@@ -596,9 +619,10 @@ import java.util.Base64;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String API_URL = &quot;http://localhost:8080/time-series-forecasting&quot;;
-        String csvPath = &quot;./test.csv&quot;;
-        String outputCsvPath = &quot;./out.csv&quot;;
+        String API_URL = "http://localhost:8080/time-series-forecasting";
+        String csvPath = "./test.csv";
+        String outputImagePath = "./out.jpg";
+        String outputCsvPath = "./out.csv";
 
         // Encode the local CSV file using Base64
         File file = new File(csvPath);
@@ -607,11 +631,11 @@ public class Main {
 
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode params = objectMapper.createObjectNode();
-        params.put(&quot;csv&quot;, csvData);
+        params.put("csv", csvData);
 
         // Create an OkHttpClient instance
         OkHttpClient client = new OkHttpClient();
-        MediaType JSON = MediaType.Companion.get(&quot;application/json; charset=utf-8&quot;);
+        MediaType JSON = MediaType.Companion.get("application/json; charset=utf-8");
         RequestBody body = RequestBody.Companion.create(params.toString(), JSON);
         Request request = new Request.Builder()
                 .url(API_URL)
@@ -623,17 +647,24 @@ public class Main {
             if (response.isSuccessful()) {
                 String responseBody = response.body().string();
                 JsonNode resultNode = objectMapper.readTree(responseBody);
-                JsonNode result = resultNode.get(&quot;result&quot;);
+                JsonNode result = resultNode.get("result");
 
                 // Save the returned data
-                String base64Csv = result.get(&quot;csv&quot;).asText();
+                String base64Image = result.get("image").asText();
+                byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+                try (FileOutputStream fos = new FileOutputStream(outputImagePath)) {
+                    fos.write(imageBytes);
+                }
+                System.out.println("Output image data saved at " + outputImagePath);
+
+                String base64Csv = result.get("csv").asText();
                 byte[] csvBytes = Base64.getDecoder().decode(base64Csv);
                 try (FileOutputStream fos = new FileOutputStream(outputCsvPath)) {
                     fos.write(csvBytes);
                 }
-                System.out.println(&quot;Output time-series data saved at &quot; + outputCsvPath);
+                System.out.println("Output time-series data saved at " + outputCsvPath);
             } else {
-                System.err.println(&quot;Request failed with code: &quot; + response.code());
+                System.err.println("Request failed with code: " + response.code());
             }
         }
     }
@@ -645,45 +676,46 @@ public class Main {
 <pre><code class="language-go">package main
 
 import (
-    &quot;bytes&quot;
-    &quot;encoding/base64&quot;
-    &quot;encoding/json&quot;
-    &quot;fmt&quot;
-    &quot;io/ioutil&quot;
-    &quot;net/http&quot;
+    "bytes"
+    "encoding/base64"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
 )
 
 func main() {
-    API_URL := &quot;http://localhost:8080/time-series-forecasting&quot;
-    csvPath := &quot;./test.csv&quot;;
-    outputCsvPath := &quot;./out.csv&quot;;
+    API_URL := "http://localhost:8080/time-series-forecasting"
+    csvPath := "./test.csv";
+    outputImagePath := "./out.jpg";
+    outputCsvPath := "./out.csv";
 
     // Read the csv file and encode it in Base64
     csvBytes, err := ioutil.ReadFile(csvPath)
     if err != nil {
-        fmt.Println(&quot;Error reading csv file:&quot;, err)
+        fmt.Println("Error reading csv file:", err)
         return
     }
     csvData := base64.StdEncoding.EncodeToString(csvBytes)
 
-    payload := map[string]string{&quot;csv&quot;: csvData} // Base64-encoded file content
+    payload := map[string]string{"csv": csvData} // Base64-encoded file content
     payloadBytes, err := json.Marshal(payload)
     if err != nil {
-        fmt.Println(&quot;Error marshaling payload:&quot;, err)
+        fmt.Println("Error marshaling payload:", err)
         return
     }
 
     // Call the API
     client := &amp;http.Client{}
-    req, err := http.NewRequest(&quot;POST&quot;, API_URL, bytes.NewBuffer(payloadBytes))
+    req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
     if err != nil {
-        fmt.Println(&quot;Error creating request:&quot;, err)
+        fmt.Println("Error creating request:", err)
         return
     }
 
     res, err := client.Do(req)
     if err != nil {
-        fmt.Println(&quot;Error sending request:&quot;, err)
+        fmt.Println("Error sending request:", err)
         return
     }
     defer res.Body.Close()
@@ -691,33 +723,46 @@ func main() {
     // Process the response data
     body, err := ioutil.ReadAll(res.Body)
     if err != nil {
-        fmt.Println(&quot;Error reading response body:&quot;, err)
+        fmt.Println("Error reading response body:", err)
         return
     }
     type Response struct {
         Result struct {
-            Csv string `json:&quot;csv&quot;`
-        } `json:&quot;result&quot;`
+            Csv string `json:"csv"`
+            Image string `json:"image"`
+        } `json:"result"`
     }
     var respData Response
     err = json.Unmarshal([]byte(string(body)), &amp;respData)
     if err != nil {
-        fmt.Println(&quot;Error unmarshaling response body:&quot;, err)
+        fmt.Println("Error unmarshaling response body:", err)
         return
     }
 
     // Decode the Base64-encoded csv data and save it as a file
+    outputImageData, err := base64.StdEncoding.DecodeString(respData.Result.Image)
+    if err != nil {
+        fmt.Println("Error decoding Base64 image data:", err)
+        return
+    }
+    err = ioutil.WriteFile(outputImagePath, outputImageData, 0644)
+    if err != nil {
+        fmt.Println("Error writing image to file:", err)
+        return
+    }
+    fmt.Printf("Output image data saved at %s.jpg", outputImagePath)
+
     outputCsvData, err := base64.StdEncoding.DecodeString(respData.Result.Csv)
     if err != nil {
-        fmt.Println(&quot;Error decoding base64 csv data:&quot;, err)
+        fmt.Println("Error decoding base64 csv data:", err)
         return
     }
     err = ioutil.WriteFile(outputCsvPath, outputCsvData, 0644)
     if err != nil {
-        fmt.Println(&quot;Error writing csv to file:&quot;, err)
+        fmt.Println("Error writing csv to file:", err)
         return
     }
-    fmt.Printf(&quot;Output time-series data saved at %s.csv&quot;, outputCsvPath)
+    fmt.Printf("Output time-series data saved at %s.csv", outputCsvPath)
 }
 </code></pre></details>
 
@@ -735,6 +780,7 @@ class Program
 {
     static readonly string API_URL = "http://localhost:8080/time-series-forecasting";
     static readonly string csvPath = "./test.csv";
+    static readonly string outputImagePath = "./out.jpg";
     static readonly string outputCsvPath = "./out.csv";
 
     static async Task Main(string[] args)
@@ -756,6 +802,12 @@ class Program
         string responseBody = await response.Content.ReadAsStringAsync();
         JObject jsonResponse = JObject.Parse(responseBody);
 
+        // Save the image file
+        string base64Image = jsonResponse["result"]["image"].ToString();
+        byte[] outputImageBytes = Convert.FromBase64String(base64Image);
+        File.WriteAllBytes(outputImagePath, outputImageBytes);
+        Console.WriteLine($"Output image data saved at {outputImagePath}");
+
         // Save the CSV file
         string base64Csv = jsonResponse["result"]["csv"].ToString();
         byte[] outputCsvBytes = Convert.FromBase64String(base64Csv);
@@ -771,8 +823,9 @@ class Program
 const fs = require('fs');
 
 const API_URL = 'http://localhost:8080/time-series-forecasting';
-const csvPath = &quot;./test.csv&quot;;
-const outputCsvPath = &quot;./out.csv&quot;;
+const csvPath = "./test.csv";
+const outputImagePath = "./out.jpg";
+const outputCsvPath = "./out.csv";
 
 let config = {
    method: 'POST',
@@ -791,10 +844,17 @@ function encodeFileToBase64(filePath) {
 
 axios.request(config)
 .then((response) =&gt; {
-    const result = response.data[&quot;result&quot;];
+    const result = response.data["result"];
+
+    // Save the image file
+    const imageBuffer = Buffer.from(result["image"], 'base64');
+    fs.writeFile(outputImagePath, imageBuffer, (err) =&gt; {
+      if (err) throw err;
+      console.log(`Output image data saved at ${outputImagePath}`);
+    });
 
     // Save the CSV file
-    const csvBuffer = Buffer.from(result[&quot;csv&quot;], 'base64');
+    const csvBuffer = Buffer.from(result["csv"], 'base64');
     fs.writeFile(outputCsvPath, csvBuffer, (err) =&gt; {
       if (err) throw err;
       console.log(`Output time-series data saved at ${outputCsvPath}`);
@@ -809,13 +869,14 @@ axios.request(config)
 
 <pre><code class="language-php">&lt;?php
 
-$API_URL = &quot;http://localhost:8080/time-series-forecasting&quot;; // Service URL
-$csv_path = &quot;./test.csv&quot;;
-$output_csv_path = &quot;./out.csv&quot;;
+$API_URL = "http://localhost:8080/time-series-forecasting"; // Service URL
+$csv_path = "./test.csv";
+$output_image_path = "./out.jpg";
+$output_csv_path = "./out.csv";
 
 // Encode the local CSV file in Base64
 $csv_data = base64_encode(file_get_contents($csv_path));
-$payload = array(&quot;csv&quot; =&gt; $csv_data); // Base64-encoded file content
+$payload = array("csv" =&gt; $csv_data); // Base64-encoded file content
 
 // Call the API
 $ch = curl_init($API_URL);
@@ -827,10 +888,13 @@ $response = curl_exec($ch);
 curl_close($ch);
 
 // Process the response data
-$result = json_decode($response, true)[&quot;result&quot;];
+$result = json_decode($response, true)["result"];
 
-file_put_contents($output_csv_path, base64_decode($result[&quot;csv&quot;]));
-echo &quot;Output time-series data saved at &quot; . $output_csv_path . &quot;\n&quot;;
+file_put_contents($output_image_path, base64_decode($result["image"]));
+echo "Output image data saved at " . $output_image_path . "\n";
+
+file_put_contents($output_csv_path, base64_decode($result["csv"]));
+echo "Output time-series data saved at " . $output_csv_path . "\n";
 
 ?&gt;
 </code></pre></details>

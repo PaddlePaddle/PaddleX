@@ -13,6 +13,4 @@
 # limitations under the License.
 
 
-MODELS = [
-    "GroundingDINO-T",
-]
+MODELS = ["GroundingDINO-T", "YOLO-Worldv2-L"]
