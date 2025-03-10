@@ -399,7 +399,8 @@ Below are the API references for basic service-based deployment and examples of 
 </table>
 <p>An example of <code>result</code> is as follows:</p>
 <pre><code class="language-json">{
-"csv": "xxxxxx"
+"csv": "xxxxxx",
+"image": "xxxxxx"
 }
 </code></pre></details>
 

@@ -435,7 +435,8 @@ for res in output:
 <p><code>result</code>示例如下：</p>
 <pre><code class="language-json">{
 "label": "running",
-"score": 0.97
+"score": 0.97,
+"image": "xxxxxx"
 }
 </code></pre></details>
 

@@ -500,7 +500,8 @@ for res in output:
 </table>
 <p><code>result</code>示例如下：</p>
 <pre><code class="language-json">{
-"csv": "xxxxxx"
+"csv": "xxxxxx",
+"image": "xxxxxx"
 }
 </code></pre></details>
 

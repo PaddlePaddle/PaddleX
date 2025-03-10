@@ -439,7 +439,8 @@ Below are the API references for basic serving deployment and multi-language ser
 <p>An example of <code>result</code> is as follows:</p>
 <pre><code class="language-json">{
 "label": "running",
-"score": 0.97
+"score": 0.97,
+"image": "xxxxxx"
 }
 </code></pre></details>
 
