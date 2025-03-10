@@ -420,6 +420,11 @@ Below are the API references for basic serving deployment and multi-language ser
 </thead>
 <tbody>
 <tr>
+<td><code>image</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>The image of time series classification result. The image is in JPEG format and encoded in Base64.</td>
+</tr>
+<tr>
 <td><code>label</code></td>
 <td><code>string</code></td>
 <td>The class label.</td>
@@ -433,8 +438,8 @@ Below are the API references for basic serving deployment and multi-language ser
 </table>
 <p>An example of <code>result</code> is as follows:</p>
 <pre><code class="language-json">{
-&quot;label&quot;: &quot;running&quot;,
-&quot;score&quot;: 0.97
+"label": "running",
+"score": 0.97
 }
 </code></pre></details>
 
@@ -446,38 +451,42 @@ Below are the API references for basic serving deployment and multi-language ser
 <pre><code class="language-python">import base64
 import requests
 
-API_URL = &quot;http://localhost:8080/time-series-classification&quot; # Service URL
-csv_path = &quot;./test.csv&quot;
+API_URL = "http://localhost:8080/time-series-classification" # Service URL
+csv_path = "./test.csv"
+output_image_path = "./out.jpg"
 
 # Encode the local CSV file in Base64
-with open(csv_path, &quot;rb&quot;) as file:
+with open(csv_path, "rb") as file:
     csv_bytes = file.read()
-    csv_data = base64.b64encode(csv_bytes).decode(&quot;ascii&quot;)
+    csv_data = base64.b64encode(csv_bytes).decode("ascii")
 
-payload = {&quot;csv&quot;: csv_data}
+payload = {"csv": csv_data}
 
 # Call the API
 response = requests.post(API_URL, json=payload)
 
 # Process the response data
 assert response.status_code == 200
-result = response.json()[&quot;result&quot;]
-print(f&quot;label: {result['label']}, score: {result['score']}&quot;)
+result = response.json()["result"]
+result = response.json()["result"]
+with open(output_image_path, "wb") as f:
+    f.write(base64.b64decode(result["image"]))
+print(f"label: {result['label']}, score: {result['score']}")
 </code></pre></details>
 
 <details><summary>C++</summary>
 
 <pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &quot;cpp-httplib/httplib.h&quot; // <url id="cu9lu0qn7542c8gg8aog" type="url" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" wc="15064">https://github.com/Huiyicc/cpp-httplib</url>
-#include &quot;nlohmann/json.hpp&quot; // <url id="cu9lu0qn7542c8gg8ap0" type="url" status="parsed" title="" wc="80311">https://github.com/nlohmann/json</url>
-#include &quot;base64.hpp&quot; // <url id="cu9lu0qn7542c8gg8apg" type="url" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" wc="2293">https://github.com/tobiaslocker/base64</url>
+#include "cpp-httplib/httplib.h" // <url id="cu9lu0qn7542c8gg8aog" type="url" status="parsed" title="GitHub - Huiyicc/cpp-httplib: A C++ header-only HTTP/HTTPS server and client library" wc="15064">https://github.com/Huiyicc/cpp-httplib</url>
+#include "nlohmann/json.hpp" // <url id="cu9lu0qn7542c8gg8ap0" type="url" status="parsed" title="" wc="80311">https://github.com/nlohmann/json</url>
+#include "base64.hpp" // <url id="cu9lu0qn7542c8gg8apg" type="url" status="parsed" title="GitHub - tobiaslocker/base64: A modern C++ base64 encoder / decoder" wc="2293">https://github.com/tobiaslocker/base64</url>
 
 int main() {
-    httplib::Client client(&quot;localhost:8080&quot;);
-    const std::string csvPath = &quot;./test.csv&quot;;
+    httplib::Client client("localhost:8080");
+    const std::string csvPath = "./test.csv";
 
     httplib::Headers headers = {
-        {&quot;Content-Type&quot;, &quot;application/json&quot;}
+        {"Content-Type", "application/json"}
     };
 
     // Encode in Base64
@@ -487,25 +496,25 @@ int main() {
 
     std::vector&lt;char&gt; buffer(size);
     if (!file.read(buffer.data(), size)) {
-        std::cerr &lt;&lt; &quot;Error reading file.&quot; &lt;&lt; std::endl;
+        std::cerr &lt;&lt; "Error reading file." &lt;&lt; std::endl;
         return 1;
     }
     std::string bufferStr(reinterpret_cast&lt;const char*&gt;(buffer.data()), buffer.size());
     std::string encodedCsv = base64::to_base64(bufferStr);
 
     nlohmann::json jsonObj;
-    jsonObj[&quot;csv&quot;] = encodedCsv;
+    jsonObj["csv"] = encodedCsv;
     std::string body = jsonObj.dump();
 
     // Call the API
-    auto response = client.Post(&quot;/time-series-classification&quot;, headers, body, &quot;application/json&quot;);
+    auto response = client.Post("/time-series-classification", headers, body, "application/json");
     // Process the response data
     if (response &amp;&amp; response-&gt;status == 200) {
         nlohmann::json jsonResponse = nlohmann::json::parse(response-&gt;body);
-        auto result = jsonResponse[&quot;result&quot;];
-        std::cout &lt;&lt; &quot;label: &quot; &lt;&lt; result[&quot;label&quot;] &lt;&lt; &quot;, score: &quot; &lt;&lt; result[&quot;score&quot;] &lt;&lt; std::endl;
+        auto result = jsonResponse["result"];
+        std::cout &lt;&lt; "label: " &lt;&lt; result["label"] &lt;&lt; ", score: " &lt;&lt; result["score"] &lt;&lt; std::endl;
     } else {
-        std::cout &lt;&lt; &quot;Failed to send HTTP request.&quot; &lt;&lt; std::endl;
+        std::cout &lt;&lt; "Failed to send HTTP request." &lt;&lt; std::endl;
         std::cout &lt;&lt; response-&gt;body &lt;&lt; std::endl;
         return 1;
     }
@@ -569,44 +578,44 @@ public class Main {
 <pre><code class="language-go">package main
 
 import (
-    &quot;bytes&quot;
-    &quot;encoding/base64&quot;
-    &quot;encoding/json&quot;
-    &quot;fmt&quot;
-    &quot;io/ioutil&quot;
-    &quot;net/http&quot;
+    "bytes"
+    "encoding/base64"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
 )
 
 func main() {
-    API_URL := &quot;http://localhost:8080/time-series-classification&quot;
-    csvPath := &quot;./test.csv&quot;;
+    API_URL := "http://localhost:8080/time-series-classification"
+    csvPath := "./test.csv";
 
     // Read the CSV file and encode it with Base64
     csvBytes, err := ioutil.ReadFile(csvPath)
     if err != nil {
-        fmt.Println(&quot;Error reading csv file:&quot;, err)
+        fmt.Println("Error reading csv file:", err)
         return
     }
     csvData := base64.StdEncoding.EncodeToString(csvBytes)
 
-    payload := map[string]string{&quot;csv&quot;: csvData} // Base64-encoded file content
+    payload := map[string]string{"csv": csvData} // Base64-encoded file content
     payloadBytes, err := json.Marshal(payload)
     if err != nil {
-        fmt.Println(&quot;Error marshaling payload:&quot;, err)
+        fmt.Println("Error marshaling payload:", err)
         return
     }
 
     // Call the API
     client := &amp;http.Client{}
-    req, err := http.NewRequest(&quot;POST&quot;, API_URL, bytes.NewBuffer(payloadBytes))
+    req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(payloadBytes))
     if err != nil {
-        fmt.Println(&quot;Error creating request:&quot;, err)
+        fmt.Println("Error creating request:", err)
         return
     }
 
     res, err := client.Do(req)
     if err != nil {
-        fmt.Println(&quot;Error sending request:&quot;, err)
+        fmt.Println("Error sending request:", err)
         return
     }
     defer res.Body.Close()
@@ -614,23 +623,23 @@ func main() {
     // Process the response data
     body, err := ioutil.ReadAll(res.Body)
     if err != nil {
-        fmt.Println(&quot;Error reading response body:&quot;, err)
+        fmt.Println("Error reading response body:", err)
         return
     }
     type Response struct {
         Result struct {
-            Label string `json:&quot;label&quot;`
-            Score string `json:&quot;score&quot;`
-        } `json:&quot;result&quot;`
+            Label string `json:"label"`
+            Score string `json:"score"`
+        } `json:"result"`
     }
     var respData Response
     err = json.Unmarshal([]byte(string(body)), &amp;respData)
     if err != nil {
-        fmt.Println(&quot;Error unmarshaling response body:&quot;, err)
+        fmt.Println("Error unmarshaling response body:", err)
         return
     }
 
-    fmt.Printf(&quot;label: %s, score: %s\n&quot;, respData.Result.Label, respData.Result.Score)
+    fmt.Printf("label: %s, score: %s\n", respData.Result.Label, respData.Result.Score)
 }
 </code></pre></details>
 
@@ -646,8 +655,8 @@ using Newtonsoft.Json.Linq;
 
 class Program
 {
-    static readonly string API_URL = &quot;http://localhost:8080/time-series-classification&quot;;
-    static readonly string csvPath = &quot;./test.csv&quot;;
+    static readonly string API_URL = "http://localhost:8080/time-series-classification";
+    static readonly string csvPath = "./test.csv";
 
     static async Task Main(string[] args)
     {
@@ -657,8 +666,8 @@ class Program
         byte[] csvBytes = File.ReadAllBytes(csvPath);
         string csvData = Convert.ToBase64String(csvBytes);
 
-        var payload = new JObject{ { &quot;csv&quot;, csvData } }; // Base64-encoded file content
-        var content = new StringContent(payload.ToString(), Encoding.UTF8, &quot;application/json&quot;);
+        var payload = new JObject{ { "csv", csvData } }; // Base64-encoded file content
+        var content = new StringContent(payload.ToString(), Encoding.UTF8, "application/json");
 
         // Call the API
         HttpResponseMessage response = await httpClient.PostAsync(API_URL, content);
@@ -668,9 +677,9 @@ class Program
         string responseBody = await response.Content.ReadAsStringAsync();
         JObject jsonResponse = JObject.Parse(responseBody);
 
-        string label = jsonResponse[&quot;result&quot;][&quot;label&quot;].ToString();
-        string score = jsonResponse[&quot;result&quot;][&quot;score&quot;].ToString();
-        Console.WriteLine($&quot;label: {label}, score: {score}&quot;);
+        string label = jsonResponse["result"]["label"].ToString();
+        string score = jsonResponse["result"]["score"].ToString();
+        Console.WriteLine($"label: {label}, score: {score}");
     }
 }
 </code></pre></details>
@@ -712,12 +721,12 @@ axios.request(config)
 
 <pre><code class="language-php">&lt;?php
 
-$API_URL = &quot;http://localhost:8080/time-series-classification&quot;; // Service URL
-$csv_path = &quot;./test.csv&quot;;
+$API_URL = "http://localhost:8080/time-series-classification"; // Service URL
+$csv_path = "./test.csv";
 
 // Encode the local CSV file using Base64
 $csv_data = base64_encode(file_get_contents($csv_path));
-$payload = array(&quot;csv&quot; =&gt; $csv_data); // Base64-encoded file content
+$payload = array("csv" =&gt; $csv_data); // Base64-encoded file content
 
 // Call the API
 $ch = curl_init($API_URL);
@@ -729,8 +738,8 @@ $response = curl_exec($ch);
 curl_close($ch);
 
 // Process the response data
-$result = json_decode($response, true)[&quot;result&quot;];
-echo &quot;label: &quot; . $result[&quot;label&quot;] . &quot;, score: &quot; . $result[&quot;score&quot;];
+$result = json_decode($response, true)["result"];
+echo "label: " . $result["label"] . ", score: " . $result["score"];
 
 ?&gt;
 </code></pre></details>

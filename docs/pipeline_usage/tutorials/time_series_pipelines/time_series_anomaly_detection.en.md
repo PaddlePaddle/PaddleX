@@ -386,6 +386,11 @@ Below are the API references for basic service-based deployment and examples of 
 </thead>
 <tbody>
 <tr>
+<td><code>image</code></td>
+<td><code>string</code> | <code>null</code></td>
+<td>The image of time series anomaly detection result. The image is in JPEG format and encoded in Base64.</td>
+</tr>
+<tr>
 <td><code>csv</code></td>
 <td><code>string</code></td>
 <td>The result of time-series anomaly detection in CSV format. Encoded in UTF-8+Base64.</td>
@@ -408,6 +413,7 @@ import requests
 
 API_URL = "http://localhost:8080/time-series-anomaly-detection"  # Service URL
 csv_path = "./test.csv"
+output_image_path = "./out.jpg"
 output_csv_path = "./out.csv"
 
 # Encode the local CSV file using Base64
@@ -423,6 +429,9 @@ response = requests.post(API_URL, json=payload)
 # Process the response data
 assert response.status_code == 200
 result = response.json()["result"]
+with open(output_image_path, "wb") as f:
+    f.write(base64.b64decode(result["image"]))
+print(f"Output image saved at  {output_image_path}")
 with open(output_csv_path, "wb") as f:
     f.write(base64.b64decode(result["csv"]))
 print(f"Output time-series data saved at {output_csv_path}")
