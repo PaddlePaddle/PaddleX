@@ -480,6 +480,7 @@ print(f"label: {result['label']}, score: {result['score']}")
 
 int main() {
     httplib::Client client("localhost:8080");
+    const std::string outputImagePath = "./out.jpg";
     const std::string csvPath = "./test.csv";
 
     httplib::Headers headers = {
@@ -510,6 +511,18 @@ int main() {
         nlohmann::json jsonResponse = nlohmann::json::parse(response-&gt;body);
         auto result = jsonResponse["result"];
         std::cout &lt;&lt; "label: " &lt;&lt; result["label"] &lt;&lt; ", score: " &lt;&lt; result["score"] &lt;&lt; std::endl;
+
+        std::string encodedImage = result["image"];
+        std::string decodedString = base64::from_base64(encodedImage);
+        std::vector<unsigned char> decodedImage(decodedString.begin(), decodedString.end());
+        std::ofstream outputImage(outputImagePath, std::ios::binary | std::ios::out);
+        if (outputImage.is_open()) {
+            outputImage.write(reinterpret_cast<char*>(decodedImage.data()), decodedImage.size());
+            outputImage.close();
+            std::cout << "Output image data saved at " << outputImagePath << std::endl;
+        } else {
+            std::cerr << "Unable to open file for writing: " << outputImagePath << std::endl;
+        }
     } else {
         std::cout &lt;&lt; "Failed to send HTTP request." &lt;&lt; std::endl;
         std::cout &lt;&lt; response-&gt;body &lt;&lt; std::endl;
@@ -535,6 +548,7 @@ import java.util.Base64;
 public class Main {
     public static void main(String[] args) throws IOException {
         String API_URL = "http://localhost:8080/time-series-classification";
+        String outputImagePath = "./out.jpg";
         String csvPath = "./test.csv";
 
         // 对本地csv进行Base64编码
@@ -562,6 +576,13 @@ public class Main {
                 JsonNode resultNode = objectMapper.readTree(responseBody);
                 JsonNode result = resultNode.get("result");
                 System.out.println("label: " + result.get("label").asText() + ", score: " + result.get("score").asText());
+
+                String base64Image = result.get("image").asText();
+                byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+                try (FileOutputStream fos = new FileOutputStream(outputImagePath)) {
+                    fos.write(imageBytes);
+                }
+                System.out.println("Output image data saved at " + outputImagePath);
             } else {
                 System.err.println("Request failed with code: " + response.code());
             }
@@ -585,6 +606,7 @@ import (
 
 func main() {
     API_URL := "http://localhost:8080/time-series-classification"
+    outputImagePath := "./out.jpg";
     csvPath := "./test.csv";
 
     // 读取csv文件并进行Base64编码
@@ -627,6 +649,7 @@ func main() {
         Result struct {
             Label string `json:"label"`
             Score string `json:"score"`
+            Image string `json:"image"`
         } `json:"result"`
     }
     var respData Response
@@ -637,6 +660,18 @@ func main() {
     }
 
     fmt.Printf("label: %s, score: %s\n", respData.Result.Label, respData.Result.Score)
+
+    outputImageData, err := base64.StdEncoding.DecodeString(respData.Result.Image)
+    if err != nil {
+        fmt.Println("Error decoding Base64 image data:", err)
+        return
+    }
+    err = ioutil.WriteFile(outputImagePath, outputImageData, 0644)
+    if err != nil {
+        fmt.Println("Error writing image to file:", err)
+        return
+    }
+    fmt.Printf("Output image data saved at %s.jpg", outputImagePath)
 }
 </code></pre></details>
 
@@ -653,6 +688,7 @@ using Newtonsoft.Json.Linq;
 class Program
 {
     static readonly string API_URL = "http://localhost:8080/time-series-classification";
+    static readonly string outputImagePath = "./out.jpg";
     static readonly string csvPath = "./test.csv";
 
     static async Task Main(string[] args)
@@ -677,6 +713,11 @@ class Program
         string label = jsonResponse["result"]["label"].ToString();
         string score = jsonResponse["result"]["score"].ToString();
         Console.WriteLine($"label: {label}, score: {score}");
+
+        string base64Image = jsonResponse["result"]["image"].ToString();
+        byte[] outputImageBytes = Convert.FromBase64String(base64Image);
+        File.WriteAllBytes(outputImagePath, outputImageBytes);
+        Console.WriteLine($"Output image data saved at {outputImagePath}");
     }
 }
 </code></pre></details>
@@ -687,6 +728,7 @@ class Program
 const fs = require('fs');
 
 const API_URL = 'http://localhost:8080/time-series-classification'
+const outputImagePath = "./out.jpg";
 const csvPath = "./test.csv";
 
 let config = {
@@ -708,6 +750,12 @@ axios.request(config)
 .then((response) =&gt; {
     const result = response.data["result"];
     console.log(`label: ${result["label"]}, score: ${result["score"]}`);
+
+    const imageBuffer = Buffer.from(result["image"], 'base64');
+    fs.writeFile(outputImagePath, imageBuffer, (err) =&gt; {
+      if (err) throw err;
+      console.log(`Output image data saved at ${outputImagePath}`);
+    });
 })
 .catch((error) =&gt; {
   console.log(error);
@@ -719,6 +767,7 @@ axios.request(config)
 <pre><code class="language-php">&lt;?php
 
 $API_URL = "http://localhost:8080/time-series-classification"; // 服务URL
+$output_image_path = "./out.jpg";
 $csv_path = "./test.csv";
 
 // 对本地csv文件进行Base64编码
@@ -737,6 +786,9 @@ curl_close($ch);
 // 处理接口返回数据
 $result = json_decode($response, true)["result"];
 echo "label: " . $result["label"] . ", score: " . $result["score"];
+
+file_put_contents($output_image_path, base64_decode($result["image"]));
+echo "Output image data saved at " . $output_image_path . "\n";
 
 ?&gt;
 </code></pre></details>

@@ -549,6 +549,18 @@ int main() {
         auto result = jsonResponse["result"];
 
         // 保存数据
+        std::string encodedImage = result["image"];
+        std::string decodedString = base64::from_base64(encodedImage);
+        std::vector<unsigned char> decodedImage(decodedString.begin(), decodedString.end());
+        std::ofstream outputImage(outputImagePath, std::ios::binary | std::ios::out);
+        if (outputImage.is_open()) {
+            outputImage.write(reinterpret_cast<char*>(decodedImage.data()), decodedImage.size());
+            outputImage.close();
+            std::cout << "Output image data saved at " << outputImagePath << std::endl;
+        } else {
+            std::cerr << "Unable to open file for writing: " << outputImagePath << std::endl;
+        }
+
         encodedCsv = result["csv"];
         decodedString = base64::from_base64(encodedCsv);
         std::vector&lt;unsigned char&gt; decodedCsv(decodedString.begin(), decodedString.end());
@@ -586,6 +598,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         String API_URL = "http://localhost:8080/time-series-anomaly-detection";
         String csvPath = "./test.csv";
+        String outputImagePath = "./out.jpg";
         String outputCsvPath = "./out.csv";
 
         // 对本地csv进行Base64编码
@@ -614,6 +627,13 @@ public class Main {
                 JsonNode result = resultNode.get("result");
 
                 // 保存返回的数据
+                String base64Image = result.get("image").asText();
+                byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+                try (FileOutputStream fos = new FileOutputStream(outputImagePath)) {
+                    fos.write(imageBytes);
+                }
+                System.out.println("Output image data saved at " + outputImagePath);
+
                 String base64Csv = result.get("csv").asText();
                 byte[] csvBytes = Base64.getDecoder().decode(base64Csv);
                 try (FileOutputStream fos = new FileOutputStream(outputCsvPath)) {
@@ -644,6 +664,7 @@ import (
 func main() {
     API_URL := "http://localhost:8080/time-series-anomaly-detection"
     csvPath := "./test.csv";
+    outputImagePath := "./out.jpg";
     outputCsvPath := "./out.csv";
 
     // 读取csv文件并进行Base64编码
@@ -685,6 +706,7 @@ func main() {
     type Response struct {
         Result struct {
             Csv string `json:"csv"`
+            Image string `json:"image"`
         } `json:"result"`
     }
     var respData Response
@@ -693,6 +715,19 @@ func main() {
         fmt.Println("Error unmarshaling response body:", err)
         return
     }
+
+    // 将Base64编码的图片数据解码并保存为文件
+    outputImageData, err := base64.StdEncoding.DecodeString(respData.Result.Image)
+    if err != nil {
+        fmt.Println("Error decoding Base64 image data:", err)
+        return
+    }
+    err = ioutil.WriteFile(outputImagePath, outputImageData, 0644)
+    if err != nil {
+        fmt.Println("Error writing image to file:", err)
+        return
+    }
+    fmt.Printf("Output image data saved at %s.jpg", outputImagePath)
 
     // 将Base64编码的csv数据解码并保存为文件
     outputCsvData, err := base64.StdEncoding.DecodeString(respData.Result.Csv)
@@ -723,6 +758,7 @@ class Program
 {
     static readonly string API_URL = "http://localhost:8080/time-series-anomaly-detection";
     static readonly string csvPath = "./test.csv";
+    static readonly string outputImagePath = "./out.jpg";
     static readonly string outputCsvPath = "./out.csv";
 
     static async Task Main(string[] args)
@@ -744,6 +780,12 @@ class Program
         string responseBody = await response.Content.ReadAsStringAsync();
         JObject jsonResponse = JObject.Parse(responseBody);
 
+        // 保存图片文件
+        string base64Image = jsonResponse["result"]["image"].ToString();
+        byte[] outputImageBytes = Convert.FromBase64String(base64Image);
+        File.WriteAllBytes(outputImagePath, outputImageBytes);
+        Console.WriteLine($"Output image data saved at {outputImagePath}");
+
         // 保存csv文件
         string base64Csv = jsonResponse["result"]["csv"].ToString();
         byte[] outputCsvBytes = Convert.FromBase64String(base64Csv);
@@ -760,6 +802,7 @@ const fs = require('fs');
 
 const API_URL = 'http://localhost:8080/time-series-anomaly-detection'
 const csvPath = "./test.csv";
+const outputImagePath = "./out.jpg";
 const outputCsvPath = "./out.csv";
 
 let config = {
@@ -781,6 +824,13 @@ axios.request(config)
 .then((response) =&gt; {
     const result = response.data["result"];
 
+    // 保存图片文件
+    const imageBuffer = Buffer.from(result["image"], 'base64');
+    fs.writeFile(outputImagePath, imageBuffer, (err) =&gt; {
+      if (err) throw err;
+      console.log(`Output image data saved at ${outputImagePath}`);
+    });
+
     // 保存csv文件
     const csvBuffer = Buffer.from(result["csv"], 'base64');
     fs.writeFile(outputCsvPath, csvBuffer, (err) =&gt; {
@@ -799,6 +849,7 @@ axios.request(config)
 
 $API_URL = "http://localhost:8080/time-series-anomaly-detection"; // 服务URL
 $csv_path = "./test.csv";
+$output_image_path = "./out.jpg";
 $output_csv_path = "./out.csv";
 
 // 对本地csv文件进行Base64编码
@@ -816,6 +867,9 @@ curl_close($ch);
 
 // 处理接口返回数据
 $result = json_decode($response, true)["result"];
+
+file_put_contents($output_image_path, base64_decode($result["image"]));
+echo "Output image data saved at " . $output_image_path . "\n";
 
 file_put_contents($output_csv_path, base64_decode($result["csv"]));
 echo "Output time-series data saved at " . $output_csv_path . "\n";
