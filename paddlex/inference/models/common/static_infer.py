@@ -18,8 +18,7 @@ import subprocess
 from typing import Sequence, List
 from pathlib import Path
 
-import paddle
-import paddle.inference
+import lazy_paddle as paddle
 import numpy as np
 
 from ....utils import logging

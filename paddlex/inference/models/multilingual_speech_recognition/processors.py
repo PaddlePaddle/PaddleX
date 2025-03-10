@@ -17,7 +17,7 @@ import tqdm
 import zlib
 import soundfile
 import numpy as np
-import paddle
+import lazy_paddle as paddle
 
 from dataclasses import dataclass
 from dataclasses import field

@@ -19,7 +19,7 @@ import platform
 import subprocess
 import contextlib
 from parsley import makeGrammar
-import paddle
+import lazy_paddle as paddle
 
 from ..utils.env import get_device_type
 from ..utils import logging

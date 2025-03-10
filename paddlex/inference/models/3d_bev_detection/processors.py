@@ -17,7 +17,7 @@ import numbers
 import cv2
 import numpy as np
 from typing import Generic, List, Optional
-import paddle
+import lazy_paddle as paddle
 
 from ...utils.io import ImageReader
 from ....utils import logging

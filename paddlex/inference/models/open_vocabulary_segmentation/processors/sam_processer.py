@@ -12,14 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from copy import deepcopy
+import os
 from typing import Dict, List, Optional, Union, Tuple
 
 import numpy as np
-import paddle
-import paddle.nn.functional as F
-import paddle.vision.transforms as T
 import PIL
+from copy import deepcopy
+
+from .....utils.lazy_loader import LazyLoader
+
+# NOTE: LazyLoader is used to avoid conflicts between ultra-infer and Paddle
+paddle = LazyLoader("lazy_paddle", globals(), "paddle")
+T = LazyLoader("T", globals(), "paddle.vision.transforms")
+F = LazyLoader("F", globals(), "paddle.nn.functional")
 
 from ....utils.benchmark import benchmark
 

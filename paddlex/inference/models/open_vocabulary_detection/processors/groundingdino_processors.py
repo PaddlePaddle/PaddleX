@@ -16,13 +16,16 @@ import os
 from typing import Dict, List, Optional, Union, Tuple
 
 import numpy as np
-import paddle
-import paddle.nn.functional as F
-import paddle.vision.transforms as T
 import PIL
 
 from ...common.tokenizer.bert_tokenizer import BertTokenizer
 from ....utils.benchmark import benchmark
+from .....utils.lazy_loader import LazyLoader
+
+# NOTE: LazyLoader is used to avoid conflicts between ultra-infer and Paddle
+paddle = LazyLoader("lazy_paddle", globals(), "paddle")
+T = LazyLoader("T", globals(), "paddle.vision.transforms")
+F = LazyLoader("F", globals(), "paddle.nn.functional")
 
 
 def _max_by_axis(the_list):

@@ -12,7 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .utils.lazy_loader import LazyLoader
+import sys
+
+paddle = LazyLoader("lazy_paddle", globals(), "paddle")
+sys.modules["lazy_paddle"] = paddle
+
 import os
+
 
 from . import version
 from .modules import (
@@ -22,7 +29,6 @@ from .modules import (
 )
 from .model import create_model
 from .inference import create_predictor, create_pipeline
-from .utils.lazy_loader import disable_pir_bydefault as _disable_pir_bydefault
 
 
 def _initialize():
@@ -45,7 +51,6 @@ def _initialize():
 def _check_paddle_version():
     """check paddle version"""
 
-    import paddle
     supported_versions = ["3.0", "0.0"]
     device_type = paddle.device.get_device().split(":")[0]
     if device_type.lower() == "xpu":
@@ -61,8 +66,6 @@ def _check_paddle_version():
             f"Please install one of the following versions of PaddlePaddle: {supported_versions}."
         )
 
-
-_disable_pir_bydefault()
 
 _initialize()
 

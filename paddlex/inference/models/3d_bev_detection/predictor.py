@@ -16,7 +16,7 @@ from typing import Any, Union, Dict, List, Tuple, Iterator
 import shutil
 import tempfile
 from importlib import import_module
-import paddle
+import lazy_paddle
 
 from ....utils import logging
 from ....utils.func_register import FuncRegister
@@ -86,7 +86,10 @@ class BEVDet3DPredictor(BasePredictor):
         Returns:
             tuple: A tuple containing the preprocessors and inference engine.
         """
-        if paddle.is_compiled_with_cuda() and not paddle.is_compiled_with_rocm():
+        if (
+            lazy_paddle.is_compiled_with_cuda()
+            and not lazy_paddle.is_compiled_with_rocm()
+        ):
             from ....ops.voxelize import hard_voxelize
             from ....ops.iou3d_nms import nms_gpu
         else:

@@ -19,7 +19,7 @@ from typing import List, Sequence, Union, Optional, Tuple
 
 import numpy as np
 import cv2
-import paddle
+import lazy_paddle as paddle
 
 from ...utils.benchmark import benchmark
 
