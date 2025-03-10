@@ -2,9 +2,9 @@
 comments: true
 ---
 
-# PaddleX 3.0 公式识别（formula_recognition）模型产线教程
+# PaddleX 3.0 公式识别（formula_recognition）模型产线实践教程
 
-PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组合实现，每个模型产线都能够解决特定的场景任务问题。PaddleX 所提供的模型产线均支持快速体验，如果效果不及预期，也同样支持使用私有数据微调模型，并且 PaddleX 提供了 Python API，方便将产线集成到个人项目中。在使用之前，您首先需要安装 PaddleX， 安装方式请参考 [PaddleX本地安装教程](../installation/installation.md)。此处以公式识别任务为例子，介绍该模型产线的使用流程。
+PaddleX 提供了丰富的模型产线，模型产线由一个或多个模型组合实现，每个模型产线都能够解决特定的场景任务问题。PaddleX 所提供的模型产线均支持快速体验，如果效果不及预期，也同样支持使用私有数据微调模型，并且 PaddleX 提供了 Python API，方便将产线集成到个人项目中。在使用之前，您首先需要安装 PaddleX， 安装方式请参考 [PaddleX本地安装教程](../installation/installation.md)。请注意，本文档是公式识别产线的实践教程，提供一些实践经验，并非该产线的完整使用教程，完整的使用教程请参考 [PaddleX 公式识别产线](../pipeline_usage/tutorials/ocr_pipelines/formula_recognition.md)。
 
 
 ## 1. 选择模型产线
