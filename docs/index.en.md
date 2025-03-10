@@ -526,7 +526,7 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
                     [ 39, ..., 726]], dtype=int16)}, 'formula_res_list': [{'input_path': None, 'page_index': None, 'rec_formula': '\\begin{array}{r l}{\\mathcal{Q}}&{=\\mathcal{K}=\\mathcal{V}=\\mathtt{F l a t t e r n}(\\mathcal{S}_{5}),}\\\\ {\\mathcal{F}_{5}}&{=\\mathtt{R e s h a p e}(\\mathtt{A I F I}(\\mathcal{Q},\\mathcal{K},\\mathcal{V})),\\qquad\\quad(1)}\\\\ {\\mathcal{O}}&{=\\mathtt{C C F F}(\\{\\mathcal{S}_{3},\\mathcal{S}_{4},\\mathcal{F}_{5}\\}),}\\end{array}', 'formula_region_id': 1, 'dt_polys': [92.092064, 563.1221, 297.57217, 607.2598]}, {'input_path': None, 'page_index': None, 'rec_formula': '\\begin{array}{r l r}{\\mathcal{U}(\\hat{\\mathcal{X}})=\\|\\mathcal{P}(\\hat{\\mathcal{X}})-\\mathcal{C}(\\hat{\\mathcal{X}})\\|,\\hat{\\mathcal{X}}\\in\\mathbb{R}^{D}}&{{}(2)}&{}\\\\ {\\mathcal{L}(\\hat{\\mathcal{X}},\\hat{\\mathcal{Y}},\\mathcal{Y})=\\mathcal{L}_{t o x}(\\hat{\\mathbf{b}},\\mathbf{b})+\\mathcal{L}_{c l s}(\\mathcal{U}(\\hat{\\mathcal{X}}),\\hat{\\mathbf{c}},\\mathbf{c})}&{{}(3)}\\end{array}', 'formula_region_id': 2, 'dt_polys': [343.82712, 551.06995, 573.45465, 589.9438]}]}}
                 ```
 
-    === "Layout Parsing v2"
+    === "Layout Parsing v3"
 
         ```bash
         paddlex --pipeline PP-StructureV3 \

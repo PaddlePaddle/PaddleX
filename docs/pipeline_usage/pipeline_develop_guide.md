@@ -271,8 +271,8 @@ Pipeline:
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html">通用版面解析产线使用教程</a></td>
 </tr>
 <tr>
-<td>通用版面解析v2</td>
-<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html">通用版面解析v2产线使用教程</a></td>
+<td>通用版面解析v3</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html">通用版面解析v3产线使用教程</a></td>
 </tr>
 <tr>
 <td>公式识别</td>

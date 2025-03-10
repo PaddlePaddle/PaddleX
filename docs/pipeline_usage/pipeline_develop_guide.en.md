@@ -269,8 +269,8 @@ Choose the appropriate deployment method for your model pipeline based on your n
 <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html">Layout Parsing Pipeline Usage Tutorial</a></td>
 </tr>
 <tr>
-<td>Layout Parsing v2</td>
-<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html">Layout Parsing v2 Pipeline Usage Tutorial</a></td>
+<td>Layout Parsing v3</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html">Layout Parsing v3 Pipeline Usage Tutorial</a></td>
 </tr>
 <tr>
 <td>Formula Recognition</td>
