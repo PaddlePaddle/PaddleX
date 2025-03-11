@@ -14,6 +14,7 @@
 
 from typing import Any, Dict, Optional, Union
 from abc import ABC, abstractmethod
+from ...utils import logging
 from ...utils.subclass_register import AutoRegisterABCMetaClass
 from ..utils.hpi import HPIConfig
 from ..utils.pp_option import PaddlePredictorOption
@@ -90,6 +91,8 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
             hpi_config = config.get("hpi_config", None)
 
         from .. import create_predictor
+
+        logging.info("Creating model: %s", (config["model_name"], model_dir))
 
         model = create_predictor(
             model_name=config["model_name"],
