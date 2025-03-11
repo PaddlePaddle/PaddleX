@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict
+from typing import Any, Dict, Optional, Union
 from abc import ABC, abstractmethod
 from ...utils.subclass_register import AutoRegisterABCMetaClass
+from ..utils.hpi import HPIConfig
 from ..utils.pp_option import PaddlePredictorOption
 from ..models import BasePredictor
 
@@ -33,7 +34,8 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         self,
         device: str = None,
         pp_option: PaddlePredictorOption = None,
-        use_hpip: bool = False,
+        use_hpip: Optional[bool] = None,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
         *args,
         **kwargs,
     ) -> None:
@@ -43,12 +45,14 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
         Args:
             device (str, optional): The device to use for prediction. Defaults to None.
             pp_option (PaddlePredictorOption, optional): The options for PaddlePredictor. Defaults to None.
-            use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
+            use_hpip (Optional[bool], optional): Whether to use high-performance inference (hpip) for prediction. Defaults to None.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional): The high-performance inference configuration dictionary. Defaults to None.
         """
         super().__init__()
         self.device = device
         self.pp_option = pp_option
         self.use_hpip = use_hpip
+        self.hpi_config = hpi_config
 
     @abstractmethod
     def predict(self, input, **kwargs):
@@ -76,7 +80,14 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
             raise ValueError(config["model_config_error"])
 
         model_dir = config.get("model_dir", None)
-        hpi_config = config.get("hpi_config", None)
+        if self.use_hpip is not None:
+            use_hpip = self.use_hpip
+        else:
+            use_hpip = config.get("use_hpip", False)
+        if self.hpi_config is not None:
+            hpi_config = self.hpi_config
+        else:
+            hpi_config = config.get("hpi_config", None)
 
         from .. import create_predictor
 
@@ -86,7 +97,7 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
             device=self.device,
             batch_size=config.get("batch_size", 1),
             pp_option=self.pp_option,
-            use_hpip=self.use_hpip,
+            use_hpip=use_hpip,
             hpi_config=hpi_config,
             **kwargs,
         )
@@ -107,11 +118,21 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
 
         from . import create_pipeline
 
+        if self.use_hpip is not None:
+            use_hpip = self.use_hpip
+        else:
+            use_hpip = config.get("use_hpip", None)
+        if self.hpi_config is not None:
+            hpi_config = self.hpi_config
+        else:
+            hpi_config = config.get("hpi_config", None)
+
         pipeline = create_pipeline(
             config=config,
             device=self.device,
             pp_option=self.pp_option,
-            use_hpip=self.use_hpip,
+            use_hpip=use_hpip,
+            hpi_config=hpi_config,
         )
         return pipeline
 

@@ -124,7 +124,9 @@ def args_cfg():
         help="Device to run the pipeline on (e.g., 'cpu', 'gpu:0').",
     )
     pipeline_group.add_argument(
-        "--use_hpip", action="store_true", help="Enable HPIP acceleration if available."
+        "--use_hpip",
+        action="store_true",
+        help="Enable HPIP acceleration for all models.",
     )
     pipeline_group.add_argument(
         "--get_pipeline_config",

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict, Optional, Union, List, Tuple
+from typing import Any, Dict, Optional, Union, List, Tuple
 import numpy as np
 from sklearn.cluster import KMeans
 from ..base import BasePipeline
@@ -22,6 +22,7 @@ from .table_recognition_post_processing_v2 import get_table_recognition_res
 from .result import SingleTableRecognitionResult, TableRecognitionResult
 from ....utils import logging
 from ...utils.pp_option import PaddlePredictorOption
+from ...utils.hpi import HPIConfig
 from ...common.reader import ReadImage
 from ...common.batch_sampler import ImageBatchSampler
 from ..ocr.result import OCRResult
@@ -40,7 +41,8 @@ class TableRecognitionPipelineV2(BasePipeline):
         config: Dict,
         device: str = None,
         pp_option: PaddlePredictorOption = None,
-        use_hpip: bool = False,
+        use_hpip: Optional[bool] = None,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ) -> None:
         """Initializes the layout parsing pipeline.
 
@@ -48,11 +50,15 @@ class TableRecognitionPipelineV2(BasePipeline):
             config (Dict): Configuration dictionary containing various settings.
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            hpi_config (Optional[Dict[str, Any]], optional): HPIP parameters. Defaults to None.
+            use_hpip (Optional[bool], optional): Whether to use high-performance inference
+                plugin (HPIP) for prediction. Defaults to None.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional): The
+                high-performance inference configuration dictionary. Defaults to None.
         """
 
-        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
+        super().__init__(
+            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+        )
 
         self.use_doc_preprocessor = config.get("use_doc_preprocessor", True)
         if self.use_doc_preprocessor:

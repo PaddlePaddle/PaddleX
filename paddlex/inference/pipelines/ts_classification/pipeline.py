@@ -16,6 +16,7 @@ from typing import Any, Dict, Optional, Union, List
 import pandas as pd
 
 from ...utils.pp_option import PaddlePredictorOption
+from ...utils.hpi import HPIConfig
 from ..base import BasePipeline
 
 from ...models.ts_classification.result import TSClsResult
@@ -31,7 +32,8 @@ class TSClsPipeline(BasePipeline):
         config: Dict,
         device: str = None,
         pp_option: PaddlePredictorOption = None,
-        use_hpip: bool = False,
+        use_hpip: Optional[bool] = None,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ) -> None:
         """Initializes the Time Series classification pipeline.
 
@@ -39,10 +41,15 @@ class TSClsPipeline(BasePipeline):
             config (Dict): Configuration dictionary containing various settings.
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
+            use_hpip (Optional[bool], optional): Whether to use high-performance inference
+                plugin (HPIP) for prediction. Defaults to None.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional): The
+                high-performance inference configuration dictionary. Defaults to None.
         """
 
-        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
+        super().__init__(
+            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+        )
 
         ts_classification_model_config = config["SubModules"]["TSClassification"]
         self.ts_classification_model = self.create_model(ts_classification_model_config)

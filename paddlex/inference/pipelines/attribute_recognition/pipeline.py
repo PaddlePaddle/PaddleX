@@ -19,6 +19,7 @@ from pathlib import Path
 import numpy as np
 
 from ...utils.pp_option import PaddlePredictorOption
+from ...utils.hpi import HPIConfig
 from ...common.reader import ReadImage
 from ...common.batch_sampler import ImageBatchSampler
 from ..components import CropByBoxes
@@ -34,9 +35,12 @@ class AttributeRecPipeline(BasePipeline):
         config: Dict,
         device: str = None,
         pp_option: PaddlePredictorOption = None,
-        use_hpip: bool = False,
+        use_hpip: Optional[bool] = None,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ):
-        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
+        super().__init__(
+            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+        )
 
         self.det_model = self.create_model(config["SubModules"]["Detection"])
         self.cls_model = self.create_model(config["SubModules"]["Classification"])

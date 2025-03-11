@@ -83,7 +83,7 @@ class BasePredictor(
         device: Optional[str] = None,
         batch_size: int = 1,
         pp_option: Optional[PaddlePredictorOption] = None,
-        use_hpip: bool = True,
+        use_hpip: bool = False,
         hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ) -> None:
         """Initializes the BasePredictor.

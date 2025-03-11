@@ -24,6 +24,7 @@ from ...common.batch_sampler import ImageBatchSampler
 from ....utils import logging
 from ....utils.file_interface import custom_open
 from ...utils.pp_option import PaddlePredictorOption
+from ...utils.hpi import HPIConfig
 from ..layout_parsing.result import LayoutParsingResult
 from ..components.chat_server import BaseChat
 
@@ -38,7 +39,8 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         config: Dict,
         device: str = None,
         pp_option: PaddlePredictorOption = None,
-        use_hpip: bool = False,
+        use_hpip: Optional[bool] = None,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
         initial_predictor: bool = True,
     ) -> None:
         """Initializes the pp-chatocrv3-doc pipeline.
@@ -47,12 +49,16 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
             config (Dict): Configuration dictionary containing various settings.
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            use_layout_parsing (bool, optional): Whether to use layout parsing. Defaults to True.
+            use_hpip (Optional[bool], optional): Whether to use high-performance inference
+                plugin (HPIP) for prediction. Defaults to None.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional): The
+                high-performance inference configuration dictionary. Defaults to None.
             initial_predictor (bool, optional): Whether to initialize the predictor. Defaults to True.
         """
 
-        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
+        super().__init__(
+            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+        )
 
         self.pipeline_name = config["pipeline_name"]
         self.config = config

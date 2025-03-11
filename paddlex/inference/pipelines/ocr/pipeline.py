@@ -18,6 +18,7 @@ from scipy.ndimage import rotate
 from ...common.reader import ReadImage
 from ...common.batch_sampler import ImageBatchSampler
 from ...utils.pp_option import PaddlePredictorOption
+from ...utils.hpi import HPIConfig
 from ..base import BasePipeline
 from ..components import (
     CropByPolys,
@@ -40,7 +41,8 @@ class OCRPipeline(BasePipeline):
         config: Dict,
         device: Optional[str] = None,
         pp_option: Optional[PaddlePredictorOption] = None,
-        use_hpip: bool = False,
+        use_hpip: Optional[bool] = None,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ) -> None:
         """
         Initializes the class with given configurations and options.
@@ -49,9 +51,14 @@ class OCRPipeline(BasePipeline):
             config (Dict): Configuration dictionary containing various settings.
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
+            use_hpip (Optional[bool], optional): Whether to use high-performance inference
+                plugin (HPIP) for prediction. Defaults to None.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional): The
+                high-performance inference configuration dictionary. Defaults to None.
         """
-        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
+        super().__init__(
+            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+        )
 
         self.use_doc_preprocessor = config.get("use_doc_preprocessor", True)
         if self.use_doc_preprocessor:
