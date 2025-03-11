@@ -117,6 +117,8 @@ class BasePredictor(
         self.batch_sampler.batch_size = batch_size
         self._use_hpip = use_hpip
         if not use_hpip:
+            if hpi_config is not None:
+                logging.warning("`hpi_config` will be ignored when not using HPIP.")
             self._pp_option = self._prepare_pp_option(pp_option, device)
         else:
             if pp_option is not None:
