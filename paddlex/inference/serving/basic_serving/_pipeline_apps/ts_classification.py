@@ -46,10 +46,16 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
 
         label = str(result["classification"].at[0, "classid"])
         score = float(result["classification"].at[0, "score"])
+        if ctx.config.visualize:
+            output_image = serving_utils.base64_encode(
+                serving_utils.image_to_bytes(result.img["res"].convert("RGB"))
+            )
+        else:
+            output_image = None
 
         return ResultResponse[InferResult](
             logId=serving_utils.generate_log_id(),
-            result=InferResult(label=label, score=score),
+            result=InferResult(label=label, score=score, image=output_image),
         )
 
     return app
