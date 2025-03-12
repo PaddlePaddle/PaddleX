@@ -2,12 +2,12 @@
 comments: true
 ---
 
-# Universal PP-StructureV3 Pipeline Tutorial
+# PP-StructureV3 Pipeline Tutorial
 
-## 1. Introduction to Universal PP-StructureV3 pipeline
-Layout parsing is a technology that extracts structured information from document images, primarily used to convert complex document layouts into machine-readable data formats. This technology is widely applied in document management, information extraction, and data digitization. By combining Optical Character Recognition (OCR), image processing, and machine learning algorithms, layout parsing can identify and extract text blocks, headings, paragraphs, images, tables, and other layout elements from documents. The process typically involves three main steps: layout detection, element analysis, and data formatting, ultimately generating structured document data to improve the efficiency and accuracy of data processing. <b>The Universal PP-StructureV3 pipeline, based on the v1 pipeline, enhances the capabilities of layout region detection, table recognition, and formula recognition, and adds the ability to restore multi-column reading order and convert results into Markdown files. It performs excellently on various document data and can handle more complex document data.</b> This pipeline also provides flexible serving deployment options, supporting the use of multiple programming languages on various hardware. Moreover, this pipeline offers the capability for custom development; you can train and optimize models on your own dataset based on this pipeline, and the trained models can be seamlessly integrated.
+## 1. Introduction to PP-StructureV3 pipeline
+Layout parsing is a technology that extracts structured information from document images, primarily used to convert complex document layouts into machine-readable data formats. This technology is widely applied in document management, information extraction, and data digitization. By combining Optical Character Recognition (OCR), image processing, and machine learning algorithms, layout parsing can identify and extract text blocks, headings, paragraphs, images, tables, and other layout elements from documents. The process typically involves three main steps: layout detection, element analysis, and data formatting, ultimately generating structured document data to improve the efficiency and accuracy of data processing. <b>The PP-StructureV3 pipeline, based on the v1 pipeline, enhances the capabilities of layout region detection, table recognition, and formula recognition, and adds the ability to restore multi-column reading order and convert results into Markdown files. It performs excellently on various document data and can handle more complex document data.</b> This pipeline also provides flexible serving deployment options, supporting the use of multiple programming languages on various hardware. Moreover, this pipeline offers the capability for custom development; you can train and optimize models on your own dataset based on this pipeline, and the trained models can be seamlessly integrated.
 
-<b>The Universal PP-StructureV3 pipeline includes a mandatory layout region analysis module and a general OCR sub-pipeline,</b> as well as optional sub-pipelines for document image preprocessing, table recognition, seal recognition, and formula recognition.
+<b>The PP-StructureV3 pipeline includes a mandatory layout region analysis module and a general OCR sub-pipeline,</b> as well as optional sub-pipelines for document image preprocessing, table recognition, seal recognition, and formula recognition.
 
 <b>If you prioritize model accuracy, choose a high-accuracy model; if you prioritize model inference speed, choose a faster inference model; if you prioritize model storage size, choose a smaller storage model.</b>
 <details><summary>👉 Model List Details</summary>
@@ -599,17 +599,17 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </details>
 
 ## 2. Quick Start
-All the model pipelines provided by PaddleX can be quickly experienced. You can use the command line or Python on your local machine to experience the effect of the General PP-StructureV3 pipeline.
+All the model pipelines provided by PaddleX can be quickly experienced. You can use the command line or Python on your local machine to experience the effect of the PP-StructureV3 pipeline.
 
-Before using the General PP-StructureV3 pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+Before using the PP-StructureV3 pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
 
 ### 2.1 Experiencing via Command Line
 
-You can quickly experience the PP-StructureV3 pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout_parsing_v3_demo.png) and replace `--input` with the local path to perform prediction.
+You can quickly experience the PP-StructureV3 pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pp_structrue_v3_demo.png) and replace `--input` with the local path to perform prediction.
 
 ```
 paddlex --pipeline PP-StructureV3 \
-        --input layout_parsing_v3_demo.png \
+        --input pp_structrue_v3_demo.png \
         --use_doc_orientation_classify False \
         --use_doc_unwarping False \
         --use_textline_orientation False \
@@ -661,7 +661,7 @@ The result parameter description can be found in the result interpretation in [2
 <b>Note:</b> Since the default model of the pipeline is relatively large, the inference speed may be slow. You can refer to the model list in Section 1 and replace it with a model that has faster inference speed.
 
 ### 2.2 Python Script Integration
-Just a few lines of code can complete the quick inference of the pipeline. Taking the General PP-StructureV3 pipeline as an example:
+Just a few lines of code can complete the quick inference of the pipeline. Taking the PP-StructureV3 pipeline as an example:
 
 ```python
 from paddlex import create_pipeline
@@ -669,7 +669,7 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="PP-StructureV3")
 
 output = pipeline.predict(
-    input="./layout_parsing_v3_demo.png",
+    input="./pp_structrue_v3_demo.png",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
     use_textline_orientation=False,
@@ -1300,7 +1300,7 @@ If you have obtained the configuration file, you can customize the PP-StructureV
 from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="./my_path/PP-StructureV3.yaml")
 output = pipeline.predict(
-    input="./layout_parsing_v3_demo.png",,
+    input="./pp_structrue_v3_demo.png",,
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
     use_textline_orientation=False,
@@ -1312,7 +1312,7 @@ for res in output:
     res.save_to_markdown(save_path="output") ## Save the result of the current image in Markdown format
 ```
 
-<b>Note:</b> The parameters in the configuration file are the pipeline initialization parameters. If you wish to change the initialization parameters of the General PP-StructureV3 pipeline, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in a configuration file, simply specify the path of the configuration file with `--pipeline`.
+<b>Note:</b> The parameters in the configuration file are the pipeline initialization parameters. If you wish to change the initialization parameters of the PP-StructureV3 pipeline, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in a configuration file, simply specify the path of the configuration file with `--pipeline`.
 
 ## 3. Development Integration/Deployment
 If the pipeline meets your requirements for inference speed and accuracy, you can proceed directly with development integration/deployment.
@@ -1707,12 +1707,12 @@ for i, res in enumerate(result["layoutParsingResults"]):
 You can choose the appropriate deployment method based on your needs to integrate the model into your pipeline and proceed with subsequent AI application integration.
 
 ## 4. Custom Development
-If the default model weights provided by the General PP-StructureV3 pipeline do not meet your requirements in terms of accuracy or speed, you can try to <b>fine-tune</b> the existing model using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the General PP-StructureV3 pipeline in your scenario.
+If the default model weights provided by the PP-StructureV3 pipeline do not meet your requirements in terms of accuracy or speed, you can try to <b>fine-tune</b> the existing model using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the PP-StructureV3 pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the General PP-StructureV3 pipeline consists of 7 modules, the unsatisfactory performance of the pipeline may originate from any one of these modules.
+Since the PP-StructureV3 pipeline consists of 7 modules, the unsatisfactory performance of the pipeline may originate from any one of these modules.
 
-Since the General PP-StructureV3 pipeline includes several modules, the unsatisfactory performance of the pipeline may originate from any one of these modules. You can analyze the cases with poor extraction results, identify which module is problematic through visualizing the images, and refer to the corresponding fine-tuning tutorial links in the table below to fine-tune the model.
+Since the PP-StructureV3 pipeline includes several modules, the unsatisfactory performance of the pipeline may originate from any one of these modules. You can analyze the cases with poor extraction results, identify which module is problematic through visualizing the images, and refer to the corresponding fine-tuning tutorial links in the table below to fine-tune the model.
 
 <table>
 <thead>
@@ -1819,7 +1819,7 @@ For example, if you use Ascend NPU for PP-StructureV3 pipeline inference, the CL
 
 ```bash
 paddlex --pipeline PP-StructureV3 \
-        --input layout_parsing_v3_demo.png  \
+        --input pp_structrue_v3_demo.png  \
         --use_doc_orientation_classify False \
         --use_doc_unwarping False \
         --use_textline_orientation False \
@@ -1829,4 +1829,4 @@ paddlex --pipeline PP-StructureV3 \
 
 Of course, you can also specify the hardware device when calling `create_pipeline()` or `predict()` in your Python script.
 
-If you want to use the Universal PP-StructureV3 pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+If you want to use the PP-StructureV3 pipeline on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).

@@ -11,7 +11,7 @@ PaddleX 3.0 rc0 全面适配 PaddlePaddle 3.0rc0 版本，新增10+条产线，4
 - 新增产线：
   - 新增[文档预处理产线](pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.md)，支持将矫正旋转和扭曲的文档图像。
   - 新增[文档场景信息抽取v4产线](pipeline_usage/tutorials/information_extraction_pipelines/document_scene_information_extraction_v4.md)，在文档场景信息抽取v3产线的基础上，融合了多模态能力，增强了OCR识别能力，优化了Prompt，最终文档信息抽取的准确率提升15个百分点。支持本地大模型OpenAI接口调用。
-  - 新增[通用版面解析v3产线](pipeline_usage/tutorials/ocr_pipelines/layout_parsing.md)，PP-StructureV3 的核心方案。在通用版面解析v1产线的基础上，优化了版面区域检测、表格识别、公式识别、阅读顺序恢复的能力，支持将不同类型的文档图像和文档PDF文件转换为标准的Markdown文件，在大多数场景的文档恢复能力表现强劲。
+  - 新增[通用版面解析v3产线](pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.md)，PP-StructureV3 的核心方案。在通用版面解析v1产线的基础上，优化了版面区域检测、表格识别、公式识别、阅读顺序恢复的能力，支持将不同类型的文档图像和文档PDF文件转换为标准的Markdown文件，在大多数场景的文档恢复能力表现强劲。
   - 新增[通用表格识别v2产线](pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.md)，采用了“表格分类+表格结构识别+单元格检测”的多模型串联组网方案，实现更高精度的端到端表格识别。
   - 新增[旋转框检测产线](pipeline_usage/tutorials/cv_pipelines/rotated_object_detection.md)，支持对旋转目标进行检测。
   - 新增[人体关键点检测产线](pipeline_usage/tutorials/cv_pipelines/human_keypoint_detection.md)，支持精确获取人体的关键点位置，如肩膀、肘部、膝盖等，从而进行姿态估计和行为识别。
