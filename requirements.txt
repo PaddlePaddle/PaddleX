@@ -11,8 +11,8 @@ numpy==1.24.4; python_version<"3.12"
 numpy==1.26.4; python_version>="3.12"
 matplotlib
 albumentations==1.4.10
-opencv-python==4.5.5.64
-opencv-python-headless==4.10.0.84
+opencv-python==4.5.5.64; platform_system == "Windows"
+opencv-python-headless==4.10.0.84; platform_system == "Windows"
 opencv-contrib-python==4.10.0.84
 chinese_calendar
 scikit-learn
