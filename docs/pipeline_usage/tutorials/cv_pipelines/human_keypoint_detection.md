@@ -73,23 +73,43 @@ PaddleX 的人体关键点检测产线是一个 Top-Down 方案，由行人检�
 </tr>
 </table>
 
-**测试环境说明：**
+<b>测试环境说明：</b>
 
-- **性能测试环境**
-  - **测试数据集**：
+- <b>性能测试环境</b>
+  - <b>测试数据集</b>：
     - 行人检测模型：CrowdHuman数据集。
     - 人体关键点检测模型：COCO数据集 AP(0.5:0.95)，所依赖的检测框为ground truth标注得到。
-  - **硬件配置**：
+  - <b>硬件配置</b>：
     - GPU：NVIDIA Tesla T4
     - CPU：Intel Xeon Gold 6271C @ 2.60GHz
     - 其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
 
-- **推理模式说明**
+- <b>推理模式说明</b>
 
-| 模式        | GPU配置                          | CPU配置          | 加速技术组合                                |
-|-------------|----------------------------------|------------------|---------------------------------------------|
-| 常规模式    | FP32精度 / 无TRT加速             | FP32精度 / 8线程       | PaddleInference                             |
-| 高性能模式  | 选择先验精度类型和加速策略的最优组合         | FP32精度 / 8线程       | 选择先验最优后端（Paddle/OpenVINO/TRT等） |
+<table border="1">
+    <thead>
+        <tr>
+            <th>模式</th>
+            <th>GPU配置</th>
+            <th>CPU配置</th>
+            <th>加速技术组合</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>常规模式</td>
+            <td>FP32精度 / 无TRT加速</td>
+            <td>FP32精度 / 8线程</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>高性能模式</td>
+            <td>选择先验精度类型和加速策略的最优组合</td>
+            <td>FP32精度 / 8线程</td>
+            <td>选择先验最优后端（Paddle/OpenVINO/TRT等）</td>
+        </tr>
+    </tbody>
+</table>
 
 </details>
 

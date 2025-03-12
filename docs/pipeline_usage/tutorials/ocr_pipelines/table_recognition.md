@@ -605,6 +605,7 @@ paddlex --pipeline table_recognition \
        ...,
        [448, ..., 121]], dtype=int16)}}]}}
 ```
+
 运行结果参数说明可以参考[2.2 Python脚本方式](#22-python脚本方式集成)中的结果解释。
 
 可视化结果保存在`save_path`下，其中表格识别的可视化结果如下：
