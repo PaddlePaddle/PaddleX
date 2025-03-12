@@ -1154,7 +1154,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.html" class="md-nav__link">
+      <a href="../pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1176,7 +1176,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html" class="md-nav__link">
+      <a href="../pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -5280,7 +5280,7 @@ You're not viewing the latest version.
 
 <h1 id="paddlex">PaddleX本地安装教程<a class="headerlink" href="#paddlex" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>❗安装 PaddleX 前请先确保您有基础的 <b>Python 运行环境</b>（注：当前支持Python 3.8 ～ Python 3.10下运行，更多Python版本适配中）。</p>
+<p>❗安装 PaddleX 前请先确保您有基础的 <b>Python 运行环境</b>（注：当前支持Python 3.8 ～ Python 3.12下运行）。</p>
 </blockquote>
 <h2 id="1">1. 快速安装<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
 <p>欢迎您使用飞桨低代码开发工具PaddleX，在我们正式开始本地安装之前，请首先明确您的开发需求，并根据您的需求选择合适的安装模式。
@@ -5331,8 +5331,8 @@ PaddleX为您提供了两种安装模式：<b>Wheel包安装</b>和<b>插件安�
 </tr>
 <tr>
 <td>通用OCR</td>
-<td>文本检测<br>文本识别</td>
-<td><code>PaddleOCR</code></td>
+<td>文档图像方向分类<br>文本图像矫正<br>文本检测<br>文本行方向分类<br>文本识别</td>
+<td><code>PaddleOCR</code><br><code>PaddleClas</code></td>
 </tr>
 <tr>
 <td>通用表格识别</td>
@@ -5393,7 +5393,7 @@ PaddleX为您提供了两种安装模式：<b>Wheel包安装</b>和<b>插件安�
 <p>当您使用官方 Docker 镜像安装时，其中<b>已经内置了 PaddlePaddle、PaddleX（包括wheel包和所有插件）</b>，并配置好了相应的CUDA环境，<b>您获取 Docker 镜像并启动容器即可开始使用</b>。</p>
 <p>当您使用自定义方式安装时，需要先安装飞桨 PaddlePaddle 框架，随后获取 PaddleX 源码，最后选择PaddleX的安装模式。</p>
 <blockquote>
-<p>❗ 注：目前 PaddleX 仅支持 11.8 和 12.3 版本的 CUDA，请确保已安装的 Nvidia 驱动支持的上述 CUDA 版本。</p>
+<p>❗ 无需关注物理机上的 CUDA 版本，只需关注显卡驱动程序版本。</p>
 </blockquote>
 <h3 id="21-dockerpaddlex">2.1 基于Docker获取PaddleX<a class="headerlink" href="#21-dockerpaddlex" title="Permanent link">&para;</a></h3>
 <p>参考下述命令，使用 PaddleX 官方 Docker 镜像，创建一个名为 <code>paddlex</code> 的容器，并将当前工作目录映射到容器内的 <code>/paddle</code> 目录。</p>
@@ -5402,10 +5402,10 @@ PaddleX为您提供了两种安装模式：<b>Wheel包安装</b>和<b>插件安�
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>docker<span class="w"> </span>run<span class="w"> </span>--name<span class="w"> </span>paddlex<span class="w"> </span>-v<span class="w"> </span><span class="nv">$PWD</span>:/paddle<span class="w"> </span>--shm-size<span class="o">=</span>8g<span class="w"> </span>--network<span class="o">=</span>host<span class="w"> </span>-it<span class="w"> </span>ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-cpu<span class="w"> </span>/bin/bash
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># 对于 GPU 用户</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># 对于 CUDA11.8 用户</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># GPU 版本，需显卡驱动程序版本 ≥450.80.02（Linux）或 ≥452.39（Windows）</span>
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>docker<span class="w"> </span>run<span class="w"> </span>--gpus<span class="w"> </span>all<span class="w"> </span>--name<span class="w"> </span>paddlex<span class="w"> </span>-v<span class="w"> </span><span class="nv">$PWD</span>:/paddle<span class="w"> </span>--shm-size<span class="o">=</span>8g<span class="w"> </span>--network<span class="o">=</span>host<span class="w"> </span>-it<span class="w"> </span>ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-gpu-cuda11.8-cudnn8.6-trt8.5<span class="w"> </span>/bin/bash
 </span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># 对于 CUDA12.3 用户</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># GPU 版本，需显卡驱动程序版本 ≥545.23.06（Linux）或 ≥545.84（Windows）</span>
 </span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>docker<span class="w"> </span>run<span class="w"> </span>--gpus<span class="w"> </span>all<span class="w"> </span>--name<span class="w"> </span>paddlex<span class="w"> </span>-v<span class="w"> </span><span class="nv">$PWD</span>:/paddle<span class="w"> </span>--shm-size<span class="o">=</span>8g<span class="w"> </span>--network<span class="o">=</span>host<span class="w"> </span>-it<span class="w"> </span>ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-gpu-cuda12.3-cudnn9.0-trt8.6<span class="w"> </span>/bin/bash
 </span></code></pre></div>
 <ul>
@@ -5499,7 +5499,7 @@ nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -i
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月11日 13:42:04">2025年3月11日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月12日 14:10:56">2025年3月12日</span>
   </span>
 
     
@@ -5509,7 +5509,7 @@ nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -i
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月11日 13:42:04">2025年3月11日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月12日 14:10:56">2025年3月12日</span>
   </span>
 
     
@@ -5524,7 +5524,7 @@ nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -i
     </span>
     <nav>
       
-        <a href="mailto:69562787+zhang-prog@users.noreply.github.com">zhang-prog</a>
+        <a href="mailto:45199522+cuicheng01@users.noreply.github.com">cuicheng01</a>
     </nav>
   </span>
 

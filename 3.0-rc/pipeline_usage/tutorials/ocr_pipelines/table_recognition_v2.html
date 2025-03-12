@@ -14,7 +14,7 @@
         <link rel="prev" href="table_recognition.html">
       
       
-        <link rel="next" href="layout_parsing_v2.html">
+        <link rel="next" href="layout_parsing.html">
       
       
       <link rel="icon" href="../../../assets/favicon.png">
@@ -1181,7 +1181,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="layout_parsing_v2.html" class="md-nav__link">
+      <a href="layout_parsing.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1203,7 +1203,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="layout_parsing.html" class="md-nav__link">
+      <a href="layout_parsing_v2.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -5428,7 +5428,7 @@ You're not viewing the latest version.
 <th>检测Hmean（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（M）</th>
 <th>介绍</th>
 </tr>
 </thead>
@@ -5893,7 +5893,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 <tr>
 <th>模型</th><th>模型下载链接</th>
 <th>MS-SSIM （%）</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（M）</th>
 <th>介绍</th>
 </tr>
 </thead>
@@ -5915,7 +5915,7 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="https://padd
 <th>Top-1 Acc（%）</th>
 <th>GPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
 <th>CPU推理耗时（ms）<br/>[常规模式 / 高性能模式]</th>
-<th>模型存储大小（M)</th>
+<th>模型存储大小（M）</th>
 <th>介绍</th>
 </tr>
 </thead>
@@ -6796,7 +6796,7 @@ for i, res in enumerate(result["tableRecResults"]):
 </span><span id="__span-5-63"><a id="__codelineno-5-63" name="__codelineno-5-63" href="#__codelineno-5-63"></a>
 </span><span id="__span-5-64"><a id="__codelineno-5-64" name="__codelineno-5-64" href="#__codelineno-5-64"></a><span class="w">      </span><span class="nt">TextRecognition</span><span class="p">:</span>
 </span><span id="__span-5-65"><a id="__codelineno-5-65" name="__codelineno-5-65" href="#__codelineno-5-65"></a><span class="w">        </span><span class="nt">module_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text_recognition</span>
-</span><span id="__span-5-66"><a id="__codelineno-5-66" name="__codelineno-5-66" href="#__codelineno-5-66"></a><span class="w">        </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PP-OCRv4_server_rec</span>
+</span><span id="__span-5-66"><a id="__codelineno-5-66" name="__codelineno-5-66" href="#__codelineno-5-66"></a><span class="w">        </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PP-OCRv4_server_rec_doc</span>
 </span><span id="__span-5-67"><a id="__codelineno-5-67" name="__codelineno-5-67" href="#__codelineno-5-67"></a><span class="w">        </span><span class="nt">model_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w"> </span><span class="c1"># 替换为微调后文本识别的模型权重路径</span>
 </span><span id="__span-5-68"><a id="__codelineno-5-68" name="__codelineno-5-68" href="#__codelineno-5-68"></a><span class="w">        </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 </span><span id="__span-5-69"><a id="__codelineno-5-69" name="__codelineno-5-69" href="#__codelineno-5-69"></a><span class="w">        </span><span class="nt">score_thresh</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
@@ -6836,7 +6836,7 @@ for i, res in enumerate(result["tableRecResults"]):
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月11日 13:42:04">2025年3月11日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月12日 14:10:56">2025年3月12日</span>
   </span>
 
     
@@ -6846,7 +6846,7 @@ for i, res in enumerate(result["tableRecResults"]):
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月11日 13:42:04">2025年3月11日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月12日 14:10:56">2025年3月12日</span>
   </span>
 
     
@@ -6861,7 +6861,7 @@ for i, res in enumerate(result["tableRecResults"]):
     </span>
     <nav>
       
-        <a href="mailto:69562787+zhang-prog@users.noreply.github.com">zhang-prog</a>
+        <a href="mailto:45199522+cuicheng01@users.noreply.github.com">cuicheng01</a>
     </nav>
   </span>
 
@@ -6969,7 +6969,7 @@ for i, res in enumerate(result["tableRecResults"]):
         
         
           
-          <a href="layout_parsing_v2.html" class="md-footer__link md-footer__link--next" aria-label="下一页: 通用版面解析产线">
+          <a href="layout_parsing.html" class="md-footer__link md-footer__link--next" aria-label="下一页: 通用版面解析产线">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 下一页
