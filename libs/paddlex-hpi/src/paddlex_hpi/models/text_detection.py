@@ -44,11 +44,11 @@ class TextDetPredictor(CVPredictor):
         unclip_ratio: Union[float, None] = None,
         use_dilation: Union[bool, None] = None,
     ) -> None:
-        if limit_type is not None:
+        if limit_type != "max":
             logging.warning(
                 "The default value for `limit_type` is max, and cannot be set in PaddleX HPI."
             )
-        if max_candidates is not None:
+        if max_candidates != "1000":
             logging.warning(
                 "The default value for `max_candidates` is 1000, and cannot be set in PaddleX HPI."
             )
@@ -106,11 +106,11 @@ class TextDetPredictor(CVPredictor):
         unclip_ratio: Union[float, None] = None,
         use_dilation: Union[bool, None] = None,
     ) -> Dict[str, List[Any]]:
-        if limit_type is not None:
+        if limit_type != "max":
             logging.warning(
                 "The default value for `limit_type` is max, and cannot be set in PaddleX HPI."
             )
-        if max_candidates is not None:
+        if max_candidates != "1000":
             logging.warning(
                 "The default value for `max_candidates` is 1000, and cannot be set in PaddleX HPI."
             )
