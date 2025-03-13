@@ -422,6 +422,15 @@ def get_table_recognition_res(
     table_box = np.array([table_box])
     table_ocr_pred = get_sub_regions_ocr_res(overall_ocr_res, table_box)
 
+    if len(table_cells_result)==0 or len(table_ocr_pred["rec_boxes"])==0:
+        pred_html = ' '.join(table_structure_result)
+        single_img_res = {
+            "cell_box_list": [],
+            "table_ocr_pred": [],
+            "pred_html": pred_html,
+        }
+        return SingleTableRecognitionResult(single_img_res)
+
     crop_start_point = [table_box[0][0], table_box[0][1]]
     img_shape = overall_ocr_res["doc_preprocessor_res"]["output_img"].shape[0:2]
 
