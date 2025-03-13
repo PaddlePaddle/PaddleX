@@ -136,6 +136,7 @@ PIR_TRT_PRECISION_MAP = PIR_TRT_PRECISION_MAP_CLASS()
 
 PIR_TRT_CFG_SETTING = {
     "SLANeXt_wired": {"disable_ops": ["pd_op.slice"]},
+    "SLANeXt_wireless": {"disable_ops": ["pd_op.slice"]},
     "DETR-R50": {"optimization_level": 4, "workspace_size": 1 << 32},
     "SegFormer-B0": {"optimization_level": 4, "workspace_size": 1 << 32},
     "SegFormer-B1": {"optimization_level": 4, "workspace_size": 1 << 32},
