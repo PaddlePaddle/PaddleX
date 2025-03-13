@@ -21,7 +21,7 @@ import pandas as pd
 from ....utils import logging
 from ....utils.download import download
 from ....utils.cache import CACHE_DIR
-from .base_batch_sampler import BaseBatchSampler
+from .base_batch_sampler import BaseBatchSampler, Batch
 
 
 class TSBatchSampler(BaseBatchSampler):
@@ -83,13 +83,13 @@ class TSBatchSampler(BaseBatchSampler):
         if not isinstance(inputs, list):
             inputs = [inputs]
 
-        batch = []
+        batch = Batch()
         for input in inputs:
             if isinstance(input, pd.DataFrame):
-                batch.append(input)
+                batch.append(input, None)
                 if len(batch) == self.batch_size:
                     yield batch
-                    batch = []
+                    batch.reset()
             elif isinstance(input, str):
                 file_path = (
                     self._download_from_url(input)
@@ -98,10 +98,10 @@ class TSBatchSampler(BaseBatchSampler):
                 )
                 file_list = self._get_files_list(file_path)
                 for file_path in file_list:
-                    batch.append(file_path)
+                    batch.append(file_path, file_path)
                     if len(batch) == self.batch_size:
                         yield batch
-                        batch = []
+                        batch.reset()
             else:
                 logging.warning(
                     f"Not supported input data type! Only `pd.DataFrame` and `str` are supported! So has been ignored: {input}."
