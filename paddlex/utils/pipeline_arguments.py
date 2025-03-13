@@ -196,6 +196,11 @@ PIPELINE_ARGUMENTS = {
     ],
     "table_recognition_v2": [
         {
+            "name": "--use_table_cells_ocr_results",
+            "type": bool,
+            "help": "Determines whether to use cells OCR results",
+        },
+        {
             "name": "--use_doc_orientation_classify",
             "type": bool,
             "help": "Determines whether to use document preprocessing",

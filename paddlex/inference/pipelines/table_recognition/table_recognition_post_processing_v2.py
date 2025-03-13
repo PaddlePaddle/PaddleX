@@ -440,7 +440,7 @@ def get_table_recognition_res(
         table_cells_result, crop_start_point, img_shape
     )
 
-    if cells_texts_list == "normal_ocr":
+    if cells_texts_list == ["normal_ocr"]:
         ocr_dt_boxes = table_ocr_pred["rec_boxes"]
         ocr_texts_res = table_ocr_pred["rec_texts"]
     else:
