@@ -639,7 +639,7 @@ class HPInfer(StaticInfer):
                 )
             else:
                 logging.debug(
-                    "The Paddle2ONNX plugin is not properly installed. Automatic model conversion will not be performed."
+                    "Paddle2ONNX is not available. Automatic model conversion will not be performed."
                 )
         available_backends = []
         if "paddle" in model_paths:
