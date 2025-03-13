@@ -38,4 +38,6 @@ TRT_BLOCKLIST = [
     "MaskRCNN-ResNet50-vd-FPN",
     "Cascade-MaskRCNN-ResNet50-FPN",
     "SOLOv2",
+    "CenterNet-DLA-34",
+    "CenterNet-ResNet50",
 ]
