@@ -13,3 +13,4 @@
 # limitations under the License.
 
 from .groundingdino_processors import GroundingDINOProcessor, GroundingDINOPostProcessor
+from .yoloworld_processors import YOLOWorldProcessor, YOLOWorldPostProcessor

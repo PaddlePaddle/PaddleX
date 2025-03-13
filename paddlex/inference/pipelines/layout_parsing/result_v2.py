@@ -90,7 +90,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 res_img_dict[key] = sub_seal_res_dict["ocr_res_img"]
 
         # for layout ordering image
-        image = Image.fromarray(self["doc_preprocessor_res"]["output_img"])
+        image = Image.fromarray(self["doc_preprocessor_res"]["output_img"][:, :, ::-1])
         draw = ImageDraw.Draw(image, "RGBA")
         parsing_result = self["parsing_res_list"]
         for block in parsing_result:

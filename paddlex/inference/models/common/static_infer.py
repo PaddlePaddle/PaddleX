@@ -28,7 +28,6 @@ from ....utils.flags import (
 from ...utils.benchmark import benchmark, set_inference_operations
 from ...utils.hpi import get_model_paths
 from ...utils.pp_option import PaddlePredictorOption
-from ...utils.trt_config import TRT_CFG
 
 
 CACHE_DIR = ".cache"
@@ -139,8 +138,7 @@ def _collect_trt_shape_range_info(
 
 # pir trt
 def _convert_trt(
-    model_name,
-    mode,
+    trt_cfg_setting,
     pp_model_file,
     pp_params_file,
     trt_save_path,
@@ -151,15 +149,14 @@ def _convert_trt(
         Input,
         TensorRTConfig,
         convert,
-        PrecisionMode,
     )
 
     def _set_trt_config():
-        if settings := TRT_CFG.get(model_name):
-            for attr_name in settings:
-                if not hasattr(trt_config, attr_name):
-                    logging.warning(f"The TensorRTConfig don't have the `{attr_name}`!")
-                setattr(trt_config, attr_name, settings[attr_name])
+        for attr_name in trt_cfg_setting:
+            assert hasattr(
+                trt_config, attr_name
+            ), f"The `{type(trt_config)}` don't have the attribute `{attr_name}`!"
+            setattr(trt_config, attr_name, trt_cfg_setting[attr_name])
 
     def _get_predictor(model_file, params_file):
         # HACK
@@ -187,11 +184,6 @@ def _convert_trt(
                 f"Invalid input name {repr(name)} found in `dynamic_shape_input_data`"
             )
 
-    precision_map = {
-        "trt_int8": PrecisionMode.INT8,
-        "trt_fp32": PrecisionMode.FP32,
-        "trt_fp16": PrecisionMode.FP16,
-    }
     trt_inputs = []
     for name, candidate_shapes in dynamic_shapes.items():
         # XXX: Currently we have no way to get the data type of the tensor
@@ -221,7 +213,6 @@ def _convert_trt(
     # Create TensorRTConfig
     trt_config = TensorRTConfig(inputs=trt_inputs)
     _set_trt_config()
-    trt_config.precision_mode = precision_map[mode]
     trt_config.save_model_dir = str(trt_save_path)
     pp_model_path = str(pp_model_file.with_suffix(""))
     convert(pp_model_path, trt_config)
@@ -385,61 +376,69 @@ class StaticInfer(object):
                 params_file,
                 cache_dir,
             )
-        else:
-            config = lazy_paddle.inference.Config(str(model_file), str(params_file))
-
-        if self._option.device_type == "gpu":
             config.exp_disable_mixed_precision_ops({"feed", "fetch"})
             config.enable_use_gpu(100, self._option.device_id)
-            if not self._option.run_mode.startswith("trt"):
+        # for Native Paddle and MKLDNN
+        else:
+            config = lazy_paddle.inference.Config(str(model_file), str(params_file))
+            if self._option.device_type == "gpu":
+                config.exp_disable_mixed_precision_ops({"feed", "fetch"})
+                from lazy_paddle.inference import PrecisionType
+
+                precision = (
+                    PrecisionType.Half
+                    if self._option.run_mode == "paddle_fp16"
+                    else PrecisionType.Float32
+                )
+                config.enable_use_gpu(100, self._option.device_id, precision)
                 if hasattr(config, "enable_new_ir"):
                     config.enable_new_ir(self._option.enable_new_ir)
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
                 config.set_optimization_level(3)
-        elif self._option.device_type == "npu":
-            config.enable_custom_device("npu")
-            if hasattr(config, "enable_new_executor"):
-                config.enable_new_executor()
-        elif self._option.device_type == "xpu":
-            if hasattr(config, "enable_new_executor"):
-                config.enable_new_executor()
-        elif self._option.device_type == "mlu":
-            config.enable_custom_device("mlu")
-            if hasattr(config, "enable_new_executor"):
-                config.enable_new_executor()
-        elif self._option.device_type == "dcu":
-            config.enable_use_gpu(100, self._option.device_id)
-            if hasattr(config, "enable_new_executor"):
-                config.enable_new_executor()
-            # XXX: is_compiled_with_rocm() must be True on dcu platform ?
-            if lazy_paddle.is_compiled_with_rocm():
-                # Delete unsupported passes in dcu
-                config.delete_pass("conv2d_add_act_fuse_pass")
-                config.delete_pass("conv2d_add_fuse_pass")
-        else:
-            assert self._option.device_type == "cpu"
-            config.disable_gpu()
-            if "mkldnn" in self._option.run_mode:
-                try:
-                    config.enable_mkldnn()
-                    if "bf16" in self._option.run_mode:
-                        config.enable_mkldnn_bfloat16()
-                except Exception as e:
-                    logging.warning(
-                        "MKL-DNN is not available. We will disable MKL-DNN."
-                    )
-                config.set_mkldnn_cache_capacity(-1)
+            elif self._option.device_type == "npu":
+                config.enable_custom_device("npu")
+                if hasattr(config, "enable_new_executor"):
+                    config.enable_new_executor()
+            elif self._option.device_type == "xpu":
+                if hasattr(config, "enable_new_executor"):
+                    config.enable_new_executor()
+            elif self._option.device_type == "mlu":
+                config.enable_custom_device("mlu")
+                if hasattr(config, "enable_new_executor"):
+                    config.enable_new_executor()
+            elif self._option.device_type == "dcu":
+                config.enable_use_gpu(100, self._option.device_id)
+                if hasattr(config, "enable_new_executor"):
+                    config.enable_new_executor()
+                # XXX: is_compiled_with_rocm() must be True on dcu platform ?
+                if lazy_paddle.is_compiled_with_rocm():
+                    # Delete unsupported passes in dcu
+                    config.delete_pass("conv2d_add_act_fuse_pass")
+                    config.delete_pass("conv2d_add_fuse_pass")
             else:
-                if hasattr(config, "disable_mkldnn"):
-                    config.disable_mkldnn()
-            config.set_cpu_math_library_num_threads(self._option.cpu_threads)
+                assert self._option.device_type == "cpu"
+                config.disable_gpu()
+                if "mkldnn" in self._option.run_mode:
+                    try:
+                        config.enable_mkldnn()
+                        if "bf16" in self._option.run_mode:
+                            config.enable_mkldnn_bfloat16()
+                    except Exception as e:
+                        logging.warning(
+                            "MKL-DNN is not available. We will disable MKL-DNN."
+                        )
+                    config.set_mkldnn_cache_capacity(-1)
+                else:
+                    if hasattr(config, "disable_mkldnn"):
+                        config.disable_mkldnn()
+                config.set_cpu_math_library_num_threads(self._option.cpu_threads)
 
-            if hasattr(config, "enable_new_ir"):
-                config.enable_new_ir(self._option.enable_new_ir)
-            if hasattr(config, "enable_new_executor"):
-                config.enable_new_executor()
-            config.set_optimization_level(3)
+                if hasattr(config, "enable_new_ir"):
+                    config.enable_new_ir(self._option.enable_new_ir)
+                if hasattr(config, "enable_new_executor"):
+                    config.enable_new_executor()
+                config.set_optimization_level(3)
 
         config.enable_memory_optim()
         for del_p in self._option.delete_pass:
@@ -458,8 +457,7 @@ class StaticInfer(object):
         if USE_PIR_TRT:
             trt_save_path = cache_dir / "trt" / self.model_file_prefix
             _convert_trt(
-                self._option.model_name,
-                self._option.run_mode,
+                self._option.trt_cfg_setting,
                 model_file,
                 params_file,
                 trt_save_path,
@@ -470,24 +468,19 @@ class StaticInfer(object):
             params_file = trt_save_path.with_suffix(".pdiparams")
             config = lazy_paddle.inference.Config(str(model_file), str(params_file))
         else:
-            PRECISION_MAP = {
-                "trt_int8": lazy_paddle.inference.Config.Precision.Int8,
-                "trt_fp32": lazy_paddle.inference.Config.Precision.Float32,
-                "trt_fp16": lazy_paddle.inference.Config.Precision.Half,
-            }
-
             config = lazy_paddle.inference.Config(str(model_file), str(params_file))
 
             config.set_optim_cache_dir(str(cache_dir / "optim_cache"))
             config.enable_use_gpu(100, self._option.device_id)
-            config.enable_tensorrt_engine(
-                workspace_size=self._option.trt_max_workspace_size,
-                max_batch_size=self._option.trt_max_batch_size,
-                min_subgraph_size=self._option.trt_min_subgraph_size,
-                precision_mode=PRECISION_MAP[self._option.run_mode],
-                use_static=self._option.trt_use_static,
-                use_calib_mode=self._option.trt_use_calib_mode,
-            )
+            for func_name in self._option.trt_cfg_setting:
+                assert hasattr(
+                    config, func_name
+                ), f"The `{type(config)}` don't have function `{func_name}`!"
+                args = self._option.trt_cfg_setting[func_name]
+                if isinstance(args, list):
+                    getattr(config, func_name)(*args)
+                else:
+                    getattr(config, func_name)(**args)
 
             if self._option.trt_use_dynamic_shapes:
                 if self._option.trt_collect_shape_range_info:

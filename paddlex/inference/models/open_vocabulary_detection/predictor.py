@@ -20,7 +20,12 @@ from ....utils.func_register import FuncRegister
 from ....modules.open_vocabulary_detection.model_list import MODELS
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from .processors import GroundingDINOProcessor, GroundingDINOPostProcessor
+from .processors import (
+    GroundingDINOProcessor,
+    GroundingDINOPostProcessor,
+    YOLOWorldProcessor,
+    YOLOWorldPostProcessor,
+)
 from ..common import StaticInfer
 from ..base import BasicPredictor
 from ..object_detection.result import DetResult
@@ -97,7 +102,7 @@ class OVDetPredictor(BasicPredictor):
         image_paths = batch_data.input_paths
         src_images = self.pre_ops[0](batch_data.instances)
         datas = src_images
-        # preprocess
+        # preprocess for image only
         for pre_op in self.pre_ops[1:-1]:
             datas = pre_op(datas)
 
@@ -141,6 +146,10 @@ class OVDetPredictor(BasicPredictor):
                 box_threshold=self.config["box_threshold"],
                 text_threshold=self.config["text_threshold"],
             )
+        elif "YOLO-World" in self.model_name:
+            return YOLOWorldPostProcessor(
+                threshold=self.config["threshold"],
+            )
         else:
             raise NotImplementedError
 
@@ -152,4 +161,18 @@ class OVDetPredictor(BasicPredictor):
             model_dir=self.model_dir,
             text_max_words=text_max_words,
             target_size=target_size,
+        )
+
+    @register("YOLOWorldProcessor")
+    def build_yoloworld_preprocessor(
+        self,
+        image_target_size=(640, 640),
+        image_mean=[0.0, 0.0, 0.0],
+        image_std=[1.0, 1.0, 1.0],
+    ):
+        return YOLOWorldProcessor(
+            model_dir=self.model_dir,
+            image_target_size=image_target_size,
+            image_mean=image_mean,
+            image_std=image_std,
         )

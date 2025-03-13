@@ -71,7 +71,7 @@ def parse_config(cfg_file):
 def print_dict(d, delimiter=0):
     """
     Recursively visualize a dict and
-    indenting acrrording by the relationship of keys.
+    indenting according by the relationship of keys.
     """
     placeholder = "-" * 60
     for k, v in sorted(d.items()):
@@ -125,7 +125,7 @@ def override(dl, ks, v):
             return s
 
     assert isinstance(dl, (list, dict)), "{} should be a list or a dict"
-    assert len(ks) > 0, "lenght of keys should larger than 0"
+    assert len(ks) > 0, "length of keys should larger than 0"
     if isinstance(dl, list):
         k = parse_str(ks[0])
         if len(ks) == 1:
