@@ -26,8 +26,7 @@ from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 from ..ocr.result import OCRResult
 from .result_v2 import LayoutParsingResultV2
-from .utils import get_single_block_parsing_res
-from .utils import get_sub_regions_ocr_res
+from .utils import get_single_block_parsing_res, get_sub_regions_ocr_res, gather_imgs
 
 
 class LayoutParsingPipelineV2(BasePipeline):
@@ -498,6 +497,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                     layout_merge_bboxes_mode=layout_merge_bboxes_mode,
                 )
             )
+            imgs_in_doc = gather_imgs(doc_preprocessor_image, layout_det_res["boxes"])
 
             if model_settings["use_formula_recognition"]:
                 formula_res_all = next(
@@ -537,7 +537,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                 overall_ocr_res = {}
 
             if model_settings["use_table_recognition"]:
-                table_overall_ocr_res = copy.deepcopy(overall_ocr_res)
+                table_contents = copy.deepcopy(overall_ocr_res)
                 for formula_res in formula_res_list:
                     x_min, y_min, x_max, y_max = list(map(int, formula_res["dt_polys"]))
                     poly_points = [
@@ -546,15 +546,34 @@ class LayoutParsingPipelineV2(BasePipeline):
                         (x_max, y_max),
                         (x_min, y_max),
                     ]
-                    table_overall_ocr_res["dt_polys"].append(poly_points)
-                    table_overall_ocr_res["rec_texts"].append(
+                    table_contents["dt_polys"].append(poly_points)
+                    table_contents["rec_texts"].append(
                         f"${formula_res['rec_formula']}$"
                     )
-                    table_overall_ocr_res["rec_boxes"] = np.vstack(
-                        (table_overall_ocr_res["rec_boxes"], [formula_res["dt_polys"]])
+                    table_contents["rec_boxes"] = np.vstack(
+                        (table_contents["rec_boxes"], [formula_res["dt_polys"]])
                     )
-                    table_overall_ocr_res["rec_polys"].append(poly_points)
-                    table_overall_ocr_res["rec_scores"].append(1)
+                    table_contents["rec_polys"].append(poly_points)
+                    table_contents["rec_scores"].append(1)
+
+                for img in imgs_in_doc:
+                    img_path = img["path"]
+                    x_min, y_min, x_max, y_max = img["coordinate"]
+                    poly_points = [
+                        (x_min, y_min),
+                        (x_max, y_min),
+                        (x_max, y_max),
+                        (x_min, y_max),
+                    ]
+                    table_contents["dt_polys"].append(poly_points)
+                    table_contents["rec_texts"].append(
+                        f'<div style="text-align: center;"><img src="{img_path}" alt="Image" /></div>'
+                    )
+                    table_contents["rec_boxes"] = np.vstack(
+                        (table_contents["rec_boxes"], img["coordinate"])
+                    )
+                    table_contents["rec_polys"].append(poly_points)
+                    table_contents["rec_scores"].append(img["score"])
 
                 table_res_all = next(
                     self.table_recognition_pipeline(
@@ -563,7 +582,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                         use_doc_unwarping=False,
                         use_layout_detection=False,
                         use_ocr_model=False,
-                        overall_ocr_res=table_overall_ocr_res,
+                        overall_ocr_res=table_contents,
                         layout_det_res=layout_det_res,
                         cell_sort_by_y_projection=True,
                     ),
@@ -623,6 +642,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                 "seal_res_list": seal_res_list,
                 "formula_res_list": formula_res_list,
                 "parsing_res_list": parsing_res_list,
+                "imgs_in_doc": imgs_in_doc,
                 "model_settings": model_settings,
             }
             yield LayoutParsingResultV2(single_img_res)

@@ -16,7 +16,6 @@ __all__ = [
     "get_sub_regions_ocr_res",
     "get_layout_ordering",
     "get_single_block_parsing_res",
-    "recursive_img_array2path",
     "get_show_color",
     "sorted_layout_boxes",
 ]
@@ -797,56 +796,22 @@ def sort_by_xycut(
     return res
 
 
-def _img_array2path(data: np.ndarray) -> str:
-    """
-    Save an image array to disk and return the relative file path.
-
-    Args:
-        data (np.ndarray): An image represented as a numpy array with 3 dimensions (H, W, C).
-
-    Returns:
-        dict: A dictionary with a single key-value pair formatted as:
-              {"imgs/image_{uuid4_hex}.png": PIL.Image.Image}
-
-    Raises:
-        ValueError: If the input data is not a valid image array.
-    """
-    if isinstance(data, np.ndarray) and data.ndim == 3:
-        # Generate a unique filename using UUID
-        img_name = f"image_{uuid.uuid4().hex}.png"
-
-        return {f"imgs/{img_name}": Image.fromarray(data[:, :, ::-1])}
-    else:
-        raise ValueError(
-            "Input data must be a 3-dimensional numpy array representing an image."
-        )
-
-
-def recursive_img_array2path(
-    data: Union[Dict[str, Any], List[Any]],
-    labels: List[str] = [],
-) -> None:
-    """
-    Recursively process a dictionary or list to save image arrays to disk
-    and replace them with file paths.
-
-    Args:
-        data (Union[Dict[str, Any], List[Any]]): The data structure that may contain image arrays.
-        save_path (Union[str, Path]): The base path where images should be saved.
-        labels (List[str]): List of keys to check for image arrays in dictionaries.
-
-    Returns:
-        None: This function modifies the input data structure in place.
-    """
-    if isinstance(data, dict):
-        for k, v in data.items():
-            if k in labels and isinstance(v, np.ndarray) and v.ndim == 3:
-                data[k] = _img_array2path(v)
-            else:
-                recursive_img_array2path(v, labels)
-    elif isinstance(data, list):
-        for item in data:
-            recursive_img_array2path(item, labels)
+def gather_imgs(original_img, layout_det_objs):
+    imgs_in_doc = []
+    for det_obj in layout_det_objs:
+        if det_obj["label"] in ("image", "chart"):
+            x_min, y_min, x_max, y_max = list(map(int, det_obj["coordinate"]))
+            img_path = f"imgs/img_in_table_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
+            img = Image.fromarray(original_img[y_min:y_max, x_min:x_max, ::-1])
+            imgs_in_doc.append(
+                {
+                    "path": img_path,
+                    "img": img,
+                    "coordinate": (x_min, y_min, x_max, y_max),
+                    "score": det_obj["score"],
+                }
+            )
+    return imgs_in_doc
 
 
 def _get_minbox_if_overlap_by_ratio(
