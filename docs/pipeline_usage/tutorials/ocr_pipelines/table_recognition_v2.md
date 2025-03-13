@@ -895,6 +895,14 @@ for res in output:
 <li><b>float</b>：大于 <code>0</code> 的任意浮点数
     <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值 <code>0.0</code>。即不设阈值</li></li></ul></td>
 <td><code>None</code></td>
+</tr>
+<td><code>use_table_cells_ocr_results</code></td>
+<td>是否启用单元格OCR模式，不启用时采用全局OCR结果填充至html表格，启用时逐个单元格做OCR并填充至html表格。二者在不同场景下表现不同，请根据实际情况选择。</td>
+<td><code>bool|False</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>
+<td><code>False</code></td>
 
 </tr></table>
 

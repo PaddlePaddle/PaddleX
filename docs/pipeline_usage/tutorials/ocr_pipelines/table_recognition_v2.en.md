@@ -893,6 +893,13 @@ In the above Python script, the following steps are executed:
 </td>
 <td><code>None</code></td>
 </tr>
+<td><code>use_table_cells_ocr_results</code></td>
+<td>Whether to enable Table-Cells-OCR mode, when not enabled, use global OCR result to fill to html table, when enabled, do OCR cell by cell and fill to html table. Both of them perform differently in different scenarios, please choose according to the actual situation.</td>
+<td><code>bool|False</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> or <code>False</code>
+<td><code>False</code></td>
 </table>
 
 (3) Process the prediction results, where each sample's prediction result is represented as a corresponding Result object, and supports operations such as printing, saving as an image, saving as an `xlsx` file, saving as an `HTML` file, and saving as a `json` file:

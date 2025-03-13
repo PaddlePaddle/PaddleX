@@ -531,6 +531,7 @@ class TableRecognitionPipelineV2(BasePipeline):
         image_array: np.ndarray,
         overall_ocr_res: OCRResult,
         table_box: list,
+        use_table_cells_ocr_results: bool = False,
         flag_find_nei_text: bool = True,
     ) -> SingleTableRecognitionResult:
         """
@@ -545,8 +546,6 @@ class TableRecognitionPipelineV2(BasePipeline):
         Returns:
             SingleTableRecognitionResult: single table recognition result.
         """
-
-        use_table_cells_ocr_results = False
 
         table_cls_pred = next(self.table_cls_model(image_array))
         table_cls_result = self.extract_results(table_cls_pred, "cls")
@@ -572,7 +571,7 @@ class TableRecognitionPipelineV2(BasePipeline):
         if use_table_cells_ocr_results == True:
             cells_texts_list = self.split_ocr_bboxes_by_table_cells(image_array, table_cells_result)
         else:
-            cells_texts_list = "normal_ocr"
+            cells_texts_list = ["normal_ocr"]
         single_table_recognition_res = get_table_recognition_res(
             table_box, table_structure_result, table_cells_result, overall_ocr_res, cells_texts_list
         )
@@ -602,6 +601,7 @@ class TableRecognitionPipelineV2(BasePipeline):
         text_det_box_thresh: Optional[float] = None,
         text_det_unclip_ratio: Optional[float] = None,
         text_rec_score_thresh: Optional[float] = None,
+        use_table_cells_ocr_results: Optional[bool] = False,
         **kwargs,
     ) -> TableRecognitionResult:
         """
@@ -673,6 +673,7 @@ class TableRecognitionPipelineV2(BasePipeline):
                     doc_preprocessor_image,
                     overall_ocr_res,
                     table_box,
+                    use_table_cells_ocr_results,
                     flag_find_nei_text=False,
                 )
                 single_table_rec_res["table_region_id"] = table_region_id
@@ -689,7 +690,7 @@ class TableRecognitionPipelineV2(BasePipeline):
                         table_box = crop_img_info["box"]
                         single_table_rec_res = (
                             self.predict_single_table_recognition_res(
-                                crop_img_info["img"], overall_ocr_res, table_box
+                                crop_img_info["img"], overall_ocr_res, table_box, use_table_cells_ocr_results
                             )
                         )
                         single_table_rec_res["table_region_id"] = table_region_id
