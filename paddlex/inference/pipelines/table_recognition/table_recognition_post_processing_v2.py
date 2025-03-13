@@ -403,6 +403,7 @@ def get_table_recognition_res(
     table_structure_result: list,
     table_cells_result: list,
     overall_ocr_res: OCRResult,
+    cells_texts_list,
 ) -> SingleTableRecognitionResult:
     """
     Retrieve table recognition result from cropped image info, table structure prediction, and overall OCR result.
@@ -412,6 +413,7 @@ def get_table_recognition_res(
         table_structure_result (list): Predicted table structure.
         table_cells_result (list): Predicted table cells.
         overall_ocr_res (OCRResult): Overall OCR result from the input image.
+        cells_texts_list: OCR results with cells.
 
     Returns:
         SingleTableRecognitionResult: An object containing the single table recognition result.
@@ -438,8 +440,12 @@ def get_table_recognition_res(
         table_cells_result, crop_start_point, img_shape
     )
 
-    ocr_dt_boxes = table_ocr_pred["rec_boxes"]
-    ocr_texts_res = table_ocr_pred["rec_texts"]
+    if cells_texts_list == "normal_ocr":
+        ocr_dt_boxes = table_ocr_pred["rec_boxes"]
+        ocr_texts_res = table_ocr_pred["rec_texts"]
+    else:
+        ocr_dt_boxes = table_cells_result
+        ocr_texts_res = cells_texts_list
 
     table_cells_result, table_cells_flag = sort_table_cells_boxes(table_cells_result)
     row_start_index = find_row_start_index(table_structure_result)
