@@ -407,6 +407,18 @@ class StaticInfer(object):
                 config.enable_custom_device("mlu")
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
+            elif self._option.device_type == "gcu":
+                from paddle_custom_device.gcu import passes as gcu_passes
+
+                gcu_passes.setUp()
+                config.enable_custom_device("gcu")
+                if hasattr(config, "enable_new_executor"):
+                    config.enable_new_ir()
+                    config.enable_new_executor()
+                else:
+                    pass_builder = config.pass_builder()
+                    name = "PaddleX_" + self._option.model_name
+                    gcu_passes.append_passes_for_legacy_ir(pass_builder, name)
             elif self._option.device_type == "dcu":
                 config.enable_use_gpu(100, self._option.device_id)
                 if hasattr(config, "enable_new_executor"):
