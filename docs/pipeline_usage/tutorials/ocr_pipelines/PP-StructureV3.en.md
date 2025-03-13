@@ -700,8 +700,9 @@ markdown_texts = ""
 markdown_images = []
 
 for res in output:
-    markdown_texts += res.markdown["markdown_texts"]
-    markdown_images.append(res.markdown["markdown_images"])
+    md_info = res.markdown
+    markdown_list.append(md_info)
+    markdown_images.append(md_info.get("markdown_images", {}))
 
 mkd_file_path = output_path / f"{Path(input_file).stem}.md"
 mkd_file_path.parent.mkdir(parents=True, exist_ok=True)

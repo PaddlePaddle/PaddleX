@@ -647,8 +647,9 @@ markdown_list = []
 markdown_images = []
 
 for res in output:
-    markdown_list.append(res.markdown)
-    markdown_images.append(res.get("markdown_images", {}))
+    md_info = res.markdown
+    markdown_list.append(md_info)
+    markdown_images.append(md_info.get("markdown_images", {}))
 
 markdown_texts = pipeline.concatenate_markdown_pages(markdown_list)
 

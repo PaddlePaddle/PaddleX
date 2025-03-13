@@ -21,6 +21,7 @@ SubModules:
     layout_merge_bboxes_mode: 
       1: "large"  # image
       18: "large" # chart
+      7: "large"  # formula
 
 SubPipelines:
   DocPreprocessor:
@@ -45,7 +46,7 @@ SubPipelines:
     SubModules:
       TextDetection:
         module_name: text_detection
-        model_name: PP-OCRv4_mobile_det
+        model_name: PP-OCRv4_server_det
         model_dir: null
         limit_side_len: 960
         limit_type: max
