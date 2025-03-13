@@ -227,6 +227,7 @@ class LayoutParsingPipelineV2(BasePipeline):
         table_res_list: list,
         seal_res_list: list,
         formula_res_list: list,
+        imgs_in_doc: list,
         text_det_limit_side_len: Optional[int] = None,
         text_det_limit_type: Optional[str] = None,
         text_det_thresh: Optional[float] = None,
@@ -344,6 +345,7 @@ class LayoutParsingPipelineV2(BasePipeline):
             layout_det_res=layout_det_res,
             table_res_list=table_res_list,
             seal_res_list=seal_res_list,
+            imgs_in_doc=imgs_in_doc,
         )
 
         return parsing_res_list
@@ -625,6 +627,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                 table_res_list=table_res_list,
                 seal_res_list=seal_res_list,
                 formula_res_list=formula_res_list,
+                imgs_in_doc=imgs_in_doc,
                 text_det_limit_side_len=text_det_limit_side_len,
                 text_det_limit_type=text_det_limit_type,
                 text_det_thresh=text_det_thresh,
