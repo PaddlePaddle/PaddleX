@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import warnings
 from pathlib import Path
 from typing import Any, Dict, Literal, List, Mapping, Optional, Tuple, Type, Union
@@ -87,7 +88,9 @@ class TensorRTConfig(_BackendConfig):
         )
         if self.precision == "FP16":
             option.trt_option.enable_fp16 = True
-        if self.dynamic_shapes is not None:
+        if self.dynamic_shapes is not None and not os.path.exists(
+            option.trt_option.serialize_file
+        ):
             for name, shapes in self.dynamic_shapes.items():
                 option.trt_option.set_shape(name, *shapes)
 

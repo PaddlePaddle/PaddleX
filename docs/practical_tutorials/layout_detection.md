@@ -227,7 +227,7 @@ SubModules:
   ObjectDetection:
     module_name: object_detection
     model_name: PP-DocLayout-L  # 修改为上文 2. 模型列表中的版面区域检测模型名称
-    model_dir: null 
+    model_dir: null
     batch_size: 1
     img_size: null
     threshold: null
@@ -236,7 +236,7 @@ SubModules:
 随后，加载自定义配置文件 `./my_path/object_detection.yaml`，参考以下本地体验中的命令行方式或 Python 脚本方式进行在线体验。
 
 
-### 2.1 本地体验 ———— 命令行方式
+### 3.1 本地体验 ———— 命令行方式
 
 运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout_test_0.jpg)到本地。自定义配置文件保存在 `./my_path/object_detection.yaml` ，则只需执行：
 
@@ -269,7 +269,7 @@ paddlex --pipeline ./my_path/object_detection.yaml \
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/practical_tutorials/layout_detection/layout_test_0_res.jpg">
 
 
-### 2.2 本地体验 ———— Python 方式
+### 3.2 本地体验 ———— Python 方式
 
 通过上述命令行方式可快速体验查看效果，在项目中往往需要代码集成，您可以通过如下几行代码完成产线的快速推理：
 
@@ -309,7 +309,7 @@ for res in output:
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") # 阈值参数不设置时，默认为0.5
-output = pipeline.predict("layout_test_2.jpg") 
+output = pipeline.predict("layout_test_2.jpg")
 for res in output:
     res.print()
     res.save_to_img("./output/")
@@ -323,7 +323,7 @@ for res in output:
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 output = pipeline.predict("layout_test_2.jpg", threshold={2: 0.6}) # 针对类别2text，设置检测得分阈值为0.6，其余类别沿用默认阈值0.5
 for res in output:
     res.print()
@@ -354,7 +354,7 @@ for res in output:
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 # output = pipeline.predict("layout_test_2.jpg", threshold=0.5)  # 不开启重叠框过滤功能
 output = pipeline.predict("layout_test_2.jpg", threshold=0.5, layout_nms=True)  # 开启重叠框过滤功能
 for res in output:
@@ -384,7 +384,7 @@ for res in output:
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 # output = pipeline.predict("layout_test_2.jpg",  threshold={2: 0.6})  # 不调整检测框边的缩放倍数
 output = pipeline.predict("layout_test_2.jpg",  threshold={2: 0.6}, layout_unclip_ratio=(1.0, 1.05))  # 调整检测框的高的缩放倍数为1.05
 for res in output:
@@ -414,7 +414,7 @@ for res in output:
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 output = pipeline.predict("PMC4836298_00004.jpg") # 默认不设置
 # output = pipeline.predict("PMC4836298_00004.jpg", layout_merge_bboxes_mode="small") # 设置'small'模式
 # output = pipeline.predict("PMC4836298_00004.jpg", layout_merge_bboxes_mode="large") # 设置'large'模式
@@ -456,7 +456,7 @@ class LayoutOCRPipeline():
     def __init__(self):
         self.layout_pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")  # 加载上述自定义的配置文件，创建版面检测产线
         self.ocr_pipeline = create_pipeline(pipeline="OCR") # 加载OCR产线
-        
+
     def crop_table(self, layout_res, layout_name):
         img_path = layout_res["input_path"]
         img = cv2.imread(img_path)
@@ -468,7 +468,7 @@ class LayoutOCRPipeline():
             table_img = img[ymin:ymax, xmin:xmax]
             table_img_list.append(table_img)
         return table_img_list
-    
+
     def predict(self, data, layout_name):
         for layout_res in self.layout_pipeline.predict(data):  # 进行版面检测
             final_res = {}
@@ -476,7 +476,7 @@ class LayoutOCRPipeline():
             if len(crop_img_list) == 0:
                 continue
             ocr_res = list(self.ocr_pipeline.predict(    # 进行OCR文字识别
-                                                input=crop_img_list, 
+                                                input=crop_img_list,
                                                 use_doc_orientation_classify=False, # 不使用文档方向分类
                                                 use_doc_unwarping=False, # 不使用文档矫正
                                                 use_textline_orientation=False # 不使用文字方向分类
@@ -512,7 +512,7 @@ if __name__ == "__main__":
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 output = pipeline.predict("layout_test_2.jpg", threshold=0.5, layout_nms=True, layout_merge_bboxes_mode="large")
 for res in output:
     res.print()
@@ -538,7 +538,7 @@ tar -xvf paddlex_hps_object_detection_sdk.tar.gz
 
 - 在 [飞桨 AI Studio 星河社区-人工智能学习与实训社区](https://aistudio.baidu.com/paddlex/commercialization) 的“开源模型产线部署序列号咨询与获取”部分选择“立即获取”，如下图所示：
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-1.png"> 
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-1.png">
 
 选择目标检测产线，并点击“获取”。之后，可以在页面下方的“开源产线部署SDK序列号管理”部分找到获取到的序列号：
 
@@ -625,5 +625,3 @@ python -m pip install paddlex_hps_client-*.whl
 * 端侧部署：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考 [PaddleX端侧部署指南](../pipeline_deploy/edge_deploy.md)。
 
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
-
-

@@ -3,7 +3,7 @@ comments: true
 ---
 
 # PaddleX本地安装教程
-> ❗安装 PaddleX 前请先确保您有基础的 <b>Python 运行环境</b>（注：当前支持Python 3.8 ～ Python 3.10下运行，更多Python版本适配中）。
+> ❗安装 PaddleX 前请先确保您有基础的 <b>Python 运行环境</b>（注：当前支持Python 3.8 ～ Python 3.12下运行）。
 
 ## 1. 快速安装
 欢迎您使用飞桨低代码开发工具PaddleX，在我们正式开始本地安装之前，请首先明确您的开发需求，并根据您的需求选择合适的安装模式。
@@ -61,8 +61,8 @@ PaddleX支持的插件如下，请您根据开发需求，确定所需的一个�
 </tr>
 <tr>
 <td>通用OCR</td>
-<td>文本检测<br>文本识别</td>
-<td><code>PaddleOCR</code></td>
+<td>文档图像方向分类<br>文本图像矫正<br>文本检测<br>文本行方向分类<br>文本识别</td>
+<td><code>PaddleOCR</code><br><code>PaddleClas</code></td>
 </tr>
 <tr>
 <td>通用表格识别</td>
@@ -131,7 +131,7 @@ paddlex --install PaddleXXX  # 例如PaddleOCR
 
 当您使用自定义方式安装时，需要先安装飞桨 PaddlePaddle 框架，随后获取 PaddleX 源码，最后选择PaddleX的安装模式。
 
-> ❗ 注：目前 PaddleX 仅支持 11.8 和 12.3 版本的 CUDA，请确保已安装的 Nvidia 驱动支持的上述 CUDA 版本。
+> ❗ 无需关注物理机上的 CUDA 版本，只需关注显卡驱动程序版本。
 
 ### 2.1 基于Docker获取PaddleX
 参考下述命令，使用 PaddleX 官方 Docker 镜像，创建一个名为 `paddlex` 的容器，并将当前工作目录映射到容器内的 `/paddle` 目录。
@@ -143,10 +143,10 @@ paddlex --install PaddleXXX  # 例如PaddleOCR
 docker run --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-cpu /bin/bash
 
 # 对于 GPU 用户
-# 对于 CUDA11.8 用户
+# GPU 版本，需显卡驱动程序版本 ≥450.80.02（Linux）或 ≥452.39（Windows）
 docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-gpu-cuda11.8-cudnn8.6-trt8.5 /bin/bash
 
-# 对于 CUDA12.3 用户
+# GPU 版本，需显卡驱动程序版本 ≥545.23.06（Linux）或 ≥545.84（Windows）
 docker run --gpus all --name paddlex -v $PWD:/paddle --shm-size=8g --network=host -it ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlex/paddlex:paddlex3.0.0rc0-paddlepaddle3.0.0rc0-gpu-cuda12.3-cudnn9.0-trt8.6 /bin/bash
 ```
 
