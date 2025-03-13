@@ -542,6 +542,7 @@ def get_single_block_parsing_res(
     layout_det_res: DetResult,
     table_res_list: list,
     seal_res_list: list,
+    imgs_in_doc: list,
 ) -> OCRResult:
     """
     Extract structured information from OCR and layout detection results.
@@ -652,14 +653,14 @@ def get_single_block_parsing_res(
                     ]
 
             if label in ["chart", "image"]:
+                x_min, y_min, x_max, y_max = list(map(int, block_bbox))
+                img_path = f"imgs/img_in_table_box_{x_min}_{y_min}_{x_max}_{y_max}.jpg"
+                img = Image.fromarray(input_img[y_min:y_max, x_min:x_max, ::-1])
                 single_block_layout_parsing_res.append(
                     {
                         "block_label": label,
                         "block_content": _process_text("".join(rec_res["rec_texts"])),
-                        "block_image": input_img[
-                            int(block_bbox[1]) : int(block_bbox[3]),
-                            int(block_bbox[0]) : int(block_bbox[2]),
-                        ],
+                        "block_image": {img_path: img},
                         "block_bbox": block_bbox,
                         "seg_start_flag": seg_start_flag,
                         "seg_end_flag": seg_end_flag,
