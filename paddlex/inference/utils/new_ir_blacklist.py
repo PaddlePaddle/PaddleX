@@ -15,7 +15,6 @@
 NEWIR_BLOCKLIST = [
     "PP-YOLOE_seg-S",
     "PatchTST_ad",
-    "TimesNet_ad",
     "Nonstationary_ad",
     "DLinear_ad",
     "Co-Deformable-DETR-R50",
