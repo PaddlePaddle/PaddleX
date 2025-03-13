@@ -309,7 +309,9 @@ class LayoutParsingPipelineV2(BasePipeline):
                     del overall_ocr_res["rec_polys"][matched_idx]
                     del overall_ocr_res["rec_scores"][matched_idx]
 
-                if sub_ocr_res["rec_boxes"] is not []:
+                if sub_ocr_res["rec_boxes"].size > 0:
+                    sub_ocr_res["rec_labels"] = ["text"] * len(sub_ocr_res["rec_texts"])
+
                     overall_ocr_res["dt_polys"].extend(sub_ocr_res["dt_polys"])
                     overall_ocr_res["rec_texts"].extend(sub_ocr_res["rec_texts"])
                     overall_ocr_res["rec_boxes"] = np.concatenate(
@@ -317,6 +319,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                     )
                     overall_ocr_res["rec_polys"].extend(sub_ocr_res["rec_polys"])
                     overall_ocr_res["rec_scores"].extend(sub_ocr_res["rec_scores"])
+                    overall_ocr_res["rec_labels"].extend(sub_ocr_res["rec_labels"])
 
         for formula_res in formula_res_list:
             x_min, y_min, x_max, y_max = list(map(int, formula_res["dt_polys"]))
@@ -331,10 +334,12 @@ class LayoutParsingPipelineV2(BasePipeline):
             overall_ocr_res["rec_boxes"] = np.vstack(
                 (overall_ocr_res["rec_boxes"], [formula_res["dt_polys"]])
             )
+            overall_ocr_res["rec_labels"].append("formula")
             overall_ocr_res["rec_polys"].append(poly_points)
             overall_ocr_res["rec_scores"].append(1)
 
         parsing_res_list = get_single_block_parsing_res(
+            self.general_ocr_pipeline,
             overall_ocr_res=overall_ocr_res,
             layout_det_res=layout_det_res,
             table_res_list=table_res_list,
@@ -472,7 +477,7 @@ class LayoutParsingPipelineV2(BasePipeline):
         if not self.check_model_settings_valid(model_settings):
             yield {"error": "the input params for model settings are invalid!"}
 
-        for img_id, batch_data in enumerate(self.batch_sampler(input)):
+        for batch_data in self.batch_sampler(input):
             image_array = self.img_reader(batch_data.instances)[0]
 
             if model_settings["use_doc_preprocessor"]:
@@ -535,6 +540,8 @@ class LayoutParsingPipelineV2(BasePipeline):
                 )
             else:
                 overall_ocr_res = {}
+
+            overall_ocr_res["rec_labels"] = ["text"] * len(overall_ocr_res["rec_texts"])
 
             if model_settings["use_table_recognition"]:
                 table_contents = copy.deepcopy(overall_ocr_res)

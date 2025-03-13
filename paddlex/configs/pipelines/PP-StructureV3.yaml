@@ -16,7 +16,14 @@ SubModules:
       7: 0.3
     layout_nms: True
     layout_unclip_ratio: 1.0
+<<<<<<< HEAD
     layout_merge_bboxes_mode: "large"
+=======
+    layout_merge_bboxes_mode: 
+      1: "large"  # image
+      18: "large" # chart
+      7: "large"  # formula
+>>>>>>> 7b7c4599f... sort formulas and text in a line && bug fix
 
 SubPipelines:
   DocPreprocessor:
@@ -41,7 +48,7 @@ SubPipelines:
     SubModules:
       TextDetection:
         module_name: text_detection
-        model_name: PP-OCRv4_mobile_det
+        model_name: PP-OCRv4_server_det
         model_dir: null
         limit_side_len: 960
         limit_type: max

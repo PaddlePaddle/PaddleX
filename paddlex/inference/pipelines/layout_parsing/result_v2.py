@@ -310,7 +310,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 "table": format_table,
                 "reference": lambda: block["block_content"],
                 "algorithm": lambda: block["block_content"].strip("\n"),
-                "seal": lambda: format_image("block_content"),
+                "seal": lambda: f"Words of Seals:\n{block['block_content']}",
             }
             parsing_res_list = obj["parsing_res_list"]
             markdown_content = ""
