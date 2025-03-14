@@ -108,7 +108,7 @@ class ArraytoTS:
         Raises:
             ValueError: If none of the expected keys are found in ori_ts.
         """
-        pred = pred[0]
+        pred = pred.reshape(1)
         if ori_ts.get("past_target", None) is not None:
             ts = ori_ts["past_target"]
         elif ori_ts.get("observed_cov_numeric", None) is not None:
