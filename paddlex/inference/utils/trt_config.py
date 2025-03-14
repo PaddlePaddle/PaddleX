@@ -135,6 +135,7 @@ OLD_IR_TRT_CFG_SETTING = {
 PIR_TRT_PRECISION_MAP = PIR_TRT_PRECISION_MAP_CLASS()
 
 PIR_TRT_CFG_SETTING = {
+    "PP-YOLOE_plus_SOD-largesize-L": {"workspace_size": 1 << 32},
     "SLANeXt_wired": {"disable_ops": ["pd_op.slice"]},
     "SLANeXt_wireless": {"disable_ops": ["pd_op.slice"]},
     "DETR-R50": {"optimization_level": 4, "workspace_size": 1 << 32},
