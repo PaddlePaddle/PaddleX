@@ -21,10 +21,6 @@ import unicodedata
 from functools import lru_cache
 from typing import List, Optional
 
-from .....utils.lazy_loader import LazyLoader
-
-paddle = LazyLoader("lazy_paddle", globals(), "paddle")
-
 from .tokenizer_utils_base import AddedToken
 from .tokenizer_utils import PretrainedTokenizer
 from .tokenizer_utils import _is_control, _is_punctuation, _is_whitespace
