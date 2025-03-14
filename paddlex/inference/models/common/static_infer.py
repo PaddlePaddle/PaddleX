@@ -22,7 +22,7 @@ import numpy as np
 from ....utils.flags import DEBUG, FLAGS_json_format_model, USE_PIR_TRT
 from ....utils import logging
 from ...utils.pp_option import PaddlePredictorOption
-
+from paddle.inference import InternalUtils
 
 def collect_trt_shapes(
     model_file, model_params, gpu_id, shape_range_info_path, trt_dynamic_shapes
@@ -240,6 +240,12 @@ class StaticInfer:
                         precision_mode=precision_map[self.option.run_mode],
                         use_static=self.option.trt_use_static,
                         use_calib_mode=self.option.trt_calib_mode,
+                    )
+                    InternalUtils.disable_tensorrt_half_ops(
+                        config,
+                        {
+                            "layer_norm",
+                        },
                     )
                     config.enable_tuned_tensorrt_dynamic_shape(
                         self.option.shape_info_filename, True
