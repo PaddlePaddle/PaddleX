@@ -571,9 +571,9 @@ class TableRecognitionPipelineV2(BasePipeline):
         if use_table_cells_ocr_results == True:
             cells_texts_list = self.split_ocr_bboxes_by_table_cells(image_array, table_cells_result)
         else:
-            cells_texts_list = ["normal_ocr"]
+            cells_texts_list = []
         single_table_recognition_res = get_table_recognition_res(
-            table_box, table_structure_result, table_cells_result, overall_ocr_res, cells_texts_list
+            table_box, table_structure_result, table_cells_result, overall_ocr_res, cells_texts_list, use_table_cells_ocr_results
         )
         neighbor_text = ""
         if flag_find_nei_text:
