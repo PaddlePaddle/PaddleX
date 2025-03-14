@@ -79,7 +79,7 @@ class ImageBatchSampler(BaseBatchSampler):
                 batch.append(input, None, None)
                 if len(batch) == self.batch_size:
                     yield batch
-                    batch.reset()
+                    batch = ImgBatch()
             elif isinstance(input, str) and input.split(".")[-1] in ("PDF", "pdf"):
                 file_path = (
                     self._download_from_url(input)
@@ -90,7 +90,7 @@ class ImageBatchSampler(BaseBatchSampler):
                     batch.append(page_img, file_path, page_idx)
                     if len(batch) == self.batch_size:
                         yield batch
-                        batch.reset()
+                        batch = ImgBatch()
             elif isinstance(input, str):
                 file_path = (
                     self._download_from_url(input)
@@ -102,7 +102,7 @@ class ImageBatchSampler(BaseBatchSampler):
                     batch.append(file_path, file_path, None)
                     if len(batch) == self.batch_size:
                         yield batch
-                        batch.reset()
+                        batch = ImgBatch()
             else:
                 logging.warning(
                     f"Not supported input data type! Only `numpy.ndarray` and `str` are supported! So has been ignored: {input}."

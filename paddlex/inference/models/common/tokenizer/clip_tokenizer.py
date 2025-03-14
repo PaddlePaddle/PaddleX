@@ -21,7 +21,9 @@ import unicodedata
 from functools import lru_cache
 from typing import List, Optional
 
-from paddle.utils import try_import
+from .....utils.lazy_loader import LazyLoader
+
+paddle = LazyLoader("lazy_paddle", globals(), "paddle")
 
 from .tokenizer_utils_base import AddedToken
 from .tokenizer_utils import PretrainedTokenizer
@@ -325,6 +327,7 @@ class CLIPTokenizer(PretrainedTokenizer):
         pad_token="<|endoftext|>",
         **kwargs
     ):
+        from paddle.utils import try_import
 
         bos_token = (
             AddedToken(bos_token, lstrip=False, rstrip=False)
