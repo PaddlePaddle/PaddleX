@@ -142,6 +142,7 @@ def _convert_trt(
     pp_model_file,
     pp_params_file,
     trt_save_path,
+    device_id,
     dynamic_shapes,
     dynamic_shape_input_data,
 ):
@@ -161,6 +162,7 @@ def _convert_trt(
     def _get_predictor(model_file, params_file):
         # HACK
         config = lazy_paddle.inference.Config(str(model_file), str(params_file))
+        config.enable_use_gpu(100, device_id)
         # NOTE: Disable oneDNN to circumvent a bug in Paddle Inference
         config.disable_mkldnn()
         config.disable_glog_info()
@@ -461,6 +463,7 @@ class StaticInfer(object):
                 model_file,
                 params_file,
                 trt_save_path,
+                self._option.device_id,
                 self._option.trt_dynamic_shapes,
                 self._option.trt_dynamic_shape_input_data,
             )
@@ -471,7 +474,6 @@ class StaticInfer(object):
             config = lazy_paddle.inference.Config(str(model_file), str(params_file))
 
             config.set_optim_cache_dir(str(cache_dir / "optim_cache"))
-            config.enable_use_gpu(100, self._option.device_id)
             for func_name in self._option.trt_cfg_setting:
                 assert hasattr(
                     config, func_name
