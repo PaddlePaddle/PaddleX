@@ -559,23 +559,23 @@ class TableRecognitionPipelineV2(BasePipeline):
 
         if table_cls_result == "wired_table":
             table_structure_pred = next(self.wired_table_rec_model(image_array))
-            if use_e2e_wired_table_rec_model == False:
+            if use_e2e_wired_table_rec_model == True:
+                use_e2e_model = True
+            else:
                 table_cells_pred = next(
                     self.wired_table_cells_detection_model(image_array, threshold=0.3)
                 ) # Setting the threshold to 0.3 can improve the accuracy of table cells detection. 
-                # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
-            else:
-                use_e2e_model = True
+                  # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
         elif table_cls_result == "wireless_table":
             table_structure_pred = next(self.wireless_table_rec_model(image_array))
-            if use_e2e_wireless_table_rec_model == False:
+            if use_e2e_wireless_table_rec_model == True:
+                use_e2e_model = True
+            else:
                 table_cells_pred = next(
                     self.wireless_table_cells_detection_model(image_array, threshold=0.3)
                 ) # Setting the threshold to 0.3 can improve the accuracy of table cells detection. 
-                # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
-            else:
-                use_e2e_model = True
-        
+                  # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
+
         if use_e2e_model == False:
             table_structure_result = self.extract_results(table_structure_pred, "table_stru")
             table_cells_result, table_cells_score = self.extract_results(table_cells_pred, "det")
