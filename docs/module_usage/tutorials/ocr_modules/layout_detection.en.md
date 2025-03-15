@@ -308,23 +308,25 @@ Relevant methods, parameters, and explanations are as follows:
 <tr>
 <td><code>layout_unclip_ratio</code></td>
 <td>Scaling factor for the side length of the detection box; if not specified, the default PaddleX official model configuration will be used</td>
-<td><code>float/list/None</code></td>
+<td><code>float/list/dict/None</code></td>
 <td>
 <ul>
 <li><b>float</b>, a positive float number, e.g., 1.1, means expanding the width and height of the detection box by 1.1 times while keeping the center unchanged</li>
 <li><b>List</b>, e.g., [1.2, 1.5], means expanding the width by 1.2 times and the height by 1.5 times while keeping the center unchanged</li>
+<li><b>dict</b>, keys as <b>int</b> representing <code>cls_id</code>, values as float scaling factors, e.g., <code>{0: (1.1, 2.0)}</code> means cls_id 0 expanding the width by 1.1 times and the height by 2.0 times while keeping the center unchanged</li>
 <li><b>None</b>, not specified, will use the default PaddleX official model configuration</li>
 </ul>
 </td>
 <tr>
 <td><code>layout_merge_bboxes_mode</code></td>
 <td>Merging mode for the detection boxes output by the model; if not specified, the default PaddleX official model configuration will be used</td>
-<td><code>string/None</code></td>
+<td><code>string/dict/None</code></td>
 <td>
 <ul>
 <li><b>large</b>, when set to large, only the largest external box will be retained for overlapping detection boxes, and the internal overlapping boxes will be deleted</li>
 <li><b>small</b>, when set to small, only the smallest internal box will be retained for overlapping detection boxes, and the external overlapping boxes will be deleted</li>
 <li><b>union</b>, no filtering of boxes will be performed, and both internal and external boxes will be retained</li>
+<li><b>dict</b>, keys as <b>int</b> representing <code>cls_id</code> and values as merging modes, e.g., <code>{0: "large", 2: "small"}</li>
 <li><b>None</b>, not specified, will use the default PaddleX official model configuration</li>
 </ul>
 </td>
@@ -395,23 +397,25 @@ Relevant methods, parameters, and explanations are as follows:
 <tr>
 <td><code>layout_unclip_ratio</code></td>
 <td>Scaling factor for the side length of the detection box; if not specified, the default PaddleX official model configuration will be used</td>
-<td><code>float/list/None</code></td>
+<td><code>float/list/dict/None</code></td>
 <td>
 <ul>
 <li><b>float</b>, a positive float number, e.g., 1.1, means expanding the width and height of the detection box by 1.1 times while keeping the center unchanged</li>
 <li><b>List</b>, e.g., [1.2, 1.5], means expanding the width by 1.2 times and the height by 1.5 times while keeping the center unchanged</li>
+<li><b>dict</b>, keys as <b>int</b> representing <code>cls_id</code>, values as float scaling factors, e.g., <code>{0: (1.1, 2.0)}</code> means cls_id 0 expanding the width by 1.1 times and the height by 2.0 times while keeping the center unchanged</li>
 <li><b>None</b>, not specified, will use the <code>layout_unclip_ratio</code> parameter specified in <code>create_model</code>. If not specified in <code>create_model</code>, the default PaddleX official model configuration will be used</li>
 </ul>
 </td>
 <tr>
 <td><code>layout_merge_bboxes_mode</code></td>
 <td>Merging mode for the detection boxes output by the model; if not specified, the default PaddleX official model configuration will be used</td>
-<td><code>string/None</code></td>
+<td><code>string/dict/None</code></td>
 <td>
 <ul>
 <li><b>large</b>, when set to large, only the largest external box will be retained for overlapping detection boxes, and the internal overlapping boxes will be deleted</li>
 <li><b>small</b>, when set to small, only the smallest internal box will be retained for overlapping detection boxes, and the external overlapping boxes will be deleted</li>
 <li><b>union</b>, no filtering of boxes will be performed, and both internal and external boxes will be retained</li>
+<li><b>dict</b>, keys as <b>int</b> representing <code>cls_id</code> and values as merging modes, e.g., <code>{0: "large", 2: "small"}</li>
 <li><b>None</b>, not specified, will use the <code>layout_merge_bboxes_mode</code> parameter specified in <code>create_model</code>. If not specified in <code>create_model</code>, the default PaddleX official model configuration will be used</li>
 </ul>
 </td>
