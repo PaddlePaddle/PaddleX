@@ -342,12 +342,12 @@ def get_table_recognition_res(
     structures = table_structure_pred["structure"]
     cell_box_list = table_structure_pred["cell_box_list"]
 
-    if use_table_cells_ocr_results == False:
-        ocr_dt_boxes = table_ocr_pred["rec_boxes"]
-        ocr_texts_res = table_ocr_pred["rec_texts"]
-    else:
+    if use_table_cells_ocr_results == True:
         ocr_dt_boxes = cell_box_list
         ocr_texts_res = cells_texts_list
+    else:
+        ocr_dt_boxes = table_ocr_pred["rec_boxes"]
+        ocr_texts_res = table_ocr_pred["rec_texts"]
 
     matched_index = match_table_and_ocr(
         cell_box_list, ocr_dt_boxes, cell_sort_by_y_projection=cell_sort_by_y_projection

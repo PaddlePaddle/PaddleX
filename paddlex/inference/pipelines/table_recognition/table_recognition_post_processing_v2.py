@@ -446,12 +446,12 @@ def get_table_recognition_res(
         table_cells_result, crop_start_point, img_shape
     )
 
-    if use_table_cells_ocr_results == False:
-        ocr_dt_boxes = table_ocr_pred["rec_boxes"]
-        ocr_texts_res = table_ocr_pred["rec_texts"]
-    else:
+    if use_table_cells_ocr_results == True:
         ocr_dt_boxes = table_cells_result
         ocr_texts_res = cells_texts_list
+    else:
+        ocr_dt_boxes = table_ocr_pred["rec_boxes"]
+        ocr_texts_res = table_ocr_pred["rec_texts"]
 
     table_cells_result, table_cells_flag = sort_table_cells_boxes(table_cells_result)
     row_start_index = find_row_start_index(table_structure_result)
