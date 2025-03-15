@@ -7,9 +7,7 @@ comments: true
 ## 1. Introduction to General Table Recognition v2 Pipeline
 Table recognition is a technology that automatically identifies and extracts table content and its structure from documents or images. It is widely used in data entry, information retrieval, and document analysis. By using computer vision and machine learning algorithms, table recognition can convert complex table information into an editable format, making it easier for users to further process and analyze data.
 
-The General Table Recognition v2 Pipeline(PP-TableMagic) is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. Unlike the General Table Recognition Pipeline, this pipeline introduces two additional modules: table classification and table cell detection, which are linked with the table structure recognition module to complete the table recognition task. This pipeline can achieve accurate table predictions and is applicable in various fields such as general, manufacturing, finance, and transportation. It also provides flexible service deployment options, supporting multiple programming languages on various hardware. Additionally, it offers custom development capabilities, allowing you to train and fine-tune models on your own dataset, with seamless integration of the trained models.
-
-<b>❗ The General Table Recognition v2 Pipeline is still being optimized and the final version will be released in the next version of PaddleX. In order to maintain the stability of use, you can use the General Table Recognition Pipeline for table processing first, and we will release a notice when the final version of v2 is open-sourced, so please stay tuned!</b>
+The General Table Recognition v2 Pipeline (PP-TableMagic) is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. Unlike the General Table Recognition Pipeline, this pipeline introduces two additional modules: table classification and table cell detection, which are linked with the table structure recognition module to complete the table recognition task. This pipeline can achieve accurate table predictions and is applicable in various fields such as general, manufacturing, finance, and transportation. It also provides flexible service deployment options, supporting multiple programming languages on various hardware. Additionally, it offers custom development capabilities, allowing you to train and fine-tune models on your own dataset, with seamless integration of the trained models. <b> In addition, the General Table Recognition v2 Pipeline also supports the use of end-to-end table structure recognition models (e.g. SLANet, SLANet_plus, etc.), and supports independent configuration of table recognition for wired and wireless table, allowing developers to freely select and combine the best table recognition solutions.</b>
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/01.png"/>
 
@@ -19,7 +17,7 @@ The General Table Recognition v2 Pipeline(PP-TableMagic) is designed to solve ta
 
 <details><summary> 👉Model List Details</summary>
 
-<p><b>Table Recognition Module Models:</b></p>
+<p><b>Table Structure Recognition Module Models:</b></p>
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -894,13 +892,54 @@ In the above Python script, the following steps are executed:
 <td><code>None</code></td>
 </tr>
 <td><code>use_table_cells_ocr_results</code></td>
-<td>Whether to enable Table-Cells-OCR mode, when not enabled, use global OCR result to fill to html table, when enabled, do OCR cell by cell and fill to html table. Both of them perform differently in different scenarios, please choose according to the actual situation.</td>
+<td>Whether to enable Table-Cells-OCR mode, when not enabled, use global OCR result to fill to HTML table, when enabled, do OCR cell by cell and fill to HTML table (it will increase the time consuming). Both of them perform differently in different scenarios, please choose according to the actual situation.</td>
+<td><code>bool|False</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> or <code>False</code>
+<td><code>False</code></td>
+</tr>
+<td><code>use_e2e_wired_table_rec_model</code></td>
+<td>Whether to enable the wired table end-to-end prediction mode, when not enabled, using the table cells detection model prediction results filled to the HTML table, when enabled, using the end-to-end table structure recognition model cell prediction results filled to the HTML table. Both of them have different performance in different scenarios, please choose according to the actual situation.</td>
+<td><code>bool|False</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> or <code>False</code>
+<td><code>False</code></td>
+</tr>
+<td><code>use_e2e_wireless_table_rec_model</code></td>
+<td>Whether to enable the wireless table end-to-end prediction mode, when not enabled, using the table cells detection model prediction results filled to the HTML table, when enabled, using the end-to-end table structure recognition model cell prediction results filled to the HTML table. Both of them have different performance in different scenarios, please choose according to the actual situation.</td>
 <td><code>bool|False</code></td>
 <td>
 <ul>
 <li><b>bool</b>：<code>True</code> or <code>False</code>
 <td><code>False</code></td>
 </table>
+
+<b>If you need to use the end-to-end table structure recognition model, just replace the corresponding table structure recognition model with the end-to-end table structure recognition model in the pipeline config file, and then load the modified config file and modify the corresponding `predict()` method parameter</b>. For example, if you need to use SLANet_plus to do end-to-end table recognition for wireless tables, just replace `model_name` with SLANet_plus in `WirelessTableStructureRecognition` in the config file (as shown below) and specify `use_e2e_ wireless_table_rec_model=True` in the prediction, the rest of the parts do not need to be modified, at this time the wireless table cells detection model will not take effect, but directly use SLANet_plus for end-to-end table recognition.
+
+```yaml
+SubModules:
+  WiredTableStructureRecognition:
+    module_name: table_structure_recognition
+    model_name: SLANeXt_wired
+    model_dir: null
+
+  WirelessTableStructureRecognition:
+    module_name: table_structure_recognition
+    model_name: SLANet_plus  # Replace with the end-to-end table structure recognition model
+    model_dir: null
+
+  WiredTableCellsDetection:
+    module_name: table_cells_detection
+    model_name: RT-DETR-L_wired_table_cell_det
+    model_dir: null
+
+  WirelessTableCellsDetection:
+    module_name: table_cells_detection
+    model_name: RT-DETR-L_wireless_table_cell_det
+    model_dir: null
+```
 
 (3) Process the prediction results, where each sample's prediction result is represented as a corresponding Result object, and supports operations such as printing, saving as an image, saving as an `xlsx` file, saving as an `HTML` file, and saving as a `json` file:
 
@@ -1471,7 +1510,7 @@ SubPipelines:
         limit_side_len: 960
         limit_type: max
         thresh: 0.3
-        box_thresh: 0.6
+        box_thresh: 0.4
         unclip_ratio: 2.0
 
       TextRecognition:
