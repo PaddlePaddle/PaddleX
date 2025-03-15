@@ -672,11 +672,12 @@ The following are the parameters and descriptions of the `visual_predict()` meth
 <tr>
 <td><code>layout_unclip_ratio</code></td>
 <td>The expansion coefficient for layout detection.</td>
-<td><code>float|Tuple[float,float]|None</code></td>
+<td><code>float|Tuple[float,float]|dict|None</code></td>
 <td>
 <ul>
   <li><b>float</b>: Any floating-point number greater than <code>0</code>;</li>
   <li><b>Tuple[float,float]</b>: The expansion coefficients in the horizontal and vertical directions, respectively;</li>
+  <li><b>dict</b>, keys as <b>int</b> representing <code>cls_id</code>, values as float scaling factors for each category.</li>
   <li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>1.0</code>;</li>
 </ul>
 </td>
@@ -685,10 +686,11 @@ The following are the parameters and descriptions of the `visual_predict()` meth
 <tr>
 <td><code>layout_merge_bboxes_mode</code></td>
 <td>The method for filtering overlapping bounding boxes.</td>
-<td><code>str|None</code></td>
+<td><code>str|dict|None</code></td>
 <td>
 <ul>
   <li><b>str</b>: large, small, union. Respectively representing retaining the larger box, smaller box, or both when overlapping boxes are filtered.</li>
+  <li><b>dict</b>, keys as <b>int</b> representing <code>cls_id</code> and values as merging modes for each category.</li>
   <li><b>None</b>: If set to <code>None</code>, it will default to the value initialized by the pipeline, initialized to <code>large</code>;</li>
 </ul>
 </td>
