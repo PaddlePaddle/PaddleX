@@ -242,6 +242,9 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
             def format_title(content_value):
                 content_value = content_value.rstrip(".")
+                content_value = re.sub(
+                    r"(\d+|[一二三四五六七八九十]+)([.、]?)\s*", r"\1\2 ", content_value
+                )
                 level = (
                     content_value.count(
                         ".",
