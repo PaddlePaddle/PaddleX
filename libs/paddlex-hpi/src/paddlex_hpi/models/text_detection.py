@@ -44,13 +44,13 @@ class TextDetPredictor(CVPredictor):
         unclip_ratio: Union[float, None] = None,
         use_dilation: Union[bool, None] = None,
     ) -> None:
-        if limit_type is not None:
+        if limit_type != "max":
             logging.warning(
-                "The default value for `limit_type` is max, and cannot be set in PaddleX HPI."
+                "The default value for `limit_type` is max, and cannot be changed in PaddleX HPI."
             )
-        if max_candidates is not None:
+        if max_candidates != "1000":
             logging.warning(
-                "The default value for `max_candidates` is 1000, and cannot be set in PaddleX HPI."
+                "The default value for `max_candidates` is 1000, and cannot be changed in PaddleX HPI."
             )
         super().__init__(
             model_dir=model_dir,
@@ -106,13 +106,13 @@ class TextDetPredictor(CVPredictor):
         unclip_ratio: Union[float, None] = None,
         use_dilation: Union[bool, None] = None,
     ) -> Dict[str, List[Any]]:
-        if limit_type is not None:
+        if limit_type != "max":
             logging.warning(
-                "The default value for `limit_type` is max, and cannot be set in PaddleX HPI."
+                "The default value for `limit_type` is max, and cannot be changed in PaddleX HPI."
             )
-        if max_candidates is not None:
+        if max_candidates != "1000":
             logging.warning(
-                "The default value for `max_candidates` is 1000, and cannot be set in PaddleX HPI."
+                "The default value for `max_candidates` is 1000, and cannot be changed in PaddleX HPI."
             )
         self._ui_model.preprocessor.set_normalize(self._mean, self._std, True)
         self._ui_model.preprocessor.max_side_len = (

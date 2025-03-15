@@ -30,7 +30,6 @@ from ...common.result import (
     XlsxMixin,
 )
 from .utils import get_layout_ordering
-from .utils import recursive_img_array2path
 from .utils import get_show_color
 
 
@@ -238,7 +237,6 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         Returns:
             Dict
         """
-        recursive_img_array2path(self["parsing_res_list"], labels=["block_image"])
 
         def _format_data(obj):
 
@@ -312,7 +310,7 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 "table": format_table,
                 "reference": lambda: block["block_content"],
                 "algorithm": lambda: block["block_content"].strip("\n"),
-                "seal": lambda: format_image("block_content"),
+                "seal": lambda: f"Words of Seals:\n{block['block_content']}",
             }
             parsing_res_list = obj["parsing_res_list"]
             markdown_content = ""
@@ -382,10 +380,9 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             page_first_element_seg_start_flag,
             page_last_element_seg_end_flag,
         )
-        markdown_info["markdown_images"] = dict()
-        for block in self["parsing_res_list"]:
-            if block["block_label"] in ["image", "chart"]:
-                image_path, image_value = next(iter(block["block_image"].items()))
-                markdown_info["markdown_images"][image_path] = image_value
+
+        markdown_info["markdown_images"] = {}
+        for img in self["imgs_in_doc"]:
+            markdown_info["markdown_images"][img["path"]] = img["img"]
 
         return markdown_info

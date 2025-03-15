@@ -526,10 +526,10 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
                     [ 39, ..., 726]], dtype=int16)}, 'formula_res_list': [{'input_path': None, 'page_index': None, 'rec_formula': '\\begin{array}{r l}{\\mathcal{Q}}&{=\\mathcal{K}=\\mathcal{V}=\\mathtt{F l a t t e r n}(\\mathcal{S}_{5}),}\\\\ {\\mathcal{F}_{5}}&{=\\mathtt{R e s h a p e}(\\mathtt{A I F I}(\\mathcal{Q},\\mathcal{K},\\mathcal{V})),\\qquad\\quad(1)}\\\\ {\\mathcal{O}}&{=\\mathtt{C C F F}(\\{\\mathcal{S}_{3},\\mathcal{S}_{4},\\mathcal{F}_{5}\\}),}\\end{array}', 'formula_region_id': 1, 'dt_polys': [92.092064, 563.1221, 297.57217, 607.2598]}, {'input_path': None, 'page_index': None, 'rec_formula': '\\begin{array}{r l r}{\\mathcal{U}(\\hat{\\mathcal{X}})=\\|\\mathcal{P}(\\hat{\\mathcal{X}})-\\mathcal{C}(\\hat{\\mathcal{X}})\\|,\\hat{\\mathcal{X}}\\in\\mathbb{R}^{D}}&{{}(2)}&{}\\\\ {\\mathcal{L}(\\hat{\\mathcal{X}},\\hat{\\mathcal{Y}},\\mathcal{Y})=\\mathcal{L}_{t o x}(\\hat{\\mathbf{b}},\\mathbf{b})+\\mathcal{L}_{c l s}(\\mathcal{U}(\\hat{\\mathcal{X}}),\\hat{\\mathbf{c}},\\mathbf{c})}&{{}(3)}\\end{array}', 'formula_region_id': 2, 'dt_polys': [343.82712, 551.06995, 573.45465, 589.9438]}]}}
                 ```
 
-    === "Layout Parsing v2"
+    === "Layout Parsing v3"
 
         ```bash
-        paddlex --pipeline layout_parsing_v2 \
+        paddlex --pipeline PP-StructureV3 \
                 --input layout_parsing_v2_demo.png \
                 --use_doc_orientation_classify False \
                 --use_doc_unwarping False \
@@ -1505,7 +1505,7 @@ The following steps were executed:
         ```python
         from paddlex import create_pipeline
 
-        pipeline = create_pipeline(pipeline="layout_parsing_v2")
+        pipeline = create_pipeline(pipeline="PP-StructureV3")
 
         output = pipeline.predict(
             input="./layout_parsing_v2_demo.png",
@@ -1874,7 +1874,7 @@ The following steps were executed:
 
     The General Layout Parsing v2 pipeline enhances the capabilities of layout area detection, table recognition, and formula recognition based on the General Layout Parsing v1 pipeline. It also adds the ability to restore multi-column reading order and convert results to Markdown files. It performs well on various document datasets and can handle more complex document data.
 
-    [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.en.md)
+    [:octicons-arrow-right-24: Tutorial](pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.en.md)
 
 - **General Table Recognition Pipeline v2**
 

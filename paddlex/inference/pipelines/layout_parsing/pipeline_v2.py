@@ -26,14 +26,13 @@ from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 from ..ocr.result import OCRResult
 from .result_v2 import LayoutParsingResultV2
-from .utils import get_single_block_parsing_res
-from .utils import get_sub_regions_ocr_res
+from .utils import get_single_block_parsing_res, get_sub_regions_ocr_res, gather_imgs
 
 
 class LayoutParsingPipelineV2(BasePipeline):
     """Layout Parsing Pipeline V2"""
 
-    entities = ["layout_parsing_v2"]
+    entities = ["PP-StructureV3"]
 
     def __init__(
         self,
@@ -228,6 +227,7 @@ class LayoutParsingPipelineV2(BasePipeline):
         table_res_list: list,
         seal_res_list: list,
         formula_res_list: list,
+        imgs_in_doc: list,
         text_det_limit_side_len: Optional[int] = None,
         text_det_limit_type: Optional[str] = None,
         text_det_thresh: Optional[float] = None,
@@ -310,7 +310,9 @@ class LayoutParsingPipelineV2(BasePipeline):
                     del overall_ocr_res["rec_polys"][matched_idx]
                     del overall_ocr_res["rec_scores"][matched_idx]
 
-                if sub_ocr_res["rec_boxes"] is not []:
+                if sub_ocr_res["rec_boxes"].size > 0:
+                    sub_ocr_res["rec_labels"] = ["text"] * len(sub_ocr_res["rec_texts"])
+
                     overall_ocr_res["dt_polys"].extend(sub_ocr_res["dt_polys"])
                     overall_ocr_res["rec_texts"].extend(sub_ocr_res["rec_texts"])
                     overall_ocr_res["rec_boxes"] = np.concatenate(
@@ -318,6 +320,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                     )
                     overall_ocr_res["rec_polys"].extend(sub_ocr_res["rec_polys"])
                     overall_ocr_res["rec_scores"].extend(sub_ocr_res["rec_scores"])
+                    overall_ocr_res["rec_labels"].extend(sub_ocr_res["rec_labels"])
 
         for formula_res in formula_res_list:
             x_min, y_min, x_max, y_max = list(map(int, formula_res["dt_polys"]))
@@ -332,14 +335,17 @@ class LayoutParsingPipelineV2(BasePipeline):
             overall_ocr_res["rec_boxes"] = np.vstack(
                 (overall_ocr_res["rec_boxes"], [formula_res["dt_polys"]])
             )
+            overall_ocr_res["rec_labels"].append("formula")
             overall_ocr_res["rec_polys"].append(poly_points)
             overall_ocr_res["rec_scores"].append(1)
 
         parsing_res_list = get_single_block_parsing_res(
+            self.general_ocr_pipeline,
             overall_ocr_res=overall_ocr_res,
             layout_det_res=layout_det_res,
             table_res_list=table_res_list,
             seal_res_list=seal_res_list,
+            imgs_in_doc=imgs_in_doc,
         )
 
         return parsing_res_list
@@ -473,7 +479,7 @@ class LayoutParsingPipelineV2(BasePipeline):
         if not self.check_model_settings_valid(model_settings):
             yield {"error": "the input params for model settings are invalid!"}
 
-        for img_id, batch_data in enumerate(self.batch_sampler(input)):
+        for batch_data in self.batch_sampler(input):
             image_array = self.img_reader(batch_data.instances)[0]
 
             if model_settings["use_doc_preprocessor"]:
@@ -498,6 +504,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                     layout_merge_bboxes_mode=layout_merge_bboxes_mode,
                 )
             )
+            imgs_in_doc = gather_imgs(doc_preprocessor_image, layout_det_res["boxes"])
 
             if model_settings["use_formula_recognition"]:
                 formula_res_all = next(
@@ -536,8 +543,10 @@ class LayoutParsingPipelineV2(BasePipeline):
             else:
                 overall_ocr_res = {}
 
+            overall_ocr_res["rec_labels"] = ["text"] * len(overall_ocr_res["rec_texts"])
+
             if model_settings["use_table_recognition"]:
-                table_overall_ocr_res = copy.deepcopy(overall_ocr_res)
+                table_contents = copy.deepcopy(overall_ocr_res)
                 for formula_res in formula_res_list:
                     x_min, y_min, x_max, y_max = list(map(int, formula_res["dt_polys"]))
                     poly_points = [
@@ -546,15 +555,34 @@ class LayoutParsingPipelineV2(BasePipeline):
                         (x_max, y_max),
                         (x_min, y_max),
                     ]
-                    table_overall_ocr_res["dt_polys"].append(poly_points)
-                    table_overall_ocr_res["rec_texts"].append(
+                    table_contents["dt_polys"].append(poly_points)
+                    table_contents["rec_texts"].append(
                         f"${formula_res['rec_formula']}$"
                     )
-                    table_overall_ocr_res["rec_boxes"] = np.vstack(
-                        (table_overall_ocr_res["rec_boxes"], [formula_res["dt_polys"]])
+                    table_contents["rec_boxes"] = np.vstack(
+                        (table_contents["rec_boxes"], [formula_res["dt_polys"]])
                     )
-                    table_overall_ocr_res["rec_polys"].append(poly_points)
-                    table_overall_ocr_res["rec_scores"].append(1)
+                    table_contents["rec_polys"].append(poly_points)
+                    table_contents["rec_scores"].append(1)
+
+                for img in imgs_in_doc:
+                    img_path = img["path"]
+                    x_min, y_min, x_max, y_max = img["coordinate"]
+                    poly_points = [
+                        (x_min, y_min),
+                        (x_max, y_min),
+                        (x_max, y_max),
+                        (x_min, y_max),
+                    ]
+                    table_contents["dt_polys"].append(poly_points)
+                    table_contents["rec_texts"].append(
+                        f'<div style="text-align: center;"><img src="{img_path}" alt="Image" /></div>'
+                    )
+                    table_contents["rec_boxes"] = np.vstack(
+                        (table_contents["rec_boxes"], img["coordinate"])
+                    )
+                    table_contents["rec_polys"].append(poly_points)
+                    table_contents["rec_scores"].append(img["score"])
 
                 table_res_all = next(
                     self.table_recognition_pipeline(
@@ -563,7 +591,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                         use_doc_unwarping=False,
                         use_layout_detection=False,
                         use_ocr_model=False,
-                        overall_ocr_res=table_overall_ocr_res,
+                        overall_ocr_res=table_contents,
                         layout_det_res=layout_det_res,
                         cell_sort_by_y_projection=True,
                     ),
@@ -599,6 +627,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                 table_res_list=table_res_list,
                 seal_res_list=seal_res_list,
                 formula_res_list=formula_res_list,
+                imgs_in_doc=imgs_in_doc,
                 text_det_limit_side_len=text_det_limit_side_len,
                 text_det_limit_type=text_det_limit_type,
                 text_det_thresh=text_det_thresh,
@@ -623,6 +652,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                 "seal_res_list": seal_res_list,
                 "formula_res_list": formula_res_list,
                 "parsing_res_list": parsing_res_list,
+                "imgs_in_doc": imgs_in_doc,
                 "model_settings": model_settings,
             }
             yield LayoutParsingResultV2(single_img_res)

@@ -331,7 +331,7 @@ nav:
          - 通用表格识别产线: pipeline_usage/tutorials/ocr_pipelines/table_recognition.md
          - 通用表格识别v2产线: pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.md
          - 通用版面解析产线: pipeline_usage/tutorials/ocr_pipelines/layout_parsing_.md
-         - 通用版面解析v2产线: pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.md
+         - 通用版面解析v3产线: pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.md
          - 公式识别产线: pipeline_usage/tutorials/ocr_pipelines/formula_recognition.md
          - 印章文本识别产线: pipeline_usage/tutorials/ocr_pipelines/seal_recognition.md
          - 文档图像预处理产线: pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.md

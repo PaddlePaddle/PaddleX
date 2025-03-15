@@ -300,10 +300,10 @@ PaddleX的每一条产线对应特定的参数，您可以在各自的产线文�
                 ...,
                 [1156, ..., 1351]], dtype=int16)}}}
             ```
-    === "通用版面解析v2"
+    === "通用版面解析v3"
 
         ```bash
-        paddlex --pipeline layout_parsing_v2 \
+        paddlex --pipeline PP-StructureV3 \
                 --input layout_parsing_v2_demo.png \
                 --use_doc_orientation_classify False \
                 --use_doc_unwarping False \
@@ -1057,12 +1057,12 @@ for res in output:
 
         ```
 
-    === "通用版面解析v2"
+    === "通用版面解析v3"
 
         ```python
         from paddlex import create_pipeline
 
-        pipeline = create_pipeline(pipeline="layout_parsing_v2")
+        pipeline = create_pipeline(pipeline="PP-StructureV3")
 
         output = pipeline.predict(
             input="./layout_parsing_v2_demo.png",
@@ -1425,13 +1425,13 @@ for res in output:
 
     [:octicons-arrow-right-24: 教程](pipeline_usage/tutorials/ocr_pipelines/OCR.md)
 
-- **通用版面解析v2**
+- **通用版面解析v3**
 
     ---
 
-    通用版面解析v2产线在通用版面解析v1产线的基础上，强化了版面区域检测、表格识别、公式识别的能力，增加了多栏阅读顺序的恢复能力、结果转换 Markdown 文件的能力，在多种文档数据中，表现优异，可以处理较复杂的文档数据。
+    通用版面解析v3产线在通用版面解析v1产线的基础上，强化了版面区域检测、表格识别、公式识别的能力，增加了多栏阅读顺序的恢复能力、结果转换 Markdown 文件的能力，在多种文档数据中，表现优异，可以处理较复杂的文档数据。
 
-    [:octicons-arrow-right-24: 教程](pipeline_usage/tutorials/ocr_pipelines/layout_parsing_v2.md)
+    [:octicons-arrow-right-24: 教程](pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.md)
 
 - **通用表格识别产线v2**
 
