@@ -207,8 +207,8 @@ paddlex --serve --pipeline image_classification --use_hpip
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0rc0/paddlex_hps_layout_parsing_sdk.tar.gz">paddlex_hps_layout_parsing_sdk.tar.gz</a></td>
 </tr>
 <tr>
-<td>通用版面解析 v2</td>
-<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0rc0/paddlex_hps_layout_parsing_v2_sdk.tar.gz">paddlex_hps_layout_parsing_v2_sdk.tar.gz</a></td>
+<td>通用版面解析 v3</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hps/public/sdks/v3.0.0rc0/paddlex_hps_PP-StructureV3_sdk.tar.gz">paddlex_hps_PP-StructureV3_sdk.tar.gz</a></td>
 </tr>
 <tr>
 <td>公式识别</td>

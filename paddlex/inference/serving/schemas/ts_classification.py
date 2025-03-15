@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Final
+from typing import Final, Optional
 
 from pydantic import BaseModel
 
@@ -30,6 +30,7 @@ class InferRequest(BaseModel):
 class InferResult(BaseModel):
     label: str
     score: float
+    image: Optional[str] = None
 
 
 PRIMARY_OPERATIONS: Final[PrimaryOperations] = {

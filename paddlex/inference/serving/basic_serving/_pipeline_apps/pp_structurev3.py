@@ -19,7 +19,7 @@ from fastapi import FastAPI
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
 from ...infra.models import ResultResponse
-from ...schemas.layout_parsing_v2 import INFER_ENDPOINT, InferRequest, InferResult
+from ...schemas.pp_structurev3 import INFER_ENDPOINT, InferRequest, InferResult
 from .._app import create_app, primary_operation
 from ._common import common
 from ._common import ocr as ocr_common
