@@ -7,11 +7,9 @@ comments: true
 ## 1. 通用表格识别v2产线介绍
 表格识别是一种自动从文档或图像中识别和提取表格内容及其结构的技术，广泛应用于数据录入、信息检索和文档分析等领域。通过使用计算机视觉和机器学习算法，表格识别能够将复杂的表格信息转换为可编辑的格式，方便用户进一步处理和分析数据。
 
-通用表格识别v2产线（PP-TableMagic）用于解决表格识别任务，对图片中的表格进行识别，并以HTML格式输出。与通用表格识别产线不同，本产线新引入了表格分类和表格单元格检测两个模块，通过采用“表格分类+表格结构识别+单元格检测”多模型串联组网方案，实现了相比通用表格识别产线更好的端到端表格识别性能。除此之外，通用表格识别v2产线原生支持针对性地模型微调，各类开发者均能对通用表格识别v2产线进行不同程度的自定义微调，使其在不同应用场景下都能得到令人满意的性能。
+通用表格识别v2产线（PP-TableMagic）用于解决表格识别任务，对图片中的表格进行识别，并以HTML格式输出。与通用表格识别产线不同，本产线新引入了表格分类和表格单元格检测两个模块，通过<b>采用“表格分类+表格结构识别+单元格检测”多模型串联组网方案</b>，实现了相比通用表格识别产线更好的端到端表格识别性能。基于此，通用表格识别v2产线<b>原生支持针对性地模型微调</b>，各类开发者均能对通用表格识别v2产线进行不同程度的自定义微调，使其在不同应用场景下都能得到令人满意的性能。<b>除此之外，通用表格识别v2产线同样支持使用端到端表格结构识别模型（例如 SLANet、SLANet_plus 等），并且支持有线表、无线表独立配置表格识别方式，开发者可以自由选取和组合最佳的表格识别方案。</b>
 
 本产线的使用场景覆盖通用、制造、金融、交通等各个领域。本产线同时提供了灵活的服务化部署方式，支持在多种硬件上使用多种编程语言调用。不仅如此，本产线也提供了二次开发的能力，您可以基于本产线在您自己的数据集上训练调优，训练后的模型也可以无缝集成。
-
-<b>❗ 通用表格识别v2产线仍在持续优化中，将在 PaddleX 下一版本发布最终版。为保持使用的稳定性，您可以先使用通用表格识别产线进行表格处理，v2最终版开源后我们将发布通知，敬请期待！</b>
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/01.png"/>
 
@@ -19,7 +17,7 @@ comments: true
 
 <b>如果您更注重模型的精度，请选择精度较高的模型；如果您更在意模型的推理速度，请选择推理速度较快的模型；如果您关注模型的存储大小，请选择存储体积较小的模型。</b>
 <details><summary> 👉模型列表详情</summary>
-<p><b>表格识别模块模型：</b></p>
+<p><b>表格结构识别模块模型：</b></p>
 <table>
 <tr>
 <th>模型</th><th>模型下载链接</th>
@@ -897,7 +895,23 @@ for res in output:
 <td><code>None</code></td>
 </tr>
 <td><code>use_table_cells_ocr_results</code></td>
-<td>是否启用单元格OCR模式，不启用时采用全局OCR结果填充至html表格，启用时逐个单元格做OCR并填充至html表格。二者在不同场景下表现不同，请根据实际情况选择。</td>
+<td>是否启用单元格OCR模式，不启用时采用全局OCR结果填充至HTML表格，启用时逐个单元格做OCR并填充至HTML表格（会增加耗时）。二者在不同场景下性能不同，请根据实际情况选择。</td>
+<td><code>bool|False</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>
+<td><code>False</code></td>
+</tr>
+<td><code>use_e2e_wired_table_rec_model</code></td>
+<td>是否启用有线表格端到端预测模式，不启用时采用表格单元格检测模型预测结果填充至HTML表格，启用时采用端到端表格结构识别模型的单元格预测结果填充至HTML表格。二者在不同场景下性能不同，请根据实际情况选择。</td>
+<td><code>bool|False</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> 或者 <code>False</code>
+<td><code>False</code></td>
+</tr>
+<td><code>use_e2e_wireless_table_rec_model</code></td>
+<td>是否启用无线表格端到端预测模式，不启用时采用表格单元格检测模型预测结果填充至HTML表格，启用时采用端到端表格结构识别模型的单元格预测结果填充至HTML表格。二者在不同场景下性能不同，请根据实际情况选择。</td>
 <td><code>bool|False</code></td>
 <td>
 <ul>
@@ -905,6 +919,32 @@ for res in output:
 <td><code>False</code></td>
 
 </tr></table>
+
+<b>如果您需要使用端到端表格结构识别模型，只需在产线配置文件中将对应的表格结构识别模型替换为端到端表格结构识别模型，然后直接加载修改后的配置文件并修改对应的`predict()` 方法参数即可</b>。例如，如果您需要使用 SLANet_plus 对无线表格做端到端表格识别，只需将配置文件中 `WirelessTableStructureRecognition` 中的 `model_name` 替换为 SLANet_plus（如下所示），并在预测时指定 `use_e2e_wireless_table_rec_model=True` 即可，其余部分无需修改，此时无线表单元格检测模型将不会生效，而是直接使用 SLANet_plus 进行端到端表格识别。
+
+```yaml
+SubModules:
+  WiredTableStructureRecognition:
+    module_name: table_structure_recognition
+    model_name: SLANeXt_wired
+    model_dir: null
+
+  WirelessTableStructureRecognition:
+    module_name: table_structure_recognition
+    model_name: SLANet_plus  # 替换为需使用的端到端表格结构识别模型
+    model_dir: null
+
+  WiredTableCellsDetection:
+    module_name: table_cells_detection
+    model_name: RT-DETR-L_wired_table_cell_det
+    model_dir: null
+
+  WirelessTableCellsDetection:
+    module_name: table_cells_detection
+    model_name: RT-DETR-L_wireless_table_cell_det
+    model_dir: null
+```
+
 
 （3）对预测结果进行处理，每个样本的预测结果均为对应的Result对象，且支持打印、保存为图片、保存为`xlsx`文件、保存为`HTML`文件、保存为`json`文件的操作:
 
@@ -1473,7 +1513,7 @@ SubPipelines:
         limit_side_len: 960
         limit_type: max
         thresh: 0.3
-        box_thresh: 0.6
+        box_thresh: 0.4
         unclip_ratio: 2.0
 
       TextRecognition:
