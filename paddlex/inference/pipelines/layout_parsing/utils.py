@@ -667,9 +667,12 @@ def get_single_block_parsing_res(
                     },
                 )
             else:
-                content = "".join(rec_res["rec_texts"])
-                if label != "reference":
-                    content = _process_text(content)
+                if label in ["doc_title"]:
+                    content = " ".join(rec_res["rec_texts"])
+                else:
+                    content = "".join(rec_res["rec_texts"])
+                    if label != "reference":
+                        content = _process_text(content)
                 single_block_layout_parsing_res.append(
                     {
                         "block_label": label,

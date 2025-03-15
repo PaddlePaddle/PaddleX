@@ -274,14 +274,16 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 )
                 return "\n".join(img_tags)
 
-            def format_reference():
-                pattern = r"\s*\[\s*\d+\s*\]\s*"
-                res = re.sub(
-                    pattern,
-                    lambda match: "\n" + match.group(),
-                    block["reference"].replace("\n", ""),
-                )
-                return "\n" + res
+            def format_first_line(templates, format_func, spliter):
+                lines = block["block_content"].split(spliter)
+                for idx in range(len(lines)):
+                    line = lines[idx]
+                    if line.strip() == "":
+                        continue
+                    if line.lower() in templates:
+                        lines[idx] = format_func(line)
+                    break
+                return spliter.join(lines)
 
             def format_table():
                 return "\n" + block["block_content"]
@@ -298,9 +300,9 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 "text": lambda: block["block_content"]
                 .replace("-\n", " ")
                 .replace("\n", " "),
-                "abstract": lambda: block["block_content"]
-                .replace("-\n", " ")
-                .replace("\n", " "),
+                "abstract": lambda: format_first_line(
+                    ["摘要", "abstract"], lambda l: f"## {l}\n", " "
+                ),
                 "content": lambda: block["block_content"]
                 .replace("-\n", " ")
                 .replace("\n", " "),
@@ -308,7 +310,9 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 "chart": lambda: format_image("block_image"),
                 "formula": lambda: f"$${block['block_content']}$$",
                 "table": format_table,
-                "reference": lambda: block["block_content"],
+                "reference": lambda: format_first_line(
+                    ["参考文献", "references"], lambda l: f"## {l}", "\n"
+                ),
                 "algorithm": lambda: block["block_content"].strip("\n"),
                 "seal": lambda: f"Words of Seals:\n{block['block_content']}",
             }
