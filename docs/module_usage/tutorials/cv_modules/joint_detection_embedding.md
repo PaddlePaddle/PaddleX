@@ -221,7 +221,7 @@ tar -xf ./dataset/mot_examples.tar -C ./dataset/
 一行命令即可完成数据校验：
 
 ```bash
-python main.py -c paddlex/configs/modules/joint_detection_embeding/FairMOT-DLA-34_1088x608.yaml  \
+python main.py -c paddlex/configs/modules/joint_detection_embedding/FairMOT-DLA-34_1088x608.yaml  \
     -o Global.mode=check_dataset \
     -o Global.dataset_dir=./dataset/mot_examples
 ```
@@ -289,7 +289,7 @@ python main.py -c paddlex/configs/modules/joint_detection_embeding/FairMOT-DLA-3
 一条命令即可完成模型的训练:
 
 ```bash
-python main.py -c paddlex/configs/modules/joint_detection_embeding/FairMOT-DLA-34_1088x608.yaml \
+python main.py -c paddlex/configs/modules/joint_detection_embedding/FairMOT-DLA-34_1088x608.yaml \
     -o Global.mode=train \
     -o Global.dataset_dir=./dataset/mot_examples
 ```
@@ -319,7 +319,7 @@ python main.py -c paddlex/configs/modules/joint_detection_embeding/FairMOT-DLA-3
 在完成模型训练后，可以对指定的模型权重文件在验证集上进行评估，验证模型精度。使用 PaddleX 进行模型评估，一条命令即可完成模型的评估：
 
 ```bash
-python main.py -c paddlex/configs/modules/joint_detection_embeding/FairMOT-DLA-34_1088x608.yaml \
+python main.py -c paddlex/configs/modules/joint_detection_embedding/FairMOT-DLA-34_1088x608.yaml \
     -o Global.mode=evaluate \
     -o Global.dataset_dir=./dataset/mot_examples
 ```
@@ -341,7 +341,7 @@ python main.py -c paddlex/configs/modules/joint_detection_embeding/FairMOT-DLA-3
 
 * 通过命令行的方式进行推理预测，只需如下一条命令。运行以下代码前，请您下载[示例图片](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/joint_detection_embedding_000.png)到本地。
 ```bash
-python main.py -c paddlex/configs/modules/joint_detection_embeding/FairMOT-DLA-34_1088x608.yaml  \
+python main.py -c paddlex/configs/modules/joint_detection_embedding/FairMOT-DLA-34_1088x608.yaml  \
     -o Global.mode=predict \
     -o Predict.model_dir="./output/best_model/inference" \
     -o Predict.input="./joint_detection_embedding_000.png"
