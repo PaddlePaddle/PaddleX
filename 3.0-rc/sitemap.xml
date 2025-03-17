@@ -666,6 +666,13 @@
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-rcen/pipeline_usage/tutorials/ocr_pipelines/OCR.html"/>
     </url>
     <url>
+        <loc>https://paddlepaddle.github.io/PaddleX/3.0-rc/pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html</loc>
+        <lastmod>2025-03-17</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-rc/pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-rcen/pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html"/>
+    </url>
+    <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-rc/pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html</loc>
         <lastmod>2025-03-17</lastmod>
         <changefreq>daily</changefreq>
@@ -678,13 +685,6 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-rc/pipeline_usage/tutorials/ocr_pipelines/formula_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-rcen/pipeline_usage/tutorials/ocr_pipelines/formula_recognition.html"/>
-    </url>
-    <url>
-        <loc>https://paddlepaddle.github.io/PaddleX/3.0-rc/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html</loc>
-        <lastmod>2025-03-17</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-rc/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html"/>
-        <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-rcen/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-rc/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html</loc>
@@ -1646,6 +1646,13 @@
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-rcpipeline_usage/tutorials/ocr_pipelines/OCR.html"/>
     </url>
     <url>
+        <loc>https://paddlepaddle.github.io/PaddleX/3.0-rc/en/pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html</loc>
+        <lastmod>2025-03-17</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-rc/en/pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-rcpipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.html"/>
+    </url>
+    <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-rc/en/pipeline_usage/tutorials/ocr_pipelines/doc_preprocessor.html</loc>
         <lastmod>2025-03-17</lastmod>
         <changefreq>daily</changefreq>
@@ -1658,13 +1665,6 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-rc/en/pipeline_usage/tutorials/ocr_pipelines/formula_recognition.html"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-rcpipeline_usage/tutorials/ocr_pipelines/formula_recognition.html"/>
-    </url>
-    <url>
-        <loc>https://paddlepaddle.github.io/PaddleX/3.0-rc/en/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html</loc>
-        <lastmod>2025-03-17</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="https://paddlepaddle.github.io/PaddleX/3.0-rc/en/pipeline_usage/tutorials/ocr_pipelines/layout_parsing.html"/>
-        <xhtml:link rel="alternate" hreflang="zh" href="https://paddlepaddle.github.io/PaddleX/3.0-rcpipeline_usage/tutorials/ocr_pipelines/layout_parsing.html"/>
     </url>
     <url>
         <loc>https://paddlepaddle.github.io/PaddleX/3.0-rc/en/pipeline_usage/tutorials/ocr_pipelines/seal_recognition.html</loc>
