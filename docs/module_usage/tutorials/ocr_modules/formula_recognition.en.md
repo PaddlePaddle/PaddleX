@@ -52,16 +52,23 @@ The formula recognition module is a crucial component of OCR (Optical Character 
 
 <b>Note: The above accuracy metrics are measured using an internally built formula recognition test set within PaddleX. The BLEU score of LaTeX_OCR_rec on the LaTeX-OCR formula recognition test set is 0.8821. All model GPU inference times are based on machines with Tesla V100 GPUs, with precision type FP32.</b>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**: PaddleX Internal Self-built Formula Recognition Test Set
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
-
-- **Inference Mode Description**
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+              <li><strong>Test Dataset：</strong>PaddleX Internal Self-built Formula Recognition Test Set</li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
 <table border="1">
     <thead>

@@ -58,18 +58,28 @@ The document image preprocessing pipeline integrates two major functions: docume
 </tbody>
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**:
-    - Document Image Orientation Classification Module: A self-built dataset using PaddleX, covering multiple scenarios such as ID cards and documents, containing 1000 images.
-    - Text Image Rectification Module: [DocUNet](https://www3.cs.stonybrook.edu/~cvl/docunet.html).
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
-
-- **Inference Mode Description**
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+                    <li><strong>Test Dataset：</strong>
+                        <ul>
+                          <li>Document Image Orientation Classification Module: A self-built dataset using PaddleX, covering multiple scenarios such as ID cards and documents, containing 1000 images.</li>
+                          <li>Text Image Rectification Module: <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet</a>.</li>
+                        </ul>
+                    </li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
 <table border="1">
     <thead>
@@ -620,7 +630,7 @@ Since the document image preprocessing pipeline consists of several modules, if 
     <tr>
       <td>The overall image rotation correction is inaccurate.</td>
       <td>Image orientation classification module</td>
-      <td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md">链接</a></td>
+      <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html">Link</a></td>
     </tr>
     <tr>
       <td>The image distortion correction is inaccurate.</td>

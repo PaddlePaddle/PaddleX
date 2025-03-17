@@ -29,16 +29,22 @@ Unsupervised anomaly detection is a technology that automatically identifies and
 </tbody>
 </table>
 
-**Test Environment Description**:
-
-- **Performance Test Environment**
-  - **Test Dataset**: The above model accuracy indicators are measured from the MVTec_AD dataset.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
-
-- **Inference Mode Description**
+<strong>Test Environment Description:</strong>
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+              <li><strong>Test Dataset：</strong>The above model accuracy indicators are measured from the MVTec_AD dataset.</li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
 <table border="1">
     <thead>

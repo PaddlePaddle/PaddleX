@@ -29,16 +29,23 @@ This pipeline integrates the high-precision anomaly detection model STFPM, which
 </tbody>
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**: The above accuracy metrics are the average anomaly scores on the </b>[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad)<b> validation set.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
-
-- **Inference Mode Description**
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+            <li><strong>Test Dataset：</strong>The above accuracy metrics are the average anomaly scores on the <b><a href="https://www.mvtec.com/company/research/datasets/mvtec-ad">MVTec AD</a></b> validation set.</li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
 <table border="1">
     <thead>
@@ -818,7 +825,7 @@ You can choose the appropriate deployment method based on your needs to integrat
 If the default model weights provided by the image anomaly detection pipeline are not satisfactory in terms of accuracy or speed for your specific scenario, you can attempt to <b>further fine-tune the existing models using your own domain-specific or application-specific data</b> to improve the recognition performance of the image anomaly detection pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the image anomaly detection pipeline includes an unsupervised image anomaly detection module, if the pipeline's performance does not meet expectations, you need to refer to the [Custom Development](../../../module_usage/tutorials/cv_modules/anomaly_detection.en.md) section in the [Unsupervised Anomaly Detection Module Development Guide](../../../module_usage/tutorials/cv_modules/anomaly_detection.en.md) and use your private dataset to fine-tune the image anomaly detection model.
+Since the image anomaly detection pipeline includes an unsupervised image anomaly detection module, if the pipeline's performance does not meet expectations, you need to refer to the [Custom Development](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/anomaly_detection.html) section in the [Unsupervised Anomaly Detection Module Development Guide](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/anomaly_detection.html) and use your private dataset to fine-tune the image anomaly detection model.
 
 ### 4.2 Model Application
 After fine-tuning with your private dataset, you will obtain the local model weight file.

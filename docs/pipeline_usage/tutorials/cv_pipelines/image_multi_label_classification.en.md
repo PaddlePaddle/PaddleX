@@ -53,16 +53,23 @@ Image multi-label classification is a technique that assigns multiple relevant c
 </tbody>
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**: multi-label classification task on <b><a href="https://cocodataset.org/#home">COCO2017</a></b>.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
-
-- **Inference Mode Description**
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+             <li><strong>Test Dataset：</strong>multi-label classification task on <b><a href="https://cocodataset.org/#home">COCO2017</a></b>.</li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
 <table border="1">
     <thead>
@@ -923,7 +930,7 @@ Since the general image multi-label classification pipeline includes an image mu
     <tr>
       <td>Multi-label classification is inaccurate</td>
       <td>Multi-label classification module</td>
-      <td><a href="../../../module_usage/tutorials/cv_modules/image_multilabel_classification.en.md">Link</a></td>
+      <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/image_multilabel_classification.html">Link</a></td>
     </tr>
   </tbody>
 </table>

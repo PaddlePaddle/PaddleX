@@ -178,21 +178,31 @@ The core task of structure analysis is to parse and segment the content of input
 </tbody>
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**:
-    - Layout Detection Model: A self-built layout area detection dataset by PaddleOCR, containing 500 common document type images such as Chinese and English papers, magazines, contracts, books, exam papers, and research reports.
-    - Table Layout Detection Model: A self-built table area detection dataset by PaddleOCR, including 7,835 Chinese and English paper document type images with tables.
-    - 3-Class Layout Detection Model: A self-built layout area detection dataset by PaddleOCR, comprising 1,154 common document type images such as Chinese and English papers, magazines, and research reports.
-    - 5-Class English Document Area Detection Model: The evaluation dataset of [PubLayNet](https://developer.ibm.com/exchanges/data/all/publaynet), containing 11,245 images of English documents.
-    - 17-Class Area Detection Model: A self-built layout area detection dataset by PaddleOCR, including 892 common document type images such as Chinese and English papers, magazines, and research reports.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
-
-- **Inference Mode Description**
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+             <li><strong>Test Dataset：</strong>
+                 <ul>
+                   <li>Layout Detection Model: A self-built layout area detection dataset by PaddleOCR, containing 500 common document type images such as Chinese and English papers, magazines, contracts, books, exam papers, and research reports.</li>
+                   <li>Table Layout Detection Model: A self-built table area detection dataset by PaddleOCR, including 7,835 Chinese and English paper document type images with tables.</li>
+                   <li> 3-Class Layout Detection Model: A self-built layout area detection dataset by PaddleOCR, comprising 1,154 common document type images such as Chinese and English papers, magazines, and research reports.</li>
+                   <li>5-Class English Document Area Detection Model: The evaluation dataset of <a href="https://developer.ibm.com/exchanges/data/all/publaynet">PubLayNet</a>, containing 11,245 images of English documents.</li>
+                   <li>17-Class Area Detection Model: A self-built layout area detection dataset by PaddleOCR, including 892 common document type images such as Chinese and English papers, magazines, and research reports.</li>
+                 </ul>
+             </li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
 <table border="1">
     <thead>

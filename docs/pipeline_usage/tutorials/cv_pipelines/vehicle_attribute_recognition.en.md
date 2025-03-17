@@ -61,18 +61,28 @@ Vehicle attribute recognition is a crucial component in computer vision systems.
 </tbody>
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**:
-    - Vehicle Detection Model: PPVehicle Validation Set.
-    - Vehicle Attribute Recognition Model: VeRi Validation Set.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
-
-- **Inference Mode Description**
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+                    <li><strong>Test Dataset：</strong>
+                        <ul>
+                          <li>Vehicle Detection Model: PPVehicle Validation Set.</li>
+                          <li>Vehicle Attribute Recognition Model: VeRi Validation Set.</li>
+                        </ul>
+                    </li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
 <table border="1">
     <thead>
@@ -618,12 +628,12 @@ Since the vehicle attribute recognition pipeline includes both a vehicle detecti
 <tr>
 <td>Inaccurate vehicle detection</td>
 <td>Vehicle Detection Module</td>
-<td><a href="../../../module_usage/tutorials/cv_modules/vehicle_detection.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/vehicle_detection.html">Link</a></td>
 </tr>
 <tr>
 <td>Inaccurate attribute recognition</td>
 <td>Vehicle Attribute Recognition Module</td>
-<td><a href="../../../module_usage/tutorials/cv_modules/vehicle_attribute_recognition.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/vehicle_attribute_recognition.html">Link</a></td>
 </tr>
 </tbody>
 </table>

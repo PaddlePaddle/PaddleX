@@ -262,21 +262,31 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tr>
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**:
-    - Chinese Recognition Model: A self-built Chinese dataset using PaddleOCR, covering various scenarios such as street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.
-    - ch_SVTRv2_rec: <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Track 1: OCR End-to-End Recognition Task</a> A-Rank Evaluation Set.
-    - ch_RepSVTR_rec: <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Track 1: OCR End-to-End Recognition Task</a> B-Rank Evaluation Set.
-    - English Recognition Model: A self-built English dataset using PaddleX.
-    - Multilingual Recognition Model: A self-built multilingual dataset using PaddleX.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
-
-- **Inference Mode Description**
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+             <li><strong>Test Dataset：</strong>
+               <ul>
+                 <li>Chinese Recognition Model: A self-built Chinese dataset using PaddleOCR, covering various scenarios such as street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.</li>
+                 <li>ch_SVTRv2_rec: <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Track 1: OCR End-to-End Recognition Task</a> A-Rank Evaluation Set.</li>
+                 <li>ch_RepSVTR_rec: <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Track 1: OCR End-to-End Recognition Task</a> B-Rank Evaluation Set.</li>
+                 <li>English Recognition Model: A self-built English dataset using PaddleX.</li>
+                 <li>Multilingual Recognition Model: A self-built multilingual dataset using PaddleX.</li>
+               </ul>
+             </li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
 <table border="1">
     <thead>
