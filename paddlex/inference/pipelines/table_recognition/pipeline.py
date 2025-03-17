@@ -15,6 +15,7 @@
 import os, sys
 from typing import Any, Dict, Optional, Union, Tuple, List
 import numpy as np
+import math
 import cv2
 from ..base import BasePipeline
 from ..components import CropByBoxes
@@ -216,12 +217,40 @@ class TableRecognitionPipeline(BasePipeline):
             doc_preprocessor_res = {}
             doc_preprocessor_image = image_array
         return doc_preprocessor_res, doc_preprocessor_image
+    
+    def split_ocr_bboxes_by_table_cells(self, ori_img, cells_bboxes):
+        """
+        Splits OCR bounding boxes by table cells and retrieves text.
+
+        Args:
+            ori_img (ndarray): The original image from which text regions will be extracted.
+            cells_bboxes (list or ndarray): Detected cell bounding boxes to extract text from.
+
+        Returns:
+            list: A list containing the recognized texts from each cell.
+        """
+
+        # Check if cells_bboxes is a list and convert it if not.
+        if not isinstance(cells_bboxes, list):
+            cells_bboxes = cells_bboxes.tolist()
+        texts_list = []  # Initialize a list to store the recognized texts.
+        # Process each bounding box provided in cells_bboxes.
+        for i in range(len(cells_bboxes)):
+            # Extract and round up the coordinates of the bounding box.
+            x1, y1, x2, y2 = [math.ceil(k) for k in cells_bboxes[i]]
+            # Perform OCR on the defined region of the image and get the recognized text.
+            rec_te = next(self.general_ocr_pipeline(ori_img[y1:y2, x1:x2, :]))
+            # Concatenate the texts and append them to the texts_list.
+            texts_list.append(''.join(rec_te["rec_texts"]))
+        # Return the list of recognized texts from each cell.
+        return texts_list
 
     def predict_single_table_recognition_res(
         self,
         image_array: np.ndarray,
         overall_ocr_res: OCRResult,
         table_box: list,
+        use_table_cells_ocr_results: bool = False,
         flag_find_nei_text: bool = True,
         cell_sort_by_y_projection: bool = False,
     ) -> SingleTableRecognitionResult:
@@ -233,16 +262,25 @@ class TableRecognitionPipeline(BasePipeline):
             overall_ocr_res (OCRResult): Overall OCR result obtained after running the OCR pipeline.
                 The overall OCR results containing text recognition information.
             table_box (list): The table box coordinates.
+            use_table_cells_ocr_results (bool): whether to use OCR results with cells.
             flag_find_nei_text (bool): Whether to find neighboring text.
             cell_sort_by_y_projection (bool): Whether to sort the matched OCR boxes by y-projection.
         Returns:
             SingleTableRecognitionResult: single table recognition result.
         """
         table_structure_pred = next(self.table_structure_model(image_array))
+        if use_table_cells_ocr_results == True:
+            table_cells_result = list(map(lambda arr: arr.tolist(), table_structure_pred['bbox']))
+            table_cells_result = [[rect[0], rect[1], rect[4], rect[5]] for rect in table_cells_result]
+            cells_texts_list = self.split_ocr_bboxes_by_table_cells(image_array, table_cells_result)
+        else:
+            cells_texts_list = []
         single_table_recognition_res = get_table_recognition_res(
             table_box,
             table_structure_pred,
             overall_ocr_res,
+            cells_texts_list,
+            use_table_cells_ocr_results,
             cell_sort_by_y_projection=cell_sort_by_y_projection,
         )
         neighbor_text = ""
@@ -271,6 +309,7 @@ class TableRecognitionPipeline(BasePipeline):
         text_det_box_thresh: Optional[float] = None,
         text_det_unclip_ratio: Optional[float] = None,
         text_rec_score_thresh: Optional[float] = None,
+        use_table_cells_ocr_results: Optional[bool] = False,
         cell_sort_by_y_projection: Optional[bool] = None,
         **kwargs,
     ) -> TableRecognitionResult:
@@ -286,6 +325,7 @@ class TableRecognitionPipeline(BasePipeline):
                 It will be used if it is not None and use_ocr_model is False.
             layout_det_res (DetResult): The layout detection result.
                 It will be used if it is not None and use_layout_detection is False.
+            use_table_cells_ocr_results (bool): whether to use OCR results with cells.
             cell_sort_by_y_projection (bool): Whether to sort the matched OCR boxes by y-projection.
             **kwargs: Additional keyword arguments.
 
@@ -346,6 +386,7 @@ class TableRecognitionPipeline(BasePipeline):
                     doc_preprocessor_image,
                     overall_ocr_res,
                     table_box,
+                    use_table_cells_ocr_results,
                     flag_find_nei_text=False,
                     cell_sort_by_y_projection=cell_sort_by_y_projection,
                 )
@@ -366,6 +407,7 @@ class TableRecognitionPipeline(BasePipeline):
                                 crop_img_info["img"],
                                 overall_ocr_res,
                                 table_box,
+                                use_table_cells_ocr_results,
                                 cell_sort_by_y_projection=cell_sort_by_y_projection,
                             )
                         )

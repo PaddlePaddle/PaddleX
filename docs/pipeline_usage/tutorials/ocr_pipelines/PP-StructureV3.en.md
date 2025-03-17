@@ -912,11 +912,12 @@ In the above Python script, the following steps are executed:
 <tr>
 <td><code>layout_unclip_ratio</code></td>
 <td>Expansion ratio of the detection box for the layout area detection model</td>
-<td><code>float|Tuple[float,float]|None</code></td>
+<td><code>float|Tuple[float,float]|dict|None</code></td>
 <td>
 <ul>
 <li><b>float</b>: Any floating-point number greater than <code>0</code>;</li>
 <li><b>Tuple[float,float]</b>: The expansion ratios in the horizontal and vertical directions, respectively;</li>
+<li><b>dict</b>, keys as <b>int</b> representing <code>cls_id</code>, values as float scaling factors, e.g., <code>{0: (1.1, 2.0)}</code> means cls_id 0 expanding the width by 1.1 times and the height by 2.0 times while keeping the center unchanged</li>
 <li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the pipeline will be used, initialized as <code>1.0</code>;</li>
 </ul>
 </td>
@@ -925,10 +926,11 @@ In the above Python script, the following steps are executed:
 <tr>
 <td><code>layout_merge_bboxes_mode</code></td>
 <td>Overlap box filtering method for layout area detection</td>
-<td><code>str|None</code></td>
+<td><code>str|dict|None</code></td>
 <td>
 <ul>
 <li><b>str</b>: <code>large</code>, <code>small</code>, <code>union</code>, representing whether to retain the larger box, the smaller box, or both during overlap box filtering;</li>
+<li><b>dict</b>, keys as <b>int</b> representing <code>cls_id</code> and values as merging modes, e.g., <code>{0: "large", 2: "small"}</li>
 <li><b>None</b>: If set to <code>None</code>, the default value initialized for this parameter in the pipeline will be used, initialized as <code>large</code>;</li>
 </ul>
 </td>

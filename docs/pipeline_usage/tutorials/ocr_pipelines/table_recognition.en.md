@@ -7,7 +7,7 @@ comments: true
 ## 1. Introduction to General Table Recognition Pipeline
 Table recognition is a technology that automatically identifies and extracts table content and structure from documents or images. It is widely used in data entry, information retrieval, and document analysis. By using computer vision and machine learning algorithms, table recognition can convert complex table information into editable formats, facilitating further processing and analysis of data.
 
-The General Table Recognition Pipeline is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. This pipeline integrates the well-known SLANet and SLANet_plus table recognition models. Based on this pipeline, precise predictions of tables can be achieved, covering a wide range of applications in general, manufacturing, finance, transportation, and other fields. The pipeline also provides flexible service deployment options, supporting various hardware and programming languages for integration. Moreover, it offers custom development capabilities, allowing you to train and optimize models on your own dataset, which can then be seamlessly integrated.
+The General Table Recognition Pipeline is designed to solve table recognition tasks by identifying tables in images and outputting them in HTML format. This pipeline integrates the well-known SLANet and SLANet_plus table structure recognition models. Based on this pipeline, precise predictions of tables can be achieved, covering a wide range of applications in general, manufacturing, finance, transportation, and other fields. The pipeline also provides flexible service deployment options, supporting various hardware and programming languages for integration. Moreover, it offers custom development capabilities, allowing you to train and optimize models on your own dataset, which can then be seamlessly integrated.
 
 <img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition/01.png"/>
 <b>The General Table Recognition Pipeline includes essential modules for table structure recognition, text detection, and text recognition, as well as optional modules for layout area detection, document image orientation classification, and text image correction.</b>
@@ -16,7 +16,7 @@ The General Table Recognition Pipeline is designed to solve table recognition ta
 
 <details><summary>👉Model List Details</summary>
 
-<p><b>Table Recognition Module Models:</b></p>
+<p><b>Table Structure Recognition Module Models:</b></p>
 <table>
 <tr>
 <th>Model</th><th>Model Download Link</th>
@@ -868,6 +868,13 @@ In the above Python script, the following steps are executed:
 </td>
 <td><code>None</code></td>
 </tr>
+<td><code>use_table_cells_ocr_results</code></td>
+<td>Whether to enable Table-Cells-OCR mode, when not enabled, use global OCR result to fill to HTML table, when enabled, do OCR cell by cell and fill to HTML table (it will increase the time consuming). Both of them perform differently in different scenarios, please choose according to the actual situation.</td>
+<td><code>bool|False</code></td>
+<td>
+<ul>
+<li><b>bool</b>：<code>True</code> or <code>False</code>
+<td><code>False</code></td>
 </table>
 
 (3) Process the prediction results. Each sample's prediction result is represented as a corresponding Result object, and supports operations such as printing, saving as an image, saving as an `xlsx` file, saving as an `HTML` file, and saving as a `json` file.
@@ -1390,12 +1397,12 @@ SubModules:
   LayoutDetection:
     module_name: layout_detection
     model_name: PicoDet_layout_1x_table
-    model_dir: null # 替换为微调后的版面区域检测模型权重路径
+    model_dir: null # Replace with fine-tuned model weight paths
 
   TableStructureRecognition:
     module_name: table_structure_recognition
     model_name: SLANet_plus
-    model_dir: null # 替换为微调后的表格结构识别模型权重路径
+    model_dir: null # Replace with fine-tuned model weight paths
 
 SubPipelines:
   DocPreprocessor:
@@ -1406,7 +1413,7 @@ SubPipelines:
       DocOrientationClassify:
         module_name: doc_text_orientation
         model_name: PP-LCNet_x1_0_doc_ori
-        model_dir: null # 替换为微调后的文档图像方向分类模型权重路径
+        model_dir: null # Replace with fine-tuned model weight paths
 
       DocUnwarping:
         module_name: image_unwarping
@@ -1422,16 +1429,16 @@ SubPipelines:
       TextDetection:
         module_name: text_detection
         model_name: PP-OCRv4_server_det
-        model_dir: null # 替换为微调后的文本检测模型权重路径
+        model_dir: null # Replace with fine-tuned model weight paths
         limit_side_len: 960
         limit_type: max
         thresh: 0.3
-        box_thresh: 0.6
+        box_thresh: 0.4
         unclip_ratio: 2.0
       TextRecognition:
         module_name: text_recognition
         model_name: PP-OCRv4_server_rec
-        model_dir: null # 替换为微调后文本识别的模型权重路径
+        model_dir: null # Replace with fine-tuned model weight paths
         batch_size: 1
         score_thresh: 0
 ```

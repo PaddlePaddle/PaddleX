@@ -50,7 +50,7 @@ class DetPredictor(BasicPredictor):
         img_size: Optional[Union[int, Tuple[int, int]]] = None,
         threshold: Optional[Union[float, dict]] = None,
         layout_nms: Optional[bool] = None,
-        layout_unclip_ratio: Optional[Union[float, Tuple[float, float]]] = None,
+        layout_unclip_ratio: Optional[Union[float, Tuple[float, float], dict]] = None,
         layout_merge_bboxes_mode: Optional[Union[str, dict]] = None,
         **kwargs,
     ):
@@ -91,9 +91,11 @@ class DetPredictor(BasicPredictor):
                 assert (
                     len(layout_unclip_ratio) == 2
                 ), f"The length of `layout_unclip_ratio` should be 2."
+            elif isinstance(layout_unclip_ratio, dict):
+                pass
             else:
                 raise ValueError(
-                    f"The type of `layout_unclip_ratio` must be float or Tuple[float, float], but got {type(layout_unclip_ratio)}."
+                    f"The type of `layout_unclip_ratio` must be float, Tuple[float, float] or Dict, but got {type(layout_unclip_ratio)}."
                 )
 
         if layout_merge_bboxes_mode is not None:
@@ -209,7 +211,7 @@ class DetPredictor(BasicPredictor):
         batch_data: List[Any],
         threshold: Optional[Union[float, dict]] = None,
         layout_nms: bool = False,
-        layout_unclip_ratio: Optional[Union[float, Tuple[float, float]]] = None,
+        layout_unclip_ratio: Optional[Union[float, Tuple[float, float], dict]] = None,
         layout_merge_bboxes_mode: Optional[Union[str, dict]] = None,
     ):
         """

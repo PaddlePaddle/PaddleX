@@ -403,6 +403,8 @@ def get_table_recognition_res(
     table_structure_result: list,
     table_cells_result: list,
     overall_ocr_res: OCRResult,
+    cells_texts_list: list,
+    use_table_cells_ocr_results: bool,
 ) -> SingleTableRecognitionResult:
     """
     Retrieve table recognition result from cropped image info, table structure prediction, and overall OCR result.
@@ -412,6 +414,8 @@ def get_table_recognition_res(
         table_structure_result (list): Predicted table structure.
         table_cells_result (list): Predicted table cells.
         overall_ocr_res (OCRResult): Overall OCR result from the input image.
+        cells_texts_list (list): OCR results with cells.
+        use_table_cells_ocr_results (bool): whether to use OCR results with cells.
 
     Returns:
         SingleTableRecognitionResult: An object containing the single table recognition result.
@@ -425,12 +429,29 @@ def get_table_recognition_res(
     crop_start_point = [table_box[0][0], table_box[0][1]]
     img_shape = overall_ocr_res["doc_preprocessor_res"]["output_img"].shape[0:2]
 
+    if len(table_cells_result) == 0 or len(table_ocr_pred["rec_boxes"]) == 0:
+        pred_html = ' '.join(table_structure_result)
+        if len(table_cells_result) != 0:
+            table_cells_result = convert_table_structure_pred_bbox(
+                table_cells_result, crop_start_point, img_shape
+            )
+        single_img_res = {
+            "cell_box_list": table_cells_result,
+            "table_ocr_pred": table_ocr_pred,
+            "pred_html": pred_html,
+        }
+        return SingleTableRecognitionResult(single_img_res)
+
     table_cells_result = convert_table_structure_pred_bbox(
         table_cells_result, crop_start_point, img_shape
     )
 
-    ocr_dt_boxes = table_ocr_pred["rec_boxes"]
-    ocr_texts_res = table_ocr_pred["rec_texts"]
+    if use_table_cells_ocr_results == True:
+        ocr_dt_boxes = table_cells_result
+        ocr_texts_res = cells_texts_list
+    else:
+        ocr_dt_boxes = table_ocr_pred["rec_boxes"]
+        ocr_texts_res = table_ocr_pred["rec_texts"]
 
     table_cells_result, table_cells_flag = sort_table_cells_boxes(table_cells_result)
     row_start_index = find_row_start_index(table_structure_result)
