@@ -40,10 +40,30 @@ Unsupervised anomaly detection is a technology that automatically identifies and
 
 - **Inference Mode Description**
 
-| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
-|-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
-| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
 
 ## III. Quick Integration  <a id="quick"> </a>
 Before quick integration, you need to install the PaddleX wheel package. For the installation method of the wheel package, please refer to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md). After installing the wheel package, a few lines of code can complete the inference of the unsupervised anomaly detection module. You can switch models under this module freely, and you can also integrate the model inference of the unsupervised anomaly detection module into your project. Before running the following code, please download the [demo image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/uad_grid.png) to your local machine.
@@ -101,6 +121,13 @@ Relevant methods, parameters, and explanations are as follows:
 <td><code>str</code></td>
 <td>None</td>
 <td>None</td>
+</tr>
+<tr>
+<td><code>device</code></td>
+<td>The device used for model inference</td>
+<td><code>str</code></td>
+<td>It supports specifying specific GPU card numbers, such as "gpu:0", other hardware card numbers, such as "npu:0", or CPU, such as "cpu".</td>
+<td><code>gpu:0</code></td>
 </tr>
 </table>
 
