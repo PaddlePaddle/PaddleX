@@ -14,14 +14,57 @@ SubModules:
     model_dir: null
     threshold: 
       0: 0.3  # paragraph_title
+      1: 0.5  # image
+      2: 0.5  # text
+      3: 0.5  # number
+      4: 0.5  # abstract
+      5: 0.5  # content
+      6: 0.5  # figure_title
       7: 0.3  # formula
+      8: 0.5  # table
+      9: 0.5  # table_title
+      10: 0.5 # reference
+      11: 0.5 # doc_title
+      12: 0.5 # footnote
+      13: 0.5 # header
+      14: 0.5 # algorithm
+      15: 0.5 # footer
       16: 0.3 # seal
+      17: 0.5 # chart_title
+      18: 0.5 # chart
+      19: 0.5 # formula_number
+      20: 0.5 # header_image
+      21: 0.5 # footer_image
+      22: 0.5 # aside_text
     layout_nms: True
     layout_unclip_ratio: 1.0
+      2: 1.0 # text
+      7: 1.0 # formula
+      8: 1.0 # table
     layout_merge_bboxes_mode: 
+      0: "union"  # paragraph_title
       1: "large"  # image
-      18: "large" # chart
+      2: "union"  # text
+      3: "union"  # number
+      4: "union"  # abstract
+      5: "union"  # content
+      6: "union"  # figure_title
       7: "large"  # formula
+      8: "union"  # table
+      9: "union"  # table_title
+      10: "union" # reference
+      11: "union" # doc_title
+      12: "union" # footnote
+      13: "union" # header
+      14: "union" # algorithm
+      15: "union" # footer
+      16: "union" # seal
+      17: "union" # chart_title
+      18: "large" # chart
+      19: "union" # formula_number
+      20: "union" # header_image
+      21: "union" # footer_image
+      22: "union" # aside_text
 
 SubPipelines:
   DocPreprocessor:
