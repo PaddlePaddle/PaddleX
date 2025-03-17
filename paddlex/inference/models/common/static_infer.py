@@ -416,6 +416,26 @@ class StaticInfer(object):
                     # Delete unsupported passes in dcu
                     config.delete_pass("conv2d_add_act_fuse_pass")
                     config.delete_pass("conv2d_add_fuse_pass")
+            elif self._option.device_type == "gcu":
+                assert lazy_paddle.device.is_compiled_with_custom_device("gcu"), (
+                    "Args device cannot be set as gcu while your paddle "
+                    "is not compiled with gcu!"
+                )
+                config.enable_custom_device("gcu")
+                from paddle_custom_device.gcu import passes as gcu_passes
+
+                gcu_passes.setUp()
+                name = "PaddleX_" + self._option.model_name
+                if hasattr(config, "enable_new_ir") and self._option.enable_new_ir:
+                    config.enable_new_ir(True)
+                    config.enable_new_executor(True)
+                    kPirGcuPasses = gcu_passes.inference_passes(use_pir=True, name=name)
+                    config.enable_custom_passes(kPirGcuPasses, True)
+                else:
+                    config.enable_new_ir(False)
+                    config.enable_new_executor(False)
+                    pass_builder = config.pass_builder()
+                    gcu_passes.append_passes_for_legacy_ir(pass_builder, name)
             else:
                 assert self._option.device_type == "cpu"
                 config.disable_gpu()
