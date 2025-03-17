@@ -414,7 +414,7 @@ class LayoutParsingPipelineV2(BasePipeline):
         use_formula_recognition: Union[bool, None] = None,
         layout_threshold: Optional[Union[float, dict]] = None,
         layout_nms: Optional[bool] = None,
-        layout_unclip_ratio: Optional[Union[float, Tuple[float, float]]] = None,
+        layout_unclip_ratio: Optional[Union[float, Tuple[float, float], dict]] = None,
         layout_merge_bboxes_mode: Optional[str] = None,
         text_det_limit_side_len: Union[int, None] = None,
         text_det_limit_type: Union[str, None] = None,

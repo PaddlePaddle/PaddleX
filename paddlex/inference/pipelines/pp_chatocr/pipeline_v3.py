@@ -198,6 +198,10 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
         use_general_ocr: Optional[bool] = None,
         use_seal_recognition: Optional[bool] = None,
         use_table_recognition: Optional[bool] = None,
+        layout_threshold: Optional[Union[float, dict]] = None,
+        layout_nms: Optional[bool] = None,
+        layout_unclip_ratio: Optional[Union[float, Tuple[float, float], dict]] = None,
+        layout_merge_bboxes_mode: Optional[str] = None,
         text_det_limit_side_len: Optional[int] = None,
         text_det_limit_type: Optional[str] = None,
         text_det_thresh: Optional[float] = None,
@@ -225,6 +229,26 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
             use_general_ocr (bool): Flag to use general OCR.
             use_seal_recognition (bool): Flag to use seal recognition.
             use_table_recognition (bool): Flag to use table recognition.
+            layout_threshold (Optional[float]): The threshold value to filter out low-confidence predictions. Default is None.
+            layout_nms (bool, optional): Whether to use layout-aware NMS. Defaults to False.
+            layout_unclip_ratio (Optional[Union[float, Tuple[float, float]]], optional): The ratio of unclipping the bounding box.
+                Defaults to None.
+                If it's a single number, then both width and height are used.
+                If it's a tuple of two numbers, then they are used separately for width and height respectively.
+                If it's None, then no unclipping will be performed.
+            layout_merge_bboxes_mode (Optional[str], optional): The mode for merging bounding boxes. Defaults to None.
+            text_det_limit_side_len (Optional[int]): Maximum side length for text detection.
+            text_det_limit_type (Optional[str]): Type of limit to apply for text detection.
+            text_det_thresh (Optional[float]): Threshold for text detection.
+            text_det_box_thresh (Optional[float]): Threshold for text detection boxes.
+            text_det_unclip_ratio (Optional[float]): Ratio for unclipping text detection boxes.
+            text_rec_score_thresh (Optional[float]): Score threshold for text recognition.
+            seal_det_limit_side_len (Optional[int]): Maximum side length for seal detection.
+            seal_det_limit_type (Optional[str]): Type of limit to apply for seal detection.
+            seal_det_thresh (Optional[float]): Threshold for seal detection.
+            seal_det_box_thresh (Optional[float]): Threshold for seal detection boxes.
+            seal_det_unclip_ratio (Optional[float]): Ratio for unclipping seal detection boxes.
+            seal_rec_score_thresh (Optional[float]): Score threshold for seal recognition.
             **kwargs: Additional keyword arguments.
 
         Returns:
@@ -248,6 +272,10 @@ class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
             use_general_ocr=use_general_ocr,
             use_seal_recognition=use_seal_recognition,
             use_table_recognition=use_table_recognition,
+            layout_threshold=layout_threshold,
+            layout_nms=layout_nms,
+            layout_unclip_ratio=layout_unclip_ratio,
+            layout_merge_bboxes_mode=layout_merge_bboxes_mode,
             text_det_limit_side_len=text_det_limit_side_len,
             text_det_limit_type=text_det_limit_type,
             text_det_thresh=text_det_thresh,
