@@ -1104,3 +1104,19 @@ register_model_info(
         },
     }
 )
+
+
+register_model_info(
+    {
+        "model_name": "FairMOT-DLA-34_1088x608",
+        "suite": "Det",
+        "config_path": osp.join(PDX_CONFIG_DIR, "FairMOT-DLA-34_1088x608.yaml"),
+        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_dataset_types": ["MOTDataset"],
+        "supported_train_opts": {
+            "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
+            "dy2st": False,
+            "amp": ["OFF"],
+        },
+    }
+)

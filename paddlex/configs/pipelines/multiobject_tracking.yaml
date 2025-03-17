@@ -1,0 +1,20 @@
+pipeline_name: multiobject_tracking 
+
+SubModules:
+  Detector:
+    module_name: joint_detection_embedding
+    model_name: FairMOT-DLA-34_1088x608
+    model_dir: null
+    batch_size: 1
+    img_size: null
+    threshold: null
+  ReID: None
+  Tracker:
+    module_name: JDETracker
+    conf_thres: 0.4
+    tracked_thresh: 0.4
+    metric_type: cosine
+    min_box_area: 200
+    vertical_ratio: 1.6 
+  MOT:
+    module_name: JDEMOT

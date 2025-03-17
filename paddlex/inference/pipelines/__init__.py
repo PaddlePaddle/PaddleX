@@ -52,6 +52,7 @@ from .rotated_object_detection import RotatedObjectDetectionPipeline
 from .keypoint_detection import KeypointDetectionPipeline
 from .open_vocabulary_detection import OpenVocabularyDetectionPipeline
 from .open_vocabulary_segmentation import OpenVocabularySegmentationPipeline
+from .multiobject_tracking import MultiObjectTrackingPipeline
 
 module_3d_bev_detection = import_module(
     ".3d_bev_detection", "paddlex.inference.pipelines"

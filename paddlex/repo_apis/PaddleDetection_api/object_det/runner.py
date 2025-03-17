@@ -83,7 +83,11 @@ class DetRunner(BaseRunner):
             cmd, env=env, switch_wdir=True, echo=True, silent=False, capture_output=True
         )
         if cp.returncode == 0:
-            metric_dict = _extract_eval_metrics(cp.stdout)
+            if "MOTA" in cp.stdout:
+                metric_dict = _extract_mot_metrics(cp.stdout)
+            else:
+                metric_dict = _extract_eval_metrics(cp.stdout)
+            print(metric_dict)
             cp.metrics = metric_dict
         return cp
 
@@ -222,5 +226,22 @@ def _extract_eval_metrics(stdout):
         match = pattern.search(line)
         if match:
             metric_dict[key] = float(match.group(0)[-5:])
+
+    return metric_dict
+
+
+def _extract_mot_metrics(stdout):
+    import re
+
+    metric_dict = {}
+
+    # Pattern to match MOTA value from MOT evaluation output
+    pattern = r"OVERALL\s+[\d.%]+\s+[\d.%]+\s+[\d.%]+\s+[\d.%]+\s+[\d.%]+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+([\d.]+)%"
+
+    match = re.search(pattern, stdout)
+    if match:
+        # Extract MOTA value and convert to float (divide by 100 to get decimal format)
+        mota_value = float(match.group(1)) / 100
+        metric_dict["mota"] = mota_value
 
     return metric_dict

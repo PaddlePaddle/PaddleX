@@ -29,6 +29,7 @@ from .processors import (
     PadStride,
     ReadImage,
     Resize,
+    LetterBoxResize,
     ToBatch,
     ToCHWImage,
     WarpAffine,
@@ -273,6 +274,12 @@ class DetPredictor(BasicPredictor):
         op = Resize(target_size=target_size[::-1], keep_ratio=keep_ratio, interp=interp)
         return op
 
+    @register("LetterBoxResize")
+    def build_letterbox_resize(self, target_size):
+        assert target_size
+        op = LetterBoxResize(target_size=target_size)
+        return op
+
     @register("NormalizeImage")
     def build_normalize(
         self,
@@ -345,4 +352,5 @@ class DetPredictor(BasicPredictor):
             self.layout_merge_bboxes_mode = self.config.get(
                 "layout_merge_bboxes_mode", None
             )
+        self.labels = self.config["label_list"]
         return DetPostProcess(labels=self.config["label_list"])

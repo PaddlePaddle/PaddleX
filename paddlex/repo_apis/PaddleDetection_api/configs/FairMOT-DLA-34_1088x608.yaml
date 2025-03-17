@@ -1,0 +1,155 @@
+# Runtime
+use_ema: true
+use_gpu: true
+use_xpu: false
+use_mlu: false
+use_npu: false
+use_gcu: false
+log_iter: 20
+save_dir: output
+snapshot_epoch: 1
+print_flops: false
+print_params: false
+
+
+# Dataset
+metric: MOT
+num_classes: 1
+
+# for MOT training
+TrainDataset:
+  name: MOTDataSet
+  dataset_dir: dataset/mot
+  image_lists: ['mot17.train', 'caltech.all', 'cuhksysu.train', 'prw.train', 'citypersons.train', 'eth.train']
+  data_fields: ['image', 'gt_bbox', 'gt_class', 'gt_ide']
+
+# for MOT evaluation
+# If you want to change the MOT evaluation dataset, please modify 'data_root'
+EvalMOTDataset:
+  name: MOTImageFolder
+  dataset_dir: dataset/mot
+  data_root: MOT16/images/train
+  keep_ori_im: False # set True if save visualization images or video, or used in DeepSORT
+
+# for MOT video inference
+TestMOTDataset:
+  name: MOTImageFolder
+  dataset_dir: dataset/mot
+  keep_ori_im: True # set True if save visualization images or video
+
+
+# Reader
+worker_num: 4
+TrainReader:
+  inputs_def:
+    image_shape: [3, 608, 1088]
+  sample_transforms:
+    - Decode: {}
+    - RGBReverse: {}
+    - AugmentHSV: {}
+    - LetterBoxResize: {target_size: [608, 1088]}
+    - MOTRandomAffine: {reject_outside: False}
+    - RandomFlip: {}
+    - BboxXYXY2XYWH: {}
+    - NormalizeBox: {}
+    - NormalizeImage: {mean: [0, 0, 0], std: [1, 1, 1]}
+    - RGBReverse: {}
+    - Permute: {}
+  batch_transforms:
+    - Gt2FairMOTTarget: {}
+  batch_size: 6
+  shuffle: True
+  drop_last: True
+  use_shared_memory: True
+
+EvalMOTReader:
+  sample_transforms:
+    - Decode: {}
+    - LetterBoxResize: {target_size: [608, 1088]}
+    - NormalizeImage: {mean: [0, 0, 0], std: [1, 1, 1], is_scale: True}
+    - Permute: {}
+  batch_size: 1
+
+TestMOTReader:
+  inputs_def:
+    image_shape: [3, 608, 1088]
+  sample_transforms:
+    - Decode: {}
+    - LetterBoxResize: {target_size: [608, 1088]}
+    - NormalizeImage: {mean: [0, 0, 0], std: [1, 1, 1], is_scale: True}
+    - Permute: {}
+  batch_size: 1
+
+
+# Model
+architecture: FairMOT
+pretrain_weights: https://paddledet.bj.bcebos.com/models/pretrained/fairmot_dla34_crowdhuman_pretrained.pdparams
+for_mot: True
+
+FairMOT:
+  detector: CenterNet
+  reid: FairMOTEmbeddingHead
+  loss: FairMOTLoss
+  tracker: JDETracker
+
+CenterNet:
+  backbone: DLA
+  neck: CenterNetDLAFPN
+  head: CenterNetHead
+  post_process: CenterNetPostProcess
+
+CenterNetDLAFPN:
+  down_ratio: 4
+  last_level: 5
+  out_channel: 0
+  dcn_v2: True
+  with_sge: False
+
+CenterNetHead:
+  head_planes: 256
+  prior_bias: -2.19
+  regress_ltrb: True
+  size_loss: 'L1'
+  loss_weight: {'heatmap': 1.0, 'size': 0.1, 'offset': 1.0, 'iou': 0.0}
+  add_iou: False
+
+FairMOTEmbeddingHead:
+  ch_head: 256
+  ch_emb: 128
+
+CenterNetPostProcess:
+  max_per_img: 500
+  down_ratio: 4
+  regress_ltrb: True
+
+JDETracker:
+  conf_thres: 0.4
+  tracked_thresh: 0.4
+  metric_type: cosine
+  min_box_area: 200
+  vertical_ratio: 1.6 # for pedestrian
+
+
+# Optimizer
+epoch: 30
+
+LearningRate:
+  base_lr: 0.0001
+  schedulers:
+  - !PiecewiseDecay
+    gamma: 0.1
+    milestones: [20,]
+    use_warmup: False
+
+OptimizerBuilder:
+  optimizer:
+    type: Adam
+  regularizer: NULL
+
+
+# Exporting the model
+export:
+  post_process: True  # Whether post-processing is included in the network when export model.
+  nms: True           # Whether NMS is included in the network when export model.
+  benchmark: False    # It is used to testing model performance, if set `True`, post-process and NMS will not be exported.
+  fuse_conv_bn: False

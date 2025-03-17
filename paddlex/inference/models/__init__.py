@@ -49,6 +49,8 @@ from .multilingual_speech_recognition import WhisperPredictor
 from .video_classification import VideoClasPredictor
 from .video_detection import VideoDetPredictor
 
+from .joint_detection_embedding import JDEPredictor
+
 module_3d_bev_detection = import_module(".3d_bev_detection", "paddlex.inference.models")
 BEVDet3DPredictor = getattr(module_3d_bev_detection, "BEVDet3DPredictor")
 
