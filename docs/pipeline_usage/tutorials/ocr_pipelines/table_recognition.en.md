@@ -870,7 +870,7 @@ In the above Python script, the following steps are executed:
 </tr>
 <td><code>use_table_cells_ocr_results</code></td>
 <td>Whether to enable Table-Cells-OCR mode, when not enabled, use global OCR result to fill to HTML table, when enabled, do OCR cell by cell and fill to HTML table (it will increase the time consuming). Both of them perform differently in different scenarios, please choose according to the actual situation.</td>
-<td><code>bool|False</code></td>
+<td><code>bool</code></td>
 <td>
 <ul>
 <li><b>bool</b>：<code>True</code> or <code>False</code>
@@ -1247,6 +1247,12 @@ Below are the API references for basic serving deployment and multi-language ser
 <td><code>textRecScoreThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
 <td>Please refer to the description of the <code>text_rec_score_thresh</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useTableCellsOcrResults</code></td>
+<td><code>boolean</code></td>
+<td>Please refer to the description of the <code>use_table_cells_ocr_results</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>

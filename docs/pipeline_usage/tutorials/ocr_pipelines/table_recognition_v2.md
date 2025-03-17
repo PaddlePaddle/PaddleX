@@ -896,7 +896,7 @@ for res in output:
 </tr>
 <td><code>use_table_cells_ocr_results</code></td>
 <td>是否启用单元格OCR模式，不启用时采用全局OCR结果填充至HTML表格，启用时逐个单元格做OCR并填充至HTML表格（会增加耗时）。二者在不同场景下性能不同，请根据实际情况选择。</td>
-<td><code>bool|False</code></td>
+<td><code>bool</code></td>
 <td>
 <ul>
 <li><b>bool</b>：<code>True</code> 或者 <code>False</code>
@@ -904,7 +904,7 @@ for res in output:
 </tr>
 <td><code>use_e2e_wired_table_rec_model</code></td>
 <td>是否启用有线表格端到端预测模式，不启用时采用表格单元格检测模型预测结果填充至HTML表格，启用时采用端到端表格结构识别模型的单元格预测结果填充至HTML表格。二者在不同场景下性能不同，请根据实际情况选择。</td>
-<td><code>bool|False</code></td>
+<td><code>bool</code></td>
 <td>
 <ul>
 <li><b>bool</b>：<code>True</code> 或者 <code>False</code>
@@ -912,7 +912,7 @@ for res in output:
 </tr>
 <td><code>use_e2e_wireless_table_rec_model</code></td>
 <td>是否启用无线表格端到端预测模式，不启用时采用表格单元格检测模型预测结果填充至HTML表格，启用时采用端到端表格结构识别模型的单元格预测结果填充至HTML表格。二者在不同场景下性能不同，请根据实际情况选择。</td>
-<td><code>bool|False</code></td>
+<td><code>bool</code></td>
 <td>
 <ul>
 <li><b>bool</b>：<code>True</code> 或者 <code>False</code>
@@ -1324,6 +1324,24 @@ for res in output:
 <td><code>textRecScoreThresh</code></td>
 <td><code>number</code> | <code>null</code></td>
 <td>请参阅产线对象中 <code>predict</code> 方法的 <code>text_rec_score_thresh</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useTableCellsOcrResults</code></td>
+<td><code>boolean</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_table_cells_ocr_results</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useE2eWiredTableRecModel</code></td>
+<td><code>boolean</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_e2e_wired_table_rec_model</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useE2eWirelessTableRecModel</code></td>
+<td><code>boolean</code></td>
+<td>请参阅产线对象中 <code>predict</code> 方法的 <code>use_e2e_wireless_table_rec_model</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 </tbody>

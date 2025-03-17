@@ -217,7 +217,7 @@ class TableRecognitionPipeline(BasePipeline):
             doc_preprocessor_res = {}
             doc_preprocessor_image = image_array
         return doc_preprocessor_res, doc_preprocessor_image
-    
+
     def split_ocr_bboxes_by_table_cells(self, ori_img, cells_bboxes):
         """
         Splits OCR bounding boxes by table cells and retrieves text.
@@ -241,7 +241,7 @@ class TableRecognitionPipeline(BasePipeline):
             # Perform OCR on the defined region of the image and get the recognized text.
             rec_te = next(self.general_ocr_pipeline(ori_img[y1:y2, x1:x2, :]))
             # Concatenate the texts and append them to the texts_list.
-            texts_list.append(''.join(rec_te["rec_texts"]))
+            texts_list.append("".join(rec_te["rec_texts"]))
         # Return the list of recognized texts from each cell.
         return texts_list
 
@@ -270,9 +270,15 @@ class TableRecognitionPipeline(BasePipeline):
         """
         table_structure_pred = next(self.table_structure_model(image_array))
         if use_table_cells_ocr_results == True:
-            table_cells_result = list(map(lambda arr: arr.tolist(), table_structure_pred['bbox']))
-            table_cells_result = [[rect[0], rect[1], rect[4], rect[5]] for rect in table_cells_result]
-            cells_texts_list = self.split_ocr_bboxes_by_table_cells(image_array, table_cells_result)
+            table_cells_result = list(
+                map(lambda arr: arr.tolist(), table_structure_pred["bbox"])
+            )
+            table_cells_result = [
+                [rect[0], rect[1], rect[4], rect[5]] for rect in table_cells_result
+            ]
+            cells_texts_list = self.split_ocr_bboxes_by_table_cells(
+                image_array, table_cells_result
+            )
         else:
             cells_texts_list = []
         single_table_recognition_res = get_table_recognition_res(
@@ -309,7 +315,7 @@ class TableRecognitionPipeline(BasePipeline):
         text_det_box_thresh: Optional[float] = None,
         text_det_unclip_ratio: Optional[float] = None,
         text_rec_score_thresh: Optional[float] = None,
-        use_table_cells_ocr_results: Optional[bool] = False,
+        use_table_cells_ocr_results: bool = False,
         cell_sort_by_y_projection: Optional[bool] = None,
         **kwargs,
     ) -> TableRecognitionResult:
