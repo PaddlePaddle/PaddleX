@@ -450,7 +450,7 @@ PIPELINE_ARGUMENTS = {
             "help": "Sets the score threshold for text recognition.",
         },
     ],
-    "layout_parsing_v2": [
+    "PP-StructureV3": [
         {
             "name": "--use_doc_orientation_classify",
             "type": bool,
