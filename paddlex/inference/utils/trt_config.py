@@ -149,7 +149,7 @@ PIR_TRT_CFG_SETTING = {
     "PP-YOLOE_seg-S": {"disable_ops": ["pd_op.slice", "pd_op.bilinear_interp"]},
     "PP-FormulaNet-L": {
         "disable_ops": ["pd_op.full_with_tensor"],
-        "workspace_size": 1 << 32,
+        "workspace_size": 2 << 32,
     },
     "PP-FormulaNet-S": {
         "disable_ops": ["pd_op.full_with_tensor"],
