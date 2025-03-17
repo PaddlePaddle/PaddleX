@@ -443,6 +443,9 @@ class LayoutParsingPipelineV2(BasePipeline):
         seal_det_box_thresh: Union[float, None] = None,
         seal_det_unclip_ratio: Union[float, None] = None,
         seal_rec_score_thresh: Union[float, None] = None,
+        use_table_cells_ocr_results: bool = None,
+        use_e2e_wired_table_rec_model: bool = None,
+        use_e2e_wireless_table_rec_model: bool = None,
         **kwargs,
     ) -> LayoutParsingResultV2:
         """
@@ -476,6 +479,9 @@ class LayoutParsingPipelineV2(BasePipeline):
             seal_det_box_thresh (Optional[float]): Threshold for seal detection boxes.
             seal_det_unclip_ratio (Optional[float]): Ratio for unclipping seal detection boxes.
             seal_rec_score_thresh (Optional[float]): Score threshold for seal recognition.
+            use_table_cells_ocr_results (bool): whether to use OCR results with cells.
+            use_e2e_wired_table_rec_model (bool): Whether to use end-to-end wired table recognition model.
+            use_e2e_wireless_table_rec_model (bool): Whether to use end-to-end wireless table recognition model.
             **kwargs (Any): Additional settings to extend functionality.
 
         Returns:
@@ -612,6 +618,9 @@ class LayoutParsingPipelineV2(BasePipeline):
                         overall_ocr_res=table_contents,
                         layout_det_res=layout_det_res,
                         cell_sort_by_y_projection=True,
+                        use_table_cells_ocr_results=use_table_cells_ocr_results,
+                        use_e2e_wired_table_rec_model=use_e2e_wired_table_rec_model,
+                        use_e2e_wireless_table_rec_model=use_e2e_wireless_table_rec_model,
                     ),
                 )
                 table_res_list = table_res_all["table_res_list"]

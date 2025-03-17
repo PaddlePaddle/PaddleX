@@ -566,6 +566,21 @@ PIPELINE_ARGUMENTS = {
             "type": float,
             "help": "Sets the score threshold for text recognition.",
         },
+        {
+            "name": "--use_table_cells_ocr_results",
+            "type": bool,
+            "help": "Determines whether to use cells OCR results",
+        },
+        {
+            "name": "--use_e2e_wired_table_rec_model",
+            "type": bool,
+            "help": "Determines whether to use end-to-end wired table recognition model",
+        },
+        {
+            "name": "--use_e2e_wireless_table_rec_model",
+            "type": bool,
+            "help": "Determines whether to use end-to-end wireless table recognition model",
+        },
     ],
     "ts_forecast": None,
     "ts_anomaly_detection": None,
