@@ -32,16 +32,23 @@ BEVFusion is a multi-modal 3D object detection model that fuses surround camera 
 <tr>
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**: <a href="https://www.nuscenes.org/nuscenes">nuscenes</a> validation set
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
-
-- **Inference Mode Description**
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+              <li><strong>Test Dataset：</strong><a href="https://www.nuscenes.org/nuscenes">nuscenes</a> validation set</li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
 <table border="1">
     <thead>
@@ -490,7 +497,7 @@ If the default model weights provided by the 3D multi-modal fusion detection pip
 
 ### 4.1 Model Fine-Tuning
 
-Refer to the [Custom Development](../../../module_usage/tutorials/cv_modules/3d_bev_detection.md#四二次开发) section in the [3D Multi-modal Fusion Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/3d_bev_detection.md) and use your private dataset to fine-tune the model.
+Refer to the [Custom Development](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/3d_bev_detection.html#四二次开发) section in the [3D Multi-modal Fusion Detection Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/3d_bev_detection.html) and use your private dataset to fine-tune the model.
 
 ### 4.2 Model Application
 After completing fine-tuning training using your private dataset, you will obtain local model weight files.

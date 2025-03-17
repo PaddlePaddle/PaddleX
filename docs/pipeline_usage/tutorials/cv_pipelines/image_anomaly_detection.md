@@ -37,7 +37,7 @@ comments: true
           <ul>
           <li><strong>测试数据集：
              </strong>
-               <a href="https://www.mvtec.com/company/research/datasets/mvtec-ad">MVTec AD</a><b> 验证集 grid 数据。
+              <b> <a href="https://www.mvtec.com/company/research/datasets/mvtec-ad">MVTec AD</a></b> 验证集 grid 数据。
              </li>
               <li><strong>硬件配置：</strong>
                   <ul>

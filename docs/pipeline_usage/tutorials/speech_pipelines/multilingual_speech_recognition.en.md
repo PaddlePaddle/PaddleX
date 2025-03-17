@@ -567,7 +567,7 @@ Since the general video classification pipeline only includes a video classifica
     <tr>
       <td>Inaccurate video classification</td>
       <td>Video Classification Module</td>
-      <td><a href="../../../module_usage/tutorials/video_modules/video_classification.en.md">Link</a></td>
+      <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/video_modules/video_classification.html">Link</a></td>
     </tr>
 
   </tbody>

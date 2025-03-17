@@ -76,18 +76,28 @@ PaddleX's Human Keypoint Detection Pipeline is a Top-Down solution consisting of
 </tr>
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**:
-    - Pedestrian Detection Model: CrowdHuman Dataset.
-    - Human Keypoint Detection Model: COCO Dataset AP(0.5:0.95), with detection boxes obtained from ground truth annotations.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
-
-- **Inference Mode Description**
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+            <li><strong>Test Dataset：</strong>
+              <ul>
+                <li>Pedestrian Detection Model: CrowdHuman Dataset.</li>
+                <li>Human Keypoint Detection Model: COCO Dataset AP(0.5:0.95), with detection boxes obtained from ground truth annotations.</li>
+              </ul>
+            </li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
 <table border="1">
     <thead>
@@ -747,7 +757,7 @@ If the default model weights provided by the human keypoint detection pipeline d
 
 Since the human keypoint detection pipeline consists of two modules (pedestrian detection module and human keypoint detection module), the suboptimal performance of the model pipeline may stem from either module.
 
-You can analyze the images with poor recognition performance. If you find that many pedestrian targets are not detected during the analysis, it may indicate a deficiency in the pedestrian detection model. You need to refer to the [Pedestrian Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/human_detection.en.md) in the [Custom Development](../../../module_usage/tutorials/cv_modules/human_detection.en.md) section to fine-tune the pedestrian detection model using your private dataset. If keypoint detection errors occur in detected pedestrians, it indicates that the keypoint detection model needs further improvement. You need to refer to the [Keypoint Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/human_keypoint_detection.en.md) in the [Custom Development](../../../module_usage/tutorials/cv_modules/human_keypoint_detection.en.md#secondary-development) section to fine-tune the keypoint detection model.
+You can analyze the images with poor recognition performance. If you find that many pedestrian targets are not detected during the analysis, it may indicate a deficiency in the pedestrian detection model. You need to refer to the [Pedestrian Detection Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/human_detection.html) in the [Custom Development](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/human_detection.html) section to fine-tune the pedestrian detection model using your private dataset. If keypoint detection errors occur in detected pedestrians, it indicates that the keypoint detection model needs further improvement. You need to refer to the [Keypoint Detection Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/human_keypoint_detection.html) in the [Custom Development](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/human_keypoint_detection.html#secondary-development) section to fine-tune the keypoint detection model.
 
 ### 4.2 Model Application
 

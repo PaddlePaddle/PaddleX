@@ -30,8 +30,23 @@ comments: true
 </tbody>
 </table>
 
-c
+<strong>测试环境说明:</strong>
 
+  <ul>
+      <li><b>性能测试环境</b>
+          <ul>
+              <li><strong>测试数据集：</strong><a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet benchmark</a>数据集。</li>
+              <li><strong>硬件配置：</strong>
+                  <ul>
+                      <li>GPU：NVIDIA Tesla T4</li>
+                      <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>推理模式说明</b></li>
+  </ul>
 
 <table border="1">
     <thead>

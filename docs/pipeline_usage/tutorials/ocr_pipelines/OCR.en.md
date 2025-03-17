@@ -389,24 +389,35 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tbody>
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**:
-    - Text Image Rectification Model: [DocUNet](https://www3.cs.stonybrook.edu/~cvl/docunet.html).
-    - Text Detection Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 500 images for detection.
-    - Chinese Recognition Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.
-    - ch_SVTRv2_rec: Evaluation set A for "OCR End-to-End Recognition Task" in the [PaddleOCR Algorithm Model Challenge](https://aistudio.baidu.com/competition/detail/1131/0/introduction).
-    - ch_RepSVTR_rec: Evaluation set B for "OCR End-to-End Recognition Task" in the [PaddleOCR Algorithm Model Challenge](https://aistudio.baidu.com/competition/detail/1131/0/introduction).
-    - English Recognition Model: A self-built English dataset using PaddleX.
-    - Multilingual Recognition Model: A self-built multilingual dataset using PaddleX.
-    - Text Line Orientation Classification Model: A self-built dataset using PaddleX, covering various scenarios such as ID cards and documents, containing 1000 images.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
-
-- **Inference Mode Description**
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+                <li><strong>Test Dataset：</strong>
+                        <ul>
+                         <li>Document Image Orientation Classification Module: A self-built dataset using PaddleX, covering multiple scenarios such as ID cards and documents, containing 1000 images.</li>
+                          <li>Text Image Rectification Model: <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet</a></li>
+                          <li>Text Detection Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 500 images for detection.</li>
+                          <li>Chinese Recognition Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.</li>
+                          <li>ch_SVTRv2_rec: Evaluation set A for "OCR End-to-End Recognition Task" in the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a></li>
+                          <li>ch_RepSVTR_rec: Evaluation set B for "OCR End-to-End Recognition Task" in the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a>.</li>
+                          <li>English Recognition Model: A self-built English dataset using PaddleX.</li>
+                          <li>Multilingual Recognition Model: A self-built multilingual dataset using PaddleX.</li>
+                          <li>Text Line Orientation Classification Model: A self-built dataset using PaddleX, covering various scenarios such as ID cards and documents, containing 1000 images.</li>
+                        </ul>
+                </li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
 <table border="1">
     <thead>
@@ -1128,22 +1139,22 @@ Since the General OCR pipeline consists of several modules, the unsatisfactory p
 <tr>
 <td>Text is missed in detection</td>
 <td>Text Detection Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/text_detection.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/text_detection.html">Link</a></td>
 </tr>
 <tr>
 <td>Text content is inaccurate</td>
 <td>Text Recognition Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/text_recognition.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/text_recognition.html">Link</a></td>
 </tr>
 <tr>
 <td>Vertical or rotated text line correction is inaccurate</td>
 <td>Text Line Orientation Classification Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/textline_orientation_classification.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/textline_orientation_classification.html">Link</a></td>
 </tr>
 <tr>
 <td>Whole-image rotation correction is inaccurate</td>
 <td>Document Image Orientation Classification Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html">Link</a></td>
 </tr>
 <tr>
 <td>Image distortion correction is inaccurate</td>

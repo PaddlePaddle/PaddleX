@@ -62,7 +62,7 @@ comments: true
   <ul>
       <li><b>性能测试环境</b>
           <ul>
-              <li><strong>测试数据集：</strong>PaddleOCR 自建的中英文数据集，覆盖街景、网图、文档、手写多个场景，其中文本识别包含 593 张图片。</li>
+              <li><strong>测试数据集：</strong>PaddleOCR 自建的中英文数据集，覆盖街景、网图、文档、手写多个场景，其中文本检测包含 593 张图片。</li>
               <li><strong>硬件配置：</strong>
                   <ul>
                       <li>GPU：NVIDIA Tesla T4</li>

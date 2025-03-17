@@ -55,17 +55,23 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
 </tr>
 </tbody>
 </table>
+<strong>Test Environment Description:</strong>
 
-**Test Environment Description**:
-
-- **Performance Test Environment**
-  - **Test Dataset**: </b>PSM<b>dataset.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
-
-- **Inference Mode Description**
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+            <li><strong>Test Dataset：</strong> <b>PSM</b> dataset.</li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
 <table border="1">
     <thead>
@@ -93,6 +99,7 @@ Time series anomaly detection focuses on identifying abnormal points or periods 
 </table>
 
 ## III. Quick Integration
+
 > ❗ Before quick integration, please install the PaddleX wheel package. For details, refer to the [PaddleX Local Installation Guide](../../../installation/installation.en.md)
 
 After installing the wheel package, a few lines of code can complete the inference of the time series anomaly detection module. You can switch models under this module freely, and you can also integrate the model inference of the time series anomaly detection module into your project. Before running the following code, please download the [demo csv](https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_ad.csv) to your local machine.

@@ -58,16 +58,23 @@ Time series forecasting aims to predict the possible values or states at a futur
 </tbody>
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**: [ETTH1](https://paddle-model-ecology.bj.bcebos.com/paddlex/data/Etth1.tar) test dataset.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
-
-- **Inference Mode Description**
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+            <li><strong>Test Dataset：</strong> <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/data/Etth1.tar">ETTH1</a> test dataset.</li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
 <table border="1">
     <thead>

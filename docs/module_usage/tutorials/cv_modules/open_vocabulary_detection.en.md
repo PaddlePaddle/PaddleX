@@ -39,16 +39,23 @@ Open-vocabulary object detection is an advanced object detection technology aime
 </tr>
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**: Based on the open vocabulary object detection model trained on the three datasets: O365, GoldG, and Cap4M.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
-
-- **Inference Mode Description**
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+              <li><strong>Test Dataset：</strong>  Based on the open vocabulary object detection model trained on the three datasets: O365, GoldG, and Cap4M.</li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
 <table border="1">
     <thead>
