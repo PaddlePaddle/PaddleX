@@ -43,6 +43,19 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         XlsxMixin.__init__(self)
         MarkdownMixin.__init__(self)
         JsonMixin.__init__(self)
+        self.title_pattern = self._build_title_pattern()
+
+    def _build_title_pattern(self):
+        # Precompiled regex pattern for matching numbering at the beginning of the title
+        numbering_pattern = (
+            r"(?:"
+            + r"[1-9][0-9]*(?:\.[1-9][0-9]*)*[\.、]?|"
+            + r"[\(\（](?:[1-9][0-9]*|["
+            r"一二三四五六七八九十百千万亿零壹贰叁肆伍陆柒捌玖拾]+)[\)\）]|" + r"["
+            r"一二三四五六七八九十百千万亿零壹贰叁肆伍陆柒捌玖拾]+"
+            r"[、\.]?|" + r"(?:I|II|III|IV|V|VI|VII|VIII|IX|X)\.?" + r")"
+        )
+        return re.compile(r"^\s*(" + numbering_pattern + r")(\s*)(.*)$")
 
     def _get_input_fn(self):
         fn = super()._get_input_fn()
@@ -241,22 +254,23 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         def _format_data(obj):
 
             def format_title(content_value):
-                content_value = content_value.rstrip(".")
-                content_value = re.sub(
-                    r"(\d+|[一二三四五六七八九十]+)([.、]?)\s*", r"\1\2 ", content_value
-                )
-                level = (
-                    content_value.count(
-                        ".",
-                    )
-                    + 1
-                    if "." in content_value
-                    else 1
-                )
-                return f"#{'#' * level} {content_value}".replace("-\n", "").replace(
-                    "\n",
-                    " ",
-                )
+                """
+                Normalize chapter title by ensuring one space between numbering and title content.
+                If numbering exists, ensure there's exactly one space between it and the title content.
+                If numbering does not exist, return the original title unchanged.
+
+                :param content_value: Original chapter title string.
+                :return: Normalized chapter title string.
+                """
+                match = self.title_pattern.match(content_value)
+                if match:
+                    numbering = match.group(1).strip()
+                    title_content = match.group(3).lstrip()
+                    # Return numbering and title content separated by one space
+                    return numbering + " " + title_content
+                else:
+                    # No numbering detected; return original title
+                    return content_value
 
             def format_centered_text(key):
                 return (
