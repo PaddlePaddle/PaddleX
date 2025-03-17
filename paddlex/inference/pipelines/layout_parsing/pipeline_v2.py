@@ -256,11 +256,19 @@ class LayoutParsingPipelineV2(BasePipeline):
         matched_ocr_dict = {}
         image = np.array(image)
         object_boxes = []
+        footnote_list = []
+        max_bottom_text_coordinate = 0
 
         for object_box_idx, box_info in enumerate(layout_det_res["boxes"]):
             box = box_info["coordinate"]
             label = box_info["label"].lower()
             object_boxes.append(box)
+
+            # set the label of footnote to text, when it is above the text boxes
+            if label == "footnote":
+                footnote_list.append(object_box_idx)
+            if label == "text" and box[3] > max_bottom_text_coordinate:
+                max_bottom_text_coordinate = box[3]
 
             if label not in ["formula", "table", "seal"]:
                 _, matched_idxs = get_sub_regions_ocr_res(
@@ -271,6 +279,13 @@ class LayoutParsingPipelineV2(BasePipeline):
                         matched_ocr_dict[matched_idx] = [object_box_idx]
                     else:
                         matched_ocr_dict[matched_idx].append(object_box_idx)
+
+        for footnote_idx in footnote_list:
+            if (
+                layout_det_res["boxes"][footnote_idx]["coordinate"][3]
+                < max_bottom_text_coordinate
+            ):
+                layout_det_res["boxes"][footnote_idx]["label"] = "text"
 
         already_processed = set()
         for matched_idx, layout_box_ids in matched_ocr_dict.items():
@@ -578,9 +593,12 @@ class LayoutParsingPipelineV2(BasePipeline):
                     table_contents["rec_texts"].append(
                         f'<div style="text-align: center;"><img src="{img_path}" alt="Image" /></div>'
                     )
-                    table_contents["rec_boxes"] = np.vstack(
-                        (table_contents["rec_boxes"], img["coordinate"])
-                    )
+                    if table_contents["rec_boxes"].size == 0:
+                        table_contents["rec_boxes"] = np.array([img["coordinate"]])
+                    else:
+                        table_contents["rec_boxes"] = np.vstack(
+                            (table_contents["rec_boxes"], img["coordinate"])
+                        )
                     table_contents["rec_polys"].append(poly_points)
                     table_contents["rec_scores"].append(img["score"])
 
