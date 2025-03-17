@@ -1556,13 +1556,13 @@ Below is the API reference for basic serving deployment and examples of service 
 </tr>
 <tr>
 <td><code>layoutUnclipRatio</code></td>
-<td><code>number</code> | <code>array</code> | <code>null</code></td>
+<td><code>number</code> | <code>array</code> | <code>object</code> | <code>null</code></td>
 <td>Please refer to the description of the <code>layout_unclip_ratio</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
 <td><code>layoutMergeBboxesMode</code></td>
-<td><code>string</code> | <code>null</code></td>
+<td><code>string</code> | <code>object</code> | <code>null</code></td>
 <td>Please refer to the description of the <code>layout_merge_bboxes_mode</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
