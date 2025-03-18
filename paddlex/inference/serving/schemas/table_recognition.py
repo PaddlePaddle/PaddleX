@@ -48,6 +48,7 @@ class InferRequest(ocr.BaseInferRequest):
     textDetBoxThresh: Optional[float] = None
     textDetUnclipRatio: Optional[float] = None
     textRecScoreThresh: Optional[float] = None
+    useTableCellsOcrResults: bool = False
 
 
 class TableRecResult(BaseModel):
