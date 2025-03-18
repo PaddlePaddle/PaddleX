@@ -253,24 +253,36 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
         def _format_data(obj):
 
-            def format_title(content_value):
+            def format_title(title):
                 """
-                Normalize chapter title by ensuring one space between numbering and title content.
+                Normalize chapter title.
+                Add the '#' to indicate the level of the title.
                 If numbering exists, ensure there's exactly one space between it and the title content.
                 If numbering does not exist, return the original title unchanged.
 
-                :param content_value: Original chapter title string.
+                :param title: Original chapter title string.
                 :return: Normalized chapter title string.
                 """
-                match = self.title_pattern.match(content_value)
+                match = self.title_pattern.match(title)
                 if match:
                     numbering = match.group(1).strip()
                     title_content = match.group(3).lstrip()
                     # Return numbering and title content separated by one space
-                    return numbering + " " + title_content
-                else:
-                    # No numbering detected; return original title
-                    return content_value
+                    title = numbering + " " + title_content
+
+                title = title.rstrip(".")
+                level = (
+                    title.count(
+                        ".",
+                    )
+                    + 1
+                    if "." in title
+                    else 1
+                )
+                return f"#{'#' * level} {title}".replace("-\n", "").replace(
+                    "\n",
+                    " ",
+                )
 
             def format_centered_text(key):
                 return (
