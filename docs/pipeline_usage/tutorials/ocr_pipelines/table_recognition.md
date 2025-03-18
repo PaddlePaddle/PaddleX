@@ -815,11 +815,7 @@ for res in output:
 </tr>
 <td><code>use_table_cells_ocr_results</code></td>
 <td>是否启用单元格OCR模式，不启用时采用全局OCR结果填充至HTML表格，启用时逐个单元格做OCR并填充至HTML表格（会增加耗时）。二者在不同场景下性能不同，请根据实际情况选择。</td>
-<<<<<<< HEAD
-<td><code>bool|False</code></td>
-=======
 <td><code>bool</code></td>
->>>>>>> upstream/develop
 <td>
 <ul>
 <li><b>bool</b>：<code>True</code> 或者 <code>False</code>
