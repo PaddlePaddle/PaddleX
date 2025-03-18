@@ -869,7 +869,7 @@ for item in markdown_images:
 <ul>
 <li><b>float</b>：任意大于 <code>0</code>  浮点数；</li>
 <li><b>Tuple[float,float]</b>：在横纵两个方向各自的扩张系数；</li>
-<li><b>字典</b>, 字典的key为<b>int</b>类型，代表<code>cls_id</code>, value为<b>tuple</b>类型，如<code>{0: (1.1, 2.0)}</code>, 表示将模型输出的第0类别检测框中心不变，宽度扩张1.1倍，高度扩张2.0倍</li>        
+<li><b>字典</b>, 字典的key为<b>int</b>类型，代表<code>cls_id</code>, value为<b>tuple</b>类型，如<code>{0: (1.1, 2.0)}</code>, 表示将模型输出的第0类别检测框中心不变，宽度扩张1.1倍，高度扩张2.0倍</li>
 <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>1.0</code>；</li>
 </ul>
 </td>
@@ -882,7 +882,7 @@ for item in markdown_images:
 <td>
 <ul>
 <li><b>str</b>：<code>large</code>，<code>small</code>, <code>union</code>，分别表示重叠框过滤时选择保留大框，小框还是同时保留</li>
-<li><b>dict</b>, 字典的key为<b>int</b>类型，代表<code>cls_id</code>, value为<b>str</b>类型, 如<code>{0: "large", 2: "small"}</code>, 表示对第0类别检测框使用large模式，对第2类别检测框使用small模式</li> 
+<li><b>dict</b>, 字典的key为<b>int</b>类型，代表<code>cls_id</code>, value为<b>str</b>类型, 如<code>{0: "large", 2: "small"}</code>, 表示对第0类别检测框使用large模式，对第2类别检测框使用small模式</li>
 <li><b>None</b>：如果设置为 <code>None</code>, 将默认使用产线初始化的该参数值，初始化为 <code>large</code>；</li>
 </ul>
 </td>
@@ -1503,13 +1503,13 @@ for res in output:
 </tr>
 <tr>
 <td><code>layoutUnclipRatio</code></td>
-<td><code>number</code> | <code>array</code> | <code>null</code></td>
+<td><code>number</code> | <code>array</code> | <code>object</code> | <code>null</code></td>
 <td>请参阅产线对象中 <code>predict</code> 方法的 <code>layout_unclip_ratio</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>layoutMergeBboxesMode</code></td>
-<td><code>string</code> | <code>null</code></td>
+<td><code>string</code> | <code>object</code> | <code>null</code></td>
 <td>请参阅产线对象中 <code>predict</code> 方法的 <code>layout_merge_bboxes_mode</code> 参数相关说明。</td>
 <td>否</td>
 </tr>

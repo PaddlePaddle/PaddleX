@@ -67,6 +67,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             seal_det_box_thresh=request.sealDetBoxThresh,
             seal_det_unclip_ratio=request.sealDetUnclipRatio,
             seal_rec_score_thresh=request.sealRecScoreThresh,
+            layout_threshold=request.layoutThreshold,
             layout_nms=request.layoutNms,
             layout_unclip_ratio=request.layoutUnclipRatio,
             layout_merge_bboxes_mode=request.layoutMergeBboxesMode,

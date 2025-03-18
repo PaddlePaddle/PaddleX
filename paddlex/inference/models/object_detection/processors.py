@@ -684,7 +684,7 @@ def check_containment(boxes, formula_index=None, category_index=None, mode=None)
                 if mode == "large" and boxes[j][0] == category_index:
                     if is_contained(boxes[i], boxes[j]):
                         contained_by_other[i] = 1
-                        contains_other[j] = 1                   
+                        contains_other[j] = 1
                 if mode == "small" and boxes[i][0] == category_index:
                     if is_contained(boxes[i], boxes[j]):
                         contained_by_other[i] = 1
@@ -759,8 +759,10 @@ class DetPostProcess:
             boxes = np.array(boxes[selected_indices])
 
         if layout_merge_bboxes_mode:
-            formula_index = (self.labels.index("formula") if "formula" in self.labels else None)
-            if isinstance(layout_merge_bboxes_mode, str): 
+            formula_index = (
+                self.labels.index("formula") if "formula" in self.labels else None
+            )
+            if isinstance(layout_merge_bboxes_mode, str):
                 assert layout_merge_bboxes_mode in [
                     "union",
                     "large",
@@ -793,13 +795,15 @@ class DetPostProcess:
                                 boxes, formula_index, category_index, mode=layout_mode
                             )
                             # Remove boxes that are contained by other boxes
-                            keep_mask &= (contained_by_other == 0)
+                            keep_mask &= contained_by_other == 0
                         elif layout_mode == "small":
                             contains_other, contained_by_other = check_containment(
                                 boxes, formula_index, category_index, mode=layout_mode
                             )
                             # Keep boxes that do not contain others or are contained by others
-                            keep_mask &= (contains_other == 0) | (contained_by_other == 1)
+                            keep_mask &= (contains_other == 0) | (
+                                contained_by_other == 1
+                            )
                 boxes = boxes[keep_mask]
 
         if layout_unclip_ratio:
