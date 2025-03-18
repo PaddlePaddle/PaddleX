@@ -129,6 +129,25 @@ OLD_IR_TRT_CFG_SETTING = {
             ["bilinear_interp_v2_1.tmp_0", "bilinear_interp_v2_1.tmp_0_slice_0"]
         ],
     },
+    "TiDE": {
+        "enable_tensorrt_engine": OLD_IR_TRT_CFG_DEFAULT_SETTING,
+        "exp_disable_tensorrt_ops": [
+            [
+                "reshape2_3.tmp_0",
+                "reshape2_2.tmp_0",
+                "reshape2_1.tmp_0",
+                "reshape2_0.tmp_0"
+            ]
+        ],
+    },
+    "Nonstationary": {
+        "enable_tensorrt_engine": OLD_IR_TRT_CFG_DEFAULT_SETTING,
+        "exp_disable_tensorrt_ops": [
+            [
+                "reshape2_13.tmp_0",
+            ]
+        ],
+    },
 }
 
 ############ pir trt ############
