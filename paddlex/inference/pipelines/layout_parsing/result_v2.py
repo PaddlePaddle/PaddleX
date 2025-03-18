@@ -43,6 +43,19 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         XlsxMixin.__init__(self)
         MarkdownMixin.__init__(self)
         JsonMixin.__init__(self)
+        self.title_pattern = self._build_title_pattern()
+
+    def _build_title_pattern(self):
+        # Precompiled regex pattern for matching numbering at the beginning of the title
+        numbering_pattern = (
+            r"(?:"
+            + r"[1-9][0-9]*(?:\.[1-9][0-9]*)*[\.、]?|"
+            + r"[\(\（](?:[1-9][0-9]*|["
+            r"一二三四五六七八九十百千万亿零壹贰叁肆伍陆柒捌玖拾]+)[\)\）]|" + r"["
+            r"一二三四五六七八九十百千万亿零壹贰叁肆伍陆柒捌玖拾]+"
+            r"[、\.]?|" + r"(?:I|II|III|IV|V|VI|VII|VIII|IX|X)\.?" + r")"
+        )
+        return re.compile(r"^\s*(" + numbering_pattern + r")(\s*)(.*)$")
 
     def _get_input_fn(self):
         fn = super()._get_input_fn()
@@ -240,17 +253,33 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
 
         def _format_data(obj):
 
-            def format_title(content_value):
-                content_value = content_value.rstrip(".")
+            def format_title(title):
+                """
+                Normalize chapter title.
+                Add the '#' to indicate the level of the title.
+                If numbering exists, ensure there's exactly one space between it and the title content.
+                If numbering does not exist, return the original title unchanged.
+
+                :param title: Original chapter title string.
+                :return: Normalized chapter title string.
+                """
+                match = self.title_pattern.match(title)
+                if match:
+                    numbering = match.group(1).strip()
+                    title_content = match.group(3).lstrip()
+                    # Return numbering and title content separated by one space
+                    title = numbering + " " + title_content
+
+                title = title.rstrip(".")
                 level = (
-                    content_value.count(
+                    title.count(
                         ".",
                     )
                     + 1
-                    if "." in content_value
+                    if "." in title
                     else 1
                 )
-                return f"#{'#' * level} {content_value}".replace("-\n", "").replace(
+                return f"#{'#' * level} {title}".replace("-\n", "").replace(
                     "\n",
                     " ",
                 )
@@ -274,14 +303,16 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 )
                 return "\n".join(img_tags)
 
-            def format_reference():
-                pattern = r"\s*\[\s*\d+\s*\]\s*"
-                res = re.sub(
-                    pattern,
-                    lambda match: "\n" + match.group(),
-                    block["reference"].replace("\n", ""),
-                )
-                return "\n" + res
+            def format_first_line(templates, format_func, spliter):
+                lines = block["block_content"].split(spliter)
+                for idx in range(len(lines)):
+                    line = lines[idx]
+                    if line.strip() == "":
+                        continue
+                    if line.lower() in templates:
+                        lines[idx] = format_func(line)
+                    break
+                return spliter.join(lines)
 
             def format_table():
                 return "\n" + block["block_content"]
@@ -298,9 +329,9 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 "text": lambda: block["block_content"]
                 .replace("-\n", " ")
                 .replace("\n", " "),
-                "abstract": lambda: block["block_content"]
-                .replace("-\n", " ")
-                .replace("\n", " "),
+                "abstract": lambda: format_first_line(
+                    ["摘要", "abstract"], lambda l: f"## {l}\n", " "
+                ),
                 "content": lambda: block["block_content"]
                 .replace("-\n", " ")
                 .replace("\n", " "),
@@ -308,7 +339,9 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 "chart": lambda: format_image("block_image"),
                 "formula": lambda: f"$${block['block_content']}$$",
                 "table": format_table,
-                "reference": lambda: block["block_content"],
+                "reference": lambda: format_first_line(
+                    ["参考文献", "references"], lambda l: f"## {l}", "\n"
+                ),
                 "algorithm": lambda: block["block_content"].strip("\n"),
                 "seal": lambda: f"Words of Seals:\n{block['block_content']}",
             }

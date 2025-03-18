@@ -60,6 +60,9 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             text_det_box_thresh=request.textDetBoxThresh,
             text_det_unclip_ratio=request.textDetUnclipRatio,
             text_rec_score_thresh=request.textRecScoreThresh,
+            use_table_cells_ocr_results=request.useTableCellsOcrResults,
+            use_e2e_wired_table_rec_model=request.useE2eWiredTableRecModel,
+            use_e2e_wireless_table_rec_model=request.useE2eWirelessTableRecModel,
         )
 
         table_rec_results: List[Dict[str, Any]] = []

@@ -21,8 +21,6 @@ import unicodedata
 from functools import lru_cache
 from typing import List, Optional
 
-from paddle.utils import try_import
-
 from .tokenizer_utils_base import AddedToken
 from .tokenizer_utils import PretrainedTokenizer
 from .tokenizer_utils import _is_control, _is_punctuation, _is_whitespace
@@ -325,6 +323,7 @@ class CLIPTokenizer(PretrainedTokenizer):
         pad_token="<|endoftext|>",
         **kwargs
     ):
+        from paddle.utils import try_import
 
         bos_token = (
             AddedToken(bos_token, lstrip=False, rstrip=False)

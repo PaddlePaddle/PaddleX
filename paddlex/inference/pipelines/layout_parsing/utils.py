@@ -667,9 +667,12 @@ def get_single_block_parsing_res(
                     },
                 )
             else:
-                content = "".join(rec_res["rec_texts"])
-                if label != "reference":
-                    content = _process_text(content)
+                if label in ["doc_title"]:
+                    content = " ".join(rec_res["rec_texts"])
+                else:
+                    content = "".join(rec_res["rec_texts"])
+                    if label != "reference":
+                        content = _process_text(content)
                 single_block_layout_parsing_res.append(
                     {
                         "block_label": label,
@@ -1230,6 +1233,8 @@ def _get_sub_category(
             if num_doc_title == 2:
                 special_pre_cut_labels = title_labels + sub_title_labels
                 break
+    if len(blocks) == 0:
+        return blocks, {}
 
     min_x = min(block["block_bbox"][0] for block in blocks)
     min_y = min(block["block_bbox"][1] for block in blocks)

@@ -256,11 +256,19 @@ class LayoutParsingPipelineV2(BasePipeline):
         matched_ocr_dict = {}
         image = np.array(image)
         object_boxes = []
+        footnote_list = []
+        max_bottom_text_coordinate = 0
 
         for object_box_idx, box_info in enumerate(layout_det_res["boxes"]):
             box = box_info["coordinate"]
             label = box_info["label"].lower()
             object_boxes.append(box)
+
+            # set the label of footnote to text, when it is above the text boxes
+            if label == "footnote":
+                footnote_list.append(object_box_idx)
+            if label == "text" and box[3] > max_bottom_text_coordinate:
+                max_bottom_text_coordinate = box[3]
 
             if label not in ["formula", "table", "seal"]:
                 _, matched_idxs = get_sub_regions_ocr_res(
@@ -271,6 +279,13 @@ class LayoutParsingPipelineV2(BasePipeline):
                         matched_ocr_dict[matched_idx] = [object_box_idx]
                     else:
                         matched_ocr_dict[matched_idx].append(object_box_idx)
+
+        for footnote_idx in footnote_list:
+            if (
+                layout_det_res["boxes"][footnote_idx]["coordinate"][3]
+                < max_bottom_text_coordinate
+            ):
+                layout_det_res["boxes"][footnote_idx]["label"] = "text"
 
         already_processed = set()
         for matched_idx, layout_box_ids in matched_ocr_dict.items():
@@ -414,7 +429,7 @@ class LayoutParsingPipelineV2(BasePipeline):
         use_formula_recognition: Union[bool, None] = None,
         layout_threshold: Optional[Union[float, dict]] = None,
         layout_nms: Optional[bool] = None,
-        layout_unclip_ratio: Optional[Union[float, Tuple[float, float]]] = None,
+        layout_unclip_ratio: Optional[Union[float, Tuple[float, float], dict]] = None,
         layout_merge_bboxes_mode: Optional[str] = None,
         text_det_limit_side_len: Union[int, None] = None,
         text_det_limit_type: Union[str, None] = None,
@@ -428,6 +443,9 @@ class LayoutParsingPipelineV2(BasePipeline):
         seal_det_box_thresh: Union[float, None] = None,
         seal_det_unclip_ratio: Union[float, None] = None,
         seal_rec_score_thresh: Union[float, None] = None,
+        use_table_cells_ocr_results: bool = None,
+        use_e2e_wired_table_rec_model: bool = None,
+        use_e2e_wireless_table_rec_model: bool = None,
         **kwargs,
     ) -> LayoutParsingResultV2:
         """
@@ -461,6 +479,9 @@ class LayoutParsingPipelineV2(BasePipeline):
             seal_det_box_thresh (Optional[float]): Threshold for seal detection boxes.
             seal_det_unclip_ratio (Optional[float]): Ratio for unclipping seal detection boxes.
             seal_rec_score_thresh (Optional[float]): Score threshold for seal recognition.
+            use_table_cells_ocr_results (bool): whether to use OCR results with cells.
+            use_e2e_wired_table_rec_model (bool): Whether to use end-to-end wired table recognition model.
+            use_e2e_wireless_table_rec_model (bool): Whether to use end-to-end wireless table recognition model.
             **kwargs (Any): Additional settings to extend functionality.
 
         Returns:
@@ -578,9 +599,12 @@ class LayoutParsingPipelineV2(BasePipeline):
                     table_contents["rec_texts"].append(
                         f'<div style="text-align: center;"><img src="{img_path}" alt="Image" /></div>'
                     )
-                    table_contents["rec_boxes"] = np.vstack(
-                        (table_contents["rec_boxes"], img["coordinate"])
-                    )
+                    if table_contents["rec_boxes"].size == 0:
+                        table_contents["rec_boxes"] = np.array([img["coordinate"]])
+                    else:
+                        table_contents["rec_boxes"] = np.vstack(
+                            (table_contents["rec_boxes"], img["coordinate"])
+                        )
                     table_contents["rec_polys"].append(poly_points)
                     table_contents["rec_scores"].append(img["score"])
 
@@ -594,6 +618,9 @@ class LayoutParsingPipelineV2(BasePipeline):
                         overall_ocr_res=table_contents,
                         layout_det_res=layout_det_res,
                         cell_sort_by_y_projection=True,
+                        use_table_cells_ocr_results=use_table_cells_ocr_results,
+                        use_e2e_wired_table_rec_model=use_e2e_wired_table_rec_model,
+                        use_e2e_wireless_table_rec_model=use_e2e_wireless_table_rec_model,
                     ),
                 )
                 table_res_list = table_res_all["table_res_list"]
