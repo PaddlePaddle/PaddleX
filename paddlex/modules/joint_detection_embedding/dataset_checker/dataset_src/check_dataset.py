@@ -84,7 +84,7 @@ def check_train(dataset_dir, output, sample_num=10):
 
     num_classes = max(labels) + 1
     attrs = {}
-    attrs["train_num_classes"] = num_classes
+    attrs["num_classes"] = num_classes
     attrs["train_num_identities"] = max(identities)
     attrs["train_samples"] = sample_cnts
     attrs["train_sample_paths"] = sample_paths
@@ -167,9 +167,7 @@ def check_val(dataset_dir, output, sample_num=10):
                 sample_paths.append(sample_path)
         sample_cnts += cur_cnts
 
-    num_classes = max(labels)
     attrs = {}
-    attrs["val_num_classes"] = num_classes
     attrs["val_num_identities"] = max(identities)
     attrs["val_samples"] = sample_cnts
     attrs["val_sample_paths"] = sample_paths
