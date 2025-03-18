@@ -360,7 +360,6 @@ class LayoutParsingPipelineV2(BasePipeline):
             layout_det_res=layout_det_res,
             table_res_list=table_res_list,
             seal_res_list=seal_res_list,
-            imgs_in_doc=imgs_in_doc,
         )
 
         return parsing_res_list
