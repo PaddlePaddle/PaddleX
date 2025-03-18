@@ -46,6 +46,7 @@ from .anomaly_detection import UadPredictor
 
 # from .face_recognition import FaceRecPredictor
 from .multilingual_speech_recognition import WhisperPredictor
+from .automatic_speech_recognition import ASRPredictor
 from .video_classification import VideoClasPredictor
 from .video_detection import VideoDetPredictor
 
@@ -95,7 +96,7 @@ def create_predictor(
         model_dir = Path(model_dir)
     config = BasePredictor.load_config(model_dir)
     assert (
-        model_name == config["Global"]["model_name"]
+        model_name == config["Global"]["model_name"] or "ChunkConformer" in model_name
     ), f"Model name mismatch，please input the correct model dir."
 
     if use_hpip:

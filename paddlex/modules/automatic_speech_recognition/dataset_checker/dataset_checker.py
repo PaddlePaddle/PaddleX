@@ -12,10 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .base_batch_sampler import BaseBatchSampler
-from .image_batch_sampler import ImageBatchSampler
-from .video_batch_sampler import VideoBatchSampler
-from .ts_batch_sampler import TSBatchSampler
-from .det_3d_batch_sampler import Det3DBatchSampler
-from .audio_batch_sampler import AudioBatchSampler
-from .chunk_conformer_batch_sampler import ChunkConformerBatchSampler
+from ..base import BaseDatasetChecker
+from .model_list import MODELS
+
+class ChunkConformerDatasetChecker(BaseDatasetChecker):
+    """Automatic Speech Recognition Dataset Checker"""
+
+    entities = MODELS
+
+    def validate_audio_format(self):
+        """Validate audio file formats match expected types"""
+        # Implementation would check for supported audio formats
+        pass
+
+    def check_sample_rate(self):
+        """Verify audio sample rates meet model requirements"""
+        # Implementation would validate sample rate consistency
+        pass

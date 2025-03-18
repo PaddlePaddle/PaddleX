@@ -17,3 +17,4 @@ from .audio_reader import ReadAudio
 from .video_reader import ReadVideo
 from .ts_reader import ReadTS
 from .det_3d_reader import ReadNuscenesData
+from .chunk_conformer_reader import ReadChunkConformer

@@ -1,0 +1,49 @@
+Global:
+  model: ChunkConformer
+  mode: train
+  dataset_dir: "path/to/your/audio_dataset"
+  device: gpu:0
+  output: "output/chunk_conformer"
+  load_audio_encoder_from: "https://example.com/audio_encoder.pdparams"
+  load_transformer_from: "https://example.com/conformer.pdparams"
+  sample_rate: 16000
+  frame_length: 0.025
+  hop_length: 0.01
+  datart_prefix: True
+  version: "v1.0"
+
+CheckDataset:
+  validate_formats:
+    enable: True
+    allowed_extensions: [".wav", ".flac"]
+  verify_duration:
+    enable: True
+    max_length: 10.0
+
+Train:
+  epochs: 100
+  batch_size: 32
+  learning_rate: 0.0001
+  warmup_steps: 1000
+  encoder_layers: 12
+  attention_heads: 8
+  chunk_size: 400
+  dropout: 0.1
+
+Evaluate:
+  batch_size: 16
+  metrics: ["WER", "CER"]
+  weight_path: output/chunk_conformer/best_model/model.pdparams
+
+Export:
+  weight_path: "https://example.com/chunk_conformer.pdparams"
+  normalize_audio: True
+  sample_rate: 16000
+
+Predict:
+  batch_size: 1
+  model_dir: "output/chunk_conformer/inference"
+  input: "path/to/your/audio_samples"
+  preprocess:
+    noise_reduction: True
+    gain_normalization: -3.0
