@@ -1,7 +1,7 @@
 Global:
   model: FairMOT-DLA-34_1088x608
   mode: check_dataset # check_dataset/train/evaluate/predict
-  dataset_dir: "/paddle/dataset/paddlex/det/det_coco_examples"
+  dataset_dir: "/paddle/dataset/paddlex/det/mot_examples"
   device: gpu:0,1
   output: "output"
 
