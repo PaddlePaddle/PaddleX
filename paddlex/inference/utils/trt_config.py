@@ -73,22 +73,40 @@ OLD_IR_TRT_CFG_DEFAULT_SETTING = {
 }
 
 OLD_IR_TRT_CFG_SETTING = {
+    "SegFormer-B0": {
+        "enable_tensorrt_engine": {
+            **OLD_IR_TRT_CFG_DEFAULT_SETTING,
+            "workspace_size": 1 << 32,
+        }
+    },
+    "SegFormer-B1": {
+        "enable_tensorrt_engine": {
+            **OLD_IR_TRT_CFG_DEFAULT_SETTING,
+            "workspace_size": 1 << 32,
+        }
+    },
+    "SegFormer-B2": {
+        "enable_tensorrt_engine": {
+            **OLD_IR_TRT_CFG_DEFAULT_SETTING,
+            "workspace_size": 1 << 32,
+        }
+    },
     "SegFormer-B3": {
         "enable_tensorrt_engine": {
             **OLD_IR_TRT_CFG_DEFAULT_SETTING,
-            "workspace_size": 1 << 31,
+            "workspace_size": 1 << 32,
         }
     },
     "SegFormer-B4": {
         "enable_tensorrt_engine": {
             **OLD_IR_TRT_CFG_DEFAULT_SETTING,
-            "workspace_size": 1 << 31,
+            "workspace_size": 1 << 32,
         }
     },
     "SegFormer-B5": {
         "enable_tensorrt_engine": {
             **OLD_IR_TRT_CFG_DEFAULT_SETTING,
-            "workspace_size": 1 << 31,
+            "workspace_size": 1 << 32,
         }
     },
     "SLANeXt_wired": {
@@ -127,6 +145,25 @@ OLD_IR_TRT_CFG_SETTING = {
         "enable_tensorrt_engine": OLD_IR_TRT_CFG_DEFAULT_SETTING,
         "exp_disable_tensorrt_ops": [
             ["bilinear_interp_v2_1.tmp_0", "bilinear_interp_v2_1.tmp_0_slice_0"]
+        ],
+    },
+    "TiDE": {
+        "enable_tensorrt_engine": OLD_IR_TRT_CFG_DEFAULT_SETTING,
+        "exp_disable_tensorrt_ops": [
+            [
+                "reshape2_3.tmp_0",
+                "reshape2_2.tmp_0",
+                "reshape2_1.tmp_0",
+                "reshape2_0.tmp_0",
+            ]
+        ],
+    },
+    "Nonstationary": {
+        "enable_tensorrt_engine": OLD_IR_TRT_CFG_DEFAULT_SETTING,
+        "exp_disable_tensorrt_ops": [
+            [
+                "reshape2_13.tmp_0",
+            ]
         ],
     },
 }
