@@ -443,9 +443,9 @@ class LayoutParsingPipelineV2(BasePipeline):
         seal_det_box_thresh: Union[float, None] = None,
         seal_det_unclip_ratio: Union[float, None] = None,
         seal_rec_score_thresh: Union[float, None] = None,
-        use_table_cells_ocr_results: bool = None,
-        use_e2e_wired_table_rec_model: bool = None,
-        use_e2e_wireless_table_rec_model: bool = None,
+        use_table_cells_ocr_results: bool = False,
+        use_e2e_wired_table_rec_model: bool = False,
+        use_e2e_wireless_table_rec_model: bool = False,
         **kwargs,
     ) -> LayoutParsingResultV2:
         """
