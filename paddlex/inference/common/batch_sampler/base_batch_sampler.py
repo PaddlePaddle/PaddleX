@@ -16,6 +16,23 @@ from typing import Union, Tuple, List, Dict, Any, Iterator
 from abc import ABC, abstractmethod
 
 
+class Batch:
+    def __init__(self):
+        self.instances = []
+        self.input_paths = []
+
+    def append(self, instance, input_path):
+        self.instances.append(instance)
+        self.input_paths.append(input_path)
+
+    def reset(self):
+        self.instances = []
+        self.input_paths = []
+
+    def __len__(self):
+        return len(self.instances)
+
+
 class BaseBatchSampler:
     """BaseBatchSampler"""
 

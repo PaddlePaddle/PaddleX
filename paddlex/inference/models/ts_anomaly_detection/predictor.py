@@ -111,7 +111,7 @@ class TSAdPredictor(BasePredictor):
             dict: A dictionary containing the input path, raw image, class IDs, scores, and label names for every instance of the batch. Keys include 'input_path', 'input_img', 'class_ids', 'scores', and 'label_names'.
         """
 
-        batch_raw_ts = self.preprocessors["ReadTS"](ts_list=batch_data)
+        batch_raw_ts = self.preprocessors["ReadTS"](ts_list=batch_data.instances)
         batch_cutoff_ts = self.preprocessors["TSCutOff"](ts_list=batch_raw_ts)
 
         if "TSNormalize" in self.preprocessors:
@@ -135,7 +135,7 @@ class TSAdPredictor(BasePredictor):
             ori_ts_list=batch_input_ts, pred_list=batch_preds
         )
         return {
-            "input_path": batch_data,
+            "input_path": batch_data.input_paths,
             "input_ts": batch_raw_ts,
             "anomaly": batch_ts_preds,
         }

@@ -65,7 +65,7 @@ class WarpPredictor(BasePredictor):
         Returns:
             tuple: A tuple containing the preprocessors, inference engine, and postprocessors.
         """
-        preprocessors = {"Read": ReadImage(format="RGB")}
+        preprocessors = {"Read": ReadImage(format="BGR")}
         preprocessors["Normalize"] = Normalize(mean=0.0, std=1.0, scale=1.0 / 255)
         preprocessors["ToCHW"] = ToCHWImage()
         preprocessors["ToBatch"] = ToBatch()

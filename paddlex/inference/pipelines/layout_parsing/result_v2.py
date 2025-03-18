@@ -30,7 +30,6 @@ from ...common.result import (
     XlsxMixin,
 )
 from .utils import get_layout_ordering
-from .utils import recursive_img_array2path
 from .utils import get_show_color
 
 
@@ -238,7 +237,6 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
         Returns:
             Dict
         """
-        recursive_img_array2path(self["parsing_res_list"], labels=["block_image"])
 
         def _format_data(obj):
 
@@ -276,14 +274,16 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 )
                 return "\n".join(img_tags)
 
-            def format_reference():
-                pattern = r"\s*\[\s*\d+\s*\]\s*"
-                res = re.sub(
-                    pattern,
-                    lambda match: "\n" + match.group(),
-                    block["reference"].replace("\n", ""),
-                )
-                return "\n" + res
+            def format_first_line(templates, format_func, spliter):
+                lines = block["block_content"].split(spliter)
+                for idx in range(len(lines)):
+                    line = lines[idx]
+                    if line.strip() == "":
+                        continue
+                    if line.lower() in templates:
+                        lines[idx] = format_func(line)
+                    break
+                return spliter.join(lines)
 
             def format_table():
                 return "\n" + block["block_content"]
@@ -300,9 +300,9 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 "text": lambda: block["block_content"]
                 .replace("-\n", " ")
                 .replace("\n", " "),
-                "abstract": lambda: block["block_content"]
-                .replace("-\n", " ")
-                .replace("\n", " "),
+                "abstract": lambda: format_first_line(
+                    ["摘要", "abstract"], lambda l: f"## {l}\n", " "
+                ),
                 "content": lambda: block["block_content"]
                 .replace("-\n", " ")
                 .replace("\n", " "),
@@ -310,9 +310,11 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 "chart": lambda: format_image("block_image"),
                 "formula": lambda: f"$${block['block_content']}$$",
                 "table": format_table,
-                "reference": lambda: block["block_content"],
+                "reference": lambda: format_first_line(
+                    ["参考文献", "references"], lambda l: f"## {l}", "\n"
+                ),
                 "algorithm": lambda: block["block_content"].strip("\n"),
-                "seal": lambda: format_image("block_content"),
+                "seal": lambda: f"Words of Seals:\n{block['block_content']}",
             }
             parsing_res_list = obj["parsing_res_list"]
             markdown_content = ""
@@ -382,10 +384,9 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             page_first_element_seg_start_flag,
             page_last_element_seg_end_flag,
         )
-        markdown_info["markdown_images"] = dict()
-        for block in self["parsing_res_list"]:
-            if block["block_label"] in ["image", "chart"]:
-                image_path, image_value = next(iter(block["block_image"].items()))
-                markdown_info["markdown_images"][image_path] = image_value
+
+        markdown_info["markdown_images"] = {}
+        for img in self["imgs_in_doc"]:
+            markdown_info["markdown_images"][img["path"]] = img["img"]
 
         return markdown_info

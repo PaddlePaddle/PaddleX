@@ -144,6 +144,11 @@ PIPELINE_ARGUMENTS = {
     ],
     "table_recognition": [
         {
+            "name": "--use_table_cells_ocr_results",
+            "type": bool,
+            "help": "Determines whether to use cells OCR results",
+        },
+        {
             "name": "--use_doc_orientation_classify",
             "type": bool,
             "help": "Determines whether to use document preprocessing",
@@ -195,6 +200,21 @@ PIPELINE_ARGUMENTS = {
         },
     ],
     "table_recognition_v2": [
+        {
+            "name": "--use_table_cells_ocr_results",
+            "type": bool,
+            "help": "Determines whether to use cells OCR results",
+        },
+        {
+            "name": "--use_e2e_wired_table_rec_model",
+            "type": bool,
+            "help": "Determines whether to use end-to-end wired table recognition model",
+        },
+        {
+            "name": "--use_e2e_wireless_table_rec_model",
+            "type": bool,
+            "help": "Determines whether to use end-to-end wireless table recognition model",
+        },
         {
             "name": "--use_doc_orientation_classify",
             "type": bool,

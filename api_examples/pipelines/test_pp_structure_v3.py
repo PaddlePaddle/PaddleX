@@ -12,17 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-NEWIR_BLOCKLIST = [
-    "PP-YOLOE_seg-S",
-    "PatchTST_ad",
-    "TimesNet_ad",
-    "Nonstationary_ad",
-    "DLinear_ad",
-    "Co-Deformable-DETR-R50",
-    "Co-Deformable-DETR-Swin-T",
-    "Co-DINO-R50",
-    "Co-DINO-Swin-L",
-    "LaTeX_OCR_rec",
-    "BEVFusion",
-    "GroundingDINO-T",
-]
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(pipeline="PP-StructureV3")
+
+output = pipeline.predict(
+    "./test_samples/demo_paper.png",
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+    use_common_ocr=True,
+    use_seal_recognition=True,
+    use_table_recognition=True,
+)
+
+for res in output:
+    res.print()
+    res.save_to_img("./output")
+    res.save_to_json("./output")
+    res.save_to_xlsx("./output")
+    res.save_to_html("./output")
+    res.save_to_markdown("./output")

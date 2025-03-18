@@ -29,7 +29,7 @@ import ultra_infer as ui
 from ultra_infer.model import BaseUltraInferModel
 from paddlex.inference.common.reader import ReadImage, ReadTS
 from paddlex.inference.models import BasePredictor
-from paddlex.inference.utils.new_ir_blacklist import NEWIR_BLOCKLIST
+from paddlex.inference.utils.new_ir_blocklist import NEWIR_BLOCKLIST
 from paddlex.utils import device as device_helper
 from paddlex.utils import logging
 from paddlex.utils.subclass_register import AutoRegisterABCMetaClass

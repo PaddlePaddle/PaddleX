@@ -23,8 +23,8 @@ from ...utils.device import (
     parse_device,
     set_env_for_device_type,
 )
-from .new_ir_blacklist import NEWIR_BLOCKLIST
-from .trt_blacklist import TRT_BLOCKLIST
+from .new_ir_blocklist import NEWIR_BLOCKLIST
+from .trt_blocklist import TRT_BLOCKLIST
 from .trt_config import TRT_PRECISION_MAP, TRT_CFG_SETTING
 
 

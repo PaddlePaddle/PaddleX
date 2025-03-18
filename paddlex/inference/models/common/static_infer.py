@@ -152,6 +152,7 @@ def _convert_trt(
     pp_model_file,
     pp_params_file,
     trt_save_path,
+    device_id,
     dynamic_shapes,
     dynamic_shape_input_data,
 ):
@@ -171,6 +172,7 @@ def _convert_trt(
     def _get_predictor(model_file, params_file):
         # HACK
         config = paddle.inference.Config(str(model_file), str(params_file))
+        config.enable_use_gpu(100, device_id)
         # NOTE: Disable oneDNN to circumvent a bug in Paddle Inference
         config.disable_mkldnn()
         config.disable_glog_info()
@@ -416,6 +418,18 @@ class PaddleInfer(StaticInfer):
                 config.enable_custom_device("mlu")
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
+            elif self._option.device_type == "gcu":
+                from paddle_custom_device.gcu import passes as gcu_passes
+
+                gcu_passes.setUp()
+                config.enable_custom_device("gcu")
+                if hasattr(config, "enable_new_executor"):
+                    config.enable_new_ir()
+                    config.enable_new_executor()
+                else:
+                    pass_builder = config.pass_builder()
+                    name = "PaddleX_" + self._option.model_name
+                    gcu_passes.append_passes_for_legacy_ir(pass_builder, name)
             elif self._option.device_type == "dcu":
                 config.enable_use_gpu(100, self._option.device_id)
                 if hasattr(config, "enable_new_executor"):
@@ -470,6 +484,7 @@ class PaddleInfer(StaticInfer):
                 model_file,
                 params_file,
                 trt_save_path,
+                self._option.device_id,
                 self._option.trt_dynamic_shapes,
                 self._option.trt_dynamic_shape_input_data,
             )
@@ -478,8 +493,8 @@ class PaddleInfer(StaticInfer):
             config = paddle.inference.Config(str(model_file), str(params_file))
         else:
             config = paddle.inference.Config(str(model_file), str(params_file))
-
             config.set_optim_cache_dir(str(cache_dir / "optim_cache"))
+            # call enable_use_gpu() first to use TensorRT engine
             config.enable_use_gpu(100, self._option.device_id)
             for func_name in self._option.trt_cfg_setting:
                 assert hasattr(

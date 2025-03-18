@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict, Final, List, Optional, Union
+from typing import Dict, Final, List, Optional, Tuple, Union
 
-from pydantic import BaseModel, Field
-from typing_extensions import Annotated
+from pydantic import BaseModel
 
 from ..infra.models import DataInfo, PrimaryOperations
 from .shared import ocr
@@ -53,9 +52,7 @@ class InferRequest(ocr.BaseInferRequest):
     sealRecScoreThresh: Optional[float] = None
     layoutThreshold: Optional[float] = None
     layoutNms: Optional[bool] = None
-    layoutUnclipRatio: Optional[
-        Union[float, Annotated[List[float], Field(min_length=2, max_length=2)]]
-    ] = None
+    layoutUnclipRatio: Optional[Union[float, Tuple[float, float]]] = None
     layoutMergeBboxesMode: Optional[str] = None
 
 

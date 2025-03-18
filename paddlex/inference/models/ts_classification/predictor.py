@@ -104,7 +104,7 @@ class TSClsPredictor(BasePredictor):
         Returns:
             Dict[str, Any]: A dictionary containing the paths to the input data, the raw input time series, and the classification results.
         """
-        batch_raw_ts = self.preprocessors["ReadTS"](ts_list=batch_data)
+        batch_raw_ts = self.preprocessors["ReadTS"](ts_list=batch_data.instances)
         batch_raw_ts_ori = copy.deepcopy(batch_raw_ts)
 
         if "TSNormalize" in self.preprocessors:
@@ -122,7 +122,7 @@ class TSClsPredictor(BasePredictor):
         batch_ts_preds = self.postprocessors["GetCls"](pred_list=batch_preds)
 
         return {
-            "input_path": batch_data,
+            "input_path": batch_data.input_paths,
             "input_ts": batch_raw_ts,
             "input_ts_data": batch_raw_ts_ori,
             "classification": batch_ts_preds,

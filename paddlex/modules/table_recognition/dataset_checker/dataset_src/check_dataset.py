@@ -75,18 +75,6 @@ def check(dataset_dir, output, dataset_type="PubTabTableRecDataset", sample_num=
                             )
                             sample_paths[tag].append(sample_path)
 
-                        boxes_num = len(cells)
-                        tokens_num = sum(
-                            [
-                                structure.count(x)
-                                for x in ["<td>", "<td", "<eb></eb>", "<td></td>"]
-                            ]
-                        )
-                        if boxes_num != tokens_num:
-                            raise CheckFailedError(
-                                f"The number of cells needs to be consistent with the number of tokens "
-                                "but the number of cells is {boxes_num}, and the number of tokens is {tokens_num}."
-                            )
         meta = {}
 
         meta["train_samples"] = sample_cnts["train"]

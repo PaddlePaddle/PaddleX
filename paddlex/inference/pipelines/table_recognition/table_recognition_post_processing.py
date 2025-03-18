@@ -299,6 +299,8 @@ def get_table_recognition_res(
     table_box: list,
     table_structure_pred: dict,
     overall_ocr_res: OCRResult,
+    cells_texts_list: list,
+    use_table_cells_ocr_results: bool,
     cell_sort_by_y_projection: bool = False,
 ) -> SingleTableRecognitionResult:
     """
@@ -308,6 +310,8 @@ def get_table_recognition_res(
         table_box (list): Information about the location of cropped image, including the bounding box.
         table_structure_pred (dict): Predicted table structure.
         overall_ocr_res (OCRResult): Overall OCR result from the input image.
+        cells_texts_list (list): OCR results with cells.
+        use_table_cells_ocr_results (bool): whether to use OCR results with cells.
         cell_sort_by_y_projection (bool): Whether to sort the matched OCR boxes by y-projection.
 
     Returns:
@@ -319,13 +323,31 @@ def get_table_recognition_res(
     crop_start_point = [table_box[0][0], table_box[0][1]]
     img_shape = overall_ocr_res["doc_preprocessor_res"]["output_img"].shape[0:2]
 
+    if len(table_structure_pred['bbox']) == 0 or len(table_ocr_pred["rec_boxes"]) == 0:
+        pred_html = ' '.join(list(table_structure_pred["structure"]))
+        if len(table_structure_pred['bbox']) != 0:
+            convert_table_structure_pred_bbox(table_structure_pred, crop_start_point, img_shape)
+            table_cells_result = table_structure_pred["cell_box_list"]
+        else:
+            table_cells_result = []
+        single_img_res = {
+            "cell_box_list": table_cells_result,
+            "table_ocr_pred": table_ocr_pred,
+            "pred_html": pred_html,
+        }
+        return SingleTableRecognitionResult(single_img_res)
+
     convert_table_structure_pred_bbox(table_structure_pred, crop_start_point, img_shape)
 
     structures = table_structure_pred["structure"]
     cell_box_list = table_structure_pred["cell_box_list"]
 
-    ocr_dt_boxes = table_ocr_pred["rec_boxes"]
-    ocr_texts_res = table_ocr_pred["rec_texts"]
+    if use_table_cells_ocr_results == True:
+        ocr_dt_boxes = cell_box_list
+        ocr_texts_res = cells_texts_list
+    else:
+        ocr_dt_boxes = table_ocr_pred["rec_boxes"]
+        ocr_texts_res = table_ocr_pred["rec_texts"]
 
     matched_index = match_table_and_ocr(
         cell_box_list, ocr_dt_boxes, cell_sort_by_y_projection=cell_sort_by_y_projection
