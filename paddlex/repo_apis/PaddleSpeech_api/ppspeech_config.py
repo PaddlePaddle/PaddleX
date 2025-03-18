@@ -17,6 +17,7 @@ import yaml
 from ...utils.misc import abspath
 from ..base import BaseConfig
 
+
 class PPSpeechConfig(BaseConfig):
     """Speech recognition configuration handler"""
 

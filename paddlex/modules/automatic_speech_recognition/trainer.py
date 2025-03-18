@@ -18,6 +18,7 @@ from ...utils.config import AttrDict
 from ...utils import logging
 from .model_list import MODELS
 
+
 class ChunkConformerTrainer(BaseTrainer):
     """Automatic Speech Recognition Model Trainer"""
 
@@ -30,7 +31,7 @@ class ChunkConformerTrainer(BaseTrainer):
             self.global_config.get("datart_prefix", True),
             "ASRDataset",
             sample_rate=self.global_config.get("sample_rate", 16000),
-            audio_format=self.global_config.get("audio_format", "wav")
+            audio_format=self.global_config.get("audio_format", "wav"),
         )
 
     def _update_pretrained_model(self):
@@ -56,7 +57,7 @@ class ChunkConformerTrainer(BaseTrainer):
         """Get training arguments"""
         train_args = {
             "device": self.get_device(),
-            "sample_rate": self.global_config.get("sample_rate", 16000)
+            "sample_rate": self.global_config.get("sample_rate", 16000),
         }
         if self.global_config.output is not None:
             train_args["save_dir"] = self.global_config.output

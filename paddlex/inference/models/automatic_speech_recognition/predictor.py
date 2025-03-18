@@ -18,39 +18,46 @@ from typing import Optional, Union
 from .processors import Preprocess, Postprocess
 from ..base import BasicPredictor
 
+
 class ASRPredictor(BasicPredictor):
     """ChunkConformer Automatic Speech Recognition Predictor"""
-    
-    def __init__(self, model_dir: Union[str, Path], config: dict, device: Optional[str] = None, **kwargs):
+
+    def __init__(
+        self,
+        model_dir: Union[str, Path],
+        config: dict,
+        device: Optional[str] = None,
+        **kwargs,
+    ):
         super().__init__(model_dir, config, device, **kwargs)
-        self.sample_rate = config.get('sample_rate', 16000)
-        
+        self.sample_rate = config.get("sample_rate", 16000)
+
         # Initialize model first
         self.model = self.create_model()
-        
+
         # Chunk processing config
-        self.chunk_size = config.get('chunk_size', 16)  # in seconds
-        self.stride = config.get('stride', 4)         # in seconds
-        
+        self.chunk_size = config.get("chunk_size", 16)  # in seconds
+        self.stride = config.get("stride", 4)  # in seconds
+
         # Audio feature extractor
         self.feature_extractor = Preprocess(
-            sample_rate=self.sample_rate,
-            n_fft=400,
-            hop_length=160
+            sample_rate=self.sample_rate, n_fft=400, hop_length=160
         )
-        
+
         # Text decoder with state tracking
         self.decoder = Postprocess(
-            vocab_path=Path(model_dir)/'vocab.txt',
-            decoding_method='ctc_greedy',
-            chunk_stride=self.stride
+            vocab_path=Path(model_dir) / "vocab.txt",
+            decoding_method="ctc_greedy",
+            chunk_stride=self.stride,
         )
 
     def preprocess(self, audio_path: Union[str, Path]):
         """Process audio input into features"""
         return self.feature_extractor(audio_path)
 
-    def postprocess(self, model_outputs: np.ndarray, decoder_state: Optional[dict] = None):
+    def postprocess(
+        self, model_outputs: np.ndarray, decoder_state: Optional[dict] = None
+    ):
         """Decode model outputs to text with state management"""
         return self.decoder(model_outputs, decoder_state)
 
@@ -58,51 +65,53 @@ class ASRPredictor(BasicPredictor):
         """Streaming prediction with chunk processing"""
         full_transcript = []
         decoder_state = None
-        
+
         # Process audio in chunks with overlap
         for chunk_idx, audio_chunk in enumerate(self.load_audio_chunks(audio_path)):
             # Extract features for current chunk
             features = self.feature_extractor(audio_chunk)
-            
+
             # Run model inference
             chunk_outputs = self.model_infer(features)
-            
+
             # Decode with state passing between chunks
             text, decoder_state = self.postprocess(chunk_outputs, decoder_state)
-            
+
             # Store intermediate results
             if chunk_idx > 0 and self.stride > 0:
                 # Remove overlapping part from previous chunk
-                full_transcript = full_transcript[:-self.stride]
-                
+                full_transcript = full_transcript[: -self.stride]
+
             full_transcript.extend(text)
-            
-        return ''.join(full_transcript)
+
+        return "".join(full_transcript)
 
     def load_audio_chunks(self, audio_path: Union[str, Path]):
         """Yield audio chunks with configurable size and stride"""
         import soundfile as sf
-        
+
         # Load full audio
         audio, sr = sf.read(audio_path)
         if sr != self.sample_rate:
-            raise ValueError(f"Audio sample rate {sr}Hz doesn't match model rate {self.sample_rate}Hz")
-            
+            raise ValueError(
+                f"Audio sample rate {sr}Hz doesn't match model rate {self.sample_rate}Hz"
+            )
+
         # Convert to mono if needed
         if len(audio.shape) > 1:
             audio = np.mean(audio, axis=1)
-            
+
         # Calculate chunk parameters in samples
         chunk_samples = int(self.chunk_size * self.sample_rate)
         stride_samples = int(self.stride * self.sample_rate)
-        
+
         # Split audio into overlapping chunks
         for start in range(0, len(audio), chunk_samples - stride_samples):
             end = start + chunk_samples
             chunk = audio[start:end]
-            
+
             # Pad last chunk if needed
             if len(chunk) < chunk_samples:
                 chunk = np.pad(chunk, (0, chunk_samples - len(chunk)))
-                
+
             yield chunk

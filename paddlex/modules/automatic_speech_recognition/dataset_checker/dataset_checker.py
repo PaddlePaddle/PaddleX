@@ -15,6 +15,7 @@
 from ..base import BaseDatasetChecker
 from .model_list import MODELS
 
+
 class ChunkConformerDatasetChecker(BaseDatasetChecker):
     """Automatic Speech Recognition Dataset Checker"""
 

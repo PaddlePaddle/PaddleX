@@ -20,7 +20,7 @@ from paddlex.modules.automatic_speech_recognition import (
     ChunkConformerTrainer,
     ChunkConformerEvaluator,
     ChunkConformerExportor,
-    ChunkConformerDatasetChecker
+    ChunkConformerDatasetChecker,
 )
 
-__all__ = ['PPSpeechConfig']
+__all__ = ["PPSpeechConfig"]

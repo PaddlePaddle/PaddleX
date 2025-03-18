@@ -63,18 +63,18 @@ class ReadChunkConformer:
         """Split audio into chunks with overlap."""
         num_samples = audio.shape[0]
         chunks = []
-        
+
         for start in range(0, num_samples, self.stride):
             end = start + self.chunk_size
             chunk = audio[start:end]
-            
+
             # Pad last chunk if needed
             if chunk.shape[0] < self.chunk_size:
                 pad_size = self.chunk_size - chunk.shape[0]
                 chunk = paddle.concat([chunk, paddle.zeros(pad_size)], axis=0)
-                
+
             chunks.append(chunk)
-            
+
             # Stop if we've reached the end
             if end >= num_samples:
                 break
