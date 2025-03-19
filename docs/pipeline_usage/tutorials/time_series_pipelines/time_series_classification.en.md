@@ -835,7 +835,7 @@ If the default model weights provided by the time-series classification pipeline
 
 
 ### 4.1 Model Fine-Tuning
-Since the time-series classification pipeline includes a time-series classification module, if the pipeline's performance is not satisfactory, you need to refer to the [Custom Development](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/time_series_modules/time_series_classification.html#four-secondary-development) section in the [Time-Series Classification Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/time_series_modules/time_series_classification.html) and fine-tune the time-series classification model using your private dataset.
+Since the time-series classification pipeline includes a time-series classification module, if the pipeline's performance is not satisfactory, you need to refer to the <b>Custom Development</b> section in the [Time-Series Classification Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/time_series_modules/time_series_classification.html) and fine-tune the time-series classification model using your private dataset.
 
 ### 4.2 Model Application
 After you have completed fine-tuning training with your private dataset, you will obtain a local model weight file.

@@ -173,6 +173,13 @@ for res in output:
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理</td>
+<td><code>bool</code></td>
+<td>无</td>
+<td><code>False</code></td>
+</tr>
+<tr>
 <td><code>flip</code></td>
 <td>是否进行图像水平反转推理结果融合； 如果为True，模型会对输入图像水平翻转后再次推理，并融合两次推理结果以增加关键点预测的准确性</td>
 <td><code>bool</code></td>

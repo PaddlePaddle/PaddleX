@@ -142,6 +142,13 @@ In the above Python script, the following steps are executed:
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
+<td><code>use_hpip</code></td>
+<td>Whether to enable high-performance inference. </td>
+<td><code>bool</code></td>
+<td>None</td>
+<td><code>False</code></td>
+</tr>
+<tr>
 <td><code>nms_thresh</code></td>
 <td>The IoU threshold parameter in the Non-Maximum Suppression (NMS) process; if not specified, the default configuration of the PaddleX official model will be used</td>
 <td><code>float/None</code></td>

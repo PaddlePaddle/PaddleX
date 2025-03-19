@@ -934,7 +934,7 @@ echo "Output time-series data saved at " . $output_csv_path . "\n";
 If the default model weights provided by the time-series forecasting pipeline are not satisfactory in terms of accuracy or speed for your specific scenario, you can attempt to further <b>fine-tune</b> the existing models using <b>your own domain-specific or application data</b> to improve the performance of the time-series forecasting pipeline in your scenario.
 
 #### 4.1 Model Fine-Tuning
-Since the general time-series forecasting pipeline includes a time-series forecasting module, if the pipeline's performance does not meet expectations, you need to refer to the [Custom Development](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/time_series_modules/time_series_forecasting.html#four-custom-development) section in the [Time-Series Forecasting Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/time_series_modules/time_series_forecasting.html) to fine-tune the time-series forecasting model using your private dataset.
+Since the general time-series forecasting pipeline includes a time-series forecasting module, if the pipeline's performance does not meet expectations, you need to refer to the <b>Custom Development</b> section in the [Time-Series Forecasting Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/time_series_modules/time_series_forecasting.html) to fine-tune the time-series forecasting model using your private dataset.
 
 #### 4.2 Model Application
 After completing fine-tuning with your private dataset, you will obtain the local model weight file.

@@ -149,6 +149,13 @@ for res in output:
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理</td>
+<td><code>bool</code></td>
+<td>无</td>
+<td><code>False</code></td>
+</tr>
+<tr>
 <td><code>img_size</code></td>
 <td>输入图像大小；如果不指定，将默认使用PaddleX官方模型配置</td>
 <td><code>int/list</code></td>

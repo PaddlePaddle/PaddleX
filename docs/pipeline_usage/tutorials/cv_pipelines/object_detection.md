@@ -1216,7 +1216,7 @@ print_r($result["detectedObjects"]);
 如果通用目标检测产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升通用目标检测产线的在您的场景中的识别效果。
 
 ### 4.1 模型微调
-由于通用目标检测产线包含目标检测模块，如果模型产线的效果不及预期，那么您需要参考[目标检测模块开发教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/object_detection.html)中的[二次开发](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/object_detection.html)章节，使用您的私有数据集对目标检测模型进行微调。
+由于通用目标检测产线包含目标检测模块，如果模型产线的效果不及预期，那么您需要参考[目标检测模块开发教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/object_detection.html)中的<b>二次开发</b>章节，使用您的私有数据集对目标检测模型进行微调。
 
 ### 4.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。
