@@ -1029,7 +1029,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../ocr_pipelines/layout_parsing.md" class="md-nav__link">
+      <a href="../ocr_pipelines/layout_parsing.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -5412,50 +5412,54 @@ You're not viewing the latest version.
 </tbody>
 </table>
 
-<p><strong>测试环境说明：</strong></p>
+<p><strong>测试环境说明:</strong></p>
 <ul>
-<li><strong>性能测试环境</strong></li>
-<li><strong>测试数据集</strong><ul>
-<li>行人检测模型：CrowdHuman数据集。</li>
-<li>行人属性是别模型：PaddleX 内部自建数据集。</li>
-</ul>
-</li>
-<li>
-<p><strong>硬件配置</strong>：</p>
-<ul>
-<li>GPU：NVIDIA Tesla T4</li>
-<li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
-<li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
-</ul>
-</li>
-<li>
-<p><strong>推理模式说明</strong></p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>模式</th>
-<th>GPU配置</th>
-<th>CPU配置</th>
-<th>加速技术组合</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>常规模式</td>
-<td>FP32精度 / 无TRT加速</td>
-<td>FP32精度 / 8线程</td>
-<td>PaddleInference</td>
-</tr>
-<tr>
-<td>高性能模式</td>
-<td>选择先验精度类型和加速策略的最优组合</td>
-<td>FP32精度 / 8线程</td>
-<td>选择先验最优后端（Paddle/OpenVINO/TRT等）</td>
-</tr>
-</tbody>
+      <li><b>性能测试环境</b>
+          <ul>
+             <li><strong>测试数据集：
+             </strong>
+                <ul>
+                  <li>行人检测模型：CrowdHuman数据集。</li>
+                  <li> 行人属性识别模型：PaddleX 内部自建数据集。</li>
+                </ul>
+             </li>
+              <li><strong>硬件配置：</strong>
+                  <ul>
+                      <li>GPU：NVIDIA Tesla T4</li>
+                      <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>推理模式说明</b></li>
+  </ul>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>模式</th>
+            <th>GPU配置</th>
+            <th>CPU配置</th>
+            <th>加速技术组合</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>常规模式</td>
+            <td>FP32精度 / 无TRT加速</td>
+            <td>FP32精度 / 8线程</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>高性能模式</td>
+            <td>选择先验精度类型和加速策略的最优组合</td>
+            <td>FP32精度 / 8线程</td>
+            <td>选择先验最优后端（Paddle/OpenVINO/TRT等）</td>
+        </tr>
+    </tbody>
 </table>
+
 <h2 id="2">2. 快速开始<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
 <p>PaddleX 所提供的模型产线均可以快速体验效果，你可以在星河社区线体验行人属性识别产线的效果，也可以在本地使用命令行或 Python 体验行人属性识别产线的效果。</p>
 <h3 id="21">2.1 在线体验<a class="headerlink" href="#21" title="Permanent link">&para;</a></h3>
@@ -5955,12 +5959,12 @@ print(result["pedestrians"])
 <tr>
 <td>行人检测不准</td>
 <td>行人检测模块</td>
-<td><a href="../../../module_usage/tutorials/cv_modules/human_detection.md">链接</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/human_detection.html">链接</a></td>
 </tr>
 <tr>
 <td>属性识别不准</td>
 <td>行人属性识别模块</td>
-<td><a href="../../../module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.md">链接</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/pedestrian_attribute_recognition.html">链接</a></td>
 </tr>
 </tbody>
 </table>
@@ -6016,7 +6020,7 @@ print(result["pedestrians"])
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月19日 10:14:11">2025年3月19日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月19日 11:18:46">2025年3月19日</span>
   </span>
 
     
@@ -6026,7 +6030,7 @@ print(result["pedestrians"])
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月19日 10:14:11">2025年3月19日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月19日 11:18:46">2025年3月19日</span>
   </span>
 
     
@@ -6041,7 +6045,7 @@ print(result["pedestrians"])
     </span>
     <nav>
       
-        <a href="mailto:94225063+zhangyubo0722@users.noreply.github.com">zhangyubo0722</a>
+        <a href="mailto:65936492+liuhongen1234567@users.noreply.github.com">liuhongen1234567</a>
     </nav>
   </span>
 

@@ -1029,7 +1029,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../../../../pipeline_usage/tutorials/ocr_pipelines/layout_parsing.md" class="md-nav__link">
+      <a href="../ocr_pipelines/layout_parsing.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -5377,46 +5377,48 @@ You're not viewing the latest version.
 <tr>
 </table>
 
-<p><strong>Test Environment Description</strong>:</p>
+<p><strong>Test Environment Description:</strong></p>
 <ul>
-<li><strong>Performance Test Environment</strong></li>
-<li><strong>Test Dataset</strong>: <a href="https://www.nuscenes.org/nuscenes">nuscenes</a> validation set</li>
-<li>
-<p><strong>Hardware Configuration</strong>:</p>
-<ul>
-<li>GPU: NVIDIA Tesla T4</li>
-<li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-<li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
-</ul>
-</li>
-<li>
-<p><strong>Inference Mode Description</strong></p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Mode</th>
-<th>GPU Configuration</th>
-<th>CPU Configuration</th>
-<th>Acceleration Technology Combination</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Normal Mode</td>
-<td>FP32 Precision / No TRT Acceleration</td>
-<td>FP32 Precision / 8 Threads</td>
-<td>PaddleInference</td>
-</tr>
-<tr>
-<td>High-Performance Mode</td>
-<td>Optimal combination of pre-selected precision types and acceleration strategies</td>
-<td>FP32 Precision / 8 Threads</td>
-<td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
-</tr>
-</tbody>
+      <li><b>Performance Test Environment</b>
+          <ul>
+              <li><strong>Test Dataset：</strong><a href="https://www.nuscenes.org/nuscenes">nuscenes</a> validation set</li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
 </table>
+
 </details>
 <h2 id="2-quick-start">2. Quick Start<a class="headerlink" href="#2-quick-start" title="Permanent link">&para;</a></h2>
 <p>The pre-trained model pipelines provided by PaddleX allow for quick experimentation. You can experience the effects of the 3D multi-modal fusion detection pipeline online or locally using the command line or Python.</p>
@@ -5518,7 +5520,7 @@ Parameter description:</p>
 2、If the runtime environment does not have a graphical interface, visualization will not be possible, but the results will still be saved. You can run the script in an environment that supports a graphical interface to visualize the saved results:
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>paddlex/inference/models/3d_bev_detection/visualizer_3d.py<span class="w"> </span>--save_path<span class="o">=</span><span class="s2">&quot;./output/&quot;</span>
 </span></code></pre></div></p>
-<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/images/pipelines/3d_bev_detection/02.png"></p>
+<p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/3d_bev_detection/02.png"></p>
 <p>In the above Python script, the following steps are executed:</p>
 <p>（1）Call <code>create_pipeline</code> to instantiate the 3D multi-modal fusion detection pipeline object. Specific parameter descriptions are as follows:</p>
 <table>
@@ -5797,7 +5799,7 @@ print(result["detectedObjects"])
 <h2 id="4-custom-development">4. Custom Development<a class="headerlink" href="#4-custom-development" title="Permanent link">&para;</a></h2>
 <p>If the default model weights provided by the 3D multi-modal fusion detection pipeline do not meet your requirements for accuracy or speed in your scenario, you can attempt to further <b>fine-tune</b> the existing model using <b>your own data from specific domains or application scenarios</b> to improve the recognition performance of the 3D multi-modal fusion detection pipeline in your scenario.</p>
 <h3 id="41-model-fine-tuning">4.1 Model Fine-Tuning<a class="headerlink" href="#41-model-fine-tuning" title="Permanent link">&para;</a></h3>
-<p>Refer to the <a href="../../../module_usage/tutorials/cv_modules/3d_bev_detection.html#四二次开发">Custom Development</a> section in the <a href="../../../module_usage/tutorials/cv_modules/3d_bev_detection.html">3D Multi-modal Fusion Detection Module Development Tutorial</a> and use your private dataset to fine-tune the model.</p>
+<p>Refer to the <b>Custom Development</b> section in the <a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/3d_bev_detection.html">3D Multi-modal Fusion Detection Module Development Tutorial</a> and use your private dataset to fine-tune the model.</p>
 <h3 id="42-model-application">4.2 Model Application<a class="headerlink" href="#42-model-application" title="Permanent link">&para;</a></h3>
 <p>After completing fine-tuning training using your private dataset, you will obtain local model weight files.</p>
 <p>If you need to use the fine-tuned model weights, simply modify the pipeline configuration file, replacing the local path of the fine-tuned 3D object detection model to the corresponding position in the pipeline configuration file:</p>
@@ -5843,7 +5845,7 @@ If you want to use the 3D multi-modal fusion detection pipeline on more types of
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 19, 2025 10:14:11">March 19, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 19, 2025 11:18:46">March 19, 2025</span>
   </span>
 
     
@@ -5853,7 +5855,7 @@ If you want to use the 3D multi-modal fusion detection pipeline on more types of
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 19, 2025 10:14:11">March 19, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 19, 2025 11:18:46">March 19, 2025</span>
   </span>
 
     
@@ -5868,7 +5870,7 @@ If you want to use the 3D multi-modal fusion detection pipeline on more types of
     </span>
     <nav>
       
-        <a href="mailto:94225063+zhangyubo0722@users.noreply.github.com">zhangyubo0722</a>
+        <a href="mailto:65936492+liuhongen1234567@users.noreply.github.com">liuhongen1234567</a>
     </nav>
   </span>
 

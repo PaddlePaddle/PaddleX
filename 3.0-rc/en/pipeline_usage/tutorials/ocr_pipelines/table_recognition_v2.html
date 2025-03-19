@@ -14,7 +14,7 @@
         <link rel="prev" href="table_recognition.html">
       
       
-        <link rel="next" href="PP-StructureV3.html">
+        <link rel="next" href="layout_parsing.html">
       
       
       <link rel="icon" href="../../../../assets/favicon.png">
@@ -1123,6 +1123,48 @@ You're not viewing the latest version.
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#4-custom-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Custom Development
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Custom Development">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-model-fine-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1 Model Fine-Tuning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-model-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2 Model Application
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-support-for-multiple-hardware-devices" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Support for Multiple Hardware Devices
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1139,7 +1181,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../../../../pipeline_usage/tutorials/ocr_pipelines/layout_parsing.md" class="md-nav__link">
+      <a href="layout_parsing.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -5225,6 +5267,48 @@ You're not viewing the latest version.
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#4-custom-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Custom Development
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Custom Development">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-model-fine-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1 Model Fine-Tuning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-model-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2 Model Application
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-support-for-multiple-hardware-devices" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Support for Multiple Hardware Devices
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5832,40 +5916,69 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tbody>
 </table>
 
-**Test Environment Description:**
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Datasets**
-    - Document Image Orientation Classification Model: A self-built dataset by PaddleX, covering multiple scenarios such as certificates and documents, with 1,000 images.
-    - Layout Region Detection Model: A self-built layout region detection dataset by PaddleOCR, containing 500 images of common document types such as Chinese and English papers, magazines, contracts, books, exams, and research reports.
-    - Table Layout Detection Model: A self-built layout table region detection dataset by PaddleOCR, with 7,835 images of Chinese and English paper document types containing tables.
-    - 3-Class Layout Detection Model: A self-built layout region detection dataset by PaddleOCR, containing 1,154 images of common document types such as Chinese and English papers, magazines, and research reports.
-    - 5-Class English Document Region Detection Model: The evaluation dataset of [PubLayNet](https://developer.ibm.com/exchanges/data/all/publaynet), containing 11,245 images of English documents. (Note: The link may not be accessible due to network issues or link validity. Please check the link and try again if necessary.)
-    - 17-Class Region Detection Model: A self-built layout region detection dataset by PaddleOCR, containing 892 images of common document types such as Chinese and English papers, magazines, and research reports.
-    - Table Structure Recognition Model: A self-built high-difficulty Chinese table recognition dataset by PaddleX.
-    - Table Cell Detection Model: A self-built evaluation dataset by PaddleX.
-    - Table Classification Model: A self-built evaluation dataset by PaddleX.
-    - Text Detection Model: A self-built Chinese dataset by PaddleOCR, covering multiple scenarios such as street views, web images, documents, and handwriting, with 500 images for detection.
-    - Chinese Recognition Model: A self-built Chinese dataset by PaddleOCR, covering multiple scenarios such as street views, web images, documents, and handwriting, with 11,000 images for text recognition.
-    - ch_SVTRv2_rec: [PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task](https://aistudio.baidu.com/competition/detail/1131/0/introduction) (Note: The link may not be accessible due to network issues or link validity. Please check the link and try again if necessary.)
-    - ch_RepSVTR_rec: [PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task](https://aistudio.baidu.com/competition/detail/1131/0/introduction) (Note: The link may not be accessible due to network issues or link validity. Please check the link and try again if necessary.)
-    - English Recognition Model: A self-built English dataset by PaddleX.
-    - Multilingual Recognition Model: A self-built multilingual dataset by PaddleX.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environment: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+            <li><strong>Test Dataset：</strong>
+                        <ul>
+                         <li>Document Image Orientation Classification Module: A self-built dataset using PaddleX, covering multiple scenarios such as ID cards and documents, containing 1000 images.</li>
+                         <li>Layout Region Detection Model: A self-built layout region detection dataset by PaddleOCR, containing 500 images of common document types such as Chinese and English papers, magazines, contracts, books, exams, and research reports.</li>
+                         <li>Table Layout Detection Model: A self-built layout table region detection dataset by PaddleOCR, with 7,835 images of Chinese and English paper document types containing tables.</li>
+                         <li>3-Class Layout Detection Model: A self-built layout region detection dataset by PaddleOCR, containing 1,154 images of common document types such as Chinese and English papers, magazines, and research reports.</li>
+                         <li>5-Class English Document Region Detection Model: The evaluation dataset of <a href="https://developer.ibm.com/exchanges/data/all/publaynet">PubLayNet</a>, containing 11,245 images of English documents. (Note: The link may not be accessible due to network issues or link validity. Please check the link and try again if necessary.)</li>
+                         <li>17-Class Region Detection Model: A self-built layout region detection dataset by PaddleOCR, containing 892 images of common document types such as Chinese and English papers, magazines, and research reports.</li>
+                         <li>Table Structure Recognition Model: A self-built high-difficulty Chinese table recognition dataset by PaddleX.</li>
+                         <li>Table Cell Detection Model: A self-built evaluation dataset by PaddleX.</li>
+                         <li>Table Classification Model: A self-built evaluation dataset by PaddleX.</li>
+                         <li>Text Detection Model: A self-built Chinese dataset by PaddleOCR, covering multiple scenarios such as street views, web images, documents, and handwriting, with 500 images for detection.</li>
+                         <li>Chinese Recognition Model: A self-built Chinese dataset by PaddleOCR, covering multiple scenarios such as street views, web images, documents, and handwriting, with 11,000 images for text recognition.</li>
+                        <li>ch_SVTRv2_rec: Evaluation set A for "OCR End-to-End Recognition Task" in the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a></li>
+                          <li>ch_RepSVTR_rec: Evaluation set B for "OCR End-to-End Recognition Task" in the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a>.</li>
+                         <li>English Recognition Model: A self-built English dataset by PaddleX.</li>
+                         <li>Multilingual Recognition Model: A self-built multilingual dataset by PaddleX.</li>
+                        </ul>
+                </li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
-- **Inference Mode Description**
-
-| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
-|-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
-| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
 
 </details>
 
-</details>
 <h2 id="2-quick-start">2. Quick Start<a class="headerlink" href="#2-quick-start" title="Permanent link">&para;</a></h2>
 <p>All model pipelines provided by PaddleX can be quickly experienced. You can use the command line or Python locally to experience the effect of the General Table Recognition v2 Pipeline.</p>
 <h3 id="21-online-experience">2.1 Online Experience<a class="headerlink" href="#21-online-experience" title="Permanent link">&para;</a></h3>
@@ -6618,7 +6731,7 @@ The visualization results are saved under `save_path`, where the visualization r
 </tr>
 </tbody>
 </table>
-
+</details>
 <details><summary>Multi-language Service Invocation Example</summary>
 <details>
 <summary>Python</summary>
@@ -6648,17 +6761,13 @@ for i, res in enumerate(result["tableRecResults"]):
         print(f"Output image saved at {img_path}")
 </code></pre></details>
 </details>
-<br/>
-
-📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on user devices, allowing the devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed procedures, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
-You can choose the appropriate deployment method according to your needs to integrate the model into your AI application.
-
-## 4. Custom Development
-If the default model weights provided by the General Table Recognition v2 Pipeline do not meet your requirements in terms of accuracy or speed, you can try to further <b>fine-tune</b> the existing models using <b>your own domain-specific or application data</b> to improve the recognition performance of the General Table Recognition v2 Pipeline in your specific scenario.
-
-### 4.1 Model Fine-Tuning
-Since the General Table Recognition v2 Pipeline consists of several modules, if the overall performance is not satisfactory, the issue may lie in any one of these modules. You can analyze the images with poor recognition results to identify which module is problematic and refer to the corresponding fine-tuning tutorial links in the table below.
-
+<p><br/></p>
+<p>📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on user devices, allowing the devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed procedures, please refer to the <a href="../../../pipeline_deploy/edge_deploy.html">PaddleX Edge Deployment Guide</a>.
+You can choose the appropriate deployment method according to your needs to integrate the model into your AI application.</p>
+<h2 id="4-custom-development">4. Custom Development<a class="headerlink" href="#4-custom-development" title="Permanent link">&para;</a></h2>
+<p>If the default model weights provided by the General Table Recognition v2 Pipeline do not meet your requirements in terms of accuracy or speed, you can try to further <b>fine-tune</b> the existing models using <b>your own domain-specific or application data</b> to improve the recognition performance of the General Table Recognition v2 Pipeline in your specific scenario.</p>
+<h3 id="41-model-fine-tuning">4.1 Model Fine-Tuning<a class="headerlink" href="#41-model-fine-tuning" title="Permanent link">&para;</a></h3>
+<p>Since the General Table Recognition v2 Pipeline consists of several modules, if the overall performance is not satisfactory, the issue may lie in any one of these modules. You can analyze the images with poor recognition results to identify which module is problematic and refer to the corresponding fine-tuning tutorial links in the table below.</p>
 <table>
 <thead>
 <tr>
@@ -6671,37 +6780,37 @@ Since the General Table Recognition v2 Pipeline consists of several modules, if 
 <tr>
 <td>Table classification error</td>
 <td>Table Classification Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/table_classification.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/table_classification.html">Link</a></td>
 </tr>
 <tr>
 <td>Table cell positioning error</td>
 <td>Table Cell Detection Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/table_cells_detection.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/table_cells_detection.html">Link</a></td>
 </tr>
 <tr>
 <td>Table structure recognition error</td>
 <td>Table Structure Recognition Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/table_structure_recognition.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/table_structure_recognition.html">Link</a></td>
 </tr>
 <tr>
 <td>Failed to detect table area</td>
 <td>Layout Area Detection Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/layout_detection.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/layout_detection.html">Link</a></td>
 </tr>
 <tr>
 <td>Text detection omission</td>
 <td>Text Detection Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/text_detection.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/text_detection.html">Link</a></td>
 </tr>
 <tr>
 <td>Inaccurate text content</td>
 <td>Text Recognition Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/text_recognition.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/text_recognition.html">Link</a></td>
 </tr>
 <tr>
 <td>Inaccurate image rotation correction</td>
 <td>Document Image Orientation Classification Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html">Link</a></td>
 </tr>
 <tr>
 <td>Inaccurate image distortion correction</td>
@@ -6711,11 +6820,9 @@ Since the General Table Recognition v2 Pipeline consists of several modules, if 
 </tbody>
 </table>
 
-### 4.2 Model Application
-After fine-tuning with your private dataset, you will obtain a local model weight file.
-
-If you need to use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local path of the fine-tuned model weights to the corresponding position in the pipeline configuration file.
-
+<h3 id="42-model-application">4.2 Model Application<a class="headerlink" href="#42-model-application" title="Permanent link">&para;</a></h3>
+<p>After fine-tuning with your private dataset, you will obtain a local model weight file.</p>
+<p>If you need to use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the local path of the fine-tuned model weights to the corresponding position in the pipeline configuration file.</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">SubModules</span><span class="p">:</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">LayoutDetection</span><span class="p">:</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="nt">module_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">layout_detection</span>
@@ -6786,14 +6893,10 @@ If you need to use the fine-tuned model weights, simply modify the pipeline conf
 </span><span id="__span-6-68"><a id="__codelineno-6-68" name="__codelineno-6-68" href="#__codelineno-6-68"></a><span class="w">        </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 </span><span id="__span-6-69"><a id="__codelineno-6-69" name="__codelineno-6-69" href="#__codelineno-6-69"></a><span class="w">        </span><span class="nt">score_thresh</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
 </span></code></pre></div>
-
-Subsequently, refer to the command-line method or Python script method in [2.2 Local Experience](#22-Local-Experience) to load the modified pipeline configuration file.
-
-## 5. Support for Multiple Hardware Devices
-PaddleX supports a variety of mainstream hardware devices including NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the `--device` parameter</b> to seamlessly switch between different hardware devices.
-
-For example, if you use Ascend NPU for OCR pipeline inference, the CLI command is:
-
+<p>Subsequently, refer to the command-line method or Python script method in <a href="#22-Local-Experience">2.2 Local Experience</a> to load the modified pipeline configuration file.</p>
+<h2 id="5-support-for-multiple-hardware-devices">5. Support for Multiple Hardware Devices<a class="headerlink" href="#5-support-for-multiple-hardware-devices" title="Permanent link">&para;</a></h2>
+<p>PaddleX supports a variety of mainstream hardware devices including NVIDIA GPU, Kunlunxin XPU, Ascend NPU, and Cambricon MLU. <b>Simply modify the <code>--device</code> parameter</b> to seamlessly switch between different hardware devices.</p>
+<p>For example, if you use Ascend NPU for OCR pipeline inference, the CLI command is:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>paddlex<span class="w"> </span>--pipeline<span class="w"> </span>table_recognition_v2<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">        </span>--use_doc_orientation_classify<span class="o">=</span>False<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">        </span>--use_doc_unwarping<span class="o">=</span>False<span class="w"> </span><span class="se">\</span>
@@ -6801,10 +6904,8 @@ For example, if you use Ascend NPU for OCR pipeline inference, the CLI command i
 </span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">        </span>--save_path<span class="w"> </span>./output<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">        </span>--device<span class="w"> </span>npu:0
 </span></code></pre></div>
-
-If you want to use the General Table Recognition v2 Pipeline on a wider variety of hardware, please refer to the [PaddleX Multi-Hardware Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
-
-If you want to use the Universal Table Recognition Pipeline v2 on a wider range of hardware, please refer to the [PaddleX Multi-Device Usage Guide](../../../other_devices_support/multi_devices_use_guide.en.md).
+<p>If you want to use the General Table Recognition v2 Pipeline on a wider variety of hardware, please refer to the <a href="../../../other_devices_support/multi_devices_use_guide.html">PaddleX Multi-Hardware Usage Guide</a>.</p>
+<p>If you want to use the Universal Table Recognition Pipeline v2 on a wider range of hardware, please refer to the <a href="../../../other_devices_support/multi_devices_use_guide.html">PaddleX Multi-Device Usage Guide</a>.</p>
 
 
 
@@ -6827,7 +6928,7 @@ If you want to use the Universal Table Recognition Pipeline v2 on a wider range 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 19, 2025 10:14:11">March 19, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 19, 2025 11:18:46">March 19, 2025</span>
   </span>
 
     
@@ -6837,7 +6938,7 @@ If you want to use the Universal Table Recognition Pipeline v2 on a wider range 
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 19, 2025 10:14:11">March 19, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 19, 2025 11:18:46">March 19, 2025</span>
   </span>
 
     
@@ -6852,7 +6953,7 @@ If you want to use the Universal Table Recognition Pipeline v2 on a wider range 
     </span>
     <nav>
       
-        <a href="mailto:94225063+zhangyubo0722@users.noreply.github.com">zhangyubo0722</a>
+        <a href="mailto:65936492+liuhongen1234567@users.noreply.github.com">liuhongen1234567</a>
     </nav>
   </span>
 
@@ -6960,13 +7061,13 @@ If you want to use the Universal Table Recognition Pipeline v2 on a wider range 
         
         
           
-          <a href="PP-StructureV3.html" class="md-footer__link md-footer__link--next" aria-label="Next: 通用版面解析v3产线">
+          <a href="layout_parsing.html" class="md-footer__link md-footer__link--next" aria-label="Next: General Layout Parsing">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                通用版面解析v3产线
+                General Layout Parsing
               </div>
             </div>
             <div class="md-footer__button md-icon">

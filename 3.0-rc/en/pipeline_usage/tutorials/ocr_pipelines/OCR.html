@@ -1187,7 +1187,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../../../../pipeline_usage/tutorials/ocr_pipelines/layout_parsing.md" class="md-nav__link">
+      <a href="layout_parsing.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -5736,56 +5736,60 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tbody>
 </table>
 
-<p><strong>Test Environment Description</strong>:</p>
+<p><strong>Test Environment Description:</strong></p>
 <ul>
-<li><strong>Performance Test Environment</strong></li>
-<li><strong>Test Dataset</strong>:<ul>
-<li>Text Image Rectification Model: <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet</a>.</li>
-<li>Text Detection Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 500 images for detection.</li>
-<li>Chinese Recognition Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.</li>
-<li>ch_SVTRv2_rec: Evaluation set A for "OCR End-to-End Recognition Task" in the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a>.</li>
-<li>ch_RepSVTR_rec: Evaluation set B for "OCR End-to-End Recognition Task" in the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a>.</li>
-<li>English Recognition Model: A self-built English dataset using PaddleX.</li>
-<li>Multilingual Recognition Model: A self-built multilingual dataset using PaddleX.</li>
-<li>Text Line Orientation Classification Model: A self-built dataset using PaddleX, covering various scenarios such as ID cards and documents, containing 1000 images.</li>
-</ul>
-</li>
-<li>
-<p><strong>Hardware Configuration</strong>:</p>
-<ul>
-<li>GPU: NVIDIA Tesla T4</li>
-<li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
-<li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
-</ul>
-</li>
-<li>
-<p><strong>Inference Mode Description</strong></p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Mode</th>
-<th>GPU Configuration</th>
-<th>CPU Configuration</th>
-<th>Acceleration Technology Combination</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Normal Mode</td>
-<td>FP32 Precision / No TRT Acceleration</td>
-<td>FP32 Precision / 8 Threads</td>
-<td>PaddleInference</td>
-</tr>
-<tr>
-<td>High-Performance Mode</td>
-<td>Optimal combination of pre-selected precision types and acceleration strategies</td>
-<td>FP32 Precision / 8 Threads</td>
-<td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
-</tr>
-</tbody>
+      <li><b>Performance Test Environment</b>
+          <ul>
+                <li><strong>Test Dataset：</strong>
+                        <ul>
+                         <li>Document Image Orientation Classification Module: A self-built dataset using PaddleX, covering multiple scenarios such as ID cards and documents, containing 1000 images.</li>
+                          <li>Text Image Rectification Model: <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet</a></li>
+                          <li>Text Detection Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 500 images for detection.</li>
+                          <li>Chinese Recognition Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.</li>
+                          <li>ch_SVTRv2_rec: Evaluation set A for "OCR End-to-End Recognition Task" in the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a></li>
+                          <li>ch_RepSVTR_rec: Evaluation set B for "OCR End-to-End Recognition Task" in the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a>.</li>
+                          <li>English Recognition Model: A self-built English dataset using PaddleX.</li>
+                          <li>Multilingual Recognition Model: A self-built multilingual dataset using PaddleX.</li>
+                          <li>Text Line Orientation Classification Model: A self-built dataset using PaddleX, covering various scenarios such as ID cards and documents, containing 1000 images.</li>
+                        </ul>
+                </li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
 </table>
+
 <h2 id="2-quick-start">2. Quick Start<a class="headerlink" href="#2-quick-start" title="Permanent link">&para;</a></h2>
 <p>All model pipelines provided by PaddleX can be quickly experienced. You can experience the effect of the general OCR pipeline on the community platform, or you can use the command line or Python locally to experience the effect of the general OCR pipeline.</p>
 <h3 id="21-online-experience">2.1 Online Experience<a class="headerlink" href="#21-online-experience" title="Permanent link">&para;</a></h3>
@@ -6475,22 +6479,22 @@ You can choose the appropriate deployment method based on your needs to integrat
 <tr>
 <td>Text is missed in detection</td>
 <td>Text Detection Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/text_detection.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/text_detection.html">Link</a></td>
 </tr>
 <tr>
 <td>Text content is inaccurate</td>
 <td>Text Recognition Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/text_recognition.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/text_recognition.html">Link</a></td>
 </tr>
 <tr>
 <td>Vertical or rotated text line correction is inaccurate</td>
 <td>Text Line Orientation Classification Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/textline_orientation_classification.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/textline_orientation_classification.html">Link</a></td>
 </tr>
 <tr>
 <td>Whole-image rotation correction is inaccurate</td>
 <td>Document Image Orientation Classification Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html">Link</a></td>
 </tr>
 <tr>
 <td>Image distortion correction is inaccurate</td>
@@ -6567,7 +6571,7 @@ Of course, you can also specify the hardware device when calling <code>create_pi
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 19, 2025 10:14:11">March 19, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 19, 2025 11:18:46">March 19, 2025</span>
   </span>
 
     
@@ -6577,7 +6581,7 @@ Of course, you can also specify the hardware device when calling <code>create_pi
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 19, 2025 10:14:11">March 19, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 19, 2025 11:18:46">March 19, 2025</span>
   </span>
 
     
@@ -6592,7 +6596,7 @@ Of course, you can also specify the hardware device when calling <code>create_pi
     </span>
     <nav>
       
-        <a href="mailto:94225063+zhangyubo0722@users.noreply.github.com">zhangyubo0722</a>
+        <a href="mailto:65936492+liuhongen1234567@users.noreply.github.com">liuhongen1234567</a>
     </nav>
   </span>
 

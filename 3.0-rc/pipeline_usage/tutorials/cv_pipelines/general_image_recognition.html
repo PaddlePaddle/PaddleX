@@ -1029,7 +1029,7 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="../ocr_pipelines/layout_parsing.md" class="md-nav__link">
+      <a href="../ocr_pipelines/layout_parsing.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -5451,50 +5451,54 @@ You're not viewing the latest version.
 </tr>
 </table>
 
-<p><strong>测试环境说明：</strong></p>
+<p><strong>测试环境说明:</strong></p>
 <ul>
-<li><strong>性能测试环境</strong></li>
-<li><strong>测试数据集</strong>：<ul>
-<li>主体检测模型：PaddleClas 主体检测数据集。</li>
-<li>图像特征模型：AliProducts数据集。</li>
-</ul>
-</li>
-<li>
-<p><strong>硬件配置</strong>：</p>
-<ul>
-<li>GPU：NVIDIA Tesla T4</li>
-<li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
-<li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
-</ul>
-</li>
-<li>
-<p><strong>推理模式说明</strong></p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>模式</th>
-<th>GPU配置</th>
-<th>CPU配置</th>
-<th>加速技术组合</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>常规模式</td>
-<td>FP32精度 / 无TRT加速</td>
-<td>FP32精度 / 8线程</td>
-<td>PaddleInference</td>
-</tr>
-<tr>
-<td>高性能模式</td>
-<td>选择先验精度类型和加速策略的最优组合</td>
-<td>FP32精度 / 8线程</td>
-<td>选择先验最优后端（Paddle/OpenVINO/TRT等）</td>
-</tr>
-</tbody>
+      <li><b>性能测试环境</b>
+          <ul>
+            <li><strong>测试数据集：
+             </strong>
+               <ul>
+                 <li>主体检测模型：PaddleClas 主体检测数据集。</li>
+                 <li>图像特征模型：AliProducts数据集。</li>
+               </ul>
+             </li>
+              <li><strong>硬件配置：</strong>
+                  <ul>
+                      <li>GPU：NVIDIA Tesla T4</li>
+                      <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>推理模式说明</b></li>
+  </ul>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>模式</th>
+            <th>GPU配置</th>
+            <th>CPU配置</th>
+            <th>加速技术组合</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>常规模式</td>
+            <td>FP32精度 / 无TRT加速</td>
+            <td>FP32精度 / 8线程</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>高性能模式</td>
+            <td>选择先验精度类型和加速策略的最优组合</td>
+            <td>FP32精度 / 8线程</td>
+            <td>选择先验最优后端（Paddle/OpenVINO/TRT等）</td>
+        </tr>
+    </tbody>
 </table>
+
 <h2 id="2">2. 快速开始<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
 <p>PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可以在本地使用 Python 体验通用图像识别产线的效果。</p>
 <h3 id="21">2.1 在线体验<a class="headerlink" href="#21" title="Permanent link">&para;</a></h3>
@@ -6403,7 +6407,7 @@ pprint.pp(result_infer["detectedObjects"])
 <p>如果通用图像识别产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升通用该产线的在您的场景中的识别效果。</p>
 <h3 id="41">4.1 模型微调<a class="headerlink" href="#41" title="Permanent link">&para;</a></h3>
 <p>由于通用图像识别产线包含两个模块（主体检测模块和图像特征模块），模型产线的效果不及预期可能来自于其中任何一个模块。</p>
-<p>您可以对识别效果差的图片进行分析，如果在分析过程中发现有较多的主体目标未被检测出来，那么可能是主体检测模型存在不足，您需要参考<a href="../../../module_usage/tutorials/cv_modules/mainbody_detection.html">主体检测模块开发教程</a>中的<a href="../../../module_usage/tutorials/cv_modules/mainbody_detection.html#四二次开发">二次开发</a>章节，使用您的私有数据集对主体检测模型进行微调；如果在已检测到的主体出现匹配错误，这表明图像特征模型需要进一步改进，您需要参考<a href="../../../module_usage/tutorials/cv_modules/image_feature.html">图像特征模块开发教程</a>中的<a href="../../../module_usage/tutorials/cv_modules/image_feature.html#四二次开发">二次开发</a>章节,对图像特征模型进行微调。</p>
+<p>您可以对识别效果差的图片进行分析，如果在分析过程中发现有较多的主体目标未被检测出来，那么可能是主体检测模型存在不足，您需要参考<a href="https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/mainbody_detection.html">主体检测模块开发教程</a>中的<b>二次开发</b>章节，使用您的私有数据集对主体检测模型进行微调；如果在已检测到的主体出现匹配错误，这表明图像特征模型需要进一步改进，您需要参考<a href="https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/image_feature.html">图像特征模块开发教程</a>中的<b>二次开发</b>章节,对图像特征模型进行微调。</p>
 <h3 id="42">4.2 模型应用<a class="headerlink" href="#42" title="Permanent link">&para;</a></h3>
 <p>当您使用私有数据集完成微调训练后，可获得本地模型权重文件。</p>
 <p>若您需要使用微调后的模型权重，只需对产线配置文件做修改，将微调后模型权重的本地路径替换至产线配置文件中的对应位置即可：</p>
@@ -6455,7 +6459,7 @@ pprint.pp(result_infer["detectedObjects"])
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月19日 10:14:11">2025年3月19日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月19日 11:18:46">2025年3月19日</span>
   </span>
 
     
@@ -6465,7 +6469,7 @@ pprint.pp(result_infer["detectedObjects"])
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月19日 10:14:11">2025年3月19日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月19日 11:18:46">2025年3月19日</span>
   </span>
 
     
@@ -6480,7 +6484,7 @@ pprint.pp(result_infer["detectedObjects"])
     </span>
     <nav>
       
-        <a href="mailto:94225063+zhangyubo0722@users.noreply.github.com">zhangyubo0722</a>
+        <a href="mailto:65936492+liuhongen1234567@users.noreply.github.com">liuhongen1234567</a>
     </nav>
   </span>
 
