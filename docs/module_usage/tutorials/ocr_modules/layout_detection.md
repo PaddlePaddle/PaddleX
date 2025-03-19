@@ -179,26 +179,56 @@ comments: true
 </tbody>
 </table>
 
-**测试环境说明：**
+ <strong>测试环境说明:</strong>
 
-- **性能测试环境**
-  - **测试数据集**：
-    - 版面检测模型： PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志、合同、书本、试卷和研报等常见的 500 张文档类型图片。
-    - 表格版面检测模型：PaddleOCR 自建的版面表格区域检测数据集，包含中英文 7835 张带有表格的论文文档类型图片。
-    - 3类版面检测模型：PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志和研报等常见的 1154 张文档类型图片。
-    - 5类英文文档区域检测模型：[PubLayNet](https://developer.ibm.com/exchanges/data/all/publaynet) 的评估数据集，包含英文文档的 11245 张文图片。
-    - 17类区域检测模型：PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志和研报等常见的 892 张文档类型图片。
-  - **硬件配置**：
-    - GPU：NVIDIA Tesla T4
-    - CPU：Intel Xeon Gold 6271C @ 2.60GHz
-    - 其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+  <ul>
+      <li><b>性能测试环境</b>
+          <ul>
+              <li><strong>测试数据集：</strong>
+                 <ul>
+                    <li>版面检测模型： PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志、合同、书本、试卷和研报等常见的 500 张文档类型图片。</li>
+                    <li>表格版面检测模型：PaddleOCR 自建的版面表格区域检测数据集，包含中英文 7835 张带有表格的论文文档类型图片。</li>
+                    <li>3类版面检测模型：PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志和研报等常见的 1154 张文档类型图片。</li>
+                    <li>5类英文文档区域检测模型： <a href="https://developer.ibm.com/exchanges/data/all/publaynet" target="_blank">PubLayNet</a> 的评估数据集，包含英文文档的 11245 张文图片。</li>
+                    <li>17类区域检测模型：PaddleOCR 自建的版面区域检测数据集，包含中英文论文、杂志和研报等常见的 892 张文档类型图片。</li>
+                 </ul>
+              </li>
+              <li><strong>硬件配置：</strong>
+                  <ul>
+                      <li>GPU：NVIDIA Tesla T4</li>
+                      <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>推理模式说明</b></li>
+  </ul>
 
-- **推理模式说明**
-
-| 模式        | GPU配置                          | CPU配置          | 加速技术组合                                |
-|-------------|----------------------------------|------------------|---------------------------------------------|
-| 常规模式    | FP32精度 / 无TRT加速             | FP32精度 / 8线程       | PaddleInference                             |
-| 高性能模式  | 选择先验精度类型和加速策略的最优组合         | FP32精度 / 8线程       | 选择先验最优后端（Paddle/OpenVINO/TRT等） |
+<table border="1">
+    <thead>
+        <tr>
+            <th>模式</th>
+            <th>GPU配置</th>
+            <th>CPU配置</th>
+            <th>加速技术组合</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>常规模式</td>
+            <td>FP32精度 / 无TRT加速</td>
+            <td>FP32精度 / 8线程</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>高性能模式</td>
+            <td>选择先验精度类型和加速策略的最优组合</td>
+            <td>FP32精度 / 8线程</td>
+            <td>选择先验最优后端（Paddle/OpenVINO/TRT等）</td>
+        </tr>
+    </tbody>
+</table>
 </details>
 
 ## 三、快速集成
@@ -268,6 +298,13 @@ for res in output:
 <td>无</td>
 </tr>
 <tr>
+<td><code>device</code></td>
+<td>模型推理设备</td>
+<td><code>str</code></td>
+<td>支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
+<td><code>gpu:0</code></td>
+</tr>
+<tr>
 <td><code>img_size</code></td>
 <td>输入图像大小；如果不指定，将默认使用PaddleX官方模型配置</td>
 <td><code>int/list/None</code></td>
@@ -326,7 +363,7 @@ for res in output:
 <li><b>large</b>, 设置为large时，表示在模型输出的检测框中，对于互相重叠包含的检测框，只保留外部最大的框，删除重叠的内部框。</li>
 <li><b>small</b>, 设置为small，表示在模型输出的检测框中，对于互相重叠包含的检测框，只保留内部被包含的小框，删除重叠的外部框。</li>
 <li><b>union</b>, 不进行框的过滤处理，内外框都保留</li>
-<li><b>dict</b>, 字典的key为<b>int</b>类型，代表<code>cls_id</code>, value为<b>str</b>类型, 如<code>{0: "large", 2: "small"}</code>, 表示对第0类别检测框使用large模式，对第2类别检测框使用small模式</li>  
+<li><b>dict</b>, 字典的key为<b>int</b>类型，代表<code>cls_id</code>, value为<b>str</b>类型, 如<code>{0: "large", 2: "small"}</code>, 表示对第0类别检测框使用large模式，对第2类别检测框使用small模式</li>
 <li><b>None</b>, 不指定，将默认使用PaddleX官方模型配置</li>
 </ul>
 </td>
@@ -422,7 +459,7 @@ for res in output:
 <li><b>large</b>, 设置为large时，表示在模型输出的检测框中，对于互相重叠包含的检测框，只保留外部最大的框，删除重叠的内部框。</li>
 <li><b>small</b>, 设置为small，表示在模型输出的检测框中，对于互相重叠包含的检测框，只保留内部被包含的小框，删除重叠的外部框。</li>
 <li><b>union</b>, 不进行框的过滤处理，内外框都保留</li>
-<li><b>dict</b>, 字典的key为<b>int</b>类型，代表<code>cls_id</code>, value为<b>str</b>类型, 如<code>{0: "large", 2: "small"}</code>, 表示对第0类别检测框使用large模式，对第2类别检测框使用small模式</li>  
+<li><b>dict</b>, 字典的key为<b>int</b>类型，代表<code>cls_id</code>, value为<b>str</b>类型, 如<code>{0: "large", 2: "small"}</code>, 表示对第0类别检测框使用large模式，对第2类别检测框使用small模式</li>
 <li><b>None</b>, 不指定，将默认使用 <code>creat_model</code> 指定的 <code>layout_merge_bboxes_mode</code> 参数，如果 <code>creat_model</code> 也没有指定，则默认使用PaddleX官方模型配置</li>
 </ul>
 </td>

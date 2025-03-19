@@ -28,21 +28,48 @@ Time series classification is a technique that categorizes time-series data into
 </tbody>
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**: <a href="https://paddlets.bj.bcebos.com/classification/UWaveGestureLibrary_TEST.csv">UWaveGestureLibrary</a> dataset.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+              <li><strong>Test Dataset：</strong><a href="https://paddlets.bj.bcebos.com/classification/UWaveGestureLibrary_TEST.csv">UWaveGestureLibrary</a> dataset.</li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
-- **Inference Mode Description**
-
-| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
-|-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
-| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
 
 ## 2. Quick Start
 PaddleX provides pre-trained model pipelines that can be quickly experienced. You can experience the effects of the General Time Series Classification Pipeline online or locally using command line or Python.
@@ -808,7 +835,7 @@ If the default model weights provided by the time-series classification pipeline
 
 
 ### 4.1 Model Fine-Tuning
-Since the time-series classification pipeline includes a time-series classification module, if the pipeline's performance is not satisfactory, you need to refer to the [Custom Development](../../../module_usage/tutorials/time_series_modules/time_series_classification.en.md#four-secondary-development) section in the [Time-Series Classification Module Development Tutorial](../../../module_usage/tutorials/time_series_modules/time_series_classification.en.md) and fine-tune the time-series classification model using your private dataset.
+Since the time-series classification pipeline includes a time-series classification module, if the pipeline's performance is not satisfactory, you need to refer to the <b>Custom Development</b> section in the [Time-Series Classification Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/time_series_modules/time_series_classification.html) and fine-tune the time-series classification model using your private dataset.
 
 ### 4.2 Model Application
 After you have completed fine-tuning training with your private dataset, you will obtain a local model weight file.

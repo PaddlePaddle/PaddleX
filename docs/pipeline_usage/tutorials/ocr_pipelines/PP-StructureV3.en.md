@@ -569,32 +569,63 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tbody>
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**:
-    - Text Image Rectification Model: [DocUNet](https://www3.cs.stonybrook.edu/~cvl/docunet.html).
-    - Layout Region Detection Model: A self-built layout detection dataset using PaddleOCR, containing 10,000 images of common document types such as Chinese and English papers, magazines, and research reports.
-    - Table Structure Recognition Model: A self-built English table recognition dataset using PaddleX.
-    - Text Detection Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 500 images for detection.
-    - Chinese Recognition Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.
-    - ch_SVTRv2_rec: Evaluation set A for "OCR End-to-End Recognition Task" in the [PaddleOCR Algorithm Model Challenge](https://aistudio.baidu.com/competition/detail/1131/0/introduction).
-    - ch_RepSVTR_rec: Evaluation set B for "OCR End-to-End Recognition Task" in the [PaddleOCR Algorithm Model Challenge](https://aistudio.baidu.com/competition/detail/1131/0/introduction).
-    - English Recognition Model: A self-built English dataset using PaddleX.
-    - Multilingual Recognition Model: A self-built multilingual dataset using PaddleX.
-    - Text Line Orientation Classification Model: A self-built dataset using PaddleX, covering various scenarios such as ID cards and documents, containing 1000 images.
-    - Seal Text Detection Model: A self-built dataset using PaddleX, containing 500 images of circular seal textures.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+          <li><strong>Test Dataset：</strong>
+                        <ul>
+                         <li>Document Image Orientation Classification Module: A self-built dataset using PaddleX, covering multiple scenarios such as ID cards and documents, containing 1000 images.</li>
+                          <li>Text Image Rectification Model: <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet</a></li>
+                          <li>Layout Region Detection Model: A self-built layout detection dataset using PaddleOCR, containing 10,000 images of common document types such as Chinese and English papers, magazines, and research reports.</li>
+                          <li>Table Structure Recognition Model: A self-built English table recognition dataset using PaddleX.</li>
+                          <li>Text Detection Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 500 images for detection.</li>
+                          <li>Chinese Recognition Model: A self-built Chinese dataset using PaddleOCR, covering multiple scenarios such as street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.</li>
+                          <li>ch_SVTRv2_rec: Evaluation set A for "OCR End-to-End Recognition Task" in the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a></li>
+                          <li>ch_RepSVTR_rec: Evaluation set B for "OCR End-to-End Recognition Task" in the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a>.</li>
+                          <li>English Recognition Model: A self-built English dataset using PaddleX.</li>
+                          <li>Multilingual Recognition Model: A self-built multilingual dataset using PaddleX.</li>
+                          <li>Text Line Orientation Classification Model: A self-built dataset using PaddleX, covering various scenarios such as ID cards and documents, containing 1000 images.</li>
+                          <li>Seal Text Detection Model: A self-built dataset using PaddleX, containing 500 images of circular seal textures.</li>
+                        </ul>
+                </li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
-- **Inference Mode Description**
-
-| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
-|-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
-| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
 
 </details>
 
@@ -716,6 +747,14 @@ for item in markdown_images:
             file_path.parent.mkdir(parents=True, exist_ok=True)
             image.save(file_path)
 ```
+
+**Note:**
+
+(1) The default text recognition model used by PP-StructureV3 is the **Chinese recognition model**. There is a certain probability of errors when recognizing some English text. You can refer to the model list to switch to an English recognition model.
+
+(2) In the example code, the parameters `use_doc_orientation_classify`, `use_doc_unwarping`, and `use_textline_orientation` are all set to False. This means that document orientation classification, document unwarping, and text line orientation classification are disabled. If you need to use these features, you can set them to True.
+
+(3) PP-StructureV3 provides flexible parameter configuration, allowing you to adjust parameters for layout detection, text detection, text recognition, etc., based on the characteristics of the document for better results. For more detailed configurations, please refer to the [PP-StructureV3 configuration file](../../../../paddlex/configs/pipelines/PP-StructureV3.yaml).
 
 In the above Python script, the following steps are executed:
 
@@ -1471,6 +1510,30 @@ Below is the API reference for basic serving deployment and examples of service 
 <td>No</td>
 </tr>
 <tr>
+<td><code>layoutThreshold</code></td>
+<td><code>number</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>layout_threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutNms</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>layout_nms</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutUnclipRatio</code></td>
+<td><code>number</code> | <code>array</code> | <code>object</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>layout_unclip_ratio</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutMergeBboxesMode</code></td>
+<td><code>string</code> | <code>object</code> | <code>null</code></td>
+<td>Please refer to the description of the <code>layout_merge_bboxes_mode</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>textDetLimitSideLen</code></td>
 <td><code>integer</code> | <code>null</code></td>
 <td>Please refer to the description of the <code>text_det_limit_side_len</code> parameter of the pipeline object's <code>predict</code> method.</td>
@@ -1543,27 +1606,21 @@ Below is the API reference for basic serving deployment and examples of service 
 <td>No</td>
 </tr>
 <tr>
-<td><code>layoutThreshold</code></td>
-<td><code>number</code> | <code>null</code></td>
-<td>Please refer to the description of the <code>layout_threshold</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td><code>useTableCellsOcrResults</code></td>
+<td><code>boolean</code></td>
+<td>Please refer to the description of the <code>use_table_cells_ocr_results</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>layoutNms</code></td>
-<td><code>boolean</code> | <code>null</code></td>
-<td>Please refer to the description of the <code>layout_nms</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td><code>useE2eWiredTableRecModel</code></td>
+<td><code>boolean</code></td>
+<td>Please refer to the description of the <code>use_e2e_wired_table_rec_model</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code>layoutUnclipRatio</code></td>
-<td><code>number</code> | <code>array</code> | <code>object</code> | <code>null</code></td>
-<td>Please refer to the description of the <code>layout_unclip_ratio</code> parameter of the pipeline object's <code>predict</code> method.</td>
-<td>No</td>
-</tr>
-<tr>
-<td><code>layoutMergeBboxesMode</code></td>
-<td><code>string</code> | <code>object</code> | <code>null</code></td>
-<td>Please refer to the description of the <code>layout_merge_bboxes_mode</code> parameter of the pipeline object's <code>predict</code> method.</td>
+<td><code>useE2eWirelessTableRecModel</code></td>
+<td><code>boolean</code></td>
+<td>Please refer to the description of the <code>use_e2e_wireless_table_rec_model</code> parameter of the pipeline object's <code>predict</code> method.</td>
 <td>No</td>
 </tr>
 </tbody>
@@ -1729,42 +1786,42 @@ Since the PP-StructureV3 pipeline includes several modules, the unsatisfactory p
 <tr>
 <td>Inaccurate layout region detection, such as missed detection of seals, tables, etc.</td>
 <td>Layout Region Detection Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/layout_detection.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/layout_detection.html">Link</a></td>
 </tr>
 <tr>
 <td>Inaccurate table structure recognition</td>
 <td>Table Structure Recognition Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/table_structure_recognition.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/table_structure_recognition.html">Link</a></td>
 </tr>
 <tr>
 <td>Inaccurate formula recognition</td>
 <td>Formula Recognition Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/formula_recognition.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/formula_recognition.html">Link</a></td>
 </tr>
 <tr>
 <td>Missed detection of seal text</td>
 <td>Seal Text Detection Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/seal_text_detection.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/seal_text_detection.html">Link</a></td>
 </tr>
 <tr>
 <td>Missed detection of text</td>
 <td>Text Detection Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/text_detection.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/text_detection.html">Link</a></td>
 </tr>
 <tr>
 <td>Inaccurate text content</td>
 <td>Text Recognition Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/text_recognition.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/text_recognition.html">Link</a></td>
 </tr>
 <tr>
 <td>Inaccurate correction of vertical or rotated text lines</td>
 <td>Text Line Orientation Classification Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/textline_orientation_classification.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/textline_orientation_classification.html">Link</a></td>
 </tr>
 <tr>
 <td>Inaccurate correction of whole-image rotation</td>
 <td>Document Image Orientation Classification Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html">Link</a></td>
 </tr>
 <tr>
 <td>Inaccurate correction of image distortion</td>

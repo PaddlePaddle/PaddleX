@@ -583,40 +583,69 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </tbody>
 </table>
 
-**Test Environment Description:**
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Datasets**
-    - Document Image Orientation Classification Model: A self-built dataset by PaddleX, covering multiple scenarios such as certificates and documents, with 1,000 images.
-    - Layout Region Detection Model: A self-built layout region detection dataset by PaddleOCR, containing 500 images of common document types such as Chinese and English papers, magazines, contracts, books, exams, and research reports.
-    - Table Layout Detection Model: A self-built layout table region detection dataset by PaddleOCR, with 7,835 images of Chinese and English paper document types containing tables.
-    - 3-Class Layout Detection Model: A self-built layout region detection dataset by PaddleOCR, containing 1,154 images of common document types such as Chinese and English papers, magazines, and research reports.
-    - 5-Class English Document Region Detection Model: The evaluation dataset of [PubLayNet](https://developer.ibm.com/exchanges/data/all/publaynet), containing 11,245 images of English documents. (Note: The link may not be accessible due to network issues or link validity. Please check the link and try again if necessary.)
-    - 17-Class Region Detection Model: A self-built layout region detection dataset by PaddleOCR, containing 892 images of common document types such as Chinese and English papers, magazines, and research reports.
-    - Table Structure Recognition Model: A self-built high-difficulty Chinese table recognition dataset by PaddleX.
-    - Table Cell Detection Model: A self-built evaluation dataset by PaddleX.
-    - Table Classification Model: A self-built evaluation dataset by PaddleX.
-    - Text Detection Model: A self-built Chinese dataset by PaddleOCR, covering multiple scenarios such as street views, web images, documents, and handwriting, with 500 images for detection.
-    - Chinese Recognition Model: A self-built Chinese dataset by PaddleOCR, covering multiple scenarios such as street views, web images, documents, and handwriting, with 11,000 images for text recognition.
-    - ch_SVTRv2_rec: [PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task](https://aistudio.baidu.com/competition/detail/1131/0/introduction) (Note: The link may not be accessible due to network issues or link validity. Please check the link and try again if necessary.)
-    - ch_RepSVTR_rec: [PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task](https://aistudio.baidu.com/competition/detail/1131/0/introduction) (Note: The link may not be accessible due to network issues or link validity. Please check the link and try again if necessary.)
-    - English Recognition Model: A self-built English dataset by PaddleX.
-    - Multilingual Recognition Model: A self-built multilingual dataset by PaddleX.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environment: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+            <li><strong>Test Dataset：</strong>
+                        <ul>
+                         <li>Document Image Orientation Classification Module: A self-built dataset using PaddleX, covering multiple scenarios such as ID cards and documents, containing 1000 images.</li>
+                         <li>Layout Region Detection Model: A self-built layout region detection dataset by PaddleOCR, containing 500 images of common document types such as Chinese and English papers, magazines, contracts, books, exams, and research reports.</li>
+                         <li>Table Layout Detection Model: A self-built layout table region detection dataset by PaddleOCR, with 7,835 images of Chinese and English paper document types containing tables.</li>
+                         <li>3-Class Layout Detection Model: A self-built layout region detection dataset by PaddleOCR, containing 1,154 images of common document types such as Chinese and English papers, magazines, and research reports.</li>
+                         <li>5-Class English Document Region Detection Model: The evaluation dataset of <a href="https://developer.ibm.com/exchanges/data/all/publaynet">PubLayNet</a>, containing 11,245 images of English documents. (Note: The link may not be accessible due to network issues or link validity. Please check the link and try again if necessary.)</li>
+                         <li>17-Class Region Detection Model: A self-built layout region detection dataset by PaddleOCR, containing 892 images of common document types such as Chinese and English papers, magazines, and research reports.</li>
+                         <li>Table Structure Recognition Model: A self-built high-difficulty Chinese table recognition dataset by PaddleX.</li>
+                         <li>Table Cell Detection Model: A self-built evaluation dataset by PaddleX.</li>
+                         <li>Table Classification Model: A self-built evaluation dataset by PaddleX.</li>
+                         <li>Text Detection Model: A self-built Chinese dataset by PaddleOCR, covering multiple scenarios such as street views, web images, documents, and handwriting, with 500 images for detection.</li>
+                         <li>Chinese Recognition Model: A self-built Chinese dataset by PaddleOCR, covering multiple scenarios such as street views, web images, documents, and handwriting, with 11,000 images for text recognition.</li>
+                        <li>ch_SVTRv2_rec: Evaluation set A for "OCR End-to-End Recognition Task" in the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a></li>
+                          <li>ch_RepSVTR_rec: Evaluation set B for "OCR End-to-End Recognition Task" in the <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge</a>.</li>
+                         <li>English Recognition Model: A self-built English dataset by PaddleX.</li>
+                         <li>Multilingual Recognition Model: A self-built multilingual dataset by PaddleX.</li>
+                        </ul>
+                </li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
-- **Inference Mode Description**
-
-| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
-|-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
-| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
 
 </details>
 
-</details>
 
 ## 2. Quick Start
 All model pipelines provided by PaddleX can be quickly experienced. You can use the command line or Python locally to experience the effect of the General Table Recognition v2 Pipeline.
@@ -1369,7 +1398,7 @@ Below are the API references for basic serving deployment and multi-language ser
 </tr>
 </tbody>
 </table>
-
+</details>
 <details><summary>Multi-language Service Invocation Example</summary>
 <details>
 <summary>Python</summary>
@@ -1422,37 +1451,37 @@ Since the General Table Recognition v2 Pipeline consists of several modules, if 
 <tr>
 <td>Table classification error</td>
 <td>Table Classification Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/table_classification.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/table_classification.html">Link</a></td>
 </tr>
 <tr>
 <td>Table cell positioning error</td>
 <td>Table Cell Detection Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/table_cells_detection.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/table_cells_detection.html">Link</a></td>
 </tr>
 <tr>
 <td>Table structure recognition error</td>
 <td>Table Structure Recognition Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/table_structure_recognition.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/table_structure_recognition.html">Link</a></td>
 </tr>
 <tr>
 <td>Failed to detect table area</td>
 <td>Layout Area Detection Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/layout_detection.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/layout_detection.html">Link</a></td>
 </tr>
 <tr>
 <td>Text detection omission</td>
 <td>Text Detection Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/text_detection.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/text_detection.html">Link</a></td>
 </tr>
 <tr>
 <td>Inaccurate text content</td>
 <td>Text Recognition Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/text_recognition.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/text_recognition.html">Link</a></td>
 </tr>
 <tr>
 <td>Inaccurate image rotation correction</td>
 <td>Document Image Orientation Classification Module</td>
-<td><a href="../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md">Link</a></td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html">Link</a></td>
 </tr>
 <tr>
 <td>Inaccurate image distortion correction</td>

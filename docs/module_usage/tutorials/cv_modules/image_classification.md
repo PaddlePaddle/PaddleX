@@ -673,21 +673,48 @@ comments: true
 </tr>
 </table>
 
-**测试环境说明：**
+<strong>测试环境说明:</strong>
 
-- **性能测试环境**
-  - **测试数据集**：<a href="https://www.image-net.org/index.php">ImageNet-1k</a> 验证集 Top1 Acc。
-  - **硬件配置**：
-    - GPU：NVIDIA Tesla T4
-    - CPU：Intel Xeon Gold 6271C @ 2.60GHz
-    - 其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+  <ul>
+      <li><b>性能测试环境</b>
+          <ul>
+           <li><strong>测试数据集：</strong><a href="https://www.image-net.org/index.php">ImageNet-1k</a> 验证集 Top1 Acc。</li>
+              <li><strong>硬件配置：</strong>
+                  <ul>
+                      <li>GPU：NVIDIA Tesla T4</li>
+                      <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>推理模式说明</b></li>
+  </ul>
 
-- **推理模式说明**
-
-| 模式        | GPU配置                          | CPU配置          | 加速技术组合                                |
-|-------------|----------------------------------|------------------|---------------------------------------------|
-| 常规模式    | FP32精度 / 无TRT加速             | FP32精度 / 8线程       | PaddleInference                             |
-| 高性能模式  | 选择先验精度类型和加速策略的最优组合         | FP32精度 / 8线程       | 选择先验最优后端（Paddle/OpenVINO/TRT等） |
+<table border="1">
+    <thead>
+        <tr>
+            <th>模式</th>
+            <th>GPU配置</th>
+            <th>CPU配置</th>
+            <th>加速技术组合</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>常规模式</td>
+            <td>FP32精度 / 无TRT加速</td>
+            <td>FP32精度 / 8线程</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>高性能模式</td>
+            <td>选择先验精度类型和加速策略的最优组合</td>
+            <td>FP32精度 / 8线程</td>
+            <td>选择先验最优后端（Paddle/OpenVINO/TRT等）</td>
+        </tr>
+    </tbody>
+</table>
 
 </details>
 
@@ -748,6 +775,13 @@ for res in output:
 <td><code>str</code></td>
 <td>无</td>
 <td>无</td>
+</tr>
+<tr>
+<td><code>device</code></td>
+<td>模型推理设备</td>
+<td><code>str</code></td>
+<td>支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
+<td><code>gpu:0</code></td>
 </tr>
 <tr>
 <td><code>topk</code></td>

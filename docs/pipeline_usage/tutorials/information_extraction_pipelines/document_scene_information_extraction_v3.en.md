@@ -299,31 +299,61 @@ The RepSVTR text recognition model is a mobile-oriented text recognition model b
 </tbody>
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**:
-    - Table Structure Recognition Model: PaddleX internally built English table recognition dataset.
-    - Layout Detection Model: PaddleOCR's self-built layout analysis dataset, containing 10,000 images of common document types such as Chinese and English papers, magazines, and research reports.
-    - Text Detection Model: PaddleOCR's self-built Chinese dataset, covering multiple scenarios including street scenes, web images, documents, and handwriting, with 500 images for detection.
-    - Text Recognition Model: PaddleOCR's self-built Chinese dataset, covering multiple scenarios including street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.
-    - ch_SVTRv2_rec: [PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task](https://aistudio.baidu.com/competition/detail/1131/0/introduction) A-rank evaluation set.
-    - ch_RepSVTR_rec: [PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task](https://aistudio.baidu.com/competition/detail/1131/0/introduction) B-rank evaluation set.
-    - English Recognition Model: PaddleX self-built English dataset.
-    - Multilingual Recognition Model: PaddleX self-built multilingual dataset.
-    - Text Line Direction Classification Model: PaddleX self-built dataset, covering multiple scenarios such as certificates and documents, containing 1,000 images.
-    - Text Image Rectification Model: [DocUNet](https://www3.cs.stonybrook.edu/~cvl/docunet.html).
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+                    <li><strong>Test Dataset：</strong>
+                        <ul>
+                          <li>Table Structure Recognition Model: PaddleX internally built English table recognition dataset.</li>
+                          <li>Layout Detection Model: PaddleOCR's self-built layout analysis dataset, containing 10,000 images of common document types such as Chinese and English papers, magazines, and research reports.</li>
+                          <li>Text Detection Model: PaddleOCR's self-built Chinese dataset, covering multiple scenarios including street scenes, web images, documents, and handwriting, with 500 images for detection.</li>
+                          <li>Text Recognition Model: PaddleOCR's self-built Chinese dataset, covering multiple scenarios including street scenes, web images, documents, and handwriting, with 11,000 images for text recognition.</li>
+                          <li>ch_SVTRv2_rec: <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a> A-rank evaluation set.</li>
+                          <li> ch_RepSVTR_rec: <a href="https://aistudio.baidu.com/competition/detail/1131/0/introduction">PaddleOCR Algorithm Model Challenge - Task 1: OCR End-to-End Recognition Task</a> B-rank evaluation set.</li>
+                          <li>English Recognition Model: PaddleX self-built English dataset.</li>
+                          <li>Multilingual Recognition Model: PaddleX self-built multilingual dataset.</li>
+                          <li>Text Line Direction Classification Model: PaddleX self-built dataset, covering multiple scenarios such as certificates and documents, containing 1,000 images.</li>
+                          <li>Text Image Rectification Model: <a href="https://www3.cs.stonybrook.edu/~cvl/docunet.html">DocUNet</a></li>
+                        </ul>
+                    </li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
-- **Inference Mode Description**
-
-| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
-|-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
-| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
 
 </details>
 
@@ -1732,21 +1762,59 @@ If the default model weights provided by the PP-ChatOCRv3-doc Pipeline do not me
 
 ### 4.1 Model Fine-tuning
 
-Since the PP-ChatOCRv3-doc Pipeline comprises six modules, unsatisfactory performance may stem from any of these modules (note that the text image rectification module does not support customization at this time).
+The document scenario information extraction V3 pipeline consists of several modules. If the performance of the model pipeline does not meet expectations, the issue may originate from any of these modules. You can analyze cases with poor extraction results by visualizing images to determine which module has the problem. Then, refer to the corresponding fine-tuning tutorial links in the table below to fine-tune the model：
 
-You can analyze images with poor recognition results and follow the guidelines below for analysis and model fine-tuning:
-
-* Incorrect table structure detection (e.g., row/column misidentification, cell position errors) may indicate deficiencies in the table structure recognition module. You need to refer to the <b>Customization</b> section in the [Table Structure Recognition Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/table_structure_recognition.en.md) and fine-tune the table structure recognition model using your private dataset.
-
-* Misplaced layout elements (e.g., incorrect positioning of tables or seals) may suggest issues with the layout detection module. Consult the <b>Customization</b> section in the [Layout Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/layout_detection.en.md) and fine-tune the layout detection model with your private dataset.
-
-* Frequent undetected text (i.e., text leakage) may indicate limitations in the text detection model. Refer to the <b>Customization</b> section in the [Text Detection Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_detection.en.md) and fine-tune the text detection model using your private dataset.
-
-* High text recognition errors (i.e., recognized text content does not match the actual text) suggest that the text recognition model requires improvement. Follow the <b>Customization</b> section in the [Text Recognition Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/text_recognition.en.md) to fine-tune the text recognition model.
-
-* Frequent recognition errors in detected seal text indicate that the seal text detection model needs further refinement. Consult the <b>Customization</b> section in the [Seal Text Detection Module Development Tutorials](../../../module_usage/tutorials/ocr_modules/seal_text_detection.en.md) to fine-tune the seal text detection model.
-
-* Frequent misidentifications of document or certificate orientations with text regions suggest that the document image orientation classification model requires improvement. Refer to the <b>Customization</b> section in the [Document Image Orientation Classification Module Development Tutorial](../../../module_usage/tutorials/ocr_modules/doc_img_orientation_classification.en.md) to fine-tune the document image orientation classification model.
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Module to Fine-tune</th>
+<th>Fine-tuning Reference Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inaccurate layout detection, such as undetected stamps or tables</td>
+<td>Layout Detection Module</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/layout_detection.html">Link</a></td>
+</tr>
+<tr>
+<td>Inaccurate table structure recognition</td>
+<td>Table Structure Recognition</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/table_structure_recognition.html">Link</a></td>
+</tr>
+<tr>
+<td>Seal text missed</td>
+<td>Seal Text Detection Module</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/seal_text_detection.html">Link</a></td>
+</tr>
+<tr>
+<td>Text missed</td>
+<td>Text Detection Module</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/text_detection.html">Link</a></td>
+</tr>
+<tr>
+<td>Text content is inaccurate</td>
+<td>Text Recognition Module</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/text_recognition.html">Link</a></td>
+</tr>
+<tr>
+<td>Vertical or rotated text line correction is inaccurate</td>
+<td>Text Line Orientation Classification Module</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/textline_orientation_classification.html">Link</a></td>
+</tr>
+<tr>
+<td>Whole image rotation correction is inaccurate</td>
+<td>Document Image Orientation Classification Module</td>
+<td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/doc_img_orientation_classification.html">Link</a></td>
+</tr>
+<tr>
+<td>Image distortion correction is inaccurate</td>
+<td>Text Image Correction Module</td>
+<td>Not supported for fine-tuning</td>
+</tr>
+</tbody>
+</table>
 
 ### 4.2 Model Deployment
 

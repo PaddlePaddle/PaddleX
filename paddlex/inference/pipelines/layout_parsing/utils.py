@@ -473,14 +473,18 @@ def _sort_ocr_res_by_y_projection(
             line = _sort_line_by_x_projection(input_img, general_ocr_pipeline, line)
         if label == "reference":
             line = _format_line(line, inline_x_min, inline_x_max, is_reference=True)
-        else:
+        elif label != "content":
             line = _format_line(line, x_min, x_max)
         new_lines.append(line)
 
     ocr_res["boxes"] = [span[0] for line in new_lines for span in line]
-    ocr_res["rec_texts"] = [span[1] + " " for line in new_lines for span in line]
-
-    return ocr_res
+    if label == "content":
+        ocr_res["rec_texts"] = [
+            "".join(f"{span[1]} " for span in line).rstrip() for line in new_lines
+        ]
+    else:
+        ocr_res["rec_texts"] = [span[1] + " " for line in new_lines for span in line]
+    return ocr_res, len(new_lines)
 
 
 def _process_text(input_text: str) -> str:
@@ -542,7 +546,6 @@ def get_single_block_parsing_res(
     layout_det_res: DetResult,
     table_res_list: list,
     seal_res_list: list,
-    imgs_in_doc: list,
 ) -> OCRResult:
     """
     Extract structured information from OCR and layout detection results.
@@ -583,8 +586,9 @@ def get_single_block_parsing_res(
         block_bbox = box_info["coordinate"]
         label = box_info["label"]
         rec_res = {"boxes": [], "rec_texts": [], "rec_labels": [], "flag": False}
-        seg_start_flag = True
-        seg_end_flag = True
+        seg_start_coordinate = float("inf")
+        seg_end_coordinate = float("-inf")
+        num_of_lines = 1
 
         if label == "table":
             for table_res in table_res_list:
@@ -599,8 +603,6 @@ def get_single_block_parsing_res(
                             "block_label": label,
                             "block_content": table_res["pred_html"],
                             "block_bbox": block_bbox,
-                            "seg_start_flag": seg_start_flag,
-                            "seg_end_flag": seg_end_flag,
                         },
                     )
                     break
@@ -613,8 +615,6 @@ def get_single_block_parsing_res(
                             ", ".join(seal_res_list[seal_index]["rec_texts"])
                         ),
                         "block_bbox": block_bbox,
-                        "seg_start_flag": seg_start_flag,
-                        "seg_end_flag": seg_end_flag,
                     },
                 )
                 seal_index += 1
@@ -637,15 +637,11 @@ def get_single_block_parsing_res(
                     rec_res["flag"] = True
 
             if rec_res["flag"]:
-                rec_res = _sort_ocr_res_by_y_projection(
+                rec_res, num_of_lines = _sort_ocr_res_by_y_projection(
                     input_img, general_ocr_pipeline, label, block_bbox, rec_res, 0.7
                 )
-                rec_res_first_bbox = rec_res["boxes"][0]
-                rec_res_end_bbox = rec_res["boxes"][-1]
-                if rec_res_first_bbox[0] - block_bbox[0] < 10:
-                    seg_start_flag = False
-                if block_bbox[2] - rec_res_end_bbox[2] < 10:
-                    seg_end_flag = False
+                seg_start_coordinate = rec_res["boxes"][0][0]
+                seg_end_coordinate = rec_res["boxes"][-1][2]
                 if label == "formula":
                     rec_res["rec_texts"] = [
                         rec_res_text.replace("$", "")
@@ -662,13 +658,13 @@ def get_single_block_parsing_res(
                         "block_content": _process_text("".join(rec_res["rec_texts"])),
                         "block_image": {img_path: img},
                         "block_bbox": block_bbox,
-                        "seg_start_flag": seg_start_flag,
-                        "seg_end_flag": seg_end_flag,
                     },
                 )
             else:
                 if label in ["doc_title"]:
                     content = " ".join(rec_res["rec_texts"])
+                elif label in ["content"]:
+                    content = "\n".join(rec_res["rec_texts"])
                 else:
                     content = "".join(rec_res["rec_texts"])
                     if label != "reference":
@@ -678,8 +674,9 @@ def get_single_block_parsing_res(
                         "block_label": label,
                         "block_content": content,
                         "block_bbox": block_bbox,
-                        "seg_start_flag": seg_start_flag,
-                        "seg_end_flag": seg_end_flag,
+                        "seg_start_coordinate": seg_start_coordinate,
+                        "seg_end_coordinate": seg_end_coordinate,
+                        "num_of_lines": num_of_lines,
                     },
                 )
 
@@ -692,8 +689,8 @@ def get_single_block_parsing_res(
                     "block_label": "text",
                     "block_content": ocr_rec_text,
                     "block_bbox": ocr_rec_box,
-                    "seg_start_flag": True,
-                    "seg_end_flag": True,
+                    "seg_start_coordinate": ocr_rec_box[0],
+                    "seg_end_coordinate": ocr_rec_box[2],
                 },
             )
 
@@ -1935,11 +1932,14 @@ def get_layout_ordering(
             "block_content": parsing_res["block_content"],
             "block_bbox": parsing_res["block_bbox"],
             "block_image": parsing_res.get("block_image", None),
-            "seg_start_flag": parsing_res["seg_start_flag"],
-            "seg_end_flag": parsing_res["seg_end_flag"],
             "sub_label": parsing_res["sub_label"],
             "sub_index": parsing_res["sub_index"],
             "index": parsing_res.get("index", None),
+            "seg_start_coordinate": parsing_res.get(
+                "seg_start_coordinate", float("inf")
+            ),
+            "seg_end_coordinate": parsing_res.get("seg_end_coordinate", float("-inf")),
+            "num_of_lines": parsing_res.get("num_of_lines", 1),
         }
         for parsing_res in final_parsing_res_list
     ]

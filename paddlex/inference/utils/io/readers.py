@@ -284,7 +284,7 @@ class OpenCVVideoReaderBackend(_VideoReaderBackend):
         return self._cap.get(cv2.CAP_PROP_FPS)
 
     def read_file(self, in_path):
-        """read vidio file from path"""
+        """read video file from path"""
         if self._cap is not None:
             self._cap_release()
         self._cap = self._cap_open(in_path)

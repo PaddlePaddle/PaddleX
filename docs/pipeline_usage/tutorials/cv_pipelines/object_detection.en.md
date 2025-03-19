@@ -347,21 +347,48 @@ Object detection aims to identify the categories and locations of multiple objec
 </tr>
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**: <a href="https://cocodataset.org/#home">COCO2017</a> validation set.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+               <li><strong>Test Dataset：</strong><a href="https://cocodataset.org/#home">COCO2017</a> validation set.</li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
-- **Inference Mode Description**
-
-| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
-|-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
-| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
 
 </details>
 
@@ -1236,7 +1263,7 @@ You can choose the appropriate method to deploy the model pipeline based on your
 If the default model weights provided by the general object detection pipeline do not meet your accuracy or speed requirements in your scenario, you can try further <b>fine-tuning</b> the existing model using <b>your own specific domain or application scenario data</b> to improve the recognition performance of the general object detection pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the general object detection pipeline includes an object detection module, if the performance of the model pipeline is not as expected, you need to refer to the [Custom Development](../../../module_usage/tutorials/cv_modules/object_detection.en.md#iv-custom-development) section in the [Object Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/object_detection.en.md) to fine-tune the object detection model using your private dataset.
+Since the general object detection pipeline includes an object detection module, if the performance of the model pipeline is not as expected, you need to refer to the <b>Custom Development</b> section in the [Object Detection Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/object_detection.html) to fine-tune the object detection model using your private dataset.
 
 ### 4.2 Model Application
 After completing the fine-tuning training with your private dataset, you will obtain a local model weight file.
