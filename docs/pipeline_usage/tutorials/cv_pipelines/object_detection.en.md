@@ -1263,7 +1263,7 @@ You can choose the appropriate method to deploy the model pipeline based on your
 If the default model weights provided by the general object detection pipeline do not meet your accuracy or speed requirements in your scenario, you can try further <b>fine-tuning</b> the existing model using <b>your own specific domain or application scenario data</b> to improve the recognition performance of the general object detection pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the general object detection pipeline includes an object detection module, if the performance of the model pipeline is not as expected, you need to refer to the [Custom Development](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/object_detection.html#iv-custom-development) section in the [Object Detection Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/object_detection.html) to fine-tune the object detection model using your private dataset.
+Since the general object detection pipeline includes an object detection module, if the performance of the model pipeline is not as expected, you need to refer to the <b>Custom Development</b> section in the [Object Detection Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/object_detection.html) to fine-tune the object detection model using your private dataset.
 
 ### 4.2 Model Application
 After completing the fine-tuning training with your private dataset, you will obtain a local model weight file.

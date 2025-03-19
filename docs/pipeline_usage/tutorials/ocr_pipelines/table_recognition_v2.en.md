@@ -646,7 +646,6 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 
 </details>
 
-</details>
 
 ## 2. Quick Start
 All model pipelines provided by PaddleX can be quickly experienced. You can use the command line or Python locally to experience the effect of the General Table Recognition v2 Pipeline.
@@ -1399,7 +1398,7 @@ Below are the API references for basic serving deployment and multi-language ser
 </tr>
 </tbody>
 </table>
-
+</details>
 <details><summary>Multi-language Service Invocation Example</summary>
 <details>
 <summary>Python</summary>

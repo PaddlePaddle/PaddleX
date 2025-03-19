@@ -144,6 +144,13 @@ for res in output:
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理</td>
+<td><code>bool</code></td>
+<td>无</td>
+<td><code>False</code></td>
+</tr>
+<tr>
 <td><code> nms_thresh</code></td>
 <td>非极大值抑制（Non-Maximum Suppression, NMS）过程中的IoU阈值参数；如果不指定，将默认使用PaddleX官方模型配置</td>
 <td><code>float/None</code></td>

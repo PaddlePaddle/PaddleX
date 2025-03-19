@@ -152,6 +152,13 @@ The Python script above performs the following steps:
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
+<td><code>use_hpip</code></td>
+<td>Whether to enable high-performance inference. </td>
+<td><code>bool</code></td>
+<td>None</td>
+<td><code>False</code></td>
+</tr>
+<tr>
 <td><code> topk</code></td>
 <td>The top <code> topk</code> categories and corresponding classification probabilities of the prediction result；if not specified, the default configuration of the PaddleX official model will be used</td>
 <td><code>int</code></td>

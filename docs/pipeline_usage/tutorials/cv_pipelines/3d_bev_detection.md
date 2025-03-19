@@ -185,7 +185,7 @@ pip install open3d
 python paddlex/inference/models/3d_bev_detection/visualizer_3d.py --save_path="./output/"
 ```
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/images/pipelines/3d_bev_detection/02.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/3d_bev_detection/02.png">
 
 
 在上述 Python 脚本中，执行了如下几个步骤：
@@ -489,7 +489,7 @@ print(result["detectedObjects"])
 
 ### 4.1 模型微调
 
-参考[3D多模态融合检测模块开发教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/3d_bev_detection.html)中的[二次开发](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/3d_bev_detection.html#四二次开发)章节，使用您的私有数据集模型进行微调。
+参考[3D多模态融合检测模块开发教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/3d_bev_detection.html)中的<b>二次开发</b>章节，使用您的私有数据集模型进行微调。
 
 ### 4.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。

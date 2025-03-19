@@ -825,7 +825,7 @@ You can choose the appropriate deployment method based on your needs to integrat
 If the default model weights provided by the image anomaly detection pipeline are not satisfactory in terms of accuracy or speed for your specific scenario, you can attempt to <b>further fine-tune the existing models using your own domain-specific or application-specific data</b> to improve the recognition performance of the image anomaly detection pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the image anomaly detection pipeline includes an unsupervised image anomaly detection module, if the pipeline's performance does not meet expectations, you need to refer to the [Custom Development](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/anomaly_detection.html) section in the [Unsupervised Anomaly Detection Module Development Guide](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/anomaly_detection.html) and use your private dataset to fine-tune the image anomaly detection model.
+Since the image anomaly detection pipeline includes an unsupervised image anomaly detection module, if the pipeline's performance does not meet expectations, you need to refer to the <b>Custom Development</b> section in the [Unsupervised Anomaly Detection Module Development Guide](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/anomaly_detection.html) and use your private dataset to fine-tune the image anomaly detection model.
 
 ### 4.2 Model Application
 After fine-tuning with your private dataset, you will obtain the local model weight file.

@@ -835,7 +835,7 @@ echo "Output image data saved at " . $output_image_path . "\n";
 
 
 ### 4.1 模型微调
-由于时序分类产线包含时序分类模块，如果模型产线的效果不及预期，那么您需要参考[时序分类模块开发教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/time_series_modules/time_series_classification.html)中的[二次开发](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/time_series_modules/time_series_classification.html#四二次开发)章节，使用您的私有数据集对时序分类模型进行微调。
+由于时序分类产线包含时序分类模块，如果模型产线的效果不及预期，那么您需要参考[时序分类模块开发教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/time_series_modules/time_series_classification.html)中的<b>二次开发</b>章节，使用您的私有数据集对时序分类模型进行微调。
 
 ### 4.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。

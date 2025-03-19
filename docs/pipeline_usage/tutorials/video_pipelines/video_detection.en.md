@@ -539,7 +539,7 @@ You can choose the appropriate method to deploy the model pipeline according to 
 If the default model weights provided by the general video detection pipeline are not satisfactory in terms of accuracy or speed for your specific scenario, you can attempt to <b>fine-tune</b> the existing model using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the general video detection pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the general video detection pipeline includes a video detection module, if the performance of the pipeline does not meet your expectations, you need to refer to the [Custom Development](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/video_modules/video_detection.html) section in the [Video Detection Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/video_modules/video_detection.html) and fine-tune the video detection model using your private dataset.
+Since the general video detection pipeline includes a video detection module, if the performance of the pipeline does not meet your expectations, you need to refer to the <b>Custom Development</b> section in the [Video Detection Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/video_modules/video_detection.html) and fine-tune the video detection model using your private dataset.
 
 ### 4.2 Model Application
 After completing the fine-tuning with your private dataset, you will obtain the local model weight file.

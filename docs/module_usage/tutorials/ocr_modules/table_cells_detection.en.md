@@ -150,6 +150,13 @@ The following is the explanation of the methods, parameters, etc.:
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
+<td><code>use_hpip</code></td>
+<td>Whether to enable high-performance inference. </td>
+<td><code>bool</code></td>
+<td>None</td>
+<td><code>False</code></td>
+</tr>
+<tr>
 <td><code>img_size</code></td>
 <td>Size of the input image; if not specified, the default configuration of the PaddleX official model will be used</td>
 <td><code>int/list</code></td>

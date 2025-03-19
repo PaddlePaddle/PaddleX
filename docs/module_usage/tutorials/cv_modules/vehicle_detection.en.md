@@ -155,6 +155,13 @@ Related methods, parameters, and explanations are as follows:
 <td>None</td>
 <td><code>None</code></td>
 </tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>Whether to enable high-performance inference. </td>
+<td><code>bool</code></td>
+<td>None</td>
+<td><code>False</code></td>
+</tr>
 </table>
 
 * The `model_name` must be specified. After specifying `model_name`, the built-in model parameters of PaddleX are used by default. If `model_dir` is specified, the user-defined model is used.

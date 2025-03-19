@@ -142,6 +142,13 @@ for res in results:
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理</td>
+<td><code>bool</code></td>
+<td>无</td>
+<td><code>False</code></td>
+</tr>
+<tr>
 <td><code>thresholds</code></td>
 <td>模型使用的过滤阈值</td>
 <td><code>dict/None</code></td>

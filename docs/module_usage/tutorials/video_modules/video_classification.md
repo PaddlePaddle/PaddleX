@@ -150,6 +150,13 @@ for res in output:
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理</td>
+<td><code>bool</code></td>
+<td>无</td>
+<td><code>False</code></td>
+</tr>
+<tr>
 <td><code> topk</code></td>
 <td>预测结果的前 <code>topk</code> 个类别和对应的分类概率；如果不指定，将默认使用PaddleX官方模型配置</td>
 <td><code>int</code></td>

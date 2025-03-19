@@ -844,7 +844,7 @@ You can choose the appropriate method to deploy the model pipeline according to 
 If the default model weights provided by the general time-series anomaly detection pipeline do not meet your accuracy or speed requirements in your scenario, you can try to further <b>fine-tune</b> the existing model using <b>your own specific domain or application scenario data</b> to improve the recognition effect of the general time-series anomaly detection pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the general time-series anomaly detection pipeline includes a time-series anomaly detection module, if the effect of the model pipeline is not as expected, you need to refer to the [Custom Development](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/time_series_modules/time_series_anomaly_detection.html#四二次开发) section in the [Time-Series Prediction Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/time_series_modules/time_series_anomaly_detection.html) to fine-tune the time-series anomaly detection model using your private dataset.
+Since the general time-series anomaly detection pipeline includes a time-series anomaly detection module, if the effect of the model pipeline is not as expected, you need to refer to the <b>Custom Development</b> section in the [Time Series Anomaly Detection Module Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/time_series_modules/time_series_anomaly_detection.html) to fine-tune the time-series anomaly detection model using your private dataset.
 
 ### 4.2 Model Application
 After you complete the fine-tuning training with your private dataset, you can obtain the local model weight file.

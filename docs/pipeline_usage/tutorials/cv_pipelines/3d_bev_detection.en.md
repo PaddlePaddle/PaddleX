@@ -195,7 +195,7 @@ pip install open3d
 python paddlex/inference/models/3d_bev_detection/visualizer_3d.py --save_path="./output/"
 ```
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/images/pipelines/3d_bev_detection/02.png">
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/3d_bev_detection/02.png">
 
 In the above Python script, the following steps are executed:
 
@@ -497,7 +497,7 @@ If the default model weights provided by the 3D multi-modal fusion detection pip
 
 ### 4.1 Model Fine-Tuning
 
-Refer to the [Custom Development](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/3d_bev_detection.html#四二次开发) section in the [3D Multi-modal Fusion Detection Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/3d_bev_detection.html) and use your private dataset to fine-tune the model.
+Refer to the <b>Custom Development</b> section in the [3D Multi-modal Fusion Detection Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/3d_bev_detection.html) and use your private dataset to fine-tune the model.
 
 ### 4.2 Model Application
 After completing fine-tuning training using your private dataset, you will obtain local model weight files.

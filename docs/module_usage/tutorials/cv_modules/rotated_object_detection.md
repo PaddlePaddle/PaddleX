@@ -137,6 +137,13 @@ for res in output:
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理</td>
+<td><code>bool</code></td>
+<td>无</td>
+<td><code>False</code></td>
+</tr>
+<tr>
 <td><code>threshold</code></td>
 <td>低分object过滤阈值</td>
 <td><code>float/None/dict[int, float]</code></td>

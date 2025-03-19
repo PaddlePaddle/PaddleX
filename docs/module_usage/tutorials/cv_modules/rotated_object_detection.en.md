@@ -142,6 +142,13 @@ Related methods and parameter explanations are as follows:
 <td><code>gpu:0</code></td>
 </tr>
 <tr>
+<td><code>use_hpip</code></td>
+<td>Whether to enable high-performance inference. </td>
+<td><code>bool</code></td>
+<td>None</td>
+<td><code>False</code></td>
+</tr>
+<tr>
 <td><code>threshold</code></td>
 <td>The threshold for filtering low-score objects</td>
 <td><code>float/None/dict</code></td>
@@ -155,6 +162,7 @@ Related methods and parameter explanations are as follows:
 <td>None</td>
 <td>None</td>
 </tr>
+
 </table>
 
 * The `model_name` must be specified. After specifying `model_name`, the model parameters built into PaddleX will be used by default. If `model_dir` is specified, the user-defined model will be used.

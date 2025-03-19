@@ -105,7 +105,7 @@ pip install open3d
 python paddlex/inference/models/3d_bev_detection/visualizer_3d.py --save_path="./output/"
 ```
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/images/pipelines/3d_bev_detection/02.png">
+<img src="https://github.com/cuicheng01/PaddleX_doc_images/blob/main/images/pipelines/3d_bev_detection/02.png">
 
 
 运行后，得到的结果为：
@@ -196,6 +196,13 @@ python paddlex/inference/models/3d_bev_detection/visualizer_3d.py --save_path=".
 <td><code>str</code></td>
 <td>支持指定GPU具体卡号，如“gpu:0”，其他硬件具体卡号，如“npu:0”，CPU如“cpu”。</td>
 <td><code>gpu:0</code></td>
+</tr>
+<tr>
+<td><code>use_hpip</code></td>
+<td>是否启用高性能推理</td>
+<td><code>bool</code></td>
+<td>无</td>
+<td><code>False</code></td>
 </tr>
 </table>
 
