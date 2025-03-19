@@ -792,6 +792,9 @@ class DetPostProcess:
                             keep_mask &= (contains_other == 0) | (contained_by_other == 1)
                 boxes = boxes[keep_mask]
 
+        if boxes.size == 0:
+            return np.array([])
+
         if layout_unclip_ratio:
             if isinstance(layout_unclip_ratio, float):
                 layout_unclip_ratio = (layout_unclip_ratio, layout_unclip_ratio)
@@ -800,7 +803,7 @@ class DetPostProcess:
                     len(layout_unclip_ratio) == 2
                 ), f"The length of `layout_unclip_ratio` should be 2."
             elif isinstance(layout_unclip_ratio, dict):
-                pass 
+                pass
             else:
                 raise ValueError(
                     f"The type of `layout_unclip_ratio` must be float, Tuple[float, float] or  Dict[int, Tuple[float, float]], but got {type(layout_unclip_ratio)}."
