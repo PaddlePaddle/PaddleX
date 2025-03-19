@@ -1534,13 +1534,13 @@ for res in output:
 </tr>
 <tr>
 <td><code>layoutUnclipRatio</code></td>
-<td><code>number</code> | <code>array</code> | <code>null</code></td>
+<td><code>number</code> | <code>array</code> | <code>object</code> | <code>null</code></td>
 <td>请参阅产线对象中 <code>predict</code> 方法的 <code>layout_unclip_ratio</code> 参数相关说明。</td>
 <td>否</td>
 </tr>
 <tr>
 <td><code>layoutMergeBboxesMode</code></td>
-<td><code>string</code> | <code>null</code></td>
+<td><code>string</code> | <code>object</code> | <code>null</code></td>
 <td>请参阅产线对象中 <code>predict</code> 方法的 <code>layout_merge_bboxes_mode</code> 参数相关说明。</td>
 <td>否</td>
 </tr>

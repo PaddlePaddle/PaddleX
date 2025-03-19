@@ -1233,6 +1233,8 @@ def _get_sub_category(
             if num_doc_title == 2:
                 special_pre_cut_labels = title_labels + sub_title_labels
                 break
+    if len(blocks) == 0:
+        return blocks, {}
 
     min_x = min(block["block_bbox"][0] for block in blocks)
     min_y = min(block["block_bbox"][1] for block in blocks)
