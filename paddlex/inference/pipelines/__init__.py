@@ -130,10 +130,12 @@ def create_pipeline(
             Defaults to None.
         pp_option (Optional[PaddlePredictorOption], optional): The options for
             the PaddlePredictor. Defaults to None.
-        use_hpip (Optional[bool], optional): Whether to use high-performance inference
-            plugin (HPIP) for prediction. Defaults to None.
+        use_hpip (Optional[bool], optional): Whether to use the high-performance
+            inference plugin (HPIP) for prediction by default.
+            Defaults to None.
         hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional): The
-            high-performance inference configuration dictionary. Defaults to None.
+            default high-performance inference configuration dictionary.
+            Defaults to None.
         *args: Additional positional arguments.
         **kwargs: Additional keyword arguments.
 
@@ -156,7 +158,7 @@ def create_pipeline(
             )
     pipeline_name = config["pipeline_name"]
     if use_hpip is None:
-        use_hpip = config.get("use_hpip", None)
+        use_hpip = config.get("use_hpip", False)
     if hpi_config is None:
         hpi_config = config.get("hpi_config", None)
 

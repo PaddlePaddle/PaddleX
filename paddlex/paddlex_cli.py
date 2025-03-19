@@ -126,7 +126,7 @@ def args_cfg():
     pipeline_group.add_argument(
         "--use_hpip",
         action="store_true",
-        help="Enable HPIP acceleration for all models.",
+        help="Enable HPIP acceleration by default.",
     )
     pipeline_group.add_argument(
         "--get_pipeline_config",
