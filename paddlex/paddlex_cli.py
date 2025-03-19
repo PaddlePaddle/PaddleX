@@ -225,13 +225,13 @@ def install(args):
             )
 
     def _install_hpi_deps(device_type):
-        support_device_type = ["cpu", "gpu"]
-        if device_type not in support_device_type:
+        supported_device_types = ["cpu", "gpu", "npu"]
+        if device_type not in supported_device_types:
             logging.error(
                 "HPI installation failed!\n"
                 "Supported device_type: %s. Your input device_type: %s.\n"
                 "Please ensure the device_type is correct.",
-                support_device_type,
+                supported_device_types,
                 device_type,
             )
             sys.exit(2)
@@ -240,6 +240,8 @@ def install(args):
             packages = ["ultra-infer-python"]
         elif device_type == "gpu":
             packages = ["ultra-infer-gpu-python"]
+        elif device_type == "npu":
+            packages = ["ultra-infer-npu-python"]
 
         with importlib.resources.path("paddlex", "hpip_links.html") as f:
             return subprocess.check_call(
