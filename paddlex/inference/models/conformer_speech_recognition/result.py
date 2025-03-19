@@ -17,7 +17,7 @@ import json
 import numpy as np
 
 
-class Result:
+class ChunkConformerResult:
     """ASR Result Container for ChunkConformer Model"""
 
     def __init__(self, transcript: str, chunk_results: List[Dict[str, Any]] = None):
@@ -78,7 +78,7 @@ class ResultBuilder:
     def from_continuous_output(transcript: str, chunk_stride: int):
         """Create result from continuous decoding output"""
         # Implement logic to split transcript into chunks based on stride
-        return Result(transcript)
+        return ChunkConformerResult(transcript)
 
     @classmethod
     def from_chunked_output(cls, chunks: List[Dict[str, Any]]):

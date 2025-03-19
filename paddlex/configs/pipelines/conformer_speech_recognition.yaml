@@ -1,8 +1,8 @@
-pipeline_name: chunk_conformer
+pipeline_name: conformer_speech_recognition
 
 SubModules:
   SpeechRecognition:
-    module_name: chunk_conformer
+    module_name: conformer_speech_recognition
     model_name: Conformer
     model_dir: null
     batch_size: 1

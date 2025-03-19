@@ -46,7 +46,7 @@ from .anomaly_detection import UadPredictor
 
 # from .face_recognition import FaceRecPredictor
 from .multilingual_speech_recognition import WhisperPredictor
-from .automatic_speech_recognition import ASRPredictor
+from .conformer_speech_recognition import ChunkConformerPredictor
 from .video_classification import VideoClasPredictor
 from .video_detection import VideoDetPredictor
 

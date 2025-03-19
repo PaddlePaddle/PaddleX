@@ -12,8 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .trainer import ChunkConformerTrainer
-from .dataset_checker import ChunkConformerDatasetChecker
-from .evaluator import ChunkConformerEvaluator
-from .exportor import ChunkConformerExportor
-from .model_list import MODELS
+from .pipeline import ChunkConformerPipeline

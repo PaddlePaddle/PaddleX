@@ -137,18 +137,18 @@ from .multilingual_speech_recognition import (
     WhisperExportor,
 )
 
-module_automatic_speech_recognition = import_module(
-    ".automatic_speech_recognition", "paddlex.modules"
+module_conformer_speech_recognition = import_module(
+    ".conformer_speech_recognition", "paddlex.modules"
 )
 ChunkConformerDatasetChecker = getattr(
-    module_automatic_speech_recognition, "ChunkConformerDatasetChecker"
+    module_conformer_speech_recognition, "ChunkConformerDatasetChecker"
 )
 ChunkConformerTrainer = getattr(
-    module_automatic_speech_recognition, "ChunkConformerTrainer"
+    module_conformer_speech_recognition, "ChunkConformerTrainer"
 )
 ChunkConformerEvaluator = getattr(
-    module_automatic_speech_recognition, "ChunkConformerEvaluator"
+    module_conformer_speech_recognition, "ChunkConformerEvaluator"
 )
 ChunkConformerExportor = getattr(
-    module_automatic_speech_recognition, "ChunkConformerExportor"
+    module_conformer_speech_recognition, "ChunkConformerExportor"
 )

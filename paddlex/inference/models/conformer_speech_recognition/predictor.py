@@ -19,7 +19,7 @@ from .processors import Preprocess, Postprocess
 from ..base import BasicPredictor
 
 
-class ASRPredictor(BasicPredictor):
+class ChunkConformerPredictor(BasicPredictor):
     """ChunkConformer Automatic Speech Recognition Predictor"""
 
     def __init__(

@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 from importlib import import_module
 from .base import BasePipeline
+from .conformer_speech_recognition import ChunkConformerPipeline
 from ..utils.pp_option import PaddlePredictorOption
 from .components import BaseChat, BaseRetriever, BaseGeneratePrompt
 from ...utils import logging

@@ -12,4 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .predictor import ASRPredictor
+from ...base import BaseDatasetChecker
+from ..model_list import MODELS
+
+
+class ChunkConformerDatasetChecker(BaseDatasetChecker):
+    """Automatic Speech Recognition Dataset Checker"""
+
+    entities = MODELS
+
+    def validate_audio_format(self):
+        """Validate audio file formats match expected types"""
+        # Implementation would check for supported audio formats
+        pass
+
+    def check_sample_rate(self):
+        """Verify audio sample rates meet model requirements"""
+        # Implementation would validate sample rate consistency
+        pass

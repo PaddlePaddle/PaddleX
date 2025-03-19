@@ -187,7 +187,7 @@ PaddleX Speech Recognition supports multiple AI accelerators. To use specific ha
 model = create_model(..., device="npu:0")  # npu, mlu, xpu, dcu or gcu
 
 # Command Line
-paddlex --module automatic_speech_recognition \
+paddlex --module conformer_speech_recognition \
         --model chunk_conformer_large \
         --input ./stream.wav \
         --device npu:0

@@ -1,5 +1,5 @@
 Global:
-  model: ChunkConformer
+  model: chunk_conformer
   mode: train
   dataset_dir: "path/to/your/audio_dataset"
   device: gpu:0
