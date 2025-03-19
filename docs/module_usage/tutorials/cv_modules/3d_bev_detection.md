@@ -105,8 +105,7 @@ pip install open3d
 python paddlex/inference/models/3d_bev_detection/visualizer_3d.py --save_path="./output/"
 ```
 
-<img src="https://github.com/cuicheng01/PaddleX_doc_images/blob/main/images/pipelines/3d_bev_detection/02.png">
-
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/3d_bev_detection/02.png">
 
 运行后，得到的结果为：
 ```bash

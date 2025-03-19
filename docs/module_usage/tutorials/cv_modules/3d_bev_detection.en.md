@@ -97,6 +97,8 @@ pip install open3d
 python paddlex/inference/models/3d_bev_detection/visualizer_3d.py --save_path="./output/"
 ```
 
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/3d_bev_detection/02.png">
+
 After running, the result obtained is:
 
 ```bash
