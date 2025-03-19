@@ -84,6 +84,7 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
             raise ValueError(config["model_config_error"])
 
         model_dir = config.get("model_dir", None)
+        # Should we log if the actual parameter to use is different from the default?
         use_hpip = config.get("use_hpip", self.use_hpip)
         hpi_config = config.get("hpi_config", None)
         if self.hpi_config is not None:

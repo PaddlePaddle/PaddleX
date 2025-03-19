@@ -157,6 +157,8 @@ def create_pipeline(
                 config["pipeline_name"],
             )
     pipeline_name = config["pipeline_name"]
+    if device is None:
+        device = config.get("device", None)
     if use_hpip is None:
         use_hpip = config.get("use_hpip", False)
     if hpi_config is None:
