@@ -127,7 +127,7 @@ SubPipelines:
       
       WirelessTableStructureRecognition:
         module_name: table_structure_recognition
-        model_name: SLANeXt_wireless
+        model_name: SLANet_plus
         model_dir: null
       
       WiredTableCellsDetection:
