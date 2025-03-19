@@ -717,6 +717,14 @@ for item in markdown_images:
             image.save(file_path)
 ```
 
+**Note:**
+
+(1) The default text recognition model used by PP-StructureV3 is the **Chinese recognition model**. There is a certain probability of errors when recognizing some English text. You can refer to the model list to switch to an English recognition model.
+
+(2) In the example code, the parameters `use_doc_orientation_classify`, `use_doc_unwarping`, and `use_textline_orientation` are all set to False. This means that document orientation classification, document unwarping, and text line orientation classification are disabled. If you need to use these features, you can set them to True.
+
+(3) PP-StructureV3 provides flexible parameter configuration, allowing you to adjust parameters for layout detection, text detection, text recognition, etc., based on the characteristics of the document for better results. For more detailed configurations, please refer to the [PP-StructureV3 configuration file](../../../../paddlex/configs/pipelines/PP-StructureV3.yaml).
+
 In the above Python script, the following steps are executed:
 
 (1) Instantiate the `create_pipeline` instance to create a pipeline object. The specific parameter descriptions are as follows:
