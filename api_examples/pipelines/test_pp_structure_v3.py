@@ -14,7 +14,7 @@
 
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="layout_parsing_v2")
+pipeline = create_pipeline(pipeline="PP-StructureV3")
 
 output = pipeline.predict(
     "./test_samples/demo_paper.png",

@@ -75,7 +75,6 @@ class FormulaRecognitionPipeline(BasePipeline):
                 "LayoutDetection",
                 {"model_config_error": "config error for layout_det_model!"},
             )
-            self.layout_det_model = self.create_model(layout_det_config)
             layout_kwargs = {}
             if (threshold := layout_det_config.get("threshold", None)) is not None:
                 layout_kwargs["threshold"] = threshold

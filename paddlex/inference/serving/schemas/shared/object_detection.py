@@ -12,14 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List
+from typing import Tuple
 
-from pydantic import Field
-from typing_extensions import Annotated, TypeAlias
+from typing_extensions import TypeAlias
 
 __all__ = ["BoundingBox", "RotatedBoundingBox"]
 
-BoundingBox: TypeAlias = Annotated[List[float], Field(min_length=4, max_length=4)]
-RotatedBoundingBox: TypeAlias = Annotated[
-    List[float], Field(min_length=8, max_length=8)
+BoundingBox: TypeAlias = Tuple[float, float, float, float]
+RotatedBoundingBox: TypeAlias = Tuple[
+    float, float, float, float, float, float, float, float
 ]
