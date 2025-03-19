@@ -37,10 +37,30 @@ SubModules:
       21: 0.5 # footer_image
       22: 0.5 # aside_text
     layout_nms: True
-    layout_unclip_ratio: 1.0
-      2: 1.0 # text
-      7: 1.0 # formula
-      8: 1.0 # table
+    layout_unclip_ratio:
+      0: [1.0, 1.0]  # paragraph_title
+      1: [1.0, 1.0]  # image
+      2: [1.0, 1.0]  # text
+      3: [1.0, 1.0]  # number
+      4: [1.0, 1.0]  # abstract
+      5: [1.0, 1.0]  # content
+      6: [1.0, 1.0]  # figure_title
+      7: [1.0, 1.0]  # formula
+      8: [1.0, 1.0]  # table
+      9: [1.0, 1.0]  # table_title
+      10: [1.0, 1.0] # reference
+      11: [1.0, 1.0] # doc_title
+      12: [1.0, 1.0] # footnote
+      13: [1.0, 1.0] # header
+      14: [1.0, 1.0] # algorithm
+      15: [1.0, 1.0] # footer
+      16: [1.0, 1.0] # seal
+      17: [1.0, 1.0] # chart_title
+      18: [1.0, 1.0] # chart
+      19: [1.0, 1.0] # formula_number
+      20: [1.0, 1.0] # header_image
+      21: [1.0, 1.0] # footer_image
+      22: [1.0, 1.0] # aside_text
     layout_merge_bboxes_mode: 
       0: "union"  # paragraph_title
       1: "large"  # image
