@@ -657,7 +657,7 @@ Online experience is not supported at the moment.
 Before using the General Table Recognition v2 Pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
 
 ### 2.3 Command Line Experience
-You can quickly experience the table recognition pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition_v2.jpg) (Note: The link may not be accessible due to network issues or link validity. Please check the link and try again if necessary.) and replace `--input` with the local path for prediction.
+You can quickly experience the table recognition pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition_v2.jpg)  and replace `--input` with the local path for prediction.
 
 ```bash
 paddlex --pipeline table_recognition_v2 \
