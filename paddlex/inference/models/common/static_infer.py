@@ -28,6 +28,7 @@ from ....utils.flags import (
 from ...utils.benchmark import benchmark, set_inference_operations
 from ...utils.hpi import get_model_paths
 from ...utils.pp_option import PaddlePredictorOption
+from ...utils.trt_config import DISABLE_TRT_HALF_OPS_CONFIG
 
 
 CACHE_DIR = ".cache"
@@ -532,6 +533,10 @@ class StaticInfer(object):
                             str(trt_shape_range_info_path),
                             self._option.trt_dynamic_shapes,
                             self._option.trt_dynamic_shape_input_data,
+                        )
+                    if self._option.model_name in DISABLE_TRT_HALF_OPS_CONFIG:
+                        lazy_paddle.inference.InternalUtils.disable_tensorrt_half_ops(
+                            config, DISABLE_TRT_HALF_OPS_CONFIG[self._option.model_name]
                         )
                     config.enable_tuned_tensorrt_dynamic_shape(
                         str(trt_shape_range_info_path),
