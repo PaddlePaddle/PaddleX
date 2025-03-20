@@ -15,6 +15,7 @@
 import numpy as np
 import pandas as pd
 
+from ....utils.parallel import maybe_parallelize
 from ...utils.io import CSVReader
 from ...utils.benchmark import benchmark
 
@@ -28,7 +29,7 @@ class ReadTS:
 
     def __call__(self, ts_list):
         """apply"""
-        return [self.read(ts) for ts in ts_list]
+        return maybe_parallelize(self.read, ts_list)
 
     def read(self, ts):
         if isinstance(ts, pd.DataFrame):

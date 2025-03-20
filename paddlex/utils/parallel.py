@@ -20,8 +20,8 @@ from .flags import EXP_USE_PARALLEL_COMPUTING
 from . import logging
 
 __all__ = [
-    "set_default_parallel_computing_executor",
-    "get_default_parallel_computing_executor",
+    "set_global_parallel_computing_executor",
+    "get_global_parallel_computing_executor",
     "maybe_parallelize",
 ]
 
@@ -32,7 +32,7 @@ def _get_default_num_jobs():
     return min(32, os.cpu_count() + 4)
 
 
-def set_default_parallel_computing_executor(executor):
+def set_global_parallel_computing_executor(executor):
     global _executor
     if _executor is not None:
         logging.warning("The old executor will be replaced.")
@@ -41,7 +41,7 @@ def set_default_parallel_computing_executor(executor):
     return old_executor
 
 
-def get_default_parallel_computing_executor():
+def get_global_parallel_computing_executor():
     return _executor
 
 

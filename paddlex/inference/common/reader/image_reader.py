@@ -15,6 +15,7 @@
 import numpy as np
 import cv2
 
+from ....utils.parallel import maybe_parallelize
 from ...utils.io import ImageReader, PDFReader
 from ...utils.benchmark import benchmark
 
@@ -44,7 +45,7 @@ class ReadImage:
 
     def __call__(self, imgs):
         """apply"""
-        return [self.read(img) for img in imgs]
+        return maybe_parallelize(self.read, imgs)
 
     def read(self, img):
         if isinstance(img, np.ndarray):
