@@ -15,6 +15,7 @@
 import numpy as np
 from skimage import measure, morphology
 
+from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 
 
@@ -30,7 +31,7 @@ class MapToMask:
 
     def __call__(self, preds, *args):
         """apply"""
-        return [self.apply(pred) for pred in preds]
+        return maybe_parallelize(self.apply, preds)
 
     def apply(
         self,

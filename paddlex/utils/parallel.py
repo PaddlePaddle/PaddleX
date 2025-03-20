@@ -45,11 +45,11 @@ def get_global_parallel_computing_executor():
     return _executor
 
 
-def maybe_parallelize(func, iterable, /, *, executor=None):
+def maybe_parallelize(func, /, *iterables, executor=None):
     if not EXP_USE_PARALLEL_COMPUTING:
-        return [func(x) for x in iterable]
+        return [func(*x) for x in zip(*iterables)]
     if executor is None:
         executor = _executor
     if executor is None:
         executor = joblib.Parallel(n_jobs=_get_default_num_jobs(), prefer="threads")
-    return executor(joblib.delayed(func)(x) for x in iterable)
+    return executor(joblib.delayed(func)(*x) for x in zip(*iterables))

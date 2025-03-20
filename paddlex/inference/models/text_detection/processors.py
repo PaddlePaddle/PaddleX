@@ -431,13 +431,15 @@ class DBPostProcess:
         """apply"""
         boxes, scores = [], []
         for box, score in maybe_parallelize(
-            lambda tup: self.process(
-                *tup,
+            lambda pred, img_shape: self.process(
+                pred,
+                img_shape,
                 thresh or self.thresh,
                 box_thresh or self.box_thresh,
-                unclip_ratio or self.unclip_ratio
+                unclip_ratio or self.unclip_ratio,
             ),
-            zip(preds[0], img_shapes),
+            preds[0],
+            img_shapes,
         ):
             boxes.append(box)
             scores.append(score)

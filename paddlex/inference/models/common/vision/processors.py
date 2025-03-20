@@ -24,6 +24,7 @@ from PIL import Image
 
 from . import funcs as F
 from ....utils.benchmark import benchmark
+from .....utils.parallel import maybe_parallelize
 
 
 class _BaseResize:
@@ -116,7 +117,7 @@ class Resize(_BaseResize):
 
     def __call__(self, imgs):
         """apply"""
-        return [self.resize(img) for img in imgs]
+        return maybe_parallelize(self.resize, imgs)
 
     def resize(self, img):
         target_size = self.target_size
@@ -160,7 +161,7 @@ class ResizeByLong(_BaseResize):
 
     def __call__(self, imgs):
         """apply"""
-        return [self.resize(img) for img in imgs]
+        return maybe_parallelize(self.resize, imgs)
 
     def resize(self, img):
         h, w = img.shape[:2]
@@ -202,7 +203,7 @@ class ResizeByShort(_BaseResize):
 
     def __call__(self, imgs):
         """apply"""
-        return [self.resize(img) for img in imgs]
+        return maybe_parallelize(self.resize, imgs)
 
     def resize(self, img):
         h, w = img.shape[:2]
@@ -268,7 +269,7 @@ class ToCHWImage:
 
     def __call__(self, imgs):
         """apply"""
-        return [img.transpose((2, 0, 1)) for img in imgs]
+        return maybe_parallelize(lambda img: img.transpose((2, 0, 1)), imgs)
 
 
 @benchmark.timeit

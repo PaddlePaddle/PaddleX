@@ -19,6 +19,7 @@ import cv2
 import numpy as np
 from numpy import ndarray
 
+from ....utils.parallel import maybe_parallelize
 from ..object_detection.processors import get_affine_transform
 from ...utils.benchmark import benchmark
 
@@ -139,7 +140,7 @@ class TopDownAffine:
         return img, center, scale
 
     def __call__(self, datas: List[dict]) -> List[dict]:
-        for data in datas:
+        def _process_data(data):
             ori_img = data["img"]
             if "ori_img" not in data:
                 data["ori_img"] = ori_img
@@ -155,6 +156,10 @@ class TopDownAffine:
 
             img_size = [img.shape[1], img.shape[0]]
             data["img_size"] = img_size  # [size_w, size_h]
+
+            return data
+
+        datas = maybe_parallelize(_process_data, datas)
 
         return datas
 
@@ -229,10 +234,13 @@ class KptPostProcess:
         Returns:
             List[dict]: The list of post-processed keypoints.
         """
-        return [
-            self.apply(output["heatmap"], data["center"], data["scale"])
-            for data, output in zip(datas, batch_outputs)
-        ]
+        return maybe_parallelize(
+            lambda data, output: self.apply(
+                output["heatmap"], data["center"], data["scale"]
+            ),
+            datas,
+            batch_outputs,
+        )
 
     def get_final_preds(
         self, heatmaps: ndarray, center: ndarray, scale: ndarray, kernelsize: int = 3

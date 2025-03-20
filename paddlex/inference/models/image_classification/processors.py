@@ -14,6 +14,7 @@
 
 import numpy as np
 
+from ....utils.parallel import maybe_parallelize
 from ....utils import logging
 from ..common.vision import F
 from ...utils.benchmark import benchmark
@@ -45,7 +46,7 @@ class Crop:
 
     def __call__(self, imgs):
         """apply"""
-        return [self.crop(img) for img in imgs]
+        return maybe_parallelize(self.crop, imgs)
 
     def crop(self, img):
         h, w = img.shape[:2]

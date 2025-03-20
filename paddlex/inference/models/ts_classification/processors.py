@@ -16,6 +16,7 @@ import numpy as np
 import pandas as pd
 from typing import List, Any, Dict
 
+from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 
 
@@ -37,7 +38,7 @@ class GetCls:
         Returns:
             List[pd.DataFrame]: A list of DataFrames, each containing the class ID and score for the corresponding prediction.
         """
-        return [self.getcls(pred) for pred in pred_list]
+        return maybe_parallelize(self.getcls, pred_list)
 
     def getcls(self, pred: Any) -> pd.DataFrame:
         """
@@ -85,7 +86,7 @@ class BuildPadMask:
         Returns:
             List[Dict[str, Any]]: A list of dictionaries with updated 'features' and 'pad_mask' keys.
         """
-        return [self.padmask(ts) for ts in ts_list]
+        return maybe_parallelize(self.padmask, ts_list)
 
     def padmask(self, ts: Dict[str, Any]) -> Dict[str, Any]:
         """
