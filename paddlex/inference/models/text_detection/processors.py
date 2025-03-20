@@ -23,7 +23,9 @@ import numpy as np
 from numpy.linalg import norm
 from PIL import Image
 from shapely.geometry import Polygon
+from functools import partial
 
+from ....utils.parallel import maybe_parallelize
 from ...utils.io import ImageReader
 from ....utils import logging
 from ...utils.benchmark import benchmark
@@ -60,8 +62,10 @@ class DetResizeForTest:
     ):
         """apply"""
         resize_imgs, img_shapes = [], []
-        for ori_img in imgs:
-            img, shape = self.resize(ori_img, limit_side_len, limit_type)
+        for img, shape in maybe_parallelize(
+            partial(self.resize, limit_side_len=limit_side_len, limit_type=limit_type),
+            imgs,
+        ):
             resize_imgs.append(img)
             img_shapes.append(shape)
         return resize_imgs, img_shapes
@@ -205,7 +209,7 @@ class NormalizeImage:
         def norm(img):
             return (img.astype("float32") * self.scale - self.mean) / self.std
 
-        return [norm(img) for img in imgs]
+        return maybe_parallelize(norm, imgs)
 
 
 @benchmark.timeit
@@ -426,14 +430,15 @@ class DBPostProcess:
     ):
         """apply"""
         boxes, scores = [], []
-        for pred, img_shape in zip(preds[0], img_shapes):
-            box, score = self.process(
-                pred,
-                img_shape,
+        for box, score in maybe_parallelize(
+            lambda tup: self.process(
+                *tup,
                 thresh or self.thresh,
                 box_thresh or self.box_thresh,
-                unclip_ratio or self.unclip_ratio,
-            )
+                unclip_ratio or self.unclip_ratio
+            ),
+            zip(preds[0], img_shapes),
+        ):
             boxes.append(box)
             scores.append(score)
         return boxes, scores

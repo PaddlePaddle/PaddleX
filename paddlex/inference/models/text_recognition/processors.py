@@ -27,6 +27,7 @@ import tempfile
 from tokenizers import Tokenizer as TokenizerFast
 
 from ....utils import logging
+from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 
 
@@ -66,7 +67,7 @@ class OCRReisizeNormImg:
 
     def __call__(self, imgs):
         """apply"""
-        return [self.resize(img) for img in imgs]
+        return maybe_parallelize(self.resize, imgs)
 
     def resize(self, img):
         imgC, imgH, imgW = self.rec_image_shape

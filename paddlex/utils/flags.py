@@ -27,6 +27,7 @@ __all__ = [
     "FLAGS_json_format_model",
     "USE_PIR_TRT",
     "DISABLE_DEV_MODEL_WL",
+    "EXP_USE_PARALLEL_COMPUTING",
 ]
 
 
@@ -66,4 +67,8 @@ INFER_BENCHMARK_USE_CACHE_FOR_READ = get_flag_from_env_var(
 )
 INFER_BENCHMARK_USE_NEW_INFER_API = get_flag_from_env_var(
     "PADDLE_PDX_INFER_BENCHMARK_USE_NEW_INFER_API", False
+)
+
+EXP_USE_PARALLEL_COMPUTING = get_flag_from_env_var(
+    "PADDLE_PDX_EXP_USE_PARALLEL_COMPUTING", False
 )
