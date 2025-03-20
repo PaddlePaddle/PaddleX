@@ -171,44 +171,44 @@ PaddleX 结合模型信息与运行环境信息为每个模型提供默认的高
 
   对于模型产线，在产线 yaml 中的 `hpi_params` 字段中新增`trt_dynamic_shapes` 或 `dynamic_shapes` 字段，以通用图像分类产线的 `image_classification.yaml` 为例：
 
-    ```yaml
-      ...
-      SubModules:
-        ImageClassification:
-          ...
-          hpi_params:
-            config:
-              selected_backends:
-                cpu: openvino
-                gpu: paddle_infer
-              backend_config:
-                # Paddle Inference 后端配置
-                paddle_infer:
-                  enable_trt: True
-                  trt_precision: FP16
-                  trt_dynamic_shapes:
-                    x:
-                      - [1, 3, 300, 300]
-                      - [4, 3, 300, 300]
-                      - [32, 3, 1200, 1200]
-                # TensorRT 后端配置
-                tensorrt:
-                  precision: FP32
-                  dynamic_shapes:
-                    x:
-                      - [1, 3, 300, 300]
-                      - [4, 3, 300, 300]
-                      - [32, 3, 1200, 1200]
-                  ...
-      ...
-    ```
+  ```yaml
+    ...
+    SubModules:
+      ImageClassification:
+        ...
+        hpi_params:
+          config:
+            selected_backends:
+              cpu: openvino
+              gpu: paddle_infer
+            backend_config:
+              # Paddle Inference 后端配置
+              paddle_infer:
+                enable_trt: True
+                trt_precision: FP16
+                trt_dynamic_shapes:
+                  x:
+                    - [1, 3, 300, 300]
+                    - [4, 3, 300, 300]
+                    - [32, 3, 1200, 1200]
+              # TensorRT 后端配置
+              tensorrt:
+                precision: FP32
+                dynamic_shapes:
+                  x:
+                    - [1, 3, 300, 300]
+                    - [4, 3, 300, 300]
+                    - [32, 3, 1200, 1200]
+                ...
+    ...
+  ```
 
-    对于单功能模块，在 `hpi_params` 参数中新增 `trt_dynamic_shapes` 或 `dynamic_shapes` 字段，以图像分类模块为例：
+  对于单功能模块，在 `hpi_params` 参数中新增 `trt_dynamic_shapes` 或 `dynamic_shapes` 字段，以图像分类模块为例：
 
-    ```python
-    from paddlex import create_model
+  ```python
+  from paddlex import create_model
 
-    model = create_model(
+  model = create_model(
         "ResNet18",
         device="gpu",
         use_hpip=True,
@@ -247,9 +247,9 @@ PaddleX 结合模型信息与运行环境信息为每个模型提供默认的高
     output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg"
     ```
 
-    在 `trt_dynamic_shapes` 或 `dynamic_shapes` 中，需要为每一个输入张量指定动态形状，格式为：`{输入张量名称}: [{最小形状}, [{最优形状}], [{最大形状}]]`。有关最小形状、最优形状以及最大形状的相关介绍及更多细节，请参考 [TensorRT 官方文档](https://docs.nvidia.com/deeplearning/tensorrt/developer-guide/index.html#work_dynamic_shapes)。
+  在 `trt_dynamic_shapes` 或 `dynamic_shapes` 中，需要为每一个输入张量指定动态形状，格式为：`{输入张量名称}: [{最小形状}, [{最优形状}], [{最大形状}]]`。有关最小形状、最优形状以及最大形状的相关介绍及更多细节，请参考 [TensorRT 官方文档](https://docs.nvidia.com/deeplearning/tensorrt/developer-guide/index.html#work_dynamic_shapes)。
 
-    在完成修改后，请删除模型目录中的缓存文件（`shape_range_info.pbtxt` 与 `trt_serialized` 开头的文件）。
+  在完成修改后，请删除模型目录中的缓存文件（`shape_range_info.pbtxt` 与 `trt_serialized` 开头的文件）。
 
 ### 2.2 二次开发高性能推理插件
 
