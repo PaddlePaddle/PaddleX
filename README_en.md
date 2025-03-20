@@ -533,7 +533,7 @@ In addition, PaddleX provides developers with a full-process efficient model tra
 
 ### 🛠️ Installation
 
-> ❗Before installing PaddleX, please ensure you have a basic **Python runtime environment** (Note: Currently supports running under Python 3.8 to Python 3.10, with more Python versions under adaptation). The PaddlePaddle version required by PaddleX
+> ❗Before installing PaddleX, please ensure you have a basic **Python runtime environment** (Note: Currently supports running under Python 3.8 to Python 3.12, with more Python versions under adaptation). The PaddlePaddle version required by PaddleX
 
 * **Installing PaddlePaddle**
 
