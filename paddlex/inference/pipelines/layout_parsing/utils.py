@@ -592,6 +592,8 @@ def get_single_block_parsing_res(
 
         if label == "table":
             for table_res in table_res_list:
+                if len(table_res["cell_box_list"]) == 0:
+                    continue
                 if (
                     _calculate_overlap_area_div_minbox_area_ratio(
                         block_bbox, table_res["cell_box_list"][0]

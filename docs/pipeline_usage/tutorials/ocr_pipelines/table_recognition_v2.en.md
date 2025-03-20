@@ -594,7 +594,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
                          <li>Layout Region Detection Model: A self-built layout region detection dataset by PaddleOCR, containing 500 images of common document types such as Chinese and English papers, magazines, contracts, books, exams, and research reports.</li>
                          <li>Table Layout Detection Model: A self-built layout table region detection dataset by PaddleOCR, with 7,835 images of Chinese and English paper document types containing tables.</li>
                          <li>3-Class Layout Detection Model: A self-built layout region detection dataset by PaddleOCR, containing 1,154 images of common document types such as Chinese and English papers, magazines, and research reports.</li>
-                         <li>5-Class English Document Region Detection Model: The evaluation dataset of <a href="https://developer.ibm.com/exchanges/data/all/publaynet">PubLayNet</a>, containing 11,245 images of English documents. (Note: The link may not be accessible due to network issues or link validity. Please check the link and try again if necessary.)</li>
+                         <li>5-Class English Document Region Detection Model: The evaluation dataset of <a href="https://developer.ibm.com/exchanges/data/all/publaynet">PubLayNet</a>, containing 11,245 images of English documents. </li>
                          <li>17-Class Region Detection Model: A self-built layout region detection dataset by PaddleOCR, containing 892 images of common document types such as Chinese and English papers, magazines, and research reports.</li>
                          <li>Table Structure Recognition Model: A self-built high-difficulty Chinese table recognition dataset by PaddleX.</li>
                          <li>Table Cell Detection Model: A self-built evaluation dataset by PaddleX.</li>
@@ -657,7 +657,7 @@ Online experience is not supported at the moment.
 Before using the General Table Recognition v2 Pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
 
 ### 2.3 Command Line Experience
-You can quickly experience the table recognition pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition_v2.jpg) (Note: The link may not be accessible due to network issues or link validity. Please check the link and try again if necessary.) and replace `--input` with the local path for prediction.
+You can quickly experience the table recognition pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition_v2.jpg)  and replace `--input` with the local path for prediction.
 
 ```bash
 paddlex --pipeline table_recognition_v2 \
