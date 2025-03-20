@@ -245,7 +245,7 @@ class DetPredictor(BasicPredictor):
         boxes = self.post_op(
             preds_list,
             datas,
-            threshold=threshold or self.threshold,
+            threshold=threshold if threshold is not None else self.threshold,
             layout_nms=layout_nms or self.layout_nms,
             layout_unclip_ratio=layout_unclip_ratio or self.layout_unclip_ratio,
             layout_merge_bboxes_mode=layout_merge_bboxes_mode
