@@ -5451,86 +5451,79 @@ You're not viewing the latest version.
 </ul>
 <p>动态形状是 TensorRT 延迟指定部分或全部张量维度直到运行时的能力。当默认的动态形状配置无法满足需求（例如，模型可能需要范围外的输入形状），用户需要修改相应的配置：</p>
 <p>对于模型产线，在产线 yaml 中的 <code>hpi_params</code> 字段中新增<code>trt_dynamic_shapes</code> 或 <code>dynamic_shapes</code> 字段，以通用图像分类产线的 <code>image_classification.yaml</code> 为例：</p>
-<div class="language-text highlight"><pre><span></span><code>```yaml
-  ...
-  SubModules:
-    ImageClassification:
-      ...
-      hpi_params:
-        config:
-          selected_backends:
-            cpu: openvino
-            gpu: paddle_infer
-          backend_config:
-            # Paddle Inference 后端配置
-            paddle_infer:
-              enable_trt: True
-              trt_precision: FP16
-              trt_dynamic_shapes:
-                x:
-                  - [1, 3, 300, 300]
-                  - [4, 3, 300, 300]
-                  - [32, 3, 1200, 1200]
-            # TensorRT 后端配置
-            tensorrt:
-              precision: FP32
-              dynamic_shapes:
-                x:
-                  - [1, 3, 300, 300]
-                  - [4, 3, 300, 300]
-                  - [32, 3, 1200, 1200]
-              ...
-  ...
-```
-
-对于单功能模块，在 `hpi_params` 参数中新增 `trt_dynamic_shapes` 或 `dynamic_shapes` 字段，以图像分类模块为例：
-
-```python
-from paddlex import create_model
-
-model = create_model(
-    &quot;ResNet18&quot;,
-    device=&quot;gpu&quot;,
-    use_hpip=True,
-    hpi_params={
-        &quot;config&quot;: {
-            &quot;selected_backends&quot;: {&quot;cpu&quot;: &quot;openvino&quot;, &quot;gpu&quot;: &quot;paddle_infer&quot;},
-            &quot;backend_config&quot;: {
-                # Paddle Inference 后端配置
-                &quot;paddle_infer&quot;: {
-                    &quot;enable_trt&quot;: True,
-                    &quot;trt_precision&quot;: &quot;FP16&quot;,
-                    &quot;trt_dynamic_shapes&quot;: {
-                        &quot;x&quot;: [
-                            [1, 3, 300, 300],
-                            [4, 3, 300, 300],
-                            [32, 3, 1200, 1200]
-                        ]
-                    }
-                },
-                # TensorRT 后端配置
-                &quot;tensorrt&quot;: {
-                    &quot;precision&quot;: &quot;FP32&quot;,
-                    &quot;dynamic_shapes&quot;: {
-                        &quot;x&quot;: [
-                            [1, 3, 300, 300],
-                            [4, 3, 300, 300],
-                            [32, 3, 1200, 1200]
-                        ]
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">SubModules</span><span class="p p-Indicator">:</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="nt">ImageClassification</span><span class="p">:</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">hpi_params</span><span class="p p-Indicator">:</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">        </span><span class="nt">config</span><span class="p">:</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">          </span><span class="nt">selected_backends</span><span class="p">:</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openvino</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">            </span><span class="nt">gpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">paddle_infer</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">          </span><span class="nt">backend_config</span><span class="p">:</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">            </span><span class="c1"># Paddle Inference 后端配置</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">            </span><span class="nt">paddle_infer</span><span class="p">:</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">              </span><span class="nt">enable_trt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">              </span><span class="nt">trt_precision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FP16</span>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">              </span><span class="nt">trt_dynamic_shapes</span><span class="p">:</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">                </span><span class="nt">x</span><span class="p">:</span>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">300</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">300</span><span class="p p-Indicator">]</span>
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">300</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">300</span><span class="p p-Indicator">]</span>
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">32</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1200</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1200</span><span class="p p-Indicator">]</span>
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">            </span><span class="c1"># TensorRT 后端配置</span>
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">            </span><span class="nt">tensorrt</span><span class="p">:</span>
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="w">              </span><span class="nt">precision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FP32</span>
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="w">              </span><span class="nt">dynamic_shapes</span><span class="p">:</span>
+</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="w">                </span><span class="nt">x</span><span class="p">:</span>
+</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">300</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">300</span><span class="p p-Indicator">]</span>
+</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">300</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">300</span><span class="p p-Indicator">]</span>
+</span><span id="__span-7-27"><a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a><span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">32</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1200</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1200</span><span class="p p-Indicator">]</span>
+</span><span id="__span-7-28"><a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a><span class="w">              </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</span><span id="__span-7-29"><a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</span></code></pre></div>
+<p>对于单功能模块，在 <code>hpi_params</code> 参数中新增 <code>trt_dynamic_shapes</code> 或 <code>dynamic_shapes</code> 字段，以图像分类模块为例：</p>
+<p>```python
+  from paddlex import create_model</p>
+<p>model = create_model(
+        "ResNet18",
+        device="gpu",
+        use_hpip=True,
+        hpi_params={
+            "config": {
+                "selected_backends": {"cpu": "openvino", "gpu": "paddle_infer"},
+                "backend_config": {
+                    # Paddle Inference 后端配置
+                    "paddle_infer": {
+                        "enable_trt": True,
+                        "trt_precision": "FP16",
+                        "trt_dynamic_shapes": {
+                            "x": [
+                                [1, 3, 300, 300],
+                                [4, 3, 300, 300],
+                                [32, 3, 1200, 1200]
+                            ]
+                        }
+                    },
+                    # TensorRT 后端配置
+                    "tensorrt": {
+                        "precision": "FP32",
+                        "dynamic_shapes": {
+                            "x": [
+                                [1, 3, 300, 300],
+                                [4, 3, 300, 300],
+                                [32, 3, 1200, 1200]
+                            ]
+                        }
                     }
                 }
             }
         }
-    }
-)
-
-output = pipeline.predict(&quot;https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg&quot;
+    )</p>
+<div class="language-text highlight"><pre><span></span><code>output = pipeline.predict(&quot;https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg&quot;
 ```
-
-在 `trt_dynamic_shapes` 或 `dynamic_shapes` 中，需要为每一个输入张量指定动态形状，格式为：`{输入张量名称}: [{最小形状}, [{最优形状}], [{最大形状}]]`。有关最小形状、最优形状以及最大形状的相关介绍及更多细节，请参考 [TensorRT 官方文档](https://docs.nvidia.com/deeplearning/tensorrt/developer-guide/index.html#work_dynamic_shapes)。
-
-在完成修改后，请删除模型目录中的缓存文件（`shape_range_info.pbtxt` 与 `trt_serialized` 开头的文件）。
 </code></pre></div>
+<p>在 <code>trt_dynamic_shapes</code> 或 <code>dynamic_shapes</code> 中，需要为每一个输入张量指定动态形状，格式为：<code>{输入张量名称}: [{最小形状}, [{最优形状}], [{最大形状}]]</code>。有关最小形状、最优形状以及最大形状的相关介绍及更多细节，请参考 <a href="https://docs.nvidia.com/deeplearning/tensorrt/developer-guide/index.html#work_dynamic_shapes">TensorRT 官方文档</a>。</p>
+<p>在完成修改后，请删除模型目录中的缓存文件（<code>shape_range_info.pbtxt</code> 与 <code>trt_serialized</code> 开头的文件）。</p>
 <h3 id="22">2.2 二次开发高性能推理插件<a class="headerlink" href="#22" title="Permanent link">&para;</a></h3>
 <p>我们已经提供了完善的配置，通常情况下不建议进行二次开发。如果有以下需求，确实需要进行二次开发，请务必在充分评估后再进行。如以下场景：</p>
 <ul>
@@ -5546,17 +5539,17 @@ output = pipeline.predict(&quot;https://paddle-model-ecology.bj.bcebos.com/paddl
 <h4 id="b-ultra-infer">b. 安装 <code>ultra-infer</code><a class="headerlink" href="#b-ultra-infer" title="Permanent link">&para;</a></h4>
 <p>对 <code>ultra-infer</code> 修改完成后，通过如下方式安装 <code>ultra-infer</code>。</p>
 <p><code>ultra-infer</code> 需要编译whl包，编译脚本位于 <code>PaddleX/libs/ultra-infer/scripts/linux/set_up_docker_and_build_py.sh</code> ，编译默认编译GPU版本和包含 <code>Paddle Inference</code>、<code>OpenVINO</code>、<code>TensorRT</code>、<code>ONNX Runtime</code> 四种推理后端的 <code>ultra-infer</code>。</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># 编译</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># export PYTHON_VERSION=...</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># export WITH_GPU=...</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># export ENABLE_ORT_BACKEND=...</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># export ...</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="nb">cd</span><span class="w"> </span>PaddleX/libs/ultra-infer/scripts/linux
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>bash<span class="w"> </span>set_up_docker_and_build_py.sh
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># 安装</span>
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>../../python/dist/ultra_infer*.whl
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># 编译</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># export PYTHON_VERSION=...</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># export WITH_GPU=...</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># export ENABLE_ORT_BACKEND=...</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># export ...</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nb">cd</span><span class="w"> </span>PaddleX/libs/ultra-infer/scripts/linux
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>bash<span class="w"> </span>set_up_docker_and_build_py.sh
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># 安装</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>../../python/dist/ultra_infer*.whl
 </span></code></pre></div>
 <p>编译时可根据需求修改如下选项：</p>
 <table>
@@ -6190,7 +6183,7 @@ output = pipeline.predict(&quot;https://paddle-model-ecology.bj.bcebos.com/paddl
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月19日 14:26:38">2025年3月19日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月20日 03:00:01">2025年3月20日</span>
   </span>
 
     
@@ -6200,7 +6193,7 @@ output = pipeline.predict(&quot;https://paddle-model-ecology.bj.bcebos.com/paddl
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月19日 14:26:38">2025年3月19日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月20日 03:00:01">2025年3月20日</span>
   </span>
 
     
@@ -6215,7 +6208,7 @@ output = pipeline.predict(&quot;https://paddle-model-ecology.bj.bcebos.com/paddl
     </span>
     <nav>
       
-        <a href="mailto:65936492+liuhongen1234567@users.noreply.github.com">liuhongen1234567</a>
+        <a href="mailto:69562787+zhang-prog@users.noreply.github.com">zhang-prog</a>
     </nav>
   </span>
 
