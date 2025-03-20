@@ -157,10 +157,14 @@ def args_cfg():
 
     ################# paddle2onnx #################
     paddle2onnx_group.add_argument(
-        "--paddle2onnx", action="store_true", help="Convert Paddle model to ONNX format"
+        "--paddle2onnx",
+        action="store_true",
+        help="Convert PaddlePaddle model to ONNX format",
     )
     paddle2onnx_group.add_argument(
-        "--paddle_model_dir", type=str, help="Directory containing the Paddle model"
+        "--paddle_model_dir",
+        type=str,
+        help="Directory containing the PaddlePaddle model",
     )
     paddle2onnx_group.add_argument(
         "--onnx_model_dir",

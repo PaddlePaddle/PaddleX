@@ -348,7 +348,7 @@ class PaddleInfer(StaticInfer):
         """_create"""
         model_paths = get_model_paths(self.model_dir, self.model_file_prefix)
         if "paddle" not in model_paths:
-            raise RuntimeError("No valid Paddle model found")
+            raise RuntimeError("No valid PaddlePaddle model found")
         model_file, params_file = model_paths["paddle"]
 
         if (
@@ -699,6 +699,11 @@ class HPInfer(StaticInfer):
                 )
             backend_config = self._config.backend_config or {}
 
+        if backend == "paddle" and not backend_config:
+            logging.warning(
+                "The Paddle Inference backend is selected with the default configuration. This may not provide optimal performance."
+            )
+
         return backend, backend_config
 
     def _build_paddle_infer(self, backend_config):
@@ -743,7 +748,7 @@ class HPInfer(StaticInfer):
                         trt_dynamic_shape_input_data
                     )
         pp_option = PaddlePredictorOption(self._config.pdx_model_name, **kwargs)
-        logging.info("Using Paddle backend")
+        logging.info("Using Paddle Inference backend")
         logging.info("Paddle predictor option: %s", pp_option)
         return PaddleInfer(self._model_dir, self._model_file_prefix, option=pp_option)
 
@@ -770,9 +775,11 @@ class HPInfer(StaticInfer):
             if "onnx" not in model_paths:
                 if self._config.auto_paddle2onnx:
                     if "paddle" not in model_paths:
-                        raise RuntimeError("Paddle model required")
+                        raise RuntimeError("PaddlePaddle model required")
                     # The CLI is used here since there is currently no API.
-                    logging.info("Automatically converting Paddle model to ONNX format")
+                    logging.info(
+                        "Automatically converting PaddlePaddle model to ONNX format"
+                    )
                     subprocess.check_call(
                         [
                             "paddlex",

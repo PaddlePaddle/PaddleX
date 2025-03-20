@@ -15,6 +15,7 @@
 import importlib.resources
 import json
 import platform
+from functools import lru_cache
 from os import PathLike
 from pathlib import Path
 from typing import Any, Dict, Final, List, Literal, Optional, Tuple, TypedDict, Union
@@ -134,6 +135,15 @@ _PREFERRED_PSEUDO_INFERENCE_BACKENDS: Final[Dict[str, List[InferenceBackend]]] =
 }
 
 
+@lru_cache(1)
+def _get_hpi_model_info_collection():
+    with importlib.resources.open_text(
+        __package__, "hpi_model_info_collection.json", encoding="utf-8"
+    ) as f:
+        hpi_model_info_collection = json.load(f)
+    return hpi_model_info_collection
+
+
 def suggest_inference_backend_and_config(
     hpi_config: HPIConfig,
     available_backends: Optional[List[InferenceBackend]] = None,
@@ -172,10 +182,7 @@ def suggest_inference_backend_and_config(
     else:
         return None, f"{repr(hpi_config.device_type)} is not a supported device type."
 
-    with importlib.resources.open_text(
-        __package__, "hpi_model_info_collection.json", encoding="utf-8"
-    ) as f:
-        hpi_model_info_collection = json.load(f)
+    hpi_model_info_collection = _get_hpi_model_info_collection()
 
     if key not in hpi_model_info_collection:
         return None, "No prior knowledge can be utilized."
@@ -186,8 +193,10 @@ def suggest_inference_backend_and_config(
     supported_pseudo_backends = hpi_model_info_collection_for_env[
         hpi_config.pdx_model_name
     ]
+    if "paddle" in available_backends:
+        supported_pseudo_backends.append("paddle")
 
-    assert key in _PREFERRED_PSEUDO_INFERENCE_BACKENDS
+    assert key in _PREFERRED_PSEUDO_INFERENCE_BACKENDS, key
     preferred_pseudo_backends = _PREFERRED_PSEUDO_INFERENCE_BACKENDS[key]
     assert all(pb in preferred_pseudo_backends for pb in supported_pseudo_backends)
     supported_pseudo_backends = sorted(
@@ -206,7 +215,9 @@ def suggest_inference_backend_and_config(
         if available_backends is not None and backend not in available_backends:
             continue
         candidate_backends.append(backend)
-        assert backend not in backend_to_pseudo_backend
+        assert (
+            backend not in backend_to_pseudo_backend
+        ), f"{repr(backend)} is not in {backend_to_pseudo_backend}"
         backend_to_pseudo_backend[backend] = pb
 
     if not candidate_backends:
@@ -224,13 +235,21 @@ def suggest_inference_backend_and_config(
 
     suggested_backend_config = {}
     if suggested_backend == "paddle":
-        if backend_to_pseudo_backend["paddle"] == "paddle_tensorrt_fp32":
+        pseudo_backend = backend_to_pseudo_backend["paddle"]
+        assert pseudo_backend in (
+            "paddle",
+            "paddle_tensorrt_fp32",
+            "paddle_tensorrt_fp16",
+        ), pseudo_backend
+        if pseudo_backend == "paddle_tensorrt_fp32":
             suggested_backend_config.update({"run_mode": "trt_fp32"})
-        elif backend_to_pseudo_backend["paddle"] == "paddle_tensorrt_fp16":
+        elif pseudo_backend == "paddle_tensorrt_fp16":
             # TODO: Check if the target device supports FP16.
             suggested_backend_config.update({"run_mode": "trt_fp16"})
     elif suggested_backend == "tensorrt":
-        if backend_to_pseudo_backend["tensorrt"] == "tensorrt_fp16":
+        pseudo_backend = backend_to_pseudo_backend["tensorrt"]
+        assert pseudo_backend in ("tensorrt", "tensorrt_fp16"), pseudo_backend
+        if pseudo_backend == "tensorrt_fp16":
             suggested_backend_config.update({"precision": "fp16"})
 
     if hpi_config.backend_config is not None:
