@@ -1,4 +1,4 @@
-// Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
+// Copyright (c) 2024 PaddlePaddle Authors. All Rights Reservedd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,8 @@
 
 #include <vector>
 
-std::vector<paddle::Tensor> boxes_iou_bev_cpu(
-    const paddle::Tensor& boxes_a_tensor, const paddle::Tensor& boxes_b_tensor);
+std::vector<paddle::Tensor>
+boxes_iou_bev_cpu(const paddle::Tensor &boxes_a_tensor,
+                  const paddle::Tensor &boxes_b_tensor);
 
 #endif
