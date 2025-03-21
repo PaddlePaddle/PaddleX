@@ -700,9 +700,9 @@ for item in markdown_images:
 
 **注：**
 
-（1）PP-StructureV3 产线使用的默认文本识别模型为**中文识别模型**，对于部分英文文字存在一定概率识别错误，可以参考模型列表更换英文识别模型。
+（1）PP-StructureV3 产线使用的默认文本识别模型为**中英文识别模型**，对于全英文场景，您可以将 [PP-StructureV3 配置文件](../../../../paddlex/configs/pipelines/PP-StructureV3.yaml)中 `TextRecognition` 配置项下的 `model_name` 修改为 `en_PP-OCRv4_mobile_rec` 英文识别模型以取得更好的识别效果。对应其他语言场景，也可以参考前文的模型列表，选择对应的语言识别模型进行替换。
 
-（2）在示例代码中，`use_doc_orientation_classify`、`use_doc_unwarping`、`use_textline_orientation` 参数均设置为 False，分别表示关闭文档方向分类、文档去扭曲、文本行方向分类功能，如果需要使用这些功能，可以设置为 True。
+（2）在示例代码中，`use_doc_orientation_classify`、`use_doc_unwarping`、`use_textline_orientation` 参数默认均设置为 False，分别表示关闭文档方向分类、文档扭曲矫正、文本行方向分类功能，如果需要使用这些功能，可以手动设置为 True。
 
 （3）PP-StructureV3 产线提供了灵活的参数配置，可以在使用过程中针对文档的特点灵活的调整版面检测、文本检测、文本识别等模块的参数，以获得更好的效果，更多详细配置可以参考[PP-StructureV3 配置文件](../../../../paddlex/configs/pipelines/PP-StructureV3.yaml)。
 

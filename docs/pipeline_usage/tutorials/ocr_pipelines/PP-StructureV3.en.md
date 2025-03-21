@@ -750,9 +750,9 @@ for item in markdown_images:
 
 **Note:**
 
-(1) The default text recognition model used by PP-StructureV3 is the **Chinese recognition model**. There is a certain probability of errors when recognizing some English text. You can refer to the model list to switch to an English recognition model.
+(1) The default text recognition model used by PP-StructureV3 is the **Chinese-English recognition model**. For scenarios involving only English, you can modify the model_name under the `TextRecognition` configuration item in the [PP-StructureV3 configuration file](../../../../paddlex/configs/pipelines/PP-StructureV3.yaml) to the `en_PP-OCRv4_mobile_rec` English recognition model for better recognition performance. For other language scenarios, you can also refer to the model list mentioned earlier and choose the corresponding language recognition model for replacement.
 
-(2) In the example code, the parameters `use_doc_orientation_classify`, `use_doc_unwarping`, and `use_textline_orientation` are all set to False. This means that document orientation classification, document unwarping, and text line orientation classification are disabled. If you need to use these features, you can set them to True.
+(2) In the example code, the parameters `use_doc_orientation_classify`, `use_doc_unwarping`, and `use_textline_orientation` are all set to False by default. These parameters respectively control the document orientation classification, document unwarping, and text line orientation classification functions. If you need to use these features, you can manually set them to True.
 
 (3) PP-StructureV3 provides flexible parameter configuration, allowing you to adjust parameters for layout detection, text detection, text recognition, etc., based on the characteristics of the document for better results. For more detailed configurations, please refer to the [PP-StructureV3 configuration file](../../../../paddlex/configs/pipelines/PP-StructureV3.yaml).
 
