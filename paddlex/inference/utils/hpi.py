@@ -215,9 +215,6 @@ def suggest_inference_backend_and_config(
         if available_backends is not None and backend not in available_backends:
             continue
         candidate_backends.append(backend)
-        assert (
-            backend not in backend_to_pseudo_backend
-        ), f"{repr(backend)} is not in {backend_to_pseudo_backend}"
         backend_to_pseudo_backend[backend] = pb
 
     if not candidate_backends:
