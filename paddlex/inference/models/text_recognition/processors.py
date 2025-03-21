@@ -27,7 +27,6 @@ import tempfile
 from tokenizers import Tokenizer as TokenizerFast
 
 from ....utils import logging
-from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 
 
@@ -58,7 +57,8 @@ class OCRReisizeNormImg:
                 resized_w = int(math.ceil(imgH * ratio))
             resized_image = cv2.resize(img, (resized_w, imgH))
         resized_image = resized_image.astype("float32")
-        resized_image = resized_image.transpose((2, 0, 1)) / 255
+        resized_image = resized_image.transpose((2, 0, 1))
+        resized_image /= 255
         resized_image -= 0.5
         resized_image /= 0.5
         padding_im = np.zeros((imgC, imgH, imgW), dtype=np.float32)
@@ -67,7 +67,7 @@ class OCRReisizeNormImg:
 
     def __call__(self, imgs):
         """apply"""
-        return maybe_parallelize(self.resize, imgs)
+        return [self.resize(img) for img in imgs]
 
     def resize(self, img):
         imgC, imgH, imgW = self.rec_image_shape

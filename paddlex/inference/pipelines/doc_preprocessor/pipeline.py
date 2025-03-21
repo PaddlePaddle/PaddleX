@@ -13,9 +13,9 @@
 # limitations under the License.
 
 from typing import Any, Dict, Optional, Union, List
-from scipy.ndimage import rotate
 import numpy as np
 from ..base import BasePipeline
+from ..components import rotate_image
 from .result import DocPreprocessorResult
 from ....utils import logging
 from ...common.reader import ReadImage
@@ -66,25 +66,6 @@ class DocPreprocessorPipeline(BasePipeline):
 
         self.batch_sampler = ImageBatchSampler(batch_size=1)
         self.img_reader = ReadImage(format="BGR")
-
-    def rotate_image(self, image_array: np.ndarray, rotate_angle: float) -> np.ndarray:
-        """
-        Rotate the given image array by the specified angle.
-
-        Args:
-            image_array (np.ndarray): The input image array to be rotated.
-            rotate_angle (float): The angle in degrees by which to rotate the image.
-
-        Returns:
-            np.ndarray: The rotated image array.
-
-        Raises:
-            AssertionError: If rotate_angle is not in the range [0, 360).
-        """
-        assert (
-            rotate_angle >= 0 and rotate_angle < 360
-        ), "rotate_angle must in [0-360), but get {rotate_angle}."
-        return rotate(image_array, rotate_angle, reshape=True)
 
     def check_model_settings_valid(self, model_settings: Dict) -> bool:
         """
@@ -168,7 +149,7 @@ class DocPreprocessorPipeline(BasePipeline):
             if model_settings["use_doc_orientation_classify"]:
                 pred = next(self.doc_ori_classify_model(image_array))
                 angle = int(pred["label_names"][0])
-                rot_img = self.rotate_image(image_array, angle)
+                rot_img = rotate_image(image_array, angle)
             else:
                 angle = -1
                 rot_img = image_array
