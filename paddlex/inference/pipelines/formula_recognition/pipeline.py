@@ -12,25 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os, sys
-from typing import Any, Dict, Optional, Union, List, Tuple
-import numpy as np
-import cv2
-from ..base import BasePipeline
-from ..components import CropByBoxes, convert_points_to_boxes
+from typing import Dict, List, Optional, Tuple, Union
 
-from .result import FormulaRecognitionResult
+import numpy as np
+
+from ....utils import logging
+from ...common.batch_sampler import ImageBatchSampler
+from ...common.reader import ReadImage
 from ...models.formula_recognition.result import (
     FormulaRecResult as SingleFormulaRecognitionResult,
 )
-from ....utils import logging
-from ...utils.pp_option import PaddlePredictorOption
-from ...common.reader import ReadImage
-from ...common.batch_sampler import ImageBatchSampler
-from ..ocr.result import OCRResult
-from ..doc_preprocessor.result import DocPreprocessorResult
-
 from ...models.object_detection.result import DetResult
+from ...utils.pp_option import PaddlePredictorOption
+from ..base import BasePipeline
+from ..components import CropByBoxes
+from .result import FormulaRecognitionResult
 
 
 class FormulaRecognitionPipeline(BasePipeline):

@@ -13,13 +13,11 @@
 # limitations under the License.
 
 
-import os
-import os.path as osp
-from typing import List, Sequence, Union, Optional, Tuple
+from typing import List
 
-import numpy as np
 import cv2
 import lazy_paddle as paddle
+import numpy as np
 
 from ...utils.benchmark import benchmark
 
@@ -423,7 +421,7 @@ class DetVideoPostProcess:
         self.labels = label_list
 
     def postprocess(self, pred: List, nms_thresh: float, score_thresh: float) -> List:
-        font = cv2.FONT_HERSHEY_SIMPLEX
+        cv2.FONT_HERSHEY_SIMPLEX
         num_seg = len(pred)
         pred_all = []
         for i in range(num_seg):

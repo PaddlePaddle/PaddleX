@@ -13,17 +13,11 @@
 # limitations under the License.
 
 
-import os
-import os.path as osp
-from typing import List, Sequence, Union, Optional, Tuple
+from typing import List, Optional, Sequence, Tuple, Union
 
-import re
-import numpy as np
 import cv2
-import math
-import json
-import tempfile
 import lazy_paddle
+import numpy as np
 
 from ...utils.benchmark import benchmark
 

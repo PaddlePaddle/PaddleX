@@ -13,8 +13,8 @@
 # limitations under the License.
 
 from typing import Dict
+
 from .base import BaseGeneratePrompt
-from .....utils import logging
 
 
 class GenerateKIEPrompt(BaseGeneratePrompt):

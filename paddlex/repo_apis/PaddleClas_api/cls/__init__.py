@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
+from . import register
+from .config import ClsConfig
 from .model import ClsModel
 from .runner import ClsRunner
-from .config import ClsConfig
-from . import register

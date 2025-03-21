@@ -14,12 +14,11 @@
 
 import os
 import os.path as osp
-from pathlib import Path
 
 from ...base.register import register_model_info, register_suite_info
+from .config import TextDetConfig
 from .model import TextDetModel
 from .runner import TextDetRunner
-from .config import TextDetConfig
 
 REPO_ROOT_PATH = os.environ.get("PADDLE_PDX_PADDLEOCR_PATH")
 PDX_CONFIG_DIR = osp.abspath(osp.join(osp.dirname(__file__), "..", "configs"))

@@ -12,46 +12,45 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from importlib import import_module
 from pathlib import Path
 from typing import Any, Dict, Optional
-from importlib import import_module
-from .base import BasePipeline
-from ..utils.pp_option import PaddlePredictorOption
-from .components import BaseChat, BaseRetriever, BaseGeneratePrompt
+
 from ...utils import logging
 from ...utils.config import parse_config
-from .ocr import OCRPipeline
-from .doc_preprocessor import DocPreprocessorPipeline
-from .layout_parsing import LayoutParsingPipeline
-from .pp_chatocr import PP_ChatOCRv3_Pipeline, PP_ChatOCRv4_Pipeline
-from .image_classification import ImageClassificationPipeline
-from .object_detection import ObjectDetectionPipeline
-from .seal_recognition import SealRecognitionPipeline
-from .table_recognition import TableRecognitionPipeline
-from .table_recognition import TableRecognitionPipelineV2
-from .multilingual_speech_recognition import MultilingualSpeechRecognitionPipeline
-from .formula_recognition import FormulaRecognitionPipeline
-from .image_multilabel_classification import ImageMultiLabelClassificationPipeline
-from .video_classification import VideoClassificationPipeline
-from .video_detection import VideoDetectionPipeline
+from ..utils.pp_option import PaddlePredictorOption
 from .anomaly_detection import AnomalyDetectionPipeline
-from .ts_forecasting import TSFcPipeline
-from .ts_anomaly_detection import TSAnomalyDetPipeline
-from .ts_classification import TSClsPipeline
-from .pp_shitu_v2 import ShiTuV2Pipeline
-from .face_recognition import FaceRecPipeline
 from .attribute_recognition import (
     PedestrianAttributeRecPipeline,
     VehicleAttributeRecPipeline,
 )
-
-from .semantic_segmentation import SemanticSegmentationPipeline
+from .base import BasePipeline
+from .components import BaseChat, BaseGeneratePrompt, BaseRetriever
+from .doc_preprocessor import DocPreprocessorPipeline
+from .face_recognition import FaceRecPipeline
+from .formula_recognition import FormulaRecognitionPipeline
+from .image_classification import ImageClassificationPipeline
+from .image_multilabel_classification import ImageMultiLabelClassificationPipeline
 from .instance_segmentation import InstanceSegmentationPipeline
-from .small_object_detection import SmallObjectDetectionPipeline
-from .rotated_object_detection import RotatedObjectDetectionPipeline
 from .keypoint_detection import KeypointDetectionPipeline
+from .layout_parsing import LayoutParsingPipeline
+from .multilingual_speech_recognition import MultilingualSpeechRecognitionPipeline
+from .object_detection import ObjectDetectionPipeline
+from .ocr import OCRPipeline
 from .open_vocabulary_detection import OpenVocabularyDetectionPipeline
 from .open_vocabulary_segmentation import OpenVocabularySegmentationPipeline
+from .pp_chatocr import PP_ChatOCRv3_Pipeline, PP_ChatOCRv4_Pipeline
+from .pp_shitu_v2 import ShiTuV2Pipeline
+from .rotated_object_detection import RotatedObjectDetectionPipeline
+from .seal_recognition import SealRecognitionPipeline
+from .semantic_segmentation import SemanticSegmentationPipeline
+from .small_object_detection import SmallObjectDetectionPipeline
+from .table_recognition import TableRecognitionPipeline, TableRecognitionPipelineV2
+from .ts_anomaly_detection import TSAnomalyDetPipeline
+from .ts_classification import TSClsPipeline
+from .ts_forecasting import TSFcPipeline
+from .video_classification import VideoClassificationPipeline
+from .video_detection import VideoDetectionPipeline
 
 module_3d_bev_detection = import_module(
     ".3d_bev_detection", "paddlex.inference.pipelines"

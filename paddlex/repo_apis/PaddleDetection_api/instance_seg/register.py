@@ -14,11 +14,10 @@
 
 import os
 import os.path as osp
-from pathlib import Path
 
 from ...base.register import register_model_info, register_suite_info
-from .model import InstanceSegModel
 from .config import InstanceSegConfig
+from .model import InstanceSegModel
 from .runner import InstanceSegRunner
 
 REPO_ROOT_PATH = os.environ.get("PADDLE_PDX_PADDLEDETECTION_PATH")

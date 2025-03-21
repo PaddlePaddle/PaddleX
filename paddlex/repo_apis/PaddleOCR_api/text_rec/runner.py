@@ -14,7 +14,6 @@
 
 
 import os
-import tempfile
 
 from ...base import BaseRunner
 from ...base.utils.subprocess import CompletedProcess

@@ -15,15 +15,15 @@
 import os
 from typing import Any, Dict, List, Optional, Union
 
-import ultra_infer as ui
 import numpy as np
+import ultra_infer as ui
+from paddlex_hpi._utils.misc import parse_scale
+from paddlex_hpi.models.base import CVPredictor, HPIParams
+
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
 from paddlex.inference.models.text_detection.result import TextDetResult
 from paddlex.modules.text_detection.model_list import CURVE_MODELS, MODELS
 from paddlex.utils import logging
-
-from paddlex_hpi._utils.misc import parse_scale
-from paddlex_hpi.models.base import CVPredictor, HPIParams
 
 
 class TextDetPredictor(CVPredictor):

@@ -12,15 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from abc import abstractmethod
 from copy import deepcopy
 
-from .inference import create_predictor, PaddlePredictorOption
+from .inference import PaddlePredictorOption, create_predictor
 from .modules import (
     build_dataset_checker,
-    build_trainer,
     build_evaluater,
     build_exportor,
+    build_trainer,
 )
 
 

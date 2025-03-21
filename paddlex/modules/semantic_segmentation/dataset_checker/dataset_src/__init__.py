@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
+from .analyse_dataset import anaylse_dataset
 from .check_dataset import check_dataset
 from .convert_dataset import convert_dataset
 from .split_dataset import split_dataset
-from .analyse_dataset import anaylse_dataset

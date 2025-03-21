@@ -19,10 +19,10 @@ import os.path as osp
 import numpy as np
 from PIL import Image, ImageOps
 
-from .utils.visualizer import visualize
 from .....utils.errors import DatasetFileNotFoundError
 from .....utils.file_interface import custom_open
 from .....utils.logging import info
+from .utils.visualizer import visualize
 
 
 def check_dataset(dataset_dir, output, sample_num=10):

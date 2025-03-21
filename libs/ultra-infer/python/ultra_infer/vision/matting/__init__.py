@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from __future__ import absolute_import
+
 from .contrib.modnet import MODNet
 from .contrib.rvm import RobustVideoMatting
 from .ppmatting import PPMatting

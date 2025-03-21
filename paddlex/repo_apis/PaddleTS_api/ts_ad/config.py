@@ -14,10 +14,9 @@
 
 
 import os
-import yaml
 
-from ..ts_base.config import BaseTSConfig
 from ....utils.misc import abspath
+from ..ts_base.config import BaseTSConfig
 
 
 class TSAnomalyConfig(BaseTSConfig):

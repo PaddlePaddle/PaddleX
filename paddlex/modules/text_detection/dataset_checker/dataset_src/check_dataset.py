@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
+import json
 import os
 import os.path as osp
 from collections import defaultdict
 
-from PIL import Image, ImageOps
-import json
 import numpy as np
+from PIL import Image, ImageOps
 
 from .....utils.errors import DatasetFileNotFoundError
 

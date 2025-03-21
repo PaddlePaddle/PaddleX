@@ -14,5 +14,4 @@
 from __future__ import absolute_import
 
 from . import uie
-from .uie import UIEModel
-from .uie import SchemaLanguage
+from .uie import SchemaLanguage, UIEModel

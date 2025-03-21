@@ -14,11 +14,12 @@
 
 import copy
 from pathlib import Path
-from PIL import Image, ImageDraw
 from typing import Dict
-import copy
+
 import numpy as np
-from ...common.result import BaseCVResult, HtmlMixin, XlsxMixin, JsonMixin
+from PIL import Image, ImageDraw
+
+from ...common.result import BaseCVResult, HtmlMixin, JsonMixin, XlsxMixin
 
 
 class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):

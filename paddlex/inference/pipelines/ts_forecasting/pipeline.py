@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, List
+from typing import Dict, List, Union
+
 import pandas as pd
 
+from ...models.ts_forecasting.result import TSFcResult
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
-
-from ...models.ts_forecasting.result import TSFcResult
 
 
 class TSFcPipeline(BasePipeline):

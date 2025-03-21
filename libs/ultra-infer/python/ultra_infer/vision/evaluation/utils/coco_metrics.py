@@ -12,14 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import copy
 import sys
 from collections import OrderedDict
-from .coco_utils import get_infer_results, cocoapi_eval
+
+from .coco_utils import cocoapi_eval, get_infer_results
 
 
 class COCOMetric(object):

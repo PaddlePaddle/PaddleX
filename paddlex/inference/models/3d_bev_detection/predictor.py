@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Union, Dict, List, Tuple, Iterator
 import shutil
 import tempfile
 from importlib import import_module
+from typing import Any, Dict, Iterator, List, Tuple
+
 import lazy_paddle
 
 from ....utils import logging
@@ -26,18 +27,18 @@ module_3d_model_list = getattr(module_3d_bev_detection, "model_list")
 MODELS = getattr(module_3d_model_list, "MODELS")
 from ...common.batch_sampler import Det3DBatchSampler
 from ...common.reader import ReadNuscenesData
-from ..common import StaticInfer
 from ..base import BasicPredictor
 from ..base.predictor.base_predictor import PredictionWrap
+from ..common import StaticInfer
 from .processors import (
+    GetInferInput,
+    LoadMultiViewImageFromFiles,
     LoadPointsFromFile,
     LoadPointsFromMultiSweeps,
-    LoadMultiViewImageFromFiles,
-    ResizeImage,
     NormalizeImage,
     PadImage,
+    ResizeImage,
     SampleFilterByKey,
-    GetInferInput,
 )
 from .result import BEV3DDetResult
 
@@ -90,8 +91,7 @@ class BEVDet3DPredictor(BasicPredictor):
             lazy_paddle.is_compiled_with_cuda()
             and not lazy_paddle.is_compiled_with_rocm()
         ):
-            from ....ops.voxelize import hard_voxelize
-            from ....ops.iou3d_nms import nms_gpu
+            pass
         else:
             logging.error("3D BEVFusion custom ops only support GPU platform!")
 

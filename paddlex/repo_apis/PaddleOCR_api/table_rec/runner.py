@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-from ..text_rec.runner import TextRecRunner
 from ...base.utils.subprocess import CompletedProcess
+from ..text_rec.runner import TextRecRunner
 
 
 class TableRecRunner(TextRecRunner):

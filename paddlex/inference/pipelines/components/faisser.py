@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import pickle
 from pathlib import Path
+
 import faiss
 import numpy as np
 
 from ....utils import logging
-from ...utils.io import YAMLWriter, YAMLReader
+from ...utils.io import YAMLReader, YAMLWriter
 
 
 class IndexData:

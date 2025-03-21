@@ -18,6 +18,7 @@ from lxml import html
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 from premailer import Premailer
+
 from .style import Table
 
 

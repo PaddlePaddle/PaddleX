@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import os
-import re
 import sys
 
 LICENSE_TEXT = """# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.

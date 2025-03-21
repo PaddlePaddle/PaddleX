@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .trainer import DetTrainer
 from .dataset_checker import COCODatasetChecker
 from .evaluator import DetEvaluator
 from .exportor import DetExportor
+from .trainer import DetTrainer

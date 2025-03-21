@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from ..utils import logging
-
-from .pipelines import create_pipeline, load_pipeline_config
 from .models import create_predictor
+from .pipelines import create_pipeline, load_pipeline_config
 from .utils.pp_option import PaddlePredictorOption

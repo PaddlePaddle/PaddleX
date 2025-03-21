@@ -13,13 +13,12 @@
 # limitations under the License.
 
 
-import os
 import glob
 import itertools
+import os
 from pathlib import Path
 
-from setuptools import find_packages
-from setuptools import setup
+from setuptools import find_packages, setup
 
 
 def readme():
@@ -98,11 +97,12 @@ def packages_and_package_data():
     pkg_data.append("serving_requirements.txt")
     pkg_data.append("paddle2onnx_requirements.txt")
     pkg_data.append("hpip_links.html")
-    ops_file_dir = 'paddlex/ops'
-    ops_file_types = ['h', 'hpp', 'cpp', 'cc', 'cu']
+    ops_file_dir = "paddlex/ops"
+    ops_file_types = ["h", "hpp", "cpp", "cc", "cu"]
     return pkgs, {
         "paddlex.ops": get_data_files(ops_file_dir, ops_file_types),
-        "paddlex": pkg_data}
+        "paddlex": pkg_data,
+    }
 
 
 if __name__ == "__main__":

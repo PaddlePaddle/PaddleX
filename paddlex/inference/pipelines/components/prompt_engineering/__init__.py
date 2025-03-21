@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .generate_kie_prompt import GenerateKIEPrompt
 from .generate_ensemble_prompt import GenerateEnsemblePrompt
+from .generate_kie_prompt import GenerateKIEPrompt

@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from operator import le
+import json
 from typing import Dict, List
 
-import json
 import requests
 from langchain_core.embeddings import Embeddings
 
 from paddlex.utils import logging
+
 from .base import BaseRetriever
 
 

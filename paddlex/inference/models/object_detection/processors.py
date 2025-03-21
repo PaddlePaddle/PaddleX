@@ -12,16 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List, Sequence, Tuple, Union, Optional
+from typing import List, Optional, Sequence, Tuple, Union
 
 import cv2
 import numpy as np
 from numpy import ndarray
 
-from ..common import Resize as CommonResize
-from ..common import Normalize as CommonNormalize
 from ...common.reader import ReadImage as CommonReadImage
 from ...utils.benchmark import benchmark
+from ..common import Normalize as CommonNormalize
+from ..common import Resize as CommonResize
 
 Boxes = List[dict]
 Number = Union[int, float]
@@ -443,7 +443,7 @@ class WarpAffine:
         if not self.keep_res:
             out_h = input_h // self.down_ratio
             out_w = input_w // self.down_ratio
-            trans_output = get_affine_transform(c, s, 0, [out_w, out_h])
+            get_affine_transform(c, s, 0, [out_w, out_h])
 
         return inp
 
@@ -630,7 +630,7 @@ def nms(boxes, iou_same=0.6, iou_diff=0.95):
         current = indices[0]
         current_box = boxes[current]
         current_class = current_box[0]
-        current_score = current_box[1]
+        current_box[1]
         current_coords = current_box[2:]
 
         selected_boxes.append(current)
@@ -753,7 +753,7 @@ class DetPostProcess:
             )
 
         if layout_nms:
-            filtered_boxes = []
+            pass
             ### Layout postprocess for NMS
             selected_indices = nms(boxes, iou_same=0.6, iou_diff=0.98)
             boxes = np.array(boxes[selected_indices])

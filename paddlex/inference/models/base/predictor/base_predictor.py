@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List, Dict, Any, Iterator
+from abc import ABC, abstractmethod
 from pathlib import Path
-from abc import abstractmethod, ABC
+from typing import Any, Dict, Iterator, List
 
 from .....utils.flags import INFER_BENCHMARK
-from ....utils.io import YAMLReader
 from ....common.batch_sampler import BaseBatchSampler
+from ....utils.io import YAMLReader
 
 
 class PredictionWrap:

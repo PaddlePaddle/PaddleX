@@ -12,18 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import sys
+import contextlib
 import json
+import os
 import platform
 import subprocess
-import contextlib
-from parsley import makeGrammar
+import sys
+
 import lazy_paddle as paddle
+from parsley import makeGrammar
 
-from ..utils.env import get_device_type
 from ..utils import logging
-
+from ..utils.env import get_device_type
 
 PLATFORM = platform.system()
 

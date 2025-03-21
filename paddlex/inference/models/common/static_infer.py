@@ -12,23 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Sequence, List
 from pathlib import Path
+from typing import List, Sequence
 
 import lazy_paddle
 import numpy as np
 
 from ....utils import logging
 from ....utils.device import constr_device
-from ....utils.flags import (
-    DEBUG,
-    USE_PIR_TRT,
-    INFER_BENCHMARK_USE_NEW_INFER_API,
-)
+from ....utils.flags import DEBUG, INFER_BENCHMARK_USE_NEW_INFER_API, USE_PIR_TRT
 from ...utils.benchmark import benchmark, set_inference_operations
 from ...utils.hpi import get_model_paths
 from ...utils.pp_option import PaddlePredictorOption
-
 
 CACHE_DIR = ".cache"
 
@@ -146,11 +141,7 @@ def _convert_trt(
     dynamic_shapes,
     dynamic_shape_input_data,
 ):
-    from lazy_paddle.tensorrt.export import (
-        Input,
-        TensorRTConfig,
-        convert,
-    )
+    from lazy_paddle.tensorrt.export import Input, TensorRTConfig, convert
 
     def _set_trt_config():
         for attr_name in trt_cfg_setting:
@@ -438,7 +429,7 @@ class StaticInfer(object):
                         config.enable_mkldnn()
                         if "bf16" in self._option.run_mode:
                             config.enable_mkldnn_bfloat16()
-                    except Exception as e:
+                    except Exception:
                         logging.warning(
                             "MKL-DNN is not available. We will disable MKL-DNN."
                         )

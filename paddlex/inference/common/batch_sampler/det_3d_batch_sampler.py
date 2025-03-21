@@ -12,18 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, List, Optional, Union
 import os
-import ast
-from pathlib import Path
-import numpy as np
 import pickle
 import tarfile
-
+from pathlib import Path
+from typing import Any, Dict, List, Union
 
 from ....utils import logging
-from ....utils.download import download
 from ....utils.cache import CACHE_DIR
+from ....utils.download import download
 from .base_batch_sampler import BaseBatchSampler
 
 

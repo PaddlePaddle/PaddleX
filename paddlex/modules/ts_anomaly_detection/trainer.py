@@ -13,13 +13,10 @@
 # limitations under the License.
 
 import os
-import json
-import time
-from pathlib import Path
 import tarfile
+from pathlib import Path
 
 from ..base import BaseTrainer
-from ...utils.config import AttrDict
 from .model_list import MODELS
 
 

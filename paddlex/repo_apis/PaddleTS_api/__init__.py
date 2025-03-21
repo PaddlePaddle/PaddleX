@@ -13,7 +13,8 @@
 # limitations under the License.
 
 
+from .ts_ad import register
+from .ts_cls import register
+
 # Register models and suites
 from .ts_fc import register
-from .ts_cls import register
-from .ts_ad import register

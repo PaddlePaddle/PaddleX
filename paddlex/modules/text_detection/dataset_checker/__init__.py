@@ -13,17 +13,15 @@
 # limitations under the License.
 
 
+import json
 import os
 import os.path as osp
+from collections import Counter, defaultdict
 from pathlib import Path
-from collections import defaultdict, Counter
-
-import json
 
 from ...base import BaseDatasetChecker
-from .dataset_src import check, split_dataset, deep_analyse
-
 from ..model_list import MODELS
+from .dataset_src import check, deep_analyse, split_dataset
 
 
 class TextDetDatasetChecker(BaseDatasetChecker):

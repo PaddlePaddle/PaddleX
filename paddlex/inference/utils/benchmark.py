@@ -14,19 +14,20 @@
 
 import csv
 import functools
-from types import GeneratorType
+import inspect
 import time
 from pathlib import Path
-import inspect
+from types import GeneratorType
+
 import numpy as np
 from prettytable import PrettyTable
 
+from ...utils import logging
 from ...utils.flags import (
     INFER_BENCHMARK,
     INFER_BENCHMARK_OUTPUT_DIR,
     INFER_BENCHMARK_USE_CACHE_FOR_READ,
 )
-from ...utils import logging
 
 ENTRY_POINT_NAME = "_entry_point_"
 

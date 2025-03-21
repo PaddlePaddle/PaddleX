@@ -13,6 +13,6 @@
 # limitations under the License.
 
 from .dataset_checker import COCOInstSegDatasetChecker
-from .trainer import InstanceSegTrainer
 from .evaluator import InstanceSegEvaluator
 from .exportor import InstanceSegExportor
+from .trainer import InstanceSegTrainer

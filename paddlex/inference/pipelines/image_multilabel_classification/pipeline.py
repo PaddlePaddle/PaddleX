@@ -12,14 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, List
+from typing import Dict, List, Union
+
 import numpy as np
-from ...common.reader import ReadImage
-from ...common.batch_sampler import ImageBatchSampler
-from ...utils.pp_option import PaddlePredictorOption
-from ..base import BasePipeline
 
 from ...models.image_multilabel_classification.result import MLClassResult
+from ...utils.pp_option import PaddlePredictorOption
+from ..base import BasePipeline
 
 
 class ImageMultiLabelClassificationPipeline(BasePipeline):
@@ -54,7 +53,7 @@ class ImageMultiLabelClassificationPipeline(BasePipeline):
         self.image_multilabel_classification_model = self.create_model(
             image_multilabel_classification_model_config
         )
-        batch_size = image_multilabel_classification_model_config["batch_size"]
+        image_multilabel_classification_model_config["batch_size"]
 
     def predict(
         self,

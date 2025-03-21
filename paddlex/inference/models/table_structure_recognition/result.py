@@ -13,13 +13,12 @@
 # limitations under the License.
 
 import copy
+from pathlib import Path
+
 import cv2
 import numpy as np
-from pathlib import Path
-import PIL
-from PIL import Image, ImageDraw, ImageFont
 
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
+from ...common.result import BaseCVResult, JsonMixin
 
 
 class TableRecResult(BaseCVResult):

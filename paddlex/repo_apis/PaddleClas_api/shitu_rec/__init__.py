@@ -13,6 +13,6 @@
 # limitations under the License.
 
 
+from . import register
 from .model import ShiTuRecModel
 from .runner import ShiTuRecRunner
-from . import register

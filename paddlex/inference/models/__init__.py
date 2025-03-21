@@ -13,39 +13,38 @@
 # limitations under the License.
 
 
+from importlib import import_module
 from pathlib import Path
 from typing import Any, Dict, Optional
-from importlib import import_module
+
 from ...utils import errors
 from ..utils.official_models import official_models
-from .base import BasePredictor, BasicPredictor
-
-from .image_classification import ClasPredictor
-from .object_detection import DetPredictor
-from .keypoint_detection import KptPredictor
-from .text_detection import TextDetPredictor
-from .text_recognition import TextRecPredictor
-from .table_structure_recognition import TablePredictor
-from .formula_recognition import FormulaRecPredictor
-from .instance_segmentation import InstanceSegPredictor
-from .semantic_segmentation import SegPredictor
-from .image_feature import ImageFeaturePredictor
-from .ts_forecasting import TSFcPredictor
-from .ts_anomaly_detection import TSAdPredictor
-from .ts_classification import TSClsPredictor
-from .image_unwarping import WarpPredictor
-from .image_multilabel_classification import MLClasPredictor
-from .face_feature import FaceFeaturePredictor
-from .open_vocabulary_detection import OVDetPredictor
-from .open_vocabulary_segmentation import OVSegPredictor
-
 
 # from .table_recognition import TablePredictor
 # from .general_recognition import ShiTuRecPredictor
 from .anomaly_detection import UadPredictor
+from .base import BasePredictor, BasicPredictor
+from .face_feature import FaceFeaturePredictor
+from .formula_recognition import FormulaRecPredictor
+from .image_classification import ClasPredictor
+from .image_feature import ImageFeaturePredictor
+from .image_multilabel_classification import MLClasPredictor
+from .image_unwarping import WarpPredictor
+from .instance_segmentation import InstanceSegPredictor
+from .keypoint_detection import KptPredictor
 
 # from .face_recognition import FaceRecPredictor
 from .multilingual_speech_recognition import WhisperPredictor
+from .object_detection import DetPredictor
+from .open_vocabulary_detection import OVDetPredictor
+from .open_vocabulary_segmentation import OVSegPredictor
+from .semantic_segmentation import SegPredictor
+from .table_structure_recognition import TablePredictor
+from .text_detection import TextDetPredictor
+from .text_recognition import TextRecPredictor
+from .ts_anomaly_detection import TSAdPredictor
+from .ts_classification import TSClsPredictor
+from .ts_forecasting import TSFcPredictor
 from .video_classification import VideoClasPredictor
 from .video_detection import VideoDetPredictor
 

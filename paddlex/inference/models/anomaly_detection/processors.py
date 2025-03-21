@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import numpy as np
-from skimage import measure, morphology
+from skimage import morphology
 
 from ...utils.benchmark import benchmark
 

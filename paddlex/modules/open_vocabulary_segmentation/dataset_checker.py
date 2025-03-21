@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .model_list import MODELS
-from ..base import BaseDatasetChecker
 from ...utils.errors import UnsupportedAPIError
+from ..base import BaseDatasetChecker
+from .model_list import MODELS
 
 
 class OVSegDatasetChecker(BaseDatasetChecker):

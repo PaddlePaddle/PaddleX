@@ -14,10 +14,10 @@
 
 from . import funcs as F
 from .processors import (
+    Normalize,
     Resize,
     ResizeByLong,
     ResizeByShort,
-    Normalize,
-    ToCHWImage,
     ToBatch,
+    ToCHWImage,
 )

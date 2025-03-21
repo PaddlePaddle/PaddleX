@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, Tuple, List
+from typing import Dict, List, Optional, Tuple, Union
+
 import numpy as np
 
+from ...models.object_detection.result import DetResult
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
-
-from ...models.object_detection.result import DetResult
 
 
 class ObjectDetectionPipeline(BasePipeline):

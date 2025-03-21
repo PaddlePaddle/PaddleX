@@ -12,13 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json
 import shutil
 from pathlib import Path
 
 from ..base import BaseTrainer
 from .model_list import MODELS
-from ...utils.config import AttrDict
 
 
 class VideoClsTrainer(BaseTrainer):

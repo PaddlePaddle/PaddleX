@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
+import math
 import os
 import os.path as osp
 import shutil
-import random
-import math
+
 import pandas as pd
-from tqdm import tqdm
+
 from .....utils.logging import info
 
 

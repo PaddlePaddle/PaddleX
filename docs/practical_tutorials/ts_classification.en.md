@@ -321,7 +321,7 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="my_path/ts_classification.yaml")
 output = pipeline.predict("pre_ts.csv")
 for res in output:
-    res.print() 
+    res.print()
     res.save_to_csv("./output/")
 ```
 

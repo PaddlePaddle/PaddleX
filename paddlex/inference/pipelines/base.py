@@ -12,14 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pathlib import Path
-from typing import Any, Dict, Optional
 from abc import ABC, abstractmethod
-import yaml
-import codecs
+from typing import Dict
+
 from ...utils.subclass_register import AutoRegisterABCMetaClass
-from ..utils.pp_option import PaddlePredictorOption
 from ..models import BasePredictor
+from ..utils.pp_option import PaddlePredictorOption
 
 
 class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):

@@ -13,6 +13,6 @@
 # limitations under the License.
 
 from .dataset_checker import TextDetDatasetChecker
-from .trainer import TextDetTrainer
 from .evaluator import TextDetEvaluator
 from .exportor import TextDetExportor
+from .trainer import TextDetTrainer

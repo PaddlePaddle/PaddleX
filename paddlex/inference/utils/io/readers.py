@@ -14,20 +14,17 @@
 
 
 import enum
+import importlib
 import itertools
+import random
+
 import cv2
 import fitz
-from PIL import Image, ImageOps
-import pandas as pd
 import numpy as np
-import yaml
+import pandas as pd
 import soundfile
-import random
-import platform
-import importlib
-
-from ....utils import logging
-
+import yaml
+from PIL import Image, ImageOps
 
 __all__ = [
     "ReaderType",
@@ -214,8 +211,6 @@ class _BaseReaderBackend(object):
 
 class _ImageReaderBackend(_BaseReaderBackend):
     """_ImageReaderBackend"""
-
-    pass
 
 
 class OpenCVImageReaderBackend(_ImageReaderBackend):
@@ -442,8 +437,6 @@ class CSVReader(_BaseReader):
 class _CSVReaderBackend(_BaseReaderBackend):
     """_CSVReaderBackend"""
 
-    pass
-
 
 class PandasCSVReaderBackend(_CSVReaderBackend):
     """PandasCSVReaderBackend"""
@@ -482,8 +475,6 @@ class AudioReader(_BaseReader):
 
 class _AudioReaderBackend(_BaseReaderBackend):
     """_AudioReaderBackend"""
-
-    pass
 
 
 class WAVReaderBackend(_AudioReaderBackend):

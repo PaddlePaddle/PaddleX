@@ -13,14 +13,6 @@
 # limitations under the License.
 
 
-import os
-import platform
-from pathlib import Path
-
-import pandas as pd
-import numpy as np
-
-
 def deep_analyse(dataset_dir, output):
     """class analysis for dataset"""
 

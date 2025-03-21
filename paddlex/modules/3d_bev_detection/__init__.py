@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .trainer import BEVFusionTrainer
 from .dataset_checker import BEVFusionDatasetChecker
 from .evaluator import BEVFusionEvaluator
 from .exportor import BEVFusionExportor
+from .trainer import BEVFusionTrainer

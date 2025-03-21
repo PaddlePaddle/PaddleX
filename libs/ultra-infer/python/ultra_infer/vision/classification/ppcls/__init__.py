@@ -20,12 +20,13 @@ from typing import List
 
 import numpy as np
 
-from .... import UltraInferModel, ModelFormat
+from .... import ModelFormat, UltraInferModel
 from .... import c_lib_wrap as C
-from ...common import ProcessorManager
 from ....py_only import PyOnlyProcessorChain
-from ....py_only.vision import PyOnlyVisionModel, processors as P
+from ....py_only.vision import PyOnlyVisionModel
+from ....py_only.vision import processors as P
 from ....utils.misc import load_config
+from ...common import ProcessorManager
 
 
 class PaddleClasPreprocessor(ProcessorManager):

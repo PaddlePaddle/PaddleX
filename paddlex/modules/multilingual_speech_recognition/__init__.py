@@ -13,6 +13,6 @@
 # limitations under the License.
 
 from .dataset_checker import WhisperDatasetChecker
-from .trainer import WhisperTrainer
 from .evaluator import WhisperEvaluator
 from .exportor import WhisperExportor
+from .trainer import WhisperTrainer

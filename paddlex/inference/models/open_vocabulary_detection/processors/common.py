@@ -13,11 +13,10 @@
 # limitations under the License.
 
 
-import os, cv2
-from typing import Dict, List, Optional, Union, Tuple
+from typing import Dict, List, Tuple
 
+import cv2
 import numpy as np
-import PIL
 
 
 class LetterResize(object):

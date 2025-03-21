@@ -12,27 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Union, Dict, List, Tuple
-import numpy as np
-import pandas as pd
-import os
 import copy
+import os
+from typing import Any, Dict, List, Tuple, Union
+
+import pandas as pd
 
 from ....modules.ts_classification.model_list import MODELS
 from ...common.batch_sampler import TSBatchSampler
 from ...common.reader import ReadTS
+from ..base import BasicPredictor
 from ..common import (
-    TSCutOff,
     BuildTSDataset,
+    StaticInfer,
+    TSCutOff,
     TSNormalize,
-    TimeFeature,
     TStoArray,
     TStoBatch,
-    StaticInfer,
 )
-
-from .processors import GetCls, BuildPadMask
-from ..base import BasicPredictor
+from .processors import BuildPadMask, GetCls
 from .result import TSClsResult
 
 

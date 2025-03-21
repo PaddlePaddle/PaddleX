@@ -14,11 +14,11 @@
 
 
 from .core import (
+    get_versions,
+    initialize,
+    is_initialized,
     set_parent_dirs,
     setup,
     wheel,
-    is_initialized,
-    initialize,
-    get_versions,
 )
 from .meta import get_all_repo_names as get_all_supported_repo_names

@@ -13,9 +13,9 @@
 # limitations under the License.
 
 
-import os
-import copy
 import collections.abc
+import copy
+import os
 
 import yaml
 

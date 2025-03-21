@@ -17,9 +17,9 @@ import copy
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH, create_font
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
-from ...utils.color_map import get_colormap, font_colormap
+from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ...common.result import BaseCVResult, JsonMixin
+from ...utils.color_map import font_colormap, get_colormap
 
 
 def draw_box(img, boxes):

@@ -12,19 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List, Tuple, Union
-import os
-import sys
-import cv2
-import copy
 import math
-import pyclipper
+import sys
+from typing import Union
+
+import cv2
 import numpy as np
-from numpy.linalg import norm
-from PIL import Image
+import pyclipper
 from shapely.geometry import Polygon
 
-from ...utils.io import ImageReader
 from ....utils import logging
 from ...utils.benchmark import benchmark
 

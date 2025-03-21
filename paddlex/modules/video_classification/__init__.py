@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .trainer import VideoClsTrainer
 from .dataset_checker import VideoClsDatasetChecker
 from .evaluator import VideoClsEvaluator
 from .exportor import VideoClsExportor
+from .trainer import VideoClsTrainer

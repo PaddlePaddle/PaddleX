@@ -14,12 +14,12 @@
 
 import os
 
+from ....utils import logging
+from ....utils.device import parse_device
+from ....utils.misc import abspath
 from ...base import BaseModel
 from ...base.utils.arg import CLIArgument
 from ...base.utils.subprocess import CompletedProcess
-from ....utils.device import parse_device
-from ....utils.misc import abspath
-from ....utils import logging
 
 
 class TextRecModel(BaseModel):

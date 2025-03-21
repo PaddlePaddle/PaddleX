@@ -13,11 +13,10 @@
 # limitations under the License.
 
 
-from .config import Config, BaseConfig
-from .model import PaddleModel, BaseModel
-from .runner import BaseRunner, InferOnlyRunner
-
 # Init cache
 from ...utils.cache import create_cache_dir
+from .config import BaseConfig, Config
+from .model import BaseModel, PaddleModel
+from .runner import BaseRunner, InferOnlyRunner
 
 create_cache_dir()

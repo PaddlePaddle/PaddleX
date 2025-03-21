@@ -12,12 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Union, Any, Tuple, List, Dict, Optional, Literal
+from typing import Dict, List, Literal, Tuple, Union
+
 import numpy as np
-from ...utils.pp_option import PaddlePredictorOption
-from ..base import BasePipeline
 
 from ...models.semantic_segmentation.result import SegResult
+from ...utils.pp_option import PaddlePredictorOption
+from ..base import BasePipeline
 
 
 class SemanticSegmentationPipeline(BasePipeline):

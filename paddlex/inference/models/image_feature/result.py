@@ -13,9 +13,8 @@
 # limitations under the License.
 
 import copy
-from PIL import Image
 
-from ...common.result import BaseResult, StrMixin, JsonMixin
+from ...common.result import BaseResult, JsonMixin
 
 
 class IdentityResult(BaseResult):

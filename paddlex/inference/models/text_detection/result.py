@@ -13,11 +13,12 @@
 # limitations under the License.
 
 import copy
-import numpy as np
-import cv2
 from pathlib import Path
 
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
+import cv2
+import numpy as np
+
+from ...common.result import BaseCVResult, JsonMixin
 
 
 class TextDetResult(BaseCVResult):

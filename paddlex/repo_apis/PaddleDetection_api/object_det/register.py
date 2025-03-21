@@ -14,11 +14,10 @@
 
 import os
 import os.path as osp
-from pathlib import Path
 
 from ...base.register import register_model_info, register_suite_info
-from .model import DetModel
 from .config import DetConfig
+from .model import DetModel
 from .runner import DetRunner
 
 REPO_ROOT_PATH = os.environ.get("PADDLE_PDX_PADDLEDETECTION_PATH")

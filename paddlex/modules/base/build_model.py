@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-import os
 from ...repo_apis.base import Config, PaddleModel
 
 

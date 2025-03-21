@@ -14,7 +14,6 @@
 
 from .base_result import BaseResult
 from .mixin import CSVMixin, ImgMixin
-from ...utils.io import CSVWriter
 
 
 class BaseTSResult(BaseResult, CSVMixin, ImgMixin):

@@ -15,12 +15,10 @@
 import os
 import os.path as osp
 import random
-import pickle
-from PIL import Image, ImageOps
-from collections import defaultdict
-from tqdm import tqdm
 
-from .....utils.errors import DatasetFileNotFoundError, CheckFailedError
+from PIL import Image, ImageOps
+
+from .....utils.errors import CheckFailedError, DatasetFileNotFoundError
 from .utils.visualizer import draw_label
 
 

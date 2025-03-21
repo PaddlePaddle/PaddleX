@@ -12,12 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import tarfile
 from pathlib import Path
 
+from ...utils import logging
 from ..base import BaseExportor
 from .model_list import MODELS
-from ...utils import logging
 
 
 class TSCLSExportor(BaseExportor):

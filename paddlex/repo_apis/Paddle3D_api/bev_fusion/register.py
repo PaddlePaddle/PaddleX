@@ -17,9 +17,9 @@ import os
 import os.path as osp
 
 from ...base.register import register_model_info, register_suite_info
+from .config import BEVFusionConfig
 from .model import BEVFusionModel
 from .runner import BEVFusionRunner
-from .config import BEVFusionConfig
 
 REPO_ROOT_PATH = os.environ.get("PADDLE_PDX_PADDLE3D_PATH")
 PDX_CONFIG_DIR = osp.abspath(osp.join(osp.dirname(__file__), "..", "configs"))

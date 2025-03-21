@@ -15,6 +15,7 @@
 
 import os
 from collections import defaultdict
+
 from .....utils.file_interface import custom_open
 
 
@@ -31,7 +32,7 @@ def simple_analyse(dataset_path):
     """
     tags = ["train", "val", "test"]
     sample_cnts = defaultdict(int)
-    img_paths = defaultdict(list)
+    defaultdict(list)
     res = [None] * 6
 
     for tag in tags:

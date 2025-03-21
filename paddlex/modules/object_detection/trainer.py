@@ -13,11 +13,8 @@
 # limitations under the License.
 
 
-from pathlib import Path
-
-from ..base import BaseTrainer
-from ...utils.config import AttrDict
 from ...utils import logging
+from ..base import BaseTrainer
 from .model_list import MODELS
 
 

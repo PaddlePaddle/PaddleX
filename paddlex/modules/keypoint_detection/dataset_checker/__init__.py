@@ -14,8 +14,8 @@
 
 
 from ...object_detection.dataset_checker import COCODatasetChecker
-from .dataset_src import check
 from ..model_list import MODELS
+from .dataset_src import check
 
 
 class KeypointDatasetChecker(COCODatasetChecker):

@@ -12,11 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import numpy as np
-import cv2
 
-from ...utils.io import VideoReader
 from ...utils.benchmark import benchmark
+from ...utils.io import VideoReader
 
 
 @benchmark.timeit_with_options(name=None, is_read_operation=True)

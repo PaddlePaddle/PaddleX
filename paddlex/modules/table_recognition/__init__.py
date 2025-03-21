@@ -13,6 +13,6 @@
 # limitations under the License.
 
 from .dataset_checker import TableRecDatasetChecker
-from .trainer import TableRecTrainer
 from .evaluator import TableRecEvaluator
 from .exportor import TableRecExportor
+from .trainer import TableRecTrainer

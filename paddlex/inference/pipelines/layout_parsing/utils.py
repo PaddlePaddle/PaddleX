@@ -20,16 +20,15 @@ __all__ = [
     "sorted_layout_boxes",
 ]
 
+import re
+from copy import deepcopy
+from typing import Any, Dict, List, Optional, Tuple, Union
+
 import numpy as np
 from PIL import Image
-import uuid
-import re
-from pathlib import Path
-from copy import deepcopy
-from typing import Optional, Union, List, Tuple, Dict, Any
-from ..ocr.result import OCRResult
+
 from ...models.object_detection.result import DetResult
-from ..components import convert_points_to_boxes
+from ..ocr.result import OCRResult
 
 
 def get_overlap_boxes_idx(src_boxes: np.ndarray, ref_boxes: np.ndarray) -> List:

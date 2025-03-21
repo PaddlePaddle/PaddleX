@@ -13,6 +13,6 @@
 # limitations under the License.
 
 
+from . import register
 from .model import InstanceSegModel
 from .runner import InstanceSegRunner
-from . import register

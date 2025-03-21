@@ -20,6 +20,7 @@ from types import ModuleType
 
 import filelock
 from paddle.utils.cpp_extension import load as paddle_jit_load
+
 from ..utils import logging
 
 

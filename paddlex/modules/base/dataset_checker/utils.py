@@ -13,8 +13,6 @@
 # limitations under the License.
 
 
-import os
-
 __all__ = [
     "build_res_dict",
     "CheckFailedError",

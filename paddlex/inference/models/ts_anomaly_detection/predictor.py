@@ -12,25 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Union, Dict, List, Tuple
-import numpy as np
-import pandas as pd
 import os
+from typing import Any, Dict, List, Tuple, Union
+
+import pandas as pd
 
 from ....modules.ts_anomaly_detection.model_list import MODELS
 from ...common.batch_sampler import TSBatchSampler
 from ...common.reader import ReadTS
+from ..base import BasicPredictor
 from ..common import (
-    TSCutOff,
     BuildTSDataset,
-    TSNormalize,
+    StaticInfer,
     TimeFeature,
+    TSCutOff,
+    TSNormalize,
     TStoArray,
     TStoBatch,
-    StaticInfer,
 )
 from .processors import GetAnomaly
-from ..base import BasicPredictor
 from .result import TSAdResult
 
 

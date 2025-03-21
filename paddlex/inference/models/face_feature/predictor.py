@@ -15,6 +15,7 @@
 from typing import Any, Dict, List, Union
 
 import numpy as np
+
 from ....modules.face_recognition.model_list import MODELS
 from ..image_feature import ImageFeaturePredictor
 

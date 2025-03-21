@@ -19,10 +19,9 @@ import numpy as np
 from ....modules.keypoint_detection.model_list import MODELS
 from ....utils import logging
 from ...common.batch_sampler import ImageBatchSampler
-
 from ..common import ToBatch
 from ..object_detection import DetPredictor
-from .processors import TopDownAffine, KptPostProcess
+from .processors import KptPostProcess, TopDownAffine
 from .result import KptResult
 
 

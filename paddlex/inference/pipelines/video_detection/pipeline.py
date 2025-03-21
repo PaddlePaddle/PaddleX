@@ -12,12 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, List
+from typing import Dict, List, Union
+
 import numpy as np
-from ...utils.pp_option import PaddlePredictorOption
-from ..base import BasePipeline
 
 from ...models.video_detection.result import DetVideoResult
+from ...utils.pp_option import PaddlePredictorOption
+from ..base import BasePipeline
 
 
 class VideoDetectionPipeline(BasePipeline):
@@ -49,7 +50,9 @@ class VideoDetectionPipeline(BasePipeline):
             model_kwargs["nms_thresh"] = video_detection_model_config["nms_thresh"]
         if "score_thresh" in video_detection_model_config:
             model_kwargs["score_thresh"] = video_detection_model_config["score_thresh"]
-        self.video_detection_model = self.create_model(video_detection_model_config, **model_kwargs)
+        self.video_detection_model = self.create_model(
+            video_detection_model_config, **model_kwargs
+        )
 
     def predict(
         self,

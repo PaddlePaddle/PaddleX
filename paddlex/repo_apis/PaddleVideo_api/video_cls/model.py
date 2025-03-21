@@ -14,11 +14,11 @@
 
 import os
 
+from ....utils import logging
+from ....utils.misc import abspath
 from ...base import BaseModel
 from ...base.utils.arg import CLIArgument
 from ...base.utils.subprocess import CompletedProcess
-from ....utils.misc import abspath
-from ....utils import logging
 
 
 class VideoClsModel(BaseModel):

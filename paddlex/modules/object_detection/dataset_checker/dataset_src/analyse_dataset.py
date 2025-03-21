@@ -14,15 +14,12 @@
 
 
 import os
-import json
 import platform
-from pathlib import Path
 from collections import defaultdict
-from PIL import Image
-import numpy as np
+
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib import font_manager
-from matplotlib.backends.backend_agg import FigureCanvasAgg
 from pycocotools.coco import COCO
 
 from .....utils.fonts import PINGFANG_FONT_FILE_PATH

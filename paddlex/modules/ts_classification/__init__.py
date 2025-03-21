@@ -14,6 +14,6 @@
 
 
 from .dataset_checker import TSCLSDatasetChecker
-from .trainer import TSCLSTrainer
 from .evaluator import TSCLSEvaluator
 from .exportor import TSCLSExportor
+from .trainer import TSCLSTrainer

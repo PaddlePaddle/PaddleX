@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
+from . import register
+from .config import VideoClsConfig
 from .model import VideoClsModel
 from .runner import VideoClsRunner
-from .config import VideoClsConfig
-from . import register

@@ -15,7 +15,8 @@
 from __future__ import absolute_import
 
 import logging
-from ... import RuntimeOption, UltraInferModel, ModelFormat
+
+from ... import ModelFormat, RuntimeOption, UltraInferModel
 from ... import c_lib_wrap as C
 
 

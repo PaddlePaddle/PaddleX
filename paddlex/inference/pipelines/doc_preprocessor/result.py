@@ -13,16 +13,11 @@
 # limitations under the License.
 
 from typing import Dict
-import math
-import random
-from pathlib import Path
-import copy
-import numpy as np
-import cv2
-import PIL
-from PIL import Image, ImageDraw, ImageFont
+
+from PIL import Image, ImageDraw
+
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH, create_font
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
+from ...common.result import BaseCVResult, JsonMixin
 
 
 class DocPreprocessorResult(BaseCVResult):

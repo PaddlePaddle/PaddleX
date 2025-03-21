@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional
+from typing import Dict
 
-import numpy as np
-
-from ...utils.pp_option import PaddlePredictorOption
-from ...common.reader import ReadImage
 from ...common.batch_sampler import ImageBatchSampler
-from ..components import CropByBoxes, FaissIndexer, FaissBuilder, IndexData
+from ...common.reader import ReadImage
+from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
+from ..components import CropByBoxes, FaissBuilder, FaissIndexer
 from .result import ShiTuResult
 
 

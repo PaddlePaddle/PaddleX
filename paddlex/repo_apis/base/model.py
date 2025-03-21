@@ -13,32 +13,24 @@
 # limitations under the License.
 
 
-import os
 import abc
-import inspect
-import functools
 import contextlib
+import functools
+import inspect
+import os
 import tempfile
-import hashlib
-import base64
-from datetime import datetime, timedelta
 
+from ...utils import flags, logging
+from ...utils.cache import get_cache_dir
+from ...utils.device import parse_device
+from ...utils.errors import UnsupportedAPIError, UnsupportedParamError
+from ...utils.misc import CachedProperty as cached_property
 from .config import Config
 from .register import (
-    get_registered_model_info,
-    build_runner_from_model_info,
     build_model_from_model_info,
+    build_runner_from_model_info,
+    get_registered_model_info,
 )
-from ...utils import flags
-from ...utils import logging
-from ...utils.errors import (
-    UnsupportedAPIError,
-    UnsupportedParamError,
-    raise_unsupported_api_error,
-)
-from ...utils.device import parse_device
-from ...utils.misc import CachedProperty as cached_property
-from ...utils.cache import get_cache_dir
 
 __all__ = ["PaddleModel", "BaseModel"]
 

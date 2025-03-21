@@ -12,11 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import numpy as np
-import cv2
 import os
-from typing import Generic, List, Optional, Any, Dict
-import pickle
+from typing import Generic
+
+import numpy as np
 
 from ...utils.benchmark import benchmark
 

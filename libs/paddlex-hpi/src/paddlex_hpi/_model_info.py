@@ -18,9 +18,9 @@ from functools import lru_cache
 from typing import Optional
 
 from importlib_resources import files
-from paddlex.utils import logging
-
 from paddlex_hpi._utils.typing import DeviceType
+
+from paddlex.utils import logging
 
 _DB_PATH: str = "model_info_collection.json"
 

@@ -14,9 +14,9 @@
 
 # Code copied from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/util/lazy_loader.py
 import importlib
-import types
-import os
 import inspect
+import os
+import types
 
 from . import logging
 from .flags import FLAGS_json_format_model

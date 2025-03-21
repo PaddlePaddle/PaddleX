@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from abc import ABC, abstractmethod
-import inspect
+
 from .....utils.subclass_register import AutoRegisterABCMetaClass
 
 

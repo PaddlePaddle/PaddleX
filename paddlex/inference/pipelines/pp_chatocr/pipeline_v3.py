@@ -12,20 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, List, Tuple
-import os
-import re
 import copy
 import json
+import os
+import re
+from typing import Dict, List, Optional, Tuple, Union
+
 import numpy as np
-from .pipeline_base import PP_ChatOCR_Pipeline
-from ...common.reader import ReadImage
-from ...common.batch_sampler import ImageBatchSampler
+
 from ....utils import logging
 from ....utils.file_interface import custom_open
+from ...common.batch_sampler import ImageBatchSampler
+from ...common.reader import ReadImage
 from ...utils.pp_option import PaddlePredictorOption
-from ..layout_parsing.result import LayoutParsingResult
 from ..components.chat_server import BaseChat
+from ..layout_parsing.result import LayoutParsingResult
+from .pipeline_base import PP_ChatOCR_Pipeline
 
 
 class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):

@@ -12,12 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import numpy as np
-import json
-from pathlib import Path
 import PIL
-from PIL import Image, ImageDraw, ImageFont
+from PIL import ImageDraw, ImageFont
 
 from ......utils.fonts import PINGFANG_FONT_FILE_PATH
 

@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import re
-import json
 import base64
+import json
+import re
 from typing import Dict
+
 from .....utils import logging
 from .base import BaseChat
 

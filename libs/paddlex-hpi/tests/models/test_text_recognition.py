@@ -13,10 +13,10 @@
 # limitations under the License.
 
 import numpy as np
-from paddlex.inference.results import TextRecResult
+from paddlex_hpi.models import TextRecPredictor
 from tests.models.base import BaseTestPredictor
 
-from paddlex_hpi.models import TextRecPredictor
+from paddlex.inference.results import TextRecResult
 
 MODEL_URL = "https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/tests/models/text_rec_model.zip"
 INPUT_DATA_URL = "https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/tests/models/text_rec_input.jpg"

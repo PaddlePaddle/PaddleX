@@ -15,8 +15,8 @@
 from pathlib import Path
 
 from ...base import BaseDatasetChecker
-from .dataset_src import check, deep_analyse
 from ..model_list import MODELS
+from .dataset_src import check, deep_analyse
 
 
 class VideoDetDatasetChecker(BaseDatasetChecker):

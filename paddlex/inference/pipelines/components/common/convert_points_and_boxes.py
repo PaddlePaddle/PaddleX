@@ -15,7 +15,6 @@
 __all__ = ["convert_points_to_boxes"]
 
 import numpy as np
-import copy
 
 
 def convert_points_to_boxes(dt_polys: list) -> np.ndarray:

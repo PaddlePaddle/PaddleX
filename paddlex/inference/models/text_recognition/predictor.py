@@ -12,19 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ....utils.func_register import FuncRegister
 from ....modules.text_recognition.model_list import MODELS
+from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..common import (
-    Resize,
-    ResizeByShort,
-    Normalize,
-    ToCHWImage,
-    StaticInfer,
-)
 from ..base import BasicPredictor
-from .processors import OCRReisizeNormImg, CTCLabelDecode, ToBatch
+from ..common import StaticInfer
+from .processors import CTCLabelDecode, OCRReisizeNormImg, ToBatch
 from .result import TextRecResult
 
 

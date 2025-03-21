@@ -17,11 +17,7 @@ import os
 import os.path as osp
 from collections import defaultdict
 
-from PIL import Image
-import json
-import numpy as np
-
-from .....utils.errors import DatasetFileNotFoundError, CheckFailedError
+from .....utils.errors import CheckFailedError, DatasetFileNotFoundError
 
 
 def check(

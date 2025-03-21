@@ -13,13 +13,12 @@
 # limitations under the License.
 
 import os
-from typing import Dict, List, Optional, Union, Tuple
+from typing import List, Tuple, Union
 
 import numpy as np
-import PIL
-from .common import LetterResize
 
 from ...common.tokenizer.clip_tokenizer import CLIPTokenizer
+from .common import LetterResize
 
 
 class YOLOWorldProcessor(object):

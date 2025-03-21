@@ -12,18 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict, Any, Iterator
-from abc import abstractmethod
+from typing import Any, Dict, Iterator
 
-from .....utils.subclass_register import AutoRegisterABCMetaClass
+from .....utils import logging
 from .....utils.flags import (
     INFER_BENCHMARK,
-    INFER_BENCHMARK_WARMUP,
     INFER_BENCHMARK_ITERS,
+    INFER_BENCHMARK_WARMUP,
 )
-from .....utils import logging
+from .....utils.subclass_register import AutoRegisterABCMetaClass
+from ....utils.benchmark import ENTRY_POINT_NAME, benchmark
 from ....utils.pp_option import PaddlePredictorOption
-from ....utils.benchmark import benchmark, ENTRY_POINT_NAME
 from .base_predictor import BasePredictor
 
 

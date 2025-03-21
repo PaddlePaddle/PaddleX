@@ -13,9 +13,10 @@
 # limitations under the License.
 
 
-import os
 import argparse
-from paddlex.repo_manager import setup, get_all_supported_repo_names
+import os
+
+from paddlex.repo_manager import get_all_supported_repo_names, setup
 
 if __name__ == "__main__":
     # Enable debug info

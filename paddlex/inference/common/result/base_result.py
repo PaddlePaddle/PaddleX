@@ -13,13 +13,14 @@
 # limitations under the License.
 
 import inspect
-from pathlib import Path
-import time
 import random
+import time
+from pathlib import Path
+
 import numpy as np
 
 from ....utils import logging
-from .mixin import StrMixin, JsonMixin, ImgMixin
+from .mixin import JsonMixin, StrMixin
 
 
 class BaseResult(dict, JsonMixin, StrMixin):

@@ -13,20 +13,13 @@
 # limitations under the License.
 
 
-import os
-import os.path as osp
+import math
+import re
 from typing import List
 
-import re
-import numpy as np
-from PIL import Image
 import cv2
-import math
-import json
-import tempfile
-from tokenizers import Tokenizer as TokenizerFast
+import numpy as np
 
-from ....utils import logging
 from ...utils.benchmark import benchmark
 
 

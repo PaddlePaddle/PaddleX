@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import json
-import shutil
 import tempfile
 from pathlib import Path
 from types import GeneratorType

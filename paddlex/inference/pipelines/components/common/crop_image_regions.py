@@ -12,14 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Tuple, List
 import copy
-import numpy as np
+from typing import List, Tuple
+
 import cv2
-from shapely.geometry import Polygon
+import numpy as np
 from numpy.linalg import norm
+from shapely.geometry import Polygon
+
 from .base_operator import BaseOperator
-from ....utils.io import ImageReader
 from .seal_det_warp import AutoRectifier
 
 

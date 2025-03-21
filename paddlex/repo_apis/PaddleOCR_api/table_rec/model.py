@@ -15,10 +15,10 @@
 import os
 
 from ....utils import logging
-from ...base.utils.arg import CLIArgument
-from ...base.utils.subprocess import CompletedProcess
 from ....utils.device import parse_device
 from ....utils.misc import abspath
+from ...base.utils.arg import CLIArgument
+from ...base.utils.subprocess import CompletedProcess
 from ..text_rec.model import TextRecModel
 
 

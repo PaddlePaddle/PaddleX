@@ -13,6 +13,6 @@
 # limitations under the License.
 
 from .dataset_checker import TextRecDatasetChecker
-from .trainer import TextRecTrainer
 from .evaluator import TextRecEvaluator
 from .exportor import TextRecExportor
+from .trainer import TextRecTrainer

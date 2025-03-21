@@ -13,5 +13,5 @@
 # limitations under the License.
 
 
-from .object_det import DetModel, DetRunner, register
 from .instance_seg import InstanceSegModel, InstanceSegRunner, register
+from .object_det import DetModel, DetRunner, register

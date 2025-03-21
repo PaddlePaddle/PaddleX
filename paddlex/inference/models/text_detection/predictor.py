@@ -12,23 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import numpy as np
 from typing import List, Union
 
-from ....utils.func_register import FuncRegister
+import numpy as np
+
 from ....modules.text_detection.model_list import MODELS
+from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..common import (
-    Resize,
-    ResizeByShort,
-    Normalize,
-    ToCHWImage,
-    ToBatch,
-    StaticInfer,
-)
 from ..base import BasicPredictor
-from .processors import DetResizeForTest, NormalizeImage, DBPostProcess
+from ..common import StaticInfer, ToBatch, ToCHWImage
+from .processors import DBPostProcess, DetResizeForTest, NormalizeImage
 from .result import TextDetResult
 
 

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from collections import defaultdict
-import lazy_paddle
+
 from ...utils.flags import USE_PIR_TRT
 
 

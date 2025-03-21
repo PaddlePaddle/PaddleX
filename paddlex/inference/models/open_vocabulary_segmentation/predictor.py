@@ -13,17 +13,15 @@
 # limitations under the License.
 
 
-from typing import Any, Union, Dict, List, Tuple, Optional, Callable
-import numpy as np
-import inspect
+from typing import Any, Dict, List
 
-from ....utils.func_register import FuncRegister
 from ....modules.open_vocabulary_segmentation.model_list import MODELS
+from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from .processors import SAMProcessor
-from ..common import StaticInfer
 from ..base import BasicPredictor
+from ..common import StaticInfer
+from .processors import SAMProcessor
 from .results import SAMSegResult
 
 

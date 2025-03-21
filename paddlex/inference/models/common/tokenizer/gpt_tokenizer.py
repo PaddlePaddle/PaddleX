@@ -18,10 +18,7 @@ import shutil
 from functools import lru_cache
 from typing import Dict, Optional, Union
 
-import jieba
 import numpy as np
-import sentencepiece as spm
-import lazy_paddle as paddle
 import regex as re
 
 from .tokenizer_utils import PretrainedTokenizer

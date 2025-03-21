@@ -13,8 +13,10 @@
 # limitations under the License.
 
 import copy
+
 import numpy as np
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
+
+from ...common.result import BaseCVResult, JsonMixin
 
 
 class DocTrResult(BaseCVResult):

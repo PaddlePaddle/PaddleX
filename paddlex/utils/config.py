@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import copy
 import argparse
+import copy
+import os
+
 import yaml
+
 from . import logging
 from .errors import raise_key_not_found_error
 from .file_interface import custom_open

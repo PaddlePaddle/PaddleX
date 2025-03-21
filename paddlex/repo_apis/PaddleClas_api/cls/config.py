@@ -12,11 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import yaml
 from typing import Union
 
-from ...base import BaseConfig
+import yaml
+
 from ....utils.misc import abspath
+from ...base import BaseConfig
 
 
 class ClsConfig(BaseConfig):

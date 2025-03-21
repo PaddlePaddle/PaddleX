@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from .base_result import BaseResult
-from .mixin import ImgMixin, VideoMixin
+from .mixin import VideoMixin
 
 
 class BaseVideoResult(BaseResult, VideoMixin):

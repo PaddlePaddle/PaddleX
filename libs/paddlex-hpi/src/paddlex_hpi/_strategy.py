@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import abc
-from typing import List, Dict, Tuple, Union, Final
+from typing import Dict, Final, List, Tuple, Union
 
 
 class BackendSelectionStrategy(metaclass=abc.ABCMeta):

@@ -13,7 +13,8 @@
 # limitations under the License.
 
 import copy
-from ...common.result import BaseCVResult, JsonMixin, StrMixin
+
+from ...common.result import BaseCVResult, JsonMixin
 from ..pp_shitu_v2.result import draw_box
 
 

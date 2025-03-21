@@ -14,6 +14,6 @@
 
 
 from .dataset_checker import TSADDatasetChecker
-from .trainer import TSADTrainer
 from .evaluator import TSADEvaluator
 from .exportor import TSADExportor
+from .trainer import TSADTrainer

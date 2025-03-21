@@ -14,9 +14,8 @@
 
 import numpy as np
 
-from ....utils import logging
-from ..common.vision import F
 from ...utils.benchmark import benchmark
+from ..common.vision import F
 
 
 @benchmark.timeit

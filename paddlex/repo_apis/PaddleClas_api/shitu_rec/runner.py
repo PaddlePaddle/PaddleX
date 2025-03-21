@@ -12,16 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import tempfile
 from ..cls import ClsRunner
-from ...base.utils.subprocess import CompletedProcess
 
 
 class ShiTuRecRunner(ClsRunner):
     """ShiTuRec Runner"""
-
-    pass
 
 
 def _extract_eval_metrics(stdout: str) -> dict:

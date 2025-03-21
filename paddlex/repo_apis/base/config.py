@@ -17,8 +17,8 @@ import abc
 import collections.abc
 from collections import OrderedDict
 
-from .register import get_registered_model_info, get_registered_suite_info
 from ...utils.errors import UnsupportedParamError
+from .register import get_registered_model_info, get_registered_suite_info
 
 __all__ = ["Config", "BaseConfig"]
 
@@ -132,7 +132,6 @@ class BaseConfig(_Config, metaclass=abc.ABCMeta):
 
     def update_device(self, device):
         """Update the device"""
-        pass
 
     @abc.abstractmethod
     def load(self, config_path):

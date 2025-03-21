@@ -12,14 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List
 import copy
+from typing import List
+
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH
-from ...utils.color_map import get_colormap, font_colormap
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
+from ...common.result import BaseCVResult, JsonMixin
+from ...utils.color_map import font_colormap, get_colormap
 
 
 def draw_box(img: Image.Image, boxes: List[dict]) -> Image.Image:

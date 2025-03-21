@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .groundingdino_processors import GroundingDINOProcessor, GroundingDINOPostProcessor
-from .yoloworld_processors import YOLOWorldProcessor, YOLOWorldPostProcessor
+from .groundingdino_processors import GroundingDINOPostProcessor, GroundingDINOProcessor
+from .yoloworld_processors import YOLOWorldPostProcessor, YOLOWorldProcessor

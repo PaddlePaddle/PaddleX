@@ -13,8 +13,10 @@
 # limitations under the License.
 
 from typing import Dict
+
 import numpy as np
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
+
+from ...common.result import BaseCVResult, JsonMixin
 
 
 class SealRecognitionResult(BaseCVResult):

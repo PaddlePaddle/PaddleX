@@ -13,12 +13,12 @@
 # limitations under the License.
 
 import os
-import sys
-import time
 import shutil
+import sys
 import tarfile
-import zipfile
 import tempfile
+import time
+import zipfile
 
 import requests
 

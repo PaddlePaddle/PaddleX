@@ -14,6 +14,6 @@
 
 
 from .dataset_checker import TSFCDatasetChecker
-from .trainer import TSFCTrainer
 from .evaluator import TSFCEvaluator
 from .exportor import TSFCExportor
+from .trainer import TSFCTrainer

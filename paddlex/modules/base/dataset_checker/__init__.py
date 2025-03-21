@@ -13,4 +13,4 @@
 # limitations under the License.
 
 
-from .dataset_checker import build_dataset_checker, BaseDatasetChecker
+from .dataset_checker import BaseDatasetChecker, build_dataset_checker

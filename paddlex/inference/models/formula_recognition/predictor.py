@@ -13,28 +13,26 @@
 # limitations under the License.
 
 import numpy as np
+
+from ....modules.formula_recognition.model_list import MODELS
 from ....utils import logging
 from ....utils.func_register import FuncRegister
-from ....modules.formula_recognition.model_list import MODELS
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..common import (
-    StaticInfer,
-)
 from ..base import BasicPredictor
+from ..common import StaticInfer
 from .processors import (
-    MinMaxResize,
-    LatexTestTransform,
     LatexImageFormat,
     LaTeXOCRDecode,
+    LatexTestTransform,
+    MinMaxResize,
     NormalizeImage,
     ToBatch,
-    UniMERNetImgDecode,
     UniMERNetDecode,
-    UniMERNetTestTransform,
     UniMERNetImageFormat,
+    UniMERNetImgDecode,
+    UniMERNetTestTransform,
 )
-
 from .result import FormulaRecResult
 
 

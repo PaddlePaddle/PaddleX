@@ -15,16 +15,14 @@
 import tempfile
 from typing import Any, Dict, List
 
-import ultra_infer as ui
 import numpy as np
-from paddlex.inference.common.batch_sampler import ImageBatchSampler
-from paddlex.inference.models.table_structure_recognition.result import (
-    TableRecResult,
-)
-from paddlex.modules.table_recognition.model_list import MODELS
-
+import ultra_infer as ui
 from paddlex_hpi._utils.compat import get_compat_version
 from paddlex_hpi.models.base import CVPredictor
+
+from paddlex.inference.common.batch_sampler import ImageBatchSampler
+from paddlex.inference.models.table_structure_recognition.result import TableRecResult
+from paddlex.modules.table_recognition.model_list import MODELS
 
 
 class TablePredictor(CVPredictor):

@@ -13,9 +13,10 @@
 # limitations under the License.
 
 from typing import List
-from ...base import BaseConfig
-from ....utils.misc import abspath
+
 from ....utils import logging
+from ....utils.misc import abspath
+from ...base import BaseConfig
 from ..config_helper import PPDetConfigMixin
 
 

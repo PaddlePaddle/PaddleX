@@ -13,12 +13,10 @@
 # limitations under the License.
 # This file refered to github.com/onnx/onnx.git
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-import shutil
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
+import shutil
 
 TOP_DIR = os.path.realpath(os.path.dirname(__file__))
 TOP_DIR = os.path.split(TOP_DIR)[0]
@@ -28,22 +26,22 @@ wheel_name = os.getenv("WHEEL_NAME", "ultra-infer-python")
 if not os.path.exists(PACKAGE_NAME):
     shutil.copytree("ultra_infer", PACKAGE_NAME)
 
-from distutils.spawn import find_executable
-from distutils import sysconfig, log
-import setuptools
-import setuptools.command.build_py
-import setuptools.command.develop
-import setuptools.command.build_ext
-
-from collections import namedtuple
-from contextlib import contextmanager
 import glob
+import multiprocessing
+import platform
 import shlex
 import subprocess
 import sys
-import platform
+from collections import namedtuple
+from contextlib import contextmanager
+from distutils import log, sysconfig
+from distutils.spawn import find_executable
 from textwrap import dedent
-import multiprocessing
+
+import setuptools
+import setuptools.command.build_ext
+import setuptools.command.build_py
+import setuptools.command.develop
 
 with open(os.path.join(TOP_DIR, "python", "requirements.txt")) as fin:
     REQUIRED_PACKAGES = fin.read()

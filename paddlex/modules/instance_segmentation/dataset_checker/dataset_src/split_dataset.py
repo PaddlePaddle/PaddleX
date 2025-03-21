@@ -13,10 +13,11 @@
 # limitations under the License.
 
 
-import os
-import shutil
-import random
 import json
+import os
+import random
+import shutil
+
 from tqdm import tqdm
 
 from .....utils.file_interface import custom_open, write_json_file

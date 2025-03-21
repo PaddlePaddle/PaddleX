@@ -15,12 +15,11 @@
 
 import logging
 import os
-from threading import ThreadError
 
-from filelock import FileLock
-import yaml
-import ruamel.yaml
 import chardet
+import ruamel.yaml
+import yaml
+from filelock import FileLock
 
 try:
     import ujson as json

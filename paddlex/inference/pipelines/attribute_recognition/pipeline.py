@@ -12,17 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, List
+from typing import Dict, List, Union
 
-import pickle
-from pathlib import Path
 import numpy as np
 
-from ...utils.pp_option import PaddlePredictorOption
-from ...common.reader import ReadImage
 from ...common.batch_sampler import ImageBatchSampler
-from ..components import CropByBoxes
+from ...common.reader import ReadImage
+from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
+from ..components import CropByBoxes
 from .result import AttributeRecResult
 
 

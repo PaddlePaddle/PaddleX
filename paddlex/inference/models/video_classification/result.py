@@ -18,9 +18,9 @@ import PIL
 from PIL import Image, ImageDraw, ImageFont
 
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ...common.result import BaseVideoResult
 from ...utils.color_map import get_colormap
 from ...utils.io import VideoReader
-from ...common.result import BaseVideoResult
 
 
 class TopkVideoResult(BaseVideoResult):

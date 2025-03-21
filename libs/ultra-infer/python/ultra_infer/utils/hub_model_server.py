@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json
-import requests
 from typing import List
+
+import requests
 
 from .hub_config import config
 

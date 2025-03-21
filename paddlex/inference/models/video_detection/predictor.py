@@ -12,17 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Union, Dict, List, Tuple
-from ....utils.func_register import FuncRegister
+from typing import Union
+
 from ....modules.video_detection.model_list import MODELS
+from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import VideoBatchSampler
 from ...common.reader import ReadVideo
-from ..common import (
-    ToBatch,
-    StaticInfer,
-)
 from ..base import BasicPredictor
-from .processors import ResizeVideo, Image2Array, NormalizeVideo, DetVideoPostProcess
+from ..common import StaticInfer
+from .processors import DetVideoPostProcess, Image2Array, NormalizeVideo, ResizeVideo
 from .result import DetVideoResult
 
 

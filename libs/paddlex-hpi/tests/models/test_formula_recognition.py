@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from paddlex.inference.results import FormulaRecResult
+from paddlex_hpi.models import LaTeXOCRPredictor
 from tests.models.base import BaseTestPredictor
 
-from paddlex_hpi.models import LaTeXOCRPredictor
+from paddlex.inference.results import FormulaRecResult
 
 MODEL_URL = "https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/tests/models/latex_ocr_model.zip"
 INPUT_DATA_URL = "https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/tests/models/latex_ocr_input.png"

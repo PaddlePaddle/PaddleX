@@ -14,17 +14,17 @@
 
 from openpyxl.cell import cell
 from openpyxl.styles import (
-    Font,
     Alignment,
-    PatternFill,
-    NamedStyle,
     Border,
-    Side,
     Color,
+    Font,
+    NamedStyle,
+    PatternFill,
+    Side,
 )
+from openpyxl.styles.colors import BLACK
 from openpyxl.styles.fills import FILL_SOLID
 from openpyxl.styles.numbers import FORMAT_CURRENCY_USD_SIMPLE, FORMAT_PERCENTAGE
-from openpyxl.styles.colors import BLACK
 
 FORMAT_DATE_MMDDYYYY = "mm/dd/yyyy"
 

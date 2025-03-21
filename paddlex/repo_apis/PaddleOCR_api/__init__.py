@@ -13,9 +13,10 @@
 # limitations under the License.
 
 
+from .formula_rec import register
+from .table_rec import register
+
 # Register models and architectures
 # task
 from .text_det import register
 from .text_rec import register
-from .formula_rec import register
-from .table_rec import register

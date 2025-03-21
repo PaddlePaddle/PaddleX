@@ -12,11 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import numpy as np
 import pandas as pd
 
-from ...utils.io import CSVReader
 from ...utils.benchmark import benchmark
+from ...utils.io import CSVReader
 
 
 @benchmark.timeit_with_options(name=None, is_read_operation=True)

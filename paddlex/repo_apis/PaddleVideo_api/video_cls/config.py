@@ -13,11 +13,12 @@
 # limitations under the License.
 
 import os
-import yaml
 from typing import Union
 
-from ...base import BaseConfig
+import yaml
+
 from ....utils.misc import abspath
+from ...base import BaseConfig
 from ..config_utils import merge_config
 
 

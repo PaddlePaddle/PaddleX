@@ -13,6 +13,6 @@
 # limitations under the License.
 
 from .dataset_checker import OVDetDatasetChecker
-from .trainer import OVDetTrainer
 from .evaluator import OVDetEvaluator
 from .exportor import OVDetExportor
+from .trainer import OVDetTrainer

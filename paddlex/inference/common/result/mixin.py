@@ -12,29 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Union, Tuple, List, Dict, Any, Iterator, Callable, Optional
+import copy
+import json
+import mimetypes
+import os
 from abc import abstractmethod
 from pathlib import Path
-import os
-import mimetypes
-import json
-import copy
-import re
+from typing import Any, Callable, Dict, List, Optional, Union
+
 import numpy as np
-from PIL import Image
 import pandas as pd
+from PIL import Image
 
 from ....utils import logging
 from ...utils.io import (
-    JsonWriter,
-    ImageReader,
-    ImageWriter,
     CSVWriter,
     HtmlWriter,
-    XlsxWriter,
+    ImageWriter,
+    JsonWriter,
+    MarkdownWriter,
     TextWriter,
     VideoWriter,
-    MarkdownWriter,
+    XlsxWriter,
 )
 
 

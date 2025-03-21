@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .trainer import MLClsTrainer
 from .dataset_checker import MLClsDatasetChecker
 from .evaluator import MLClsEvaluator
 from .exportor import MLClsExportor
+from .trainer import MLClsTrainer

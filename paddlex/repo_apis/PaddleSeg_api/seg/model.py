@@ -14,13 +14,13 @@
 
 import os
 
+from ....utils.cache import DEFAULT_CACHE_DIR
+from ....utils.device import parse_device
+from ....utils.download import download
+from ....utils.misc import abspath
 from ...base import BaseModel
 from ...base.utils.arg import CLIArgument
 from ...base.utils.subprocess import CompletedProcess
-from ....utils.device import parse_device
-from ....utils.misc import abspath
-from ....utils.download import download
-from ....utils.cache import DEFAULT_CACHE_DIR
 
 
 class SegModel(BaseModel):

@@ -14,16 +14,20 @@
 
 
 import json
+import logging
 import os
 import shutil
-import logging
 import unicodedata
 from functools import lru_cache
 from typing import List, Optional
 
+from .tokenizer_utils import (
+    PretrainedTokenizer,
+    _is_control,
+    _is_punctuation,
+    _is_whitespace,
+)
 from .tokenizer_utils_base import AddedToken
-from .tokenizer_utils import PretrainedTokenizer
-from .tokenizer_utils import _is_control, _is_punctuation, _is_whitespace
 
 __all__ = ["CLIPTokenizer"]
 

@@ -14,10 +14,10 @@
 
 
 from pathlib import Path
-from ...base import BaseDatasetChecker
-from .dataset_src import check, split_dataset, deep_analyse, convert
 
+from ...base import BaseDatasetChecker
 from ..model_list import MODELS
+from .dataset_src import check, convert, deep_analyse, split_dataset
 
 
 class FormulaRecDatasetChecker(BaseDatasetChecker):

@@ -14,11 +14,8 @@
 
 
 import os
-import glob
-from pathlib import Path
 
 from ..base import BaseTrainer
-from ...utils.config import AttrDict
 from .model_list import MODELS
 
 

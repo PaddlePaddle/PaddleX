@@ -14,7 +14,6 @@
 
 
 import os
-import tempfile
 
 from ...base import BaseRunner
 from ...base.utils.arg import gather_opts_args

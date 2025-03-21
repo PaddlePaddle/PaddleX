@@ -12,22 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Union, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, Union
+
 import numpy as np
 
-from ....utils.func_register import FuncRegister
 from ....modules.semantic_segmentation.model_list import MODELS
+from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..common import (
-    ResizeByShort,
-    Normalize,
-    ToCHWImage,
-    ToBatch,
-    StaticInfer,
-)
-from .processors import Resize, SegPostProcess
 from ..base import BasicPredictor
+from ..common import Normalize, StaticInfer, ToBatch, ToCHWImage
+from .processors import Resize, SegPostProcess
 from .result import SegResult
 
 

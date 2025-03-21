@@ -12,24 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .static_infer import StaticInfer
+from .tokenizer import PretrainedTokenizer
+from .ts import BuildTSDataset, TimeFeature, TSCutOff, TSNormalize, TStoArray, TStoBatch
 from .vision import (
     F,
+    Normalize,
     Resize,
     ResizeByLong,
     ResizeByShort,
-    Normalize,
-    ToCHWImage,
     ToBatch,
+    ToCHWImage,
 )
-
-from .ts import (
-    BuildTSDataset,
-    TSCutOff,
-    TSNormalize,
-    TimeFeature,
-    TStoArray,
-    TStoBatch,
-)
-from .static_infer import StaticInfer
-
-from .tokenizer import PretrainedTokenizer, PretrainedTokenizer

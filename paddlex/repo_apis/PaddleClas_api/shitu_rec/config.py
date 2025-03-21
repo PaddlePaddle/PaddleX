@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ..cls import ClsConfig
 from ....utils.misc import abspath
+from ..cls import ClsConfig
 
 
 class ShiTuRecConfig(ClsConfig):

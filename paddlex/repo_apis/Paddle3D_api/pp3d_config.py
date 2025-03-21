@@ -13,9 +13,10 @@
 # limitations under the License.
 
 import codecs
-import yaml
-from ...utils.misc import abspath
 
+import yaml
+
+from ...utils.misc import abspath
 from ..base import BaseConfig
 
 

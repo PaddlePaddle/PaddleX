@@ -13,10 +13,11 @@
 # limitations under the License.
 
 from __future__ import absolute_import
-from .contrib.yolov5face import YOLOv5Face
-from .contrib.yolov7face import *
-from .contrib.centerface import *
+
 from .contrib.blazeface import *
+from .contrib.centerface import *
 from .contrib.retinaface import RetinaFace
 from .contrib.scrfd import SCRFD
 from .contrib.ultraface import UltraFace
+from .contrib.yolov5face import YOLOv5Face
+from .contrib.yolov7face import *

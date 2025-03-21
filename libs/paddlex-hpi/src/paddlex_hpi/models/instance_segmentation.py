@@ -15,15 +15,15 @@
 import os
 from typing import Any, Dict, List, Optional, Union
 
-import ultra_infer as ui
 import numpy as np
+import ultra_infer as ui
+from paddlex_hpi.models.base import CVPredictor, HPIParams
+from pydantic import BaseModel
+
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
 from paddlex.inference.models.instance_segmentation.result import InstanceSegResult
 from paddlex.modules.instance_segmentation.model_list import MODELS
 from paddlex.utils import logging
-from pydantic import BaseModel
-
-from paddlex_hpi.models.base import CVPredictor, HPIParams
 
 
 class _InstanceSegPPParams(BaseModel):

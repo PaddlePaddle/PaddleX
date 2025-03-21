@@ -13,6 +13,6 @@
 # limitations under the License.
 
 from .dataset_checker import FormulaRecDatasetChecker
-from .trainer import FormulaRecTrainer
 from .evaluator import FormulaRecEvaluator
 from .exportor import FormulaRecExportor
+from .trainer import FormulaRecTrainer

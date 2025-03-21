@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-from .model import DetModel
-from .runner import DetRunner
 from . import register
+from .model import DetModel
 from .official_categories import official_categories
+from .runner import DetRunner

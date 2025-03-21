@@ -13,8 +13,8 @@
 # limitations under the License.
 
 from __future__ import absolute_import
-import logging
-from .... import UltraInferModel, ModelFormat
+
+from .... import ModelFormat, UltraInferModel
 from .... import c_lib_wrap as C
 
 

@@ -17,13 +17,13 @@ import sys
 from collections import OrderedDict
 
 from ..utils import logging
-from .utils import install_deps_using_pip
 from .meta import get_all_repo_names, get_repo_meta
 from .repo import (
-    build_repo_instance,
     build_repo_group_getter,
     build_repo_group_installer,
+    build_repo_instance,
 )
+from .utils import install_deps_using_pip
 
 __all__ = [
     "set_parent_dirs",

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
+from .analyse_dataset import deep_analyse
 from .check_dataset import check
 from .convert_dataset import convert
 from .split_dataset import split_dataset
-from .analyse_dataset import deep_analyse

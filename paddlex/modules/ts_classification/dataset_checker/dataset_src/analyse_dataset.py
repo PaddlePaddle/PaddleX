@@ -15,11 +15,10 @@
 
 import os
 import platform
-from pathlib import Path
 
-import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 from matplotlib import font_manager
 
 from .....utils.fonts import PINGFANG_FONT_FILE_PATH

@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-from .model_list import MODELS
 from ..object_detection import DetTrainer
+from .model_list import MODELS
 
 
 class KeypointTrainer(DetTrainer):

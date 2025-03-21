@@ -18,8 +18,8 @@ import os.path as osp
 import random
 import shutil
 
-from .....utils.file_interface import custom_open
 from .....utils import logging
+from .....utils.file_interface import custom_open
 
 
 def split_dataset(root_dir, train_percent, val_percent):

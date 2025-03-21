@@ -12,22 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Union, Dict, List, Tuple
-from ....utils.func_register import FuncRegister
+from typing import Union
+
 from ....modules.video_classification.model_list import MODELS
+from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import VideoBatchSampler
 from ...common.reader import ReadVideo
-from ..common import (
-    StaticInfer,
-)
 from ..base import BasicPredictor
+from ..common import StaticInfer
 from .processors import (
-    Scale,
     CenterCrop,
     Image2Array,
     NormalizeVideo,
-    VideoClasTopk,
+    Scale,
     ToBatch,
+    VideoClasTopk,
 )
 from .result import TopkVideoResult
 

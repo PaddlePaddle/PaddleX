@@ -13,11 +13,10 @@
 # limitations under the License.
 
 
-import cv2
 import numpy as np
-from numpy import ndarray
-from ..common.vision import funcs as F
+
 from ...utils.benchmark import benchmark
+from ..common.vision import funcs as F
 
 
 @benchmark.timeit

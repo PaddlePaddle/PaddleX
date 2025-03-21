@@ -15,10 +15,9 @@
 import os
 import os.path as osp
 import random
-from PIL import Image, ImageOps
 from collections import defaultdict
 
-from .....utils.errors import DatasetFileNotFoundError, CheckFailedError
+from .....utils.errors import CheckFailedError, DatasetFileNotFoundError
 
 
 def check(dataset_dir, output, sample_num=10):

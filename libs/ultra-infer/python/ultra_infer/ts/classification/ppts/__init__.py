@@ -16,14 +16,15 @@ from __future__ import absolute_import
 
 import os
 from copy import deepcopy
-import numpy as np
 from dataclasses import dataclass
 
+import numpy as np
+
 from .... import ModelFormat
-from ....py_only.ts import PyOnlyTSModel
-from ....utils.misc import load_config
 from ....py_only import PyOnlyProcessorChain
-from ....py_only.ts import PyOnlyTSModel, processors as P
+from ....py_only.ts import PyOnlyTSModel
+from ....py_only.ts import processors as P
+from ....utils.misc import load_config
 
 
 class PyOnlyClassificationModel(PyOnlyTSModel):

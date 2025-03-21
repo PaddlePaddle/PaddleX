@@ -15,13 +15,13 @@
 import tempfile
 from typing import Any, Dict, List
 
-import ultra_infer as ui
 import numpy as np
+import ultra_infer as ui
+from paddlex_hpi.models.base import CVPredictor
+
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
 from paddlex.inference.models.text_recognition.result import TextRecResult
 from paddlex.modules.text_recognition.model_list import MODELS
-
-from paddlex_hpi.models.base import CVPredictor
 
 
 class TextRecPredictor(CVPredictor):

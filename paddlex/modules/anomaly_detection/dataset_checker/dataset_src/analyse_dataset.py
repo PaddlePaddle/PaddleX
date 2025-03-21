@@ -21,7 +21,6 @@ import numpy as np
 from PIL import Image, ImageOps
 
 from .....utils.file_interface import custom_open
-from .....utils.logging import info
 
 
 def anaylse_dataset(dataset_dir, output):

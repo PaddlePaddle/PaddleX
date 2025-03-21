@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .model_list import MODELS
-from ..base import BaseTrainer
 from ...utils.errors import UnsupportedAPIError
+from ..base import BaseTrainer
+from .model_list import MODELS
 
 
 class OVSegTrainer(BaseTrainer):
@@ -30,7 +30,6 @@ class OVSegTrainer(BaseTrainer):
 
     def update_config(self):
         """update training config"""
-        pass
 
     def get_train_kwargs(self) -> dict:
         """get key-value arguments of model training function

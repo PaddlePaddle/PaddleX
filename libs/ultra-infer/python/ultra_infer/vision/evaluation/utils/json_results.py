@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import six
 import numpy as np
+import six
 
 
 def get_det_res(bboxes, bbox_nums, image_id, label_to_cat_id_map, bias=0):

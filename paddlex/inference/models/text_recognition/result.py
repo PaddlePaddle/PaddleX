@@ -13,11 +13,12 @@
 # limitations under the License.
 
 import copy
+
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
+from ...common.result import BaseCVResult, JsonMixin
 
 
 class TextRecResult(BaseCVResult):

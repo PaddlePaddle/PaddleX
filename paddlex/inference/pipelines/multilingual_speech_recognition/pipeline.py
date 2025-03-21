@@ -12,12 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, List
+from typing import Dict, List, Union
+
 import numpy as np
 
+from ...models.multilingual_speech_recognition.result import WhisperResult
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
-from ...models.multilingual_speech_recognition.result import WhisperResult
 
 
 class MultilingualSpeechRecognitionPipeline(BasePipeline):
@@ -50,7 +51,7 @@ class MultilingualSpeechRecognitionPipeline(BasePipeline):
             multilingual_speech_recognition_model_config
         )
         # only support batch size 1
-        batch_size = multilingual_speech_recognition_model_config["batch_size"]
+        multilingual_speech_recognition_model_config["batch_size"]
 
     def predict(
         self, input: Union[str, List[str], np.ndarray, List[np.ndarray]], **kwargs

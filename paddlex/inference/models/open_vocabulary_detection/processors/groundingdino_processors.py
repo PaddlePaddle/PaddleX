@@ -13,14 +13,14 @@
 # limitations under the License.
 
 import os
-from typing import Dict, List, Optional, Union, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import PIL
 
-from ...common.tokenizer.bert_tokenizer import BertTokenizer
 from .....utils.lazy_loader import LazyLoader
 from ....utils.benchmark import benchmark
+from ...common.tokenizer.bert_tokenizer import BertTokenizer
 
 # NOTE: LazyLoader is used to avoid conflicts between ultra-infer and Paddle
 paddle = LazyLoader("lazy_paddle", globals(), "paddle")

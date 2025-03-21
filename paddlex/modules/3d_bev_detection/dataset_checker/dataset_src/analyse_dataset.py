@@ -14,16 +14,13 @@
 
 
 import os
-import json
-import platform
 import pickle
-
+import platform
 from collections import defaultdict
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib import font_manager
-from matplotlib.backends.backend_agg import FigureCanvasAgg
 
 from paddlex.utils.fonts import PINGFANG_FONT_FILE_PATH
 
@@ -31,7 +28,6 @@ from paddlex.utils.fonts import PINGFANG_FONT_FILE_PATH
 def deep_analyse(dataset_dir, output):
     """class analysis for dataset"""
     tags = ["train", "val"]
-    all_instances = 0
     class_name_train = defaultdict(int)
     class_name_val = defaultdict(int)
     for tag in tags:

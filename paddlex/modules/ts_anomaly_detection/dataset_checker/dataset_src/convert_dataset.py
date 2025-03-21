@@ -15,12 +15,8 @@
 
 import os
 import os.path as osp
-import shutil
-import json
-import random
-import numpy as np
+
 import pandas as pd
-from tqdm import tqdm
 
 from .....utils.errors import ConvertFailedError
 

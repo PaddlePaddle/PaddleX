@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-import glob
 import json
 import os
 import os.path as osp
@@ -23,8 +22,8 @@ import cv2
 import numpy as np
 from PIL import Image, ImageDraw
 
-from .....utils.file_interface import custom_open
 from .....utils import logging
+from .....utils.file_interface import custom_open
 
 
 def convert_dataset(dataset_type, input_dir):

@@ -13,5 +13,5 @@
 # limitations under the License.
 
 
-from .check_dataset import check
 from .analyse_dataset import deep_analyse
+from .check_dataset import check

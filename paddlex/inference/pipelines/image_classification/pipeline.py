@@ -12,14 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, List
+from typing import Dict, List, Union
+
 import numpy as np
-from ...common.reader import ReadImage
-from ...common.batch_sampler import ImageBatchSampler
-from ...utils.pp_option import PaddlePredictorOption
-from ..base import BasePipeline
 
 from ...models.image_classification.result import TopkResult
+from ...utils.pp_option import PaddlePredictorOption
+from ..base import BasePipeline
 
 
 class ImageClassificationPipeline(BasePipeline):

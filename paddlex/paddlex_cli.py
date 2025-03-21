@@ -12,19 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import argparse
 import importlib.resources
+import os
+import shutil
 import subprocess
 import sys
-import shutil
 from pathlib import Path
 
 from . import create_pipeline
 from .inference.pipelines import load_pipeline_config
-from .repo_manager import setup, get_all_supported_repo_names
-from .utils.flags import FLAGS_json_format_model
+from .repo_manager import get_all_supported_repo_names, setup
 from .utils import logging
+from .utils.flags import FLAGS_json_format_model
 from .utils.interactive_get_pipeline import interactive_get_pipeline
 from .utils.pipeline_arguments import PIPELINE_ARGUMENTS
 

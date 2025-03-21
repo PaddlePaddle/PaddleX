@@ -14,11 +14,12 @@
 
 import os
 from pathlib import Path
+
 import numpy as np
 
 from ....utils import logging
-from ....utils.download import download
 from ....utils.cache import CACHE_DIR
+from ....utils.download import download
 from ...utils.io import PDFReader
 from .base_batch_sampler import BaseBatchSampler, Batch
 

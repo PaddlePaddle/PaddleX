@@ -13,10 +13,11 @@
 # limitations under the License.
 
 import copy
+
 import numpy as np
 from PIL import Image
 
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
+from ...common.result import BaseCVResult, JsonMixin
 
 
 class UadResult(BaseCVResult):

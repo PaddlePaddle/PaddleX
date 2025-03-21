@@ -13,6 +13,6 @@
 # limitations under the License.
 
 from .dataset_checker import UadDatasetChecker
-from .trainer import UadTrainer
 from .evaluator import UadEvaluator
 from .exportor import UadExportor
+from .trainer import UadTrainer

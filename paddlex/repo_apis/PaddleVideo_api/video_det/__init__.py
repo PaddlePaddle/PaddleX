@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
+from . import register
+from .config import VideoDetConfig
 from .model import VideoDetModel
 from .runner import VideoDetRunner
-from .config import VideoDetConfig
-from . import register

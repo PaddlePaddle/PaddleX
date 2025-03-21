@@ -16,8 +16,8 @@ import os
 from pathlib import Path
 
 from ....utils import logging
-from ....utils.download import download
 from ....utils.cache import CACHE_DIR
+from ....utils.download import download
 from .base_batch_sampler import BaseBatchSampler
 
 

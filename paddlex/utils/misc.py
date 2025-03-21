@@ -15,12 +15,14 @@
 
 import os
 import threading
-import numpy as np
 from abc import ABCMeta
+
+import numpy as np
+
 from .errors import (
+    DuplicateRegistrationError,
     raise_class_not_found_error,
     raise_no_entity_registered_error,
-    DuplicateRegistrationError,
 )
 from .logging import *
 
@@ -197,5 +199,3 @@ class AutoRegisterMetaClass(type):
 
 class AutoRegisterABCMetaClass(ABCMeta, AutoRegisterMetaClass):
     """AutoRegisterABCMetaClass"""
-
-    pass

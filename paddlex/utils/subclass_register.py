@@ -16,9 +16,9 @@ from abc import ABCMeta
 
 from . import logging
 from .errors import (
+    DuplicateRegistrationError,
     raise_class_not_found_error,
     raise_no_entity_registered_error,
-    DuplicateRegistrationError,
 )
 
 
@@ -97,5 +97,3 @@ class AutoRegisterMetaClass(type):
 
 class AutoRegisterABCMetaClass(ABCMeta, AutoRegisterMetaClass):
     """AutoRegisterABCMetaClass"""
-
-    pass

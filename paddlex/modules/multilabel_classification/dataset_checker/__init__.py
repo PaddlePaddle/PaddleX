@@ -15,8 +15,8 @@
 from pathlib import Path
 
 from ...base import BaseDatasetChecker
-from .dataset_src import check, convert, split_dataset, deep_analyse
 from ..model_list import MODELS
+from .dataset_src import check, convert, deep_analyse, split_dataset
 
 
 class MLClsDatasetChecker(BaseDatasetChecker):

@@ -16,9 +16,9 @@ import os
 import os.path as osp
 
 from ...base.register import register_model_info, register_suite_info
+from .config import ShiTuRecConfig
 from .model import ShiTuRecModel
 from .runner import ShiTuRecRunner
-from .config import ShiTuRecConfig
 
 REPO_ROOT_PATH = os.environ.get("PADDLE_PDX_PADDLECLAS_PATH")
 PDX_CONFIG_DIR = osp.abspath(osp.join(osp.dirname(__file__), "..", "configs"))
