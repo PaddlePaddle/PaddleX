@@ -534,7 +534,7 @@ class StaticInfer(object):
                             self._option.trt_dynamic_shapes,
                             self._option.trt_dynamic_shape_input_data,
                         )
-                    if self._option.model_name in DISABLE_TRT_HALF_OPS_CONFIG:
+                    if self._option.model_name in DISABLE_TRT_HALF_OPS_CONFIG and self._option.run_mode == "trt_fp16":
                         lazy_paddle.inference.InternalUtils.disable_tensorrt_half_ops(
                             config, DISABLE_TRT_HALF_OPS_CONFIG[self._option.model_name]
                         )
