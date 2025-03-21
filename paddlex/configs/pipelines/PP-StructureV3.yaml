@@ -62,7 +62,7 @@ SubModules:
       21: [1.0, 1.0] # footer_image
       22: [1.0, 1.0] # aside_text
     layout_merge_bboxes_mode: 
-      0: "union"  # paragraph_title
+      0: "large"  # paragraph_title
       1: "large"  # image
       2: "union"  # text
       3: "union"  # number

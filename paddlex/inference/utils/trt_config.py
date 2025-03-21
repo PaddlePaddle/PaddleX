@@ -189,6 +189,11 @@ OLD_IR_TRT_CFG_SETTING = {
     },
 }
 
+DISABLE_TRT_HALF_OPS_CONFIG = {
+    # TODO: just for example
+    "model_name": {"layer_norm"}
+}
+
 ############ pir trt ############
 PIR_TRT_PRECISION_MAP = PIR_TRT_PRECISION_MAP_CLASS()
 
