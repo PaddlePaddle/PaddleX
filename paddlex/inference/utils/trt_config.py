@@ -166,6 +166,27 @@ OLD_IR_TRT_CFG_SETTING = {
             ]
         ],
     },
+    "ch_SVTRv2_rec": {
+        "enable_tensorrt_engine": OLD_IR_TRT_CFG_DEFAULT_SETTING,
+        "exp_disable_tensorrt_ops": [
+            [
+                "reshape2_3.tmp_0",
+                "reshape2_5.tmp_0",
+                "reshape2_7.tmp_0",
+                "reshape2_9.tmp_0",
+                "reshape2_11.tmp_0",
+                "reshape2_13.tmp_0",
+                "reshape2_15.tmp_0",
+                "reshape2_17.tmp_0",
+                "reshape2_19.tmp_0",
+                "reshape2_28.tmp_0",
+                "reshape2_42.tmp_0",
+                "reshape2_47.tmp_0",
+                "layer_norm_15.tmp_2",
+                "layer_norm_13.tmp_2",
+            ]
+        ],
+    },
 }
 
 ############ pir trt ############

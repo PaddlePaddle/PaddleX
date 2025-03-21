@@ -249,11 +249,11 @@ class PDFReaderBackend(_BaseReaderBackend):
 
     def read_file(self, in_path):
         for page in fitz.open(in_path):
-            pix = page.get_pixmap(matrix=self.mat, alpha=False)
-            getpngdata = pix.tobytes(output="png")
-            # decode as np.uint8
-            image_array = np.frombuffer(getpngdata, dtype=np.uint8)
-            img_cv = cv2.imdecode(image_array, cv2.IMREAD_ANYCOLOR)
+            pixmap = page.get_pixmap(matrix=self.mat, alpha=False)
+            img_cv = np.frombuffer(pixmap.samples, dtype=np.uint8).reshape(
+                pixmap.h, pixmap.w, pixmap.n
+            )
+            img_cv = cv2.cvtColor(img_cv, cv2.COLOR_RGB2BGR)
             yield img_cv
 
 
