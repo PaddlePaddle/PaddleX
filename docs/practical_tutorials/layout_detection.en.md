@@ -205,7 +205,7 @@ First, you need to choose the corresponding PaddleX pipeline based on the task s
 
 ## 3. Quick Integration
 
-> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Tutorial](../../../installation/installation.en.md)
+> ❗ Before quick integration, please install the PaddleX wheel package. For detailed instructions, refer to [PaddleX Local Installation Tutorial](../installation/installation.en.md)
 
 First, obtain the default configuration file for the production line. Since the layout detection task is part of the object detection production line, you can execute the following command to obtain the default configuration file:
 
