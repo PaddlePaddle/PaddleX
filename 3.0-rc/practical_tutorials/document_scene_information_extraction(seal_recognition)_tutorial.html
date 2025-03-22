@@ -11,6 +11,10 @@
         <link rel="canonical" href="https://paddlepaddle.github.io/PaddleX/3.0-rc/practical_tutorials/document_scene_information_extraction%28seal_recognition%29_tutorial.html">
       
       
+        <link rel="prev" href="document_scene_information_extraction%28layout_detection%29_tutorial.html">
+      
+      
+        <link rel="next" href="document_scene_information_extraction%28deepseek%29_tutorial.html">
       
       
       <link rel="icon" href="../assets/favicon.png">
@@ -18,7 +22,7 @@
     
     
       
-        <title>PaddleX 3.0 文档场景信息抽取v3（PP-ChatOCRv3_doc） —— 印章信息抽取教程 - PaddleX 文档</title>
+        <title>文档场景信息抽取实践教程-如何微调印章文本检测 - PaddleX 文档</title>
       
     
     
@@ -141,7 +145,7 @@ You're not viewing the latest version.
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              PaddleX 3.0 文档场景信息抽取v3（PP-ChatOCRv3_doc） —— 印章信息抽取教程
+              文档场景信息抽取实践教程-如何微调印章文本检测
             
           </span>
         </div>
@@ -468,10 +472,12 @@ You're not viewing the latest version.
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="document_scene_information_extraction%28layout_detection%29_tutorial.html" class="md-tabs__link">
           
   
@@ -4636,8 +4642,10 @@ You're not viewing the latest version.
       
   
   
+    
   
   
+  
     
     
       
@@ -4663,24 +4671,39 @@ You're not viewing the latest version.
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
-        
-          
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -4692,7 +4715,7 @@ You're not viewing the latest version.
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
             产业实践教程&范例
@@ -4710,7 +4733,7 @@ You're not viewing the latest version.
         
   
   <span class="md-ellipsis">
-    论文文献信息抽取教程
+    文档场景信息抽取实践教程-如何微调版面区域检测
     
   </span>
   
@@ -4725,19 +4748,213 @@ You're not viewing the latest version.
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="image_classification_garbage_tutorial.html" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    文档场景信息抽取实践教程-如何微调印章文本检测
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="document_scene_information_extraction%28seal_recognition%29_tutorial.html" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
-    垃圾分类教程
+    文档场景信息抽取实践教程-如何微调印章文本检测
     
   </span>
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 选择产线
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. 快速体验
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 快速体验">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 本地体验
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 在线体验
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. 选择模型
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. 数据准备和校验
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 数据准备和校验">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1 数据准备
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2 数据集校验
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.3 数据集划分（非必选）
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. 模型训练和评估
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 模型训练和评估">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 模型训练
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 模型评估
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3 模型调优
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. 产线测试
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. 开发集成/部署
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -4750,55 +4967,11 @@ You're not viewing the latest version.
   
   
     <li class="md-nav__item">
-      <a href="instance_segmentation_remote_sensing_tutorial.html" class="md-nav__link">
+      <a href="document_scene_information_extraction%28deepseek%29_tutorial.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    遥感图像实例分割教程
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="object_detection_fall_tutorial.html" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    行人跌倒检测教程
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="object_detection_fashion_pedia_tutorial.html" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    服装时尚元素检测教程
+    文档场景信息抽取实践教程-如何使用deepseek
     
   </span>
   
@@ -4820,7 +4993,7 @@ You're not viewing the latest version.
         
   
   <span class="md-ellipsis">
-    车牌识别教程
+    OCR识别之车牌文本检测实践教程
     
   </span>
   
@@ -4842,7 +5015,183 @@ You're not viewing the latest version.
         
   
   <span class="md-ellipsis">
-    手写中文识别教程
+    OCR识别之手写中文识别实践教程
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="formula_recognition_tutorial.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    公式识别实践教程
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="layout_detection.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    版面区域检测模型使用实践教程
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="face_recognition_tutorial.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    人脸识别之卡通人脸识别实践教程
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="image_classification_garbage_tutorial.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    垃圾分类实践教程
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="instance_segmentation_remote_sensing_tutorial.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    遥感图像实例分割实践教程
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="object_detection_fall_tutorial.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    行人跌倒检测实践教程
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="object_detection_fashion_pedia_tutorial.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    服装时尚元素检测实践教程
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ocr_det_license_tutorial.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OCR识别之车牌文本检测实践教程
     
   </span>
   
@@ -4864,7 +5213,7 @@ You're not viewing the latest version.
         
   
   <span class="md-ellipsis">
-    车道线分割教程
+    车道线分割实践教程
     
   </span>
   
@@ -4886,7 +5235,7 @@ You're not viewing the latest version.
         
   
   <span class="md-ellipsis">
-    设备异常检测应用教程
+    设备异常检测应用实践教程
     
   </span>
   
@@ -4908,7 +5257,7 @@ You're not viewing the latest version.
         
   
   <span class="md-ellipsis">
-    心跳监测时序数据分类应用教程
+    心跳监测时序数据分类应用实践教程
     
   </span>
   
@@ -4930,7 +5279,29 @@ You're not viewing the latest version.
         
   
   <span class="md-ellipsis">
-    用电量长期预测应用教程
+    用电量长期预测应用实践教程
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="deployment_tutorial.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    产线部署实践教程
     
   </span>
   
@@ -5607,7 +5978,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月21日 09:15:47">2025年3月21日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月22日 16:12:54">2025年3月22日</span>
   </span>
 
     
@@ -5617,7 +5988,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月21日 09:15:47">2025年3月21日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2025年3月22日 16:12:54">2025年3月22日</span>
   </span>
 
     
@@ -5632,7 +6003,7 @@ You're not viewing the latest version.
     </span>
     <nav>
       
-        <a href="mailto:zhouchangda@baidu.com">zhouchangda</a>
+        <a href="mailto:45199522+cuicheng01@users.noreply.github.com">cuicheng01</a>
     </nav>
   </span>
 
@@ -5718,6 +6089,44 @@ You're not viewing the latest version.
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+        
+          
+          <a href="document_scene_information_extraction%28layout_detection%29_tutorial.html" class="md-footer__link md-footer__link--prev" aria-label="上一页: 文档场景信息抽取实践教程-如何微调版面区域检测">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              <div class="md-ellipsis">
+                文档场景信息抽取实践教程-如何微调版面区域检测
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="document_scene_information_extraction%28deepseek%29_tutorial.html" class="md-footer__link md-footer__link--next" aria-label="下一页: 文档场景信息抽取实践教程-如何使用deepseek">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              <div class="md-ellipsis">
+                文档场景信息抽取实践教程-如何使用deepseek
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
     
   
   <div class="md-footer-meta md-typeset">
