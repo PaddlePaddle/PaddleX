@@ -666,7 +666,7 @@ python -m pip install ../../python/dist/ultra_infer*.whl
   </tr>
 
   <tr>
-    <td rowspan="9">通用版面解析v2</td>
+    <td rowspan="9">通用版面解析v3</td>
     <td>文档图像方向分类（可选）</td>
     <td><b>1</b> / 1 </td>
     <td>无 </td>
