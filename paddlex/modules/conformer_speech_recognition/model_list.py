@@ -14,5 +14,5 @@
 
 
 MODELS = [
-    "ChunkConformer",
+    "chunk_conformer",
 ]

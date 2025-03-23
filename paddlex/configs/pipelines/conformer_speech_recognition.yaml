@@ -1,9 +1,9 @@
 pipeline_name: conformer_speech_recognition
 
 SubModules:
-  SpeechRecognition:
+  ConformerSpeechRecognition:
     module_name: conformer_speech_recognition
-    model_name: Conformer
+    model_name: chunk_conformer
     model_dir: null
     batch_size: 1
     sample_rate: 16000

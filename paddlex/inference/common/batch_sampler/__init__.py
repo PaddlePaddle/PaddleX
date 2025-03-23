@@ -18,4 +18,4 @@ from .video_batch_sampler import VideoBatchSampler
 from .ts_batch_sampler import TSBatchSampler
 from .det_3d_batch_sampler import Det3DBatchSampler
 from .audio_batch_sampler import AudioBatchSampler
-from .chunk_conformer_batch_sampler import ChunkConformerBatchSampler
+from .conformer_batch_sampler import ConformerSpeechBatchSampler

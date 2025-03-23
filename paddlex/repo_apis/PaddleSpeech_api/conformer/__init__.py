@@ -12,17 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Register models and suites
-from .chunk_conformer import ChunkConformerModel, ChunkConformerRunner, register
 
-register()  # Activate registration
+from .config import ChunkConformerConfig
+from .model import ChunkConformerModel
+from .runner import ChunkConformerRunner
+from .register import register
 
-from .ppspeech_config import PPSpeechConfig
-from paddlex.modules.conformer_speech_recognition import (
-    ChunkConformerTrainer,
-    ChunkConformerEvaluator,
-    ChunkConformerExportor,
-    ChunkConformerDatasetChecker,
-)
-
-__all__ = ["PPSpeechConfig"]
+__all__ = [
+    "ChunkConformerConfig",
+    "ChunkConformerModel",
+    "ChunkConformerRunner",
+    "register",
+]

@@ -12,106 +12,215 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Any, Union, Dict, List, Tuple, Iterator
 import numpy as np
 from pathlib import Path
-from typing import Optional, Union
-from .processors import Preprocess, Postprocess
+import tempfile
+import shutil
+from importlib import import_module
+
+from ....utils import logging
+from ....utils.func_register import FuncRegister
+from ...common.batch_sampler import ConformerSpeechBatchSampler
+from ...common.reader.chunk_conformer_reader import ReadChunkConformer
+from ..common import StaticInfer
 from ..base import BasicPredictor
+from ..base.predictor.base_predictor import PredictionWrap
+from .processors import (
+    LoadAudioFromFile,
+    ExtractFeatures,
+    ProcessChunks,
+    DecodeOutputs,
+    GetInferInput,
+)
+from .result import ConformerSpeechResult
+
+module_speech_recognition = import_module(
+    ".conformer_speech_recognition", "paddlex.modules"
+)
+module_model_list = getattr(module_speech_recognition, "model_list")
+MODELS = getattr(module_model_list, "MODELS")
 
 
-class ChunkConformerPredictor(BasicPredictor):
-    """ChunkConformer Automatic Speech Recognition Predictor"""
+class ConformerSpeechPredictor(BasicPredictor):
+    """ConformerSpeechPredictor that inherits from BasicPredictor."""
 
-    def __init__(
-        self,
-        model_dir: Union[str, Path],
-        config: dict,
-        device: Optional[str] = None,
-        **kwargs,
-    ):
-        super().__init__(model_dir, config, device, **kwargs)
-        self.sample_rate = config.get("sample_rate", 16000)
+    entities = MODELS
 
-        # Initialize model first
-        self.model = self.create_model()
+    _FUNC_MAP = {}
+    register = FuncRegister(_FUNC_MAP)
 
-        # Chunk processing config
-        self.chunk_size = config.get("chunk_size", 16)  # in seconds
-        self.stride = config.get("stride", 4)  # in seconds
+    def __init__(self, *args: List, **kwargs: Dict) -> None:
+        """Initializes ConformerSpeechPredictor.
 
-        # Audio feature extractor
-        self.feature_extractor = Preprocess(
-            sample_rate=self.sample_rate, n_fft=400, hop_length=160
+        Args:
+            *args: Arbitrary positional arguments passed to the superclass.
+            **kwargs: Arbitrary keyword arguments passed to the superclass.
+        """
+        self.temp_dir = tempfile.mkdtemp()
+        logging.info(
+            f"infer data will be stored in temporary directory {self.temp_dir}"
         )
+        super().__init__(*args, **kwargs)
+        # Set audio processing parameters before building the model
+        self.sample_rate = self.config.get("sample_rate", 16000)
+        self.chunk_size = self.config.get("chunk_size", 16)  # in seconds
+        self.stride = self.config.get("stride", 4)  # in seconds
+        # Build the model after setting the parameters
+        self.pre_tfs, self.infer = self._build()
 
-        # Text decoder with state tracking
-        self.decoder = Postprocess(
-            vocab_path=Path(model_dir) / "vocab.txt",
-            decoding_method="ctc_greedy",
-            chunk_stride=self.stride,
-        )
+    def _build_batch_sampler(self) -> ConformerSpeechBatchSampler:
+        """Builds and returns a ConformerSpeechBatchSampler instance.
 
-    def preprocess(self, audio_path: Union[str, Path]):
-        """Process audio input into features"""
-        return self.feature_extractor(audio_path)
+        Returns:
+            ConformerSpeechBatchSampler: An instance of ConformerSpeechBatchSampler.
+        """
+        return ConformerSpeechBatchSampler(temp_dir=self.temp_dir)
 
-    def postprocess(
-        self, model_outputs: np.ndarray, decoder_state: Optional[dict] = None
-    ):
-        """Decode model outputs to text with state management"""
-        return self.decoder(model_outputs, decoder_state)
+    def _get_result_class(self) -> type:
+        """Returns the result class, ConformerSpeechResult.
 
-    def predict(self, audio_path: Union[str, Path]):
-        """Streaming prediction with chunk processing"""
-        full_transcript = []
-        decoder_state = None
+        Returns:
+            type: The ConformerSpeechResult class.
+        """
+        return ConformerSpeechResult
 
-        # Process audio in chunks with overlap
-        for chunk_idx, audio_chunk in enumerate(self.load_audio_chunks(audio_path)):
-            # Extract features for current chunk
-            features = self.feature_extractor(audio_chunk)
+    def _build(self) -> Tuple:
+        """Build the preprocessors and inference engine based on the configuration.
 
-            # Run model inference
-            chunk_outputs = self.model_infer(features)
-
-            # Decode with state passing between chunks
-            text, decoder_state = self.postprocess(chunk_outputs, decoder_state)
-
-            # Store intermediate results
-            if chunk_idx > 0 and self.stride > 0:
-                # Remove overlapping part from previous chunk
-                full_transcript = full_transcript[: -self.stride]
-
-            full_transcript.extend(text)
-
-        return "".join(full_transcript)
-
-    def load_audio_chunks(self, audio_path: Union[str, Path]):
-        """Yield audio chunks with configurable size and stride"""
-        import soundfile as sf
-
-        # Load full audio
-        audio, sr = sf.read(audio_path)
-        if sr != self.sample_rate:
-            raise ValueError(
-                f"Audio sample rate {sr}Hz doesn't match model rate {self.sample_rate}Hz"
+        Returns:
+            tuple: A tuple containing the preprocessors and inference engine.
+        """
+        # Convert seconds to samples for ReadChunkConformer
+        chunk_size_samples = int(self.sample_rate * self.chunk_size)
+        stride_samples = int(self.sample_rate * self.stride)
+        pre_tfs = {
+            "Read": ReadChunkConformer(
+                chunk_size=chunk_size_samples, stride=stride_samples
             )
+        }
 
-        # Convert to mono if needed
-        if len(audio.shape) > 1:
-            audio = np.mean(audio, axis=1)
+        # Process the transform operations from config
+        for cfg in self.config["PreProcess"]["transform_ops"]:
+            tf_key = list(cfg.keys())[0]
+            func = self._FUNC_MAP[tf_key]
+            args = cfg.get(tf_key, {})
+            name, op = func(self, **args) if args else func(self)
+            if op:
+                pre_tfs[name] = op
+        pre_tfs["GetInferInput"] = GetInferInput()
 
-        # Calculate chunk parameters in samples
-        chunk_samples = int(self.chunk_size * self.sample_rate)
-        stride_samples = int(self.stride * self.sample_rate)
+        infer = StaticInfer(
+            model_dir=self.model_dir,
+            model_prefix=self.MODEL_FILE_PREFIX,
+            option=self.pp_option,
+        )
 
-        # Split audio into overlapping chunks
-        for start in range(0, len(audio), chunk_samples - stride_samples):
-            end = start + chunk_samples
-            chunk = audio[start:end]
+        return pre_tfs, infer
 
-            # Pad last chunk if needed
-            if len(chunk) < chunk_samples:
-                chunk = np.pad(chunk, (0, chunk_samples - len(chunk)))
+    def _format_output(
+        self, infer_input: List[Any], outs: List[Any], audio_metas: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """format inference input and output into predict result
 
-            yield chunk
+        Args:
+            infer_input(List): Model infer inputs with list containing audio features.
+            outs(List): Model infer output containing logits and decoded text.
+            audio_metas(Dict): Audio metas info of input sample.
+
+        Returns:
+            Dict: A Dict containing formatted inference output results.
+        """
+        input_audio_path = audio_metas["input_audio_path"]
+        sample_id = audio_metas["sample_id"]
+        results = {}
+
+        results["input_path"] = [input_audio_path]
+        results["sample_id"] = [sample_id]
+        results["logits"] = [outs[0]]
+        results["text"] = [outs[1]]
+        results["features"] = [infer_input[0]]
+
+        return results
+
+    def process(self, batch_data: List[str]) -> Dict[str, Any]:
+        """
+        Process a batch of data through the preprocessing and inference.
+
+        Args:
+            batch_data (List[str]): A batch of input data (e.g., audio file paths).
+
+        Returns:
+            dict: A dictionary containing the input path, features, output logits and decoded text.
+        """
+        sample = self.pre_tfs["Read"](batch_data=batch_data)
+        sample = self.pre_tfs["LoadAudioFromFile"](results=sample[0])
+        sample = self.pre_tfs["ExtractFeatures"](results=sample)
+        sample = self.pre_tfs["ProcessChunks"](results=sample)
+        infer_input, audio_metas = self.pre_tfs["GetInferInput"](sample=sample)
+        infer_output = self.infer(x=infer_input)
+        results = self._format_output(infer_input, infer_output, audio_metas)
+        return results
+
+    @register("LoadAudioFromFile")
+    def build_load_audio_from_file(self, sample_rate=16000):
+        return "LoadAudioFromFile", LoadAudioFromFile(sample_rate=sample_rate)
+
+    @register("ExtractFeatures")
+    def build_extract_features(
+        self, n_fft=400, hop_length=160, win_length=None, window=None
+    ):
+        # If win_length is None, use n_fft as default
+        if win_length is None:
+            win_length = n_fft
+
+        return "ExtractFeatures", ExtractFeatures(
+            n_fft=n_fft, hop_length=hop_length, win_length=win_length, window=window
+        )
+
+    @register("ProcessChunks")
+    def build_process_chunks(self, chunk_size=16, stride=4):
+        # Convert seconds to frames using hop_length and sample_rate
+        # Assuming 10ms per frame (hop_length=160, sample_rate=16000)
+        # So frames = seconds * sample_rate / hop_length
+        chunk_size_frames = int(chunk_size * self.sample_rate / 160)
+        context_frames = int(stride * self.sample_rate / 160)
+
+        return "ProcessChunks", ProcessChunks(
+            chunk_size_frames=chunk_size_frames,
+            context_frames=context_frames,
+        )
+
+    @register("DecodeOutputs")
+    def build_decode_outputs(self, vocab_path=None, decoding_method="ctc_greedy"):
+        if vocab_path is None:
+            vocab_path = Path(self.model_dir) / "vocab.txt"
+        return "DecodeOutputs", DecodeOutputs(
+            vocab_path=vocab_path,
+            decoding_method=decoding_method,
+        )
+
+    @register("GetInferInput")
+    def build_get_infer_input(self):
+        return "GetInferInput", GetInferInput()
+
+    def apply(self, input: Any, **kwargs) -> Iterator[Any]:
+        """
+        Do predicting with the input data and yields predictions.
+
+        Args:
+            input (Any): The input data to be predicted.
+
+        Yields:
+            Iterator[Any]: An iterator yielding prediction results.
+        """
+        try:
+            for batch_data in self.batch_sampler(input):
+                prediction = self.process(batch_data, **kwargs)
+                prediction = PredictionWrap(prediction, len(batch_data))
+                for idx in range(len(batch_data)):
+                    yield self.result_class(prediction.get_by_idx(idx))
+        except Exception as e:
+            raise e
+        finally:
+            shutil.rmtree(self.temp_dir)

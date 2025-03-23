@@ -17,7 +17,7 @@ import numpy as np
 
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
-from ...models.conformer_speech_recognition.result import ChunkConformerResult
+from ...models.conformer_speech_recognition.result import ConformerSpeechResult
 
 
 class ChunkConformerPipeline(BasePipeline):
@@ -42,7 +42,6 @@ class ChunkConformerPipeline(BasePipeline):
             use_hpip (bool): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
         """
         super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
-
         conformer_speech_recognition_model_config = config["SubModules"][
             "ConformerSpeechRecognition"
         ]
@@ -54,7 +53,7 @@ class ChunkConformerPipeline(BasePipeline):
 
     def predict(
         self, input: Union[str, List[str], np.ndarray, List[np.ndarray]], **kwargs
-    ) -> ChunkConformerResult:
+    ) -> ConformerSpeechResult:
         """Predicts speech recognition results for the given input.
 
         Args:
@@ -62,6 +61,6 @@ class ChunkConformerPipeline(BasePipeline):
             **kwargs: Additional keyword arguments that can be passed to the function.
 
         Returns:
-            ChunkConformerResult: The predicted whisper results, support str and json output.
+            ConformerSpeechResult: The predicted whisper results, support str and json output.
         """
         yield from self.conformer_speech_recognition_model(input)

@@ -36,7 +36,8 @@ class PPSpeechConfig(BaseConfig):
     def load(self, config_path):
         with codecs.open(config_path, "r", "utf-8") as file:
             dic = yaml.load(file, Loader=yaml.FullLoader)
-        self.reset_from_dict(dic)
+        dict_ = dic
+        self.reset_from_dict(dict_)
 
     def dump(self, config_path):
         with open(config_path, "w", encoding="utf-8") as f:
@@ -44,7 +45,9 @@ class PPSpeechConfig(BaseConfig):
 
     def update_learning_rate(self, learning_rate):
         if "lr_scheduler" not in self:
-            raise RuntimeError("No LR scheduler config found")
+            raise RuntimeError(
+                "Not able to update learning rate, because no LR scheduler config was found."
+            )
 
         if self.lr_scheduler["type"] in ["TransformerLRScheduler", "WarmupDecay"]:
             self.lr_scheduler["learning_rate"] = learning_rate
@@ -55,7 +58,9 @@ class PPSpeechConfig(BaseConfig):
         if mode == "train":
             self.set_val("batch_size", batch_size)
         else:
-            raise ValueError(f"Setting batch_size in {mode} mode not supported")
+            raise ValueError(
+                f"Setting `batch_size` in {repr(mode)} mode is not supported."
+            )
 
     def update_audio_params(self, sample_rate: int, audio_format: str):
         self.set_val("sample_rate", sample_rate)
@@ -68,15 +73,53 @@ class PPSpeechConfig(BaseConfig):
         if mode == "train":
             self.set_val("epochs", epochs)
         else:
-            raise ValueError(f"Setting epochs in {mode} mode not supported")
+            raise ValueError(f"Setting `epochs` in {repr(mode)} mode is not supported.")
 
-    def update_pretrained_weights(self, weight_path):
-        self.set_val("pretrained_weights", abspath(weight_path))
+    def update_pretrained_weights(self, weight_path, is_backbone=False):
+        raise NotImplementedError
+
+    def get_epochs_iters(self):
+        if "iters" in self:
+            return self.iters
+        else:
+            assert "epochs" in self
+            return self.epochs
 
     def get_learning_rate(self):
         if "lr_scheduler" not in self:
             return 0.00025  # Default ASR learning rate
-        return self.lr_scheduler.get("learning_rate", 0.00025)
+
+        if "learning_rate" in self.lr_scheduler:
+            lr = self.lr_scheduler["learning_rate"]
+        elif "base_lr" in self.lr_scheduler:
+            lr = self.lr_scheduler["base_lr"]
+        else:
+            return 0.00025  # Default ASR learning rate
+
+        while isinstance(lr, dict):
+            if "learning_rate" in lr:
+                lr = lr["learning_rate"]
+            elif "base_lr" in lr:
+                lr = lr["base_lr"]
+            else:
+                break
+        return lr
+
+    def get_batch_size(self, mode="train"):
+        if "batch_size" in self:
+            return self.batch_size
+        else:
+            # Default batch size
+            return 32
+
+    def update_warmup_steps(self, steps):
+        if "lr_scheduler" in self:
+            self.lr_scheduler["warmup_steps"] = steps
+
+    def update_iters(self, iters):
+        self.set_val("iters", iters)
+        if "epochs" in self:
+            self.set_val("epochs", None)
 
     def update_save_dir(self, save_dir: str):
         self["save_dir"] = abspath(save_dir)
