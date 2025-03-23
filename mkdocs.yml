@@ -471,4 +471,6 @@ nav:
        - 用电量长期预测应用实践教程: practical_tutorials/ts_forecast.md
        - 产线部署实践教程: practical_tutorials/deployment_tutorial.md
   - FAQ: FAQ.md
-  - 近期更新: CHANGLOG.md
+  - 近期更新: 
+       - 近期更新: CHANGLOG.md
+       - 3.0rc0版本API变更日志: API_change_log/v3.0.0rc.md

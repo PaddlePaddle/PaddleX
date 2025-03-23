@@ -50,7 +50,7 @@ PaddleX 3.0 is a low-code development tool for AI models built on the PaddlePadd
 
 - **Expanded 48 cutting-edge models, including the major releases in the OCR field such as Document Layout Detection Model [PP-DocLayout](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/layout_detection.html), Formula Recognition Model [PP-FormulaNet](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/formula_recognition.html), Table Structure Recognition Model [SLANeXt](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/table_structure_recognition.html), text Recognition Model [PP-OCRv4_server_rec_doc](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/ocr_modules/text_recognition.html)**. In the CV field, models for 3D detection, human keypoints, open vocabulary detection/segmentation, and in the speech recognition field, models from the Whisper series, among others.
 
-- **Optimized and upgraded the inference APIs for models and pipelines**, supporting more parameter configurations to enhance the flexibility of model and pipeline inference. [Details](docs/API_change_log/v3.0.0rc.en.md).
+- **Optimized and upgraded the inference APIs for models and pipelines**, supporting more parameter configurations to enhance the flexibility of model and pipeline inference. [Details](https://paddlepaddle.github.io/PaddleX/latest/en/API_change_log/v3.0.0rc.html).
 
 - **Expanded hardware support:** added support for Suoyuan GCU (90+ models), and significantly increased the number of models for Ascend NPU/Kunlunxin XPU/Cambricon MLU/Hygon DCU.
 
@@ -863,7 +863,7 @@ To use the Python script for other pipelines, simply adjust the `pipeline` param
   <summary> <b> ⏱️ Time Series Analysis </b></summary>
 
   * [📈 Time Series Forecasting Module Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/time_series_modules/time_series_forecasting.html)
-  * [🚨 Time Series Anomaly Detection Module Tutorial](./docs/module_usage/tutorials/time_series_modules/time_series_anomaly_detection.md)
+  * [🚨 Time Series Anomaly Detection Module Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.html)
   * [🕒 Time Series Classification Module Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/time_series_modules/time_series_classification.html)
   </details>
 
@@ -916,18 +916,20 @@ To use the Python script for other pipelines, simply adjust the `pipeline` param
 <details>
   <summary> <b> 📝 Tutorials & Examples </b></summary>
 
-* [📑 PP-ChatOCRv3 Model Line —— Paper Document Information Extract Tutorial](./docs/practical_tutorials/document_scene_information_extraction(layout_detection)_tutorial_en.md)
-* [📑 PP-ChatOCRv3 Model Line —— Seal Information Extract Tutorial](./docs/practical_tutorials/document_scene_information_extraction(seal_recognition)_tutorial_en.md)
-* [🖼️ General Image Classification Model Line —— Garbage Classification Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/image_classification_garbage_tutorial.html)
-* [🧩 General Instance Segmentation Model Line —— Remote Sensing Image Instance Segmentation Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/instance_segmentation_remote_sensing_tutorial.html)
-* [👥 General Object Detection Model Line —— Pedestrian Fall Detection Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/object_detection_fall_tutorial.html)
-* [👗 General Object Detection Model Line —— Fashion Element Detection Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/object_detection_fashion_pedia_tutorial.html)
-* [🚗 General OCR Model Line —— License Plate Recognition Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/ocr_det_license_tutorial.html)
-* [✍️ General OCR Model Line —— Handwritten Chinese Character Recognition Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/ocr_rec_chinese_tutorial.html)
-* [🗣️ General Semantic Segmentation Model Line —— Road Line Segmentation Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/semantic_segmentation_road_tutorial.html)
-* [🛠️ Time Series Anomaly Detection Model Line —— Equipment Anomaly Detection Application Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/ts_anomaly_detection.html)
-* [🎢 Time Series Classification Model Line —— Heartbeat Monitoring Time Series Data Classification Application Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/ts_classification.html)
-* [🔋 Time Series Forecasting Model Line —— Long-term Electricity Consumption Forecasting Application Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/ts_forecast.html)
+* [📑 Document Scene Information Extraction v3 Model Pipeline — Academic Paper Information Extraction Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/document_scene_information_extraction%28layout_detection%29_tutorial.html)
+* [📑 Document Scene Information Extraction v3 Model Pipeline — Seal Information Extraction Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/document_scene_information_extraction%28seal_recognition%29_tutorial.html)
+* [📑 Document Scene Information Extraction v3 Model Pipeline — Deepseek Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/document_scene_information_extraction%28deepseek%29_tutorial.html)
+* [📑 Formula Recognition Model Pipeline — Post-processing Parameter Practice Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/formula_recognition_tutorial.html)
+* [🖼️ General Image Classification Model Pipeline — Garbage Classification Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/image_classification_garbage_tutorial.html)
+* [🧩 General Instance Segmentation Model Pipeline — Remote Sensing Image Instance Segmentation Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/instance_segmentation_remote_sensing_tutorial.html)
+* [👥 General Object Detection Model Pipeline — Pedestrian Fall Detection Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/object_detection_fall_tutorial.html)
+* [👗 General Object Detection Model Pipeline — Fashion Element Detection Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/object_detection_fashion_pedia_tutorial.html)
+* [🚗 General OCR Model Pipeline — License Plate Recognition Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/ocr_det_license_tutorial.html)
+* [✍️ General OCR Model Pipeline — Handwritten Chinese Recognition Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/ocr_rec_chinese_tutorial.html)
+* [🗣️ General Semantic Segmentation Model Pipeline — Lane Line Segmentation Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/semantic_segmentation_road_tutorial.html)
+* [🛠️ Time Series Anomaly Detection Model Pipeline — Equipment Anomaly Detection Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/ts_anomaly_detection.html)
+* [🎢 Time Series Classification Model Pipeline — Heartbeat Monitoring Time Series Data Classification Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/ts_classification.html)
+* [🔋 Time Series Forecasting Model Pipeline — Long-term Electricity Consumption Forecasting Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/practical_tutorials/ts_forecast.html)
 
   </details>
 
