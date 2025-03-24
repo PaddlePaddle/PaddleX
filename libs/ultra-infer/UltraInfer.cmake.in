@@ -32,6 +32,7 @@ set(ENABLE_PADDLE_BACKEND @ENABLE_PADDLE_BACKEND@)
 set(ENABLE_OPENVINO_BACKEND @ENABLE_OPENVINO_BACKEND@)
 set(ENABLE_POROS_BACKEND @ENABLE_POROS_BACKEND@)
 set(ENABLE_TRT_BACKEND @ENABLE_TRT_BACKEND@)
+set(ENABLE_OM_BACKEND @ENABLE_OM_BACKEND@)
 set(ENABLE_PADDLE2ONNX @ENABLE_PADDLE2ONNX@)
 set(BUILD_PADDLE2ONNX @BUILD_PADDLE2ONNX@)
 
@@ -177,6 +178,32 @@ if(ENABLE_POROS_BACKEND)
   set(TORCH_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/third_libs/install/torch/include")
   list(APPEND ULTRAINFER_LIBS ${POROS_LIB} ${TORCH_LIB})
   list(APPEND ULTRAINFER_INCS ${CMAKE_CURRENT_LIST_DIR}/third_libs/install/poros/include ${TORCH_INCLUDE})
+endif()
+
+if(ENABLE_OM_BACKEND)
+  set(LIB_PATH $ENV{NPU_HOST_LIB})
+  if (NOT DEFINED ENV{NPU_HOST_LIB})
+    set(LIB_PATH "/usr/local/Ascend/ascend-toolkit/latest/x86_64-linux/lib64")
+    message(STATUS "set default LIB_PATH: ${LIB_PATH}")
+  else()
+    message(STATUS "set LIB_PATH: ${LIB_PATH}")
+  endif ()
+
+  set(INC_PATH $ENV{DDK_PATH})
+  if (NOT DEFINED ENV{DDK_PATH})
+    set(INC_PATH "/usr/local/Ascend/ascend-toolkit/latest")
+    message(STATUS "set default INC_PATH: ${INC_PATH}")
+  else()
+    message(STATUS "set INC_PATH: ${INC_PATH}")
+  endif ()
+
+  set(NPU_libs ascendcl stdc++)
+
+  link_directories(${LIB_PATH})
+
+  list(APPEND ULTRAINFER_LIBS ${NPU_libs})
+
+  list(APPEND ULTRAINFER_INCS ${INC_PATH}/runtime/include/)
 endif()
 
 if(WITH_GPU)

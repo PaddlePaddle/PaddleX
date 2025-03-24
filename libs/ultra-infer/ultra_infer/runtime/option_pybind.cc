@@ -65,6 +65,7 @@ void BindOption(pybind11::module &m) {
       .def("use_trt_backend", &RuntimeOption::UseTrtBackend)
       .def("use_openvino_backend", &RuntimeOption::UseOpenVINOBackend)
       .def("use_lite_backend", &RuntimeOption::UseLiteBackend)
+      .def("use_om_backend", &RuntimeOption::UseOMBackend)
       .def("enable_pinned_memory", &RuntimeOption::EnablePinnedMemory)
       .def("disable_pinned_memory", &RuntimeOption::DisablePinnedMemory)
       .def("use_ipu", &RuntimeOption::UseIpu)
