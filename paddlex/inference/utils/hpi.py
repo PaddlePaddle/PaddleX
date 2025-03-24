@@ -122,19 +122,6 @@ def get_model_paths(
     return model_paths
 
 
-_PREFERRED_PSEUDO_INFERENCE_BACKENDS: Final[Dict[str, List[InferenceBackend]]] = {
-    "cpu_x64": ["openvino", "onnxruntime", "paddle"],
-    "gpu_cuda118_cudnn86": [
-        "paddle_tensorrt_fp16",
-        "tensorrt_fp16",
-        "tensorrt",
-        "paddle_tensorrt",
-        "onnxruntime",
-        "paddle",
-    ],
-}
-
-
 @lru_cache(1)
 def _get_hpi_model_info_collection():
     with importlib.resources.open_text(
@@ -193,15 +180,6 @@ def suggest_inference_backend_and_config(
     supported_pseudo_backends = hpi_model_info_collection_for_env[
         hpi_config.pdx_model_name
     ]
-    if "paddle" in available_backends:
-        supported_pseudo_backends.append("paddle")
-
-    assert key in _PREFERRED_PSEUDO_INFERENCE_BACKENDS, key
-    preferred_pseudo_backends = _PREFERRED_PSEUDO_INFERENCE_BACKENDS[key]
-    assert all(pb in preferred_pseudo_backends for pb in supported_pseudo_backends)
-    supported_pseudo_backends = sorted(
-        supported_pseudo_backends, key=lambda pb: preferred_pseudo_backends.index(pb)
-    )
 
     candidate_backends = []
     backend_to_pseudo_backend = {}
@@ -228,6 +206,7 @@ def suggest_inference_backend_and_config(
             )
         suggested_backend = hpi_config.backend
     else:
+        # The first backend is the preferred one.
         suggested_backend = candidate_backends[0]
 
     suggested_backend_config = {}
