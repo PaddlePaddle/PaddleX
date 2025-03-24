@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict, Final, List, Optional, Union
+from typing import Dict, Final, List, Optional, Tuple, Union
 
-from pydantic import BaseModel, Field
-from typing_extensions import Annotated
+from pydantic import BaseModel
 
 from ..infra.models import DataInfo, PrimaryOperations
 from .shared import ocr
@@ -40,6 +39,10 @@ class InferRequest(ocr.BaseInferRequest):
     useSealRecognition: Optional[bool] = None
     useTableRecognition: Optional[bool] = None
     useFormulaRecognition: Optional[bool] = None
+    layoutThreshold: Optional[float] = None
+    layoutNms: Optional[bool] = None
+    layoutUnclipRatio: Optional[Union[float, Tuple[float, float], dict]] = None
+    layoutMergeBboxesMode: Optional[Union[str, dict]] = None
     textDetLimitSideLen: Optional[int] = None
     textDetLimitType: Optional[str] = None
     textDetThresh: Optional[float] = None
@@ -52,12 +55,9 @@ class InferRequest(ocr.BaseInferRequest):
     sealDetBoxThresh: Optional[float] = None
     sealDetUnclipRatio: Optional[float] = None
     sealRecScoreThresh: Optional[float] = None
-    layoutThreshold: Optional[float] = None
-    layoutNms: Optional[bool] = None
-    layoutUnclipRatio: Optional[
-        Union[float, Annotated[List[float], Field(min_length=2, max_length=2)]]
-    ] = None
-    layoutMergeBboxesMode: Optional[str] = None
+    useTableCellsOcrResults: bool = False
+    useE2eWiredTableRecModel: bool = False
+    useE2eWirelessTableRecModel: bool = False
 
 
 class MarkdownData(BaseModel):

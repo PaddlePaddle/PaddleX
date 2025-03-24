@@ -96,23 +96,54 @@ comments: true
 </tbody>
 </table>
 
-**测试环境说明：**
+<strong>测试环境说明:</strong>
 
-- **性能测试环境**
-  - **测试数据集**
-    - 人脸检测模型：COCO 格式的 WIDER-FACE 验证集上，以640*640作为输入尺寸评估得到的。
-    - 人脸特征模型：分别在 AgeDB-30、CFP-FP 和 LFW 数据集。
-  - **硬件配置**：
-    - GPU：NVIDIA Tesla T4
-    - CPU：Intel Xeon Gold 6271C @ 2.60GHz
-    - 其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+  <ul>
+      <li><b>性能测试环境</b>
+          <ul>
+             <li><strong>测试数据集：
+             </strong>
+               <ul>
+                 <li>人脸检测模型：COCO 格式的 WIDER-FACE 验证集上，以640*640作为输入尺寸评估得到的。</li>
+                 <li>人脸特征模型：分别在 AgeDB-30、CFP-FP 和 LFW 数据集。</li>
+               </ul>
+             </li>
+              <li><strong>硬件配置：</strong>
+                  <ul>
+                      <li>GPU：NVIDIA Tesla T4</li>
+                      <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>推理模式说明</b></li>
+  </ul>
 
-- **推理模式说明**
-
-| 模式        | GPU配置                          | CPU配置          | 加速技术组合                                |
-|-------------|----------------------------------|------------------|---------------------------------------------|
-| 常规模式    | FP32精度 / 无TRT加速             | FP32精度 / 8线程       | PaddleInference                             |
-| 高性能模式  | 选择先验精度类型和加速策略的最优组合         | FP32精度 / 8线程       | 选择先验最优后端（Paddle/OpenVINO/TRT等） |
+<table border="1">
+    <thead>
+        <tr>
+            <th>模式</th>
+            <th>GPU配置</th>
+            <th>CPU配置</th>
+            <th>加速技术组合</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>常规模式</td>
+            <td>FP32精度 / 无TRT加速</td>
+            <td>FP32精度 / 8线程</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>高性能模式</td>
+            <td>选择先验精度类型和加速策略的最优组合</td>
+            <td>FP32精度 / 8线程</td>
+            <td>选择先验最优后端（Paddle/OpenVINO/TRT等）</td>
+        </tr>
+    </tbody>
+</table>
 
 ## 2. 快速开始
 PaddleX 所提供的模型产线均可以快速体验效果，你可以在线体验人脸识别产线的效果，也可以在本地使用命令行或 Python 体验人脸识别产线的效果。
@@ -1069,7 +1100,7 @@ pprint.pp(result_infer["faces"])
 ### 4.1 模型微调
 由于人脸识别产线包含两个模块（人脸检测和人脸特征），模型产线的效果不及预期可能来自于其中任何一个模块。
 
-您可以对识别效果差的图片进行分析，如果在分析过程中发现有较多的人脸未被检测出来，那么可能是人脸检测模型存在不足，您需要参考[人脸检测模块开发教程](../../../module_usage/tutorials/cv_modules/face_detection.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/face_detection.md#四二次开发)章节，使用您的私有数据集对人脸检测模型进行微调；如果在已检测到的人脸出现匹配错误，这表明人脸特征模块需要进一步改进，您需要参考[人脸特征模块开发教程](../../../module_usage/tutorials/cv_modules/face_feature.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/face_feature.md#四二次开发)章节，对人脸特征模块进行微调。
+您可以对识别效果差的图片进行分析，如果在分析过程中发现有较多的人脸未被检测出来，那么可能是人脸检测模型存在不足，您需要参考[人脸检测模块开发教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/face_detection.html)中的<b>二次开发</b>章节，使用您的私有数据集对人脸检测模型进行微调；如果在已检测到的人脸出现匹配错误，这表明人脸特征模块需要进一步改进，您需要参考[人脸特征模块开发教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/face_feature.html)中的<b>二次开发</b>章节，对人脸特征模块进行微调。
 
 ### 4.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。

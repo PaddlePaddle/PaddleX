@@ -34,21 +34,48 @@ Rotated object detection is a variant of the object detection module, specifical
 </tr>
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**: <a href="https://captain-whu.github.io/DOTA/">DOTA</a> validation set.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+               <li><strong>Test Dataset：</strong> <a href="https://captain-whu.github.io/DOTA/">DOTA</a> validation set.</li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
-- **Inference Mode Description**
-
-| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
-|-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
-| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
 
 ## 2. Quick Start
 
@@ -899,7 +926,6 @@ print_r($result["detectedObjects"]);
 📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on user devices, allowing them to process data locally without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed instructions, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
 You can choose the appropriate deployment method based on your needs to integrate the model pipeline into subsequent AI applications.
 
-
 ## 4. Custom Development
 If the default model weights provided by the Rotated Object Detection Pipeline do not meet your requirements in terms of accuracy or speed, you can attempt to <b>fine-tune</b> the existing models using <b>your own domain-specific or application-specific data</b> to improve the detection performance in your scenario.
 
@@ -919,73 +945,7 @@ Since the Rotated Object Detection Pipeline includes a rotated object detection 
     <tr>
       <td>Prediction results are not satisfactory</td>
       <td>Rotated Object Detection Module</td>
-      <td><a href="../../../module_usage/tutorials/cv_modules/rotated_object_detection.en.md">Link</a></td>
-    </tr>
-  </tbody>
-</table>
-
-### 4.2 Model Application
-After fine-tuning with your private dataset, you will obtain the local model weight file.
-
-To use the fine-tuned model weights, simply modify the pipeline configuration file by replacing the path of the fine-tuned model weights with the corresponding location in the pipeline configuration file:
-
-<details><summary>PHP</summary>
-
-<pre><code class="language-php">&lt;?php
-
-$API_URL = "http://localhost:8080/small-object-detection"; // Service URL
-$image_path = "./demo.jpg";
-$output_image_path = "./out.jpg";
-
-// Encode the local image in Base64
-$image_data = base64_encode(file_get_contents($image_path));
-$payload = array("image" => $image_data); // Base64-encoded file content or image URL
-
-// Call the API
-$ch = curl_init($API_URL);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$response = curl_exec($ch);
-curl_close($ch);
-
-// Process the response data from the API
-$result = json_decode($response, true)["result"];
-file_put_contents($output_image_path, base64_decode($result["image"]));
-echo "Output image saved at " . $output_image_path . "\n";
-echo "\nDetected objects:\n";
-print_r($result["detectedObjects"]);
-
-?&gt;
-</code></pre></details>
-</details>
-<br/>
-
-📱 <b>Edge Deployment</b>: Edge deployment is a method of placing computing and data processing capabilities directly on user devices, allowing them to process data locally without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed instructions, please refer to the [PaddleX Edge Deployment Guide](../../../pipeline_deploy/edge_deploy.en.md).
-You can choose the appropriate deployment method based on your needs to integrate the model pipeline into subsequent AI applications.
-
-
-## 4. Custom Development
-If the default model weights provided by the Rotated Object Detection Pipeline do not meet your requirements in terms of accuracy or speed, you can attempt to <b>fine-tune</b> the existing models using <b>your own domain-specific or application-specific data</b> to improve the detection performance in your scenario.
-
-### 4.1 Model Fine-Tuning
-Since the Rotated Object Detection Pipeline includes a rotated object detection module, if the pipeline's performance is not satisfactory, you can analyze the poorly detected images and refer to the fine-tuning tutorial links in the table below for model fine-tuning.
-
-
-<table>
-  <thead>
-    <tr>
-      <th>Scenario</th>
-      <th>Fine-Tuning Module</th>
-      <th>Fine-Tuning Reference Link</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Prediction results are not satisfactory</td>
-      <td>Rotated Object Detection Module</td>
-      <td><a href="../../../module_usage/tutorials/cv_modules/rotated_object_detection.en.md">Link</a></td>
+      <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/rotated_object_detection.html">Link</a></td>
     </tr>
   </tbody>
 </table>

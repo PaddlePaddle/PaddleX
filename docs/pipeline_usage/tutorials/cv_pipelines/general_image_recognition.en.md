@@ -71,23 +71,53 @@ PP-ShiTuV2 is a practical general image recognition system mainly composed of th
 </tr>
 </table>
 
-**Test Environment Description**:
+<strong>Test Environment Description:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**:
-    - Subject Detection Model: PaddleClas Subject Detection Dataset.
-    - Image Feature Model: AliProducts Dataset.
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+  <ul>
+      <li><b>Performance Test Environment</b>
+          <ul>
+            <li><strong>Test Dataset：</strong>
+              <ul>
+                <li>Subject Detection Model: PaddleClas Subject Detection Dataset.</li>
+                <li>Image Feature Model: AliProducts Dataset.</li>
+              </ul>
+            </li>
+              <li><strong>Hardware Configuration：</strong>
+                  <ul>
+                      <li>GPU: NVIDIA Tesla T4</li>
+                      <li>CPU: Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>Inference Mode Description</b></li>
+  </ul>
 
-- **Inference Mode Description**
-
-| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
-|-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
-| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mode</th>
+            <th>GPU Configuration </th>
+            <th>CPU Configuration </th>
+            <th>Acceleration Technology Combination</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Normal Mode</td>
+            <td>FP32 Precision / No TRT Acceleration</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>High-Performance Mode</td>
+            <td>Optimal combination of pre-selected precision types and acceleration strategies</td>
+            <td>FP32 Precision / 8 Threads</td>
+            <td>Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.)</td>
+        </tr>
+    </tbody>
+</table>
 
 ## 2. Quick Start
 
@@ -1033,7 +1063,7 @@ If the default model weights provided by the general image recognition pipeline 
 
 Since the general image recognition pipeline includes two modules (main body detection module and image feature module), the suboptimal performance of the model pipeline may come from either module.
 
-You can analyze the images with poor recognition results. If you find that many main body targets are not detected during the analysis, it may be due to the inadequacy of the main body detection model. You need to refer to the [Main Body Detection Module Development Tutorial](../../../module_usage/tutorials/cv_modules/mainbody_detection.en.md) in the [Custom Development](../../../module_usage/tutorials/cv_modules/mainbody_detection.en.md) section to fine-tune the main body detection model using your private dataset. If there are matching errors in the detected main bodies, it indicates that the image feature model needs further improvement. You need to refer to the [Image Feature Module Development Tutorial](../../../module_usage/tutorials/cv_modules/image_feature.en.md) in the [Custom Development](../../../module_usage/tutorials/cv_modules/image_feature.en.md) section to fine-tune the image feature model.
+You can analyze the images with poor recognition results. If you find that many main body targets are not detected during the analysis, it may be due to the inadequacy of the main body detection model. You need to refer to the [Main Body Detection Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/mainbody_detection.html) in the <b>Custom Development</b> section to fine-tune the main body detection model using your private dataset. If there are matching errors in the detected main bodies, it indicates that the image feature model needs further improvement. You need to refer to the [Image Feature Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/cv_modules/image_feature.html) in the <b>Custom Development</b> section to fine-tune the image feature model.
 
 ### 4.2 Model Application
 

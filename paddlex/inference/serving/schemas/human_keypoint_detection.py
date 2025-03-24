@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Final, List, Optional
+from typing import Final, List, Optional, Tuple
 
-from pydantic import BaseModel, Field
-from typing_extensions import Annotated, TypeAlias
+from pydantic import BaseModel
+from typing_extensions import TypeAlias
 
 from ..infra.models import PrimaryOperations
 from .shared import object_detection
@@ -29,7 +29,7 @@ __all__ = [
     "PRIMARY_OPERATIONS",
 ]
 
-KeyPoint: TypeAlias = Annotated[List[float], Field(min_length=3, max_length=3)]
+KeyPoint: TypeAlias = Tuple[float, float, float]
 INFER_ENDPOINT: Final[str] = "/human-keypoint-detection"
 
 

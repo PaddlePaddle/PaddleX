@@ -55,21 +55,52 @@ comments: true
 </tbody>
 </table>
 
-**Test Environment Description**:
+<strong>测试环境说明:</strong>
 
-- **Performance Test Environment**
-  - **Test Dataset**: <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_anomaly_examples.tar">PSM</a> 数据集。
-  - **Hardware Configuration**:
-    - GPU: NVIDIA Tesla T4
-    - CPU: Intel Xeon Gold 6271C @ 2.60GHz
-    - Other Environments: Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+  <ul>
+      <li><b>性能测试环境</b>
+          <ul>
+           <li><strong>测试数据集：
+             </strong>
+              <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/data/ts_anomaly_examples.tar">PSM</a> 数据集。
+             </li>
+              <li><strong>硬件配置：</strong>
+                  <ul>
+                      <li>GPU：NVIDIA Tesla T4</li>
+                      <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>推理模式说明</b></li>
+  </ul>
 
-- **Inference Mode Description**
+<table border="1">
+    <thead>
+        <tr>
+            <th>模式</th>
+            <th>GPU配置</th>
+            <th>CPU配置</th>
+            <th>加速技术组合</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>常规模式</td>
+            <td>FP32精度 / 无TRT加速</td>
+            <td>FP32精度 / 8线程</td>
+            <td>PaddleInference</td>
+        </tr>
+        <tr>
+            <td>高性能模式</td>
+            <td>选择先验精度类型和加速策略的最优组合</td>
+            <td>FP32精度 / 8线程</td>
+            <td>选择先验最优后端（Paddle/OpenVINO/TRT等）</td>
+        </tr>
+    </tbody>
+</table>
 
-| Mode        | GPU Configuration                        | CPU Configuration | Acceleration Technology Combination                   |
-|-------------|----------------------------------------|-------------------|---------------------------------------------------|
-| Normal Mode | FP32 Precision / No TRT Acceleration   | FP32 Precision / 8 Threads | PaddleInference                                 |
-| High-Performance Mode | Optimal combination of pre-selected precision types and acceleration strategies | FP32 Precision / 8 Threads | Pre-selected optimal backend (Paddle/OpenVINO/TRT, etc.) |
 
 
 ## 2. 快速开始
@@ -887,7 +918,7 @@ echo "Output time-series data saved at " . $output_csv_path . "\n";
 如果通用时序异常检测产线提供的默认模型权重在您的场景中，精度或速度不满意，您可以尝试利用<b>您自己拥有的特定领域或应用场景的数据</b>对现有模型进行进一步的<b>微调</b>，以提升通用时序异常检测产线的在您的场景中的识别效果。
 
 ### 4.1 模型微调
-由于通用时序异常检测产线包含时序异常检测模块，如果模型产线的效果不及预期，那么您需要参考[时序预测模块开发教程](../../../module_usage/tutorials/time_series_modules/time_series_anomaly_detection.md)中的[二次开发](../../../module_usage/tutorials/time_series_modules/time_series_anomaly_detection.md#四二次开发)章节，使用您的私有数据集对时序异常检测模型进行微调。
+由于通用时序异常检测产线包含时序异常检测模块，如果模型产线的效果不及预期，那么您需要参考[时序异常检测模块使用教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/time_series_modules/time_series_anomaly_detection.html)中的<b>二次开发</b>章节，使用您的私有数据集对时序异常检测模型进行微调。
 
 ### 4.2 模型应用
 当您使用私有数据集完成微调训练后，可获得本地模型权重文件。
