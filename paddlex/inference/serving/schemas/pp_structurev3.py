@@ -39,6 +39,10 @@ class InferRequest(ocr.BaseInferRequest):
     useSealRecognition: Optional[bool] = None
     useTableRecognition: Optional[bool] = None
     useFormulaRecognition: Optional[bool] = None
+    layoutThreshold: Optional[float] = None
+    layoutNms: Optional[bool] = None
+    layoutUnclipRatio: Optional[Union[float, Tuple[float, float], dict]] = None
+    layoutMergeBboxesMode: Optional[Union[str, dict]] = None
     textDetLimitSideLen: Optional[int] = None
     textDetLimitType: Optional[str] = None
     textDetThresh: Optional[float] = None
@@ -51,10 +55,9 @@ class InferRequest(ocr.BaseInferRequest):
     sealDetBoxThresh: Optional[float] = None
     sealDetUnclipRatio: Optional[float] = None
     sealRecScoreThresh: Optional[float] = None
-    layoutThreshold: Optional[float] = None
-    layoutNms: Optional[bool] = None
-    layoutUnclipRatio: Optional[Union[float, Tuple[float, float], dict]] = None
-    layoutMergeBboxesMode: Optional[Union[str, dict]] = None
+    useTableCellsOcrResults: bool = False
+    useE2eWiredTableRecModel: bool = False
+    useE2eWirelessTableRecModel: bool = False
 
 
 class MarkdownData(BaseModel):

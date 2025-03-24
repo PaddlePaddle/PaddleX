@@ -73,18 +73,30 @@ PaddleX 的人体关键点检测产线是一个 Top-Down 方案，由行人检�
 </tr>
 </table>
 
-<b>测试环境说明：</b>
+<strong>测试环境说明:</strong>
 
-- <b>性能测试环境</b>
-  - <b>测试数据集</b>：
-    - 行人检测模型：CrowdHuman数据集。
-    - 人体关键点检测模型：COCO数据集 AP(0.5:0.95)，所依赖的检测框为ground truth标注得到。
-  - <b>硬件配置</b>：
-    - GPU：NVIDIA Tesla T4
-    - CPU：Intel Xeon Gold 6271C @ 2.60GHz
-    - 其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2
+  <ul>
+      <li><b>性能测试环境</b>
+          <ul>
+            <li><strong>测试数据集：
+             </strong>
+               <ul>
+                 <li>行人检测模型：CrowdHuman数据集。</li>
+                 <li>人体关键点检测模型：COCO数据集 AP(0.5:0.95)，所依赖的检测框为ground truth标注得到。</li>
+               </ul>
+             </li>
+              <li><strong>硬件配置：</strong>
+                  <ul>
+                      <li>GPU：NVIDIA Tesla T4</li>
+                      <li>CPU：Intel Xeon Gold 6271C @ 2.60GHz</li>
+                      <li>其他环境：Ubuntu 20.04 / cuDNN 8.6 / TensorRT 8.5.2.2</li>
+                  </ul>
+              </li>
+          </ul>
+      </li>
+      <li><b>推理模式说明</b></li>
+  </ul>
 
-- <b>推理模式说明</b>
 
 <table border="1">
     <thead>
@@ -736,7 +748,7 @@ print(result["persons"])
 
 由于人体关键点检测产线包含两个模块（行人检测模块和人体关键点检测模块），模型产线的效果不及预期可能来自于其中任何一个模块。
 
-您可以对识别效果差的图片进行分析，如果在分析过程中发现有较多的行人目标未被检测出来，那么可能是行人检测模型存在不足，您需要参考[行人检测模块开发教程](../../../module_usage/tutorials/cv_modules/human_detection.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/human_detection.md#四二次开发)章节，使用您的私有数据集对行人检测模型进行微调；如果在已检测到行人出现关键点检测错误，这表明关键点检测模型需要进一步改进，您需要参考[关键点检测模块开发教程](../../../module_usage/tutorials/cv_modules/human_keypoint_detection.md)中的[二次开发](../../../module_usage/tutorials/cv_modules/human_keypoint_detection.md#四二次开发)章节,对关键点检测模型进行微调。
+您可以对识别效果差的图片进行分析，如果在分析过程中发现有较多的行人目标未被检测出来，那么可能是行人检测模型存在不足，您需要参考[行人检测模块开发教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/human_detection.html)中的<b>二次开发</b>章节，使用您的私有数据集对行人检测模型进行微调；如果在已检测到行人出现关键点检测错误，这表明关键点检测模型需要进一步改进，您需要参考[关键点检测模块开发教程](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/cv_modules/human_keypoint_detection.html)中的<b>二次开发</b>章节,对关键点检测模型进行微调。
 
 ### 4.2 模型应用
 

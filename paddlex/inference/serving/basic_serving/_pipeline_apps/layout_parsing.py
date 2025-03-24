@@ -55,6 +55,10 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             use_seal_recognition=request.useSealRecognition,
             use_table_recognition=request.useTableRecognition,
             use_formula_recognition=request.useFormulaRecognition,
+            layout_threshold=request.layoutThreshold,
+            layout_nms=request.layoutNms,
+            layout_unclip_ratio=request.layoutUnclipRatio,
+            layout_merge_bboxes_mode=request.layoutMergeBboxesMode,
             text_det_limit_side_len=request.textDetLimitSideLen,
             text_det_limit_type=request.textDetLimitType,
             text_det_thresh=request.textDetThresh,
@@ -67,10 +71,6 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             seal_det_box_thresh=request.sealDetBoxThresh,
             seal_det_unclip_ratio=request.sealDetUnclipRatio,
             seal_rec_score_thresh=request.sealRecScoreThresh,
-            layout_threshold=request.layoutThreshold,
-            layout_nms=request.layoutNms,
-            layout_unclip_ratio=request.layoutUnclipRatio,
-            layout_merge_bboxes_mode=request.layoutMergeBboxesMode,
         )
 
         layout_parsing_results: List[Dict[str, Any]] = []
