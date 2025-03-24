@@ -91,7 +91,8 @@ class BEVDet3DPredictor(BasicPredictor):
             lazy_paddle.is_compiled_with_cuda()
             and not lazy_paddle.is_compiled_with_rocm()
         ):
-            pass
+            from ....ops.iou3d_nms import nms_gpu  # noqa: F401
+            from ....ops.voxelize import hard_voxelize  # noqa: F401
         else:
             logging.error("3D BEVFusion custom ops only support GPU platform!")
 
