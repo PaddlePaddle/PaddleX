@@ -111,8 +111,8 @@ SubPipelines:
         module_name: text_detection
         model_name: PP-OCRv4_server_det
         model_dir: null
-        limit_side_len: 1200
-        limit_type: max
+        limit_side_len: 736
+        limit_type: min
         thresh: 0.3
         box_thresh: 0.4
         unclip_ratio: 2.0
@@ -170,8 +170,8 @@ SubPipelines:
             module_name: text_detection
             model_name: PP-OCRv4_server_det
             model_dir: null
-            limit_side_len: 1200
-            limit_type: max
+            limit_side_len: 736
+            limit_type: min
             thresh: 0.3
             box_thresh: 0.4
             unclip_ratio: 2.0

@@ -93,16 +93,16 @@ def packages_and_package_data():
     pkg_data.append("inference/pipelines/ppchatocrv3/ch_prompt.yaml")
     pkg_data.extend(pipeline_config)
     pkg_data.append(".version")
-    pkg_data.append("utils/fonts/PingFang-SC-Regular.ttf")
     pkg_data.append("repo_manager/requirements.txt")
     pkg_data.append("serving_requirements.txt")
     pkg_data.append("paddle2onnx_requirements.txt")
     pkg_data.append("hpip_links.html")
-    ops_file_dir = 'paddlex/ops'
-    ops_file_types = ['h', 'hpp', 'cpp', 'cc', 'cu']
+    ops_file_dir = "paddlex/ops"
+    ops_file_types = ["h", "hpp", "cpp", "cc", "cu"]
     return pkgs, {
         "paddlex.ops": get_data_files(ops_file_dir, ops_file_types),
-        "paddlex": pkg_data}
+        "paddlex": pkg_data,
+    }
 
 
 if __name__ == "__main__":

@@ -12,11 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from pathlib import Path
 
 import PIL
 from PIL import ImageFont
+from .. import logging
+from ..download import download
 
 
 def get_font_file_path(file_name: str) -> str:
@@ -26,8 +27,14 @@ def get_font_file_path(file_name: str) -> str:
     Returns:
     str: The path to the font file.
     """
+    font_path = (Path(__file__).parent / file_name).resolve().as_posix()
+    if not Path(font_path).exists():
+        download(
+            url=f"https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/fonts/{file_name}",
+            save_path=font_path,
+        )
 
-    return (Path(__file__).parent / file_name).resolve().as_posix()
+    return font_path
 
 
 def create_font(txt: str, sz: tuple, font_path: str) -> ImageFont:

@@ -23,13 +23,6 @@ class OpenAIBotRetriever(BaseRetriever):
         "openai",
     ]
 
-    MODELS = [
-        "tao-8k",
-        "embedding-v1",
-        "bge-large-zh",
-        "bge-large-en",
-    ]
-
     def __init__(self, config: Dict) -> None:
         """
         Initializes the OpenAIBotRetriever instance with the provided configuration.
