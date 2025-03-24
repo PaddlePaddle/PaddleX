@@ -114,7 +114,7 @@ setup_configs["BUILD_ON_JETSON"] = os.getenv("BUILD_ON_JETSON", "OFF")
 setup_configs["BUILD_PADDLE2ONNX"] = os.getenv("BUILD_PADDLE2ONNX", "OFF")
 
 if setup_configs["RKNN2_TARGET_SOC"] != "" or setup_configs["BUILD_ON_JETSON"] != "OFF":
-    REQUIRED_PACKAGES = REQUIRED_PACKAGES.replace("opencv-python", "")
+    REQUIRED_PACKAGES = REQUIRED_PACKAGES.replace("opencv-contrib-python", "")
 
 if wheel_name == "ultra-infer-python":
     if setup_configs["WITH_GPU"] == "ON" or setup_configs["BUILD_ON_JETSON"] == "ON":
