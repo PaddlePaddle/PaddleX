@@ -584,7 +584,7 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
         --layout_threshold 0.5 \
         --layout_nms True \
         --layout_unclip_ratio  1.0 \
-        --layout_merge_bboxes_mode large \
+        --layout_merge_bboxes_mode "'large'"\
         --save_path ./output \
         --device gpu:0
         ```

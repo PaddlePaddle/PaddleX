@@ -349,7 +349,7 @@ PaddleX的每一条产线对应特定的参数，您可以在各自的产线文�
                 --layout_threshold 0.5 \
                 --layout_nms True \
                 --layout_unclip_ratio  1.0 \
-                --layout_merge_bboxes_mode large \
+                --layout_merge_bboxes_mode "'large'"\
                 --save_path ./output \
                 --device gpu:0
         ```
