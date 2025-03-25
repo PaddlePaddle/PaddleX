@@ -213,6 +213,9 @@ class NormalizeImage:
                 split_im[c] += self.beta[c]
 
             res = cv2.merge(split_im)
+
+            if self.order == "chw":
+                res = np.transpose(res, (1, 2, 0))
             return res
 
         return [norm(img) for img in imgs]
@@ -297,10 +300,12 @@ class DBPostProcess:
                 continue
 
             box = np.array(box)
-            box[:, 0] = np.clip(np.round(box[:, 0] / width * dest_width), 0, dest_width)
-            box[:, 1] = np.clip(
-                np.round(box[:, 1] / height * dest_height), 0, dest_height
-            )
+            width_scale = dest_width / width
+            height_scale = dest_height / height
+            for i in range(box.shape[0]):
+                box[i, 0] = max(0, min(round(box[i, 0] * width_scale), dest_width))
+                box[i, 1] = max(0, min(round(box[i, 1] * height_scale), dest_height))
+
             boxes.append(box)
             scores.append(score)
         return boxes, scores
@@ -349,19 +354,20 @@ class DBPostProcess:
             if sside < self.min_size + 2:
                 continue
             box = np.array(box)
-
-            box[:, 0] = np.clip(np.round(box[:, 0] / width * dest_width), 0, dest_width)
-            box[:, 1] = np.clip(
-                np.round(box[:, 1] / height * dest_height), 0, dest_height
-            )
+            width_scale = dest_width / width
+            height_scale = dest_height / height
+            for i in range(box.shape[0]):
+                box[i, 0] = max(0, min(round(box[i, 0] * width_scale), dest_width))
+                box[i, 1] = max(0, min(round(box[i, 1] * height_scale), dest_height))
             boxes.append(box.astype(np.int16))
             scores.append(score)
         return np.array(boxes, dtype=np.int16), scores
 
     def unclip(self, box, unclip_ratio):
         """unclip"""
-        poly = Polygon(box)
-        distance = poly.area * unclip_ratio / poly.length
+        area = cv2.contourArea(box)
+        length = cv2.arcLength(box, True)
+        distance = area * unclip_ratio / length
         offset = pyclipper.PyclipperOffset()
         offset.AddPath(box, pyclipper.JT_ROUND, pyclipper.ET_CLOSEDPOLYGON)
         try:
@@ -396,10 +402,10 @@ class DBPostProcess:
         """box_score_fast: use bbox mean score as the mean score"""
         h, w = bitmap.shape[:2]
         box = _box.copy()
-        xmin = np.clip(np.floor(box[:, 0].min()).astype("int"), 0, w - 1)
-        xmax = np.clip(np.ceil(box[:, 0].max()).astype("int"), 0, w - 1)
-        ymin = np.clip(np.floor(box[:, 1].min()).astype("int"), 0, h - 1)
-        ymax = np.clip(np.ceil(box[:, 1].max()).astype("int"), 0, h - 1)
+        xmin = max(0, min(math.floor(box[:, 0].min()), w - 1))
+        xmax = max(0, min(math.ceil(box[:, 0].max()), w - 1))
+        ymin = max(0, min(math.floor(box[:, 1].min()), h - 1))
+        ymax = max(0, min(math.ceil(box[:, 1].max()), h - 1))
 
         mask = np.zeros((ymax - ymin + 1, xmax - xmin + 1), dtype=np.uint8)
         box[:, 0] = box[:, 0] - xmin
