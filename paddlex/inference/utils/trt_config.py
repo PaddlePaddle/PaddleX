@@ -201,6 +201,7 @@ DISABLE_TRT_HALF_OPS_CONFIG = {
     "SeaFormer_small": {"fused_conv2d_add_act"},
     "SeaFormer_tiny": {"fused_conv2d_add_act"},
     "PP-OCRv4_mobile_seal_det": {"fused_conv2d_add_act","softmax"},
+    "BlazeFace-FPN-SSH": {"fused_conv2d_add_act"},
 }
 
 ############ pir trt ############
@@ -227,6 +228,14 @@ PIR_TRT_CFG_SETTING = {
         "disable_ops": ["pd_op.full_with_tensor"],
         "workspace_size": 1 << 32,
     },
+    "ConvNeXt_tiny": {"ops_run_float": {"pd_op.layer_norm"}},
+    "ConvNeXt_small": {"ops_run_float": {"pd_op.layer_norm"}},
+    "ConvNeXt_base_224": {"ops_run_float": {"pd_op.layer_norm"}},
+    "ConvNeXt_base_384": {"ops_run_float": {"pd_op.layer_norm"}},
+    "ConvNeXt_large_224": {"ops_run_float": {"pd_op.layer_norm"}},
+    "ConvNeXt_large_384": {"ops_run_float": {"pd_op.layer_norm"}},
+    "PP-HGNetV2-B3": {"ops_run_float": {"pd_op.softmax"}},
+    "BlazeFace-FPN-SSH": {"ops_run_float": {"pd_op.fused_conv2d_add_act"}},
 }
 
 
