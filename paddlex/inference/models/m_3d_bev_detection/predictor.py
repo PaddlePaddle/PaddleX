@@ -18,7 +18,7 @@ from typing import Any, Dict, Iterator, List, Tuple
 
 import lazy_paddle
 
-from ....modules.m_3d_bev_detection import MODELS
+from ....modules.m_3d_bev_detection.model_list import MODELS
 from ....utils import logging
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import Det3DBatchSampler
