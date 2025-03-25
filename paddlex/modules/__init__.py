@@ -39,11 +39,29 @@ from .instance_segmentation import (
     InstanceSegExportor,
     InstanceSegTrainer,
 )
+from .keypoint_detection import (
+    KeypointDatasetChecker,
+    KeypointEvaluator,
+    KeypointExportor,
+    KeypointTrainer,
+)
+from .m_3d_bev_detection import (
+    BEVFusionDatasetChecker,
+    BEVFusionEvaluator,
+    BEVFusionExportor,
+    BEVFusionTrainer,
+)
 from .multilabel_classification import (
     MLClsDatasetChecker,
     MLClsEvaluator,
     MLClsExportor,
     MLClsTrainer,
+)
+from .multilingual_speech_recognition import (
+    WhisperDatasetChecker,
+    WhisperEvaluator,
+    WhisperExportor,
+    WhisperTrainer,
 )
 from .object_detection import COCODatasetChecker, DetEvaluator, DetExportor, DetTrainer
 from .semantic_segmentation import (
@@ -83,25 +101,6 @@ from .ts_classification import (
     TSCLSTrainer,
 )
 from .ts_forecast import TSFCDatasetChecker, TSFCEvaluator, TSFCTrainer
-
-module_3d_bev_detection = import_module(".3d_bev_detection", "paddlex.modules")
-BEVFusionDatasetChecker = getattr(module_3d_bev_detection, "BEVFusionDatasetChecker")
-BEVFusionTrainer = getattr(module_3d_bev_detection, "BEVFusionTrainer")
-BEVFusionEvaluator = getattr(module_3d_bev_detection, "BEVFusionEvaluator")
-BEVFusionExportor = getattr(module_3d_bev_detection, "BEVFusionExportor")
-
-from .keypoint_detection import (
-    KeypointDatasetChecker,
-    KeypointEvaluator,
-    KeypointExportor,
-    KeypointTrainer,
-)
-from .multilingual_speech_recognition import (
-    WhisperDatasetChecker,
-    WhisperEvaluator,
-    WhisperExportor,
-    WhisperTrainer,
-)
 from .video_classification import (
     VideoClsDatasetChecker,
     VideoClsEvaluator,

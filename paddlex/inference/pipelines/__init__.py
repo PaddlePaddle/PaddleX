@@ -34,6 +34,7 @@ from .image_multilabel_classification import ImageMultiLabelClassificationPipeli
 from .instance_segmentation import InstanceSegmentationPipeline
 from .keypoint_detection import KeypointDetectionPipeline
 from .layout_parsing import LayoutParsingPipeline
+from .m_3d_bev_detection import BEVDet3DPipeline
 from .multilingual_speech_recognition import MultilingualSpeechRecognitionPipeline
 from .object_detection import ObjectDetectionPipeline
 from .ocr import OCRPipeline
@@ -51,11 +52,6 @@ from .ts_classification import TSClsPipeline
 from .ts_forecasting import TSFcPipeline
 from .video_classification import VideoClassificationPipeline
 from .video_detection import VideoDetectionPipeline
-
-module_3d_bev_detection = import_module(
-    ".3d_bev_detection", "paddlex.inference.pipelines"
-)
-BEVDet3DPipeline = getattr(module_3d_bev_detection, "BEVDet3DPipeline")
 
 
 def get_pipeline_path(pipeline_name: str) -> str:

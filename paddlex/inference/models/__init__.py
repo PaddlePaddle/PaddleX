@@ -32,6 +32,7 @@ from .image_multilabel_classification import MLClasPredictor
 from .image_unwarping import WarpPredictor
 from .instance_segmentation import InstanceSegPredictor
 from .keypoint_detection import KptPredictor
+from .m_3d_bev_detection import BEVDet3DPredictor
 
 # from .face_recognition import FaceRecPredictor
 from .multilingual_speech_recognition import WhisperPredictor
@@ -47,9 +48,6 @@ from .ts_classification import TSClsPredictor
 from .ts_forecasting import TSFcPredictor
 from .video_classification import VideoClasPredictor
 from .video_detection import VideoDetPredictor
-
-module_3d_bev_detection = import_module(".3d_bev_detection", "paddlex.inference.models")
-BEVDet3DPredictor = getattr(module_3d_bev_detection, "BEVDet3DPredictor")
 
 
 def _create_hp_predictor(

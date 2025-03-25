@@ -12,18 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from importlib import import_module
 from typing import Dict, List, Union
 
 import numpy as np
 
+from ...models.m_3d_bev_detection.result import BEV3DDetResult
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
-
-module_3d_bev_detection_result = import_module(
-    ".result", "paddlex.inference.models.3d_bev_detection"
-)
-BEV3DDetResult = getattr(module_3d_bev_detection_result, "BEV3DDetResult")
 
 
 class BEVDet3DPipeline(BasePipeline):

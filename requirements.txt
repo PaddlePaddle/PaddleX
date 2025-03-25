@@ -32,6 +32,9 @@ premailer
 PyMuPDF
 ujson
 Pillow
+joblib
+six
+soundfile
 ######## For Chatocrv3 #######
 langchain==0.2.17
 langchain-community==0.2.17

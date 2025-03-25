@@ -14,7 +14,6 @@
 
 
 import enum
-import importlib
 import itertools
 import random
 
@@ -353,7 +352,9 @@ class DecordVideoReaderBackend(_VideoReaderBackend):
 
         # XXX(gaotingquan): There is a confict with `paddle` when import `decord` globally.
         try:
-            self.decord_module = importlib.import_module("decord")
+            import decord
+
+            self.decord_module = decord
         except ModuleNotFoundError():
             raise Exception(
                 "Please install `decord` manually, otherwise, the related model cannot work. It can be automatically installed only on `x86_64`. Refers: `https://github.com/dmlc/decord`."

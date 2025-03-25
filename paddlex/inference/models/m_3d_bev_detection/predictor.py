@@ -14,17 +14,13 @@
 
 import shutil
 import tempfile
-from importlib import import_module
 from typing import Any, Dict, Iterator, List, Tuple
 
 import lazy_paddle
 
+from ....modules.m_3d_bev_detection import MODELS
 from ....utils import logging
 from ....utils.func_register import FuncRegister
-
-module_3d_bev_detection = import_module(".3d_bev_detection", "paddlex.modules")
-module_3d_model_list = getattr(module_3d_bev_detection, "model_list")
-MODELS = getattr(module_3d_model_list, "MODELS")
 from ...common.batch_sampler import Det3DBatchSampler
 from ...common.reader import ReadNuscenesData
 from ..base import BasicPredictor
