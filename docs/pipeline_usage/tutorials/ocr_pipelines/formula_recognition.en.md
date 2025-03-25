@@ -306,7 +306,7 @@ paddlex --pipeline formula_recognition \
         --layout_threshold 0.5 \
         --layout_nms True \
         --layout_unclip_ratio  1.0 \
-        --layout_merge_bboxes_mode large \
+        --layout_merge_bboxes_mode "'large'"\
         --save_path ./output \
         --device gpu:0
 ```
@@ -1012,7 +1012,7 @@ paddlex --pipeline formula_recognition \
         --layout_threshold 0.5 \
         --layout_nms True \
         --layout_unclip_ratio  1.0 \
-        --layout_merge_bboxes_mode large \
+        --layout_merge_bboxes_mode "'large'"\
         --save_path ./output \
         --device npu:0
 
