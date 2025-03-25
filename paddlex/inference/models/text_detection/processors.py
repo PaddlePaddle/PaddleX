@@ -208,9 +208,9 @@ class NormalizeImage:
 
             split_im = list(cv2.split(img))
             for c in range(img.shape[2]):
-                split_im[c] = (
-                    split_im[c].astype(np.float32) * self.alpha[c] + self.beta[c]
-                )
+                split_im[c] = split_im[c].astype(np.float32)
+                split_im[c] *= self.alpha[c]
+                split_im[c] += self.beta[c]
 
             res = cv2.merge(split_im)
             return res
