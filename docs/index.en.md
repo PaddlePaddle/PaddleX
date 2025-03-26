@@ -149,12 +149,12 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
 
         ```bash
         paddlex --pipeline OCR \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png \
-        --use_doc_orientation_classify False \
-        --use_doc_unwarping False \
-        --use_textline_orientation False \
-        --save_path ./output \
-        --device gpu:0
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png \
+                --use_doc_orientation_classify False \
+                --use_doc_unwarping False \
+                --use_textline_orientation False \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "What's the result"
@@ -171,146 +171,45 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
 
         ```bash
         paddlex --pipeline table_recognition \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg \
-        --save_path ./output \
-        --device gpu:0
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "What's the result"
             === "output"
                 ```bash
-                {'res': {'input_path': 'table_recognition.jpg', 'model_settings': {'use_doc_preprocessor': True, 'use_layout_detection': True, 'use_ocr_model': True}, 'doc_preprocessor_res': {'input_path': '0.jpg', 'model_settings': {'use_doc_orientation_classify': True, 'use_doc_unwarping': True}, 'angle': 0}, 'layout_det_res': {'input_path': None, 'boxes': [{'cls_id': 0, 'label': 'Table', 'score': 0.9196816086769104, 'coordinate': [0, 8.614925, 550.9877, 132]}]}, 'overall_ocr_res': {'input_path': '0.jpg', 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': [array([[232,   0],
-                    [318,   1],
-                    [318,  24],
-                    [232,  21]], dtype=int16), array([[32, 38],
-                    [67, 38],
-                    [67, 55],
-                    [32, 55]], dtype=int16), array([[119,  34],
-                    [196,  34],
-                    [196,  57],
-                    [119,  57]], dtype=int16), array([[222,  29],
-                    [396,  31],
-                    [396,  60],
-                    [222,  58]], dtype=int16), array([[420,  30],
-                    [542,  32],
-                    [542,  61],
-                    [419,  59]], dtype=int16), array([[29, 71],
-                    [72, 71],
-                    [72, 92],
-                    [29, 92]], dtype=int16), array([[287,  72],
-                    [329,  72],
-                    [329,  93],
-                    [287,  93]], dtype=int16), array([[458,  68],
-                    [501,  71],
-                    [499,  94],
-                    [456,  91]], dtype=int16), array([[  9, 101],
-                    [ 89, 103],
-                    [ 89, 130],
-                    [  8, 128]], dtype=int16), array([[139, 105],
-                    [172, 105],
-                    [172, 126],
-                    [139, 126]], dtype=int16), array([[274, 103],
-                    [339, 101],
-                    [340, 128],
-                    [275, 130]], dtype=int16), array([[451, 103],
-                    [508, 103],
-                    [508, 126],
-                    [451, 126]], dtype=int16)], 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], 'text_rec_score_thresh': 0, 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上，没想', '江、江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': [0.9943075180053711, 0.9951075315475464, 0.9907732009887695, 0.9975494146347046, 0.9974043369293213, 0.9983242750167847, 0.991967499256134, 0.9898287653923035, 0.9961177110671997, 0.9975040555000305, 0.9986456632614136, 0.9987970590591431], 'rec_polys': [array([[232,   0],
-                    [318,   1],
-                    [318,  24],
-                    [232,  21]], dtype=int16), array([[32, 38],
-                    [67, 38],
-                    [67, 55],
-                    [32, 55]], dtype=int16), array([[119,  34],
-                    [196,  34],
-                    [196,  57],
-                    [119,  57]], dtype=int16), array([[222,  29],
-                    [396,  31],
-                    [396,  60],
-                    [222,  58]], dtype=int16), array([[420,  30],
-                    [542,  32],
-                    [542,  61],
-                    [419,  59]], dtype=int16), array([[29, 71],
-                    [72, 71],
-                    [72, 92],
-                    [29, 92]], dtype=int16), array([[287,  72],
-                    [329,  72],
-                    [329,  93],
-                    [287,  93]], dtype=int16), array([[458,  68],
-                    [501,  71],
-                    [499,  94],
-                    [456,  91]], dtype=int16), array([[  9, 101],
-                    [ 89, 103],
-                    [ 89, 130],
-                    [  8, 128]], dtype=int16), array([[139, 105],
-                    [172, 105],
-                    [172, 126],
-                    [139, 126]], dtype=int16), array([[274, 103],
-                    [339, 101],
-                    [340, 128],
-                    [275, 130]], dtype=int16), array([[451, 103],
-                    [508, 103],
-                    [508, 126],
-                    [451, 126]], dtype=int16)], 'rec_boxes': array([[232,   0, 318,  24],
-                    [ 32,  38,  67,  55],
-                    [119,  34, 196,  57],
-                    [222,  29, 396,  60],
-                    [419,  30, 542,  61],
-                    [ 29,  71,  72,  92],
-                    [287,  72, 329,  93],
-                    [456,  68, 501,  94],
-                    [  8, 101,  89, 130],
-                    [139, 105, 172, 126],
-                    [274, 101, 340, 130],
-                    [451, 103, 508, 126]], dtype=int16)}, 'table_res_list': [{'cell_box_list': array([[  8.        ,   9.61492538, 532.        ,  26.61492538],
-                    [  3.        ,  27.61492538, 104.        ,  65.61492538],
-                    [109.        ,  28.61492538, 215.        ,  66.61492538],
-                    [219.        ,  28.61492538, 396.        ,  64.61492538],
-                    [396.        ,  29.61492538, 546.        ,  66.61492538],
-                    [  1.        ,  65.61492538, 110.        ,  93.61492538],
-                    [111.        ,  65.61492538, 215.        ,  94.61492538],
-                    [220.        ,  66.61492538, 397.        ,  94.61492538],
-                    [398.        ,  67.61492538, 544.        ,  94.61492538],
-                    [  2.        ,  98.61492538, 111.        , 131.61492538],
-                    [113.        ,  98.61492538, 216.        , 131.61492538],
-                    [219.        ,  98.61492538, 400.        , 131.61492538],
-                    [403.        ,  99.61492538, 545.        , 130.61492538]]), 'pred_html': '<html><body><table><tr><td colspan="4">CRuncover</td></tr><tr><td>Dres</td><td>连续工作3</td><td>取出来放在网上，没想</td><td>江、江等八大</td></tr><tr><td>Abstr</td><td></td><td>rSrivi</td><td>$709.</td></tr><tr><td>cludingGiv</td><td>2.72</td><td>Ingcubic</td><td>$744.78</td></tr></table></body></html>', 'table_ocr_pred': {'rec_polys': [array([[232,   0],
-                    [318,   1],
-                    [318,  24],
-                    [232,  21]], dtype=int16), array([[32, 38],
-                    [67, 38],
-                    [67, 55],
-                    [32, 55]], dtype=int16), array([[119,  34],
-                    [196,  34],
-                    [196,  57],
-                    [119,  57]], dtype=int16), array([[222,  29],
-                    [396,  31],
-                    [396,  60],
-                    [222,  58]], dtype=int16), array([[420,  30],
-                    [542,  32],
-                    [542,  61],
-                    [419,  59]], dtype=int16), array([[29, 71],
-                    [72, 71],
-                    [72, 92],
-                    [29, 92]], dtype=int16), array([[287,  72],
-                    [329,  72],
-                    [329,  93],
-                    [287,  93]], dtype=int16), array([[458,  68],
-                    [501,  71],
-                    [499,  94],
-                    [456,  91]], dtype=int16), array([[  9, 101],
-                    [ 89, 103],
-                    [ 89, 130],
-                    [  8, 128]], dtype=int16), array([[139, 105],
-                    [172, 105],
-                    [172, 126],
-                    [139, 126]], dtype=int16), array([[274, 103],
-                    [339, 101],
-                    [340, 128],
-                    [275, 130]], dtype=int16), array([[451, 103],
-                    [508, 103],
-                    [508, 126],
-                    [451, 126]], dtype=int16)], 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上，没想', '江、江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': [0.9943075180053711, 0.9951075315475464, 0.9907732009887695, 0.9975494146347046, 0.9974043369293213, 0.9983242750167847, 0.991967499256134, 0.9898287653923035, 0.9961177110671997, 0.9975040555000305, 0.9986456632614136, 0.9987970590591431], 'rec_boxes': [array([232,   0, 318,  24], dtype=int16), array([32, 38, 67, 55], dtype=int16), array([119,  34, 196,  57], dtype=int16), array([222,  29, 396,  60], dtype=int16), array([419,  30, 542,  61], dtype=int16), array([29, 71, 72, 92], dtype=int16), array([287,  72, 329,  93], dtype=int16), array([456,  68, 501,  94], dtype=int16), array([  8, 101,  89, 130], dtype=int16), array([139, 105, 172, 126], dtype=int16), array([274, 101, 340, 130], dtype=int16), array([451, 103, 508, 126], dtype=int16)]}}]}}
+                {'res': {'input_path': '/root/.paddlex/predict_input/table_recognition.jpg', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True, 'use_ocr_model': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 8, 'label': 'table', 'score': 0.9730289578437805, 'coordinate': [0.77032924, 0.0992564, 550.78864, 127.53717]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[234,   6],
+                        ...,
+                        [234,  25]],
+
+                    ...,
+
+                    [[448, 101],
+                        ...,
+                        [448, 121]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': array([0.99612021, ..., 0.99815977]), 'rec_polys': array([[[234,   6],
+                        ...,
+                        [234,  25]],
+
+                    ...,
+
+                    [[448, 101],
+                        ...,
+                        [448, 121]]], dtype=int16), 'rec_boxes': array([[234, ...,  25],
+                    ...,
+                    [448, ..., 121]], dtype=int16)}, 'table_res_list': [{'cell_box_list': array([[  3.77032924, ...,  27.0992564 ],
+                    ...,
+                    [403.77032924, ..., 125.0992564 ]]), 'pred_html': '<html><body><table><tr><td colspan="4">CRuncover</td></tr><tr><td>Dres</td><td>连续工作3</td><td>取出来放在网上 没想</td><td>江、整江等八大</td></tr><tr><td>Abstr</td><td></td><td>rSrivi</td><td>$709.</td></tr><tr><td>cludingGiv</td><td>2.72</td><td>Ingcubic</td><td>$744.78</td></tr></table></body></html>', 'table_ocr_pred': {'rec_polys': array([[[234,   6],
+                        ...,
+                        [234,  25]],
+
+                    ...,
+
+                    [[448, 101],
+                        ...,
+                        [448, 121]]], dtype=int16), 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': array([0.99612021, ..., 0.99815977]), 'rec_boxes': array([[234, ...,  25],
+                    ...,
+                    [448, ..., 121]], dtype=int16)}}]}}
                 ```
 
             === "img"
@@ -320,210 +219,85 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
 
         ```bash
         paddlex --pipeline table_recognition_v2 \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg \
-        --save_path ./output \
-        --device gpu:0
+                --use_doc_orientation_classify=False \
+                --use_doc_unwarping=False \
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition_v2.jpg \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "What's the result"
             === "output"
                 ```bash
-                {'res': {'input_path': 'table_recognition.jpg', 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True, 'use_ocr_model': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 0, 'label': 'Table', 'score': 0.9922188520431519, 'coordinate': [3.0127392, 0.14648987, 547.5102, 127.72023]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': [array([[234,   6],
-                    [316,   6],
-                    [316,  25],
-                    [234,  25]], dtype=int16), array([[38, 39],
-                    [73, 39],
-                    [73, 57],
-                    [38, 57]], dtype=int16), array([[122,  32],
-                    [201,  32],
-                    [201,  58],
-                    [122,  58]], dtype=int16), array([[227,  34],
-                    [346,  34],
-                    [346,  57],
-                    [227,  57]], dtype=int16), array([[351,  34],
-                    [391,  34],
-                    [391,  58],
-                    [351,  58]], dtype=int16), array([[417,  35],
-                    [534,  35],
-                    [534,  58],
-                    [417,  58]], dtype=int16), array([[34, 70],
-                    [78, 70],
-                    [78, 90],
-                    [34, 90]], dtype=int16), array([[287,  70],
-                    [328,  70],
-                    [328,  90],
-                    [287,  90]], dtype=int16), array([[454,  69],
-                    [496,  69],
-                    [496,  90],
-                    [454,  90]], dtype=int16), array([[ 17, 101],
-                    [ 95, 101],
-                    [ 95, 124],
-                    [ 17, 124]], dtype=int16), array([[144, 101],
-                    [178, 101],
-                    [178, 122],
-                    [144, 122]], dtype=int16), array([[278, 101],
-                    [338, 101],
-                    [338, 124],
-                    [278, 124]], dtype=int16), array([[448, 101],
-                    [503, 101],
-                    [503, 121],
-                    [448, 121]], dtype=int16)], 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], 'text_rec_score_thresh': 0, 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': [0.9951260685920715, 0.9943379759788513, 0.9968608021736145, 0.9978817105293274, 0.9985721111297607, 0.9616036415100098, 0.9977153539657593, 0.987593948841095, 0.9906861186027527, 0.9959743618965149, 0.9970152378082275, 0.9977849721908569, 0.9984450936317444], 'rec_polys': [array([[234,   6],
-                    [316,   6],
-                    [316,  25],
-                    [234,  25]], dtype=int16), array([[38, 39],
-                    [73, 39],
-                    [73, 57],
-                    [38, 57]], dtype=int16), array([[122,  32],
-                    [201,  32],
-                    [201,  58],
-                    [122,  58]], dtype=int16), array([[227,  34],
-                    [346,  34],
-                    [346,  57],
-                    [227,  57]], dtype=int16), array([[351,  34],
-                    [391,  34],
-                    [391,  58],
-                    [351,  58]], dtype=int16), array([[417,  35],
-                    [534,  35],
-                    [534,  58],
-                    [417,  58]], dtype=int16), array([[34, 70],
-                    [78, 70],
-                    [78, 90],
-                    [34, 90]], dtype=int16), array([[287,  70],
-                    [328,  70],
-                    [328,  90],
-                    [287,  90]], dtype=int16), array([[454,  69],
-                    [496,  69],
-                    [496,  90],
-                    [454,  90]], dtype=int16), array([[ 17, 101],
-                    [ 95, 101],
-                    [ 95, 124],
-                    [ 17, 124]], dtype=int16), array([[144, 101],
-                    [178, 101],
-                    [178, 122],
-                    [144, 122]], dtype=int16), array([[278, 101],
-                    [338, 101],
-                    [338, 124],
-                    [278, 124]], dtype=int16), array([[448, 101],
-                    [503, 101],
-                    [503, 121],
-                    [448, 121]], dtype=int16)], 'rec_boxes': array([[234,   6, 316,  25],
-                    [ 38,  39,  73,  57],
-                    [122,  32, 201,  58],
-                    [227,  34, 346,  57],
-                    [351,  34, 391,  58],
-                    [417,  35, 534,  58],
-                    [ 34,  70,  78,  90],
-                    [287,  70, 328,  90],
-                    [454,  69, 496,  90],
-                    [ 17, 101,  95, 124],
-                    [144, 101, 178, 122],
-                    [278, 101, 338, 124],
-                    [448, 101, 503, 121]], dtype=int16)}, 'table_res_list': [{'cell_box_list': [array([3.18822289e+00, 1.46489874e-01, 5.46996138e+02, 3.08782365e+01]), array([  3.21032453,  31.1510637 , 110.20750237,  65.14108063]), array([110.18174553,  31.13076188, 213.00813103,  65.02860047]), array([212.96108818,  31.09959008, 404.19618034,  64.99535157]), array([404.08112907,  31.18304802, 547.00864983,  65.0847223 ]), array([  3.21772957,  65.0738733 , 110.33685875,  96.07921387]), array([110.23703575,  65.02486207, 213.08839226,  96.01378419]), array([213.06095695,  64.96230103, 404.28425407,  95.97141816]), array([404.23704338,  65.04879548, 547.01273918,  96.03654267]), array([  3.22793937,  96.08334137, 110.38572502, 127.08698823]), array([110.40586662,  96.10539795, 213.19943047, 127.07002045]), array([213.12627983,  96.0539148 , 404.42686272, 127.02842499]), array([404.33042717,  96.07251526, 547.01273918, 126.45088746])], 'pred_html': '<html><body><table><tr><td colspan="4">CRuncover</td></tr><tr><td>Dres</td><td>连续工作3</td><td>取出来放在网上 没想</td><td>江、整江等八大</td></tr><tr><td>Abstr</td><td></td><td>rSrivi</td><td>$709.</td></tr><tr><td>cludingGiv</td><td>2.72</td><td>Ingcubic</td><td>$744.78</td></tr></table></body></html>', 'table_ocr_pred': {'rec_polys': [array([[234,   6],
-                    [316,   6],
-                    [316,  25],
-                    [234,  25]], dtype=int16), array([[38, 39],
-                    [73, 39],
-                    [73, 57],
-                    [38, 57]], dtype=int16), array([[122,  32],
-                    [201,  32],
-                    [201,  58],
-                    [122,  58]], dtype=int16), array([[227,  34],
-                    [346,  34],
-                    [346,  57],
-                    [227,  57]], dtype=int16), array([[351,  34],
-                    [391,  34],
-                    [391,  58],
-                    [351,  58]], dtype=int16), array([[417,  35],
-                    [534,  35],
-                    [534,  58],
-                    [417,  58]], dtype=int16), array([[34, 70],
-                    [78, 70],
-                    [78, 90],
-                    [34, 90]], dtype=int16), array([[287,  70],
-                    [328,  70],
-                    [328,  90],
-                    [287,  90]], dtype=int16), array([[454,  69],
-                    [496,  69],
-                    [496,  90],
-                    [454,  90]], dtype=int16), array([[ 17, 101],
-                    [ 95, 101],
-                    [ 95, 124],
-                    [ 17, 124]], dtype=int16), array([[144, 101],
-                    [178, 101],
-                    [178, 122],
-                    [144, 122]], dtype=int16), array([[278, 101],
-                    [338, 101],
-                    [338, 124],
-                    [278, 124]], dtype=int16), array([[448, 101],
-                    [503, 101],
-                    [503, 121],
-                    [448, 121]], dtype=int16)], 'rec_texts': ['CRuncover', 'Dres', '连续工作3', '取出来放在网上', '没想', '江、整江等八大', 'Abstr', 'rSrivi', '$709.', 'cludingGiv', '2.72', 'Ingcubic', '$744.78'], 'rec_scores': [0.9951260685920715, 0.9943379759788513, 0.9968608021736145, 0.9978817105293274, 0.9985721111297607, 0.9616036415100098, 0.9977153539657593, 0.987593948841095, 0.9906861186027527, 0.9959743618965149, 0.9970152378082275, 0.9977849721908569, 0.9984450936317444], 'rec_boxes': [array([234,   6, 316,  25], dtype=int16), array([38, 39, 73, 57], dtype=int16), array([122,  32, 201,  58], dtype=int16), array([227,  34, 346,  57], dtype=int16), array([351,  34, 391,  58], dtype=int16), array([417,  35, 534,  58], dtype=int16), array([34, 70, 78, 90], dtype=int16), array([287,  70, 328,  90], dtype=int16), array([454,  69, 496,  90], dtype=int16), array([ 17, 101,  95, 124], dtype=int16), array([144, 101, 178, 122], dtype=int16), array([278, 101, 338, 124], dtype=int16), array([448, 101, 503, 121], dtype=int16)]}}]}}
+                {'res': {'input_path': 'table_recognition_v2.jpg', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True, 'use_ocr_model': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 8, 'label': 'table', 'score': 0.8676343560218811, 'coordinate': [0.017525911, 0.4164088, 1281.396, 585.3947]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[   9,   21],
+                        ...,
+                        [   9,   59]],
+
+                    ...,
+
+                    [[1046,  536],
+                        ...,
+                        [1046,  573]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.4, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['部门', '报销人', '报销事由', '批准人：', '单据', '张', '合计金额', '元', '车费票', '其', '火车费票', '飞机票', '中', '旅住宿费', '其他', '补贴'], 'rec_scores': array([0.9995774 , ..., 0.99309814]), 'rec_polys': array([[[   9,   21],
+                        ...,
+                        [   9,   59]],
+
+                    ...,
+
+                    [[1046,  536],
+                        ...,
+                        [1046,  573]]], dtype=int16), 'rec_boxes': array([[   9, ...,   59],
+                    ...,
+                    [1046, ...,  573]], dtype=int16)}, 'table_res_list': [{'cell_box_list': [array([1.75259113e-02, ..., 7.36299403e+01]), array([104.53061795, ...,  73.56454113]), array([319.99210477, ...,  73.57040814]), array([424.35038114, ...,  73.77019909]), array([580.89661527, ...,  73.57633618]), array([722.90680814, ...,  73.23406628]), array([983.61304593, ..., 137.50552014]), array([1.75259113e-02, ..., 5.85416409e+02]), array([994., ..., 190.]), array([1245., ...,  186.]), array([211.09584928, ..., 257.55050305]), array([984.40485501, ..., 331.61166027]), array([1038.28327298, ...,  329.74648693]), array([1053., ...,  379.]), array([1038.92304349, ...,  585.03628185]), array([1000., ...,  444.]), array([1.75259113e-02, ..., 5.85416409e+02])], 'pred_html': '<html><body><table><tbody><tr><td>部门</td><td></td><td>报销人</td><td></td><td>报销事由</td><td></td><td colspan="2">批准人： 单据 张</td></tr><tr><td colspan="6" rowspan="8"></td><td colspan="2"></td></tr><tr><td colspan="2">合计金额</td></tr><tr><td rowspan="6"></td><td></td></tr><tr><td></td></tr><tr><td>飞机票</td></tr><tr><td>旅住宿费 其他 补贴</td></tr><tr><td>中</td></tr><tr><td></td></tr></tbody></table></body></html>', 'table_ocr_pred': {'rec_polys': array([[[   9,   21],
+                        ...,
+                        [   9,   59]],
+
+                    ...,
+
+                    [[1046,  536],
+                        ...,
+                        [1046,  573]]], dtype=int16), 'rec_texts': ['部门', '报销人', '报销事由', '批准人：', '单据', '张', '合计金额', '元', '车费票', '其', '火车费票', '飞机票', '中', '旅住宿费', '其他', '补贴'], 'rec_scores': array([0.9995774 , ..., 0.99309814]), 'rec_boxes': array([[   9, ...,   59],
+                    ...,
+                    [1046, ...,  573]], dtype=int16)}}]}}
                 ```
 
             === "img"
-                <p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/03.png"></p>
+                <p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipelines/table_recognition_v2/01.png"></p>
 
 
     === "Layout Parsing"
 
         ```bash
         paddlex --pipeline layout_parsing \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/demo_paper.png \
-        --use_doc_orientation_classify False \
-        --use_doc_unwarping False \
-        --use_textline_orientation False \
-        --save_path ./output \
-        --device gpu:0 \
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout_parsing_demo.png \
+                --use_doc_orientation_classify False \
+                --use_doc_unwarping False \
+                --use_textline_orientation False \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "What's the result"
             === "output"
             ```bash
-                {'res': {'input_path': 'demo_paper.png', 'model_settings': {'use_doc_preprocessor': True, 'use_general_ocr': True, 'use_seal_recognition': True, 'use_table_recognition': True, 'use_formula_recognition': True}, 'parsing_res_list': [{'layout_bbox': [46.905365, 44.05746, 565.6911, 217.74211], 'image': array([[[255, ..., 255],
-                        ...,
-                        [188, ..., 175]],
-
+            {'res': {'input_path': 'layout_parsing_demo.png', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_general_ocr': True, 'use_seal_recognition': True, 'use_table_recognition': True, 'use_formula_recognition': False}, 'parsing_res_list': [{'block_bbox': [133.36868, 40.128025, 1383.7496, 123.51852], 'block_label': 'text', 'block_content': '助力双方交往\n搭建友谊桥梁'}, {'block_bbox': [587.4096, 160.58267, 927.6319, 179.2817], 'block_label': 'figure_title', 'block_content': '本报记者沈小晓任彦黄培昭'}, {'block_bbox': [773.8337, 200.6484, 1505.5646, 687.1228], 'block_label': 'image', 'block_content': ''}, {'block_bbox': [390.39642, 201.85085, 741.43414, 292.60092], 'block_label': 'text', 'block_content': '厄立特里亚高等教育与研究院合作建立，开\n设了中国语言课程和中国文化课程，注册学\n生2万余人次。10余年来，厄特孔院已成为\n当地民众了解中国的一扇窗口。'}, {'block_bbox': [9.714512, 202.68811, 359.62323, 340.3127], 'block_label': 'text', 'block_content': '身着中国传统民族服装的厄立特里亚青\n年依次登台表演中国民族舞、现代舞、扇子舞\n等，曼妙的舞姿赢得现场观众阵阵掌声。这\n是日前厄立特里亚高等教育与研究院孔子学\n院(以下简称"厄特孔院"举办“喜迎新年"中国\n歌舞比赛的场景。'}, {'block_bbox': [390.74124, 298.42255, 740.8009, 436.79193], 'block_label': 'text', 'block_content': '黄鸣飞表示，随着来学习中文的人日益\n增多，阿斯马拉大学教学点已难以满足教学\n需要。2024年4月，由中企蜀道集团所属四\n川路桥承建的孔院教学楼项目在阿斯马拉开\n工建设，预计今年上半年峻工，建成后将为厄\n特孔院提供全新的办学场地。'}, {'block_bbox': [10.579921, 346.26508, 359.13733, 436.17682], 'block_label': 'text', 'block_content': '中国和厄立特里亚传统友谊深厚。近年\n来,在高质量共建“一带一路"框架下，中厄两\n国人文交流不断深化，互利合作的民意基础\n日益深厚。'}, {'block_bbox': [410.51892, 457.0816, 722.768, 516.78217], 'block_label': 'text', 'block_content': '“在中国学习的经历\n让我看到更广阔的世界”'}, {'block_bbox': [30.334734, 457.53757, 341.92758, 516.81995], 'block_label': 'paragraph_title', 'block_content': '“学好中文，我们的\n未来不是梦"'}, {'block_bbox': [390.89084, 538.1777, 742.1934, 604.6777], 'block_label': 'text', 'block_content': '多年来，厄立特里亚广大赴华留学生和\n培训人员积极投身国家建设，成为助力该国\n发展的人才和厄中友好的见证者和推动者。'}, {'block_bbox': [9.884378, 538.3683, 359.43878, 652.03644], 'block_label': 'text', 'block_content': '“鲜花曾告诉我你怎样走过，大地知道你\n心中的每一个角落……"厄立特里亚阿斯马拉\n大学综合楼二层，一阵优美的歌声在走廊里回\n响。循着熟悉的旋律轻轻推开一间教室的门，\n学生们正跟着老师学唱中文歌曲《同一首歌》。'}, {'block_bbox': [390.88583, 610.61304, 741.1856, 747.91656], 'block_label': 'text', 'block_content': '在厄立特里亚全国妇女联盟工作的约翰\n娜·特韦尔德·凯莱塔就是其中一位。她曾在\n中华女子学院攻读硕士学位，研究方向是女\n性领导力与社会发展。其间，她实地走访中国\n多个地区，获得了观察中国社会发展的第一\n手资料。'}, {'block_bbox': [10.115321, 658.7913, 359.40344, 771.3188], 'block_label': 'text', 'block_content': '这是厄特孔院阿斯马拉大学教学点的一\n节中文歌曲课。为了让学生们更好地理解歌\n词大意，老师尤斯拉·穆罕默德萨尔·侯赛因逐\n字翻译和解释歌词。随着伴奏声响起，学生们\n边唱边随着节拍摇动身体，现场气氛热烈。'}, {'block_bbox': [809.6597, 705.4076, 1485.5686, 747.42346], 'block_label': 'figure_title', 'block_content': '在厄立特里亚不久前举办的第六届中国风筝文化节上，当地小学生体验风筝制作。\n中国驻厄立特里亚大使馆供图'}, {'block_bbox': [389.62894, 753.4464, 742.0593, 890.9599], 'block_label': 'text', 'block_content': '谈起在中国求学的经历，约翰娜记忆犹\n新：“中国的发展在当今世界是独一无二的。\n沿着中国特色社会主义道路坚定前行，中国\n创造了发展奇迹，这一切都离不开中国共产党\n的领导。中国的发展经验值得许多国家学习\n借鉴。”'}, {'block_bbox': [9.867948, 777.38995, 360.40143, 843.43], 'block_label': 'text', 'block_content': '“这是中文歌曲初级班，共有32人。学\n生大部分来自首都阿斯马拉的中小学，年龄\n最小的仅有6岁。"尤斯拉告诉记者。'}, {'block_bbox': [9.780596, 850.09344, 359.62875, 1059.8483], 'block_label': 'text', 'block_content': '尤斯拉今年23岁，是厄立特里亚一所公立\n学校的艺术老师。她12岁开始在厄特孔院学\n习中文，在2017年第十届"汉语桥"世界中学生\n中文比赛中获得厄立特里亚赛区第一名，并和\n同伴代表厄立特里亚前往中国参加决赛，获得\n团体优胜奖。2022年起，尤斯拉开始在厄特孔\n院兼职教授中文歌曲，每周末两个课时。“中国\n文化博大精深，我希望我的学生们能够通过中\n文歌曲更好地理解中国文化。"她说。'}, {'block_bbox': [771.98157, 777.02783, 1124.4025, 1059.2194], 'block_label': 'text', 'block_content': '“不管远近都是客人，请不用客气；相约\n好了在一起，我们欢迎你…"在一场中厄青\n年联谊活动上，四川路桥中方员工同当地大\n学生合唱《北京欢迎你》。厄立特里亚技术学\n院计算机科学与工程专业学生鲁夫塔·谢拉\n是其中一名演唱者，她很早便在孔院学习中\n文，一直在为去中国留学作准备。“这句歌词\n是我们两国人民友谊的生动写照。无论是投\n身于厄立特里亚基础设施建设的中企员工，\n还是在中国留学的厄立特里亚学子，两国人\n民携手努力，必将推动两国关系不断向前发\n展。"鲁夫塔说。'}, {'block_bbox': [1155.9126, 777.7057, 1331.4768, 795.6466], 'block_label': 'text', 'block_content': '瓦的北红海省博物馆。'}, {'block_bbox': [1153.6993, 801.5608, 1504.5693, 987.6245], 'block_label': 'text', 'block_content': '博物馆二层陈列着一个发掘自阿杜利\n斯古城的中国古代陶制酒器，罐身上写着\n“万”“和"“禅"“山"等汉字。“这件文物证\n明，很早以前我们就通过海上丝绸之路进行\n贸易往来与文化交流。这也是厄立特里亚\n与中国友好交往历史的有力证明。"北红海\n省博物馆研究与文献部负责人伊萨亚斯·特\n斯法兹吉说。'}, {'block_bbox': [390.19556, 897.58984, 742.03076, 1035.8021], 'block_label': 'text', 'block_content': '正在西南大学学习的厄立特里亚博士生\n穆卢盖塔·泽穆伊对中国怀有深厚感情。8\n盖塔在社交媒体上写下这样一段话：“这是我\n人生的重要一步，自此我拥有了一双坚固的\n鞋子，赋予我穿越荆棘的力量。"'}, {'block_bbox': [1154.4485, 993.47705, 1503.8442, 1107.7343], 'block_label': 'text', 'block_content': '厄立特里亚国家博物馆考古学和人类学\n研究员菲尔蒙·特韦尔德十分喜爱中国文\n化。他表示：“学习彼此的语言和文化，将帮\n助厄中两国人民更好地理解彼此，助力双方\n交往，搭建友谊桥梁。"'}, {'block_bbox': [391.1788, 1041.2518, 740.86304, 1131.4594], 'block_label': 'text', 'block_content': '穆卢盖塔密切关注中国在经济、科技、教\n育等领域的发展，“中国在科研等方面的实力\n与日俱增。在中国学习的经历让我看到更广\n阔的世界，从中受益匪浅。”'}, {'block_bbox': [9.44888, 1065.2853, 360.20395, 1180.0414], 'block_label': 'text', 'block_content': '“姐姐，你想去中国吗？"“非常想！我想\n去看故宫、爬长城。"尤斯拉的学生中有一对\n能歌善舞的姐妹，姐姐露娅今年15岁，妹妹\n莉娅14岁，两人都已在厄特孔院学习多年，\n中文说得格外流利。'}, {'block_bbox': [771.5103, 1065.0969, 1123.4521, 1179.5637], 'block_label': 'text', 'block_content': '厄立特里亚高等教育委员会主任助理萨\n马瑞表示：“每年我们都会组织学生到中国访\n问学习，目前有超过5000名厄立特里亚学生\n在中国留学。学习中国的教育经验，有助于\n提升厄立特里亚的教育水平。"'}, {'block_bbox': [1153.9072, 1114.012, 1503.9468, 1347.0771], 'block_label': 'text', 'block_content': '厄立特里亚国家博物馆馆长塔吉丁·努\n里达姆·优素福曾多次访问中国，对中华文明\n的传承与创新、现代化博物馆的建设与发展\n印象深刻。“中国博物馆不仅有许多保存完好\n的文物，还充分运用先进科技手段进行展示，\n帮助人们更好理解中华文明。"塔吉丁说，“厄\n立特里亚与中国都拥有悠久的文明，始终相\n互理解、相互尊重。我希望未来与中国同行\n加强合作，共同向世界展示非洲和亚洲的灿\n烂文明。”'}, {'block_bbox': [390.84042, 1137.481, 741.0446, 1346.7771], 'block_label': 'text', 'block_content': '23岁的莉迪亚·埃斯蒂法诺斯已在厄特\n孔院学习3年，在中国书法、中国画等方面表\n现十分优秀，在2024年厄立特里亚赛区的\n“汉语桥"比赛中获得一等奖。莉迪亚说：“学\n习中国书法让我的内心变得安宁和纯粹。我\n也喜欢中国的服饰，希望未来能去中国学习，\n把中国不同民族元素融入服装设计中，创作\n出更多精美作品，也把厄特文化分享给更多\n的中国朋友。”'}, {'block_bbox': [8.636964, 1186.1119, 359.81888, 1299.478], 'block_label': 'text', 'block_content': '露娅对记者说：“这些年来，怀着对中文\n和中国文化的热爱，我们姐妹俩始终相互鼓\n励，一起学习。我们的中文一天比一天好，还\n学会了中文歌和中国舞。我们一定要到中国\n去。学好中文，我们的未来不是梦！”'}, {'block_bbox': [9.65557, 1305.0817, 359.62732, 1347.9409], 'block_label': 'text', 'block_content': '据厄特孔院中方院长黄鸣飞介绍，这所\n孔院成立于2013年3月，由贵州财经大学和'}, {'block_bbox': [791.91876, 1201.0499, 1104.4822, 1260.1809], 'block_label': 'text', 'block_content': '“共同向世界展示非\n洲和亚洲的灿烂文明”'}, {'block_bbox': [772.4803, 1281.0001, 1123.4064, 1348.0051], 'block_label': 'text', 'block_content': '从阿斯马拉出发，沿着蜿蜓曲折的盘山\n公路一路向东寻找丝路印迹。驱车两个小\n时，记者来到位于厄立特里亚港口城市马萨'}], 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 1, 'label': 'image', 'score': 0.985334038734436, 'coordinate': [773.8337, 200.6484, 1505.5646, 687.1228]}, {'cls_id': 2, 'label': 'text', 'score': 0.9781306385993958, 'coordinate': [771.98157, 777.02783, 1124.4025, 1059.2194]}, {'cls_id': 2, 'label': 'text', 'score': 0.9772591590881348, 'coordinate': [1153.9072, 1114.012, 1503.9468, 1347.0771]}, {'cls_id': 2, 'label': 'text', 'score': 0.9764459133148193, 'coordinate': [390.74124, 298.42255, 740.8009, 436.79193]}, {'cls_id': 2, 'label': 'text', 'score': 0.9752683639526367, 'coordinate': [9.714512, 202.68811, 359.62323, 340.3127]}, {'cls_id': 2, 'label': 'text', 'score': 0.9751600027084351, 'coordinate': [1153.6993, 801.5608, 1504.5693, 987.6245]}, {'cls_id': 2, 'label': 'text', 'score': 0.9741775989532471, 'coordinate': [9.780596, 850.09344, 359.62875, 1059.8483]}, {'cls_id': 2, 'label': 'text', 'score': 0.9723023772239685, 'coordinate': [390.39642, 201.85085, 741.43414, 292.60092]}, {'cls_id': 2, 'label': 'text', 'score': 0.9717830419540405, 'coordinate': [390.84042, 1137.481, 741.0446, 1346.7771]}, {'cls_id': 2, 'label': 'text', 'score': 0.970496654510498, 'coordinate': [390.88583, 610.61304, 741.1856, 747.91656]}, {'cls_id': 2, 'label': 'text', 'score': 0.967951774597168, 'coordinate': [8.636964, 1186.1119, 359.81888, 1299.478]}, {'cls_id': 2, 'label': 'text', 'score': 0.9675101637840271, 'coordinate': [390.19556, 897.58984, 742.03076, 1035.8021]}, {'cls_id': 2, 'label': 'text', 'score': 0.9672409296035767, 'coordinate': [389.62894, 753.4464, 742.0593, 890.9599]}, {'cls_id': 2, 'label': 'text', 'score': 0.9657630324363708, 'coordinate': [10.579921, 346.26508, 359.13733, 436.17682]}, {'cls_id': 2, 'label': 'text', 'score': 0.9655840396881104, 'coordinate': [771.5103, 1065.0969, 1123.4521, 1179.5637]}, {'cls_id': 2, 'label': 'text', 'score': 0.9651231169700623, 'coordinate': [1154.4485, 993.47705, 1503.8442, 1107.7343]}, {'cls_id': 2, 'label': 'text', 'score': 0.9631907343864441, 'coordinate': [772.4803, 1281.0001, 1123.4064, 1348.0051]}, {'cls_id': 2, 'label': 'text', 'score': 0.9616568684577942, 'coordinate': [9.44888, 1065.2853, 360.20395, 1180.0414]}, {'cls_id': 2, 'label': 'text', 'score': 0.9596402645111084, 'coordinate': [10.115321, 658.7913, 359.40344, 771.3188]}, {'cls_id': 2, 'label': 'text', 'score': 0.9591165781021118, 'coordinate': [391.1788, 1041.2518, 740.86304, 1131.4594]}, {'cls_id': 2, 'label': 'text', 'score': 0.9564457535743713, 'coordinate': [9.884378, 538.3683, 359.43878, 652.03644]}, {'cls_id': 2, 'label': 'text', 'score': 0.9525545835494995, 'coordinate': [390.89084, 538.1777, 742.1934, 604.6777]}, {'cls_id': 2, 'label': 'text', 'score': 0.9493281245231628, 'coordinate': [9.867948, 777.38995, 360.40143, 843.43]}, {'cls_id': 2, 'label': 'text', 'score': 0.9400925040245056, 'coordinate': [9.65557, 1305.0817, 359.62732, 1347.9409]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.9255779385566711, 'coordinate': [809.6597, 705.4076, 1485.5686, 747.42346]}, {'cls_id': 2, 'label': 'text', 'score': 0.9046083688735962, 'coordinate': [1155.9126, 777.7057, 1331.4768, 795.6466]}, {'cls_id': 2, 'label': 'text', 'score': 0.8666954040527344, 'coordinate': [410.51892, 457.0816, 722.768, 516.78217]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.7959974408149719, 'coordinate': [30.334734, 457.53757, 341.92758, 516.81995]}, {'cls_id': 2, 'label': 'text', 'score': 0.7298153042793274, 'coordinate': [791.91876, 1201.0499, 1104.4822, 1260.1809]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.6074362397193909, 'coordinate': [587.4096, 160.58267, 927.6319, 179.2817]}, {'cls_id': 2, 'label': 'text', 'score': 0.584621012210846, 'coordinate': [133.36868, 40.128025, 1383.7496, 123.51852]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[ 122,   28],
                     ...,
+                    [ 122,  135]],
 
-                    [[255, ..., 255],
-                        ...,
-                        [255, ..., 255]]], dtype=uint8), 'image_text': 'Efficient Hybrid Encoder\nCaevIst s1\nCaaveJs2\nCCFF\n\nFusion\n00□0□000000', 'layout': 'single'}, {'layout_bbox': [42.178703, 227.34215, 570.1248, 284.377], 'text': 'Figure 4, Overview of RT-DETR. We feed the features from the last three stages of the backbone into the encoder. The eficient hybrid\nencoder transforms multi-scale features into a sequence of image features through the Attention-based Intra-scale Feature Interaction (AIFI)\nfeatures to serve as initial object queries for the decoder, Finaly, the decoder with auxiliary prediction heads iteratively optimizes object\nand the CNN-based Cross-scale Feature Fusion (CCFF), Then, the uncertainty-minimal query selection selects a fixed number of encoder\nqueries to generate categories and boxes.', 'layout': 'single'}, {'layout_bbox': [53.227856, 294.16644, 283.854, 396.24164], 'image': array([[[255, ..., 255],
-                        ...,
-                        [255, ..., 255]],
+                ...,
 
+                [[1156, 1330],
                     ...,
-
-                    [[255, ..., 255],
-                        ...,
-                        [255, ..., 255]]], dtype=uint8), 'image_text': '1x1Conv\nFusion\nC\nNX\n1x1Conv\nRepBlock\nCConcatenate\nElement-wise add\nFlatten', 'layout': 'double'}, {'layout_bbox': [99.52045, 401.63477, 240.27536, 411.01334], 'text': 'Figure 5. The fusion block in CCFF', 'layout': 'double'}, {'layout_bbox': [41.776196, 418.61166, 296.82672, 554.4149], 'text': 'D, Ds, not only significantly reduces latency (35% faster),\nbut also improves accuracy (0.4% AP higher). CCFF is opti-\nmized based on the cross-scale fusion module, which inserts\nseveral fusion blocks consisting of convolutional layers into\nthe fusion path. The role of the fusion block is to fuse two\nadjacent scale features into a new feature, and its structure is\nillustrated in Figure 5. The fusion block contains two 1 × 1\nconvolutions to adjust the number of channels, N RepBlocks\ncomposed of RepConv [8] are used for feature fusion, and\nthe two-path outputs are fused by element-wise add. We\nformulate the calculation of the hybrid encoder as:', 'layout': 'double'}, {'layout_bbox': [92.092064, 563.1221, 297.57217, 607.2598], 'formula': '\\begin{array}{r l}{\\mathcal{Q}}&{=\\mathcal{K}=\\mathcal{V}=\\mathtt{F l a t t e r n}(\\mathcal{S}_{5}),}\\\\ {\\mathcal{F}_{5}}&{=\\mathtt{R e s h a p e}(\\mathtt{A I F I}(\\mathcal{Q},\\mathcal{K},\\mathcal{V})),\\qquad\\quad(1)}\\\\ {\\mathcal{O}}&{=\\mathtt{C C F F}(\\{\\mathcal{S}_{3},\\mathcal{S}_{4},\\mathcal{F}_{5}\\}),}\\end{array}', 'layout': 'double'}, {'layout_bbox': [41.275124, 613.64154, 298.0696, 636.9947], 'text': 'where Reshape represents restoring the shape of the flat-\ntened feature to the same shape as S5', 'layout': 'double'}, {'layout_bbox': [41.01993, 645.3085, 253.87302, 656.61505], 'text': '4.3.Uncertainty-minimal Ouery Selection', 'layout': 'double'}, {'layout_bbox': [39.780045, 664.1547, 296.5302, 724.974], 'text': 'To reduce the difficulty of optimizing object queries in\nDETR, several subsequent works [42, 44, 45] propose query\nselection schemes, which have in common that they use the\nconfidence score to select the top K features from the en-\ncoder to initialize object queries (or just position queries).', 'layout': 'double'}, {'layout_bbox': [316.3008, 289.54156, 573.4635, 415.4659], 'text': 'The confidence score represents the likelihood that the fea-\nture includes foreground objects. Nevertheless, the detector\nare required to simultaneously model the category and loca-\ntion of objects, both of which determine the quality of the\nfeatures. Hence, the performance score of the feature is a la-\ntent variable that is jointly correlated with both classification\nand localization. Based on the analysis, the current query\nselection lead to a considerable level of uncertainty in the\nselected features, resulting in sub-optimal initialization for\nthe decoder and hindering the performance of the detector.', 'layout': 'double'}, {'layout_bbox': [316.1587, 417.67807, 575.0031, 541.93054], 'text': 'To address this problem, we propose the uncertainty mini-\nmal query selection scheme, which explicitly constructs and\noptimizes the epistemic uncertainty to model the joint latent\nvariable of encoder features, thereby providing high-quality\nqueries for the decoder. Specifically, the feature uncertainty\nL/ is defined as the discrepancy between the predicted dis-\ntributions of localization P and classification C in Eq. (2).\nTo minimize the uncertainty of the queries, we integrate\nthe uncertainty into the loss function for the gradient-based\noptimization in Eq. (3).', 'layout': 'double'}, {'layout_bbox': [343.82712, 551.06995, 573.45465, 589.9438], 'formula': '\\begin{array}{r l r}{\\mathcal{U}(\\hat{\\mathcal{X}})=\\|\\mathcal{P}(\\hat{\\mathcal{X}})-\\mathcal{C}(\\hat{\\mathcal{X}})\\|,\\hat{\\mathcal{X}}\\in\\mathbb{R}^{D}}&{{}(2)}&{}\\\\ {\\mathcal{L}(\\hat{\\mathcal{X}},\\hat{\\mathcal{Y}},\\mathcal{Y})=\\mathcal{L}_{t o x}(\\hat{\\mathbf{b}},\\mathbf{b})+\\mathcal{L}_{c l s}(\\mathcal{U}(\\hat{\\mathcal{X}}),\\hat{\\mathbf{c}},\\mathbf{c})}&{{}(3)}\\end{array}', 'layout': 'double'}, {'layout_bbox': [316.74704, 598.45776, 573.39526, 636.35236], 'text': 'where  and y denote the prediction and ground truth.\n= (e, b), C and b represent the category and bounding\nbox respectively, X represent the encoder feature.', 'layout': 'double'}, {'layout_bbox': [315.35437, 638.09393, 572.0008, 724.53687], 'text': 'Effectiveness analysis. To analyze the effectiveness of thc\nuncertainty-minimal query selection, we visualize the clas-\nsification scores and IoU scores of the selected features on\nCOCO va1.2017, Figure 6. We draw the scatterplot with\nclassification scores greater than 0.5. The purple and green\nwith uncertainty-minimal query selection and vanilla query\ndots represent the selected features from the model trained', 'layout': 'double'}], 'doc_preprocessor_res': {'input_path': None, 'model_settings': {'use_doc_orientation_classify': True, 'use_doc_unwarping': True}, 'angle': 0}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 1, 'label': 'image', 'score': 0.9874590635299683, 'coordinate': [46.905365, 44.05746, 565.6911, 217.74211]}, {'cls_id': 2, 'label': 'text', 'score': 0.9869957566261292, 'coordinate': [41.776196, 418.61166, 296.82672, 554.4149]}, {'cls_id': 2, 'label': 'text', 'score': 0.9792540073394775, 'coordinate': [39.780045, 664.1547, 296.5302, 724.974]}, {'cls_id': 2, 'label': 'text', 'score': 0.9792136549949646, 'coordinate': [316.3008, 289.54156, 573.4635, 415.4659]}, {'cls_id': 2, 'label': 'text', 'score': 0.9789648652076721, 'coordinate': [316.1587, 417.67807, 575.0031, 541.93054]}, {'cls_id': 1, 'label': 'image', 'score': 0.9786934852600098, 'coordinate': [53.227856, 294.16644, 283.854, 396.24164]}, {'cls_id': 2, 'label': 'text', 'score': 0.9765349626541138, 'coordinate': [315.35437, 638.09393, 572.0008, 724.53687]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.9575827717781067, 'coordinate': [42.178703, 227.34215, 570.1248, 284.377]}, {'cls_id': 2, 'label': 'text', 'score': 0.9554654359817505, 'coordinate': [41.275124, 613.64154, 298.0696, 636.9947]}, {'cls_id': 7, 'label': 'formula', 'score': 0.951255738735199, 'coordinate': [92.092064, 563.1221, 297.57217, 607.2598]}, {'cls_id': 7, 'label': 'formula', 'score': 0.9501133561134338, 'coordinate': [343.82712, 551.06995, 573.45465, 589.9438]}, {'cls_id': 6, 'label': 'figure_title', 'score': 0.9381633400917053, 'coordinate': [99.52045, 401.63477, 240.27536, 411.01334]}, {'cls_id': 2, 'label': 'text', 'score': 0.9283379316329956, 'coordinate': [316.74704, 598.45776, 573.39526, 636.35236]}, {'cls_id': 0, 'label': 'paragraph_title', 'score': 0.9257320761680603, 'coordinate': [41.01993, 645.3085, 253.87302, 656.61505]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[169,  50],
-                        ...,
-                        [169,  62]],
-
+                    [1156, 1351]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['助力双方交往', '搭建友谊桥梁', '西', '本报记者沈小晓任彦黄培昭', '身着中国传统民族服装的厄立特里亚青', '厄立特里亚高等教育与研究院合作建立，开', '年依次登台表演中国民族舞、现代舞、扇子舞', '设了中国语言课程和中国文化课程，注册学', '等，曼妙的舞姿赢得现场观众阵阵掌声。这', '生2万余人次。10余年来，厄特孔院已成为', '是日前厄立特里亚高等教育与研究院孔子学', '当地民众了解中国的一扇窗口。', '院(以下简称"厄特孔院"举办“喜迎新年"中国', '黄鸣飞表示，随着来学习中文的人日益', '歌舞比赛的场景。', '增多，阿斯马拉大学教学点已难以满足教学', '中国和厄立特里亚传统友谊深厚。近年', '需要。2024年4月，由中企蜀道集团所属四', '来,在高质量共建“一带一路"框架下，中厄两', '川路桥承建的孔院教学楼项目在阿斯马拉开', '国人文交流不断深化，互利合作的民意基础', '工建设，预计今年上半年峻工，建成后将为厄', '日益深厚。', '特孔院提供全新的办学场地。', '“学好中文，我们的', '“在中国学习的经历', '未来不是梦"', '让我看到更广阔的世界”', '“鲜花曾告诉我你怎样走过，大地知道你', '多年来，厄立特里亚广大赴华留学生和', '心中的每一个角落……"厄立特里亚阿斯马拉', '培训人员积极投身国家建设，成为助力该国', '大学综合楼二层，一阵优美的歌声在走廊里回', '发展的人才和厄中友好的见证者和推动者。', '响。循着熟悉的旋律轻轻推开一间教室的门，', '在厄立特里亚全国妇女联盟工作的约翰', '学生们正跟着老师学唱中文歌曲《同一首歌》。', '娜·特韦尔德·凯莱塔就是其中一位。她曾在', '这是厄特孔院阿斯马拉大学教学点的一', '中华女子学院攻读硕士学位，研究方向是女', '节中文歌曲课。为了让学生们更好地理解歌', '性领导力与社会发展。其间，她实地走访中国', '词大意，老师尤斯拉·穆罕默德萨尔·侯赛因逐', '多个地区，获得了观察中国社会发展的第一', '在厄立特里亚不久前举办的第六届中国风筝文化节上，当地小学生体验风筝制作。', '字翻译和解释歌词。随着伴奏声响起，学生们', '手资料。', '中国驻厄立特里亚大使馆供图', '边唱边随着节拍摇动身体，现场气氛热烈。', '谈起在中国求学的经历，约翰娜记忆犹', '“这是中文歌曲初级班，共有32人。学', '新：“中国的发展在当今世界是独一无二的。', '“不管远近都是客人，请不用客气；相约', '瓦的北红海省博物馆。', '生大部分来自首都阿斯马拉的中小学，年龄', '沿着中国特色社会主义道路坚定前行，中国', '好了在一起，我们欢迎你………"在一场中厄青', '博物馆二层陈列着一个发掘自阿杜利', '最小的仅有6岁。"尤斯拉告诉记者。', '创造了发展奇迹，这一切都离不开中国共产党', '年联谊活动上，四川路桥中方员工同当地大', '斯古城的中国古代陶制酒器，罐身上写着', '尤斯拉今年23岁，是厄立特里亚一所公立', '的领导。中国的发展经验值得许多国家学习', '学生合唱《北京欢迎你》。厄立特里亚技术学', '“万”“和”“禅”“山"等汉字。“这件文物证', '学校的艺术老师。她12岁开始在厄特孔院学', '借鉴。”', '院计算机科学与工程专业学生鲁夫塔·谢拉', '明，很早以前我们就通过海上丝绸之路进行', '习中文，在2017年第十届"汉语桥"世界中学生', '正在西南大学学习的厄立特里亚博士生', '是其中一名演唱者，她很早便在孔院学习中', '贸易往来与文化交流。这也是厄立特里亚', '中文比赛中获得厄立特里亚赛区第一名，并和', '穆卢盖塔·泽穆伊对中国怀有深厚感情。8', '文，一直在为去中国留学作准备。“这句歌词', '与中国友好交往历史的有力证明。"北红海', '同伴代表厄立特里亚前往中国参加决赛，获得', '是我们两国人民友谊的生动写照。无论是投', '省博物馆研究与文献部负责人伊萨亚斯·特', '团体优胜奖。2022年起，尤斯拉开始在厄特孔', '盖塔在社交媒体上写下这样一段话：“这是我', '身于厄立特里亚基础设施建设的中企员工，', '斯法兹吉说。', '院兼职教授中文歌曲，每周末两个课时。“中国', '人生的重要一步，自此我拥有了一双坚固的', '还是在中国留学的厄立特里亚学子，两国人', '厄立特里亚国家博物馆考古学和人类学', '文化博大精深，我希望我的学生们能够通过中', '鞋子，赋予我穿越荆棘的力量。"', '民携手努力，必将推动两国关系不断向前发', '研究员菲尔蒙·特韦尔德十分喜爱中国文', '文歌曲更好地理解中国文化。"她说。', '穆卢盖塔密切关注中国在经济、科技、教', '展。"鲁夫塔说。', '化。他表示：“学习彼此的语言和文化，将帮', '“姐姐，你想去中国吗？"“非常想！我想', '育等领域的发展，“中国在科研等方面的实力', '厄立特里亚高等教育委员会主任助理萨', '助厄中两国人民更好地理解彼此，助力双方', '去看故宫、爬长城。"尤斯拉的学生中有一对', '与日俱增。在中国学习的经历让我看到更广', '马瑞表示：“每年我们都会组织学生到中国访', '交往，搭建友谊桥梁。"', '能歌善舞的姐妹，姐姐露娅今年15岁，妹妹', '阔的世界，从中受益匪浅。”', '问学习，目前有超过5000名厄立特里亚学生', '厄立特里亚国家博物馆馆长塔吉丁·努', '莉娅14岁，两人都已在厄特孔院学习多年，', '23岁的莉迪亚·埃斯蒂法诺斯已在厄特', '在中国留学。学习中国的教育经验，有助于', '里达姆·优素福曾多次访问中国，对中华文明', '中文说得格外流利。', '孔院学习3年，在中国书法、中国画等方面表', '提升厄立特里亚的教育水平。"', '的传承与创新、现代化博物馆的建设与发展', '露娅对记者说：“这些年来，怀着对中文', '现十分优秀，在2024年厄立特里亚赛区的', '印象深刻。“中国博物馆不仅有许多保存完好', '“共同向世界展示非', '和中国文化的热爱，我们姐妹俩始终相互鼓', '“汉语桥"比赛中获得一等奖。莉迪亚说：“学', '的文物，还充分运用先进科技手段进行展示，', '励，一起学习。我们的中文一天比一天好，还', '习中国书法让我的内心变得安宁和纯粹。我', '洲和亚洲的灿烂文明”', '帮助人们更好理解中华文明。"塔吉丁说，“厄', '学会了中文歌和中国舞。我们一定要到中国', '也喜欢中国的服饰，希望未来能去中国学习，', '立特里亚与中国都拥有悠久的文明，始终相', '去。学好中文，我们的未来不是梦！”', '把中国不同民族元素融入服装设计中，创作', '从阿斯马拉出发，沿着蜿蜓曲折的盘山', '互理解、相互尊重。我希望未来与中国同行', '据厄特孔院中方院长黄鸣飞介绍，这所', '出更多精美作品，也把厄特文化分享给更多', '公路一路向东寻找丝路印迹。驱车两个小', '加强合作，共同向世界展示非洲和亚洲的灿', '孔院成立于2013年3月，由贵州财经大学和', '的中国朋友。”', '时，记者来到位于厄立特里亚港口城市马萨', '烂文明。”'], 'rec_scores': array([0.99982357, ..., 0.93637466]), 'rec_polys': array([[[ 122,   28],
                     ...,
+                    [ 122,  135]],
 
-                    [[ 39, 711],
-                        ...,
-                        [ 39, 726]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['Efficient Hybrid Encoder', 'CaevIst s1', 'CaaveJs2', 'CCFF', '', 'Fusion', '00□0□000000', 'Figure 4, Overview of RT-DETR. We feed the features from the last three stages of the backbone into the encoder. The eficient hybrid', 'encoder transforms multi-scale features into a sequence of image features through the Attention-based Intra-scale Feature Interaction (AIFI)', 'features to serve as initial object queries for the decoder, Finaly, the decoder with auxiliary prediction heads iteratively optimizes object', 'and the CNN-based Cross-scale Feature Fusion (CCFF), Then, the uncertainty-minimal query selection selects a fixed number of encoder', 'queries to generate categories and boxes.', '1x1Conv', 'Fusion', 'The confidence score represents the likelihood that the fea-', 'C', 'ture includes foreground objects. Nevertheless, the detector', 'are required to simultaneously model the category and loca-', 'NX', 'tion of objects, both of which determine the quality of the', '1x1Conv', 'features. Hence, the performance score of the feature is a la-', 'RepBlock', 'tent variable that is jointly correlated with both classification', 'and localization. Based on the analysis, the current query', 'CConcatenate', 'Element-wise add', 'Flatten', 'selection lead to a considerable level of uncertainty in the', 'selected features, resulting in sub-optimal initialization for', 'Figure 5. The fusion block in CCFF', 'the decoder and hindering the performance of the detector.', 'D, Ds, not only significantly reduces latency (35% faster),', 'To address this problem, we propose the uncertainty mini-', 'but also improves accuracy (0.4% AP higher). CCFF is opti-', 'mal query selection scheme, which explicitly constructs and', 'mized based on the cross-scale fusion module, which inserts', 'optimizes the epistemic uncertainty to model the joint latent', 'several fusion blocks consisting of convolutional layers into', 'variable of encoder features, thereby providing high-quality', 'the fusion path. The role of the fusion block is to fuse two', 'queries for the decoder. Specifically, the feature uncertainty', 'adjacent scale features into a new feature, and its structure is', 'L/ is defined as the discrepancy between the predicted dis-', 'illustrated in Figure 5. The fusion block contains two 1 × 1', 'tributions of localization P and classification C in Eq. (2).', 'convolutions to adjust the number of channels, N RepBlocks', 'To minimize the uncertainty of the queries, we integrate', 'composed of RepConv [8] are used for feature fusion, and', 'the uncertainty into the loss function for the gradient-based', 'the two-path outputs are fused by element-wise add. We', 'optimization in Eq. (3).', 'formulate the calculation of the hybrid encoder as:', 'u(x)=P(x）-C(x）,x∈RD', '(2)', '=K =V =F1atten(Ss),', 'F = Reshape(AIFI(Q,K,V)),', '(1)', 'C(x.y)= Lo（b,b）+Cc(u(x）,e,c)（3)', 'O=CCFF（{S,S,F}）', 'where  and y denote the prediction and ground truth.', 'where Reshape represents restoring the shape of the flat-', '= (e, b), C and b represent the category and bounding', 'tened feature to the same shape as S5', 'box respectively, X represent the encoder feature.', '4.3.Uncertainty-minimal Ouery Selection', 'Effectiveness analysis. To analyze the effectiveness of thc', 'uncertainty-minimal query selection, we visualize the clas-', 'To reduce the difficulty of optimizing object queries in', 'sification scores and IoU scores of the selected features on', 'DETR, several subsequent works [42, 44, 45] propose query', 'COCO va1.2017, Figure 6. We draw the scatterplot with', 'selection schemes, which have in common that they use the', 'classification scores greater than 0.5. The purple and green', 'confidence score to select the top K features from the en-', 'with uncertainty-minimal query selection and vanilla query', 'dots represent the selected features from the model trained', 'coder to initialize object queries (or just position queries).'], 'rec_scores': array([0.95921248, ..., 0.99757016]), 'rec_polys': array([[[169,  50],
-                        ...,
-                        [169,  62]],
+                ...,
 
+                [[1156, 1330],
                     ...,
-
-                    [[ 39, 711],
-                        ...,
-                        [ 39, 726]]], dtype=int16), 'rec_boxes': array([[169, ...,  62],
-                    ...,
-                    [ 39, ..., 726]], dtype=int16)}, 'text_paragraphs_ocr_res': {'rec_polys': array([[[169,  50],
-                        ...,
-                        [169,  62]],
-
-                    ...,
-
-                    [[ 39, 711],
-                        ...,
-                        [ 39, 726]]], dtype=int16), 'rec_texts': ['Efficient Hybrid Encoder', 'CaevIst s1', 'CaaveJs2', 'CCFF', '', 'Fusion', '00□0□000000', 'Figure 4, Overview of RT-DETR. We feed the features from the last three stages of the backbone into the encoder. The eficient hybrid', 'encoder transforms multi-scale features into a sequence of image features through the Attention-based Intra-scale Feature Interaction (AIFI)', 'features to serve as initial object queries for the decoder, Finaly, the decoder with auxiliary prediction heads iteratively optimizes object', 'and the CNN-based Cross-scale Feature Fusion (CCFF), Then, the uncertainty-minimal query selection selects a fixed number of encoder', 'queries to generate categories and boxes.', '1x1Conv', 'Fusion', 'The confidence score represents the likelihood that the fea-', 'C', 'ture includes foreground objects. Nevertheless, the detector', 'are required to simultaneously model the category and loca-', 'NX', 'tion of objects, both of which determine the quality of the', '1x1Conv', 'features. Hence, the performance score of the feature is a la-', 'RepBlock', 'tent variable that is jointly correlated with both classification', 'and localization. Based on the analysis, the current query', 'CConcatenate', 'Element-wise add', 'Flatten', 'selection lead to a considerable level of uncertainty in the', 'selected features, resulting in sub-optimal initialization for', 'Figure 5. The fusion block in CCFF', 'the decoder and hindering the performance of the detector.', 'D, Ds, not only significantly reduces latency (35% faster),', 'To address this problem, we propose the uncertainty mini-', 'but also improves accuracy (0.4% AP higher). CCFF is opti-', 'mal query selection scheme, which explicitly constructs and', 'mized based on the cross-scale fusion module, which inserts', 'optimizes the epistemic uncertainty to model the joint latent', 'several fusion blocks consisting of convolutional layers into', 'variable of encoder features, thereby providing high-quality', 'the fusion path. The role of the fusion block is to fuse two', 'queries for the decoder. Specifically, the feature uncertainty', 'adjacent scale features into a new feature, and its structure is', 'L/ is defined as the discrepancy between the predicted dis-', 'illustrated in Figure 5. The fusion block contains two 1 × 1', 'tributions of localization P and classification C in Eq. (2).', 'convolutions to adjust the number of channels, N RepBlocks', 'To minimize the uncertainty of the queries, we integrate', 'composed of RepConv [8] are used for feature fusion, and', 'the uncertainty into the loss function for the gradient-based', 'the two-path outputs are fused by element-wise add. We', 'optimization in Eq. (3).', 'formulate the calculation of the hybrid encoder as:', 'where  and y denote the prediction and ground truth.', 'where Reshape represents restoring the shape of the flat-', '= (e, b), C and b represent the category and bounding', 'tened feature to the same shape as S5', 'box respectively, X represent the encoder feature.', '4.3.Uncertainty-minimal Ouery Selection', 'Effectiveness analysis. To analyze the effectiveness of thc', 'uncertainty-minimal query selection, we visualize the clas-', 'To reduce the difficulty of optimizing object queries in', 'sification scores and IoU scores of the selected features on', 'DETR, several subsequent works [42, 44, 45] propose query', 'COCO va1.2017, Figure 6. We draw the scatterplot with', 'selection schemes, which have in common that they use the', 'classification scores greater than 0.5. The purple and green', 'confidence score to select the top K features from the en-', 'with uncertainty-minimal query selection and vanilla query', 'dots represent the selected features from the model trained', 'coder to initialize object queries (or just position queries).'], 'rec_scores': array([0.95921248, ..., 0.99757016]), 'rec_boxes': array([[169, ...,  62],
-                    ...,
-                    [ 39, ..., 726]], dtype=int16)}, 'formula_res_list': [{'input_path': None, 'page_index': None, 'rec_formula': '\\begin{array}{r l}{\\mathcal{Q}}&{=\\mathcal{K}=\\mathcal{V}=\\mathtt{F l a t t e r n}(\\mathcal{S}_{5}),}\\\\ {\\mathcal{F}_{5}}&{=\\mathtt{R e s h a p e}(\\mathtt{A I F I}(\\mathcal{Q},\\mathcal{K},\\mathcal{V})),\\qquad\\quad(1)}\\\\ {\\mathcal{O}}&{=\\mathtt{C C F F}(\\{\\mathcal{S}_{3},\\mathcal{S}_{4},\\mathcal{F}_{5}\\}),}\\end{array}', 'formula_region_id': 1, 'dt_polys': [92.092064, 563.1221, 297.57217, 607.2598]}, {'input_path': None, 'page_index': None, 'rec_formula': '\\begin{array}{r l r}{\\mathcal{U}(\\hat{\\mathcal{X}})=\\|\\mathcal{P}(\\hat{\\mathcal{X}})-\\mathcal{C}(\\hat{\\mathcal{X}})\\|,\\hat{\\mathcal{X}}\\in\\mathbb{R}^{D}}&{{}(2)}&{}\\\\ {\\mathcal{L}(\\hat{\\mathcal{X}},\\hat{\\mathcal{Y}},\\mathcal{Y})=\\mathcal{L}_{t o x}(\\hat{\\mathbf{b}},\\mathbf{b})+\\mathcal{L}_{c l s}(\\mathcal{U}(\\hat{\\mathcal{X}}),\\hat{\\mathbf{c}},\\mathbf{c})}&{{}(3)}\\end{array}', 'formula_region_id': 2, 'dt_polys': [343.82712, 551.06995, 573.45465, 589.9438]}]}}
+                    [1156, 1351]]], dtype=int16), 'rec_boxes': array([[ 122, ...,  135],
+                ...,
+                [1156, ..., 1351]], dtype=int16)}}}
                 ```
 
     === "PP-StructureV3"
@@ -567,16 +341,16 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
 
         ```bash
         paddlex --pipeline formula_recognition \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/pipelines/general_formula_recognition_001.png \
-        --use_layout_detection True \
-        --use_doc_orientation_classify False \
-        --use_doc_unwarping False \
-        --layout_threshold 0.5 \
-        --layout_nms True \
-        --layout_unclip_ratio  1.0 \
-        --layout_merge_bboxes_mode "'large'"\
-        --save_path ./output \
-        --device gpu:0
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/pipelines/general_formula_recognition_001.png \
+                --use_layout_detection True \
+                --use_doc_orientation_classify False \
+                --use_doc_unwarping False \
+                --layout_threshold 0.5 \
+                --layout_nms True \
+                --layout_unclip_ratio  1.0 \
+                --layout_merge_bboxes_mode "'large'"\
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "What's the result"
@@ -593,11 +367,11 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
 
         ```bash
         paddlex --pipeline seal_recognition \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png \
-        --use_doc_orientation_classify False \
-        --use_doc_unwarping False \
-        --device gpu:0 \
-        --save_path ./output
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/seal_text_det.png \
+                --use_doc_orientation_classify False \
+                --use_doc_unwarping False \
+                --device gpu:0 \
+                --save_path ./output
         ```
 
         ??? question "What's the result"
@@ -842,11 +616,11 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
 
         ```bash
         paddlex --pipeline doc_preprocessor \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/doc_test_rotated.jpg \
-        --use_doc_orientation_classify True \
-        --use_doc_unwarping True \
-        --save_path ./output \
-        --device gpu:0
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/demo_image/doc_test_rotated.jpg \
+                --use_doc_orientation_classify True \
+                --use_doc_unwarping True \
+                --save_path ./output \
+                --device gpu:0
         ```
         ??? question "What's the result"
             === "output"
@@ -880,10 +654,10 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
 
         ```bash
         paddlex --pipeline object_detection \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png \
-        --threshold 0.5 \
-        --save_path ./output/ \
-        --device gpu:0
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_object_detection_002.png \
+                --threshold 0.5 \
+                --save_path ./output/ \
+                --device gpu:0
         ```
         ??? question "What's the result"
             === "output"
@@ -899,10 +673,10 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
 
         ```bash
         paddlex --pipeline instance_segmentation \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png \
-        --threshold 0.5 \
-        --save_path ./output \
-        --device gpu:0 \
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_instance_segmentation_004.png \
+                --threshold 0.5 \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "What's the result"
@@ -919,10 +693,10 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
 
         ```bash
         paddlex --pipeline semantic_segmentation \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png \
-        --target_size -1 \
-        --save_path ./output \
-        --device gpu:0 \
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/application/semantic_segmentation/makassaridn-road_demo.png \
+                --target_size -1 \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "What's the result"
@@ -955,10 +729,10 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
 
         ```bash
         paddlex --pipeline small_object_detection \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg \
-        --threshold 0.5 \
-        --save_path ./output \
-        --device gpu:0 \
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/small_object_detection.jpg \
+                --threshold 0.5 \
+                --save_path ./output \
+                --device gpu:0 \
         ```
 
         ??? question "What's the result"
@@ -997,10 +771,10 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
 
         ```bash
         paddlex --pipeline human_keypoint_detection \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/keypoint_detection_001.jpg \
-        --det_threshold 0.5 \
-        --save_path ./output/ \
-        --device gpu:0
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/keypoint_detection_001.jpg \
+                --det_threshold 0.5 \
+                --save_path ./output/ \
+                --device gpu:0
         ```
 
         ??? question "What's the result"
@@ -1177,11 +951,11 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
 
         ```bash
         paddlex --pipeline open_vocabulary_segmentation \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/open_vocabulary_segmentation.jpg \
-        --prompt_type box \
-        --prompt "[[112.9,118.4,513.8,382.1],[4.6,263.6,92.2,336.6],[592.4,260.9,607.2,294.2]]" \
-        --save_path ./output \
-        --device gpu:0
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/open_vocabulary_segmentation.jpg \
+                --prompt_type box \
+                --prompt "[[112.9,118.4,513.8,382.1],[4.6,263.6,92.2,336.6],[592.4,260.9,607.2,294.2]]" \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "What's the result"
@@ -1198,11 +972,11 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
 
         ```bash
         paddlex --pipeline open_vocabulary_detection \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/open_vocabulary_detection.jpg \
-        --prompt "bus . walking man . rearview mirror ." \
-        --thresholds "{'text_threshold': 0.25, 'box_threshold': 0.3}" \
-        --save_path ./output \
-        --device gpu:0
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/open_vocabulary_detection.jpg \
+                --prompt "bus . walking man . rearview mirror ." \
+                --thresholds "{'text_threshold': 0.25, 'box_threshold': 0.3}" \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "What's the result"
@@ -1251,10 +1025,10 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
 
         ```bash
         paddlex --pipeline rotated_object_detection \
-        --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/rotated_object_detection_001.png \
-        --threshold 0.5 \
-        --save_path ./output \
-        --device gpu:0 \
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/rotated_object_detection_001.png \
+                --threshold 0.5 \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "What's the result"
@@ -1338,9 +1112,9 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
 
         ```bash
         paddlex --pipeline multilingual_speech_recognition \
-        --input https://paddlespeech.bj.bcebos.com/PaddleAudio/zh.wav \
-        --save_path ./output \
-        --device gpu:0
+                --input https://paddlespeech.bj.bcebos.com/PaddleAudio/zh.wav \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "What's the result"
@@ -1355,10 +1129,10 @@ Each pipeline in PaddleX corresponds to specific parameters. You can find detail
 
         ```bash
         paddlex --pipeline video_classification \
-            --input https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/general_video_classification_001.mp4 \
-            --topk 5 \
-            --save_path ./output \
-            --device gpu:0
+                --input https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/general_video_classification_001.mp4 \
+                --topk 5 \
+                --save_path ./output \
+                --device gpu:0
         ```
 
         ??? question "What's the result"
@@ -1456,7 +1230,7 @@ The following steps were executed:
         pipeline = create_pipeline(pipeline_name="table_recognition_v2")
 
         output = pipeline.predict(
-            input="table_recognition.jpg",
+            input="table_recognition_v2.jpg",
             use_doc_orientation_classify=False,
             use_doc_unwarping=False,
         )
@@ -1477,7 +1251,7 @@ The following steps were executed:
         pipeline = create_pipeline(pipeline="layout_parsing")
 
         output = pipeline.predict(
-            input="./demo_paper.png",
+            input="./layout_parsing_demo.png",
             use_doc_orientation_classify=False,
             use_doc_unwarping=False,
             use_textline_orientation=False,
