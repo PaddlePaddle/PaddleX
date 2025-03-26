@@ -284,7 +284,7 @@ PIPELINE_ARGUMENTS = {
         },
         {
             "name": "--layout_threshold",
-            "type": float,
+            "type": custom_type(Optional[Union[float, Dict[int, float]]]),
             "help": "Determines confidence threshold for layout detection",
         },
         {
@@ -294,12 +294,12 @@ PIPELINE_ARGUMENTS = {
         },
         {
             "name": "--layout_unclip_ratio",
-            "type": float,
+            "type": custom_type(Optional[Union[float, Tuple[float, float], Dict[int, Tuple]]]),
             "help": "Determines unclip ratio for layout detection boxes",
         },
         {
             "name": "--layout_merge_bboxes_mode",
-            "type": str,
+            "type": custom_type(Optional[Union[str, Dict[int, str]]]),
             "help": "Determines merge mode for layout detection bboxes, 'union', 'large' or 'small'",
         },
         {
@@ -371,7 +371,7 @@ PIPELINE_ARGUMENTS = {
         },
         {
             "name": "--layout_threshold",
-            "type": float,
+            "type": custom_type(Optional[Union[float, Dict[int, float]]]),
             "help": "Determines confidence threshold for layout detection",
         },
         {
@@ -381,12 +381,12 @@ PIPELINE_ARGUMENTS = {
         },
         {
             "name": "--layout_unclip_ratio",
-            "type": float,
+            "type": custom_type(Optional[Union[float, Tuple[float, float], Dict[int, Tuple]]]),
             "help": "Determines unclip ratio for layout detection boxes",
         },
         {
             "name": "--layout_merge_bboxes_mode",
-            "type": str,
+            "type": custom_type(Optional[Union[str, Dict[int, str]]]),
             "help": "Determines merge mode for layout detection bboxes, 'union', 'large' or 'small'",
         },
         {
@@ -488,7 +488,7 @@ PIPELINE_ARGUMENTS = {
         },
         {
             "name": "--layout_threshold",
-            "type": float,
+            "type": custom_type(Optional[Union[float, Dict[int, float]]]),
             "help": "Determines confidence threshold for layout detection",
         },
         {
@@ -498,12 +498,12 @@ PIPELINE_ARGUMENTS = {
         },
         {
             "name": "--layout_unclip_ratio",
-            "type": float,
+            "type": custom_type(Optional[Union[float, Tuple[float, float], Dict[int, Tuple]]]),
             "help": "Determines unclip ratio for layout detection boxes",
         },
         {
             "name": "--layout_merge_bboxes_mode",
-            "type": str,
+            "type": custom_type(Optional[Union[str, Dict[int, str]]]),
             "help": "Determines merge mode for layout detection bboxes, 'union', 'large' or 'small'",
         },
         {
@@ -603,7 +603,7 @@ PIPELINE_ARGUMENTS = {
         },
         {
             "name": "--layout_threshold",
-            "type": float,
+            "type": custom_type(Optional[Union[float, Dict[int, float]]]),
             "help": "Sets the layout threshold for layout detection.",
         },
         {
@@ -613,12 +613,12 @@ PIPELINE_ARGUMENTS = {
         },
         {
             "name": "--layout_unclip_ratio",
-            "type": float,
+            "type": custom_type(Optional[Union[float, Tuple[float, float], Dict[int, Tuple]]]),
             "help": "Sets the layout unclip ratio for layout detection.",
         },
         {
             "name": "--layout_merge_bboxes_mode",
-            "type": str,
+            "type": custom_type(Optional[Union[str, Dict[int, str]]]),
             "help": "Sets the layout merge bboxes mode for layout detection.",
         },
     ],
