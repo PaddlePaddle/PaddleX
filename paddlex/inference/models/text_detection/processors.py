@@ -22,7 +22,6 @@ import pyclipper
 import numpy as np
 from numpy.linalg import norm
 from PIL import Image
-from shapely.geometry import Polygon
 
 from ...utils.io import ImageReader
 from ....utils import logging
@@ -265,7 +264,8 @@ class DBPostProcess:
 
         bitmap = _bitmap
         height, width = bitmap.shape
-
+        width_scale = dest_width / width
+        height_scale = dest_height / height
         boxes = []
         scores = []
 
@@ -300,8 +300,6 @@ class DBPostProcess:
                 continue
 
             box = np.array(box)
-            width_scale = dest_width / width
-            height_scale = dest_height / height
             for i in range(box.shape[0]):
                 box[i, 0] = max(0, min(round(box[i, 0] * width_scale), dest_width))
                 box[i, 1] = max(0, min(round(box[i, 1] * height_scale), dest_height))
@@ -323,6 +321,8 @@ class DBPostProcess:
 
         bitmap = _bitmap
         height, width = bitmap.shape
+        width_scale = dest_width / width
+        height_scale = dest_height / height
 
         outs = cv2.findContours(
             (bitmap * 255).astype(np.uint8), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE
@@ -353,12 +353,12 @@ class DBPostProcess:
             box, sside = self.get_mini_boxes(box)
             if sside < self.min_size + 2:
                 continue
+
             box = np.array(box)
-            width_scale = dest_width / width
-            height_scale = dest_height / height
             for i in range(box.shape[0]):
                 box[i, 0] = max(0, min(round(box[i, 0] * width_scale), dest_width))
                 box[i, 1] = max(0, min(round(box[i, 1] * height_scale), dest_height))
+
             boxes.append(box.astype(np.int16))
             scores.append(score)
         return np.array(boxes, dtype=np.int16), scores
