@@ -20,6 +20,8 @@
 
 namespace ultra_infer {
 
+bool OmBackend::aclInitFlag = false;
+
 OmBackend::~OmBackend() {
   FreeInputBuffer();
   FreeOutputBuffer();
@@ -49,43 +51,9 @@ std::vector<TensorInfo> OmBackend::GetOutputInfos() { return outputs_desc_; }
 
 bool OmBackend::Init(const RuntimeOption &runtime_option) {
   // ACL init
-  aclError ret = aclInit(NULL);
-  if (ret != ACL_SUCCESS) {
-    FDERROR << "acl init failed, errorCode = " << static_cast<int32_t>(ret);
-    return false;
-  }
-
-  // set device
-  ret = aclrtSetDevice(deviceId_);
-  if (ret != ACL_SUCCESS) {
-    FDERROR << "acl set device" << deviceId_
-            << " failed, errorCode = " << static_cast<int32_t>(ret);
-    return false;
-  }
-
-  // create context (set current)
-  ret = aclrtCreateContext(&context_, deviceId_);
-  if (ret != ACL_SUCCESS) {
-    FDERROR << "acl create context failed, deviceId" << deviceId_
-            << ", errorCode = " << static_cast<int32_t>(ret);
-    return false;
-  }
-
-  // create stream
-  ret = aclrtCreateStream(&stream_);
-  if (ret != ACL_SUCCESS) {
-    FDERROR << "acl create stream failed, deviceId" << deviceId_
-            << ", errorCode = " << static_cast<int32_t>(ret);
-    return false;
-  }
-
-  // get run mode
-  // runMode is ACL_HOST which represents app is running in host
-  // runMode is ACL_DEVICE which represents app is running in device
-  aclrtRunMode runMode;
-  ret = aclrtGetRunMode(&runMode);
-  if (ret != ACL_SUCCESS) {
-    FDERROR << "acl get run mode failed, errorCode = "
+  aclError ret = InitResource();
+  if (ret != true) {
+    FDERROR << "execute InitResource failed, errorCode = "
             << static_cast<int32_t>(ret);
     return false;
   }
@@ -123,6 +91,14 @@ bool OmBackend::Init(const RuntimeOption &runtime_option) {
 
 bool OmBackend::Infer(std::vector<FDTensor> &inputs,
                       std::vector<FDTensor> *outputs, bool copy_to_fd) {
+  // set context
+  aclError aclRet = aclrtSetCurrentContext(context_);
+  if (aclRet != ACL_SUCCESS) {
+    FDERROR << "aclrtSetCurrentContext failed"
+            << ", errorCode is " << static_cast<int32_t>(aclRet);
+    return false;
+  }
+
   // Judge whether the input and output size are the same
   if (inputs.size() != inputs_desc_.size()) {
     FDERROR << "[OmBackend] Size of the inputs(" << inputs.size()
@@ -139,9 +115,8 @@ bool OmBackend::Infer(std::vector<FDTensor> &inputs,
       return false;
     }
     size_t modelInputSize = aclmdlGetInputSizeByIndex(modelDesc_, i);
-    aclError aclRet =
-        aclrtMemcpy(inputBuffer[i], modelInputSize, inputs[i].Data(),
-                    inputs[i].Nbytes(), ACL_MEMCPY_DEVICE_TO_DEVICE);
+    aclRet = aclrtMemcpy(inputBuffer[i], modelInputSize, inputs[i].Data(),
+                         inputs[i].Nbytes(), ACL_MEMCPY_DEVICE_TO_DEVICE);
     if (aclRet != ACL_SUCCESS) {
       FDERROR << "memcpy d2d failed. buffer size is " << modelInputSize
               << ", inputs[i].Nbytes() is " << inputs[i].Nbytes()
@@ -184,6 +159,55 @@ bool OmBackend::Infer(std::vector<FDTensor> &inputs,
               << ", errorCode is " << static_cast<int32_t>(aclRet);
       return false;
     }
+  }
+
+  return true;
+}
+
+bool OmBackend::InitResource() {
+  // ACL init
+  aclError ret;
+  if (aclInitFlag == false) {
+    ret = aclInit(NULL);
+    if (ret != ACL_SUCCESS) {
+      FDERROR << "acl init failed, errorCode = " << static_cast<int32_t>(ret);
+      return false;
+    }
+    aclInitFlag = true;
+  }
+  // set device
+  ret = aclrtSetDevice(deviceId_);
+  if (ret != ACL_SUCCESS) {
+    FDERROR << "acl set device" << deviceId_
+            << " failed, errorCode = " << static_cast<int32_t>(ret);
+    return false;
+  }
+
+  // create context (set current)
+  ret = aclrtCreateContext(&context_, deviceId_);
+  if (ret != ACL_SUCCESS) {
+    FDERROR << "acl create context failed, deviceId" << deviceId_
+            << ", errorCode = " << static_cast<int32_t>(ret);
+    return false;
+  }
+
+  // create stream
+  ret = aclrtCreateStream(&stream_);
+  if (ret != ACL_SUCCESS) {
+    FDERROR << "acl create stream failed, deviceId" << deviceId_
+            << ", errorCode = " << static_cast<int32_t>(ret);
+    return false;
+  }
+
+  // get run mode
+  // runMode is ACL_HOST which represents app is running in host
+  // runMode is ACL_DEVICE which represents app is running in device
+  aclrtRunMode runMode;
+  ret = aclrtGetRunMode(&runMode);
+  if (ret != ACL_SUCCESS) {
+    FDERROR << "acl get run mode failed, errorCode = "
+            << static_cast<int32_t>(ret);
+    return false;
   }
 
   return true;
@@ -241,7 +265,6 @@ bool OmBackend::Execute() {
             << ", errorCode is " << static_cast<int32_t>(ret);
     return false;
   }
-  FDINFO << "model execute success";
   return true;
 }
 
@@ -258,9 +281,6 @@ bool OmBackend::CreateModelDesc() {
             << ", errorCode is " << static_cast<int32_t>(ret);
     return false;
   }
-
-  FDINFO << "create model description success";
-
   return true;
 }
 
@@ -366,8 +386,6 @@ bool OmBackend::CreateInput() {
     TensorInfo temp_input_info = {temp_name, temp_shape, temp_dtype};
     inputs_desc_[i] = temp_input_info;
   }
-  FDINFO << "create model input success";
-
   return true;
 }
 
@@ -465,9 +483,6 @@ bool OmBackend::CreateOutput() {
     TensorInfo temp_output_info = {temp_name, temp_shape, temp_dtype};
     outputs_desc_[i] = temp_output_info;
   }
-
-  FDINFO << "create model output success";
-
   return true;
 }
 
@@ -500,7 +515,6 @@ void OmBackend::DestroyInput() {
   }
   (void)aclmdlDestroyDataset(input_);
   input_ = nullptr;
-  FDINFO << "destroy model input success";
 }
 
 void OmBackend::DestroyOutput() {
@@ -517,11 +531,16 @@ void OmBackend::DestroyOutput() {
 
   (void)aclmdlDestroyDataset(output_);
   output_ = nullptr;
-  FDINFO << "destroy model output success";
 }
 
 void OmBackend::DestroyResource() {
-  aclError ret;
+  // set context
+  aclError ret = aclrtSetCurrentContext(context_);
+  if (ret != ACL_SUCCESS) {
+    FDERROR << "aclrtSetCurrentContext failed"
+            << ", errorCode is " << static_cast<int32_t>(ret);
+    return;
+  }
   if (stream_ != nullptr) {
     ret = aclrtDestroyStream(stream_);
     if (ret != ACL_SUCCESS) {
@@ -546,11 +565,14 @@ void OmBackend::DestroyResource() {
             << " failed, errorCode = " << static_cast<int32_t>(ret);
   }
 
-  ret = aclFinalize();
-  if (ret != ACL_SUCCESS) {
-    FDERROR << "finalize acl failed, errorCode = " << static_cast<int32_t>(ret);
+  if (aclInitFlag == true) {
+    ret = aclFinalize();
+    if (ret != ACL_SUCCESS) {
+      FDERROR << "finalize acl failed, errorCode = "
+              << static_cast<int32_t>(ret);
+    }
+    aclInitFlag = false;
   }
-  FDINFO << "end to destroy acl resource";
 }
 
 } // namespace ultra_infer
