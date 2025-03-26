@@ -16,3 +16,4 @@ from .base_result import CVResult, BaseResult
 from .sort_boxes import SortQuadBoxes, SortPolyBoxes
 from .crop_image_regions import CropByPolys, CropByBoxes
 from .convert_points_and_boxes import convert_points_to_boxes
+from .warp_image import rotate_image

@@ -14,7 +14,6 @@
 
 from typing import Any, Dict, List, Optional, Union
 import numpy as np
-from scipy.ndimage import rotate
 from ...common.reader import ReadImage
 from ...common.batch_sampler import ImageBatchSampler
 from ...utils.pp_option import PaddlePredictorOption
@@ -24,6 +23,7 @@ from ..components import (
     SortQuadBoxes,
     SortPolyBoxes,
     convert_points_to_boxes,
+    rotate_image,
 )
 from .result import OCRResult
 from ..doc_preprocessor.result import DocPreprocessorResult
@@ -148,7 +148,7 @@ class OCRPipeline(BasePipeline):
         for image_array, rotate_indicator in zip(image_array_list, rotate_angle_list):
             # Convert 0/1 indicator to actual rotation angle
             rotate_angle = rotate_indicator * 180
-            rotated_image = rotate(image_array, rotate_angle, reshape=True)
+            rotated_image = rotate_image(image_array, rotate_angle)
             rotated_images.append(rotated_image)
 
         return rotated_images
