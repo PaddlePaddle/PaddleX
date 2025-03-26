@@ -16,7 +16,6 @@ from .common import CVResult, BaseResult
 from .common import SortQuadBoxes, SortPolyBoxes
 from .common import CropByPolys, CropByBoxes
 from .common import convert_points_to_boxes
-from .common import rotate_image
 from .utils.mixin import HtmlMixin, XlsxMixin
 from .chat_server.base import BaseChat
 from .retriever.base import BaseRetriever
