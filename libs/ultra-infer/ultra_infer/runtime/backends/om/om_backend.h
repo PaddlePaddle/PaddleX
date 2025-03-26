@@ -47,6 +47,7 @@ public:
 
   bool Infer(std::vector<FDTensor> &inputs, std::vector<FDTensor> *outputs,
              bool copy_to_fd = true) override;
+  static bool aclInitFlag;
 
 private:
   std::vector<TensorInfo> inputs_desc_;
@@ -76,5 +77,6 @@ private:
   bool CreateModelDesc();
   void FreeInputBuffer();
   void FreeOutputBuffer();
+  bool InitResource();
 };
 } // namespace ultra_infer
