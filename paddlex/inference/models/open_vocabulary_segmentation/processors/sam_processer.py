@@ -20,12 +20,13 @@ import PIL
 from copy import deepcopy
 
 from .....utils.lazy_loader import LazyLoader
-from ....utils.benchmark import benchmark
 
 # NOTE: LazyLoader is used to avoid conflicts between ultra-infer and Paddle
 paddle = LazyLoader("lazy_paddle", globals(), "paddle")
 T = LazyLoader("T", globals(), "paddle.vision.transforms")
 F = LazyLoader("F", globals(), "paddle.nn.functional")
+
+from ....utils.benchmark import benchmark
 
 
 def _get_preprocess_shape(

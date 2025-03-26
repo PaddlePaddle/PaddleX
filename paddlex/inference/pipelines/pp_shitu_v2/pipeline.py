@@ -12,11 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 import numpy as np
 
 from ...utils.pp_option import PaddlePredictorOption
+from ...utils.hpi import HPIConfig
 from ...common.reader import ReadImage
 from ...common.batch_sampler import ImageBatchSampler
 from ..components import CropByBoxes, FaissIndexer, FaissBuilder, IndexData
@@ -35,8 +36,11 @@ class ShiTuV2Pipeline(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ):
-        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
+        super().__init__(
+            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+        )
 
         self._topk, self._rec_threshold, self._hamming_radius, self._det_threshold = (
             config.get("rec_topk", 5),

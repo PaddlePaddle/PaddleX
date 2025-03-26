@@ -477,7 +477,7 @@ Additionally, PaddleX offers three other deployment methods, detailed as follows
 <li><b><code>infer</code></b></li>
 </ul>
 <p>Obtain the document image preprocessing results.</p>
-<p><code>POST /doc_preprocessor</code></p>
+<p><code>POST /document-preprocessing</code></p>
 <ul>
 <li>The attributes of the request body are as follows:</li>
 </ul>

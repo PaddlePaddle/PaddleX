@@ -13,4 +13,3 @@
 # limitations under the License.
 
 from .base_predictor import BasePredictor
-from .basic_predictor import BasicPredictor

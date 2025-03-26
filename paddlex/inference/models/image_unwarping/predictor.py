@@ -22,15 +22,14 @@ from ..common import (
     Normalize,
     ToCHWImage,
     ToBatch,
-    StaticInfer,
 )
-from ..base import BasicPredictor
+from ..base import BasePredictor
 from .processors import DocTrPostProcess
 from .result import DocTrResult
 
 
-class WarpPredictor(BasicPredictor):
-    """WarpPredictor that inherits from BasicPredictor."""
+class WarpPredictor(BasePredictor):
+    """WarpPredictor that inherits from BasePredictor."""
 
     entities = MODELS
 
@@ -71,11 +70,7 @@ class WarpPredictor(BasicPredictor):
         preprocessors["ToCHW"] = ToCHWImage()
         preprocessors["ToBatch"] = ToBatch()
 
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         postprocessors = {"DocTrPostProcess": DocTrPostProcess()}
         return preprocessors, infer, postprocessors

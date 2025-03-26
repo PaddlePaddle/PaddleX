@@ -22,7 +22,7 @@ from ....modules.multilabel_classification.model_list import MODELS
 
 
 class MLClasPredictor(ClasPredictor):
-    """MLClasPredictor that inherits from BasicPredictor."""
+    """MLClasPredictor that inherits from BasePredictor."""
 
     entities = MODELS
 

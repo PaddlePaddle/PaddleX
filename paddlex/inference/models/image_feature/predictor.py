@@ -25,15 +25,14 @@ from ..common import (
     Normalize,
     ToCHWImage,
     ToBatch,
-    StaticInfer,
 )
-from ..base import BasicPredictor
+from ..base import BasePredictor
 from .processors import NormalizeFeatures
 from .result import IdentityResult
 
 
-class ImageFeaturePredictor(BasicPredictor):
-    """ImageFeaturePredictor that inherits from BasicPredictor."""
+class ImageFeaturePredictor(BasePredictor):
+    """ImageFeaturePredictor that inherits from BasePredictor."""
 
     entities = MODELS
 
@@ -83,11 +82,7 @@ class ImageFeaturePredictor(BasicPredictor):
             preprocessors[name] = op
         preprocessors["ToBatch"] = ToBatch()
 
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         postprocessors = {}
         for key in self.config["PostProcess"]:

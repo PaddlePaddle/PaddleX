@@ -43,6 +43,10 @@ def is_built_with_openvino() ->bool:
     return True if "@ENABLE_OPENVINO_BACKEND@" == "ON" else False
 
 
+def is_built_with_om() ->bool:
+    return True if "@ENABLE_OM_BACKEND@" == "ON" else False
+
+
 def get_default_cuda_directory() -> str:
     if not is_built_with_gpu():
        return ""

@@ -17,7 +17,6 @@ import numpy as np
 
 from ....modules.instance_segmentation.model_list import MODELS
 from ...common.batch_sampler import ImageBatchSampler
-from ..common import StaticInfer
 from ..object_detection.processors import (
     ReadImage,
     ToBatch,
@@ -85,11 +84,7 @@ class InstanceSegPredictor(DetPredictor):
         pre_ops.append(self.build_to_batch())
 
         # build infer
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         # build postprocess op
         post_op = self.build_postprocess()

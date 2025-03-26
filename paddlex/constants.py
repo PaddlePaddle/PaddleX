@@ -12,9 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ..utils import logging
+from typing import Final
 
-from .pipelines import create_pipeline, load_pipeline_config
-from .models import create_predictor
-from .utils.hpi import HPIConfig
-from .utils.pp_option import PaddlePredictorOption
+
+MODEL_FILE_PREFIX: Final[str] = "inference"

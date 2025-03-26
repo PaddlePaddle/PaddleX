@@ -18,14 +18,14 @@ import numpy as np
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import AudioBatchSampler
 
-from ..base import BasicPredictor
+from ..base import BasePredictor
 from .result import WhisperResult
 from ...utils.io import AudioReader
 from ....modules.multilingual_speech_recognition.model_list import MODELS
 from ....utils.download import download_and_extract
 
 
-class WhisperPredictor(BasicPredictor):
+class WhisperPredictor(BasePredictor):
 
     entities = MODELS
 

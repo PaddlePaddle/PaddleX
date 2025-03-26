@@ -27,7 +27,7 @@ MODELS = getattr(module_3d_model_list, "MODELS")
 from ...common.batch_sampler import Det3DBatchSampler
 from ...common.reader import ReadNuscenesData
 from ..common import StaticInfer
-from ..base import BasicPredictor
+from ..base import BasePredictor
 from ..base.predictor.base_predictor import PredictionWrap
 from .processors import (
     LoadPointsFromFile,
@@ -42,8 +42,8 @@ from .processors import (
 from .result import BEV3DDetResult
 
 
-class BEVDet3DPredictor(BasicPredictor):
-    """BEVDet3DPredictor that inherits from BasicPredictor."""
+class BEVDet3DPredictor(BasePredictor):
+    """BEVDet3DPredictor that inherits from BasePredictor."""
 
     entities = MODELS
 
@@ -105,11 +105,7 @@ class BEVDet3DPredictor(BasicPredictor):
                 pre_tfs[name] = op
         pre_tfs["GetInferInput"] = GetInferInput()
 
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         return pre_tfs, infer
 

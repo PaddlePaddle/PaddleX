@@ -10,6 +10,7 @@ premailer
 python-docx
 ######## For Chatocrv3 #######
 langchain==0.2.17
+langchain-openai==0.1.25
 langchain-community==0.2.17
 langchain-text-splitters==0.2.4
 transformers==4.40.0

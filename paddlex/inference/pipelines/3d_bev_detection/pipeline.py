@@ -16,6 +16,7 @@ from typing import Any, Dict, Optional, Union, List
 import numpy as np
 from importlib import import_module
 from ...utils.pp_option import PaddlePredictorOption
+from ...utils.hpi import HPIConfig
 from ..base import BasePipeline
 
 module_3d_bev_detection_result = import_module(
@@ -35,6 +36,7 @@ class BEVDet3DPipeline(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ) -> None:
         """
         Initializes the class with given configurations and options.
@@ -43,9 +45,15 @@ class BEVDet3DPipeline(BasePipeline):
             config (Dict): Configuration dictionary containing model and other parameters.
             device (str): The device to run the prediction on. Default is None.
             pp_option (PaddlePredictorOption): Options for PaddlePaddle predictor. Default is None.
-            use_hpip (bool): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
+            use_hpip (bool, optional): Whether to use the high-performance
+                inference plugin (HPIP) by default. Defaults to False.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
+                The default high-performance inference configuration dictionary.
+                Defaults to None.
         """
-        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
+        super().__init__(
+            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+        )
 
         bev_detection_3d_model_config = config["SubModules"]["3DBEVDetection"]
         self.bev_detection_3d_model = self.create_model(bev_detection_3d_model_config)

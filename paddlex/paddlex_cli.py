@@ -21,6 +21,7 @@ import shutil
 from pathlib import Path
 
 from . import create_pipeline
+from .constants import MODEL_FILE_PREFIX
 from .inference.pipelines import load_pipeline_config
 from .repo_manager import setup, get_all_supported_repo_names
 from .utils.flags import FLAGS_json_format_model
@@ -123,7 +124,9 @@ def args_cfg():
         help="Device to run the pipeline on (e.g., 'cpu', 'gpu:0').",
     )
     pipeline_group.add_argument(
-        "--use_hpip", action="store_true", help="Enable HPIP acceleration if available."
+        "--use_hpip",
+        action="store_true",
+        help="Enable HPIP acceleration by default.",
     )
     pipeline_group.add_argument(
         "--get_pipeline_config",
@@ -154,15 +157,18 @@ def args_cfg():
 
     ################# paddle2onnx #################
     paddle2onnx_group.add_argument(
-        "--paddle2onnx", action="store_true", help="Convert Paddle model to ONNX format"
+        "--paddle2onnx",
+        action="store_true",
+        help="Convert PaddlePaddle model to ONNX format",
     )
     paddle2onnx_group.add_argument(
-        "--paddle_model_dir", type=str, help="Directory containing the Paddle model"
+        "--paddle_model_dir",
+        type=str,
+        help="Directory containing the PaddlePaddle model",
     )
     paddle2onnx_group.add_argument(
         "--onnx_model_dir",
         type=str,
-        default="onnx",
         help="Output directory for the ONNX model",
     )
     paddle2onnx_group.add_argument(
@@ -223,21 +229,23 @@ def install(args):
             )
 
     def _install_hpi_deps(device_type):
-        support_device_type = ["cpu", "gpu"]
-        if device_type not in support_device_type:
+        supported_device_types = ["cpu", "gpu", "npu"]
+        if device_type not in supported_device_types:
             logging.error(
                 "HPI installation failed!\n"
                 "Supported device_type: %s. Your input device_type: %s.\n"
                 "Please ensure the device_type is correct.",
-                support_device_type,
+                supported_device_types,
                 device_type,
             )
             sys.exit(2)
 
         if device_type == "cpu":
-            packages = ["ultra-infer-python", "paddlex-hpi"]
+            packages = ["ultra-infer-python"]
         elif device_type == "gpu":
-            packages = ["ultra-infer-gpu-python", "paddlex-hpi"]
+            packages = ["ultra-infer-gpu-python"]
+        elif device_type == "npu":
+            packages = ["ultra-infer-npu-python"]
 
         with importlib.resources.path("paddlex", "hpip_links.html") as f:
             return subprocess.check_call(
@@ -336,10 +344,10 @@ def serve(pipeline, *, device, use_hpip, host, port):
 
 # TODO: Move to another module
 def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
-    PD_MODEL_FILE_PREFIX = "inference"
-    PD_PARAMS_FILENAME = "inference.pdiparams"
-    ONNX_MODEL_FILENAME = "inference.onnx"
-    CONFIG_FILENAME = "inference.yml"
+    PD_MODEL_FILE_PREFIX = MODEL_FILE_PREFIX
+    PD_PARAMS_FILENAME = f"{MODEL_FILE_PREFIX}.pdiparams"
+    ONNX_MODEL_FILENAME = f"{MODEL_FILE_PREFIX}.onnx"
+    CONFIG_FILENAME = f"{MODEL_FILE_PREFIX}.yml"
     ADDITIONAL_FILENAMES = ["scaler.pkl"]
 
     def _check_input_dir(input_dir, pd_model_file_ext):
@@ -407,6 +415,8 @@ def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
             logging.info(f"Copied {src_path} to {dst_path}")
 
     paddle_model_dir = Path(paddle_model_dir)
+    if not onnx_model_dir:
+        onnx_model_dir = paddle_model_dir
     onnx_model_dir = Path(onnx_model_dir)
     logging.info(f"Input dir: {paddle_model_dir}")
     logging.info(f"Output dir: {onnx_model_dir}")

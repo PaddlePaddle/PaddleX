@@ -24,15 +24,14 @@ from ..common import (
     Normalize,
     ToCHWImage,
     ToBatch,
-    StaticInfer,
 )
 from .processors import Resize, SegPostProcess
-from ..base import BasicPredictor
+from ..base import BasePredictor
 from .result import SegResult
 
 
-class SegPredictor(BasicPredictor):
-    """SegPredictor that inherits from BasicPredictor."""
+class SegPredictor(BasePredictor):
+    """SegPredictor that inherits from BasePredictor."""
 
     entities = MODELS
 
@@ -95,11 +94,7 @@ class SegPredictor(BasicPredictor):
             _, op = self._FUNC_MAP["Resize"](self, target_size=self.target_size)
             preprocessors["Resize"] = op
 
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         postprocessers = SegPostProcess()
 

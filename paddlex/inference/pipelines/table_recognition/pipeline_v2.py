@@ -12,11 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os, sys
 from typing import Any, Dict, Optional, Union, List, Tuple
 import numpy as np
 import math
-import cv2
 from sklearn.cluster import KMeans
 from ..base import BasePipeline
 from ..components import CropByBoxes
@@ -28,6 +26,7 @@ from .table_recognition_post_processing import (
 from .result import SingleTableRecognitionResult, TableRecognitionResult
 from ....utils import logging
 from ...utils.pp_option import PaddlePredictorOption
+from ...utils.hpi import HPIConfig
 from ...common.reader import ReadImage
 from ...common.batch_sampler import ImageBatchSampler
 from ..ocr.result import OCRResult
@@ -47,7 +46,7 @@ class TableRecognitionPipelineV2(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
-        hpi_params: Optional[Dict[str, Any]] = None,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ) -> None:
         """Initializes the layout parsing pipeline.
 
@@ -55,12 +54,15 @@ class TableRecognitionPipelineV2(BasePipeline):
             config (Dict): Configuration dictionary containing various settings.
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            hpi_params (Optional[Dict[str, Any]], optional): HPIP parameters. Defaults to None.
+            use_hpip (bool, optional): Whether to use the high-performance
+                inference plugin (HPIP) by default. Defaults to False.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
+                The default high-performance inference configuration dictionary.
+                Defaults to None.
         """
 
         super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_params=hpi_params
+            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
         )
 
         self.use_doc_preprocessor = config.get("use_doc_preprocessor", True)
@@ -130,8 +132,7 @@ class TableRecognitionPipelineV2(BasePipeline):
             self.general_ocr_pipeline = self.create_pipeline(general_ocr_config)
         else:
             self.general_ocr_config_bak = config.get("SubPipelines", {}).get(
-                "GeneralOCR",
-                None
+                "GeneralOCR", None
             )
 
         self._crop_by_boxes = CropByBoxes()
@@ -600,15 +601,25 @@ class TableRecognitionPipelineV2(BasePipeline):
                 use_e2e_model = True
             else:
                 table_cells_pred = next(
-                    self.wireless_table_cells_detection_model(image_array, threshold=0.3)
+                    self.wireless_table_cells_detection_model(
+                        image_array, threshold=0.3
+                    )
                 )  # Setting the threshold to 0.3 can improve the accuracy of table cells detection.
                 # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
 
         if use_e2e_model == False:
-            table_structure_result = self.extract_results(table_structure_pred, "table_stru")
-            table_cells_result, table_cells_score = self.extract_results(table_cells_pred, "det")
-            table_cells_result, table_cells_score = self.cells_det_results_nms(table_cells_result, table_cells_score)
-            ocr_det_boxes = self.get_region_ocr_det_boxes(overall_ocr_res["rec_boxes"].tolist(), table_box)
+            table_structure_result = self.extract_results(
+                table_structure_pred, "table_stru"
+            )
+            table_cells_result, table_cells_score = self.extract_results(
+                table_cells_pred, "det"
+            )
+            table_cells_result, table_cells_score = self.cells_det_results_nms(
+                table_cells_result, table_cells_score
+            )
+            ocr_det_boxes = self.get_region_ocr_det_boxes(
+                overall_ocr_res["rec_boxes"].tolist(), table_box
+            )
             table_cells_result = self.cells_det_results_reprocessing(
                 table_cells_result,
                 table_cells_score,
@@ -616,7 +627,9 @@ class TableRecognitionPipelineV2(BasePipeline):
                 len(table_structure_pred["bbox"]),
             )
             if use_table_cells_ocr_results == True:
-                cells_texts_list = self.split_ocr_bboxes_by_table_cells(image_array, table_cells_result)
+                cells_texts_list = self.split_ocr_bboxes_by_table_cells(
+                    image_array, table_cells_result
+                )
             else:
                 cells_texts_list = []
             single_table_recognition_res = get_table_recognition_res(
@@ -629,9 +642,16 @@ class TableRecognitionPipelineV2(BasePipeline):
             )
         else:
             if use_table_cells_ocr_results == True:
-                table_cells_result_e2e = list(map(lambda arr: arr.tolist(), table_structure_pred["bbox"]))
-                table_cells_result_e2e = [[rect[0], rect[1], rect[4], rect[5]]for rect in table_cells_result_e2e]
-                cells_texts_list = self.split_ocr_bboxes_by_table_cells(image_array, table_cells_result_e2e)
+                table_cells_result_e2e = list(
+                    map(lambda arr: arr.tolist(), table_structure_pred["bbox"])
+                )
+                table_cells_result_e2e = [
+                    [rect[0], rect[1], rect[4], rect[5]]
+                    for rect in table_cells_result_e2e
+                ]
+                cells_texts_list = self.split_ocr_bboxes_by_table_cells(
+                    image_array, table_cells_result_e2e
+                )
             else:
                 cells_texts_list = []
             single_table_recognition_res = get_table_recognition_res_e2e(
@@ -737,7 +757,9 @@ class TableRecognitionPipelineV2(BasePipeline):
                 )
             elif use_table_cells_ocr_results == True:
                 assert self.general_ocr_config_bak != None
-                self.general_ocr_pipeline = self.create_pipeline(self.general_ocr_config_bak)
+                self.general_ocr_pipeline = self.create_pipeline(
+                    self.general_ocr_config_bak
+                )
 
             table_res_list = []
             table_region_id = 1

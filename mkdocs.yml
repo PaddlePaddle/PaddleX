@@ -103,7 +103,7 @@ plugins:
             通用表格识别产线: General Table Recognition
             通用表格识别v2产线: General Table Recognition V2
             通用版面解析产线: General Layout Parsing
-            通用版面解析v2产线: General Layout Parsing V2
+            通用版面解析v3产线: PP-StructureV3
             公式识别产线: Formula Recognition
             印章文本识别产线: Seal Recognition
             文档图像预处理产线: Document Image Preprocessing
@@ -131,7 +131,7 @@ plugins:
             文本检测模块: Text Detection
             印章文本检测模块: Seal Detection
             文本识别模块: Text Recognition
-            版面区域检测模块: Layout Parsing
+            版面区域检测模块: Layout Detection
             表格结构识别模块: Table Structure Recognition
             表格单元格检测模块: Table Cell Detection
             表格分类模块: Table Classification
@@ -330,7 +330,7 @@ nav:
          - 通用OCR产线: pipeline_usage/tutorials/ocr_pipelines/OCR.md
          - 通用表格识别产线: pipeline_usage/tutorials/ocr_pipelines/table_recognition.md
          - 通用表格识别v2产线: pipeline_usage/tutorials/ocr_pipelines/table_recognition_v2.md
-         - 通用版面解析产线: pipeline_usage/tutorials/ocr_pipelines/layout_parsing_.md
+         - 通用版面解析产线: pipeline_usage/tutorials/ocr_pipelines/layout_parsing.md
          - 通用版面解析v3产线: pipeline_usage/tutorials/ocr_pipelines/PP-StructureV3.md
          - 公式识别产线: pipeline_usage/tutorials/ocr_pipelines/formula_recognition.md
          - 印章文本识别产线: pipeline_usage/tutorials/ocr_pipelines/seal_recognition.md
@@ -452,16 +452,23 @@ nav:
        - PaddleX模型列表(XPU): support_list/model_list_xpu.md
        - PaddleX模型列表(GCU): support_list/model_list_gcu.md
   - 产业实践教程&范例:
-       - 论文文献信息抽取教程: practical_tutorials/document_scene_information_extraction(layout_detection)_tutorial.md
-       - 垃圾分类教程: practical_tutorials/image_classification_garbage_tutorial.md
-       - 遥感图像实例分割教程: practical_tutorials/instance_segmentation_remote_sensing_tutorial.md
-       - 行人跌倒检测教程: practical_tutorials/object_detection_fall_tutorial.md
-       - 服装时尚元素检测教程: practical_tutorials/object_detection_fashion_pedia_tutorial.md
-       - 车牌识别教程: practical_tutorials/ocr_det_license_tutorial.md
-       - 手写中文识别教程: practical_tutorials/ocr_rec_chinese_tutorial.md
-       - 车道线分割教程: practical_tutorials/semantic_segmentation_road_tutorial.md
-       - 设备异常检测应用教程: practical_tutorials/ts_anomaly_detection.md
-       - 心跳监测时序数据分类应用教程: practical_tutorials/ts_classification.md
-       - 用电量长期预测应用教程: practical_tutorials/ts_forecast.md
+       - 文档场景信息抽取实践教程-如何微调版面区域检测: practical_tutorials/document_scene_information_extraction(layout_detection)_tutorial.md
+       - 文档场景信息抽取实践教程-如何微调印章文本检测: practical_tutorials/document_scene_information_extraction(seal_recognition)_tutorial.md
+       - 文档场景信息抽取实践教程-如何使用deepseek: practical_tutorials/document_scene_information_extraction(deepseek)_tutorial.md
+       - OCR识别之车牌文本检测实践教程: practical_tutorials/ocr_det_license_tutorial.md
+       - OCR识别之手写中文识别实践教程: practical_tutorials/ocr_rec_chinese_tutorial.md
+       - 公式识别实践教程: practical_tutorials/formula_recognition_tutorial.md
+       - 版面区域检测模型使用实践教程: practical_tutorials/layout_detection.md
+       - 人脸识别之卡通人脸识别实践教程: practical_tutorials/face_recognition_tutorial.md
+       - 垃圾分类实践教程: practical_tutorials/image_classification_garbage_tutorial.md
+       - 遥感图像实例分割实践教程: practical_tutorials/instance_segmentation_remote_sensing_tutorial.md
+       - 行人跌倒检测实践教程: practical_tutorials/object_detection_fall_tutorial.md
+       - 服装时尚元素检测实践教程: practical_tutorials/object_detection_fashion_pedia_tutorial.md
+       - 车牌识别实践教程: practical_tutorials/ocr_det_license_tutorial.md
+       - 车道线分割实践教程: practical_tutorials/semantic_segmentation_road_tutorial.md
+       - 设备异常检测应用实践教程: practical_tutorials/ts_anomaly_detection.md
+       - 心跳监测时序数据分类应用实践教程: practical_tutorials/ts_classification.md
+       - 用电量长期预测应用实践教程: practical_tutorials/ts_forecast.md
+       - 产线部署实践教程: practical_tutorials/deployment_tutorial.md
   - FAQ: FAQ.md
   - 近期更新: CHANGLOG.md

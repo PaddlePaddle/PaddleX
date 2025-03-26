@@ -14,11 +14,12 @@
 
 
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 from importlib import import_module
 from ...utils import errors
+from ..utils.hpi import HPIConfig
 from ..utils.official_models import official_models
-from .base import BasePredictor, BasicPredictor
+from .base import BasePredictor
 
 from .image_classification import ClasPredictor
 from .object_detection import DetPredictor
@@ -53,38 +54,13 @@ module_3d_bev_detection = import_module(".3d_bev_detection", "paddlex.inference.
 BEVDet3DPredictor = getattr(module_3d_bev_detection, "BEVDet3DPredictor")
 
 
-def _create_hp_predictor(
-    model_name, model_dir, device, config, hpi_params, *args, **kwargs
-):
-    try:
-        from paddlex_hpi.models import HPPredictor
-    except ModuleNotFoundError:
-        raise RuntimeError(
-            "The PaddleX HPI plugin is not properly installed, and the high-performance model inference features are not available."
-        ) from None
-    try:
-        predictor = HPPredictor.get(model_name)(
-            model_dir=model_dir,
-            config=config,
-            device=device,
-            *args,
-            hpi_params=hpi_params,
-            **kwargs,
-        )
-    except errors.others.ClassNotFoundException:
-        raise ValueError(
-            f"{model_name} is not supported by the PaddleX HPI plugin."
-        ) from None
-    return predictor
-
-
 def create_predictor(
     model_name: str,
     model_dir: Optional[str] = None,
     device=None,
     pp_option=None,
     use_hpip: bool = False,
-    hpi_params: Optional[Dict[str, Any]] = None,
+    hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     *args,
     **kwargs,
 ) -> BasePredictor:
@@ -97,26 +73,16 @@ def create_predictor(
     assert (
         model_name == config["Global"]["model_name"]
     ), f"Model name mismatch，please input the correct model dir."
-
-    if use_hpip:
-        return _create_hp_predictor(
-            model_name=model_name,
-            model_dir=model_dir,
-            config=config,
-            hpi_params=hpi_params,
-            device=device,
-            *args,
-            **kwargs,
-        )
-    else:
-        return BasicPredictor.get(model_name)(
-            model_dir=model_dir,
-            config=config,
-            device=device,
-            pp_option=pp_option,
-            *args,
-            **kwargs,
-        )
+    return BasePredictor.get(model_name)(
+        model_dir=model_dir,
+        config=config,
+        device=device,
+        pp_option=pp_option,
+        use_hpip=use_hpip,
+        hpi_config=hpi_config,
+        *args,
+        **kwargs,
+    )
 
 
 def check_model(model):

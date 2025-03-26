@@ -17,10 +17,7 @@ from ....utils.func_register import FuncRegister
 from ....modules.video_classification.model_list import MODELS
 from ...common.batch_sampler import VideoBatchSampler
 from ...common.reader import ReadVideo
-from ..common import (
-    StaticInfer,
-)
-from ..base import BasicPredictor
+from ..base import BasePredictor
 from .processors import (
     Scale,
     CenterCrop,
@@ -32,7 +29,7 @@ from .processors import (
 from .result import TopkVideoResult
 
 
-class VideoClasPredictor(BasicPredictor):
+class VideoClasPredictor(BasePredictor):
 
     entities = MODELS
 
@@ -62,11 +59,7 @@ class VideoClasPredictor(BasicPredictor):
                 pre_tfs[name] = op
         pre_tfs["ToBatch"] = ToBatch()
 
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         post_op = {}
         for key in self.config["PostProcess"]:
