@@ -32,6 +32,8 @@ def check_image_size(input_):
 def resize(im, target_size, interp, backend="cv2"):
     """resize image to target size"""
     w, h = target_size
+    if w == im.shape[1] and h == im.shape[0]:
+        return im
     if backend.lower() == "pil":
         resize_function = _pil_resize
     else:

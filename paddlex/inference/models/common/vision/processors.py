@@ -232,7 +232,7 @@ class Normalize:
                 applying normalization. Default: 1/255.
             mean (float|tuple|list, optional): Means for each channel of the image.
                 Default: 0.5.
-            std (float|tuple|list, optional): Standard deviations for each channel
+            std (float|tuple|list|np.ndarray, optional): Standard deviations for each channel
                 of the image. Default: 0.5.
         """
         super().__init__()
@@ -245,12 +245,17 @@ class Normalize:
             std = [std] * 3
         self.std = np.asarray(std).astype("float32")
 
+        if len(self.std) != 3:
+            raise ValueError(
+                f"Expected 'std' to be a list of length 3, but got {len(self.std)} elements. Please provide a list with three float elements."
+            )
+        if len(self.mean) != 3:
+            raise ValueError(
+                f"Expected 'mean' to be a list of length 3, but got {len(self.std)} elements. Please provide a list with three float elements."
+            )
+
         self.alpha = [self.scale / self.std[i] for i in range(len(std))]
-        if len(self.alpha) == 1:
-            self.alpha = self.alpha * 3
         self.beta = [-mean[i] / self.std[i] for i in range(len(std))]
-        if len(self.beta) == 1:
-            self.beta = self.beta * 3
 
     def norm(self, img):
         split_im = list(cv2.split(img))
