@@ -124,16 +124,8 @@ class TableLabelDecode:
 
     def __call__(self, pred, img_size, ori_img_size):
         """apply"""
-        bbox_preds, structure_probs = [], []
-
-        for i in range(len(pred[0][0])):
-            bbox_preds.append(pred[0][0][i])
-            structure_probs.append(pred[1][0][i])
-        bbox_preds = [bbox_preds]
-        structure_probs = [structure_probs]
-
-        bbox_preds = np.array(bbox_preds)
-        structure_probs = np.array(structure_probs)
+        bbox_preds = np.array([list(pred[0][0])])
+        structure_probs = np.array([list(pred[1][0])])
 
         bbox_list, structure_str_list, structure_score = self.decode(
             structure_probs, bbox_preds, img_size, ori_img_size
@@ -230,9 +222,7 @@ class TableLabelDecode:
             ratio_h = h / ori_h
             ratio = min(ratio_w, ratio_h)
 
-            bbox[0::2] *= w
-            bbox[1::2] *= h
-            bbox[0::2] /= ratio
-            bbox[1::2] /= ratio
+            bbox[0::2] *= w / ratio
+            bbox[1::2] *= h / ratio
 
         return bbox

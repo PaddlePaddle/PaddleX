@@ -90,6 +90,9 @@ def pad(im, pad, val):
         pad = [pad] * 4
     if len(pad) != 4:
         raise ValueError
+    if pad[1] == im.shape[0] and pad[3] == im.shape[1]:
+        return im
+
     chns = 1 if im.ndim == 2 else im.shape[2]
     im = cv2.copyMakeBorder(im, *pad, cv2.BORDER_CONSTANT, value=(val,) * chns)
     return im
