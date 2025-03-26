@@ -20,14 +20,14 @@ from ....modules.image_classification.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasicPredictor
-from ..common import Normalize, Resize, ResizeByShort, StaticInfer, ToBatch, ToCHWImage
+from ..base import BasePredictor
+from ..common import Normalize, Resize, ResizeByShort, ToBatch, ToCHWImage
 from .processors import Crop, Topk
 from .result import TopkResult
 
 
-class ClasPredictor(BasicPredictor):
-    """ClasPredictor that inherits from BasicPredictor."""
+class ClasPredictor(BasePredictor):
+    """ClasPredictor that inherits from BasePredictor."""
 
     entities = MODELS
 
@@ -79,11 +79,7 @@ class ClasPredictor(BasicPredictor):
             preprocessors[name] = op
         preprocessors["ToBatch"] = ToBatch()
 
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         postprocessors = {}
         for key in self.config["PostProcess"]:

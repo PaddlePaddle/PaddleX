@@ -18,7 +18,6 @@ import numpy as np
 
 from ....modules.instance_segmentation.model_list import MODELS
 from ....utils import logging
-from ..common import StaticInfer
 from ..object_detection import DetPredictor
 from ..object_detection.processors import ReadImage, ToBatch
 from .processors import InstanceSegPostProcess
@@ -82,11 +81,7 @@ class InstanceSegPredictor(DetPredictor):
         pre_ops.append(self.build_to_batch())
 
         # build infer
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         # build postprocess op
         post_op = self.build_postprocess()

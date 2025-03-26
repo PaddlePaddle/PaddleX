@@ -70,6 +70,7 @@ option(ENABLE_SOPHGO_BACKEND "Whether to enable SOPHON backend." OFF)
 option(ENABLE_TVM_BACKEND "Whether to enable TVM backend." OFF)
 option(ENABLE_LITE_BACKEND "Whether to enable paddle lite backend." OFF)
 option(ENABLE_HORIZON_BACKEND "Whether to enable HORIZON backend." OFF)
+option(ENABLE_OM_BACKEND "Whether to enable OM backend." OFF)
 option(ENABLE_VISION "Whether to enable vision models usage." OFF)
 option(ENABLE_TEXT "Whether to enable text models usage." OFF)
 option(ENABLE_FLYCV "Whether to enable flycv to boost image preprocess." OFF)
@@ -172,6 +173,7 @@ file(GLOB_RECURSE DEPLOY_SOPHGO_SRCS ${PROJECT_SOURCE_DIR}/${CSRCS_DIR_NAME}/ult
 file(GLOB_RECURSE DEPLOY_TVM_SRCS ${PROJECT_SOURCE_DIR}/${CSRCS_DIR_NAME}/ultra_infer/runtime/backends/tvm/*.cc)
 file(GLOB_RECURSE DEPLOY_LITE_SRCS ${PROJECT_SOURCE_DIR}/${CSRCS_DIR_NAME}/ultra_infer/runtime/backends/lite/*.cc)
 file(GLOB_RECURSE DEPLOY_PIPELINE_SRCS ${PROJECT_SOURCE_DIR}/${CSRCS_DIR_NAME}/ultra_infer/pipeline/*.cc)
+file(GLOB_RECURSE DEPLOY_OM_SRCS ${PROJECT_SOURCE_DIR}/${CSRCS_DIR_NAME}/ultra_infer/runtime/backends/om/*.cc)
 file(GLOB_RECURSE DEPLOY_VISION_SRCS ${PROJECT_SOURCE_DIR}/${CSRCS_DIR_NAME}/ultra_infer/vision/*.cc)
 file(GLOB_RECURSE DEPLOY_TEXT_SRCS ${PROJECT_SOURCE_DIR}/${CSRCS_DIR_NAME}/ultra_infer/text/*.cc)
 file(GLOB_RECURSE DEPLOY_PYBIND_SRCS ${PROJECT_SOURCE_DIR}/${CSRCS_DIR_NAME}/ultra_infer/pybind/*.cc ${PROJECT_SOURCE_DIR}/${CSRCS_DIR_NAME}/ultra_infer/*_pybind.cc)
@@ -194,7 +196,7 @@ list(REMOVE_ITEM ALL_DEPLOY_SRCS ${DEPLOY_ORT_SRCS} ${DEPLOY_PADDLE_SRCS}
                                  ${DEPLOY_PIPELINE_SRCS} ${DEPLOY_RKNPU2_SRCS}
                                  ${DEPLOY_SOPHGO_SRCS}
                                  ${DEPLOY_HORIZON_SRCS} ${DEPLOY_TVM_SRCS}
-                                 ${DEPLOY_PADDLE_CUSTOM_OP_SRCS})
+                                 ${DEPLOY_PADDLE_CUSTOM_OP_SRCS} ${DEPLOY_OM_SRCS})
 
 
 set(DEPEND_LIBS "")
@@ -326,6 +328,13 @@ if(ENABLE_POROS_BACKEND)
   find_package(Python COMPONENTS Interpreter Development REQUIRED)
   message(STATUS "Copying ${TRT_DIRECTORY}/lib to ${CMAKE_CURRENT_BINARY_DIR}/third_libs/install/tensorrt/lib ...")
   execute_process(COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/copy_directory.py ${TRT_DIRECTORY}/lib ${CMAKE_CURRENT_BINARY_DIR}/third_libs/install/tensorrt/lib)
+endif()
+
+if(ENABLE_OM_BACKEND)
+  add_definitions(-DENABLE_OM_BACKEND)
+  list(APPEND ALL_DEPLOY_SRCS ${DEPLOY_OM_SRCS})
+  include(${PROJECT_SOURCE_DIR}/cmake/om.cmake)
+  list(APPEND DEPEND_LIBS ${NPU_libs})
 endif()
 
 if(WITH_GPU)

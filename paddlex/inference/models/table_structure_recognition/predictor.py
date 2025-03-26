@@ -20,13 +20,13 @@ from ....modules.table_recognition.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasicPredictor
-from ..common import Normalize, ResizeByLong, StaticInfer, ToBatch, ToCHWImage
+from ..base import BasePredictor
+from ..common import Normalize, ResizeByLong, ToBatch, ToCHWImage
 from .processors import Pad, TableLabelDecode
 from .result import TableRecResult
 
 
-class TablePredictor(BasicPredictor):
+class TablePredictor(BasePredictor):
     entities = MODELS
 
     _FUNC_MAP = {}
@@ -53,11 +53,7 @@ class TablePredictor(BasicPredictor):
                 preprocessors.append(op)
         preprocessors.append(ToBatch())
 
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         postprocessors = TableLabelDecode(
             model_name=self.config["Global"]["model_name"],

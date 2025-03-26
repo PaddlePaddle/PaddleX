@@ -20,10 +20,9 @@ import pandas as pd
 from ....modules.ts_anomaly_detection.model_list import MODELS
 from ...common.batch_sampler import TSBatchSampler
 from ...common.reader import ReadTS
-from ..base import BasicPredictor
+from ..base import BasePredictor
 from ..common import (
     BuildTSDataset,
-    StaticInfer,
     TimeFeature,
     TSCutOff,
     TSNormalize,
@@ -34,8 +33,8 @@ from .processors import GetAnomaly
 from .result import TSAdResult
 
 
-class TSAdPredictor(BasicPredictor):
-    """TSAdPredictor that inherits from BasicPredictor."""
+class TSAdPredictor(BasePredictor):
+    """TSAdPredictor that inherits from BasePredictor."""
 
     entities = MODELS
 
@@ -94,11 +93,7 @@ class TSAdPredictor(BasicPredictor):
             )
         preprocessors["TStoArray"] = TStoArray(self.config["input_data"])
         preprocessors["TStoBatch"] = TStoBatch()
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
         postprocessors = {}
         postprocessors["GetAnomaly"] = GetAnomaly(
             self.config["model_threshold"], self.config["info_params"]

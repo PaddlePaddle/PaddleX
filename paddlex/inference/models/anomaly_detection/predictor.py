@@ -20,14 +20,14 @@ from ....modules.anomaly_detection.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasicPredictor
-from ..common import Normalize, Resize, StaticInfer, ToBatch, ToCHWImage
+from ..base import BasePredictor
+from ..common import Normalize, Resize, ToBatch, ToCHWImage
 from .processors import MapToMask
 from .result import UadResult
 
 
-class UadPredictor(BasicPredictor):
-    """UadPredictor that inherits from BasicPredictor."""
+class UadPredictor(BasePredictor):
+    """UadPredictor that inherits from BasePredictor."""
 
     entities = MODELS
 
@@ -76,11 +76,7 @@ class UadPredictor(BasicPredictor):
             preprocessors[name] = op
         preprocessors["ToBatch"] = ToBatch()
 
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
         postprocessors = {"Map_to_mask": MapToMask()}
         return preprocessors, infer, postprocessors
 

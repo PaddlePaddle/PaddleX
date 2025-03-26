@@ -21,21 +21,14 @@ import pandas as pd
 from ....modules.ts_classification.model_list import MODELS
 from ...common.batch_sampler import TSBatchSampler
 from ...common.reader import ReadTS
-from ..base import BasicPredictor
-from ..common import (
-    BuildTSDataset,
-    StaticInfer,
-    TSCutOff,
-    TSNormalize,
-    TStoArray,
-    TStoBatch,
-)
+from ..base import BasePredictor
+from ..common import BuildTSDataset, TSCutOff, TSNormalize, TStoArray, TStoBatch
 from .processors import BuildPadMask, GetCls
 from .result import TSClsResult
 
 
-class TSClsPredictor(BasicPredictor):
-    """TSClsPredictor that inherits from BasicPredictor."""
+class TSClsPredictor(BasePredictor):
+    """TSClsPredictor that inherits from BasePredictor."""
 
     entities = MODELS
 
@@ -88,11 +81,7 @@ class TSClsPredictor(BasicPredictor):
         preprocessors["BuildPadMask"] = BuildPadMask(self.config["input_data"])
         preprocessors["TStoArray"] = TStoArray(self.config["input_data"])
         preprocessors["TStoBatch"] = TStoBatch()
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
         postprocessors = {}
         postprocessors["GetCls"] = GetCls()
         return preprocessors, infer, postprocessors

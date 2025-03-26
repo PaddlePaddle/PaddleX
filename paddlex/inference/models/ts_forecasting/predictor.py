@@ -21,10 +21,9 @@ import pandas as pd
 from ....modules.ts_forecast.model_list import MODELS
 from ...common.batch_sampler import TSBatchSampler
 from ...common.reader import ReadTS
-from ..base import BasicPredictor
+from ..base import BasePredictor
 from ..common import (
     BuildTSDataset,
-    StaticInfer,
     TimeFeature,
     TSCutOff,
     TSNormalize,
@@ -35,8 +34,8 @@ from .processors import ArraytoTS, TSDeNormalize
 from .result import TSFcResult
 
 
-class TSFcPredictor(BasicPredictor):
-    """TSFcPredictor that inherits from BasicPredictor."""
+class TSFcPredictor(BasePredictor):
+    """TSFcPredictor that inherits from BasePredictor."""
 
     entities = MODELS
 
@@ -95,11 +94,7 @@ class TSFcPredictor(BasicPredictor):
             )
         preprocessors["TStoArray"] = TStoArray(self.config["input_data"])
         preprocessors["TStoBatch"] = TStoBatch()
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
         postprocessors = {}
         postprocessors["ArraytoTS"] = ArraytoTS(self.config["info_params"])
         if self.config.get("scale", None):

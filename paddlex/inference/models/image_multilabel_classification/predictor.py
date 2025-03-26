@@ -23,7 +23,7 @@ from .result import MLClassResult
 
 
 class MLClasPredictor(ClasPredictor):
-    """MLClasPredictor that inherits from BasicPredictor."""
+    """MLClasPredictor that inherits from BasePredictor."""
 
     entities = MODELS
 

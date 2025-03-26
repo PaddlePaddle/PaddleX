@@ -19,7 +19,6 @@ import os
 import yaml
 
 from . import logging
-from .errors import raise_key_not_found_error
 from .file_interface import custom_open
 
 __all__ = ["get_config"]
@@ -32,7 +31,7 @@ class AttrDict(dict):
         if key in self:
             return self[key]
         else:
-            raise raise_key_not_found_error(key, self)
+            raise AttributeError(key)
 
     def __setattr__(self, key, value):
         if key in self.__dict__:

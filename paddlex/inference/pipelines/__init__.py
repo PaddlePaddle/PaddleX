@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from importlib import import_module
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 from ...utils import logging
 from ...utils.config import parse_config
+from ..utils.hpi import HPIConfig
 from ..utils.pp_option import PaddlePredictorOption
 from .anomaly_detection import AnomalyDetectionPipeline
 from .attribute_recognition import (
@@ -104,7 +104,8 @@ def create_pipeline(
     config: Optional[Dict[str, Any]] = None,
     device: Optional[str] = None,
     pp_option: Optional[PaddlePredictorOption] = None,
-    use_hpip: bool = False,
+    use_hpip: Optional[bool] = None,
+    hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     *args: Any,
     **kwargs: Any,
 ) -> BasePipeline:
@@ -123,8 +124,12 @@ def create_pipeline(
             Defaults to None.
         pp_option (Optional[PaddlePredictorOption], optional): The options for
             the PaddlePredictor. Defaults to None.
-        use_hpip (bool, optional): Whether to use high-performance inference
-            plugin (HPIP) for prediction. Defaults to False.
+        use_hpip (Optional[bool], optional): Whether to use the high-performance
+            inference plugin (HPIP) for prediction by default.
+            Defaults to None.
+        hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional): The
+            default high-performance inference configuration dictionary.
+            Defaults to None.
         *args: Additional positional arguments.
         **kwargs: Additional keyword arguments.
 
@@ -146,12 +151,19 @@ def create_pipeline(
                 config["pipeline_name"],
             )
     pipeline_name = config["pipeline_name"]
+    if device is None:
+        device = config.get("device", None)
+    if use_hpip is None:
+        use_hpip = config.get("use_hpip", False)
+    if hpi_config is None:
+        hpi_config = config.get("hpi_config", None)
 
     pipeline = BasePipeline.get(pipeline_name)(
         config=config,
         device=device,
         pp_option=pp_option,
         use_hpip=use_hpip,
+        hpi_config=hpi_config,
         *args,
         **kwargs,
     )

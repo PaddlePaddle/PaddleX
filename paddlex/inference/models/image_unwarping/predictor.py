@@ -19,14 +19,14 @@ import numpy as np
 from ....modules.image_unwarping.model_list import MODELS
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasicPredictor
-from ..common import Normalize, StaticInfer, ToBatch, ToCHWImage
+from ..base import BasePredictor
+from ..common import Normalize, ToBatch, ToCHWImage
 from .processors import DocTrPostProcess
 from .result import DocTrResult
 
 
-class WarpPredictor(BasicPredictor):
-    """WarpPredictor that inherits from BasicPredictor."""
+class WarpPredictor(BasePredictor):
+    """WarpPredictor that inherits from BasePredictor."""
 
     entities = MODELS
 
@@ -67,11 +67,7 @@ class WarpPredictor(BasicPredictor):
         preprocessors["ToCHW"] = ToCHWImage()
         preprocessors["ToBatch"] = ToBatch()
 
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         postprocessors = {"DocTrPostProcess": DocTrPostProcess()}
         return preprocessors, infer, postprocessors

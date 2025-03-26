@@ -20,14 +20,14 @@ from ....modules.semantic_segmentation.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasicPredictor
-from ..common import Normalize, StaticInfer, ToBatch, ToCHWImage
+from ..base import BasePredictor
+from ..common import Normalize, ToBatch, ToCHWImage
 from .processors import Resize, SegPostProcess
 from .result import SegResult
 
 
-class SegPredictor(BasicPredictor):
-    """SegPredictor that inherits from BasicPredictor."""
+class SegPredictor(BasePredictor):
+    """SegPredictor that inherits from BasePredictor."""
 
     entities = MODELS
 
@@ -90,11 +90,7 @@ class SegPredictor(BasicPredictor):
             _, op = self._FUNC_MAP["Resize"](self, target_size=self.target_size)
             preprocessors["Resize"] = op
 
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         postprocessers = SegPostProcess()
 

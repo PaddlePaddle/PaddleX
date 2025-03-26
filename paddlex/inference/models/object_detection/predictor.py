@@ -19,8 +19,7 @@ import numpy as np
 from ....modules.object_detection.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
-from ..base import BasicPredictor
-from ..common import StaticInfer
+from ..base import BasePredictor
 from .processors import (
     DetPad,
     DetPostProcess,
@@ -36,7 +35,7 @@ from .result import DetResult
 from .utils import STATIC_SHAPE_MODEL_LIST
 
 
-class DetPredictor(BasicPredictor):
+class DetPredictor(BasePredictor):
 
     entities = MODELS
 
@@ -141,11 +140,7 @@ class DetPredictor(BasicPredictor):
             pre_ops.insert(1, self.build_resize(self.img_size, False, 2))
 
         # build infer
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         # build postprocess op
         post_op = self.build_postprocess()

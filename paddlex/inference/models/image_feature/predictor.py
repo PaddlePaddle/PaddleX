@@ -20,14 +20,14 @@ from ....modules.general_recognition.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasicPredictor
-from ..common import Normalize, Resize, ResizeByShort, StaticInfer, ToBatch, ToCHWImage
+from ..base import BasePredictor
+from ..common import Normalize, Resize, ResizeByShort, ToBatch, ToCHWImage
 from .processors import NormalizeFeatures
 from .result import IdentityResult
 
 
-class ImageFeaturePredictor(BasicPredictor):
-    """ImageFeaturePredictor that inherits from BasicPredictor."""
+class ImageFeaturePredictor(BasePredictor):
+    """ImageFeaturePredictor that inherits from BasePredictor."""
 
     entities = MODELS
 
@@ -77,11 +77,7 @@ class ImageFeaturePredictor(BasicPredictor):
             preprocessors[name] = op
         preprocessors["ToBatch"] = ToBatch()
 
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         postprocessors = {}
         for key in self.config["PostProcess"]:

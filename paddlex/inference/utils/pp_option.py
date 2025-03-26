@@ -44,12 +44,16 @@ class PaddlePredictorOption(object):
     )
     SUPPORT_DEVICE = ("gpu", "cpu", "npu", "xpu", "mlu", "dcu", "gcu")
 
-    def __init__(self, model_name=None, **kwargs):
+    def __init__(self, model_name, **kwargs):
         super().__init__()
-        self.model_name = model_name
+        self._model_name = model_name
         self._cfg = {}
         self._init_option(**kwargs)
         self._changed = False
+
+    @property
+    def model_name(self):
+        return self._model_name
 
     @property
     def changed(self):
@@ -121,9 +125,9 @@ class PaddlePredictorOption(object):
                 f"`run_mode` must be {support_run_mode_str}, but received {repr(run_mode)}."
             )
         # TRT Blocklist
-        if run_mode.startswith("trt") and self.model_name in TRT_BLOCKLIST:
+        if run_mode.startswith("trt") and self._model_name in TRT_BLOCKLIST:
             logging.warning(
-                f"The model({self.model_name}) is not supported to run in trt mode! Using `paddle` instead!"
+                f"The model({self._model_name}) is not supported to run in trt mode! Using `paddle` instead!"
             )
             run_mode = "paddle"
 

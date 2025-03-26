@@ -19,8 +19,7 @@ from ....modules.open_vocabulary_detection.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..base import BasicPredictor
-from ..common import StaticInfer
+from ..base import BasePredictor
 from ..object_detection.result import DetResult
 from .processors import (
     GroundingDINOPostProcessor,
@@ -30,7 +29,7 @@ from .processors import (
 )
 
 
-class OVDetPredictor(BasicPredictor):
+class OVDetPredictor(BasePredictor):
 
     entities = MODELS
 
@@ -72,11 +71,7 @@ class OVDetPredictor(BasicPredictor):
                 pre_ops.append(op)
 
         # build infer
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         # build postprocess op
         post_op = self.build_postprocess(pre_ops=pre_ops)

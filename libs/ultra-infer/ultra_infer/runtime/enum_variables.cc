@@ -36,6 +36,8 @@ std::ostream &operator<<(std::ostream &out, const Backend &backend) {
     out << "Backend::HORIZONNPU";
   } else if (backend == Backend::TVM) {
     out << "Backend::TVM";
+  } else if (backend == Backend::OMONNPU) {
+    out << "Backend::OMONNPU";
   } else {
     out << "UNKNOWN-Backend";
   }
@@ -92,6 +94,8 @@ std::ostream &operator<<(std::ostream &out, const ModelFormat &format) {
     out << "ModelFormat::HORIZON";
   } else if (format == ModelFormat::TVMFormat) {
     out << "ModelFormat::TVMFormat";
+  } else if (format == ModelFormat::OM) {
+    out << "ModelFormat::OM";
   } else {
     out << "UNKNOWN-ModelFormat";
   }
@@ -129,6 +133,9 @@ std::vector<Backend> GetAvailableBackends() {
 #endif
 #ifdef ENABLE_TVM_BACKEND
   backends.push_back(Backend::TVM);
+#endif
+#ifdef ENABLE_OM_BACKEND
+  backends.push_back(Backend::OMONNPU);
 #endif
   return backends;
 }

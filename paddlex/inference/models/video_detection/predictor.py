@@ -18,13 +18,12 @@ from ....modules.video_detection.model_list import MODELS
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import VideoBatchSampler
 from ...common.reader import ReadVideo
-from ..base import BasicPredictor
-from ..common import StaticInfer
+from ..base import BasePredictor
 from .processors import DetVideoPostProcess, Image2Array, NormalizeVideo, ResizeVideo
 from .result import DetVideoResult
 
 
-class VideoDetPredictor(BasicPredictor):
+class VideoDetPredictor(BasePredictor):
 
     entities = MODELS
 
@@ -60,11 +59,7 @@ class VideoDetPredictor(BasicPredictor):
             if op:
                 pre_tfs[name] = op
 
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
         post_op = {}
         for cfg in self.config["PostProcess"]["transform_ops"]:
             tf_key = list(cfg.keys())[0]

@@ -155,6 +155,8 @@ from .c_lib_wrap import (
     TensorInfo,
     get_default_cuda_directory,
     is_built_with_gpu,
+    is_built_with_om,
+    is_built_with_openvino,
     is_built_with_ort,
     is_built_with_paddle,
     is_built_with_trt,

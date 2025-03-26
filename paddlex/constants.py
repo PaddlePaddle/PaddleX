@@ -12,15 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .static_infer import HPInfer, PaddleInfer, StaticInfer
-from .tokenizer import PretrainedTokenizer
-from .ts import BuildTSDataset, TimeFeature, TSCutOff, TSNormalize, TStoArray, TStoBatch
-from .vision import (
-    F,
-    Normalize,
-    Resize,
-    ResizeByLong,
-    ResizeByShort,
-    ToBatch,
-    ToCHWImage,
-)
+from typing import Final
+
+MODEL_FILE_PREFIX: Final[str] = "inference"
