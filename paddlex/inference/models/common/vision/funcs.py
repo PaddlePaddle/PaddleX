@@ -61,20 +61,12 @@ def _pil_resize(src, size, resample):
 
 def flip_h(im):
     """flip image horizontally"""
-    if len(im.shape) == 3:
-        im = im[:, ::-1, :]
-    elif len(im.shape) == 2:
-        im = im[:, ::-1]
-    return im
+    return cv2.flip(im, 1)
 
 
 def flip_v(im):
     """flip image vertically"""
-    if len(im.shape) == 3:
-        im = im[::-1, :, :]
-    elif len(im.shape) == 2:
-        im = im[::-1, :]
-    return im
+    return cv2.flip(im, 0)
 
 
 def slice(im, coords):

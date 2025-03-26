@@ -49,7 +49,7 @@ class ReadImage:
     def read(self, img):
         if isinstance(img, np.ndarray):
             if self.format == "RGB":
-                img = img[:, :, ::-1]
+                img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             return img
         elif isinstance(img, str):
             blob = self._img_reader.read(img)
@@ -60,7 +60,7 @@ class ReadImage:
                 if blob.ndim != 3:
                     raise RuntimeError("Array is not 3-dimensional.")
                 # BGR to RGB
-                blob = blob[..., ::-1]
+                blob = cv2.cvtColor(blob, cv2.COLOR_BGR2RGB)
             return blob
         else:
             raise TypeError(
