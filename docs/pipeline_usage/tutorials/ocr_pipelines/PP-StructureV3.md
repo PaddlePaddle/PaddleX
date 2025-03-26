@@ -599,7 +599,7 @@ PaddleX 所提供的模型产线均可以快速体验效果，你可以在本地
 
 ```
 paddlex --pipeline PP-StructureV3 \
-        --input pp_structrue_v3_demo.png \
+        --input pp_structure_v3_demo.png \
         --use_doc_orientation_classify False \
         --use_doc_unwarping False \
         --use_textline_orientation False \
