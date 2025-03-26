@@ -182,8 +182,8 @@ class TableLabelDecode:
             structure_batch_list.append(structure_list)
             structure_score = np.mean(score_list)
 
-        bbox_batch_tensor = np.multiply(np.array(bbox_list), np.array(scale_list))
-        bbox_batch_list = [bbox_batch_tensor.astype(int).tolist()]
+        bbox_batch_array = np.multiply(np.array(bbox_list), np.array(scale_list))
+        bbox_batch_list = [bbox_batch_array.astype(int).tolist()]
 
         return bbox_batch_list, structure_batch_list, structure_score
 
