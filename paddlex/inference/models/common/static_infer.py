@@ -544,7 +544,7 @@ class PaddleInfer(StaticInfer):
                             self._option.trt_dynamic_shape_input_data,
                         )
                     if self._option.model_name in DISABLE_TRT_HALF_OPS_CONFIG:
-                        lazy_paddle.inference.InternalUtils.disable_tensorrt_half_ops(
+                        paddle.inference.InternalUtils.disable_tensorrt_half_ops(
                             config, DISABLE_TRT_HALF_OPS_CONFIG[self._option.model_name]
                         )
                     config.enable_tuned_tensorrt_dynamic_shape(
@@ -719,39 +719,25 @@ class HPInfer(StaticInfer):
         }
         # TODO: This is probably redundant. Can we reuse the code in the
         # predictor class?
-        if (
-            backend_config.get("use_dynamic_shapes", True)
-            and backend_config.get("dynamic_shapes", None) is None
-        ):
-            paddle_info = self._config.hpi_info.backend_configs.paddle_infer
-            if paddle_info is not None and paddle_info.trt_dynamic_shapes is not None:
+        paddle_info = self._config.hpi_info.backend_configs.paddle_infer
+        if paddle_info is not None:
+            if (
+                kwargs.get("trt_dynamic_shapes") is None
+                and paddle_info.trt_dynamic_shapes is not None
+            ):
                 trt_dynamic_shapes = paddle_info.trt_dynamic_shapes
                 logging.debug("TensorRT dynamic shapes set to %s", trt_dynamic_shapes)
-                backend_config["dynamic_shapes"] = trt_dynamic_shapes
-            if paddle_info is not None:
-                if (
-                    "trt_dynamic_shapes" not in kwargs
-                    and paddle_info.trt_dynamic_shapes is not None
-                ):
-                    trt_dynamic_shapes = paddle_info.trt_dynamic_shapes
-                    logging.debug(
-                        "TensorRT dynamic shapes set to %s", trt_dynamic_shapes
-                    )
-                    kwargs["trt_dynamic_shapes"] = trt_dynamic_shapes
-                if (
-                    "trt_dynamic_shape_input_data" not in kwargs
-                    and paddle_info.trt_dynamic_shape_input_data is not None
-                ):
-                    trt_dynamic_shape_input_data = (
-                        paddle_info.trt_dynamic_shape_input_data
-                    )
-                    logging.debug(
-                        "TensorRT dynamic shape input data set to %s",
-                        trt_dynamic_shape_input_data,
-                    )
-                    kwargs["trt_dynamic_shape_input_data"] = (
-                        trt_dynamic_shape_input_data
-                    )
+                kwargs["trt_dynamic_shapes"] = trt_dynamic_shapes
+            if (
+                kwargs.get("trt_dynamic_shape_input_data") is None
+                and paddle_info.trt_dynamic_shape_input_data is not None
+            ):
+                trt_dynamic_shape_input_data = paddle_info.trt_dynamic_shape_input_data
+                logging.debug(
+                    "TensorRT dynamic shape input data set to %s",
+                    trt_dynamic_shape_input_data,
+                )
+                kwargs["trt_dynamic_shape_input_data"] = trt_dynamic_shape_input_data
         pp_option = PaddlePredictorOption(self._config.pdx_model_name, **kwargs)
         logging.info("Using Paddle Inference backend")
         logging.info("Paddle predictor option: %s", pp_option)
@@ -820,7 +806,7 @@ class HPInfer(StaticInfer):
         elif backend == "tensorrt":
             if (
                 backend_config.get("use_dynamic_shapes", True)
-                and backend_config.get("dynamic_shapes", None) is None
+                and backend_config.get("dynamic_shapes") is None
             ):
                 trt_info = self._config.hpi_info.backend_configs.tensorrt
                 if trt_info is not None and trt_info.dynamic_shapes is not None:
@@ -828,7 +814,10 @@ class HPInfer(StaticInfer):
                     logging.debug(
                         "TensorRT dynamic shapes set to %s", trt_dynamic_shapes
                     )
-                    backend_config["dynamic_shapes"] = trt_dynamic_shapes
+                    backend_config = {
+                        **backend_config,
+                        "dynamic_shapes": trt_dynamic_shapes,
+                    }
             backend_config = TensorRTConfig.model_validate(backend_config)
             ui_option.use_trt_backend()
             cache_dir = self.model_dir / CACHE_DIR / "tensorrt"
