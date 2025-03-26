@@ -198,6 +198,7 @@ class TableRecognitionResult(BaseCVResult, HtmlMixin, XlsxMixin):
             table_region_id = table_res["table_region_id"]
             key = f"table_{table_region_id}"
             res_html_dict[key] = table_res.html["pred"]
+            res_html_dict[key] = res_html_dict[key].replace("<table>", '<table border="1">')
         return res_html_dict
 
     def _to_xlsx(self) -> Dict[str, str]:

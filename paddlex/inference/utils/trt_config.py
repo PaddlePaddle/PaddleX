@@ -190,8 +190,17 @@ OLD_IR_TRT_CFG_SETTING = {
 }
 
 DISABLE_TRT_HALF_OPS_CONFIG = {
-    # TODO: just for example
-    "model_name": {"layer_norm"}
+    "ConvNeXt_tiny": {"layer_norm"},
+    "ConvNeXt_small": {"layer_norm"},
+    "ConvNeXt_base_224": {"layer_norm"},
+    "ConvNeXt_large_224": {"layer_norm"},
+    "ConvNeXt_base_384": {"layer_norm"},
+    "ConvNeXt_large_384": {"layer_norm"},
+    "PP-HGNetV2-B3": {"softmax"},
+    "MobileNetV1_x0_5": {"fused_conv2d_add_act"},
+    "SeaFormer_small": {"fused_conv2d_add_act"},
+    "SeaFormer_tiny": {"fused_conv2d_add_act"},
+    "PP-OCRv4_mobile_seal_det": {"fused_conv2d_add_act","softmax"},
 }
 
 ############ pir trt ############

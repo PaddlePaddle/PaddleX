@@ -93,7 +93,6 @@ def packages_and_package_data():
     pkg_data.append("inference/pipelines/ppchatocrv3/ch_prompt.yaml")
     pkg_data.extend(pipeline_config)
     pkg_data.append(".version")
-    pkg_data.append("utils/fonts/PingFang-SC-Regular.ttf")
     pkg_data.append("repo_manager/requirements.txt")
     pkg_data.append("serving_requirements.txt")
     pkg_data.append("paddle2onnx_requirements.txt")
