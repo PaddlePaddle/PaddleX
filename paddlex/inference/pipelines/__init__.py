@@ -19,7 +19,7 @@ from .base import BasePipeline
 from ..utils.pp_option import PaddlePredictorOption
 from .components import BaseChat, BaseRetriever, BaseGeneratePrompt
 from ...utils import logging
-from ...utils.config import parse_config
+from ...utils.config import override_config, parse_config
 from .ocr import OCRPipeline
 from .doc_preprocessor import DocPreprocessorPipeline
 from .layout_parsing import LayoutParsingPipeline
@@ -78,6 +78,32 @@ def get_pipeline_path(pipeline_name: str) -> str:
         return None
     return pipeline_path
 
+def find_relative_model_dirs(config: Dict[str, Any], parent_key: str = None) -> list:
+    """
+    Get relative paths for key `model_dir` in the config.
+    Args:
+        config (Dict[str, Any]): Configuration dictionary.
+        parent_key (str, optional): Parent key for nested dictionaries. Defaults to None.
+    Returns:
+        list: List of tuples containing the key and its corresponding value for relative paths.
+    """
+    results = []
+    
+    if isinstance(config, dict):
+        for key, value in config.items():
+            current_key = f"{parent_key}.{key}" if parent_key else key
+            
+            if key == "model_dir" and not Path(value).is_absolute():
+                results.append((current_key, value))
+            
+            if isinstance(value, (dict, list)):
+                results.extend(find_relative_model_dirs(value, current_key))
+    
+    elif isinstance(config, list):
+        for item in config:
+            results.extend(find_relative_model_dirs(item, parent_key))
+    
+    return results
 
 def load_pipeline_config(pipeline: str) -> Dict[str, Any]:
     """
@@ -101,6 +127,16 @@ def load_pipeline_config(pipeline: str) -> Dict[str, Any]:
     else:
         pipeline_path = pipeline
     config = parse_config(pipeline_path)
+    
+    # Convert relative model_dir paths to absolute paths
+    relative_model_dirs = find_relative_model_dirs(config)
+    if relative_model_dirs:
+        override_paths = [
+            f"{key}={(Path(pipeline_path).parent / value).resolve()}"
+            for key, value in relative_model_dirs
+        ]
+        override_config(config, override_paths)
+    
     return config
 
 
