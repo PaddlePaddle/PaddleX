@@ -127,35 +127,12 @@ class Resize(CommonResize):
 
 @benchmark.timeit
 class Normalize(CommonNormalize):
-    def __init__(self, scale=1.0 / 255, mean=0.5, std=0.5, preserve_dtype=False):
-        super().__init__(scale, mean, std, preserve_dtype)
-
-        self.alpha = [self.scale / self.std[i] for i in range(len(self.std))]
-        self.beta = [-self.mean[i] / self.std[i] for i in range(len(self.std))]
-
-    def apply(self, img: ndarray) -> ndarray:
-        """Applies normalization to a single image."""
-        old_type = img.dtype
-        # XXX: If `old_type` has higher precision than float32,
-        # we will lose some precision.
-        split_im = list(cv2.split(img))
-        for c in range(img.shape[2]):
-            split_im[c] = split_im[c].astype(np.float32)
-            split_im[c] *= self.alpha[c]
-            split_im[c] += self.beta[c]
-
-        res = cv2.merge(split_im)
-        if self.preserve_dtype:
-            res = res.astype(old_type, copy=False)
-
-        return res
-
     def __call__(self, datas: List[dict]) -> List[dict]:
         """Normalizes images in a list of dictionaries. Iterates over each dictionary,
         applies normalization to the 'img' key, and returns the modified list.
         """
         for data in datas:
-            data["img"] = self.apply(data["img"])
+            data["img"] = self.norm(data["img"])
         return datas
 
 

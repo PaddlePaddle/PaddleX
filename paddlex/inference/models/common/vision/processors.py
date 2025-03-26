@@ -221,9 +221,9 @@ class ResizeByShort(_BaseResize):
 
 @benchmark.timeit
 class Normalize:
-    """Normalize the image."""
+    """Normalize the BGR image."""
 
-    def __init__(self, scale=1.0 / 255, mean=0.5, std=0.5, preserve_dtype=False):
+    def __init__(self, scale=1.0 / 255, mean=0.5, std=0.5):
         """
         Initialize the instance.
 
@@ -234,32 +234,37 @@ class Normalize:
                 Default: 0.5.
             std (float|tuple|list, optional): Standard deviations for each channel
                 of the image. Default: 0.5.
-            preserve_dtype (bool, optional): Whether to preserve the original dtype
-                of the image.
         """
         super().__init__()
 
         self.scale = np.float32(scale)
         if isinstance(mean, float):
-            mean = [mean]
+            mean = [mean] * 3
         self.mean = np.asarray(mean).astype("float32")
         if isinstance(std, float):
-            std = [std]
+            std = [std] * 3
         self.std = np.asarray(std).astype("float32")
-        self.preserve_dtype = preserve_dtype
+
+        self.alpha = [self.scale / self.std[i] for i in range(len(std))]
+        if len(self.alpha) == 1:
+            self.alpha = self.alpha * 3
+        self.beta = [-mean[i] / self.std[i] for i in range(len(std))]
+        if len(self.beta) == 1:
+            self.beta = self.beta * 3
+
+    def norm(self, img):
+        split_im = list(cv2.split(img))
+        for c in range(img.shape[2]):
+            split_im[c] = split_im[c].astype(np.float32)
+            split_im[c] *= self.alpha[c]
+            split_im[c] += self.beta[c]
+
+        res = cv2.merge(split_im)
+        return res
 
     def __call__(self, imgs):
         """apply"""
-        old_type = imgs[0].dtype
-        # XXX: If `old_type` has higher precision than float32,
-        # we will lose some precision.
-        imgs = np.array(imgs).astype("float32", copy=False)
-        imgs *= self.scale
-        imgs -= self.mean
-        imgs /= self.std
-        if self.preserve_dtype:
-            imgs = imgs.astype(old_type, copy=False)
-        return list(imgs)
+        return [self.norm(img) for img in imgs]
 
 
 @benchmark.timeit
