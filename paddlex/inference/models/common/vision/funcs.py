@@ -90,7 +90,7 @@ def pad(im, pad, val):
         pad = [pad] * 4
     if len(pad) != 4:
         raise ValueError
-    if pad[1] == im.shape[0] and pad[3] == im.shape[1]:
+    if pad[1] == 0 and pad[3] == 0:
         return im
 
     chns = 1 if im.ndim == 2 else im.shape[2]
