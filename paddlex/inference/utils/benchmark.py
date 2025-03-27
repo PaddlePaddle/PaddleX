@@ -53,7 +53,7 @@ class Benchmark:
 
             nonlocal name
             if name is None:
-                name = func_or_cls.__qualname__ + "." + uuid.uuid4().hex
+                name = func_or_cls.__qualname__
 
             if isinstance(func_or_cls, type):
                 if not hasattr(func_or_cls, "__call__"):
@@ -69,7 +69,7 @@ class Benchmark:
                 source_line = inspect.getsourcelines(func)[1]
                 location = f"{source_file}:{source_line}"
             except (TypeError, OSError) as e:
-                location = "Unknown"
+                location = uuid.uuid4().hex
                 logging.debug(
                     f"Benchmark: failed to get source file and line number: {e}"
                 )
@@ -214,8 +214,10 @@ class Benchmark:
         for name, time_list in logs.items():
             assert len(time_list) == iters
             avg = np.mean(time_list)
-            operation_name = name.split("@")[0].split(".")[0]
+            operation_name = name.split("@")[0]
             location = name.split("@")[1]
+            if ":" not in location:
+                location = "Unknown"
             detail_list.append(
                 (iters, batch_size, instances, operation_name, avg, avg / batch_size)
             )
