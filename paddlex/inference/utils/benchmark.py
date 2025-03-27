@@ -12,14 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
 import csv
 import functools
+import uuid
 from types import GeneratorType
 import time
 from pathlib import Path
 import inspect
 import numpy as np
 from prettytable import PrettyTable
+
 
 from ...utils.flags import (
     INFER_BENCHMARK,
@@ -32,6 +35,8 @@ ENTRY_POINT_NAME = "_entry_point_"
 
 # XXX: Global mutable state
 _inference_operations = []
+
+_is_measuring_time = False
 
 
 class Benchmark:
@@ -48,7 +53,7 @@ class Benchmark:
 
             nonlocal name
             if name is None:
-                name = func_or_cls.__qualname__
+                name = func_or_cls.__qualname__ + "." + uuid.uuid4().hex
 
             if isinstance(func_or_cls, type):
                 if not hasattr(func_or_cls, "__call__"):
@@ -88,15 +93,27 @@ class Benchmark:
                         for k, v in kwargs.items()
                     }
                     output = func(*args, **kwargs)
+                    output = copy.deepcopy(output)
                     return output
 
             else:
 
                 @functools.wraps(func)
                 def _wrapper(*args, **kwargs):
+                    global _is_measuring_time
                     operation_name = f"{name}@{location}"
+                    if _is_measuring_time:
+                        raise RuntimeError(
+                            "Nested calls detected: Check the timed modules and exclude nested calls to prevent double-counting."
+                        )
+                    if not operation_name.startswith(f"{ENTRY_POINT_NAME}@"):
+                        _is_measuring_time = True
                     tic = time.perf_counter()
-                    output = func(*args, **kwargs)
+                    try:
+                        output = func(*args, **kwargs)
+                    finally:
+                        if not operation_name.startswith(f"{ENTRY_POINT_NAME}@"):
+                            _is_measuring_time = False
                     if isinstance(output, GeneratorType):
                         return self.watch_generator(output, operation_name)
                     else:
@@ -117,10 +134,21 @@ class Benchmark:
     def watch_generator(self, generator, name):
         @functools.wraps(generator)
         def wrapper():
+            global _is_measuring_time
             while True:
                 try:
+                    if _is_measuring_time:
+                        raise RuntimeError(
+                            "Nested calls detected: Check the timed modules and exclude nested calls to prevent double-counting."
+                        )
+                    if not name.startswith(f"{ENTRY_POINT_NAME}@"):
+                        _is_measuring_time = True
                     tic = time.perf_counter()
-                    item = next(generator)
+                    try:
+                        item = next(generator)
+                    finally:
+                        if not name.startswith(f"{ENTRY_POINT_NAME}@"):
+                            _is_measuring_time = False
                     self._update(time.perf_counter() - tic, name)
                     yield item
                 except StopIteration:
@@ -186,7 +214,7 @@ class Benchmark:
         for name, time_list in logs.items():
             assert len(time_list) == iters
             avg = np.mean(time_list)
-            operation_name = name.split("@")[0]
+            operation_name = name.split("@")[0].split(".")[0]
             location = name.split("@")[1]
             detail_list.append(
                 (iters, batch_size, instances, operation_name, avg, avg / batch_size)
