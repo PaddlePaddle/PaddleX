@@ -239,7 +239,7 @@ class Normalize:
 
         if isinstance(mean, float):
             mean = [mean] * 3
-        elif len(self.mean) != 3:
+        elif len(mean) != 3:
             raise ValueError(
                 f"Expected `mean` to be a tuple or list of length 3, but got {len(mean)} elements."
             )
