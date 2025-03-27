@@ -53,5 +53,3 @@ jinja2
 regex
 ######## For Speech #######
 soundfile
-######## For 3D BEVFusion #######
-pyquaternion
