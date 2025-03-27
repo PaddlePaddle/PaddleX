@@ -186,22 +186,23 @@ class DetResizeForTest:
 class NormalizeImage:
     """normalize image such as substract mean, divide std"""
 
-    def __init__(self, scale=None, mean=None, std=None, order="chw", **kwargs):
+    def __init__(self, scale=None, mean=None, std=None, order="chw"):
         super().__init__()
         if isinstance(scale, str):
             scale = eval(scale)
         self.order = order
-        self.scale = np.float32(scale if scale is not None else 1.0 / 255.0)
+
+        scale = scale if scale is not None else 1.0 / 255.0
         mean = mean if mean is not None else [0.485, 0.456, 0.406]
         std = std if std is not None else [0.229, 0.224, 0.225]
 
-        self.alpha = [self.scale / std[i] for i in range(len(std))]
+        self.alpha = [scale / std[i] for i in range(len(std))]
         self.beta = [-mean[i] / std[i] for i in range(len(std))]
 
     def __call__(self, imgs):
         """apply"""
 
-        def norm(img):
+        def _norm(img):
             if self.order == "chw":
                 img = np.transpose(img, (2, 0, 1))
 
@@ -217,7 +218,7 @@ class NormalizeImage:
                 res = np.transpose(res, (1, 2, 0))
             return res
 
-        return [norm(img) for img in imgs]
+        return [_norm(img) for img in imgs]
 
 
 @benchmark.timeit

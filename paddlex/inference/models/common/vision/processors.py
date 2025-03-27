@@ -221,7 +221,7 @@ class ResizeByShort(_BaseResize):
 
 @benchmark.timeit
 class Normalize:
-    """Normalize the BGR image."""
+    """Normalize the three-channel image."""
 
     def __init__(self, scale=1.0 / 255, mean=0.5, std=0.5):
         """
@@ -237,28 +237,25 @@ class Normalize:
         """
         super().__init__()
 
-        self.scale = np.float32(scale)
         if isinstance(mean, float):
             mean = [mean] * 3
-        self.mean = np.asarray(mean).astype("float32")
+        elif len(self.mean) != 3:
+            raise ValueError(
+                f"Expected `mean` to be a tuple or list of length 3, but got {len(mean)} elements."
+            )
         if isinstance(std, float):
             std = [std] * 3
-        self.std = np.asarray(std).astype("float32")
-
-        if len(self.std) != 3:
+        elif len(std) != 3:
             raise ValueError(
-                f"Expected 'std' to be a list of length 3, but got {len(self.std)} elements. Please provide a list with three float elements."
-            )
-        if len(self.mean) != 3:
-            raise ValueError(
-                f"Expected 'mean' to be a list of length 3, but got {len(self.std)} elements. Please provide a list with three float elements."
+                f"Expected `std` to be a tuple or list of length 3, but got {len(std)} elements."
             )
 
-        self.alpha = [self.scale / self.std[i] for i in range(len(std))]
-        self.beta = [-mean[i] / self.std[i] for i in range(len(std))]
+        self.alpha = [scale / std[i] for i in range(len(std))]
+        self.beta = [-mean[i] / std[i] for i in range(len(std))]
 
     def norm(self, img):
         split_im = list(cv2.split(img))
+
         for c in range(img.shape[2]):
             split_im[c] = split_im[c].astype(np.float32)
             split_im[c] *= self.alpha[c]
