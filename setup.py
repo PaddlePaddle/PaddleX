@@ -17,8 +17,23 @@ import glob
 import itertools
 import os
 from pathlib import Path
+from runpy import run_path
 
 from setuptools import find_packages, setup
+
+
+def _get_deps_from_module(module_path):
+    mod_globals = run_path(str(module_path))
+    deps = []
+    for name, spec in mod_globals["DEPS"].items():
+        if not isinstance(spec, list):
+            spec = [spec]
+        for item in spec:
+            if item:
+                deps.append(name + " " + item)
+            else:
+                deps.append(name)
+    return deps
 
 
 def readme():
@@ -29,18 +44,27 @@ def readme():
 
 def dependencies():
     """get dependencies"""
-    with open("requirements.txt", "r") as file:
-        return file.read()
+    return _get_deps_from_module(Path("paddlex", "deps", "required.py"))
 
 
-def serving_dependencies():
-    with open(os.path.join("paddlex", "serving_requirements.txt"), "r") as file:
-        return file.read()
-
-
-def paddle2onnx_dependencies():
-    with open(os.path.join("paddlex", "paddle2onnx_requirements.txt"), "r") as file:
-        return file.read()
+def extras():
+    dic = {}
+    all_deps = set()
+    for child in Path("paddlex", "deps").iterdir():
+        if child.is_dir():
+            group_name = child.stem
+            group_deps = set()
+            for mod_path in child.glob("*.py"):
+                if mod_path.name == "__init__.py":
+                    continue
+                extra = mod_path.stem
+                deps = _get_deps_from_module(mod_path)
+                dic[extra] = deps
+                group_deps.update(deps)
+            dic[group_name] = sorted(group_deps, key=str.lower)
+            all_deps.update(group_deps)
+    dic["all"] = sorted(all_deps, key=str.lower)
+    return dic
 
 
 def version():
@@ -92,9 +116,8 @@ def packages_and_package_data():
     pkg_data.append("inference/pipelines/ppchatocrv3/ch_prompt.yaml")
     pkg_data.extend(pipeline_config)
     pkg_data.append(".version")
+    pkg_data.extend(get_data_files("requirements", "txt"))
     pkg_data.append("repo_manager/requirements.txt")
-    pkg_data.append("serving_requirements.txt")
-    pkg_data.append("paddle2onnx_requirements.txt")
     pkg_data.append("hpip_links.html")
     pkg_data.append("inference/utils/hpi_model_info_collection.json")
     ops_file_dir = "paddlex/ops"
@@ -116,10 +139,7 @@ if __name__ == "__main__":
         author="PaddlePaddle Authors",
         author_email="",
         install_requires=dependencies(),
-        extras_require={
-            "serving": serving_dependencies(),
-            "paddle2onnx": paddle2onnx_dependencies(),
-        },
+        extras_require=extras(),
         packages=pkgs,
         package_data=pkg_data,
         entry_points={

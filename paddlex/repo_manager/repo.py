@@ -18,23 +18,26 @@ import os.path as osp
 import shutil
 import tempfile
 
+from packaging.requirements import Requirement
+
 from ..utils import logging
 from ..utils.download import download_and_extract
 from ..utils.file_interface import custom_open
+from ..utils.install import (
+    install_packages,
+    install_packages_from_requirements_file,
+    uninstall_packages,
+)
 from .meta import REPO_DOWNLOAD_BASE, get_repo_meta
 from .utils import (
     build_wheel_using_pip,
-    check_installation_using_pip,
-    env_marker_ast2expr,
+    check_package_installation,
     fetch_repo_using_git,
     install_external_deps,
-    install_packages_using_pip,
     mute,
     remove_repo_using_rm,
     reset_repo_using_git,
     switch_working_dir,
-    to_dep_spec_pep508,
-    uninstall_package_using_pip,
 )
 
 __all__ = ["build_repo_instance", "build_repo_group_installer"]
@@ -98,7 +101,7 @@ class PPRepository(object):
             return lib is not None
         else:
             # TODO: Also check if correct dependencies are installed.
-            return check_installation_using_pip(self.pkg_name)
+            return check_package_installation(self.pkg_name)
 
     def replace_repo_deps(self, deps_to_replace, src_requirements):
         """replace_repo_deps"""
@@ -152,7 +155,12 @@ class PPRepository(object):
                 )
                 shutil.copy(paddlex_requirements, src_requirements)
             try:
-                install_packages_using_pip(["."], editable=editable, no_deps=no_deps)
+                pip_install_opts = []
+                if editable:
+                    pip_install_opts.append("-e")
+                if no_deps:
+                    pip_install_opts.append("--no-deps")
+                install_packages(["."], pip_install_opts=pip_install_opts)
                 install_external_deps(self.name, self.root_dir)
             finally:
                 if clean:
@@ -163,7 +171,10 @@ class PPRepository(object):
         if extra_editable:
             with switch_working_dir(os.path.join(self.root_dir, extra_editable)):
                 try:
-                    install_packages_using_pip(["."], editable=True, no_deps=no_deps)
+                    pip_install_opts = ["-e"]
+                    if no_deps:
+                        pip_install_opts.append("--no-deps")
+                    install_packages(["."], pip_install_opts=pip_install_opts)
                 finally:
                     if clean:
                         # Clean build artifacts
@@ -173,7 +184,7 @@ class PPRepository(object):
 
     def uninstall_package(self):
         """uninstall_package"""
-        uninstall_package_using_pip(self.pkg_name)
+        uninstall_packages([self.pkg_name])
 
     def download(self):
         """download from remote"""
@@ -213,7 +224,7 @@ class PPRepository(object):
             deps_str = self.get_deps()
             with open(main_req_file_path, "w", encoding="utf-8") as f:
                 f.write(deps_str)
-            install_packages_using_pip([], req_files=[main_req_file_path])
+            install_packages_from_requirements_file(main_req_file_path)
             with switch_working_dir(tmp_repo_dir):
                 build_wheel_using_pip(".", tmp_dst_dir)
             shutil.copytree(tmp_dst_dir, dst_dir)
@@ -364,7 +375,13 @@ class RepositoryGroupInstaller(object):
                 cons_files = [cons_file]
             else:
                 cons_files = []
-            install_packages_using_pip([], req_files=[req_file], cons_files=cons_files)
+            pip_install_opts = []
+            for f in cons_files:
+                pip_install_opts.append("-c")
+                pip_install_opts.append(f)
+            install_packages_from_requirements_file(
+                req_file, pip_install_opts=pip_install_opts
+            )
 
     def _sort_repos(self, repos, check_missing=False):
         # We sort the repos to ensure that the dependencies precede the
@@ -400,41 +417,30 @@ class RepositoryGroupInstaller(object):
 
     def _normalize_deps(self, deps, headline=None):
         repo_pkgs = set(repo.pkg_name for repo in self.repos)
-        normed_lines = []
+        lines = []
         if headline is not None:
-            normed_lines.append(headline)
+            lines.append(headline)
         for line in deps.splitlines():
             line_s = line.strip()
-            if len(line_s) == 0 or line_s.startswith("#"):
+            if not line_s:
                 continue
-            # If `line` is not a comment, it must be a requirement specifier.
+            pos = line_s.find("#")
+            if pos == 0:
+                continue
+            elif pos > 0:
+                line_s = line_s[:pos]
+            # If `line` is not an empty line or a comment, it must be a requirement specifier.
             # Other forms may cause a parse error.
-            n, e, v, m = to_dep_spec_pep508(line_s)
-            if isinstance(v, str):
-                raise RuntimeError("Currently, URL based lookup is not supported.")
-            if n in repo_pkgs:
+            req = Requirement(line_s)
+            if req.name in repo_pkgs:
                 # Skip repo packages
                 continue
-            elif check_installation_using_pip(n):
+            elif check_package_installation(req.name):
                 continue
             else:
-                line_n = [n]
-                fe = f"[{','.join(e)}]" if e else ""
-                if fe:
-                    line_n.append(fe)
-                fv = []
-                for tup in v:
-                    fv.append(" ".join(tup))
-                fv = ", ".join(fv) if fv else ""
-                if fv:
-                    line_n.append(fv)
-                if m is not None:
-                    fm = f"; {env_marker_ast2expr(m)}"
-                    line_n.append(fm)
-                line_n = " ".join(line_n)
-                normed_lines.append(line_n)
+                lines.append(line_s)
 
-        return "\n".join(normed_lines)
+        return "\n".join(lines)
 
 
 class RepositoryGroupGetter(object):

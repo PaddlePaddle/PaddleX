@@ -26,6 +26,7 @@ from .inference.pipelines import load_pipeline_config
 from .repo_manager import get_all_supported_repo_names, setup
 from .utils import logging
 from .utils.flags import FLAGS_json_format_model
+from .utils.install import install_packages
 from .utils.interactive_get_pipeline import interactive_get_pipeline
 from .utils.pipeline_arguments import PIPELINE_ARGUMENTS
 
@@ -213,20 +214,10 @@ def install(args):
     """install paddlex"""
 
     def _install_serving_deps():
-        with importlib.resources.path(
-            "paddlex", "serving_requirements.txt"
-        ) as req_file:
-            return subprocess.check_call(
-                [sys.executable, "-m", "pip", "install", "-r", str(req_file)]
-            )
+        install_packages("serving")
 
     def _install_paddle2onnx_deps():
-        with importlib.resources.path(
-            "paddlex", "paddle2onnx_requirements.txt"
-        ) as req_file:
-            return subprocess.check_call(
-                [sys.executable, "-m", "pip", "install", "-r", str(req_file)]
-            )
+        install_packages("paddle2onnx")
 
     def _install_hpi_deps(device_type):
         supported_device_types = ["cpu", "gpu", "npu"]
@@ -248,17 +239,7 @@ def install(args):
             packages = ["ultra-infer-npu-python"]
 
         with importlib.resources.path("paddlex", "hpip_links.html") as f:
-            return subprocess.check_call(
-                [
-                    sys.executable,
-                    "-m",
-                    "pip",
-                    "install",
-                    "--find-links",
-                    str(f),
-                    *packages,
-                ]
-            )
+            install_packages(packages, ["--find-links", str(f)])
 
     # Enable debug info
     os.environ["PADDLE_PDX_DEBUG"] = "True"
