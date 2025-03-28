@@ -27,6 +27,8 @@ Arch:
   class_num: 1000
   return_embed: False
   pretrained: True
+  use_fused_attn: True
+  use_fused_linear: True
 
 # loss function config for traing/eval process
 Loss:
