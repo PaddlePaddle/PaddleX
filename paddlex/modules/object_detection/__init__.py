@@ -16,3 +16,4 @@ from .trainer import DetTrainer
 from .dataset_checker import COCODatasetChecker
 from .evaluator import DetEvaluator
 from .exportor import DetExportor
+from .compressor import DetCompressor

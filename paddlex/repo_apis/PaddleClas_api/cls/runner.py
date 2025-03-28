@@ -174,7 +174,7 @@ class ClsRunner(BaseRunner):
         ]
         cp_export = self.export(config_path, export_cli_args, device)
 
-        return cp_train, cp_export
+        return cp_export
 
 
 def _extract_eval_metrics(stdout: str) -> dict:

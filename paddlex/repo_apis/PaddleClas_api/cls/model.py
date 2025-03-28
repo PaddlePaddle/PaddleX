@@ -325,6 +325,8 @@ class ClsModel(BaseModel):
             config._update_use_vdl(use_vdl)
             config._update_slim_config(self.model_info["auto_compression_config_path"])
             config.update_pretrained_weights(weight_path)
+            uniform_output_enabled = kwargs.pop("uniform_output_enabled", False)
+            config.update([f"Global.uniform_output_enabled={uniform_output_enabled}"])
 
             if batch_size is not None:
                 config.update_batch_size(batch_size)
