@@ -61,12 +61,12 @@ def _compare_version(version1, version2):
     return 0
 
 
-def check_package_installation(pkg):
+def check_package_installation(package):
     try:
-        importlib.metadata.version(pkg)
-        return True
+        importlib.metadata.distribution(package)
     except importlib.metadata.PackageNotFoundError:
         return False
+    return True
 
 
 def install_external_deps(repo_name, repo_root):

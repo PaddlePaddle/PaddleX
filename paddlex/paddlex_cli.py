@@ -25,6 +25,7 @@ from .constants import MODEL_FILE_PREFIX
 from .inference.pipelines import load_pipeline_config
 from .repo_manager import get_all_supported_repo_names, setup
 from .utils import logging
+from .utils.deps import EXTRAS
 from .utils.flags import FLAGS_json_format_model
 from .utils.install import install_packages
 from .utils.interactive_get_pipeline import interactive_get_pipeline
@@ -214,10 +215,17 @@ def install(args):
     """install paddlex"""
 
     def _install_serving_deps():
-        install_packages("serving")
+        reqs = []
+        for dep_specs in EXTRAS["serving"].values():
+            reqs += dep_specs
+        # Should we sort the requirements?
+        install_packages(reqs)
 
     def _install_paddle2onnx_deps():
-        install_packages("paddle2onnx")
+        reqs = []
+        for dep_specs in EXTRAS["paddle2onnx"].values():
+            reqs += dep_specs
+        install_packages(reqs)
 
     def _install_hpi_deps(device_type):
         supported_device_types = ["cpu", "gpu", "npu"]
