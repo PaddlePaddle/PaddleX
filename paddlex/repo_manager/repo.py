@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import importlib
+import importlib.resources
 import os
 import os.path as osp
 import shutil
@@ -364,7 +365,13 @@ class RepositoryGroupInstaller(object):
                 cons_files = [cons_file]
             else:
                 cons_files = []
-            install_packages_using_pip([], req_files=[req_file], cons_files=cons_files)
+            with importlib.resources.path(
+                "paddlex.repo_manager", "constraints.txt"
+            ) as f:
+                cons_files.append(f)
+                install_packages_using_pip(
+                    [], req_files=[req_file], cons_files=cons_files
+                )
 
     def _sort_repos(self, repos, check_missing=False):
         # We sort the repos to ensure that the dependencies precede the

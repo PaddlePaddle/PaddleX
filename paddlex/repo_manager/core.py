@@ -23,7 +23,6 @@ from .repo import (
     build_repo_group_installer,
     build_repo_instance,
 )
-from .utils import install_deps_using_pip
 
 __all__ = [
     "set_parent_dirs",
@@ -208,7 +207,6 @@ def setup(
         constraints=constraints,
         deps_to_replace=deps_to_replace,
     )
-    install_deps_using_pip()
     logging.info("All packages are installed.")
 
 
