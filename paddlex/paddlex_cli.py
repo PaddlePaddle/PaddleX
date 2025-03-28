@@ -58,15 +58,10 @@ def args_cfg():
     ################# install pdx #################
     install_group.add_argument(
         "--install",
-        action="store_true",
-        default=False,
-        help="Install specified PaddleX plugins.",
-    )
-    install_group.add_argument(
-        "plugins",
         nargs="*",
         default=[],
-        help="Names of custom development plugins to install (space-separated).",
+        metavar="PLUGIN",
+        help="Install specified PaddleX plugins.",
     )
     install_group.add_argument(
         "--no_deps",
@@ -265,7 +260,7 @@ def install(args):
     # Disable eager initialization
     os.environ["PADDLE_PDX_EAGER_INIT"] = "False"
 
-    plugins = args.plugins[:]
+    plugins = args.install[:]
 
     if "serving" in plugins:
         plugins.remove("serving")
