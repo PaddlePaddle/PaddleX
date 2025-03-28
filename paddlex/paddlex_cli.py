@@ -59,7 +59,6 @@ def args_cfg():
     install_group.add_argument(
         "--install",
         nargs="*",
-        default=[],
         metavar="PLUGIN",
         help="Install specified PaddleX plugins.",
     )
@@ -175,7 +174,10 @@ def args_cfg():
     pipeline = args.pipeline
     pipeline_args = []
 
-    if not (args.install or args.serve or args.paddle2onnx) and pipeline is not None:
+    if (
+        not (args.install is not None or args.serve or args.paddle2onnx)
+        and pipeline is not None
+    ):
         if os.path.isfile(pipeline):
             pipeline_name = load_pipeline_config(pipeline)["pipeline_name"]
         else:
@@ -439,8 +441,9 @@ def main():
         parser.print_help()
         sys.exit(2)
 
-    if args.install:
+    if args.install is not None:
         install(args)
+        return
     elif args.serve:
         serve(
             args.pipeline,
@@ -449,12 +452,14 @@ def main():
             host=args.host,
             port=args.port,
         )
+        return
     elif args.paddle2onnx:
         paddle_to_onnx(
             args.paddle_model_dir,
             args.onnx_model_dir,
             opset_version=args.opset_version,
         )
+        return
     else:
         if args.get_pipeline_config is not None:
             interactive_get_pipeline(args.get_pipeline_config, args.save_path)
@@ -467,7 +472,7 @@ def main():
                     pipeline_args_dict[arg_name] = getattr(args, arg_name)
                 else:
                     logging.warning(f"Argument {arg_name} is missing in args")
-            return pipeline_predict(
+            pipeline_predict(
                 args.pipeline,
                 args.input,
                 args.device,
@@ -475,3 +480,4 @@ def main():
                 use_hpip=args.use_hpip,
                 **pipeline_args_dict,
             )
+            return
