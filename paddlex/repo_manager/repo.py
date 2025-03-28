@@ -84,7 +84,7 @@ class PPRepository(object):
 
     def initialize(self):
         """initialize"""
-        if not self.check_installation(quick_check=True):
+        if not self.check_installation():
             return False
         if "path_env" in self.meta:
             # Set env var
@@ -94,14 +94,10 @@ class PPRepository(object):
         self.get_pdx()
         return True
 
-    def check_installation(self, quick_check=False):
+    def check_installation(self):
         """check_installation"""
-        if quick_check:
-            lib = self._get_lib(load=False)
-            return lib is not None
-        else:
-            # TODO: Also check if correct dependencies are installed.
-            return check_package_installation(self.pkg_name)
+        # TODO: Also check if correct dependencies are installed.
+        return check_package_installation(self.pkg_name)
 
     def replace_repo_deps(self, deps_to_replace, src_requirements):
         """replace_repo_deps"""
@@ -229,23 +225,16 @@ class PPRepository(object):
                 build_wheel_using_pip(".", tmp_dst_dir)
             shutil.copytree(tmp_dst_dir, dst_dir)
 
-    def _get_lib(self, load=True):
+    def _get_lib(self):
         """_get_lib"""
         import importlib.util
 
         importlib.invalidate_caches()
-        if load:
-            try:
-                with mute():
-                    return importlib.import_module(self.lib_name)
-            except ImportError:
-                return None
-        else:
-            spec = importlib.util.find_spec(self.lib_name)
-            if spec is not None and not osp.exists(spec.origin):
-                return None
-            else:
-                return spec
+        try:
+            with mute():
+                return importlib.import_module(self.lib_name)
+        except ImportError:
+            return None
 
     def get_pdx(self):
         """get_pdx"""
