@@ -12,3 +12,4 @@ transformers==4.40.0
 openai==1.63.2
 numpy==1.24.4; python_version<"3.12"
 numpy==1.26.4; python_version>="3.12"
+albumentations==1.4.10
