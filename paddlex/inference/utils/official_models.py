@@ -334,6 +334,7 @@ PP-LCNet_x1_0_vehicle_attribute_infer.tar",
     "PP-DocLayout-S": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocLayout-S_infer.tar",
     "BEVFusion": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/BEVFusion_infer.tar",
     "YOLO-Worldv2-L": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOLO-Worldv2-L_infer.tar",
+    "FairMOT-DLA-34_1088x608": "https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/FairMOT-DLA-34_1088x608_infer.tar",
 }
 
 

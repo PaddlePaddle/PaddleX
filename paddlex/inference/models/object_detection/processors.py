@@ -126,6 +126,67 @@ class Resize(CommonResize):
 
 
 @benchmark.timeit
+class LetterBoxResize(object):
+    def __init__(self, target_size: Union[int, Sequence[int]]):
+        """
+        Resize image to target size, convert normalized xywh to pixel xyxy
+        format ([x_center, y_center, width, height] -> [x0, y0, x1, y1]).
+        Args:
+            target_size (int|list): image target size.
+        """
+        super(LetterBoxResize, self).__init__()
+        if isinstance(target_size, int):
+            target_size = [target_size, target_size]
+        self.target_size = target_size
+
+        assert len(self.target_size) == 2
+        assert self.target_size[0] > 0 and self.target_size[1] > 0
+
+    def letterbox(self, img, height, width, color=(127.5, 127.5, 127.5)):
+        # letterbox: resize a rectangular image to a padded rectangular
+        shape = img.shape[:2]  # [height, width]
+        ratio_h = float(height) / shape[0]
+        ratio_w = float(width) / shape[1]
+        ratio = min(ratio_h, ratio_w)
+        new_shape = (
+            round(shape[1] * ratio),
+            round(shape[0] * ratio),
+        )  # [width, height]
+        padw = (width - new_shape[0]) / 2
+        padh = (height - new_shape[1]) / 2
+        top, bottom = round(padh - 0.1), round(padh + 0.1)
+        left, right = round(padw - 0.1), round(padw + 0.1)
+
+        img = cv2.resize(
+            img, new_shape, interpolation=cv2.INTER_AREA
+        )  # resized, no border
+        img = cv2.copyMakeBorder(
+            img, top, bottom, left, right, cv2.BORDER_CONSTANT, value=color
+        )  # padded rectangular
+        return img, ratio, padw, padh
+
+    def __call__(self, datas: List[dict]) -> List[dict]:
+        """
+        Args:
+            im (np.ndarray): image (np.ndarray)
+            im_info (dict): info of image
+        Returns:
+            im (np.ndarray):  processed image (np.ndarray)
+            im_info (dict): info of processed image
+        """
+        for data in datas:
+            img = data["img"]
+            height, width = self.target_size
+            h, w = img.shape[:2]
+            img, ratio, _, _ = self.letterbox(img, height=height, width=width)
+            new_shape = [round(w * ratio), round(h * ratio)]
+            data["img"] = img
+            data["img_size"] = np.array(new_shape, dtype=np.float32)  # [size_w, size_h]
+            data["scale_factors"] = np.array([ratio, ratio], dtype=np.float32)
+        return datas
+
+
+@benchmark.timeit
 class Normalize(CommonNormalize):
     """Normalizes images in a list of dictionaries containing image data"""
 

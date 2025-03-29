@@ -136,3 +136,10 @@ from .multilingual_speech_recognition import (
     WhisperEvaluator,
     WhisperExportor,
 )
+
+from .joint_detection_embedding import (
+    JDEDatasetChecker,
+    JDETrainer,
+    JDEEvaluator,
+    JDEExportor,
+)
