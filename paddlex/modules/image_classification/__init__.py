@@ -16,3 +16,4 @@ from .trainer import ClsTrainer
 from .dataset_checker import ClsDatasetChecker
 from .evaluator import ClsEvaluator
 from .exportor import ClsExportor
+from .compressor import ClsCompressor

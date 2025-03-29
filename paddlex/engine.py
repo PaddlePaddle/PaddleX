@@ -53,5 +53,8 @@ class Engine(object):
                 res.print()
                 if self._output:
                     res.save_all(save_path=self._output)
+        elif self._mode == "compress":
+            disable_pir_bydefault()
+            return self._model.compress()
         else:
             raise_unsupported_api_error(f"{self._mode}", self.__class__)

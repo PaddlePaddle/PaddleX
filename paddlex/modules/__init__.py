@@ -18,6 +18,7 @@ from .base import (
     build_trainer,
     build_evaluater,
     build_exportor,
+    build_compressor,
 )
 
 from .image_classification import (
@@ -25,6 +26,7 @@ from .image_classification import (
     ClsTrainer,
     ClsEvaluator,
     ClsExportor,
+    ClsCompressor,
 )
 
 from .multilabel_classification import (

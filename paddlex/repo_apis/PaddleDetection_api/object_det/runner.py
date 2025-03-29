@@ -192,7 +192,7 @@ class DetRunner(BaseRunner):
         ]
         cp_export = self.run_cmd(cmd, switch_wdir=True, echo=True, silent=False)
 
-        return cp_train, cp_export
+        return cp_export
 
     def _gather_opts_args(self, args):
         """_gather_opts_args"""

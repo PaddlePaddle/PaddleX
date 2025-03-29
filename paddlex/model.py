@@ -21,6 +21,7 @@ from .modules import (
     build_trainer,
     build_evaluater,
     build_exportor,
+    build_compressor,
 )
 
 
@@ -130,3 +131,7 @@ class _ModelBasedConfig(_BaseModel):
     def predict(self):
         predict_kwargs, predictor = self._build_predictor()
         yield from predictor(**predict_kwargs)
+
+    def compress(self):
+        compressor = build_compressor(self._config)
+        return compressor.compress()

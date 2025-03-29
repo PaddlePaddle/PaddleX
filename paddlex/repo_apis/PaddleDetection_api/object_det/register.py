@@ -132,7 +132,10 @@ register_model_info(
         "model_name": "RT-DETR-L",
         "suite": "Det",
         "config_path": osp.join(PDX_CONFIG_DIR, "RT-DETR-L.yaml"),
-        "supported_apis": ["train", "evaluate", "predict", "export"],
+        "auto_compression_config_path": osp.join(
+            PDX_CONFIG_DIR, "slim", "rtdetr_qat.yml"
+        ),
+        "supported_apis": ["train", "evaluate", "predict", "export", "compression"],
         "supported_dataset_types": ["COCODetDataset"],
         "supported_train_opts": {
             "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],
@@ -1080,7 +1083,17 @@ register_model_info(
         "model_name": "PP-DocLayout-M",
         "suite": "Det",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-DocLayout-M.yaml"),
-        "supported_apis": ["train", "evaluate", "predict", "export", "infer"],
+        "supported_apis": [
+            "train",
+            "evaluate",
+            "predict",
+            "export",
+            "infer",
+            "compression",
+        ],
+        "auto_compression_config_path": osp.join(
+            PDX_CONFIG_DIR, "slim", "PP-DocLayout-M_qat.yaml"
+        ),
         "supported_dataset_types": ["COCODetDataset"],
         "supported_train_opts": {
             "device": ["cpu", "gpu_nxcx", "xpu", "npu", "mlu"],

@@ -91,7 +91,7 @@ class PaddlePredictorOption(object):
         device_type, device_ids = parse_device(get_default_device())
 
         default_config = {
-            "run_mode": "paddle",
+            "run_mode": "trt_fp32",
             "device_type": device_type,
             "device_id": None if device_ids is None else device_ids[0],
             "cpu_threads": 8,

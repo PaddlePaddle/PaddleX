@@ -407,6 +407,8 @@ class DetModel(BaseModel):
         else:
             save_dir = abspath(save_dir)
         cps_config.update_save_dir(save_dir)
+        uniform_output_enabled = kwargs.pop("uniform_output_enabled", False)
+        config.update({"uniform_output_enabled": uniform_output_enabled})
         if use_vdl:
             train_cli_args.append(CLIArgument("--use_vdl", use_vdl))
             train_cli_args.append(CLIArgument("--vdl_log_dir", save_dir))
@@ -425,6 +427,6 @@ class DetModel(BaseModel):
 
             self._assert_empty_kwargs(kwargs)
 
-            self.runner.compression(
+            return self.runner.compression(
                 config_path, train_cli_args, export_cli_args, device, save_dir
             )

@@ -147,7 +147,10 @@ register_model_info(
         "model_name": "PP-LCNet_x1_0",
         "suite": "Cls",
         "config_path": osp.join(PDX_CONFIG_DIR, "PP-LCNet_x1_0.yaml"),
-        "supported_apis": ["train", "evaluate", "predict", "export"],
+        "auto_compression_config_path": osp.join(
+            PDX_CONFIG_DIR, "slim/PP_LCNet_x1_0_quantization.yaml"
+        ),
+        "supported_apis": ["train", "evaluate", "predict", "export", "compression"],
     }
 )
 
