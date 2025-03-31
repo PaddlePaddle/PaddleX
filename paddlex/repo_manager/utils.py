@@ -23,7 +23,6 @@ import lazy_paddle as paddle
 
 from ..utils import logging
 from ..utils.env import get_device_type
-from ..utils.install import install_packages_from_requirements_file
 
 PLATFORM = platform.system()
 
@@ -96,13 +95,6 @@ def install_external_deps(repo_name, repo_root):
                     "your environment does not meet these requirements, so we will skip the installation of custom operators under PaddleDetection/ppdet/ext_ops, "
                     "which means you can not train the Rotated Object Detection models."
                 )
-
-
-def install_deps_using_pip():
-    """install requirements"""
-    current_file_path = os.path.dirname(os.path.abspath(__file__))
-    deps_path = os.path.join(current_file_path, "requirements.txt")
-    return install_packages_from_requirements_file(deps_path)
 
 
 def clone_repo_using_git(url, branch=None):
