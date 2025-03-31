@@ -27,7 +27,7 @@ Boxes = List[dict]
 Number = Union[int, float]
 
 
-@benchmark.timeit
+@benchmark.timeit_with_options(name=None, is_read_operation=True)
 class ReadImage(CommonReadImage):
     """Reads images from a list of raw image data or file paths."""
 
