@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,11 +13,11 @@
 # limitations under the License.
 
 from . import fd_logging
-from .util import *
+from .cityscapes import *
+from .coco import *
 from .coco_metrics import *
-from .seg_metrics import *
+from .coco_utils import *
 from .json_results import *
 from .map_utils import *
-from .coco_utils import *
-from .coco import *
-from .cityscapes import *
+from .seg_metrics import *
+from .util import *

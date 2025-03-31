@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@ from functools import lru_cache
 from typing import Optional
 
 from importlib_resources import files
-from paddlex.utils import logging
-
 from paddlex_hpi._utils.typing import DeviceType
+
+from paddlex.utils import logging
 
 _DB_PATH: str = "model_info_collection.json"
 

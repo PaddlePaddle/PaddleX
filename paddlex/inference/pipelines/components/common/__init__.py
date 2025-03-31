@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .base_result import CVResult, BaseResult
-from .sort_boxes import SortQuadBoxes, SortPolyBoxes
-from .crop_image_regions import CropByPolys, CropByBoxes
+from .base_result import BaseResult, CVResult
 from .convert_points_and_boxes import convert_points_to_boxes
+from .crop_image_regions import CropByBoxes, CropByPolys
+from .sort_boxes import SortPolyBoxes, SortQuadBoxes

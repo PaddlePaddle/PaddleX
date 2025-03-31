@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
 import os
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-import ultra_infer as ui
 import numpy as np
+import ultra_infer as ui
+from paddlex_hpi.models.base import CVPredictor, HPIParams
+
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
 from paddlex.inference.models.semantic_segmentation.result import SegResult
 from paddlex.modules.semantic_segmentation.model_list import MODELS
 from paddlex.utils import logging
-
-from paddlex_hpi.models.base import CVPredictor, HPIParams
 
 
 class SegPredictor(CVPredictor):

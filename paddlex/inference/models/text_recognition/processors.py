@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,20 +13,13 @@
 # limitations under the License.
 
 
-import os
-import os.path as osp
+import math
+import re
 from typing import List
 
-import re
-import numpy as np
-from PIL import Image
 import cv2
-import math
-import json
-import tempfile
-from tokenizers import Tokenizer as TokenizerFast
+import numpy as np
 
-from ....utils import logging
 from ...utils.benchmark import benchmark
 
 

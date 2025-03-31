@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .tokenizer_utils import PretrainedTokenizer
-from .gpt_tokenizer import GPTTokenizer
 from .bert_tokenizer import BertTokenizer
 from .clip_tokenizer import CLIPTokenizer
+from .gpt_tokenizer import GPTTokenizer
+from .tokenizer_utils import PretrainedTokenizer

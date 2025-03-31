@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,21 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
+import copy
 import sys
+
 import numpy as np
-from .map_utils import draw_pr_curve
+
+from . import fd_logging as logging
 from .json_results import (
-    get_det_res,
     get_det_poly_res,
+    get_det_res,
     get_seg_res,
     get_solov2_segm_res,
 )
-from . import fd_logging as logging
-import copy
+from .map_utils import draw_pr_curve
 
 
 def loadRes(coco_obj, anns):
@@ -47,9 +47,10 @@ def loadRes(coco_obj, anns):
     import matplotlib
 
     matplotlib.use("Agg")
-    from pycocotools.coco import COCO
-    import pycocotools.mask as maskUtils
     import time
+
+    import pycocotools.mask as maskUtils
+    from pycocotools.coco import COCO
 
     res = COCO()
     res.dataset["images"] = [img for img in coco_obj.dataset["images"]]

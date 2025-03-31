@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 from abc import ABC, abstractmethod
 from copy import deepcopy
 from pathlib import Path
-from typing import Any, List, Dict, Iterator, Optional, Union
+from typing import Any, Dict, Iterator, List, Optional, Union
 
 from pydantic import ValidationError
 
@@ -24,13 +24,13 @@ from .....utils import logging
 from .....utils.device import get_default_device, parse_device
 from .....utils.flags import (
     INFER_BENCHMARK,
-    INFER_BENCHMARK_WARMUP,
     INFER_BENCHMARK_ITERS,
+    INFER_BENCHMARK_WARMUP,
 )
 from .....utils.subclass_register import AutoRegisterABCMetaClass
 from ....common.batch_sampler import BaseBatchSampler
-from ....utils.benchmark import benchmark, ENTRY_POINT_NAME
-from ....utils.hpi import HPIInfo, HPIConfig
+from ....utils.benchmark import ENTRY_POINT_NAME, benchmark
+from ....utils.hpi import HPIConfig, HPIInfo
 from ....utils.io import YAMLReader
 from ....utils.pp_option import PaddlePredictorOption
 from ...common import HPInfer, PaddleInfer

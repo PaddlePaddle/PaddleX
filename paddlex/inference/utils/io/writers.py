@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,18 +13,17 @@
 # limitations under the License.
 
 
-import os
 import enum
 import json
 from pathlib import Path
 
 import cv2
 import numpy as np
-from PIL import Image
 import pandas as pd
 import yaml
-from .tablepyxl import document_to_xl
+from PIL import Image
 
+from .tablepyxl import document_to_xl
 
 __all__ = [
     "WriterType",
@@ -303,8 +302,6 @@ class XlsxWriterBackend(_BaseWriterBackend):
 class _ImageWriterBackend(_BaseWriterBackend):
     """_ImageWriterBackend"""
 
-    pass
-
 
 class OpenCVImageWriterBackend(_ImageWriterBackend):
     """OpenCVImageWriterBackend"""
@@ -343,8 +340,6 @@ class PILImageWriterBackend(_ImageWriterBackend):
 
 class _VideoWriterBackend(_BaseWriterBackend):
     """_VideoWriterBackend"""
-
-    pass
 
 
 class OpenCVVideoWriterBackend(_VideoWriterBackend):
@@ -428,8 +423,6 @@ class CSVWriter(_BaseWriter):
 
 class _CSVWriterBackend(_BaseWriterBackend):
     """_CSVWriterBackend"""
-
-    pass
 
 
 class PandasCSVWriterBackend(_CSVWriterBackend):

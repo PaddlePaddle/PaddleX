@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,12 @@
 # limitations under the License.
 
 import copy
+from pathlib import Path
+
 import cv2
 import numpy as np
-from pathlib import Path
-import PIL
-from PIL import Image, ImageDraw, ImageFont
 
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
+from ...common.result import BaseCVResult, JsonMixin
 
 
 class TableRecResult(BaseCVResult):

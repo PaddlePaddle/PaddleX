@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,13 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union
 from abc import ABC, abstractmethod
+from typing import Any, Dict, Optional, Union
+
 from ...utils import logging
 from ...utils.subclass_register import AutoRegisterABCMetaClass
+from ..models import BasePredictor
 from ..utils.hpi import HPIConfig
 from ..utils.pp_option import PaddlePredictorOption
-from ..models import BasePredictor
 
 
 class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):

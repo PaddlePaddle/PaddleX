@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,17 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import cv2
 import copy
-import numpy as np
+
+import cv2
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH
-from ...utils.io import ImageReader
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
-from ...utils.color_map import get_colormap, font_colormap
+from ...common.result import BaseCVResult, JsonMixin
+from ...utils.color_map import font_colormap, get_colormap
 
 
 def draw_attribute_result(img, boxes):
@@ -49,7 +47,7 @@ def draw_attribute_result(img, boxes):
             label2color[i] = color_list[color_index]
             catid2fontcolor[i] = font_colormap(color_index)
         color = tuple(label2color[i]) + (255,)
-        font_color = tuple(catid2fontcolor[i])
+        tuple(catid2fontcolor[i])
 
         xmin, ymin, xmax, ymax = bbox
         # draw box

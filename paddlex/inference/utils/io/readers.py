@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,19 +15,15 @@
 
 import enum
 import itertools
+import random
+
 import cv2
 import fitz
-from PIL import Image, ImageOps
-import pandas as pd
 import numpy as np
-import yaml
+import pandas as pd
 import soundfile
-import random
-import platform
-import importlib
-
-from ....utils import logging
-
+import yaml
+from PIL import Image, ImageOps
 
 __all__ = [
     "ReaderType",
@@ -215,8 +211,6 @@ class _BaseReaderBackend(object):
 class _ImageReaderBackend(_BaseReaderBackend):
     """_ImageReaderBackend"""
 
-    pass
-
 
 class OpenCVImageReaderBackend(_ImageReaderBackend):
     """OpenCVImageReaderBackend"""
@@ -358,7 +352,9 @@ class DecordVideoReaderBackend(_VideoReaderBackend):
 
         # XXX(gaotingquan): There is a confict with `paddle` when import `decord` globally.
         try:
-            self.decord_module = importlib.import_module("decord")
+            import decord
+
+            self.decord_module = decord
         except ModuleNotFoundError():
             raise Exception(
                 "Please install `decord` manually, otherwise, the related model cannot work. It can be automatically installed only on `x86_64`. Refers: `https://github.com/dmlc/decord`."
@@ -442,8 +438,6 @@ class CSVReader(_BaseReader):
 class _CSVReaderBackend(_BaseReaderBackend):
     """_CSVReaderBackend"""
 
-    pass
-
 
 class PandasCSVReaderBackend(_CSVReaderBackend):
     """PandasCSVReaderBackend"""
@@ -482,8 +476,6 @@ class AudioReader(_BaseReader):
 
 class _AudioReaderBackend(_BaseReaderBackend):
     """_AudioReaderBackend"""
-
-    pass
 
 
 class WAVReaderBackend(_AudioReaderBackend):

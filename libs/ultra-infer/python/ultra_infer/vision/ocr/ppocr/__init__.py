@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,24 +13,26 @@
 # limitations under the License.
 
 from __future__ import absolute_import
+
 import logging
 import math
 import os
 import re
 import tempfile
-
 from dataclasses import dataclass
+
 from tokenizers import Tokenizer as TokenizerFast
 
-from .... import UltraInferModel, ModelFormat
+from .... import ModelFormat, UltraInferModel
 from .... import c_lib_wrap as C
-from ...common import ProcessorManager
 from ....py_only import PyOnlyProcessorChain
-from ....py_only.vision import PyOnlyVisionModel, processors as P
+from ....py_only.vision import PyOnlyVisionModel
+from ....py_only.vision import processors as P
 from ....utils.misc import load_config
-from .utils.ser_vi_layoutxlm.vqa_utils import *
-from .utils.ser_vi_layoutxlm.transforms import *
+from ...common import ProcessorManager
 from .utils.ser_vi_layoutxlm.operators import *
+from .utils.ser_vi_layoutxlm.transforms import *
+from .utils.ser_vi_layoutxlm.vqa_utils import *
 
 
 def sort_boxes(boxes):

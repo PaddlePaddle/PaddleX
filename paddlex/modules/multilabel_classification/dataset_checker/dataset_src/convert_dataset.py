@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,9 +14,10 @@
 
 
 import os
-import json
-from tqdm import tqdm
+
 from pycocotools.coco import COCO
+from tqdm import tqdm
+
 from .....utils.errors import ConvertFailedError
 from .....utils.logging import info, warning
 
@@ -24,7 +25,7 @@ from .....utils.logging import info, warning
 def check_src_dataset(root_dir, dataset_type):
     """check src dataset format validity"""
     if dataset_type in ("COCO"):
-        anno_suffix = ".json"
+        pass
     else:
         raise ConvertFailedError(
             message=f"数据格式转换失败！不支持{dataset_type}格式数据集。当前仅支持 COCO 格式。"
@@ -74,7 +75,6 @@ def coco2multilabels(src_img_dir, src_anno_path, root_dir):
     num_classes = len(list(cat_id_map.keys()))
 
     with open(anno_save_path, "w") as fp:
-        lines = []
         for img_id in tqdm(sorted(coco.getImgIds())):
             img_info = coco.loadImgs([img_id])[0]
             img_filename = img_info["file_name"]
@@ -108,7 +108,6 @@ def coco2multilabels(src_img_dir, src_anno_path, root_dir):
     if label_type == "train":
         label_txt_save_path = os.path.join(root_dir, "label.txt")
         with open(label_txt_save_path, "w") as fp:
-            label_name_list = []
             for cat in coco.cats.values():
                 id = cat["id"]
                 name = cat["name"]

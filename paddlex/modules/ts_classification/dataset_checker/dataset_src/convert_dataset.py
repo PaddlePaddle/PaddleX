@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,12 +14,8 @@
 
 
 import os
-import shutil
-import json
-import random
-import numpy as np
+
 import pandas as pd
-from tqdm import tqdm
 
 from .....utils.errors import ConvertFailedError
 

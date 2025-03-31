@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,12 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .common import CVResult, BaseResult
-from .common import SortQuadBoxes, SortPolyBoxes
-from .common import CropByPolys, CropByBoxes
-from .common import convert_points_to_boxes
-from .utils.mixin import HtmlMixin, XlsxMixin
 from .chat_server.base import BaseChat
-from .retriever.base import BaseRetriever
-from .prompt_engineering.base import BaseGeneratePrompt
+from .common import (
+    BaseResult,
+    CropByBoxes,
+    CropByPolys,
+    CVResult,
+    SortPolyBoxes,
+    SortQuadBoxes,
+    convert_points_to_boxes,
+)
 from .faisser import FaissBuilder, FaissIndexer, IndexData
+from .prompt_engineering.base import BaseGeneratePrompt
+from .retriever.base import BaseRetriever
+from .utils.mixin import HtmlMixin, XlsxMixin

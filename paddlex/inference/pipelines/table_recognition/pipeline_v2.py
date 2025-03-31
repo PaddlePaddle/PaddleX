@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,27 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, List, Tuple
-import numpy as np
 import math
+from typing import Any, Dict, List, Optional, Tuple, Union
+
+import numpy as np
 from sklearn.cluster import KMeans
+
+from ....utils import logging
+from ...common.batch_sampler import ImageBatchSampler
+from ...common.reader import ReadImage
+from ...models.object_detection.result import DetResult
+from ...utils.hpi import HPIConfig
+from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 from ..components import CropByBoxes
-from .utils import get_neighbor_boxes_idx
-from .table_recognition_post_processing_v2 import get_table_recognition_res
+from ..doc_preprocessor.result import DocPreprocessorResult
+from ..ocr.result import OCRResult
+from .result import SingleTableRecognitionResult, TableRecognitionResult
 from .table_recognition_post_processing import (
     get_table_recognition_res as get_table_recognition_res_e2e,
 )
-from .result import SingleTableRecognitionResult, TableRecognitionResult
-from ....utils import logging
-from ...utils.pp_option import PaddlePredictorOption
-from ...utils.hpi import HPIConfig
-from ...common.reader import ReadImage
-from ...common.batch_sampler import ImageBatchSampler
-from ..ocr.result import OCRResult
-from ..doc_preprocessor.result import DocPreprocessorResult
-
-from ...models.object_detection.result import DetResult
+from .table_recognition_post_processing_v2 import get_table_recognition_res
+from .utils import get_neighbor_boxes_idx
 
 
 class TableRecognitionPipelineV2(BasePipeline):
@@ -415,7 +416,7 @@ class TableRecognitionPipelineV2(BasePipeline):
             intersection_area = (x_right - x_left) * (y_bottom - y_top)
             # Calculate the area of both rectangles
             box1_area = (box1[2] - box1[0]) * (box1[3] - box1[1])
-            box2_area = (box2[2] - box2[0]) * (box2[3] - box2[1])
+            (box2[2] - box2[0]) * (box2[3] - box2[1])
             # Calculate the IoU
             iou = intersection_area / float(box1_area)
             return iou

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,18 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-from pathlib import Path
-from typing import Dict
-import copy
 import math
 import random
-import numpy as np
+from pathlib import Path
+from typing import Dict
+
 import cv2
-import PIL
-from PIL import Image, ImageDraw, ImageFont
+import numpy as np
+from PIL import Image, ImageDraw
+
 from ....utils.fonts import SIMFANG_FONT_FILE_PATH, create_font
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
+from ...common.result import BaseCVResult, JsonMixin
 
 
 class OCRResult(BaseCVResult):

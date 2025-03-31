@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
 
 import os.path as osp
 
-from .runner import raise_unsupported_api_error
-from ...base import BaseModel
 from ....utils import logging
-from ...base.utils.arg import CLIArgument
 from ....utils.misc import abspath
+from ...base import BaseModel
+from ...base.utils.arg import CLIArgument
+from .runner import raise_unsupported_api_error
 
 
 class BEVFusionModel(BaseModel):

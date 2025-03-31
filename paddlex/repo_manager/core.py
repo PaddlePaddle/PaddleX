@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,12 +17,11 @@ import sys
 from collections import OrderedDict
 
 from ..utils import logging
-from .utils import install_deps_using_pip
 from .meta import get_all_repo_names, get_repo_meta
 from .repo import (
-    build_repo_instance,
     build_repo_group_getter,
     build_repo_group_installer,
+    build_repo_instance,
 )
 
 __all__ = [
@@ -208,7 +207,6 @@ def setup(
         constraints=constraints,
         deps_to_replace=deps_to_replace,
     )
-    install_deps_using_pip()
     logging.info("All packages are installed.")
 
 

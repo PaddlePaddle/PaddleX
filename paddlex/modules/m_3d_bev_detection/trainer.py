@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,11 +13,7 @@
 # limitations under the License.
 
 
-from pathlib import Path
-
 from ..base import BaseTrainer
-from ...utils.config import AttrDict
-from ...utils import logging
 from .model_list import MODELS
 
 
@@ -51,9 +47,9 @@ class BEVFusionTrainer(BaseTrainer):
             self.pdx_config.update_learning_rate(self.train_config.learning_rate)
         if self.train_config.epochs_iters is not None:
             self.pdx_config.update_epochs(self.train_config.epochs_iters)
-            epochs_iters = self.train_config.epochs_iters
+            self.train_config.epochs_iters
         else:
-            epochs_iters = self.pdx_config.get_epochs_iters()
+            self.pdx_config.get_epochs_iters()
         if self.global_config.output is not None:
             self.pdx_config.update_save_dir(self.global_config.output)
 

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,16 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import numpy as np
-import json
-from pathlib import Path
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 from pycocotools.coco import COCO
 
-from ......utils.fonts import PINGFANG_FONT_FILE_PATH
 from ......utils import logging
+from ......utils.fonts import PINGFANG_FONT_FILE_PATH
 
 
 def colormap(rgb=False):

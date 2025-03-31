@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,29 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import importlib
 import os
 import os.path as osp
-import importlib
-import tempfile
 import shutil
+import tempfile
 
 from ..utils import logging
-from ..utils.file_interface import custom_open
 from ..utils.download import download_and_extract
-from .meta import get_repo_meta, REPO_DOWNLOAD_BASE
+from ..utils.file_interface import custom_open
+from .meta import REPO_DOWNLOAD_BASE, get_repo_meta
 from .utils import (
-    install_packages_using_pip,
-    fetch_repo_using_git,
-    reset_repo_using_git,
-    uninstall_package_using_pip,
-    remove_repo_using_rm,
-    check_installation_using_pip,
     build_wheel_using_pip,
+    check_installation_using_pip,
+    env_marker_ast2expr,
+    fetch_repo_using_git,
+    install_external_deps,
+    install_packages_using_pip,
     mute,
+    remove_repo_using_rm,
+    reset_repo_using_git,
     switch_working_dir,
     to_dep_spec_pep508,
-    env_marker_ast2expr,
-    install_external_deps,
+    uninstall_package_using_pip,
 )
 
 __all__ = ["build_repo_instance", "build_repo_group_installer"]

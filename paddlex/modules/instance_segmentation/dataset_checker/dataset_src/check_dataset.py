@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,15 +15,15 @@
 import json
 import os
 import os.path as osp
-from collections import defaultdict, Counter
+from collections import Counter, defaultdict
 from pathlib import Path
 
 from PIL import Image, ImageOps
 from pycocotools.coco import COCO
 
-from .utils.visualizer import draw_bbox, draw_mask
 from .....utils.errors import DatasetFileNotFoundError
 from .....utils.logging import info
+from .utils.visualizer import draw_bbox, draw_mask
 
 
 def check(dataset_dir, output, sample_num=10):
@@ -35,7 +35,7 @@ def check(dataset_dir, output, sample_num=10):
 
     sample_cnts = dict()
     sample_paths = defaultdict(list)
-    im_sizes = defaultdict(Counter)
+    defaultdict(Counter)
     tags = ["instance_train", "instance_val"]
     for _, tag in enumerate(tags):
         file_list = osp.join(dataset_dir, f"annotations/{tag}.json")

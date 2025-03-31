@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,18 +13,18 @@
 # limitations under the License.
 
 import os
-from pathlib import Path
 from abc import ABC, abstractmethod
+from pathlib import Path
 
-from .build_model import build_model
-from ...utils.device import (
-    update_device_num,
-    set_env_for_device,
-    check_supported_device,
-)
-from ...utils.misc import AutoRegisterABCMetaClass
 from ...utils.config import AttrDict
+from ...utils.device import (
+    check_supported_device,
+    set_env_for_device,
+    update_device_num,
+)
 from ...utils.logging import *
+from ...utils.misc import AutoRegisterABCMetaClass
+from .build_model import build_model
 
 
 def build_evaluater(config: AttrDict) -> "BaseEvaluator":
@@ -38,7 +38,7 @@ def build_evaluater(config: AttrDict) -> "BaseEvaluator":
     """
     model_name = config.Global.model
     try:
-        import feature_line_modules
+        pass
     except ModuleNotFoundError:
         pass
     return BaseEvaluator.get(model_name)(config)

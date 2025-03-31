@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,26 +13,26 @@
 # limitations under the License.
 
 import numpy as np
+
+from ....modules.formula_recognition.model_list import MODELS
 from ....utils import logging
 from ....utils.parallel import maybe_parallelize
 from ....utils.func_register import FuncRegister
-from ....modules.formula_recognition.model_list import MODELS
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ..base import BasePredictor
 from .processors import (
-    MinMaxResize,
-    LatexTestTransform,
     LatexImageFormat,
     LaTeXOCRDecode,
+    LatexTestTransform,
+    MinMaxResize,
     NormalizeImage,
     ToBatch,
-    UniMERNetImgDecode,
     UniMERNetDecode,
-    UniMERNetTestTransform,
     UniMERNetImageFormat,
+    UniMERNetImgDecode,
+    UniMERNetTestTransform,
 )
-
 from .result import FormulaRecResult
 
 

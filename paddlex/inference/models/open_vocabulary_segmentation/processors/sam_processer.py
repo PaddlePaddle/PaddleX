@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,12 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-from typing import Dict, List, Optional, Union, Tuple
+from copy import deepcopy
+from typing import List, Optional, Tuple, Union
 
 import numpy as np
 import PIL
-from copy import deepcopy
 
 from .....utils.lazy_loader import LazyLoader
 
@@ -228,7 +227,7 @@ class SamImageProcessor(object):
     ):
         """Preprocess an image or a batch of images with a same shape."""
 
-        size = self.size
+        self.size
 
         input_image = [self.apply_image(image) for image in images]
 

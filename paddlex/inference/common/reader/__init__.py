@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .image_reader import ReadImage
 from .audio_reader import ReadAudio
-from .video_reader import ReadVideo
-from .ts_reader import ReadTS
 from .det_3d_reader import ReadNuscenesData
+from .image_reader import ReadImage
+from .ts_reader import ReadTS
+from .video_reader import ReadVideo

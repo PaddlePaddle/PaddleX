@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,21 +13,22 @@
 # limitations under the License.
 from __future__ import annotations
 
-from typing import Any, Dict, Optional, Union, Tuple
-import numpy as np
-import re
 import copy
+import re
+from typing import Any, Dict, Optional, Tuple, Union
+
+import numpy as np
 
 from ....utils import logging
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
-from ...utils.pp_option import PaddlePredictorOption
 from ...utils.hpi import HPIConfig
+from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 from ..ocr.result import OCRResult
 from .result_v2 import LayoutParsingResultV2
-from .utils import get_single_block_parsing_res, get_sub_regions_ocr_res, gather_imgs
+from .utils import gather_imgs, get_single_block_parsing_res, get_sub_regions_ocr_res
 
 
 class LayoutParsingPipelineV2(BasePipeline):

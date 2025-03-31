@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,7 +29,8 @@ def get_pdx_version():
 
 def get_version_dict():
     """get_version_dict"""
-    import paddle
+    import lazy_paddle as paddle
+
     from . import repo_manager
 
     ver_dict = dict()

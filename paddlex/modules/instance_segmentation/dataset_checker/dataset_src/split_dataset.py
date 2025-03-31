@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,10 +13,11 @@
 # limitations under the License.
 
 
-import os
-import shutil
-import random
 import json
+import os
+import random
+import shutil
+
 from tqdm import tqdm
 
 from .....utils.file_interface import custom_open, write_json_file

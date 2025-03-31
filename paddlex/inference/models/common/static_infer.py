@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,32 +15,27 @@
 import abc
 import importlib.util
 import subprocess
-from typing import Sequence, List
 from pathlib import Path
+from typing import List, Sequence
 
 import lazy_paddle as paddle
 import numpy as np
 
 from ....utils import logging
 from ....utils.device import constr_device
-from ....utils.flags import (
-    DEBUG,
-    USE_PIR_TRT,
-    INFER_BENCHMARK_USE_NEW_INFER_API,
-)
+from ....utils.flags import DEBUG, INFER_BENCHMARK_USE_NEW_INFER_API, USE_PIR_TRT
 from ...utils.benchmark import benchmark, set_inference_operations
 from ...utils.hpi import (
     HPIConfig,
+    OMConfig,
     ONNXRuntimeConfig,
     OpenVINOConfig,
     TensorRTConfig,
-    OMConfig,
     get_model_paths,
     suggest_inference_backend_and_config,
 )
 from ...utils.pp_option import PaddlePredictorOption
 from ...utils.trt_config import DISABLE_TRT_HALF_OPS_CONFIG
-
 
 CACHE_DIR = ".cache"
 
@@ -157,11 +152,7 @@ def _convert_trt(
     dynamic_shapes,
     dynamic_shape_input_data,
 ):
-    from paddle.tensorrt.export import (
-        Input,
-        TensorRTConfig,
-        convert,
-    )
+    from paddle.tensorrt.export import Input, TensorRTConfig, convert
 
     def _set_trt_config():
         for attr_name in trt_cfg_setting:
@@ -448,7 +439,7 @@ class PaddleInfer(StaticInfer):
                         config.enable_mkldnn()
                         if "bf16" in self._option.run_mode:
                             config.enable_mkldnn_bfloat16()
-                    except Exception as e:
+                    except Exception:
                         logging.warning(
                             "MKL-DNN is not available. We will disable MKL-DNN."
                         )
