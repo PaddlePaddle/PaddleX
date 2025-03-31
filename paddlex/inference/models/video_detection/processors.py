@@ -254,12 +254,12 @@ def get_region_boxes(
     grid_x = paddle.linspace(0, w - 1, w)
     grid_x = paddle.tile(grid_x, [h, 1])
     grid_x = paddle.tile(grid_x, [batch * num_anchors, 1, 1])
-    grid_x = paddle.reshape(grid_x, [batch * num_anchors * h * w]).cuda()
+    grid_x = paddle.reshape(grid_x, [batch * num_anchors * h * w])
 
     grid_y = paddle.linspace(0, h - 1, h)
     grid_y = paddle.tile(grid_y, [w, 1]).t()
     grid_y = paddle.tile(grid_y, [batch * num_anchors, 1, 1])
-    grid_y = paddle.reshape(grid_y, [batch * num_anchors * h * w]).cuda()
+    grid_y = paddle.reshape(grid_y, [batch * num_anchors * h * w])
 
     sigmoid = paddle.nn.Sigmoid()
     xs = sigmoid(output[0]) + grid_x
@@ -279,11 +279,11 @@ def get_region_boxes(
 
     anchor_w = paddle.tile(anchor_w, [batch, 1])
     anchor_w = paddle.tile(anchor_w, [1, 1, h * w])
-    anchor_w = paddle.reshape(anchor_w, [batch * num_anchors * h * w]).cuda()
+    anchor_w = paddle.reshape(anchor_w, [batch * num_anchors * h * w])
 
     anchor_h = paddle.tile(anchor_h, [batch, 1])
     anchor_h = paddle.tile(anchor_h, [1, 1, h * w])
-    anchor_h = paddle.reshape(anchor_h, [batch * num_anchors * h * w]).cuda()
+    anchor_h = paddle.reshape(anchor_h, [batch * num_anchors * h * w])
 
     ws = paddle.exp(output[2]) * anchor_w
     hs = paddle.exp(output[3]) * anchor_h
