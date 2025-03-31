@@ -12,12 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .common import CVResult, BaseResult
-from .common import SortQuadBoxes, SortPolyBoxes
-from .common import CropByPolys, CropByBoxes
-from .common import convert_points_to_boxes
-from .common import rotate_image
-from .utils.mixin import HtmlMixin, XlsxMixin
 from .chat_server.base import BaseChat
 from .common import (
     BaseResult,
@@ -27,6 +21,7 @@ from .common import (
     SortPolyBoxes,
     SortQuadBoxes,
     convert_points_to_boxes,
+    rotate_image,
 )
 from .faisser import FaissBuilder, FaissIndexer, IndexData
 from .prompt_engineering.base import BaseGeneratePrompt

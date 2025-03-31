@@ -18,8 +18,7 @@ from typing import Union
 
 import cv2
 import numpy as np
-from numpy.linalg import norm
-from PIL import Image
+import pyclipper
 
 from ....utils import logging
 from ...utils.benchmark import benchmark

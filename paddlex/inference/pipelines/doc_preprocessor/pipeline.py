@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, List
+from typing import Any, Dict, List, Optional, Union
+
 import numpy as np
-from scipy.ndimage import rotate
 
 from ....utils import logging
 from ...common.batch_sampler import ImageBatchSampler

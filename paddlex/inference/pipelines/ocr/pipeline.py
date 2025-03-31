@@ -15,7 +15,8 @@
 from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
-from ...common.reader import ReadImage
+
+from ....utils import logging
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...utils.hpi import HPIConfig
