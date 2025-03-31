@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
 __all__ = ["convert_points_to_boxes"]
 
 import numpy as np
-import copy
 
 
 def convert_points_to_boxes(dt_polys: list) -> np.ndarray:

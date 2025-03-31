@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,17 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, List
-import numpy as np
-from importlib import import_module
-from ...utils.pp_option import PaddlePredictorOption
-from ...utils.hpi import HPIConfig
-from ..base import BasePipeline
+from typing import Any, Dict, List, Optional, Union
 
-module_3d_bev_detection_result = import_module(
-    ".result", "paddlex.inference.models.3d_bev_detection"
-)
-BEV3DDetResult = getattr(module_3d_bev_detection_result, "BEV3DDetResult")
+import numpy as np
+
+from ...models.m_3d_bev_detection.result import BEV3DDetResult
+from ...utils.hpi import HPIConfig
+from ...utils.pp_option import PaddlePredictorOption
+from ..base import BasePipeline
 
 
 class BEVDet3DPipeline(BasePipeline):

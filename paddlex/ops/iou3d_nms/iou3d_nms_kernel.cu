@@ -69,7 +69,7 @@ __device__ inline int check_in_box2d(const float *box, const Point &p) {
   float center_x = box[0], center_y = box[1];
   float angle_cos = cos(-box[6]),
         angle_sin =
-            sin(-box[6]);  // rotate the point in the opposite direction of box
+            sin(-box[6]); // rotate the point in the opposite direction of box
   float rot_x = (p.x - center_x) * angle_cos + (p.y - center_y) * (-angle_sin);
   float rot_y = (p.x - center_x) * angle_sin + (p.y - center_y) * angle_cos;
 
@@ -81,7 +81,8 @@ __device__ inline int intersection(const Point &p1, const Point &p0,
                                    const Point &q1, const Point &q0,
                                    Point &ans) {
   // fast exclusion
-  if (check_rect_cross(p0, p1, q0, q1) == 0) return 0;
+  if (check_rect_cross(p0, p1, q0, q1) == 0)
+    return 0;
 
   // check cross standing
   float s1 = cross(q0, p1, p0);
@@ -89,7 +90,8 @@ __device__ inline int intersection(const Point &p1, const Point &p0,
   float s3 = cross(p0, q1, q0);
   float s4 = cross(q1, p1, q0);
 
-  if (!(s1 * s2 > 0 && s3 * s4 > 0)) return 0;
+  if (!(s1 * s2 > 0 && s3 * s4 > 0))
+    return 0;
 
   // calculate intersection of two lines
   float s5 = cross(q1, p1, p0);
@@ -438,13 +440,13 @@ void BoxesOverlapLauncher(const cudaStream_t &stream, const int num_a,
                           const float *boxes_b, float *ans_overlap) {
   dim3 blocks(
       DIVUP(num_b, THREADS_PER_BLOCK),
-      DIVUP(num_a, THREADS_PER_BLOCK));  // blockIdx.x(col), blockIdx.y(row)
+      DIVUP(num_a, THREADS_PER_BLOCK)); // blockIdx.x(col), blockIdx.y(row)
   dim3 threads(THREADS_PER_BLOCK, THREADS_PER_BLOCK);
 
   boxes_overlap_kernel<<<blocks, threads, 0, stream>>>(num_a, boxes_a, num_b,
                                                        boxes_b, ans_overlap);
 #ifdef DEBUG
-  cudaDeviceSynchronize();  // for using printf in kernel function
+  cudaDeviceSynchronize(); // for using printf in kernel function
 #endif
 }
 
@@ -453,13 +455,13 @@ void BoxesIouBevLauncher(const cudaStream_t &stream, const int num_a,
                          const float *boxes_b, float *ans_iou) {
   dim3 blocks(
       DIVUP(num_b, THREADS_PER_BLOCK),
-      DIVUP(num_a, THREADS_PER_BLOCK));  // blockIdx.x(col), blockIdx.y(row)
+      DIVUP(num_a, THREADS_PER_BLOCK)); // blockIdx.x(col), blockIdx.y(row)
   dim3 threads(THREADS_PER_BLOCK, THREADS_PER_BLOCK);
 
   boxes_iou_bev_kernel<<<blocks, threads, 0, stream>>>(num_a, boxes_a, num_b,
                                                        boxes_b, ans_iou);
 #ifdef DEBUG
-  cudaDeviceSynchronize();  // for using printf in kernel function
+  cudaDeviceSynchronize(); // for using printf in kernel function
 #endif
 }
 

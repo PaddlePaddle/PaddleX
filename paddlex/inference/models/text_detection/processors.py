@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,22 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List, Tuple, Union
-import os
-import sys
-import cv2
-import copy
 import math
-import pyclipper
-import numpy as np
-from numpy.linalg import norm
-from PIL import Image
-from shapely.geometry import Polygon
+import sys
 from functools import partial
+from typing import Union
 
-from ....utils.parallel import maybe_parallelize
-from ...utils.io import ImageReader
+import cv2
+import numpy as np
+import pyclipper
+from shapely.geometry import Polygon
+
 from ....utils import logging
+from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 
 

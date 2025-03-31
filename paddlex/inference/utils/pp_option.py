@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
 import os
 from typing import Dict, List
 
-from ...utils.flags import USE_PIR_TRT
 from ...utils import logging
 from ...utils.device import (
     check_supported_device_type,
@@ -23,9 +22,10 @@ from ...utils.device import (
     parse_device,
     set_env_for_device_type,
 )
+from ...utils.flags import USE_PIR_TRT
 from .new_ir_blocklist import NEWIR_BLOCKLIST
 from .trt_blocklist import TRT_BLOCKLIST
-from .trt_config import TRT_PRECISION_MAP, TRT_CFG_SETTING
+from .trt_config import TRT_CFG_SETTING, TRT_PRECISION_MAP
 
 
 class PaddlePredictorOption(object):

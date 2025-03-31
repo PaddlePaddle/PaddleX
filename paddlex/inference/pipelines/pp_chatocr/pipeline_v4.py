@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,23 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, List, Tuple
-import os
-import re
-import cv2
+import base64
 import copy
 import json
-import base64
+import os
+import re
+from typing import Any, Dict, List, Optional, Tuple, Union
+
+import cv2
 import numpy as np
-from .pipeline_base import PP_ChatOCR_Pipeline
-from ...common.reader import ReadImage
-from ...common.batch_sampler import ImageBatchSampler
+
 from ....utils import logging
 from ....utils.file_interface import custom_open
-from ...utils.pp_option import PaddlePredictorOption
+from ...common.batch_sampler import ImageBatchSampler
+from ...common.reader import ReadImage
 from ...utils.hpi import HPIConfig
-from ..layout_parsing.result import LayoutParsingResult
+from ...utils.pp_option import PaddlePredictorOption
 from ..components.chat_server import BaseChat
+from ..layout_parsing.result import LayoutParsingResult
+from .pipeline_base import PP_ChatOCR_Pipeline
 
 
 class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):

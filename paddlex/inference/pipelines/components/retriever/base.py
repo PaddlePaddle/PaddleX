@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,16 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import Dict, List
-from abc import ABC, abstractmethod
-
-import time
 import base64
+import time
+from abc import ABC, abstractmethod
+from typing import List
 
 from langchain.docstore.document import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import FAISS
 from langchain_community import vectorstores
+from langchain_community.vectorstores import FAISS
 
 from paddlex.utils import logging
 
@@ -137,7 +136,7 @@ class BaseRetriever(ABC, metaclass=AutoRegisterABCMetaClass):
             vectorstore = FAISS.from_documents(
                 documents=all_splits, embedding=self.embedding
             )
-        except ValueError as e:
+        except ValueError:
             vectorstore = None
 
         return vectorstore
@@ -208,7 +207,6 @@ class BaseRetriever(ABC, metaclass=AutoRegisterABCMetaClass):
         Returns:
             str: A concatenated string of all unique contexts found.
         """
-        C = []
         all_C = ""
         if vectorstore is None:
             return all_C

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,22 +13,20 @@
 # limitations under the License.
 
 
-import os
-import os.path as osp
-
-import re
-import numpy as np
-from PIL import Image, ImageOps, ImageDraw
-import cv2
-import math
 import json
+import math
+import os
+import re
 import tempfile
-from tokenizers import Tokenizer as TokenizerFast
+from typing import Any, Dict, List, Optional, Tuple, Union
+
+import cv2
+import numpy as np
+from PIL import Image, ImageOps
 from tokenizers import AddedToken
-from typing import List, Tuple, Optional, Any, Dict, Union
+from tokenizers import Tokenizer as TokenizerFast
 
 from ....utils.parallel import maybe_parallelize
-from ....utils import logging
 from ...utils.benchmark import benchmark
 
 
@@ -965,7 +963,6 @@ class UniMERNetImageFormat:
     def __init__(self, **kwargs) -> None:
         """Initializes the UniMERNetImageFormat instance."""
         # your init code
-        pass
 
     def format(self, img: np.ndarray) -> np.ndarray:
         """Formats a single image to UniMERNet's required format.

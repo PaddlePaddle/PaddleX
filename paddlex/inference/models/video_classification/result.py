@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@ import PIL
 from PIL import Image, ImageDraw, ImageFont
 
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ...common.result import BaseVideoResult
 from ...utils.color_map import get_colormap
 from ...utils.io import VideoReader
-from ...common.result import BaseVideoResult
 
 
 class TopkVideoResult(BaseVideoResult):

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,16 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, List
-from scipy.ndimage import rotate
+from typing import Any, Dict, List, Optional, Union
+
 import numpy as np
+from scipy.ndimage import rotate
+
+from ....utils import logging
+from ...common.batch_sampler import ImageBatchSampler
+from ...common.reader import ReadImage
+from ...utils.hpi import HPIConfig
+from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 from .result import DocPreprocessorResult
-from ....utils import logging
-from ...common.reader import ReadImage
-from ...common.batch_sampler import ImageBatchSampler
-from ...utils.pp_option import PaddlePredictorOption
-from ...utils.hpi import HPIConfig
 
 
 class DocPreprocessorPipeline(BasePipeline):

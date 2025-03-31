@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,25 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os, sys
-from typing import Any, Dict, Optional, Union, Tuple, List
-import numpy as np
 import math
-import cv2
+from typing import Any, Dict, List, Optional, Tuple, Union
+
+import numpy as np
+
+from ....utils import logging
+from ...common.batch_sampler import ImageBatchSampler
+from ...common.reader import ReadImage
+from ...models.object_detection.result import DetResult
+from ...utils.hpi import HPIConfig
+from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 from ..components import CropByBoxes
-from .utils import get_neighbor_boxes_idx
-from .table_recognition_post_processing import get_table_recognition_res
-from .result import SingleTableRecognitionResult, TableRecognitionResult
-from ....utils import logging
-from ...utils.pp_option import PaddlePredictorOption
-from ...utils.hpi import HPIConfig
-from ...common.reader import ReadImage
-from ...common.batch_sampler import ImageBatchSampler
-from ..ocr.result import OCRResult
 from ..doc_preprocessor.result import DocPreprocessorResult
-
-from ...models.object_detection.result import DetResult
+from ..ocr.result import OCRResult
+from .result import SingleTableRecognitionResult, TableRecognitionResult
+from .table_recognition_post_processing import get_table_recognition_res
+from .utils import get_neighbor_boxes_idx
 
 
 class TableRecognitionPipeline(BasePipeline):

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,12 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import math
-from typing import Any, Dict, Optional
+
 import numpy as np
-from ..layout_parsing.utils import get_sub_regions_ocr_res
+
 from ..components import convert_points_to_boxes
-from .result import SingleTableRecognitionResult
+from ..layout_parsing.utils import get_sub_regions_ocr_res
 from ..ocr.result import OCRResult
+from .result import SingleTableRecognitionResult
 
 
 def get_ori_image_coordinate(x: int, y: int, box_list: list) -> list:
@@ -141,7 +142,7 @@ def compute_inter(rec1, rec2):
     inter_area = inter_width * inter_height
     rec2_area = (x2_2 - x1_2) * (y2_2 - y1_2)
     if rec2_area == 0:
-        return 0 
+        return 0
     iou = inter_area / rec2_area
     return iou
 
@@ -158,9 +159,11 @@ def match_table_and_ocr(cell_box_list, ocr_dt_boxes, table_cells_flag, row_start
         dict: matched dict, key is table index, value is ocr index
     """
     all_matched = []
-    for k in range(len(table_cells_flag)-1):
+    for k in range(len(table_cells_flag) - 1):
         matched = {}
-        for i, table_box in enumerate(cell_box_list[table_cells_flag[k]:table_cells_flag[k+1]]):
+        for i, table_box in enumerate(
+            cell_box_list[table_cells_flag[k] : table_cells_flag[k + 1]]
+        ):
             if len(table_box) == 8:
                 table_box = [
                     np.min(table_box[0::2]),
@@ -174,13 +177,13 @@ def match_table_and_ocr(cell_box_list, ocr_dt_boxes, table_cells_flag, row_start
                         matched[i] = [j]
                     else:
                         matched[i].append(j)
-        real_len=max(matched.keys())+1 if len(matched)!=0 else 0
-        if table_cells_flag[k+1] < row_start_index[k+1]:
-            for s in range(row_start_index[k+1]-table_cells_flag[k+1]):
-                matched[real_len+s] = []
-        elif table_cells_flag[k+1] > row_start_index[k+1]:
-            for s in range(table_cells_flag[k+1]-row_start_index[k+1]):
-                matched[real_len-1].append(matched[real_len+s])
+        real_len = max(matched.keys()) + 1 if len(matched) != 0 else 0
+        if table_cells_flag[k + 1] < row_start_index[k + 1]:
+            for s in range(row_start_index[k + 1] - table_cells_flag[k + 1]):
+                matched[real_len + s] = []
+        elif table_cells_flag[k + 1] > row_start_index[k + 1]:
+            for s in range(table_cells_flag[k + 1] - row_start_index[k + 1]):
+                matched[real_len - 1].append(matched[real_len + s])
         all_matched.append(matched)
     return all_matched
 
@@ -212,7 +215,7 @@ def get_html_result(
             if "<td></td>" == tag:
                 pred_html.extend("<td>")
             if td_index in matched_index.keys():
-                if len(matched_index[td_index])==0:
+                if len(matched_index[td_index]) == 0:
                     continue
                 b_with = False
                 if (
@@ -245,7 +248,10 @@ def get_html_result(
                 pred_html.append(tag)
             td_index += 1
             td_count += 1
-            if td_count>=table_cells_flag[matched_list_index+1] and matched_list_index<len(all_matched_index)-1:
+            if (
+                td_count >= table_cells_flag[matched_list_index + 1]
+                and matched_list_index < len(all_matched_index) - 1
+            ):
                 matched_list_index += 1
                 td_index = 0
         else:
@@ -299,15 +305,15 @@ def sort_table_cells_boxes(boxes):
 
 def convert_to_four_point_coordinates(boxes):
     """
-    Convert bounding boxes from [x1, y1, x2, y2] format to 
+    Convert bounding boxes from [x1, y1, x2, y2] format to
     [x1, y1, x2, y1, x2, y2, x1, y2] format.
 
     Parameters:
-    - boxes: A list of bounding boxes, each defined as a list of integers 
+    - boxes: A list of bounding boxes, each defined as a list of integers
              in the format [x1, y1, x2, y2].
 
     Returns:
-    - A list of bounding boxes, each converted to the format 
+    - A list of bounding boxes, each converted to the format
       [x1, y1, x2, y1, x2, y2, x1, y2].
     """
     # Initialize an empty list to store the converted bounding boxes
@@ -316,7 +322,7 @@ def convert_to_four_point_coordinates(boxes):
     # Loop over each box in the input list
     for box in boxes:
         x1, y1, x2, y2 = box
-        
+
         # Define the four corner points
         top_left = (x1, y1)
         top_right = (x2, y1)
@@ -325,10 +331,14 @@ def convert_to_four_point_coordinates(boxes):
 
         # Create a new list for the converted box
         converted_box = [
-            top_left[0], top_left[1],  # Top-left corner
-            top_right[0], top_right[1],  # Top-right corner
-            bottom_right[0], bottom_right[1],  # Bottom-right corner
-            bottom_left[0], bottom_left[1]   # Bottom-left corner
+            top_left[0],
+            top_left[1],  # Top-left corner
+            top_right[0],
+            top_right[1],  # Top-right corner
+            bottom_right[0],
+            bottom_right[1],  # Bottom-right corner
+            bottom_left[0],
+            bottom_left[1],  # Bottom-left corner
         ]
 
         # Append the converted box to the list
@@ -339,13 +349,13 @@ def convert_to_four_point_coordinates(boxes):
 
 def find_row_start_index(html_list):
     """
-        find the index of the first cell in each row
+    find the index of the first cell in each row
 
-        Args:
-            html_list (list): list for html results
+    Args:
+        html_list (list): list for html results
 
-        Returns:
-            row_start_indices (list): list for the index of the first cell in each row
+    Returns:
+        row_start_indices (list): list for the index of the first cell in each row
     """
     # Initialize an empty list to store the indices of row start positions
     row_start_indices = []
@@ -430,7 +440,7 @@ def get_table_recognition_res(
     img_shape = overall_ocr_res["doc_preprocessor_res"]["output_img"].shape[0:2]
 
     if len(table_cells_result) == 0 or len(table_ocr_pred["rec_boxes"]) == 0:
-        pred_html = ' '.join(table_structure_result)
+        pred_html = " ".join(table_structure_result)
         if len(table_cells_result) != 0:
             table_cells_result = convert_table_structure_pred_bbox(
                 table_cells_result, crop_start_point, img_shape
@@ -458,8 +468,12 @@ def get_table_recognition_res(
     table_cells_flag = map_and_get_max(table_cells_flag, row_start_index)
     table_cells_flag.append(len(table_cells_result))
     row_start_index.append(len(table_cells_result))
-    matched_index = match_table_and_ocr(table_cells_result, ocr_dt_boxes, table_cells_flag, table_cells_flag)
-    pred_html = get_html_result(matched_index, ocr_texts_res, table_structure_result, row_start_index)
+    matched_index = match_table_and_ocr(
+        table_cells_result, ocr_dt_boxes, table_cells_flag, table_cells_flag
+    )
+    pred_html = get_html_result(
+        matched_index, ocr_texts_res, table_structure_result, row_start_index
+    )
 
     single_img_res = {
         "cell_box_list": table_cells_result,

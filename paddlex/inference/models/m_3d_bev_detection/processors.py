@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,16 +14,12 @@
 
 
 import numbers
+
 import cv2
 import numpy as np
-from typing import Generic, List, Optional
-import lazy_paddle as paddle
 
-from ...utils.io import ImageReader
-from ....utils import logging
 from ...common.reader.det_3d_reader import Sample
 from ...utils.benchmark import benchmark
-
 
 cv2_interp_codes = {
     "nearest": cv2.INTER_NEAREST,

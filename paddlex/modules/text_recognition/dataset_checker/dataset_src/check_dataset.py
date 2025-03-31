@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,10 +18,8 @@ import os.path as osp
 from collections import defaultdict
 
 from PIL import Image, ImageOps
-import json
-import numpy as np
 
-from .....utils.errors import DatasetFileNotFoundError, CheckFailedError
+from .....utils.errors import CheckFailedError, DatasetFileNotFoundError
 
 
 def check(
@@ -35,7 +33,6 @@ def check(
         tags = ["train", "val"]
         delim = "\t"
         valid_num_parts = 2
-        max_recorded_sample_cnts = 50
         sample_cnts = dict()
         sample_paths = defaultdict(list)
         if dataset_type == "LaTeXOCRDataset":

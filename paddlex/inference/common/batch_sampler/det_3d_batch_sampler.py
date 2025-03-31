@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,18 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, List, Optional, Union
 import os
-import ast
-from pathlib import Path
-import numpy as np
 import pickle
 import tarfile
-
+from pathlib import Path
+from typing import Any, Dict, List, Union
 
 from ....utils import logging
-from ....utils.download import download
 from ....utils.cache import CACHE_DIR
+from ....utils.download import download
 from .base_batch_sampler import BaseBatchSampler
 
 

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,19 +14,20 @@
 
 import csv
 import functools
-from types import GeneratorType
+import inspect
 import time
 from pathlib import Path
-import inspect
+from types import GeneratorType
+
 import numpy as np
 from prettytable import PrettyTable
 
+from ...utils import logging
 from ...utils.flags import (
     INFER_BENCHMARK,
     INFER_BENCHMARK_OUTPUT_DIR,
     INFER_BENCHMARK_USE_CACHE_FOR_READ,
 )
-from ...utils import logging
 
 ENTRY_POINT_NAME = "_entry_point_"
 

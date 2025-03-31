@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,9 +13,9 @@
 # limitations under the License.
 
 from ast import literal_eval
+from typing import Dict, List, Literal, Optional, Tuple, Union
+
 from pydantic import TypeAdapter, ValidationError
-from functools import wraps
-from typing import Dict, List, Tuple, Union, Literal, Optional
 
 
 def custom_type(cli_expected_type):
@@ -294,7 +294,9 @@ PIPELINE_ARGUMENTS = {
         },
         {
             "name": "--layout_unclip_ratio",
-            "type": custom_type(Optional[Union[float, Tuple[float, float], Dict[int, Tuple]]]),
+            "type": custom_type(
+                Optional[Union[float, Tuple[float, float], Dict[int, Tuple]]]
+            ),
             "help": "Determines unclip ratio for layout detection boxes",
         },
         {
@@ -381,7 +383,9 @@ PIPELINE_ARGUMENTS = {
         },
         {
             "name": "--layout_unclip_ratio",
-            "type": custom_type(Optional[Union[float, Tuple[float, float], Dict[int, Tuple]]]),
+            "type": custom_type(
+                Optional[Union[float, Tuple[float, float], Dict[int, Tuple]]]
+            ),
             "help": "Determines unclip ratio for layout detection boxes",
         },
         {
@@ -498,7 +502,9 @@ PIPELINE_ARGUMENTS = {
         },
         {
             "name": "--layout_unclip_ratio",
-            "type": custom_type(Optional[Union[float, Tuple[float, float], Dict[int, Tuple]]]),
+            "type": custom_type(
+                Optional[Union[float, Tuple[float, float], Dict[int, Tuple]]]
+            ),
             "help": "Determines unclip ratio for layout detection boxes",
         },
         {
@@ -613,7 +619,9 @@ PIPELINE_ARGUMENTS = {
         },
         {
             "name": "--layout_unclip_ratio",
-            "type": custom_type(Optional[Union[float, Tuple[float, float], Dict[int, Tuple]]]),
+            "type": custom_type(
+                Optional[Union[float, Tuple[float, float], Dict[int, Tuple]]]
+            ),
             "help": "Sets the layout unclip ratio for layout detection.",
         },
         {

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,30 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .utils.lazy_loader import LazyLoader
 import sys
+
+from .utils.lazy_loader import LazyLoader
 
 paddle = LazyLoader("lazy_paddle", globals(), "paddle")
 sys.modules["lazy_paddle"] = paddle
 
 import os
 
-
 from . import version
-from .modules import (
-    build_dataset_checker,
-    build_trainer,
-    build_evaluater,
-)
+from .inference import create_pipeline, create_predictor
 from .model import create_model
-from .inference import create_predictor, create_pipeline
+from .modules import build_dataset_checker, build_evaluater, build_trainer
 
 
 def _initialize():
-    from .utils.logging import setup_logging
+    from . import repo_apis, repo_manager
     from .utils import flags
-    from . import repo_manager
-    from . import repo_apis
+    from .utils.logging import setup_logging
 
     __DIR__ = os.path.abspath(os.path.dirname(os.path.abspath(__file__)))
     repo_manager.set_parent_dirs(

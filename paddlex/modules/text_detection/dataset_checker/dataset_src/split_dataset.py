@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,8 +15,9 @@
 
 import glob
 import os.path
-import numpy as np
 import shutil
+
+import numpy as np
 
 from .....utils.file_interface import custom_open
 from .....utils.logging import info
@@ -71,7 +72,6 @@ def split_dataset(dataset_root, train_rate, val_rate):
     start = 0
     rate_list = [train_rate, val_rate]
     name_list = ["train", "val"]
-    separator = " "
     for i, name in enumerate(name_list):
         info("Creating {}.txt...".format(name))
 

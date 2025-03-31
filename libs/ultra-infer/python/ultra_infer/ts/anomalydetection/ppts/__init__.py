@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,16 +16,17 @@ from __future__ import absolute_import
 
 import os
 from copy import deepcopy
+from dataclasses import dataclass
+from typing import List
+
 import numpy as np
 import pandas as pd
-from typing import List
-from dataclasses import dataclass
 
-from .... import UltraInferModel, ModelFormat
-from ....py_only.ts import PyOnlyTSModel
-from ....utils.misc import load_config
+from .... import ModelFormat, UltraInferModel
 from ....py_only import PyOnlyProcessorChain
-from ....py_only.ts import PyOnlyTSModel, processors as P
+from ....py_only.ts import PyOnlyTSModel
+from ....py_only.ts import processors as P
+from ....utils.misc import load_config
 
 
 class PyOnlyAnomalyDetectionModel(PyOnlyTSModel):

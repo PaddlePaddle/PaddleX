@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,10 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ...common.result import BaseResult, StrMixin, JsonMixin
-import numpy as np
 import os
+
+import numpy as np
+
+from ...common.result import BaseResult
 from .visualizer_3d import Visualizer3D
+
 
 class BEV3DDetResult(BaseResult):
     """Base class for computer vision results."""
@@ -35,27 +38,27 @@ class BEV3DDetResult(BaseResult):
 
     def visualize(self, save_path: str, show: bool) -> None:
         # input point cloud
-        assert 'input_path' in self.keys(), 'input_path is not found in the data'
-        points = np.fromfile(self['input_path'], dtype=np.float32)
+        assert "input_path" in self.keys(), "input_path is not found in the data"
+        points = np.fromfile(self["input_path"], dtype=np.float32)
         points = points.reshape(-1, 5)
         points = points[:, :4]
 
         # detection result
         result = dict()
-        assert 'boxes_3d' in self.keys(), 'boxes_3d is not found in the data'
+        assert "boxes_3d" in self.keys(), "boxes_3d is not found in the data"
         result["bbox3d"] = self["boxes_3d"]
-        assert 'scores_3d' in self.keys(), 'scores_3d is not found in the data'
+        assert "scores_3d" in self.keys(), "scores_3d is not found in the data"
         result["scores"] = self["scores_3d"]
-        assert 'labels_3d' in self.keys(), 'labels_3d is not found in the data'
+        assert "labels_3d" in self.keys(), "labels_3d is not found in the data"
         result["labels"] = self["labels_3d"]
 
         if save_path is not None:
             # save result for local visualization
             if not os.path.exists(save_path):
                 os.makedirs(save_path)
-            np.save(os.path.join(save_path, 'results.npy'), result)
-            np.save(os.path.join(save_path, 'points.npy'), points)
-        
+            np.save(os.path.join(save_path, "results.npy"), result)
+            np.save(os.path.join(save_path, "points.npy"), points)
+
         if show:
             # visualize
             score_threshold = 0.25

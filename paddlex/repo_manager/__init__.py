@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@
 
 
 from .core import (
+    get_versions,
+    initialize,
+    is_initialized,
     set_parent_dirs,
     setup,
     wheel,
-    is_initialized,
-    initialize,
-    get_versions,
 )
 from .meta import get_all_repo_names as get_all_supported_repo_names

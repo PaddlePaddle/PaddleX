@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,19 +13,17 @@
 # limitations under the License.
 
 
-import os
-import shutil
 import json
+import os
 import random
-import xml.etree.ElementTree as ET
+import shutil
 
-import cv2
 import numpy as np
 from PIL import Image, ImageDraw
 from tqdm import tqdm
 
-from .....utils.file_interface import custom_open, write_json_file
 from .....utils.errors import ConvertFailedError
+from .....utils.file_interface import custom_open, write_json_file
 from .....utils.logging import info, warning
 
 
@@ -73,7 +71,7 @@ class Extension(object):
 def check_src_dataset(root_dir, dataset_type):
     """check src dataset format validity"""
     if dataset_type == "LabelMe":
-        anno_suffix = ".json"
+        pass
     else:
         raise ConvertFailedError(
             message=f"数据格式转换失败！不支持{dataset_type}格式数据集。当前仅支持 LabelMe 格式。"

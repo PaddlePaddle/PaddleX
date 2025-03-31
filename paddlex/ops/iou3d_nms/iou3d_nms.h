@@ -21,10 +21,12 @@
 
 #include <vector>
 
-std::vector<paddle::Tensor> boxes_overlap_bev_gpu(
-    const paddle::Tensor &boxes_a, const paddle::Tensor &boxes_b);
-std::vector<paddle::Tensor> boxes_iou_bev_gpu(
-    const paddle::Tensor &boxes_a_tensor, const paddle::Tensor &boxes_b_tensor);
+std::vector<paddle::Tensor>
+boxes_overlap_bev_gpu(const paddle::Tensor &boxes_a,
+                      const paddle::Tensor &boxes_b);
+std::vector<paddle::Tensor>
+boxes_iou_bev_gpu(const paddle::Tensor &boxes_a_tensor,
+                  const paddle::Tensor &boxes_b_tensor);
 std::vector<paddle::Tensor> nms_gpu(const paddle::Tensor &boxes,
                                     float nms_overlap_thresh);
 std::vector<paddle::Tensor> nms_normal_gpu(const paddle::Tensor &boxes,

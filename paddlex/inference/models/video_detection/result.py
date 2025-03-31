@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,16 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import random
+
 import cv2
 import numpy as np
-import random
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ...common.result import BaseVideoResult
 from ...utils.color_map import get_colormap
 from ...utils.io import VideoReader
-from ...common.result import BaseVideoResult
 
 
 class DetVideoResult(BaseVideoResult):
@@ -39,7 +40,7 @@ class DetVideoResult(BaseVideoResult):
 
         for i in range(len(video)):
             image = Image.fromarray(video[i].asnumpy())
-            image_size = image.size
+            image.size
             font_size = int(0.018 * int(image.width)) + 2
             font = ImageFont.truetype(
                 PINGFANG_FONT_FILE_PATH, font_size, encoding="utf-8"

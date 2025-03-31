@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,16 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+import copy
+
 import cv2
 import numpy as np
-import copy
-import PIL
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image
 
-from ...utils.color_map import get_colormap, font_colormap
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ...common.result import BaseCVResult, JsonMixin
+from ...utils.color_map import get_colormap
 from ..object_detection.result import draw_box
 
 
@@ -29,7 +27,6 @@ def draw_segm(im, masks, mask_info, alpha=0.7):
     """
     Draw segmentation on image
     """
-    mask_color_id = 0
     w_ratio = 0.4
     color_list = get_colormap(rgb=True)
     im = np.array(im).astype("float32")

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
 
 import numpy as np
 import pytest
-from paddlex.inference.results import SegResult
+from paddlex_hpi.models import SegPredictor
 from tests.models.base import BaseTestPredictor
 
-from paddlex_hpi.models import SegPredictor
+from paddlex.inference.results import SegResult
 
 MODEL_URL = "https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/tests/models/seg_model.zip"
 INPUT_DATA_URL = "https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/tests/models/seg_input.png"

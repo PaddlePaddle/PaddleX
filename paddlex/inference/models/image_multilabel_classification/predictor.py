@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,13 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Union, Dict, List
+from typing import Any, Dict, List, Union
+
 import numpy as np
 
-from .result import MLClassResult
-from .processors import MultiLabelThreshOutput
-from ..image_classification import ClasPredictor
 from ....modules.multilabel_classification.model_list import MODELS
+from ..image_classification import ClasPredictor
+from .processors import MultiLabelThreshOutput
+from .result import MLClassResult
 
 
 class MLClasPredictor(ClasPredictor):

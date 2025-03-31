@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,11 +15,10 @@
 import os
 import os.path as osp
 import random
-from PIL import Image, ImageOps
 from collections import defaultdict
 
+from .....utils.errors import CheckFailedError, DatasetFileNotFoundError
 from .....utils.file_interface import custom_open
-from .....utils.errors import DatasetFileNotFoundError, CheckFailedError
 
 
 def check(dataset_dir, output, sample_num=10):
@@ -30,7 +29,6 @@ def check(dataset_dir, output, sample_num=10):
         raise DatasetFileNotFoundError(file_path=dataset_dir)
 
     tags = ["train", "val"]
-    delim = " "
     valid_num_parts = 5
 
     sample_cnts = dict()
@@ -104,7 +102,7 @@ def check(dataset_dir, output, sample_num=10):
                         for label_line in label_lines:
                             label_info = label_line.strip().split(" ")
                             try:
-                                label = int(label_info[0])
+                                int(label_info[0])
                             except (ValueError, TypeError) as e:
                                 raise CheckFailedError(
                                     f"Ensure that the first number in each line in {label_info} should be int."

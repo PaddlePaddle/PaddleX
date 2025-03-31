@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,14 +14,12 @@
 
 from typing import Any, Dict, Optional, Union
 
-import numpy as np
-
-from ...utils.pp_option import PaddlePredictorOption
-from ...utils.hpi import HPIConfig
-from ...common.reader import ReadImage
 from ...common.batch_sampler import ImageBatchSampler
-from ..components import CropByBoxes, FaissIndexer, FaissBuilder, IndexData
+from ...common.reader import ReadImage
+from ...utils.hpi import HPIConfig
+from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
+from ..components import CropByBoxes, FaissBuilder, FaissIndexer
 from .result import ShiTuResult
 
 

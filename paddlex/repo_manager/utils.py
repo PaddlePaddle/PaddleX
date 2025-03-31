@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,18 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import sys
+import contextlib
 import json
+import os
 import platform
 import subprocess
-import contextlib
-from parsley import makeGrammar
+import sys
+
 import lazy_paddle as paddle
+from parsley import makeGrammar
 
-from ..utils.env import get_device_type
 from ..utils import logging
-
+from ..utils.env import get_device_type
 
 PLATFORM = platform.system()
 
@@ -128,14 +128,6 @@ def install_external_deps(repo_name, repo_root):
                     "your environment does not meet these requirements, so we will skip the installation of custom operators under PaddleDetection/ppdet/ext_ops, "
                     "which means you can not train the Rotated Object Detection models."
                 )
-
-
-def install_deps_using_pip():
-    """install requirements"""
-    current_file_path = os.path.dirname(os.path.abspath(__file__))
-    deps_path = os.path.join(current_file_path, "requirements.txt")
-    args = [sys.executable, "-m", "pip", "install", "-r", deps_path]
-    return _check_call(args)
 
 
 def clone_repo_using_git(url, branch=None):

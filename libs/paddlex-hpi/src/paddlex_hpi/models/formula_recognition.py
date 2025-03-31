@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
 
 from typing import Any, Dict, List
 
-import ultra_infer as ui
 import numpy as np
+import ultra_infer as ui
+from paddlex_hpi.models.base import CVPredictor
+
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
 from paddlex.inference.models.formula_recognition.result import FormulaRecResult
 from paddlex.modules.formula_recognition.model_list import MODELS
-
-from paddlex_hpi.models.base import CVPredictor
 
 
 class LaTeXOCRPredictor(CVPredictor):

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from paddlex.inference.results import BaseResult
+from paddlex_hpi.models import ShiTuRecPredictor
 from tests.models.base import BaseTestPredictor
 
-from paddlex_hpi.models import ShiTuRecPredictor
+from paddlex.inference.results import BaseResult
 
 MODEL_URL = "https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/tests/models/shitu_rec_model.zip"
 INPUT_DATA_URL = "https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/deploy/paddlex_hpi/tests/models/shitu_rec_input.jpg"

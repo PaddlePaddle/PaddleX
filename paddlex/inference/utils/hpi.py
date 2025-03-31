@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import platform
 from functools import lru_cache
 from os import PathLike
 from pathlib import Path
-from typing import Any, Dict, Final, List, Literal, Optional, Tuple, TypedDict, Union
+from typing import Any, Dict, List, Literal, Optional, Tuple, TypedDict, Union
 
 from pydantic import BaseModel, Field
 from typing_extensions import Annotated, TypeAlias

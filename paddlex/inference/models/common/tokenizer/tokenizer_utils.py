@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,33 +13,30 @@
 # limitations under the License.
 
 import bisect
+import functools
+import inspect
 import io
 import itertools
 import json
 import os
 import re
-import six
-import inspect
 import unicodedata
-import functools
 from collections import OrderedDict
 from dataclasses import asdict, dataclass
+from functools import lru_cache
 from typing import Any, Dict, List, Optional, Tuple, Union
 
+import lazy_paddle as paddle
 import numpy
 import numpy as np
-import lazy_paddle as paddle
+import six
 from jinja2 import Template
 from jinja2.exceptions import TemplateError, TemplateSyntaxError
 from jinja2.sandbox import ImmutableSandboxedEnvironment
 
-from .tokenizer_utils_base import CHAT_TEMPLATE_CONFIG_NAME
 from .....utils import logging
-
-from functools import lru_cache
-
-from .vocab import Vocab
 from .tokenizer_utils_base import (
+    CHAT_TEMPLATE_CONFIG_NAME,
     AddedToken,
     BatchEncoding,
     EncodedInput,
@@ -54,6 +51,7 @@ from .tokenizer_utils_base import (
     TruncationStrategy,
 )
 from .utils import convert_to_dict_message, fn_args_to_dict
+from .vocab import Vocab
 
 __all__ = [
     "ChatTemplate",

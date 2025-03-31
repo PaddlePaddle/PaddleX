@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,10 +15,11 @@
 import os
 import os.path as osp
 import random
-from PIL import Image, ImageOps
 from collections import defaultdict
 
-from .....utils.errors import DatasetFileNotFoundError, CheckFailedError
+from PIL import Image, ImageOps
+
+from .....utils.errors import CheckFailedError, DatasetFileNotFoundError
 from .utils.visualizer import draw_label
 
 
@@ -35,9 +36,7 @@ def check(dataset_dir, output, sample_num=10, dataset_type="ShiTuRec"):
     valid_num_parts = 2
 
     sample_cnts = dict()
-    label_map_dict = dict()
     sample_paths = defaultdict(list)
-    labels = []
 
     for tag in tags:
         file_list = osp.join(dataset_dir, f"{tag}.txt")

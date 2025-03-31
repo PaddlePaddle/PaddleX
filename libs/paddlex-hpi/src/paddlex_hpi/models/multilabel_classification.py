@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,21 +13,21 @@
 # limitations under the License.
 
 import os
+import tempfile
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-import ultra_infer as ui
 import numpy as np
-from pathlib import Path
-import tempfile
+import ultra_infer as ui
 import yaml
+from paddlex_hpi.models.base import CVPredictor, HPIParams
+
 from paddlex.inference.common.batch_sampler import ImageBatchSampler
 from paddlex.inference.models.image_multilabel_classification.result import (
     MLClassResult,
 )
 from paddlex.modules.multilabel_classification.model_list import MODELS
 from paddlex.utils import logging
-
-from paddlex_hpi.models.base import CVPredictor, HPIParams
 
 
 class MLClasPredictor(CVPredictor):

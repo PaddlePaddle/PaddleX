@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,10 +15,9 @@
 
 import os
 import sys
-import json
 import traceback
-from .flags import DEBUG
-from .file_interface import custom_open, write_json_file
+
+from .file_interface import write_json_file
 
 
 def try_except_decorator(func):
@@ -29,7 +28,7 @@ def try_except_decorator(func):
             result = func(self, *args, **kwargs)
             if result:
                 save_result(True, self._mode, self._output, result_dict=result)
-        except Exception as e:
+        except Exception:
             exc_type, exc_value, exc_tb = sys.exc_info()
             save_result(
                 False,

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
 
 
 from pathlib import Path
-from ...base import BaseDatasetChecker
-from .dataset_src import check, split_dataset, deep_analyse, convert
 
+from ...base import BaseDatasetChecker
 from ..model_list import MODELS
+from .dataset_src import check, convert, deep_analyse, split_dataset
 
 
 class FormulaRecDatasetChecker(BaseDatasetChecker):

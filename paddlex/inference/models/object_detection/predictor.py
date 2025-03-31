@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,14 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, List, Sequence, Optional, Union, Tuple
+from typing import Any, List, Optional, Sequence, Tuple, Union
 
 import numpy as np
 
-from ....utils.func_register import FuncRegister
 from ....modules.object_detection.model_list import MODELS
+from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
-
 from ..base import BasePredictor
 from .processors import (
     DetPad,

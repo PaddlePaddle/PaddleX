@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,20 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, List, Tuple
-import numpy as np
-from ..base import BasePipeline
-from .utils import get_sub_regions_ocr_res, sorted_layout_boxes
-from ..components import CropByBoxes
-from .result import LayoutParsingResult
-from ....utils import logging
-from ...utils.pp_option import PaddlePredictorOption
-from ...utils.hpi import HPIConfig
-from ...common.reader import ReadImage
-from ...common.batch_sampler import ImageBatchSampler
-from ..ocr.result import OCRResult
+from typing import Any, Dict, List, Optional, Tuple, Union
 
+import numpy as np
+
+from ....utils import logging
+from ...common.batch_sampler import ImageBatchSampler
+from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
+from ...utils.hpi import HPIConfig
+from ...utils.pp_option import PaddlePredictorOption
+from ..base import BasePipeline
+from ..components import CropByBoxes
+from ..ocr.result import OCRResult
+from .result import LayoutParsingResult
+from .utils import get_sub_regions_ocr_res, sorted_layout_boxes
 
 
 class LayoutParsingPipeline(BasePipeline):

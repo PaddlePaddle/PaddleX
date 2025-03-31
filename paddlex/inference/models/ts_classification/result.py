@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any
 import io
-import pandas as pd
+from typing import Any
+
 import matplotlib.pyplot as plt
 from PIL import Image
 
@@ -34,16 +34,21 @@ def visualize(predicted_label, input_ts, target_cols):
     """
     # 设置图形大小
     plt.figure(figsize=(12, 6))
-    input_ts_columns = input_ts.columns
+    input_ts.columns
     input_ts.index = input_ts.index.astype(str)
     length = len(input_ts)
-    value = predicted_label.loc[0, 'classid']
-    plt.plot(input_ts.index, input_ts[target_cols[0]], label=f'Predicted classid: {value}', color='blue')
+    value = predicted_label.loc[0, "classid"]
+    plt.plot(
+        input_ts.index,
+        input_ts[target_cols[0]],
+        label=f"Predicted classid: {value}",
+        color="blue",
+    )
 
     # 设置图形标题和标签
-    plt.title('Time Series input_ts with Predicted Labels')
-    plt.xlabel('Time')
-    plt.ylabel('Value')
+    plt.title("Time Series input_ts with Predicted Labels")
+    plt.xlabel("Time")
+    plt.ylabel("Value")
     plt.legend()
     plt.grid(True)
     plt.xticks(ticks=range(0, length, 10))
@@ -51,7 +56,7 @@ def visualize(predicted_label, input_ts, target_cols):
 
     # 保存图像到内存
     buf = io.BytesIO()
-    plt.savefig(buf, bbox_inches='tight')
+    plt.savefig(buf, bbox_inches="tight")
     buf.seek(0)
     plt.close()
     image = Image.open(buf)
@@ -67,7 +72,7 @@ class TSClsResult(BaseTSResult):
         classification = self["classification"]
         ts_input = self["input_ts_data"]
         return {"res": visualize(classification, ts_input, self["target_cols"])}
-    
+
     def _to_csv(self) -> Any:
         """
         Converts the classification results to a CSV format.

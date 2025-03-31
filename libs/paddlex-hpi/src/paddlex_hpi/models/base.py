@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,28 +15,19 @@
 import abc
 from os import PathLike
 from pathlib import Path
-from typing import (
-    Any,
-    Dict,
-    Final,
-    Iterator,
-    Optional,
-    TypedDict,
-    Union,
-)
+from typing import Any, Dict, Final, Iterator, Optional, TypedDict, Union
 
 import ultra_infer as ui
+from paddlex_hpi._config import HPIConfig
+from typing_extensions import assert_never
 from ultra_infer.model import BaseUltraInferModel
+
 from paddlex.inference.common.reader import ReadImage, ReadTS
 from paddlex.inference.models import BasePredictor
 from paddlex.inference.utils.new_ir_blocklist import NEWIR_BLOCKLIST
 from paddlex.utils import device as device_helper
 from paddlex.utils import logging
 from paddlex.utils.subclass_register import AutoRegisterABCMetaClass
-from typing_extensions import assert_never
-
-from paddlex_hpi._config import HPIConfig
-from paddlex_hpi._utils.typing import Backend
 
 HPI_CONFIG_KEY: Final[str] = "Hpi"
 

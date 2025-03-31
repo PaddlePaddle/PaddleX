@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,16 +15,16 @@
 import os
 import warnings
 from pathlib import Path
-from typing import Any, Dict, Literal, List, Mapping, Optional, Tuple, Type, Union
+from typing import Any, Dict, List, Literal, Mapping, Optional, Tuple, Type, Union
 
 import ultra_infer as ui
-from paddlex.utils import logging
+from paddlex_hpi._model_info import get_model_info
+from paddlex_hpi._strategy import SelectFirstStrategy, SelectSpecificStrategy
+from paddlex_hpi._utils.typing import Backend, DeviceType
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing_extensions import Annotated, TypeAlias, TypedDict, assert_never
 
-from paddlex_hpi._model_info import get_model_info
-from paddlex_hpi._strategy import SelectSpecificStrategy, SelectFirstStrategy
-from paddlex_hpi._utils.typing import Backend, DeviceType
+from paddlex.utils import logging
 
 
 class _BackendConfig(BaseModel):

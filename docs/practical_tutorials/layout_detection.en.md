@@ -222,7 +222,7 @@ SubModules:
   ObjectDetection:
     module_name: object_detection
     model_name: PP-DocLayout-L  # Modify it to the layout region detection model name from the model list in the previous text.
-    model_dir: null 
+    model_dir: null
     batch_size: 1
     img_size: null
     threshold: null
@@ -272,7 +272,7 @@ The above command-line method allows you to quickly experience and check the res
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 
 output = pipeline.predict("layout_test_0.jpg", threshold=0.5)
 for res in output:
@@ -304,7 +304,7 @@ Before running the following code, please download the [sample image](https://pa
 from paddlex import create_pipeline
 
 pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") # 阈值参数不设置时，默认为0.5
-output = pipeline.predict("layout_test_2.jpg") 
+output = pipeline.predict("layout_test_2.jpg")
 for res in output:
     res.print()
     res.save_to_img("./output/")
@@ -318,7 +318,7 @@ In this case, you can enable `threshold={2: 0.6}` to set the detection score thr
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 output = pipeline.predict("layout_test_2.jpg", threshold={2: 0.6}) # To set the detection score threshold specifically for category 2 (text) to 0.6 while keeping the default threshold of 0.5 for other categories
 for res in output:
     res.print()
@@ -350,7 +350,7 @@ When the overlapping box filtering feature is not enabled, you may notice overla
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 # output = pipeline.predict("layout_test_2.jpg", threshold=0.5)  # Disabling the overlapping box filtering feature
 output = pipeline.predict("layout_test_2.jpg", threshold=0.5, layout_nms=True)  # Enabling the overlapping box filtering feature
 for res in output:
@@ -380,7 +380,7 @@ The `layout_unclip_ratio` parameter allows you to adjust the side length of the 
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 # output = pipeline.predict("layout_test_2.jpg",  threshold={2: 0.6})  # Without adjusting the scaling factor of the detection box
 output = pipeline.predict("layout_test_2.jpg",  threshold={2: 0.6}, layout_unclip_ratio=(1.0, 1.05))  # Adjust the scaling factor of the height of the detection box to 1.05.
 for res in output:
@@ -411,8 +411,8 @@ The visualization results in the saved directory are as follows. It can be obser
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
-output = pipeline.predict("PMC4836298_00004.jpg") # not setting 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
+output = pipeline.predict("PMC4836298_00004.jpg") # not setting
 # output = pipeline.predict("PMC4836298_00004.jpg", layout_merge_bboxes_mode="small") # 'small' mode
 # output = pipeline.predict("PMC4836298_00004.jpg", layout_merge_bboxes_mode="large") # 'large' mode
 for res in output:
@@ -454,7 +454,7 @@ class LayoutOCRPipeline():
     def __init__(self):
         self.layout_pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")  # Load the custom configuration file mentioned above to create a layout detection pipeline.
         self.ocr_pipeline = create_pipeline(pipeline="OCR") # init OCR pipeline
-        
+
     def crop_table(self, layout_res, layout_name):
         img_path = layout_res["input_path"]
         img = cv2.imread(img_path)
@@ -466,7 +466,7 @@ class LayoutOCRPipeline():
             table_img = img[ymin:ymax, xmin:xmax]
             table_img_list.append(table_img)
         return table_img_list
-    
+
     def predict(self, data, layout_name):
         for layout_res in self.layout_pipeline.predict(data):  # do layout detection
             final_res = {}
@@ -474,8 +474,8 @@ class LayoutOCRPipeline():
             if len(crop_img_list) == 0:
                 continue
             ocr_res = list(self.ocr_pipeline.predict(    # do OCR
-                                                input=crop_img_list, 
-                                                use_doc_orientation_classify=False, 
+                                                input=crop_img_list,
+                                                use_doc_orientation_classify=False,
                                                 use_doc_unwarping=False,
                                                 use_textline_orientation=False
                                                 ))
@@ -510,7 +510,7 @@ If the layout detection performance meets your requirements for inference speed 
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml") 
+pipeline = create_pipeline(pipeline="./my_path/object_detection.yaml")
 output = pipeline.predict("layout_test_2.jpg", threshold=0.5, layout_nms=True, layout_merge_bboxes_mode="large")
 for res in output:
     res.print()
@@ -535,7 +535,7 @@ tar -xvf paddlex_hps_object_detection_sdk.tar.gz
 
 - In the "Open Source Model Pipeline Deployment Serial Number Consultation and Acquisition" section of the [PaddlePaddle AI Studio Galaxy Community - AI Learning and Training Community](https://aistudio.baidu.com/paddlex/commercialization), select "Get Now," as shown in the image below:
 
-<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-1.png"> 
+<img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/main/images/pipeline_deploy/image-1.png">
 
 Select the target detection pipeline and click "Get." Then, you can find the acquired serial number in the "Open Source Pipeline Deployment SDK Serial Number Management" section at the bottom of the page:
 
@@ -622,5 +622,3 @@ The `client.py` script in the `client` directory contains examples of service ca
 * Edge Deployment: Edge deployment is a method that places computing and data processing capabilities directly on user devices, allowing devices to process data without relying on remote servers. PaddleX supports deploying models on edge devices such as Android. For detailed edge deployment procedures, please refer to the [PaddleX Edge Deployment Guide](../pipeline_deploy/edge_deploy.en.md).
 
 You can choose the appropriate method to deploy the model pipeline based on your needs, and then proceed with the subsequent integration of AI applications.
-
-

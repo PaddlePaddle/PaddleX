@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,10 @@
 # limitations under the License.
 # This file refered to github.com/onnx/onnx.git
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-import shutil
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
+import shutil
 
 TOP_DIR = os.path.realpath(os.path.dirname(__file__))
 TOP_DIR = os.path.split(TOP_DIR)[0]
@@ -28,22 +26,22 @@ wheel_name = os.getenv("WHEEL_NAME", "ultra-infer-python")
 if not os.path.exists(PACKAGE_NAME):
     shutil.copytree("ultra_infer", PACKAGE_NAME)
 
-from distutils.spawn import find_executable
-from distutils import sysconfig, log
-import setuptools
-import setuptools.command.build_py
-import setuptools.command.develop
-import setuptools.command.build_ext
-
-from collections import namedtuple
-from contextlib import contextmanager
 import glob
+import multiprocessing
+import platform
 import shlex
 import subprocess
 import sys
-import platform
+from collections import namedtuple
+from contextlib import contextmanager
+from distutils import log, sysconfig
+from distutils.spawn import find_executable
 from textwrap import dedent
-import multiprocessing
+
+import setuptools
+import setuptools.command.build_ext
+import setuptools.command.build_py
+import setuptools.command.develop
 
 with open(os.path.join(TOP_DIR, "python", "requirements.txt")) as fin:
     REQUIRED_PACKAGES = fin.read()
@@ -117,7 +115,7 @@ setup_configs["BUILD_ON_JETSON"] = os.getenv("BUILD_ON_JETSON", "OFF")
 setup_configs["BUILD_PADDLE2ONNX"] = os.getenv("BUILD_PADDLE2ONNX", "OFF")
 
 if setup_configs["RKNN2_TARGET_SOC"] != "" or setup_configs["BUILD_ON_JETSON"] != "OFF":
-    REQUIRED_PACKAGES = REQUIRED_PACKAGES.replace("opencv-python", "")
+    REQUIRED_PACKAGES = REQUIRED_PACKAGES.replace("opencv-contrib-python", "")
 
 if wheel_name == "ultra-infer-python":
     if setup_configs["WITH_GPU"] == "ON" or setup_configs["BUILD_ON_JETSON"] == "ON":

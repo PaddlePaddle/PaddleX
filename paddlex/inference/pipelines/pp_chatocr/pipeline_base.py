@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,10 +13,11 @@
 # limitations under the License.
 
 from typing import Any, Dict, Optional, Union
-from ..base import BasePipeline
+
 from ....utils import logging
-from ...utils.pp_option import PaddlePredictorOption
 from ...utils.hpi import HPIConfig
+from ...utils.pp_option import PaddlePredictorOption
+from ..base import BasePipeline
 
 
 class PP_ChatOCR_Pipeline(BasePipeline):
