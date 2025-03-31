@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,17 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
+from __future__ import division, print_function, unicode_literals
 
 import copy
-import numpy as np
 import json
-import copy
+from collections import defaultdict
 from copy import deepcopy
 
-from collections import defaultdict
+import numpy as np
 
 
 def order_by_tbyx(ocr_info):
@@ -78,9 +75,9 @@ class VQATokenLabelEncode(object):
     ):
         super(VQATokenLabelEncode, self).__init__()
         from paddlenlp.transformers import (
-            LayoutXLMTokenizer,
             LayoutLMTokenizer,
             LayoutLMv2Tokenizer,
+            LayoutXLMTokenizer,
         )
 
         tokenizer_dict = {

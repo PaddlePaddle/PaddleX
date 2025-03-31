@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,33 +13,30 @@
 # limitations under the License.
 
 import numpy as np
+
+from ....modules.formula_recognition.model_list import MODELS
 from ....utils import logging
 from ....utils.func_register import FuncRegister
-from ....modules.formula_recognition.model_list import MODELS
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..common import (
-    StaticInfer,
-)
-from ..base import BasicPredictor
+from ..base import BasePredictor
 from .processors import (
-    MinMaxResize,
-    LatexTestTransform,
     LatexImageFormat,
     LaTeXOCRDecode,
+    LatexTestTransform,
+    MinMaxResize,
     NormalizeImage,
     ToBatch,
-    UniMERNetImgDecode,
     UniMERNetDecode,
-    UniMERNetTestTransform,
     UniMERNetImageFormat,
+    UniMERNetImgDecode,
+    UniMERNetTestTransform,
 )
-
 from .result import FormulaRecResult
 
 
-class FormulaRecPredictor(BasicPredictor):
-    """FormulaRecPredictor that inherits from BasicPredictor."""
+class FormulaRecPredictor(BasePredictor):
+    """FormulaRecPredictor that inherits from BasePredictor."""
 
     entities = MODELS
 
@@ -84,11 +81,7 @@ class FormulaRecPredictor(BasicPredictor):
                 pre_tfs[name] = op
         pre_tfs["ToBatch"] = ToBatch()
 
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         post_op = self.build_postprocess(**self.config["PostProcess"])
         return pre_tfs, infer, post_op

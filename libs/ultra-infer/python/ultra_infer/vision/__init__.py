@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,24 +13,26 @@
 # limitations under the License.
 from __future__ import absolute_import
 
-from . import detection
-from . import classification
-from . import segmentation
-from . import tracking
-from . import keypointdetection
-from . import matting
-from . import facedet
-from . import facealign
-from . import faceid
-from . import ocr
-from . import headpose
-from . import sr
-from . import evaluation
-from . import generation
-from . import perception
+from .. import C
+from . import (
+    classification,
+    detection,
+    evaluation,
+    facealign,
+    facedet,
+    faceid,
+    generation,
+    headpose,
+    keypointdetection,
+    matting,
+    ocr,
+    perception,
+    segmentation,
+    sr,
+    tracking,
+)
 from .utils import fd_result_to_json
 from .visualize import *
-from .. import C
 
 
 def enable_flycv():

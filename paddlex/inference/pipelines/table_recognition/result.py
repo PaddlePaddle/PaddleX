@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-from typing import Dict
-from pathlib import Path
-from PIL import Image, ImageDraw
-import numpy as np
-import cv2
 import copy
-from ...common.result import BaseCVResult, HtmlMixin, XlsxMixin, StrMixin, JsonMixin
+from pathlib import Path
+from typing import Dict
+
+import numpy as np
+from PIL import Image, ImageDraw
+
+from ...common.result import BaseCVResult, HtmlMixin, JsonMixin, XlsxMixin
 
 
 class SingleTableRecognitionResult(BaseCVResult, HtmlMixin, XlsxMixin):
@@ -96,7 +96,7 @@ class TableRecognitionResult(BaseCVResult, HtmlMixin, XlsxMixin):
         super().__init__(data)
         HtmlMixin.__init__(self)
         XlsxMixin.__init__(self)
-    
+
     def _get_input_fn(self):
         fn = super()._get_input_fn()
         if (page_idx := self["page_index"]) is not None:
@@ -198,7 +198,9 @@ class TableRecognitionResult(BaseCVResult, HtmlMixin, XlsxMixin):
             table_region_id = table_res["table_region_id"]
             key = f"table_{table_region_id}"
             res_html_dict[key] = table_res.html["pred"]
-            res_html_dict[key] = res_html_dict[key].replace("<table>", '<table border="1">')
+            res_html_dict[key] = res_html_dict[key].replace(
+                "<table>", '<table border="1">'
+            )
         return res_html_dict
 
     def _to_xlsx(self) -> Dict[str, str]:

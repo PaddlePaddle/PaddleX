@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,24 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os, sys
-from typing import Any, Dict, Optional, List
-import cv2
-import PIL
-import fitz
 import copy
 import math
-import random
-import tempfile
+import os
 import subprocess
-import numpy as np
+import tempfile
 from pathlib import Path
+from typing import List, Optional
+
+import cv2
+import fitz
+import numpy as np
+import PIL
 from PIL import Image, ImageDraw, ImageFont
 
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
 from ....utils import logging
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH
 from ....utils.file_interface import custom_open
+from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ...common.result import BaseCVResult, JsonMixin
 
 
 class FormulaRecResult(BaseCVResult):
@@ -199,7 +199,7 @@ def generate_pdf_file(
         if is_debug:
             subprocess.check_call(command, shell=True)
         else:
-            devNull = custom_open(os.devnull, "w")
+            custom_open(os.devnull, "w")
             subprocess.check_call(
                 command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True
             )

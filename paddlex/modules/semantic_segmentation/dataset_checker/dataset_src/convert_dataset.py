@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-import glob
 import json
 import os
 import os.path as osp
@@ -23,8 +22,8 @@ import cv2
 import numpy as np
 from PIL import Image, ImageDraw
 
-from .....utils.file_interface import custom_open
 from .....utils import logging
+from .....utils.file_interface import custom_open
 
 
 def convert_dataset(dataset_type, input_dir):

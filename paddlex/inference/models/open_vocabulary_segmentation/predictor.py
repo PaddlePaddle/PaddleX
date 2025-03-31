@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,21 +13,18 @@
 # limitations under the License.
 
 
-from typing import Any, Union, Dict, List, Tuple, Optional, Callable
-import numpy as np
-import inspect
+from typing import Any, Dict, List
 
-from ....utils.func_register import FuncRegister
 from ....modules.open_vocabulary_segmentation.model_list import MODELS
+from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
+from ..base import BasePredictor
 from .processors import SAMProcessor
-from ..common import StaticInfer
-from ..base import BasicPredictor
 from .results import SAMSegResult
 
 
-class OVSegPredictor(BasicPredictor):
+class OVSegPredictor(BasePredictor):
 
     entities = MODELS
 
@@ -62,11 +59,7 @@ class OVSegPredictor(BasicPredictor):
                 pre_ops.append(op)
 
         # build infer
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         # build model specific processor, it's required for a OV model.
         processor_cfg = self.config["Processor"]

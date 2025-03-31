@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,38 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Union, Dict, List, Tuple, Iterator
 import shutil
 import tempfile
-from importlib import import_module
+from typing import Any, Dict, Iterator, List, Tuple
+
 import lazy_paddle
 
+from ....modules.m_3d_bev_detection.model_list import MODELS
 from ....utils import logging
 from ....utils.func_register import FuncRegister
-
-module_3d_bev_detection = import_module(".3d_bev_detection", "paddlex.modules")
-module_3d_model_list = getattr(module_3d_bev_detection, "model_list")
-MODELS = getattr(module_3d_model_list, "MODELS")
 from ...common.batch_sampler import Det3DBatchSampler
 from ...common.reader import ReadNuscenesData
-from ..common import StaticInfer
-from ..base import BasicPredictor
+from ..base import BasePredictor
 from ..base.predictor.base_predictor import PredictionWrap
 from .processors import (
+    GetInferInput,
+    LoadMultiViewImageFromFiles,
     LoadPointsFromFile,
     LoadPointsFromMultiSweeps,
-    LoadMultiViewImageFromFiles,
-    ResizeImage,
     NormalizeImage,
     PadImage,
+    ResizeImage,
     SampleFilterByKey,
-    GetInferInput,
 )
 from .result import BEV3DDetResult
 
 
-class BEVDet3DPredictor(BasicPredictor):
-    """BEVDet3DPredictor that inherits from BasicPredictor."""
+class BEVDet3DPredictor(BasePredictor):
+    """BEVDet3DPredictor that inherits from BasePredictor."""
 
     entities = MODELS
 
@@ -90,8 +86,8 @@ class BEVDet3DPredictor(BasicPredictor):
             lazy_paddle.is_compiled_with_cuda()
             and not lazy_paddle.is_compiled_with_rocm()
         ):
-            from ....ops.voxelize import hard_voxelize
-            from ....ops.iou3d_nms import nms_gpu
+            from ....ops.iou3d_nms import nms_gpu  # noqa: F401
+            from ....ops.voxelize import hard_voxelize  # noqa: F401
         else:
             logging.error("3D BEVFusion custom ops only support GPU platform!")
 
@@ -105,11 +101,7 @@ class BEVDet3DPredictor(BasicPredictor):
                 pre_tfs[name] = op
         pre_tfs["GetInferInput"] = GetInferInput()
 
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         return pre_tfs, infer
 

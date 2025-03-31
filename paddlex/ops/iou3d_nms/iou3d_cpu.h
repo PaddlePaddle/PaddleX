@@ -21,7 +21,8 @@
 
 #include <vector>
 
-std::vector<paddle::Tensor> boxes_iou_bev_cpu(
-    const paddle::Tensor& boxes_a_tensor, const paddle::Tensor& boxes_b_tensor);
+std::vector<paddle::Tensor>
+boxes_iou_bev_cpu(const paddle::Tensor &boxes_a_tensor,
+                  const paddle::Tensor &boxes_b_tensor);
 
 #endif

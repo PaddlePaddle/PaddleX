@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,12 @@
 # limitations under the License.
 
 
-import os
 import glob
 import itertools
+import os
 from pathlib import Path
 
-from setuptools import find_packages
-from setuptools import setup
+from setuptools import find_packages, setup
 
 
 def readme():
@@ -93,16 +92,16 @@ def packages_and_package_data():
     pkg_data.append("inference/pipelines/ppchatocrv3/ch_prompt.yaml")
     pkg_data.extend(pipeline_config)
     pkg_data.append(".version")
-    pkg_data.append("utils/fonts/PingFang-SC-Regular.ttf")
-    pkg_data.append("repo_manager/requirements.txt")
     pkg_data.append("serving_requirements.txt")
     pkg_data.append("paddle2onnx_requirements.txt")
     pkg_data.append("hpip_links.html")
-    ops_file_dir = 'paddlex/ops'
-    ops_file_types = ['h', 'hpp', 'cpp', 'cc', 'cu']
+    pkg_data.append("inference/utils/hpi_model_info_collection.json")
+    ops_file_dir = "paddlex/ops"
+    ops_file_types = ["h", "hpp", "cpp", "cc", "cu"]
     return pkgs, {
         "paddlex.ops": get_data_files(ops_file_dir, ops_file_types),
-        "paddlex": pkg_data}
+        "paddlex": pkg_data,
+    }
 
 
 if __name__ == "__main__":
@@ -113,6 +112,7 @@ if __name__ == "__main__":
         version=version(),
         description=("Low-code development tool based on PaddlePaddle."),
         long_description=readme(),
+        long_description_content_type="text/markdown",
         author="PaddlePaddle Authors",
         author_email="",
         install_requires=dependencies(),
@@ -137,6 +137,8 @@ if __name__ == "__main__":
             "Programming Language :: Python :: 3.8",
             "Programming Language :: Python :: 3.9",
             "Programming Language :: Python :: 3.10",
+            "Programming Language :: Python :: 3.11",
+            "Programming Language :: Python :: 3.12",
             "Topic :: Scientific/Engineering",
             "Topic :: Scientific/Engineering :: Mathematics",
             "Topic :: Scientific/Engineering :: Artificial Intelligence",

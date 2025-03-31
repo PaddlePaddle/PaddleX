@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -41,6 +41,10 @@ def is_built_with_poros() ->bool:
 
 def is_built_with_openvino() ->bool:
     return True if "@ENABLE_OPENVINO_BACKEND@" == "ON" else False
+
+
+def is_built_with_om() ->bool:
+    return True if "@ENABLE_OM_BACKEND@" == "ON" else False
 
 
 def get_default_cuda_directory() -> str:

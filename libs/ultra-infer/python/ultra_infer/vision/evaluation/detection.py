@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import numpy as np
-import copy
 import collections
+import copy
 import math
 
 
@@ -27,11 +26,12 @@ def eval_detection(
     plot=False,
     batch_size=1,
 ):
-    from .utils import CocoDetection
-    from .utils import COCOMetric
+    import time
+
     import cv2
     from tqdm import trange
-    import time
+
+    from .utils import CocoDetection, COCOMetric
 
     if conf_threshold is not None or nms_iou_threshold is not None:
         assert (

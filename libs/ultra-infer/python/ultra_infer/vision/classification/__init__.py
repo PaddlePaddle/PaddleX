@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,15 @@
 # limitations under the License.
 from __future__ import absolute_import
 
+from .contrib.resnet import ResNet
 from .contrib.yolov5cls import YOLOv5Cls
 from .ppcls import *
-from .ppshitu import PPShiTuV2Detector
-from .ppshitu import PPShiTuV2Recognizer
-from .ppshitu import PPShiTuV2RecognizerPreprocessor
-from .ppshitu import PPShiTuV2RecognizerPostprocessor
-from .contrib.resnet import ResNet
+from .ppshitu import (
+    PPShiTuV2Detector,
+    PPShiTuV2Recognizer,
+    PPShiTuV2RecognizerPostprocessor,
+    PPShiTuV2RecognizerPreprocessor,
+)
 
 PPLCNet = PaddleClasModel
 PPLCNetv2 = PaddleClasModel

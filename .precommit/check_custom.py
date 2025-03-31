@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,9 @@ import os
 import re
 import sys
 
-LICENSE_TEXT = """# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+YEAR_PATTERN = r"(?:20\d\d)"
+LICENSE_TEXT = re.escape(
+    """# Copyright (c) <YEAR_PATTERN> PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,6 +32,7 @@ LICENSE_TEXT = """# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
+).replace("<YEAR_PATTERN>", YEAR_PATTERN)
 
 
 def check(file_path):
@@ -38,7 +41,7 @@ def check(file_path):
     # Exclude shebang line
     if content.startswith("#!"):
         content = content[content.index("\n") + 1 :]
-    if not content.startswith(LICENSE_TEXT):
+    if not re.match(LICENSE_TEXT, content):
         print(f"License header missing in {file_path}")
         return False
     if "paddlex" in file_path.split(os.sep):

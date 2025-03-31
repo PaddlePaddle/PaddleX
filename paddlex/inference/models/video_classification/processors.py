@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,17 +13,11 @@
 # limitations under the License.
 
 
-import os
-import os.path as osp
-from typing import List, Sequence, Union, Optional, Tuple
+from typing import List, Optional, Sequence, Tuple, Union
 
-import re
-import numpy as np
 import cv2
-import math
-import json
-import tempfile
 import lazy_paddle
+import numpy as np
 
 from ...utils.benchmark import benchmark
 

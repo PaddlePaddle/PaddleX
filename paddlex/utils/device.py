@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,19 +13,19 @@
 # limitations under the License.
 
 import os
-import GPUtil
 
+import GPUtil
 import lazy_paddle as paddle
+
 from . import logging
-from .flags import DISABLE_DEV_MODEL_WL
-from .errors import raise_unsupported_device_error
 from .custom_device_whitelist import (
     DCU_WHITELIST,
+    GCU_WHITELIST,
     MLU_WHITELIST,
     NPU_WHITELIST,
     XPU_WHITELIST,
-    GCU_WHITELIST,
 )
+from .flags import DISABLE_DEV_MODEL_WL
 
 SUPPORTED_DEVICE_TYPE = ["cpu", "gpu", "xpu", "npu", "mlu", "gcu", "dcu"]
 

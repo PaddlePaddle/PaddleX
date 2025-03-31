@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,15 +16,14 @@ import copy
 import io
 import json
 import os
-
 import warnings
 from collections import OrderedDict, UserDict
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, NamedTuple, Optional, Sequence, Tuple, Union
 
-import numpy as np
 import lazy_paddle as paddle
+import numpy as np
 
 from .....utils import logging
 
@@ -91,8 +90,6 @@ class AddedToken:
 @dataclass
 class FastEncoding:
     """This is dummy class reserved for fast tokenizer"""
-
-    pass
 
 
 class ExplicitEnum(Enum):
@@ -1462,7 +1459,6 @@ class PretrainedTokenizerBase(SpecialTokensMixin):
         """
         Private method to put the tokenizer in input mode (when it has different modes for input/outputs)
         """
-        pass
 
     @max_len_sentences_pair.setter
     def max_len_sentences_pair(self, value) -> int:

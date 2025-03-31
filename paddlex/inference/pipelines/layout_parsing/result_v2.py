@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,13 +14,11 @@
 from __future__ import annotations
 
 import copy
-from pathlib import Path
-from PIL import Image, ImageDraw
-
 import re
+from pathlib import Path
+
 import numpy as np
-from PIL import Image
-from PIL import ImageDraw
+from PIL import Image, ImageDraw
 
 from ...common.result import (
     BaseCVResult,
@@ -29,7 +27,6 @@ from ...common.result import (
     MarkdownMixin,
     XlsxMixin,
 )
-from .utils import get_layout_ordering
 from .utils import get_show_color
 
 

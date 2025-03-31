@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,14 +13,14 @@
 # limitations under the License.
 
 import math
-from typing import List, Sequence, Tuple, Union, Optional
+from typing import List, Optional, Sequence, Tuple, Union
 
 import cv2
 import numpy as np
 from numpy import ndarray
 
-from ..object_detection.processors import get_affine_transform
 from ...utils.benchmark import benchmark
+from ..object_detection.processors import get_affine_transform
 
 Number = Union[int, float]
 Kpts = List[dict]

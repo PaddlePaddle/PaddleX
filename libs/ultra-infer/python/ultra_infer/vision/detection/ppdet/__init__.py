@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,9 +13,11 @@
 # limitations under the License.
 
 from __future__ import absolute_import
-from typing import Union, List
+
 import logging
-from .... import UltraInferModel, ModelFormat
+from typing import List, Union
+
+from .... import ModelFormat, UltraInferModel
 from .... import c_lib_wrap as C
 from ...common import ProcessorManager
 

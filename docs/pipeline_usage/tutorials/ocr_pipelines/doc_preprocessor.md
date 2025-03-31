@@ -479,7 +479,7 @@ for res in output:
 <li><b><code>infer</code></b></li>
 </ul>
 <p>获取图像文档图像预处理结果。</p>
-<p><code>POST /doc_preprocessor</code></p>
+<p><code>POST /document-preprocessing</code></p>
 <ul>
 <li>请求体的属性如下：</li>
 </ul>

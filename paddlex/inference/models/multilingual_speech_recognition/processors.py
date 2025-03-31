@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,16 +13,15 @@
 # limitations under the License.
 # Modified from OpenAI Whisper 2022 (https://github.com/openai/whisper/whisper)
 import os
-import tqdm
 import zlib
-import soundfile
-import numpy as np
-import lazy_paddle as paddle
-
-from dataclasses import dataclass
-from dataclasses import field
+from dataclasses import dataclass, field
 from functools import lru_cache
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple, Union
+
+import lazy_paddle as paddle
+import numpy as np
+import soundfile
+import tqdm
 
 from ..common.tokenizer import GPTTokenizer
 
@@ -706,7 +705,6 @@ class Inference:
 
     def cleanup_caching(self) -> None:
         """Clean up any resources or hooks after decoding is finished"""
-        pass
 
 
 class WhisperInference(Inference):

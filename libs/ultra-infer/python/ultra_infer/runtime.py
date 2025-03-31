@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,8 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from __future__ import absolute_import
+
 import logging
+
 import numpy as np
+
 from . import ModelFormat
 from . import c_lib_wrap as C
 
@@ -320,6 +323,10 @@ class RuntimeOption:
     def use_paddle_lite_backend(self):
         """Wrapper function of use_lite_backend(), use Paddle Lite backend, support inference Paddle model on ARM CPU."""
         return self.use_lite_backend()
+
+    def use_om_backend(self):
+        """Use Om backend, support inference Om model on NPU"""
+        return self._option.use_om_backend()
 
     def set_lite_context_properties(self, context_properties):
         """Set nnadapter context properties for Paddle Lite backend."""

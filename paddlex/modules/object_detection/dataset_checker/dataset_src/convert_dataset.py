@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,15 +13,16 @@
 # limitations under the License.
 
 
-import os
-import shutil
 import json
+import os
 import random
+import shutil
 import xml.etree.ElementTree as ET
+
 from tqdm import tqdm
 
-from .....utils.file_interface import custom_open, write_json_file
 from .....utils.errors import ConvertFailedError
+from .....utils.file_interface import custom_open, write_json_file
 from .....utils.logging import info, warning
 
 
@@ -69,9 +70,9 @@ class Extension(object):
 def check_src_dataset(root_dir, dataset_type):
     """check src dataset format validity"""
     if dataset_type in ("VOC", "VOCWithUnlabeled"):
-        anno_suffix = ".xml"
+        pass
     elif dataset_type in ("LabelMe", "LabelMeWithUnlabeled"):
-        anno_suffix = ".json"
+        pass
     else:
         raise ConvertFailedError(
             message=f"数据格式转换失败！不支持{dataset_type}格式数据集。当前仅支持 VOC、LabelMe 和 VOCWithUnlabeled、LabelMeWithUnlabeled 格式。"
@@ -305,7 +306,7 @@ def voc_get_image_info(annotation_root, img_indexer):
     """
     filename = annotation_root.findtext("filename")
     assert filename is not None, filename
-    img_name = os.path.basename(filename)
+    os.path.basename(filename)
     im_id = img_indexer.get_id(filename)
 
     size = annotation_root.find("size")

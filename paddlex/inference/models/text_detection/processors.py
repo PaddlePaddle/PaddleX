@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,18 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List, Tuple, Union
-import os
-import sys
-import cv2
-import copy
 import math
-import pyclipper
+import sys
+from typing import Union
+
+import cv2
 import numpy as np
 from numpy.linalg import norm
 from PIL import Image
 
-from ...utils.io import ImageReader
 from ....utils import logging
 from ...utils.benchmark import benchmark
 
@@ -32,11 +29,14 @@ from ...utils.benchmark import benchmark
 class DetResizeForTest:
     """DetResizeForTest"""
 
-    def __init__(self, **kwargs):
+    def __init__(self, input_shape=None, **kwargs):
         super().__init__()
         self.resize_type = 0
         self.keep_ratio = False
-        if "image_shape" in kwargs:
+        if input_shape is not None:
+            self.input_shape = input_shape
+            self.resize_type = 3
+        elif "image_shape" in kwargs:
             self.image_shape = kwargs["image_shape"]
             self.resize_type = 1
             if "keep_ratio" in kwargs:
@@ -79,6 +79,8 @@ class DetResizeForTest:
             )
         elif self.resize_type == 2:
             img, [ratio_h, ratio_w] = self.resize_image_type2(img)
+        elif self.resize_type == 3:
+            img, [ratio_h, ratio_w] = self.resize_image_type3(img)
         else:
             # img, shape = self.resize_image_type1(img)
             img, [ratio_h, ratio_w] = self.resize_image_type1(img)
@@ -179,6 +181,15 @@ class DetResizeForTest:
         ratio_h = resize_h / float(h)
         ratio_w = resize_w / float(w)
 
+        return img, [ratio_h, ratio_w]
+
+    def resize_image_type3(self, img):
+        """resize the image"""
+        resize_c, resize_h, resize_w = self.input_shape  # (c, h, w)
+        ori_h, ori_w = img.shape[:2]  # (h, w, c)
+        ratio_h = float(resize_h) / ori_h
+        ratio_w = float(resize_w) / ori_w
+        img = cv2.resize(img, (int(resize_w), int(resize_h)))
         return img, [ratio_h, ratio_w]
 
 

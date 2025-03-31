@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,19 +13,17 @@
 # limitations under the License.
 
 
+import atexit
+import functools
+import hashlib
+import inspect
 import os
 import os.path as osp
-from pathlib import Path
-import inspect
-import functools
 import pickle
-import hashlib
 import tempfile
-import atexit
+from pathlib import Path
+
 import filelock
-
-from . import logging
-
 
 DEFAULT_CACHE_DIR = osp.abspath(osp.join(os.path.expanduser("~"), ".paddlex"))
 CACHE_DIR = os.environ.get("PADDLE_PDX_CACHE_HOME", DEFAULT_CACHE_DIR)
@@ -123,7 +121,7 @@ class TempFileManager:
             try:
                 temp_file.close()
                 os.remove(temp_file.name)
-            except FileNotFoundError as e:
+            except FileNotFoundError:
                 pass
         self.temp_files = []
 

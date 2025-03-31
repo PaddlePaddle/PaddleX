@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,21 +13,22 @@
 # limitations under the License.
 
 from typing import Any, Dict, List, Optional, Union
+
 import numpy as np
 from ...common.reader import ReadImage
 from ...common.batch_sampler import ImageBatchSampler
+from ...common.reader import ReadImage
+from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 from ..components import (
     CropByPolys,
-    SortQuadBoxes,
     SortPolyBoxes,
+    SortQuadBoxes,
     convert_points_to_boxes,
     rotate_image,
 )
 from .result import OCRResult
-from ..doc_preprocessor.result import DocPreprocessorResult
-from ....utils import logging
 
 
 class OCRPipeline(BasePipeline):
@@ -41,6 +42,7 @@ class OCRPipeline(BasePipeline):
         device: Optional[str] = None,
         pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ) -> None:
         """
         Initializes the class with given configurations and options.
@@ -49,9 +51,15 @@ class OCRPipeline(BasePipeline):
             config (Dict): Configuration dictionary containing various settings.
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
+            use_hpip (bool, optional): Whether to use the high-performance
+                inference plugin (HPIP) by default. Defaults to False.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
+                The default high-performance inference configuration dictionary.
+                Defaults to None.
         """
-        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
+        super().__init__(
+            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+        )
 
         self.use_doc_preprocessor = config.get("use_doc_preprocessor", True)
         if self.use_doc_preprocessor:
@@ -84,6 +92,7 @@ class OCRPipeline(BasePipeline):
             self.text_det_limit_type = text_det_config.get("limit_type", "max")
             self.text_det_thresh = text_det_config.get("thresh", 0.3)
             self.text_det_box_thresh = text_det_config.get("box_thresh", 0.6)
+            self.input_shape = text_det_config.get("input_shape", None)
             self.text_det_unclip_ratio = text_det_config.get("unclip_ratio", 2.0)
             self._sort_boxes = SortQuadBoxes()
             self._crop_by_polys = CropByPolys(det_box_type="quad")
@@ -93,6 +102,7 @@ class OCRPipeline(BasePipeline):
             self.text_det_thresh = text_det_config.get("thresh", 0.2)
             self.text_det_box_thresh = text_det_config.get("box_thresh", 0.6)
             self.text_det_unclip_ratio = text_det_config.get("unclip_ratio", 0.5)
+            self.input_shape = text_det_config.get("input_shape", None)
             self._sort_boxes = SortPolyBoxes()
             self._crop_by_polys = CropByPolys(det_box_type="poly")
         else:
@@ -105,6 +115,7 @@ class OCRPipeline(BasePipeline):
             thresh=self.text_det_thresh,
             box_thresh=self.text_det_box_thresh,
             unclip_ratio=self.text_det_unclip_ratio,
+            input_shape=self.input_shape,
         )
 
         text_rec_config = config.get("SubModules", {}).get(
@@ -112,7 +123,10 @@ class OCRPipeline(BasePipeline):
             {"model_config_error": "config error for text_rec_model!"},
         )
         self.text_rec_score_thresh = text_rec_config.get("score_thresh", 0)
-        self.text_rec_model = self.create_model(text_rec_config)
+        self.input_shape = text_rec_config.get("input_shape", None)
+        self.text_rec_model = self.create_model(
+            text_rec_config, input_shape=self.input_shape
+        )
 
         self.batch_sampler = ImageBatchSampler(batch_size=1)
         self.img_reader = ReadImage(format="BGR")
@@ -324,7 +338,7 @@ class OCRPipeline(BasePipeline):
             )
 
             dt_polys = det_res["dt_polys"]
-            dt_scores = det_res["dt_scores"]
+            det_res["dt_scores"]
 
             dt_polys = self._sort_boxes(dt_polys)
 

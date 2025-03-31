@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,11 +13,10 @@
 # limitations under the License.
 
 
-import os, cv2
-from typing import Dict, List, Optional, Union, Tuple
+from typing import Dict, List, Tuple
 
+import cv2
 import numpy as np
-import PIL
 
 
 class LetterResize(object):

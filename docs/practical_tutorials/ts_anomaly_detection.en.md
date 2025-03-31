@@ -349,8 +349,8 @@ from paddlex import create_pipeline
 pipeline = create_pipeline(pipeline="my_path/ts_anomaly_detection.yaml")
 output = pipeline.predict("pre_ts.csv")
 for res in output:
-    res.print() 
-    res.save_to_csv("./output/") 
+    res.print()
+    res.save_to_csv("./output/")
 ```
 
 For more parameters, please refer to the [Time Series Anomaly Detection Pipeline Usage Tutorial](../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.en.md)

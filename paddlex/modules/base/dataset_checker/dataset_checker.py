@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 import os
 from abc import ABC, abstractmethod
 
-from .utils import build_res_dict
-from ....utils.misc import AutoRegisterABCMetaClass
 from ....utils.config import AttrDict
 from ....utils.logging import info
+from ....utils.misc import AutoRegisterABCMetaClass
+from .utils import build_res_dict
 
 
 def build_dataset_checker(config: AttrDict) -> "BaseDatasetChecker":
@@ -33,7 +33,7 @@ def build_dataset_checker(config: AttrDict) -> "BaseDatasetChecker":
     """
     model_name = config.Global.model
     try:
-        import feature_line_modules
+        pass
     except ModuleNotFoundError:
         pass
 

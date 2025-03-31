@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,18 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from tqdm import trange
-import numpy as np
 import collections
-import os
 import math
+import os
 import time
+
+import numpy as np
+from tqdm import trange
 
 
 def eval_segmentation(model, data_dir, batch_size=1):
     import cv2
-    from .utils import Cityscapes
-    from .utils import f1_score, calculate_area, mean_iou, accuracy, kappa
+
+    from .utils import Cityscapes, accuracy, calculate_area, f1_score, kappa, mean_iou
 
     assert os.path.isdir(data_dir), "The image_file_path:{} is not a directory.".format(
         data_dir

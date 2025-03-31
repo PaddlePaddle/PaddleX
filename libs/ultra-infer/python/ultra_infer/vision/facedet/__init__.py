@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,10 +13,11 @@
 # limitations under the License.
 
 from __future__ import absolute_import
-from .contrib.yolov5face import YOLOv5Face
-from .contrib.yolov7face import *
-from .contrib.centerface import *
+
 from .contrib.blazeface import *
+from .contrib.centerface import *
 from .contrib.retinaface import RetinaFace
 from .contrib.scrfd import SCRFD
 from .contrib.ultraface import UltraFace
+from .contrib.yolov5face import YOLOv5Face
+from .contrib.yolov7face import *

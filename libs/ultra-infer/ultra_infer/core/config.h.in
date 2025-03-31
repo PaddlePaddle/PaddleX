@@ -84,3 +84,7 @@
 #ifndef ENABLE_TVM_BACKEND
 #cmakedefine ENABLE_TVM_BACKEND
 #endif
+
+#ifndef ENABLE_OM_BACKEND
+#cmakedefine ENABLE_OM_BACKEND
+#endif

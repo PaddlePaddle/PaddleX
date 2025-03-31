@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,18 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List, Tuple, Union
-import os
-import sys
-import cv2
-import copy
 import math
-import pyclipper
-import numpy as np
-from ..common.vision.processors import _BaseResize
 
-from ..common.vision import funcs as F
+import cv2
+import numpy as np
+
 from ...utils.benchmark import benchmark
+from ..common.vision import funcs as F
+from ..common.vision.processors import _BaseResize
 
 
 @benchmark.timeit
