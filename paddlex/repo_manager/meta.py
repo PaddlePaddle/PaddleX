@@ -134,9 +134,7 @@ REPO_META = {
         "pkg_name": "paddlemix",
         "pdx_pkg_name": "PaddleMIX_api",
         "editable": True,
-        "extra_pkgs": [
-            ("ppdiffusers", "ppdiffusers", "ppdiffusers/requirements.txt", True)
-        ],
+        "extra_pkgs": [("ppdiffusers", "ppdiffusers", None, True)],
         "path_env": "PADDLE_PDX_PADDLEMIX_PATH",
         "requires": ["PaddleNLP"],
     },

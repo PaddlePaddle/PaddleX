@@ -123,7 +123,7 @@ class PPRepository(object):
         """check_repo_exiting"""
         return osp.exists(osp.join(self.root_dir, ".git"))
 
-    def install_packages(self, no_deps=False, clean=True):
+    def install_packages(self, clean=True):
         """install_packages"""
         if self.meta["install_pkg"]:
             editable = self.meta.get("editable", True)
@@ -131,11 +131,9 @@ class PPRepository(object):
                 logging.warning(f"{self.pkg_name} will be installed in editable mode.")
             with switch_working_dir(self.root_dir):
                 try:
-                    pip_install_opts = []
+                    pip_install_opts = ["--no-deps"]
                     if editable:
                         pip_install_opts.append("-e")
-                    if no_deps:
-                        pip_install_opts.append("--no-deps")
                     install_packages(["."], pip_install_opts=pip_install_opts)
                     install_external_deps(self.name, self.root_dir)
                 finally:
@@ -148,11 +146,9 @@ class PPRepository(object):
             if isinstance(e, tuple):
                 with switch_working_dir(osp.join(self.root_dir, e[0])):
                     try:
-                        pip_install_opts = []
+                        pip_install_opts = ["--no-deps"]
                         if e[3]:
                             pip_install_opts.append("-e")
-                        if no_deps:
-                            pip_install_opts.append("--no-deps")
                         install_packages(["."], pip_install_opts=pip_install_opts)
                     finally:
                         if clean:
@@ -223,9 +219,7 @@ class PPRepository(object):
         req_list = [self.main_reqs_file]
         for e in self.meta.get("extra", []):
             if isinstance(e, tuple):
-                e = e[2]
-            elif osp.isdir(e):
-                e = osp.join(e, "requirements.txt")
+                e = e[2] or osp.join(e[0], "requirements.txt")
             req_list.append(e)
         if deps_to_replace is not None:
             deps_dict = {}
@@ -296,7 +290,7 @@ class RepositoryGroupInstaller(object):
         # failure of one repo package aborts the entire installation process.
         for ins_flag, repo in zip(ins_flags, repos):
             if ins_flag:
-                repo.install_packages(no_deps=True)
+                repo.install_packages()
                 repo.mark_installed()
 
     def uninstall(self):
