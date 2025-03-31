@@ -30,7 +30,6 @@ from ..utils.install import (
 )
 from .meta import REPO_DOWNLOAD_BASE, get_repo_meta
 from .utils import (
-    build_wheel_using_pip,
     check_package_installation,
     fetch_repo_using_git,
     install_external_deps,
@@ -75,12 +74,12 @@ class PPRepository(object):
 
         self.meta = get_repo_meta(self.name)
         self.git_path = self.meta["git_path"]
-        self.pkg_name = self.meta["pkg_name"]
         self.lib_name = self.meta["lib_name"]
+        self.pkg_name = self.meta.get("pkg_name", None)
         self.pdx_mod_name = (
             pdx_collection_mod.__name__ + "." + self.meta["pdx_pkg_name"]
         )
-        self.main_req_file = self.meta.get("main_req_file", "requirements.txt")
+        self.main_reqs_file = self.meta.get("main_reqs_file", "requirements.txt")
 
     def initialize(self):
         """initialize"""
@@ -96,8 +95,7 @@ class PPRepository(object):
 
     def check_installation(self):
         """check_installation"""
-        # TODO: Also check if correct dependencies are installed.
-        return check_package_installation(self.pkg_name)
+        return osp.exists(osp.join(self.root_dir, ".installed"))
 
     def replace_repo_deps(self, deps_to_replace, src_requirements):
         """replace_repo_deps"""
@@ -121,66 +119,63 @@ class PPRepository(object):
         with open(src_requirements, "w") as file:
             file.writelines([l + "\n" for l in existing_deps])
 
-    def check_repo_exiting(self, quick_check=False):
+    def check_repo_exiting(self):
         """check_repo_exiting"""
-        return os.path.exists(os.path.join(self.root_dir, ".git"))
+        return osp.exists(osp.join(self.root_dir, ".git"))
 
-    def install(self, *args, **kwargs):
-        """install"""
-        return RepositoryGroupInstaller([self]).install(*args, **kwargs)
-
-    def uninstall(self, *args, **kwargs):
-        """uninstall"""
-        return RepositoryGroupInstaller([self]).uninstall(*args, **kwargs)
-
-    def install_deps(self, *args, **kwargs):
-        """install_deps"""
-        return RepositoryGroupInstaller([self]).install_deps(*args, **kwargs)
-
-    def install_package(self, no_deps=False, clean=True, install_extra_only=False):
-        """install_package"""
-        editable = self.meta.get("editable", True)
-        extra_editable = self.meta.get("extra_editable", None)
-        if editable:
-            logging.warning(f"{self.pkg_name} will be installed in editable mode.")
-        with switch_working_dir(self.root_dir):
-            if install_extra_only:
-                src_requirements = os.path.join(self.root_dir, "requirements.txt")
-                paddlex_requirements = os.path.join(
-                    self.root_dir, "requirements_paddlex.txt"
-                )
-                shutil.copy(paddlex_requirements, src_requirements)
-            try:
-                pip_install_opts = []
-                if editable:
-                    pip_install_opts.append("-e")
-                if no_deps:
-                    pip_install_opts.append("--no-deps")
-                install_packages(["."], pip_install_opts=pip_install_opts)
-                install_external_deps(self.name, self.root_dir)
-            finally:
-                if clean:
-                    # Clean build artifacts
-                    tmp_build_dir = os.path.join(self.root_dir, "build")
-                    if os.path.exists(tmp_build_dir):
-                        shutil.rmtree(tmp_build_dir)
-        if extra_editable:
-            with switch_working_dir(os.path.join(self.root_dir, extra_editable)):
+    def install_packages(self, no_deps=False, clean=True):
+        """install_packages"""
+        if self.meta["install_pkg"]:
+            editable = self.meta.get("editable", True)
+            if editable:
+                logging.warning(f"{self.pkg_name} will be installed in editable mode.")
+            with switch_working_dir(self.root_dir):
                 try:
-                    pip_install_opts = ["-e"]
+                    pip_install_opts = []
+                    if editable:
+                        pip_install_opts.append("-e")
                     if no_deps:
                         pip_install_opts.append("--no-deps")
                     install_packages(["."], pip_install_opts=pip_install_opts)
+                    install_external_deps(self.name, self.root_dir)
                 finally:
                     if clean:
                         # Clean build artifacts
-                        tmp_build_dir = os.path.join(self.root_dir, "build")
-                        if os.path.exists(tmp_build_dir):
+                        tmp_build_dir = "build"
+                        if osp.exists(tmp_build_dir):
                             shutil.rmtree(tmp_build_dir)
+        for e in self.meta.get("extra", []):
+            if isinstance(e, tuple):
+                with switch_working_dir(osp.join(self.root_dir, e[0])):
+                    try:
+                        pip_install_opts = []
+                        if e[3]:
+                            pip_install_opts.append("-e")
+                        if no_deps:
+                            pip_install_opts.append("--no-deps")
+                        install_packages(["."], pip_install_opts=pip_install_opts)
+                    finally:
+                        if clean:
+                            tmp_build_dir = "build"
+                            if osp.exists(tmp_build_dir):
+                                shutil.rmtree(tmp_build_dir)
 
-    def uninstall_package(self):
-        """uninstall_package"""
-        uninstall_packages([self.pkg_name])
+    def uninstall_packages(self):
+        """uninstall_packages"""
+        pkgs = []
+        if self.install_pkg:
+            pkgs.append(self.pkg_name)
+        for e in self.meta.get("extra", []):
+            if isinstance(e, tuple):
+                pkgs.append(e[1])
+        uninstall_packages(pkgs)
+
+    def mark_installed(self):
+        with open(osp.join(self.root_dir, ".installed"), "wb"):
+            pass
+
+    def mark_uninstalled(self):
+        os.unlink(osp.join(self.root_dir, ".installed"))
 
     def download(self):
         """download from remote"""
@@ -207,24 +202,6 @@ class PPRepository(object):
                     f"Update {self.name} from {git_url} failed, check your network connection. Error:\n{e}"
                 )
 
-    def wheel(self, dst_dir):
-        """wheel"""
-        with tempfile.TemporaryDirectory() as td:
-            tmp_repo_dir = osp.join(td, self.name)
-            tmp_dst_dir = osp.join(td, "dist")
-            shutil.copytree(self.root_dir, tmp_repo_dir, symlinks=False)
-
-            # NOTE: Installation of the repo relies on `self.main_req_file` in root directory
-            # Thus, we overwrite the content of it.
-            main_req_file_path = osp.join(tmp_repo_dir, self.main_req_file)
-            deps_str = self.get_deps()
-            with open(main_req_file_path, "w", encoding="utf-8") as f:
-                f.write(deps_str)
-            install_packages_from_requirements_file(main_req_file_path)
-            with switch_working_dir(tmp_repo_dir):
-                build_wheel_using_pip(".", tmp_dst_dir)
-            shutil.copytree(tmp_dst_dir, dst_dir)
-
     def _get_lib(self):
         """_get_lib"""
         import importlib.util
@@ -240,21 +217,23 @@ class PPRepository(object):
         """get_pdx"""
         return importlib.import_module(self.pdx_mod_name)
 
-    def get_deps(self, install_extra_only=False, deps_to_replace=None):
+    def get_deps(self, deps_to_replace=None):
         """get_deps"""
         # Merge requirement files
-        if install_extra_only:
-            req_list = []
-        else:
-            req_list = [self.main_req_file]
-        req_list.extend(self.meta.get("extra_req_files", []))
+        req_list = [self.main_reqs_file]
+        for e in self.meta.get("extra", []):
+            if isinstance(e, tuple):
+                e = e[2]
+            elif osp.isdir(e):
+                e = osp.join(e, "requirements.txt")
+            req_list.append(e)
         if deps_to_replace is not None:
             deps_dict = {}
             for dep in deps_to_replace:
                 part, version = dep.split("=")
                 repo_name, dep_name = part.split(".")
                 deps_dict[repo_name] = {dep_name: version}
-            src_requirements = os.path.join(self.root_dir, "requirements.txt")
+            src_requirements = osp.join(self.root_dir, "requirements.txt")
             if self.name in deps_dict:
                 self.replace_repo_deps(deps_dict[self.name], src_requirements)
         deps = []
@@ -317,13 +296,8 @@ class RepositoryGroupInstaller(object):
         # failure of one repo package aborts the entire installation process.
         for ins_flag, repo in zip(ins_flags, repos):
             if ins_flag:
-                if repo.name in ["PaddleVideo"]:
-                    repo.install_package(
-                        no_deps=True,
-                        install_extra_only=True,
-                    )
-                else:
-                    repo.install_package(no_deps=True)
+                repo.install_packages(no_deps=True)
+                repo.mark_installed()
 
     def uninstall(self):
         """uninstall"""
@@ -332,19 +306,15 @@ class RepositoryGroupInstaller(object):
         for repo in repos:
             if repo.check_installation():
                 # NOTE: Dependencies are not uninstalled.
-                repo.uninstall_package()
+                repo.uninstall_packages()
+                repo.mark_uninstalled()
 
     def get_deps(self, deps_to_replace=None):
         """get_deps"""
         deps_list = []
         repos = self._sort_repos(self.repos, check_missing=True)
         for repo in repos:
-            if repo.name in ["PaddleVideo"]:
-                deps = repo.get_deps(
-                    install_extra_only=True, deps_to_replace=deps_to_replace
-                )
-            else:
-                deps = repo.get_deps(deps_to_replace=deps_to_replace)
+            deps = repo.get_deps(deps_to_replace=deps_to_replace)
             deps = self._normalize_deps(deps, headline=f"# {repo.name} dependencies")
             deps_list.append(deps)
         # Add an extra new line to separate dependencies of different repos.
@@ -354,11 +324,11 @@ class RepositoryGroupInstaller(object):
         """install_deps"""
         deps_str = self.get_deps(deps_to_replace=deps_to_replace)
         with tempfile.TemporaryDirectory() as td:
-            req_file = os.path.join(td, "requirements.txt")
+            req_file = osp.join(td, "requirements.txt")
             with open(req_file, "w", encoding="utf-8") as fr:
                 fr.write(deps_str)
             if constraints is not None:
-                cons_file = os.path.join(td, "constraints.txt")
+                cons_file = osp.join(td, "constraints.txt")
                 with open(cons_file, "w", encoding="utf-8") as fc:
                     fc.write(constraints)
                 cons_files = [cons_file]
