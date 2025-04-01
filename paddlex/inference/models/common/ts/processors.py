@@ -15,6 +15,7 @@
 from typing import Any, Dict, List
 
 import numpy as np
+import pandas as pd
 
 from .....utils.deps import class_requires_deps, is_dep_available
 from ....utils.benchmark import benchmark
@@ -22,8 +23,6 @@ from .funcs import load_from_dataframe, time_feature
 
 if is_dep_available("joblib"):
     import joblib
-if is_dep_available("pandas"):
-    import pandas as pd
 
 __all__ = [
     "BuildTSDataset",
@@ -95,7 +94,7 @@ class TSCutOff:
 
 
 @benchmark.timeit
-@class_requires_deps("joblib", "pandas")
+@class_requires_deps("joblib")
 class TSNormalize:
     """Normalizes time series data using a pre-fitted scaler.
 
@@ -117,7 +116,7 @@ class TSNormalize:
         self.scaler = joblib.load(scale_path)
         self.params_info = params_info
 
-    def __call__(self, ts_list: List["pd.DataFrame"]) -> List["pd.DataFrame"]:
+    def __call__(self, ts_list: List[pd.DataFrame]) -> List[pd.DataFrame]:
         """Applies normalization to a list of time series data frames.
 
         Args:
@@ -128,7 +127,7 @@ class TSNormalize:
         """
         return [self.tsnorm(ts) for ts in ts_list]
 
-    def tsnorm(self, ts: "pd.DataFrame") -> "pd.DataFrame":
+    def tsnorm(self, ts: pd.DataFrame) -> pd.DataFrame:
         """Normalizes specified columns of a single time series data frame.
 
         This method applies the scaler to normalize the specified target

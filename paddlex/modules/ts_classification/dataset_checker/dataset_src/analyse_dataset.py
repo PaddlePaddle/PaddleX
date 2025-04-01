@@ -17,6 +17,7 @@ import os
 import platform
 
 import numpy as np
+import pandas as pd
 
 from .....utils.deps import function_requires_deps, is_dep_available
 from .....utils.fonts import PINGFANG_FONT_FILE_PATH
@@ -24,11 +25,9 @@ from .....utils.fonts import PINGFANG_FONT_FILE_PATH
 if is_dep_available("matplotlib"):
     import matplotlib.pyplot as plt
     from matplotlib import font_manager
-if is_dep_available("pandas"):
-    import pandas as pd
 
 
-@function_requires_deps("pandas", "matplotlib")
+@function_requires_deps("matplotlib")
 def deep_analyse(dataset_dir, output, label_col="label"):
     """class analysis for dataset"""
     tags = ["train", "val"]

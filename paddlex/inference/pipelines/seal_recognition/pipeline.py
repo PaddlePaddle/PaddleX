@@ -28,7 +28,7 @@ from ..components import CropByBoxes
 from .result import SealRecognitionResult
 
 
-@pipeline_requires_extra("cv")
+@pipeline_requires_extra("ocr")
 class SealRecognitionPipeline(BasePipeline):
     """Seal Recognition Pipeline"""
 

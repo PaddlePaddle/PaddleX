@@ -17,10 +17,10 @@ from abc import abstractmethod
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 from PIL import Image
 
 from .....utils import logging
-from .....utils.deps import is_dep_available
 from ....utils.io import (
     CSVWriter,
     HtmlWriter,
@@ -29,9 +29,6 @@ from ....utils.io import (
     TextWriter,
     XlsxWriter,
 )
-
-if is_dep_available("pandas"):
-    import pandas as pd
 
 #### [TODO] need tingquan to add explanatory notes
 

@@ -23,6 +23,7 @@ from typing import Awaitable, Callable, List, Optional, Tuple, TypeVar, Union, o
 from urllib.parse import urlparse
 
 import numpy as np
+import pandas as pd
 import requests
 from PIL import Image
 from typing_extensions import Literal, ParamSpec, TypeAlias, assert_never
@@ -38,8 +39,6 @@ if is_dep_available("filetype"):
     import filetype
 if is_dep_available("PyMuPDF"):
     import fitz
-if is_dep_available("pandas"):
-    import pandas as pd
 if is_dep_available("yarl"):
     import yarl
 
@@ -147,15 +146,13 @@ def image_array_to_bytes(image: np.ndarray, ext: str = ".jpg") -> bytes:
     return image.tobytes()
 
 
-@function_requires_deps("pandas")
-def csv_bytes_to_data_frame(data: bytes) -> "pd.DataFrame":
+def csv_bytes_to_data_frame(data: bytes) -> pd.DataFrame:
     with io.StringIO(data.decode("utf-8")) as f:
         df = pd.read_csv(f)
     return df
 
 
-@function_requires_deps("pandas")
-def data_frame_to_bytes(df: "pd.DataFrame") -> bytes:
+def data_frame_to_bytes(df: pd.DataFrame) -> bytes:
     return df.to_csv().encode("utf-8")
 
 

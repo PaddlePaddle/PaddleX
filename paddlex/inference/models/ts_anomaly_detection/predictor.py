@@ -15,8 +15,9 @@
 import os
 from typing import Any, Dict, List, Tuple, Union
 
+import pandas as pd
+
 from ....modules.ts_anomaly_detection.model_list import MODELS
-from ....utils.deps import function_requires_deps, is_dep_available
 from ...common.batch_sampler import TSBatchSampler
 from ...common.reader import ReadTS
 from ..base import BasePredictor
@@ -30,9 +31,6 @@ from ..common import (
 )
 from .processors import GetAnomaly
 from .result import TSAdResult
-
-if is_dep_available("pandas"):
-    import pandas as pd
 
 
 class TSAdPredictor(BasePredictor):
@@ -102,8 +100,7 @@ class TSAdPredictor(BasePredictor):
         )
         return preprocessors, infer, postprocessors
 
-    @function_requires_deps("pandas")
-    def process(self, batch_data: List[Union[str, "pd.DataFrame"]]) -> Dict[str, Any]:
+    def process(self, batch_data: List[Union[str, pd.DataFrame]]) -> Dict[str, Any]:
         """
         Process a batch of data through the preprocessing, inference, and postprocessing.
 

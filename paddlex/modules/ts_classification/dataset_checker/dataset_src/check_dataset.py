@@ -17,14 +17,11 @@ import os.path as osp
 from collections import defaultdict
 from pathlib import Path
 
-from .....utils.deps import function_requires_deps, is_dep_available
+import pandas as pd
+
 from .....utils.errors import DatasetFileNotFoundError
 
-if is_dep_available("pandas"):
-    import pandas as pd
 
-
-@function_requires_deps("pandas")
 def check(dataset_dir, output, sample_num=10):
     """check dataset"""
     dataset_dir = osp.abspath(dataset_dir)

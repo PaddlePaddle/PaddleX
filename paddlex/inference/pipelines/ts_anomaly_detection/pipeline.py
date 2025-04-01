@@ -14,18 +14,13 @@
 
 from typing import Any, Dict, List, Optional, Union
 
-from ....utils.deps import (
-    function_requires_deps,
-    is_dep_available,
-    pipeline_requires_extra,
-)
+import pandas as pd
+
+from ....utils.deps import pipeline_requires_extra
 from ...models.ts_anomaly_detection.result import TSAdResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
-
-if is_dep_available("pandas"):
-    import pandas as pd
 
 
 @pipeline_requires_extra("ts")
@@ -62,11 +57,8 @@ class TSAnomalyDetPipeline(BasePipeline):
         ts_ad_model_config = config["SubModules"]["TSAnomalyDetection"]
         self.ts_ad_model = self.create_model(ts_ad_model_config)
 
-    @function_requires_deps("pandas")
     def predict(
-        self,
-        input: Union[str, List[str], "pd.DataFrame", List["pd.DataFrame"]],
-        **kwargs
+        self, input: Union[str, List[str], pd.DataFrame, List[pd.DataFrame]], **kwargs
     ) -> TSAdResult:
         """Predicts time series anomaly detection results for the given input.
 

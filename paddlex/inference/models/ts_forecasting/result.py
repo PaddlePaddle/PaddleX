@@ -15,6 +15,7 @@
 import io
 from typing import Any
 
+import pandas as pd
 from PIL import Image
 
 from ....utils.deps import function_requires_deps, is_dep_available
@@ -22,12 +23,10 @@ from ...common.result import BaseTSResult
 
 if is_dep_available("matplotlib"):
     import matplotlib.pyplot as plt
-if is_dep_available("pandas"):
-    import pandas as pd
 
 
-@function_requires_deps("matplotlib", "pandas")
-def visualize(forecast: "pd.DataFrame", actual_data: "pd.DataFrame") -> Image.Image:
+@function_requires_deps("matplotlib")
+def visualize(forecast: pd.DataFrame, actual_data: pd.DataFrame) -> Image.Image:
     """
     Visualizes both the time series forecast and actual results, returning them as a Pillow image.
 

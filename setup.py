@@ -84,6 +84,8 @@ REQUIRED_DEPS = [
     "GPUtil",
     "numpy",
     "packaging",
+    # Currently it is not easy to make `pandas` optional
+    "pandas",
     "pillow",
     "prettytable",
     "py-cpuinfo",
@@ -109,6 +111,7 @@ EXTRAS = {
         "multimodal": [
             "ftfy",
             "Jinja2",
+            "opencv-contrib-python",
             # For the same reason as in `cv`
             "PyMuPDF",
             "regex",
@@ -155,7 +158,6 @@ EXTRAS = {
             "chinese-calendar",
             "joblib",
             "matplotlib",
-            "pandas",
             "scikit-learn",
         ],
         "video": [

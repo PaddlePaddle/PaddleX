@@ -20,7 +20,7 @@ from typing import Dict, Iterable, List, Optional, Sequence, Tuple, Union
 
 import numpy as np
 
-from ....utils.deps import is_dep_available, require_deps
+from ....utils.deps import function_requires_deps, is_dep_available
 from ..common.tokenizer import GPTTokenizer
 
 if is_dep_available("soundfile"):
@@ -808,6 +808,7 @@ if is_dep_available("paddlepaddle"):
 
         return language_tokens, language_probs
 
+    @function_requires_deps("tqdm")
     def transcribe(
         model: "Whisper",
         mel: paddle.Tensor,
@@ -863,7 +864,6 @@ if is_dep_available("paddlepaddle"):
         A dictionary containing the resulting text ("text") and segment-level details ("segments"), and
         the spoken language ("language"), which is detected when `decode_options["language"]` is None.
         """
-        require_deps("tqdm", obj=transcribe)
 
         dtype = np.float32  # paddle only support float32
 
@@ -1939,6 +1939,7 @@ if is_dep_available("paddlepaddle"):
         with np.load(os.path.join(resource_path, "assets", "mel_filters.npz")) as f:
             return paddle.to_tensor(f[f"mel_{n_mels}"])
 
+    @function_requires_deps("soundfile")
     def log_mel_spectrogram(
         audio: Union[str, np.ndarray, paddle.Tensor],
         n_mels: int = N_MELS,
@@ -1960,7 +1961,6 @@ if is_dep_available("paddlepaddle"):
         paddle.Tensor, shape = (80, n_frames)
             A Tensor that contains the Mel spectrogram
         """
-        require_deps("soundfile", obj=log_mel_spectrogram)
 
         if not paddle.is_tensor(audio):
             if isinstance(audio, str):

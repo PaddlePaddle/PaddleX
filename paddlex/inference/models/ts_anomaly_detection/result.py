@@ -22,12 +22,11 @@ from ...common.result import BaseTSResult
 
 if is_dep_available("matplotlib"):
     import matplotlib.pyplot as plt
-if is_dep_available("pandas"):
-    import pandas as pd
+import pandas as pd
 
 
-@function_requires_deps("pandas", "matplotlib")
-def visualize(forecast: "pd.DataFrame") -> Image.Image:
+@function_requires_deps("matplotlib")
+def visualize(forecast: pd.DataFrame) -> Image.Image:
     """
     Visualizes both the time series forecast and actual results, returning them as a Pillow image.
 

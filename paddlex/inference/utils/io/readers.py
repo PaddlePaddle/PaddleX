@@ -18,6 +18,7 @@ import itertools
 import random
 
 import numpy as np
+import pandas as pd
 import yaml
 from PIL import Image, ImageOps
 
@@ -27,8 +28,6 @@ if is_dep_available("opencv-contrib-python"):
     import cv2
 if is_dep_available("PyMuPDF"):
     import fitz
-if is_dep_available("pandas"):
-    import pandas as pd
 if is_dep_available("soundfile"):
     import soundfile
 
@@ -451,7 +450,6 @@ class _CSVReaderBackend(_BaseReaderBackend):
     """_CSVReaderBackend"""
 
 
-@class_requires_deps("pandas")
 class PandasCSVReaderBackend(_CSVReaderBackend):
     """PandasCSVReaderBackend"""
 

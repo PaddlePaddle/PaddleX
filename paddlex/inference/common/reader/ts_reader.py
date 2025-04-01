@@ -12,16 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ....utils.deps import class_requires_deps, is_dep_available
+import pandas as pd
+
 from ...utils.benchmark import benchmark
 from ...utils.io import CSVReader
 
-if is_dep_available("pandas"):
-    import pandas as pd
-
 
 @benchmark.timeit_with_options(name=None, is_read_operation=True)
-@class_requires_deps("pandas")
 class ReadTS:
 
     def __init__(self):

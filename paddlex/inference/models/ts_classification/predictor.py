@@ -16,17 +16,15 @@ import copy
 import os
 from typing import Any, Dict, List, Tuple, Union
 
+import pandas as pd
+
 from ....modules.ts_classification.model_list import MODELS
-from ....utils.deps import function_requires_deps, is_dep_available
 from ...common.batch_sampler import TSBatchSampler
 from ...common.reader import ReadTS
 from ..base import BasePredictor
 from ..common import BuildTSDataset, TSCutOff, TSNormalize, TStoArray, TStoBatch
 from .processors import BuildPadMask, GetCls
 from .result import TSClsResult
-
-if is_dep_available("pandas"):
-    import pandas as pd
 
 
 class TSClsPredictor(BasePredictor):
@@ -88,8 +86,7 @@ class TSClsPredictor(BasePredictor):
         postprocessors["GetCls"] = GetCls()
         return preprocessors, infer, postprocessors
 
-    @function_requires_deps("pandas")
-    def process(self, batch_data: List[Union[str, "pd.DataFrame"]]) -> Dict[str, Any]:
+    def process(self, batch_data: List[Union[str, pd.DataFrame]]) -> Dict[str, Any]:
         """
         Processes a batch of time series data through a series of preprocessing, inference, and postprocessing steps.
 

@@ -15,16 +15,12 @@
 from typing import Any, Dict, List
 
 import numpy as np
+import pandas as pd
 
-from ....utils.deps import class_requires_deps, is_dep_available
 from ...utils.benchmark import benchmark
-
-if is_dep_available("pandas"):
-    import pandas as pd
 
 
 @benchmark.timeit
-@class_requires_deps("pandas")
 class GetCls:
     """A class to process prediction outputs and return class IDs and scores."""
 
@@ -32,7 +28,7 @@ class GetCls:
         """Initializes the GetCls instance."""
         super().__init__()
 
-    def __call__(self, pred_list: List[Any]) -> List["pd.DataFrame"]:
+    def __call__(self, pred_list: List[Any]) -> List[pd.DataFrame]:
         """
         Processes a list of predictions and returns a list of DataFrames with class IDs and scores.
 
@@ -44,7 +40,7 @@ class GetCls:
         """
         return [self.getcls(pred) for pred in pred_list]
 
-    def getcls(self, pred: Any) -> "pd.DataFrame":
+    def getcls(self, pred: Any) -> pd.DataFrame:
         """
         Computes the class ID and score from a single prediction.
 
