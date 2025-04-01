@@ -757,7 +757,7 @@ class HPInfer(StaticInfer):
         elif self._config.device_type == "gpu":
             ui_option.use_gpu(self._config.device_id or 0)
         elif self._config.device_type == "npu":
-            ui_option.use_ascend()
+            ui_option.use_ascend(self._config.device_id or 0)
         else:
             raise RuntimeError(
                 f"Unsupported device type {repr(self._config.device_type)}"

@@ -50,6 +50,7 @@ TensorInfo OmBackend::GetOutputInfo(int index) {
 std::vector<TensorInfo> OmBackend::GetOutputInfos() { return outputs_desc_; }
 
 bool OmBackend::Init(const RuntimeOption &runtime_option) {
+  deviceId_ = runtime_option.device_id;
   // ACL init
   aclError ret = InitResource();
   if (ret != true) {
