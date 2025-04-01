@@ -31,6 +31,7 @@ Number = Union[int, float]
 
 
 @benchmark.timeit_with_options(name=None, is_read_operation=True)
+@function_requires_deps("opencv-contrib-python")
 class ReadImage(CommonReadImage):
     """Reads images from a list of raw image data or file paths."""
 

@@ -17,7 +17,11 @@ import math
 import numpy as np
 from PIL import Image
 
-from .....utils.deps import class_requires_deps, is_dep_available
+from .....utils.deps import (
+    class_requires_deps,
+    function_requires_deps,
+    is_dep_available,
+)
 from ....utils.benchmark import benchmark
 from . import funcs as F
 
@@ -220,6 +224,7 @@ class ResizeByShort(_BaseResize):
 
 
 @benchmark.timeit
+@function_requires_deps("opencv-contrib-python")
 class Normalize:
     """Normalize the three-channel image."""
 

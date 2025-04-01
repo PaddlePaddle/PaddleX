@@ -16,15 +16,20 @@ import math
 import sys
 from typing import Union
 
-import cv2
 import numpy as np
-import pyclipper
 
 from ....utils import logging
+from ....utils.deps import class_requires_deps, is_dep_available
 from ...utils.benchmark import benchmark
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+if is_dep_available("pyclipper"):
+    import pyclipper
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class DetResizeForTest:
     """DetResizeForTest"""
 
@@ -193,6 +198,7 @@ class DetResizeForTest:
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class NormalizeImage:
     """normalize image such as substract mean, divide std"""
 
@@ -232,6 +238,7 @@ class NormalizeImage:
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python", "pyclipper")
 class DBPostProcess:
     """
     The post process for Differentiable Binarization (DB).
