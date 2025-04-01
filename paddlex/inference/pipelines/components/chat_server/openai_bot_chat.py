@@ -18,9 +18,11 @@ import re
 from typing import Dict
 
 from .....utils import logging
+from .....utils.deps import class_requires_deps
 from .base import BaseChat
 
 
+@class_requires_deps("openai")
 class OpenAIBotChat(BaseChat):
     """OpenAI Bot Chat"""
 
@@ -40,6 +42,8 @@ class OpenAIBotChat(BaseChat):
             api_key is None for api_type is openai.
             ValueError: If end_point is not one of ['completion', 'chat_completion'].
         """
+        from openai import OpenAI
+
         super().__init__()
         model_name = config.get("model_name", None)
         # compatible with historical model name
@@ -63,11 +67,6 @@ class OpenAIBotChat(BaseChat):
             raise ValueError(
                 "end_point must be one of ['completion', 'chat_completion']"
             )
-
-        try:
-            from openai import OpenAI
-        except:
-            raise Exception("openai is not installed, please install it first.")
 
         self.client = OpenAI(base_url=base_url, api_key=api_key)
 
