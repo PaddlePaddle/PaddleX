@@ -17,7 +17,7 @@ from typing import List, Optional, Sequence, Tuple, Union
 
 import numpy as np
 
-from ....utils.deps import function_requires_deps, is_dep_available
+from ....utils.deps import class_requires_deps, is_dep_available
 from ...utils.benchmark import benchmark
 
 if is_dep_available("opencv-contrib-python"):
@@ -25,7 +25,7 @@ if is_dep_available("opencv-contrib-python"):
 
 
 @benchmark.timeit
-@function_requires_deps("opencv-contrib-python")
+@class_requires_deps("opencv-contrib-python")
 class Scale:
     """Scale images."""
 
@@ -244,7 +244,7 @@ class Image2Array:
 
 
 @benchmark.timeit
-@function_requires_deps("opencv-contrib-python")
+@class_requires_deps("opencv-contrib-python")
 class NormalizeVideo:
     """
     Normalize video frames by subtracting the mean and dividing by the standard deviation.

@@ -115,7 +115,7 @@ class BaseRetriever(ABC, metaclass=AutoRegisterABCMetaClass):
         text_list: List[str],
         block_size: int = 300,
         separators: List[str] = ["\t", "\n", "。", "\n\n", ""],
-    ) -> FAISS:
+    ) -> "FAISS":
         """
         Generates a vector database from a list of texts.
 
@@ -145,7 +145,7 @@ class BaseRetriever(ABC, metaclass=AutoRegisterABCMetaClass):
 
         return vectorstore
 
-    def encode_vector_store_to_bytes(self, vectorstore: FAISS) -> str:
+    def encode_vector_store_to_bytes(self, vectorstore: "FAISS") -> str:
         """
         Encode the vector store serialized to bytes.
 
@@ -161,7 +161,7 @@ class BaseRetriever(ABC, metaclass=AutoRegisterABCMetaClass):
             vectorstore = self.encode_vector_store(vectorstore.serialize_to_bytes())
         return vectorstore
 
-    def decode_vector_store_from_bytes(self, vectorstore: str) -> FAISS:
+    def decode_vector_store_from_bytes(self, vectorstore: str) -> "FAISS":
         """
         Decode a vector store from bytes according to the specified API type.
 
@@ -194,7 +194,7 @@ class BaseRetriever(ABC, metaclass=AutoRegisterABCMetaClass):
     def similarity_retrieval(
         self,
         query_text_list: List[str],
-        vectorstore: FAISS,
+        vectorstore: "FAISS",
         sleep_time: float = 0.5,
         topk: int = 2,
         min_characters: int = 3500,

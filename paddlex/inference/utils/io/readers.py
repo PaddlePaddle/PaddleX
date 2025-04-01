@@ -223,8 +223,10 @@ class _ImageReaderBackend(_BaseReaderBackend):
 class OpenCVImageReaderBackend(_ImageReaderBackend):
     """OpenCVImageReaderBackend"""
 
-    def __init__(self, flags=cv2.IMREAD_COLOR):
+    def __init__(self, flags=None):
         super().__init__()
+        if flags is None:
+            flags = cv2.IMREAD_COLOR
         self.flags = flags
 
     def read_file(self, in_path):

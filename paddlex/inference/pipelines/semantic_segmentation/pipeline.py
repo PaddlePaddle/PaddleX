@@ -16,12 +16,14 @@ from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 
 import numpy as np
 
+from ....utils.deps import pipeline_requires_extra
 from ...models.semantic_segmentation.result import SegResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 
 
+@pipeline_requires_extra("cv")
 class SemanticSegmentationPipeline(BasePipeline):
     """Semantic Segmentation Pipeline"""
 

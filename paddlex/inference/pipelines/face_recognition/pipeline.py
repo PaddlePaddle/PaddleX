@@ -14,10 +14,12 @@
 
 import numpy as np
 
+from ....utils.deps import pipeline_requires_extra
 from ..pp_shitu_v2 import ShiTuV2Pipeline
 from .result import FaceRecResult
 
 
+@pipeline_requires_extra("cv")
 class FaceRecPipeline(ShiTuV2Pipeline):
     """Face Recognition Pipeline"""
 

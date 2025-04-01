@@ -22,7 +22,11 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import numpy as np
 
 from ....utils import logging
-from ....utils.deps import function_requires_deps, is_dep_available
+from ....utils.deps import (
+    function_requires_deps,
+    is_dep_available,
+    pipeline_requires_extra,
+)
 from ....utils.file_interface import custom_open
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
@@ -36,6 +40,7 @@ if is_dep_available("opencv-contrib-python"):
     import cv2
 
 
+@pipeline_requires_extra("ie")
 class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
     """PP-ChatOCRv4 Pipeline"""
 

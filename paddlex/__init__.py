@@ -42,10 +42,10 @@ def _initialize():
     if flags.EAGER_INITIALIZATION:
         repo_manager.initialize()
 
+    __version__ = version.get_pdx_version()
+
 
 _initialize()
-
-__version__ = version.get_pdx_version()
 
 for mod in _SPECIAL_MODS:
     if mod in sys.modules and mod not in _loaded_special_mods:

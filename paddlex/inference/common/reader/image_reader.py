@@ -18,7 +18,7 @@ from ....utils.deps import class_requires_deps, is_dep_available
 from ...utils.benchmark import benchmark
 from ...utils.io import ImageReader
 
-if is_dep_available("cv2"):
+if is_dep_available("opencv-contrib-python"):
     import cv2
 
 

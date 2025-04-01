@@ -12,10 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import cv2
 import numpy as np
 
+from .....utils.deps import function_requires_deps, is_dep_available
 
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+
+
+@function_requires_deps("opencv-contrib-python")
 def rotate_image(image, angle):
     if angle < 0 or angle >= 360:
         raise ValueError("`angle` should be in range [0, 360)")

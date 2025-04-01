@@ -102,11 +102,15 @@ EXTRAS = {
             "matplotlib",
             "opencv-contrib-python",
             "pycocotools",
+            # Currently `PyMuPDF` is required by the image batch sampler
+            "PyMuPDF",
             "scikit-image",
         ],
         "multimodal": [
             "ftfy",
             "Jinja2",
+            # For the same reason as in `cv`
+            "PyMuPDF",
             "regex",
         ],
         "ie": [

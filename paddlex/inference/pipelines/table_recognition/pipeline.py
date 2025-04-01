@@ -18,6 +18,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import numpy as np
 
 from ....utils import logging
+from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
@@ -32,6 +33,7 @@ from .table_recognition_post_processing import get_table_recognition_res
 from .utils import get_neighbor_boxes_idx
 
 
+@pipeline_requires_extra("ocr")
 class TableRecognitionPipeline(BasePipeline):
     """Table Recognition Pipeline"""
 

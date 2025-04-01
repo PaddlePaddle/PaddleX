@@ -36,10 +36,13 @@ def Homography(
     img_points,
     world_width,
     world_height,
-    interpolation=cv2.INTER_CUBIC,
+    interpolation=None,
     ratio_width=1.0,
     ratio_height=1.0,
 ):
+    if interpolation is None:
+        interpolation = cv2.INTER_CUBIC
+
     _points = np.array(img_points).reshape(-1, 2).astype(np.float32)
 
     expand_x = int(0.5 * world_width * (ratio_width - 1))
@@ -550,7 +553,7 @@ class CurveTextRectifier:
         img_points,
         obj_points,
         is_horizontal_text,
-        interpolation=cv2.INTER_LINEAR,
+        interpolation=None,
         ratio_width=1.0,
         ratio_height=1.0,
     ):
@@ -558,6 +561,9 @@ class CurveTextRectifier:
         divide and conquer: homography
         # ratio_width and ratio_height must be 1.0 here
         """
+        if interpolation is None:
+            interpolation = cv2.INTER_LINEAR
+
         _img_points = img_points.reshape(-1, 2)
         _obj_points = obj_points.reshape(-1, 3)
 
@@ -619,10 +625,13 @@ class CurveTextRectifier:
         img_points,
         world_width,
         world_height,
-        interpolation=cv2.INTER_CUBIC,
+        interpolation=None,
         ratio_width=1.0,
         ratio_height=1.0,
     ):
+        if interpolation is None:
+            interpolation = cv2.INTER_CUBIC
+
         _points = np.array(img_points).reshape(-1, 2).astype(np.float32)
 
         expand_x = int(0.5 * world_width * (ratio_width - 1))
@@ -654,7 +663,7 @@ class CurveTextRectifier:
         self,
         image_data,
         points,
-        interpolation=cv2.INTER_LINEAR,
+        interpolation=None,
         ratio_width=1.0,
         ratio_height=1.0,
         mode="calibration",
@@ -669,6 +678,9 @@ class CurveTextRectifier:
         :param mode: 'calibration' or 'homography'. when homography, ratio_width and ratio_height must be 1.0
         :return:
         """
+        if interpolation is None:
+            interpolation = cv2.INTER_LINEAR
+
         org_h, org_w = image_data.shape[:2]
         org_size = (org_w, org_h)
         self.image = image_data

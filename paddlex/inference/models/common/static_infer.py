@@ -611,7 +611,6 @@ class HPInfer(StaticInfer):
         config: HPIConfig,
     ) -> None:
         super().__init__()
-        self._ensure_hpip_installed()
         self._model_dir = model_dir
         self._model_file_prefix = model_file_prefix
         self._config = config

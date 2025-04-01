@@ -16,12 +16,14 @@ from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
 
+from ....utils.deps import pipeline_requires_extra
 from ...models.instance_segmentation.result import InstanceSegResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 
 
+@pipeline_requires_extra("cv")
 class InstanceSegmentationPipeline(BasePipeline):
     """Instance Segmentation Pipeline"""
 

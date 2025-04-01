@@ -14,7 +14,11 @@
 
 from typing import Any, Dict, List, Optional, Union
 
-from .....utils.deps import function_requires_deps, is_dep_available
+from ....utils.deps import (
+    function_requires_deps,
+    is_dep_available,
+    pipeline_requires_extra,
+)
 from ...models.ts_forecasting.result import TSFcResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
@@ -24,6 +28,7 @@ if is_dep_available("pandas"):
     import pandas as pd
 
 
+@pipeline_requires_extra("ts")
 class TSFcPipeline(BasePipeline):
     """TSFcPipeline Pipeline"""
 

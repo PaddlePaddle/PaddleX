@@ -14,6 +14,7 @@
 
 from typing import Any, Dict, Optional, Union
 
+from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...utils.hpi import HPIConfig
@@ -23,6 +24,7 @@ from ..components import CropByBoxes, FaissBuilder, FaissIndexer
 from .result import ShiTuResult
 
 
+@pipeline_requires_extra("cv")
 class ShiTuV2Pipeline(BasePipeline):
     """ShiTuV2 Pipeline"""
 

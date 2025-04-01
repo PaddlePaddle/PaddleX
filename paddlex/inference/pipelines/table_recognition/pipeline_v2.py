@@ -18,7 +18,11 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import numpy as np
 
 from ....utils import logging
-from ....utils.deps import function_requires_deps, is_dep_available
+from ....utils.deps import (
+    function_requires_deps,
+    is_dep_available,
+    pipeline_requires_extra,
+)
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
@@ -39,6 +43,7 @@ if is_dep_available("scikit-learn"):
     from sklearn.cluster import KMeans
 
 
+@pipeline_requires_extra("ocr")
 class TableRecognitionPipelineV2(BasePipeline):
     """Table Recognition Pipeline"""
 
