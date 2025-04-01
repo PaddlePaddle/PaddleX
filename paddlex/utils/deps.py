@@ -110,10 +110,17 @@ def class_requires_deps(*deps):
             return old_init_func(self, *args, **kwargs)
 
         cls._deps_ = set(deps)
-        for base_cls in inspect.getmro(cls):
+        for base_cls in inspect.getmro(cls)[1:-1]:
             if hasattr(base_cls, "_deps_"):
                 cls._deps_.update(base_cls._deps_)
-        old_init_func = cls.__init__
+        if "__init__" in cls.__dict__:
+            old_init_func = cls.__init__
+        else:
+
+            def _forward(self, *args, **kwargs):
+                return super(cls, self).__init__(*args, **kwargs)
+
+            old_init_func = _forward
         cls.__init__ = _wrapper
         return cls
 

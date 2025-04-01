@@ -208,7 +208,6 @@ def adapt_stale_fwd_patch(self, name, value):
     model compression, we make these patches compatible with the latest forward
     method.
     """
-    import paddle
 
     if name == "forward":
         # NOTE(guosheng): In dygraph to static, `layer.forward` would be patched
@@ -237,6 +236,8 @@ def adapt_stale_fwd_patch(self, name, value):
         ]
 
         if new_args:
+            import paddle
+
             if self.__module__.startswith("paddlenlp"):
                 logging.warning(
                     f"The `forward` method of {self.__class__ if isinstance(self, paddle.nn.Layer) else self} is patched and the patch "
@@ -941,7 +942,9 @@ class ChatTemplateMixin:
             logging.info("Chat-template config file saved in " + chat_template_file)
 
 
-class PretrainedTokenizer(ChatTemplateMixin, PretrainedTokenizerBase):
+class PretrainedTokenizer(
+    ChatTemplateMixin, PretrainedTokenizerBase, metaclass=InitTrackerMeta
+):
     """
     Base class for all tokenizers.
 

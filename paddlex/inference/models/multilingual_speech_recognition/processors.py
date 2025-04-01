@@ -337,11 +337,9 @@ if is_dep_available("paddlepaddle"):
             """
             Returns the list of tokens to suppress in order to avoid any speaker tags or non-speech
             annotations, to prevent sampling texts that are not actually spoken in the audio, e.g.
-
             - ♪♪♪
             - ( SPEAKING FOREIGN LANGUAGE )
             - [DAVID] Hey there,
-
             keeping basic punctuations like commas, periods, question marks, exclamation points, etc.
             """
             symbols = list('"#()*+/:;<=>@[\\]^_`{|}~「」『』')
@@ -753,7 +751,6 @@ if is_dep_available("paddlepaddle"):
         Detect the spoken language in the audio, and return them as list of strings, along with the ids
         of the most probable language tokens and the probability distribution over all language tokens.
         This is performed outside the main decode loop in order to not interfere with kv-caching.
-
         Returns
         -------
         language_tokens : Tensor, shape = (batch_size,)
@@ -824,47 +821,36 @@ if is_dep_available("paddlepaddle"):
     ):
         """
         Transcribe an audio file using Whisper
-
         Parameters
         ----------
         model: Whisper
             The Whisper model instance
-
         mel: paddle.Tensor
             The audio feature
-
         verbose: bool
             Whether to display the text being decoded to the console. If True, displays all the details,
             If False, displays minimal details. If None, does not display anything
-
         temperature: Union[float, Tuple[float, ...]]
             Temperature for sampling. It can be a tuple of temperatures, which will be successfully used
             upon failures according to either `compression_ratio_threshold` or `logprob_threshold`.
-
         compression_ratio_threshold: float
             If the gzip compression ratio is above this value, treat as failed
-
         logprob_threshold: float
             If the average log probability over sampled tokens is below this value, treat as failed
-
         no_speech_threshold: float
             If the no_speech probability is higher than this value AND the average log probability
             over sampled tokens is below `logprob_threshold`, consider the segment as silent
-
         condition_on_previous_text: bool
             if True, the previous output of the model is provided as a prompt for the next window;
             disabling may make the text inconsistent across windows, but the model becomes less prone to
             getting stuck in a failure loop, such as repetition looping or timestamps going out of sync.
-
         decode_options: dict
             Keyword arguments to construct `DecodingOptions` instances
-
         Returns
         -------
         A dictionary containing the resulting text ("text") and segment-level details ("segments"), and
         the spoken language ("language"), which is detected when `decode_options["language"]` is None.
         """
-
         dtype = np.float32  # paddle only support float32
 
         if dtype == np.float32:
@@ -1134,26 +1120,20 @@ if is_dep_available("paddlepaddle"):
             sum_logprobs: paddle.Tensor,
         ) -> Tuple[paddle.Tensor, bool]:
             """Specify how to select the next token, based on the current trace and logits
-
             Parameters
             ----------
             tokens : Tensor, shape = (n_batch, current_sequence_length)
                 all tokens in the context so far, including the prefix and sot_sequence tokens
-
             logits : Tensor, shape = (n_batch, vocab_size)
                 per-token logits of the probability distribution at the current step
-
             sum_logprobs : Tensor, shape = (n_batch)
                 cumulative log probabilities for each sequence
-
             Returns
             -------
             tokens : Tensor, shape = (n_batch, current_sequence_length + 1)
                 the tokens, appended with the selected next token
-
             completed : bool
                 True if all sequences has reached the end of text
-
             """
             raise NotImplementedError
 
@@ -1161,23 +1141,18 @@ if is_dep_available("paddlepaddle"):
             self, tokens: paddle.Tensor, sum_logprobs: paddle.Tensor
         ) -> Tuple[Sequence[Sequence[paddle.Tensor]], List[List[float]]]:
             """Finalize search and return the final candidate sequences
-
             Parameters
             ----------
             tokens : Tensor, shape = (batch_size, beam_size, current_sequence_length)
                 all tokens in the context so far, including the prefix and sot_sequence
-
             sum_logprobs : Tensor, shape = (batch_size, beam_size)
                 cumulative log probabilities for each sequence
-
             Returns
             -------
             tokens : Sequence[Sequence[Tensor]], length = batch_size
                 sequence of Tensors containing candidate token sequences, for each audio input
-
             sum_logprobs : List[List[float]], length = batch_size
                 sequence of cumulative log probabilities corresponding to the above
-
             """
             raise NotImplementedError
 
@@ -1696,22 +1671,18 @@ if is_dep_available("paddlepaddle"):
                 ]
 
             # repeat the audio & text tensors by the group size, for beam search or best-of-n sampling
-
             audio_features = paddle.repeat_interleave(
                 audio_features, self.beam_size, axis=0
             )
             tokens = paddle.repeat_interleave(tokens, self.beam_size, axis=0)
-
             # call the main sampling loop
             tokens, sum_logprobs, no_speech_probs = self._main_loop(
                 audio_features, tokens
             )
-
             # reshape the tensors to have (batch_size, beam_size) as the first two dimensions
             audio_features = audio_features[:: self.beam_size]
             no_speech_probs = no_speech_probs[:: self.beam_size]
             assert audio_features.shape[0] == len(no_speech_probs) == batch_size
-
             tokens = tokens.reshape([batch_size, self.beam_size, -1])
             sum_logprobs = sum_logprobs.reshape([batch_size, self.beam_size])
 
@@ -1770,18 +1741,14 @@ if is_dep_available("paddlepaddle"):
     ) -> Union[DecodingResult, List[DecodingResult]]:
         """
         Performs decoding of 30-second audio segment(s), provided as Mel spectrogram(s).
-
         Parameters
         ----------
         model: Whisper
             the Whisper model instance
-
         mel: paddle.Tensor, shape = (80, 3000) or (*, 80, 3000)
             A tensor containing the Mel spectrogram(s)
-
         options: DecodingOptions
             A dataclass that contains all necessary options for decoding 30-second segments
-
         Returns
         -------
         result: Union[DecodingResult, List[DecodingResult]]
@@ -1846,7 +1813,6 @@ if is_dep_available("paddlepaddle"):
             tensors calculated for the previous positions. This method returns a dictionary that stores
             all caches, and the necessary hooks for the key and value projection modules that save the
             intermediate tensors to be reused during later calculations.
-
             Returns
             -------
             cache : Dict[nn.Layer, paddle.Tensor]
@@ -1929,7 +1895,6 @@ if is_dep_available("paddlepaddle"):
         """
         load the mel filterbank matrix for projecting STFT into a Mel spectrogram.
         Allows decoupling librosa dependency; saved using:
-
             np.savez_compressed(
                 "mel_filters.npz",
                 mel_80=librosa.filters.mel(sr=16000, n_fft=400, n_mels=80),
@@ -1947,21 +1912,17 @@ if is_dep_available("paddlepaddle"):
     ):
         """
         Compute the log-Mel spectrogram of
-
         Parameters
         ----------
         audio: Union[str, np.ndarray, paddle.Tensor], shape = (*)
             The path to audio or either a NumPy array or Tensor containing the audio waveform in 16 kHz
-
         n_mels: int
             The number of Mel-frequency filters, only 80 is supported
-
         Returns
         -------
         paddle.Tensor, shape = (80, n_frames)
             A Tensor that contains the Mel spectrogram
         """
-
         if not paddle.is_tensor(audio):
             if isinstance(audio, str):
                 audio, _ = soundfile.read(audio, dtype="float32", always_2d=True)
