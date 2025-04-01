@@ -17,13 +17,18 @@ import enum
 import json
 from pathlib import Path
 
-import cv2
 import numpy as np
-import pandas as pd
 import yaml
 from PIL import Image
 
+from ....utils.deps import class_requires_deps, is_dep_available
 from .tablepyxl import document_to_xl
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+if is_dep_available("pandas"):
+    import pandas as pd
+
 
 __all__ = [
     "WriterType",
@@ -303,6 +308,7 @@ class _ImageWriterBackend(_BaseWriterBackend):
     """_ImageWriterBackend"""
 
 
+@class_requires_deps("opencv-contrib-python")
 class OpenCVImageWriterBackend(_ImageWriterBackend):
     """OpenCVImageWriterBackend"""
 
@@ -342,6 +348,7 @@ class _VideoWriterBackend(_BaseWriterBackend):
     """_VideoWriterBackend"""
 
 
+@class_requires_deps("opencv-contrib-python")
 class OpenCVVideoWriterBackend(_VideoWriterBackend):
     """OpenCVImageWriterBackend"""
 
@@ -425,6 +432,7 @@ class _CSVWriterBackend(_BaseWriterBackend):
     """_CSVWriterBackend"""
 
 
+@class_requires_deps("pandas")
 class PandasCSVWriterBackend(_CSVWriterBackend):
     """PILImageWriterBackend"""
 

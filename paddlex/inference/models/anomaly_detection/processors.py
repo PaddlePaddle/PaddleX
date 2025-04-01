@@ -13,12 +13,16 @@
 # limitations under the License.
 
 import numpy as np
-from skimage import morphology
 
+from ....utils.deps import class_requires_deps, is_dep_available
 from ...utils.benchmark import benchmark
+
+if is_dep_available("scikit-image"):
+    from skimage import morphology
 
 
 @benchmark.timeit
+@class_requires_deps("scikit-image")
 class MapToMask:
     """Map_to_mask"""
 

@@ -20,14 +20,18 @@ from pathlib import Path
 from types import GeneratorType
 
 import numpy as np
-from prettytable import PrettyTable
 
 from ...utils import logging
+from ...utils.deps import class_requires_deps, is_dep_available
 from ...utils.flags import (
     INFER_BENCHMARK,
     INFER_BENCHMARK_OUTPUT_DIR,
     INFER_BENCHMARK_USE_CACHE_FOR_READ,
 )
+
+if is_dep_available("prettytable"):
+    from prettytable import PrettyTable
+
 
 ENTRY_POINT_NAME = "_entry_point_"
 
@@ -35,6 +39,7 @@ ENTRY_POINT_NAME = "_entry_point_"
 _inference_operations = []
 
 
+@class_requires_deps("prettytable")
 class Benchmark:
     def __init__(self, enabled):
         self._enabled = enabled

@@ -14,14 +14,19 @@
 
 from typing import Any, Dict, List
 
-import joblib
 import numpy as np
-import pandas as pd
 
+from ....utils.deps import class_requires_deps, is_dep_available
 from ...utils.benchmark import benchmark
+
+if is_dep_available("joblib"):
+    import joblib
+if is_dep_available("pandas"):
+    import pandas as pd
 
 
 @benchmark.timeit
+@class_requires_deps("joblib", "pandas")
 class TSDeNormalize:
     """A class to de-normalize time series prediction data using a pre-fitted scaler."""
 
@@ -37,7 +42,7 @@ class TSDeNormalize:
         self.scaler = joblib.load(scale_path)
         self.params_info = params_info
 
-    def __call__(self, preds_list: List[pd.DataFrame]) -> List[pd.DataFrame]:
+    def __call__(self, preds_list: List["pd.DataFrame"]) -> List["pd.DataFrame"]:
         """
         Applies de-normalization to a list of prediction DataFrames.
 
@@ -49,7 +54,7 @@ class TSDeNormalize:
         """
         return [self.tsdenorm(pred) for pred in preds_list]
 
-    def tsdenorm(self, pred: pd.DataFrame) -> pd.DataFrame:
+    def tsdenorm(self, pred: "pd.DataFrame") -> "pd.DataFrame":
         """
         De-normalizes a single prediction DataFrame.
 
@@ -65,6 +70,7 @@ class TSDeNormalize:
 
 
 @benchmark.timeit
+@class_requires_deps("pandas")
 class ArraytoTS:
     """A class to convert arrays of predictions into time series format."""
 
@@ -80,7 +86,7 @@ class ArraytoTS:
 
     def __call__(
         self, ori_ts_list: List[Dict[str, Any]], pred_list: List[np.ndarray]
-    ) -> List[pd.DataFrame]:
+    ) -> List["pd.DataFrame"]:
         """
         Converts a list of arrays to a list of time series DataFrames.
 
@@ -95,7 +101,7 @@ class ArraytoTS:
             self.arraytots(ori_ts, pred) for ori_ts, pred in zip(ori_ts_list, pred_list)
         ]
 
-    def arraytots(self, ori_ts: Dict[str, Any], pred: np.ndarray) -> pd.DataFrame:
+    def arraytots(self, ori_ts: Dict[str, Any], pred: np.ndarray) -> "pd.DataFrame":
         """
         Converts a single array prediction to a time series DataFrame.
 

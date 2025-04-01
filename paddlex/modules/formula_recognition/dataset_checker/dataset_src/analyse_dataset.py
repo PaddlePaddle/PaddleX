@@ -18,15 +18,19 @@ import os
 import platform
 from collections import defaultdict
 
-import cv2
-import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import font_manager
-from matplotlib.backends.backend_agg import FigureCanvasAgg
 
+from .....utils.deps import function_requires_deps, is_dep_available
 from .....utils.file_interface import custom_open
 from .....utils.fonts import PINGFANG_FONT_FILE_PATH
 from .....utils.logging import warning
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+if is_dep_available("matplotlib"):
+    import matplotlib.pyplot as plt
+    from matplotlib import font_manager
+    from matplotlib.backends.backend_agg import FigureCanvasAgg
 
 
 def simple_analyse(dataset_path, images_dict):
@@ -74,6 +78,7 @@ def simple_analyse(dataset_path, images_dict):
     )
 
 
+@function_requires_deps("matplotlib", "opencv-contrib-python")
 def deep_analyse(dataset_path, output, datatype="FormulaRecDataset"):
     """class analysis for dataset"""
     tags = ["train", "val"]

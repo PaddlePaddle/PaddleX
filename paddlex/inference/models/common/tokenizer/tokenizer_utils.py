@@ -26,15 +26,14 @@ from dataclasses import asdict, dataclass
 from functools import lru_cache
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-import lazy_paddle as paddle
-import numpy
 import numpy as np
-import six
-from jinja2 import Template
-from jinja2.exceptions import TemplateError, TemplateSyntaxError
-from jinja2.sandbox import ImmutableSandboxedEnvironment
 
 from .....utils import logging
+from .....utils.deps import (
+    class_requires_deps,
+    function_requires_deps,
+    is_dep_available,
+)
 from .tokenizer_utils_base import (
     CHAT_TEMPLATE_CONFIG_NAME,
     AddedToken,
@@ -53,6 +52,11 @@ from .tokenizer_utils_base import (
 from .utils import convert_to_dict_message, fn_args_to_dict
 from .vocab import Vocab
 
+if is_dep_available("Jinja2"):
+    from jinja2 import Template
+    from jinja2.exceptions import TemplateError, TemplateSyntaxError
+    from jinja2.sandbox import ImmutableSandboxedEnvironment
+
 __all__ = [
     "ChatTemplate",
     "Trie",
@@ -62,6 +66,7 @@ __all__ = [
 ]
 
 
+@class_requires_deps("Jinja2")
 @dataclass
 class ChatTemplate:
     conversation: Union[List[str], None] = None
@@ -70,7 +75,7 @@ class ChatTemplate:
 
     @staticmethod
     @lru_cache()
-    def _compile_jinja_template(chat_template) -> Template:
+    def _compile_jinja_template(chat_template) -> "Template":
         def raise_exception(message):
             raise TemplateError(message)
 
@@ -196,12 +201,15 @@ class ChatTemplate:
         return cls.from_dict(config)
 
 
+@function_requires_deps("paddlepaddle")
 def adapt_stale_fwd_patch(self, name, value):
     """
     Since there are some monkey patches for forward of PretrainedModel, such as
     model compression, we make these patches compatible with the latest forward
     method.
     """
+    import paddle
+
     if name == "forward":
         # NOTE(guosheng): In dygraph to static, `layer.forward` would be patched
         # by an instance of `StaticFunction`. And use string compare to avoid to
@@ -634,6 +642,7 @@ def normalize_chars(text):
     return "".join(output)
 
 
+@class_requires_deps("paddlepaddle", "Jinja2")
 class ChatTemplateMixin:
     chat_template: Optional[ChatTemplate] = None
 
@@ -643,7 +652,7 @@ class ChatTemplateMixin:
         tokenize: bool = True,
         context_data: Dict[str, Any] = {},
         **tokenizer_kwargs,
-    ) -> Union[str, Dict[str, Union["numpy.ndarray", "paddle.Tensor"]]]:
+    ):
         """apply chat_template rules to conversation which should not be batched data
 
         Args:
@@ -652,7 +661,7 @@ class ChatTemplateMixin:
             tokenize (bool, optional): whether do tokenization. Defaults to True.
 
         Returns:
-            str | dict[str, Union["numpy.ndarray", "paddle.Tensor"]]: return the result of applied data
+            str | dict[str, Union[numpy.ndarray, paddle.Tensor]]: return the result of applied data
         """
         if not self.chat_template:
             raise ValueError(
@@ -677,7 +686,7 @@ class ChatTemplateMixin:
         self,
         conversation: Union[List[Dict[str, str]], str],
         context_data: Dict[str, Any] = {},
-    ) -> Union[str, Dict[str, Union["numpy.ndarray", "paddle.Tensor"]]]:
+    ):
         context_data = self.chat_template._init_context_data(context_data)
 
         if isinstance(conversation, str):
@@ -695,7 +704,7 @@ class ChatTemplateMixin:
         self,
         conversation: Union[Dict[str, str], str],
         add_generation_prompt=True,
-    ) -> Union[str, Dict[str, Union["numpy.ndarray", "paddle.Tensor"]]]:
+    ):
         if isinstance(conversation, str):
             conversations = [{"role": "user", "content": conversation}]
         elif isinstance(conversation, list):
@@ -932,7 +941,6 @@ class ChatTemplateMixin:
             logging.info("Chat-template config file saved in " + chat_template_file)
 
 
-@six.add_metaclass(InitTrackerMeta)
 class PretrainedTokenizer(ChatTemplateMixin, PretrainedTokenizerBase):
     """
     Base class for all tokenizers.

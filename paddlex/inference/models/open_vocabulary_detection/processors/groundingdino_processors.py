@@ -18,14 +18,9 @@ from typing import Dict, List, Optional, Tuple, Union
 import numpy as np
 import PIL
 
-from .....utils.lazy_loader import LazyLoader
+from .....utils.deps import class_requires_deps
 from ....utils.benchmark import benchmark
 from ...common.tokenizer.bert_tokenizer import BertTokenizer
-
-# NOTE: LazyLoader is used to avoid conflicts between ultra-infer and Paddle
-paddle = LazyLoader("lazy_paddle", globals(), "paddle")
-T = LazyLoader("T", globals(), "paddle.vision.transforms")
-F = LazyLoader("F", globals(), "paddle.nn.functional")
 
 
 def _max_by_axis(the_list):
@@ -99,6 +94,7 @@ def _text_pad_batch_data(
 
 
 @benchmark.timeit
+@class_requires_deps("paddlepaddle")
 class GroundingDINOPostProcessor(object):
     """PostProcessors for GroundingDINO"""
 
@@ -129,6 +125,7 @@ class GroundingDINOPostProcessor(object):
         text_threshold=None,
         **kwargs,
     ):
+        import paddle
 
         box_threshold = self.box_threshold if box_threshold is None else box_threshold
         text_threshold = (
@@ -168,6 +165,8 @@ class GroundingDINOPostProcessor(object):
         text_threshold,
     ):
         """Post Process for prediction result of single image."""
+        import paddle
+        import paddle.nn.functional as F
 
         logits = F.sigmoid(pred_logits)
         boxes = pred_boxes
@@ -265,6 +264,7 @@ class GroundingDINOProcessor(object):
 
 
 @benchmark.timeit
+@class_requires_deps("paddlepaddle")
 class GroundingDinoTextProcessor(object):
     """Constructs a GroundingDino text processor."""
 
@@ -280,6 +280,8 @@ class GroundingDinoTextProcessor(object):
         special_tokens_list,
     ):
         """Preprocess the text with tokenization."""
+        import paddle
+
         tokenized_out = {}
         input_ids = _text_pad_batch_data(input_ids)
         input_ids = paddle.to_tensor(input_ids, dtype=paddle.int64).squeeze(-1)
@@ -325,6 +327,8 @@ class GroundingDinoTextProcessor(object):
         Returns:
             torch.Tensor: attention mask between each special tokens.
         """
+        import paddle
+
         input_ids = tokenized["input_ids"]
         bs, num_token = input_ids.shape
         special_tokens_mask = paddle.zeros((bs, num_token), dtype=paddle.bool)
@@ -368,6 +372,7 @@ class GroundingDinoTextProcessor(object):
 
 
 @benchmark.timeit
+@class_requires_deps("paddlepaddle")
 class GroundingDinoImageProcessor(object):
     """Constructs a GroundingDino image processor."""
 
@@ -398,6 +403,7 @@ class GroundingDinoImageProcessor(object):
 
     def resize(self, image, size=None, max_size=1333):
         """Officially aligned Image resize."""
+        import paddle.vision.transforms as T
 
         def get_size_with_aspect_ratio(image_size, size, max_size=None):
             w, h = image_size
@@ -431,6 +437,8 @@ class GroundingDinoImageProcessor(object):
         return rescaled_image
 
     def nested_tensor_from_tensor_list(self, tensor_list):
+        import paddle
+
         if tensor_list[0].ndim == 3:
             max_size = _max_by_axis([list(img.shape) for img in tensor_list])
             batch_shape = [len(tensor_list)] + max_size
@@ -460,6 +468,8 @@ class GroundingDinoImageProcessor(object):
         **kwargs,
     ):
         """Preprocess an image or batch of images."""
+        import paddle.vision.transforms as T
+
         do_resize = do_resize if do_resize is not None else self.do_resize
         do_normalize = do_normalize if do_normalize is not None else self.do_normalize
         do_nested = do_nested if do_nested is not None else self.do_nested

@@ -14,12 +14,15 @@
 
 import math
 
-import cv2
 import numpy as np
 
+from ....utils.deps import class_requires_deps, is_dep_available
 from ...utils.benchmark import benchmark
 from ..common.vision import funcs as F
 from ..common.vision.processors import _BaseResize
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 
 @benchmark.timeit
@@ -80,6 +83,7 @@ class Resize(_BaseResize):
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class SegPostProcess:
     """Semantic Segmentation PostProcess
 

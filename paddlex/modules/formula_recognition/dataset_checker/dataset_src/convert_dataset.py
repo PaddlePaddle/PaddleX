@@ -18,10 +18,13 @@ import os
 import pickle
 from collections import defaultdict
 
-import imagesize
-from tqdm import tqdm
-
+from .....utils.deps import function_requires_deps, is_dep_available
 from .....utils.errors import ConvertFailedError
+
+if is_dep_available("imagesize"):
+    import imagesize
+if is_dep_available("tqdm"):
+    from tqdm import tqdm
 
 
 def check_src_dataset(root_dir, dataset_type):
@@ -63,6 +66,7 @@ def convert_pkl_dataset(root_dir):
         txt2pickle(src_img_dir, src_anno_path, root_dir)
 
 
+@function_requires_deps("tqdm", "imagesize")
 def txt2pickle(images, equations, save_dir):
     phase = os.path.basename(equations).replace(".txt", "")
     save_p = os.path.join(save_dir, "latexocr_{}.pkl".format(phase))

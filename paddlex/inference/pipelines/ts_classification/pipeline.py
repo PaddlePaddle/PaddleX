@@ -14,12 +14,14 @@
 
 from typing import Any, Dict, List, Optional, Union
 
-import pandas as pd
-
+from ....utils.deps import function_requires_deps, is_dep_available
 from ...models.ts_classification.result import TSClsResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
+
+if is_dep_available("pandas"):
+    import pandas as pd
 
 
 class TSClsPipeline(BasePipeline):
@@ -55,8 +57,11 @@ class TSClsPipeline(BasePipeline):
         ts_classification_model_config = config["SubModules"]["TSClassification"]
         self.ts_classification_model = self.create_model(ts_classification_model_config)
 
+    @function_requires_deps("pandas")
     def predict(
-        self, input: Union[str, List[str], pd.DataFrame, List[pd.DataFrame]], **kwargs
+        self,
+        input: Union[str, List[str], "pd.DataFrame", List["pd.DataFrame"]],
+        **kwargs
     ) -> TSClsResult:
         """Predicts time series classification results for the given input.
 

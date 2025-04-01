@@ -51,7 +51,7 @@ def install_packages(requirements, pip_install_opts=None):
         os.unlink(reqs_file_path)
 
 
-def uninstall_packages(pkgs, pip_uninstall_opts=None):
+def uninstall_packages(packages, pip_uninstall_opts=None):
     return subprocess.check_call(
         [
             sys.executable,
@@ -60,6 +60,6 @@ def uninstall_packages(pkgs, pip_uninstall_opts=None):
             "uninstall",
             "-y",
             *(pip_uninstall_opts or []),
-            *pkgs,
+            *packages,
         ]
     )

@@ -25,9 +25,9 @@ from .constants import MODEL_FILE_PREFIX
 from .inference.pipelines import load_pipeline_config
 from .repo_manager import get_all_supported_repo_names, setup
 from .utils import logging
-from .utils.deps import EXTRAS
+from .utils.deps import EXTRAS, require_paddle2onnx_plugin
 from .utils.flags import FLAGS_json_format_model
-from .utils.install import install_packages
+from .utils.install import install_deps
 from .utils.interactive_get_pipeline import interactive_get_pipeline
 from .utils.pipeline_arguments import PIPELINE_ARGUMENTS
 
@@ -219,13 +219,13 @@ def install(args):
         for dep_specs in EXTRAS["serving"].values():
             reqs += dep_specs
         # Should we sort the requirements?
-        install_packages(reqs)
+        install_deps(reqs)
 
     def _install_paddle2onnx_deps():
         reqs = []
         for dep_specs in EXTRAS["paddle2onnx"].values():
             reqs += dep_specs
-        install_packages(reqs)
+        install_deps(reqs)
 
     def _install_hpi_deps(device_type):
         supported_device_types = ["cpu", "gpu", "npu"]
@@ -247,7 +247,7 @@ def install(args):
             packages = ["ultra-infer-npu-python"]
 
         with importlib.resources.path("paddlex", "hpip_links.html") as f:
-            install_packages(packages, ["--find-links", str(f)])
+            install_deps(packages, ["--find-links", str(f)])
 
     # Enable debug info
     os.environ["PADDLE_PDX_DEBUG"] = "True"
@@ -333,6 +333,8 @@ def serve(pipeline, *, device, use_hpip, host, port):
 
 # TODO: Move to another module
 def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
+    require_paddle2onnx_plugin()
+
     PD_MODEL_FILE_PREFIX = MODEL_FILE_PREFIX
     PD_PARAMS_FILENAME = f"{MODEL_FILE_PREFIX}.pdiparams"
     ONNX_MODEL_FILENAME = f"{MODEL_FILE_PREFIX}.onnx"

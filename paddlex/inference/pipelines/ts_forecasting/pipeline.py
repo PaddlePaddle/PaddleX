@@ -14,12 +14,14 @@
 
 from typing import Any, Dict, List, Optional, Union
 
-import pandas as pd
-
+from .....utils.deps import function_requires_deps, is_dep_available
 from ...models.ts_forecasting.result import TSFcResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
+
+if is_dep_available("pandas"):
+    import pandas as pd
 
 
 class TSFcPipeline(BasePipeline):
@@ -55,8 +57,11 @@ class TSFcPipeline(BasePipeline):
         ts_forecast_model_config = config["SubModules"]["TSForecast"]
         self.ts_forecast_model = self.create_model(ts_forecast_model_config)
 
+    @function_requires_deps("pandas")
     def predict(
-        self, input: Union[str, List[str], pd.DataFrame, List[pd.DataFrame]], **kwargs
+        self,
+        input: Union[str, List[str], "pd.DataFrame", List["pd.DataFrame"]],
+        **kwargs
     ) -> TSFcResult:
         """Predicts time series forecast results for the given input.
 

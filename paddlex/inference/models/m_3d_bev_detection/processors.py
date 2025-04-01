@@ -15,19 +15,14 @@
 
 import numbers
 
-import cv2
 import numpy as np
 
+from ....utils.deps import class_requires_deps, is_dep_available
 from ...common.reader.det_3d_reader import Sample
 from ...utils.benchmark import benchmark
 
-cv2_interp_codes = {
-    "nearest": cv2.INTER_NEAREST,
-    "bilinear": cv2.INTER_LINEAR,
-    "bicubic": cv2.INTER_CUBIC,
-    "area": cv2.INTER_AREA,
-    "lanczos": cv2.INTER_LANCZOS4,
-}
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 
 @benchmark.timeit
@@ -45,6 +40,7 @@ class LoadPointsFromFile:
             shift_height (bool): Whether to shift height values.
             use_color (bool): Whether to include color attributes in the loaded points.
         """
+
         self.shift_height = shift_height
         self.use_color = use_color
         if isinstance(use_dim, int):
@@ -275,6 +271,7 @@ class LoadPointsFromMultiSweeps(object):
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class LoadMultiViewImageFromFiles:
     """Load multi-view images from files."""
 
@@ -342,6 +339,7 @@ class LoadMultiViewImageFromFiles:
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class ResizeImage:
     """Resize images & bbox & mask."""
 
@@ -595,6 +593,13 @@ class ResizeImage:
         Returns:
             numpy.ndarray or tuple: The resized image. If return_scale is True, returns a tuple containing the resized image and the scaling factors (w_scale, h_scale).
         """
+        cv2_interp_codes = {
+            "nearest": cv2.INTER_NEAREST,
+            "bilinear": cv2.INTER_LINEAR,
+            "bicubic": cv2.INTER_CUBIC,
+            "area": cv2.INTER_AREA,
+            "lanczos": cv2.INTER_LANCZOS4,
+        }
         h, w = img.shape[:2]
         if backend not in ["cv2", "pillow"]:
             raise ValueError(
@@ -673,6 +678,7 @@ class ResizeImage:
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class NormalizeImage:
     """Normalize the image."""
 
@@ -732,6 +738,7 @@ class NormalizeImage:
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class PadImage(object):
     """Pad the image & mask."""
 

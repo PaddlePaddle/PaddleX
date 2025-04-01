@@ -33,7 +33,6 @@ from .utils import (
     check_package_installation,
     fetch_repo_using_git,
     install_external_deps,
-    mute,
     remove_repo_using_rm,
     reset_repo_using_git,
     switch_working_dir,
@@ -74,8 +73,8 @@ class PPRepository(object):
 
         self.meta = get_repo_meta(self.name)
         self.git_path = self.meta["git_path"]
-        self.lib_name = self.meta["lib_name"]
-        self.pkg_name = self.meta.get("pkg_name", None)
+        self.dist_name = self.meta.get("dist_name", None)
+        self.import_name = self.meta.get("import_name", None)
         self.pdx_mod_name = (
             pdx_collection_mod.__name__ + "." + self.meta["pdx_pkg_name"]
         )
@@ -128,7 +127,9 @@ class PPRepository(object):
         if self.meta["install_pkg"]:
             editable = self.meta.get("editable", True)
             if editable:
-                logging.warning(f"{self.pkg_name} will be installed in editable mode.")
+                logging.warning(
+                    f"{self.import_name} will be installed in editable mode."
+                )
             with switch_working_dir(self.root_dir):
                 try:
                     pip_install_opts = ["--no-deps"]
@@ -160,7 +161,7 @@ class PPRepository(object):
         """uninstall_packages"""
         pkgs = []
         if self.install_pkg:
-            pkgs.append(self.pkg_name)
+            pkgs.append(self.dist_name)
         for e in self.meta.get("extra", []):
             if isinstance(e, tuple):
                 pkgs.append(e[1])
@@ -197,17 +198,6 @@ class PPRepository(object):
                 logging.warning(
                     f"Update {self.name} from {git_url} failed, check your network connection. Error:\n{e}"
                 )
-
-    def _get_lib(self):
-        """_get_lib"""
-        import importlib.util
-
-        importlib.invalidate_caches()
-        try:
-            with mute():
-                return importlib.import_module(self.lib_name)
-        except ImportError:
-            return None
 
     def get_pdx(self):
         """get_pdx"""
@@ -369,7 +359,9 @@ class RepositoryGroupInstaller(object):
         return sorted_repos
 
     def _normalize_deps(self, deps, headline=None):
-        repo_pkgs = set(repo.pkg_name for repo in self.repos)
+        repo_pkgs = set(
+            repo.dist_name for repo in self.repos if repo.dist_name is not None
+        )
         lines = []
         if headline is not None:
             lines.append(headline)

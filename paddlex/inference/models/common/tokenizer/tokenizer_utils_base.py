@@ -22,10 +22,10 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, NamedTuple, Optional, Sequence, Tuple, Union
 
-import lazy_paddle as paddle
 import numpy as np
 
 from .....utils import logging
+from .....utils.deps import class_requires_deps, function_requires_deps
 
 __all__ = [
     "AddedToken",
@@ -125,10 +125,13 @@ class TensorType(ExplicitEnum):
     NUMPY = "np"
 
 
+@function_requires_deps("paddlepaddle")
 def to_py_obj(obj):
     """
     Convert a Paddle tensor, Numpy array or python list to a python list.
     """
+    import paddle
+
     if isinstance(obj, (dict, UserDict)):
         return {k: to_py_obj(v) for k, v in obj.items()}
     elif isinstance(obj, (list, tuple)):
@@ -183,6 +186,7 @@ class TokenSpan(NamedTuple):
     end: int
 
 
+@class_requires_deps("paddlepaddle")
 class BatchEncoding(UserDict):
     """
     Holds the output of the [`PretrainedTokenizerBase.__call__`],
@@ -719,6 +723,8 @@ class BatchEncoding(UserDict):
             prepend_batch_axis (`int`, *optional*, defaults to `False`):
                 Whether or not to add the batch dimension during the conversion.
         """
+        import paddle
+
         if tensor_type is None:
             return self
 
@@ -1304,6 +1310,7 @@ class SpecialTokensMixin:
         return all_ids
 
 
+@class_requires_deps("paddlepaddle")
 class PretrainedTokenizerBase(SpecialTokensMixin):
     """
     Base class for [`PretrainedTokenizer`].
@@ -2723,6 +2730,8 @@ class PretrainedTokenizerBase(SpecialTokensMixin):
             verbose (`bool`, *optional*, defaults to `True`):
                 Whether or not to print more information and warnings.
         """
+        import paddle
+
         # If we have a list of dicts, let's convert it in a dict of lists
         if isinstance(encoded_inputs, (list, tuple)) and isinstance(
             encoded_inputs[0], (dict, BatchEncoding)
@@ -3336,7 +3345,7 @@ class PretrainedTokenizerBase(SpecialTokensMixin):
 
     def batch_decode(
         self,
-        sequences: Union[List[int], List[List[int]], "np.ndarray", "paddle.Tensor"],
+        sequences,
         skip_special_tokens: bool = False,
         clean_up_tokenization_spaces: bool = True,
         **kwargs,
@@ -3369,7 +3378,7 @@ class PretrainedTokenizerBase(SpecialTokensMixin):
 
     def decode(
         self,
-        token_ids: Union[int, List[int], "np.ndarray", "paddle.Tensor"],
+        token_ids,
         skip_special_tokens: bool = False,
         clean_up_tokenization_spaces: bool = True,
         **kwargs,

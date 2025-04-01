@@ -16,8 +16,7 @@ import asyncio
 from operator import attrgetter
 from typing import Any, Dict, List
 
-from fastapi import FastAPI
-
+from .....utils.deps import function_requires_deps, is_dep_available
 from ....pipelines.components import IndexData
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
@@ -26,8 +25,12 @@ from ...schemas import pp_shituv2 as schema
 from .._app import create_app, primary_operation
 from ._common import image_recognition as ir_common
 
+if is_dep_available("fastapi"):
+    from fastapi import FastAPI
 
-def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
+
+@function_requires_deps("fastapi")
+def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
     app, ctx = create_app(
         pipeline=pipeline, app_config=app_config, app_aiohttp_session=True
     )

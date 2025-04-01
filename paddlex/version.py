@@ -29,7 +29,7 @@ def get_pdx_version():
 
 def get_version_dict():
     """get_version_dict"""
-    import lazy_paddle as paddle
+    import paddle
 
     from . import repo_manager
 

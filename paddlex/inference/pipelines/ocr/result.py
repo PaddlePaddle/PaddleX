@@ -17,14 +17,18 @@ import random
 from pathlib import Path
 from typing import Dict
 
-import cv2
 import numpy as np
 from PIL import Image, ImageDraw
 
+from ....utils.deps import class_requires_deps, function_requires_deps, is_dep_available
 from ....utils.fonts import SIMFANG_FONT_FILE_PATH, create_font
 from ...common.result import BaseCVResult, JsonMixin
 
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
+
+@class_requires_deps("opencv-contrib-python")
 class OCRResult(BaseCVResult):
     """OCR result"""
 
@@ -193,6 +197,7 @@ class OCRResult(BaseCVResult):
 
 
 # Adds a function comment according to Google Style Guide
+@function_requires_deps("opencv-contrib-python")
 def draw_box_txt_fine(
     img_size: tuple, box: np.ndarray, txt: str, font_path: str
 ) -> np.ndarray:

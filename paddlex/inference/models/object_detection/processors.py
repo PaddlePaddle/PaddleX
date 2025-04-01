@@ -14,14 +14,17 @@
 
 from typing import List, Optional, Sequence, Tuple, Union
 
-import cv2
 import numpy as np
 from numpy import ndarray
 
+from ....utils.deps import class_requires_deps, function_requires_deps, is_dep_available
 from ...common.reader import ReadImage as CommonReadImage
 from ...utils.benchmark import benchmark
 from ..common import Normalize as CommonNormalize
 from ..common import Resize as CommonResize
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 Boxes = List[dict]
 Number = Union[int, float]
@@ -326,6 +329,7 @@ def _get_3rd_point(a: ndarray, b: ndarray) -> ndarray:
     return third_pt
 
 
+@function_requires_deps("opencv-contrib-python")
 def get_affine_transform(
     center: ndarray,
     input_size: Union[Number, Tuple[Number, Number], ndarray],
@@ -383,6 +387,7 @@ def get_affine_transform(
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class WarpAffine:
     """Apply warp affine transformation to the image based on the given parameters.
 

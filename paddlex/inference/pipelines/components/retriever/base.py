@@ -16,16 +16,20 @@ import time
 from abc import ABC, abstractmethod
 from typing import List
 
-from langchain.docstore.document import Document
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community import vectorstores
-from langchain_community.vectorstores import FAISS
-
 from paddlex.utils import logging
 
+from .....utils.deps import class_requires_deps, is_dep_available
 from .....utils.subclass_register import AutoRegisterABCMetaClass
 
+if is_dep_available("langchain"):
+    from langchain.docstore.document import Document
+    from langchain.text_splitter import RecursiveCharacterTextSplitter
+if is_dep_available("langchain-community"):
+    from langchain_community import vectorstores
+    from langchain_community.vectorstores import FAISS
 
+
+@class_requires_deps("langchain", "langchain-community")
 class BaseRetriever(ABC, metaclass=AutoRegisterABCMetaClass):
     """Base Retriever"""
 

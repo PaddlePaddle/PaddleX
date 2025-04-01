@@ -139,7 +139,7 @@ def suggest_inference_backend_and_config(
     # additional important factors, such as NVIDIA GPU compute capability and
     # device manufacturers. We should also allow users to provide hints.
 
-    import lazy_paddle as paddle
+    import paddle
 
     if available_backends is not None and not available_backends:
         return None, "No inference backends are available."
@@ -159,11 +159,11 @@ def suggest_inference_backend_and_config(
         # FIXME: We should not rely on the PaddlePaddle library to detemine CUDA
         # and cuDNN versions.
         # Should we inject environment info from the outside?
-        import lazy_paddle.version
+        import paddle.version
 
-        cuda_version = lazy_paddle.version.cuda()
+        cuda_version = paddle.version.cuda()
         cuda_version = cuda_version.replace(".", "")
-        cudnn_version = lazy_paddle.version.cudnn().rsplit(".", 1)[0]
+        cudnn_version = paddle.version.cudnn().rsplit(".", 1)[0]
         cudnn_version = cudnn_version.replace(".", "")
         key = f"gpu_cuda{cuda_version}_cudnn{cudnn_version}"
     else:

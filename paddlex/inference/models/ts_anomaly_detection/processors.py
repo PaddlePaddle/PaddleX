@@ -15,12 +15,16 @@
 from typing import Any, Dict, List
 
 import numpy as np
-import pandas as pd
 
+from ....utils.deps import class_requires_deps, is_dep_available
 from ...utils.benchmark import benchmark
+
+if is_dep_available("pandas"):
+    import pandas as pd
 
 
 @benchmark.timeit
+@class_requires_deps("pandas")
 class GetAnomaly:
     """A class to detect anomalies in time series data based on a model threshold."""
 
@@ -38,7 +42,7 @@ class GetAnomaly:
 
     def __call__(
         self, ori_ts_list: List[Dict[str, Any]], pred_list: List[np.ndarray]
-    ) -> List[pd.DataFrame]:
+    ) -> List["pd.DataFrame"]:
         """
         Detects anomalies for a list of time series predictions.
 
@@ -54,7 +58,7 @@ class GetAnomaly:
             for ori_ts, pred in zip(ori_ts_list, pred_list)
         ]
 
-    def getanomaly(self, ori_ts: Dict[str, Any], pred: np.ndarray) -> pd.DataFrame:
+    def getanomaly(self, ori_ts: Dict[str, Any], pred: np.ndarray) -> "pd.DataFrame":
         """
         Detects anomalies in a single time series prediction.
 

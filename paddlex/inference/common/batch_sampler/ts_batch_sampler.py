@@ -15,14 +15,17 @@
 import os
 from pathlib import Path
 
-import pandas as pd
-
 from ....utils import logging
 from ....utils.cache import CACHE_DIR
+from ....utils.deps import class_requires_deps, is_dep_available
 from ....utils.download import download
 from .base_batch_sampler import BaseBatchSampler, Batch
 
+if is_dep_available("pandas"):
+    import pandas as pd
 
+
+@class_requires_deps("pandas")
 class TSBatchSampler(BaseBatchSampler):
     """Batch sampler for time series data, supporting CSV file inputs."""
 

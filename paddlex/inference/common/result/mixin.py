@@ -21,10 +21,10 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Union
 
 import numpy as np
-import pandas as pd
 from PIL import Image
 
 from ....utils import logging
+from ....utils.deps import function_requires_deps, is_dep_available
 from ...utils.io import (
     CSVWriter,
     HtmlWriter,
@@ -35,6 +35,9 @@ from ...utils.io import (
     VideoWriter,
     XlsxWriter,
 )
+
+if is_dep_available("pandas"):
+    import pandas as pd
 
 
 class StrMixin:
@@ -70,6 +73,7 @@ class StrMixin:
         logging.info(self._to_str())
 
 
+@function_requires_deps("pandas")
 def _format_data(obj):
     """Helper function to format data into a JSON-serializable format.
 
@@ -350,7 +354,7 @@ class CSVMixin:
         self._save_funcs.append(self.save_to_csv)
 
     @property
-    def csv(self) -> Dict[str, pd.DataFrame]:
+    def csv(self) -> Dict[str, "pd.DataFrame"]:
         """Property to get the pandas Dataframe representation of the result.
 
         Returns:
@@ -359,7 +363,7 @@ class CSVMixin:
         return self._to_csv()
 
     @abstractmethod
-    def _to_csv(self) -> Dict[str, pd.DataFrame]:
+    def _to_csv(self) -> Dict[str, "pd.DataFrame"]:
         """Abstract method to convert the result to pandas.DataFrame.
 
         Returns:

@@ -18,11 +18,14 @@ import os
 import os.path as osp
 import shutil
 
-import pandas as pd
-
+from .....utils.deps import function_requires_deps, is_dep_available
 from .....utils.logging import info
 
+if is_dep_available("pandas"):
+    import pandas as pd
 
+
+@function_requires_deps("pandas")
 def split_dataset(root_dir, train_rate, val_rate):
     """split dataset"""
     assert (

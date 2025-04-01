@@ -16,9 +16,9 @@ import math
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
-from sklearn.cluster import KMeans
 
 from ....utils import logging
+from ....utils.deps import function_requires_deps, is_dep_available
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
@@ -34,6 +34,9 @@ from .table_recognition_post_processing import (
 )
 from .table_recognition_post_processing_v2 import get_table_recognition_res
 from .utils import get_neighbor_boxes_idx
+
+if is_dep_available("scikit-learn"):
+    from sklearn.cluster import KMeans
 
 
 class TableRecognitionPipelineV2(BasePipeline):
@@ -422,6 +425,7 @@ class TableRecognitionPipelineV2(BasePipeline):
             return iou
 
         # Function to combine rectangles into N rectangles
+        @function_requires_deps("scikit-learn")
         def combine_rectangles(rectangles, N):
             """
             Combine rectangles into N rectangles based on geometric proximity.

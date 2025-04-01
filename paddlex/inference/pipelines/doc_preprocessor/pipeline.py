@@ -15,7 +15,6 @@
 from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
-from scipy.ndimage import rotate
 
 from ....utils import logging
 from ...common.batch_sampler import ImageBatchSampler

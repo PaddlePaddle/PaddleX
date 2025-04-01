@@ -16,10 +16,9 @@ import shutil
 import tempfile
 from typing import Any, Dict, Iterator, List, Tuple
 
-import lazy_paddle
-
 from ....modules.m_3d_bev_detection.model_list import MODELS
 from ....utils import logging
+from ....utils.deps import function_requires_deps
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import Det3DBatchSampler
 from ...common.reader import ReadNuscenesData
@@ -76,16 +75,16 @@ class BEVDet3DPredictor(BasePredictor):
         """
         return BEV3DDetResult
 
+    @function_requires_deps("paddlepaddle")
     def _build(self) -> Tuple:
         """Build the preprocessors and inference engine based on the configuration.
 
         Returns:
             tuple: A tuple containing the preprocessors and inference engine.
         """
-        if (
-            lazy_paddle.is_compiled_with_cuda()
-            and not lazy_paddle.is_compiled_with_rocm()
-        ):
+        import paddle
+
+        if paddle.is_compiled_with_cuda() and not paddle.is_compiled_with_rocm():
             from ....ops.iou3d_nms import nms_gpu  # noqa: F401
             from ....ops.voxelize import hard_voxelize  # noqa: F401
         else:

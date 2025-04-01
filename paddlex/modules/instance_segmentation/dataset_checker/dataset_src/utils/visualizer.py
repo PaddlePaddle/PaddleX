@@ -15,10 +15,13 @@
 import numpy as np
 import PIL
 from PIL import Image, ImageDraw, ImageFont
-from pycocotools.coco import COCO
 
 from ......utils import logging
+from ......utils.deps import function_requires_deps, is_dep_available
 from ......utils.fonts import PINGFANG_FONT_FILE_PATH
+
+if is_dep_available("pycocotools"):
+    from pycocotools.coco import COCO
 
 
 def colormap(rgb=False):
@@ -111,7 +114,8 @@ def font_colormap(color_index):
         return dark.astype("int32")
 
 
-def draw_bbox(image, coco_info: COCO, img_id):
+@function_requires_deps("pycocotools")
+def draw_bbox(image, coco_info: "COCO", img_id):
     """
     Draw bbox on image
     """
@@ -188,7 +192,8 @@ def draw_bbox(image, coco_info: COCO, img_id):
     return image
 
 
-def draw_mask(image, coco_info: COCO, img_id):
+@function_requires_deps("pycocotools")
+def draw_mask(image, coco_info: "COCO", img_id):
     """
     Draw mask on image
     """

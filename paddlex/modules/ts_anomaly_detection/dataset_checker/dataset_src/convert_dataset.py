@@ -16,9 +16,11 @@
 import os
 import os.path as osp
 
-import pandas as pd
-
+from .....utils.deps import function_requires_deps, is_dep_available
 from .....utils.errors import ConvertFailedError
+
+if is_dep_available("pandas"):
+    import pandas as pd
 
 
 def check_src_dataset(root_dir):
@@ -37,6 +39,7 @@ def check_src_dataset(root_dir):
             continue
 
 
+@function_requires_deps("pandas")
 def convert_excel_dataset(input_dir):
     """
     将excel标注的数据集转换为PaddleX需要的格式

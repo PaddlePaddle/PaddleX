@@ -14,12 +14,16 @@
 
 from __future__ import absolute_import
 
-from lxml import html
-from openpyxl import Workbook
-from openpyxl.utils import get_column_letter
-from premailer import Premailer
-
+from ....utils.deps import function_requires_deps, is_dep_available
 from .style import Table
+
+if is_dep_available("lxml"):
+    from lxml import html
+if is_dep_available("openpyxl"):
+    from openpyxl import Workbook
+    from openpyxl.utils import get_column_letter
+if is_dep_available("premailer"):
+    from premailer import Premailer
 
 
 def string_to_int(s):
@@ -31,6 +35,7 @@ def string_to_int(s):
     return 0
 
 
+@function_requires_deps("lxml")
 def get_Tables(doc):
     """
     Find all the tables in the doc
@@ -42,6 +47,7 @@ def get_Tables(doc):
     return [Table(table) for table in tree.xpath("//table")]
 
 
+@function_requires_deps("openpyxl")
 def write_rows(worksheet, elem, row, column=1):
     """
     Writes every tr child element of elem to a row in the worksheet
@@ -101,6 +107,7 @@ def table_to_sheet(table, wb):
     insert_table(table, ws, 1, 1)
 
 
+@function_requires_deps("openpyxl", "premailer")
 def document_to_workbook(doc, wb=None, base_url=None):
     """
     Takes a string representation of an html document and writes one sheet for

@@ -12,26 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import lazy_paddle as paddle
-from lazy_paddle.utils.cpp_extension import CppExtension, CUDAExtension, setup
+from paddlex.utils.deps import is_dep_available
 
-from paddlex.ops import custom_ops
+if is_dep_available("paddlepaddle"):
+    import paddle
+    from paddle.utils.cpp_extension import CppExtension, CUDAExtension, setup
 
-for op_name, op_dict in custom_ops.items():
-    sources = op_dict.pop("sources", [])
-    flags = None
+    from paddlex.ops import custom_ops
 
-    if paddle.device.is_compiled_with_cuda():
-        extension = CUDAExtension
-        flags = {"cxx": ["-DPADDLE_WITH_CUDA"]}
-        if "extra_cuda_cflags" in op_dict:
-            flags["nvcc"] = op_dict.pop("extra_cuda_cflags")
-    else:
-        sources = filter(lambda x: x.endswith("cu"), sources)
-        extension = CppExtension
+    for op_name, op_dict in custom_ops.items():
+        sources = op_dict.pop("sources", [])
+        flags = None
 
-    if len(sources) == 0:
-        continue
+        if paddle.device.is_compiled_with_cuda():
+            extension = CUDAExtension
+            flags = {"cxx": ["-DPADDLE_WITH_CUDA"]}
+            if "extra_cuda_cflags" in op_dict:
+                flags["nvcc"] = op_dict.pop("extra_cuda_cflags")
+        else:
+            sources = filter(lambda x: x.endswith("cu"), sources)
+            extension = CppExtension
 
-    extension = extension(sources=sources, extra_compile_args=flags)
-    setup(name=op_name, ext_modules=extension)
+        if len(sources) == 0:
+            continue
+
+        extension = extension(sources=sources, extra_compile_args=flags)
+        setup(name=op_name, ext_modules=extension)

@@ -41,7 +41,7 @@ class LazyLoadDict(dict):
 
 class OLD_IR_TRT_PRECISION_MAP_CLASS(LazyLoadDict):
     def _load(self):
-        from lazy_paddle.inference import PrecisionType
+        from paddle.inference import PrecisionType
 
         return {
             "trt_int8": PrecisionType.Int8,
@@ -52,7 +52,7 @@ class OLD_IR_TRT_PRECISION_MAP_CLASS(LazyLoadDict):
 
 class PIR_TRT_PRECISION_MAP_CLASS(LazyLoadDict):
     def _load(self):
-        from lazy_paddle.tensorrt.export import PrecisionMode
+        from paddle.tensorrt.export import PrecisionMode
 
         return {
             "trt_int8": PrecisionMode.INT8,

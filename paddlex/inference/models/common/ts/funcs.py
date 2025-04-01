@@ -15,57 +15,68 @@
 
 from typing import Callable, Dict, List, Optional, Union
 
-import chinese_calendar
 import numpy as np
-import pandas as pd
-from pandas.tseries import holiday as hd
-from pandas.tseries.offsets import DateOffset, Day, Easter
-from sklearn.preprocessing import StandardScaler
+
+from .....utils.deps import function_requires_deps, is_dep_available
+
+if is_dep_available("chinese-calendar"):
+    import chinese_calendar
+if is_dep_available("pandas"):
+    import pandas as pd
+    from pandas.tseries import holiday as hd
+    from pandas.tseries.offsets import DateOffset, Day, Easter
+if is_dep_available("scikit-learn"):
+    from sklearn.preprocessing import StandardScaler
 
 MAX_WINDOW = 183 + 17
-EasterSunday = hd.Holiday("Easter Sunday", month=1, day=1, offset=[Easter(), Day(0)])
-NewYearsDay = hd.Holiday("New Years Day", month=1, day=1)
-SuperBowl = hd.Holiday("Superbowl", month=2, day=1, offset=DateOffset(weekday=hd.SU(1)))
-MothersDay = hd.Holiday(
-    "Mothers Day", month=5, day=1, offset=DateOffset(weekday=hd.SU(2))
-)
-IndependenceDay = hd.Holiday("Independence Day", month=7, day=4)
-ChristmasEve = hd.Holiday("Christmas", month=12, day=24)
-ChristmasDay = hd.Holiday("Christmas", month=12, day=25)
-NewYearsEve = hd.Holiday("New Years Eve", month=12, day=31)
-BlackFriday = hd.Holiday(
-    "Black Friday",
-    month=11,
-    day=1,
-    offset=[pd.DateOffset(weekday=hd.TH(4)), Day(1)],
-)
-CyberMonday = hd.Holiday(
-    "Cyber Monday",
-    month=11,
-    day=1,
-    offset=[pd.DateOffset(weekday=hd.TH(4)), Day(4)],
-)
+if is_dep_available("pandas"):
+    EasterSunday = hd.Holiday(
+        "Easter Sunday", month=1, day=1, offset=[Easter(), Day(0)]
+    )
+    NewYearsDay = hd.Holiday("New Years Day", month=1, day=1)
+    SuperBowl = hd.Holiday(
+        "Superbowl", month=2, day=1, offset=DateOffset(weekday=hd.SU(1))
+    )
+    MothersDay = hd.Holiday(
+        "Mothers Day", month=5, day=1, offset=DateOffset(weekday=hd.SU(2))
+    )
+    IndependenceDay = hd.Holiday("Independence Day", month=7, day=4)
+    ChristmasEve = hd.Holiday("Christmas", month=12, day=24)
+    ChristmasDay = hd.Holiday("Christmas", month=12, day=25)
+    NewYearsEve = hd.Holiday("New Years Eve", month=12, day=31)
+    BlackFriday = hd.Holiday(
+        "Black Friday",
+        month=11,
+        day=1,
+        offset=[pd.DateOffset(weekday=hd.TH(4)), Day(1)],
+    )
+    CyberMonday = hd.Holiday(
+        "Cyber Monday",
+        month=11,
+        day=1,
+        offset=[pd.DateOffset(weekday=hd.TH(4)), Day(4)],
+    )
 
-HOLIDAYS = [
-    hd.EasterMonday,
-    hd.GoodFriday,
-    hd.USColumbusDay,
-    hd.USLaborDay,
-    hd.USMartinLutherKingJr,
-    hd.USMemorialDay,
-    hd.USPresidentsDay,
-    hd.USThanksgivingDay,
-    EasterSunday,
-    NewYearsDay,
-    SuperBowl,
-    MothersDay,
-    IndependenceDay,
-    ChristmasEve,
-    ChristmasDay,
-    NewYearsEve,
-    BlackFriday,
-    CyberMonday,
-]
+    HOLIDAYS = [
+        hd.EasterMonday,
+        hd.GoodFriday,
+        hd.USColumbusDay,
+        hd.USLaborDay,
+        hd.USMartinLutherKingJr,
+        hd.USMemorialDay,
+        hd.USPresidentsDay,
+        hd.USThanksgivingDay,
+        EasterSunday,
+        NewYearsDay,
+        SuperBowl,
+        MothersDay,
+        IndependenceDay,
+        ChristmasEve,
+        ChristmasDay,
+        NewYearsEve,
+        BlackFriday,
+        CyberMonday,
+    ]
 
 
 def _cal_year(
@@ -134,12 +145,14 @@ def _cal_weekofyear(
     return x.weekofyear / 51.0 - 0.5
 
 
+@function_requires_deps("chinese-calendar")
 def _cal_holiday(
     x: np.datetime64,
 ):
     return float(chinese_calendar.is_holiday(x))
 
 
+@function_requires_deps("chinese-calendar")
 def _cal_workday(
     x: np.datetime64,
 ):
@@ -177,14 +190,15 @@ CAL_DATE_METHOD = {
 }
 
 
+@function_requires_deps("pandas")
 def load_from_one_dataframe(
-    data: Union[pd.DataFrame, pd.Series],
+    data: Union["pd.DataFrame", "pd.Series"],
     time_col: Optional[str] = None,
     value_cols: Optional[Union[List[str], str]] = None,
     freq: Optional[Union[str, int]] = None,
     drop_tail_nan: bool = False,
     dtype: Optional[Union[type, Dict[str, type]]] = None,
-) -> pd.DataFrame:
+) -> "pd.DataFrame":
     """Transforms a DataFrame or Series into a time-indexed DataFrame.
 
     Args:
@@ -275,8 +289,9 @@ def load_from_one_dataframe(
     return series_data
 
 
+@function_requires_deps("pandas")
 def load_from_dataframe(
-    df: pd.DataFrame,
+    df: "pd.DataFrame",
     group_id: Optional[str] = None,
     time_col: Optional[str] = None,
     target_cols: Optional[Union[List[str], str]] = None,
@@ -290,7 +305,7 @@ def load_from_dataframe(
     fillna_method: str = "pre",
     fillna_window_size: int = 10,
     **kwargs,
-) -> Dict[str, Optional[Union[pd.DataFrame, Dict[str, any]]]]:
+) -> Dict[str, Optional[Union["pd.DataFrame", Dict[str, any]]]]:
     """Loads and processes time series data from a DataFrame.
 
     This function extracts and organizes time series data from a given DataFrame.
@@ -401,7 +416,8 @@ def load_from_dataframe(
     return res[0]
 
 
-def _distance_to_holiday(holiday) -> Callable[[pd.Timestamp], float]:
+@function_requires_deps("pandas")
+def _distance_to_holiday(holiday) -> Callable[["pd.Timestamp"], float]:
     """Creates a function to calculate the distance in days to the nearest holiday.
 
     This function generates a closure that computes the number of days from
@@ -443,6 +459,7 @@ def _distance_to_holiday(holiday) -> Callable[[pd.Timestamp], float]:
     return _distance_to_day
 
 
+@function_requires_deps("pandas", "scikit-learn")
 def time_feature(
     dataset: Dict,
     freq: Optional[Union[str, int]],

@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import lazy_paddle as paddle
-
+from ....utils.deps import class_requires_deps
 from ...utils.io import AudioReader
 
 
+@class_requires_deps("paddlepaddle")
 class ReadAudio:
     """Load audio from the file."""
 
@@ -29,6 +29,8 @@ class ReadAudio:
         self._audio_reader = AudioReader(backend="wav")
 
     def read(self, input):
+        import paddle
+
         if isinstance(input, str):
             audio, sample_rate = self._audio_reader.read(input)
             if sample_rate != 16000:
