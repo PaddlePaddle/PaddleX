@@ -123,16 +123,8 @@ class TableLabelDecode:
 
     def __call__(self, pred, img_size, ori_img_size):
         """apply"""
-        bbox_preds, structure_probs = [], []
-
-        for i in range(len(pred[0][0])):
-            bbox_preds.append(pred[0][0][i])
-            structure_probs.append(pred[1][0][i])
-        bbox_preds = [bbox_preds]
-        structure_probs = [structure_probs]
-
-        bbox_preds = np.array(bbox_preds)
-        structure_probs = np.array(structure_probs)
+        bbox_preds = np.array([list(pred[0][0])])
+        structure_probs = np.array([list(pred[1][0])])
 
         bbox_list, structure_str_list, structure_score = self.decode(
             structure_probs, bbox_preds, img_size, ori_img_size
@@ -161,9 +153,11 @@ class TableLabelDecode:
         structure_batch_list = []
         bbox_batch_list = []
         batch_size = len(structure_idx)
+        bbox_list = []
+        scale_list = []
+        scales = [0] * 8
         for batch_idx in range(batch_size):
             structure_list = []
-            bbox_list = []
             score_list = []
             for idx in range(len(structure_idx[batch_idx])):
                 char_idx = int(structure_idx[batch_idx][idx])
@@ -174,15 +168,21 @@ class TableLabelDecode:
                 text = self.character[char_idx]
                 if text in self.td_token:
                     bbox = bbox_preds[batch_idx, idx]
-                    bbox = self._bbox_decode(
-                        bbox, padding_size[batch_idx], ori_img_size[batch_idx]
+                    h_scale, w_scale = self._get_bbox_scales(
+                        padding_size[batch_idx], ori_img_size[batch_idx]
                     )
-                    bbox_list.append(bbox.astype(int))
+                    scales[0::2] = [h_scale] * 4
+                    scales[1::2] = [w_scale] * 4
+                    bbox_list.append(bbox)
+                    scale_list.append(scales)
+
                 structure_list.append(text)
                 score_list.append(structure_probs[batch_idx, idx])
             structure_batch_list.append(structure_list)
             structure_score = np.mean(score_list)
-            bbox_batch_list.append(bbox_list)
+
+        bbox_batch_array = np.multiply(np.array(bbox_list), np.array(scale_list))
+        bbox_batch_list = [bbox_batch_array.astype(int).tolist()]
 
         return bbox_batch_list, structure_batch_list, structure_score
 
@@ -216,22 +216,14 @@ class TableLabelDecode:
             bbox_batch_list.append(bbox_list)
         return bbox_batch_list, structure_batch_list
 
-    def _bbox_decode(self, bbox, padding_shape, ori_shape):
-
+    def _get_bbox_scales(self, padding_shape, ori_shape):
         if self.model_name == "SLANet":
             w, h = ori_shape
-            bbox[0::2] *= w
-            bbox[1::2] *= h
+            return w, h
         else:
             w, h = padding_shape
             ori_w, ori_h = ori_shape
             ratio_w = w / ori_w
             ratio_h = h / ori_h
             ratio = min(ratio_w, ratio_h)
-
-            bbox[0::2] *= w
-            bbox[1::2] *= h
-            bbox[0::2] /= ratio
-            bbox[1::2] /= ratio
-
-        return bbox
+            return w / ratio, h / ratio

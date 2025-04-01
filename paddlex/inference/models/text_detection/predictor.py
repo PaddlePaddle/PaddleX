@@ -152,11 +152,8 @@ class TextDetPredictor(BasePredictor):
         std=[0.229, 0.224, 0.225],
         scale=1 / 255,
         order="",
-        channel_num=3,
     ):
-        return "Normalize", NormalizeImage(
-            mean=mean, std=std, scale=scale, order=order, channel_num=channel_num
-        )
+        return "Normalize", NormalizeImage(mean=mean, std=std, scale=scale, order=order)
 
     @register("ToCHWImage")
     def build_to_chw(self):
