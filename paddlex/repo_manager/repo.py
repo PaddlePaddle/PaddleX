@@ -395,6 +395,9 @@ class RepositoryGroupInstaller(object):
             elif req.name in ("nuscenes-devkit", "nuscenes_devkit"):
                 # HACK
                 line_s = "nuscenes-devkit @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/nuscenes_devkit-1.1.11%2Bpdx-py3-none-any.whl"
+            elif req.name == "imgaug":
+                # HACK
+                line_s = "imgaug @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/imgaug-0.4.0%2Bpdx-py2.py3-none-any.whl"
             lines.append(line_s)
 
         return "\n".join(lines)
