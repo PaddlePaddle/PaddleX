@@ -388,6 +388,12 @@ class RepositoryGroupInstaller(object):
                 # FIXME: The original version specifiers are ignored. It would be better to check them here.
                 # The resolver will get the version info from the constraints file.
                 line_s = "opencv-contrib-python"
+            elif req.name == "albumentations":
+                # HACK
+                line_s = "albumentations @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/albumentations-1.4.10%2Bpdx-py3-none-any.whl"
+            elif req.name in ("nuscenes-devkit", "nuscenes_devkit"):
+                # HACK
+                line_s = "nuscenes-devkit @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/nuscenes_devkit-1.1.11%2Bpdx-py3-none-any.whl"
             else:
                 lines.append(line_s)
 
