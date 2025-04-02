@@ -23,7 +23,7 @@ from ....utils import logging
 from ....utils.deps import (
     class_requires_deps,
     function_requires_deps,
-    is_extra_available,
+    is_paddle2onnx_plugin_available,
 )
 from ....utils.device import constr_device
 from ....utils.flags import DEBUG, INFER_BENCHMARK_USE_NEW_INFER_API, USE_PIR_TRT
@@ -668,16 +668,16 @@ class HPInfer(StaticInfer):
 
         model_paths = get_model_paths(self._model_dir, self._model_file_prefix)
         is_onnx_model_available = "onnx" in model_paths
-        # TODO: Give a warning if Paddle2ONNX is not available but can be used
-        # to select a better backend.
+        # TODO: Give a warning if the Paddle2ONNX plugin is not available but
+        # can be used to select a better backend.
         if self._config.auto_paddle2onnx:
-            if is_extra_available("paddle2onnx"):
+            if is_paddle2onnx_plugin_available():
                 is_onnx_model_available = (
                     is_onnx_model_available or "paddle" in model_paths
                 )
             else:
                 logging.debug(
-                    "Paddle2ONNX is not available. Automatic model conversion will not be performed."
+                    "The Paddle2ONNX plugin is not available. Automatic model conversion will not be performed."
                 )
         available_backends = []
         if "paddle" in model_paths:

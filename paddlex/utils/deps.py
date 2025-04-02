@@ -202,8 +202,15 @@ def require_serving_plugin():
         )
 
 
+def get_serving_dep_specs():
+    dep_specs = []
+    for item in EXTRAS["serving"].values():
+        dep_specs += item
+    return dep_specs
+
+
 def is_paddle2onnx_plugin_available():
-    return is_extra_available("paddle2onnx")
+    return is_dep_available("paddle2onnx")
 
 
 def require_paddle2onnx_plugin():
@@ -211,3 +218,7 @@ def require_paddle2onnx_plugin():
         raise RuntimeError(
             "The Paddle2ONNX plugin is not available. Please install it properly."
         )
+
+
+def get_paddle2onnx_spec():
+    return "paddle2onnx"

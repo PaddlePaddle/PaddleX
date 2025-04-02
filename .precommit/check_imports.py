@@ -56,7 +56,6 @@ MOD_TO_DEP = {
     "cv2": "opencv-contrib-python",
     "openpyxl": "openpyxl",
     "packaging": "packaging",
-    "paddle2onnx": "paddle2onnx",
     "pandas": "pandas",
     "PIL": "pillow",
     "premailer": "premailer",

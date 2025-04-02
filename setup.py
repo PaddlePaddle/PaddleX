@@ -50,7 +50,6 @@ DEP_SPECS = {
     "opencv-contrib-python": "== 4.10.0.84",
     "openpyxl": "",
     "packaging": "",
-    "paddle2onnx": "",
     "pandas": "",
     "pillow": "",
     "premailer": "",
@@ -174,9 +173,6 @@ EXTRAS = {
             "starlette",
             "uvicorn",
             "yarl",
-        ],
-        "paddle2onnx": [
-            "paddle2onnx",
         ],
     },
 }
