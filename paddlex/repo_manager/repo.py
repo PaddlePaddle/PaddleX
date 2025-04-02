@@ -310,17 +310,17 @@ class RepositoryGroupInstaller(object):
             req_file = osp.join(td, "requirements.txt")
             with open(req_file, "w", encoding="utf-8") as fr:
                 fr.write(deps_str)
-            if constraints is not None:
-                cons_file = osp.join(td, "constraints.txt")
-                with open(cons_file, "w", encoding="utf-8") as fc:
+            cons_file = osp.join(td, "constraints.txt")
+            with open(cons_file, "w", encoding="utf-8") as fc:
+                if constraints is not None:
                     fc.write(constraints)
-                cons_files = [cons_file]
-            else:
-                cons_files = []
+                # HACK: Avoid installing OpenCV variants unexpectedly
+                fc.write("opencv-python == 0.0.0\n")
+                fc.write("opencv-python-headless == 0.0.0\n")
+                fc.write("opencv-contrib-python-headless == 0.0.0\n")
             pip_install_opts = []
-            for f in cons_files:
-                pip_install_opts.append("-c")
-                pip_install_opts.append(f)
+            pip_install_opts.append("-c")
+            pip_install_opts.append(cons_file)
             install_packages_from_requirements_file(
                 req_file, pip_install_opts=pip_install_opts
             )
@@ -391,7 +391,7 @@ class RepositoryGroupInstaller(object):
             elif req.name == "albumentations":
                 # HACK
                 line_s = "albumentations @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/albumentations-1.4.10%2Bpdx-py3-none-any.whl"
-                line_s += "\nalbucore @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/albucore-0.0.23%2Bpdx-py3-none-any.whl"
+                line_s += "\nalbucore @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/albucore-0.0.13%2Bpdx-py3-none-any.whl"
             elif req.name in ("nuscenes-devkit", "nuscenes_devkit"):
                 # HACK
                 line_s = "nuscenes-devkit @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/nuscenes_devkit-1.1.11%2Bpdx-py3-none-any.whl"
