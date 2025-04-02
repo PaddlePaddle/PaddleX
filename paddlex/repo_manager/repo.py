@@ -379,6 +379,15 @@ class RepositoryGroupInstaller(object):
             if req.name in repo_pkgs:
                 # Skip repo packages
                 continue
+            elif req.name in (
+                "opencv-python",
+                "opencv-contrib-python",
+                "opencv-python-headless",
+                "opencv-contrib-python-headless",
+            ):
+                # FIXME: The original version specifiers are ignored. It would be better to check them here.
+                # The resolver will get the version info from the constraints file.
+                line_s = "opencv-contrib-python"
             else:
                 lines.append(line_s)
 
