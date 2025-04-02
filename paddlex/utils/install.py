@@ -42,7 +42,6 @@ def install_packages_from_requirements_file(
         requirements_file_path,
     ]
     logging.debug("Command: %s", args)
-    print(args)
 
     try:
         return subprocess.check_call(args)
