@@ -62,7 +62,7 @@ def get_dep_specs():
     dep_specs = []
     for dep_spec in importlib.metadata.requires("paddlex"):
         extra_name, dep_spec = _get_extra_name_and_remove_extra_marker(dep_spec)
-        if extra_name == "all":
+        if extra_name is None or extra_name == "all":
             dep_spec = dep_spec.rstrip()
             dep_specs.append(dep_spec)
     return dep_specs

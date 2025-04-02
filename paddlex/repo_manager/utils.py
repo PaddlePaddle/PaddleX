@@ -17,11 +17,11 @@ import importlib.metadata
 import os
 import platform
 import subprocess
+import sys
 
 from ..utils import logging
 from ..utils.deps import function_requires_deps
 from ..utils.env import get_device_type
-from ..utils.install import install_packages
 
 PLATFORM = platform.system()
 
@@ -88,7 +88,9 @@ def install_external_deps(repo_name, repo_root):
                 )
             ):
                 with switch_working_dir(os.path.join(repo_root, "ppdet", "ext_op")):
-                    install_packages(["."])
+                    # TODO: Apply constraints here
+                    args = [sys.executable, "setup.py", "install"]
+                    _check_call(args)
             else:
                 logging.warning(
                     "The custom operators in PaddleDetection for Rotated Object Detection is only supported when using CUDA, GCC>=8.2.0 and Paddle>=2.0.1, "
