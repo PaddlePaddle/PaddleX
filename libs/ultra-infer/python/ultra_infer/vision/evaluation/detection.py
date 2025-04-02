@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import collections
 import copy
+import collections
 import math
 
 
@@ -26,12 +26,11 @@ def eval_detection(
     plot=False,
     batch_size=1,
 ):
-    import time
-
+    from .utils import CocoDetection
+    from .utils import COCOMetric
     import cv2
     from tqdm import trange
-
-    from .utils import CocoDetection, COCOMetric
+    import time
 
     if conf_threshold is not None or nms_iou_threshold is not None:
         assert (

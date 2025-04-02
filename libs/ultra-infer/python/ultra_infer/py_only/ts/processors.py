@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict, List, Optional, Union
+from typing import List, Optional, Union, Dict
 
 import chinese_calendar
 import joblib
 import numpy as np
 import pandas as pd
+from pandas.tseries.offsets import DateOffset, Easter, Day
 from pandas.tseries import holiday as hd
-from pandas.tseries.offsets import DateOffset, Day, Easter
 from sklearn.preprocessing import StandardScaler
 
 from ..base import PyOnlyProcessor

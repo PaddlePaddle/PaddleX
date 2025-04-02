@@ -13,12 +13,9 @@
 # limitations under the License.
 
 from __future__ import absolute_import
-
 import logging
-
-import cv2
-
 from ... import c_lib_wrap as C
+import cv2
 
 
 def vis_detection(

@@ -31,9 +31,6 @@ def create_operators(op_param_list, global_config=None):
     Args:
         params(list): a dict list, used to create some operators
     """
-    from .operators import *
-    from .vqa_utils import *
-
     assert isinstance(op_param_list, list), "operator config should be a list"
     ops = []
     for operator in op_param_list:

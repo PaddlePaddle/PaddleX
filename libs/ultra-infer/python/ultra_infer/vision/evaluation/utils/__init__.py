@@ -13,11 +13,11 @@
 # limitations under the License.
 
 from . import fd_logging
-from .cityscapes import *
-from .coco import *
+from .util import *
 from .coco_metrics import *
-from .coco_utils import *
+from .seg_metrics import *
 from .json_results import *
 from .map_utils import *
-from .seg_metrics import *
-from .util import *
+from .coco_utils import *
+from .coco import *
+from .cityscapes import *
