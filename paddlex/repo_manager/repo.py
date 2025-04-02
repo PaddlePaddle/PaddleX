@@ -30,7 +30,6 @@ from ..utils.install import (
 )
 from .meta import REPO_DOWNLOAD_BASE, get_repo_meta
 from .utils import (
-    check_package_installation,
     fetch_repo_using_git,
     install_external_deps,
     remove_repo_using_rm,
@@ -78,7 +77,7 @@ class PPRepository(object):
         self.pdx_mod_name = (
             pdx_collection_mod.__name__ + "." + self.meta["pdx_pkg_name"]
         )
-        self.main_reqs_file = self.meta.get("main_reqs_file", "requirements.txt")
+        self.main_req_file = self.meta.get("main_req_file", "requirements.txt")
 
     def initialize(self):
         """initialize"""
@@ -206,7 +205,7 @@ class PPRepository(object):
     def get_deps(self, deps_to_replace=None):
         """get_deps"""
         # Merge requirement files
-        req_list = [self.main_reqs_file]
+        req_list = [self.main_req_file]
         for e in self.meta.get("extra", []):
             if isinstance(e, tuple):
                 e = e[2] or osp.join(e[0], "requirements.txt")
@@ -379,8 +378,6 @@ class RepositoryGroupInstaller(object):
             req = Requirement(line_s)
             if req.name in repo_pkgs:
                 # Skip repo packages
-                continue
-            elif check_package_installation(req.name):
                 continue
             else:
                 lines.append(line_s)

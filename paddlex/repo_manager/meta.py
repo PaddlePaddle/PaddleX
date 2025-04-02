@@ -149,7 +149,7 @@ REPO_META = {
         "editable": False,
         "path_env": "PADDLE_PDX_PADDLE3D_PATH",
         "requires": ["PaddleSeg", "PaddleDetection"],
-        "main_reqs_file": "requirements_pdx.txt",
+        "main_req_file": "requirements_pdx.txt",
     },
     "PaddleVideo": {
         "git_path": "/PaddlePaddle/PaddleVideo.git",
@@ -160,7 +160,7 @@ REPO_META = {
         "import_name": "ppvideo",
         "pdx_pkg_name": "PaddleVideo_api",
         "editable": False,
-        "main_reqs_file": "requirements_paddlex.txt",
+        "main_req_file": "requirements_paddlex.txt",
         "path_env": "PADDLE_PDX_PADDLEVIDEO_PATH",
     },
 }

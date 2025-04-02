@@ -17,11 +17,11 @@ import importlib.metadata
 import os
 import platform
 import subprocess
-import sys
 
 from ..utils import logging
 from ..utils.deps import function_requires_deps
 from ..utils.env import get_device_type
+from ..utils.install import install_packages
 
 PLATFORM = platform.system()
 
@@ -88,8 +88,7 @@ def install_external_deps(repo_name, repo_root):
                 )
             ):
                 with switch_working_dir(os.path.join(repo_root, "ppdet", "ext_op")):
-                    args = [sys.executable, "setup.py", "install"]
-                    _check_call(args)
+                    install_packages(["."])
             else:
                 logging.warning(
                     "The custom operators in PaddleDetection for Rotated Object Detection is only supported when using CUDA, GCC>=8.2.0 and Paddle>=2.0.1, "
@@ -128,18 +127,6 @@ def remove_repo_using_rm(name):
             return _check_call(["rmdir", "/S", "/Q", name], shell=True)
         else:
             return _check_call(["rm", "-rf", name])
-
-
-def build_wheel_using_pip(pkg, dst_dir="./", with_deps=False, pip_flags=None):
-    """build_wheel_using_pip"""
-    args = [sys.executable, "-m", "pip", "wheel", "--wheel-dir", dst_dir]
-    if not with_deps:
-        args.append("--no-deps")
-    if pip_flags is not None:
-        args.extend(pip_flags)
-    args.append(pkg)
-
-    return _check_call(args)
 
 
 @contextlib.contextmanager
