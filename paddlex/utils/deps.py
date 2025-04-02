@@ -26,7 +26,7 @@ from . import logging
 _EXTRA_PATTERN = re.compile(
     r"(?:;|and)*[ \t]*extra[ \t]*==[ \t]*['\"]([a-z0-9]+(?:-[a-z0-9]+)*)['\"]"
 )
-_EXTRA_NAMES_TO_EXCLUDE = {"base", "plugins"}
+_COLLECTIVE_EXTRA_NAMES = {"base", "plugins", "all"}
 
 
 def _get_extra_name_and_remove_extra_marker(dep_spec):
@@ -43,11 +43,11 @@ def get_extras():
     extras = {}
     # XXX: The `metadata.get_all` used here is not well documented.
     for name in metadata.get_all("Provides-Extra", []):
-        if name not in _EXTRA_NAMES_TO_EXCLUDE:
+        if name not in _COLLECTIVE_EXTRA_NAMES:
             extras[name] = defaultdict(list)
     for dep_spec in importlib.metadata.requires("paddlex"):
         extra_name, dep_spec = _get_extra_name_and_remove_extra_marker(dep_spec)
-        if extra_name is not None and extra_name not in _EXTRA_NAMES_TO_EXCLUDE:
+        if extra_name is not None and extra_name not in _COLLECTIVE_EXTRA_NAMES:
             dep_spec = dep_spec.rstrip()
             req = Requirement(dep_spec)
             assert extra_name in extras, extra_name
@@ -56,6 +56,19 @@ def get_extras():
 
 
 EXTRAS = get_extras()
+
+
+def get_dep_specs():
+    dep_specs = []
+    for dep_spec in importlib.metadata.requires("paddlex"):
+        extra_name, dep_spec = _get_extra_name_and_remove_extra_marker(dep_spec)
+        if extra_name == "all":
+            dep_spec = dep_spec.rstrip()
+            dep_specs.append(dep_spec)
+    return dep_specs
+
+
+DEP_SPECS = get_dep_specs()
 
 
 def get_dep_version(dep):

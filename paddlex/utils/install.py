@@ -17,25 +17,36 @@ import subprocess
 import sys
 import tempfile
 
+from . import logging
+
 
 def install_packages_from_requirements_file(
     requirements_file_path, pip_install_opts=None
 ):
-    # TODO: Constraints can be applied here to ensure a safe installation.
-    # For example, it is best to prevent installing a different version of a
-    # distribution for an already loaded package, as that could lead to
-    # problems.
-    return subprocess.check_call(
-        [
-            sys.executable,
-            "-m",
-            "pip",
-            "install",
-            *(pip_install_opts or []),
-            "-r",
-            requirements_file_path,
-        ]
-    )
+    from .deps import DEP_SPECS
+
+    with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as f:
+        for req in DEP_SPECS:
+            f.write(req + "\n")
+        constraints_file_path = f.name
+
+    args = [
+        sys.executable,
+        "-m",
+        "pip",
+        "install",
+        "-c",
+        constraints_file_path,
+        *(pip_install_opts or []),
+        "-r",
+        requirements_file_path,
+    ]
+    logging.debug("Command: %s", args)
+
+    try:
+        return subprocess.check_call(args)
+    finally:
+        os.unlink(constraints_file_path)
 
 
 def install_packages(requirements, pip_install_opts=None):
@@ -52,14 +63,14 @@ def install_packages(requirements, pip_install_opts=None):
 
 
 def uninstall_packages(packages, pip_uninstall_opts=None):
-    return subprocess.check_call(
-        [
-            sys.executable,
-            "-m",
-            "pip",
-            "uninstall",
-            "-y",
-            *(pip_uninstall_opts or []),
-            *packages,
-        ]
-    )
+    args = [
+        sys.executable,
+        "-m",
+        "pip",
+        "uninstall",
+        "-y",
+        *(pip_uninstall_opts or []),
+        *packages,
+    ]
+    logging.debug("Command: %s", args)
+    return subprocess.check_call(args)
