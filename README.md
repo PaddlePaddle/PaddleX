@@ -553,7 +553,7 @@ python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org
 * **安装PaddleX**
 
 ```bash
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0rc0-py3-none-any.whl
+pip install paddlex==3.0rc0
 ```
 
 > ❗ 更多安装方式参考 [PaddleX 安装教程](https://paddlepaddle.github.io/PaddleX/latest/installation/installation.html)
