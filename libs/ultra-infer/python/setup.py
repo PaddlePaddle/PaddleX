@@ -121,7 +121,7 @@ if setup_configs["RKNN2_TARGET_SOC"] != "" or setup_configs["BUILD_ON_JETSON"] !
 if wheel_name == "ultra-infer-python":
     device_type = setup_configs["DEVICE_TYPE"]
     if device_type and device_type in ["GPU", "IPU", "NPU"]:
-        wheel_name = f"ultra-infer-{device_type}-python"
+        wheel_name = f"ultra-infer-{device_type.lower()}-python"
     else:
         if (
             setup_configs["WITH_GPU"] == "ON"
