@@ -149,7 +149,7 @@ REPO_META = {
         "editable": False,
         "path_env": "PADDLE_PDX_PADDLE3D_PATH",
         "requires": ["PaddleSeg", "PaddleDetection"],
-        "main_req_file": "requirements_pdx.txt",
+        "main_reqs_file": "requirements_pdx.txt",
     },
     "PaddleVideo": {
         "git_path": "/PaddlePaddle/PaddleVideo.git",

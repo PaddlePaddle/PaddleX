@@ -129,9 +129,10 @@ void RuntimeOption::UseIpu(int device_num, int micro_batch_size,
 #endif
 }
 
-void RuntimeOption::UseAscend() {
+void RuntimeOption::UseAscend(int npu_id) {
   device = Device::ASCEND;
   paddle_lite_option.device = device;
+  device_id = npu_id;
 }
 
 void RuntimeOption::UseDirectML() { device = Device::DIRECTML; }

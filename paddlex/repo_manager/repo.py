@@ -77,7 +77,7 @@ class PPRepository(object):
         self.pdx_mod_name = (
             pdx_collection_mod.__name__ + "." + self.meta["pdx_pkg_name"]
         )
-        self.main_req_file = self.meta.get("main_req_file", "requirements.txt")
+        self.main_reqs_file = self.meta.get("main_reqs_file", "requirements.txt")
 
     def initialize(self):
         """initialize"""

@@ -259,9 +259,9 @@ class RuntimeOption:
         """Inference with SOPHGO TPU"""
         return self._option.use_sophgo()
 
-    def use_ascend(self):
+    def use_ascend(self, device_id=0):
         """Inference with Huawei Ascend NPU"""
-        return self._option.use_ascend()
+        return self._option.use_ascend(device_id)
 
     def disable_valid_backend_check(self):
         """Disable checking validity of backend during inference"""
