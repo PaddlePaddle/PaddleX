@@ -83,6 +83,7 @@ setup_configs["WITH_DIRECTML"] = os.getenv("WITH_DIRECTML", "OFF")
 setup_configs["WITH_ASCEND"] = os.getenv("WITH_ASCEND", "OFF")
 setup_configs["WITH_KUNLUNXIN"] = os.getenv("WITH_KUNLUNXIN", "OFF")
 setup_configs["RKNN2_TARGET_SOC"] = os.getenv("RKNN2_TARGET_SOC", "")
+setup_configs["DEVICE_TYPE"] = os.getenv("DEVICE_TYPE", "")
 # Custom deps settings
 setup_configs["TRT_DIRECTORY"] = os.getenv("TRT_DIRECTORY", "UNDEFINED")
 setup_configs["CUDA_DIRECTORY"] = os.getenv("CUDA_DIRECTORY", "/usr/local/cuda")
@@ -118,12 +119,17 @@ if setup_configs["RKNN2_TARGET_SOC"] != "" or setup_configs["BUILD_ON_JETSON"] !
     REQUIRED_PACKAGES = REQUIRED_PACKAGES.replace("opencv-contrib-python", "")
 
 if wheel_name == "ultra-infer-python":
-    if setup_configs["WITH_GPU"] == "ON" or setup_configs["BUILD_ON_JETSON"] == "ON":
-        wheel_name = "ultra-infer-gpu-python"
-    elif setup_configs["WITH_IPU"] == "ON":
-        wheel_name = "ultra-infer-ipu-python"
-    elif setup_configs["WITH_NPU"] == "ON":
-        wheel_name = "ultra-infer-npu-python"
+    device_type = setup_configs["DEVICE_TYPE"]
+    if device_type and device_type in ["GPU", "IPU", "NPU"]:
+        wheel_name = f"ultra-infer-{device_type}-python"
+    else:
+        if (
+            setup_configs["WITH_GPU"] == "ON"
+            or setup_configs["BUILD_ON_JETSON"] == "ON"
+        ):
+            wheel_name = "ultra-infer-gpu-python"
+        elif setup_configs["WITH_IPU"] == "ON":
+            wheel_name = "ultra-infer-ipu-python"
 
 if os.getenv("CMAKE_CXX_COMPILER", None) is not None:
     setup_configs["CMAKE_CXX_COMPILER"] = os.getenv("CMAKE_CXX_COMPILER")
@@ -423,17 +429,18 @@ if sys.version_info[0] == 3:
 # Pyonly
 ################################################################################
 
-if len(sys.argv) > 2 and sys.argv[2] == "pyonly":
-    extras_require["pyyaml"] = ["pyyaml"]
-    extras_require["pillow"] = ["pillow<10.0.0"]
-    extras_require["pandas"] = ["pandas>=0.25.0,<=1.3.5"]
-    extras_require["pycocotools"] = ["pycocotools"]
-    extras_require["matplotlib"] = ["matplotlib"]
-    extras_require["chinese_calendar"] = ["chinese_calendar"]
-    extras_require["joblib"] = ["joblib"]
-    extras_require["scikit-image"] = ["scikit-image"]
-    extras_require["scikit-learn"] = ["scikit-learn>=1.3.2"]
-    extras_require["tokenizers"] = ["tokenizers"]
+extras_require["pyonly"] = [
+    "pyyaml",
+    "pillow<10.0.0",
+    "pandas>=0.25.0,<=1.3.5",
+    "pycocotools",
+    "matplotlib",
+    "chinese_calendar",
+    "joblib",
+    "scikit-image",
+    "scikit-learn>=1.3.2",
+    "tokenizers",
+]
 
 ################################################################################
 # Final
