@@ -122,6 +122,8 @@ if wheel_name == "ultra-infer-python":
         wheel_name = "ultra-infer-gpu-python"
     elif setup_configs["WITH_IPU"] == "ON":
         wheel_name = "ultra-infer-ipu-python"
+    elif setup_configs["WITH_NPU"] == "ON":
+        wheel_name = "ultra-infer-npu-python"
 
 if os.getenv("CMAKE_CXX_COMPILER", None) is not None:
     setup_configs["CMAKE_CXX_COMPILER"] = os.getenv("CMAKE_CXX_COMPILER")
@@ -416,6 +418,22 @@ else:
 if sys.version_info[0] == 3:
     # Mypy doesn't work with Python 2
     extras_require["mypy"] = ["mypy==0.600"]
+
+################################################################################
+# Pyonly
+################################################################################
+
+if len(sys.argv) > 2 and sys.argv[2] == "pyonly":
+    extras_require["pyyaml"] = ["pyyaml"]
+    extras_require["pillow"] = ["pillow<10.0.0"]
+    extras_require["pandas"] = ["pandas>=0.25.0,<=1.3.5"]
+    extras_require["pycocotools"] = ["pycocotools"]
+    extras_require["matplotlib"] = ["matplotlib"]
+    extras_require["chinese_calendar"] = ["chinese_calendar"]
+    extras_require["joblib"] = ["joblib"]
+    extras_require["scikit-image"] = ["scikit-image"]
+    extras_require["scikit-learn"] = ["scikit-learn>=1.3.2"]
+    extras_require["tokenizers"] = ["tokenizers"]
 
 ################################################################################
 # Final
