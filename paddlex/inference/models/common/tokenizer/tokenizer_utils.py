@@ -639,20 +639,20 @@ class ChatTemplateMixin:
 
     def apply_chat_template(
         self,
-        conversation: List[List[str] | Dict[str, str]] | str,
+        conversation: Union[List[List[str]], Dict[str, str], str],
         tokenize: bool = True,
         context_data: Dict[str, Any] = {},
         **tokenizer_kwargs,
-    ) -> str | dict[str, numpy.ndarray | paddle.Tensor]:
+    ) -> Union[str, dict[str, Union[numpy.ndarray, paddle.Tensor]]]:
         """apply chat_template rules to conversation which should not be batched data
 
         Args:
-            conversation (List[List[str]] | str): the conversation messages between user and bot
+            conversation (List[List[str]] , str): the conversation messages between user and bot
             context_data (Dict[str, Any]): the context data for chat_template.json
             tokenize (bool, optional): whether do tokenization. Defaults to True.
 
         Returns:
-            str | dict[str, numpy.ndarray | paddle.Tensor]: return the result of applied data
+            str , dict[str, Union[numpy.ndarray, paddle.Tensor]]: return the result of applied data
         """
         if not self.chat_template:
             raise ValueError(
@@ -675,9 +675,9 @@ class ChatTemplateMixin:
 
     def _apply_chat_template_paddle(
         self,
-        conversation: List[List[str]] | str,
+        conversation: Union[List[List[str]], str],
         context_data: Dict[str, Any] = {},
-    ) -> str | dict[str, numpy.ndarray | paddle.Tensor]:
+    ) -> Union[str, dict[str, Union[numpy.ndarray, paddle.Tensor]]]:
         context_data = self.chat_template._init_context_data(context_data)
 
         if isinstance(conversation, str):
@@ -693,9 +693,9 @@ class ChatTemplateMixin:
 
     def _apply_chat_template(
         self,
-        conversation: List[List[str] | Dict[str, str]] | str,
+        conversation: Union[List[List[str]], Dict[str, str], str],
         add_generation_prompt=True,
-    ) -> str | dict[str, numpy.ndarray | paddle.Tensor]:
+    ) -> Union[str, dict[str, Union[numpy.ndarray, paddle.Tensor]]]:
         if isinstance(conversation, str):
             conversations = [{"role": "user", "content": conversation}]
         elif isinstance(conversation, list):
@@ -893,11 +893,11 @@ class ChatTemplateMixin:
         tokenizer.init_chat_template(chat_template_file)
         return tokenizer
 
-    def init_chat_template(self, chat_template: str | dict):
+    def init_chat_template(self, chat_template: Union[str, dict]):
         """init chat_tempalte by file_path or template dict data
 
         Args:
-            chat_template (str | dict): file_path or template dict data
+            chat_template (str, dict): file_path or template dict data
         """
         if isinstance(chat_template, str):
             if not os.path.exists(chat_template):
