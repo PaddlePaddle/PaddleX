@@ -169,6 +169,7 @@ EXTRAS = {
             "bce-python-sdk",
             "fastapi",
             "filetype",
+            "openai",
             "starlette",
             "uvicorn",
             "yarl",
