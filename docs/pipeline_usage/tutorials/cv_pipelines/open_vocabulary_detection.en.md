@@ -81,7 +81,7 @@ Open vocabulary object detection is an advanced object detection technology that
 ## 2. Quick Start
 
 ### 2.1 Local Experience
-> ❗ Before using the general open vocabulary detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.md).
+> ❗ Before using the general open vocabulary detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `multimodal`.
 
 #### 2.1.1 Command Line Experience
 * You can quickly experience the open vocabulary detection pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/open_vocabulary_detection.jpg) and replace `--input` with your local path for prediction.
