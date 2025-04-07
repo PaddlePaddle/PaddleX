@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import abc
+
 from ..base import PyOnlyUltraInferModel
 
 

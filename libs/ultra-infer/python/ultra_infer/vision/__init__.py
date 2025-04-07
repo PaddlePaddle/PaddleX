@@ -13,6 +13,7 @@
 # limitations under the License.
 from __future__ import absolute_import
 
+from .. import C
 from . import (
     classification,
     detection,
@@ -32,7 +33,6 @@ from . import (
 )
 from .utils import fd_result_to_json
 from .visualize import *
-from .. import C
 
 
 def enable_flycv():

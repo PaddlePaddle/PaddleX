@@ -20,11 +20,7 @@ from typing import List, Sequence
 import numpy as np
 
 from ....utils import logging
-from ....utils.deps import (
-    class_requires_deps,
-    function_requires_deps,
-    is_paddle2onnx_plugin_available,
-)
+from ....utils.deps import class_requires_deps, function_requires_deps
 from ....utils.device import constr_device
 from ....utils.flags import DEBUG, INFER_BENCHMARK_USE_NEW_INFER_API, USE_PIR_TRT
 from ...utils.benchmark import benchmark, set_inference_operations
@@ -602,7 +598,7 @@ class MultiBackendInfer(object):
 
 # TODO: It would be better to refactor the code to make `HPInfer` a higher-level
 # class that uses `PaddleInfer`.
-@class_requires_deps("ultra-infer", "paddlepaddle")
+@class_requires_deps("ultra-infer")
 class HPInfer(StaticInfer):
     def __init__(
         self,
@@ -659,54 +655,13 @@ class HPInfer(StaticInfer):
         return self._multi_backend_infer(inputs)
 
     def _determine_backend_and_config(self):
-        from ultra_infer import (
-            is_built_with_om,
-            is_built_with_openvino,
-            is_built_with_ort,
-            is_built_with_trt,
-        )
-
-        model_paths = get_model_paths(self._model_dir, self._model_file_prefix)
-        is_onnx_model_available = "onnx" in model_paths
-        # TODO: Give a warning if the Paddle2ONNX plugin is not available but
-        # can be used to select a better backend.
-        if self._config.auto_paddle2onnx:
-            if is_paddle2onnx_plugin_available():
-                is_onnx_model_available = (
-                    is_onnx_model_available or "paddle" in model_paths
-                )
-            else:
-                logging.debug(
-                    "The Paddle2ONNX plugin is not available. Automatic model conversion will not be performed."
-                )
-        available_backends = []
-        if "paddle" in model_paths:
-            available_backends.append("paddle")
-        if is_built_with_openvino() and is_onnx_model_available:
-            available_backends.append("openvino")
-        if is_built_with_ort() and is_onnx_model_available:
-            available_backends.append("onnxruntime")
-        if is_built_with_trt() and is_onnx_model_available:
-            available_backends.append("tensorrt")
-        if is_built_with_om() and "om" in model_paths:
-            available_backends.append("om")
-
-        if not available_backends:
-            raise RuntimeError("No inference backend is available")
-
-        if (
-            self._config.backend is not None
-            and self._config.backend not in available_backends
-        ):
-            raise RuntimeError(
-                f"Inference backend {repr(self._config.backend)} is unavailable"
-            )
-
         if self._config.auto_config:
             # Should we use the strategy pattern here to allow extensible
             # strategies?
+            model_paths = get_model_paths(self._model_dir, self._model_file_prefix)
             ret = suggest_inference_backend_and_config(
-                self._config, available_backends=available_backends
+                self._config,
+                model_paths,
             )
             if ret[0] is None:
                 # Should I use a custom exception?

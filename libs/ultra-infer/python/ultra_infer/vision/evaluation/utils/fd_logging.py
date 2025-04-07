@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import time
 import sys
+import time
+
 from colorama import init
 
 init(autoreset=True)

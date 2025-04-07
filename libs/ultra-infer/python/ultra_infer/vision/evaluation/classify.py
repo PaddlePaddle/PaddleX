@@ -11,10 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import numpy as np
+import collections
 import os
 import time
-import collections
+
+import numpy as np
 
 
 def topk_accuracy(topk_list, label_list):
@@ -24,9 +25,10 @@ def topk_accuracy(topk_list, label_list):
 
 
 def eval_classify(model, image_file_path, label_file_path, topk=5):
-    from tqdm import trange
-    import cv2
     import math
+
+    import cv2
+    from tqdm import trange
 
     result_list = []
     label_list = []

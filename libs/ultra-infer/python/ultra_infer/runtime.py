@@ -12,8 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from __future__ import absolute_import
+
 import logging
+
 import numpy as np
+
 from . import ModelFormat
 from . import c_lib_wrap as C
 

@@ -80,6 +80,7 @@ def get_dep_version(dep):
 
 @lru_cache()
 def is_dep_available(dep, /):
+    # Currently for several special deps we check if the import packages exist.
     if dep == "paddlepaddle":
         return importlib.util.find_spec("paddle") is not None
     elif dep == "paddle-custom-device":
@@ -221,4 +222,4 @@ def require_paddle2onnx_plugin():
 
 
 def get_paddle2onnx_spec():
-    return "paddle2onnx"
+    return "paddle2onnx == 2.0.0a2"

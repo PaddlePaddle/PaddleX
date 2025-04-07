@@ -14,7 +14,7 @@
 
 from __future__ import absolute_import
 
-from ..... import UltraInferModel, ModelFormat
+from ..... import ModelFormat, UltraInferModel
 from ..... import c_lib_wrap as C
 
 

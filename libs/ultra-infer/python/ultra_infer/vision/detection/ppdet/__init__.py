@@ -13,9 +13,11 @@
 # limitations under the License.
 
 from __future__ import absolute_import
-from typing import Union, List
+
 import logging
-from .... import UltraInferModel, ModelFormat
+from typing import List, Union
+
+from .... import ModelFormat, UltraInferModel
 from .... import c_lib_wrap as C
 from ...common import ProcessorManager
 
