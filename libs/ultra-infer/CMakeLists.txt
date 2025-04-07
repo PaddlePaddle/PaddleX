@@ -36,10 +36,10 @@ set(THIRD_PARTY_DIR ${PROJECT_SOURCE_DIR}/third_party)
 add_subdirectory(${CSRCS_DIR_NAME}/ultra_infer)
 include(${PROJECT_SOURCE_DIR}/cmake/utils.cmake)
 
-# Set C++11 as standard for the whole project
+# Set C++17 as standard for the whole project
 if(NOT MSVC)
   if(NOT DEFINED CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD 17)
   endif()
   set(CMAKE_CXX_FLAGS "-Wno-format -g0 -O3")
   if(NEED_ABI0)
