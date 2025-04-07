@@ -12,20 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import hashlib
-import logging
 import os
 import os.path as osp
 import shutil
-import tarfile
+import requests
 import time
 import zipfile
-
-import requests
+import tarfile
+import hashlib
 import tqdm
+import logging
 
-from .utils import hub_env as hubenv
 from .utils.hub_model_server import model_server
+from .utils import hub_env as hubenv
 
 DOWNLOAD_RETRY_LIMIT = 3
 
