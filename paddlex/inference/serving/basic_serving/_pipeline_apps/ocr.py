@@ -18,7 +18,7 @@ from fastapi import FastAPI
 
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
-from ...infra.models import ResultResponse
+from ...infra.models import AIStudioResultResponse
 from ...schemas.ocr import INFER_ENDPOINT, InferRequest, InferResult
 from .._app import create_app, primary_operation
 from ._common import common
@@ -37,7 +37,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
         INFER_ENDPOINT,
         "infer",
     )
-    async def _infer(request: InferRequest) -> ResultResponse[InferResult]:
+    async def _infer(request: InferRequest) -> AIStudioResultResponse[InferResult]:
         pipeline = ctx.pipeline
 
         log_id = serving_utils.generate_log_id()
@@ -88,7 +88,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
                 )
             )
 
-        return ResultResponse[InferResult](
+        return AIStudioResultResponse[InferResult](
             logId=log_id,
             result=InferResult(
                 ocrResults=ocr_results,

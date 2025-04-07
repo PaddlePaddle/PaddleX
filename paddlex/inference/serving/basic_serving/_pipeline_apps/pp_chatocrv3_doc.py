@@ -18,7 +18,7 @@ from fastapi import FastAPI
 
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
-from ...infra.models import ResultResponse
+from ...infra.models import AIStudioResultResponse
 from ...schemas import pp_chatocrv3_doc as schema
 from .._app import create_app, primary_operation
 from ._common import common
@@ -39,7 +39,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
     )
     async def _analyze_images(
         request: schema.AnalyzeImagesRequest,
-    ) -> ResultResponse[schema.AnalyzeImagesResult]:
+    ) -> AIStudioResultResponse[schema.AnalyzeImagesResult]:
         pipeline = ctx.pipeline
 
         log_id = serving_utils.generate_log_id()
@@ -105,7 +105,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             )
             visual_info.append(item["visual_info"])
 
-        return ResultResponse[schema.AnalyzeImagesResult](
+        return AIStudioResultResponse[schema.AnalyzeImagesResult](
             logId=log_id,
             result=schema.AnalyzeImagesResult(
                 layoutParsingResults=layout_parsing_results,
@@ -121,7 +121,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
     )
     async def _build_vector_store(
         request: schema.BuildVectorStoreRequest,
-    ) -> ResultResponse[schema.BuildVectorStoreResult]:
+    ) -> AIStudioResultResponse[schema.BuildVectorStoreResult]:
         pipeline = ctx.pipeline
 
         kwargs: Dict[str, Any] = {
@@ -139,7 +139,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             **kwargs,
         )
 
-        return ResultResponse[schema.BuildVectorStoreResult](
+        return AIStudioResultResponse[schema.BuildVectorStoreResult](
             logId=serving_utils.generate_log_id(),
             result=schema.BuildVectorStoreResult(vectorInfo=vector_info),
         )
@@ -151,7 +151,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
     )
     async def _chat(
         request: schema.ChatRequest,
-    ) -> ResultResponse[schema.ChatResult]:
+    ) -> AIStudioResultResponse[schema.ChatResult]:
         pipeline = ctx.pipeline
 
         kwargs: Dict[str, Any] = dict(
@@ -181,7 +181,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             **kwargs,
         )
 
-        return ResultResponse[schema.ChatResult](
+        return AIStudioResultResponse[schema.ChatResult](
             logId=serving_utils.generate_log_id(),
             result=schema.ChatResult(
                 chatResult=result["chat_res"],

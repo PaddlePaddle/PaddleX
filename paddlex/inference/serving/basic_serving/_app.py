@@ -39,7 +39,7 @@ from typing_extensions import ParamSpec, TypeGuard
 from ....utils import logging
 from ...pipelines import BasePipeline
 from ..infra.config import AppConfig
-from ..infra.models import NoResultResponse
+from ..infra.models import AIStudioNoResultResponse
 from ..infra.utils import call_async, generate_log_id
 
 PipelineT = TypeVar("PipelineT", bound=BasePipeline)
@@ -148,8 +148,8 @@ def create_app(
     app.state.context = ctx
 
     @app.get("/health", operation_id="checkHealth")
-    async def _check_health() -> NoResultResponse:
-        return NoResultResponse(
+    async def _check_health() -> AIStudioNoResultResponse:
+        return AIStudioNoResultResponse(
             logId=generate_log_id(), errorCode=0, errorMsg="Healthy"
         )
 
@@ -158,7 +158,7 @@ def create_app(
         request: fastapi.Request, exc: RequestValidationError
     ) -> JSONResponse:
         json_compatible_data = jsonable_encoder(
-            NoResultResponse(
+            AIStudioNoResultResponse(
                 logId=generate_log_id(),
                 errorCode=422,
                 errorMsg=json.dumps(exc.errors()),
@@ -171,7 +171,7 @@ def create_app(
         request: fastapi.Request, exc: HTTPException
     ) -> JSONResponse:
         json_compatible_data = jsonable_encoder(
-            NoResultResponse(
+            AIStudioNoResultResponse(
                 logId=generate_log_id(), errorCode=exc.status_code, errorMsg=exc.detail
             )
         )
@@ -185,7 +185,7 @@ def create_app(
         # necessary to log the exception info here?
         logging.exception("Unhandled exception")
         json_compatible_data = jsonable_encoder(
-            NoResultResponse(
+            AIStudioNoResultResponse(
                 logId=generate_log_id(),
                 errorCode=500,
                 errorMsg="Internal server error",
@@ -203,7 +203,10 @@ def primary_operation(
     return app.post(
         path,
         operation_id=operation_id,
-        responses={422: {"model": NoResultResponse}, 500: {"model": NoResultResponse}},
+        responses={
+            422: {"model": AIStudioNoResultResponse},
+            500: {"model": AIStudioNoResultResponse},
+        },
         response_model_exclude_none=True,
         **kwargs,
     )

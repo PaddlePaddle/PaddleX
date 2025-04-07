@@ -18,7 +18,7 @@ from fastapi import FastAPI
 
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
-from ...infra.models import ResultResponse
+from ...infra.models import AIStudioResultResponse
 from ...schemas.image_multilabel_classification import (
     INFER_ENDPOINT,
     InferRequest,
@@ -37,7 +37,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
         INFER_ENDPOINT,
         "infer",
     )
-    async def _infer(request: InferRequest) -> ResultResponse[InferResult]:
+    async def _infer(request: InferRequest) -> AIStudioResultResponse[InferResult]:
         pipeline = ctx.pipeline
         aiohttp_session = ctx.aiohttp_session
 
@@ -62,7 +62,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
         else:
             output_image_base64 = None
 
-        return ResultResponse[InferResult](
+        return AIStudioResultResponse[InferResult](
             logId=serving_utils.generate_log_id(),
             result=InferResult(categories=categories, image=output_image_base64),
         )
