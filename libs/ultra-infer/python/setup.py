@@ -122,7 +122,7 @@ if wheel_name == "ultra-infer-python":
     device_type = setup_configs["DEVICE_TYPE"]
     if device_type:
         if device_type not in ["GPU", "IPU", "NPU"]:
-            raise ValueError(
+            sys.exit(
                 f"Invalid DEVICE_TYPE: '{device_type}'. Supported values are: GPU, IPU, NPU. "
                 "Please update the DEVICE_TYPE environment variable accordingly."
             )
