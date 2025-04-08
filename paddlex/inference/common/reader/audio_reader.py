@@ -12,11 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ....utils.deps import class_requires_deps
 from ...utils.io import AudioReader
 
 
-@class_requires_deps("paddlepaddle")
 class ReadAudio:
     """Load audio from the file."""
 

@@ -18,7 +18,6 @@ from typing import Dict, List, Optional, Tuple, Union
 import numpy as np
 import PIL
 
-from .....utils.deps import class_requires_deps
 from ....utils.benchmark import benchmark
 from ...common.tokenizer.bert_tokenizer import BertTokenizer
 
@@ -94,7 +93,6 @@ def _text_pad_batch_data(
 
 
 @benchmark.timeit
-@class_requires_deps("paddlepaddle")
 class GroundingDINOPostProcessor(object):
     """PostProcessors for GroundingDINO"""
 
@@ -264,7 +262,6 @@ class GroundingDINOProcessor(object):
 
 
 @benchmark.timeit
-@class_requires_deps("paddlepaddle")
 class GroundingDinoTextProcessor(object):
     """Constructs a GroundingDino text processor."""
 
@@ -372,7 +369,6 @@ class GroundingDinoTextProcessor(object):
 
 
 @benchmark.timeit
-@class_requires_deps("paddlepaddle")
 class GroundingDinoImageProcessor(object):
     """Constructs a GroundingDino image processor."""
 

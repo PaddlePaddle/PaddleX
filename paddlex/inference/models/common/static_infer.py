@@ -20,11 +20,7 @@ from typing import List, Sequence
 import numpy as np
 
 from ....utils import logging
-from ....utils.deps import (
-    class_requires_deps,
-    function_requires_deps,
-    is_paddle2onnx_plugin_available,
-)
+from ....utils.deps import class_requires_deps
 from ....utils.device import constr_device
 from ....utils.flags import DEBUG, INFER_BENCHMARK_USE_NEW_INFER_API, USE_PIR_TRT
 from ...utils.benchmark import benchmark, set_inference_operations
@@ -53,7 +49,6 @@ set_inference_operations(INFERENCE_OPERATIONS)
 
 
 # XXX: Better use Paddle Inference API to do this
-@function_requires_deps("paddlepaddle")
 def _pd_dtype_to_np_dtype(pd_dtype):
     import paddle
 
@@ -74,7 +69,6 @@ def _pd_dtype_to_np_dtype(pd_dtype):
 
 
 # old trt
-@function_requires_deps("paddlepaddle")
 def _collect_trt_shape_range_info(
     model_file,
     model_params,
@@ -151,7 +145,6 @@ def _collect_trt_shape_range_info(
 
 
 # pir trt
-@function_requires_deps("paddlepaddle")
 def _convert_trt(
     trt_cfg_setting,
     pp_model_file,
@@ -249,7 +242,6 @@ def _concatenate(*callables):
 
 
 @benchmark.timeit
-@class_requires_deps("paddlepaddle")
 class PaddleCopyToDevice:
     def __init__(self, device_type, device_id):
         self.device_type = device_type
@@ -265,7 +257,6 @@ class PaddleCopyToDevice:
 
 
 @benchmark.timeit
-@class_requires_deps("paddlepaddle")
 class PaddleCopyToHost:
     def __call__(self, paddle_tensors):
         arrs = [i.numpy() for i in paddle_tensors]
@@ -273,7 +264,6 @@ class PaddleCopyToHost:
 
 
 @benchmark.timeit
-@class_requires_deps("paddlepaddle")
 class PaddleModelInfer:
     def __init__(self, predictor):
         super().__init__()
@@ -285,7 +275,6 @@ class PaddleModelInfer:
 
 # FIXME: Name might be misleading
 @benchmark.timeit
-@class_requires_deps("paddlepaddle")
 class PaddleInferChainLegacy:
     def __init__(self, predictor):
         self.predictor = predictor
@@ -315,7 +304,6 @@ class StaticInfer(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
 
-@class_requires_deps("paddlepaddle")
 class PaddleInfer(StaticInfer):
     def __init__(
         self,
@@ -602,7 +590,7 @@ class MultiBackendInfer(object):
 
 # TODO: It would be better to refactor the code to make `HPInfer` a higher-level
 # class that uses `PaddleInfer`.
-@class_requires_deps("ultra-infer", "paddlepaddle")
+@class_requires_deps("ultra-infer")
 class HPInfer(StaticInfer):
     def __init__(
         self,
@@ -659,54 +647,13 @@ class HPInfer(StaticInfer):
         return self._multi_backend_infer(inputs)
 
     def _determine_backend_and_config(self):
-        from ultra_infer import (
-            is_built_with_om,
-            is_built_with_openvino,
-            is_built_with_ort,
-            is_built_with_trt,
-        )
-
-        model_paths = get_model_paths(self._model_dir, self._model_file_prefix)
-        is_onnx_model_available = "onnx" in model_paths
-        # TODO: Give a warning if the Paddle2ONNX plugin is not available but
-        # can be used to select a better backend.
-        if self._config.auto_paddle2onnx:
-            if is_paddle2onnx_plugin_available():
-                is_onnx_model_available = (
-                    is_onnx_model_available or "paddle" in model_paths
-                )
-            else:
-                logging.debug(
-                    "The Paddle2ONNX plugin is not available. Automatic model conversion will not be performed."
-                )
-        available_backends = []
-        if "paddle" in model_paths:
-            available_backends.append("paddle")
-        if is_built_with_openvino() and is_onnx_model_available:
-            available_backends.append("openvino")
-        if is_built_with_ort() and is_onnx_model_available:
-            available_backends.append("onnxruntime")
-        if is_built_with_trt() and is_onnx_model_available:
-            available_backends.append("tensorrt")
-        if is_built_with_om() and "om" in model_paths:
-            available_backends.append("om")
-
-        if not available_backends:
-            raise RuntimeError("No inference backend is available")
-
-        if (
-            self._config.backend is not None
-            and self._config.backend not in available_backends
-        ):
-            raise RuntimeError(
-                f"Inference backend {repr(self._config.backend)} is unavailable"
-            )
-
         if self._config.auto_config:
             # Should we use the strategy pattern here to allow extensible
             # strategies?
+            model_paths = get_model_paths(self._model_dir, self._model_file_prefix)
             ret = suggest_inference_backend_and_config(
-                self._config, available_backends=available_backends
+                self._config,
+                model_paths,
             )
             if ret[0] is None:
                 # Should I use a custom exception?
@@ -789,16 +736,24 @@ class HPInfer(StaticInfer):
                     logging.info(
                         "Automatically converting PaddlePaddle model to ONNX format"
                     )
-                    subprocess.check_call(
-                        [
-                            "paddlex",
-                            "--paddle2onnx",
-                            "--paddle_model_dir",
-                            self._model_dir,
-                            "--onnx_model_dir",
-                            self._model_dir,
-                        ]
-                    )
+                    try:
+                        subprocess.run(
+                            [
+                                "paddlex",
+                                "--paddle2onnx",
+                                "--paddle_model_dir",
+                                self._model_dir,
+                                "--onnx_model_dir",
+                                self._model_dir,
+                            ],
+                            capture_output=True,
+                            check=True,
+                            text=True,
+                        )
+                    except subprocess.CalledProcessError as e:
+                        raise RuntimeError(
+                            f"PaddlePaddle-to-ONNX conversion failed:\n{e.stderr}"
+                        ) from e
                     model_paths = get_model_paths(
                         self.model_dir, self.model_file_prefix
                     )

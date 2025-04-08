@@ -569,7 +569,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 ## 2. Quick Start
 The pipelines provided by PaddleX allow for quick experience of their effects. You can use the command line or Python to experience the effects of the General Layout Parsing pipeline locally.
 
-Before using the General Layout Parsing pipeline locally, ensure you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Tutorial](../../../installation/installation.md).
+Before using the General Layout Parsing pipeline locally, ensure you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Tutorial](../../../installation/installation.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `ocr`.
 
 ### 2.1 Experience via Command Line
 You can quickly experience the effects of the Layout Parsing pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/layout_parsing_demo.png) and replace `--input` with the local path for prediction:

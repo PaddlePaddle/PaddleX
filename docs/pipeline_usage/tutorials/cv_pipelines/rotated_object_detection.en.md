@@ -80,7 +80,7 @@ Rotated object detection is a variant of the object detection module, specifical
 ## 2. Quick Start
 
 ### 2.1 Local Experience
-> ❗ Before using the rotated object detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+> ❗ Before using the rotated object detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `cv`.
 
 #### 2.1.1 Command Line Experience
 * You can quickly experience the rotated object detection pipeline with a single command. Use the [test image](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/rotated_object_detection_001.png) and replace `--input` with your local path for prediction.

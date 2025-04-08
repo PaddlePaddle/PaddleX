@@ -153,7 +153,7 @@ PaddleX 所提供的模型产线均可以快速体验效果，你可以在线体
 暂不支持在线体验
 
 ### 2.2 本地体验
-> ❗ 在本地使用人脸识别产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+> ❗ 在本地使用人脸识别产线前，请确保您已经按照[PaddleX安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。如果您希望选择性安装依赖，请参考安装教程中的相关说明。该产线对应的依赖分组为 `cv`。
 
 #### 2.2.1 命令行方式体验
 

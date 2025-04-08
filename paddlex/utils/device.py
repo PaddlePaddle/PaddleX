@@ -24,7 +24,6 @@ from .custom_device_whitelist import (
     NPU_WHITELIST,
     XPU_WHITELIST,
 )
-from .deps import function_requires_deps
 from .flags import DISABLE_DEV_MODEL_WL
 
 SUPPORTED_DEVICE_TYPE = ["cpu", "gpu", "xpu", "npu", "mlu", "gcu", "dcu"]
@@ -94,7 +93,6 @@ def set_env_for_device(device):
     return set_env_for_device_type(device_type)
 
 
-@function_requires_deps("paddlepaddle")
 def set_env_for_device_type(device_type):
     import paddle
 

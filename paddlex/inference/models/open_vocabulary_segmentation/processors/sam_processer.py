@@ -18,7 +18,6 @@ from typing import List, Optional, Tuple, Union
 import numpy as np
 import PIL
 
-from .....utils.deps import class_requires_deps
 from ....utils.benchmark import benchmark
 
 
@@ -33,7 +32,6 @@ def _get_preprocess_shape(
     return (newh, neww)
 
 
-@class_requires_deps("paddlepaddle")
 class SAMProcessor(object):
 
     def __init__(
@@ -180,7 +178,6 @@ class SamPromptProcessor(object):
 
 
 @benchmark.timeit
-@class_requires_deps("paddlepaddle")
 class SamImageProcessor(object):
     """Constructs a Sam image processor."""
 
