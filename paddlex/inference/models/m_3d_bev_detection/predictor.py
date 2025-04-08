@@ -18,7 +18,6 @@ from typing import Any, Dict, Iterator, List, Tuple
 
 from ....modules.m_3d_bev_detection.model_list import MODELS
 from ....utils import logging
-from ....utils.deps import function_requires_deps
 from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import Det3DBatchSampler
 from ...common.reader import ReadNuscenesData
@@ -75,7 +74,6 @@ class BEVDet3DPredictor(BasePredictor):
         """
         return BEV3DDetResult
 
-    @function_requires_deps("paddlepaddle")
     def _build(self) -> Tuple:
         """Build the preprocessors and inference engine based on the configuration.
 

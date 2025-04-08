@@ -15,7 +15,6 @@
 import numpy as np
 
 from ....modules.multilingual_speech_recognition.model_list import MODELS
-from ....utils.deps import function_requires_deps
 from ....utils.download import download_and_extract
 from ...common.batch_sampler import AudioBatchSampler
 from ...utils.io import AudioReader
@@ -54,7 +53,6 @@ class WhisperPredictor(BasePredictor):
         """
         return WhisperResult
 
-    @function_requires_deps("paddlepaddle")
     def _build(self):
         """Build the model, audio reader based on the configuration.
 
@@ -77,7 +75,6 @@ class WhisperPredictor(BasePredictor):
         audio_reader = AudioReader(backend="wav")
         return audio_reader
 
-    @function_requires_deps("paddlepaddle")
     def process(self, batch_data):
         """
         Process a batch of data through the preprocessing, inference, and postprocessing.

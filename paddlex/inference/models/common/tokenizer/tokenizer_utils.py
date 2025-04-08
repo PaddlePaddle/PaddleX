@@ -29,11 +29,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import numpy as np
 
 from .....utils import logging
-from .....utils.deps import (
-    class_requires_deps,
-    function_requires_deps,
-    is_dep_available,
-)
+from .....utils.deps import class_requires_deps, is_dep_available
 from .tokenizer_utils_base import (
     CHAT_TEMPLATE_CONFIG_NAME,
     AddedToken,
@@ -201,7 +197,6 @@ class ChatTemplate:
         return cls.from_dict(config)
 
 
-@function_requires_deps("paddlepaddle")
 def adapt_stale_fwd_patch(self, name, value):
     """
     Since there are some monkey patches for forward of PretrainedModel, such as
@@ -643,7 +638,6 @@ def normalize_chars(text):
     return "".join(output)
 
 
-@class_requires_deps("paddlepaddle", "Jinja2")
 class ChatTemplateMixin:
     chat_template: Optional[ChatTemplate] = None
 

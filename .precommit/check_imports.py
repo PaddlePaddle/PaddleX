@@ -89,6 +89,7 @@ MOD_PATTERN = re.compile(
 )
 STDLIB_MODS = set(stdlib_list())
 SPECIAL_KNOWN_MODS = {
+    "paddle",
     "paddleseg",
     "paddleclas",
     "paddledet",
@@ -100,7 +101,7 @@ SPECIAL_KNOWN_MODS = {
     "paddle3d",
     "paddlevideo",
 }
-MANUALLY_MANAGED_HEAVY_MODS = {"paddle", "paddle_custom_device", "ultra_infer"}
+MANUALLY_MANAGED_OPTIONAL_HEAVY_MODS = {"paddle_custom_device", "ultra_infer"}
 
 
 def check(file_path):
@@ -143,7 +144,7 @@ def check(file_path):
             tl = mod.split(".")[0]
             if tl == "paddlex" or tl in SPECIAL_KNOWN_MODS or tl in STDLIB_MODS:
                 continue
-            elif tl in MANUALLY_MANAGED_HEAVY_MODS:
+            elif tl in MANUALLY_MANAGED_OPTIONAL_HEAVY_MODS:
                 if level == 1:
                     print(
                         f"{pos}: Module of a manually managed heavy dependency imported at the top level: {mod}"

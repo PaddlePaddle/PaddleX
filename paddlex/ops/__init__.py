@@ -90,7 +90,6 @@ class CustomOperatorPathLoader:
         return sys.modules[fullname]
 
 
-@class_requires_deps("paddlepaddle")
 class PaddleXCustomOperatorModule(ModuleType):
     def __init__(self, modulename: str, fullname: str):
         self.fullname = fullname

@@ -25,7 +25,6 @@ from typing import Any, Dict, List, NamedTuple, Optional, Sequence, Tuple, Union
 import numpy as np
 
 from .....utils import logging
-from .....utils.deps import class_requires_deps, function_requires_deps
 
 __all__ = [
     "AddedToken",
@@ -125,7 +124,6 @@ class TensorType(ExplicitEnum):
     NUMPY = "np"
 
 
-@function_requires_deps("paddlepaddle")
 def to_py_obj(obj):
     """
     Convert a Paddle tensor, Numpy array or python list to a python list.
@@ -186,7 +184,6 @@ class TokenSpan(NamedTuple):
     end: int
 
 
-@class_requires_deps("paddlepaddle")
 class BatchEncoding(UserDict):
     """
     Holds the output of the [`PretrainedTokenizerBase.__call__`],
@@ -1310,7 +1307,6 @@ class SpecialTokensMixin:
         return all_ids
 
 
-@class_requires_deps("paddlepaddle")
 class PretrainedTokenizerBase(SpecialTokensMixin):
     """
     Base class for [`PretrainedTokenizer`].
