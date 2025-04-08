@@ -744,16 +744,24 @@ class HPInfer(StaticInfer):
                     logging.info(
                         "Automatically converting PaddlePaddle model to ONNX format"
                     )
-                    subprocess.check_call(
-                        [
-                            "paddlex",
-                            "--paddle2onnx",
-                            "--paddle_model_dir",
-                            self._model_dir,
-                            "--onnx_model_dir",
-                            self._model_dir,
-                        ]
-                    )
+                    try:
+                        subprocess.run(
+                            [
+                                "paddlex",
+                                "--paddle2onnx",
+                                "--paddle_model_dir",
+                                self._model_dir,
+                                "--onnx_model_dir",
+                                self._model_dir,
+                            ],
+                            capture_output=True,
+                            check=True,
+                            text=True,
+                        )
+                    except subprocess.CalledProcessError as e:
+                        raise RuntimeError(
+                            f"PaddlePaddle-to-ONNX conversion failed:\n{e.stderr}"
+                        ) from e
                     model_paths = get_model_paths(
                         self.model_dir, self.model_file_prefix
                     )

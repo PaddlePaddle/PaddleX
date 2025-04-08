@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import ctypes.util
 import importlib.resources
 import importlib.util
 import json
@@ -210,7 +211,10 @@ def suggest_inference_backend_and_config(
         hpi_config.pdx_model_name
     ]
 
-    if not (USE_PIR_TRT and importlib.util.find_spec("tensorrt") is not None):
+    # XXX
+    if not ctypes.util.find_library("nvinfer") or (
+        USE_PIR_TRT and importlib.util.find_spec("tensorrt") is None
+    ):
         if "paddle_tensorrt" in supported_pseudo_backends:
             supported_pseudo_backends.remove("paddle_tensorrt")
         if "paddle_tensorrt_fp16" in supported_pseudo_backends:
