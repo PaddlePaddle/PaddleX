@@ -89,6 +89,7 @@ MOD_PATTERN = re.compile(
 )
 STDLIB_MODS = set(stdlib_list())
 SPECIAL_KNOWN_MODS = {
+    "paddle",
     "paddleseg",
     "paddleclas",
     "paddledet",
@@ -100,7 +101,7 @@ SPECIAL_KNOWN_MODS = {
     "paddle3d",
     "paddlevideo",
 }
-MANUALLY_MANAGED_HEAVY_MODS = {"paddle", "paddle_custom_device", "ultra_infer"}
+MANUALLY_MANAGED_HEAVY_MODS = {"paddle_custom_device", "ultra_infer"}
 
 
 def check(file_path):
