@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import sys
 from collections import OrderedDict
 
@@ -27,7 +26,6 @@ from .repo import (
 __all__ = [
     "set_parent_dirs",
     "setup",
-    "wheel",
     "is_initialized",
     "initialize",
     "get_versions",
@@ -208,26 +206,6 @@ def setup(
         deps_to_replace=deps_to_replace,
     )
     logging.info("All packages are installed.")
-
-
-def wheel(repo_names, dst_dir="./", fail_fast=False):
-    """wheel"""
-    for repo_name in repo_names:
-        repo = _GlobalContext.build_repo_instance(repo_name)
-        logging.info(f"Now building Wheel for {repo_name}...")
-        try:
-            tgt_dir = os.path.join(dst_dir, repo.pkg_name)
-            if os.path.exists(tgt_dir):
-                raise FileExistsError(f"{tgt_dir} already exists.")
-            repo.wheel(tgt_dir)
-        except Exception as e:
-            logging.warning(
-                f"Failed to build wheel for {repo_name}. We encountered the following error:\n  {str(e)}\n"
-            )
-            if fail_fast:
-                raise
-        else:
-            logging.info(f"Wheel for {repo_name} is built.\n")
 
 
 def initialize(repo_names=None):

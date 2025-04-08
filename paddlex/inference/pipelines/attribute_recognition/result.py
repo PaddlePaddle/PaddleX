@@ -14,13 +14,16 @@
 
 import copy
 
-import cv2
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 
+from ....utils.deps import class_requires_deps, is_dep_available
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH
 from ...common.result import BaseCVResult, JsonMixin
 from ...utils.color_map import font_colormap, get_colormap
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 
 def draw_attribute_result(img, boxes):
@@ -71,6 +74,7 @@ def draw_attribute_result(img, boxes):
     return img
 
 
+@class_requires_deps("opencv-contrib-python")
 class AttributeRecResult(BaseCVResult):
 
     def _to_str(self, *args, **kwargs):

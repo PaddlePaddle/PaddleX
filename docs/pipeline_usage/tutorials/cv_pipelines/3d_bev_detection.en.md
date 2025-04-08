@@ -86,7 +86,7 @@ The pre-trained model pipelines provided by PaddleX allow for quick experimentat
 Online experience is currently not supported.
 
 ### 2.2 Local Experience
-> ❗ Before using the 3D multi-modal fusion detection pipeline locally, please ensure you have completed the PaddleX wheel package installation according to [the PaddleX Installation Tutorial](../../../installation/installation.md).
+> ❗ Before using the 3D multi-modal fusion detection pipeline locally, please ensure you have completed the PaddleX wheel package installation according to [the PaddleX Installation Tutorial](../../../installation/installation.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `cv`.
 
 Demo dataset download: You can use the following command to download the demo dataset to a specified folder:
 

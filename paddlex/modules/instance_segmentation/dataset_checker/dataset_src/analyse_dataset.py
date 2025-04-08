@@ -17,14 +17,19 @@ import os
 import platform
 from collections import defaultdict
 
-import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import font_manager
-from pycocotools.coco import COCO
 
+from .....utils.deps import function_requires_deps, is_dep_available
 from .....utils.fonts import PINGFANG_FONT_FILE_PATH
 
+if is_dep_available("matplotlib"):
+    import matplotlib.pyplot as plt
+    from matplotlib import font_manager
+if is_dep_available("pycocotools"):
+    from pycocotools.coco import COCO
 
+
+@function_requires_deps("pycocotools", "matplotlib")
 def deep_analyse(dataset_dir, output):
     """class analysis for dataset"""
     tags = ["train", "val"]

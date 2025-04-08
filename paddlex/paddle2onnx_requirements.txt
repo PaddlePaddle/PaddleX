@@ -1,1 +1,0 @@
-paddle2onnx>=2

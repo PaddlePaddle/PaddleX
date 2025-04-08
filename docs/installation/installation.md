@@ -19,8 +19,9 @@ PaddleX为您提供了两种安装模式：<b>Wheel包安装</b>和<b>插件安�
 > ❗ 注：请务必保证 PaddlePaddle 安装成功，安装成功后，方可进行下一步。
 
 ```bash
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0rc0-py3-none-any.whl
+pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0rc0-py3-none-any.whl[base]
 ```
+
 ### 1.2 插件安装模式
 若您使用PaddleX的应用场景为<b>二次开发</b> （例如重新训练模型、微调模型、自定义模型结构、自定义推理代码等），那么推荐您使用<b>功能更加强大</b>的插件安装模式。
 
@@ -193,7 +194,7 @@ cd PaddleX
 
 # 安装 PaddleX whl
 # -e：以可编辑模式安装，当前项目的代码更改，都会直接作用到已经安装的 PaddleX Wheel
-pip install -e .
+pip install -e .[base]
 ```
 <b>若您选择插件安装模式</b>，并且您需要的插件名称为 PaddleXXX（可以有多个），请执行以下命令：
 
@@ -202,7 +203,7 @@ cd PaddleX
 
 # 安装 PaddleX whl
 # -e：以可编辑模式安装，当前项目的代码更改，都会直接作用到已经安装的 PaddleX Wheel
-pip install -e .
+pip install -e .[base]
 
 # 安装 PaddleX 插件
 paddlex --install PaddleXXX
@@ -233,3 +234,37 @@ paddlex --install --platform gitee.com
 All packages are installed.
 ```
 更多硬件环境的PaddleX安装请参考[PaddleX多硬件使用指南](../other_devices_support/multi_devices_use_guide.md)
+
+### 2.3 选择性安装依赖
+
+PaddleX 的功能丰富，而不同的功能需要的依赖也不尽相同。将 PaddleX 中不需要安装插件即可使用的功能归类为“基础功能”。PaddleX 官方 Docker 镜像预置了基础功能所需的全部依赖；使用上文介绍的 `pip install ...[base]` 的安装方式也将安装基础功能需要的所有依赖。如果您只专注于 PaddleX 的某一项功能，且希望保持安装的依赖的体积尽可能小，可以通过指定“依赖组”的方式，选择性地安装依赖：
+
+```bash
+# 以仅安装 OCR 类基础功能为例
+# 安装预编译的 wheel 包
+pip install /url/of/wheel[ocr]
+# 从源码安装
+pip install -e .[ocr]
+
+# 也可以同时指定多个依赖组
+pip install -e .[ocr,cv]
+```
+
+PaddleX 目前提供如下依赖组：
+
+| 依赖组名称 | 对应的功能 |
+| - | - |
+| `base` | PaddleX 的所有基础功能。 |
+| `cv` | 除多模态产线外的 CV 产线的基础功能。 |
+| `multimodal` | 多模态产线的基础功能。 |
+| `ie` | 信息抽取产线的基础功能。 |
+| `ocr` | OCR 类产线的基础功能。 |
+| `speech` | 语音产线的基础功能。 |
+| `ts` | 时序产线的基础功能。 |
+| `video` | 视频产线的基础功能。 |
+| `serving` | 服务化部署功能。安装此依赖组等效于安装 PaddleX 服务化部署插件；也可以通过 PaddleX CLI 安装服务化部署插件。 |
+| `plugins` | 所有支持通过指定依赖组安装的插件提供的功能。 |
+| `all` | PaddleX 的所有基础功能，以及所有支持通过指定依赖组安装的插件提供的功能。 |
+
+
+每一条产线属于且仅属于一个依赖组；在各产线的使用文档中可以了解产线属于哪一依赖组。对于单功能模块，安装任意包含该模块的产线对应的依赖组后即可使用相关的基础功能。

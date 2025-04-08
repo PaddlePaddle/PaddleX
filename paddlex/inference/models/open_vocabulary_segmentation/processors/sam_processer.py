@@ -18,13 +18,6 @@ from typing import List, Optional, Tuple, Union
 import numpy as np
 import PIL
 
-from .....utils.lazy_loader import LazyLoader
-
-# NOTE: LazyLoader is used to avoid conflicts between ultra-infer and Paddle
-paddle = LazyLoader("lazy_paddle", globals(), "paddle")
-T = LazyLoader("T", globals(), "paddle.vision.transforms")
-F = LazyLoader("F", globals(), "paddle.nn.functional")
-
 from ....utils.benchmark import benchmark
 
 
@@ -107,6 +100,8 @@ class SAMProcessor(object):
         return image_seg, prompt
 
     def postprocess(self, low_res_masks, mask_threshold: float = 0.0):
+        import paddle
+        import paddle.nn.functional as F
 
         if isinstance(low_res_masks, list):
             assert len(low_res_masks) == 1
@@ -210,6 +205,8 @@ class SamImageProcessor(object):
 
     def apply_image(self, image: np.ndarray) -> np.ndarray:
         """Expects a numpy array with shape HxWxC in uint8 format."""
+        import paddle.vision.transforms as T
+
         target_size = _get_preprocess_shape(image.shape[0], image.shape[1], self.size)
         if isinstance(image, np.ndarray):
             image = PIL.Image.fromarray(image)
@@ -226,8 +223,8 @@ class SamImageProcessor(object):
         images,
     ):
         """Preprocess an image or a batch of images with a same shape."""
-
-        self.size
+        import paddle
+        import paddle.nn.functional as F
 
         input_image = [self.apply_image(image) for image in images]
 

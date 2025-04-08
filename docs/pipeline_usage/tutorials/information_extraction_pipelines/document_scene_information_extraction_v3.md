@@ -367,7 +367,7 @@ PaddleX 所提供的预训练的模型产线均可以快速体验效果，你可
 如果您对产线运行的效果满意，可以直接对产线进行集成部署，如果不满意，您也可以利用私有数据<b>对产线中的模型进行在线微调</b>。
 
 ### 2.2 本地体验
-在本地使用文档场景信息抽取v3产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+在本地使用文档场景信息抽取v3产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。如果您希望选择性安装依赖，请参考安装教程中的相关说明。该产线对应的依赖分组为 `ie`。
 
 在进行模型推理之前，首先需要准备大语言模型的 api_key，PP-ChatOCRv3 支持调用 [百度云千帆平台](https://console.bce.baidu.com/qianfan/ais/console/onlineService) 提供的大模型推理服务，您可以参考[认证鉴权](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Um2wxbaps) 获取千帆平台的 api_key。
 

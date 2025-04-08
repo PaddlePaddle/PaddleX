@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import lazy_paddle as paddle
-from lazy_paddle.utils.cpp_extension import CppExtension, CUDAExtension, setup
+import paddle
+from paddle.utils.cpp_extension import CppExtension, CUDAExtension, setup
 
 from paddlex.ops import custom_ops
 

@@ -83,7 +83,7 @@ Open vocabulary segmentation is an image segmentation task that aims to segment 
 ## 2. Quick Start
 
 ### 2.1 Local Experience
-> ❗ Before using the general open vocabulary segmentation pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+> ❗ Before using the general open vocabulary segmentation pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `multimodal`.
 
 #### 2.1.1 Command Line Experience
 * You can quickly experience the open vocabulary segmentation pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/open_vocabulary_segmentation.jpg) and replace `--input` with your local path for prediction.

@@ -21,6 +21,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import numpy as np
 
 from ....utils import logging
+from ....utils.deps import pipeline_requires_extra
 from ....utils.file_interface import custom_open
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
@@ -31,6 +32,7 @@ from ..layout_parsing.result import LayoutParsingResult
 from .pipeline_base import PP_ChatOCR_Pipeline
 
 
+@pipeline_requires_extra("ie")
 class PP_ChatOCRv3_Pipeline(PP_ChatOCR_Pipeline):
     """PP-ChatOCR Pipeline"""
 

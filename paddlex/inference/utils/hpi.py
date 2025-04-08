@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import ctypes.util
 import importlib.resources
+import importlib.util
 import json
 import platform
 from functools import lru_cache
@@ -23,7 +25,8 @@ from typing import Any, Dict, List, Literal, Optional, Tuple, TypedDict, Union
 from pydantic import BaseModel, Field
 from typing_extensions import Annotated, TypeAlias
 
-from ...utils.flags import FLAGS_json_format_model
+from ...utils.deps import function_requires_deps, is_paddle2onnx_plugin_available
+from ...utils.flags import USE_PIR_TRT, FLAGS_json_format_model
 
 
 class PaddleInferenceInfo(BaseModel):
@@ -131,21 +134,48 @@ def _get_hpi_model_info_collection():
     return hpi_model_info_collection
 
 
+@function_requires_deps("ultra-infer")
 def suggest_inference_backend_and_config(
     hpi_config: HPIConfig,
-    available_backends: Optional[List[InferenceBackend]] = None,
+    model_paths: ModelPaths,
 ) -> Union[Tuple[InferenceBackend, Dict[str, Any]], Tuple[None, str]]:
     # TODO: The current strategy is naive. It would be better to consider
     # additional important factors, such as NVIDIA GPU compute capability and
     # device manufacturers. We should also allow users to provide hints.
 
-    import lazy_paddle as paddle
+    import paddle
+    from ultra_infer import (
+        is_built_with_om,
+        is_built_with_openvino,
+        is_built_with_ort,
+        is_built_with_trt,
+    )
 
-    if available_backends is not None and not available_backends:
+    is_onnx_model_available = "onnx" in model_paths
+    # TODO: Give a warning if the Paddle2ONNX plugin is not available but
+    # can be used to select a better backend.
+    if hpi_config.auto_paddle2onnx and is_paddle2onnx_plugin_available():
+        is_onnx_model_available = is_onnx_model_available or "paddle" in model_paths
+    available_backends = []
+    if "paddle" in model_paths:
+        available_backends.append("paddle")
+    if is_built_with_openvino() and is_onnx_model_available:
+        available_backends.append("openvino")
+    if is_built_with_ort() and is_onnx_model_available:
+        available_backends.append("onnxruntime")
+    if is_built_with_trt() and is_onnx_model_available:
+        available_backends.append("tensorrt")
+    if is_built_with_om() and "om" in model_paths:
+        available_backends.append("om")
+
+    if not available_backends:
         return None, "No inference backends are available."
 
+    if hpi_config.backend is not None and hpi_config.backend not in available_backends:
+        return None, f"Inference backend {repr(hpi_config.backend)} is unavailable."
+
     paddle_version = paddle.__version__
-    if paddle_version != "3.0.0-rc0":
+    if paddle_version != "3.0.0":
         return None, f"{repr(paddle_version)} is not a supported Paddle version."
 
     if hpi_config.device_type == "cpu":
@@ -159,11 +189,11 @@ def suggest_inference_backend_and_config(
         # FIXME: We should not rely on the PaddlePaddle library to detemine CUDA
         # and cuDNN versions.
         # Should we inject environment info from the outside?
-        import lazy_paddle.version
+        import paddle.version
 
-        cuda_version = lazy_paddle.version.cuda()
+        cuda_version = paddle.version.cuda()
         cuda_version = cuda_version.replace(".", "")
-        cudnn_version = lazy_paddle.version.cudnn().rsplit(".", 1)[0]
+        cudnn_version = paddle.version.cudnn().rsplit(".", 1)[0]
         cudnn_version = cudnn_version.replace(".", "")
         key = f"gpu_cuda{cuda_version}_cudnn{cudnn_version}"
     else:
@@ -180,6 +210,15 @@ def suggest_inference_backend_and_config(
     supported_pseudo_backends = hpi_model_info_collection_for_env[
         hpi_config.pdx_model_name
     ]
+
+    # XXX
+    if not ctypes.util.find_library("nvinfer") or (
+        USE_PIR_TRT and importlib.util.find_spec("tensorrt") is None
+    ):
+        if "paddle_tensorrt" in supported_pseudo_backends:
+            supported_pseudo_backends.remove("paddle_tensorrt")
+        if "paddle_tensorrt_fp16" in supported_pseudo_backends:
+            supported_pseudo_backends.remove("paddle_tensorrt_fp16")
 
     candidate_backends = []
     backend_to_pseudo_backend = {}

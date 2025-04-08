@@ -16,12 +16,14 @@ from typing import Any, Dict, List, Optional, Union
 
 import pandas as pd
 
+from ....utils.deps import pipeline_requires_extra
 from ...models.ts_anomaly_detection.result import TSAdResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 
 
+@pipeline_requires_extra("ts")
 class TSAnomalyDetPipeline(BasePipeline):
     """TSAnomalyDetPipeline Pipeline"""
 

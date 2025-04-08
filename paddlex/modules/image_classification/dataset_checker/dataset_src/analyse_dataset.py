@@ -16,14 +16,18 @@ import os
 import platform
 from collections import defaultdict
 
-import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import font_manager
 
+from .....utils.deps import function_requires_deps, is_dep_available
 from .....utils.file_interface import custom_open
 from .....utils.fonts import PINGFANG_FONT_FILE_PATH
 
+if is_dep_available("matplotlib"):
+    import matplotlib.pyplot as plt
+    from matplotlib import font_manager
 
+
+@function_requires_deps("matplotlib")
 def deep_analyse(dataset_path, output):
     """class analysis for dataset"""
     tags = ["train", "val"]

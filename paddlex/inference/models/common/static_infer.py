@@ -13,15 +13,14 @@
 # limitations under the License.
 
 import abc
-import importlib.util
 import subprocess
 from pathlib import Path
 from typing import List, Sequence
 
-import lazy_paddle as paddle
 import numpy as np
 
 from ....utils import logging
+from ....utils.deps import class_requires_deps
 from ....utils.device import constr_device
 from ....utils.flags import DEBUG, INFER_BENCHMARK_USE_NEW_INFER_API, USE_PIR_TRT
 from ...utils.benchmark import benchmark, set_inference_operations
@@ -51,6 +50,8 @@ set_inference_operations(INFERENCE_OPERATIONS)
 
 # XXX: Better use Paddle Inference API to do this
 def _pd_dtype_to_np_dtype(pd_dtype):
+    import paddle
+
     if pd_dtype == paddle.inference.DataType.FLOAT64:
         return np.float64
     elif pd_dtype == paddle.inference.DataType.FLOAT32:
@@ -76,6 +77,7 @@ def _collect_trt_shape_range_info(
     dynamic_shapes,
     dynamic_shape_input_data,
 ):
+    import paddle.inference
 
     dynamic_shape_input_data = dynamic_shape_input_data or {}
 
@@ -152,6 +154,7 @@ def _convert_trt(
     dynamic_shapes,
     dynamic_shape_input_data,
 ):
+    import paddle.inference
     from paddle.tensorrt.export import Input, TensorRTConfig, convert
 
     def _set_trt_config():
@@ -245,6 +248,8 @@ class PaddleCopyToDevice:
         self.device_id = device_id
 
     def __call__(self, arrs):
+        import paddle
+
         device_id = [self.device_id] if self.device_id is not None else self.device_id
         device = constr_device(self.device_type, device_id)
         paddle_tensors = [paddle.to_tensor(i, place=device) for i in arrs]
@@ -338,6 +343,9 @@ class PaddleInfer(StaticInfer):
         self,
     ):
         """_create"""
+        import paddle
+        import paddle.inference
+
         model_paths = get_model_paths(self.model_dir, self.model_file_prefix)
         if "paddle" not in model_paths:
             raise RuntimeError("No valid PaddlePaddle model found")
@@ -469,6 +477,8 @@ class PaddleInfer(StaticInfer):
 
     def _configure_trt(self, model_file, params_file, cache_dir):
         # TODO: Support calibration
+        import paddle.inference
+
         if USE_PIR_TRT:
             trt_save_path = cache_dir / "trt" / self.model_file_prefix
             _convert_trt(
@@ -566,6 +576,7 @@ class PaddleInfer(StaticInfer):
 
 # FIXME: Name might be misleading
 @benchmark.timeit
+@class_requires_deps("ultra-infer")
 class MultiBackendInfer(object):
     def __init__(self, ui_runtime):
         super().__init__()
@@ -579,6 +590,7 @@ class MultiBackendInfer(object):
 
 # TODO: It would be better to refactor the code to make `HPInfer` a higher-level
 # class that uses `PaddleInfer`.
+@class_requires_deps("ultra-infer")
 class HPInfer(StaticInfer):
     def __init__(
         self,
@@ -635,54 +647,13 @@ class HPInfer(StaticInfer):
         return self._multi_backend_infer(inputs)
 
     def _determine_backend_and_config(self):
-        from ultra_infer import (
-            is_built_with_om,
-            is_built_with_openvino,
-            is_built_with_ort,
-            is_built_with_trt,
-        )
-
-        model_paths = get_model_paths(self._model_dir, self._model_file_prefix)
-        is_onnx_model_available = "onnx" in model_paths
-        # TODO: Give a warning if Paddle2ONNX is not available but can be used
-        # to select a better backend.
-        if self._config.auto_paddle2onnx:
-            if self._check_paddle2onnx():
-                is_onnx_model_available = (
-                    is_onnx_model_available or "paddle" in model_paths
-                )
-            else:
-                logging.debug(
-                    "Paddle2ONNX is not available. Automatic model conversion will not be performed."
-                )
-        available_backends = []
-        if "paddle" in model_paths:
-            available_backends.append("paddle")
-        if is_built_with_openvino() and is_onnx_model_available:
-            available_backends.append("openvino")
-        if is_built_with_ort() and is_onnx_model_available:
-            available_backends.append("onnxruntime")
-        if is_built_with_trt() and is_onnx_model_available:
-            available_backends.append("tensorrt")
-        if is_built_with_om() and "om" in model_paths:
-            available_backends.append("om")
-
-        if not available_backends:
-            raise RuntimeError("No inference backend is available")
-
-        if (
-            self._config.backend is not None
-            and self._config.backend not in available_backends
-        ):
-            raise RuntimeError(
-                f"Inference backend {repr(self._config.backend)} is unavailable"
-            )
-
         if self._config.auto_config:
             # Should we use the strategy pattern here to allow extensible
             # strategies?
+            model_paths = get_model_paths(self._model_dir, self._model_file_prefix)
             ret = suggest_inference_backend_and_config(
-                self._config, available_backends=available_backends
+                self._config,
+                model_paths,
             )
             if ret[0] is None:
                 # Should I use a custom exception?
@@ -748,7 +719,7 @@ class HPInfer(StaticInfer):
         elif self._config.device_type == "gpu":
             ui_option.use_gpu(self._config.device_id or 0)
         elif self._config.device_type == "npu":
-            ui_option.use_ascend()
+            ui_option.use_ascend(self._config.device_id or 0)
         else:
             raise RuntimeError(
                 f"Unsupported device type {repr(self._config.device_type)}"
@@ -765,16 +736,24 @@ class HPInfer(StaticInfer):
                     logging.info(
                         "Automatically converting PaddlePaddle model to ONNX format"
                     )
-                    subprocess.check_call(
-                        [
-                            "paddlex",
-                            "--paddle2onnx",
-                            "--paddle_model_dir",
-                            self._model_dir,
-                            "--onnx_model_dir",
-                            self._model_dir,
-                        ]
-                    )
+                    try:
+                        subprocess.run(
+                            [
+                                "paddlex",
+                                "--paddle2onnx",
+                                "--paddle_model_dir",
+                                self._model_dir,
+                                "--onnx_model_dir",
+                                self._model_dir,
+                            ],
+                            capture_output=True,
+                            check=True,
+                            text=True,
+                        )
+                    except subprocess.CalledProcessError as e:
+                        raise RuntimeError(
+                            f"PaddlePaddle-to-ONNX conversion failed:\n{e.stderr}"
+                        ) from e
                     model_paths = get_model_paths(
                         self.model_dir, self.model_file_prefix
                     )
@@ -843,7 +822,3 @@ class HPInfer(StaticInfer):
         ui_runtime = Runtime(ui_option)
 
         return ui_runtime
-
-    def _check_paddle2onnx(self):
-        # HACK
-        return importlib.util.find_spec("paddle2onnx") is not None

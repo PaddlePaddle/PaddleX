@@ -21,6 +21,7 @@ from .common import (
     SortPolyBoxes,
     SortQuadBoxes,
     convert_points_to_boxes,
+    rotate_image,
 )
 from .faisser import FaissBuilder, FaissIndexer, IndexData
 from .prompt_engineering.base import BaseGeneratePrompt

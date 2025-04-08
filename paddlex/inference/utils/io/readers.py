@@ -17,13 +17,19 @@ import enum
 import itertools
 import random
 
-import cv2
-import fitz
 import numpy as np
 import pandas as pd
-import soundfile
 import yaml
 from PIL import Image, ImageOps
+
+from ....utils.deps import class_requires_deps, is_dep_available
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+if is_dep_available("PyMuPDF"):
+    import fitz
+if is_dep_available("soundfile"):
+    import soundfile
 
 __all__ = [
     "ReaderType",
@@ -212,11 +218,14 @@ class _ImageReaderBackend(_BaseReaderBackend):
     """_ImageReaderBackend"""
 
 
+@class_requires_deps("opencv-contrib-python")
 class OpenCVImageReaderBackend(_ImageReaderBackend):
     """OpenCVImageReaderBackend"""
 
-    def __init__(self, flags=cv2.IMREAD_COLOR):
+    def __init__(self, flags=None):
         super().__init__()
+        if flags is None:
+            flags = cv2.IMREAD_COLOR
         self.flags = flags
 
     def read_file(self, in_path):
@@ -235,6 +244,7 @@ class PILImageReaderBackend(_ImageReaderBackend):
         return ImageOps.exif_transpose(Image.open(in_path))
 
 
+@class_requires_deps("PyMuPDF", "opencv-contrib-python")
 class PDFReaderBackend(_BaseReaderBackend):
 
     def __init__(self, rotate=0, zoom_x=2.0, zoom_y=2.0):
@@ -263,6 +273,7 @@ class _VideoReaderBackend(_BaseReaderBackend):
         raise NotImplementedError
 
 
+@class_requires_deps("opencv-contrib-python")
 class OpenCVVideoReaderBackend(_VideoReaderBackend):
     """OpenCVVideoReaderBackend"""
 
@@ -478,6 +489,7 @@ class _AudioReaderBackend(_BaseReaderBackend):
     """_AudioReaderBackend"""
 
 
+@class_requires_deps("soundfile")
 class WAVReaderBackend(_AudioReaderBackend):
     """PandasCSVReaderBackend"""
 

@@ -41,7 +41,7 @@ YOWO是具有两个分支的单阶段网络。一个分支通过2D-CNN提取关�
 
 PaddleX 支持在本地使用命令行或 Python 体验产线的效果。
 
-在本地使用通用视频检测产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+在本地使用通用视频检测产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。如果您希望选择性安装依赖，请参考安装教程中的相关说明。该产线对应的依赖分组为 `video`。
 
 ### 2.1 本地体验
 

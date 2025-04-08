@@ -14,24 +14,35 @@
 
 import copy
 
-import cv2
 import numpy as np
 from numpy import arctan, cos, sin, sqrt
 
 from .....utils import logging
+from .....utils.deps import (
+    class_requires_deps,
+    function_requires_deps,
+    is_dep_available,
+)
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 #### [TODO] need sunting to add explanatory notes
 
 
+@function_requires_deps("opencv-contrib-python")
 def Homography(
     image,
     img_points,
     world_width,
     world_height,
-    interpolation=cv2.INTER_CUBIC,
+    interpolation=None,
     ratio_width=1.0,
     ratio_height=1.0,
 ):
+    if interpolation is None:
+        interpolation = cv2.INTER_CUBIC
+
     _points = np.array(img_points).reshape(-1, 2).astype(np.float32)
 
     expand_x = int(0.5 * world_width * (ratio_width - 1))
@@ -60,13 +71,14 @@ def Homography(
     return dst_img
 
 
+@class_requires_deps("opencv-contrib-python")
 class PlanB:
     def __call__(
         self,
         image,
         points,
         curveTextRectifier,
-        interpolation=cv2.INTER_LINEAR,
+        interpolation=None,
         ratio_width=1.0,
         ratio_height=1.0,
         loss_thresh=5.0,
@@ -84,6 +96,8 @@ class PlanB:
         :param square: crop square image or not. True or False. The default is False
         :return:
         """
+        if interpolation is None:
+            interpolation = cv2.INTER_LINEAR
         h, w = image.shape[:2]
         _points = np.array(points).reshape(-1, 2).astype(np.float32)
         x_min = int(np.min(_points[:, 0]))
@@ -126,6 +140,7 @@ class PlanB:
         return dst_img, loss
 
 
+@class_requires_deps("opencv-contrib-python")
 class CurveTextRectifier:
     """
     spatial transformer via monocular vision
@@ -538,7 +553,7 @@ class CurveTextRectifier:
         img_points,
         obj_points,
         is_horizontal_text,
-        interpolation=cv2.INTER_LINEAR,
+        interpolation=None,
         ratio_width=1.0,
         ratio_height=1.0,
     ):
@@ -546,6 +561,9 @@ class CurveTextRectifier:
         divide and conquer: homography
         # ratio_width and ratio_height must be 1.0 here
         """
+        if interpolation is None:
+            interpolation = cv2.INTER_LINEAR
+
         _img_points = img_points.reshape(-1, 2)
         _obj_points = obj_points.reshape(-1, 3)
 
@@ -607,10 +625,13 @@ class CurveTextRectifier:
         img_points,
         world_width,
         world_height,
-        interpolation=cv2.INTER_CUBIC,
+        interpolation=None,
         ratio_width=1.0,
         ratio_height=1.0,
     ):
+        if interpolation is None:
+            interpolation = cv2.INTER_CUBIC
+
         _points = np.array(img_points).reshape(-1, 2).astype(np.float32)
 
         expand_x = int(0.5 * world_width * (ratio_width - 1))
@@ -642,7 +663,7 @@ class CurveTextRectifier:
         self,
         image_data,
         points,
-        interpolation=cv2.INTER_LINEAR,
+        interpolation=None,
         ratio_width=1.0,
         ratio_height=1.0,
         mode="calibration",
@@ -657,6 +678,9 @@ class CurveTextRectifier:
         :param mode: 'calibration' or 'homography'. when homography, ratio_width and ratio_height must be 1.0
         :return:
         """
+        if interpolation is None:
+            interpolation = cv2.INTER_LINEAR
+
         org_h, org_w = image_data.shape[:2]
         org_size = (org_w, org_h)
         self.image = image_data
@@ -703,6 +727,7 @@ class CurveTextRectifier:
         return dst, ret
 
 
+@class_requires_deps("opencv-contrib-python")
 class AutoRectifier:
     def __init__(self):
         self.npoints = 10
@@ -710,7 +735,7 @@ class AutoRectifier:
 
     @staticmethod
     def get_rotate_crop_image(
-        img, points, interpolation=cv2.INTER_CUBIC, ratio_width=1.0, ratio_height=1.0
+        img, points, interpolation=None, ratio_width=1.0, ratio_height=1.0
     ):
         """
         crop or homography
@@ -721,6 +746,8 @@ class AutoRectifier:
         :param ratio_height:
         :return:
         """
+        if interpolation is None:
+            interpolation = cv2.INTER_CUBIC
         h, w = img.shape[:2]
         _points = np.array(points).reshape(-1, 2).astype(np.float32)
 
@@ -796,7 +823,7 @@ class AutoRectifier:
         self,
         image_data,
         points,
-        interpolation=cv2.INTER_LINEAR,
+        interpolation=None,
         ratio_width=1.0,
         ratio_height=1.0,
         loss_thresh=5.0,
@@ -813,6 +840,8 @@ class AutoRectifier:
         :param mode: 'calibration' or 'homography'. when homography, ratio_width and ratio_height must be 1.0
         :return:
         """
+        if interpolation is None:
+            interpolation = cv2.INTER_LINEAR
         _points = np.array(points).reshape(-1, 2)
         if len(_points) >= self.npoints and len(_points) % 2 == 0:
             try:
@@ -879,7 +908,7 @@ class AutoRectifier:
         self,
         image_data,
         points_list,
-        interpolation=cv2.INTER_LINEAR,
+        interpolation=None,
         ratio_width=1.0,
         ratio_height=1.0,
         loss_thresh=5.0,
@@ -903,6 +932,8 @@ class AutoRectifier:
         for points in points_list:
             if not isinstance(points, list):
                 raise ValueError
+        if interpolation is None:
+            interpolation = cv2.INTER_LINEAR
 
         if ratio_width < 1.0 or ratio_height < 1.0:
             raise ValueError(

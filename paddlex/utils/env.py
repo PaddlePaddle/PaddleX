@@ -12,15 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import lazy_paddle as paddle
-
 
 def get_device_type():
+    import paddle
+
     device_str = paddle.get_device()
     return device_str.split(":")[0]
 
 
 def get_paddle_version():
+    import paddle
+
     version = paddle.__version__.split(".")
     # ref: https://github.com/PaddlePaddle/Paddle/blob/release/3.0-beta2/setup.py#L316
     assert len(version) == 3

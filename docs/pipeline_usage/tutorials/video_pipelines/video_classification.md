@@ -96,7 +96,7 @@ PP-TSM是一种百度飞桨视觉团队自研的视频分类模型。该模型�
 
 PaddleX 支持在本地使用命令行或 Python 体验产线的效果。
 
-在本地使用通用视频分类产线前，请确保您已经按照PaddleX本地安装教程完成了PaddleX的wheel包安装。
+在本地使用通用视频分类产线前，请确保您已经按照PaddleX本地安装教程完成了PaddleX的wheel包安装。如果您希望选择性安装依赖，请参考安装教程中的相关说明。该产线对应的依赖分组为 `video`。
 
 #### 2.1 命令行方式体验
 一行命令即可快速体验视频分类产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/general_video_classification_001.mp4)，并将 `--input` 替换为本地路径，进行预测

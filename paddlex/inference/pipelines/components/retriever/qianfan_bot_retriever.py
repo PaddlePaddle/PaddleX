@@ -16,10 +16,10 @@ import json
 from typing import Dict, List
 
 import requests
-from langchain_core.embeddings import Embeddings
 
 from paddlex.utils import logging
 
+from .....utils.deps import is_dep_available
 from .base import BaseRetriever
 
 
@@ -80,84 +80,87 @@ class QianFanBotRetriever(BaseRetriever):
         self.config = config
 
 
-class QianfanEmbeddings(Embeddings):
-    """`Baidu Qianfan Embeddings` embedding models."""
+if is_dep_available("langchain-core"):
+    from langchain_core.embeddings import Embeddings
 
-    def __init__(
-        self,
-        api_key: str,
-        base_url: str = "https://qianfan.baidubce.com/v2",
-        model: str = "embedding-v1",
-        **kwargs,
-    ):
-        """
-        Initialize the Baidu Qianfan Embeddings class.
+    class QianfanEmbeddings(Embeddings):
+        """`Baidu Qianfan Embeddings` embedding models."""
 
-        Args:
-            api_key (str): The Qianfan API key.
-            base_url (str): The base URL for 'qianfan' API.
-            model (str): Model name. Default is "embedding-v1",select in ["tao-8k","embedding-v1","bge-large-en","bge-large-zh"].
-            kwargs (dict): Additional keyword arguments passed to the base Embeddings class.
-        """
-        super().__init__(**kwargs)
-        chunk_size_map = {
-            "tao-8k": 1,
-            "embedding-v1": 16,
-            "bge-large-en": 16,
-            "bge-large-zh": 16,
-        }
-        self.api_key = api_key
-        self.base_url = base_url
-        self.model = model
-        self.chunk_size = chunk_size_map.get(model, 1)
+        def __init__(
+            self,
+            api_key: str,
+            base_url: str = "https://qianfan.baidubce.com/v2",
+            model: str = "embedding-v1",
+            **kwargs,
+        ):
+            """
+            Initialize the Baidu Qianfan Embeddings class.
 
-    def embed(self, texts: str, **kwargs) -> List[float]:
-        url = f"{self.base_url}/embeddings"
-        payload = json.dumps(
-            {"model": kwargs.get("model", self.model), "input": [f"{texts}"]}
-        )
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {self.api_key}",
-        }
+            Args:
+                api_key (str): The Qianfan API key.
+                base_url (str): The base URL for 'qianfan' API.
+                model (str): Model name. Default is "embedding-v1",select in ["tao-8k","embedding-v1","bge-large-en","bge-large-zh"].
+                kwargs (dict): Additional keyword arguments passed to the base Embeddings class.
+            """
+            super().__init__(**kwargs)
+            chunk_size_map = {
+                "tao-8k": 1,
+                "embedding-v1": 16,
+                "bge-large-en": 16,
+                "bge-large-zh": 16,
+            }
+            self.api_key = api_key
+            self.base_url = base_url
+            self.model = model
+            self.chunk_size = chunk_size_map.get(model, 1)
 
-        response = requests.request("POST", url, headers=headers, data=payload)
-        if response.status_code != 200:
-            logging.error(
-                f"Failed to call Qianfan API. Status code: {response.status_code}, Response content: {response}"
+        def embed(self, texts: str, **kwargs) -> List[float]:
+            url = f"{self.base_url}/embeddings"
+            payload = json.dumps(
+                {"model": kwargs.get("model", self.model), "input": [f"{texts}"]}
             )
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self.api_key}",
+            }
 
-        return response.json()
+            response = requests.request("POST", url, headers=headers, data=payload)
+            if response.status_code != 200:
+                logging.error(
+                    f"Failed to call Qianfan API. Status code: {response.status_code}, Response content: {response}"
+                )
 
-    def embed_query(self, text: str) -> List[float]:
-        resp = self.embed_documents([text])
-        return resp[0]
+            return response.json()
 
-    def embed_documents(self, texts: List[str]) -> List[List[float]]:
-        """
-        Embeds a list of text documents using the AutoVOT algorithm.
+        def embed_query(self, text: str) -> List[float]:
+            resp = self.embed_documents([text])
+            return resp[0]
 
-        Args:
-            texts (List[str]): A list of text documents to embed.
+        def embed_documents(self, texts: List[str]) -> List[List[float]]:
+            """
+            Embeds a list of text documents using the AutoVOT algorithm.
 
-        Returns:
-            List[List[float]]: A list of embeddings for each document in the input list.
-                            Each embedding is represented as a list of float values.
-        """
-        lst = []
-        for chunk in texts:
-            resp = self.embed(texts=chunk)
-            lst.extend([res["embedding"] for res in resp["data"]])
-        return lst
+            Args:
+                texts (List[str]): A list of text documents to embed.
 
-    async def aembed_query(self, text: str) -> List[float]:
-        embeddings = await self.aembed_documents([text])
-        return embeddings[0]
+            Returns:
+                List[List[float]]: A list of embeddings for each document in the input list.
+                                Each embedding is represented as a list of float values.
+            """
+            lst = []
+            for chunk in texts:
+                resp = self.embed(texts=chunk)
+                lst.extend([res["embedding"] for res in resp["data"]])
+            return lst
 
-    async def aembed_documents(self, texts: List[str]) -> List[List[float]]:
-        lst = []
-        for chunk in texts:
-            resp = await self.embed(texts=chunk)
-            for res in resp["data"]:
-                lst.extend([res["embedding"]])
-        return lst
+        async def aembed_query(self, text: str) -> List[float]:
+            embeddings = await self.aembed_documents([text])
+            return embeddings[0]
+
+        async def aembed_documents(self, texts: List[str]) -> List[List[float]]:
+            lst = []
+            for chunk in texts:
+                resp = await self.embed(texts=chunk)
+                for res in resp["data"]:
+                    lst.extend([res["embedding"]])
+            return lst

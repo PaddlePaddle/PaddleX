@@ -110,7 +110,7 @@ The document image preprocessing pipeline integrates two major functions: docume
 
 PaddleX supports experiencing the effects of the document image preprocessing pipeline locally via command line or Python.
 
-Before using the document image preprocessing pipeline locally, please ensure you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.md).
+Before using the document image preprocessing pipeline locally, please ensure you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `ocr`.
 
 ### 2.1 Local Experience
 

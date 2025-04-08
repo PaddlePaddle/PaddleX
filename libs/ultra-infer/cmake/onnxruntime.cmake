@@ -41,8 +41,8 @@ else()
 endif()
 set(CMAKE_BUILD_RPATH "${CMAKE_BUILD_RPATH}" "${ONNXRUNTIME_LIB_DIR}")
 
-set(ONNXRUNTIME_VERSION "1.12.0")
-set(ONNXRUNTIME_URL_PREFIX "https://bj.bcebos.com/paddle2onnx/libs/")
+set(ONNXRUNTIME_VERSION "1.20.1")
+set(ONNXRUNTIME_URL_PREFIX "https://fastdeploy.bj.bcebos.com/third_libs/")
 
 if(WIN32) 
   if(WITH_GPU)

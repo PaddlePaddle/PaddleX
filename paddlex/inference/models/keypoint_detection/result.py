@@ -15,12 +15,16 @@
 import copy
 import math
 
-import cv2
-import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 
+from ....utils.deps import function_requires_deps, is_dep_available
 from ...common.result import BaseCVResult, JsonMixin
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+if is_dep_available("matplotlib"):
+    import matplotlib.pyplot as plt
 
 
 def get_color(idx):
@@ -29,6 +33,7 @@ def get_color(idx):
     return color
 
 
+@function_requires_deps("matplotlib", "opencv-contrib-python")
 def draw_keypoints(img, results, visual_thresh=0.1, ids=None):
     plt.switch_backend("agg")
     skeletons = results["keypoints"]

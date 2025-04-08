@@ -16,6 +16,7 @@ from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
 
+from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...utils.hpi import HPIConfig
@@ -99,9 +100,11 @@ class AttributeRecPipeline(BasePipeline):
         return AttributeRecResult(single_img_res)
 
 
+@pipeline_requires_extra("cv")
 class PedestrianAttributeRecPipeline(AttributeRecPipeline):
     entities = "pedestrian_attribute_recognition"
 
 
+@pipeline_requires_extra("cv")
 class VehicleAttributeRecPipeline(AttributeRecPipeline):
     entities = "vehicle_attribute_recognition"

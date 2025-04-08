@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import lazy_paddle as paddle
 import numpy as np
 
 from ....modules.multilingual_speech_recognition.model_list import MODELS
@@ -60,6 +59,8 @@ class WhisperPredictor(BasePredictor):
         Returns:
             AudioReader: An instance of AudioReader.
         """
+        import paddle
+
         from .processors import ModelDimensions, Whisper
 
         # build model
@@ -84,6 +85,8 @@ class WhisperPredictor(BasePredictor):
         Returns:
             dict: A dictionary containing the input path and result. The result include 'text', 'segments' and 'language'.
         """
+        import paddle
+
         from .processors import log_mel_spectrogram
 
         # load mel_filters from resource_dir and extract feature for audio

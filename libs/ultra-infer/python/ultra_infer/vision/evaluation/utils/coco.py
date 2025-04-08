@@ -13,13 +13,10 @@
 # limitations under the License.
 
 from __future__ import absolute_import
-
 import os.path as osp
-
 import numpy as np
-
 from . import fd_logging as logging
-from .util import get_num_workers, is_pic
+from .util import is_pic, get_num_workers
 
 
 class CocoDetection(object):

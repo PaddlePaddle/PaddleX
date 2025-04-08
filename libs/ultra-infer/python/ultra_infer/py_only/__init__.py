@@ -13,4 +13,4 @@
 # limitations under the License.
 
 from . import ts, vision
-from .base import PyOnlyProcessor, PyOnlyProcessorChain, PyOnlyUltraInferModel
+from .base import PyOnlyUltraInferModel, PyOnlyProcessor, PyOnlyProcessorChain

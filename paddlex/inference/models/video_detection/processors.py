@@ -15,15 +15,15 @@
 
 from typing import List
 
-import cv2
-import lazy_paddle as paddle
 import numpy as np
 
+from ....utils.deps import class_requires_deps
 from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class ResizeVideo:
     """Resizes frames of a video to a specified target size.
 
@@ -58,6 +58,8 @@ class ResizeVideo:
         Raises:
             NotImplementedError: If a frame is not an instance of numpy.ndarray.
         """
+        import cv2
+
         num_seg = len(video)
         seg_len = len(video[0])
 
@@ -238,6 +240,8 @@ def get_region_boxes(
     Returns:
         all_box(List[List[float]]): A list of predicted bounding boxes for each image in the batch.
     """
+    import paddle
+
     anchor_step = len(anchors) // num_anchors
     if output.dim() == 3:
         output = output.unsqueeze(0)
@@ -253,12 +257,12 @@ def get_region_boxes(
     grid_x = paddle.linspace(0, w - 1, w)
     grid_x = paddle.tile(grid_x, [h, 1])
     grid_x = paddle.tile(grid_x, [batch * num_anchors, 1, 1])
-    grid_x = paddle.reshape(grid_x, [batch * num_anchors * h * w]).cuda()
+    grid_x = paddle.reshape(grid_x, [batch * num_anchors * h * w])
 
     grid_y = paddle.linspace(0, h - 1, h)
     grid_y = paddle.tile(grid_y, [w, 1]).t()
     grid_y = paddle.tile(grid_y, [batch * num_anchors, 1, 1])
-    grid_y = paddle.reshape(grid_y, [batch * num_anchors * h * w]).cuda()
+    grid_y = paddle.reshape(grid_y, [batch * num_anchors * h * w])
 
     sigmoid = paddle.nn.Sigmoid()
     xs = sigmoid(output[0]) + grid_x
@@ -278,11 +282,11 @@ def get_region_boxes(
 
     anchor_w = paddle.tile(anchor_w, [batch, 1])
     anchor_w = paddle.tile(anchor_w, [1, 1, h * w])
-    anchor_w = paddle.reshape(anchor_w, [batch * num_anchors * h * w]).cuda()
+    anchor_w = paddle.reshape(anchor_w, [batch * num_anchors * h * w])
 
     anchor_h = paddle.tile(anchor_h, [batch, 1])
     anchor_h = paddle.tile(anchor_h, [1, 1, h * w])
-    anchor_h = paddle.reshape(anchor_h, [batch * num_anchors * h * w]).cuda()
+    anchor_h = paddle.reshape(anchor_h, [batch * num_anchors * h * w])
 
     ws = paddle.exp(output[2]) * anchor_w
     hs = paddle.exp(output[3]) * anchor_h
@@ -347,6 +351,8 @@ def nms(boxes, nms_thresh):
     """
     Performs non-maximum suppression on the input boxes based on their IoUs.
     """
+    import paddle
+
     if len(boxes) == 0:
         return boxes
     det_confs = paddle.zeros([len(boxes)])
@@ -370,6 +376,8 @@ def bbox_iou(box1, box2, x1y1x2y2=True):
     """
     Returns the Intersection over Union (IoU) of two bounding boxes.
     """
+    import paddle
+
     if x1y1x2y2:
         mx = min(box1[0], box2[0])
         Mx = max(box1[2], box2[2])
@@ -422,7 +430,8 @@ class DetVideoPostProcess:
         self.labels = label_list
 
     def postprocess(self, pred: List, nms_thresh: float, score_thresh: float) -> List:
-        cv2.FONT_HERSHEY_SIMPLEX
+        import paddle
+
         num_seg = len(pred)
         pred_all = []
         for i in range(num_seg):

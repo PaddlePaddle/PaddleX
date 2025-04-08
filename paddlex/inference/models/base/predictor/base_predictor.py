@@ -21,6 +21,7 @@ from pydantic import ValidationError
 
 from ..... import constants
 from .....utils import logging
+from .....utils.deps import require_hpip
 from .....utils.device import get_default_device, parse_device
 from .....utils.flags import (
     INFER_BENCHMARK,
@@ -121,6 +122,7 @@ class BasePredictor(
                 logging.warning("`hpi_config` will be ignored when not using HPIP.")
             self._pp_option = self._prepare_pp_option(pp_option, device)
         else:
+            require_hpip()
             if pp_option is not None:
                 logging.warning("`pp_option` will be ignored when using HPIP.")
             self._hpi_config = self._prepare_hpi_config(hpi_config, device)

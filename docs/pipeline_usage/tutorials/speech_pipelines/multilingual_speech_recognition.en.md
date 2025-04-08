@@ -58,7 +58,7 @@ Speech recognition is an advanced tool that can automatically convert spoken lan
 ## 2. Quick Start
 PaddleX supports experiencing the multilingual speech recognition pipeline locally using the command line or Python.
 
-Before using the multilingual speech recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+Before using the multilingual speech recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `speech`.
 
 ### 2.1 Local Experience
 

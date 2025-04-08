@@ -15,7 +15,6 @@
 import os
 
 import GPUtil
-import lazy_paddle as paddle
 
 from . import logging
 from .custom_device_whitelist import (
@@ -95,6 +94,8 @@ def set_env_for_device(device):
 
 
 def set_env_for_device_type(device_type):
+    import paddle
+
     def _set(envs):
         for key, val in envs.items():
             os.environ[key] = val

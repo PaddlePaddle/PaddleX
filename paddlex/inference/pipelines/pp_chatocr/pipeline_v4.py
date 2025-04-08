@@ -19,10 +19,14 @@ import os
 import re
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-import cv2
 import numpy as np
 
 from ....utils import logging
+from ....utils.deps import (
+    function_requires_deps,
+    is_dep_available,
+    pipeline_requires_extra,
+)
 from ....utils.file_interface import custom_open
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
@@ -32,7 +36,11 @@ from ..components.chat_server import BaseChat
 from ..layout_parsing.result import LayoutParsingResult
 from .pipeline_base import PP_ChatOCR_Pipeline
 
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
+
+@pipeline_requires_extra("ie")
 class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
     """PP-ChatOCRv4 Pipeline"""
 
@@ -583,6 +591,7 @@ class PP_ChatOCRv4_Pipeline(PP_ChatOCR_Pipeline):
 
         return []
 
+    @function_requires_deps("opencv-contrib-python")
     def mllm_pred(
         self,
         input: Union[str, np.ndarray],

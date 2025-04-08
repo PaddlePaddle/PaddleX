@@ -124,7 +124,7 @@ PaddleX 所提供的模型产线均可以快速体验效果，你可以在星河
 
 ### 2.2 本地体验
 
-在本地使用车辆属性识别产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+在本地使用车辆属性识别产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。如果您希望选择性安装依赖，请参考安装教程中的相关说明。该产线对应的依赖分组为 `cv`。
 
 #### 2.2.1 命令行方式体验
 一行命令即可快速体验车辆属性识别产线效果，使用 [测试文件](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/vehicle_attribute_002.jpg)，并将 `--input` 替换为本地路径，进行预测

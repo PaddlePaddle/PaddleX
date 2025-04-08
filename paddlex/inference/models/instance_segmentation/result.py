@@ -14,15 +14,19 @@
 
 import copy
 
-import cv2
 import numpy as np
 from PIL import Image
 
+from ....utils.deps import function_requires_deps, is_dep_available
 from ...common.result import BaseCVResult, JsonMixin
 from ...utils.color_map import get_colormap
 from ..object_detection.result import draw_box
 
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
+
+@function_requires_deps("opencv-contrib-python")
 def draw_segm(im, masks, mask_info, alpha=0.7):
     """
     Draw segmentation on image

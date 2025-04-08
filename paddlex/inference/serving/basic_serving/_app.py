@@ -28,19 +28,24 @@ from typing import (
     TypeVar,
 )
 
-import aiohttp
-import fastapi
-from fastapi.encoders import jsonable_encoder
-from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
-from starlette.exceptions import HTTPException
 from typing_extensions import ParamSpec, TypeGuard
 
 from ....utils import logging
+from ....utils.deps import class_requires_deps, function_requires_deps, is_dep_available
 from ...pipelines import BasePipeline
 from ..infra.config import AppConfig
 from ..infra.models import NoResultResponse
 from ..infra.utils import call_async, generate_log_id
+
+if is_dep_available("aiohttp"):
+    import aiohttp
+if is_dep_available("fastapi"):
+    import fastapi
+    from fastapi.encoders import jsonable_encoder
+    from fastapi.exceptions import RequestValidationError
+    from fastapi.responses import JSONResponse
+if is_dep_available("starlette"):
+    from starlette.exceptions import HTTPException
 
 PipelineT = TypeVar("PipelineT", bound=BasePipeline)
 P = ParamSpec("P")
@@ -64,6 +69,7 @@ def _is_error(obj: object) -> TypeGuard[_Error]:
 # for type hinting. However, I would stick with the current design, as it does
 # not introduce runtime overhead at the moment and may prove useful in the
 # future.
+@class_requires_deps("fastapi")
 class PipelineWrapper(Generic[PipelineT]):
     def __init__(self, pipeline: PipelineT) -> None:
         super().__init__()
@@ -94,6 +100,7 @@ class PipelineWrapper(Generic[PipelineT]):
             return await call_async(func, *args, **kwargs)
 
 
+@class_requires_deps("aiohttp")
 class AppContext(Generic[PipelineT]):
     def __init__(self, *, config: AppConfig) -> None:
         super().__init__()
@@ -117,21 +124,22 @@ class AppContext(Generic[PipelineT]):
         self._pipeline = val
 
     @property
-    def aiohttp_session(self) -> aiohttp.ClientSession:
+    def aiohttp_session(self) -> "aiohttp.ClientSession":
         if not self._aiohttp_session:
             raise AttributeError("`aiohttp_session` has not been set.")
         return self._aiohttp_session
 
     @aiohttp_session.setter
-    def aiohttp_session(self, val: aiohttp.ClientSession) -> None:
+    def aiohttp_session(self, val: "aiohttp.ClientSession") -> None:
         self._aiohttp_session = val
 
 
+@function_requires_deps("fastapi", "aiohttp", "starlette")
 def create_app(
     *, pipeline: PipelineT, app_config: AppConfig, app_aiohttp_session: bool = True
-) -> Tuple[fastapi.FastAPI, AppContext[PipelineT]]:
+) -> Tuple["fastapi.FastAPI", AppContext[PipelineT]]:
     @contextlib.asynccontextmanager
-    async def _app_lifespan(app: fastapi.FastAPI) -> AsyncGenerator[None, None]:
+    async def _app_lifespan(app: "fastapi.FastAPI") -> AsyncGenerator[None, None]:
         ctx.pipeline = PipelineWrapper[PipelineT](pipeline)
         if app_aiohttp_session:
             async with aiohttp.ClientSession(
@@ -197,8 +205,9 @@ def create_app(
 
 
 # TODO: Precise type hints
+@function_requires_deps("fastapi")
 def primary_operation(
-    app: fastapi.FastAPI, path: str, operation_id: str, **kwargs: Any
+    app: "fastapi.FastAPI", path: str, operation_id: str, **kwargs: Any
 ) -> Callable:
     return app.post(
         path,

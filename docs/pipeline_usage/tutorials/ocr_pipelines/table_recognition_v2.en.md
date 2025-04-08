@@ -654,7 +654,7 @@ All model pipelines provided by PaddleX can be quickly experienced. You can use 
 Online experience is not supported at the moment.
 
 ### 2.2 Local Experience
-Before using the General Table Recognition v2 Pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md).
+Before using the General Table Recognition v2 Pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Tutorial](../../../installation/installation.en.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `ocr`.
 
 ### 2.3 Command Line Experience
 You can quickly experience the table recognition pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition_v2.jpg)  and replace `--input` with the local path for prediction.

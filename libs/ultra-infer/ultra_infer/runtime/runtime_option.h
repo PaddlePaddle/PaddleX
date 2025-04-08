@@ -76,7 +76,7 @@ struct ULTRAINFER_DECL RuntimeOption {
   /// Use TimVX e.g RV1126/A311D to inference
   void UseTimVX();
   /// Use Huawei Ascend to inference
-  void UseAscend();
+  void UseAscend(int npu_id);
 
   /// Use onnxruntime DirectML to inference
   void UseDirectML();

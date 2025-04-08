@@ -20,17 +20,22 @@ import re
 import tempfile
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-import cv2
 import numpy as np
 from PIL import Image, ImageOps
-from tokenizers import AddedToken
-from tokenizers import Tokenizer as TokenizerFast
 
+from ....utils.deps import class_requires_deps, is_dep_available
 from ....utils.parallel import maybe_parallelize
 from ...utils.benchmark import benchmark
 
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+if is_dep_available("tokenizers"):
+    from tokenizers import AddedToken
+    from tokenizers import Tokenizer as TokenizerFast
+
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class MinMaxResize:
     """Class for resizing images to be within specified minimum and maximum dimensions, with padding and normalization."""
 
@@ -156,6 +161,7 @@ class MinMaxResize:
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class LatexTestTransform:
     """
     A transform class for processing images according to Latex test requirements.
@@ -308,6 +314,7 @@ class ToBatch(object):
 
 
 @benchmark.timeit
+@class_requires_deps("tokenizers")
 class LaTeXOCRDecode(object):
     """Class for decoding LaTeX OCR tokens based on a provided character list."""
 
@@ -318,8 +325,6 @@ class LaTeXOCRDecode(object):
             character_list (list): The list of characters to use for tokenization.
             **kwargs: Additional keyword arguments for initialization.
         """
-        from tokenizers import Tokenizer as TokenizerFast
-
         super(LaTeXOCRDecode, self).__init__()
         temp_path = tempfile.gettempdir()
         rec_char_dict_path = os.path.join(temp_path, "latexocr_tokenizer.json")
@@ -409,6 +414,7 @@ class LaTeXOCRDecode(object):
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class UniMERNetImgDecode(object):
     """Class for decoding images for UniMERNet, including cropping margins, resizing, and padding."""
 
@@ -562,6 +568,7 @@ class UniMERNetImgDecode(object):
 
 
 @benchmark.timeit
+@class_requires_deps("tokenizers")
 class UniMERNetDecode(object):
     """Class for decoding tokenized inputs using UniMERNet tokenizer.
 
@@ -695,8 +702,8 @@ class UniMERNetDecode(object):
                         self._add_tokens(tokens, special_tokens=is_last_special)
 
     def _add_tokens(
-        self, new_tokens: List[Union[AddedToken, str]], special_tokens: bool = False
-    ) -> List[Union[AddedToken, str]]:
+        self, new_tokens: "List[Union[AddedToken, str]]", special_tokens: bool = False
+    ) -> "List[Union[AddedToken, str]]":
         """Adds new tokens to the tokenizer.
 
         Args:
@@ -712,7 +719,7 @@ class UniMERNetDecode(object):
         return self.tokenizer.add_tokens(new_tokens)
 
     def added_tokens_encoder(
-        self, added_tokens_decoder: Dict[int, AddedToken]
+        self, added_tokens_decoder: "Dict[int, AddedToken]"
     ) -> Dict[str, int]:
         """Creates an encoder dictionary from added tokens.
 
@@ -738,7 +745,7 @@ class UniMERNetDecode(object):
         return all_toks
 
     @property
-    def all_special_tokens_extended(self) -> List[Union[str, AddedToken]]:
+    def all_special_tokens_extended(self) -> "List[Union[str, AddedToken]]":
         """Retrieves all special tokens, including extended ones.
 
         Returns:
@@ -909,6 +916,7 @@ class UniMERNetDecode(object):
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class UniMERNetTestTransform:
     """
     A class for transforming images according to UniMERNet test specifications.

@@ -6,26 +6,13 @@ WITH_GPU="${WITH_GPU:-ON}"
 ENABLE_BENCHMARK="${ENABLE_BENCHMARK:-OFF}"
 DEBUG="${DEBUG:-OFF}"
 PYTHON_VERSION="${PYTHON_VERSION:-3.10.0}"
-ENABLE_PADDLE_BACKEND="${ENABLE_PADDLE_BACKEND:-ON}"
 ENABLE_ORT_BACKEND="${ENABLE_ORT_BACKEND:-ON}"
 ENABLE_OPENVINO_BACKEND="${ENABLE_OPENVINO_BACKEND:-ON}"
 ENABLE_TRT_BACKEND="${ENABLE_TRT_BACKEND:-ON}"
 TRT_DIRECTORY="${TRT_DIRECTORY:-Default}"
-ENABLE_VISION="${ENABLE_VISION:-ON}"
-ENABLE_TEXT="${ENABLE_TEXT:-ON}"
 
 if [ "$WITH_GPU" = "OFF" ]; then
     ENABLE_TRT_BACKEND="OFF"
-fi
-
-if [ "$ENABLE_PADDLE_BACKEND" = "ON" ] && [ -z "$PADDLEINFERENCE_URL" ]; then
-    if [ "$WITH_GPU" = "ON" ]; then
-        PADDLEINFERENCE_URL=https://paddle-qa.bj.bcebos.com/paddle-pipeline/GITHUB_Docker_Compile_Test_Cuda118_cudnn860_Trt8522_R1/791e99fc54c36151b9e5f1245e0fc8ae5d8a282b/paddle_inference.tgz
-        PADDLEINFERENCE_VERSION="3.0.0-rc"
-    else
-        PADDLEINFERENCE_URL=https://paddle-qa.bj.bcebos.com/paddle-pipeline/GITHUB_Docker_Compile_Test_CPU_R1/791e99fc54c36151b9e5f1245e0fc8ae5d8a282b/paddle_inference.tgz
-        PADDLEINFERENCE_VERSION="3.0.0-rc"
-    fi
 fi
 
 DOCKER_IMAGE="ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddle_manylinux_devel:cuda11.8-cudnn8.6-trt8.5-gcc8.2"
@@ -48,7 +35,7 @@ docker run --gpus all -it --name="${CONTAINER_NAME}" --shm-size=128g --net=host 
 "${DOCKER_IMAGE}" /bin/bash -c "
 cd /workspace && \
 ldconfig && \
-./ultra-infer/scripts/linux/_build_py.sh --with-gpu "${WITH_GPU}" --enable-benchmark "${ENABLE_BENCHMARK}" --python "${PYTHON_VERSION}" --paddleinference-url "${PADDLEINFERENCE_URL}" --paddleinference-version "${PADDLEINFERENCE_VERSION}" --enable-paddle-backend "${ENABLE_PADDLE_BACKEND}" --enable-ort-backend "${ENABLE_ORT_BACKEND}" --enable-openvino-backend "${ENABLE_OPENVINO_BACKEND}" --enable-trt-backend "${ENABLE_TRT_BACKEND}" --trt-directory "${TRT_DIRECTORY}" --enable-vision "${ENABLE_VISION}" --enable-text "${ENABLE_TEXT}" && \
+./ultra-infer/scripts/linux/_build_py.sh --with-gpu "${WITH_GPU}" --enable-benchmark "${ENABLE_BENCHMARK}" --python "${PYTHON_VERSION}" --enable-ort-backend "${ENABLE_ORT_BACKEND}" --enable-openvino-backend "${ENABLE_OPENVINO_BACKEND}" --enable-trt-backend "${ENABLE_TRT_BACKEND}" --trt-directory "${TRT_DIRECTORY}" && \
 tail -f /dev/null"
 EOF
 )
@@ -61,7 +48,7 @@ docker run -it --name="${CONTAINER_NAME}" --shm-size=128g --net=host \
 -e "https_proxy=${https_proxy}" \
 "${DOCKER_IMAGE}" /bin/bash -c "
 cd /workspace && \
-./ultra-infer/scripts/linux/_build_py.sh --with-gpu "${WITH_GPU}" --enable-benchmark "${ENABLE_BENCHMARK}" --python "${PYTHON_VERSION}" --paddleinference-url "${PADDLEINFERENCE_URL}" --paddleinference-version "${PADDLEINFERENCE_VERSION}" --enable-paddle-backend "${ENABLE_PADDLE_BACKEND}" --enable-ort-backend "${ENABLE_ORT_BACKEND}" --enable-openvino-backend "${ENABLE_OPENVINO_BACKEND}" --enable-trt-backend "${ENABLE_TRT_BACKEND}" --trt-directory "${TRT_DIRECTORY}" --enable-vision "${ENABLE_VISION}" --enable-text "${ENABLE_TEXT}" && \
+./ultra-infer/scripts/linux/_build_py.sh --with-gpu "${WITH_GPU}" --enable-benchmark "${ENABLE_BENCHMARK}" --python "${PYTHON_VERSION}" --enable-ort-backend "${ENABLE_ORT_BACKEND}" --enable-openvino-backend "${ENABLE_OPENVINO_BACKEND}" --enable-trt-backend "${ENABLE_TRT_BACKEND}" --trt-directory "${TRT_DIRECTORY}" && \
 tail -f /dev/null"
 EOF
 )

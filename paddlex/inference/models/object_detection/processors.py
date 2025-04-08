@@ -14,21 +14,25 @@
 
 from typing import List, Optional, Sequence, Tuple, Union
 
-import cv2
 import numpy as np
 from numpy import ndarray
 
+from ....utils.deps import class_requires_deps, function_requires_deps, is_dep_available
 from ....utils.parallel import maybe_parallelize
 from ...common.reader import ReadImage as CommonReadImage
 from ...utils.benchmark import benchmark
 from ..common import Normalize as CommonNormalize
 from ..common import Resize as CommonResize
 
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+
 Boxes = List[dict]
 Number = Union[int, float]
 
 
-@benchmark.timeit
+@benchmark.timeit_with_options(name=None, is_read_operation=True)
+@class_requires_deps("opencv-contrib-python")
 class ReadImage(CommonReadImage):
     """Reads images from a list of raw image data or file paths."""
 
@@ -74,7 +78,7 @@ class ReadImage(CommonReadImage):
         if isinstance(img, np.ndarray):
             ori_img = img
             if self.format == "RGB":
-                img = img[:, :, ::-1]
+                img = cv2.cvtColor(ori_img, cv2.COLOR_BGR2RGB)
             return img, ori_img
         elif isinstance(img, str):
             blob = self._img_reader.read(img)
@@ -86,7 +90,7 @@ class ReadImage(CommonReadImage):
                 if blob.ndim != 3:
                     raise RuntimeError("Array is not 3-dimensional.")
                 # BGR to RGB
-                blob = blob[..., ::-1]
+                blob = cv2.cvtColor(blob, cv2.COLOR_BGR2RGB)
             return blob, ori_img
         else:
             raise TypeError(
@@ -135,30 +139,12 @@ class Resize(CommonResize):
 
 @benchmark.timeit
 class Normalize(CommonNormalize):
-    """Normalizes images in a list of dictionaries containing image data"""
-
-    def apply(self, img: ndarray) -> ndarray:
-        """Applies normalization to a single image."""
-        old_type = img.dtype
-        # XXX: If `old_type` has higher precision than float32,
-        # we will lose some precision.
-        img = img.astype("float32", copy=False)
-        img *= self.scale
-        img -= self.mean
-        img /= self.std
-        if self.preserve_dtype:
-            img = img.astype(old_type, copy=False)
-        return img
-
     def __call__(self, datas: List[dict]) -> List[dict]:
         """Normalizes images in a list of dictionaries. Iterates over each dictionary,
         applies normalization to the 'img' key, and returns the modified list.
         """
 
-        def _normalize(img):
-            return self.apply(img)
-
-        imgs = maybe_parallelize(_normalize, [d["img"] for d in datas])
+        imgs = maybe_parallelize(self.norm, [d["img"] for d in datas])
         for data, img in zip(datas, imgs):
             data["img"] = img
 
@@ -340,6 +326,7 @@ def _get_3rd_point(a: ndarray, b: ndarray) -> ndarray:
     return third_pt
 
 
+@function_requires_deps("opencv-contrib-python")
 def get_affine_transform(
     center: ndarray,
     input_size: Union[Number, Tuple[Number, Number], ndarray],
@@ -397,6 +384,7 @@ def get_affine_transform(
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class WarpAffine:
     """Apply warp affine transformation to the image based on the given parameters.
 

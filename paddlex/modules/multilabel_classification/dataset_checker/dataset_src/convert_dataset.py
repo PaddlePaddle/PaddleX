@@ -15,11 +15,14 @@
 
 import os
 
-from pycocotools.coco import COCO
-from tqdm import tqdm
-
+from .....utils.deps import function_requires_deps, is_dep_available
 from .....utils.errors import ConvertFailedError
 from .....utils.logging import info, warning
+
+if is_dep_available("pycocotools"):
+    from pycocotools.coco import COCO
+if is_dep_available("tqdm"):
+    from tqdm import tqdm
 
 
 def check_src_dataset(root_dir, dataset_type):
@@ -62,6 +65,7 @@ def convert_coco_dataset(root_dir):
         coco2multilabels(src_img_dir, src_anno_path, root_dir)
 
 
+@function_requires_deps("pycocotools", "tqdm")
 def coco2multilabels(src_img_dir, src_anno_path, root_dir):
     image_dir = os.path.join(root_dir, "images")
     label_type = (

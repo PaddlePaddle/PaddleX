@@ -30,9 +30,9 @@ from ....py_only.vision import PyOnlyVisionModel
 from ....py_only.vision import processors as P
 from ....utils.misc import load_config
 from ...common import ProcessorManager
-from .utils.ser_vi_layoutxlm.operators import *
 from .utils.ser_vi_layoutxlm.transforms import *
 from .utils.ser_vi_layoutxlm.vqa_utils import *
+from .utils.ser_vi_layoutxlm.operators import *
 
 
 def sort_boxes(boxes):

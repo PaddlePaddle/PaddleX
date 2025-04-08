@@ -15,10 +15,15 @@
 
 from typing import Dict, List, Tuple
 
-import cv2
 import numpy as np
 
+from .....utils.deps import class_requires_deps, is_dep_available
 
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+
+
+@class_requires_deps("opencv-contrib-python")
 class LetterResize(object):
     def __init__(
         self,

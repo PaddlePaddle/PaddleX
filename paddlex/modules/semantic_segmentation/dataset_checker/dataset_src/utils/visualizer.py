@@ -13,8 +13,9 @@
 # limitations under the License.
 
 
-import cv2
 import numpy as np
+
+from ......utils.deps import function_requires_deps
 
 
 def get_color_map_list(length):
@@ -34,8 +35,11 @@ def get_color_map_list(length):
     return color_map
 
 
+@function_requires_deps("opencv-contrib-python")
 def visualize(image, result, weight=0.6, use_multilabel=False):
     """Convert predict result to color image, and save added image."""
+    import cv2
+
     color_map = get_color_map_list(256)
     color_map = [color_map[i : i + 3] for i in range(0, len(color_map), 3)]
     color_map = np.array(color_map).astype("uint8")
