@@ -200,8 +200,11 @@ DISABLE_TRT_HALF_OPS_CONFIG = {
     "MobileNetV1_x0_5": {"fused_conv2d_add_act"},
     "SeaFormer_small": {"fused_conv2d_add_act"},
     "SeaFormer_tiny": {"fused_conv2d_add_act"},
-    "PP-OCRv4_mobile_seal_det": {"fused_conv2d_add_act", "softmax"},
+    "PP-OCRv4_mobile_seal_det": {"fused_conv2d_add_act", "softmax", "conv2d", "multiply"},
+    "PicoDet_LCNet_x2_5_face": {"fused_conv2d_add_act", "softmax", "elementwise_mul", "matrix_multiply"},
+    "PP-YOLOE_plus_SOD-S": {"fused_conv2d_add_act", "softmax", "conv2d", "elementwise_mul", "matrix_multiply"},
     "BlazeFace-FPN-SSH": {"fused_conv2d_add_act"},
+    "PP-YOLOE_plus-S_face": {"fused_conv2d_add_act", "conv2d", "multiply"},
 }
 
 ############ pir trt ############
@@ -236,6 +239,10 @@ PIR_TRT_CFG_SETTING = {
     "ConvNeXt_large_384": {"ops_run_float": {"pd_op.layer_norm"}},
     "PP-HGNetV2-B3": {"ops_run_float": {"pd_op.softmax"}},
     "BlazeFace-FPN-SSH": {"ops_run_float": {"pd_op.fused_conv2d_add_act"}},
+    "PP-OCRv4_mobile_seal_det": {"ops_run_float": {"pd_op.fused_conv2d_add_act", "pd_op.softmax", "pd_op.multiply", "pd_op.conv2d"}},
+    "PP-YOLOE_plus_SOD-S": {"ops_run_float": {"pd_op.fused_conv2d_add_act", "pd_op.softmax", "pd_op.conv2d", "pd_op.multiply", "pd_op.matmul"}},
+    "PicoDet_LCNet_x2_5_face": {"ops_run_float": {"pd_op.fused_conv2d_add_act", "pd_op.softmax", "pd_op.conv2d", "pd_op.multiply", "pd_op.matmul"}},
+    "PP-YOLOE_plus-S_face": {"ops_run_float": {"pd_op.fused_conv2d_add_act", "pd_op.multiply", "pd_op.conv2d"}},
 }
 
 
