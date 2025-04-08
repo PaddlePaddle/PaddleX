@@ -19,9 +19,8 @@ import platform
 import subprocess
 import sys
 
-import lazy_paddle as paddle
-
 from ..utils import logging
+from ..utils.deps import function_requires_deps
 from ..utils.env import get_device_type
 
 PLATFORM = platform.system()
@@ -68,8 +67,10 @@ def check_package_installation(package):
     return True
 
 
+@function_requires_deps("paddlepaddle")
 def install_external_deps(repo_name, repo_root):
     """install paddle repository custom dependencies"""
+    import paddle
 
     def get_gcc_version():
         return subprocess.check_output(["gcc", "--version"]).decode("utf-8").split()[2]
@@ -87,6 +88,7 @@ def install_external_deps(repo_name, repo_root):
                 )
             ):
                 with switch_working_dir(os.path.join(repo_root, "ppdet", "ext_op")):
+                    # TODO: Apply constraints here
                     args = [sys.executable, "setup.py", "install"]
                     _check_call(args)
             else:
@@ -127,18 +129,6 @@ def remove_repo_using_rm(name):
             return _check_call(["rmdir", "/S", "/Q", name], shell=True)
         else:
             return _check_call(["rm", "-rf", name])
-
-
-def build_wheel_using_pip(pkg, dst_dir="./", with_deps=False, pip_flags=None):
-    """build_wheel_using_pip"""
-    args = [sys.executable, "-m", "pip", "wheel", "--wheel-dir", dst_dir]
-    if not with_deps:
-        args.append("--no-deps")
-    if pip_flags is not None:
-        args.extend(pip_flags)
-    args.append(pkg)
-
-    return _check_call(args)
 
 
 @contextlib.contextmanager

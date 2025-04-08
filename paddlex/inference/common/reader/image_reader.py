@@ -12,22 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import cv2
 import numpy as np
 
+from ....utils.deps import class_requires_deps, is_dep_available
 from ...utils.benchmark import benchmark
 from ...utils.io import ImageReader
 
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+
 
 @benchmark.timeit_with_options(name=None, is_read_operation=True)
+@class_requires_deps("opencv-contrib-python")
 class ReadImage:
     """Load image from the file."""
-
-    _FLAGS_DICT = {
-        "BGR": cv2.IMREAD_COLOR,
-        "RGB": cv2.IMREAD_COLOR,
-        "GRAY": cv2.IMREAD_GRAYSCALE,
-    }
 
     def __init__(self, format="BGR"):
         """
@@ -39,7 +37,11 @@ class ReadImage:
         """
         super().__init__()
         self.format = format
-        flags = self._FLAGS_DICT[self.format]
+        flags = {
+            "BGR": cv2.IMREAD_COLOR,
+            "RGB": cv2.IMREAD_COLOR,
+            "GRAY": cv2.IMREAD_GRAYSCALE,
+        }[self.format]
         self._img_reader = ImageReader(backend="opencv", flags=flags)
 
     def __call__(self, imgs):

@@ -16,17 +16,16 @@ from __future__ import absolute_import
 
 import os
 from copy import deepcopy
-from dataclasses import dataclass
-from typing import List
-
 import numpy as np
 import pandas as pd
+from typing import List
+from dataclasses import dataclass
 
-from .... import ModelFormat, UltraInferModel
-from ....py_only import PyOnlyProcessorChain
+from .... import UltraInferModel, ModelFormat
 from ....py_only.ts import PyOnlyTSModel
-from ....py_only.ts import processors as P
 from ....utils.misc import load_config
+from ....py_only import PyOnlyProcessorChain
+from ....py_only.ts import PyOnlyTSModel, processors as P
 
 
 class PyOnlyAnomalyDetectionModel(PyOnlyTSModel):

@@ -50,7 +50,6 @@ DEP_SPECS = {
     "opencv-contrib-python": "== 4.10.0.84",
     "openpyxl": "",
     "packaging": "",
-    "paddle2onnx": ">= 2",
     "pandas": "",
     "pillow": "",
     "premailer": "",
@@ -67,7 +66,6 @@ DEP_SPECS = {
     "scikit-image": "",
     "scikit-learn": "",
     "shapely": "",
-    "six": "",
     "soundfile": "",
     "starlette": ">= 0.36",
     "tokenizers": "== 0.19.1",
@@ -85,7 +83,10 @@ REQUIRED_DEPS = [
     "GPUtil",
     "numpy",
     "packaging",
+    # Currently it is not easy to make `pandas` optional
+    "pandas",
     "pillow",
+    "prettytable",
     "py-cpuinfo",
     "pydantic",
     "PyYAML",
@@ -102,13 +103,17 @@ EXTRAS = {
             "matplotlib",
             "opencv-contrib-python",
             "pycocotools",
+            # Currently `PyMuPDF` is required by the image batch sampler
+            "PyMuPDF",
             "scikit-image",
         ],
         "multimodal": [
             "ftfy",
             "Jinja2",
+            "opencv-contrib-python",
+            # For the same reason as in `cv`
+            "PyMuPDF",
             "regex",
-            "six",
         ],
         "ie": [
             "ftfy",
@@ -122,7 +127,6 @@ EXTRAS = {
             "opencv-contrib-python",
             "openpyxl",
             "premailer",
-            "prettytable",
             "pyclipper",
             "PyMuPDF",
             "scikit-learn",
@@ -136,7 +140,6 @@ EXTRAS = {
             "opencv-contrib-python",
             "openpyxl",
             "premailer",
-            "prettytable",
             "pyclipper",
             "PyMuPDF",
             "scikit-learn",
@@ -147,7 +150,6 @@ EXTRAS = {
             "ftfy",
             "Jinja2",
             "regex",
-            "six",
             "soundfile",
             "tqdm",
         ],
@@ -155,7 +157,6 @@ EXTRAS = {
             "chinese-calendar",
             "joblib",
             "matplotlib",
-            "pandas",
             "scikit-learn",
         ],
         "video": [
@@ -172,9 +173,6 @@ EXTRAS = {
             "starlette",
             "uvicorn",
             "yarl",
-        ],
-        "paddle2onnx": [
-            "paddle2onnx",
         ],
     },
 }

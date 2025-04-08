@@ -20,11 +20,11 @@ import tempfile
 from pathlib import Path
 from typing import Dict, Tuple
 
-import cv2
 import numpy as np
 from PIL import Image, ImageDraw
 
 from ....utils import logging
+from ....utils.deps import class_requires_deps, function_requires_deps, is_dep_available
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH
 from ...common.result import BaseCVResult, JsonMixin
 from ...models.formula_recognition.result import (
@@ -37,7 +37,11 @@ from ...models.formula_recognition.result import (
     pdf2img,
 )
 
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
+
+@class_requires_deps("opencv-contrib-python")
 class FormulaRecognitionResult(BaseCVResult):
     """Formula Recognition Result"""
 
@@ -222,6 +226,7 @@ class FormulaRecognitionResult(BaseCVResult):
         return JsonMixin._to_json(data, *args, **kwargs)
 
 
+@function_requires_deps("opencv-contrib-python")
 def draw_box_formula_fine(
     img_size: Tuple[int, int], box: np.ndarray, formula: str, is_debug: bool = False
 ) -> np.ndarray:

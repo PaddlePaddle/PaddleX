@@ -15,12 +15,16 @@
 import io
 from typing import Any
 
-import matplotlib.pyplot as plt
 from PIL import Image
 
+from ....utils.deps import function_requires_deps, is_dep_available
 from ...common.result import BaseTSResult
 
+if is_dep_available("matplotlib"):
+    import matplotlib.pyplot as plt
 
+
+@function_requires_deps("matplotlib")
 def visualize(predicted_label, input_ts, target_cols):
     """
     Visualize time series data and its prediction results.

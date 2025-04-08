@@ -14,31 +14,35 @@
 
 import math
 
-import cv2
 import numpy as np
 from PIL import Image
 
+from .....utils.deps import class_requires_deps, is_dep_available
 from ....utils.benchmark import benchmark
 from . import funcs as F
 
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
+
+@class_requires_deps("opencv-contrib-python")
 class _BaseResize:
-    _CV2_INTERP_DICT = {
-        "NEAREST": cv2.INTER_NEAREST,
-        "LINEAR": cv2.INTER_LINEAR,
-        "BICUBIC": cv2.INTER_CUBIC,
-        "AREA": cv2.INTER_AREA,
-        "LANCZOS4": cv2.INTER_LANCZOS4,
-    }
-    _PIL_INTERP_DICT = {
-        "NEAREST": Image.NEAREST,
-        "BILINEAR": Image.BILINEAR,
-        "BICUBIC": Image.BICUBIC,
-        "BOX": Image.BOX,
-        "LANCZOS4": Image.LANCZOS,
-    }
-
     def __init__(self, size_divisor, interp, backend="cv2"):
+        _CV2_INTERP_DICT = {
+            "NEAREST": cv2.INTER_NEAREST,
+            "LINEAR": cv2.INTER_LINEAR,
+            "BICUBIC": cv2.INTER_CUBIC,
+            "AREA": cv2.INTER_AREA,
+            "LANCZOS4": cv2.INTER_LANCZOS4,
+        }
+        _PIL_INTERP_DICT = {
+            "NEAREST": Image.NEAREST,
+            "BILINEAR": Image.BILINEAR,
+            "BICUBIC": Image.BICUBIC,
+            "BOX": Image.BOX,
+            "LANCZOS4": Image.LANCZOS,
+        }
+
         super().__init__()
 
         if size_divisor is not None:
@@ -50,9 +54,9 @@ class _BaseResize:
         try:
             interp = interp.upper()
             if backend == "cv2":
-                interp = self._CV2_INTERP_DICT[interp]
+                interp = _CV2_INTERP_DICT[interp]
             elif backend == "pil":
-                interp = self._PIL_INTERP_DICT[interp]
+                interp = _PIL_INTERP_DICT[interp]
             else:
                 raise ValueError("backend must be `cv2` or `pil`")
         except KeyError:
@@ -60,9 +64,9 @@ class _BaseResize:
                 "For backend '{}', `interp` should be one of {}. Please ensure the interpolation method matches the selected backend.".format(
                     backend,
                     (
-                        self._CV2_INTERP_DICT.keys()
+                        _CV2_INTERP_DICT.keys()
                         if backend == "cv2"
-                        else self._PIL_INTERP_DICT.keys()
+                        else _PIL_INTERP_DICT.keys()
                     ),
                 )
             )
@@ -216,6 +220,7 @@ class ResizeByShort(_BaseResize):
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class Normalize:
     """Normalize the three-channel image."""
 

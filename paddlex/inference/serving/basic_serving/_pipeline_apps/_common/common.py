@@ -15,12 +15,15 @@
 import os
 from typing import Dict, Optional, Tuple, Union
 
-import cv2
 import numpy as np
 from PIL.Image import Image
 
+from ......utils.deps import function_requires_deps, is_dep_available
 from ....infra import utils as serving_utils
 from ....infra.storage import Storage, SupportsGetURL
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 
 def prune_result(result: dict) -> dict:
@@ -39,6 +42,7 @@ def prune_result(result: dict) -> dict:
     return _process_obj(result)
 
 
+@function_requires_deps("opencv-contrib-python")
 def postprocess_image(
     image: np.ndarray,
     log_id: str,

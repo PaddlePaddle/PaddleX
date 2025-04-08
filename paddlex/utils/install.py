@@ -17,25 +17,46 @@ import subprocess
 import sys
 import tempfile
 
+from packaging.requirements import Requirement
+
+from . import logging
+
 
 def install_packages_from_requirements_file(
     requirements_file_path, pip_install_opts=None
 ):
-    # TODO: Constraints can be applied here to ensure a safe installation.
-    # For example, it is best to prevent installing a different version of a
-    # distribution for an already loaded package, as that could lead to
-    # problems.
-    return subprocess.check_call(
-        [
-            sys.executable,
-            "-m",
-            "pip",
-            "install",
-            *(pip_install_opts or []),
-            "-r",
-            requirements_file_path,
-        ]
-    )
+    from .deps import DEP_SPECS
+
+    # TODO: Precompute or cache the constraints
+    with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as f:
+        for req in DEP_SPECS:
+            req = Requirement(req)
+            if req.marker and not req.marker.evaluate():
+                continue
+            if req.url:
+                req = f"{req.name}@{req.url}"
+            else:
+                req = f"{req.name}{req.specifier}"
+            f.write(req + "\n")
+        constraints_file_path = f.name
+
+    args = [
+        sys.executable,
+        "-m",
+        "pip",
+        "install",
+        "-c",
+        constraints_file_path,
+        *(pip_install_opts or []),
+        "-r",
+        requirements_file_path,
+    ]
+    logging.debug("Command: %s", args)
+
+    try:
+        return subprocess.check_call(args)
+    finally:
+        os.unlink(constraints_file_path)
 
 
 def install_packages(requirements, pip_install_opts=None):
@@ -51,15 +72,15 @@ def install_packages(requirements, pip_install_opts=None):
         os.unlink(reqs_file_path)
 
 
-def uninstall_packages(pkgs, pip_uninstall_opts=None):
-    return subprocess.check_call(
-        [
-            sys.executable,
-            "-m",
-            "pip",
-            "uninstall",
-            "-y",
-            *(pip_uninstall_opts or []),
-            *pkgs,
-        ]
-    )
+def uninstall_packages(packages, pip_uninstall_opts=None):
+    args = [
+        sys.executable,
+        "-m",
+        "pip",
+        "uninstall",
+        "-y",
+        *(pip_uninstall_opts or []),
+        *packages,
+    ]
+    logging.debug("Command: %s", args)
+    return subprocess.check_call(args)

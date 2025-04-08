@@ -15,14 +15,18 @@
 from typing import Final, List, Tuple, Union
 
 import numpy as np
-from fastapi import HTTPException
 from typing_extensions import Literal
 
+from ......utils.deps import function_requires_deps, is_dep_available
 from ....infra import utils as serving_utils
 from ....infra.models import ImageInfo, PDFInfo
 from ....infra.storage import SupportsGetURL, create_storage
 from ....schemas.shared.ocr import BaseInferRequest
 from ..._app import AppContext
+
+if is_dep_available("fastapi"):
+    from fastapi import HTTPException
+
 
 DEFAULT_MAX_NUM_INPUT_IMGS: Final[int] = 10
 DEFAULT_MAX_OUTPUT_IMG_SIZE: Final[Tuple[int, int]] = (2000, 2000)
@@ -52,6 +56,7 @@ def update_app_context(app_context: AppContext) -> None:
     )
 
 
+@function_requires_deps("fastapi")
 def get_file_type(request: BaseInferRequest) -> Literal["PDF", "IMAGE"]:
     if request.fileType is None:
         if serving_utils.is_url(request.file):

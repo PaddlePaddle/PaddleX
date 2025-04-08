@@ -14,14 +14,18 @@
 
 from typing import Any, Dict, List
 
-import joblib
 import numpy as np
 import pandas as pd
 
+from ....utils.deps import class_requires_deps, is_dep_available
 from ...utils.benchmark import benchmark
+
+if is_dep_available("joblib"):
+    import joblib
 
 
 @benchmark.timeit
+@class_requires_deps("joblib")
 class TSDeNormalize:
     """A class to de-normalize time series prediction data using a pre-fitted scaler."""
 

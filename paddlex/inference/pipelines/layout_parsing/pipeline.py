@@ -17,6 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import numpy as np
 
 from ....utils import logging
+from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
@@ -29,6 +30,7 @@ from .result import LayoutParsingResult
 from .utils import get_sub_regions_ocr_res, sorted_layout_boxes
 
 
+@pipeline_requires_extra("ocr")
 class LayoutParsingPipeline(BasePipeline):
     """Layout Parsing Pipeline"""
 

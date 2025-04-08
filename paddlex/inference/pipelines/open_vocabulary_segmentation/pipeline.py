@@ -16,6 +16,7 @@ from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
 
+from ....utils.deps import pipeline_requires_extra
 from ...models.open_vocabulary_segmentation.results import SAMSegResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
@@ -24,6 +25,7 @@ from ..base import BasePipeline
 Number = Union[int, float]
 
 
+@pipeline_requires_extra("multimodal")
 class OpenVocabularySegmentationPipeline(BasePipeline):
     """Open Vocabulary Segmentation pipeline"""
 

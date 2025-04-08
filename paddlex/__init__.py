@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import sys
 
-from .utils.lazy_loader import LazyLoader
-
-paddle = LazyLoader("lazy_paddle", globals(), "paddle")
-sys.modules["lazy_paddle"] = paddle
-
-import os
+_SPECIAL_MODS = ["paddle", "paddle_custom_device", "ultra_infer"]
+_loaded_special_mods = []
+for mod in _SPECIAL_MODS:
+    if mod in sys.modules:
+        _loaded_special_mods.append(mod)
 
 from . import version
 from .inference import create_pipeline, create_predictor
@@ -42,26 +42,13 @@ def _initialize():
     if flags.EAGER_INITIALIZATION:
         repo_manager.initialize()
 
-
-def _check_paddle_version():
-    """check paddle version"""
-
-    supported_versions = ["3.0", "0.0"]
-    device_type = paddle.device.get_device().split(":")[0]
-    if device_type.lower() == "xpu":
-        supported_versions.append("2.6")
-    version = paddle.__version__
-    # Recognizable version number: major.minor.patch
-    major, minor, patch = version.split(".")
-    # Ignore patch
-    version = f"{major}.{minor}"
-    if version not in supported_versions:
-        raise RuntimeError(
-            f"The {version} version of PaddlePaddle is not supported. "
-            f"Please install one of the following versions of PaddlePaddle: {supported_versions}."
-        )
+    __version__ = version.get_pdx_version()
 
 
 _initialize()
 
-__version__ = version.get_pdx_version()
+for mod in _SPECIAL_MODS:
+    if mod in sys.modules and mod not in _loaded_special_mods:
+        raise AssertionError(
+            f"`{mod}` is unexpectedly loaded. Please contact the PaddleX team to report this issue."
+        )

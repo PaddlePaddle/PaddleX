@@ -18,8 +18,7 @@ import os
 import random
 import shutil
 
-from tqdm import tqdm
-
+from .....utils.deps import function_requires_deps
 from .....utils.file_interface import custom_open, write_json_file
 from .....utils.logging import info
 
@@ -71,8 +70,11 @@ def split_dataset(root_dir, train_rate, val_rate):
     return root_dir
 
 
+@function_requires_deps("tqdm")
 def json2list(json_path, base_image_num):
     """load json as list"""
+    from tqdm import tqdm
+
     assert os.path.exists(json_path), json_path
     with custom_open(json_path, "r") as f:
         data = json.load(f)

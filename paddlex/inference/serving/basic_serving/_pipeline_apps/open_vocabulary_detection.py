@@ -14,8 +14,7 @@
 
 from typing import Any, Dict, List
 
-from fastapi import FastAPI
-
+from .....utils.deps import function_requires_deps, is_dep_available
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
 from ...infra.models import ResultResponse
@@ -26,8 +25,12 @@ from ...schemas.open_vocabulary_detection import (
 )
 from .._app import create_app, primary_operation
 
+if is_dep_available("fastapi"):
+    from fastapi import FastAPI
 
-def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
+
+@function_requires_deps("fastapi")
+def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
     app, ctx = create_app(
         pipeline=pipeline, app_config=app_config, app_aiohttp_session=True
     )

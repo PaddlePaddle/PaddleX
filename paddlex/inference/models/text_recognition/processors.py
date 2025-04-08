@@ -17,13 +17,17 @@ import math
 import re
 from typing import List
 
-import cv2
 import numpy as np
 
+from ....utils.deps import class_requires_deps, is_dep_available
 from ...utils.benchmark import benchmark
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class OCRReisizeNormImg:
     """for ocr image resize and normalization"""
 

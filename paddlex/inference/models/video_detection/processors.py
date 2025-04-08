@@ -15,14 +15,14 @@
 
 from typing import List
 
-import cv2
-import lazy_paddle as paddle
 import numpy as np
 
+from ....utils.deps import class_requires_deps, function_requires_deps
 from ...utils.benchmark import benchmark
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class ResizeVideo:
     """Resizes frames of a video to a specified target size.
 
@@ -57,6 +57,8 @@ class ResizeVideo:
         Raises:
             NotImplementedError: If a frame is not an instance of numpy.ndarray.
         """
+        import cv2
+
         num_seg = len(video)
         seg_len = len(video[0])
 
@@ -204,6 +206,7 @@ def convert2cpu_long(gpu_matrix):
     return int_64_g.cpu()
 
 
+@function_requires_deps("paddlepaddle")
 def get_region_boxes(
     output,
     conf_thresh=0.005,
@@ -237,6 +240,8 @@ def get_region_boxes(
     Returns:
         all_box(List[List[float]]): A list of predicted bounding boxes for each image in the batch.
     """
+    import paddle
+
     anchor_step = len(anchors) // num_anchors
     if output.dim() == 3:
         output = output.unsqueeze(0)
@@ -342,10 +347,13 @@ def get_region_boxes(
     return all_boxes
 
 
+@function_requires_deps("paddlepaddle")
 def nms(boxes, nms_thresh):
     """
     Performs non-maximum suppression on the input boxes based on their IoUs.
     """
+    import paddle
+
     if len(boxes) == 0:
         return boxes
     det_confs = paddle.zeros([len(boxes)])
@@ -365,10 +373,13 @@ def nms(boxes, nms_thresh):
     return out_boxes
 
 
+@function_requires_deps("paddlepaddle")
 def bbox_iou(box1, box2, x1y1x2y2=True):
     """
     Returns the Intersection over Union (IoU) of two bounding boxes.
     """
+    import paddle
+
     if x1y1x2y2:
         mx = min(box1[0], box2[0])
         Mx = max(box1[2], box2[2])
@@ -403,6 +414,7 @@ def bbox_iou(box1, box2, x1y1x2y2=True):
 
 
 @benchmark.timeit
+@class_requires_deps("paddlepaddle")
 class DetVideoPostProcess:
     """
     A class used to perform post-processing on detection results in videos.
@@ -421,7 +433,8 @@ class DetVideoPostProcess:
         self.labels = label_list
 
     def postprocess(self, pred: List, nms_thresh: float, score_thresh: float) -> List:
-        cv2.FONT_HERSHEY_SIMPLEX
+        import paddle
+
         num_seg = len(pred)
         pred_all = []
         for i in range(num_seg):

@@ -15,13 +15,17 @@
 import copy
 from typing import List, Tuple
 
-import cv2
 import numpy as np
 from numpy.linalg import norm
-from shapely.geometry import Polygon
 
+from .....utils.deps import class_requires_deps, is_dep_available
 from .base_operator import BaseOperator
 from .seal_det_warp import AutoRectifier
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+if is_dep_available("shapely"):
+    from shapely.geometry import Polygon
 
 
 class CropByBoxes(BaseOperator):
@@ -60,6 +64,7 @@ class CropByBoxes(BaseOperator):
         return output_list
 
 
+@class_requires_deps("opencv-contrib-python", "shapely")
 class CropByPolys(BaseOperator):
     """Crop Image by Polys"""
 

@@ -30,10 +30,8 @@ from ..utils.install import (
 )
 from .meta import REPO_DOWNLOAD_BASE, get_repo_meta
 from .utils import (
-    check_package_installation,
     fetch_repo_using_git,
     install_external_deps,
-    mute,
     remove_repo_using_rm,
     reset_repo_using_git,
     switch_working_dir,
@@ -74,12 +72,12 @@ class PPRepository(object):
 
         self.meta = get_repo_meta(self.name)
         self.git_path = self.meta["git_path"]
-        self.lib_name = self.meta["lib_name"]
-        self.pkg_name = self.meta.get("pkg_name", None)
+        self.dist_name = self.meta.get("dist_name", None)
+        self.import_name = self.meta.get("import_name", None)
         self.pdx_mod_name = (
             pdx_collection_mod.__name__ + "." + self.meta["pdx_pkg_name"]
         )
-        self.main_reqs_file = self.meta.get("main_reqs_file", "requirements.txt")
+        self.main_req_file = self.meta.get("main_req_file", "requirements.txt")
 
     def initialize(self):
         """initialize"""
@@ -128,7 +126,9 @@ class PPRepository(object):
         if self.meta["install_pkg"]:
             editable = self.meta.get("editable", True)
             if editable:
-                logging.warning(f"{self.pkg_name} will be installed in editable mode.")
+                logging.warning(
+                    f"{self.import_name} will be installed in editable mode."
+                )
             with switch_working_dir(self.root_dir):
                 try:
                     pip_install_opts = ["--no-deps"]
@@ -160,7 +160,7 @@ class PPRepository(object):
         """uninstall_packages"""
         pkgs = []
         if self.install_pkg:
-            pkgs.append(self.pkg_name)
+            pkgs.append(self.dist_name)
         for e in self.meta.get("extra", []):
             if isinstance(e, tuple):
                 pkgs.append(e[1])
@@ -198,17 +198,6 @@ class PPRepository(object):
                     f"Update {self.name} from {git_url} failed, check your network connection. Error:\n{e}"
                 )
 
-    def _get_lib(self):
-        """_get_lib"""
-        import importlib.util
-
-        importlib.invalidate_caches()
-        try:
-            with mute():
-                return importlib.import_module(self.lib_name)
-        except ImportError:
-            return None
-
     def get_pdx(self):
         """get_pdx"""
         return importlib.import_module(self.pdx_mod_name)
@@ -216,7 +205,7 @@ class PPRepository(object):
     def get_deps(self, deps_to_replace=None):
         """get_deps"""
         # Merge requirement files
-        req_list = [self.main_reqs_file]
+        req_list = [self.main_req_file]
         for e in self.meta.get("extra", []):
             if isinstance(e, tuple):
                 e = e[2] or osp.join(e[0], "requirements.txt")
@@ -321,17 +310,17 @@ class RepositoryGroupInstaller(object):
             req_file = osp.join(td, "requirements.txt")
             with open(req_file, "w", encoding="utf-8") as fr:
                 fr.write(deps_str)
-            if constraints is not None:
-                cons_file = osp.join(td, "constraints.txt")
-                with open(cons_file, "w", encoding="utf-8") as fc:
+            cons_file = osp.join(td, "constraints.txt")
+            with open(cons_file, "w", encoding="utf-8") as fc:
+                if constraints is not None:
                     fc.write(constraints)
-                cons_files = [cons_file]
-            else:
-                cons_files = []
+                # HACK: Avoid installing OpenCV variants unexpectedly
+                fc.write("opencv-python == 0.0.0\n")
+                fc.write("opencv-python-headless == 0.0.0\n")
+                fc.write("opencv-contrib-python-headless == 0.0.0\n")
             pip_install_opts = []
-            for f in cons_files:
-                pip_install_opts.append("-c")
-                pip_install_opts.append(f)
+            pip_install_opts.append("-c")
+            pip_install_opts.append(cons_file)
             install_packages_from_requirements_file(
                 req_file, pip_install_opts=pip_install_opts
             )
@@ -369,7 +358,9 @@ class RepositoryGroupInstaller(object):
         return sorted_repos
 
     def _normalize_deps(self, deps, headline=None):
-        repo_pkgs = set(repo.pkg_name for repo in self.repos)
+        repo_pkgs = set(
+            repo.dist_name for repo in self.repos if repo.dist_name is not None
+        )
         lines = []
         if headline is not None:
             lines.append(headline)
@@ -388,10 +379,26 @@ class RepositoryGroupInstaller(object):
             if req.name in repo_pkgs:
                 # Skip repo packages
                 continue
-            elif check_package_installation(req.name):
-                continue
-            else:
-                lines.append(line_s)
+            elif req.name in (
+                "opencv-python",
+                "opencv-contrib-python",
+                "opencv-python-headless",
+                "opencv-contrib-python-headless",
+            ):
+                # FIXME: The original version specifiers are ignored. It would be better to check them here.
+                # The resolver will get the version info from the constraints file.
+                line_s = "opencv-contrib-python"
+            elif req.name == "albumentations":
+                # HACK
+                line_s = "albumentations @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/albumentations-1.4.10%2Bpdx-py3-none-any.whl"
+                line_s += "\nalbucore @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/albucore-0.0.13%2Bpdx-py3-none-any.whl"
+            elif req.name in ("nuscenes-devkit", "nuscenes_devkit"):
+                # HACK
+                line_s = "nuscenes-devkit @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/nuscenes_devkit-1.1.11%2Bpdx-py3-none-any.whl"
+            elif req.name == "imgaug":
+                # HACK
+                line_s = "imgaug @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/imgaug-0.4.0%2Bpdx-py2.py3-none-any.whl"
+            lines.append(line_s)
 
         return "\n".join(lines)
 

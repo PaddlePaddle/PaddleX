@@ -12,15 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import json
-import os
-import os.path as osp
-from collections import Counter, defaultdict
 from pathlib import Path
-
-from PIL import Image
-from pycocotools.coco import COCO
 
 from ...base import BaseDatasetChecker
 from ..model_list import MODELS

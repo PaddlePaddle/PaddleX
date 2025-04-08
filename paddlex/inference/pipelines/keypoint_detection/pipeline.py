@@ -16,6 +16,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 
+from ....utils.deps import pipeline_requires_extra
 from ...models.keypoint_detection.result import KptResult
 from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
@@ -24,6 +25,7 @@ from ..base import BasePipeline
 Number = Union[int, float]
 
 
+@pipeline_requires_extra("cv")
 class KeypointDetectionPipeline(BasePipeline):
     """Keypoint Detection pipeline"""
 

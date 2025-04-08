@@ -18,12 +18,15 @@ import os
 import os.path as osp
 import shutil
 
-import cv2
 import numpy as np
 from PIL import Image, ImageDraw
 
 from .....utils import logging
+from .....utils.deps import function_requires_deps, is_dep_available
 from .....utils.file_interface import custom_open
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 
 def convert_dataset(dataset_type, input_dir):
@@ -34,6 +37,7 @@ def convert_dataset(dataset_type, input_dir):
         raise NotImplementedError(dataset_type)
 
 
+@function_requires_deps("opencv-contrib-python")
 def convert_labelme_dataset(input_dir):
     """convert labelme format to paddlex official format"""
     bg_name = "_background_"

@@ -16,16 +16,20 @@
 import os
 import os.path as osp
 
-import cv2
 import numpy as np
 from PIL import Image
 
+from .....utils.deps import function_requires_deps, is_dep_available
 from .....utils.errors import DatasetFileNotFoundError
 from .....utils.file_interface import custom_open
 from .....utils.logging import info
 from .utils.visualizer import visualize
 
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
+
+@function_requires_deps("opencv-contrib-python")
 def check_dataset(dataset_dir, output, sample_num=10):
     """check dataset"""
     dataset_dir = osp.abspath(dataset_dir)

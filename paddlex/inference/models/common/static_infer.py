@@ -13,15 +13,18 @@
 # limitations under the License.
 
 import abc
-import importlib.util
 import subprocess
 from pathlib import Path
 from typing import List, Sequence
 
-import lazy_paddle as paddle
 import numpy as np
 
 from ....utils import logging
+from ....utils.deps import (
+    class_requires_deps,
+    function_requires_deps,
+    is_paddle2onnx_plugin_available,
+)
 from ....utils.device import constr_device
 from ....utils.flags import DEBUG, INFER_BENCHMARK_USE_NEW_INFER_API, USE_PIR_TRT
 from ...utils.benchmark import benchmark, set_inference_operations
@@ -50,7 +53,10 @@ set_inference_operations(INFERENCE_OPERATIONS)
 
 
 # XXX: Better use Paddle Inference API to do this
+@function_requires_deps("paddlepaddle")
 def _pd_dtype_to_np_dtype(pd_dtype):
+    import paddle
+
     if pd_dtype == paddle.inference.DataType.FLOAT64:
         return np.float64
     elif pd_dtype == paddle.inference.DataType.FLOAT32:
@@ -68,6 +74,7 @@ def _pd_dtype_to_np_dtype(pd_dtype):
 
 
 # old trt
+@function_requires_deps("paddlepaddle")
 def _collect_trt_shape_range_info(
     model_file,
     model_params,
@@ -76,6 +83,7 @@ def _collect_trt_shape_range_info(
     dynamic_shapes,
     dynamic_shape_input_data,
 ):
+    import paddle.inference
 
     dynamic_shape_input_data = dynamic_shape_input_data or {}
 
@@ -143,6 +151,7 @@ def _collect_trt_shape_range_info(
 
 
 # pir trt
+@function_requires_deps("paddlepaddle")
 def _convert_trt(
     trt_cfg_setting,
     pp_model_file,
@@ -152,6 +161,7 @@ def _convert_trt(
     dynamic_shapes,
     dynamic_shape_input_data,
 ):
+    import paddle.inference
     from paddle.tensorrt.export import Input, TensorRTConfig, convert
 
     def _set_trt_config():
@@ -239,12 +249,15 @@ def _concatenate(*callables):
 
 
 @benchmark.timeit
+@class_requires_deps("paddlepaddle")
 class PaddleCopyToDevice:
     def __init__(self, device_type, device_id):
         self.device_type = device_type
         self.device_id = device_id
 
     def __call__(self, arrs):
+        import paddle
+
         device_id = [self.device_id] if self.device_id is not None else self.device_id
         device = constr_device(self.device_type, device_id)
         paddle_tensors = [paddle.to_tensor(i, place=device) for i in arrs]
@@ -252,6 +265,7 @@ class PaddleCopyToDevice:
 
 
 @benchmark.timeit
+@class_requires_deps("paddlepaddle")
 class PaddleCopyToHost:
     def __call__(self, paddle_tensors):
         arrs = [i.numpy() for i in paddle_tensors]
@@ -259,6 +273,7 @@ class PaddleCopyToHost:
 
 
 @benchmark.timeit
+@class_requires_deps("paddlepaddle")
 class PaddleModelInfer:
     def __init__(self, predictor):
         super().__init__()
@@ -270,6 +285,7 @@ class PaddleModelInfer:
 
 # FIXME: Name might be misleading
 @benchmark.timeit
+@class_requires_deps("paddlepaddle")
 class PaddleInferChainLegacy:
     def __init__(self, predictor):
         self.predictor = predictor
@@ -299,6 +315,7 @@ class StaticInfer(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
 
+@class_requires_deps("paddlepaddle")
 class PaddleInfer(StaticInfer):
     def __init__(
         self,
@@ -338,6 +355,9 @@ class PaddleInfer(StaticInfer):
         self,
     ):
         """_create"""
+        import paddle
+        import paddle.inference
+
         model_paths = get_model_paths(self.model_dir, self.model_file_prefix)
         if "paddle" not in model_paths:
             raise RuntimeError("No valid PaddlePaddle model found")
@@ -469,6 +489,8 @@ class PaddleInfer(StaticInfer):
 
     def _configure_trt(self, model_file, params_file, cache_dir):
         # TODO: Support calibration
+        import paddle.inference
+
         if USE_PIR_TRT:
             trt_save_path = cache_dir / "trt" / self.model_file_prefix
             _convert_trt(
@@ -566,6 +588,7 @@ class PaddleInfer(StaticInfer):
 
 # FIXME: Name might be misleading
 @benchmark.timeit
+@class_requires_deps("ultra-infer")
 class MultiBackendInfer(object):
     def __init__(self, ui_runtime):
         super().__init__()
@@ -579,6 +602,7 @@ class MultiBackendInfer(object):
 
 # TODO: It would be better to refactor the code to make `HPInfer` a higher-level
 # class that uses `PaddleInfer`.
+@class_requires_deps("ultra-infer", "paddlepaddle")
 class HPInfer(StaticInfer):
     def __init__(
         self,
@@ -644,16 +668,16 @@ class HPInfer(StaticInfer):
 
         model_paths = get_model_paths(self._model_dir, self._model_file_prefix)
         is_onnx_model_available = "onnx" in model_paths
-        # TODO: Give a warning if Paddle2ONNX is not available but can be used
-        # to select a better backend.
+        # TODO: Give a warning if the Paddle2ONNX plugin is not available but
+        # can be used to select a better backend.
         if self._config.auto_paddle2onnx:
-            if self._check_paddle2onnx():
+            if is_paddle2onnx_plugin_available():
                 is_onnx_model_available = (
                     is_onnx_model_available or "paddle" in model_paths
                 )
             else:
                 logging.debug(
-                    "Paddle2ONNX is not available. Automatic model conversion will not be performed."
+                    "The Paddle2ONNX plugin is not available. Automatic model conversion will not be performed."
                 )
         available_backends = []
         if "paddle" in model_paths:
@@ -843,7 +867,3 @@ class HPInfer(StaticInfer):
         ui_runtime = Runtime(ui_option)
 
         return ui_runtime
-
-    def _check_paddle2onnx(self):
-        # HACK
-        return importlib.util.find_spec("paddle2onnx") is not None

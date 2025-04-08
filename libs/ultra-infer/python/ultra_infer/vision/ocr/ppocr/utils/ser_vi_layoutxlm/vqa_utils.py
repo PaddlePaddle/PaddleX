@@ -12,14 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import division, print_function, unicode_literals
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 import copy
+import numpy as np
 import json
-from collections import defaultdict
+import copy
 from copy import deepcopy
 
-import numpy as np
+from collections import defaultdict
 
 
 def order_by_tbyx(ocr_info):
@@ -75,9 +78,9 @@ class VQATokenLabelEncode(object):
     ):
         super(VQATokenLabelEncode, self).__init__()
         from paddlenlp.transformers import (
+            LayoutXLMTokenizer,
             LayoutLMTokenizer,
             LayoutLMv2Tokenizer,
-            LayoutXLMTokenizer,
         )
 
         tokenizer_dict = {

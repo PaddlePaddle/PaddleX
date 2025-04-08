@@ -14,17 +14,21 @@
 
 import random
 
-import cv2
 import numpy as np
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 
+from ....utils.deps import class_requires_deps, is_dep_available
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH
 from ...common.result import BaseVideoResult
 from ...utils.color_map import get_colormap
 from ...utils.io import VideoReader
 
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
+
+@class_requires_deps("opencv-contrib-python")
 class DetVideoResult(BaseVideoResult):
 
     def _to_video(self):

@@ -13,10 +13,15 @@
 # limitations under the License.
 import numpy as np
 from PIL import ImageDraw
-from pycocotools.coco import COCO
+
+from ......utils.deps import function_requires_deps, is_dep_available
+
+if is_dep_available("pycocotools"):
+    from pycocotools.coco import COCO
 
 
-def draw_keypoint(image, coco_info: COCO, img_id):
+@function_requires_deps("pycocotools")
+def draw_keypoint(image, coco_info: "COCO", img_id):
     """
     Draw keypoints on image for the COCO human keypoint dataset with 17 keypoints.
 

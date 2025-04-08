@@ -15,12 +15,16 @@
 import copy
 from pathlib import Path
 
-import cv2
 import numpy as np
 
+from ....utils.deps import class_requires_deps, is_dep_available
 from ...common.result import BaseCVResult, JsonMixin
 
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
+
+@class_requires_deps("opencv-contrib-python")
 class TextDetResult(BaseCVResult):
 
     def _get_input_fn(self):

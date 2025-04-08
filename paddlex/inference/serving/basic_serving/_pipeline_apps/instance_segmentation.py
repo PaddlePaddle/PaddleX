@@ -15,22 +15,28 @@
 from typing import Any, Dict, List
 
 import numpy as np
-import pycocotools.mask as mask_util
-from fastapi import FastAPI
 
+from .....utils.deps import function_requires_deps, is_dep_available
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
 from ...infra.models import ResultResponse
 from ...schemas.instance_segmentation import INFER_ENDPOINT, InferRequest, InferResult
 from .._app import create_app, primary_operation
 
+if is_dep_available("fastapi"):
+    from fastapi import FastAPI
+if is_dep_available("pycocotools"):
+    import pycocotools.mask as mask_util
 
+
+@function_requires_deps("pycocotools")
 def _rle(mask: np.ndarray) -> str:
     rle_res = mask_util.encode(np.asarray(mask[..., None], order="F", dtype="uint8"))[0]
     return rle_res["counts"].decode("utf-8")
 
 
-def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
+@function_requires_deps("fastapi")
+def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
     app, ctx = create_app(
         pipeline=pipeline,
         app_config=app_config,

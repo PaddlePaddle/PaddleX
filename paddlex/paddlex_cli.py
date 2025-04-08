@@ -25,7 +25,11 @@ from .constants import MODEL_FILE_PREFIX
 from .inference.pipelines import load_pipeline_config
 from .repo_manager import get_all_supported_repo_names, setup
 from .utils import logging
-from .utils.deps import EXTRAS
+from .utils.deps import (
+    get_paddle2onnx_spec,
+    get_serving_dep_specs,
+    require_paddle2onnx_plugin,
+)
 from .utils.flags import FLAGS_json_format_model
 from .utils.install import install_packages
 from .utils.interactive_get_pipeline import interactive_get_pipeline
@@ -215,39 +219,34 @@ def install(args):
     """install paddlex"""
 
     def _install_serving_deps():
-        reqs = []
-        for dep_specs in EXTRAS["serving"].values():
-            reqs += dep_specs
+        reqs = get_serving_dep_specs()
         # Should we sort the requirements?
         install_packages(reqs)
 
     def _install_paddle2onnx_deps():
-        reqs = []
-        for dep_specs in EXTRAS["paddle2onnx"].values():
-            reqs += dep_specs
-        install_packages(reqs)
+        install_packages([get_paddle2onnx_spec()])
 
     def _install_hpi_deps(device_type):
-        supported_device_types = ["cpu", "gpu", "npu"]
-        if device_type not in supported_device_types:
+        SUPPORTED_DEVICE_TYPES = ["cpu", "gpu", "npu"]
+        if device_type not in SUPPORTED_DEVICE_TYPES:
             logging.error(
                 "HPI installation failed!\n"
                 "Supported device_type: %s. Your input device_type: %s.\n"
                 "Please ensure the device_type is correct.",
-                supported_device_types,
+                SUPPORTED_DEVICE_TYPES,
                 device_type,
             )
             sys.exit(2)
 
         if device_type == "cpu":
-            packages = ["ultra-infer-python"]
+            package = "ultra-infer-python"
         elif device_type == "gpu":
-            packages = ["ultra-infer-gpu-python"]
+            package = "ultra-infer-gpu-python"
         elif device_type == "npu":
-            packages = ["ultra-infer-npu-python"]
+            package = "ultra-infer-npu-python"
 
         with importlib.resources.path("paddlex", "hpip_links.html") as f:
-            install_packages(packages, ["--find-links", str(f)])
+            install_packages([package], pip_install_opts=["--find-links", str(f)])
 
     # Enable debug info
     os.environ["PADDLE_PDX_DEBUG"] = "True"
@@ -333,6 +332,8 @@ def serve(pipeline, *, device, use_hpip, host, port):
 
 # TODO: Move to another module
 def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
+    require_paddle2onnx_plugin()
+
     PD_MODEL_FILE_PREFIX = MODEL_FILE_PREFIX
     PD_PARAMS_FILENAME = f"{MODEL_FILE_PREFIX}.pdiparams"
     ONNX_MODEL_FILENAME = f"{MODEL_FILE_PREFIX}.onnx"

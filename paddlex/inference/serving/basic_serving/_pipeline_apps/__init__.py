@@ -15,9 +15,11 @@
 import importlib
 from typing import Any, Dict
 
-from fastapi import FastAPI
-
+from .....utils.deps import function_requires_deps, is_dep_available
 from ...infra.config import create_app_config
+
+if is_dep_available("fastapi"):
+    from fastapi import FastAPI
 
 
 def _pipeline_name_to_mod_name(pipeline_name: str) -> str:
@@ -31,7 +33,8 @@ def _pipeline_name_to_mod_name(pipeline_name: str) -> str:
 
 # XXX: A dynamic approach is used here for writing fewer lines of code, at the
 # cost of sacrificing some benefits of type hints.
-def create_pipeline_app(pipeline: Any, pipeline_config: Dict[str, Any]) -> FastAPI:
+@function_requires_deps("fastapi")
+def create_pipeline_app(pipeline: Any, pipeline_config: Dict[str, Any]) -> "FastAPI":
     pipeline_name = pipeline_config["pipeline_name"]
     mod_name = _pipeline_name_to_mod_name(pipeline_name)
     mod = importlib.import_module(f".{mod_name}", package=__package__)

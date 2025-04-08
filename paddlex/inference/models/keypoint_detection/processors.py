@@ -15,12 +15,15 @@
 import math
 from typing import List, Optional, Sequence, Tuple, Union
 
-import cv2
 import numpy as np
 from numpy import ndarray
 
+from ....utils.deps import class_requires_deps, is_dep_available
 from ...utils.benchmark import benchmark
 from ..object_detection.processors import get_affine_transform
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 Number = Union[int, float]
 Kpts = List[dict]
@@ -67,6 +70,7 @@ def get_warp_matrix(
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class TopDownAffine:
     """refer to https://github.com/open-mmlab/mmpose/blob/71ec36ebd63c475ab589afc817868e749a61491f/mmpose/datasets/transforms/topdown_transforms.py#L13
     Get the bbox image as the model input by affine transform.
@@ -199,6 +203,7 @@ def transform_preds(
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class KptPostProcess:
     """Save Result Transform"""
 

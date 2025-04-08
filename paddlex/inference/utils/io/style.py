@@ -12,23 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from openpyxl.cell import cell
-from openpyxl.styles import (
-    Alignment,
-    Border,
-    Color,
-    Font,
-    NamedStyle,
-    PatternFill,
-    Side,
-)
-from openpyxl.styles.colors import BLACK
-from openpyxl.styles.fills import FILL_SOLID
-from openpyxl.styles.numbers import FORMAT_CURRENCY_USD_SIMPLE, FORMAT_PERCENTAGE
+
+from ....utils.deps import class_requires_deps, function_requires_deps, is_dep_available
+
+if is_dep_available("openpyxl"):
+    from openpyxl.cell import cell
+    from openpyxl.styles import (
+        Alignment,
+        Border,
+        Color,
+        Font,
+        NamedStyle,
+        PatternFill,
+        Side,
+    )
+    from openpyxl.styles.colors import BLACK
+    from openpyxl.styles.fills import FILL_SOLID
+    from openpyxl.styles.numbers import FORMAT_CURRENCY_USD_SIMPLE, FORMAT_PERCENTAGE
 
 FORMAT_DATE_MMDDYYYY = "mm/dd/yyyy"
 
 
+@function_requires_deps("openpyxl")
 def colormap(color):
     """
     Convenience for looking up known colors
@@ -65,6 +70,7 @@ def get_side(style, name):
 known_styles = {}
 
 
+@function_requires_deps("openpyxl")
 def style_dict_to_named_style(style_dict, number_format=None):
     """
     Change css style (stored in a python dictionary) to openpyxl NamedStyle
@@ -303,6 +309,7 @@ def _element_to_string(el):
     return text + string + "\n" + tail
 
 
+@class_requires_deps("openpyxl")
 class TableCell(Element):
     """
     This class maps to the `<td>` element of the html table.

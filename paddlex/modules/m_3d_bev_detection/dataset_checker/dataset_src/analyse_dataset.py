@@ -18,13 +18,17 @@ import pickle
 import platform
 from collections import defaultdict
 
-import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import font_manager
 
+from paddlex.utils.deps import function_requires_deps, is_dep_available
 from paddlex.utils.fonts import PINGFANG_FONT_FILE_PATH
 
+if is_dep_available("matplotlib"):
+    import matplotlib.pyplot as plt
+    from matplotlib import font_manager
 
+
+@function_requires_deps("matplotlib")
 def deep_analyse(dataset_dir, output):
     """class analysis for dataset"""
     tags = ["train", "val"]

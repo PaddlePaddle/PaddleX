@@ -19,15 +19,18 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from PIL import Image, ImageOps
-from pycocotools.coco import COCO
 
+from .....utils.deps import function_requires_deps
 from .....utils.errors import DatasetFileNotFoundError
 from .....utils.logging import info
 from .utils.visualizer import draw_bbox, draw_mask
 
 
+@function_requires_deps("pycocotools")
 def check(dataset_dir, output, sample_num=10):
     """check dataset"""
+    from pycocotools.coco import COCO
+
     info(dataset_dir)
     dataset_dir = osp.abspath(dataset_dir)
     if not osp.exists(dataset_dir) or not osp.isdir(dataset_dir):

@@ -17,6 +17,7 @@ from typing import Any, Dict, List, Optional, Union
 import numpy as np
 
 from ....utils import logging
+from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...utils.hpi import HPIConfig
@@ -32,6 +33,7 @@ from ..components import (
 from .result import OCRResult
 
 
+@pipeline_requires_extra("ocr")
 class OCRPipeline(BasePipeline):
     """OCR Pipeline"""
 

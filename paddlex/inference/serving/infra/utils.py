@@ -22,18 +22,25 @@ from functools import partial
 from typing import Awaitable, Callable, List, Optional, Tuple, TypeVar, Union, overload
 from urllib.parse import urlparse
 
-import aiohttp
-import cv2
-import filetype
-import fitz
 import numpy as np
 import pandas as pd
 import requests
-import yarl
 from PIL import Image
 from typing_extensions import Literal, ParamSpec, TypeAlias, assert_never
 
+from ....utils.deps import function_requires_deps, is_dep_available
 from .models import ImageInfo, PDFInfo, PDFPageInfo
+
+if is_dep_available("aiohttp"):
+    import aiohttp
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+if is_dep_available("filetype"):
+    import filetype
+if is_dep_available("PyMuPDF"):
+    import fitz
+if is_dep_available("yarl"):
+    import yarl
 
 __all__ = [
     "FileType",
@@ -103,6 +110,7 @@ def infer_file_type(url: str) -> Optional[FileType]:
         return None
 
 
+@function_requires_deps("filetype")
 def infer_file_ext(file: str) -> Optional[str]:
     if is_url(file):
         url_parts = urlparse(file)
@@ -116,6 +124,7 @@ def infer_file_ext(file: str) -> Optional[str]:
         return "." + filetype.guess_extension(bytes_)
 
 
+@function_requires_deps("opencv-contrib-python")
 def image_bytes_to_array(data: bytes) -> np.ndarray:
     return cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
 
@@ -131,6 +140,7 @@ def image_to_bytes(image: Image.Image, format: str = "JPEG") -> bytes:
     return img_bytes
 
 
+@function_requires_deps("opencv-contrib-python")
 def image_array_to_bytes(image: np.ndarray, ext: str = ".jpg") -> bytes:
     image = cv2.imencode(ext, image)[1]
     return image.tobytes()
@@ -150,6 +160,7 @@ def base64_encode(data: bytes) -> str:
     return base64.b64encode(data).decode("ascii")
 
 
+@function_requires_deps("PyMuPDF", "opencv-contrib-python")
 def read_pdf(
     bytes_: bytes, max_num_imgs: Optional[int] = None
 ) -> Tuple[List[np.ndarray], PDFInfo]:
@@ -243,7 +254,8 @@ def get_raw_bytes(file: str) -> bytes:
         return base64.b64decode(file)
 
 
-async def get_raw_bytes_async(file: str, session: aiohttp.ClientSession) -> bytes:
+@function_requires_deps("aiohttp", "yarl")
+async def get_raw_bytes_async(file: str, session: "aiohttp.ClientSession") -> bytes:
     if is_url(file):
         async with session.get(yarl.URL(file, encoded=True)) as resp:
             return await resp.read()

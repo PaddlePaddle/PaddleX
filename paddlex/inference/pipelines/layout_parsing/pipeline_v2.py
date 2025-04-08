@@ -20,6 +20,7 @@ from typing import Any, Dict, Optional, Tuple, Union
 import numpy as np
 
 from ....utils import logging
+from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
@@ -31,6 +32,7 @@ from .result_v2 import LayoutParsingResultV2
 from .utils import gather_imgs, get_single_block_parsing_res, get_sub_regions_ocr_res
 
 
+@pipeline_requires_extra("ocr")
 class LayoutParsingPipelineV2(BasePipeline):
     """Layout Parsing Pipeline V2"""
 

@@ -14,12 +14,15 @@
 
 from typing import Any, Dict, List
 
-import joblib
 import numpy as np
 import pandas as pd
 
+from .....utils.deps import class_requires_deps, is_dep_available
 from ....utils.benchmark import benchmark
 from .funcs import load_from_dataframe, time_feature
+
+if is_dep_available("joblib"):
+    import joblib
 
 __all__ = [
     "BuildTSDataset",
@@ -91,6 +94,7 @@ class TSCutOff:
 
 
 @benchmark.timeit
+@class_requires_deps("joblib")
 class TSNormalize:
     """Normalizes time series data using a pre-fitted scaler.
 

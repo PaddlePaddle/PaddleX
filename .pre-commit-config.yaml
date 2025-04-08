@@ -51,12 +51,20 @@ repos:
     -   id: isort
         args:
             - --profile=black
+        exclude: ^libs/ultra-infer/python/ultra_infer/
 
 # check license
 -   repo: local
     hooks:
-    -   id: check-custom
-        name: Check Custom
-        entry: python .precommit/check_custom.py
+    -   id: check-license-headers
+        name: Check License Headers
+        entry: python .precommit/check_license_headers.py
         language: python
-        files: \.py$
+        files: .*\.py$
+    -   id: check-imports
+        name: Check Imports
+        entry: python .precommit/check_imports.py
+        language: python
+        files: ^paddlex/.*\.py$
+        additional_dependencies:
+            - stdlib-list==0.10.0
