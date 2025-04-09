@@ -91,9 +91,12 @@ void OpenVINOBackend::InitTensorInfo(
     TensorInfo info;
     auto partial_shape = PartialShapeToVec(ov_outputs[i].get_partial_shape());
     info.shape.assign(partial_shape.begin(), partial_shape.end());
-    info.name = ov_outputs[i].get_any_name();
     info.dtype = OpenVINODataTypeToFD(ov_outputs[i].get_element_type());
-    tensor_infos->insert(std::make_pair(info.name, info));
+    auto names = ov_outputs[i].get_names();
+    for (const auto &name : names) {
+      info.name = name;
+      tensor_infos->insert(std::make_pair(info.name, info));
+    }
   }
 }
 
@@ -316,16 +319,14 @@ bool OpenVINOBackend::InitFromOnnx(const std::string &model_file,
   auto reader =
       paddle2onnx::OnnxReader(model_content.c_str(), model_content.size());
   if (reader.num_inputs != input_infos.size()) {
-    FDERROR << "The number of inputs from OnnxReader:" << reader.num_inputs
-            << " not equal to the number of inputs from OpenVINO:"
-            << input_infos.size() << "." << std::endl;
-    return false;
+    FDWARNING << "The number of inputs from OnnxReader:" << reader.num_inputs
+              << " not equal to the number of inputs from OpenVINO:"
+              << input_infos.size() << "." << std::endl;
   }
   if (reader.num_outputs != output_infos.size()) {
-    FDERROR << "The number of outputs from OnnxReader:" << reader.num_outputs
-            << " not equal to the number of outputs from OpenVINO:"
-            << output_infos.size() << "." << std::endl;
-    return false;
+    FDWARNING << "The number of outputs from OnnxReader:" << reader.num_outputs
+              << " not equal to the number of outputs from OpenVINO:"
+              << output_infos.size() << "." << std::endl;
   }
   for (int i = 0; i < reader.num_inputs; ++i) {
     auto iter = input_infos.find(std::string(reader.inputs[i].name));
