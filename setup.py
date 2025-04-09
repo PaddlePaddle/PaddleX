@@ -27,6 +27,7 @@ DEP_SPECS = {
     "chinese-calendar": "",
     "colorlog": "",
     "decord": "== 0.6.0; (platform_machine == 'x86_64' or platform_machine == 'AMD64') and sys_platform != 'darwin'",
+    "einops": "",
     "faiss-cpu": "",
     "fastapi": ">= 0.110",
     "filelock": "",
@@ -108,6 +109,7 @@ EXTRAS = {
             "scikit-image",
         ],
         "multimodal": [
+            "einops",
             "ftfy",
             "Jinja2",
             "opencv-contrib-python",

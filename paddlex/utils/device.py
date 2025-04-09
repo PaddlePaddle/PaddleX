@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+from contextlib import ContextDecorator
 
 import GPUtil
 
@@ -162,3 +163,32 @@ def check_supported_device_type(device_type, model_name):
 def check_supported_device(device, model_name):
     device_type, _ = parse_device(device)
     return check_supported_device_type(device_type, model_name)
+
+
+class TemporaryDeviceChanger(ContextDecorator):
+    """
+    A context manager to temporarily change global device
+    """
+
+    def __init__(self, new_device):
+        # if new_device is None, nothing changed
+        import paddle
+
+        self.new_device = new_device
+        self.original_device = paddle.device.get_device()
+
+    def __enter__(self):
+        import paddle
+
+        if self.new_device is None:
+            return self
+        paddle.device.set_device(self.new_device)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        import paddle
+
+        if self.new_device is None:
+            return False
+        paddle.device.set_device(self.original_device)
+        return False

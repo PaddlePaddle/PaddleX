@@ -12,10 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .audio_batch_sampler import AudioBatchSampler
-from .base_batch_sampler import BaseBatchSampler
-from .det_3d_batch_sampler import Det3DBatchSampler
-from .doc_vlm_batch_sampler import DocVLMBatchSampler
-from .image_batch_sampler import ImageBatchSampler
-from .ts_batch_sampler import TSBatchSampler
-from .video_batch_sampler import VideoBatchSampler
+
+MODELS = ["PP-DocBee-2B", "PP-DocBee-7B"]
