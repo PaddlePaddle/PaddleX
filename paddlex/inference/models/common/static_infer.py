@@ -20,7 +20,7 @@ from typing import List, Sequence
 import numpy as np
 
 from ....utils import logging
-from ....utils.deps import class_requires_deps, function_requires_deps
+from ....utils.deps import class_requires_deps
 from ....utils.device import constr_device
 from ....utils.flags import DEBUG, INFER_BENCHMARK_USE_NEW_INFER_API, USE_PIR_TRT
 from ...utils.benchmark import benchmark, set_inference_operations
@@ -49,7 +49,6 @@ set_inference_operations(INFERENCE_OPERATIONS)
 
 
 # XXX: Better use Paddle Inference API to do this
-@function_requires_deps("paddlepaddle")
 def _pd_dtype_to_np_dtype(pd_dtype):
     import paddle
 
@@ -70,7 +69,6 @@ def _pd_dtype_to_np_dtype(pd_dtype):
 
 
 # old trt
-@function_requires_deps("paddlepaddle")
 def _collect_trt_shape_range_info(
     model_file,
     model_params,
@@ -147,7 +145,6 @@ def _collect_trt_shape_range_info(
 
 
 # pir trt
-@function_requires_deps("paddlepaddle")
 def _convert_trt(
     trt_cfg_setting,
     pp_model_file,
@@ -245,7 +242,6 @@ def _concatenate(*callables):
 
 
 @benchmark.timeit
-@class_requires_deps("paddlepaddle")
 class PaddleCopyToDevice:
     def __init__(self, device_type, device_id):
         self.device_type = device_type
@@ -261,7 +257,6 @@ class PaddleCopyToDevice:
 
 
 @benchmark.timeit
-@class_requires_deps("paddlepaddle")
 class PaddleCopyToHost:
     def __call__(self, paddle_tensors):
         arrs = [i.numpy() for i in paddle_tensors]
@@ -269,7 +264,6 @@ class PaddleCopyToHost:
 
 
 @benchmark.timeit
-@class_requires_deps("paddlepaddle")
 class PaddleModelInfer:
     def __init__(self, predictor):
         super().__init__()
@@ -281,7 +275,6 @@ class PaddleModelInfer:
 
 # FIXME: Name might be misleading
 @benchmark.timeit
-@class_requires_deps("paddlepaddle")
 class PaddleInferChainLegacy:
     def __init__(self, predictor):
         self.predictor = predictor
@@ -311,7 +304,6 @@ class StaticInfer(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
 
-@class_requires_deps("paddlepaddle")
 class PaddleInfer(StaticInfer):
     def __init__(
         self,

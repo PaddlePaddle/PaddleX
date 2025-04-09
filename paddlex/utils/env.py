@@ -12,10 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .deps import function_requires_deps
 
-
-@function_requires_deps("paddlepaddle")
 def get_device_type():
     import paddle
 
@@ -23,7 +20,6 @@ def get_device_type():
     return device_str.split(":")[0]
 
 
-@function_requires_deps("paddlepaddle")
 def get_paddle_version():
     import paddle
 

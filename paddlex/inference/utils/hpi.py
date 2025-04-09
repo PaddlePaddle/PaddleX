@@ -134,7 +134,7 @@ def _get_hpi_model_info_collection():
     return hpi_model_info_collection
 
 
-@function_requires_deps("paddlepaddle", "ultra-infer")
+@function_requires_deps("ultra-infer")
 def suggest_inference_backend_and_config(
     hpi_config: HPIConfig,
     model_paths: ModelPaths,

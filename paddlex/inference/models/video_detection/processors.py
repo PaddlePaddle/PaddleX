@@ -17,7 +17,7 @@ from typing import List
 
 import numpy as np
 
-from ....utils.deps import class_requires_deps, function_requires_deps
+from ....utils.deps import class_requires_deps
 from ...utils.benchmark import benchmark
 
 
@@ -206,7 +206,6 @@ def convert2cpu_long(gpu_matrix):
     return int_64_g.cpu()
 
 
-@function_requires_deps("paddlepaddle")
 def get_region_boxes(
     output,
     conf_thresh=0.005,
@@ -347,7 +346,6 @@ def get_region_boxes(
     return all_boxes
 
 
-@function_requires_deps("paddlepaddle")
 def nms(boxes, nms_thresh):
     """
     Performs non-maximum suppression on the input boxes based on their IoUs.
@@ -373,7 +371,6 @@ def nms(boxes, nms_thresh):
     return out_boxes
 
 
-@function_requires_deps("paddlepaddle")
 def bbox_iou(box1, box2, x1y1x2y2=True):
     """
     Returns the Intersection over Union (IoU) of two bounding boxes.
@@ -414,7 +411,6 @@ def bbox_iou(box1, box2, x1y1x2y2=True):
 
 
 @benchmark.timeit
-@class_requires_deps("paddlepaddle")
 class DetVideoPostProcess:
     """
     A class used to perform post-processing on detection results in videos.

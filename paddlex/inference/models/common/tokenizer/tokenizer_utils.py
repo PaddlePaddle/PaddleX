@@ -24,16 +24,12 @@ import unicodedata
 from collections import OrderedDict
 from dataclasses import asdict, dataclass
 from functools import lru_cache
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 
 import numpy as np
 
 from .....utils import logging
-from .....utils.deps import (
-    class_requires_deps,
-    function_requires_deps,
-    is_dep_available,
-)
+from .....utils.deps import class_requires_deps, is_dep_available
 from .tokenizer_utils_base import (
     CHAT_TEMPLATE_CONFIG_NAME,
     AddedToken,
@@ -201,7 +197,6 @@ class ChatTemplate:
         return cls.from_dict(config)
 
 
-@function_requires_deps("paddlepaddle")
 def adapt_stale_fwd_patch(self, name, value):
     """
     Since there are some monkey patches for forward of PretrainedModel, such as
@@ -643,13 +638,12 @@ def normalize_chars(text):
     return "".join(output)
 
 
-@class_requires_deps("paddlepaddle", "Jinja2")
 class ChatTemplateMixin:
     chat_template: Optional[ChatTemplate] = None
 
     def apply_chat_template(
         self,
-        conversation: Union[Dict[str, str], str],
+        conversation: Union[List[List[str]], Dict[str, str], str],
         tokenize: bool = True,
         context_data: Dict[str, Any] = {},
         **tokenizer_kwargs,
@@ -657,7 +651,7 @@ class ChatTemplateMixin:
         """apply chat_template rules to conversation which should not be batched data
 
         Args:
-            conversation (List[List[str, str]] | str): the conversation messages between user and bot
+            conversation (List[List[str]] , str): the conversation messages between user and bot
             context_data (Dict[str, Any]): the context data for chat_template.json
             tokenize (bool, optional): whether do tokenization. Defaults to True.
 
@@ -685,7 +679,7 @@ class ChatTemplateMixin:
 
     def _apply_chat_template_paddle(
         self,
-        conversation: Union[List[Dict[str, str]], str],
+        conversation: Union[List[List[str]], str],
         context_data: Dict[str, Any] = {},
     ):
         context_data = self.chat_template._init_context_data(context_data)
@@ -703,7 +697,7 @@ class ChatTemplateMixin:
 
     def _apply_chat_template(
         self,
-        conversation: Union[Dict[str, str], str],
+        conversation: Union[List[List[str]], Dict[str, str], str],
         add_generation_prompt=True,
     ):
         if isinstance(conversation, str):
@@ -728,7 +722,7 @@ class ChatTemplateMixin:
 
     def encode_chat_inputs(
         self,
-        conversations: List[Dict[str, str]],
+        conversations: List[List[str]],
         context_data: Dict[str, Any] = {},
         **kwargs,
     ):
@@ -737,7 +731,7 @@ class ChatTemplateMixin:
         Turn t: sep + bot + query             bot + eos
 
         Args:
-            conversation (List[Dict[str, str]]): the conversation of data
+            conversation (List[List[str]]): the conversation of data
             context_data (Dict[str, Any]): the context data of conversation
 
         Returns:
@@ -757,7 +751,7 @@ class ChatTemplateMixin:
         return query
 
     def _encode_chat_inputs_paddle(
-        self, conversations: List[Dict[str, str]], context_data: Dict[str, Any] = {}
+        self, conversations: List[List[str]], context_data: Dict[str, Any] = {}
     ):
         context_data = self.chat_template._init_context_data(context_data)
         # encode system
@@ -787,7 +781,7 @@ class ChatTemplateMixin:
 
     def _encode_chat_inputs(
         self,
-        conversations: List[Dict[str, str]],
+        conversations: List[List[str]],
         context_data: Dict[str, Any] = {},
         system: str = None,
         add_generation_prompt=True,
@@ -832,7 +826,9 @@ class ChatTemplateMixin:
             ans.append(ans_roundi)
 
         non_learnable_parts = self._extract_non_learnable_parts(origin_msg, ans)
-        assert len(non_learnable_parts) == len(ans)
+        assert len(non_learnable_parts) == len(
+            ans
+        ), f"Get non_learnable_parts len: {len(non_learnable_parts)}, but ans len: {len(ans)}."
 
         conversation_ids = []
         for i in range(len(non_learnable_parts)):
@@ -901,11 +897,11 @@ class ChatTemplateMixin:
         tokenizer.init_chat_template(chat_template_file)
         return tokenizer
 
-    def init_chat_template(self, chat_template: Union[str, Dict]):
+    def init_chat_template(self, chat_template: Union[str, dict]):
         """init chat_tempalte by file_path or template dict data
 
         Args:
-            chat_template (str | dict): file_path or template dict data
+            chat_template (str, dict): file_path or template dict data
         """
         if isinstance(chat_template, str):
             if not os.path.exists(chat_template):
@@ -1001,8 +997,12 @@ class PretrainedTokenizer(
         init_dict.pop("self", None)
         super(PretrainedTokenizer, self).__init__(**init_dict)
 
-        self.added_tokens_encoder: Dict[str, int] = {}
-        self.added_tokens_decoder: Dict[int, str] = {}
+        self.added_tokens_decoder: Dict[int, AddedToken] = {}
+        self.added_tokens_decoder.update(kwargs.pop("added_tokens_decoder", {}))
+        self.added_tokens_encoder: Dict[str, int] = {
+            k.content: v for v, k in self.added_tokens_decoder.items()
+        }
+
         self.unique_no_split_tokens: List[str] = []
         self.tokens_trie = Trie()
 
@@ -1100,6 +1100,7 @@ class PretrainedTokenizer(
                 and self.convert_tokens_to_ids(token)
                 == self.convert_tokens_to_ids(self.unk_token)
                 and token not in tokens_to_add
+                and token not in self.added_tokens_encoder.keys()
             ):
                 tokens_to_add.append(token)
                 if self.verbose:
@@ -1188,6 +1189,11 @@ class PretrainedTokenizer(
         Returns:
             `List[str]`: The list of tokens.
         """
+
+        split_special_tokens = kwargs.pop(
+            "split_special_tokens", self.split_special_tokens
+        )
+
         # Simple mapping string => AddedToken for special tokens with specific tokenization behaviors
         all_special_tokens_extended = dict(
             (str(t), t)
@@ -1209,8 +1215,15 @@ class PretrainedTokenizer(
                 pattern, lambda m: m.groups()[0] or m.groups()[1].lower(), text
             )
 
-        no_split_token = set(self.unique_no_split_tokens)
-        tokens = self.tokens_trie.split(text)
+        if split_special_tokens:
+            no_split_token = []
+            tokens = [text]
+        else:
+            no_split_token = set(
+                self.unique_no_split_tokens
+            )  # don't split on any of the added tokens
+            # "This is something<special_token_1>  else"
+            tokens = self.tokens_trie.split(text)
 
         # ["This is something", "<special_token_1>", "  else"]
         for i, token in enumerate(tokens):
@@ -1295,7 +1308,9 @@ class PretrainedTokenizer(
     def convert_ids_to_tokens(self, ids, skip_special_tokens=False):
         if isinstance(ids, int):
             if ids in self.added_tokens_decoder:
-                return self.added_tokens_decoder[ids]
+                token = self.added_tokens_decoder[ids]
+                token = token.content if isinstance(token, AddedToken) else token
+                return token
             else:
                 return self._convert_id_to_token(ids)
         tokens = []
@@ -1304,7 +1319,9 @@ class PretrainedTokenizer(
             if skip_special_tokens and index in self.all_special_ids:
                 continue
             if index in self.added_tokens_decoder:
-                tokens.append(self.added_tokens_decoder[index])
+                token = self.added_tokens_decoder[index]
+                token = token.content if isinstance(token, AddedToken) else token
+                tokens.append(token)
             else:
                 tokens.append(self._convert_id_to_token(index))
         return tokens
@@ -1436,6 +1453,7 @@ class PretrainedTokenizer(
         stride: int = 0,
         is_split_into_words: bool = False,
         pad_to_multiple_of: Optional[int] = None,
+        padding_side: Optional[Literal["right", "left"]] = None,
         return_tensors: Optional[Union[str, TensorType]] = None,
         return_position_ids: Optional[bool] = None,
         return_token_type_ids: Optional[bool] = None,
@@ -1500,6 +1518,7 @@ class PretrainedTokenizer(
             max_length=max_length,
             stride=stride,
             pad_to_multiple_of=pad_to_multiple_of,
+            padding_side=padding_side,
             return_tensors=return_tensors,
             prepend_batch_axis=True,
             return_position_ids=return_position_ids,
@@ -1530,6 +1549,7 @@ class PretrainedTokenizer(
         stride: int = 0,
         is_split_into_words: bool = False,
         pad_to_multiple_of: Optional[int] = None,
+        padding_side: Optional[Literal["right", "left"]] = None,
         return_position_ids: Optional[bool] = None,
         return_tensors: Optional[Union[str, TensorType]] = None,
         return_token_type_ids: Optional[bool] = None,
@@ -1615,6 +1635,7 @@ class PretrainedTokenizer(
             max_length=max_length,
             stride=stride,
             pad_to_multiple_of=pad_to_multiple_of,
+            padding_side=padding_side,
             return_position_ids=return_position_ids,
             return_attention_mask=return_attention_mask,
             return_token_type_ids=return_token_type_ids,
@@ -1639,6 +1660,7 @@ class PretrainedTokenizer(
         max_length: Optional[int] = None,
         stride: int = 0,
         pad_to_multiple_of: Optional[int] = None,
+        padding_side: Optional[Literal["right", "left"]] = None,
         return_position_ids: Optional[bool] = None,
         return_tensors: Optional[str] = None,
         return_token_type_ids: Optional[bool] = None,
@@ -1767,6 +1789,7 @@ class PretrainedTokenizer(
                     max_length=max_length,
                     stride=stride,
                     pad_to_multiple_of=None,  # we pad in batch afterward
+                    padding_side=padding_side,  # we pad in batch afterward
                     return_position_ids=return_position_ids,  # we pad in batch afterward
                     return_attention_mask=False,  # we pad in batch afterward
                     return_token_type_ids=return_token_type_ids,
@@ -1789,6 +1812,7 @@ class PretrainedTokenizer(
             padding=padding_strategy.value,
             max_length=max_length,
             pad_to_multiple_of=pad_to_multiple_of,
+            padding_side=padding_side,
             return_attention_mask=return_attention_mask,
         )
         if return_dict:
@@ -2036,31 +2060,6 @@ class PretrainedTokenizer(
             return clean_text
         else:
             return text
-
-    def decode_token(
-        self,
-        all_input_ids: List[int],
-        prefix_offset: int = 0,
-        read_offset: int = 0,
-    ) -> Tuple[str, int, int]:
-        """tokenizer decoding for the streaming generation use case. This method can be overrided for tokenizer that doesn't follow this API"""
-        # The prefix text is necessary only to defeat cleanup algorithms in the decode
-        # which decide to add a space or not depending on the surrounding ids.
-        prefix_text = self.decode(
-            all_input_ids[prefix_offset:read_offset], skip_special_tokens=False
-        )
-        new_text = self.decode(all_input_ids[prefix_offset:], skip_special_tokens=False)
-
-        if len(new_text) > len(prefix_text) and not new_text.endswith("�"):
-            # utf-8 char at the end means it's a potential unfinished byte sequence
-            # from byte fallback tokenization.
-            # If it's in the middle, it's probably a real invalid id generated
-            # by the model
-            prefix_index = new_text.index(prefix_text)
-            new_text = new_text[prefix_index + len(prefix_text) :]
-            return new_text, read_offset, len(all_input_ids)
-        else:
-            return "", prefix_offset, read_offset
 
 
 def _is_control(char):

@@ -20,7 +20,6 @@ import subprocess
 import sys
 
 from ..utils import logging
-from ..utils.deps import function_requires_deps
 from ..utils.env import get_device_type
 
 PLATFORM = platform.system()
@@ -67,7 +66,6 @@ def check_package_installation(package):
     return True
 
 
-@function_requires_deps("paddlepaddle")
 def install_external_deps(repo_name, repo_root):
     """install paddle repository custom dependencies"""
     import paddle
