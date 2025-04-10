@@ -219,14 +219,8 @@ bool OpenVINOBackend::InitFromPaddle(const std::string &model_file,
     }
 
     FDINFO << "number of streams:" << option_.num_streams << "." << std::endl;
-    if (option_.affinity == "YES") {
-      properties["AFFINITY"] = "CORE";
-    } else if (option_.affinity == "NO") {
-      properties["AFFINITY"] = "NONE";
-    } else if (option_.affinity == "NUMA") {
-      properties["AFFINITY"] = "NUMA";
-    } else if (option_.affinity == "HYBRID_AWARE") {
-      properties["AFFINITY"] = "HYBRID_AWARE";
+    if (option_.affinity == "NO") {
+      properties.emplace(ov::hint::enable_cpu_pinning(false));
     }
     FDINFO << "affinity:" << option_.affinity << "." << std::endl;
   } else if (option_.hint == "LATENCY") {
@@ -318,15 +312,17 @@ bool OpenVINOBackend::InitFromOnnx(const std::string &model_file,
   ReadBinaryFromFile(model_file, &model_content);
   auto reader =
       paddle2onnx::OnnxReader(model_content.c_str(), model_content.size());
-  if (reader.num_inputs != input_infos.size()) {
-    FDWARNING << "The number of inputs from OnnxReader:" << reader.num_inputs
-              << " not equal to the number of inputs from OpenVINO:"
-              << input_infos.size() << "." << std::endl;
+  if (reader.num_inputs != inputs.size()) {
+    FDERROR << "The number of inputs from OnnxReader:" << reader.num_inputs
+            << " not equal to the number of inputs from OpenVINO:"
+            << inputs.size() << "." << std::endl;
+    return false;
   }
-  if (reader.num_outputs != output_infos.size()) {
-    FDWARNING << "The number of outputs from OnnxReader:" << reader.num_outputs
-              << " not equal to the number of outputs from OpenVINO:"
-              << output_infos.size() << "." << std::endl;
+  if (reader.num_outputs != outputs.size()) {
+    FDERROR << "The number of outputs from OnnxReader:" << reader.num_outputs
+            << " not equal to the number of outputs from OpenVINO:"
+            << outputs.size() << "." << std::endl;
+    return false;
   }
   for (int i = 0; i < reader.num_inputs; ++i) {
     auto iter = input_infos.find(std::string(reader.inputs[i].name));
@@ -361,14 +357,8 @@ bool OpenVINOBackend::InitFromOnnx(const std::string &model_file,
     }
 
     FDINFO << "number of streams:" << option_.num_streams << "." << std::endl;
-    if (option_.affinity == "YES") {
-      properties["AFFINITY"] = "CORE";
-    } else if (option_.affinity == "NO") {
-      properties["AFFINITY"] = "NONE";
-    } else if (option_.affinity == "NUMA") {
-      properties["AFFINITY"] = "NUMA";
-    } else if (option_.affinity == "HYBRID_AWARE") {
-      properties["AFFINITY"] = "HYBRID_AWARE";
+    if (option_.affinity == "NO") {
+      properties.emplace(ov::hint::enable_cpu_pinning(false));
     }
     FDINFO << "affinity:" << option_.affinity << "." << std::endl;
   } else if (option_.hint == "LATENCY") {
