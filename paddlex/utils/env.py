@@ -26,5 +26,23 @@ def get_paddle_version():
     version = paddle.__version__.split(".")
     # ref: https://github.com/PaddlePaddle/Paddle/blob/release/3.0-beta2/setup.py#L316
     assert len(version) == 3
-    major_v, minor_v, patch_v = version
+    major_v, minor_v, patch_v = map(int, version)
     return major_v, minor_v, patch_v
+
+
+def get_cuda_version():
+    # FIXME: We should not rely on the PaddlePaddle library to detemine CUDA
+    # versions.
+    import paddle.version
+
+    cuda_version = paddle.version.cuda()
+    return tuple(map(int, cuda_version.split(".")))
+
+
+def get_cudnn_version():
+    # FIXME: We should not rely on the PaddlePaddle library to detemine cuDNN
+    # versions.
+    import paddle.version
+
+    cudnn_version = paddle.version.cudnn()
+    return tuple(map(int, cudnn_version.split(".")))

@@ -26,6 +26,7 @@ from pydantic import BaseModel, Field
 from typing_extensions import Annotated, TypeAlias
 
 from ...utils.deps import function_requires_deps, is_paddle2onnx_plugin_available
+from ...utils.env import get_cuda_version, get_cudnn_version, get_paddle_version
 from ...utils.flags import USE_PIR_TRT, FLAGS_json_format_model
 
 
@@ -143,7 +144,6 @@ def suggest_inference_backend_and_config(
     # additional important factors, such as NVIDIA GPU compute capability and
     # device manufacturers. We should also allow users to provide hints.
 
-    import paddle
     from ultra_infer import (
         is_built_with_om,
         is_built_with_openvino,
@@ -174,9 +174,12 @@ def suggest_inference_backend_and_config(
     if hpi_config.backend is not None and hpi_config.backend not in available_backends:
         return None, f"Inference backend {repr(hpi_config.backend)} is unavailable."
 
-    paddle_version = paddle.__version__
-    if paddle_version != "3.0.0":
-        return None, f"{repr(paddle_version)} is not a supported Paddle version."
+    paddle_version = get_paddle_version()
+    if paddle_version != (3, 0, 0):
+        return (
+            None,
+            f"{repr('.'.join(paddle_version))} is not a supported Paddle version.",
+        )
 
     if hpi_config.device_type == "cpu":
         uname = platform.uname()
@@ -186,15 +189,10 @@ def suggest_inference_backend_and_config(
         else:
             return None, f"{repr(arch)} is not a supported architecture."
     elif hpi_config.device_type == "gpu":
-        # FIXME: We should not rely on the PaddlePaddle library to detemine CUDA
-        # and cuDNN versions.
-        # Should we inject environment info from the outside?
-        import paddle.version
-
-        cuda_version = paddle.version.cuda()
-        cuda_version = cuda_version.replace(".", "")
-        cudnn_version = paddle.version.cudnn().rsplit(".", 1)[0]
-        cudnn_version = cudnn_version.replace(".", "")
+        cuda_version = get_cuda_version()
+        cuda_version = "".join(cuda_version)
+        cudnn_version = get_cudnn_version()
+        cudnn_version = "".join(cudnn_version[:-1])
         key = f"gpu_cuda{cuda_version}_cudnn{cudnn_version}"
     else:
         return None, f"{repr(hpi_config.device_type)} is not a supported device type."
