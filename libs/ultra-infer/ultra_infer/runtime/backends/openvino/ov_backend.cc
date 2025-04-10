@@ -312,11 +312,23 @@ bool OpenVINOBackend::InitFromOnnx(const std::string &model_file,
   ReadBinaryFromFile(model_file, &model_content);
   auto reader =
       paddle2onnx::OnnxReader(model_content.c_str(), model_content.size());
+  if (reader.num_inputs != input_infos.size()) {
+    FDWARNING << "The number of input_names from OnnxReader:"
+              << reader.num_outputs
+              << " not equal to the number of input_names from OpenVINO:"
+              << output_infos.size() << "." << std::endl;
+  }
   if (reader.num_inputs != inputs.size()) {
     FDERROR << "The number of inputs from OnnxReader:" << reader.num_inputs
             << " not equal to the number of inputs from OpenVINO:"
             << inputs.size() << "." << std::endl;
     return false;
+  }
+  if (reader.num_outputs != output_infos.size()) {
+    FDWARNING << "The number of output_names from OnnxReader:"
+              << reader.num_outputs
+              << " not equal to the number of output_names from OpenVINO:"
+              << output_infos.size() << "." << std::endl;
   }
   if (reader.num_outputs != outputs.size()) {
     FDERROR << "The number of outputs from OnnxReader:" << reader.num_outputs
