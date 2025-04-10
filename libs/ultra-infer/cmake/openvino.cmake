@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -51,7 +51,8 @@ else()
       if(NEED_ABI0)
         set(OPENVINO_FILENAME "openvino-linux-x64-20230302-abi0")
       else()
-        set(OPENVINO_FILENAME "openvino-linux-x64-20230302")
+        set(OPENVINO_VERSION "2025.0")
+        set(OPENVINO_FILENAME "openvino-linux-x64-${OPENVINO_VERSION}")
       endif()
     endif()
   endif()

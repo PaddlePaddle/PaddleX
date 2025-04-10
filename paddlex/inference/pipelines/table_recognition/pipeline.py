@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,26 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os, sys
-from typing import Any, Dict, Optional, Union, Tuple, List
-import numpy as np
 import math
-import cv2
+from typing import Any, Dict, List, Optional, Tuple, Union
+
+import numpy as np
+
+from ....utils import logging
+from ....utils.deps import pipeline_requires_extra
+from ...common.batch_sampler import ImageBatchSampler
+from ...common.reader import ReadImage
+from ...models.object_detection.result import DetResult
+from ...utils.hpi import HPIConfig
+from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 from ..components import CropByBoxes
-from .utils import get_neighbor_boxes_idx
-from .table_recognition_post_processing import get_table_recognition_res
-from .result import SingleTableRecognitionResult, TableRecognitionResult
-from ....utils import logging
-from ...utils.pp_option import PaddlePredictorOption
-from ...common.reader import ReadImage
-from ...common.batch_sampler import ImageBatchSampler
-from ..ocr.result import OCRResult
 from ..doc_preprocessor.result import DocPreprocessorResult
+from ..ocr.result import OCRResult
+from .result import SingleTableRecognitionResult, TableRecognitionResult
+from .table_recognition_post_processing import get_table_recognition_res
+from .utils import get_neighbor_boxes_idx
 
-from ...models.object_detection.result import DetResult
 
-
+@pipeline_requires_extra("ocr")
 class TableRecognitionPipeline(BasePipeline):
     """Table Recognition Pipeline"""
 
@@ -43,6 +45,7 @@ class TableRecognitionPipeline(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ) -> None:
         """Initializes the layout parsing pipeline.
 
@@ -50,10 +53,16 @@ class TableRecognitionPipeline(BasePipeline):
             config (Dict): Configuration dictionary containing various settings.
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
+            use_hpip (bool, optional): Whether to use the high-performance
+                inference plugin (HPIP) by default. Defaults to False.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
+                The default high-performance inference configuration dictionary.
+                Defaults to None.
         """
 
-        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
+        super().__init__(
+            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+        )
 
         self.use_doc_preprocessor = config.get("use_doc_preprocessor", True)
         if self.use_doc_preprocessor:
@@ -88,6 +97,10 @@ class TableRecognitionPipeline(BasePipeline):
                 {"pipeline_config_error": "config error for general_ocr_pipeline!"},
             )
             self.general_ocr_pipeline = self.create_pipeline(general_ocr_config)
+        else:
+            self.general_ocr_config_bak = config.get("SubPipelines", {}).get(
+                "GeneralOCR", None
+            )
 
         self._crop_by_boxes = CropByBoxes()
 
@@ -217,6 +230,33 @@ class TableRecognitionPipeline(BasePipeline):
             doc_preprocessor_res = {}
             doc_preprocessor_image = image_array
         return doc_preprocessor_res, doc_preprocessor_image
+
+    def split_ocr_bboxes_by_table_cells(self, ori_img, cells_bboxes):
+        """
+        Splits OCR bounding boxes by table cells and retrieves text.
+
+        Args:
+            ori_img (ndarray): The original image from which text regions will be extracted.
+            cells_bboxes (list or ndarray): Detected cell bounding boxes to extract text from.
+
+        Returns:
+            list: A list containing the recognized texts from each cell.
+        """
+
+        # Check if cells_bboxes is a list and convert it if not.
+        if not isinstance(cells_bboxes, list):
+            cells_bboxes = cells_bboxes.tolist()
+        texts_list = []  # Initialize a list to store the recognized texts.
+        # Process each bounding box provided in cells_bboxes.
+        for i in range(len(cells_bboxes)):
+            # Extract and round up the coordinates of the bounding box.
+            x1, y1, x2, y2 = [math.ceil(k) for k in cells_bboxes[i]]
+            # Perform OCR on the defined region of the image and get the recognized text.
+            rec_te = next(self.general_ocr_pipeline(ori_img[y1:y2, x1:x2, :]))
+            # Concatenate the texts and append them to the texts_list.
+            texts_list.append("".join(rec_te["rec_texts"]))
+        # Return the list of recognized texts from each cell.
+        return texts_list
 
     def split_ocr_bboxes_by_table_cells(self, ori_img, cells_bboxes):
         """
@@ -380,6 +420,11 @@ class TableRecognitionPipeline(BasePipeline):
                         text_det_unclip_ratio=text_det_unclip_ratio,
                         text_rec_score_thresh=text_rec_score_thresh,
                     )
+                )
+            elif use_table_cells_ocr_results == True:
+                assert self.general_ocr_config_bak != None
+                self.general_ocr_pipeline = self.create_pipeline(
+                    self.general_ocr_config_bak
                 )
 
             table_res_list = []

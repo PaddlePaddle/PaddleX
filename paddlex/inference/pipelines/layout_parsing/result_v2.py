@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,13 +14,11 @@
 from __future__ import annotations
 
 import copy
-from pathlib import Path
-from PIL import Image, ImageDraw
-
 import re
+from pathlib import Path
+
 import numpy as np
-from PIL import Image
-from PIL import ImageDraw
+from PIL import Image, ImageDraw
 
 from ...common.result import (
     BaseCVResult,
@@ -29,7 +27,6 @@ from ...common.result import (
     MarkdownMixin,
     XlsxMixin,
 )
-from .utils import get_layout_ordering
 from .utils import get_show_color
 
 
@@ -317,6 +314,59 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             def format_table():
                 return "\n" + block["block_content"]
 
+            def get_seg_flag(block, prev_block):
+
+                seg_start_flag = True
+                seg_end_flag = True
+
+                block_box = block["block_bbox"]
+                context_left_coordinate = block_box[0]
+                context_right_coordinate = block_box[2]
+                seg_start_coordinate = block.get("seg_start_coordinate")
+                seg_end_coordinate = block.get("seg_end_coordinate")
+
+                if prev_block is not None:
+                    prev_block_bbox = prev_block["block_bbox"]
+                    num_of_prev_lines = prev_block.get("num_of_lines")
+                    pre_block_seg_end_coordinate = prev_block.get("seg_end_coordinate")
+                    prev_end_space_small = (
+                        context_right_coordinate - pre_block_seg_end_coordinate < 10
+                    )
+                    prev_lines_more_than_one = num_of_prev_lines > 1
+
+                    overlap_blocks = context_left_coordinate < prev_block_bbox[2]
+
+                    # update context_left_coordinate and context_right_coordinate
+                    if overlap_blocks:
+                        context_left_coordinate = min(
+                            prev_block_bbox[0], context_left_coordinate
+                        )
+                        context_right_coordinate = max(
+                            prev_block_bbox[2], context_right_coordinate
+                        )
+                        prev_end_space_small = (
+                            prev_block_bbox[2] - pre_block_seg_end_coordinate < 10
+                        )
+
+                    current_start_space_small = (
+                        seg_start_coordinate - context_left_coordinate < 10
+                    )
+
+                    if (
+                        prev_end_space_small
+                        and current_start_space_small
+                        and prev_lines_more_than_one
+                    ):
+                        seg_start_flag = False
+                else:
+                    if seg_start_coordinate - context_left_coordinate < 10:
+                        seg_start_flag = False
+
+                if context_right_coordinate - seg_end_coordinate < 10:
+                    seg_end_flag = False
+
+                return seg_start_flag, seg_end_flag
+
             handlers = {
                 "paragraph_title": lambda: format_title(block["block_content"]),
                 "doc_title": lambda: f"# {block['block_content']}".replace(
@@ -333,8 +383,8 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     ["摘要", "abstract"], lambda l: f"## {l}\n", " "
                 ),
                 "content": lambda: block["block_content"]
-                .replace("-\n", " ")
-                .replace("\n", " "),
+                .replace("-\n", "  \n")
+                .replace("\n", "  \n"),
                 "image": lambda: format_image("block_image"),
                 "chart": lambda: format_image("block_image"),
                 "formula": lambda: f"$${block['block_content']}$$",
@@ -350,18 +400,17 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
             last_label = None
             seg_start_flag = None
             seg_end_flag = None
+            prev_block = None
             page_first_element_seg_start_flag = None
             page_last_element_seg_end_flag = None
             parsing_res_list = sorted(
                 parsing_res_list,
                 key=lambda x: x.get("sub_index", 999),
             )
-            for block in sorted(
-                parsing_res_list,
-                key=lambda x: x.get("sub_index", 999),
-            ):
+            for block in parsing_res_list:
+                seg_start_flag, seg_end_flag = get_seg_flag(block, prev_block)
+
                 label = block.get("block_label")
-                seg_start_flag = block.get("seg_start_flag")
                 page_first_element_seg_start_flag = (
                     seg_start_flag
                     if (page_first_element_seg_start_flag is None)
@@ -369,10 +418,8 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                 )
                 handler = handlers.get(label)
                 if handler:
-                    if (
-                        label == last_label == "text"
-                        and seg_start_flag == seg_end_flag == False
-                    ):
+                    prev_block = block
+                    if label == last_label == "text" and seg_start_flag == False:
                         last_char_of_markdown = (
                             markdown_content[-1] if markdown_content else ""
                         )
@@ -396,7 +443,6 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                             "\n\n" + handler() if markdown_content else handler()
                         )
                     last_label = label
-                    seg_end_flag = block.get("seg_end_flag")
             page_last_element_seg_end_flag = seg_end_flag
 
             return markdown_content, (

@@ -41,8 +41,9 @@ void NmsLauncher(const cudaStream_t &stream, const float *boxes, int64_t *mask,
 void NmsNormalLauncher(const cudaStream_t &stream, const float *boxes,
                        int64_t *mask, int boxes_num, float nms_overlap_thresh);
 
-std::vector<paddle::Tensor> boxes_overlap_bev_gpu(
-    const paddle::Tensor &boxes_a, const paddle::Tensor &boxes_b) {
+std::vector<paddle::Tensor>
+boxes_overlap_bev_gpu(const paddle::Tensor &boxes_a,
+                      const paddle::Tensor &boxes_b) {
   // params boxes_a: (N, 7) [x, y, z, dx, dy, dz, heading]
   // params boxes_b: (M, 7) [x, y, z, dx, dy, dz, heading]
   // params ans_overlap: (N, M)
@@ -61,9 +62,9 @@ std::vector<paddle::Tensor> boxes_overlap_bev_gpu(
   return {ans_overlap};
 }
 
-std::vector<paddle::Tensor> boxes_iou_bev_gpu(
-    const paddle::Tensor &boxes_a_tensor,
-    const paddle::Tensor &boxes_b_tensor) {
+std::vector<paddle::Tensor>
+boxes_iou_bev_gpu(const paddle::Tensor &boxes_a_tensor,
+                  const paddle::Tensor &boxes_b_tensor) {
   // params boxes_a: (N, 7) [x, y, z, dx, dy, dz, heading]
   // params boxes_b: (M, 7) [x, y, z, dx, dy, dz, heading]
   // params ans_overlap: (N, M)
@@ -135,7 +136,8 @@ std::vector<paddle::Tensor> nms_gpu(const paddle::Tensor &boxes,
   }
 
   num_to_keep_data[0] = num_to_keep;
-  if (cudaSuccess != cudaGetLastError()) printf("Error!\n");
+  if (cudaSuccess != cudaGetLastError())
+    printf("Error!\n");
 
   return {keep, num_to_keep_tensor};
 }

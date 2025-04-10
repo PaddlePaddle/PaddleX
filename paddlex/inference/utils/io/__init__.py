@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,23 +14,23 @@
 
 
 from .readers import (
-    ReaderType,
-    ImageReader,
-    VideoReader,
-    CSVReader,
-    PDFReader,
-    YAMLReader,
     AudioReader,
+    CSVReader,
+    ImageReader,
+    PDFReader,
+    ReaderType,
+    VideoReader,
+    YAMLReader,
 )
 from .writers import (
-    WriterType,
-    ImageWriter,
-    TextWriter,
-    JsonWriter,
     CSVWriter,
     HtmlWriter,
+    ImageWriter,
+    JsonWriter,
+    MarkdownWriter,
+    TextWriter,
+    VideoWriter,
+    WriterType,
     XlsxWriter,
     YAMLWriter,
-    VideoWriter,
-    MarkdownWriter,
 )

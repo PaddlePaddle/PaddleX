@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,17 @@
 # limitations under the License.
 
 
-import os, cv2
-from typing import Dict, List, Optional, Union, Tuple
+from typing import Dict, List, Tuple
 
 import numpy as np
-import PIL
+
+from .....utils.deps import class_requires_deps, is_dep_available
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 
+@class_requires_deps("opencv-contrib-python")
 class LetterResize(object):
     def __init__(
         self,

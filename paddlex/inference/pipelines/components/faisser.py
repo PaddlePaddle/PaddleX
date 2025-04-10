@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,16 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import pickle
 from pathlib import Path
-import faiss
+
 import numpy as np
 
 from ....utils import logging
-from ...utils.io import YAMLWriter, YAMLReader
+from ....utils.deps import class_requires_deps, is_dep_available
+from ...utils.io import YAMLReader, YAMLWriter
+
+if is_dep_available("faiss-cpu"):
+    import faiss
 
 
+@class_requires_deps("faiss-cpu")
 class IndexData:
     VECTOR_FN = "vector"
     VECTOR_SUFFIX = ".index"
@@ -164,6 +168,7 @@ class FaissIndexer:
         return preds
 
 
+@class_requires_deps("faiss-cpu")
 class FaissBuilder:
 
     SUPPORT_METRIC_TYPE = ("hamming", "IP", "L2")

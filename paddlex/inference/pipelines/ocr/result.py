@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,20 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-from pathlib import Path
-from typing import Dict
-import copy
 import math
 import random
+from pathlib import Path
+from typing import Dict
+
 import numpy as np
-import cv2
-import PIL
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
+
+from ....utils.deps import class_requires_deps, function_requires_deps, is_dep_available
 from ....utils.fonts import SIMFANG_FONT_FILE_PATH, create_font
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
+from ...common.result import BaseCVResult, JsonMixin
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 
+@class_requires_deps("opencv-contrib-python")
 class OCRResult(BaseCVResult):
     """OCR result"""
 
@@ -194,6 +197,7 @@ class OCRResult(BaseCVResult):
 
 
 # Adds a function comment according to Google Style Guide
+@function_requires_deps("opencv-contrib-python")
 def draw_box_txt_fine(
     img_size: tuple, box: np.ndarray, txt: str, font_path: str
 ) -> np.ndarray:

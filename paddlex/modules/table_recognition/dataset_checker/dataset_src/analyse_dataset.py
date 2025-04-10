@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 
 import os
 from collections import defaultdict
+
 from .....utils.file_interface import custom_open
 
 
@@ -31,7 +32,7 @@ def simple_analyse(dataset_path):
     """
     tags = ["train", "val", "test"]
     sample_cnts = defaultdict(int)
-    img_paths = defaultdict(list)
+    defaultdict(list)
     res = [None] * 6
 
     for tag in tags:

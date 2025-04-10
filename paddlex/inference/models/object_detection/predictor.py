@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,16 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, List, Sequence, Optional, Union, Tuple
+from typing import Any, List, Optional, Sequence, Tuple, Union
 
 import numpy as np
 
-from ....utils.func_register import FuncRegister
 from ....modules.object_detection.model_list import MODELS
+from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
-
-from ..common import StaticInfer
-from ..base import BasicPredictor
+from ..base import BasePredictor
 from .processors import (
     DetPad,
     DetPostProcess,
@@ -37,7 +35,7 @@ from .result import DetResult
 from .utils import STATIC_SHAPE_MODEL_LIST
 
 
-class DetPredictor(BasicPredictor):
+class DetPredictor(BasePredictor):
 
     entities = MODELS
 
@@ -142,11 +140,7 @@ class DetPredictor(BasicPredictor):
             pre_ops.insert(1, self.build_resize(self.img_size, False, 2))
 
         # build infer
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         # build postprocess op
         post_op = self.build_postprocess()
@@ -245,7 +239,7 @@ class DetPredictor(BasicPredictor):
         boxes = self.post_op(
             preds_list,
             datas,
-            threshold=threshold or self.threshold,
+            threshold=threshold if threshold is not None else self.threshold,
             layout_nms=layout_nms or self.layout_nms,
             layout_unclip_ratio=layout_unclip_ratio or self.layout_unclip_ratio,
             layout_merge_bboxes_mode=layout_merge_bboxes_mode

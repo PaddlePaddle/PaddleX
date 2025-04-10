@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,22 +13,19 @@
 # limitations under the License.
 
 
-import os
-import os.path as osp
-from typing import List, Sequence, Union, Optional, Tuple
+from typing import List, Optional, Sequence, Tuple, Union
 
-import re
 import numpy as np
-import cv2
-import math
-import json
-import tempfile
-import lazy_paddle
 
+from ....utils.deps import class_requires_deps, is_dep_available
 from ...utils.benchmark import benchmark
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class Scale:
     """Scale images."""
 
@@ -167,22 +164,16 @@ class CenterCrop:
 
         crop_imgs = []
         th, tw = self.target_size, self.target_size
-        if isinstance(imgs, lazy_paddle.Tensor):
-            h, w = imgs.shape[-2:]
+        for img in imgs:
+            h, w, _ = img.shape
+            assert (w >= self.target_size) and (
+                h >= self.target_size
+            ), "image width({}) and height({}) should be larger than crop size".format(
+                w, h, self.target_size
+            )
             x1 = int(round((w - tw) / 2.0)) if self.do_round else (w - tw) // 2
             y1 = int(round((h - th) / 2.0)) if self.do_round else (h - th) // 2
-            crop_imgs = imgs[:, :, y1 : y1 + th, x1 : x1 + tw]
-        else:
-            for img in imgs:
-                h, w, _ = img.shape
-                assert (w >= self.target_size) and (
-                    h >= self.target_size
-                ), "image width({}) and height({}) should be larger than crop size".format(
-                    w, h, self.target_size
-                )
-                x1 = int(round((w - tw) / 2.0)) if self.do_round else (w - tw) // 2
-                y1 = int(round((h - th) / 2.0)) if self.do_round else (h - th) // 2
-                crop_imgs.append(img[y1 : y1 + th, x1 : x1 + tw])
+            crop_imgs.append(img[y1 : y1 + th, x1 : x1 + tw])
         return crop_imgs
 
     def __call__(self, videos: List[np.ndarray]) -> List[np.ndarray]:
@@ -253,6 +244,7 @@ class Image2Array:
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class NormalizeVideo:
     """
     Normalize video frames by subtracting the mean and dividing by the standard deviation.

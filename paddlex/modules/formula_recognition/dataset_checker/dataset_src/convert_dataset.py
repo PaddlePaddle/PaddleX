@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,23 +13,24 @@
 # limitations under the License.
 
 
-import os
-import shutil
-import json
-import random
 import math
+import os
 import pickle
-from tqdm import tqdm
 from collections import defaultdict
-import imagesize
+
+from .....utils.deps import function_requires_deps, is_dep_available
 from .....utils.errors import ConvertFailedError
-from .....utils.logging import info, warning
+
+if is_dep_available("imagesize"):
+    import imagesize
+if is_dep_available("tqdm"):
+    from tqdm import tqdm
 
 
 def check_src_dataset(root_dir, dataset_type):
     """check src dataset format validity"""
     if dataset_type in ("FormulaRecDataset"):
-        anno_suffix = ".txt"
+        pass
     else:
         raise ConvertFailedError(
             message=f"数据格式转换失败！不支持{dataset_type}格式数据集。当前仅支持 FormulaRecDataset 格式。"
@@ -65,12 +66,12 @@ def convert_pkl_dataset(root_dir):
         txt2pickle(src_img_dir, src_anno_path, root_dir)
 
 
+@function_requires_deps("tqdm", "imagesize")
 def txt2pickle(images, equations, save_dir):
     phase = os.path.basename(equations).replace(".txt", "")
     save_p = os.path.join(save_dir, "latexocr_{}.pkl".format(phase))
     min_dimensions = (32, 32)
     max_dimensions = (672, 192)
-    max_length = 512
     data = defaultdict(lambda: [])
     pic_num = 0
     if images is not None and equations is not None:

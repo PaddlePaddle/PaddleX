@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,22 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List, Sequence, Tuple, Union, Optional
+from typing import List, Optional, Sequence, Tuple, Union
 
-import cv2
 import numpy as np
 from numpy import ndarray
 
-from ..common import Resize as CommonResize
-from ..common import Normalize as CommonNormalize
+from ....utils.deps import class_requires_deps, function_requires_deps, is_dep_available
 from ...common.reader import ReadImage as CommonReadImage
 from ...utils.benchmark import benchmark
+from ..common import Normalize as CommonNormalize
+from ..common import Resize as CommonResize
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 Boxes = List[dict]
 Number = Union[int, float]
 
 
-@benchmark.timeit
+@benchmark.timeit_with_options(name=None, is_read_operation=True)
+@class_requires_deps("opencv-contrib-python")
 class ReadImage(CommonReadImage):
     """Reads images from a list of raw image data or file paths."""
 
@@ -71,7 +75,7 @@ class ReadImage(CommonReadImage):
         if isinstance(img, np.ndarray):
             ori_img = img
             if self.format == "RGB":
-                img = img[:, :, ::-1]
+                img = cv2.cvtColor(ori_img, cv2.COLOR_BGR2RGB)
             return img, ori_img
         elif isinstance(img, str):
             blob = self._img_reader.read(img)
@@ -83,7 +87,7 @@ class ReadImage(CommonReadImage):
                 if blob.ndim != 3:
                     raise RuntimeError("Array is not 3-dimensional.")
                 # BGR to RGB
-                blob = blob[..., ::-1]
+                blob = cv2.cvtColor(blob, cv2.COLOR_BGR2RGB)
             return blob, ori_img
         else:
             raise TypeError(
@@ -127,27 +131,12 @@ class Resize(CommonResize):
 
 @benchmark.timeit
 class Normalize(CommonNormalize):
-    """Normalizes images in a list of dictionaries containing image data"""
-
-    def apply(self, img: ndarray) -> ndarray:
-        """Applies normalization to a single image."""
-        old_type = img.dtype
-        # XXX: If `old_type` has higher precision than float32,
-        # we will lose some precision.
-        img = img.astype("float32", copy=False)
-        img *= self.scale
-        img -= self.mean
-        img /= self.std
-        if self.preserve_dtype:
-            img = img.astype(old_type, copy=False)
-        return img
-
     def __call__(self, datas: List[dict]) -> List[dict]:
         """Normalizes images in a list of dictionaries. Iterates over each dictionary,
         applies normalization to the 'img' key, and returns the modified list.
         """
         for data in datas:
-            data["img"] = self.apply(data["img"])
+            data["img"] = self.norm(data["img"])
         return datas
 
 
@@ -326,6 +315,7 @@ def _get_3rd_point(a: ndarray, b: ndarray) -> ndarray:
     return third_pt
 
 
+@function_requires_deps("opencv-contrib-python")
 def get_affine_transform(
     center: ndarray,
     input_size: Union[Number, Tuple[Number, Number], ndarray],
@@ -383,6 +373,7 @@ def get_affine_transform(
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class WarpAffine:
     """Apply warp affine transformation to the image based on the given parameters.
 
@@ -443,7 +434,7 @@ class WarpAffine:
         if not self.keep_res:
             out_h = input_h // self.down_ratio
             out_w = input_w // self.down_ratio
-            trans_output = get_affine_transform(c, s, 0, [out_w, out_h])
+            get_affine_transform(c, s, 0, [out_w, out_h])
 
         return inp
 
@@ -630,7 +621,7 @@ def nms(boxes, iou_same=0.6, iou_diff=0.95):
         current = indices[0]
         current_box = boxes[current]
         current_class = current_box[0]
-        current_score = current_box[1]
+        current_box[1]
         current_coords = current_box[2:]
 
         selected_boxes.append(current)
@@ -753,7 +744,7 @@ class DetPostProcess:
             )
 
         if layout_nms:
-            filtered_boxes = []
+            pass
             ### Layout postprocess for NMS
             selected_indices = nms(boxes, iou_same=0.6, iou_diff=0.98)
             boxes = np.array(boxes[selected_indices])
@@ -806,6 +797,9 @@ class DetPostProcess:
                             )
                 boxes = boxes[keep_mask]
 
+        if boxes.size == 0:
+            return np.array([])
+
         if layout_unclip_ratio:
             if isinstance(layout_unclip_ratio, float):
                 layout_unclip_ratio = (layout_unclip_ratio, layout_unclip_ratio)
@@ -814,7 +808,7 @@ class DetPostProcess:
                     len(layout_unclip_ratio) == 2
                 ), f"The length of `layout_unclip_ratio` should be 2."
             elif isinstance(layout_unclip_ratio, dict):
-                pass 
+                pass
             else:
                 raise ValueError(
                     f"The type of `layout_unclip_ratio` must be float, Tuple[float, float] or  Dict[int, Tuple[float, float]], but got {type(layout_unclip_ratio)}."

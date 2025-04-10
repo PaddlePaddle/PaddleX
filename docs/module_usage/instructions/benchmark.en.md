@@ -133,7 +133,7 @@ After enabling the benchmark feature, the benchmark results will be automaticall
 Below is an example of the benchmark results obtained by running the example program in Section 2:
 
 ```
-                                               WarmUp Data
+                                               Warmup Data
 +-------+------------+-----------+----------------+------------------------+----------------------------+
 | Iters | Batch Size | Instances |      Type      | Avg Time Per Iter (ms) | Avg Time Per Instance (ms) |
 +-------+------------+-----------+----------------+------------------------+----------------------------+

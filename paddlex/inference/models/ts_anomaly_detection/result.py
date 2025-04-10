@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,15 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any
 import io
-import pandas as pd
-import matplotlib.pyplot as plt
+from typing import Any
+
 from PIL import Image
 
+from ....utils.deps import function_requires_deps, is_dep_available
 from ...common.result import BaseTSResult
 
+if is_dep_available("matplotlib"):
+    import matplotlib.pyplot as plt
+import pandas as pd
 
+
+@function_requires_deps("matplotlib")
 def visualize(forecast: pd.DataFrame) -> Image.Image:
     """
     Visualizes both the time series forecast and actual results, returning them as a Pillow image.
@@ -33,12 +38,18 @@ def visualize(forecast: pd.DataFrame) -> Image.Image:
     """
     plt.figure(figsize=(12, 6))
     forecast_columns = forecast.columns
-    index_name = forecast.index.name
+    forecast.index.name
     forecast.index = forecast.index.astype(str)
 
-    plt.step(forecast.index, forecast[forecast_columns[0]], where='post', label='Anomaly', color='red')
-    plt.title('Time Series Anomaly Detection')
-    plt.xlabel('Time')
+    plt.step(
+        forecast.index,
+        forecast[forecast_columns[0]],
+        where="post",
+        label="Anomaly",
+        color="red",
+    )
+    plt.title("Time Series Anomaly Detection")
+    plt.xlabel("Time")
     plt.ylabel(forecast_columns[0])
     plt.legend()
     plt.grid(True)
@@ -46,7 +57,7 @@ def visualize(forecast: pd.DataFrame) -> Image.Image:
     plt.xticks(rotation=45)
 
     buf = io.BytesIO()
-    plt.savefig(buf, bbox_inches='tight')
+    plt.savefig(buf, bbox_inches="tight")
     buf.seek(0)
     plt.close()
     image = Image.open(buf)
@@ -61,7 +72,7 @@ class TSAdResult(BaseTSResult):
         """apply"""
         anomaly = self["anomaly"]
         return {"res": visualize(anomaly)}
-    
+
     def _to_csv(self) -> Any:
         """
         Converts the anomaly detection results to a CSV format.

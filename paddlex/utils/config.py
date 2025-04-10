@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,12 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import copy
 import argparse
+import copy
+import os
+
 import yaml
+
 from . import logging
-from .errors import raise_key_not_found_error
 from .file_interface import custom_open
 
 __all__ = ["get_config"]
@@ -30,7 +31,7 @@ class AttrDict(dict):
         if key in self:
             return self[key]
         else:
-            raise raise_key_not_found_error(key, self)
+            raise AttributeError(key)
 
     def __setattr__(self, key, value):
         if key in self.__dict__:

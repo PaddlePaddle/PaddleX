@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,24 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os, sys
-from typing import Any, Dict, Optional, List
-import cv2
-import PIL
-import fitz
 import copy
 import math
-import random
-import tempfile
+import os
 import subprocess
-import numpy as np
+import tempfile
 from pathlib import Path
+from typing import List, Optional
+
+import numpy as np
+import PIL
 from PIL import Image, ImageDraw, ImageFont
 
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
 from ....utils import logging
-from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ....utils.deps import function_requires_deps, is_dep_available
 from ....utils.file_interface import custom_open
+from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ...common.result import BaseCVResult, JsonMixin
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+if is_dep_available("PyMuPDF"):
+    import fitz
 
 
 class FormulaRecResult(BaseCVResult):
@@ -199,12 +203,13 @@ def generate_pdf_file(
         if is_debug:
             subprocess.check_call(command, shell=True)
         else:
-            devNull = custom_open(os.devnull, "w")
+            custom_open(os.devnull, "w")
             subprocess.check_call(
                 command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True
             )
 
 
+@function_requires_deps("opencv-contrib-python")
 def crop_white_area(image: np.ndarray) -> Optional[List[int]]:
     """
     Finds and returns the bounding box of the non-white area in an image.
@@ -231,6 +236,7 @@ def crop_white_area(image: np.ndarray) -> Optional[List[int]]:
         return None
 
 
+@function_requires_deps("PyMuPDF", "opencv-contrib-python")
 def pdf2img(pdf_path: str, img_path: str, is_padding: bool = False):
     """
     Converts a single-page PDF to an image, optionally cropping white areas and adding padding.
@@ -326,6 +332,7 @@ def env_valid() -> bool:
             formula_img = pdf2img(pdf_file_path, img_file_path, is_padding=False)
 
 
+@function_requires_deps("opencv-contrib-python")
 def draw_box_txt_fine(img_size: tuple, box: list, txt: str, font_path: str):
     """
     Draw box text.

@@ -63,6 +63,10 @@
 #include "ultra_infer/runtime/backends/tvm/tvm_backend.h"
 #endif
 
+#ifdef ENABLE_OM_BACKEND
+#include "ultra_infer/runtime/backends/om/om_backend.h"
+#endif
+
 namespace ultra_infer {
 
 bool AutoSelectBackend(RuntimeOption &option) {
@@ -147,6 +151,8 @@ bool Runtime::Init(const RuntimeOption &_option) {
     CreateHorizonBackend();
   } else if (option.backend == Backend::TVM) {
     CreateTVMBackend();
+  } else if (option.backend == Backend::OMONNPU) {
+    CreateOMBackend();
   } else {
     std::string msg = Str(GetAvailableBackends());
     FDERROR << "The compiled UltraInfer only supports " << msg << ", "
@@ -394,6 +400,18 @@ void Runtime::CreatePorosBackend() {
                   "ENABLE_POROS_BACKEND=ON.");
 #endif
   FDINFO << "Runtime initialized with Backend::POROS in " << option.device
+         << "." << std::endl;
+}
+
+void Runtime::CreateOMBackend() {
+#ifdef ENABLE_OM_BACKEND
+  backend_ = utils::make_unique<OmBackend>();
+  FDASSERT(backend_->Init(option), "Failed to initialize om backend.");
+#else
+  FDASSERT(false, "OMBackend is not available, please compiled with ",
+           " ENABLE_OM_BACKEND=ON.");
+#endif
+  FDINFO << "Runtime initialized with Backend::OMONNPU in " << option.device
          << "." << std::endl;
 }
 

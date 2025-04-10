@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,11 +14,12 @@
 
 import copy
 from pathlib import Path
-from PIL import Image, ImageDraw
 from typing import Dict
-import copy
+
 import numpy as np
-from ...common.result import BaseCVResult, HtmlMixin, XlsxMixin, JsonMixin
+from PIL import Image, ImageDraw
+
+from ...common.result import BaseCVResult, HtmlMixin, JsonMixin, XlsxMixin
 
 
 class LayoutParsingResult(BaseCVResult, HtmlMixin, XlsxMixin):

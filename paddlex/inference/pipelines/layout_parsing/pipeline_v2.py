@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,22 +13,26 @@
 # limitations under the License.
 from __future__ import annotations
 
-from typing import Optional, Union, Tuple, Iterator
-import numpy as np
-import re
 import copy
+import re
+from typing import Any, Dict, Optional, Tuple, Union
+
+import numpy as np
 
 from ....utils import logging
+from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
+from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 from ..ocr.result import OCRResult
 from .result_v2 import LayoutParsingResultV2
-from .utils import get_single_block_parsing_res, get_sub_regions_ocr_res, gather_imgs
+from .utils import gather_imgs, get_single_block_parsing_res, get_sub_regions_ocr_res
 
 
+@pipeline_requires_extra("ocr")
 class LayoutParsingPipelineV2(BasePipeline):
     """Layout Parsing Pipeline V2"""
 
@@ -40,6 +44,7 @@ class LayoutParsingPipelineV2(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ) -> None:
         """Initializes the layout parsing pipeline.
 
@@ -47,13 +52,18 @@ class LayoutParsingPipelineV2(BasePipeline):
             config (Dict): Configuration dictionary containing various settings.
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
+            use_hpip (bool, optional): Whether to use the high-performance
+                inference plugin (HPIP) by default. Defaults to False.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
+                The default high-performance inference configuration dictionary.
+                Defaults to None.
         """
 
         super().__init__(
             device=device,
             pp_option=pp_option,
             use_hpip=use_hpip,
+            hpi_config=hpi_config,
         )
 
         self.inintial_predictor(config)
@@ -360,7 +370,6 @@ class LayoutParsingPipelineV2(BasePipeline):
             layout_det_res=layout_det_res,
             table_res_list=table_res_list,
             seal_res_list=seal_res_list,
-            imgs_in_doc=imgs_in_doc,
         )
 
         return parsing_res_list
@@ -443,9 +452,9 @@ class LayoutParsingPipelineV2(BasePipeline):
         seal_det_box_thresh: Union[float, None] = None,
         seal_det_unclip_ratio: Union[float, None] = None,
         seal_rec_score_thresh: Union[float, None] = None,
-        use_table_cells_ocr_results: bool = None,
-        use_e2e_wired_table_rec_model: bool = None,
-        use_e2e_wireless_table_rec_model: bool = None,
+        use_table_cells_ocr_results: bool = False,
+        use_e2e_wired_table_rec_model: bool = False,
+        use_e2e_wireless_table_rec_model: bool = True,
         **kwargs,
     ) -> LayoutParsingResultV2:
         """

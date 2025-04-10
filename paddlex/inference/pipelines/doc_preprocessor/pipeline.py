@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,17 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Optional, Union, List
-from scipy.ndimage import rotate
+from typing import Any, Dict, List, Optional, Union
+
 import numpy as np
-from ..base import BasePipeline
-from .result import DocPreprocessorResult
+
 from ....utils import logging
-from ...common.reader import ReadImage
+from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
+from ...common.reader import ReadImage
+from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
+from ..base import BasePipeline
+from ..components import rotate_image
+from .result import DocPreprocessorResult
 
 
+@pipeline_requires_extra("ocr")
 class DocPreprocessorPipeline(BasePipeline):
     """Doc Preprocessor Pipeline"""
 
@@ -34,6 +39,7 @@ class DocPreprocessorPipeline(BasePipeline):
         device: Optional[str] = None,
         pp_option: Optional[PaddlePredictorOption] = None,
         use_hpip: bool = False,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ) -> None:
         """Initializes the doc preprocessor pipeline.
 
@@ -41,10 +47,16 @@ class DocPreprocessorPipeline(BasePipeline):
             config (Dict): Configuration dictionary containing various settings.
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
+            use_hpip (bool, optional): Whether to use the high-performance
+                inference plugin (HPIP) by default. Defaults to False.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
+                The default high-performance inference configuration dictionary.
+                Defaults to None.
         """
 
-        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
+        super().__init__(
+            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+        )
 
         self.use_doc_orientation_classify = config.get(
             "use_doc_orientation_classify", True
@@ -66,25 +78,6 @@ class DocPreprocessorPipeline(BasePipeline):
 
         self.batch_sampler = ImageBatchSampler(batch_size=1)
         self.img_reader = ReadImage(format="BGR")
-
-    def rotate_image(self, image_array: np.ndarray, rotate_angle: float) -> np.ndarray:
-        """
-        Rotate the given image array by the specified angle.
-
-        Args:
-            image_array (np.ndarray): The input image array to be rotated.
-            rotate_angle (float): The angle in degrees by which to rotate the image.
-
-        Returns:
-            np.ndarray: The rotated image array.
-
-        Raises:
-            AssertionError: If rotate_angle is not in the range [0, 360).
-        """
-        assert (
-            rotate_angle >= 0 and rotate_angle < 360
-        ), "rotate_angle must in [0-360), but get {rotate_angle}."
-        return rotate(image_array, rotate_angle, reshape=True)
 
     def check_model_settings_valid(self, model_settings: Dict) -> bool:
         """
@@ -168,7 +161,7 @@ class DocPreprocessorPipeline(BasePipeline):
             if model_settings["use_doc_orientation_classify"]:
                 pred = next(self.doc_ori_classify_model(image_array))
                 angle = int(pred["label_names"][0])
-                rot_img = self.rotate_image(image_array, angle)
+                rot_img = rotate_image(image_array, angle)
             else:
                 angle = -1
                 rot_img = image_array

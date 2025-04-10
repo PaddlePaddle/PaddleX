@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,11 +17,10 @@ from os import PathLike
 from pathlib import Path
 from typing import Any, Dict, Optional, Protocol, Union, runtime_checkable
 
-from baidubce.auth.bce_credentials import BceCredentials
-from baidubce.bce_client_configuration import BceClientConfiguration
-from baidubce.services.bos.bos_client import BosClient
 from pydantic import BaseModel, Discriminator, SecretStr, TypeAdapter
 from typing_extensions import Annotated, Literal, assert_never
+
+from ....utils.deps import class_requires_deps
 
 __all__ = [
     "InMemoryStorageConfig",
@@ -123,9 +122,15 @@ class FileSystemStorage(Storage):
         return self._directory / key
 
 
+@class_requires_deps("bce-python-sdk")
 class BOS(Storage):
     def __init__(self, config: BOSConfig) -> None:
+        from baidubce.auth.bce_credentials import BceCredentials
+        from baidubce.bce_client_configuration import BceClientConfiguration
+        from baidubce.services.bos.bos_client import BosClient
+
         super().__init__()
+
         bos_cfg = BceClientConfiguration(
             credentials=BceCredentials(
                 config.ak.get_secret_value(), config.sk.get_secret_value()
