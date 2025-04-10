@@ -187,6 +187,20 @@ OLD_IR_TRT_CFG_SETTING = {
             ]
         ],
     },
+    "PP-YOLOE_plus_SOD-largesize-L": {
+        "enable_tensorrt_engine": OLD_IR_TRT_CFG_DEFAULT_SETTING,
+        "exp_disable_tensorrt_ops": [
+            [
+                "conv2d",
+                "fused_conv2d_add_act",
+                "swish",
+                "reduce_mean",
+                "softmax",
+                "layer_norm",
+                "gelu",
+            ]
+        ],
+    },
 }
 
 DISABLE_TRT_HALF_OPS_CONFIG = {
@@ -205,6 +219,13 @@ DISABLE_TRT_HALF_OPS_CONFIG = {
     "PP-YOLOE_plus_SOD-S": {"fused_conv2d_add_act", "softmax", "conv2d", "elementwise_mul", "matrix_multiply"},
     "BlazeFace-FPN-SSH": {"fused_conv2d_add_act"},
     "PP-YOLOE_plus-S_face": {"fused_conv2d_add_act", "conv2d", "multiply"},
+    "PP-ShiTuV2_det": {"conv2d", "depthwise_conv2d", "fused_conv2d_add_act", "matrix_multiply"},
+    "RT-DETR-H_layout_3cls": {"fused_conv2d_add_act", "elementwise_mul", "elementwise_add" ,"elementwise_div", "matrix_multiply", "layer_norm"},
+    "DETR-R50": {"fused_conv2d_add_act", "elementwise_mul", "elementwise_add", "elementwise_div", "matrix_multiply", "layer_norm"},
+    "RT-DETR-R50": {"fused_conv2d_add_act", "elementwise_mul", "elementwise_add", "elementwise_div", "matrix_multiply", "layer_norm"},
+    "YOLOX-M": {"fused_conv2d_add_act", "elementwise_mul", "elementwise_add", "scale"},
+    "YOLOv3-MobileNetV3": {"fused_conv2d_add_act", "elementwise_mul", "elementwise_add", "depthwise_conv2d", "elementwise_div"},
+    "PP-OCRv4_server_det":  {"fused_conv2d_add_act", "conv2d"},
 }
 
 ############ pir trt ############
@@ -221,8 +242,9 @@ PIR_TRT_CFG_SETTING = {
     "SegFormer-B3": {"optimization_level": 4, "workspace_size": 1 << 32},
     "SegFormer-B4": {"optimization_level": 4, "workspace_size": 1 << 32},
     "SegFormer-B5": {"optimization_level": 4, "workspace_size": 1 << 32},
-    "LaTeX_OCR_rec": {"disable_ops": ["pd_op.slice"]},
+    "LaTeX_OCR_rec": {"disable_ops": ["pd_op.slice", "pd_op.reshape"]},
     "PP-YOLOE_seg-S": {"disable_ops": ["pd_op.slice", "pd_op.bilinear_interp"]},
+    "PP-YOLOE_plus_SOD-largesize-L": {"disable_ops": ["pd_op.conv2d", "pd_op.fused_conv2d_add_act", "pd_op.swish", "pd_op.mean", "pd_op.softmax", "pd_op.layer_norm", "pd_op.gelu"]},
     "PP-FormulaNet-L": {
         "disable_ops": ["pd_op.full_with_tensor"],
         "workspace_size": 2 << 32,
@@ -243,6 +265,14 @@ PIR_TRT_CFG_SETTING = {
     "PP-YOLOE_plus_SOD-S": {"ops_run_float": {"pd_op.fused_conv2d_add_act", "pd_op.softmax", "pd_op.conv2d", "pd_op.multiply", "pd_op.matmul"}},
     "PicoDet_LCNet_x2_5_face": {"ops_run_float": {"pd_op.fused_conv2d_add_act", "pd_op.softmax", "pd_op.conv2d", "pd_op.multiply", "pd_op.matmul"}},
     "PP-YOLOE_plus-S_face": {"ops_run_float": {"pd_op.fused_conv2d_add_act", "pd_op.multiply", "pd_op.conv2d"}},
+    "PP-ShiTuV2_det": {"ops_run_float": {"pd_op.fused_conv2d_add_act", "pd_op.depthwise_conv2d", "pd_op.conv2d"}},
+    "RT-DETR-H_layout_3cls": {"ops_run_float": {"pd_op.matmul", "pd_op.conv2d", "pd_op.depthwise_conv2d", "pd_op.fused_conv2d_add_act", "pd_op.batch_norm_"}},
+    "DETR-R50": {"ops_run_float": {"pd_op.matmul", "pd_op.conv2d", "pd_op.fused_conv2d_add_act"}},
+    "RT-DETR-R50": {"ops_run_float": {"pd_op.matmul", "pd_op.conv2d", "pd_op.fused_conv2d_add_act"}},
+    "YOLOX-M": {"ops_run_float": {"pd_op.multiply", "pd_op.conv2d", "pd_op.fused_conv2d_add_act"}},
+    "YOLOv3-MobileNetV3": {"ops_run_float": {"pd_op.depthwise_conv2d", "pd_op.conv2d", "pd_op.fused_conv2d_add_act"}},
+    "PP-OCRv4_server_det":  {"ops_run_float": {"pd_op.conv2d", "pd_op.fused_conv2d_add_act"}},
+    "PP-YOLOE_seg-S": {"ops_run_float": {"pd_op.conv2d", "pd_op.fused_conv2d_add_act", "pd_op.conv2d_transpose", "pd_op.matmul"}},
 }
 
 
