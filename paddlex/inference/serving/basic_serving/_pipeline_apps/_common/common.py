@@ -27,7 +27,7 @@ if is_dep_available("opencv-contrib-python"):
 
 
 def prune_result(result: dict) -> dict:
-    KEYS_TO_REMOVE = ["input_path"]
+    KEYS_TO_REMOVE = ["input_path", "page_index"]
 
     def _process_obj(obj):
         if isinstance(obj, dict):
