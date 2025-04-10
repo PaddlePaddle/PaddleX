@@ -313,9 +313,9 @@ bool OpenVINOBackend::InitFromOnnx(const std::string &model_file,
   auto reader =
       paddle2onnx::OnnxReader(model_content.c_str(), model_content.size());
   if (reader.num_inputs != input_infos.size()) {
-    FDWARNING << "The number of input_names from OnnxReader:"
+    FDWARNING << "The number of input names from OnnxReader:"
               << reader.num_outputs
-              << " not equal to the number of input_names from OpenVINO:"
+              << " not equal to the number of input names from OpenVINO:"
               << output_infos.size() << "." << std::endl;
   }
   if (reader.num_inputs != inputs.size()) {
@@ -325,9 +325,9 @@ bool OpenVINOBackend::InitFromOnnx(const std::string &model_file,
     return false;
   }
   if (reader.num_outputs != output_infos.size()) {
-    FDWARNING << "The number of output_names from OnnxReader:"
+    FDWARNING << "The number of output names from OnnxReader:"
               << reader.num_outputs
-              << " not equal to the number of output_names from OpenVINO:"
+              << " not equal to the number of output names from OpenVINO:"
               << output_infos.size() << "." << std::endl;
   }
   if (reader.num_outputs != outputs.size()) {
