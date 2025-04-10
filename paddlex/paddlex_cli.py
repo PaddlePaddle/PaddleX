@@ -243,7 +243,7 @@ def install(args):
             package = "ultra-infer-python"
         elif device_type == "gpu":
             if get_cuda_version()[0] != 11:
-                sys.exit("CUDA version must be 11.x for GPU devices")
+                sys.exit("Currently, CUDA version must be 11.x for GPU devices.")
             package = "ultra-infer-gpu-python"
         elif device_type == "npu":
             package = "ultra-infer-npu-python"
