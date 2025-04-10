@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Register models and suites
-from .chunk_conformer import ChunkConformerModel, ChunkConformerRunner, register
+from .conformer import ChunkConformerModel, ChunkConformerRunner, register
 
 register()  # Activate registration
 
