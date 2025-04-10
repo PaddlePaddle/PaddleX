@@ -19,7 +19,7 @@ comments: true
 <tr>
 <td>PP-DocBee-2B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocBee-2B_infer.tar">推理模型</a></td>
 <td>4.2</td>
-<td rowspan="2">PP-DocBee 是PaddleMIX团队自研的一款专注于文档理解的多模态大模型，在中文文档理解任务上具有卓越表现。该模型通过近 500 万条文档理解类多模态数据集进行微调优化，各种数据集包括了通用VQA类、OCR类、图表类、text-rich文档类、数学和复杂推理类、合成数据类、纯文本数据等，并设置了不同训练数据配比。在学术界权威的几个英文文档理解评测榜单上，PP-DocBee基本都达到了同参数量级别模型的SOTA。在内部业务中文场景类的指标上，PP-DocBee也高于目前的热门开源和闭源模型。</td>
+<td rowspan="2">PP-DocBee 是飞桨团队自研的一款专注于文档理解的多模态大模型，在中文文档理解任务上具有卓越表现。该模型通过近 500 万条文档理解类多模态数据集进行微调优化，各种数据集包括了通用VQA类、OCR类、图表类、text-rich文档类、数学和复杂推理类、合成数据类、纯文本数据等，并设置了不同训练数据配比。在学术界权威的几个英文文档理解评测榜单上，PP-DocBee基本都达到了同参数量级别模型的SOTA。在内部业务中文场景类的指标上，PP-DocBee也高于目前的热门开源和闭源模型。</td>
 </tr>
 <tr>
 <td>PP-DocBee-7B</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/PP-DocBee-7B_infer.tar">推理模型</a></td>
@@ -48,7 +48,7 @@ for res in results:
 运行后，得到的结果为：
 
 ```bash
-{'res': {'image': '/ChartQA/PaddleX_refactor/PaddleMIX/paddlemix/demo_images/medal_table.png', 'query': '识别这份表格的内容', 'result': '| 名次 | 国家/地区 | 金牌 | 银牌 | 铜牌 | 奖牌总数 |\n| --- | --- | --- | --- | --- | --- |\n| 1 | 中国（CHN） | 48 | 22 | 30 | 100 |\n| 2 | 美国（USA） | 36 | 39 | 37 | 112 |\n| 3 | 俄罗斯（RUS） | 24 | 13 | 23 | 60 |\n| 4 | 英国（GBR） | 19 | 13 | 19 | 51 |\n| 5 | 德国（GER） | 16 | 11 | 14 | 41 |\n| 6 | 澳大利亚（AUS） | 14 | 15 | 17 | 46 |\n| 7 | 韩国（KOR） | 13 | 11 | 8 | 32 |\n| 8 | 日本（JPN） | 9 | 8 | 8 | 25 |\n| 9 | 意大利（ITA） | 8 | 9 | 10 | 27 |\n| 10 | 法国（FRA） | 7 | 16 | 20 | 43 |\n| 11 | 荷兰（NED） | 7 | 5 | 4 | 16 |\n| 12 | 乌克兰（UKR） | 7 | 4 | 11 | 22 |\n| 13 | 肯尼亚（KEN） | 6 | 4 | 6 | 16 |\n| 14 | 西班牙（ESP） | 5 | 11 | 3 | 19 |\n| 15 | 牙买加（JAM） | 5 | 4 | 2 | 11 |\n'}}
+{'res': {'image': 'medal_table.png', 'query': '识别这份表格的内容', 'result': '| 名次 | 国家/地区 | 金牌 | 银牌 | 铜牌 | 奖牌总数 |\n| --- | --- | --- | --- | --- | --- |\n| 1 | 中国（CHN） | 48 | 22 | 30 | 100 |\n| 2 | 美国（USA） | 36 | 39 | 37 | 112 |\n| 3 | 俄罗斯（RUS） | 24 | 13 | 23 | 60 |\n| 4 | 英国（GBR） | 19 | 13 | 19 | 51 |\n| 5 | 德国（GER） | 16 | 11 | 14 | 41 |\n| 6 | 澳大利亚（AUS） | 14 | 15 | 17 | 46 |\n| 7 | 韩国（KOR） | 13 | 11 | 8 | 32 |\n| 8 | 日本（JPN） | 9 | 8 | 8 | 25 |\n| 9 | 意大利（ITA） | 8 | 9 | 10 | 27 |\n| 10 | 法国（FRA） | 7 | 16 | 20 | 43 |\n| 11 | 荷兰（NED） | 7 | 5 | 4 | 16 |\n| 12 | 乌克兰（UKR） | 7 | 4 | 11 | 22 |\n| 13 | 肯尼亚（KEN） | 6 | 4 | 6 | 16 |\n| 14 | 西班牙（ESP） | 5 | 11 | 3 | 19 |\n| 15 | 牙买加（JAM） | 5 | 4 | 2 | 11 |\n'}}
 ```
 运行结果参数含义如下：
 - `image`: 表示输入待预测图像的路径
