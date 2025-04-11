@@ -379,7 +379,7 @@ class RepositoryGroupInstaller(object):
             if req.name in repo_pkgs:
                 # Skip repo packages
                 continue
-            elif req.name in (
+            elif req.name.replace("_", "-") in (
                 "opencv-python",
                 "opencv-contrib-python",
                 "opencv-python-headless",
@@ -392,7 +392,7 @@ class RepositoryGroupInstaller(object):
                 # HACK
                 line_s = "albumentations @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/albumentations-1.4.10%2Bpdx-py3-none-any.whl"
                 line_s += "\nalbucore @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/albucore-0.0.13%2Bpdx-py3-none-any.whl"
-            elif req.name in ("nuscenes-devkit", "nuscenes_devkit"):
+            elif req.name.replace("_", "-") == "nuscenes-devkit":
                 # HACK
                 line_s = "nuscenes-devkit @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/nuscenes_devkit-1.1.11%2Bpdx-py3-none-any.whl"
             elif req.name == "imgaug":
