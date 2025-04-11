@@ -438,6 +438,8 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
           backend: tensorrt
   ```
 
+  </details>
+
 #### (2) 修改 TensorRT 的动态形状配置
 
   ##### 通用图像分类产线修改动态形状配置：
