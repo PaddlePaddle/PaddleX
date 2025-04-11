@@ -4,7 +4,7 @@ comments: true
 
 # PaddleX 高性能推理指南
 
-在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速。本文档将首先介绍高性能推理插件的安装和使用方式，然后列举目前支持使用高性能推理插件的产线与模型。
+在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在通过自动配置和多后端推理功能，显著提高模型推理速度。
 
 ## 目录
 
@@ -198,7 +198,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 <tbody>
 <tr>
 <td><code>auto_config</code></td>
-<td>是否启用安全自动配置模式，<code>True</code>为启用安全自动配置模式，<code>False</code>为启用无限制手动配置模式。</td>
+<td>是否启用安全自动配置模式。<br /><code>True</code>为启用安全自动配置模式，<code>False</code>为启用无限制手动配置模式。</td>
 <td><code>bool</code></td>
 <td><code>True</code></td>
 </tr>
