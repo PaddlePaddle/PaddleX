@@ -30,14 +30,14 @@ comments: true
 
 <table>
   <tr>
-    <th>处理器架构</th>
     <th>操作系统</th>
+    <th>处理器架构</th>
     <th>设备类型</th>
     <th>Python 版本</th>
   </tr>
   <tr>
+    <td rowspan="5">Linux</td>
     <td rowspan="4">x86-64</td>
-    <td rowspan="4">Linux</td>
   </tr>
   <tr>
     <td>CPU</td>
@@ -52,10 +52,7 @@ comments: true
     <td>3.10</td>
   </tr>
   <tr>
-    <td rowspan="4">aarch64</td>
-    <td rowspan="4">Linux</td>
-  </tr>
-  <tr>
+    <td>aarch64</td>
     <td>NPU</td>
     <td>3.10</td>
   </tr>
@@ -102,7 +99,7 @@ comments: true
 
 2. NPU 设备的使用说明参考 [昇腾 NPU 高性能推理教程](../practical_tutorials/high_performance_npu_tutorial.md)。
 
-3. Windows只支持基于 Docker 安装和使用高性能推理插件。
+3. Windows 只支持基于 Docker 安装和使用高性能推理插件。
 
 ### 1.2 启用高性能推理插件
 
@@ -168,7 +165,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
 ## 2. 进阶使用方法
 
-本节介绍高性能推理的进阶使用方法，适合具有丰富经验的用户。用户可以参照配置说明和示例，根据自身需求自定义使用高性能推理。接下来将详细介绍各个部分。
+本节介绍高性能推理的进阶使用方法，适合具有丰富经验的用户。用户可以参照配置说明和示例，根据自身需求自定义使用高性能推理。接下来将对进阶使用方法进行详细介绍。
 
 ### 2.1 高性能推理工作模式
 
@@ -233,7 +230,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
   </tr>
   <tr>
     <td><code>paddle</code></td>
-    <td>Paddle Inference 推理引擎，同时支持 Paddle Inference TensorRT 子图引擎的方式提升模型的 GPU 推理性能。</td>
+    <td>Paddle Inference 推理引擎，支持 Paddle Inference TensorRT 子图引擎的方式提升模型的 GPU 推理性能。</td>
     <td>CPU, GPU</td>
   </tr>
   <tr>
