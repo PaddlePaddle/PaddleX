@@ -13,8 +13,8 @@ comments: true
   - [1.2 启用高性能推理插件](#1.2-启用高性能推理插件)
 - [2. 进阶使用方法](#2.-进阶使用方法)
   - [2.1 修改高性能推理配置](#2.1-修改高性能推理配置)
-  - [2.2 二次开发高性能推理插件](#2.2-二次开发高性能推理插件)
-- [3. 支持使用高性能推理插件的产线与模型](#3.-支持使用高性能推理插件的产线与模型)
+  - [2.2 自定义编译高性能推理插件](#2.2-自定义编译高性能推理插件)
+- [3. 常见问题](#3.-常见问题)
 
 ## 1. 基础使用方法
 
@@ -63,7 +63,9 @@ paddlex --install hpi-gpu
 
 ### 1.2 启用高性能推理插件
 
-对于 PaddleX CLI，指定 `--use_hpip`，即可启用高性能推理插件。以通用图像分类产线为例：
+对于 PaddleX CLI，指定 `--use_hpip`，即可启用高性能推理插件。以通用图像分类产线和图像分类模块为例：
+
+通用图像分类产线：
 
 ```bash
 paddlex \
@@ -71,6 +73,18 @@ paddlex \
     --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
     --device gpu:0 \
     --use_hpip
+```
+
+图像分类模块：
+
+```bash
+python main.py \
+    -c paddlex/configs/modules/image_classification/ResNet18.yaml \
+    -o Global.mode=predict \
+    -o Predict.model_dir=None \
+    -o Predict.input=https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
+    -o Global.device=gpu:0 \
+    -o Predict.use_hpip=True
 ```
 
 对于 PaddleX Python API，启用高性能推理插件的方法类似。以通用图像分类产线和图像分类模块为例：
@@ -109,169 +123,332 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
 ### 2.1 修改高性能推理配置
 
-PaddleX 结合模型信息与运行环境信息为每个模型提供默认的高性能推理配置，其中包括推理后端和推理后端的配置。这些默认配置经过精心准备，以便在数个常见场景中可用，且能够取得较优的性能。因此，通常用户可能并不用关心如何这些配置的具体细节。
+高性能推理配置默认使用产线配置文件，可以通过修改产线配置文件、传递CLI或Python API参数中的 `hpi_config` 字段内容来修改配置。传递CLI或Python API参数将覆盖产线配置文件的设置。
 
-然而，由于实际部署环境与需求的多样性，使用默认配置可能无法在特定场景获取理想的性能，甚至可能出现推理失败的情况。对于默认配置无法满足要求的情形，用户可以手动调整配置。以下列举两种常见的情形：
+常用高性能推理配置包含以下字段：
 
-- 更换推理后端：
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+<th>参数类型</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>auto_config</code></td>
+<td>是否启用自动配置模式</td>
+<td><code>bool</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+  <td><code>backend</code></td>
+  <td>如果非None，可以用于指定要使用的推理后端。在手动配置模式下，不能为None。</td>
+  <td><code>str | None</code></td>
+  <td><code>None</code></td>
+</tr>
+<tr>
+  <td><code>backend_config</code></td>
+  <td>如果非None，则可以覆盖推理后端的默认配置项。</td>
+  <td><code>dict | None</code></td>
+  <td><code>None</code></td>
+</tr>
+<tr>
+  <td><code>auto_paddle2onnx</code></td>
+  <td>是否启用模型格式自动转换功能。高性能推理插件自动将模型转换为 ONNX 格式后用推理引擎推理。在需要的时候（例如用户指定了必须使用ONNX格式模型的推理后端，或者paddlex经过分析认为使用这样的后端能取得更好的推理性能）将Paddle格式模型自动转换为ONNX格式模型，转换得到的ONNX格式模型存储在原始模型目录中。此功能仅在安装了Paddle2ONNX插件时生效。</td>
+  <td><code>bool</code></td>
+  <td><code>True</code></td>
+</tr>
+</tbody>
+</table>
 
-    对于模型产线，通过在产线 yaml 中增加 `hpi_params` 字段，即可更换推理后端，以通用图像分类产线的 `image_classification.yaml` 为例：
+`backend` 可选值如下表所示：
 
-    ```yaml
-      ...
+<table>
+  <tr>
+    <th>选项</th>
+    <th>描述</th>
+    <th>支持设备</th>
+  </tr>
+  <tr>
+    <td><code>openvino</code></td>
+    <td><a href="https://github.com/openvinotoolkit/openvino">OpenVINO</a>，Intel 提供的深度学习推理工具，优化了多种 Intel 硬件上的模型推理性能。</td>
+    <td>CPU</td>
+  </tr>
+  <tr>
+    <td><code>onnxruntime</code></td>
+    <td><a href="https://onnxruntime.ai/">ONNX Runtime</a>，跨平台、高性能的推理引擎。</td>
+    <td>CPU, GPU</td>
+  </tr>
+  <tr>
+    <td><code>tensorrt</code></td>
+    <td><a href="https://developer.nvidia.com/tensorrt">TensorRT</a>，NVIDIA 提供的高性能深度学习推理库，针对 NVIDIA GPU 进行优化以提升速度。</td>
+    <td>GPU</td>
+  </tr>
+  <tr>
+    <td><code>om</code></td>
+    <td></td>
+    <td>NPU</td>
+  </tr>
+</table>
+
+`backend_config` 根据不同后端有不同的可选值，如下表所示：
+
+<table>
+  <tr>
+    <th>后端</th>
+    <th>可选值</th>
+  </tr>
+  <tr>
+    <td><code>openvino</code></td>
+    <td><code>cpu_num_threads</code>：CPU推理使用的逻辑处理器数量。默认为<code>8</code>。</td>
+  </tr>
+  <tr>
+    <td><code>onnxruntime</code></td>
+    <td><code>cpu_num_threads</code>：CPU推理时算子内部的并行计算线程数。默认为<code>8</code>。</td>
+  </tr>
+  <tr>
+    <td><code>tensorrt</code></td>
+    <td>
+      <code>precision</code>：使用的精度，<code>fp16</code>或<code>fp32</code>。默认为<code>fp32</code>。
+      <code>dynamic_shapes</code>：动态形状。
+    </td>
+  </tr>
+  <tr>
+    <td><code>om</code></td>
+    <td>暂无</td>
+  </tr>
+</table>
+
+PaddleX 结合模型信息与运行环境信息为每个模型提供默认的高性能推理配置，其中包括推理后端和推理后端的配置。这些默认配置经过精心准备，以便在数个常见场景中可用，且能够取得较优的性能。因此，通常用户可能并不需要关心这些配置的具体细节。
+
+然而，由于实际部署环境与需求的多样性，对于默认配置无法满足要求的情形，用户可以手动调整配置。例如两种常见的情形：
+
+- 更换推理后端。
+
+  模型产线更换推理后端，以通用OCR产线为例：
+
+  <details><summary>👉 <b>1. 修改产线配置文件方式（点击展开）</b></summary>
+
+  ```yaml
+  # 支持在不同层级增加配置以实现不同粒度的控制
+  # 对于`hpi_config`，子模块或子产线可以覆盖上级配置的顶层字段
+  # 使用此方式可以实现“仅产线中的某个子产线/子模块使用高性能推理”
+
+  pipeline_name: OCR
+
+  text_type: general
+
+  use_doc_preprocessor: True
+  use_textline_orientation: True
+
+  SubPipelines:
+    DocPreprocessor:
+      pipeline_name: doc_preprocessor
+      use_doc_orientation_classify: True
+      use_doc_unwarping: True
+      # 当前子产线中的子模块默认启用高性能推理
+      use_hpip: True
+      # 当前子产线中的子模块默认使用如下高性能推理配置
+      hpi_config:
+          auto_config: False
+          backend: onnxruntime
       SubModules:
-        ImageClassification:
-          ...
-          hpi_params:
-            config:
-              selected_backends:
-                cpu: openvino # 可选：paddle_infer, openvino, onnx_runtime
-                gpu: paddle_infer # 可选：paddle_infer, onnx_runtime, tensorrt
-              backend_config:
-                # Paddle Inference 后端配置
-                paddle_infer:
-                  enable_trt: True # 可选：True, False
-                  trt_precision: FP16 # 当 enable_trt 为 True 时，可选：FP32, FP16
-                # TensorRT 后端配置
-                tensorrt:
-                  precision: FP32 # 可选：FP32, FP16
-      ...
-    ```
+        DocOrientationClassify:
+          module_name: doc_text_orientation
+          model_name: PP-LCNet_x1_0_doc_ori
+          model_dir: null
+          # 当前子模块不启用高性能推理
+          use_hpip: False
+        DocUnwarping:
+          module_name: image_unwarping
+          model_name: UVDoc
+          model_dir: null
+          # 当前子模块使用如下高性能推理配置
+          hpi_config:
+              backend: tensorrt
 
-    对于单功能模块，通过传入 `hpi_params` 参数，即可更换推理后端，以图像分类模块为例：
+  SubModules:
+    TextDetection:
+      module_name: text_detection
+      model_name: PP-OCRv4_mobile_det
+      model_dir: null
+      limit_side_len: 960
+      limit_type: max
+      thresh: 0.3
+      box_thresh: 0.6
+      unclip_ratio: 2.0
+      # 当前子模块启用高性能推理
+      use_hpip: True
+      # 当前子模块使用如下高性能推理配置
+      hpi_config:
+          auto_config: False
+          backend: onnxruntime
+    TextLineOrientation:
+      module_name: textline_orientation
+      model_name: PP-LCNet_x0_25_textline_ori
+      model_dir: null
+      batch_size: 6
+    TextRecognition:
+      module_name: text_recognition
+      model_name: PP-OCRv4_mobile_rec
+      model_dir: null
+      batch_size: 6
+      score_thresh: 0.0
+  ```
 
-    ```python
-    from paddlex import create_model
+  </details>
+  <br />
+  <details><summary>👉 <b>2. CLI传参方式（点击展开）</b></summary>
 
-    model = create_model(
-        "ResNet18",
-        device="gpu",
-        use_hpip=True,
-        hpi_params={
-            "config": {
-                "selected_backends": {"cpu": "openvino", "gpu": "paddle_infer"},
-                "backend_config": {"paddle_infer": {"enable_trt": True, "trt_precision": "FP16"}, "tensorrt": {"precision": "FP32"}}
-            }
-        }
-    )
+  ```bash
+  paddlex \
+      --pipeline image_classification \
+      --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
+      --device gpu:0 \
+      --use_hpip \
+      --hpi_config '{"auto_config": False, "backend": "onnxruntime"}'
+  ```
 
-    output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg")
-    ```
+  </details>
+  <br />
+  <details><summary>👉 <b>3. Python API传参方式（点击展开）</b></summary>
 
-    目前所有可选的推理后端如下：
+  ```python
+  from paddlex import create_pipeline
 
-    * `paddle_infer`：Paddle Inference 推理引擎。支持 CPU 和 GPU。相比 PaddleX 快速推理，高性能推理插件支持以集成 TensorRT 子图的方式提升模型的 GPU 推理性能。
-    * `openvino`：[OpenVINO](https://github.com/openvinotoolkit/openvino)，Intel 提供的深度学习推理工具，优化了多种 Intel 硬件上的模型推理性能。仅支持 CPU。高性能推理插件自动将模型转换为 ONNX 格式后用该引擎推理。
-    * `onnx_runtime`：[ONNX Runtime](https://onnxruntime.ai/)，跨平台、高性能的推理引擎。支持 CPU 和 GPU。高性能推理插件自动将模型转换为 ONNX 格式后用该引擎推理。
-    * `tensorrt`：[TensorRT](https://developer.nvidia.com/tensorrt)，NVIDIA 提供的高性能深度学习推理库，针对 NVIDIA GPU 进行优化以提升速度。仅支持 GPU。高性能推理插件自动将模型转换为 ONNX 格式后用该引擎推理。
+  pipeline = create_pipeline(
+      pipeline="OCR",
+      device="gpu",
+      use_hpip=True,
+      hpi_config={"auto_config": False, "backend": "onnxruntime"}
+  )
+  ```
+
+  </details>
+  <br />
+
+  单功能模块更换推理后端，以图像分类模块为例：
+
+  <details><summary>👉 <b>1. 修改产线配置文件方式（点击展开）</b></summary>
+
+  ```yaml
+  # paddlex/configs/modules/image_classification/ResNet18.yaml
+  ...
+  Predict:
+    ...
+    use_hpip: True
+    hpi_config:
+        auto_config: False
+        backend: onnxruntime
+    ...
+  ...
+  ```
+
+  </details>
+  <br />
+  <details><summary>👉 <b>2. CLI传参方式（点击展开）</b></summary>
+
+  ```bash
+  python main.py \
+      -c paddlex/configs/modules/image_classification/ResNet18.yaml \
+      -o Global.mode=predict \
+      -o Predict.model_dir=None \
+      -o Predict.input=https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
+      -o Global.device=gpu:0 \
+      -o Predict.use_hpip=True \
+      -o Predict.hpi_config='{"auto_config": False, "backend": "onnxruntime"}'
+  ```
+
+  </details>
+  <br />
+  <details><summary>👉 <b>3. Python API传参方式（点击展开）</b></summary>
+
+  ```python
+  from paddlex import create_model
+
+  model = create_model(
+      model_name="ResNet18",
+      device="gpu",
+      use_hpip=True,
+      hpi_config={"auto_config": False, "backend": "onnxruntime"}
+  )
+  ```
+
+  </details>
+  <br />
 
 - 修改 Paddle Inference 或 TensorRT 的动态形状配置：
 
-  动态形状是 TensorRT 延迟指定部分或全部张量维度直到运行时的能力。当默认的动态形状配置无法满足需求（例如，模型可能需要范围外的输入形状），用户需要修改相应的配置：
+  动态形状是 TensorRT 延迟指定部分或全部张量维度直到运行时的能力。当默认的动态形状配置无法满足需求（例如，模型可能需要范围外的输入形状），用户需要修改相应的配置。
 
-  对于模型产线，在产线 yaml 中的 `hpi_params` 字段中新增`trt_dynamic_shapes` 或 `dynamic_shapes` 字段，以通用图像分类产线的 `image_classification.yaml` 为例：
+  下面以修改产线配置文件方式为例，CLI传参和Python API传参方式参考更换推理后端中的例子。
+
+  模型产线以通用图像分类产线为例：
+
+  <details><summary>👉 <b>点击展开</b></summary>
 
   ```yaml
     ...
     SubModules:
       ImageClassification:
         ...
-        hpi_params:
-          config:
-            selected_backends:
-              cpu: openvino
-              gpu: paddle_infer
-            backend_config:
-              # Paddle Inference 后端配置
-              paddle_infer:
-                enable_trt: True
-                trt_precision: FP16
-                trt_dynamic_shapes:
-                  x:
-                    - [1, 3, 300, 300]
-                    - [4, 3, 300, 300]
-                    - [32, 3, 1200, 1200]
-              # TensorRT 后端配置
-              tensorrt:
-                precision: FP32
-                dynamic_shapes:
-                  x:
-                    - [1, 3, 300, 300]
-                    - [4, 3, 300, 300]
-                    - [32, 3, 1200, 1200]
-                ...
+        hpi_config:
+          auto_config: False
+          backend: tensorrt
+          backend_config:
+            precision: fp32
+            dynamic_shapes:
+              x:
+                - [1, 3, 300, 300]
+                - [4, 3, 300, 300]
+                - [32, 3, 1200, 1200]
+              ...
     ...
   ```
 
-  对于单功能模块，在 `hpi_params` 参数中新增 `trt_dynamic_shapes` 或 `dynamic_shapes` 字段，以图像分类模块为例：
+  </details>
+  <br />
 
-  ```python
-  from paddlex import create_model
+  单功能模块以图像分类模块为例：
+  <details><summary>👉 <b>点击展开</b></summary>
 
-  model = create_model(
-        "ResNet18",
-        device="gpu",
-        use_hpip=True,
-        hpi_params={
-            "config": {
-                "selected_backends": {"cpu": "openvino", "gpu": "paddle_infer"},
-                "backend_config": {
-                    # Paddle Inference 后端配置
-                    "paddle_infer": {
-                        "enable_trt": True,
-                        "trt_precision": "FP16",
-                        "trt_dynamic_shapes": {
-                            "x": [
-                                [1, 3, 300, 300],
-                                [4, 3, 300, 300],
-                                [32, 3, 1200, 1200]
-                            ]
-                        }
-                    },
-                    # TensorRT 后端配置
-                    "tensorrt": {
-                        "precision": "FP32",
-                        "dynamic_shapes": {
-                            "x": [
-                                [1, 3, 300, 300],
-                                [4, 3, 300, 300],
-                                [32, 3, 1200, 1200]
-                            ]
-                        }
-                    }
-                }
-            }
-        }
-    )
-
-  output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg")
+  ```yaml
+  # paddlex/configs/modules/image_classification/ResNet18.yaml
+  ...
+  Predict:
+    ...
+    use_hpip: True
+    hpi_config:
+        auto_config: False
+        backend: onnxruntime
+        backend_config:
+          precision: fp32
+          dynamic_shapes:
+            x:
+              - [1, 3, 300, 300]
+              - [4, 3, 300, 300]
+              - [32, 3, 1200, 1200]
+    ...
+  ...
   ```
 
-  在 `trt_dynamic_shapes` 或 `dynamic_shapes` 中，需要为每一个输入张量指定动态形状，格式为：`{输入张量名称}: [{最小形状}, [{最优形状}], [{最大形状}]]`。有关最小形状、最优形状以及最大形状的相关介绍及更多细节，请参考 [TensorRT 官方文档](https://docs.nvidia.com/deeplearning/tensorrt/developer-guide/index.html#work_dynamic_shapes)。
+  </details>
+  <br />
+
+  在 `dynamic_shapes` 中，需要为每一个输入张量指定动态形状，格式为：`{输入张量名称}: [{最小形状}, [{最优形状}], [{最大形状}]]`。有关最小形状、最优形状以及最大形状的相关介绍及更多细节，请参考 [TensorRT 官方文档](https://docs.nvidia.com/deeplearning/tensorrt/developer-guide/index.html#work_dynamic_shapes)。
 
   在完成修改后，请删除模型目录中的缓存文件（`shape_range_info.pbtxt` 与 `trt_serialized` 开头的文件）。
 
-### 2.2 二次开发高性能推理插件
+  关于修改 Paddle-TensorRT 的动态形状的具体方法，请参考 [PaddleX单模型Python脚本使用说明: 4. 推理后端设置](../module_usage/instructions/model_python_API.md)。
 
-我们已经提供了完善的配置，通常情况下不建议进行二次开发。如果有以下需求，确实需要进行二次开发，请务必在充分评估后再进行。如以下场景：
+### 2.2 自定义编译高性能推理插件
 
-- 自定义数据预处理或后处理逻辑。
-- 实现特定算子的优化。
-- 支持特殊的输入/输出格式。
-- 集成第三方加速库。
-- ......
+高性能推理插件 `ultra-infer` 位于 `PaddleX/libs/ultra-infer` 目录。编译脚本位于 `PaddleX/libs/ultra-infer/scripts/linux/set_up_docker_and_build_py.sh` ，编译默认编译GPU版本和包含 `OpenVINO`、`TensorRT`、`ONNX Runtime` 三种推理后端的 `ultra-infer`。
 
-二次开发高性能推理插件流程如下：
-
-#### a. 按需修改 `ultra-infer` 代码
-
-`ultra-infer`，是高性能推理功能的底层依赖，包含前后处理加速和多后端推理。位于 `libs` 目录下。
-
-#### b. 安装 `ultra-infer`
-
-对 `ultra-infer` 修改完成后，通过如下方式安装 `ultra-infer`。
-
-`ultra-infer` 需要编译whl包，编译脚本位于 `PaddleX/libs/ultra-infer/scripts/linux/set_up_docker_and_build_py.sh` ，编译默认编译GPU版本和包含 `Paddle Inference`、`OpenVINO`、`TensorRT`、`ONNX Runtime` 四种推理后端的 `ultra-infer`。
+编译示例：
 
 ```shell
 # 编译
@@ -314,588 +491,30 @@ python -m pip install ../../python/dist/ultra_infer*.whl
             <td>是否编译集成ONNX Runtime后端，默认 <code>ON</code></td>
         </tr>
         <tr>
-            <td>ENABLE_PADDLE_BACKEND</td>
-            <td>是否编译集成Paddle Inference后端，默认 <code>ON</code></td>
-        </tr>
-        <tr>
             <td>ENABLE_TRT_BACKEND</td>
-            <td>是否编译集成TensorRT后端，默认 <code>ON</code></td>
+            <td>是否编译集成TensorRT后端（仅支持GPU），默认 <code>ON</code></td>
         </tr>
         <tr>
             <td>ENABLE_OPENVINO_BACKEND</td>
-            <td>是否编译集成OpenVINO后端(仅支持CPU)，默认 <code>ON</code></td>
-        </tr>
-        <tr>
-            <td>ENABLE_VISION</td>
-            <td>是否编译集成视觉模型的部署模块，默认 <code>ON</code></td>
-        </tr>
-        <tr>
-            <td>ENABLE_TEXT</td>
-            <td>是否编译集成文本NLP模型的部署模块，默认 <code>ON</code></td>
+            <td>是否编译集成OpenVINO后端（仅支持CPU），默认 <code>ON</code></td>
         </tr>
     </tbody>
 </table>
 
-## 3. 支持使用高性能推理插件的产线与模型
+## 3. 常见问题
 
-<table>
-  <tr>
-    <th>模型产线</th>
-    <th>单功能模块</th>
-    <th>支持数量/模型总数</th>
-    <th>不支持模型</th>
-  </tr>
+1. 为什么使用高性能推理功能后，推理速度还是与普通推理的速度差不多？
 
-  <tr>
-    <td rowspan="6">通用OCR</td>
-    <tr>
-      <td>文档图像方向分类（可选）</td>
-      <td><b>1</b> / 1 </td>
-      <td>无 </td>
-    </tr>
-  </tr>
+- 高性能推理通过智能选择后端来加速推理，但由于模型复杂性或不支持算子等情况，部分模型可能无法使用加速后端（如OpenVINO、TensorRT等）。此时会选择已知**最快的可用后端**，因此可能退回到普通推理。
 
-  <tr>
-    <td>文本图像矫正（可选）</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
+2. 高性能推理功能是否支持所有模型产线与单功能模块？
 
-  <tr>
-    <td>文本检测</td>
-    <td><b>4</b> / 4 </td>
-    <td>无 </td>
-  </tr>
+- 高性能推理功能支持所有模型产线与单功能模块，但部分模型可能无法加速推理，此时日志中会提示相关内容，具体原因可以参考问题1。
 
-  <tr>
-    <td>文本识别</td>
-    <td><b>18</b> / 18 </td>
-    <td>无 </td>
-  </tr>
+3. 为什么安装高性能推理插件会失败？
 
-  <tr>
-    <td>文本行方向分类（可选）</td>
-    <td><b>0</b> / 1 </td>
-    <td>
-        <details>
-        <summary>查看详情</summary>
-        PP-LCNet_x0_25_textline_ori</br>
-      </details>
-    </td>
-  </tr>
+- 高性能推理功能目前支持的环境如 [1.1节的表](#11-安装高性能推理插件) 所示。如果安装失败，可能是高性能推理功能不支持当前环境。另外，CUDA 12.6 已经在支持中。
 
-  <tr>
-    <td rowspan="9">文档场景信息抽取v4</td>
-    <td>文档图像方向分类（可选）</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
+4. 为什么使用高性能推理功能后，程序在运行过程中会卡住或者弹出一些 WARNING 和 ERROR 信息？这种情况下应该如何处理？
 
-  <tr>
-    <td>文本图像矫正（可选）</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>版面区域检测</td>
-    <td><b>11</b> / 11 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td>表格结构识别（可选）</td>
-    <td><b>2</b> / 2 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td>文本检测</td>
-    <td><b>4</b> / 4 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>文本识别</td>
-    <td><b>18</b> / 18 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>文本行方向分类（可选）</td>
-    <td><b>0</b> / 1 </td>
-    <td>
-        <details>
-        <summary>查看详情</summary>
-        PP-LCNet_x0_25_textline_ori</br>
-      </details>
-    </td>
-  </tr>
-
-  <tr>
-    <td>公式识别（可选）</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>印章文本检测（可选）</td>
-    <td><b>2</b> / 2 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td rowspan="7">文档场景信息抽取v3</td>
-    <td>表格结构识别</td>
-    <td><b>2</b> / 2 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td>版面区域检测</td>
-    <td><b>11</b> / 11 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td>文本检测</td>
-    <td><b>2</b> / 2 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>文本识别</td>
-    <td><b>4</b> / 4 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>印章文本检测</td>
-    <td><b>2</b> / 2 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>文本图像矫正</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>文档图像方向分类</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td rowspan="7">通用表格识别v2</td>
-    <td>表格结构识别</td>
-    <td><b>0</b> / 2 </td>
-    <td>
-      <details>
-        <summary>查看详情</summary>
-        SLANeXt_wired</br>
-        SLANeXt_wireless</br>
-      </details>
-    </td>
-  </tr>
-
-  <tr>
-    <td>表格分类</td>
-    <td><b>1</b> / 1 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td>表格单元格检测</td>
-    <td><b>2</b> / 2 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td>文本检测</td>
-    <td><b>2</b> / 2 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>文本识别</td>
-    <td><b>18</b> / 18 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td>版面区域检测</td>
-    <td><b>11</b> / 11 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td>文档图像方向分类</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td rowspan="6">通用表格识别</td>
-    <td>表格结构识别</td>
-    <td><b>2</b> / 2 </td>
-    <td>无 </td>
-    </td>
-  </tr>
-
-  <tr>
-    <td>文本检测</td>
-    <td><b>2</b> / 2 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>文本识别</td>
-    <td><b>18</b> / 18 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td>版面区域检测（可选）</td>
-    <td><b>11</b> / 11 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td>文本图像矫正（可选）</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>文档图像方向分类（可选）</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>通用目标检测</td>
-    <td>目标检测</td>
-    <td><b>32</b> / 37</td>
-    <td>
-      <details>
-        <summary>查看详情</summary>
-        FasterRCNN-Swin-Tiny-FPN<br>
-        CenterNet-DLA-34<br>
-        CenterNet-ResNet50<br>
-        Co-Deformable-DETR-R50<br>
-        Co-Deformable-DETR-Swin-T<br>
-      </details>
-    </td>
-  </tr>
-
-  <tr>
-    <td>通用实例分割</td>
-    <td>实例分割</td>
-    <td><b>12</b> / 15</td>
-    <td>
-      <details>
-        <summary>查看详情</summary>
-        Mask-RT-DETR-S</br>
-        PP-YOLOE_seg-S</br>
-        SOLOv2
-      </details>
-    </td>
-  </tr>
-
-  <tr>
-    <td>通用图像分类</td>
-    <td>图像分类</td>
-    <td><b>80</b> / 80 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td>通用语义分割</td>
-    <td>语义分割</td>
-    <td><b>18</b> / 18 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td>时序预测</td>
-    <td>时序预测</td>
-    <td><b>7</b> / 7 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td>时序异常检测</td>
-    <td>时序异常预测</td>
-    <td><b>4</b> / 5</td>
-    <td>
-      <details>
-        <summary>查看详情</summary>
-        TimesNet_ad</br>
-      </details>
-    </td>
-  </tr>
-
-  <tr>
-    <td>时序分类</td>
-    <td>时序分类</td>
-    <td><b>1</b> / 1 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td>小目标检测</td>
-    <td>小目标检测</td>
-    <td><b>3</b> / 3 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td>图像多标签分类</td>
-    <td>图像多标签分类</td>
-    <td><b>6</b> / 6 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td>图像异常检测</td>
-    <td>无监督异常检测</td>
-    <td><b>1</b> / 1 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td rowspan="9">通用版面解析v3</td>
-    <td>文档图像方向分类（可选）</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>文本图像矫正（可选）</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>版面区域检测</td>
-    <td><b>3</b> / 3 </td>
-    <td>无</td>
-  </tr>
-
-  <td>表格结构识别（可选）</td>
-    <td><b>2</b> / 2 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td>文本检测</td>
-    <td><b>4</b> / 4 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>文本识别</td>
-    <td><b>18</b> / 18 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>文本行方向分类（可选）</td>
-    <td><b>0</b> / 1 </td>
-    <td>
-        <details>
-        <summary>查看详情</summary>
-        PP-LCNet_x0_25_textline_ori</br>
-      </details>
-    </td>
-  </tr>
-
-  <tr>
-    <td>公式识别（可选）</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>印章文本检测（可选）</td>
-    <td><b>2</b> / 2 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td rowspan="9">通用版面解析</td>
-    <td>文档图像方向分类（可选）</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>文本图像矫正（可选）</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>版面区域检测</td>
-    <td><b>11</b> / 11 </td>
-    <td>无</td>
-  </tr>
-
-  <td>表格结构识别（可选）</td>
-    <td><b>2</b> / 2 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td>文本检测</td>
-    <td><b>4</b> / 4 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>文本识别</td>
-    <td><b>18</b> / 18 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>文本行方向分类（可选）</td>
-    <td><b>0</b> / 1 </td>
-    <td>
-        <details>
-        <summary>查看详情</summary>
-        PP-LCNet_x0_25_textline_ori</br>
-      </details>
-    </td>
-  </tr>
-
-  <tr>
-    <td>公式识别（可选）</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>印章文本检测（可选）</td>
-    <td><b>2</b> / 2 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td rowspan="4">公式识别</td>
-    <td>文档图像方向分类（可选）</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>文本图像矫正（可选）</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>版面区域检测（可选）</td>
-    <td><b>6</b> / 6 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td>公式识别</td>
-    <td><b>1</b> / 4 </td>
-    <td>
-      <details>
-        <summary>查看详情</summary>
-        UnimerNet</br>
-        PP-FormulaNet-L</br>
-        PP-FormulaNet-S</br>
-      </details>
-    </td>
-  </tr>
-
-  <tr>
-    <td rowspan="5">印章文本识别</td>
-    <td>版面区域检测（可选）</td>
-    <td><b>11</b> / 11 </td>
-    <td>无</td>
-  </tr>
-
-  <tr>
-    <td>文档图像方向分类（可选）</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>文本图像矫正（可选）</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>印章文本检测</td>
-    <td><b>2</b> / 2 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>文本识别</td>
-    <td><b>18</b> / 18 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td rowspan="2">通用图像识别</td>
-    <td>主体检测</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>图像特征</td>
-    <td><b>3</b> / 3 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td rowspan="2">行人属性识别</td>
-    <td>行人检测</td>
-    <td><b>2</b> / 2 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>行人属性识别</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td rowspan="2">车辆属性识别</td>
-    <td>车辆检测</td>
-    <td><b>2</b> / 2 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>车辆属性识别</td>
-    <td><b>1</b> / 1 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td rowspan="2">人脸识别</td>
-    <td>人脸检测</td>
-    <td><b>4</b> / 4 </td>
-    <td>无 </td>
-  </tr>
-
-  <tr>
-    <td>人脸特征</td>
-    <td><b>2</b> / 2 </td>
-    <td>无 </td>
-  </tr>
-
-</table>
+- 在引擎构建过程中，由于子图优化和算子处理，可能会导致程序耗时较长，并生成一些 WARNING 和 ERROR 信息。然而，只要程序没有自动退出，建议耐心等待，程序通常会继续运行至完成。
