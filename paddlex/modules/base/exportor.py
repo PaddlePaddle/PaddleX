@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 from abc import ABC
 from pathlib import Path
 
@@ -23,6 +22,7 @@ from ...utils.device import (
     set_env_for_device,
     update_device_num,
 )
+from ...utils.flags import FLAGS_json_format_model
 from ...utils.misc import AutoRegisterABCMetaClass
 from .build_model import build_model
 
@@ -134,9 +134,9 @@ exporting!"
 
     def get_export_kwargs(self):
         """get key-value arguments of model export function"""
-        export_with_pir = self.global_config.get("export_with_pir", False) or os.getenv(
-            "FLAGS_json_format_model"
-        ) in ["1", "True"]
+        export_with_pir = (
+            self.global_config.get("export_with_pir", False) or FLAGS_json_format_model
+        )
         return {
             "weight_path": self.export_config.weight_path,
             "save_dir": self.global_config.output,

@@ -16,6 +16,7 @@ import os
 import tarfile
 from pathlib import Path
 
+from ...utils.flags import FLAGS_json_format_model
 from ..base import BaseTrainer
 from .model_list import MODELS
 
@@ -32,9 +33,9 @@ class TSFCTrainer(BaseTrainer):
         self.update_config()
         self.dump_config()
         train_args = self.get_train_kwargs()
-        export_with_pir = self.global_config.get("export_with_pir", False) or os.getenv(
-            "FLAGS_json_format_model"
-        ) in ["1", "True"]
+        export_with_pir = (
+            self.global_config.get("export_with_pir", False) or FLAGS_json_format_model
+        )
         train_args.update(
             {
                 "uniform_output_enabled": self.train_config.get(
