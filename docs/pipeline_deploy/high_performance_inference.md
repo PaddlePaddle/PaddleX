@@ -10,10 +10,14 @@ comments: true
 
 - [1. 基础使用方法](#1.-基础使用方法)
   - [1.1 安装高性能推理插件](#1.1-安装高性能推理插件)
-  - [1.2 启用高性能推理功能](#1.2-启用高性能推理功能)
-- [2. 进阶使用方法](#2.-进阶使用方法)
-  - [2.1 修改高性能推理配置](#2.1-修改高性能推理配置)
-  - [2.2 自定义编译高性能推理插件](#2.2-自定义编译高性能推理插件)
+  - [1.2 启用高性能推理插件](#1.2-启用高性能推理插件)
+- [2. 进阶使用方法](#2-进阶使用方法)
+  - [2.1 高性能推理工作模式](#21-高性能推理工作模式)
+  - [2.2 高性能推理配置](#22-高性能推理配置)
+  - [2.3 如何修改高性能推理配置](#23-如何修改高性能推理配置)
+  - [2.4 修改高性能推理配置示例](#24-修改高性能推理配置示例)
+  - [2.5 模型缓存管理](#25-模型缓存管理)
+  - [2.6 自定义编译ultra-infer](#26-自定义编译ultra-infer)
 - [3. 常见问题](#3.-常见问题)
 
 ## 1. 基础使用方法
@@ -78,12 +82,12 @@ comments: true
           <tr>
               <td>GPU</td>
               <td><code>paddlex --install hpi-gpu</code></td>
-              <td>安装 GPU 版本的高性能推理功能。包含了 CPU 版本的所有功能，因此无需单独安装 CPU 版本。</td>
+              <td>安装 GPU 版本的高性能推理功能。<br />包含了 CPU 版本的所有功能，无需再单独安装 CPU 版本。</td>
           </tr>
           <tr>
               <td>NPU</td>
               <td><code>paddlex --install hpi-npu</code></td>
-              <td>安装 NPU 版本的高性能推理功能。有关使用说明请参考<a href="../practical_tutorials/high_performance_npu_tutorial.md">昇腾 NPU 高性能推理教程</a>。</td>
+              <td>安装 NPU 版本的高性能推理功能。<br />使用说明请参考<a href="../practical_tutorials/high_performance_npu_tutorial.md">昇腾 NPU 高性能推理教程</a>。</td>
           </tr>
       </tbody>
   </table>
@@ -100,9 +104,9 @@ comments: true
 
 3. Windows只支持基于 Docker 安装和使用高性能推理插件。
 
-### 1.2 启用高性能推理
+### 1.2 启用高性能推理插件
 
-启用高性能推理默认作用于整条产线/整个模块，若想细粒度控制高性能推理的作用范围，如只对产线中某个模块使用高性能推理，请参考 [2. 进阶使用方法](#2-进阶使用方法)。
+**启用高性能推理默认作用于整条产线/整个模块**，若想细粒度控制高性能推理的作用范围，如只对产线中某个模块使用高性能推理，请参考 [2. 进阶使用方法](#2-进阶使用方法)。
 
 以下是使用 PaddleX CLI 和 Python API 在通用图像分类产线和图像分类模块中启用高性能推理功能的示例。
 
@@ -160,17 +164,11 @@ model = create_model(
 output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg")
 ```
 
-启用高性能推理插件得到的推理结果与未启用插件时一致。对于部分模型，在首次启用高性能推理插件时，可能需要花费较长时间完成推理引擎的构建。PaddleX 将在推理引擎的第一次构建完成后将相关信息缓存在模型目录，并在后续复用缓存中的内容以提升初始化速度。
+启用高性能推理插件得到的推理结果与未启用插件时一致。对于部分模型，**在首次启用高性能推理插件时，可能需要花费较长时间完成推理引擎的构建**。PaddleX 将在推理引擎的第一次构建完成后将相关信息缓存在模型目录，并在后续复用缓存中的内容以提升初始化速度。
 
 ## 2. 进阶使用方法
 
-首先，介绍高性能推理的两种工作模式。
-
-接着，介绍高性能推理的详细配置。
-
-然后，介绍了如何修改高性能推理配置，包括更换后端和修改动态形状。
-
-最后，介绍了修改高性能推理配置的一些示例。
+本节介绍高性能推理的进阶使用方法，适合具有丰富经验的用户。用户可以参照配置说明和示例，根据自身需求自定义使用高性能推理。接下来将详细介绍各个部分。
 
 ### 2.1 高性能推理工作模式
 
@@ -178,11 +176,11 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
 ##### (1) 安全自动配置模式
 
-安全自动配置模式，具有保护机制，会**自动选择当前环境最快的可用后端**。用户可以尝试切换推理后端，但成功与否取决于具体环境。如果所选后端不被支持，将在日志中提供相应提示。
+安全自动配置模式，具有保护机制，默认**自动选用当前环境性能较优的配置**。在这种模式下，用户可以覆盖默认配置，但用户提供的配置将受到检查，PaddleX将根据先验知识拒绝不可用的配置。这是默认的工作模式。
 
 ##### (2) 无限制手动配置模式
 
-无限制手动配置模式，提供完全的配置自由，可以**自由选择推理后端**，但无法保证推理过程一定成功。此模式适合有经验和对有明确需求的用户，建议在熟悉高性能推理的情况下使用。
+无限制手动配置模式，提供完全的配置自由，可以**自由选择推理后端、修改后端配置等**，但无法保证推理一定成功。此模式适合有经验和对有明确需求的用户，建议在熟悉高性能推理的情况下使用。
 
 ### 2.2 高性能推理配置
 
@@ -200,7 +198,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 <tbody>
 <tr>
 <td><code>auto_config</code></td>
-<td>高性能推理的工作模式，<code>True</code>为安全自动配置模式，<code>False</code>为无限制手动配置模式。</td>
+<td>是否启用安全自动配置模式，<code>True</code>为启用安全自动配置模式，<code>False</code>为启用无限制手动配置模式。</td>
 <td><code>bool</code></td>
 <td><code>True</code></td>
 </tr>
@@ -234,6 +232,11 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
     <th>支持设备</th>
   </tr>
   <tr>
+    <td><code>paddle</code></td>
+    <td>Paddle Inference 推理引擎，同时支持 Paddle Inference TensorRT 子图引擎的方式提升模型的 GPU 推理性能。</td>
+    <td>CPU, GPU</td>
+  </tr>
+  <tr>
     <td><code>openvino</code></td>
     <td><a href="https://github.com/openvinotoolkit/openvino">OpenVINO</a>，Intel 提供的深度学习推理工具，优化了多种 Intel 硬件上的模型推理性能。</td>
     <td>CPU</td>
@@ -255,14 +258,16 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
   </tr>
 </table>
 
-  `paddle` 后端参考[PaddleX单模型Python脚本使用说明: 4. 推理后端设置](../module_usage/instructions/model_python_API.md)
-
 `backend_config` 根据不同后端有不同的可选值，如下表所示：
 
 <table>
   <tr>
     <th>后端</th>
     <th>可选值</th>
+  </tr>
+  <tr>
+    <td><code>openvino</code></td>
+    <td>参考<a href="../module_usage/instructions/model_python_API.md">PaddleX单模型Python脚本使用说明: 4. 推理后端设置</a>。</td>
   </tr>
   <tr>
     <td><code>openvino</code></td>
@@ -277,7 +282,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
     <td>
       <code>precision</code>：使用的精度，<code>fp16</code>或<code>fp32</code>。默认为<code>fp32</code>。
       <br />
-      <code>dynamic_shapes</code>：动态形状。
+      <code>dynamic_shapes</code>：动态形状。动态形状包含最小形状、最优形状以及最大形状，是 TensorRT 延迟指定部分或全部张量维度直到运行时的能力。更多介绍请参考 <a href="https://docs.nvidia.com/deeplearning/tensorrt/developer-guide/index.html#work_dynamic_shapes">TensorRT 官方文档</a>。
     </td>
   </tr>
   <tr>
@@ -288,25 +293,23 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
 ### 2.3 如何修改高性能推理配置
 
-PaddleX 根据模型和运行环境信息，**在单功能模块和模型产线的配置文件中为每个模型提供默认的高性能推理配置**，其中包括推理后端和推理后端的配置。这些默认配置经过精心准备，以便在数个常见场景中可用，且能够取得较优的性能。因此，通常用户可能并不需要关心这些配置的具体细节。
-
-然而，由于实际部署环境和需求的多样性，默认配置可能无法满足所有要求。以下是两种常见的情况：
+由于实际部署环境和需求的多样性，默认配置可能无法满足所有要求。以下是两种常见的情况：
 
 - 需要更换推理后端。
   - 例如在OCR产线中，指定`text_detection`模块使用`onnxruntime`后端，`text_recognition`模块使用`tensorrt`后端。
 
 - 需要修改 TensorRT 的动态形状配置：
-  - 动态形状是 TensorRT 延迟指定部分或全部张量维度直到运行时的能力。当默认的动态形状配置无法满足需求（例如，模型可能需要范围外的输入形状），就需要修改相应的配置。
+  - 当默认的动态形状配置无法满足需求（例如，模型可能需要范围外的输入形状），就需要为每一个输入张量指定动态形状，格式为：`{输入张量名称}: [{最小形状}, [{最优形状}], [{最大形状}]]`。修改完成后，需要清理模型的`.cache`缓存目录。
 
 在这些情况下，用户可以通过修改**产线/模块配置文件**、**CLI**或**Python API**所传递参数中的 `hpi_config` 字段内容来修改配置。**通过 CLI 或 Python API 传递的参数将覆盖产线/模块配置文件的设置**。
 
 ### 2.4 修改高性能推理配置示例
 
-#### (1) 在安全自动配置模式下更换推理后端。
+#### (1) 更换推理后端。
 
   ##### 通用OCR产线的所有模型使用`onnxruntime`后端：
 
-  <details><summary>👉 <b>1. 修改产线配置文件方式（点击展开）</b></summary>
+  <details><summary>👉 1. 修改产线配置文件方式（点击展开）</summary>
 
   ```yaml
   pipeline_name: OCR
@@ -320,7 +323,7 @@ PaddleX 根据模型和运行环境信息，**在单功能模块和模型产线�
   ```
 
   </details>
-  <details><summary>👉 <b>2. CLI传参方式（点击展开）</b></summary>
+  <details><summary>👉 2. CLI传参方式（点击展开）</summary>
 
   ```bash
   paddlex \
@@ -332,7 +335,7 @@ PaddleX 根据模型和运行环境信息，**在单功能模块和模型产线�
   ```
 
   </details>
-  <details><summary>👉 <b>3. Python API传参方式（点击展开）</b></summary>
+  <details><summary>👉 3. Python API传参方式（点击展开）</summary>
 
   ```python
   from paddlex import create_pipeline
@@ -349,7 +352,7 @@ PaddleX 根据模型和运行环境信息，**在单功能模块和模型产线�
 
   ##### 图像分类模块的模型使用`onnxruntime`后端：
 
-  <details><summary>👉 <b>1. 修改产线配置文件方式（点击展开）</b></summary>
+  <details><summary>👉 1. 修改产线配置文件方式（点击展开）</summary>
 
   ```yaml
   # paddlex/configs/modules/image_classification/ResNet18.yaml
@@ -365,7 +368,7 @@ PaddleX 根据模型和运行环境信息，**在单功能模块和模型产线�
   ```
 
   </details>
-  <details><summary>👉 <b>2. CLI传参方式（点击展开）</b></summary>
+  <details><summary>👉 2. CLI传参方式（点击展开）</summary>
 
   ```bash
   python main.py \
@@ -379,7 +382,7 @@ PaddleX 根据模型和运行环境信息，**在单功能模块和模型产线�
   ```
 
   </details>
-  <details><summary>👉 <b>3. Python API传参方式（点击展开）</b></summary>
+  <details><summary>👉 3. Python API传参方式（点击展开）</summary>
 
   ```python
   from paddlex import create_model
@@ -394,15 +397,55 @@ PaddleX 根据模型和运行环境信息，**在单功能模块和模型产线�
 
   </details>
 
-#### (2) 在无限制手动配置模式下更换推理后端
+  ##### 通用OCR产线的`text_detection`模块使用`onnxruntime`后端，`text_recognition`模块使用`tensorrt`后端：
 
-参考[在安全自动配置模式下更换推理后端](#1-在安全自动配置模式下更换推理后端)，将`auto_config`改为`False`即可。
+  <details><summary>👉 1. 修改产线配置文件方式（点击展开）</summary>
 
-#### (3) 在安全自动配置模式下修改 TensorRT 的动态形状配置
+  ```yaml
+  pipeline_name: OCR
 
-  模型产线以通用图像分类产线为例：
+  ...
 
-  <details><summary>👉 <b>点击展开</b></summary>
+  SubModules:
+    TextDetection:
+      module_name: text_detection
+      model_name: PP-OCRv4_mobile_det
+      model_dir: null
+      limit_side_len: 960
+      limit_type: max
+      thresh: 0.3
+      box_thresh: 0.6
+      unclip_ratio: 2.0
+      # 当前子模块启用高性能推理
+      use_hpip: True
+      # 当前子模块使用如下高性能推理配置
+      hpi_config:
+          auto_config: True
+          backend: onnxruntime
+    TextLineOrientation:
+      module_name: textline_orientation
+      model_name: PP-LCNet_x0_25_textline_ori
+      model_dir: null
+      batch_size: 6
+    TextRecognition:
+      module_name: text_recognition
+      model_name: PP-OCRv4_mobile_rec
+      model_dir: null
+      batch_size: 6
+      score_thresh: 0.0
+      # 当前子模块启用高性能推理
+      use_hpip: True
+      # 当前子模块使用如下高性能推理配置
+      hpi_config:
+          auto_config: True
+          backend: tensorrt
+  ```
+
+#### (2) 修改 TensorRT 的动态形状配置
+
+  ##### 通用图像分类产线修改动态形状配置：
+
+  <details><summary>👉 点击展开</summary>
 
   ```yaml
     ...
@@ -425,9 +468,9 @@ PaddleX 根据模型和运行环境信息，**在单功能模块和模型产线�
 
   </details>
 
-  单功能模块以图像分类模块为例：
+  ##### 图像分类模块修改动态形状配置：
 
-  <details><summary>👉 <b>点击展开</b></summary>
+  <details><summary>👉 点击展开</summary>
 
   ```yaml
   ...
@@ -450,15 +493,13 @@ PaddleX 根据模型和运行环境信息，**在单功能模块和模型产线�
 
   </details>
 
-  在 `dynamic_shapes` 中，需要为每一个输入张量指定动态形状，格式为：`{输入张量名称}: [{最小形状}, [{最优形状}], [{最大形状}]]`。有关最小形状、最优形状以及最大形状的相关介绍及更多细节，请参考 [TensorRT 官方文档](https://docs.nvidia.com/deeplearning/tensorrt/developer-guide/index.html#work_dynamic_shapes)。
+### 2.5 模型缓存管理
 
-  在完成修改后，请删除模型目录中的缓存文件（`shape_range_info.pbtxt` 与 `trt_serialized` 开头的文件）。
+模型缓存会存放在模型目录下的 `.cache` 目录下，包括使用 `tensorrt` 后端时产生的 `shape_range_info.pbtxt`与`trt_serialized`开头的文件。
 
-#### (4) 在无限制手动配置模式下修改 TensorRT 的动态形状配置。
+当启用`auto_paddle2onnx`选项时，会在模型目录下自动生成`inference.onnx`文件。
 
-参考[在安全自动配置模式下修改 TensorRT 的动态形状配置](#3-在安全自动配置模式下修改-tensorrt-的动态形状配置)，将`auto_config`改为`False`即可。
-
-### 2.5 自定义编译ultra-infer
+### 2.6 自定义编译ultra-infer
 
 `ultra-infer`，是高性能推理功能的底层依赖，位于 `PaddleX/libs/ultra-infer` 目录。编译脚本位于 `PaddleX/libs/ultra-infer/scripts/linux/set_up_docker_and_build_py.sh` ，编译默认编译GPU版本和包含 `OpenVINO`、`TensorRT`、`ONNX Runtime` 三种推理后端的 `ultra-infer`。
 
