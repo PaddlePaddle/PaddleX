@@ -30,9 +30,9 @@ from ...utils.hpi import (
     ONNXRuntimeConfig,
     OpenVINOConfig,
     TensorRTConfig,
-    get_model_paths,
     suggest_inference_backend_and_config,
 )
+from ...utils.model_paths import get_model_paths
 from ...utils.pp_option import PaddlePredictorOption
 from ...utils.trt_config import DISABLE_TRT_HALF_OPS_CONFIG
 

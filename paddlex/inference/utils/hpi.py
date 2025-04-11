@@ -18,16 +18,15 @@ import importlib.util
 import json
 import platform
 from functools import lru_cache
-from os import PathLike
-from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional, Tuple, TypedDict, Union
+from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 
 from pydantic import BaseModel, Field
 from typing_extensions import Annotated, TypeAlias
 
 from ...utils.deps import function_requires_deps, is_paddle2onnx_plugin_available
 from ...utils.env import get_cuda_version, get_cudnn_version, get_paddle_version
-from ...utils.flags import USE_PIR_TRT, FLAGS_json_format_model
+from ...utils.flags import USE_PIR_TRT
+from .model_paths import ModelPaths
 
 
 class PaddleInferenceInfo(BaseModel):
@@ -94,38 +93,6 @@ class ModelInfo(BaseModel):
 ModelFormat: TypeAlias = Literal["paddle", "onnx", "om"]
 
 
-class ModelPaths(TypedDict, total=False):
-    paddle: Tuple[Path, Path]
-    onnx: Path
-    om: Path
-
-
-def get_model_paths(
-    model_dir: Union[str, PathLike], model_file_prefix: str
-) -> ModelPaths:
-    model_dir = Path(model_dir)
-    model_paths: ModelPaths = {}
-    pd_model_path = None
-    if FLAGS_json_format_model:
-        if (model_dir / f"{model_file_prefix}.json").exists():
-            pd_model_path = model_dir / f"{model_file_prefix}.json"
-    else:
-        if (model_dir / f"{model_file_prefix}.json").exists():
-            pd_model_path = model_dir / f"{model_file_prefix}.json"
-        elif (model_dir / f"{model_file_prefix}.pdmodel").exists():
-            pd_model_path = model_dir / f"{model_file_prefix}.pdmodel"
-    if pd_model_path and (model_dir / f"{model_file_prefix}.pdiparams").exists():
-        model_paths["paddle"] = (
-            pd_model_path,
-            model_dir / f"{model_file_prefix}.pdiparams",
-        )
-    if (model_dir / f"{model_file_prefix}.onnx").exists():
-        model_paths["onnx"] = model_dir / f"{model_file_prefix}.onnx"
-    if (model_dir / f"{model_file_prefix}.om").exists():
-        model_paths["om"] = model_dir / f"{model_file_prefix}.om"
-    return model_paths
-
-
 @lru_cache(1)
 def _get_hpi_model_info_collection():
     with importlib.resources.open_text(
@@ -190,9 +157,9 @@ def suggest_inference_backend_and_config(
             return None, f"{repr(arch)} is not a supported architecture."
     elif hpi_config.device_type == "gpu":
         cuda_version = get_cuda_version()
-        cuda_version = "".join(cuda_version)
+        cuda_version = "".join(map(str, cuda_version))
         cudnn_version = get_cudnn_version()
-        cudnn_version = "".join(cudnn_version[:-1])
+        cudnn_version = "".join(map(str, cudnn_version[:-1]))
         key = f"gpu_cuda{cuda_version}_cudnn{cudnn_version}"
     else:
         return None, f"{repr(hpi_config.device_type)} is not a supported device type."
