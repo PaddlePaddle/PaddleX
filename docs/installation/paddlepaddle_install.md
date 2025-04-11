@@ -58,7 +58,7 @@ python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org
 python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
 ```
 
-docker 镜像默认支持 [Paddle Inference(TensorRT子图引擎)](https://www.paddlepaddle.org.cn/documentation/docs/zh/guides/paddle_v3_features/paddle_trt_cn.html)。
+docker 镜像默认支持 [Paddle Inference TensorRT 子图引擎](https://www.paddlepaddle.org.cn/documentation/docs/zh/guides/paddle_v3_features/paddle_trt_cn.html)。
 
 > ❗ <b>注</b>：无需关注物理机上的 CUDA 版本，只需关注显卡驱动程序版本。更多飞桨 Wheel 版本请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/pip/linux-pip.html)。
 
@@ -75,7 +75,7 @@ python -c "import paddle; print(paddle.__version__)"
 3.0.0-rc0
 ```
 
-如果想要使用 [Paddle Inference(TensorRT子图引擎)](https://www.paddlepaddle.org.cn/documentation/docs/zh/guides/paddle_v3_features/paddle_trt_cn.html)，在安装paddle后需参考 [TensorRT 文档](https://docs.nvidia.com/deeplearning/tensorrt/archives/index.html)安装相应版本的 `tensorrt`，下面是在 `CUDA11.8` 环境下使用 `Tar File Installation` 方式安装 `TensoRT-8.6.1.6` 的例子：
+如果想要使用 [Paddle Inference TensorRT 子图引擎](https://www.paddlepaddle.org.cn/documentation/docs/zh/guides/paddle_v3_features/paddle_trt_cn.html)，在安装paddle后需参考 [TensorRT 文档](https://docs.nvidia.com/deeplearning/tensorrt/archives/index.html)安装相应版本的 `tensorrt`，下面是在 `CUDA11.8` 环境下使用 `Tar File Installation` 方式安装 `TensoRT-8.6.1.6` 的例子：
 
 ```bash
 # 下载 TensorRT tar 文件

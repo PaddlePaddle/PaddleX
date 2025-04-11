@@ -1,7 +1,7 @@
 
-# Paddle2ONNX 工具的安装与使用
+# Paddle2ONNX 插件的安装与使用
 
-Paddle2ONNX 工具提供了将 Paddle 模型转换为 ONNX 模型的能力。
+Paddle2ONNX 插件提供了将 Paddle 模型转换为 ONNX 模型的能力。
 
 ## 1. 安装
 
@@ -30,7 +30,7 @@ paddlex --install paddle2onnx
         <tr>
             <td>onnx_model_dir</td>
             <td>str</td>
-            <td>ONNX模型的输出目录，默认为<code>onnx</code>。</td>
+            <td>ONNX模型的输出目录，可以与Paddle模型目录相同。默认为<code>onnx</code>。</td>
         </tr>
         <tr>
             <td>opset_version</td>
