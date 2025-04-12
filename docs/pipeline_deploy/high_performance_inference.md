@@ -182,8 +182,6 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
 无限制手动配置模式，提供完全的配置自由，可以**自由选择推理后端、修改后端配置等**，但无法保证推理一定成功。此模式适合有经验和对推理后端及其配置有明确需求的用户，建议在熟悉高性能推理的情况下使用。
 
-<br />
-
 ### 2.2 高性能推理配置
 
 常用高性能推理配置包含以下字段：
@@ -293,8 +291,6 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
   </tr>
 </table>
 
-<br />
-
 ### 2.3 如何修改高性能推理配置
 
 由于实际部署环境和需求的多样性，默认配置可能无法满足所有要求。这时，可能需要手动调整高性能推理配置。以下是两种常见的情况：
@@ -306,8 +302,6 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
   - 当默认的动态形状配置无法满足需求（例如，模型可能需要范围外的输入形状），就需要为每一个输入张量指定动态形状。修改完成后，需要清理模型的`.cache`缓存目录。
 
 在这些情况下，用户可以通过修改**产线/模块配置文件**、**CLI**或**Python API**所传递参数中的 `hpi_config` 字段内容来修改配置。**通过 CLI 或 Python API 传递的参数将覆盖产线/模块配置文件的设置**。
-
-<br />
 
 ### 2.4 修改高性能推理配置示例
 
@@ -495,13 +489,11 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
   </details>
 
-<br />
-
 ### 2.5 高性能推理在子产线/子模块中的启用/禁用
 
 高性能推理支持通过在子产线/子模块级别使用 `use_hpip`，实现**仅产线中的某个子产线/子模块使用高性能推理**。示例如下：
 
-##### 示例：通用OCR产线的`text_detection`模块使用高性能推理，`text_recognition`模块不使用高性能推理：
+##### 通用OCR产线的`text_detection`模块使用高性能推理，`text_recognition`模块不使用高性能推理：
 
   <details><summary>👉 点击展开</summary>
 
@@ -543,15 +535,11 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
 2. **强烈建议通过修改产线配置文件的方式开启高性能推理**，不建议使用CLI或Python API的方式进行设置。如果通过CLI或Python API启用 `use_hpip`，等同于在配置文件的最上层设置 `use_hpip`。
 
-<br />
-
 ### 2.6 模型缓存说明
 
 模型缓存会存放在模型目录下的 `.cache` 目录下，包括使用 `tensorrt` 或 `paddle` 后端时产生的 `shape_range_info.pbtxt`与`trt_serialized`开头的文件。
 
 当启用`auto_paddle2onnx`选项时，可能会在模型目录下自动生成`inference.onnx`文件。
-
-<br />
 
 ### 2.7 定制模型推理库
 
