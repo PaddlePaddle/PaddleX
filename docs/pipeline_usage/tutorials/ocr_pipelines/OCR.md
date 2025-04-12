@@ -961,8 +961,7 @@ for res in output:
 <td><code>file</code></td>
 <td><code>string</code></td>
 <td>服务器可访问的图像文件或PDF文件的URL，或上述类型文件内容的Base64编码结果。对于超过10页的PDF文件，只有前10页的内容会被使用。<br /> 要解除页数限制，请在产线配置文件中添加以下配置：
-<pre><code>
-Serving:
+<pre><code>Serving:
   extra:
     max_num_input_imgs: null
 </code></pre>
