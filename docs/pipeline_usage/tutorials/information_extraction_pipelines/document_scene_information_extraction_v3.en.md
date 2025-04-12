@@ -1431,7 +1431,7 @@ To remove the page limit, please add the following configuration to the pipeline
 <tr>
 <td><code>layoutParsingResults</code></td>
 <td><code>array</code></td>
-<td>Analysis results obtained using computer vision models. The array length is 1 (for image input) or the smaller of the number of document pages and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file in sequence.</td>
+<td>Analysis results obtained using computer vision models. The array length is 1 (for image input) or the number of document pages (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file in sequence.</td>
 </tr>
 <tr>
 <td><code>visualInfo</code></td>

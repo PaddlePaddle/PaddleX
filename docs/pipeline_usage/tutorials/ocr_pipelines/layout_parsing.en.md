@@ -1423,7 +1423,7 @@ To remove the page limit, please add the following configuration to the pipeline
 <tr>
 <td><code>layoutParsingResults</code></td>
 <td><code>array</code></td>
-<td>The layout parsing results. The length of the array is 1 (for image input) or the smaller of the document page count and 10 (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
+<td>The layout parsing results. The length of the array is 1 (for image input) or the number of document pages  (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
 </tr>
 <tr>
 <td><code>dataInfo</code></td>
