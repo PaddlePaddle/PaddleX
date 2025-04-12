@@ -1274,7 +1274,7 @@ Below are the API references for basic serving and multi-language service invoca
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>URL of an image file or PDF file accessible to the server, or Base64 encoded result of the content of the above file types. For PDF files exceeding 10 pages, only the content of the first 10 pages will be used.<br />
+<td>URL of an image file or PDF file accessible to the server, or Base64 encoded result of the content of the above file types. By default, for PDF files exceeding 10 pages, only the content of the first 10 pages will be used.<br />
 To remove the page limit, please add the following configuration to the pipeline configuration file:
 <pre><code>Serving:
   extra:

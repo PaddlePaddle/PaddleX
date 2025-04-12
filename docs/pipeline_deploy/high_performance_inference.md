@@ -4,7 +4,7 @@ comments: true
 
 # PaddleX 高性能推理指南
 
-在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，通过自动配置和多后端推理功能，在用户无感知的情况下显著提高模型的推理速度。
+在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，通过自动配置和多后端推理功能，让用户无需关注复杂的配置和底层细节，即可显著提升模型的推理速度。
 
 ## 目录
 
@@ -61,7 +61,7 @@ comments: true
   </tr>
 </table>
 
-#### a. 基于 Docker 安装高性能推理插件（强烈推荐）：
+#### (1) 基于 Docker 安装高性能推理插件（强烈推荐）：
 
 参考 [基于Docker获取PaddleX](../installation/installation.md#21-基于docker获取paddlex) 使用 Docker 启动 PaddleX 容器。启动容器后，根据设备类型，执行如下指令，安装高性能推理插件：
 
@@ -92,7 +92,7 @@ comments: true
       </tbody>
   </table>
 
-#### b. 本地安装高性能推理插件：
+#### (2) 本地安装高性能推理插件：
 
 需要本地 [安装CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive) 和 [安装cuDNN 8.6](https://docs.nvidia.com/deeplearning/cudnn/archives/cudnn-860/install-guide/index.html) 后执行上面的安装指令。
 
@@ -176,11 +176,11 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
 高性能推理分为两种工作模式：
 
-##### (1) 安全自动配置模式
+#### (1) 安全自动配置模式
 
 安全自动配置模式，具有保护机制，默认**自动选用当前环境性能较优的配置**。在这种模式下，用户可以覆盖默认配置，但用户提供的配置将受到检查，PaddleX将根据先验知识拒绝不可用的配置。这是默认的工作模式。
 
-##### (2) 无限制手动配置模式
+#### (2) 无限制手动配置模式
 
 无限制手动配置模式，提供完全的配置自由，可以**自由选择推理后端、修改后端配置等**，但无法保证推理一定成功。此模式适合有经验和对推理后端及其配置有明确需求的用户，建议在熟悉高性能推理的情况下使用。
 
@@ -255,7 +255,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
   </tr>
   <tr>
     <td><code>om</code></td>
-    <td>OM，华为昇腾NPU定制的离线模型格式，针对硬件进行了深度优化，减少算子计算时间和调度时间，能够有效提升推理性能。</td>
+    <td>OM，华为昇腾NPU定制的离线模型格式对应的推理引擎，针对硬件进行了深度优化，减少算子计算时间和调度时间，能够有效提升推理性能。</td>
     <td>NPU</td>
   </tr>
 </table>
@@ -545,7 +545,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
 ### 2.7 定制模型推理库
 
-`ultra-infer`是高性能推理底层依赖的模型推理库，位于 `PaddleX/libs/ultra-infer` 目录。编译脚本位于 `PaddleX/libs/ultra-infer/scripts/linux/set_up_docker_and_build_py.sh` ，编译默认编译GPU版本和包含 `OpenVINO`、`TensorRT`、`ONNX Runtime` 三种推理后端的 `ultra-infer`。
+`ultra-infer`是高性能推理底层依赖的模型推理库，位于 `PaddleX/libs/ultra-infer` 目录。编译脚本位于 `PaddleX/libs/ultra-infer/scripts/linux/set_up_docker_and_build_py.sh` ，编译默认编译GPU版本和包含 OpenVINO、TensorRT、ONNX Runtime 三种推理后端的 `ultra-infer`。
 
 自定义编译时可根据需求修改如下选项：
 
@@ -602,9 +602,15 @@ python -m pip install ../../python/dist/ultra_infer*.whl
 
 ## 3. 常见问题
 
-**1. 为什么使用高性能推理功能后，推理速度还是与普通推理的速度差不多？**
+**1. 为什么开启高性能推理插件前后，感觉推理速度没有明显提升？**
 
-高性能推理通过智能选择后端来加速推理，但由于模型复杂性或不支持算子等情况，部分模型可能无法使用加速后端（如OpenVINO、TensorRT等）。此时日志中会提示相关内容，并选择已知**最快的可用后端**，因此可能退回到普通推理。
+高性能推理插件通过智能选择后端来加速推理。
+
+对于单功能模块，由于模型复杂性或不支持算子等情况，部分模型可能无法使用加速后端（如OpenVINO、TensorRT等）。此时日志中会提示相关内容，并选择已知**最快的可用后端**，因此可能退回到普通推理。
+
+对于模型产线，性能瓶颈可能不在模型推理阶段。
+
+可以使用 [PaddleX benchmark](../module_usage/instructions/benchmark.md) 工具进行实际速度测试，以便更准确地评估性能。
 
 **2: 高性能推理功能是否支持所有模型产线与单功能模块？**
 

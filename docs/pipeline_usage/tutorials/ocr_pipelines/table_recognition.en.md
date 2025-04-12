@@ -1186,7 +1186,7 @@ Below are the API references for basic serving deployment and multi-language ser
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>The URL of an image or PDF file accessible by the server, or the Base64-encoded content of the above file types. For PDF files exceeding 10 pages, only the content of the first 10 pages will be used.<br />
+<td>The URL of an image or PDF file accessible by the server, or the Base64-encoded content of the above file types. By default, for PDF files exceeding 10 pages, only the content of the first 10 pages will be used.<br />
 To remove the page limit, please add the following configuration to the pipeline configuration file:
 <pre><code>Serving:
   extra:
