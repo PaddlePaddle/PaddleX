@@ -16,8 +16,9 @@ comments: true
   - [2.2 高性能推理配置](#22-高性能推理配置)
   - [2.3 如何修改高性能推理配置](#23-如何修改高性能推理配置)
   - [2.4 修改高性能推理配置示例](#24-修改高性能推理配置示例)
-  - [2.5 模型缓存管理](#25-模型缓存管理)
-  - [2.6 自定义编译ultra-infer](#26-自定义编译ultra-infer)
+  - [2.5 高性能推理在子产线/子模块中的启用/禁用](#25-高性能推理在子产线子模块中的启用禁用)
+  - [2.6 模型缓存说明](#26-模型缓存说明)
+  - [2.7 定制模型推理库](#27-定制模型推理库)
 - [3. 常见问题](#3.-常见问题)
 
 ## 1. 基础使用方法
@@ -97,13 +98,13 @@ comments: true
 
 1. **GPU 只支持 CUDA 11.8 + cuDNN8.6**，CUDA 12.6 已经在支持中。
 
-2. NPU 设备的使用说明参考 [昇腾 NPU 高性能推理教程](../practical_tutorials/high_performance_npu_tutorial.md)。
+2. 同一环境下只能存在一个高性能推理插件版本。
+
+3. NPU 设备的使用说明参考 [昇腾 NPU 高性能推理教程](../practical_tutorials/high_performance_npu_tutorial.md)。
 
 3. Windows 只支持基于 Docker 安装和使用高性能推理插件。
 
 ### 1.2 启用高性能推理插件
-
-**启用高性能推理默认作用于整条产线/整个模块**，若想细粒度控制高性能推理的作用范围，如只对产线中某个模块使用高性能推理，请参考 [2. 进阶使用方法](#2-进阶使用方法)。
 
 以下是使用 PaddleX CLI 和 Python API 在通用图像分类产线和图像分类模块中启用高性能推理功能的示例。
 
@@ -163,9 +164,11 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
 启用高性能推理插件得到的推理结果与未启用插件时一致。对于部分模型，**在首次启用高性能推理插件时，可能需要花费较长时间完成推理引擎的构建**。PaddleX 将在推理引擎的第一次构建完成后将相关信息缓存在模型目录，并在后续复用缓存中的内容以提升初始化速度。
 
+**启用高性能推理默认作用于整条产线/整个模块**，若想细粒度控制作用范围，如只对产线中某条子产线或某个子模块启用高性能推理插件，可以在产线配置文件中不同层级的配置里设置`use_hpip`，请参考 [2.5 高性能推理在子产线/子模块中的启用/禁用](#25-高性能推理在子产线子模块中的启用禁用)。
+
 ## 2. 进阶使用方法
 
-本节介绍高性能推理的进阶使用方法，适合具有丰富经验的用户。用户可以参照配置说明和示例，根据自身需求自定义使用高性能推理。接下来将对进阶使用方法进行详细介绍。
+本节介绍高性能推理的进阶使用方法，适合对模型部署有一定了解或希望进行手动配置调优的用户。用户可以参照配置说明和示例，根据自身需求自定义使用高性能推理。接下来将对进阶使用方法进行详细介绍。
 
 ### 2.1 高性能推理工作模式
 
@@ -177,7 +180,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
 ##### (2) 无限制手动配置模式
 
-无限制手动配置模式，提供完全的配置自由，可以**自由选择推理后端、修改后端配置等**，但无法保证推理一定成功。此模式适合有经验和对有明确需求的用户，建议在熟悉高性能推理的情况下使用。
+无限制手动配置模式，提供完全的配置自由，可以**自由选择推理后端、修改后端配置等**，但无法保证推理一定成功。此模式适合有经验和对推理后端及其配置有明确需求的用户，建议在熟悉高性能推理的情况下使用。
 
 ### 2.2 高性能推理配置
 
@@ -279,7 +282,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
     <td>
       <code>precision</code>：使用的精度，<code>fp16</code>或<code>fp32</code>。默认为<code>fp32</code>。
       <br />
-      <code>dynamic_shapes</code>：动态形状。动态形状包含最小形状、最优形状以及最大形状，是 TensorRT 延迟指定部分或全部张量维度直到运行时的能力。更多介绍请参考 <a href="https://docs.nvidia.com/deeplearning/tensorrt/developer-guide/index.html#work_dynamic_shapes">TensorRT 官方文档</a>。
+      <code>dynamic_shapes</code>：动态形状。动态形状包含最小形状、最优形状以及最大形状，是 TensorRT 延迟指定部分或全部张量维度直到运行时的能力。格式为：<code>{输入张量名称}: [{最小形状}, [{最优形状}], [{最大形状}]]</code>。更多介绍请参考 <a href="https://docs.nvidia.com/deeplearning/tensorrt/developer-guide/index.html#work_dynamic_shapes">TensorRT 官方文档</a>。
     </td>
   </tr>
   <tr>
@@ -290,13 +293,13 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
 ### 2.3 如何修改高性能推理配置
 
-由于实际部署环境和需求的多样性，默认配置可能无法满足所有要求。以下是两种常见的情况：
+由于实际部署环境和需求的多样性，默认配置可能无法满足所有要求。这时，可能需要手动调整高性能推理配置。以下是两种常见的情况：
 
 - 需要更换推理后端。
   - 例如在OCR产线中，指定`text_detection`模块使用`onnxruntime`后端，`text_recognition`模块使用`tensorrt`后端。
 
 - 需要修改 TensorRT 的动态形状配置：
-  - 当默认的动态形状配置无法满足需求（例如，模型可能需要范围外的输入形状），就需要为每一个输入张量指定动态形状，格式为：`{输入张量名称}: [{最小形状}, [{最优形状}], [{最大形状}]]`。修改完成后，需要清理模型的`.cache`缓存目录。
+  - 当默认的动态形状配置无法满足需求（例如，模型可能需要范围外的输入形状），就需要为每一个输入张量指定动态形状。修改完成后，需要清理模型的`.cache`缓存目录。
 
 在这些情况下，用户可以通过修改**产线/模块配置文件**、**CLI**或**Python API**所传递参数中的 `hpi_config` 字段内容来修改配置。**通过 CLI 或 Python API 传递的参数将覆盖产线/模块配置文件的设置**。
 
@@ -313,7 +316,6 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
   use_hpip: True
   hpi_config:
-    auto_config: True
     backend: onnxruntime
 
   ...
@@ -328,7 +330,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
       --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
       --device gpu:0 \
       --use_hpip \
-      --hpi_config '{"auto_config": True, "backend": "onnxruntime"}'
+      --hpi_config '{"backend": "onnxruntime"}'
   ```
 
   </details>
@@ -341,7 +343,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
       pipeline="OCR",
       device="gpu",
       use_hpip=True,
-      hpi_config={"auto_config": True, "backend": "onnxruntime"}
+      hpi_config={"backend": "onnxruntime"}
   )
   ```
 
@@ -358,7 +360,6 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
     ...
     use_hpip: True
     hpi_config:
-        auto_config: True
         backend: onnxruntime
     ...
   ...
@@ -375,7 +376,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
       -o Predict.input=https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
       -o Global.device=gpu:0 \
       -o Predict.use_hpip=True \
-      -o Predict.hpi_config='{"auto_config": True, "backend": "onnxruntime"}'
+      -o Predict.hpi_config='{"backend": "onnxruntime"}'
   ```
 
   </details>
@@ -388,7 +389,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
       model_name="ResNet18",
       device="gpu",
       use_hpip=True,
-      hpi_config={"auto_config": True, "backend": "onnxruntime"}
+      hpi_config={"backend": "onnxruntime"}
   )
   ```
 
@@ -417,7 +418,6 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
       use_hpip: True
       # 当前子模块使用如下高性能推理配置
       hpi_config:
-          auto_config: True
           backend: onnxruntime
     TextLineOrientation:
       module_name: textline_orientation
@@ -434,7 +434,6 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
       use_hpip: True
       # 当前子模块使用如下高性能推理配置
       hpi_config:
-          auto_config: True
           backend: tensorrt
   ```
 
@@ -452,7 +451,6 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
       ImageClassification:
         ...
         hpi_config:
-          auto_config: True
           backend: tensorrt
           backend_config:
             precision: fp32
@@ -477,7 +475,6 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
     ...
     use_hpip: True
     hpi_config:
-        auto_config: True
         backend: tensorrt
         backend_config:
           precision: fp32
@@ -492,15 +489,61 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
   </details>
 
-### 2.5 模型缓存管理
+### 2.5 高性能推理在子产线/子模块中的启用/禁用
 
-模型缓存会存放在模型目录下的 `.cache` 目录下，包括使用 `tensorrt` 后端时产生的 `shape_range_info.pbtxt`与`trt_serialized`开头的文件。
+高性能推理支持通过在子产线/子模块级别使用 `use_hpip`，实现**仅产线中的某个子产线/子模块使用高性能推理**。示例如下：
 
-当启用`auto_paddle2onnx`选项时，会在模型目录下自动生成`inference.onnx`文件。
+##### 示例：通用OCR产线的`text_detection`模块使用高性能推理，`text_recognition`模块不使用高性能推理：
 
-### 2.6 自定义编译ultra-infer
+  <details><summary>👉 点击展开</summary>
 
-`ultra-infer`，是高性能推理功能的底层依赖，位于 `PaddleX/libs/ultra-infer` 目录。编译脚本位于 `PaddleX/libs/ultra-infer/scripts/linux/set_up_docker_and_build_py.sh` ，编译默认编译GPU版本和包含 `OpenVINO`、`TensorRT`、`ONNX Runtime` 三种推理后端的 `ultra-infer`。
+  ```yaml
+  pipeline_name: OCR
+
+  ...
+
+  SubModules:
+    TextDetection:
+      module_name: text_detection
+      model_name: PP-OCRv4_mobile_det
+      model_dir: null
+      limit_side_len: 960
+      limit_type: max
+      thresh: 0.3
+      box_thresh: 0.6
+      unclip_ratio: 2.0
+      use_hpip: True # 当前子模块启用高性能推理
+    TextLineOrientation:
+      module_name: textline_orientation
+      model_name: PP-LCNet_x0_25_textline_ori
+      model_dir: null
+      batch_size: 6
+    TextRecognition:
+      module_name: text_recognition
+      model_name: PP-OCRv4_mobile_rec
+      model_dir: null
+      batch_size: 6
+      score_thresh: 0.0
+      use_hpip: False # 当前子模块不启用高性能推理
+  ```
+
+  </details>
+
+**注意：**
+
+1. 在子产线或子模块中设置 `use_hpip` 时，将以最深层的配置为准。
+
+2. **强烈建议通过修改产线配置文件的方式开启高性能推理**，不建议使用CLI或Python API的方式进行设置。如果通过CLI或Python API启用 `use_hpip`，等同于在配置文件的最高层上设置 `use_hpip`。
+
+### 2.6 模型缓存说明
+
+模型缓存会存放在模型目录下的 `.cache` 目录下，包括使用 `tensorrt` 或 `paddle` 后端时产生的 `shape_range_info.pbtxt`与`trt_serialized`开头的文件。
+
+当启用`auto_paddle2onnx`选项时，可能会在模型目录下自动生成`inference.onnx`文件。
+
+### 2.7 定制模型推理库
+
+`ultra-infer`是高性能推理底层依赖的模型推理库，位于 `PaddleX/libs/ultra-infer` 目录。编译脚本位于 `PaddleX/libs/ultra-infer/scripts/linux/set_up_docker_and_build_py.sh` ，编译默认编译GPU版本和包含 `OpenVINO`、`TensorRT`、`ONNX Runtime` 三种推理后端的 `ultra-infer`。
 
 自定义编译时可根据需求修改如下选项：
 

@@ -1,7 +1,7 @@
 
 # Paddle2ONNX 插件的安装与使用
 
-PaddleX 的 Paddle2ONNX 插件通过使用[Paddle2ONNX](https://github.com/PaddlePaddle/Paddle2ONNX)，提供了将 Paddle 模型转换为 ONNX 模型的能力。
+PaddleX 的 Paddle2ONNX 插件提供了将 Paddle 模型转换为 ONNX 模型的能力，底层使用[Paddle2ONNX](https://github.com/PaddlePaddle/Paddle2ONNX)。
 
 ## 1. 安装
 
