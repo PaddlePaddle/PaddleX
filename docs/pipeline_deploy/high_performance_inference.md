@@ -268,7 +268,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
     <th>可选值</th>
   </tr>
   <tr>
-    <td><code>openvino</code></td>
+    <td><code>paddle</code></td>
     <td>参考<a href="../module_usage/instructions/model_python_API.md">PaddleX单模型Python脚本使用说明: 4. 推理后端设置</a>。</td>
   </tr>
   <tr>
