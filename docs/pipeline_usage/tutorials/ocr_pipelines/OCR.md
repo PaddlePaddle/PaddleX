@@ -965,7 +965,6 @@ for res in output:
   extra:
     max_num_input_imgs: null
 </code></pre>
-</>
 </td>
 <td>是</td>
 </tr>
@@ -1047,7 +1046,7 @@ for res in output:
 <tr>
 <td><code>ocrResults</code></td>
 <td><code>object</code></td>
-<td>OCR结果。数组长度为1（对于图像输入）或文档页数与10中的较小者（对于PDF输入）。对于PDF输入，数组中的每个元素依次表示PDF文件中每一页的处理结果。</td>
+<td>OCR结果。数组长度为1（对于图像输入）或文档页数（对于PDF输入）。对于PDF输入，数组中的每个元素依次表示PDF文件中每一页的处理结果。</td>
 </tr>
 <tr>
 <td><code>dataInfo</code></td>

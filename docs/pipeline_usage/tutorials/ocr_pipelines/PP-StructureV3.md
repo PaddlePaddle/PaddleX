@@ -1586,7 +1586,7 @@ for res in output:
 <tr>
 <td><code>layoutParsingResults</code></td>
 <td><code>array</code></td>
-<td>版面解析结果。数组长度为1（对于图像输入）或文档页数与10中的较小者（对于PDF输入）。对于PDF输入，数组中的每个元素依次表示PDF文件中每一页的处理结果。</td>
+<td>版面解析结果。数组长度为1（对于图像输入）或文档页数（对于PDF输入）。对于PDF输入，数组中的每个元素依次表示PDF文件中每一页的处理结果。</td>
 </tr>
 <tr>
 <td><code>dataInfo</code></td>
