@@ -1258,7 +1258,7 @@ Below are the API references for basic serving deployment and multi-language ser
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>The URL of a server-accessible image or PDF file, or the Base64-encoded content of such files. By default, for PDF files exceeding 10 pages, only the first 10 pages will be used.<br />
+<td>The URL of a server-accessible image or PDF file, or the Base64-encoded content of such files. By default, for PDF files exceeding 10 pages, only the first 10 pages will be processed.<br />
 To remove the page limit, please add the following configuration to the pipeline configuration file:
 <pre><code>Serving:
   extra:
@@ -1391,7 +1391,7 @@ To remove the page limit, please add the following configuration to the pipeline
 <tr>
 <td><code>tableRecResults</code></td>
 <td><code>object</code></td>
-<td>The table recognition results. The array length is 1 (for image input) or the number of document pages (for PDF input). For PDF input, each element in the array represents the processing result of each page in the PDF file.</td>
+<td>The table recognition results. The array length is 1 (for image input) or the actual number of document pages processed (for PDF input). For PDF input, each element in the array represents the result of each page actually processed in the PDF file.</td>
 </tr>
 <tr>
 <td><code>dataInfo</code></td>
