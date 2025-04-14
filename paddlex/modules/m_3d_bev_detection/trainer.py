@@ -61,6 +61,8 @@ class BEVFusionTrainer(BaseTrainer):
         """
         train_args = {"device": self.get_device()}
         train_args["dy2st"] = self.train_config.get("dy2st", False)
+        # amp support 'O1', 'O2', 'OFF'
+        train_args["amp"] = self.train_config.get("amp", "OFF")
         if self.global_config.output is not None:
             train_args["save_dir"] = self.global_config.output
         return train_args

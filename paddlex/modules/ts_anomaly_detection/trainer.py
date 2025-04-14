@@ -107,4 +107,6 @@ training!"
         train_args = {"device": self.get_device(using_device_number=1)}
         if self.global_config.output is not None:
             train_args["save_dir"] = self.global_config.output
+        # amp support 'O1', 'O2', 'OFF'
+        train_args["amp"] = self.train_config.get("amp", "OFF")
         return train_args

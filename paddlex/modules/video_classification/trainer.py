@@ -83,4 +83,6 @@ class VideoClsTrainer(BaseTrainer):
         ):
             train_args["resume_path"] = self.train_config.resume_path
         train_args["dy2st"] = self.train_config.get("dy2st", False)
+        # amp support 'O1', 'O2', 'OFF'
+        train_args["amp"] = self.train_config.get("amp", "OFF")
         return train_args

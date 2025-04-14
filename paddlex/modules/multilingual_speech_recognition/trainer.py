@@ -35,5 +35,8 @@ class WhisperTrainer(BaseTrainer):
         Returns:
             dict: the arguments of training function.
         """
-        train_args = {"device": self.get_device()}
+        train_args = {
+            "device": self.get_device(),
+            "amp": self.train_config.get("amp", "OFF"),  # amp support 'O1', 'O2', 'OFF'
+        }
         return train_args

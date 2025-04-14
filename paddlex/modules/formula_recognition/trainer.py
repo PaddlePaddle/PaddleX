@@ -116,4 +116,5 @@ class FormulaRecTrainer(BaseTrainer):
         return {
             "device": self.get_device(),
             "dy2st": self.train_config.get("dy2st", False),
+            "amp": self.train_config.get("amp", "OFF"),  # amp support 'O1', 'O2', 'OFF'
         }

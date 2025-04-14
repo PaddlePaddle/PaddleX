@@ -65,4 +65,6 @@ class UadTrainer(BaseTrainer):
             train_args["do_eval"] = True
             train_args["save_interval"] = self.train_config.eval_interval
         train_args["dy2st"] = self.train_config.get("dy2st", False)
+        # amp support 'O1', 'O2', 'OFF'
+        train_args["amp"] = self.train_config.get("amp", "OFF")
         return train_args
