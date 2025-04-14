@@ -408,7 +408,7 @@ class PaddleInfer(StaticInfer):
                     config.enable_new_executor()
                 config.set_optimization_level(3)
             elif self._option.device_type == "npu":
-                config.enable_custom_device("npu")
+                config.enable_custom_device("npu", self._option.device_id)
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
             elif self._option.device_type == "xpu":
