@@ -438,6 +438,8 @@ class PaddleInfer(StaticInfer):
                     name = "PaddleX_" + self._option.model_name
                     gcu_passes.append_passes_for_legacy_ir(pass_builder, name)
             elif self._option.device_type == "dcu":
+                if hasattr(config, "enable_new_ir"):
+                    config.enable_new_ir(self._option.enable_new_ir)
                 config.enable_use_gpu(100, self._option.device_id)
 
                 if hasattr(config, "enable_new_ir"):

@@ -415,6 +415,7 @@ nav:
        - 高性能推理: pipeline_deploy/high_performance_inference.md
        - 服务化部署: pipeline_deploy/serving.md
        - 端侧部署: pipeline_deploy/edge_deploy.md
+       - 获取 ONNX 模型: pipeline_deploy/paddle2onnx.md
   - 多硬件使用:
        - 多硬件使用指南: other_devices_support/multi_devices_use_guide.md
        - 飞桨多硬件安装:

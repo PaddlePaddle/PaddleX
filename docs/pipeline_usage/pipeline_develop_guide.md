@@ -164,7 +164,7 @@ Pipeline:
 
 若您需要将产线直接应用在您的Python项目中，可以参考[PaddleX产线Python脚本使用说明](./instructions/pipeline_python_API.md)及[快速体验](#2快速体验)中的Python示例代码。
 
-此外，PaddleX 也提供了其他三种部署方式，详细说明如下：
+PaddleX 也提供了其他三种部署方式，详细说明如下：
 
 
 🚀 <b>高性能推理</b>：在实际生产环境中，许多应用对部署策略的性能指标（尤其是响应速度）有着较严苛的标准，以确保系统的高效运行与用户体验的流畅性。为此，PaddleX 提供高性能推理插件，旨在对模型推理及前后处理进行深度性能优化，实现端到端流程的显著提速，详细的高性能部署流程请参考[PaddleX高性能部署指南](../pipeline_deploy/high_performance_inference.md)。
@@ -174,7 +174,7 @@ Pipeline:
 📱 <b>端侧部署</b>：端侧部署是一种将计算和数据处理功能放在用户设备本身上的方式，设备可以直接处理数据，而不需要依赖远程的服务器。PaddleX 支持将模型部署在 Android 等端侧设备上，详细的端侧部署流程请参考[PaddleX端侧部署指南](../pipeline_deploy/edge_deploy.md)。
 您可以根据需要选择合适的方式部署模型产线，进而进行后续的 AI 应用集成。
 
-
+PaddleX 提供了将 Paddle 模型转换为 ONNX 模型的能力，详细说明请参考[Paddle2ONNX 插件的安装与使用](../pipeline_deploy/paddle2onnx.md)
 
 > ❗ PaddleX为每个产线都提供了详细的使用说明，您可以根据需要进行选择，所有产线对应的使用说明如下：
 

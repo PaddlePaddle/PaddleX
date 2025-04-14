@@ -1614,7 +1614,12 @@ for res in visual_predict_res:
 <tr>
 <td><code>file</code></td>
 <td><code>string</code></td>
-<td>服务器可访问的图像文件或PDF文件的URL，或上述类型文件内容的Base64编码结果。对于超过10页的PDF文件，只有前10页的内容会被使用。</td>
+<td>服务器可访问的图像文件或PDF文件的URL，或上述类型文件内容的Base64编码结果。默认对于超过10页的PDF文件，只有前10页的内容会被处理。<br /> 要解除页数限制，请在产线配置文件中添加以下配置：
+<pre><code>Serving:
+  extra:
+    max_num_input_imgs: null
+</code></pre>
+</td>
 <td>是</td>
 </tr>
 <tr>
@@ -1766,7 +1771,7 @@ for res in visual_predict_res:
 <tr>
 <td><code>layoutParsingResults</code></td>
 <td><code>array</code></td>
-<td>使用计算机视觉模型得到的分析结果。数组长度为1（对于图像输入）或文档页数与10中的较小者（对于PDF输入）。对于PDF输入，数组中的每个元素依次表示PDF文件中每一页的处理结果。</td>
+<td>使用计算机视觉模型得到的分析结果。数组长度为1（对于图像输入）或实际处理的文档页数（对于PDF输入）。对于PDF输入，数组中的每个元素依次表示PDF文件中实际处理的每一页的结果。</td>
 </tr>
 <tr>
 <td><code>visualInfo</code></td>
