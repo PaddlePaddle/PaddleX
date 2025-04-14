@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,189 @@
 # limitations under the License.
 
 
-import os
 import glob
 import itertools
+import os
 from pathlib import Path
 
-from setuptools import find_packages
-from setuptools import setup
+from setuptools import find_packages, setup
+
+DEP_SPECS = {
+    "aiohttp": ">= 3.9",
+    "bce-python-sdk": ">= 0.9",
+    "chardet": "",
+    "chinese-calendar": "",
+    "colorlog": "",
+    "decord": "== 0.6.0; (platform_machine == 'x86_64' or platform_machine == 'AMD64') and sys_platform != 'darwin'",
+    "einops": "",
+    "faiss-cpu": "",
+    "fastapi": ">= 0.110",
+    "filelock": "",
+    "filetype": ">= 1.2",
+    "ftfy": "",
+    "GPUtil": ">= 1.4",
+    "imagesize": "",
+    "Jinja2": "",
+    "joblib": "",
+    "langchain": "== 0.2.17",
+    "langchain-community": "== 0.2.17",
+    "langchain-core": "",
+    "langchain-openai": "== 0.1.25",
+    "lxml": "",
+    "matplotlib": "",
+    "numpy": [
+        "== 1.24.4; python_version < '3.12'",
+        "== 1.26.4; python_version >= '3.12'",
+    ],
+    "openai": "== 1.63.2",
+    "opencv-contrib-python": "== 4.10.0.84",
+    "openpyxl": "",
+    "packaging": "",
+    "pandas": "",
+    "pillow": "",
+    "premailer": "",
+    "prettytable": "",
+    "py-cpuinfo": "",
+    "pyclipper": "",
+    "pycocotools": "",
+    "pydantic": ">= 2",
+    "PyMuPDF": "",
+    "PyYAML": "== 6.0.2",
+    "regex": "",
+    "requests": "",
+    "ruamel.yaml": "",
+    "scikit-image": "",
+    "scikit-learn": "",
+    "shapely": "",
+    "soundfile": "",
+    "starlette": ">= 0.36",
+    "tokenizers": "== 0.19.1",
+    "tqdm": "",
+    "typing-extensions": "",
+    "ujson": "",
+    "uvicorn": ">= 0.16",
+    "yarl": ">= 1.9",
+}
+
+REQUIRED_DEPS = [
+    "chardet",
+    "colorlog",
+    "filelock",
+    "GPUtil",
+    "numpy",
+    "packaging",
+    # Currently it is not easy to make `pandas` optional
+    "pandas",
+    "pillow",
+    "prettytable",
+    "py-cpuinfo",
+    "pydantic",
+    "PyYAML",
+    "requests",
+    "ruamel.yaml",
+    "typing-extensions",
+    "ujson",
+]
+
+EXTRAS = {
+    "base": {
+        "cv": [
+            "faiss-cpu",
+            "matplotlib",
+            "opencv-contrib-python",
+            "pycocotools",
+            # Currently `PyMuPDF` is required by the image batch sampler
+            "PyMuPDF",
+            "scikit-image",
+        ],
+        "multimodal": [
+            "einops",
+            "ftfy",
+            "Jinja2",
+            "opencv-contrib-python",
+            # For the same reason as in `cv`
+            "PyMuPDF",
+            "regex",
+        ],
+        "ie": [
+            "ftfy",
+            "imagesize",
+            "langchain",
+            "langchain-community",
+            "langchain-core",
+            "langchain-openai",
+            "lxml",
+            "openai",
+            "opencv-contrib-python",
+            "openpyxl",
+            "premailer",
+            "pyclipper",
+            "PyMuPDF",
+            "scikit-learn",
+            "shapely",
+            "tokenizers",
+        ],
+        "ocr": [
+            "ftfy",
+            "imagesize",
+            "lxml",
+            "opencv-contrib-python",
+            "openpyxl",
+            "premailer",
+            "pyclipper",
+            "PyMuPDF",
+            "scikit-learn",
+            "shapely",
+            "tokenizers",
+        ],
+        "speech": [
+            "ftfy",
+            "Jinja2",
+            "regex",
+            "soundfile",
+            "tqdm",
+        ],
+        "ts": [
+            "chinese-calendar",
+            "joblib",
+            "matplotlib",
+            "scikit-learn",
+        ],
+        "video": [
+            "decord",
+            "opencv-contrib-python",
+        ],
+    },
+    "plugins": {
+        "serving": [
+            "aiohttp",
+            "bce-python-sdk",
+            "fastapi",
+            "filetype",
+            "starlette",
+            "uvicorn",
+            "yarl",
+        ],
+    },
+}
+
+
+def _get_dep_specs(deps):
+    dep_specs = []
+    for dep in deps:
+        val = DEP_SPECS[dep]
+        if not isinstance(val, list):
+            val = [val]
+        for v in val:
+            if not v:
+                dep_specs.append(dep)
+            else:
+                dep_specs.append(dep + " " + v)
+    return dep_specs
+
+
+def _sort_dep_specs(dep_specs):
+    return sorted(dep_specs, key=str.lower)
 
 
 def readme():
@@ -29,19 +205,23 @@ def readme():
 
 
 def dependencies():
-    """get dependencies"""
-    with open("requirements.txt", "r") as file:
-        return file.read()
+    dep_specs = _get_dep_specs(REQUIRED_DEPS)
+    return _sort_dep_specs(dep_specs)
 
 
-def serving_dependencies():
-    with open(os.path.join("paddlex", "serving_requirements.txt"), "r") as file:
-        return file.read()
-
-
-def paddle2onnx_dependencies():
-    with open(os.path.join("paddlex", "paddle2onnx_requirements.txt"), "r") as file:
-        return file.read()
+def extras():
+    dic = {}
+    all_dep_specs = set()
+    for group_name, group in EXTRAS.items():
+        group_dep_specs = set()
+        for extra_name, extra_deps in group.items():
+            extra_dep_specs = _get_dep_specs(extra_deps)
+            dic[extra_name] = _sort_dep_specs(extra_dep_specs)
+            group_dep_specs.update(extra_dep_specs)
+            dic[group_name] = _sort_dep_specs(group_dep_specs)
+            all_dep_specs.update(group_dep_specs)
+    dic["all"] = _sort_dep_specs(all_dep_specs)
+    return dic
 
 
 def version():
@@ -93,16 +273,14 @@ def packages_and_package_data():
     pkg_data.append("inference/pipelines/ppchatocrv3/ch_prompt.yaml")
     pkg_data.extend(pipeline_config)
     pkg_data.append(".version")
-    pkg_data.append("utils/fonts/PingFang-SC-Regular.ttf")
-    pkg_data.append("repo_manager/requirements.txt")
-    pkg_data.append("serving_requirements.txt")
-    pkg_data.append("paddle2onnx_requirements.txt")
     pkg_data.append("hpip_links.html")
-    ops_file_dir = 'paddlex/ops'
-    ops_file_types = ['h', 'hpp', 'cpp', 'cc', 'cu']
+    pkg_data.append("inference/utils/hpi_model_info_collection.json")
+    ops_file_dir = "paddlex/ops"
+    ops_file_types = ["h", "hpp", "cpp", "cc", "cu"]
     return pkgs, {
         "paddlex.ops": get_data_files(ops_file_dir, ops_file_types),
-        "paddlex": pkg_data}
+        "paddlex": pkg_data,
+    }
 
 
 if __name__ == "__main__":
@@ -113,13 +291,11 @@ if __name__ == "__main__":
         version=version(),
         description=("Low-code development tool based on PaddlePaddle."),
         long_description=readme(),
+        long_description_content_type="text/markdown",
         author="PaddlePaddle Authors",
         author_email="",
         install_requires=dependencies(),
-        extras_require={
-            "serving": serving_dependencies(),
-            "paddle2onnx": paddle2onnx_dependencies(),
-        },
+        extras_require=extras(),
         packages=pkgs,
         package_data=pkg_data,
         entry_points={
@@ -137,6 +313,8 @@ if __name__ == "__main__":
             "Programming Language :: Python :: 3.8",
             "Programming Language :: Python :: 3.9",
             "Programming Language :: Python :: 3.10",
+            "Programming Language :: Python :: 3.11",
+            "Programming Language :: Python :: 3.12",
             "Topic :: Scientific/Engineering",
             "Topic :: Scientific/Engineering :: Mathematics",
             "Topic :: Scientific/Engineering :: Artificial Intelligence",

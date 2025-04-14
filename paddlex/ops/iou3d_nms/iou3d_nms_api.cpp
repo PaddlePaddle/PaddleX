@@ -21,13 +21,15 @@
 #include "iou3d_cpu.h"
 #include "iou3d_nms.h"
 
-std::vector<paddle::DataType> BoxesIouBevCpuInferDtype(
-    paddle::DataType boxes_a_dtype, paddle::DataType boxes_b_dtype) {
+std::vector<paddle::DataType>
+BoxesIouBevCpuInferDtype(paddle::DataType boxes_a_dtype,
+                         paddle::DataType boxes_b_dtype) {
   return {boxes_a_dtype};
 }
 
-std::vector<std::vector<int64_t>> BoxesIouBevCpuInferShape(
-    std::vector<int64_t> boxes_a_shape, std::vector<int64_t> boxes_b_shape) {
+std::vector<std::vector<int64_t>>
+BoxesIouBevCpuInferShape(std::vector<int64_t> boxes_a_shape,
+                         std::vector<int64_t> boxes_b_shape) {
   return {{boxes_a_shape[0], boxes_b_shape[0]}};
 }
 
@@ -35,38 +37,42 @@ std::vector<paddle::DataType> NmsInferDtype(paddle::DataType boxes_dtype) {
   return {paddle::DataType::INT64, paddle::DataType::INT64};
 }
 
-std::vector<std::vector<int64_t>> NmsInferShape(
-    std::vector<int64_t> boxes_shape) {
+std::vector<std::vector<int64_t>>
+NmsInferShape(std::vector<int64_t> boxes_shape) {
   return {{boxes_shape[0]}, {1}};
 }
 
-std::vector<paddle::DataType> NmsNormalInferDtype(
-    paddle::DataType boxes_dtype) {
+std::vector<paddle::DataType>
+NmsNormalInferDtype(paddle::DataType boxes_dtype) {
   return {paddle::DataType::INT64, paddle::DataType::INT64};
 }
 
-std::vector<std::vector<int64_t>> NmsNormalInferShape(
-    std::vector<int64_t> boxes_shape) {
+std::vector<std::vector<int64_t>>
+NmsNormalInferShape(std::vector<int64_t> boxes_shape) {
   return {{boxes_shape[0]}, {1}};
 }
 
-std::vector<paddle::DataType> BoxesIouBevGpuInferDtype(
-    paddle::DataType boxes_a_dtype, paddle::DataType boxes_b_dtype) {
+std::vector<paddle::DataType>
+BoxesIouBevGpuInferDtype(paddle::DataType boxes_a_dtype,
+                         paddle::DataType boxes_b_dtype) {
   return {boxes_a_dtype};
 }
 
-std::vector<std::vector<int64_t>> BoxesIouBevGpuInferShape(
-    std::vector<int64_t> boxes_a_shape, std::vector<int64_t> boxes_b_shape) {
+std::vector<std::vector<int64_t>>
+BoxesIouBevGpuInferShape(std::vector<int64_t> boxes_a_shape,
+                         std::vector<int64_t> boxes_b_shape) {
   return {{boxes_a_shape[0], boxes_b_shape[0]}};
 }
 
-std::vector<paddle::DataType> BoxesOverlapBevGpuInferDtype(
-    paddle::DataType boxes_a_dtype, paddle::DataType boxes_b_dtype) {
+std::vector<paddle::DataType>
+BoxesOverlapBevGpuInferDtype(paddle::DataType boxes_a_dtype,
+                             paddle::DataType boxes_b_dtype) {
   return {boxes_a_dtype};
 }
 
-std::vector<std::vector<int64_t>> BoxesOverlapBevGpuInferShape(
-    std::vector<int64_t> boxes_a_shape, std::vector<int64_t> boxes_b_shape) {
+std::vector<std::vector<int64_t>>
+BoxesOverlapBevGpuInferShape(std::vector<int64_t> boxes_a_shape,
+                             std::vector<int64_t> boxes_b_shape) {
   return {{boxes_a_shape[0], boxes_b_shape[0]}};
 }
 

@@ -76,7 +76,7 @@ inline int check_in_box2d(const float *box, const Point &p) {
   float center_x = box[0], center_y = box[1];
   float angle_cos = cos(-box[6]),
         angle_sin =
-            sin(-box[6]);  // rotate the point in the opposite direction of box
+            sin(-box[6]); // rotate the point in the opposite direction of box
   float rot_x = (p.x - center_x) * angle_cos + (p.y - center_y) * (-angle_sin);
   float rot_y = (p.x - center_x) * angle_sin + (p.y - center_y) * angle_cos;
 
@@ -87,7 +87,8 @@ inline int check_in_box2d(const float *box, const Point &p) {
 inline int intersection(const Point &p1, const Point &p0, const Point &q1,
                         const Point &q0, Point &ans) {
   // fast exclusion
-  if (check_rect_cross(p0, p1, q0, q1) == 0) return 0;
+  if (check_rect_cross(p0, p1, q0, q1) == 0)
+    return 0;
 
   // check cross standing
   float s1 = cross(q0, p1, p0);
@@ -95,7 +96,8 @@ inline int intersection(const Point &p1, const Point &p0, const Point &q1,
   float s3 = cross(p0, q1, q0);
   float s4 = cross(q1, p1, q0);
 
-  if (!(s1 * s2 > 0 && s3 * s4 > 0)) return 0;
+  if (!(s1 * s2 > 0 && s3 * s4 > 0))
+    return 0;
 
   // calculate intersection of two lines
   float s5 = cross(q1, p1, p0);
@@ -238,9 +240,9 @@ inline float iou_bev(const float *box_a, const float *box_b) {
   return s_overlap / fmaxf(sa + sb - s_overlap, EPS);
 }
 
-std::vector<paddle::Tensor> boxes_iou_bev_cpu(
-    const paddle::Tensor &boxes_a_tensor,
-    const paddle::Tensor &boxes_b_tensor) {
+std::vector<paddle::Tensor>
+boxes_iou_bev_cpu(const paddle::Tensor &boxes_a_tensor,
+                  const paddle::Tensor &boxes_b_tensor) {
   // params boxes_a_tensor: (N, 7) [x, y, z, dx, dy, dz, heading]
   // params boxes_b_tensor: (M, 7) [x, y, z, dx, dy, dz, heading]
   // params ans_iou_tensor: (N, M)

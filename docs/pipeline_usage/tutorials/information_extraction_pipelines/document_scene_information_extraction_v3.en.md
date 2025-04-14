@@ -368,7 +368,7 @@ You can [experience online](https://aistudio.baidu.com/community/app/182491/webU
 If you are satisfied with the pipeline's performance, you can directly integrate and deploy it. If not, you can also use private data to **fine-tune the models in the pipeline online**.
 
 ### 2.2 Local Experience
-Before using the Document Scene Information Extraction v3 pipeline locally, ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.md).
+Before using the Document Scene Information Extraction v3 pipeline locally, ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `ie`.
 
 Before performing model inference, you need to prepare the API key for the large language model. PP-ChatOCRv3 supports calling the large model inference service provided by the [Baidu Cloud Qianfan Platform](https://console.bce.baidu.com/qianfan/ais/console/onlineService). You can refer to [Authentication and Authorization](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Um2wxbaps) to obtain the API key from the Qianfan Platform.
 

@@ -107,7 +107,7 @@ comments: true
 ## 2. 快速开始
 PaddleX 支持在本地使用命令行或 Python 体验文档图像预处理产线的效果。
 
-在本地使用文档图像预处理产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。
+在本地使用文档图像预处理产线前，请确保您已经按照[PaddleX本地安装教程](../../../installation/installation.md)完成了PaddleX的wheel包安装。如果您希望选择性安装依赖，请参考安装教程中的相关说明。该产线对应的依赖分组为 `ocr`。
 
 ### 2.1 本地体验
 
@@ -479,7 +479,7 @@ for res in output:
 <li><b><code>infer</code></b></li>
 </ul>
 <p>获取图像文档图像预处理结果。</p>
-<p><code>POST /doc_preprocessor</code></p>
+<p><code>POST /document-preprocessing</code></p>
 <ul>
 <li>请求体的属性如下：</li>
 </ul>

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,18 +13,21 @@
 # limitations under the License.
 # Modified from OpenAI Whisper 2022 (https://github.com/openai/whisper/whisper)
 import os
-import tqdm
 import zlib
-import soundfile
-import numpy as np
-import lazy_paddle as paddle
-
-from dataclasses import dataclass
-from dataclasses import field
+from dataclasses import dataclass, field
 from functools import lru_cache
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple, Union
 
+import numpy as np
+import paddle
+
+from ....utils.deps import function_requires_deps, is_dep_available
 from ..common.tokenizer import GPTTokenizer
+
+if is_dep_available("soundfile"):
+    import soundfile
+if is_dep_available("tqdm"):
+    import tqdm
 
 __all__ = [
     "Whisper",
@@ -336,11 +339,9 @@ class Tokenizer:
         """
         Returns the list of tokens to suppress in order to avoid any speaker tags or non-speech
         annotations, to prevent sampling texts that are not actually spoken in the audio, e.g.
-
         - ♪♪♪
         - ( SPEAKING FOREIGN LANGUAGE )
         - [DAVID] Hey there,
-
         keeping basic punctuations like commas, periods, question marks, exclamation points, etc.
         """
         symbols = list('"#()*+/:;<=>@[\\]^_`{|}~「」『』')
@@ -706,7 +707,6 @@ class Inference:
 
     def cleanup_caching(self) -> None:
         """Clean up any resources or hooks after decoding is finished"""
-        pass
 
 
 class WhisperInference(Inference):
@@ -752,7 +752,6 @@ def detect_language(
     Detect the spoken language in the audio, and return them as list of strings, along with the ids
     of the most probable language tokens and the probability distribution over all language tokens.
     This is performed outside the main decode loop in order to not interfere with kv-caching.
-
     Returns
     -------
     language_tokens : Tensor, shape = (batch_size,)
@@ -804,6 +803,7 @@ def detect_language(
     return language_tokens, language_probs
 
 
+@function_requires_deps("tqdm")
 def transcribe(
     model: "Whisper",
     mel: paddle.Tensor,
@@ -819,41 +819,31 @@ def transcribe(
 ):
     """
     Transcribe an audio file using Whisper
-
     Parameters
     ----------
     model: Whisper
         The Whisper model instance
-
     mel: paddle.Tensor
         The audio feature
-
     verbose: bool
         Whether to display the text being decoded to the console. If True, displays all the details,
         If False, displays minimal details. If None, does not display anything
-
     temperature: Union[float, Tuple[float, ...]]
         Temperature for sampling. It can be a tuple of temperatures, which will be successfully used
         upon failures according to either `compression_ratio_threshold` or `logprob_threshold`.
-
     compression_ratio_threshold: float
         If the gzip compression ratio is above this value, treat as failed
-
     logprob_threshold: float
         If the average log probability over sampled tokens is below this value, treat as failed
-
     no_speech_threshold: float
         If the no_speech probability is higher than this value AND the average log probability
         over sampled tokens is below `logprob_threshold`, consider the segment as silent
-
     condition_on_previous_text: bool
         if True, the previous output of the model is provided as a prompt for the next window;
         disabling may make the text inconsistent across windows, but the model becomes less prone to
         getting stuck in a failure loop, such as repetition looping or timestamps going out of sync.
-
     decode_options: dict
         Keyword arguments to construct `DecodingOptions` instances
-
     Returns
     -------
     A dictionary containing the resulting text ("text") and segment-level details ("segments"), and
@@ -886,7 +876,10 @@ def transcribe(
     language = decode_options["language"]
     task = decode_options.get("task", "transcribe")
     tokenizer = get_tokenizer(
-        model.is_multilingual, resource_path=resource_path, language=language, task=task
+        model.is_multilingual,
+        resource_path=resource_path,
+        language=language,
+        task=task,
     )
 
     def decode_with_fallback(segment: paddle.Tensor) -> DecodingResult:
@@ -944,7 +937,11 @@ def transcribe(
         initial_prompt = []
 
     def add_segment(
-        *, start: float, end: float, text_tokens: paddle.Tensor, result: DecodingResult
+        *,
+        start: float,
+        end: float,
+        text_tokens: paddle.Tensor,
+        result: DecodingResult,
     ):
         text = tokenizer.decode(
             [token for token in text_tokens if token < tokenizer.eot]
@@ -1113,29 +1110,26 @@ class TokenDecoder:
         """Initialize any stateful variables for decoding a new sequence"""
 
     def update(
-        self, tokens: paddle.Tensor, logits: paddle.Tensor, sum_logprobs: paddle.Tensor
+        self,
+        tokens: paddle.Tensor,
+        logits: paddle.Tensor,
+        sum_logprobs: paddle.Tensor,
     ) -> Tuple[paddle.Tensor, bool]:
         """Specify how to select the next token, based on the current trace and logits
-
         Parameters
         ----------
         tokens : Tensor, shape = (n_batch, current_sequence_length)
             all tokens in the context so far, including the prefix and sot_sequence tokens
-
         logits : Tensor, shape = (n_batch, vocab_size)
             per-token logits of the probability distribution at the current step
-
         sum_logprobs : Tensor, shape = (n_batch)
             cumulative log probabilities for each sequence
-
         Returns
         -------
         tokens : Tensor, shape = (n_batch, current_sequence_length + 1)
             the tokens, appended with the selected next token
-
         completed : bool
             True if all sequences has reached the end of text
-
         """
         raise NotImplementedError
 
@@ -1143,23 +1137,18 @@ class TokenDecoder:
         self, tokens: paddle.Tensor, sum_logprobs: paddle.Tensor
     ) -> Tuple[Sequence[Sequence[paddle.Tensor]], List[List[float]]]:
         """Finalize search and return the final candidate sequences
-
         Parameters
         ----------
         tokens : Tensor, shape = (batch_size, beam_size, current_sequence_length)
             all tokens in the context so far, including the prefix and sot_sequence
-
         sum_logprobs : Tensor, shape = (batch_size, beam_size)
             cumulative log probabilities for each sequence
-
         Returns
         -------
         tokens : Sequence[Sequence[Tensor]], length = batch_size
             sequence of Tensors containing candidate token sequences, for each audio input
-
         sum_logprobs : List[List[float]], length = batch_size
             sequence of cumulative log probabilities corresponding to the above
-
         """
         raise NotImplementedError
 
@@ -1170,7 +1159,10 @@ class GreedyDecoder(TokenDecoder):
         self.eot = eot
 
     def update(
-        self, tokens: paddle.Tensor, logits: paddle.Tensor, sum_logprobs: paddle.Tensor
+        self,
+        tokens: paddle.Tensor,
+        logits: paddle.Tensor,
+        sum_logprobs: paddle.Tensor,
     ) -> Tuple[paddle.Tensor, bool]:
         temperature = self.temperature
         if temperature == 0:
@@ -1235,7 +1227,10 @@ class BeamSearchDecoder(TokenDecoder):
         self.finished_sequences = None
 
     def update(
-        self, tokens: paddle.Tensor, logits: paddle.Tensor, sum_logprobs: paddle.Tensor
+        self,
+        tokens: paddle.Tensor,
+        logits: paddle.Tensor,
+        sum_logprobs: paddle.Tensor,
     ) -> Tuple[paddle.Tensor, bool]:
         if tokens.shape[0] % self.beam_size != 0:
             raise ValueError(f"{tokens.shape}[0] % {self.beam_size} != 0")
@@ -1564,7 +1559,10 @@ class DecodingTask:
         return audio_features
 
     def _detect_language(
-        self, audio_features: paddle.Tensor, tokens: paddle.Tensor, resource_path: str
+        self,
+        audio_features: paddle.Tensor,
+        tokens: paddle.Tensor,
+        resource_path: str,
     ):
         languages = [self.options.language] * audio_features.shape[0]
         lang_probs = None
@@ -1656,20 +1654,16 @@ class DecodingTask:
             ]
 
         # repeat the audio & text tensors by the group size, for beam search or best-of-n sampling
-
         audio_features = paddle.repeat_interleave(
             audio_features, self.beam_size, axis=0
         )
         tokens = paddle.repeat_interleave(tokens, self.beam_size, axis=0)
-
         # call the main sampling loop
         tokens, sum_logprobs, no_speech_probs = self._main_loop(audio_features, tokens)
-
         # reshape the tensors to have (batch_size, beam_size) as the first two dimensions
         audio_features = audio_features[:: self.beam_size]
         no_speech_probs = no_speech_probs[:: self.beam_size]
         assert audio_features.shape[0] == len(no_speech_probs) == batch_size
-
         tokens = tokens.reshape([batch_size, self.beam_size, -1])
         sum_logprobs = sum_logprobs.reshape([batch_size, self.beam_size])
 
@@ -1727,18 +1721,14 @@ def decode(
 ) -> Union[DecodingResult, List[DecodingResult]]:
     """
     Performs decoding of 30-second audio segment(s), provided as Mel spectrogram(s).
-
     Parameters
     ----------
     model: Whisper
         the Whisper model instance
-
     mel: paddle.Tensor, shape = (80, 3000) or (*, 80, 3000)
         A tensor containing the Mel spectrogram(s)
-
     options: DecodingOptions
         A dataclass that contains all necessary options for decoding 30-second segments
-
     Returns
     -------
     result: Union[DecodingResult, List[DecodingResult]]
@@ -1804,7 +1794,6 @@ class Whisper(paddle.nn.Layer):
         tensors calculated for the previous positions. This method returns a dictionary that stores
         all caches, and the necessary hooks for the key and value projection modules that save the
         intermediate tensors to be reused during later calculations.
-
         Returns
         -------
         cache : Dict[nn.Layer, paddle.Tensor]
@@ -1888,7 +1877,6 @@ def mel_filters(resource_path: str, n_mels: int = N_MELS) -> paddle.Tensor:
     """
     load the mel filterbank matrix for projecting STFT into a Mel spectrogram.
     Allows decoupling librosa dependency; saved using:
-
         np.savez_compressed(
             "mel_filters.npz",
             mel_80=librosa.filters.mel(sr=16000, n_fft=400, n_mels=80),
@@ -1899,6 +1887,7 @@ def mel_filters(resource_path: str, n_mels: int = N_MELS) -> paddle.Tensor:
         return paddle.to_tensor(f[f"mel_{n_mels}"])
 
 
+@function_requires_deps("soundfile")
 def log_mel_spectrogram(
     audio: Union[str, np.ndarray, paddle.Tensor],
     n_mels: int = N_MELS,
@@ -1906,15 +1895,12 @@ def log_mel_spectrogram(
 ):
     """
     Compute the log-Mel spectrogram of
-
     Parameters
     ----------
     audio: Union[str, np.ndarray, paddle.Tensor], shape = (*)
         The path to audio or either a NumPy array or Tensor containing the audio waveform in 16 kHz
-
     n_mels: int
         The number of Mel-frequency filters, only 80 is supported
-
     Returns
     -------
     paddle.Tensor, shape = (80, n_frames)

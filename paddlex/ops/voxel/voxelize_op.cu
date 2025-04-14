@@ -14,11 +14,11 @@
 
 #include "paddle/extension.h"
 
-#define CHECK_INPUT_CUDA(x) \
+#define CHECK_INPUT_CUDA(x)                                                    \
   PD_CHECK(x.is_gpu() || x.is_gpu_pinned(), #x " must be a GPU Tensor.")
 
-#define CUDA_KERNEL_LOOP(i, n)                                  \
-  for (auto i = blockIdx.x * blockDim.x + threadIdx.x; i < (n); \
+#define CUDA_KERNEL_LOOP(i, n)                                                 \
+  for (auto i = blockIdx.x * blockDim.x + threadIdx.x; i < (n);                \
        i += blockDim.x * gridDim.x)
 
 template <typename T, typename T_int>
@@ -119,12 +119,11 @@ __global__ void update_points_flag(const int *points_valid,
 }
 
 template <typename T_int>
-__global__ void get_voxel_idx_kernel(const int *points_flag,
-                                     const T_int *points_to_grid_idx,
-                                     const int *points_flag_prefix_sum,
-                                     const int num_points, const int max_voxels,
-                                     T_int *num_voxels,
-                                     T_int *grid_idx_to_voxel_idx) {
+__global__ void
+get_voxel_idx_kernel(const int *points_flag, const T_int *points_to_grid_idx,
+                     const int *points_flag_prefix_sum, const int num_points,
+                     const int max_voxels, T_int *num_voxels,
+                     T_int *grid_idx_to_voxel_idx) {
   int tid = threadIdx.x + blockIdx.x * blockDim.x;
   for (int i = tid; i < num_points; i += gridDim.x * blockDim.x) {
     if (points_flag[i] == 1) {
@@ -155,11 +154,12 @@ __global__ void init_voxels_kernel(const int64_t num, T *voxels) {
 }
 
 template <typename T, typename T_int>
-__global__ void assign_voxels_kernel(
-    const T *points, const T_int *points_to_grid_idx,
-    const T_int *points_to_num_idx, const T_int *grid_idx_to_voxel_idx,
-    const int64_t num_points, const int num_point_dim,
-    const int max_num_points_in_voxel, T *voxels) {
+__global__ void
+assign_voxels_kernel(const T *points, const T_int *points_to_grid_idx,
+                     const T_int *points_to_num_idx,
+                     const T_int *grid_idx_to_voxel_idx,
+                     const int64_t num_points, const int num_point_dim,
+                     const int max_num_points_in_voxel, T *voxels) {
   int64_t point_idx = blockIdx.x * blockDim.x + threadIdx.x;
   if (point_idx > num_points || point_idx == num_points) {
     return;
@@ -179,13 +179,12 @@ __global__ void assign_voxels_kernel(
 }
 
 template <typename T, typename T_int>
-__global__ void assign_coords_kernel(const T_int *grid_idx_to_voxel_idx,
-                                     const T_int *num_points_in_grid,
-                                     const int num_grids, const int grid_size_x,
-                                     const int grid_size_y,
-                                     const int grid_size_z,
-                                     const int max_num_points_in_voxel,
-                                     T *coords, T *num_points_per_voxel) {
+__global__ void
+assign_coords_kernel(const T_int *grid_idx_to_voxel_idx,
+                     const T_int *num_points_in_grid, const int num_grids,
+                     const int grid_size_x, const int grid_size_y,
+                     const int grid_size_z, const int max_num_points_in_voxel,
+                     T *coords, T *num_points_per_voxel) {
   int64_t grid_idx = blockIdx.x * blockDim.x + threadIdx.x;
   if (grid_idx > num_grids || grid_idx == num_grids) {
     return;
@@ -205,10 +204,11 @@ __global__ void assign_coords_kernel(const T_int *grid_idx_to_voxel_idx,
   }
 }
 
-std::vector<paddle::Tensor> hard_voxelize_cuda(
-    const paddle::Tensor &points, const std::vector<float> &voxel_size,
-    const std::vector<float> &point_cloud_range, int max_num_points_in_voxel,
-    int max_voxels) {
+std::vector<paddle::Tensor>
+hard_voxelize_cuda(const paddle::Tensor &points,
+                   const std::vector<float> &voxel_size,
+                   const std::vector<float> &point_cloud_range,
+                   int max_num_points_in_voxel, int max_voxels) {
   // check device
   CHECK_INPUT_CUDA(points);
 

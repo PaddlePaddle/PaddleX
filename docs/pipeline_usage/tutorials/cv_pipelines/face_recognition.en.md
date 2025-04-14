@@ -152,7 +152,7 @@ The pre-trained model pipelines provided by PaddleX can be quickly experienced. 
 Oneline Experience is not supported at the moment.
 
 ### 2.2 Local Experience
-> ❗ Before using the face recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md).
+> ❗ Before using the face recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Installation Guide](../../../installation/installation.en.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `cv`.
 
 #### 2.2.1 Command Line Experience
 

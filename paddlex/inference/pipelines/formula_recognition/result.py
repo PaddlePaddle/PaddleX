@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,36 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os, sys
-from typing import Tuple, List, Dict, Any
-import cv2
-import PIL
 import math
-import copy
+import os
 import random
-import tempfile
 import subprocess
-import numpy as np
+import tempfile
 from pathlib import Path
-import PIL
-from PIL import Image, ImageDraw, ImageFont
+from typing import Dict, Tuple
 
-from ...common.result import BaseCVResult, JsonMixin, ImgMixin, StrMixin
+import numpy as np
+from PIL import Image, ImageDraw
+
 from ....utils import logging
+from ....utils.deps import class_requires_deps, function_requires_deps, is_dep_available
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ...common.result import BaseCVResult, JsonMixin
 from ...models.formula_recognition.result import (
-    get_align_equation,
-    generate_tex_file,
-    generate_pdf_file,
-    env_valid,
-    pdf2img,
-    create_font,
     crop_white_area,
     draw_box_txt_fine,
     draw_formula_module,
+    env_valid,
+    generate_pdf_file,
+    generate_tex_file,
+    pdf2img,
 )
 
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
+
+@class_requires_deps("opencv-contrib-python")
 class FormulaRecognitionResult(BaseCVResult):
     """Formula Recognition Result"""
 
@@ -123,10 +123,10 @@ class FormulaRecognitionResult(BaseCVResult):
         random.seed(0)
         draw_left = ImageDraw.Draw(img_left)
 
-        formula_res_list = self["formula_res_list"]
+        self["formula_res_list"]
         for tno in range(len(self["formula_res_list"])):
             formula_res = self["formula_res_list"][tno]
-            formula_region_id = formula_res["formula_region_id"]
+            formula_res["formula_region_id"]
             formula = str(formula_res["rec_formula"])
             dt_polys = formula_res["dt_polys"]
             x1, y1, x2, y2 = list(dt_polys)
@@ -226,6 +226,7 @@ class FormulaRecognitionResult(BaseCVResult):
         return JsonMixin._to_json(data, *args, **kwargs)
 
 
+@function_requires_deps("opencv-contrib-python")
 def draw_box_formula_fine(
     img_size: Tuple[int, int], box: np.ndarray, formula: str, is_debug: bool = False
 ) -> np.ndarray:

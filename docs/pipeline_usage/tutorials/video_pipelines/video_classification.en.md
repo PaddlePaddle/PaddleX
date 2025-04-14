@@ -92,7 +92,7 @@ PP-TSM is a video classification model developed by Baidu PaddlePaddle's Vision 
 
 PaddleX supports experiencing the pipeline's effects locally using command line or Python.
 
-Before using the general video classification pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the PaddleX Local Installation Guide.
+Before using the general video classification pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the PaddleX Local Installation Guide. If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `video`.
 
 #### 2.1 Command Line Experience
 You can quickly experience the video classification pipeline with a single command. Use the [test file](https://paddle-model-ecology.bj.bcebos.com/paddlex/videos/demo_video/general_video_classification_001.mp4) and replace `--input` with your local path for prediction.

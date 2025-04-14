@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,15 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import cv2
 import copy
 import math
+
+import numpy as np
 from PIL import Image
 
-import matplotlib.pyplot as plt
-import numpy as np
-
+from ....utils.deps import function_requires_deps, is_dep_available
 from ...common.result import BaseCVResult, JsonMixin
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+if is_dep_available("matplotlib"):
+    import matplotlib.pyplot as plt
 
 
 def get_color(idx):
@@ -29,6 +33,7 @@ def get_color(idx):
     return color
 
 
+@function_requires_deps("matplotlib", "opencv-contrib-python")
 def draw_keypoints(img, results, visual_thresh=0.1, ids=None):
     plt.switch_backend("agg")
     skeletons = results["keypoints"]

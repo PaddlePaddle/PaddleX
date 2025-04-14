@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,22 +13,20 @@
 # limitations under the License.
 
 import os
-import json
-import math
 import platform
-from pathlib import Path
 
-from collections import defaultdict
-from PIL import Image
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib import font_manager
-from matplotlib.backends.backend_agg import FigureCanvasAgg
 
+from .....utils.deps import function_requires_deps, is_dep_available
 from .....utils.file_interface import custom_open
 from .....utils.fonts import PINGFANG_FONT_FILE_PATH
 
+if is_dep_available("matplotlib"):
+    import matplotlib.pyplot as plt
+    from matplotlib import font_manager
 
+
+@function_requires_deps("matplotlib")
 def deep_analyse(dataset_path, output, dataset_type="ShiTuRec"):
     """class analysis for dataset"""
     tags = ["train", "gallery", "query"]

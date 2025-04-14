@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,26 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
 import csv
 import functools
-from types import GeneratorType
-import time
-from pathlib import Path
 import inspect
+import time
+import uuid
+from pathlib import Path
+from types import GeneratorType
+
 import numpy as np
 from prettytable import PrettyTable
 
+from ...utils import logging
 from ...utils.flags import (
     INFER_BENCHMARK,
     INFER_BENCHMARK_OUTPUT_DIR,
     INFER_BENCHMARK_USE_CACHE_FOR_READ,
 )
-from ...utils import logging
 
 ENTRY_POINT_NAME = "_entry_point_"
 
 # XXX: Global mutable state
 _inference_operations = []
+
+_is_measuring_time = False
 
 
 class Benchmark:
@@ -64,7 +69,7 @@ class Benchmark:
                 source_line = inspect.getsourcelines(func)[1]
                 location = f"{source_file}:{source_line}"
             except (TypeError, OSError) as e:
-                location = "Unknown"
+                location = uuid.uuid4().hex
                 logging.debug(
                     f"Benchmark: failed to get source file and line number: {e}"
                 )
@@ -88,15 +93,27 @@ class Benchmark:
                         for k, v in kwargs.items()
                     }
                     output = func(*args, **kwargs)
+                    output = copy.deepcopy(output)
                     return output
 
             else:
 
                 @functools.wraps(func)
                 def _wrapper(*args, **kwargs):
+                    global _is_measuring_time
                     operation_name = f"{name}@{location}"
+                    if _is_measuring_time:
+                        raise RuntimeError(
+                            "Nested calls detected: Check the timed modules and exclude nested calls to prevent double-counting."
+                        )
+                    if not operation_name.startswith(f"{ENTRY_POINT_NAME}@"):
+                        _is_measuring_time = True
                     tic = time.perf_counter()
-                    output = func(*args, **kwargs)
+                    try:
+                        output = func(*args, **kwargs)
+                    finally:
+                        if not operation_name.startswith(f"{ENTRY_POINT_NAME}@"):
+                            _is_measuring_time = False
                     if isinstance(output, GeneratorType):
                         return self.watch_generator(output, operation_name)
                     else:
@@ -117,10 +134,21 @@ class Benchmark:
     def watch_generator(self, generator, name):
         @functools.wraps(generator)
         def wrapper():
+            global _is_measuring_time
             while True:
                 try:
+                    if _is_measuring_time:
+                        raise RuntimeError(
+                            "Nested calls detected: Check the timed modules and exclude nested calls to prevent double-counting."
+                        )
+                    if not name.startswith(f"{ENTRY_POINT_NAME}@"):
+                        _is_measuring_time = True
                     tic = time.perf_counter()
-                    item = next(generator)
+                    try:
+                        item = next(generator)
+                    finally:
+                        if not name.startswith(f"{ENTRY_POINT_NAME}@"):
+                            _is_measuring_time = False
                     self._update(time.perf_counter() - tic, name)
                     yield item
                 except StopIteration:
@@ -162,11 +190,9 @@ class Benchmark:
         # 3. Operations do not nest, except that the entry point operation
         #    contains all other operations.
         # 4. The input batch size for each operation is `batch_size`.
-        # 5. Inference operations are always performed, while preprocessing and
-        #    postprocessing operations are optional.
-        # 6. If present, preprocessing operations are always performed before
-        #    inference operations, and inference operations are completed before
-        #    any postprocessing operations. There is no interleaving among these
+        # 5. Preprocessing operations are always performed before inference
+        #    operations, and inference operations are completed before
+        #    postprocessing operations. There is no interleaving among these
         #    stages.
 
         logs = {k: v for k, v in self.logs.items()}
@@ -188,6 +214,8 @@ class Benchmark:
             avg = np.mean(time_list)
             operation_name = name.split("@")[0]
             location = name.split("@")[1]
+            if ":" not in location:
+                location = "Unknown"
             detail_list.append(
                 (iters, batch_size, instances, operation_name, avg, avg / batch_size)
             )
@@ -275,8 +303,8 @@ class Benchmark:
                 i[:4] + (f"{i[4]:.8f}", f"{i[5]:.8f}") for i in summary_list
             ]
             table.add_rows(summary_list)
-            table_name = "WarmUp Data".center(len(str(table).split("\n")[0]), " ")
-            logging.info(table_name)
+            table_title = "Warmup Data".center(len(str(table).split("\n")[0]), " ")
+            logging.info(table_title)
             logging.info(table)
 
         else:
@@ -286,8 +314,8 @@ class Benchmark:
             ]
             table = PrettyTable(operation_head)
             table.add_rows(operation_list)
-            table_name = "Operation Info".center(len(str(table).split("\n")[0]), " ")
-            logging.info(table_name)
+            table_title = "Operation Info".center(len(str(table).split("\n")[0]), " ")
+            logging.info(table_title)
             logging.info(table)
 
             detail_head = [
@@ -301,8 +329,8 @@ class Benchmark:
             table = PrettyTable(detail_head)
             detail_list = [i[:4] + (f"{i[4]:.8f}", f"{i[5]:.8f}") for i in detail_list]
             table.add_rows(detail_list)
-            table_name = "Detail Data".center(len(str(table).split("\n")[0]), " ")
-            logging.info(table_name)
+            table_title = "Detail Data".center(len(str(table).split("\n")[0]), " ")
+            logging.info(table_title)
             logging.info(table)
 
             summary_head = [
@@ -318,8 +346,8 @@ class Benchmark:
                 i[:4] + (f"{i[4]:.8f}", f"{i[5]:.8f}") for i in summary_list
             ]
             table.add_rows(summary_list)
-            table_name = "Summary Data".center(len(str(table).split("\n")[0]), " ")
-            logging.info(table_name)
+            table_title = "Summary Data".center(len(str(table).split("\n")[0]), " ")
+            logging.info(table_title)
             logging.info(table)
 
             if INFER_BENCHMARK_OUTPUT_DIR:

@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@ from abc import ABCMeta
 
 from . import logging
 from .errors import (
+    DuplicateRegistrationError,
     raise_class_not_found_error,
     raise_no_entity_registered_error,
-    DuplicateRegistrationError,
 )
 
 
@@ -97,5 +97,3 @@ class AutoRegisterMetaClass(type):
 
 class AutoRegisterABCMetaClass(ABCMeta, AutoRegisterMetaClass):
     """AutoRegisterABCMetaClass"""
-
-    pass

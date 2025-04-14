@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ __all__ = [
     "INFER_BENCHMARK_ITERS",
     "INFER_BENCHMARK_WARMUP",
     "INFER_BENCHMARK_OUTPUT_DIR",
+    "INFER_BENCHMARK_USE_NEW_INFER_API",
     "FLAGS_json_format_model",
     "USE_PIR_TRT",
     "DISABLE_DEV_MODEL_WL",

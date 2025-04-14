@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,13 +14,11 @@
 from __future__ import annotations
 
 import copy
-from pathlib import Path
-from PIL import Image, ImageDraw
-
 import re
+from pathlib import Path
+
 import numpy as np
-from PIL import Image
-from PIL import ImageDraw
+from PIL import Image, ImageDraw
 
 from ...common.result import (
     BaseCVResult,
@@ -29,7 +27,6 @@ from ...common.result import (
     MarkdownMixin,
     XlsxMixin,
 )
-from .utils import get_layout_ordering
 from .utils import get_show_color
 
 
@@ -332,31 +329,30 @@ class LayoutParsingResultV2(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin):
                     prev_block_bbox = prev_block["block_bbox"]
                     num_of_prev_lines = prev_block.get("num_of_lines")
                     pre_block_seg_end_coordinate = prev_block.get("seg_end_coordinate")
+                    prev_end_space_small = (
+                        context_right_coordinate - pre_block_seg_end_coordinate < 10
+                    )
+                    prev_lines_more_than_one = num_of_prev_lines > 1
+
+                    overlap_blocks = context_left_coordinate < prev_block_bbox[2]
 
                     # update context_left_coordinate and context_right_coordinate
-                    if context_left_coordinate < prev_block_bbox[2]:
+                    if overlap_blocks:
                         context_left_coordinate = min(
                             prev_block_bbox[0], context_left_coordinate
                         )
                         context_right_coordinate = max(
                             prev_block_bbox[2], context_right_coordinate
                         )
+                        prev_end_space_small = (
+                            prev_block_bbox[2] - pre_block_seg_end_coordinate < 10
+                        )
 
-                    # 判断是否需要分段
-                    prev_end_space_small = (
-                        prev_block_bbox[2] - pre_block_seg_end_coordinate < 10
-                    )
                     current_start_space_small = (
                         seg_start_coordinate - context_left_coordinate < 10
                     )
-                    overlap_blocks = context_left_coordinate < prev_block_bbox[2]
-                    prev_lines_more_than_one = num_of_prev_lines > 1
 
                     if (
-                        overlap_blocks
-                        and current_start_space_small
-                        and prev_lines_more_than_one
-                    ) or (
                         prev_end_space_small
                         and current_start_space_small
                         and prev_lines_more_than_one

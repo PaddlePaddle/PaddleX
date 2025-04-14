@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,19 +13,19 @@
 # limitations under the License.
 
 import os
+from contextlib import ContextDecorator
+
 import GPUtil
 
-import lazy_paddle as paddle
 from . import logging
-from .flags import DISABLE_DEV_MODEL_WL
-from .errors import raise_unsupported_device_error
 from .custom_device_whitelist import (
     DCU_WHITELIST,
+    GCU_WHITELIST,
     MLU_WHITELIST,
     NPU_WHITELIST,
     XPU_WHITELIST,
-    GCU_WHITELIST,
 )
+from .flags import DISABLE_DEV_MODEL_WL
 
 SUPPORTED_DEVICE_TYPE = ["cpu", "gpu", "xpu", "npu", "mlu", "gcu", "dcu"]
 
@@ -95,6 +95,8 @@ def set_env_for_device(device):
 
 
 def set_env_for_device_type(device_type):
+    import paddle
+
     def _set(envs):
         for key, val in envs.items():
             os.environ[key] = val
@@ -161,3 +163,32 @@ def check_supported_device_type(device_type, model_name):
 def check_supported_device(device, model_name):
     device_type, _ = parse_device(device)
     return check_supported_device_type(device_type, model_name)
+
+
+class TemporaryDeviceChanger(ContextDecorator):
+    """
+    A context manager to temporarily change global device
+    """
+
+    def __init__(self, new_device):
+        # if new_device is None, nothing changed
+        import paddle
+
+        self.new_device = new_device
+        self.original_device = paddle.device.get_device()
+
+    def __enter__(self):
+        import paddle
+
+        if self.new_device is None:
+            return self
+        paddle.device.set_device(self.new_device)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        import paddle
+
+        if self.new_device is None:
+            return False
+        paddle.device.set_device(self.original_device)
+        return False

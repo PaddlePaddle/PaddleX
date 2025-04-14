@@ -39,7 +39,7 @@ YOWO is a single-stage network with two branches. One branch extracts spatial fe
 
 PaddleX supports experiencing the pipeline's effects locally using command line or Python.
 
-Before using the general video detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+Before using the general video detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `video`.
 
 ### 2.1 Local Experience
 

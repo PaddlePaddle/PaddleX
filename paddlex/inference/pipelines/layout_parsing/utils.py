@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,16 +20,15 @@ __all__ = [
     "sorted_layout_boxes",
 ]
 
+import re
+from copy import deepcopy
+from typing import Any, Dict, List, Optional, Tuple, Union
+
 import numpy as np
 from PIL import Image
-import uuid
-import re
-from pathlib import Path
-from copy import deepcopy
-from typing import Optional, Union, List, Tuple, Dict, Any
-from ..ocr.result import OCRResult
+
 from ...models.object_detection.result import DetResult
-from ..components import convert_points_to_boxes
+from ..ocr.result import OCRResult
 
 
 def get_overlap_boxes_idx(src_boxes: np.ndarray, ref_boxes: np.ndarray) -> List:
@@ -575,6 +574,9 @@ def get_single_block_parsing_res(
     single_block_layout_parsing_res = []
     input_img = overall_ocr_res["doc_preprocessor_res"]["output_img"]
     seal_index = 0
+    with_doc_title = False
+    max_block_area = 0.0
+    paragraph_title_indexs = []
 
     layout_det_res_list, _ = _remove_overlap_blocks(
         deepcopy(layout_det_res["boxes"]),
@@ -582,13 +584,21 @@ def get_single_block_parsing_res(
         smaller=True,
     )
 
-    for box_info in layout_det_res_list:
+    for box_idx, box_info in enumerate(layout_det_res_list):
         block_bbox = box_info["coordinate"]
         label = box_info["label"]
         rec_res = {"boxes": [], "rec_texts": [], "rec_labels": [], "flag": False}
         seg_start_coordinate = float("inf")
         seg_end_coordinate = float("-inf")
         num_of_lines = 1
+
+        if label == "doc_title":
+            with_doc_title = True
+        elif label == "paragraph_title":
+            paragraph_title_indexs.append(box_idx)
+
+        block_area = (block_bbox[2] - block_bbox[0]) * (block_bbox[3] - block_bbox[1])
+        max_block_area = max(max_block_area, block_area)
 
         if label == "table":
             for table_res in table_res_list:
@@ -679,8 +689,21 @@ def get_single_block_parsing_res(
                         "seg_start_coordinate": seg_start_coordinate,
                         "seg_end_coordinate": seg_end_coordinate,
                         "num_of_lines": num_of_lines,
+                        "block_area": block_area,
                     },
                 )
+
+    if (
+        not with_doc_title
+        and len(paragraph_title_indexs) == 1
+        and single_block_layout_parsing_res[paragraph_title_indexs[0]].get(
+            "block_area", 0
+        )
+        > max_block_area * 0.3
+    ):
+        single_block_layout_parsing_res[paragraph_title_indexs[0]][
+            "block_label"
+        ] = "doc_title"
 
     if len(layout_det_res_list) == 0:
         for ocr_rec_box, ocr_rec_text in zip(
