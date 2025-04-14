@@ -23,6 +23,7 @@ import requests
 from PIL import Image
 
 from .....utils import logging
+from ....utils.benchmark import benchmark
 from ...common.vision.funcs import resize
 from .common import (
     BatchFeature,
@@ -668,6 +669,7 @@ class PPDocBeeProcessor(Qwen2VLProcessor):
     PP-DocBee processor, based on Qwen2VLProcessor
     """
 
+    @benchmark.timeit
     def preprocess(self, image: Union[str, Image.Image, np.ndarray], query: str):
         """
         PreProcess for PP-DocBee Series
@@ -686,6 +688,7 @@ class PPDocBeeProcessor(Qwen2VLProcessor):
 
         return rst_inputs
 
+    @benchmark.timeit
     def postprocess(self, model_pred, *args, **kwargs):
         """
         Post process adapt for PaddleX
