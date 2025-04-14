@@ -13,6 +13,7 @@
 # limitations under the License.
 
 
+import functools
 import inspect
 import logging
 import sys
@@ -65,6 +66,14 @@ def info(msg, *args, **kwargs):
 def warning(msg, *args, **kwargs):
     """warning"""
     _logger.warning(msg, *args, **kwargs)
+
+
+@functools.lru_cache(None)
+def warning_once(msg, *args, **kwargs):
+    """
+    This method is identical to `logger.warning()`, but will emit the warning with the same message only once
+    """
+    warning(msg, *args, **kwargs)
 
 
 def error(msg, *args, **kwargs):

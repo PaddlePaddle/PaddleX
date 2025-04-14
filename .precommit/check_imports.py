@@ -36,6 +36,7 @@ MOD_TO_DEP = {
     "chinese_calendar": "chinese-calendar",
     "colorlog": "colorlog",
     "decord": "decord",
+    "einops": "einops",
     "faiss": "faiss-cpu",
     "fastapi": "fastapi",
     "filelock": "filelock",

@@ -12,10 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .audio_batch_sampler import AudioBatchSampler
-from .base_batch_sampler import BaseBatchSampler
-from .det_3d_batch_sampler import Det3DBatchSampler
-from .doc_vlm_batch_sampler import DocVLMBatchSampler
-from .image_batch_sampler import ImageBatchSampler
-from .ts_batch_sampler import TSBatchSampler
-from .video_batch_sampler import VideoBatchSampler
+from ...utils.errors import UnsupportedAPIError
+from ..base import BaseDatasetChecker
+from .model_list import MODELS
+
+
+class DocVLMDatasetChecker(BaseDatasetChecker):
+    """Dataset Checker for Document Vision Languange Model"""
+
+    entities = MODELS
+
+    def __init__(self, config):
+        # not support for now
+        raise UnsupportedAPIError(
+            "document vision languange models do not support data check for now."
+        )

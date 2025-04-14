@@ -25,6 +25,7 @@ from ..utils.official_models import official_models
 # from .general_recognition import ShiTuRecPredictor
 from .anomaly_detection import UadPredictor
 from .base import BasePredictor
+from .doc_vlm import DocVLMPredictor
 from .face_feature import FaceFeaturePredictor
 from .formula_recognition import FormulaRecPredictor
 from .image_classification import ClasPredictor
