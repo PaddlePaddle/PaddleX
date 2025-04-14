@@ -25,12 +25,14 @@ def get_paddle_version():
 
     version = paddle.__version__
     if "-" in version:
-        version, prerelease = version.split("-")
+        version, tag = version.split("-")
+    else:
+        tag = None
     version = version.split(".")
     assert len(version) == 3
     major_v, minor_v, patch_v = map(int, version)
-    if prerelease:
-        return major_v, minor_v, patch_v, prerelease
+    if tag:
+        return major_v, minor_v, patch_v, tag
     else:
         return major_v, minor_v, patch_v, None
 
