@@ -142,11 +142,11 @@ def suggest_inference_backend_and_config(
         return None, f"Inference backend {repr(hpi_config.backend)} is unavailable."
 
     paddle_version = get_paddle_version()
-    if paddle_version != (3, 0, 0):
-        return (
-            None,
-            f"{repr('.'.join(paddle_version))} is not a supported Paddle version.",
-        )
+    # if paddle_version != (3, 0, 0, None):
+    #     return (
+    #         None,
+    #         f"{paddle_version} is not a supported Paddle version.",
+    #     )
 
     if hpi_config.device_type == "cpu":
         uname = platform.uname()
