@@ -60,7 +60,7 @@ class AudioBatchSampler(BaseBatchSampler):
         elif isinstance(inputs, list):
             yield inputs
         else:
-            raise RuntimeError(
+            raise TypeError(
                 f"Not supported input data type! Only `str` are supported, but got: {type(inputs)}."
             )
 

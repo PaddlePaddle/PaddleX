@@ -38,9 +38,11 @@ class DocVLMBatchSampler(BaseBatchSampler):
         """
         if isinstance(inputs, dict):
             yield [inputs]
+        elif isinstance(inputs, list) and all(isinstance(i, dict) for i in inputs):
+            yield inputs
         else:
-            logging.warning(
-                f"Not supported input data type! Only `dict` are supported, but got: {input}."
+            raise TypeError(
+                f"Not supported input data type! Only `dict` are supported, but got: {type(inputs)}."
             )
 
     @BaseBatchSampler.batch_size.setter
