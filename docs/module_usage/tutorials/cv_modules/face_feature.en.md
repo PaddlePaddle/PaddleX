@@ -413,7 +413,8 @@ After completing model training, all outputs are saved in the specified output d
 <li><code>train_result.json</code>: A file that records the training results, indicating whether the training task was successfully completed, and includes metrics, paths to related files, etc.</li>
 <li><code>train.log</code>: A log file that records changes in model metrics, loss variations, and other details during the training process.</li>
 <li><code>config.yaml</code>: A configuration file that logs the hyperparameter settings for the current training session.</li>
-<li><code>.pdparams</code>, <code>.pdema</code>, <code>.pdopt.pdstate</code>, <code>.pdiparams</code>, <code>.pdmodel</code>: Files related to model weights, including network parameters, optimizer, EMA (Exponential Moving Average), static graph network parameters, and static graph network structure.</li>
+<li><code>.pdparams</code>, <code>.pdema</code>, <code>.pdopt.pdstate</code>, <code>.pdiparams</code>, <code>.json</code>: Files related to model weights, including network parameters, optimizer, EMA (Exponential Moving Average), static graph network parameters, and static graph network structure.</li>
+<li>Notice: Since Paddle 3.0.0, the format of storing static graph network structure has changed to json(the current<code>.json</code> file) from protobuf(the former<code>.pdmodel</code> file) to be compatible with PIR and more flexible and scalable.</li>
 </ul>
 <details>
 
