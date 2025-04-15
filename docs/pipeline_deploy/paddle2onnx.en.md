@@ -1,6 +1,6 @@
 # Installation and Usage of the Paddle2ONNX Plugin
 
-The Paddle2ONNX plugin for PaddleX provides the ability to convert PaddlePaddle format models to ONNX format models, leveraging the underlying [Paddle2ONNX](https://github.com/PaddlePaddle/Paddle2ONNX).
+The Paddle2ONNX plugin for PaddleX provides the ability to convert PaddlePaddle static models to ONNX format models, leveraging the underlying [Paddle2ONNX](https://github.com/PaddlePaddle/Paddle2ONNX).
 
 ## 1. Installation
 
