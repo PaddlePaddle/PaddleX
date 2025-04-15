@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict, Generic, List, Tuple, Type, TypeVar, Union
+from typing import Dict, Generic, List, Tuple, TypeVar, Union
 
 from openai.types.chat import ChatCompletion
 from pydantic import BaseModel, Discriminator
@@ -47,11 +47,8 @@ class AIStudioResultResponse(BaseModel, Generic[ResultT]):
     errorMsg: Literal["Success"] = "Success"
 
 
-OpenAIChatCompletion: Type = ChatCompletion
-
-
 Response: TypeAlias = Union[
-    AIStudioResultResponse, AIStudioNoResultResponse, OpenAIChatCompletion
+    AIStudioResultResponse, AIStudioNoResultResponse, ChatCompletion
 ]
 
 
