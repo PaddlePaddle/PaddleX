@@ -17,7 +17,7 @@ After installing PaddlePaddle (refer to the [PaddlePaddle Local Installation Tut
 > ❗ <b>Note</b>: Please ensure that PaddlePaddle is successfully installed before proceeding to the next step.
 
 ```bash
-pip install https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0rc0-py3-none-any.whl[base]
+pip install "https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.0rc0-py3-none-any.whl[base]"
 ```
 
 ### 1.2 Plugin Installation Mode
@@ -111,7 +111,7 @@ If the plugin you need to install is `PaddleXXX`, after installing PaddlePaddle 
 ```bash
 git clone https://github.com/PaddlePaddle/PaddleX.git
 cd PaddleX
-pip install -e .[base]
+pip install -e ".[base]"
 paddlex --install PaddleXXX
 ```
 
@@ -186,7 +186,7 @@ cd PaddleX
 
 # Install PaddleX whl
 # -e: Install in editable mode, so changes to the current project's code will directly affect the installed PaddleX Wheel
-pip install -e .[base]
+pip install -e ".[base]"
 ```
 
 * <b>If you choose plugin installation mode</b> and the plugin you need is named PaddleXXX (there can be multiple), execute the following commands:
@@ -196,7 +196,7 @@ cd PaddleX
 
 # Install PaddleX whl
 # -e: Install in editable mode, so changes to the current project's code will directly affect the installed PaddleX Wheel
-pip install -e .[base]
+pip install -e ".[base]"
 
 # Install PaddleX plugins
 paddlex --install PaddleXXX
@@ -239,19 +239,19 @@ Sure! Here's the English translation:
 
 ### 2.3 Selective Installation of Dependencies
 
-PaddleX offers a wide range of features, and different features require different dependencies. The features in PaddleX that can be used without installing plugins are categorized as "basic features." The official PaddleX Docker images have all dependencies required for these basic features preinstalled. Similarly, using the installation method introduced earlier—`pip install ...[base]`—will install all dependencies needed for the basic features.
+PaddleX offers a wide range of features, and different features require different dependencies. The features in PaddleX that can be used without installing plugins are categorized as "basic features." The official PaddleX Docker images have all dependencies required for these basic features preinstalled. Similarly, using the installation method introduced earlier—`pip install "...[base]"`—will install all dependencies needed for the basic features.
 
 If you are only focused on a specific feature of PaddleX and want to minimize the size of the installed dependencies, you can selectively install them by specifying a "dependency group":
 
 ```bash
 # For example, to install only the basic OCR features
 # Install the precompiled wheel package
-pip install /url/of/wheel[ocr]
+pip install "/url/of/wheel[ocr]"
 # Install from source
-pip install -e .[ocr]
+pip install -e ".[ocr]"
 
 # You can also specify multiple dependency groups at once
-pip install -e .[ocr,cv]
+pip install -e ".[ocr,cv]"
 ```
 
 PaddleX currently provides the following dependency groups:

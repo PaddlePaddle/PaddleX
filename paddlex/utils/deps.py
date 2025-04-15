@@ -159,7 +159,7 @@ def require_extra(extra, *, obj_name=None):
             msg = f"`{obj_name}` requires additional dependencies."
         else:
             msg = "Additional dependencies are required."
-        msg += f" To install them, run `pip install paddlex[{extra}]==<PADDLEX_VERSION>` if you’re installing `paddlex` from an index, or `pip install -e /path/to/PaddleX[{extra}]` if you’re installing `paddlex` locally."
+        msg += f' To install them, run `pip install "paddlex[{extra}]==<PADDLEX_VERSION>"` if you’re installing `paddlex` from an index, or `pip install -e "/path/to/PaddleX[{extra}]"` if you’re installing `paddlex` locally.'
         raise RuntimeError(msg)
 
 
