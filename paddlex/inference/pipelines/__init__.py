@@ -27,6 +27,7 @@ from .attribute_recognition import (
 from .base import BasePipeline
 from .components import BaseChat, BaseGeneratePrompt, BaseRetriever
 from .doc_preprocessor import DocPreprocessorPipeline
+from .doc_understanding import DocUnderstandingPipeline
 from .face_recognition import FaceRecPipeline
 from .formula_recognition import FormulaRecognitionPipeline
 from .image_classification import ImageClassificationPipeline

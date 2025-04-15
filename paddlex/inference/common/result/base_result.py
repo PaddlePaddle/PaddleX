@@ -56,7 +56,7 @@ class BaseResult(dict, JsonMixin, StrMixin):
                 func()
 
     def _get_input_fn(self):
-        if (fp := self["input_path"]) is None:
+        if self.get("input_path", None) is None:
             if self._rand_fn:
                 return self._rand_fn
 
@@ -68,4 +68,5 @@ class BaseResult(dict, JsonMixin, StrMixin):
             )
             self._rand_fn = Path(fp).name
             return self._rand_fn
+        fp = self["input_path"]
         return Path(fp).name
