@@ -25,7 +25,7 @@ comments: true
 
 使用高性能推理插件前，请确保您已经按照[PaddleX本地安装教程](../installation/installation.md) 完成了PaddleX的安装，且按照PaddleX产线命令行使用说明或PaddleX产线Python脚本使用说明跑通了产线的快速推理。
 
-高性能推理支持处理 **PaddlePaddle 静态图模型( `.pdmodel`, `.json` )** 和 **ONNX 格式模型( `.onnx` )**。对于 ONNX 格式模型建议使用[Paddle2ONNX 插件](./paddle2onnx.md)转换得到。如果模型目录中存在多种格式的模型，会根据需要自动选择。
+高性能推理支持处理 **PaddlePaddle 静态图模型( `.pdmodel`、 `.json` )** 和 **ONNX 格式模型( `.onnx` )**。对于 ONNX 格式模型，建议使用[Paddle2ONNX 插件](./paddle2onnx.md)转换得到。如果模型目录中存在多种格式的模型，PaddleX 会根据需要自动选择。
 
 ### 1.1 安装高性能推理插件
 
