@@ -43,6 +43,12 @@ nvidia-docker run --name paddlex -v $PWD:/paddle  --shm-size=8G --network=host -
 
 * Note: For more official PaddlePaddle Docker images, please refer to the [PaddlePaddle official website](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/en/install/docker/linux-docker.html)
 
+To use [Paddle Inference TensorRT Subgraph Engine](https://www.paddlepaddle.org.cn/documentation/docs/en/install/pip/linux-pip_en.html#gpu), install TensorRT by executing the following instructions in the 'paddlex' container that has just been started
+
+```bash
+python -m pip install /usr/local/TensorRT-8.6.1.6/python/tensorrt-8.6.1-cp310-none-linux_x86_64.whl
+```
+
 ## Installing PaddlePaddle via pip
 <b>If you choose to install via pip</b>, please refer to the following commands to install PaddlePaddle in your current environment using pip:
 
@@ -56,8 +62,6 @@ python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org
 # GPU, this command is only suitable for machines with CUDA version 12.3
 python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
 ```
-
-The Docker images support the [Paddle Inference TensorRT Subgraph Engine](https://www.paddlepaddle.org.cn/documentation/docs/en/guides/paddle_v3_features/paddle_trt_en.html) by default.
 
 Note: For more PaddlePaddle Wheel versions, please refer to the [PaddlePaddle official website](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/en/install/pip/linux-pip.html).
 
@@ -74,7 +78,12 @@ If the installation is successful, the following content will be output:
 3.0.0-rc0
 ```
 
-If you want to use the [Paddle Inference TensorRT Subgraph Engine](https://www.paddlepaddle.org.cn/documentation/docs/en/guides/paddle_v3_features/paddle_trt_en.html), after installing Paddle, you need to install the corresponding version of TensorRT by referring to the [TensorRT documentation](https://docs.nvidia.com/deeplearning/tensorrt/archives/index.html). Below is an example of installing TensorRT-8.6.1.6 using the "Tar File Installation" method in a CUDA 11.8 environment:
+If you want to use the [Paddle Inference TensorRT Subgraph Engine](https://www.paddlepaddle.org.cn/documentation/docs/en/guides/paddle_v3_features/paddle_trt_en.html), after installing Paddle, you need to refer to the [TensorRT Documentation](https://docs.nvidia.com/deeplearning/tensorrt/archives/index.html) to install the corresponding version of TensorRT:
+
+- For CUDA 11.8, the compatible TensorRT version is 8.x (x>=6). PaddleX has completed compatibility testing for Paddle-TensorRT on TensorRT 8.6.1.6, so it is **strongly recommended to install TensorRT 8.6.1.6**.
+- For CUDA 12.6, the compatible TensorRT version is 10.x (x>=5), and it is recommended to install TensorRT 10.5.0.18.
+
+Below is an example of installing TensorRT-8.6.1.6 using the "Tar File Installation" method in a CUDA 11.8 environment:
 
 ```bash
 # Download TensorRT tar file

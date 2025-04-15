@@ -44,6 +44,12 @@ nvidia-docker run --name paddlex -v $PWD:/paddle --shm-size=8G --network=host -i
 
 * 注：更多飞桨官方 docker 镜像请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/docker/linux-docker.html)。
 
+在刚刚启动的 `paddlex` 容器中执行下面指令安装 TensorRT，即可使用 [Paddle Inference TensorRT 子图引擎](https://www.paddlepaddle.org.cn/documentation/docs/zh/guides/paddle_v3_features/paddle_trt_cn.html)：
+
+```bash
+python -m pip install /usr/local/TensorRT-8.6.1.6/python/tensorrt-8.6.1-cp310-none-linux_x86_64.whl
+```
+
 ## 基于 pip 安装飞桨
 <b>若您通过 pip 安装</b>，请参考下述命令，用 pip 在当前环境中安装飞桨 PaddlePaddle：
 
@@ -57,8 +63,6 @@ python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org
 # gpu，该命令仅适用于 CUDA 版本为 12.3 的机器环境
 python -m pip install paddlepaddle-gpu==3.0.0rc0 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
 ```
-
-Docker 镜像默认支持 [Paddle Inference TensorRT 子图引擎](https://www.paddlepaddle.org.cn/documentation/docs/zh/guides/paddle_v3_features/paddle_trt_cn.html)。
 
 > ❗ <b>注</b>：无需关注物理机上的 CUDA 版本，只需关注显卡驱动程序版本。更多飞桨 Wheel 版本请参考[飞桨官网](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/pip/linux-pip.html)。
 
@@ -75,7 +79,12 @@ python -c "import paddle; print(paddle.__version__)"
 3.0.0-rc0
 ```
 
-如果想要使用 [Paddle Inference TensorRT 子图引擎](https://www.paddlepaddle.org.cn/documentation/docs/zh/guides/paddle_v3_features/paddle_trt_cn.html)，在安装paddle后需参考 [TensorRT 文档](https://docs.nvidia.com/deeplearning/tensorrt/archives/index.html)安装相应版本的 TensorRT，下面是在 CUDA11.8 环境下使用 "Tar File Installation" 方式安装 TensoRT-8.6.1.6 的例子：
+如果想要使用 [Paddle Inference TensorRT 子图引擎](https://www.paddlepaddle.org.cn/documentation/docs/zh/guides/paddle_v3_features/paddle_trt_cn.html)，在安装paddle后需参考 [TensorRT 文档](https://docs.nvidia.com/deeplearning/tensorrt/archives/index.html) 安装相应版本的 TensorRT：
+
+- 对于 CUDA 11.8，兼容的 TensorRT 版本为 8.x（x>=6）。PaddleX 已在 TensorRT 8.6.1.6 上完成了 Paddle-TensorRT 的兼容性测试，因此**强烈建议安装 TensorRT 8.6.1.6**。
+- 对于 CUDA 12.6，兼容的 TensorRT 版本为 10.x（x>=5），建议安装 TensorRT 10.5.0.18。
+
+下面是在 CUDA11.8 环境下使用 "Tar File Installation" 方式安装 TensoRT-8.6.1.6 的例子：
 
 ```bash
 # 下载 TensorRT tar 文件

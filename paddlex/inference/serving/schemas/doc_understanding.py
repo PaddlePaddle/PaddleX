@@ -15,10 +15,9 @@
 from enum import Enum
 from typing import Final, List, Literal, Optional, Union
 
-from openai.types.chat import ChatCompletion
 from pydantic import BaseModel, HttpUrl
 
-from ..infra.models import PrimaryOperations
+from ..infra.models import OpenAIChatCompletion, PrimaryOperations
 
 __all__ = [
     "INFER_ENDPOINT",
@@ -26,7 +25,7 @@ __all__ = [
     "PRIMARY_OPERATIONS",
 ]
 
-INFER_ENDPOINT: Final[str] = "/pp-docbee"
+INFER_ENDPOINT: Final[str] = "/chat/completions"
 
 
 class ContentType(str, Enum):
@@ -70,5 +69,5 @@ class InferRequest(BaseModel):
 
 
 PRIMARY_OPERATIONS: Final[PrimaryOperations] = {
-    "infer": (INFER_ENDPOINT, InferRequest, ChatCompletion),
+    "infer": (INFER_ENDPOINT, InferRequest, OpenAIChatCompletion),
 }

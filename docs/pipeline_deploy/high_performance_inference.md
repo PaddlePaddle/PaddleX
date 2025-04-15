@@ -25,7 +25,7 @@ comments: true
 
 使用高性能推理插件前，请确保您已经按照[PaddleX本地安装教程](../installation/installation.md) 完成了PaddleX的安装，且按照PaddleX产线命令行使用说明或PaddleX产线Python脚本使用说明跑通了产线的快速推理。
 
-高性能推理支持处理 PaddlePaddle 格式模型和 ONNX 格式模型，对于 ONNX 格式模型建议使用[Paddle2ONNX 插件](./paddle2onnx.md)转换得到。如果模型目录中存在多种格式的模型，会根据需要自动选择。
+高性能推理支持处理 **PaddlePaddle 静态图模型( `.pdmodel`、 `.json` )** 和 **ONNX 格式模型( `.onnx` )**。对于 ONNX 格式模型，建议使用[Paddle2ONNX 插件](./paddle2onnx.md)转换得到。如果模型目录中存在多种格式的模型，PaddleX 会根据需要自动选择。
 
 ### 1.1 安装高性能推理插件
 
@@ -47,7 +47,7 @@ comments: true
     <td>3.8–3.12</td>
   </tr>
   <tr>
-    <td>GPU&nbsp;（CUDA&nbsp;11.8&nbsp;+&nbsp;cuDNN&nbsp;8.6）</td>
+    <td>GPU&nbsp;（CUDA&nbsp;11.8&nbsp;+&nbsp;cuDNN&nbsp;8.9）</td>
     <td>3.8–3.12</td>
   </tr>
   <tr>
@@ -82,7 +82,7 @@ comments: true
           <tr>
               <td>GPU</td>
               <td><code>paddlex --install hpi-gpu</code></td>
-              <td>安装 GPU 版本的高性能推理功能。<br />包含了 CPU 版本的所有功能，无需再单独安装 CPU 版本。</td>
+              <td>安装 GPU 版本的高性能推理功能。<br />包含了 CPU 版本的所有功能。</td>
           </tr>
           <tr>
               <td>NPU</td>
@@ -94,17 +94,44 @@ comments: true
 
 #### (2) 本地安装高性能推理插件：
 
-需要本地 [安装CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive) 和 [安装cuDNN 8.6](https://docs.nvidia.com/deeplearning/cudnn/archives/cudnn-860/install-guide/index.html) 后执行上面的安装指令。
+##### 安装 CPU 版本的高性能推理插件：
+
+执行：
+
+```bash
+paddlex --install hpi-cpu
+```
+
+##### 安装 GPU 版本的高性能推理插件：
+
+参考 [NVIDIA 官网](https://developer.nvidia.com/) 本地安装 CUDA 和 cuDNN，再执行：
+
+```bash
+paddlex --install hpi-gpu
+```
+
+所需的 CUDA 和 cuDNN 版本可以通过如下方式获取：
+
+```bash
+# CUDA 版本
+pip list | grep nvidia-cuda
+# cuDNN 版本
+pip list | grep nvidia-cudnn
+```
+
+安装 CUDA 11.8 和 cuDNN 8.9 的参考文档：
+- [安装CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive)
+- [安装cuDNN 8.9](https://docs.nvidia.com/deeplearning/cudnn/archives/cudnn-890/install-guide/index.html)
 
 **注意：**
 
-1. **GPU 只支持 CUDA 11.8 + cuDNN8.6**，CUDA 12.6 已经在支持中。
+1. **GPU 只支持 CUDA 11.8 + cuDNN8.9**，CUDA 12.6 已经在支持中。
 
-2. 同一环境下只能存在一个高性能推理插件版本。
+2. 同一环境下只应该存在一个高性能推理插件版本。
 
-3. NPU 设备的使用说明参考 [昇腾 NPU 高性能推理教程](../practical_tutorials/high_performance_npu_tutorial.md)。
+3. NPU 设备的高性能推理使用说明参考 [昇腾 NPU 高性能推理教程](../practical_tutorials/high_performance_npu_tutorial.md)。
 
-3. Windows 只支持基于 Docker 安装和使用高性能推理插件。
+4. Windows 只支持基于 Docker 安装和使用高性能推理插件。
 
 ### 1.2 启用高性能推理插件
 
@@ -255,7 +282,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
   </tr>
   <tr>
     <td><code>om</code></td>
-    <td>OM，华为昇腾NPU定制的离线模型格式对应的推理引擎，针对硬件进行了深度优化，减少算子计算时间和调度时间，能够有效提升推理性能。</td>
+    <td>华为昇腾NPU定制的离线模型格式对应的推理引擎，针对硬件进行了深度优化，减少算子计算时间和调度时间，能够有效提升推理性能。</td>
     <td>NPU</td>
   </tr>
 </table>

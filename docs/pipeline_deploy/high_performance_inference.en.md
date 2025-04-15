@@ -25,7 +25,7 @@ In actual production environments, many applications have stringent standards fo
 
 Before using the high-performance inference plugin, ensure you have completed the installation of PaddleX according to the [PaddleX Local Installation Tutorial](../installation/installation.en.md) and successfully run the quick inference using the PaddleX pipeline command-line instructions or Python script instructions.
 
-High-performance inference supports processing PaddlePaddle format models and ONNX format models. For ONNX format models, it is recommended to use the [Paddle2ONNX plugin](./paddle2onnx.en.md) for conversion. If multiple format models exist in the model directory, they will be automatically selected as needed.
+High-performance inference supports processing PaddlePaddle static models( `.pdmodel`, `.json` ) and ONNX format models( `.onnx` )**. For ONNX format models, it is recommended to use the [Paddle2ONNX plugin](./paddle2onnx.en.md) for conversion. If multiple format models exist in the model directory, PaddleX will automatically select them as needed.
 
 ### 1.1 Installing the High-Performance Inference Plugin
 
@@ -47,7 +47,7 @@ The processor architectures, operating systems, device types, and Python version
     <td>3.8–3.12</td>
   </tr>
   <tr>
-    <td>GPU (CUDA 11.8 + cuDNN 8.6)</td>
+    <td>GPU (CUDA 11.8 + cuDNN 8.9)</td>
     <td>3.8–3.12</td>
   </tr>
   <tr>
@@ -82,7 +82,7 @@ Refer to [Get PaddleX based on Docker](../installation/installation.en.md#21-obt
         <tr>
             <td>GPU</td>
             <td><code>paddlex --install hpi-gpu</code></td>
-            <td>Installs the GPU version of high-performance inference.<br />Includes all features of the CPU version, no need to install the CPU version separately.</td>
+            <td>Installs the GPU version of high-performance inference.<br />Includes all features of the CPU version.</td>
         </tr>
         <tr>
             <td>NPU</td>
@@ -94,17 +94,44 @@ Refer to [Get PaddleX based on Docker](../installation/installation.en.md#21-obt
 
 #### (2) Local Installation of High-Performance Inference Plugin:
 
-After locally [installing CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive) and [installing cuDNN 8.6](https://docs.nvidia.com/deeplearning/cudnn/archives/cudnn-860/install-guide/index.html), execute the above installation commands.
+##### Installing the High-Performance Inference Plugin for CPU:
+
+Execute:
+
+```bash
+paddlex --install hpi-cpu
+```
+
+##### Installing the High-Performance Inference Plugin for GPU:
+
+Refer to the [NVIDIA official website](https://developer.nvidia.com/) to install CUDA and cuDNN locally, then execute:
+
+```bash
+paddlex --install hpi-gpu
+```
+
+The required CUDA and cuDNN versions can be obtained through the following commands:
+
+```bash
+# CUDA version
+pip list | grep nvidia-cuda
+# cuDNN version
+pip list | grep nvidia-cudnn
+```
+
+Reference documents for installing CUDA 11.8 and cuDNN 8.9:
+- [Install CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive)
+- [Install cuDNN 8.9](https://docs.nvidia.com/deeplearning/cudnn/archives/cudnn-890/install-guide/index.html)
 
 **Notes**:
 
-1. **GPU only supports CUDA 11.8 + cuDNN 8.6**, and CUDA 12.6 is under support.
+1. **GPUs only support CUDA 11.8 + cuDNN 8.9**, and support for CUDA 12.6 is under development.
 
-2. Only one version of the high-performance inference plugin can exist in the same environment.
+2. Only one version of the high-performance inference plugin should exist in the same environment.
 
-3. For NPU device usage instructions, refer to the [Ascend NPU High-Performance Inference Tutorial](../practical_tutorials/high_performance_npu_tutorial.en.md).
+3. For instructions on high-performance inference using NPU devices, refer to the [Ascend NPU High-Performance Inference Tutorial](../practical_tutorials/high_performance_npu_tutorial.md).
 
-4. Windows only supports installing and using the high-performance inference plugin based on Docker.
+4. Windows only supports installing and using the high-performance inference plugin via Docker.
 
 ### 1.2 Enabling High-Performance Inference
 
@@ -255,7 +282,7 @@ The available options for `backend` are shown in the following table:
   </tr>
   <tr>
     <td><code>om</code></td>
-    <td>OM, a inference engine of offline model format customized for Huawei Ascend NPU, deeply optimized for hardware to reduce operator computation time and scheduling time, effectively improving inference performance.</td>
+    <td>a inference engine of offline model format customized for Huawei Ascend NPU, deeply optimized for hardware to reduce operator computation time and scheduling time, effectively improving inference performance.</td>
     <td>NPU</td>
   </tr>
 </table>

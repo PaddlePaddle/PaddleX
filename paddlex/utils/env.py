@@ -23,11 +23,18 @@ def get_device_type():
 def get_paddle_version():
     import paddle
 
-    version = paddle.__version__.split(".")
-    # ref: https://github.com/PaddlePaddle/Paddle/blob/release/3.0-beta2/setup.py#L316
+    version = paddle.__version__
+    if "-" in version:
+        version, tag = version.split("-")
+    else:
+        tag = None
+    version = version.split(".")
     assert len(version) == 3
     major_v, minor_v, patch_v = map(int, version)
-    return major_v, minor_v, patch_v
+    if tag:
+        return major_v, minor_v, patch_v, tag
+    else:
+        return major_v, minor_v, patch_v, None
 
 
 def get_cuda_version():

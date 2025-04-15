@@ -14,9 +14,13 @@
 
 from typing import Dict, Generic, List, Tuple, Type, TypeVar, Union
 
-from openai.types.chat import ChatCompletion
 from pydantic import BaseModel, Discriminator
 from typing_extensions import Annotated, Literal, TypeAlias
+
+from .utils import is_dep_available
+
+if is_dep_available("openai"):
+    from openai.types.chat import ChatCompletion
 
 __all__ = [
     "AIStudioNoResultResponse",
