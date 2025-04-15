@@ -30,6 +30,7 @@ from .utils.deps import (
     get_serving_dep_specs,
     require_paddle2onnx_plugin,
 )
+from .utils.env import get_cuda_version
 from .utils.flags import FLAGS_json_format_model
 from .utils.install import install_packages
 from .utils.interactive_get_pipeline import interactive_get_pipeline
@@ -241,6 +242,8 @@ def install(args):
         if device_type == "cpu":
             package = "ultra-infer-python"
         elif device_type == "gpu":
+            if get_cuda_version()[0] != 11:
+                sys.exit("Currently, the CUDA version must be 11.x for GPU devices.")
             package = "ultra-infer-gpu-python"
         elif device_type == "npu":
             package = "ultra-infer-npu-python"

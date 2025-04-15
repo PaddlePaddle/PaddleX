@@ -18,15 +18,15 @@ import importlib.util
 import json
 import platform
 from functools import lru_cache
-from os import PathLike
-from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional, Tuple, TypedDict, Union
+from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 
 from pydantic import BaseModel, Field
 from typing_extensions import Annotated, TypeAlias
 
 from ...utils.deps import function_requires_deps, is_paddle2onnx_plugin_available
-from ...utils.flags import USE_PIR_TRT, FLAGS_json_format_model
+from ...utils.env import get_cuda_version, get_cudnn_version, get_paddle_version
+from ...utils.flags import USE_PIR_TRT
+from .model_paths import ModelPaths
 
 
 class PaddleInferenceInfo(BaseModel):
@@ -93,38 +93,6 @@ class ModelInfo(BaseModel):
 ModelFormat: TypeAlias = Literal["paddle", "onnx", "om"]
 
 
-class ModelPaths(TypedDict, total=False):
-    paddle: Tuple[Path, Path]
-    onnx: Path
-    om: Path
-
-
-def get_model_paths(
-    model_dir: Union[str, PathLike], model_file_prefix: str
-) -> ModelPaths:
-    model_dir = Path(model_dir)
-    model_paths: ModelPaths = {}
-    pd_model_path = None
-    if FLAGS_json_format_model:
-        if (model_dir / f"{model_file_prefix}.json").exists():
-            pd_model_path = model_dir / f"{model_file_prefix}.json"
-    else:
-        if (model_dir / f"{model_file_prefix}.json").exists():
-            pd_model_path = model_dir / f"{model_file_prefix}.json"
-        elif (model_dir / f"{model_file_prefix}.pdmodel").exists():
-            pd_model_path = model_dir / f"{model_file_prefix}.pdmodel"
-    if pd_model_path and (model_dir / f"{model_file_prefix}.pdiparams").exists():
-        model_paths["paddle"] = (
-            pd_model_path,
-            model_dir / f"{model_file_prefix}.pdiparams",
-        )
-    if (model_dir / f"{model_file_prefix}.onnx").exists():
-        model_paths["onnx"] = model_dir / f"{model_file_prefix}.onnx"
-    if (model_dir / f"{model_file_prefix}.om").exists():
-        model_paths["om"] = model_dir / f"{model_file_prefix}.om"
-    return model_paths
-
-
 @lru_cache(1)
 def _get_hpi_model_info_collection():
     with importlib.resources.open_text(
@@ -143,7 +111,6 @@ def suggest_inference_backend_and_config(
     # additional important factors, such as NVIDIA GPU compute capability and
     # device manufacturers. We should also allow users to provide hints.
 
-    import paddle
     from ultra_infer import (
         is_built_with_om,
         is_built_with_openvino,
@@ -174,9 +141,12 @@ def suggest_inference_backend_and_config(
     if hpi_config.backend is not None and hpi_config.backend not in available_backends:
         return None, f"Inference backend {repr(hpi_config.backend)} is unavailable."
 
-    paddle_version = paddle.__version__
-    if paddle_version != "3.0.0":
-        return None, f"{repr(paddle_version)} is not a supported Paddle version."
+    paddle_version = get_paddle_version()
+    if paddle_version != (3, 0, 0):
+        return (
+            None,
+            f"{repr('.'.join(paddle_version))} is not a supported Paddle version.",
+        )
 
     if hpi_config.device_type == "cpu":
         uname = platform.uname()
@@ -186,15 +156,10 @@ def suggest_inference_backend_and_config(
         else:
             return None, f"{repr(arch)} is not a supported architecture."
     elif hpi_config.device_type == "gpu":
-        # FIXME: We should not rely on the PaddlePaddle library to detemine CUDA
-        # and cuDNN versions.
-        # Should we inject environment info from the outside?
-        import paddle.version
-
-        cuda_version = paddle.version.cuda()
-        cuda_version = cuda_version.replace(".", "")
-        cudnn_version = paddle.version.cudnn().rsplit(".", 1)[0]
-        cudnn_version = cudnn_version.replace(".", "")
+        cuda_version = get_cuda_version()
+        cuda_version = "".join(map(str, cuda_version))
+        cudnn_version = get_cudnn_version()
+        cudnn_version = "".join(map(str, cudnn_version[:-1]))
         key = f"gpu_cuda{cuda_version}_cudnn{cudnn_version}"
     else:
         return None, f"{repr(hpi_config.device_type)} is not a supported device type."

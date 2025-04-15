@@ -18,11 +18,11 @@ from contextlib import ContextDecorator
 import GPUtil
 
 from . import logging
-from .custom_device_whitelist import (
+from .custom_device_list import (
     DCU_WHITELIST,
     GCU_WHITELIST,
     MLU_WHITELIST,
-    NPU_WHITELIST,
+    NPU_BLACKLIST,
     XPU_WHITELIST,
 )
 from .flags import DISABLE_DEV_MODEL_WL
@@ -148,7 +148,7 @@ def check_supported_device_type(device_type, model_name):
         ), f"The MLU device does not yet support `{model_name}` model!"
     elif device_type == "npu":
         assert (
-            model_name in NPU_WHITELIST
+            model_name not in NPU_BLACKLIST
         ), f"The NPU device does not yet support `{model_name}` model!"
     elif device_type == "xpu":
         assert (

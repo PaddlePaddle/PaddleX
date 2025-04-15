@@ -12,9 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-from contextlib import ContextDecorator
-
 
 def get_device_type():
     import paddle
@@ -29,34 +26,23 @@ def get_paddle_version():
     version = paddle.__version__.split(".")
     # ref: https://github.com/PaddlePaddle/Paddle/blob/release/3.0-beta2/setup.py#L316
     assert len(version) == 3
-    major_v, minor_v, patch_v = version
+    major_v, minor_v, patch_v = map(int, version)
     return major_v, minor_v, patch_v
 
 
-class TemporaryEnvVarChanger(ContextDecorator):
-    """
-    A context manager to temporarily change an environment variable's value
-    and restore it upon exiting the context.
-    """
+def get_cuda_version():
+    # FIXME: We should not rely on the PaddlePaddle library to detemine CUDA
+    # versions.
+    import paddle.version
 
-    def __init__(self, var_name, new_value):
-        # if new_value is None, nothing changed
-        self.var_name = var_name
-        self.new_value = new_value
-        self.original_value = None
+    cuda_version = paddle.version.cuda()
+    return tuple(map(int, cuda_version.split(".")))
 
-    def __enter__(self):
-        if self.new_value is None:
-            return self
-        self.original_value = os.environ.get(self.var_name, None)
-        os.environ[self.var_name] = self.new_value
-        return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.new_value is None:
-            return False
-        if self.original_value is not None:
-            os.environ[self.var_name] = self.original_value
-        elif self.var_name in os.environ:
-            del os.environ[self.var_name]
-        return False
+def get_cudnn_version():
+    # FIXME: We should not rely on the PaddlePaddle library to detemine cuDNN
+    # versions.
+    import paddle.version
+
+    cudnn_version = paddle.version.cudnn()
+    return tuple(map(int, cudnn_version.split(".")))

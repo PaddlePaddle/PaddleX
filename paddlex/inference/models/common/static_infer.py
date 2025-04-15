@@ -30,9 +30,9 @@ from ...utils.hpi import (
     ONNXRuntimeConfig,
     OpenVINOConfig,
     TensorRTConfig,
-    get_model_paths,
     suggest_inference_backend_and_config,
 )
+from ...utils.model_paths import get_model_paths
 from ...utils.pp_option import PaddlePredictorOption
 from ...utils.trt_config import DISABLE_TRT_HALF_OPS_CONFIG
 
@@ -411,9 +411,9 @@ class PaddleInfer(StaticInfer):
                 config.enable_custom_device("npu")
                 if hasattr(config, "enable_new_ir"):
                     config.enable_new_ir(self._option.enable_new_ir)
+                config.enable_custom_device("npu", self._option.device_id)
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
-                config.enable_custom_passes([], custom_pass_only=True)
             elif self._option.device_type == "xpu":
                 if hasattr(config, "enable_new_ir"):
                     config.enable_new_ir(self._option.enable_new_ir)
