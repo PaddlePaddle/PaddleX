@@ -393,7 +393,8 @@ python main.py -c paddlex/configs/modules/3d_bev_detection/BEVFusion.yaml \
 * Specify the path of the model's `.yaml` configuration file (here it is `bevf_pp_2x8_1x_nusc.yaml`. When training other models, you need to specify the corresponding configuration file. The correspondence between models and configuration files can be found in [PaddleX Model List (CPU/GPU)](../../../support_list/models_list.en.md)).
 * Set the mode to model training: `-o Global.mode=train`
 * Specify the training dataset path: `-o Global.dataset_dir`
-Other related parameters can be set by modifying the fields under `Global` and `Train` in the `.yaml` configuration file, or by appending parameters in the command line. For example, to specify training on the first 2 GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file instructions for the corresponding model task module [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).
+* Other related parameters can be set by modifying the fields under `Global` and `Train` in the `.yaml` configuration file, or by appending parameters in the command line. For example, to specify training on the first 2 GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file instructions for the corresponding model task module [PaddleX Common Model Configuration Parameters](../../instructions/config_parameters_common.en.md).
+* New Feature: Paddle 3.0 support CINN (Compiler Infrastructure for Neural Networks) to accelerate training speed when using GPU device. Please specify `-o Train.dy2st=True` to enable it.
 
 <details><summary>👉 <b>More Information (Click to Expand)</b></summary>
 

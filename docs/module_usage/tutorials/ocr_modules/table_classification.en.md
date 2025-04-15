@@ -387,7 +387,8 @@ python main.py -c paddlex/configs/modules/table_classification/PP-LCNet_x1_0_tab
 * Specify the `.yaml` configuration file path for the model (here it is `PP-LCNet_x1_0_table_cls.yaml`. When training other models, the corresponding configuration file needs to be specified. The correspondence between models and configurations can be found in [PaddleX Model List (CPU/GPU)](../../../support_list/models_list.en.md)).
 * Set the mode to model training: `-o Global.mode=train`
 * Specify the training dataset path: `-o Global.dataset_dir`
-Other related parameters can be set by modifying the fields under `Global` and `Train` in the `.yaml` configuration file, or by appending parameters in the command line. For example, to specify training on the first 2 GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file description of the corresponding model task module [PaddleX General Model Configuration Parameters](../../instructions/config_parameters_common.en.md).
+* Other related parameters can be set by modifying the fields under `Global` and `Train` in the `.yaml` configuration file, or by appending parameters in the command line. For example, to specify training on the first 2 GPUs: `-o Global.device=gpu:0,1`; to set the number of training epochs to 10: `-o Train.epochs_iters=10`. For more modifiable parameters and their detailed explanations, refer to the configuration file description of the corresponding model task module [PaddleX General Model Configuration Parameters](../../instructions/config_parameters_common.en.md).
+* New Feature: Paddle 3.0 support CINN (Compiler Infrastructure for Neural Networks) to accelerate training speed when using GPU device. Please specify `-o Train.dy2st=True` to enable it.
 
 <details><summary>👉 <b>More Details (Click to Expand)</b></summary>
 

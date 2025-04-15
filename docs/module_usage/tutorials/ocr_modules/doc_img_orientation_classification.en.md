@@ -475,12 +475,10 @@ python main.py -c paddlex/configs/modules/doc_text_orientation/PP-LCNet_x1_0_doc
 Similar to model training and evaluation, the following steps are required:
 
 * Specify the `.yaml` configuration file path of the model (here it's `PP-LCNet_x1_0_doc_ori.yaml`)
-
 * Set the mode to model inference prediction: `-o Global.mode=predict`
-
 * Specify the model weights path: -o Predict.model_dir="./output/best_accuracy/inference"
-
-Specify the input data path: `-o Predict.input="..."` Other related parameters can be set by modifying the fields under Global and Predict in the `.yaml` configuration file. For details, refer to PaddleX Common Model Configuration File Parameter Description.
+* Specify the input data path: `-o Predict.input="..."` Other related parameters can be set by modifying the fields under Global and Predict in the `.yaml` configuration file. For details, refer to PaddleX Common Model Configuration File Parameter Description.
+* New Feature: Paddle 3.0 support CINN (Compiler Infrastructure for Neural Networks) to accelerate training speed when using GPU device. Please specify `-o Train.dy2st=True` to enable it.
 
 Alternatively, you can use the PaddleX wheel package for inference, easily integrating the model into your own projects.
 

@@ -223,7 +223,8 @@ the following steps are required for model inference:
 * Specify the `.yaml` configuration file path for the model (here it is `whisper_large.yaml`)
 * Specify the mode as model inference prediction: `-o Global.mode=predict`
 * Specify the input data path: `-o Predict.input="..."`
-Other related parameters can be set by modifying the `Global` and `Predict` fields in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
+* Other related parameters can be set by modifying the `Global` and `Predict` fields in the `.yaml` configuration file. For details, refer to [PaddleX Common Model Configuration File Parameter Description](../../instructions/config_parameters_common.en.md).
+* New Feature: Paddle 3.0 support CINN (Compiler Infrastructure for Neural Networks) to accelerate training speed when using GPU device. Please specify `-o Train.dy2st=True` to enable it.
 
 #### 4.4.2 Model Integration
 Models can be directly integrated into the PaddleX pipelines or into your own projects.
