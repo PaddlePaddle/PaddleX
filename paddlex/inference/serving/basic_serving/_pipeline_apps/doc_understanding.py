@@ -18,7 +18,6 @@ from typing import Any, List
 from .....utils.deps import function_requires_deps, is_dep_available
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
-from ...infra.models import OpenAIChatCompletion
 from ...schemas.doc_understanding import (
     INFER_ENDPOINT,
     ImageContent,
@@ -33,11 +32,12 @@ from .._app import create_app, primary_operation
 if is_dep_available("fastapi"):
     from fastapi import FastAPI
 if is_dep_available("openai"):
+    from openai.types.chat import ChatCompletion
     from openai.types.chat.chat_completion import Choice as ChatCompletionChoice
     from openai.types.chat.chat_completion_message import ChatCompletionMessage
 
 
-@function_requires_deps("fastapi")
+@function_requires_deps("fastapi", "openai")
 def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
     app, ctx = create_app(
         pipeline=pipeline, app_config=app_config, app_aiohttp_session=True
@@ -48,10 +48,10 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
         INFER_ENDPOINT,
         "infer",
     )
-    async def _infer(request: InferRequest) -> OpenAIChatCompletion:
+    async def _infer(request: InferRequest) -> "ChatCompletion":
         pipeline = ctx.pipeline
 
-        def process_messages(messages: List[Message]):
+        def _process_messages(messages: List[Message]):
             system_message = ""
             user_message = ""
             image_url = ""
@@ -82,14 +82,14 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
                         user_message = msg.content
             return system_message, user_message, image_url
 
-        system_message, user_message, image_url = process_messages(request.messages)
+        system_message, user_message, image_url = _process_messages(request.messages)
         result = (
             await pipeline.infer(
                 {"image": image_url, "query": user_message},
             )
         )[0]
 
-        return OpenAIChatCompletion(
+        return ChatCompletion(
             id=serving_utils.generate_log_id(),
             model=request.model,
             choices=[

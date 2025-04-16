@@ -17,7 +17,11 @@ from typing import Final, List, Literal, Optional, Union
 
 from pydantic import BaseModel, HttpUrl
 
-from ..infra.models import OpenAIChatCompletion, PrimaryOperations
+from ....utils.deps import is_dep_available
+from ..infra.models import PrimaryOperations
+
+if is_dep_available("openai"):
+    from openai.types.chat import ChatCompletion
 
 __all__ = [
     "INFER_ENDPOINT",
@@ -69,5 +73,5 @@ class InferRequest(BaseModel):
 
 
 PRIMARY_OPERATIONS: Final[PrimaryOperations] = {
-    "infer": (INFER_ENDPOINT, InferRequest, OpenAIChatCompletion),
+    "infer": (INFER_ENDPOINT, InferRequest, ChatCompletion),
 }

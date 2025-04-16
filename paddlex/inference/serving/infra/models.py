@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict, Generic, List, Tuple, Type, TypeVar, Union
+from typing import Dict, Generic, List, Tuple, TypeVar, Union
 
 from pydantic import BaseModel, Discriminator
 from typing_extensions import Annotated, Literal, TypeAlias
 
-from .utils import is_dep_available
+from ....utils.deps import is_dep_available
 
 if is_dep_available("openai"):
     from openai.types.chat import ChatCompletion
@@ -51,11 +51,8 @@ class AIStudioResultResponse(BaseModel, Generic[ResultT]):
     errorMsg: Literal["Success"] = "Success"
 
 
-OpenAIChatCompletion: Type = ChatCompletion
-
-
 Response: TypeAlias = Union[
-    AIStudioResultResponse, AIStudioNoResultResponse, OpenAIChatCompletion
+    AIStudioResultResponse, AIStudioNoResultResponse, "ChatCompletion"
 ]
 
 
