@@ -280,7 +280,18 @@ DISABLE_TRT_HALF_OPS_CONFIG = {
 PIR_TRT_PRECISION_MAP = PIR_TRT_PRECISION_MAP_CLASS()
 
 PIR_TRT_CFG_SETTING = {
-    "PP-YOLOE_plus_SOD-largesize-L": {"workspace_size": 1 << 32},
+    "PP-YOLOE_plus_SOD-largesize-L": {
+        "workspace_size": 1 << 32,
+        "disable_ops": [
+            "pd_op.conv2d",
+            "pd_op.fused_conv2d_add_act",
+            "pd_op.swish",
+            "pd_op.mean",
+            "pd_op.softmax",
+            "pd_op.layer_norm",
+            "pd_op.gelu",
+        ],
+    },
     "SLANeXt_wired": {"disable_ops": ["pd_op.slice"]},
     "SLANeXt_wireless": {"disable_ops": ["pd_op.slice"]},
     "DETR-R50": {
@@ -303,17 +314,6 @@ PIR_TRT_CFG_SETTING = {
             "pd_op.conv2d_transpose",
             "pd_op.matmul",
         },
-    },
-    "PP-YOLOE_plus_SOD-largesize-L": {
-        "disable_ops": [
-            "pd_op.conv2d",
-            "pd_op.fused_conv2d_add_act",
-            "pd_op.swish",
-            "pd_op.mean",
-            "pd_op.softmax",
-            "pd_op.layer_norm",
-            "pd_op.gelu",
-        ]
     },
     "PP-FormulaNet-L": {
         "disable_ops": ["pd_op.full_with_tensor"],
@@ -398,6 +398,12 @@ PIR_TRT_CFG_SETTING = {
         }
     },
     "PP-OCRv4_server_det": {
+        "ops_run_float": {"pd_op.conv2d", "pd_op.fused_conv2d_add_act"}
+    },
+    "PP-OCRv4_server_seal_det": {
+        "ops_run_float": {"pd_op.conv2d", "pd_op.fused_conv2d_add_act"}
+    },
+    "PP-YOLOE_plus-M": {
         "ops_run_float": {"pd_op.conv2d", "pd_op.fused_conv2d_add_act"}
     },
 }
