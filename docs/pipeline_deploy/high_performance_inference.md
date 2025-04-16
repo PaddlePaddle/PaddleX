@@ -128,7 +128,7 @@ paddlex --install hpi-gpu
 
 ##### 安装 NPU 版本的高性能推理插件：
 
-请参考 [昇腾 NPU 高性能推理教程](../practical_tutorials/high_performance_npu_tutorial.md)
+请参考 [昇腾 NPU 高性能推理教程](../practical_tutorials/high_performance_npu_tutorial.md)。
 
 **注意：**
 
@@ -218,14 +218,14 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
 ### 2.2 高性能推理配置
 
-常用高性能推理配置包含以下字段：
+常用高性能推理配置包含以下配置项：
 
 <table>
 <thead>
 <tr>
-<th>参数</th>
-<th>参数说明</th>
-<th>参数类型</th>
+<th>名称</th>
+<th>说明</th>
+<th>类型</th>
 <th>默认值</th>
 </tr>
 </thead>
@@ -250,7 +250,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 </tr>
 <tr>
   <td><code>auto_paddle2onnx</code></td>
-  <td>是否启用<a href="./paddle2onnx.md">Paddle2ONNX插件</a>将Paddle模型自动转换为ONNX模型。</td>
+  <td>是否启用 <a href="./paddle2onnx.md">Paddle2ONNX插件</a> 将Paddle模型自动转换为ONNX模型。</td>
   <td><code>bool</code></td>
   <td><code>True</code></td>
 </tr>
@@ -268,7 +268,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
   <tr>
     <td><code>paddle</code></td>
     <td>Paddle Inference 推理引擎，支持通过 Paddle Inference TensorRT 子图引擎的方式提升模型的 GPU 推理性能。</td>
-    <td>CPU, GPU</td>
+    <td>CPU，GPU</td>
   </tr>
   <tr>
     <td><code>openvino</code></td>
@@ -278,7 +278,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
   <tr>
     <td><code>onnxruntime</code></td>
     <td><a href="https://onnxruntime.ai/">ONNX Runtime</a>，跨平台、高性能的推理引擎。</td>
-    <td>CPU, GPU</td>
+    <td>CPU，GPU</td>
   </tr>
   <tr>
     <td><code>tensorrt</code></td>
@@ -292,31 +292,31 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
   </tr>
 </table>
 
-`backend_config` 对不同的后端有不同的可选值，如下表所示：
+`backend_config` 对不同的后端有不同的配置项，如下表所示：
 
 <table>
   <tr>
     <th>后端</th>
-    <th>可选值</th>
+    <th>配置项</th>
   </tr>
   <tr>
     <td><code>paddle</code></td>
-    <td>参考<a href="../module_usage/instructions/model_python_API.md">PaddleX单模型Python脚本使用说明: 4. 推理后端设置</a>。</td>
+    <td>参考 <a href="../module_usage/instructions/model_python_API.md#4-推理配置">PaddleX单模型Python脚本使用说明</a>。可通过键值对配置 <code>PaddlePredictorOption</code> 对象的属性，例如 <code>run_mode</code>。</td>
   </tr>
   <tr>
     <td><code>openvino</code></td>
-    <td><code>cpu_num_threads</code>：CPU 推理使用的逻辑处理器数量。默认为<code>8</code>。</td>
+    <td><code>cpu_num_threads</code>（<code>int</code>）：CPU 推理使用的逻辑处理器数量。默认为<code>8</code>。</td>
   </tr>
   <tr>
     <td><code>onnxruntime</code></td>
-    <td><code>cpu_num_threads</code>：CPU 推理时算子内部的并行计算线程数。默认为<code>8</code>。</td>
+    <td><code>cpu_num_threads</code>（<code>int</code>）：CPU 推理时算子内部的并行计算线程数。默认为<code>8</code>。</td>
   </tr>
   <tr>
     <td><code>tensorrt</code></td>
     <td>
-      <code>precision</code>：使用的精度，<code>fp16</code>或<code>fp32</code>。默认为<code>fp32</code>。
+      <code>precision</code>（<code>str</code>）：使用的精度，<code>"fp16"</code>或<code>"fp32"</code>。默认为<code>"fp32"</code>。
       <br />
-      <code>dynamic_shapes</code>：动态形状。动态形状包含最小形状、最优形状以及最大形状，是 TensorRT 延迟指定部分或全部张量维度直到运行时的能力。格式为：<code>{输入张量名称}: [{最小形状}, [{最优形状}], [{最大形状}]]</code>。更多介绍请参考 <a href="https://docs.nvidia.com/deeplearning/tensorrt/developer-guide/index.html#work_dynamic_shapes">TensorRT 官方文档</a>。
+      <code>dynamic_shapes</code>（<code>dict</code>）：动态形状。动态形状包含最小形状、最优形状以及最大形状，是 TensorRT 延迟指定部分或全部张量维度直到运行时的能力。格式为：<code>{输入张量名称}: [{最小形状}, {优化形状}, {最大形状}]</code>。更多介绍请参考 <a href="https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/work-dynamic-shapes.html">TensorRT 官方文档</a>。
     </td>
   </tr>
   <tr>
@@ -616,17 +616,11 @@ python -m pip install ../../python/dist/ultra_infer*.whl
 
 **1. 为什么开启高性能推理插件前后，感觉推理速度没有明显提升？**
 
-高性能推理插件通过智能选择后端来加速推理。
+高性能推理插件通过智能选择和配置后端来实现推理加速。由于模型结构复杂或存在不支持算子等情况，部分模型可能无法实现加速。此时，PaddleX 会在日志中给出相应提示。可以使用 [PaddleX benchmark 功能](../module_usage/instructions/benchmark.md) 测量模块中各部分的推理耗时情况，以便更准确地评估性能。
 
-对于单功能模块，由于模型复杂性或不支持算子等情况，部分模型可能无法使用加速后端（如OpenVINO、TensorRT等）。此时日志中会提示相关内容，并选择已知**最快的可用后端**，因此可能退回到普通推理。
+**2. 是否所有产线与模块均支持高性能推理？**
 
-对于模型产线，性能瓶颈可能不在模型推理阶段。
-
-可以使用 [PaddleX benchmark](../module_usage/instructions/benchmark.md) 工具进行实际速度测试，以便更准确地评估性能。
-
-**2. 高性能推理功能是否支持所有模型产线与单功能模块？**
-
-高性能推理功能支持所有模型产线与单功能模块，但部分模型可能无法加速推理，具体原因可以参考问题1。
+所有使用静态图模型的产线与模块都支持启用高性能推理插件，但部分模型在某些情况下可能无法获得推理加速，具体原因可以参考问题1。
 
 **3. 为什么安装高性能推理插件会失败，日志显示：Currently, the CUDA version must be 11.x for GPU devices.？**
 

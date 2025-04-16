@@ -34,7 +34,7 @@ for res in output:
   * 参数：
     * `pipeline`：`str` 类型，产线名或是本地产线配置文件路径，如“image_classification”、“/path/to/image_classification.yaml”；
     * `device`：`str` 类型，用于设置模型推理设备，如为 GPU 则可以指定卡号，如“cpu”、“gpu:2”，默认情况下，如有 GPU 设置则使用 0 号 GPU，否则使用 CPU；
-    * `pp_option`：`PaddlePredictorOption` 类型，用于设置模型推理后端，关于推理后端的详细说明，请参考下文[4-推理后端设置](#4-推理后端设置)；
+    * `pp_option`：`PaddlePredictorOption` 类型，用于改变运行模式等配置项，关于推理配置的详细说明，请参考下文[4-推理配置](#4-推理配置)；
   * 返回值：`BasePredictor`类型。
 
 ### 2. 调用预测模型产线对象的`predict()`方法进行推理预测
@@ -94,25 +94,31 @@ for res in output:
 
 ### 4. 推理后端设置
 
-PaddleX 支持通过`PaddlePredictorOption`设置推理后端，相关API如下：
+PaddleX 支持通过`PaddlePredictorOption`修改推理配置，相关API如下：
 
 #### 属性：
 
 * `deivce`：推理设备；
-  * 支持设置 `str` 类型表示的推理设备类型及卡号，设备类型支持可选 'gpu', 'cpu', 'npu', 'xpu', 'mlu'，当使用加速卡时，支持指定卡号，如使用 0 号 gpu：'gpu:0'，默认为 'gpu:0'；
+  * 支持设置 `str` 类型表示的推理设备类型及卡号，设备类型支持可选 “gpu”、“cpu”、“npu”、“xpu”、“mlu”、“dcu”，当使用加速卡时，支持指定卡号，如使用 0 号 GPU：`gpu:0`，默认情况下，如有 GPU 设置则使用 0 号 GPU，否则使用 CPU；
   * 返回值：`str`类型，当前设置的推理设备。
-* `run_mode`：推理后端；
-  * 支持设置 `str` 类型的推理后端，支持可选 'paddle'，'trt_fp32'，'trt_fp16'，'trt_int8'，'mkldnn'，'mkldnn_bf16'，其中 'mkldnn' 仅当推理设备使用 cpu 时可选，默认为 'paddle'；
-  * 返回值：`str`类型，当前设置的推理后端。
+* `run_mode`：运行模式；
+  * 支持设置 `str` 类型的运行模式，支持可选 'paddle'，'trt_fp32'，'trt_fp16'，'trt_int8'，'mkldnn'，'mkldnn_bf16'，其中 'trt_fp32' 和' trt_fp16' 分别对应使用 TensorRT 子图引擎进行 FP32 和 FP16 精度的推理，仅当推理设备使用 GPU 时可选，'mkldnn' 仅当推理设备使用 CPU 时可选，默认为 'paddle'；
+  * 返回值：`str`类型，当前设置的运行模式。
 * `cpu_threads`：cpu 加速库计算线程数，仅当推理设备使用 cpu 时有效；
   * 支持设置 `int` 类型，cpu 推理时加速库计算线程数；
   * 返回值：`int` 类型，当前设置的加速库计算线程数。
+* `trt_dynamic_shapes`：TensorRT 动态形状，仅当 `run_mode` 为 'trt_fp32' 或 'trt_fp16' 时有效；
+  * 支持设置：`dict` 类型或 `None`，如果为 `dict`，键为输入张量名称，值为一个两级嵌套列表：`[{最小形状}, {优化形状}, {最大形状}]`，例如 `[[1, 2], [1, 2], [2, 2]]`；
+  * 返回值：`dict` 类型或 `None`，当前设置的 TensorRT 动态形状。
+* `trt_dynamic_shape_input_data`：使用 TensorRT 时，为用于构建引擎的输入张量填充的数据，仅当 `run_mode` 为 'trt_fp32' 或 'trt_fp16' 时有效；
+  * 支持设置：`dict` 类型或 `None`，如果为 `dict`，键为输入张量名称，值为一个两级嵌套列表：`[{最小形状对应的填充数据}, {优化形状对应的填充数据}, {最大形状对应的填充数据}]`，例如 `[[1.0, 1.0], [1.0, 1.0], [1.0, 1.0, 1.0, 1.0]]`，数据为浮点数，按照行优先顺序填充；
+  * 返回值：`dict` 类型或 `None`，当前设置的输入张量填充数据。
 
 #### 方法：
 
-* `get_support_run_mode`：获取支持的推理后端设置；
+* `get_support_run_mode`：获取支持的运行模式；
   * 参数：无；
-  * 返回值：list 类型，可选的推理后端设置。
+  * 返回值：list 类型，可选的运行模式。
 * `get_support_device`：获取支持的运行设备类型；
   * 参数：无；
   * 返回值：list 类型，可选的设备类型。

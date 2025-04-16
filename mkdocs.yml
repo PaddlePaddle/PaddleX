@@ -411,6 +411,7 @@ nav:
          - PaddleX单模型Python脚本使用说明: module_usage/instructions/model_python_API.md
          - PaddleX通用模型配置文件参数说明: module_usage/instructions/config_parameters_common.md
          - PaddleX时序任务模型配置文件参数说明: module_usage/instructions/config_parameters_time_series.md
+         - 模型推理 Benchmark: module_usage/instructions/benchmark.md
   - 模型产线部署:
        - 高性能推理: pipeline_deploy/high_performance_inference.md
        - 服务化部署: pipeline_deploy/serving.md
