@@ -25,7 +25,7 @@ If your use case for PaddleX involves <b>custom development</b> (e.g. retraining
 
 After installing the PaddleX plugins you need, you can not only perform inference and integration with the supported models but also conduct advanced operations such as model training for custom development.
 
-The plugins supported by PaddleX are listed below. Please determine the name(s) of the plugin(s) you need based on your development requirements:
+The model training related plugins supported by PaddleX are listed below. Please determine the name(s) of the plugin(s) you need based on your development requirements:
 
 <details><summary>👉 <b>Plugin and Pipeline Correspondence (Click to Expand)</b></summary>
 
@@ -122,7 +122,7 @@ Next, we provide detailed installation tutorials for your reference. If you are 
 ## 2. Detailed Tutorial for Installing PaddleX on Linux
 When installing PaddleX on Linux, we <b>strongly recommend using the official PaddleX Docker image</b>. Alternatively, you can use other custom installation methods.
 
-When using the official Docker image, <b>PaddlePaddle, PaddleX (including the wheel package and all plugins), and the corresponding CUDA environment are already pre-installed</b>. You can simply obtain the Docker image and start the container to begin using it.
+When using the official Docker image, <b>PaddlePaddle, PaddleX (including the wheel package and all plugins), and the corresponding CUDA environment are already pre-installed</b>. You can simply obtain the Docker image and start the container to begin using it. <b>Please note that the official Docker image of PaddleX is different from the official Docker image of the PaddlePaddle framework, as the latter does not come with PaddleX pre-installed.</b>
 
 When using custom installation methods, you need to first install the PaddlePaddle framework, then obtain the PaddleX source code, and finally choose the PaddleX installation mode.
 ### 2.1 Get PaddleX based on Docker
@@ -232,10 +232,6 @@ All packages are installed.
 ```
 
 For PaddleX installation on more hardware environments, please refer to the [PaddleX Multi-hardware Usage Guide](../other_devices_support/multi_devices_use_guide.en.md)
-
-Sure! Here's the English translation:
-
----
 
 ### 2.3 Selective Installation of Dependencies
 

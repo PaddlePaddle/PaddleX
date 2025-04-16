@@ -9,7 +9,7 @@ comments: true
 安装飞桨 PaddlePaddle 时，支持通过 Docker 安装和通过 pip 安装。
 
 ## 基于 Docker 安装飞桨
-<b>若您通过 Docker 安装</b>，请参考下述命令，使用飞桨官方 Docker 镜像，创建一个名为 `paddlex` 的容器，并将当前工作目录映射到容器内的 `/paddle` 目录：
+<b>若您通过 Docker 安装</b>，请参考下述命令，使用飞桨框架官方 Docker 镜像，创建一个名为 `paddlex` 的容器，并将当前工作目录映射到容器内的 `/paddle` 目录：
 
 若您使用的 Docker 版本 >= 19.03，请执行：
 
@@ -81,10 +81,10 @@ python -c "import paddle; print(paddle.__version__)"
 
 如果想要使用 [Paddle Inference TensorRT 子图引擎](https://www.paddlepaddle.org.cn/documentation/docs/zh/guides/paddle_v3_features/paddle_trt_cn.html)，在安装paddle后需参考 [TensorRT 文档](https://docs.nvidia.com/deeplearning/tensorrt/archives/index.html) 安装相应版本的 TensorRT：
 
-- 对于 CUDA 11.8，兼容的 TensorRT 版本为 8.x（x>=6）。PaddleX 已在 TensorRT 8.6.1.6 上完成了 Paddle-TensorRT 的兼容性测试，因此**强烈建议安装 TensorRT 8.6.1.6**。
-- 对于 CUDA 12.6，兼容的 TensorRT 版本为 10.x（x>=5），建议安装 TensorRT 10.5.0.18。
+- 对于 CUDA 11.8 版本的飞桨，兼容的 TensorRT 版本为 8.x（x>=6）。PaddleX 已在 TensorRT 8.6.1.6 上完成了 Paddle-TensorRT 的兼容性测试，因此**强烈建议安装 TensorRT 8.6.1.6**。
+- 对于 CUDA 12.6 版本的飞桨，兼容的 TensorRT 版本为 10.x（x>=5），建议安装 TensorRT 10.5.0.18。
 
-下面是在 CUDA11.8 环境下使用 "Tar File Installation" 方式安装 TensoRT-8.6.1.6 的例子：
+下面是在 CUDA 11.8 环境下使用 "Tar File Installation" 方式安装 TensoRT 8.6.1.6 的例子：
 
 ```bash
 # 下载 TensorRT tar 文件

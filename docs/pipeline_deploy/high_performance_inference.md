@@ -14,18 +14,17 @@ comments: true
 - [2. 进阶使用方法](#2-进阶使用方法)
   - [2.1 高性能推理工作模式](#21-高性能推理工作模式)
   - [2.2 高性能推理配置](#22-高性能推理配置)
-  - [2.3 如何修改高性能推理配置](#23-如何修改高性能推理配置)
-  - [2.4 修改高性能推理配置示例](#24-修改高性能推理配置示例)
-  - [2.5 高性能推理在子产线/子模块中的启用/禁用](#25-高性能推理在子产线子模块中的启用禁用)
-  - [2.6 模型缓存说明](#26-模型缓存说明)
-  - [2.7 定制模型推理库](#27-定制模型推理库)
+  - [2.3 修改高性能推理配置](#23-修改高性能推理配置)
+  - [2.4 高性能推理插件在子产线/子模块中的启用/禁用](#24-高性能推理插件在子产线子模块中的启用禁用)
+  - [2.5 模型缓存说明](#25-模型缓存说明)
+  - [2.6 定制模型推理库](#26-定制模型推理库)
 - [3. 常见问题](#3.-常见问题)
 
 ## 1. 基础使用方法
 
-使用高性能推理插件前，请确保您已经按照[PaddleX本地安装教程](../installation/installation.md) 完成了PaddleX的安装，且按照PaddleX产线命令行使用说明或PaddleX产线Python脚本使用说明跑通了产线的快速推理。
+使用高性能推理插件前，请确保您已经按照 [PaddleX本地安装教程](../installation/installation.md) 完成了PaddleX的安装，且按照PaddleX产线命令行使用说明或PaddleX产线Python脚本使用说明跑通了产线的快速推理。
 
-高性能推理支持处理 **PaddlePaddle 静态图模型( `.pdmodel`、 `.json` )** 和 **ONNX 格式模型( `.onnx` )**。对于 ONNX 格式模型，建议使用[Paddle2ONNX 插件](./paddle2onnx.md)转换得到。如果模型目录中存在多种格式的模型，PaddleX 会根据需要自动选择。
+高性能推理支持处理 **PaddlePaddle 静态图模型( `.pdmodel`、 `.json` )** 和 **ONNX 格式模型( `.onnx` )**。对于 ONNX 格式模型，建议使用 [Paddle2ONNX 插件](./paddle2onnx.md) 转换得到。如果模型目录中存在多种格式的模型，PaddleX 会根据需要自动选择。
 
 ### 1.1 安装高性能推理插件
 
@@ -55,13 +54,13 @@ comments: true
     <td>3.10</td>
   </tr>
   <tr>
-    <td>aarch64</td>
+    <td>AArch64</td>
     <td>NPU</td>
     <td>3.10</td>
   </tr>
 </table>
 
-#### (1) 基于 Docker 安装高性能推理插件（强烈推荐）：
+#### (1) 在 Docker 容器中安装高性能推理插件（强烈推荐）：
 
 参考 [基于Docker获取PaddleX](../installation/installation.md#21-基于docker获取paddlex) 使用 Docker 启动 PaddleX 容器。启动容器后，根据设备类型，执行如下指令，安装高性能推理插件：
 
@@ -84,15 +83,14 @@ comments: true
               <td><code>paddlex --install hpi-gpu</code></td>
               <td>安装 GPU 版本的高性能推理功能。<br />包含了 CPU 版本的所有功能。</td>
           </tr>
-          <tr>
-              <td>NPU</td>
-              <td><code>paddlex --install hpi-npu</code></td>
-              <td>安装 NPU 版本的高性能推理功能。<br />使用说明请参考<a href="../practical_tutorials/high_performance_npu_tutorial.md">昇腾 NPU 高性能推理教程</a>。</td>
-          </tr>
       </tbody>
   </table>
 
-#### (2) 本地安装高性能推理插件：
+PaddleX 官方 Docker 镜像中默认安装了 TensorRT，高性能推理插件可以使用 Paddle Inference TensorRT 子图引擎进行推理加速。
+
+**请注意，以上提到的镜像指的是 [基于Docker获取PaddleX](../installation/installation.md#21-基于docker获取paddlex) 中描述的 PaddleX 官方镜像，而非 [飞桨PaddlePaddle本地安装教程](../installation/paddlepaddle_install.md#基于-docker-安装飞桨) 中描述的飞桨框架官方镜像。对于后者，请参考高性能推理插件本地安装说明。**
+
+#### (2) 本地安装高性能推理插件（不推荐）：
 
 ##### 安装 CPU 版本的高性能推理插件：
 
@@ -104,40 +102,47 @@ paddlex --install hpi-cpu
 
 ##### 安装 GPU 版本的高性能推理插件：
 
-参考 [NVIDIA 官网](https://developer.nvidia.com/) 本地安装 CUDA 和 cuDNN，再执行：
+在安装前，需要确保环境中安装有 CUDA 与 cuDNN。目前 PaddleX 官方仅提供 CUDA 11.8 + cuDNN 8.9 的预编译包，请保证安装的 CUDA 和 cuDNN 版本与编译版本兼容。以下分别是 CUDA 11.8 和 cuDNN 8.9 的安装说明文档：
+
+- [安装 CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive)
+- [安装 cuDNN 8.9](https://docs.nvidia.com/deeplearning/cudnn/archives/cudnn-890/install-guide/index.html)
+
+如果使用的是飞桨框架官方镜像，则镜像中的 CUDA 和 cuDNN 版本已经是满足要求的，无需重新安装。
+
+如果通过 pip 安装飞桨，通常 CUDA、cuDNN 的相关 Python 包将被自动安装。在这种情况下，**仍需要通过安装非 Python 专用的 CUDA 与 cuDNN**。同时，建议安装的 CUDA 和 cuDNN 版本与环境中存在的 Python 包版本保持一致，以避免不同版本的库共存导致的潜在问题。可以通过如下方式可以查看 CUDA 和 cuDNN 相关 Python 包的版本：
+
+```bash
+# CUDA 相关 Python 包版本
+pip list | grep nvidia-cuda
+# cuDNN 相关 Python 包版本
+pip list | grep nvidia-cudnn
+```
+
+如果希望使用 Paddle Inference TensorRT 子图引擎，需额外安装 TensorRT。请参考 [飞桨PaddlePaddle本地安装教程](../installation/paddlepaddle_install.md) 中的相关说明。需要注意的是，由于高性能推理插件的底层推理库也集成了 TensorRT，建议安装相同版本的 TensorRT 以避免版本冲突。目前，高性能推理插件的底层推理库集成的 TensorRT 版本为 8.6.1.6。如果使用的是飞桨框架官方镜像，则无需关心版本冲突问题。
+
+确认安装了正确版本的 CUDA、cuDNN、以及 TensorRT （可选）后，执行：
 
 ```bash
 paddlex --install hpi-gpu
 ```
 
-所需的 CUDA 和 cuDNN 版本可以通过如下方式获取：
+##### 安装 NPU 版本的高性能推理插件：
 
-```bash
-# CUDA 版本
-pip list | grep nvidia-cuda
-# cuDNN 版本
-pip list | grep nvidia-cudnn
-```
-
-安装 CUDA 11.8 和 cuDNN 8.9 的参考文档：
-- [安装CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive)
-- [安装cuDNN 8.9](https://docs.nvidia.com/deeplearning/cudnn/archives/cudnn-890/install-guide/index.html)
+请参考 [昇腾 NPU 高性能推理教程](../practical_tutorials/high_performance_npu_tutorial.md)
 
 **注意：**
 
-1. **GPU 只支持 CUDA 11.8 + cuDNN8.9**，CUDA 12.6 已经在支持中。
+1. **目前 PaddleX 官方仅提供 CUDA 11.8 + cuDNN 8.9 的预编译包**；CUDA 12.6 已经在支持中。
 
-2. 同一环境下只应该存在一个高性能推理插件版本。
+2. 同一环境中只应该存在一个版本的高性能推理插件。
 
-3. NPU 设备的高性能推理使用说明参考 [昇腾 NPU 高性能推理教程](../practical_tutorials/high_performance_npu_tutorial.md)。
-
-4. Windows 只支持基于 Docker 安装和使用高性能推理插件。
+3. 对于 Windows 系统，目前建议在 Docker 容器中安装和使用高性能推理插件。
 
 ### 1.2 启用高性能推理插件
 
-以下是使用 PaddleX CLI 和 Python API 在通用图像分类产线和图像分类模块中启用高性能推理功能的示例。
+以下是使用 PaddleX CLI 和 Python API 在通用图像分类产线和图像分类模块中启用高性能推理插件的示例。
 
-对于 PaddleX CLI，指定 `--use_hpip`，即可启用高性能推理。
+对于 PaddleX CLI，指定 `--use_hpip`，即可启用高性能推理插件。
 
 通用图像分类产线：
 
@@ -161,7 +166,7 @@ python main.py \
     -o Predict.use_hpip=True
 ```
 
-对于 PaddleX Python API，启用高性能推理的方法类似。以通用图像分类产线和图像分类模块为例：
+对于 PaddleX Python API，启用高性能推理插件的方法类似。以通用图像分类产线和图像分类模块为例：
 
 通用图像分类产线：
 
@@ -193,15 +198,15 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
 启用高性能推理插件得到的推理结果与未启用插件时一致。对于部分模型，**在首次启用高性能推理插件时，可能需要花费较长时间完成推理引擎的构建**。PaddleX 将在推理引擎的第一次构建完成后将相关信息缓存在模型目录，并在后续复用缓存中的内容以提升初始化速度。
 
-**启用高性能推理默认作用于整条产线/整个模块**，若想细粒度控制作用范围，如只对产线中某条子产线或某个子模块启用高性能推理插件，可以在产线配置文件中不同层级的配置里设置`use_hpip`，请参考 [2.5 高性能推理在子产线/子模块中的启用/禁用](#25-高性能推理在子产线子模块中的启用禁用)。
+**启用高性能推理插件默认作用于整条产线/整个模块**，若想细粒度控制作用范围，如只对产线中某条子产线或某个子模块启用高性能推理插件，可以在产线配置文件中不同层级的配置里设置`use_hpip`，请参考 [2.4 高性能推理插件在子产线/子模块中的启用/禁用](#24-高性能推理插件在子产线子模块中的启用禁用)。
 
 ## 2. 进阶使用方法
 
-本节介绍高性能推理的进阶使用方法，适合对模型部署有一定了解或希望进行手动配置调优的用户。用户可以参照配置说明和示例，根据自身需求自定义使用高性能推理。接下来将对进阶使用方法进行详细介绍。
+本节介绍高性能推理插件的进阶使用方法，适合对模型部署有一定了解或希望进行手动配置调优的用户。用户可以参照配置说明和示例，根据自身需求自定义使用高性能推理插件。接下来将对进阶使用方法进行详细介绍。
 
 ### 2.1 高性能推理工作模式
 
-高性能推理分为两种工作模式：
+高性能推理插件支持两种工作模式。通过修改高性能推理配置，可以切换不同的工作模式。
 
 #### (1) 安全自动配置模式
 
@@ -262,7 +267,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
   </tr>
   <tr>
     <td><code>paddle</code></td>
-    <td>Paddle Inference 推理引擎，支持 Paddle Inference TensorRT 子图引擎的方式提升模型的 GPU 推理性能。</td>
+    <td>Paddle Inference 推理引擎，支持通过 Paddle Inference TensorRT 子图引擎的方式提升模型的 GPU 推理性能。</td>
     <td>CPU, GPU</td>
   </tr>
   <tr>
@@ -287,7 +292,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
   </tr>
 </table>
 
-`backend_config` 根据不同后端有不同的可选值，如下表所示：
+`backend_config` 对不同的后端有不同的可选值，如下表所示：
 
 <table>
   <tr>
@@ -300,11 +305,11 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
   </tr>
   <tr>
     <td><code>openvino</code></td>
-    <td><code>cpu_num_threads</code>：CPU推理使用的逻辑处理器数量。默认为<code>8</code>。</td>
+    <td><code>cpu_num_threads</code>：CPU 推理使用的逻辑处理器数量。默认为<code>8</code>。</td>
   </tr>
   <tr>
     <td><code>onnxruntime</code></td>
-    <td><code>cpu_num_threads</code>：CPU推理时算子内部的并行计算线程数。默认为<code>8</code>。</td>
+    <td><code>cpu_num_threads</code>：CPU 推理时算子内部的并行计算线程数。默认为<code>8</code>。</td>
   </tr>
   <tr>
     <td><code>tensorrt</code></td>
@@ -320,30 +325,19 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
   </tr>
 </table>
 
-### 2.3 如何修改高性能推理配置
+### 2.3 修改高性能推理配置
 
-由于实际部署环境和需求的多样性，默认配置可能无法满足所有要求。这时，可能需要手动调整高性能推理配置。以下是两种常见的情况：
-
-- 需要更换推理后端。
-  - 例如在OCR产线中，指定`text_detection`模块使用`onnxruntime`后端，`text_recognition`模块使用`tensorrt`后端。
-
-- 需要修改 TensorRT 的动态形状配置：
-  - 当默认的动态形状配置无法满足需求（例如，模型可能需要范围外的输入形状），就需要为每一个输入张量指定动态形状。修改完成后，需要清理模型的`.cache`缓存目录。
-
-在这些情况下，用户可以通过修改**产线/模块配置文件**、**CLI**或**Python API**所传递参数中的 `hpi_config` 字段内容来修改配置。**通过 CLI 或 Python API 传递的参数将覆盖产线/模块配置文件的设置**。
-
-### 2.4 修改高性能推理配置示例
+由于实际部署环境和需求的多样性，默认配置可能无法满足所有要求。这时，可能需要手动调整高性能推理配置。用户可以通过修改**产线/模块配置文件**、**CLI**或**Python API**所传递参数中的 `hpi_config` 字段内容来修改配置。**通过 CLI 或 Python API 传递的参数将覆盖产线/模块配置文件中的设置**。以下将结合一些例子介绍如何修改配置。
 
 #### (1) 更换推理后端。
 
-  ##### 通用OCR产线的所有模型使用`onnxruntime`后端：
+  ##### 通用OCR产线的所有模型使用 `onnxruntime` 后端：
 
   <details><summary>👉 1. 修改产线配置文件方式（点击展开）</summary>
 
   ```yaml
   pipeline_name: OCR
 
-  use_hpip: True
   hpi_config:
     backend: onnxruntime
 
@@ -378,7 +372,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
   </details>
 
-  ##### 图像分类模块的模型使用`onnxruntime`后端：
+  ##### 图像分类模块使用 `onnxruntime` 后端：
 
   <details><summary>👉 1. 修改产线配置文件方式（点击展开）</summary>
 
@@ -387,7 +381,6 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
   ...
   Predict:
     ...
-    use_hpip: True
     hpi_config:
         backend: onnxruntime
     ...
@@ -424,7 +417,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
   </details>
 
-  ##### 通用OCR产线的`text_detection`模块使用`onnxruntime`后端，`text_recognition`模块使用`tensorrt`后端：
+  ##### 通用OCR产线的 `text_detection` 模块使用 `onnxruntime` 后端，`text_recognition` 模块使用 `tensorrt` 后端：
 
   <details><summary>👉 1. 修改产线配置文件方式（点击展开）</summary>
 
@@ -443,11 +436,8 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
       thresh: 0.3
       box_thresh: 0.6
       unclip_ratio: 2.0
-      # 当前子模块启用高性能推理
-      use_hpip: True
-      # 当前子模块使用如下高性能推理配置
       hpi_config:
-          backend: onnxruntime
+        backend: onnxruntime
     TextLineOrientation:
       module_name: textline_orientation
       model_name: PP-LCNet_x0_25_textline_ori
@@ -459,11 +449,8 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
       model_dir: null
       batch_size: 6
       score_thresh: 0.0
-      # 当前子模块启用高性能推理
-      use_hpip: True
-      # 当前子模块使用如下高性能推理配置
       hpi_config:
-          backend: tensorrt
+        backend: tensorrt
   ```
 
   </details>
@@ -482,7 +469,6 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
         hpi_config:
           backend: tensorrt
           backend_config:
-            precision: fp32
             dynamic_shapes:
               x:
                 - [1, 3, 300, 300]
@@ -502,11 +488,9 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
   ...
   Predict:
     ...
-    use_hpip: True
     hpi_config:
         backend: tensorrt
         backend_config:
-          precision: fp32
           dynamic_shapes:
             x:
               - [1, 3, 300, 300]
@@ -518,11 +502,11 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
   </details>
 
-### 2.5 高性能推理在子产线/子模块中的启用/禁用
+### 2.4 高性能推理插件在子产线/子模块中的启用/禁用
 
 高性能推理支持通过在子产线/子模块级别使用 `use_hpip`，实现**仅产线中的某个子产线/子模块使用高性能推理**。示例如下：
 
-##### 通用OCR产线的`text_detection`模块使用高性能推理，`text_recognition`模块不使用高性能推理：
+##### 通用OCR产线的 `text_detection` 模块使用高性能推理，`text_recognition` 模块不使用高性能推理：
 
   <details><summary>👉 点击展开</summary>
 
@@ -541,19 +525,20 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
       thresh: 0.3
       box_thresh: 0.6
       unclip_ratio: 2.0
-      use_hpip: True # 当前子模块启用高性能推理
+      use_hpip: True # 当前子模块使用高性能推理
     TextLineOrientation:
       module_name: textline_orientation
       model_name: PP-LCNet_x0_25_textline_ori
       model_dir: null
       batch_size: 6
+      # 当前子模块未单独配置，默认与全局配置一致（如果配置文件和 CLI、API 参数均未设置，则不使用高性能推理）
     TextRecognition:
       module_name: text_recognition
       model_name: PP-OCRv4_mobile_rec
       model_dir: null
       batch_size: 6
       score_thresh: 0.0
-      use_hpip: False # 当前子模块不启用高性能推理
+      use_hpip: False # 当前子模块不使用高性能推理
   ```
 
   </details>
@@ -561,20 +546,21 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 **注意：**
 
 1. 在子产线或子模块中设置 `use_hpip` 时，将以最深层的配置为准。
+2. **当通过修改产线配置文件的方式启用/禁用高性能推理插件时，不建议同时使用 CLI 或 Python API 的方式进行设置。** 通过 CLI 或 Python API 设置 `use_hpip` 等同于修改配置文件顶层的 `use_hpip`。
 
-2. **强烈建议通过修改产线配置文件的方式开启高性能推理**，不建议使用CLI或Python API的方式进行设置。如果通过CLI或Python API启用 `use_hpip`，等同于在配置文件的最上层设置 `use_hpip`。
-
-### 2.6 模型缓存说明
+### 2.5 模型缓存说明
 
 模型缓存会存放在模型目录下的 `.cache` 目录下，包括使用 `tensorrt` 或 `paddle` 后端时产生的 `shape_range_info.pbtxt`与`trt_serialized`开头的文件。
 
+**修改 TensorRT 相关配置后，建议清理缓存，以避免出现缓存导致新配置不生效的情况。**
+
 当启用`auto_paddle2onnx`选项时，可能会在模型目录下自动生成`inference.onnx`文件。
 
-### 2.7 定制模型推理库
+### 2.6 定制模型推理库
 
-`ultra-infer`是高性能推理底层依赖的模型推理库，位于 `PaddleX/libs/ultra-infer` 目录。编译脚本位于 `PaddleX/libs/ultra-infer/scripts/linux/set_up_docker_and_build_py.sh` ，编译默认编译GPU版本和包含 OpenVINO、TensorRT、ONNX Runtime 三种推理后端的 `ultra-infer`。
+`ultra-infer` 是高性能推理底层依赖的模型推理库，在 `PaddleX/libs/ultra-infer` 目录以子项目形式维护。PaddleX 提供 `ultra-infer` 的构建脚本，位于 `PaddleX/libs/ultra-infer/scripts/linux/set_up_docker_and_build_py.sh` 。编译脚本默认构建 GPU 版本的 `ultra-infer`，集成 OpenVINO、TensorRT、ONNX Runtime 三种推理后端。
 
-自定义编译时可根据需求修改如下选项：
+如果需要自定义构建 `ultra-infer`，可根据需求修改构建脚本的如下选项：
 
 <table>
     <thead>
@@ -586,41 +572,40 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
     <tbody>
         <tr>
             <td>http_proxy</td>
-            <td>在下载三方库时使用具体的http代理，默认空</td>
+            <td>在下载三方库时使用的 HTTP 代理，默认为空</td>
         </tr>
         <tr>
             <td>PYTHON_VERSION</td>
-            <td>Python版本，默认 <code>3.10.0</code></td>
+            <td>Python 版本，默认 <code>3.10.0</code></td>
         </tr>
         <tr>
             <td>WITH_GPU</td>
-            <td>是否编译支持Nvidia-GPU，默认 <code>ON</code></td>
+            <td>是否支持 GPU，默认 <code>ON</code></td>
         </tr>
         <tr>
             <td>ENABLE_ORT_BACKEND</td>
-            <td>是否编译集成ONNX Runtime后端，默认 <code>ON</code></td>
+            <td>是否集成 ONNX Runtime 后端，默认 <code>ON</code></td>
         </tr>
         <tr>
             <td>ENABLE_TRT_BACKEND</td>
-            <td>是否编译集成TensorRT后端（仅支持GPU），默认 <code>ON</code></td>
+            <td>是否集成 TensorRT 后端（仅支持GPU），默认 <code>ON</code></td>
         </tr>
         <tr>
             <td>ENABLE_OPENVINO_BACKEND</td>
-            <td>是否编译集成OpenVINO后端（仅支持CPU），默认 <code>ON</code></td>
+            <td>是否集成 OpenVINO 后端（仅支持CPU），默认 <code>ON</code></td>
         </tr>
     </tbody>
 </table>
 
-编译示例：
+示例：
 
 ```shell
-# 编译
+# 构建
+cd PaddleX/libs/ultra-infer/scripts/linux
 # export PYTHON_VERSION=...
 # export WITH_GPU=...
 # export ENABLE_ORT_BACKEND=...
 # export ...
-
-cd PaddleX/libs/ultra-infer/scripts/linux
 bash set_up_docker_and_build_py.sh
 
 # 安装
@@ -639,14 +624,14 @@ python -m pip install ../../python/dist/ultra_infer*.whl
 
 可以使用 [PaddleX benchmark](../module_usage/instructions/benchmark.md) 工具进行实际速度测试，以便更准确地评估性能。
 
-**2: 高性能推理功能是否支持所有模型产线与单功能模块？**
+**2. 高性能推理功能是否支持所有模型产线与单功能模块？**
 
 高性能推理功能支持所有模型产线与单功能模块，但部分模型可能无法加速推理，具体原因可以参考问题1。
 
-**3: 为什么安装高性能推理插件会失败，日志显示：Currently, the CUDA version must be 11.x for GPU devices.？**
+**3. 为什么安装高性能推理插件会失败，日志显示：Currently, the CUDA version must be 11.x for GPU devices.？**
 
-高性能推理功能目前支持的环境如 [1.1节的表](#11-安装高性能推理插件) 所示。如果安装失败，可能是高性能推理功能不支持当前环境。另外，CUDA 12.6 已经在支持中。
+高性能推理功能目前仅支持有限的环境，详情请参考安装说明。如果安装失败，可能是高性能推理功能不支持当前环境。另外，CUDA 12.6 已经在支持中。
 
 **4. 为什么使用高性能推理功能后，程序在运行过程中会卡住或者显示一些 WARNING 和 ERROR 信息？这种情况下应该如何处理？**
 
-在引擎构建过程中，由于子图优化和算子处理，可能会导致程序耗时较长，并生成一些 WARNING 和 ERROR 信息。然而，只要程序没有自动退出，建议耐心等待，程序通常会继续运行至完成。
+在初始化模型时，子图优化等操作可能会导致程序耗时较长，并生成一些 WARNING 和 ERROR 信息。然而，只要程序没有自动退出，建议耐心等待，程序通常会继续运行至完成。

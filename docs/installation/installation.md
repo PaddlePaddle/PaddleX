@@ -27,7 +27,7 @@ pip install "https://paddle-model-ecology.bj.bcebos.com/paddlex/whl/paddlex-3.0.
 
 安装您需要的PaddleX插件之后，您不仅同样能够对插件支持的模型进行推理与集成，还可以对其进行模型训练等二次开发更高级的操作。
 
-PaddleX支持的插件如下，请您根据开发需求，确定所需的一个或多个插件名称：
+PaddleX支持的模型训练相关插件如下，请您根据开发需求，确定所需的一个或多个插件名称：
 
 <details><summary>👉 <b>插件和产线对应关系（点击展开）</b></summary>
 
@@ -128,7 +128,7 @@ paddlex --install PaddleXXX  # 例如PaddleOCR
 ## 2. Linux安装PaddeX详细教程
 使用Linux安装PaddleX时，我们<b>强烈推荐使用PaddleX官方Docker镜像安装</b>，当然也可使用其他自定义方式安装。
 
-当您使用官方 Docker 镜像安装时，其中<b>已经内置了 PaddlePaddle、PaddleX（包括wheel包和所有插件）</b>，并配置好了相应的CUDA环境，<b>您获取 Docker 镜像并启动容器即可开始使用</b>。
+当您使用官方 Docker 镜像安装时，其中<b>已经内置了 PaddlePaddle、PaddleX（包括wheel包和所有插件）</b>，并配置好了相应的CUDA环境，<b>您获取 Docker 镜像并启动容器即可开始使用</b>。<b>请注意，PaddleX 官方 Docker 镜像与飞桨框架官方 Docker 镜像不同，后者并没有预装 PaddleX。</b>
 
 当您使用自定义方式安装时，需要先安装飞桨 PaddlePaddle 框架，随后获取 PaddleX 源码，最后选择PaddleX的安装模式。
 
