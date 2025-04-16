@@ -179,7 +179,7 @@ def args_cfg():
         help="Output directory for the ONNX model",
     )
     paddle2onnx_group.add_argument(
-        "--opset_version", type=int, help="Version of the ONNX opset to use"
+        "--opset_version", type=int, default=7, help="Version of the ONNX opset to use"
     )
 
     # Parse known arguments to get the pipeline name
@@ -367,12 +367,6 @@ def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
     def _run_paddle2onnx(input_dir, pd_model_file_ext, output_dir, opset_version):
         logging.info("Paddle2ONNX conversion starting...")
         # XXX: To circumvent Paddle2ONNX's bug
-        if opset_version is None:
-            if pd_model_file_ext == ".json":
-                opset_version = 19
-            else:
-                opset_version = 7
-            logging.info("Using default ONNX opset version: %d", opset_version)
         cmd = [
             "paddle2onnx",
             "--model_dir",

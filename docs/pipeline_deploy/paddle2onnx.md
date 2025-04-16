@@ -35,7 +35,7 @@ paddlex --install paddle2onnx
         <tr>
             <td>opset_version</td>
             <td>int</td>
-            <td>使用的ONNX opset版本。<code>.json</code>格式的Paddle模型默认为<code>19</code>，<code>.pdmodel</code>格式的Paddle模型默认为<code>7</code>。</td>
+            <td>使用的ONNX opset版本。默认为<code>7</code>。</td>
         </tr>
     </tbody>
 </table>

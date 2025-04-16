@@ -34,7 +34,7 @@ paddlex --install paddle2onnx
         <tr>
             <td>opset_version</td>
             <td>int</td>
-            <td>The ONNX opset version to use. Defaults to <code>19</code> for <code>.json</code> format Paddle models and <code>7</code> for <code>.pdmodel</code> format Paddle models.</td>
+            <td>The ONNX opset version to use. Defaults to <code>7</code>.</td>
         </tr>
     </tbody>
 </table>
