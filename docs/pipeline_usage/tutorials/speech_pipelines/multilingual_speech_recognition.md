@@ -19,7 +19,7 @@ comments: true
    </tr>
    <tr>
      <td>whisper_large</td>
-     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/whisper_large.tar">whisper_large</a></td>
+     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_large.tar">whisper_large</a></td>
      <td >680kh</td>
      <td>5.8G</td>
      <td>2.7 (Librispeech)</td>
@@ -27,28 +27,28 @@ comments: true
    </tr>
    <tr>
      <td>whisper_medium</td>
-     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/whisper_medium.tar">whisper_medium</a></td>
+     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_medium.tar">whisper_medium</a></td>
      <td>680kh</td>
      <td>2.9G</td>
      <td>-</td>
    </tr>
    <tr>
      <td>whisper_small</td>
-     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/whisper_small.tar">whisper_small</a></td>
+     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_small.tar">whisper_small</a></td>
      <td>680kh</td>
      <td>923M</td>
      <td>-</td>
    </tr>
    <tr>
      <td>whisper_base</td>
-     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/whisper_base.tar">whisper_base</a></td>
+     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_base.tar">whisper_base</a></td>
      <td>680kh</td>
      <td>277M</td>
      <td>-</td>
    </tr>
    <tr>
      <td>whisper_small</td>
-     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/whisper_tiny.tar">whisper_tiny</a></td>
+     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_tiny.tar">whisper_tiny</a></td>
      <td>680kh</td>
      <td>145M</td>
      <td>-</td>

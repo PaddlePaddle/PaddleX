@@ -18,14 +18,14 @@ Open-vocabulary segmentation is an image segmentation task that aims to segment 
 <th>Description</th>
 </tr>
 <tr>
-<td>SAM-H_box</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SAM-H_box_infer.tar">Inference Model</a></td>
+<td>SAM-H_box</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SAM-H_box_infer.tar">Inference Model</a></td>
 <td>144.9</td>
 <td>33920.7</td>
 <td>2433.7</td>
 <td rowspan="2">SAM (Segment Anything Model) is an advanced image segmentation model that can segment any object in an image based on simple user-provided prompts (such as points, boxes, or text). Trained on the SA-1B dataset with ten million images and 1.1 billion mask annotations, it performs well in most scenarios.</td>
 </tr>
 <tr>
-<td>SAM-H_point</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/SAM-H_point_infer.tar">Inference Model</a></td>
+<td>SAM-H_point</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/SAM-H_point_infer.tar">Inference Model</a></td>
 <td>144.9</td>
 <td>33920.7</td>
 <td>2433.7</td>
