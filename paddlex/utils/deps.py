@@ -222,4 +222,4 @@ def require_paddle2onnx_plugin():
 
 
 def get_paddle2onnx_spec():
-    return "paddle2onnx == 2.0.0a5"
+    return "paddle2onnx == 2.0.1a1"
