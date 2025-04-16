@@ -76,12 +76,12 @@ Refer to [Get PaddleX based on Docker](../installation/installation.en.md#21-obt
       <tr>
           <td>CPU</td>
           <td><code>paddlex --install hpi-cpu</code></td>
-          <td>Installs the CPU version of the high-performance inference functionality.</td>
+          <td>Installs the CPU version of the high-performance inference feature.</td>
       </tr>
       <tr>
           <td>GPU</td>
           <td><code>paddlex --install hpi-gpu</code></td>
-          <td>Installs the GPU version of the high-performance inference functionality.<br />Includes all functionalities of the CPU version.</td>
+          <td>Installs the GPU version of the high-performance inference feature.<br />Includes all functionalities of the CPU version.</td>
       </tr>
   </tbody>
 </table>
@@ -102,7 +102,7 @@ paddlex --install hpi-cpu
 
 ##### To install the GPU version of the high-performance inference plugin:
 
-Before installation, please ensure that CUDA and cuDNN are installed in your environment. The official PaddleX currently only provides a precompiled package for CUDA 11.8 + cuDNN 8.9, so please ensure that the installed versions of CUDA and cuDNN are compatible with the compiled versions. Below are the installation documentation links for CUDA 11.8 and cuDNN 8.9:
+Before installation, please ensure that CUDA and cuDNN are installed in your environment. The official PaddleX currently only provides precompiled packages for CUDA 11.8 + cuDNN 8.9, so please ensure that the installed versions of CUDA and cuDNN are compatible with the compiled versions. Below are the installation documentation links for CUDA 11.8 and cuDNN 8.9:
 
 - [Install CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive)
 - [Install cuDNN 8.9](https://docs.nvidia.com/deeplearning/cudnn/archives/cudnn-890/install-guide/index.html)
@@ -132,7 +132,7 @@ Please refer to the [Ascend NPU High-Performance Inference Tutorial](../practica
 
 **Note:**
 
-1. **Currently, the official PaddleX only provides a precompiled package for CUDA 11.8 + cuDNN 8.9**; support for CUDA 12.6 is in progress.
+1. **Currently, the official PaddleX only provides precompiled packages for CUDA 11.8 + cuDNN 8.9**; support for CUDA 12 is in progress.
 2. Only one version of the high-performance inference plugin should exist in the same environment.
 3. For Windows systems, it is currently recommended to install and use the high-performance inference plugin within a Docker container.
 
@@ -623,8 +623,8 @@ All pipelines and modules that use static graph models support enabling the high
 
 **3. Why does the installation of the high-performance inference plugin fail with a log message stating: “Currently, the CUDA version must be 11.x for GPU devices.”?**
 
-The high-performance inference functionality currently supports only a limited set of environments. Please refer to the installation instructions. If installation fails, it may be that the current environment is not supported by the high-performance inference functionality. Note that CUDA 12.6 is already under support.
+For the GPU version of the high-performance inference plugin, the official PaddleX currently only provides precompiled packages for CUDA 11.8 + cuDNN 8.9. The support for CUDA 12 is in progress.
 
-**4. Why does the program freeze during runtime or display some WARNING and ERROR messages after using the high-performance inference functionality? What should be done in such cases?**
+**4. Why does the program freeze during runtime or display some "WARNING" and "ERROR" messages after using the high-performance inference feature? What should be done in such cases?**
 
-When initializing the model, operations such as subgraph optimization may take longer and may generate some WARNING and ERROR messages. However, as long as the program does not exit automatically, it is recommended to wait patiently, as the program usually continues to run to completion.
+When initializing the model, operations such as subgraph optimization may take longer and may generate some "WARNING" and "ERROR" messages. However, as long as the program does not exit automatically, it is recommended to wait patiently, as the program usually continues to run to completion.
