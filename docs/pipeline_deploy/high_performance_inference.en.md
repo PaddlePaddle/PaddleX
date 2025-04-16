@@ -615,7 +615,7 @@ python -m pip install ../../python/dist/ultra_infer*.whl
 
 **1. Why does the inference speed not appear to improve noticeably before and after enabling the high-performance inference plugin?**
 
-The high-performance inference plugin achieves inference acceleration by intelligently selecting and configuring the backend. However, due to the complex structure of some models or the presence of unsupported operators, not all models may be able to be accelerated. In these cases, PaddleX will provide corresponding prompts in the log. You can use the [PaddleX benchmark feature](../module_usage/instructions/benchmark.en.md) to measure the inference duration of each module component, thereby facilitating a more accurate performance evaluation.
+The high-performance inference plugin achieves inference acceleration by intelligently selecting and configuring the backend. However, due to the complex structure of some models or the presence of unsupported operators, not all models may be able to be accelerated. In these cases, PaddleX will provide corresponding prompts in the log. You can use the [PaddleX benchmark feature](../module_usage/instructions/benchmark.en.md) to measure the inference duration of each module component, thereby facilitating a more accurate performance evaluation. Moreover, for pipelines, the performance bottleneck of inference may not lie in the model inference, but rather in the surrounding logic, which could also result in limited acceleration gains.
 
 **2. Do all pipelines and modules support high-performance inference?**
 
