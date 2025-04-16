@@ -404,6 +404,8 @@ class PaddleInfer(StaticInfer):
                 config.enable_use_gpu(100, self._option.device_id, precision)
                 if hasattr(config, "enable_new_ir"):
                     config.enable_new_ir(self._option.enable_new_ir)
+                    if self._option.enable_new_ir and self._option.enable_cinn:
+                        config.enable_cinn()
                 if hasattr(config, "enable_new_executor"):
                     config.enable_new_executor()
                 config.set_optimization_level(3)
