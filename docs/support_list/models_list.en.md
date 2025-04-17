@@ -1371,6 +1371,15 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 <td>658.3</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/GroundingDINO-T_infer.tar">Inference Model</a></td>
 </tr>
+<tr>
+<td>YOLO-Worldv2-L</td>
+<td>44.4</td>
+<td>59.8</td>
+<td>24.32</td>
+<td>374.89</td>
+<td>421.4</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLO-Worldv2-L_infer.tar">Inference Model</a></td>
+</tr>
 </table>
 <b>Note: The above accuracy metrics are based on the COCO val2017 validation set mAP(0.5:0.95).</b>
 
@@ -2898,6 +2907,27 @@ PaddleX includes multiple pipelines, each containing several modules, and each m
 </tr>
 </table>
 <p><b>Note: The above accuracy metrics are based on the test dataset <a href="http://www.thumos.info/download.html">UCF101-24</a>, using the Frame-mAP (@ IoU 0.5) metric.</b></p>
+
+## [Document Vision-Language Model Module](../module_usage/tutorials/vlm_modules/doc_vlm.en.md)
+
+<table>
+<tr>
+<th>Model</th>
+<th>Model Storage Size（GB）</th>
+<th>Model Download Lin</th>
+</tr>
+<tr>
+<td>PP-DocBee-2B</td>
+<td>4.2</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-2B_infer.tar">Inference Model</a></td>
+</tr>
+<tr>
+<td>PP-DocBee-7B</td>
+<td>15.8</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-7B_infer.tar">Inference Model</a></td>
+</tr>
+</table>
+
 
 **Test Environment Description:**
 

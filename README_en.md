@@ -399,6 +399,16 @@ In addition, PaddleX provides developers with a full-process efficient model tra
         <td>✅</td>
         <td>🚧</td>
     </tr>
+    <tr>
+        <td><a href="https://paddlepaddle.github.io/PaddleX/latest/pipeline_usage/tutorials/vlm_pipelines/doc_understanding.html">Document Understanding</a></td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>🚧</td>
+        <td>✅</td>
+        <td>🚧</td>
+        <td>🚧</td>
+        <td>🚧</td>
+    </tr>
 
 </table>
 
@@ -696,6 +706,7 @@ To use the Python script for other pipelines, simply adjust the `pipeline` param
 | Multilingual Speech Recognition | `multilingual_speech_recognition` | [Instructions for Using the Multilingual Speech Recognition Pipeline Python Script](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/time_series_pipelines/multilingual_speech_recognition.html#212-python-script-integration) |
 | General Video Classification | `video_classification` | [Instructions for Using the General Video Classification Pipeline Python Script](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/time_series_pipelines/video_classification.html#22-python-script-integration) |
 | General Video Detection | `video_detection` | [Instructions for Using the General Video Detection Pipeline Python Script](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/time_series_pipelines/video_detection.html#212-python-script-integration) |
+| Document Understanding       | `doc_understanding`                           | [Instructions for Using the Document Understanding Pipeline Python Script](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/vlm_pipelines/doc_understanding.html#211-python-script-integration)   |
 </details>
 
 ## 📖 Documentation
@@ -770,6 +781,12 @@ To use the Python script for other pipelines, simply adjust the `pipeline` param
 
     * [📈 General Video Classification Pipeline Usage Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/video_pipelines/video_classification.html)
     * [🔍 General Video Detection Pipeline Usage Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/video_pipelines/video_detection.html)
+
+* <details open>
+    <summary> <b> 🌐 Multimodal Vision-Language Model</b> </summary>
+
+   * [📝 Doc Understanding Pipeline Usage Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_usage/tutorials/vlm_pipelines/doc_understanding.html)
+  </details>
 
 * <details open>
     <summary> <b>🔧 Related Instructions</b> </summary>
@@ -882,6 +899,12 @@ To use the Python script for other pipelines, simply adjust the `pipeline` param
 
   * [📈 Video Classification Module Usage Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/video_modules/video_classification.html)
   * [🔍 Video Detection Module Usage Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/video_modules/video_detection.html)
+
+* <details open>
+  <summary> <b> 🌐 Multimodal Vision-Language Model </b></summary>
+
+  * [📝 Document Vision-Language Model Usage Tutorial](https://paddlepaddle.github.io/PaddleX/latest/module_usage/tutorials/vlm_modules/doc_vlm.html)
+  </details>
 
 * <details open>
   <summary> <b> 📄 Related Instructions </b></summary>

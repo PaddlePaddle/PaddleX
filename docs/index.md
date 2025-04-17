@@ -1136,7 +1136,7 @@ for res in output:
             res.save_to_json("./output/")
         ```
 
-!!! example "计算机视觉相关产线命令行使用"
+!!! example "计算机视觉相关产线Python脚本使用"
 
     === "通用图像分类"
 
@@ -1320,7 +1320,7 @@ for res in output:
             res.save_to_json(save_path="./output/")
         ```
 
-!!! example "时序分析相关产线命令行使用"
+!!! example "时序分析相关产线Python脚本使用"
 
     === "时序预测"
 
@@ -1362,7 +1362,7 @@ for res in output:
             res.save_to_json(save_path="./output/") ## 保存json格式结果
         ```
 
-!!! example "语音相关产线命令行使用"
+!!! example "语音相关产线Python脚本使用"
 
     === "多语种语音识别"
 
@@ -1377,7 +1377,7 @@ for res in output:
             res.save_to_json(save_path="./output/")
         ```
 
-!!! example "视频相关产线命令行使用"
+!!! example "视频相关产线Python脚本使用"
 
     === "通用视频分类"
 
@@ -1404,6 +1404,24 @@ for res in output:
             res.print() ## 打印预测的结构化输出
             res.save_to_video(save_path="./output/") ## 保存结果可视化视频
             res.save_to_json(save_path="./output/") ## 保存预测的结构化输出
+        ```
+
+!!! example "多模态视觉语言模型相关产线Python脚本使用"
+
+    === "文档理解"
+
+        ```python
+        from paddlex import create_pipeline
+        pipeline = create_pipeline(pipeline="doc_understanding")
+        output = pipeline.predict(
+            {
+                "image": "medal_table.png",
+                "query": "识别这份表格的内容"
+            }
+        )
+        for res in output:
+            res.print() ## 打印预测的结构化输出
+            res.save_to_json("./output/") ## 保存预测的结构化输出
         ```
 
 ## 🚀 详细教程

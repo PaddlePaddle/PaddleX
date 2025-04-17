@@ -1256,6 +1256,15 @@ PaddleX 内置了多条产线，每条产线都包含了若干模块，每个模
 <td>658.3</td>
 <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/GroundingDINO-T_infer.tar">推理模型</a></td>
 </tr>
+<tr>
+<td>YOLO-Worldv2-L</td>
+<td>44.4</td>
+<td>59.8</td>
+<td>24.32</td>
+<td>374.89</td>
+<td>421.4</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOLO-Worldv2-L_infer.tar">推理模型</a></td>
+</tr>
 </table>
 <b>注：以上精度指标为 COCO val2017 验证集 mAP(0.5:0.95)。</b>。
 
@@ -2775,6 +2784,26 @@ devanagari_PP-OCRv3_mobile_rec_infer.tar">推理模型</a>/<a href="">训练模�
 </tr>
 </table>
 <p><b>注：以上精度指标为 <a href="http://www.thumos.info/download.html">UCF101-24</a> test数据集上的测试指标Frame-mAP (@ IoU 0.5)</b></p>
+
+## [文档类视觉语言模型模块](../module_usage/tutorials/vlm_modules/doc_vlm.md)
+
+<table>
+<tr>
+<th>模型</th>
+<th>模型存储大小（GB）</th>
+<th>模型下载链接</th>
+</tr>
+<tr>
+<td>PP-DocBee-2B</td>
+<td>4.2</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-2B_infer.tar">推理模型</a></td>
+</tr>
+<tr>
+<td>PP-DocBee-7B</td>
+<td>15.8</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocBee-7B_infer.tar">推理模型</a></td>
+</tr>
+</table>
 
 <strong>测试环境说明:</strong>
 

@@ -168,6 +168,7 @@ plugins:
             实例分割模块: Instance Segmentation
             人脸特征模块: Face Feature
             图像异常检测模块: Image Anomaly Detection
+            文档类视觉语言模型模块: Document Vision-Language Model
             时序分析: Time Series Analysis
             时序预测模块: Time Series Forecasting
             时序异常检测模块: Time Series Anomaly Detection
@@ -361,6 +362,8 @@ nav:
        - 视频分析:
          - 通用视频分类: pipeline_usage/tutorials/video_pipelines/video_classification.md
          - 通用视频检测: pipeline_usage/tutorials/video_pipelines/video_detection.md
+       - 多模态视觉语言模型:
+         - 文档理解产线: pipeline_usage/tutorials/vlm_pipelines/doc_understanding.md
        - 说明文件: 
          - PaddleX产线命令行使用说明: pipeline_usage/instructions/pipeline_CLI_usage.md
          - PaddleX产线Python脚本使用说明: pipeline_usage/instructions/pipeline_python_API.md
@@ -407,6 +410,8 @@ nav:
          - 多语种语音识别模块: module_usage/tutorials/speech_modules/multilingual_speech_recognition.md
        - 3D检测: 
          - BEV融合3D检测模块: module_usage/tutorials/cv_modules/3d_bev_detection.md
+       - 多模态视觉语言模型:
+         - 文档类视觉语言模型模块: module_usage/tutorials/vlm_modules/doc_vlm.md
        - 说明文件:
          - PaddleX单模型Python脚本使用说明: module_usage/instructions/model_python_API.md
          - PaddleX通用模型配置文件参数说明: module_usage/instructions/config_parameters_common.md
