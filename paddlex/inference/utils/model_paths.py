@@ -34,6 +34,8 @@ def get_model_paths(
     if FLAGS_json_format_model:
         if (model_dir / f"{model_file_prefix}.json").exists():
             pd_model_path = model_dir / f"{model_file_prefix}.json"
+        elif (model_dir / f"{model_file_prefix}.pdmodel").exists():
+            pd_model_path = model_dir / f"{model_file_prefix}.pdmodel"
     else:
         if (model_dir / f"{model_file_prefix}.json").exists():
             pd_model_path = model_dir / f"{model_file_prefix}.json"
