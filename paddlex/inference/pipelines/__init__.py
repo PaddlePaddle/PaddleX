@@ -125,10 +125,9 @@ def create_pipeline(
         pp_option (Optional[PaddlePredictorOption], optional): The options for
             the PaddlePredictor. Defaults to None.
         use_hpip (Optional[bool], optional): Whether to use the high-performance
-            inference plugin (HPIP) for prediction by default.
-            Defaults to None.
+            inference plugin (HPIP). Defaults to None.
         hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional): The
-            default high-performance inference configuration dictionary.
+            high-performance inference configuration dictionary.
             Defaults to None.
         *args: Additional positional arguments.
         **kwargs: Additional keyword arguments.

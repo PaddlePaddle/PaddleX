@@ -48,9 +48,9 @@ class BasePipeline(ABC, metaclass=AutoRegisterABCMetaClass):
             device (str, optional): The device to use for prediction. Defaults to None.
             pp_option (PaddlePredictorOption, optional): The options for PaddlePredictor. Defaults to None.
             use_hpip (bool, optional): Whether to use the high-performance
-                inference plugin (HPIP) by default. Defaults to False.
+                inference plugin (HPIP). Defaults to False.
             hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
-                The default high-performance inference configuration dictionary.
+                The high-performance inference configuration dictionary.
                 Defaults to None.
         """
         super().__init__()

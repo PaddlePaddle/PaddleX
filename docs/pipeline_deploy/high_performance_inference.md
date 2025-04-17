@@ -60,7 +60,7 @@ comments: true
   </tr>
 </table>
 
-#### (1) 在 Docker 容器中安装高性能推理插件（强烈推荐）：
+#### 1.1.1 在 Docker 容器中安装高性能推理插件（强烈推荐）：
 
 参考 [基于Docker获取PaddleX](../installation/installation.md#21-基于docker获取paddlex) 使用 Docker 启动 PaddleX 容器。启动容器后，根据设备类型，执行如下指令，安装高性能推理插件：
 
@@ -90,9 +90,9 @@ PaddleX 官方 Docker 镜像中默认安装了 TensorRT，高性能推理插件�
 
 **请注意，以上提到的镜像指的是 [基于Docker获取PaddleX](../installation/installation.md#21-基于docker获取paddlex) 中描述的 PaddleX 官方镜像，而非 [飞桨PaddlePaddle本地安装教程](../installation/paddlepaddle_install.md#基于-docker-安装飞桨) 中描述的飞桨框架官方镜像。对于后者，请参考高性能推理插件本地安装说明。**
 
-#### (2) 本地安装高性能推理插件（不推荐）：
+#### 1.1.2 本地安装高性能推理插件：
 
-##### 安装 CPU 版本的高性能推理插件：
+**安装 CPU 版本的高性能推理插件：**
 
 执行：
 
@@ -100,7 +100,7 @@ PaddleX 官方 Docker 镜像中默认安装了 TensorRT，高性能推理插件�
 paddlex --install hpi-cpu
 ```
 
-##### 安装 GPU 版本的高性能推理插件：
+**安装 GPU 版本的高性能推理插件：**
 
 在安装前，需要确保环境中安装有 CUDA 与 cuDNN。目前 PaddleX 官方仅提供 CUDA 11.8 + cuDNN 8.9 的预编译包，请保证安装的 CUDA 和 cuDNN 版本与编译版本兼容。以下分别是 CUDA 11.8 和 cuDNN 8.9 的安装说明文档：
 
@@ -126,7 +126,7 @@ pip list | grep nvidia-cudnn
 paddlex --install hpi-gpu
 ```
 
-##### 安装 NPU 版本的高性能推理插件：
+**安装 NPU 版本的高性能推理插件：**
 
 请参考 [昇腾 NPU 高性能推理教程](../practical_tutorials/high_performance_npu_tutorial.md)。
 
@@ -208,11 +208,11 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
 高性能推理插件支持两种工作模式。通过修改高性能推理配置，可以切换不同的工作模式。
 
-#### (1) 安全自动配置模式
+#### 2.1.1 安全自动配置模式
 
 安全自动配置模式，具有保护机制，默认**自动选用当前环境性能较优的配置**。在这种模式下，用户可以覆盖默认配置，但用户提供的配置将受到检查，PaddleX将根据先验知识拒绝不可用的配置。这是默认的工作模式。
 
-#### (2) 无限制手动配置模式
+#### 2.1.2 无限制手动配置模式
 
 无限制手动配置模式，提供完全的配置自由，可以**自由选择推理后端、修改后端配置等**，但无法保证推理一定成功。此模式适合有经验和对推理后端及其配置有明确需求的用户，建议在熟悉高性能推理的情况下使用。
 
@@ -329,166 +329,112 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
 
 由于实际部署环境和需求的多样性，默认配置可能无法满足所有要求。这时，可能需要手动调整高性能推理配置。用户可以通过修改**产线/模块配置文件**、**CLI**或**Python API**所传递参数中的 `hpi_config` 字段内容来修改配置。**通过 CLI 或 Python API 传递的参数将覆盖产线/模块配置文件中的设置**。以下将结合一些例子介绍如何修改配置。
 
-#### (1) 更换推理后端。
+**通用OCR产线的所有模型使用 `onnxruntime` 后端：**
 
-  ##### 通用OCR产线的所有模型使用 `onnxruntime` 后端：
+<details><summary>👉 修改产线配置文件方式（点击展开）</summary>
 
-  <details><summary>👉 1. 修改产线配置文件方式（点击展开）</summary>
+```yaml
+...
+hpi_config:
+  backend: onnxruntime
+```
 
-  ```yaml
-  pipeline_name: OCR
+</details>
+<details><summary>👉 CLI传参方式（点击展开）</summary>
 
+```bash
+paddlex \
+    --pipeline image_classification \
+    --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
+    --device gpu:0 \
+    --use_hpip \
+    --hpi_config '{"backend": "onnxruntime"}'
+```
+
+</details>
+<details><summary>👉 Python API传参方式（点击展开）</summary>
+
+```python
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(
+    pipeline="OCR",
+    device="gpu",
+    use_hpip=True,
+    hpi_config={"backend": "onnxruntime"}
+)
+```
+
+</details>
+
+**图像分类模块使用 `onnxruntime` 后端：**
+
+<details><summary>👉 修改产线配置文件方式（点击展开）</summary>
+
+```yaml
+Predict:
+  ...
   hpi_config:
     backend: onnxruntime
+```
 
-  ...
-  ```
+</details>
+<details><summary>👉 CLI传参方式（点击展开）</summary>
 
-  </details>
-  <details><summary>👉 2. CLI传参方式（点击展开）</summary>
+```bash
+python main.py \
+    -c paddlex/configs/modules/image_classification/ResNet18.yaml \
+    -o Global.mode=predict \
+    -o Predict.model_dir=None \
+    -o Predict.input=https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
+    -o Global.device=gpu:0 \
+    -o Predict.use_hpip=True \
+    -o Predict.hpi_config='{"backend": "onnxruntime"}'
+```
 
-  ```bash
-  paddlex \
-      --pipeline image_classification \
-      --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
-      --device gpu:0 \
-      --use_hpip \
-      --hpi_config '{"backend": "onnxruntime"}'
-  ```
+</details>
+<details><summary>👉 Python API传参方式（点击展开）</summary>
 
-  </details>
-  <details><summary>👉 3. Python API传参方式（点击展开）</summary>
+```python
+from paddlex import create_model
 
-  ```python
-  from paddlex import create_pipeline
+model = create_model(
+    model_name="ResNet18",
+    device="gpu",
+    use_hpip=True,
+    hpi_config={"backend": "onnxruntime"}
+)
+```
 
-  pipeline = create_pipeline(
-      pipeline="OCR",
-      device="gpu",
-      use_hpip=True,
-      hpi_config={"backend": "onnxruntime"}
-  )
-  ```
+</details>
 
-  </details>
+**通用OCR产线的 `text_detection` 模块使用 `onnxruntime` 后端，`text_recognition` 模块使用 `tensorrt` 后端：**
 
-  ##### 图像分类模块使用 `onnxruntime` 后端：
+<details><summary>👉 修改产线配置文件方式（点击展开）</summary>
 
-  <details><summary>👉 1. 修改产线配置文件方式（点击展开）</summary>
-
-  ```yaml
-  # paddlex/configs/modules/image_classification/ResNet18.yaml
-  ...
-  Predict:
+```yaml
+SubModules:
+  TextDetection:
     ...
     hpi_config:
-        backend: onnxruntime
+      backend: onnxruntime
+  TextRecognition:
     ...
-  ...
-  ```
+    hpi_config:
+      backend: tensorrt
+```
 
-  </details>
-  <details><summary>👉 2. CLI传参方式（点击展开）</summary>
+</details>
 
-  ```bash
-  python main.py \
-      -c paddlex/configs/modules/image_classification/ResNet18.yaml \
-      -o Global.mode=predict \
-      -o Predict.model_dir=None \
-      -o Predict.input=https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
-      -o Global.device=gpu:0 \
-      -o Predict.use_hpip=True \
-      -o Predict.hpi_config='{"backend": "onnxruntime"}'
-  ```
+**通用图像分类产线修改动态形状配置：**
 
-  </details>
-  <details><summary>👉 3. Python API传参方式（点击展开）</summary>
+<details><summary>👉 修改产线配置文件方式（点击展开）</summary>
 
-  ```python
-  from paddlex import create_model
-
-  model = create_model(
-      model_name="ResNet18",
-      device="gpu",
-      use_hpip=True,
-      hpi_config={"backend": "onnxruntime"}
-  )
-  ```
-
-  </details>
-
-  ##### 通用OCR产线的 `text_detection` 模块使用 `onnxruntime` 后端，`text_recognition` 模块使用 `tensorrt` 后端：
-
-  <details><summary>👉 1. 修改产线配置文件方式（点击展开）</summary>
-
-  ```yaml
-  pipeline_name: OCR
-
-  ...
-
+```yaml
   SubModules:
-    TextDetection:
-      module_name: text_detection
-      model_name: PP-OCRv4_mobile_det
-      model_dir: null
-      limit_side_len: 960
-      limit_type: max
-      thresh: 0.3
-      box_thresh: 0.6
-      unclip_ratio: 2.0
+    ImageClassification:
       hpi_config:
-        backend: onnxruntime
-    TextLineOrientation:
-      module_name: textline_orientation
-      model_name: PP-LCNet_x0_25_textline_ori
-      model_dir: null
-      batch_size: 6
-    TextRecognition:
-      module_name: text_recognition
-      model_name: PP-OCRv4_mobile_rec
-      model_dir: null
-      batch_size: 6
-      score_thresh: 0.0
-      hpi_config:
-        backend: tensorrt
-  ```
-
-  </details>
-
-#### (2) 修改 TensorRT 的动态形状配置
-
-  ##### 通用图像分类产线修改动态形状配置：
-
-  <details><summary>👉 点击展开</summary>
-
-  ```yaml
-    ...
-    SubModules:
-      ImageClassification:
         ...
-        hpi_config:
-          backend: tensorrt
-          backend_config:
-            dynamic_shapes:
-              x:
-                - [1, 3, 300, 300]
-                - [4, 3, 300, 300]
-                - [32, 3, 1200, 1200]
-              ...
-    ...
-  ```
-
-  </details>
-
-  ##### 图像分类模块修改动态形状配置：
-
-  <details><summary>👉 点击展开</summary>
-
-  ```yaml
-  ...
-  Predict:
-    ...
-    hpi_config:
         backend: tensorrt
         backend_config:
           dynamic_shapes:
@@ -496,52 +442,51 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
               - [1, 3, 300, 300]
               - [4, 3, 300, 300]
               - [32, 3, 1200, 1200]
-    ...
-  ...
-  ```
+```
 
-  </details>
+</details>
+
+**图像分类模块修改 TensorRT 动态形状配置：**
+
+<details><summary>👉 修改产线配置文件方式（点击展开）</summary>
+
+```yaml
+Predict:
+  hpi_config:
+    ...
+    backend: tensorrt
+    backend_config:
+      dynamic_shapes:
+        x:
+          - [1, 3, 300, 300]
+          - [4, 3, 300, 300]
+          - [32, 3, 1200, 1200]
+```
+
+</details>
 
 ### 2.4 高性能推理插件在子产线/子模块中的启用/禁用
 
 高性能推理支持通过在子产线/子模块级别使用 `use_hpip`，实现**仅产线中的某个子产线/子模块使用高性能推理**。示例如下：
 
-##### 通用OCR产线的 `text_detection` 模块使用高性能推理，`text_recognition` 模块不使用高性能推理：
+**通用OCR产线的 `text_detection` 模块使用高性能推理，`text_recognition` 模块不使用高性能推理：**
 
-  <details><summary>👉 点击展开</summary>
+<details><summary>👉 点击展开</summary>
 
-  ```yaml
-  pipeline_name: OCR
+```yaml
+SubModules:
+  TextDetection:
+    ...
+    use_hpip: True # 当前子模块使用高性能推理
+  TextLineOrientation:
+    ...
+    # 当前子模块未单独配置，默认与全局配置一致（如果配置文件和 CLI、API 参数均未设置，则不使用高性能推理）
+  TextRecognition:
+    ...
+    use_hpip: False # 当前子模块不使用高性能推理
+```
 
-  ...
-
-  SubModules:
-    TextDetection:
-      module_name: text_detection
-      model_name: PP-OCRv4_mobile_det
-      model_dir: null
-      limit_side_len: 960
-      limit_type: max
-      thresh: 0.3
-      box_thresh: 0.6
-      unclip_ratio: 2.0
-      use_hpip: True # 当前子模块使用高性能推理
-    TextLineOrientation:
-      module_name: textline_orientation
-      model_name: PP-LCNet_x0_25_textline_ori
-      model_dir: null
-      batch_size: 6
-      # 当前子模块未单独配置，默认与全局配置一致（如果配置文件和 CLI、API 参数均未设置，则不使用高性能推理）
-    TextRecognition:
-      module_name: text_recognition
-      model_name: PP-OCRv4_mobile_rec
-      model_dir: null
-      batch_size: 6
-      score_thresh: 0.0
-      use_hpip: False # 当前子模块不使用高性能推理
-  ```
-
-  </details>
+</details>
 
 **注意：**
 

@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import argparse
+import ast
 import importlib.resources
 import os
 import shutil
@@ -133,7 +134,12 @@ def args_cfg():
     pipeline_group.add_argument(
         "--use_hpip",
         action="store_true",
-        help="Enable HPIP acceleration by default.",
+        help="Use high-performance inference plugin.",
+    )
+    pipeline_group.add_argument(
+        "--hpi_config",
+        type=ast.literal_eval,
+        help="High-performance inference configuration.",
     )
     pipeline_group.add_argument(
         "--get_pipeline_config",
@@ -166,20 +172,20 @@ def args_cfg():
     paddle2onnx_group.add_argument(
         "--paddle2onnx",
         action="store_true",
-        help="Convert PaddlePaddle model to ONNX format",
+        help="Convert PaddlePaddle model to ONNX format.",
     )
     paddle2onnx_group.add_argument(
         "--paddle_model_dir",
         type=str,
-        help="Directory containing the PaddlePaddle model",
+        help="Directory containing the PaddlePaddle model.",
     )
     paddle2onnx_group.add_argument(
         "--onnx_model_dir",
         type=str,
-        help="Output directory for the ONNX model",
+        help="Output directory for the ONNX model.",
     )
     paddle2onnx_group.add_argument(
-        "--opset_version", type=int, default=7, help="Version of the ONNX opset to use"
+        "--opset_version", type=int, default=7, help="Version of the ONNX opset to use."
     )
 
     # Parse known arguments to get the pipeline name
@@ -313,10 +319,13 @@ def pipeline_predict(
     device,
     save_path,
     use_hpip,
+    hpi_config,
     **pipeline_args,
 ):
     """pipeline predict"""
-    pipeline = create_pipeline(pipeline, device=device, use_hpip=use_hpip)
+    pipeline = create_pipeline(
+        pipeline, device=device, use_hpip=use_hpip, hpi_config=hpi_config
+    )
     result = pipeline.predict(input, **pipeline_args)
     for res in result:
         res.print()
@@ -324,11 +333,13 @@ def pipeline_predict(
             res.save_all(save_path=save_path)
 
 
-def serve(pipeline, *, device, use_hpip, host, port):
+def serve(pipeline, *, device, use_hpip, hpi_config, host, port):
     from .inference.serving.basic_serving import create_pipeline_app, run_server
 
     pipeline_config = load_pipeline_config(pipeline)
-    pipeline = create_pipeline(config=pipeline_config, device=device, use_hpip=use_hpip)
+    pipeline = create_pipeline(
+        config=pipeline_config, device=device, use_hpip=use_hpip, hpi_config=hpi_config
+    )
     app = create_pipeline_app(pipeline, pipeline_config)
     run_server(app, host=host, port=port)
 
@@ -438,6 +449,7 @@ def main():
             args.pipeline,
             device=args.device,
             use_hpip=args.use_hpip,
+            hpi_config=args.hpi_config,
             host=args.host,
             port=args.port,
         )
@@ -465,5 +477,6 @@ def main():
                 args.device,
                 args.save_path,
                 use_hpip=args.use_hpip,
+                hpi_config=args.hpi_config,
                 **pipeline_args_dict,
             )

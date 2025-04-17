@@ -44,9 +44,9 @@ class TSAnomalyDetPipeline(BasePipeline):
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
             use_hpip (bool, optional): Whether to use the high-performance
-                inference plugin (HPIP) by default. Defaults to False.
+                inference plugin (HPIP). Defaults to False.
             hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
-                The default high-performance inference configuration dictionary.
+                The high-performance inference configuration dictionary.
                 Defaults to None.
         """
 

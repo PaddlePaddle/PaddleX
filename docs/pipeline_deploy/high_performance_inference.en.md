@@ -60,7 +60,7 @@ Currently, the supported processor architectures, operating systems, device type
   </tr>
 </table>
 
-#### (1) Installing the High-Performance Inference Plugin in a Docker Container (Highly Recommended):
+#### 1.1.1 Installing the High-Performance Inference Plugin in a Docker Container (Highly Recommended):
 
 Refer to [Get PaddleX based on Docker](../installation/installation.en.md#21-obtaining-paddlex-based-on-docker) to start a PaddleX container using Docker. After starting the container, execute the following commands according to your device type to install the high-performance inference plugin:
 
@@ -90,9 +90,9 @@ In the official PaddleX Docker image, TensorRT is installed by default. The high
 
 **Please note that the aforementioned Docker image refers to the official PaddleX image described in [Get PaddleX via Docker](../installation/installation.en.md#21-get-paddlex-based-on-docker), rather than the PaddlePaddle official image described in [PaddlePaddle Local Installation Tutorial](../installation/paddlepaddle_install.en.md#installing-paddlepaddle-via-docker). For the latter, please refer to the local installation instructions for the high-performance inference plugin.**
 
-#### (2) Installing the High-Performance Inference Plugin Locally (Not Recommended):
+#### 1.1.2 Installing the High-Performance Inference Plugin Locally:
 
-##### To install the CPU version of the high-performance inference plugin:
+**To install the CPU version of the high-performance inference plugin:**
 
 Run:
 
@@ -100,7 +100,7 @@ Run:
 paddlex --install hpi-cpu
 ```
 
-##### To install the GPU version of the high-performance inference plugin:
+**To install the GPU version of the high-performance inference plugin:**
 
 Before installation, please ensure that CUDA and cuDNN are installed in your environment. The official PaddleX currently only provides precompiled packages for CUDA 11.8 + cuDNN 8.9, so please ensure that the installed versions of CUDA and cuDNN are compatible with the compiled versions. Below are the installation documentation links for CUDA 11.8 and cuDNN 8.9:
 
@@ -126,7 +126,7 @@ After confirming that the correct versions of CUDA, cuDNN, and TensorRT (optiona
 paddlex --install hpi-gpu
 ```
 
-##### To install the NPU version of the high-performance inference plugin:
+**To install the NPU version of the high-performance inference plugin:**
 
 Please refer to the [Ascend NPU High-Performance Inference Tutorial](../practical_tutorials/high_performance_npu_tutorial.en.md).
 
@@ -206,11 +206,11 @@ This section introduces the advanced usage of the high-performance inference plu
 
 The high-performance inference plugin supports two working modes. The operating mode can be switched by modifying the high-performance inference configuration.
 
-#### (1) Safe Auto-Configuration Mode
+#### 2.1.1 Safe Auto-Configuration Mode
 
 In safe auto-configuration mode, a protective mechanism is enabled. By default, **the configuration with the best performance for the current environment is automatically selected**. In this mode, while the user can override the default configuration, the provided configuration will be subject to checks, and PaddleX will reject configurations that are not available based on prior knowledge. This is the default operating mode.
 
-#### (2) Unrestricted Manual Configuration Mode
+#### 2.1.2 Unrestricted Manual Configuration Mode
 
 In unrestricted manual configuration mode, full freedom is provided to configure—users can **choose the inference backend freely and modify its configuration, etc.**—but there is no guarantee that inference will always succeed. This mode is recommended for experienced users who have clear requirements for the inference backend and its configuration; it is advised to use this mode only when familiar with high-performance inference.
 
@@ -327,166 +327,112 @@ The available configuration items for `backend_config` vary for different backen
 
 Due to the diversity of actual deployment environments and requirements, the default configuration might not meet all needs. In such cases, manual adjustment of the high-performance inference configuration may be necessary. Users can modify the configuration by editing the **pipeline/module configuration file** or by passing the `hpi_config` field in the parameters via **CLI** or **Python API**. **Parameters passed via CLI or Python API will override the settings in the pipeline/module configuration file.** The following examples illustrate how to modify the configuration.
 
-#### (1) Changing the Inference Backend
+**For the general OCR pipeline, use the `onnxruntime` backend for all models:**
 
-  ##### For the general OCR pipeline, use the `onnxruntime` backend for all models:
+<details><summary>👉 Modify via Pipeline Configuration File (click to expand)</summary>
 
-  <details><summary>👉 1. Modify via Pipeline Configuration File (click to expand)</summary>
+```yaml
+...
+hpi_config:
+  backend: onnxruntime
+```
 
-  ```yaml
-  pipeline_name: OCR
+</details>
+<details><summary>👉 CLI Parameter Method (click to expand)</summary>
 
+```bash
+paddlex \
+    --pipeline image_classification \
+    --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
+    --device gpu:0 \
+    --use_hpip \
+    --hpi_config '{"backend": "onnxruntime"}'
+```
+
+</details>
+<details><summary>👉 Python API Parameter Method (click to expand)</summary>
+
+```python
+from paddlex import create_pipeline
+
+pipeline = create_pipeline(
+    pipeline="OCR",
+    device="gpu",
+    use_hpip=True,
+    hpi_config={"backend": "onnxruntime"}
+)
+```
+
+</details>
+
+**For the image classification module, use the `onnxruntime` backend:**
+
+<details><summary>👉 Modify via Pipeline Configuration File (click to expand)</summary>
+
+```yaml
+Predict:
+  ...
   hpi_config:
     backend: onnxruntime
+```
 
-  ...
-  ```
+</details>
+<details><summary>👉 CLI Parameter Method (click to expand)</summary>
 
-  </details>
-  <details><summary>👉 2. CLI Parameter Method (click to expand)</summary>
+```bash
+python main.py \
+    -c paddlex/configs/modules/image_classification/ResNet18.yaml \
+    -o Global.mode=predict \
+    -o Predict.model_dir=None \
+    -o Predict.input=https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
+    -o Global.device=gpu:0 \
+    -o Predict.use_hpip=True \
+    -o Predict.hpi_config='{"backend": "onnxruntime"}'
+```
 
-  ```bash
-  paddlex \
-      --pipeline image_classification \
-      --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
-      --device gpu:0 \
-      --use_hpip \
-      --hpi_config '{"backend": "onnxruntime"}'
-  ```
+</details>
+<details><summary>👉 Python API Parameter Method (click to expand)</summary>
 
-  </details>
-  <details><summary>👉 3. Python API Parameter Method (click to expand)</summary>
+```python
+from paddlex import create_model
 
-  ```python
-  from paddlex import create_pipeline
+model = create_model(
+    model_name="ResNet18",
+    device="gpu",
+    use_hpip=True,
+    hpi_config={"backend": "onnxruntime"}
+)
+```
 
-  pipeline = create_pipeline(
-      pipeline="OCR",
-      device="gpu",
-      use_hpip=True,
-      hpi_config={"backend": "onnxruntime"}
-  )
-  ```
+</details>
 
-  </details>
+**For the general OCR pipeline, use the `onnxruntime` backend for the `text_detection` module and the `tensorrt` backend for the `text_recognition` module:**
 
-  ##### For the image classification module, use the `onnxruntime` backend:
+<details><summary>👉 Modify via Pipeline Configuration File (click to expand)</summary>
 
-  <details><summary>👉 1. Modify via Pipeline Configuration File (click to expand)</summary>
-
-  ```yaml
-  # paddlex/configs/modules/image_classification/ResNet18.yaml
-  ...
-  Predict:
+```yaml
+SubModules:
+  TextDetection:
     ...
     hpi_config:
-        backend: onnxruntime
+      backend: onnxruntime
+  TextRecognition:
     ...
-  ...
-  ```
+    hpi_config:
+      backend: tensorrt
+```
 
-  </details>
-  <details><summary>👉 2. CLI Parameter Method (click to expand)</summary>
+</details>
 
-  ```bash
-  python main.py \
-      -c paddlex/configs/modules/image_classification/ResNet18.yaml \
-      -o Global.mode=predict \
-      -o Predict.model_dir=None \
-      -o Predict.input=https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg \
-      -o Global.device=gpu:0 \
-      -o Predict.use_hpip=True \
-      -o Predict.hpi_config='{"backend": "onnxruntime"}'
-  ```
+**For the general image classification pipeline, modify dynamic shape configuration:**
 
-  </details>
-  <details><summary>👉 3. Python API Parameter Method (click to expand)</summary>
+<details><summary>👉 Modify via Pipeline Configuration File (click to expand)</summary>
 
-  ```python
-  from paddlex import create_model
-
-  model = create_model(
-      model_name="ResNet18",
-      device="gpu",
-      use_hpip=True,
-      hpi_config={"backend": "onnxruntime"}
-  )
-  ```
-
-  </details>
-
-  ##### For the general OCR pipeline, use the `onnxruntime` backend for the `text_detection` module and the `tensorrt` backend for the `text_recognition` module:
-
-  <details><summary>👉 1. Modify via Pipeline Configuration File (click to expand)</summary>
-
-  ```yaml
-  pipeline_name: OCR
-
-  ...
-
+```yaml
   SubModules:
-    TextDetection:
-      module_name: text_detection
-      model_name: PP-OCRv4_mobile_det
-      model_dir: null
-      limit_side_len: 960
-      limit_type: max
-      thresh: 0.3
-      box_thresh: 0.6
-      unclip_ratio: 2.0
+    ImageClassification:
       hpi_config:
-        backend: onnxruntime
-    TextLineOrientation:
-      module_name: textline_orientation
-      model_name: PP-LCNet_x0_25_textline_ori
-      model_dir: null
-      batch_size: 6
-    TextRecognition:
-      module_name: text_recognition
-      model_name: PP-OCRv4_mobile_rec
-      model_dir: null
-      batch_size: 6
-      score_thresh: 0.0
-      hpi_config:
-        backend: tensorrt
-  ```
-
-  </details>
-
-#### (2) Modifying TensorRT Dynamic Shape Configuration
-
-  ##### For the general image classification pipeline, modify dynamic shape configuration:
-
-  <details><summary>👉 Click to expand</summary>
-
-  ```yaml
-    ...
-    SubModules:
-      ImageClassification:
         ...
-        hpi_config:
-          backend: tensorrt
-          backend_config:
-            dynamic_shapes:
-              x:
-                - [1, 3, 300, 300]
-                - [4, 3, 300, 300]
-                - [32, 3, 1200, 1200]
-              ...
-    ...
-  ```
-
-  </details>
-
-  ##### For the image classification module, modify dynamic shape configuration:
-
-  <details><summary>👉 Click to expand</summary>
-
-  ```yaml
-  ...
-  Predict:
-    ...
-    hpi_config:
         backend: tensorrt
         backend_config:
           dynamic_shapes:
@@ -494,53 +440,52 @@ Due to the diversity of actual deployment environments and requirements, the def
               - [1, 3, 300, 300]
               - [4, 3, 300, 300]
               - [32, 3, 1200, 1200]
-    ...
-  ...
-  ```
+```
 
-  </details>
+</details>
+
+**For the image classification module, modify dynamic shape configuration:**
+
+<details><summary>👉 Modify via Pipeline Configuration File (click to expand)</summary>
+
+```yaml
+Predict:
+  hpi_config:
+    ...
+    backend: tensorrt
+    backend_config:
+      dynamic_shapes:
+        x:
+          - [1, 3, 300, 300]
+          - [4, 3, 300, 300]
+          - [32, 3, 1200, 1200]
+```
+
+</details>
 
 ### 2.4 Enabling/Disabling the High-Performance Inference Plugin on Sub-pipelines/Submodules
 
 High-performance inference supports enabling the high-performance inference plugin for only specific sub-pipelines/submodules by configuring `use_hpip` at the sub-pipeline or submodule level. For example:
 
-##### In the general OCR pipeline, enable high-performance inference for the `text_detection` module, but not for the `text_recognition` module:
+**In the general OCR pipeline, enable high-performance inference for the `text_detection` module, but not for the `text_recognition` module:**
 
-  <details><summary>👉 Click to expand</summary>
+<details><summary>👉 Click to expand</summary>
 
-  ```yaml
-  pipeline_name: OCR
+```yaml
+SubModules:
+  TextDetection:
+    ...
+    use_hpip: True # This submodule uses high-performance inference
+  TextLineOrientation:
+    ...
+    # This submodule does not have a specific configuration; it defaults to the global configuration
+    # (if neither the configuration file nor CLI/API parameters set it, high-performance inference will not be used)
+  TextRecognition:
+    ...
+    use_hpip: False # This submodule does not use high-performance inference
+```
 
-  ...
-
-  SubModules:
-    TextDetection:
-      module_name: text_detection
-      model_name: PP-OCRv4_mobile_det
-      model_dir: null
-      limit_side_len: 960
-      limit_type: max
-      thresh: 0.3
-      box_thresh: 0.6
-      unclip_ratio: 2.0
-      use_hpip: True # This submodule uses high-performance inference
-    TextLineOrientation:
-      module_name: textline_orientation
-      model_name: PP-LCNet_x0_25_textline_ori
-      model_dir: null
-      batch_size: 6
-      # This submodule does not have a specific configuration; it defaults to the global configuration
-      # (if neither the configuration file nor CLI/API parameters set it, high-performance inference will not be used)
-    TextRecognition:
-      module_name: text_recognition
-      model_name: PP-OCRv4_mobile_rec
-      model_dir: null
-      batch_size: 6
-      score_thresh: 0.0
-      use_hpip: False # This submodule does not use high-performance inference
-  ```
-
-  </details>
+</details>
 
 **Note:**
 
