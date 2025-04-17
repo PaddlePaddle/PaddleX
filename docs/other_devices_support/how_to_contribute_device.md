@@ -30,25 +30,25 @@
 
 ### 2.1.1 更新白名单设置
 
-由于不同的AI计算硬件上支持的模型列表不一样，PaddleX内部基于白名单确定特定模型是否支持该硬件，相关代码位于 [PaddleX模型白名单](../../paddlex/utils/custom_device_list.py)中的 `XXX_WHITELIST`，请根据实际支持情况设置该名单。
+由于不同的AI计算硬件上支持的模型列表不一样，PaddleX内部基于白名单确定特定模型是否支持该硬件，相关代码位于 [PaddleX模型白名单](../../paddlex/utils/custom_device_list.py) 中的 `XXX_WHITELIST`，请根据实际支持情况设置该名单。
 
-同时需要更新 [设备判断](../../paddlex/utils/device.py)中的 `check_supported_device_type`
+同时需要更新 [设备判断](../../paddlex/utils/device.py) 中的 `check_supported_device_type`
 
 ### 2.1.2 更新AI计算芯片支持列表
 
-更新PaddleX中AI计算芯片支持列表，相关代码位于 [PaddleX硬件支持列表](../../paddlex/utils/device.py)中的 `SUPPORTED_DEVICE_TYPE`
+更新PaddleX中AI计算芯片支持列表，相关代码位于 [PaddleX硬件支持列表](../../paddlex/utils/device.py) 中的 `SUPPORTED_DEVICE_TYPE`
 
 ### 2.1.3 设置环境变量
 
-如果相关硬件在使用时，需要设定特殊的环境变量，可以修改设备环境设置代码，相关代码位于 [PaddleX环境变量设置](../../paddlex/utils/device.py)中的 `set_env_for_device_type`
+如果相关硬件在使用时，需要设定特殊的环境变量，可以修改设备环境设置代码，相关代码位于 [PaddleX环境变量设置](../../paddlex/utils/device.py) 中的 `set_env_for_device_type`
 
 ### 2.1.4 更新Predictor Opiton支持的设备列表
 
-PaddleX创建Predictor时会判断设备是否已支持，相关代码位于[PaddleX Predictor Opiton](../../paddlex/inference/utils/pp_option.py)的 `SUPPORT_DEVICE`
+PaddleX创建Predictor时会判断设备是否已支持，相关代码位于 [PaddleX Predictor Opiton](../../paddlex/inference/utils/pp_option.py) 中的 `SUPPORT_DEVICE`
 
 ### 2.1.5 更新Predictor Opiton支持的设备列表
 
-PaddleX的推理能力基于飞桨Paddle Inference Predictor提供，创建Predictor时需要根据设备信息选择不同的硬件并创建pass，相关代码位于[PaddleX Predictor创建](../../paddlex/inference/models/common/static_infer.py)的 `_create`
+PaddleX的推理能力基于飞桨Paddle Inference Predictor提供，创建Predictor时需要根据设备信息选择不同的硬件并创建pass，相关代码位于 [PaddleX Predictor创建](../../paddlex/inference/models/common/static_infer.py) 中的 `_create`
 
 ### 2.1.6 高性能推理支持
 
