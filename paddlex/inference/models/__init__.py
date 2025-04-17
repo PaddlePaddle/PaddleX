@@ -63,7 +63,10 @@ def create_predictor(
     **kwargs,
 ) -> BasePredictor:
     if model_dir is None:
-        model_dir = check_model(model_name)
+        assert (
+            model_name in official_models
+        ), f"The model ({model_name}) is not supported! Please using directory of local model files or model name supported by PaddleX!"
+        model_dir = official_models[model_name]
     else:
         assert Path(model_dir).exists(), f"{model_dir} is not exists!"
         model_dir = Path(model_dir)
@@ -81,14 +84,3 @@ def create_predictor(
         *args,
         **kwargs,
     )
-
-
-def check_model(model):
-    if Path(model).exists():
-        return Path(model)
-    elif model in official_models:
-        return official_models[model]
-    else:
-        raise Exception(
-            f"The model ({model}) is no exists! Please using directory of local model files or model name supported by PaddleX!"
-        )
