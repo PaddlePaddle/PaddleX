@@ -800,7 +800,7 @@ class HPInfer(StaticInfer):
             cache_dir = self.model_dir / CACHE_DIR / "tensorrt"
             cache_dir.mkdir(parents=True, exist_ok=True)
             ui_option.trt_option.serialize_file = str(cache_dir / "trt_serialized.trt")
-            if backend_config.precision == "FP16":
+            if backend_config.precision == "fp16":
                 ui_option.trt_option.enable_fp16 = True
             if not backend_config.use_dynamic_shapes:
                 raise RuntimeError(
