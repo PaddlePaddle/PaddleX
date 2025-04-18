@@ -29,7 +29,7 @@ __all__ = [
     "PRIMARY_OPERATIONS",
 ]
 
-INFER_ENDPOINT: Final[str] = "/chat/completions"
+INFER_ENDPOINT: Final[str] = "/document-understanding"
 
 
 class ContentType(str, Enum):

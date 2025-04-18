@@ -45,6 +45,11 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
 
     @primary_operation(
         app,
+        "/chat/completions",
+        "inferA",
+    )
+    @primary_operation(
+        app,
         INFER_ENDPOINT,
         "infer",
     )
