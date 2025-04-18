@@ -24,7 +24,7 @@ In real production environments, many applications impose strict performance met
 
 Before using the high-performance inference plugin, please ensure that you have completed the PaddleX installation according to the [PaddleX Local Installation Tutorial](../installation/installation.en.md) and have run the quick inference using the PaddleX pipeline command line or the PaddleX pipeline Python script as described in the usage instructions.
 
-High-performance inference supports handling **PaddlePaddle static graph (`.pdmodel`, `.json`)**, **ONNX (`.onnx`)** and **Huawei OM (`.om`)**. For ONNX models, it is recommended to convert them using the [Paddle2ONNX Plugin](./paddle2onnx.en.md). If multiple model formats are present in the model directory, PaddleX will automatically choose the appropriate one as needed, and aotimatic model conversion may be performed.
+The high-performance inference plugin supports handling multiple model formats, including **PaddlePaddle static graph (`.pdmodel`, `.json`)**, **ONNX (`.onnx`)** and **Huawei OM (`.om`)**, among others. For ONNX models, it is recommended to convert them using the [Paddle2ONNX Plugin](./paddle2onnx.en.md). If multiple model formats are present in the model directory, PaddleX will automatically choose the appropriate one as needed, and aotimatic model conversion may be performed.
 
 ### 1.1 Installing the High-Performance Inference Plugin
 
