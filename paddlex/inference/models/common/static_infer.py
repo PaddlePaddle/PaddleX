@@ -14,8 +14,9 @@
 
 import abc
 import subprocess
+from os import PathLike
 from pathlib import Path
-from typing import List, Sequence
+from typing import List, Sequence, Union
 
 import numpy as np
 
@@ -307,12 +308,12 @@ class StaticInfer(metaclass=abc.ABCMeta):
 class PaddleInfer(StaticInfer):
     def __init__(
         self,
-        model_dir: str,
+        model_dir: Union[str, PathLike],
         model_file_prefix: str,
         option: PaddlePredictorOption,
     ) -> None:
         super().__init__()
-        self.model_dir = model_dir
+        self.model_dir = Path(model_dir)
         self.model_file_prefix = model_file_prefix
         self._option = option
         self.predictor = self._create()
@@ -491,6 +492,8 @@ class PaddleInfer(StaticInfer):
         import paddle.inference
 
         if USE_PIR_TRT:
+            if self._option.trt_dynamic_shapes is None:
+                raise RuntimeError("No dynamic shape information provided")
             trt_save_path = cache_dir / "trt" / self.model_file_prefix
             _convert_trt(
                 self._option.trt_cfg_setting,
@@ -520,6 +523,8 @@ class PaddleInfer(StaticInfer):
                     getattr(config, func_name)(**args)
 
             if self._option.trt_use_dynamic_shapes:
+                if self._option.trt_dynamic_shapes is None:
+                    raise RuntimeError("No dynamic shape information provided")
                 if self._option.trt_collect_shape_range_info:
                     # NOTE: We always use a shape range info file.
                     if self._option.trt_shape_range_info_path is not None:
@@ -567,20 +572,17 @@ class PaddleInfer(StaticInfer):
                         self._option.trt_allow_rebuild_at_runtime,
                     )
                 else:
-                    if self._option.trt_dynamic_shapes is not None:
-                        min_shapes, opt_shapes, max_shapes = {}, {}, {}
-                        for (
-                            key,
-                            shapes,
-                        ) in self._option.trt_dynamic_shapes.items():
-                            min_shapes[key] = shapes[0]
-                            opt_shapes[key] = shapes[1]
-                            max_shapes[key] = shapes[2]
-                            config.set_trt_dynamic_shape_info(
-                                min_shapes, max_shapes, opt_shapes
-                            )
-                    else:
-                        raise RuntimeError("No dynamic shape information provided")
+                    min_shapes, opt_shapes, max_shapes = {}, {}, {}
+                    for (
+                        key,
+                        shapes,
+                    ) in self._option.trt_dynamic_shapes.items():
+                        min_shapes[key] = shapes[0]
+                        opt_shapes[key] = shapes[1]
+                        max_shapes[key] = shapes[2]
+                        config.set_trt_dynamic_shape_info(
+                            min_shapes, max_shapes, opt_shapes
+                        )
 
         return config
 
@@ -605,12 +607,12 @@ class MultiBackendInfer(object):
 class HPInfer(StaticInfer):
     def __init__(
         self,
-        model_dir: str,
+        model_dir: Union[str, PathLike],
         model_file_prefix: str,
         config: HPIConfig,
     ) -> None:
         super().__init__()
-        self._model_dir = model_dir
+        self._model_dir = Path(model_dir)
         self._model_file_prefix = model_file_prefix
         self._config = config
         backend, backend_config = self._determine_backend_and_config()
@@ -627,7 +629,7 @@ class HPInfer(StaticInfer):
             ]
 
     @property
-    def model_dir(self) -> str:
+    def model_dir(self) -> Path:
         return self._model_dir
 
     @property
@@ -695,7 +697,11 @@ class HPInfer(StaticInfer):
         }
         # TODO: This is probably redundant. Can we reuse the code in the
         # predictor class?
-        paddle_info = self._config.hpi_info.backend_configs.paddle_infer
+        paddle_info = None
+        if self._config.hpi_info:
+            hpi_info = self._config.hpi_info
+            if hpi_info.backend_configs:
+                paddle_info = hpi_info.backend_configs.paddle_infer
         if paddle_info is not None:
             if (
                 kwargs.get("trt_dynamic_shapes") is None
@@ -736,7 +742,7 @@ class HPInfer(StaticInfer):
                 f"Unsupported device type {repr(self._config.device_type)}"
             )
 
-        model_paths = get_model_paths(self.model_dir, self.model_file_prefix)
+        model_paths = get_model_paths(self._model_dir, self.model_file_prefix)
         if backend in ("openvino", "onnxruntime", "tensorrt"):
             # XXX: This introduces side effects.
             if "onnx" not in model_paths:
@@ -753,9 +759,9 @@ class HPInfer(StaticInfer):
                                 "paddlex",
                                 "--paddle2onnx",
                                 "--paddle_model_dir",
-                                self._model_dir,
+                                str(self._model_dir),
                                 "--onnx_model_dir",
-                                self._model_dir,
+                                str(self._model_dir),
                             ],
                             capture_output=True,
                             check=True,
@@ -766,7 +772,7 @@ class HPInfer(StaticInfer):
                             f"PaddlePaddle-to-ONNX conversion failed:\n{e.stderr}"
                         ) from e
                     model_paths = get_model_paths(
-                        self.model_dir, self.model_file_prefix
+                        self._model_dir, self.model_file_prefix
                     )
                     assert "onnx" in model_paths
                 else:
@@ -792,7 +798,11 @@ class HPInfer(StaticInfer):
                 backend_config.get("use_dynamic_shapes", True)
                 and backend_config.get("dynamic_shapes") is None
             ):
-                trt_info = self._config.hpi_info.backend_configs.tensorrt
+                trt_info = None
+                if self._config.hpi_info:
+                    hpi_info = self._config.hpi_info
+                    if hpi_info.backend_configs:
+                        trt_info = hpi_info.backend_configs.tensorrt
                 if trt_info is not None and trt_info.dynamic_shapes is not None:
                     trt_dynamic_shapes = trt_info.dynamic_shapes
                     logging.debug(
@@ -804,7 +814,7 @@ class HPInfer(StaticInfer):
                     }
             backend_config = TensorRTConfig.model_validate(backend_config)
             ui_option.use_trt_backend()
-            cache_dir = self.model_dir / CACHE_DIR / "tensorrt"
+            cache_dir = self._model_dir / CACHE_DIR / "tensorrt"
             cache_dir.mkdir(parents=True, exist_ok=True)
             ui_option.trt_option.serialize_file = str(cache_dir / "trt_serialized.trt")
             if backend_config.precision == "fp16":

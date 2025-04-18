@@ -177,8 +177,10 @@ def suggest_inference_backend_and_config(
     ]
 
     # XXX
-    if not ctypes.util.find_library("nvinfer") or (
-        USE_PIR_TRT and importlib.util.find_spec("tensorrt") is None
+    if (
+        USE_PIR_TRT
+        and importlib.util.find_spec("tensorrt")
+        and ctypes.util.find_library("nvinfer")
     ):
         if "paddle_tensorrt" in supported_pseudo_backends:
             supported_pseudo_backends.remove("paddle_tensorrt")

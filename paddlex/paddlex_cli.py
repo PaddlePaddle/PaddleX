@@ -24,6 +24,7 @@ from pathlib import Path
 from . import create_pipeline
 from .constants import MODEL_FILE_PREFIX
 from .inference.pipelines import load_pipeline_config
+from .inference.utils.model_paths import get_model_paths
 from .repo_manager import get_all_supported_repo_names, setup
 from .utils import logging
 from .utils.deps import (
@@ -32,7 +33,6 @@ from .utils.deps import (
     require_paddle2onnx_plugin,
 )
 from .utils.env import get_cuda_version
-from .utils.flags import FLAGS_json_format_model
 from .utils.install import install_packages
 from .utils.interactive_get_pipeline import interactive_get_pipeline
 from .utils.pipeline_arguments import PIPELINE_ARGUMENTS
@@ -348,25 +348,20 @@ def serve(pipeline, *, device, use_hpip, hpi_config, host, port):
 def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
     require_paddle2onnx_plugin()
 
-    PD_MODEL_FILE_PREFIX = MODEL_FILE_PREFIX
-    PD_PARAMS_FILENAME = f"{MODEL_FILE_PREFIX}.pdiparams"
     ONNX_MODEL_FILENAME = f"{MODEL_FILE_PREFIX}.onnx"
     CONFIG_FILENAME = f"{MODEL_FILE_PREFIX}.yml"
     ADDITIONAL_FILENAMES = ["scaler.pkl"]
 
-    def _check_input_dir(input_dir, pd_model_file_ext):
+    def _check_input_dir(input_dir):
         if input_dir is None:
             sys.exit("Input directory must be specified")
         if not input_dir.exists():
             sys.exit(f"{input_dir} does not exist")
         if not input_dir.is_dir():
             sys.exit(f"{input_dir} is not a directory")
-        model_path = (input_dir / PD_MODEL_FILE_PREFIX).with_suffix(pd_model_file_ext)
-        if not model_path.exists():
-            sys.exit(f"{model_path} does not exist")
-        params_path = input_dir / PD_PARAMS_FILENAME
-        if not params_path.exists():
-            sys.exit(f"{params_path} does not exist")
+        model_paths = get_model_paths(input_dir)
+        if "paddle" not in model_paths:
+            sys.exit("PaddlePaddle model does not exist")
         config_path = input_dir / CONFIG_FILENAME
         if not config_path.exists():
             sys.exit(f"{config_path} does not exist")
@@ -375,17 +370,18 @@ def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
         if shutil.which("paddle2onnx") is None:
             sys.exit("Paddle2ONNX is not available. Please install the plugin first.")
 
-    def _run_paddle2onnx(input_dir, pd_model_file_ext, output_dir, opset_version):
+    def _run_paddle2onnx(input_dir, output_dir, opset_version):
+        model_paths = get_model_paths(input_dir)
         logging.info("Paddle2ONNX conversion starting...")
         # XXX: To circumvent Paddle2ONNX's bug
         cmd = [
             "paddle2onnx",
             "--model_dir",
-            str(input_dir),
+            str(model_paths["paddle"][0].parent),
             "--model_filename",
-            str(Path(PD_MODEL_FILE_PREFIX).with_suffix(pd_model_file_ext)),
+            str(model_paths["paddle"][0].name),
             "--params_filename",
-            PD_PARAMS_FILENAME,
+            str(model_paths["paddle"][1].name),
             "--save_file",
             str(output_dir / ONNX_MODEL_FILENAME),
             "--opset_version",
@@ -418,13 +414,9 @@ def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
     onnx_model_dir = Path(onnx_model_dir)
     logging.info(f"Input dir: {paddle_model_dir}")
     logging.info(f"Output dir: {onnx_model_dir}")
-    pd_model_file_ext = ".json"
-    if not FLAGS_json_format_model:
-        if not (paddle_model_dir / f"{PD_MODEL_FILE_PREFIX}.json").exists():
-            pd_model_file_ext = ".pdmodel"
-    _check_input_dir(paddle_model_dir, pd_model_file_ext)
+    _check_input_dir(paddle_model_dir)
     _check_paddle2onnx()
-    _run_paddle2onnx(paddle_model_dir, pd_model_file_ext, onnx_model_dir, opset_version)
+    _run_paddle2onnx(paddle_model_dir, onnx_model_dir, opset_version)
     if not (onnx_model_dir.exists() and onnx_model_dir.samefile(paddle_model_dir)):
         _copy_config_file(paddle_model_dir, onnx_model_dir)
         _copy_additional_files(paddle_model_dir, onnx_model_dir)
