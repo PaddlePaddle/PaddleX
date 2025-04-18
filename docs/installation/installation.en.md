@@ -255,7 +255,7 @@ PaddleX currently provides the following dependency groups:
 | Dependency Group | Corresponding Features |
 | - | - |
 | `base` | All basic features of PaddleX. |
-| `cv` | Basic features of computer vision pipelines (excluding multimodal pipelines). |
+| `cv` | Basic features of computer vision pipelines. |
 | `multimodal` | Basic features of multimodal pipelines. |
 | `ie` | Basic features of information extraction pipelines. |
 | `ocr` | Basic features of OCR-related pipelines. |

@@ -106,9 +106,9 @@ PaddleX supports modifying the inference configuration through `PaddlePredictorO
 * `cpu_threads`: Number of CPU threads for the acceleration library, only valid when the inference device is 'cpu'.
   * Supports setting an `int` type for the number of CPU threads for the acceleration library during CPU inference.
   * Return value: `int` type, the currently set number of threads for the acceleration library.
-* `trt_dynamic_shapes`: TensorRT dynamic shapes, only effective when `run_mode` is set to 'trt_fp32' or 'trt_fp16'.
+* `trt_dynamic_shapes`: TensorRT dynamic shape configuration, only effective when `run_mode` is set to 'trt_fp32' or 'trt_fp16'.
   * Supports setting a value of type `dict` or `None`. If it is a `dict`, the keys are the input tensor names and the values are two-level nested lists formatted as `[{minimum shape}, {optimal shape}, {maximum shape}]`, for example `[[1, 2], [1, 2], [2, 2]]`.
-  * Return value: `dict` type or `None`, the current TensorRT dynamic shape settings.
+  * Return value: `dict` type or `None`, the current TensorRT dynamic shape configuration.
 * `trt_dynamic_shape_input_data`: For TensorRT usage, this parameter provides the fill data for the input tensors used to build the engine, and it is only valid when `run_mode` is set to 'trt_fp32' or 'trt_fp16'.
   * Supports setting a value of type `dict` or `None`. If it is a `dict`, the keys are the input tensor names and the values are two-level nested lists formatted as `[{fill data corresponding to the minimum shape}, {fill data corresponding to the optimal shape}, {fill data corresponding to the maximum shape}]`, for example `[[1.0, 1.0], [1.0, 1.0], [1.0, 1.0, 1.0, 1.0]]`. The data are floating point numbers filled in row-major order.
   * Return value: `dict` type or `None`, the currently set input tensor fill data.

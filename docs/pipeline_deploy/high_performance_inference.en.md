@@ -24,7 +24,7 @@ In real production environments, many applications impose strict performance met
 
 Before using the high-performance inference plugin, please ensure that you have completed the PaddleX installation according to the [PaddleX Local Installation Tutorial](../installation/installation.en.md) and have run the quick inference using the PaddleX pipeline command line or the PaddleX pipeline Python script as described in the usage instructions.
 
-High-performance inference supports handling **PaddlePaddle static graph models (`.pdmodel`, `.json`)** and **ONNX format models (`.onnx`)**. For ONNX format models, it is recommended to convert them using the [Paddle2ONNX Plugin](./paddle2onnx.en.md). If multiple model formats are present in the model directory, PaddleX will automatically choose the appropriate one as needed.
+The high-performance inference plugin supports handling multiple model formats, including **PaddlePaddle static graph (`.pdmodel`, `.json`)**, **ONNX (`.onnx`)** and **Huawei OM (`.om`)**, among others. For ONNX models, it is recommended to convert them using the [Paddle2ONNX Plugin](./paddle2onnx.en.md). If multiple model formats are present in the model directory, PaddleX will automatically choose the appropriate one as needed, and aotimatic model conversion may be performed.
 
 ### 1.1 Installing the High-Performance Inference Plugin
 
@@ -60,7 +60,7 @@ Currently, the supported processor architectures, operating systems, device type
   </tr>
 </table>
 
-#### 1.1.1 Installing the High-Performance Inference Plugin in a Docker Container (Highly Recommended):
+#### 1.1.1 Installing the High-Performance Inference Plugin in a Docker Container (Highly Recommended)
 
 Refer to [Get PaddleX based on Docker](../installation/installation.en.md#21-obtaining-paddlex-based-on-docker) to start a PaddleX container using Docker. After starting the container, execute the following commands according to your device type to install the high-performance inference plugin:
 
@@ -90,7 +90,7 @@ In the official PaddleX Docker image, TensorRT is installed by default. The high
 
 **Please note that the aforementioned Docker image refers to the official PaddleX image described in [Get PaddleX via Docker](../installation/installation.en.md#21-get-paddlex-based-on-docker), rather than the PaddlePaddle official image described in [PaddlePaddle Local Installation Tutorial](../installation/paddlepaddle_install.en.md#installing-paddlepaddle-via-docker). For the latter, please refer to the local installation instructions for the high-performance inference plugin.**
 
-#### 1.1.2 Installing the High-Performance Inference Plugin Locally:
+#### 1.1.2 Installing the High-Performance Inference Plugin Locally
 
 **To install the CPU version of the high-performance inference plugin:**
 
@@ -134,7 +134,7 @@ Please refer to the [Ascend NPU High-Performance Inference Tutorial](../practica
 
 1. **Currently, the official PaddleX only provides precompiled packages for CUDA 11.8 + cuDNN 8.9**; support for CUDA 12 is in progress.
 2. Only one version of the high-performance inference plugin should exist in the same environment.
-3. For Windows systems, it is currently recommended to install and use the high-performance inference plugin within a Docker container.
+3. For Windows systems, it is currently recommended to install and use the high-performance inference plugin within a Docker container or in [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) environments.
 
 ### 1.2 Enabling the High-Performance Inference Plugin
 
@@ -314,7 +314,7 @@ The available configuration items for `backend_config` vary for different backen
     <td>
       <code>precision</code> (<code>str</code>): The precision used, either <code>"fp16"</code> or <code>"fp32"</code>. The default is <code>"fp32"</code>.
       <br />
-      <code>dynamic_shapes</code> (<code>dict</code>): Dynamic shapes. Dynamic shapes include the minimum shape, optimal shape, and maximum shape, which represent TensorRT’s ability to delay specifying some or all tensor dimensions until runtime. The format is: <code>{input tensor name}: [{minimum shape}, {optimization shape}, {maximum shape}]</code>. For more details, please refer to the <a href="https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/work-dynamic-shapes.html">TensorRT official documentation</a>.
+      <code>dynamic_shapes</code> (<code>dict</code>): Dynamic shape configuration that specifies, for each input, its minimum shape, optimization shape, and maximum shape. The format is: <code>{input tensor name}: [{minimum shape}, {optimization shape}, {maximum shape}]</code>. Dynamic shapes is TensorRT’s ability to defer specifying some or all tensor dimensions until runtime. For more information, see the <a href="https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/work-dynamic-shapes.html">TensorRT official documentation</a>.
     </td>
   </tr>
   <tr>

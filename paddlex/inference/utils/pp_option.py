@@ -76,7 +76,7 @@ class PaddlePredictorOption(object):
             self._cfg.setdefault(k, v)
 
         # for trt
-        if self.run_mode in TRT_PRECISION_MAP:
+        if self.run_mode in ("trt_int8", "trt_fp32", "trt_fp16"):
             trt_cfg_setting = TRT_CFG_SETTING[self.model_name]
             if USE_PIR_TRT:
                 trt_cfg_setting["precision_mode"] = TRT_PRECISION_MAP[self.run_mode]

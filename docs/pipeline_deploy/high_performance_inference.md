@@ -24,7 +24,7 @@ comments: true
 
 使用高性能推理插件前，请确保您已经按照 [PaddleX本地安装教程](../installation/installation.md) 完成了PaddleX的安装，且按照PaddleX产线命令行使用说明或PaddleX产线Python脚本使用说明跑通了产线的快速推理。
 
-高性能推理支持处理 **PaddlePaddle 静态图模型( `.pdmodel`、 `.json` )** 和 **ONNX 格式模型( `.onnx` )**。对于 ONNX 格式模型，建议使用 [Paddle2ONNX 插件](./paddle2onnx.md) 转换得到。如果模型目录中存在多种格式的模型，PaddleX 会根据需要自动选择。
+高性能推理插件支持处理 **PaddlePaddle 静态图（`.pdmodel`、 `.json`）**、**ONNX（`.onnx`）**、**华为 OM（`.om`）** 等多种模型格式。对于 ONNX 模型，建议使用 [Paddle2ONNX 插件](./paddle2onnx.md) 转换得到。如果模型目录中存在多种格式的模型，PaddleX 会根据需要自动选择，并可能进行自动模型转换。
 
 ### 1.1 安装高性能推理插件
 
@@ -60,7 +60,7 @@ comments: true
   </tr>
 </table>
 
-#### 1.1.1 在 Docker 容器中安装高性能推理插件（强烈推荐）：
+#### 1.1.1 在 Docker 容器中安装高性能推理插件（强烈推荐）
 
 参考 [基于Docker获取PaddleX](../installation/installation.md#21-基于docker获取paddlex) 使用 Docker 启动 PaddleX 容器。启动容器后，根据设备类型，执行如下指令，安装高性能推理插件：
 
@@ -90,7 +90,7 @@ PaddleX 官方 Docker 镜像中默认安装了 TensorRT，高性能推理插件�
 
 **请注意，以上提到的镜像指的是 [基于Docker获取PaddleX](../installation/installation.md#21-基于docker获取paddlex) 中描述的 PaddleX 官方镜像，而非 [飞桨PaddlePaddle本地安装教程](../installation/paddlepaddle_install.md#基于-docker-安装飞桨) 中描述的飞桨框架官方镜像。对于后者，请参考高性能推理插件本地安装说明。**
 
-#### 1.1.2 本地安装高性能推理插件：
+#### 1.1.2 本地安装高性能推理插件
 
 **安装 CPU 版本的高性能推理插件：**
 
@@ -136,7 +136,7 @@ paddlex --install hpi-gpu
 
 2. 同一环境中只应该存在一个版本的高性能推理插件。
 
-3. 对于 Windows 系统，目前建议在 Docker 容器中安装和使用高性能推理插件。
+3. 对于 Windows 系统，目前建议在 Docker 容器或者 [WSL](https://learn.microsoft.com/zh-cn/windows/wsl/install) 环境中安装和使用高性能推理插件。
 
 ### 1.2 启用高性能推理插件
 
@@ -287,7 +287,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
   </tr>
   <tr>
     <td><code>om</code></td>
-    <td>华为昇腾NPU定制的离线模型格式对应的推理引擎，针对硬件进行了深度优化，减少算子计算时间和调度时间，能够有效提升推理性能。</td>
+    <td>华为昇腾 NPU 定制的离线模型格式对应的推理引擎，针对硬件进行了深度优化，减少算子计算时间和调度时间，能够有效提升推理性能。</td>
     <td>NPU</td>
   </tr>
 </table>
@@ -316,7 +316,7 @@ output = model.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/
     <td>
       <code>precision</code>（<code>str</code>）：使用的精度，<code>"fp16"</code>或<code>"fp32"</code>。默认为<code>"fp32"</code>。
       <br />
-      <code>dynamic_shapes</code>（<code>dict</code>）：动态形状。动态形状包含最小形状、最优形状以及最大形状，是 TensorRT 延迟指定部分或全部张量维度直到运行时的能力。格式为：<code>{输入张量名称}: [{最小形状}, {优化形状}, {最大形状}]</code>。更多介绍请参考 <a href="https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/work-dynamic-shapes.html">TensorRT 官方文档</a>。
+      <code>dynamic_shapes</code>（<code>dict</code>）：动态形状配置，指定每个输入对应的最小形状、优化形状以及最大形状。格式为：<code>{输入张量名称}: [{最小形状}, {优化形状}, {最大形状}]</code>。动态形状是 TensorRT 延迟指定部分或全部张量维度直到运行时的能力，更多介绍请参考 <a href="https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/work-dynamic-shapes.html">TensorRT 官方文档</a>。
     </td>
   </tr>
   <tr>

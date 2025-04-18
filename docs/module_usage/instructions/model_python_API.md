@@ -110,9 +110,9 @@ PaddleX 支持通过`PaddlePredictorOption`修改推理配置，相关API如下�
 * `cpu_threads`：cpu 加速库计算线程数，仅当推理设备使用 cpu 时有效；
   * 支持设置 `int` 类型，cpu 推理时加速库计算线程数；
   * 返回值：`int` 类型，当前设置的加速库计算线程数。
-* `trt_dynamic_shapes`：TensorRT 动态形状，仅当 `run_mode` 为 'trt_fp32' 或 'trt_fp16' 时有效；
+* `trt_dynamic_shapes`：TensorRT 动态形状配置，仅当 `run_mode` 为 'trt_fp32' 或 'trt_fp16' 时有效；
   * 支持设置：`dict` 类型或 `None`，如果为 `dict`，键为输入张量名称，值为一个两级嵌套列表：`[{最小形状}, {优化形状}, {最大形状}]`，例如 `[[1, 2], [1, 2], [2, 2]]`；
-  * 返回值：`dict` 类型或 `None`，当前设置的 TensorRT 动态形状。
+  * 返回值：`dict` 类型或 `None`，当前设置的 TensorRT 动态形状配置。
 * `trt_dynamic_shape_input_data`：使用 TensorRT 时，为用于构建引擎的输入张量填充的数据，仅当 `run_mode` 为 'trt_fp32' 或 'trt_fp16' 时有效；
   * 支持设置：`dict` 类型或 `None`，如果为 `dict`，键为输入张量名称，值为一个两级嵌套列表：`[{最小形状对应的填充数据}, {优化形状对应的填充数据}, {最大形状对应的填充数据}]`，例如 `[[1.0, 1.0], [1.0, 1.0], [1.0, 1.0, 1.0, 1.0]]`，数据为浮点数，按照行优先顺序填充；
   * 返回值：`dict` 类型或 `None`，当前设置的输入张量填充数据。
