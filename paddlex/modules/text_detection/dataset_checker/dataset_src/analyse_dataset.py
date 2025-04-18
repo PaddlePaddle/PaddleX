@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,19 +13,21 @@
 # limitations under the License.
 
 
-from cProfile import label
+import json
 import os
-
 from collections import defaultdict
 
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_agg import FigureCanvasAgg
 import numpy as np
 from PIL import Image, ImageOps
-import cv2
-import json
 
+from .....utils.deps import function_requires_deps, is_dep_available
 from .....utils.file_interface import custom_open
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
+if is_dep_available("matplotlib"):
+    import matplotlib.pyplot as plt
+    from matplotlib.backends.backend_agg import FigureCanvasAgg
 
 
 # show data samples
@@ -49,7 +51,6 @@ def simple_analyse(dataset_path, max_recorded_sample_cnts=20, show_label=True):
     lab_infos = defaultdict(list)
     res = [None] * 9
     delim = "\t"
-    valid_num_parts = 2
 
     for tag in tags:
         file_list = os.path.join(dataset_path, f"{tag}.txt")
@@ -142,6 +143,7 @@ def simple_analyse(dataset_path, max_recorded_sample_cnts=20, show_label=True):
         )
 
 
+@function_requires_deps("opencv-contrib-python")
 def show_label_img(img_path, dt_boxes):
     """draw ocr detection label"""
     img = cv2.imread(img_path)
@@ -151,13 +153,14 @@ def show_label_img(img_path, dt_boxes):
     return img[:, :, ::-1]
 
 
+@function_requires_deps("matplotlib", "opencv-contrib-python")
 def deep_analyse(dataset_path, output):
     """class analysis for dataset"""
     sample_results = simple_analyse(
         dataset_path, max_recorded_sample_cnts=float("inf"), show_label=False
     )
     lab_infos = sample_results[-3] + sample_results[-2] + sample_results[-1]
-    labels_cnt = defaultdict(int)
+    defaultdict(int)
     img_shapes = []  # w, h
     ratios_w = []
     ratios_h = []

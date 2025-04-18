@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,17 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import cv2
 import numpy as np
 import PIL
 from PIL import Image, ImageDraw, ImageFont
 
+from ....utils.deps import class_requires_deps, is_dep_available
 from ....utils.fonts import PINGFANG_FONT_FILE_PATH
+from ...common.result import BaseVideoResult
 from ...utils.color_map import get_colormap
 from ...utils.io import VideoReader
-from ...common.result import BaseVideoResult
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 
+@class_requires_deps("opencv-contrib-python")
 class TopkVideoResult(BaseVideoResult):
 
     def _to_video(self):

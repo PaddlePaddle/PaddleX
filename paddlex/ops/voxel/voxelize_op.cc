@@ -81,10 +81,11 @@ bool hard_voxelize_cpu_kernel(
   return true;
 }
 
-std::vector<paddle::Tensor> hard_voxelize_cpu(
-    const paddle::Tensor &points, const std::vector<float> &voxel_size,
-    const std::vector<float> &point_cloud_range,
-    const int max_num_points_in_voxel, const int max_voxels) {
+std::vector<paddle::Tensor>
+hard_voxelize_cpu(const paddle::Tensor &points,
+                  const std::vector<float> &voxel_size,
+                  const std::vector<float> &point_cloud_range,
+                  const int max_num_points_in_voxel, const int max_voxels) {
   auto num_points = points.shape()[0];
   auto num_point_dim = points.shape()[1];
 
@@ -140,16 +141,18 @@ std::vector<paddle::Tensor> hard_voxelize_cpu(
 }
 
 #ifdef PADDLE_WITH_CUDA
-std::vector<paddle::Tensor> hard_voxelize_cuda(
-    const paddle::Tensor &points, const std::vector<float> &voxel_size,
-    const std::vector<float> &point_cloud_range, int max_num_points_in_voxel,
-    int max_voxels);
+std::vector<paddle::Tensor>
+hard_voxelize_cuda(const paddle::Tensor &points,
+                   const std::vector<float> &voxel_size,
+                   const std::vector<float> &point_cloud_range,
+                   int max_num_points_in_voxel, int max_voxels);
 #endif
 
-std::vector<paddle::Tensor> hard_voxelize(
-    const paddle::Tensor &points, const std::vector<float> &voxel_size,
-    const std::vector<float> &point_cloud_range,
-    const int max_num_points_in_voxel, const int max_voxels) {
+std::vector<paddle::Tensor>
+hard_voxelize(const paddle::Tensor &points,
+              const std::vector<float> &voxel_size,
+              const std::vector<float> &point_cloud_range,
+              const int max_num_points_in_voxel, const int max_voxels) {
   if (points.is_cpu()) {
     return hard_voxelize_cpu(points, voxel_size, point_cloud_range,
                              max_num_points_in_voxel, max_voxels);
@@ -159,16 +162,16 @@ std::vector<paddle::Tensor> hard_voxelize(
                               max_num_points_in_voxel, max_voxels);
 #endif
   } else {
-    PD_THROW(
-        "Unsupported device type for hard_voxelize "
-        "operator.");
+    PD_THROW("Unsupported device type for hard_voxelize "
+             "operator.");
   }
 }
 
-std::vector<std::vector<int64_t>> HardInferShape(
-    std::vector<int64_t> points_shape, const std::vector<float> &voxel_size,
-    const std::vector<float> &point_cloud_range,
-    const int &max_num_points_in_voxel, const int &max_voxels) {
+std::vector<std::vector<int64_t>>
+HardInferShape(std::vector<int64_t> points_shape,
+               const std::vector<float> &voxel_size,
+               const std::vector<float> &point_cloud_range,
+               const int &max_num_points_in_voxel, const int &max_voxels) {
   return {{max_voxels, max_num_points_in_voxel, points_shape[1]},
           {max_voxels, 3},
           {max_voxels},

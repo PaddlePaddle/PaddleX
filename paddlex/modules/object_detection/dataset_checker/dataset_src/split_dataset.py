@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,14 +13,17 @@
 # limitations under the License.
 
 
-import os
-import shutil
-import random
 import json
-from tqdm import tqdm
+import os
+import random
+import shutil
 
+from .....utils.deps import function_requires_deps, is_dep_available
 from .....utils.file_interface import custom_open, write_json_file
 from .....utils.logging import info
+
+if is_dep_available("tqdm"):
+    from tqdm import tqdm
 
 
 def split_dataset(root_dir, train_rate, val_rate):
@@ -70,6 +73,7 @@ def split_dataset(root_dir, train_rate, val_rate):
     return root_dir
 
 
+@function_requires_deps("tqdm")
 def json2list(json_path, base_image_num):
     """load json as list"""
     assert os.path.exists(json_path), json_path

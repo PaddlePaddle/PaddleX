@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,50 +13,46 @@
 # limitations under the License.
 
 from pathlib import Path
-from typing import Any, Dict, Optional
-from importlib import import_module
-from .base import BasePipeline
-from ..utils.pp_option import PaddlePredictorOption
-from .components import BaseChat, BaseRetriever, BaseGeneratePrompt
+from typing import Any, Dict, Optional, Union
+
 from ...utils import logging
 from ...utils.config import parse_config
-from .ocr import OCRPipeline
-from .doc_preprocessor import DocPreprocessorPipeline
-from .layout_parsing import LayoutParsingPipeline
-from .pp_chatocr import PP_ChatOCRv3_Pipeline, PP_ChatOCRv4_Pipeline
-from .image_classification import ImageClassificationPipeline
-from .object_detection import ObjectDetectionPipeline
-from .seal_recognition import SealRecognitionPipeline
-from .table_recognition import TableRecognitionPipeline
-from .table_recognition import TableRecognitionPipelineV2
-from .multilingual_speech_recognition import MultilingualSpeechRecognitionPipeline
-from .formula_recognition import FormulaRecognitionPipeline
-from .image_multilabel_classification import ImageMultiLabelClassificationPipeline
-from .video_classification import VideoClassificationPipeline
-from .video_detection import VideoDetectionPipeline
+from ..utils.hpi import HPIConfig
+from ..utils.pp_option import PaddlePredictorOption
 from .anomaly_detection import AnomalyDetectionPipeline
-from .ts_forecasting import TSFcPipeline
-from .ts_anomaly_detection import TSAnomalyDetPipeline
-from .ts_classification import TSClsPipeline
-from .pp_shitu_v2 import ShiTuV2Pipeline
-from .face_recognition import FaceRecPipeline
 from .attribute_recognition import (
     PedestrianAttributeRecPipeline,
     VehicleAttributeRecPipeline,
 )
-
-from .semantic_segmentation import SemanticSegmentationPipeline
+from .base import BasePipeline
+from .components import BaseChat, BaseGeneratePrompt, BaseRetriever
+from .doc_preprocessor import DocPreprocessorPipeline
+from .doc_understanding import DocUnderstandingPipeline
+from .face_recognition import FaceRecPipeline
+from .formula_recognition import FormulaRecognitionPipeline
+from .image_classification import ImageClassificationPipeline
+from .image_multilabel_classification import ImageMultiLabelClassificationPipeline
 from .instance_segmentation import InstanceSegmentationPipeline
-from .small_object_detection import SmallObjectDetectionPipeline
-from .rotated_object_detection import RotatedObjectDetectionPipeline
 from .keypoint_detection import KeypointDetectionPipeline
+from .layout_parsing import LayoutParsingPipeline
+from .m_3d_bev_detection import BEVDet3DPipeline
+from .multilingual_speech_recognition import MultilingualSpeechRecognitionPipeline
+from .object_detection import ObjectDetectionPipeline
+from .ocr import OCRPipeline
 from .open_vocabulary_detection import OpenVocabularyDetectionPipeline
 from .open_vocabulary_segmentation import OpenVocabularySegmentationPipeline
-
-module_3d_bev_detection = import_module(
-    ".3d_bev_detection", "paddlex.inference.pipelines"
-)
-BEVDet3DPipeline = getattr(module_3d_bev_detection, "BEVDet3DPipeline")
+from .pp_chatocr import PP_ChatOCRv3_Pipeline, PP_ChatOCRv4_Pipeline
+from .pp_shitu_v2 import ShiTuV2Pipeline
+from .rotated_object_detection import RotatedObjectDetectionPipeline
+from .seal_recognition import SealRecognitionPipeline
+from .semantic_segmentation import SemanticSegmentationPipeline
+from .small_object_detection import SmallObjectDetectionPipeline
+from .table_recognition import TableRecognitionPipeline, TableRecognitionPipelineV2
+from .ts_anomaly_detection import TSAnomalyDetPipeline
+from .ts_classification import TSClsPipeline
+from .ts_forecasting import TSFcPipeline
+from .video_classification import VideoClassificationPipeline
+from .video_detection import VideoDetectionPipeline
 
 
 def get_pipeline_path(pipeline_name: str) -> str:
@@ -109,7 +105,8 @@ def create_pipeline(
     config: Optional[Dict[str, Any]] = None,
     device: Optional[str] = None,
     pp_option: Optional[PaddlePredictorOption] = None,
-    use_hpip: bool = False,
+    use_hpip: Optional[bool] = None,
+    hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     *args: Any,
     **kwargs: Any,
 ) -> BasePipeline:
@@ -128,8 +125,11 @@ def create_pipeline(
             Defaults to None.
         pp_option (Optional[PaddlePredictorOption], optional): The options for
             the PaddlePredictor. Defaults to None.
-        use_hpip (bool, optional): Whether to use high-performance inference
-            plugin (HPIP) for prediction. Defaults to False.
+        use_hpip (Optional[bool], optional): Whether to use the high-performance
+            inference plugin (HPIP). Defaults to None.
+        hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional): The
+            high-performance inference configuration dictionary.
+            Defaults to None.
         *args: Additional positional arguments.
         **kwargs: Additional keyword arguments.
 
@@ -151,12 +151,19 @@ def create_pipeline(
                 config["pipeline_name"],
             )
     pipeline_name = config["pipeline_name"]
+    if device is None:
+        device = config.get("device", None)
+    if use_hpip is None:
+        use_hpip = config.get("use_hpip", False)
+    if hpi_config is None:
+        hpi_config = config.get("hpi_config", None)
 
     pipeline = BasePipeline.get(pipeline_name)(
         config=config,
         device=device,
         pp_option=pp_option,
         use_hpip=use_hpip,
+        hpi_config=hpi_config,
         *args,
         **kwargs,
     )

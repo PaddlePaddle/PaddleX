@@ -129,9 +129,10 @@ void RuntimeOption::UseIpu(int device_num, int micro_batch_size,
 #endif
 }
 
-void RuntimeOption::UseAscend() {
+void RuntimeOption::UseAscend(int npu_id) {
   device = Device::ASCEND;
   paddle_lite_option.device = device;
+  device_id = npu_id;
 }
 
 void RuntimeOption::UseDirectML() { device = Device::DIRECTML; }
@@ -231,6 +232,14 @@ void RuntimeOption::UseHorizonNPUBackend() {
   backend = Backend::HORIZONNPU;
 #else
   FDASSERT(false, "The UltraInfer didn't compile with horizon");
+#endif
+}
+
+void RuntimeOption::UseOMBackend() {
+#ifdef ENABLE_OM_BACKEND
+  backend = Backend::OMONNPU;
+#else
+  FDASSERT(false, "The FastDeploy didn't compile with npu om");
 #endif
 }
 

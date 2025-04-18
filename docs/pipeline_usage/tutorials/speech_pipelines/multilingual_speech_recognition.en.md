@@ -19,7 +19,7 @@ Speech recognition is an advanced tool that can automatically convert spoken lan
    </tr>
    <tr>
      <td>whisper_large</td>
-     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/whisper_large.tar">whisper_large</a></td>
+     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_large.tar">whisper_large</a></td>
      <td>680kh</td>
      <td>5.8G</td>
      <td>2.7 (Librispeech)</td>
@@ -27,28 +27,28 @@ Speech recognition is an advanced tool that can automatically convert spoken lan
    </tr>
    <tr>
      <td>whisper_medium</td>
-     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/whisper_medium.tar">whisper_medium</a></td>
+     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_medium.tar">whisper_medium</a></td>
      <td>680kh</td>
      <td>2.9G</td>
      <td>-</td>
    </tr>
    <tr>
      <td>whisper_small</td>
-     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/whisper_small.tar">whisper_small</a></td>
+     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_small.tar">whisper_small</a></td>
      <td>680kh</td>
      <td>923M</td>
      <td>-</td>
    </tr>
    <tr>
      <td>whisper_base</td>
-     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/whisper_base.tar">whisper_base</a></td>
+     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_base.tar">whisper_base</a></td>
      <td>680kh</td>
      <td>277M</td>
      <td>-</td>
    </tr>
    <tr>
      <td>whisper_tiny</td>
-     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/whisper_tiny.tar">whisper_tiny</a></td>
+     <td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/whisper_tiny.tar">whisper_tiny</a></td>
      <td>680kh</td>
      <td>145M</td>
      <td>-</td>
@@ -58,7 +58,7 @@ Speech recognition is an advanced tool that can automatically convert spoken lan
 ## 2. Quick Start
 PaddleX supports experiencing the multilingual speech recognition pipeline locally using the command line or Python.
 
-Before using the multilingual speech recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+Before using the multilingual speech recognition pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `speech`.
 
 ### 2.1 Local Experience
 
@@ -567,7 +567,7 @@ Since the general video classification pipeline only includes a video classifica
     <tr>
       <td>Inaccurate video classification</td>
       <td>Video Classification Module</td>
-      <td><a href="../../../module_usage/tutorials/video_modules/video_classification.en.md">Link</a></td>
+      <td><a href="https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/video_modules/video_classification.html">Link</a></td>
     </tr>
 
   </tbody>

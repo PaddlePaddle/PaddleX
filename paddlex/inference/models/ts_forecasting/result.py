@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,15 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any
 import io
+from typing import Any
+
 import pandas as pd
-import matplotlib.pyplot as plt
 from PIL import Image
 
+from ....utils.deps import function_requires_deps, is_dep_available
 from ...common.result import BaseTSResult
 
+if is_dep_available("matplotlib"):
+    import matplotlib.pyplot as plt
 
+
+@function_requires_deps("matplotlib")
 def visualize(forecast: pd.DataFrame, actual_data: pd.DataFrame) -> Image.Image:
     """
     Visualizes both the time series forecast and actual results, returning them as a Pillow image.
@@ -43,20 +48,28 @@ def visualize(forecast: pd.DataFrame, actual_data: pd.DataFrame) -> Image.Image:
 
     length = min(len(forecast), len(actual_data))
     actual_data = actual_data.tail(length)
-    
-    plt.plot(actual_data.index, actual_data[forecast_columns[0]], label='Actual Data', color='blue', linestyle='--')
-    plt.plot(forecast.index, forecast[forecast_columns[0]], label='Forecast', color='red')
 
-    plt.title('Time Series Forecast')
-    plt.xlabel('Time')
+    plt.plot(
+        actual_data.index,
+        actual_data[forecast_columns[0]],
+        label="Actual Data",
+        color="blue",
+        linestyle="--",
+    )
+    plt.plot(
+        forecast.index, forecast[forecast_columns[0]], label="Forecast", color="red"
+    )
+
+    plt.title("Time Series Forecast")
+    plt.xlabel("Time")
     plt.ylabel(forecast_columns[0])
     plt.legend()
     plt.grid(True)
-    plt.xticks(ticks=range(0, 2*length, 10))
+    plt.xticks(ticks=range(0, 2 * length, 10))
     plt.xticks(rotation=45)
 
     buf = io.BytesIO()
-    plt.savefig(buf, bbox_inches='tight')
+    plt.savefig(buf, bbox_inches="tight")
     buf.seek(0)
     plt.close()
     image = Image.open(buf)
@@ -72,7 +85,7 @@ class TSFcResult(BaseTSResult):
         forecast = self["forecast"]
         ts_input = self["cutoff_ts"]
         return {"res": visualize(forecast, ts_input)}
-    
+
     def _to_csv(self) -> Any:
         """
         Converts the forecasting results to a CSV format.

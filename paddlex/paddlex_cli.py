@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,19 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import argparse
+import ast
 import importlib.resources
+import os
+import shutil
 import subprocess
 import sys
-import shutil
 from pathlib import Path
 
 from . import create_pipeline
+from .constants import MODEL_FILE_PREFIX
 from .inference.pipelines import load_pipeline_config
-from .repo_manager import setup, get_all_supported_repo_names
-from .utils.flags import FLAGS_json_format_model
+from .repo_manager import get_all_supported_repo_names, setup
 from .utils import logging
+from .utils.deps import (
+    get_paddle2onnx_spec,
+    get_serving_dep_specs,
+    require_paddle2onnx_plugin,
+)
+from .utils.env import get_cuda_version
+from .utils.flags import FLAGS_json_format_model
+from .utils.install import install_packages
 from .utils.interactive_get_pipeline import interactive_get_pipeline
 from .utils.pipeline_arguments import PIPELINE_ARGUMENTS
 
@@ -123,7 +132,14 @@ def args_cfg():
         help="Device to run the pipeline on (e.g., 'cpu', 'gpu:0').",
     )
     pipeline_group.add_argument(
-        "--use_hpip", action="store_true", help="Enable HPIP acceleration if available."
+        "--use_hpip",
+        action="store_true",
+        help="Use high-performance inference plugin.",
+    )
+    pipeline_group.add_argument(
+        "--hpi_config",
+        type=ast.literal_eval,
+        help="High-performance inference configuration.",
     )
     pipeline_group.add_argument(
         "--get_pipeline_config",
@@ -154,19 +170,22 @@ def args_cfg():
 
     ################# paddle2onnx #################
     paddle2onnx_group.add_argument(
-        "--paddle2onnx", action="store_true", help="Convert Paddle model to ONNX format"
+        "--paddle2onnx",
+        action="store_true",
+        help="Convert PaddlePaddle model to ONNX format.",
     )
     paddle2onnx_group.add_argument(
-        "--paddle_model_dir", type=str, help="Directory containing the Paddle model"
+        "--paddle_model_dir",
+        type=str,
+        help="Directory containing the PaddlePaddle model.",
     )
     paddle2onnx_group.add_argument(
         "--onnx_model_dir",
         type=str,
-        default="onnx",
-        help="Output directory for the ONNX model",
+        help="Output directory for the ONNX model.",
     )
     paddle2onnx_group.add_argument(
-        "--opset_version", type=int, help="Version of the ONNX opset to use"
+        "--opset_version", type=int, default=7, help="Version of the ONNX opset to use."
     )
 
     # Parse known arguments to get the pipeline name
@@ -207,50 +226,36 @@ def install(args):
     """install paddlex"""
 
     def _install_serving_deps():
-        with importlib.resources.path(
-            "paddlex", "serving_requirements.txt"
-        ) as req_file:
-            return subprocess.check_call(
-                [sys.executable, "-m", "pip", "install", "-r", str(req_file)]
-            )
+        reqs = get_serving_dep_specs()
+        # Should we sort the requirements?
+        install_packages(reqs)
 
     def _install_paddle2onnx_deps():
-        with importlib.resources.path(
-            "paddlex", "paddle2onnx_requirements.txt"
-        ) as req_file:
-            return subprocess.check_call(
-                [sys.executable, "-m", "pip", "install", "-r", str(req_file)]
-            )
+        install_packages([get_paddle2onnx_spec()])
 
     def _install_hpi_deps(device_type):
-        support_device_type = ["cpu", "gpu"]
-        if device_type not in support_device_type:
+        SUPPORTED_DEVICE_TYPES = ["cpu", "gpu", "npu"]
+        if device_type not in SUPPORTED_DEVICE_TYPES:
             logging.error(
                 "HPI installation failed!\n"
                 "Supported device_type: %s. Your input device_type: %s.\n"
                 "Please ensure the device_type is correct.",
-                support_device_type,
+                SUPPORTED_DEVICE_TYPES,
                 device_type,
             )
             sys.exit(2)
 
         if device_type == "cpu":
-            packages = ["ultra-infer-python", "paddlex-hpi"]
+            package = "ultra-infer-python"
         elif device_type == "gpu":
-            packages = ["ultra-infer-gpu-python", "paddlex-hpi"]
+            if get_cuda_version()[0] != 11:
+                sys.exit("Currently, the CUDA version must be 11.x for GPU devices.")
+            package = "ultra-infer-gpu-python"
+        elif device_type == "npu":
+            package = "ultra-infer-npu-python"
 
         with importlib.resources.path("paddlex", "hpip_links.html") as f:
-            return subprocess.check_call(
-                [
-                    sys.executable,
-                    "-m",
-                    "pip",
-                    "install",
-                    "--find-links",
-                    str(f),
-                    *packages,
-                ]
-            )
+            install_packages([package], pip_install_opts=["--find-links", str(f)])
 
     # Enable debug info
     os.environ["PADDLE_PDX_DEBUG"] = "True"
@@ -314,10 +319,13 @@ def pipeline_predict(
     device,
     save_path,
     use_hpip,
+    hpi_config,
     **pipeline_args,
 ):
     """pipeline predict"""
-    pipeline = create_pipeline(pipeline, device=device, use_hpip=use_hpip)
+    pipeline = create_pipeline(
+        pipeline, device=device, use_hpip=use_hpip, hpi_config=hpi_config
+    )
     result = pipeline.predict(input, **pipeline_args)
     for res in result:
         res.print()
@@ -325,21 +333,25 @@ def pipeline_predict(
             res.save_all(save_path=save_path)
 
 
-def serve(pipeline, *, device, use_hpip, host, port):
+def serve(pipeline, *, device, use_hpip, hpi_config, host, port):
     from .inference.serving.basic_serving import create_pipeline_app, run_server
 
     pipeline_config = load_pipeline_config(pipeline)
-    pipeline = create_pipeline(config=pipeline_config, device=device, use_hpip=use_hpip)
+    pipeline = create_pipeline(
+        config=pipeline_config, device=device, use_hpip=use_hpip, hpi_config=hpi_config
+    )
     app = create_pipeline_app(pipeline, pipeline_config)
     run_server(app, host=host, port=port)
 
 
 # TODO: Move to another module
 def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
-    PD_MODEL_FILE_PREFIX = "inference"
-    PD_PARAMS_FILENAME = "inference.pdiparams"
-    ONNX_MODEL_FILENAME = "inference.onnx"
-    CONFIG_FILENAME = "inference.yml"
+    require_paddle2onnx_plugin()
+
+    PD_MODEL_FILE_PREFIX = MODEL_FILE_PREFIX
+    PD_PARAMS_FILENAME = f"{MODEL_FILE_PREFIX}.pdiparams"
+    ONNX_MODEL_FILENAME = f"{MODEL_FILE_PREFIX}.onnx"
+    CONFIG_FILENAME = f"{MODEL_FILE_PREFIX}.yml"
     ADDITIONAL_FILENAMES = ["scaler.pkl"]
 
     def _check_input_dir(input_dir, pd_model_file_ext):
@@ -366,12 +378,6 @@ def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
     def _run_paddle2onnx(input_dir, pd_model_file_ext, output_dir, opset_version):
         logging.info("Paddle2ONNX conversion starting...")
         # XXX: To circumvent Paddle2ONNX's bug
-        if opset_version is None:
-            if pd_model_file_ext == ".json":
-                opset_version = 19
-            else:
-                opset_version = 7
-            logging.info("Using default ONNX opset version: %d", opset_version)
         cmd = [
             "paddle2onnx",
             "--model_dir",
@@ -407,6 +413,8 @@ def paddle_to_onnx(paddle_model_dir, onnx_model_dir, *, opset_version):
             logging.info(f"Copied {src_path} to {dst_path}")
 
     paddle_model_dir = Path(paddle_model_dir)
+    if not onnx_model_dir:
+        onnx_model_dir = paddle_model_dir
     onnx_model_dir = Path(onnx_model_dir)
     logging.info(f"Input dir: {paddle_model_dir}")
     logging.info(f"Output dir: {onnx_model_dir}")
@@ -441,6 +449,7 @@ def main():
             args.pipeline,
             device=args.device,
             use_hpip=args.use_hpip,
+            hpi_config=args.hpi_config,
             host=args.host,
             port=args.port,
         )
@@ -468,5 +477,6 @@ def main():
                 args.device,
                 args.save_path,
                 use_hpip=args.use_hpip,
+                hpi_config=args.hpi_config,
                 **pipeline_args_dict,
             )

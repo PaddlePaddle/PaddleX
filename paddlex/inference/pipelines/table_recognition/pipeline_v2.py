@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,26 +12,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os, sys
-from typing import Any, Dict, Optional, Union, List, Tuple
+import math
+from typing import Any, Dict, List, Optional, Tuple, Union
+
 import numpy as np
-import cv2
-from sklearn.cluster import KMeans
+
+from ....utils import logging
+from ....utils.deps import (
+    function_requires_deps,
+    is_dep_available,
+    pipeline_requires_extra,
+)
+from ...common.batch_sampler import ImageBatchSampler
+from ...common.reader import ReadImage
+from ...models.object_detection.result import DetResult
+from ...utils.hpi import HPIConfig
+from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 from ..components import CropByBoxes
-from .utils import get_neighbor_boxes_idx
-from .table_recognition_post_processing_v2 import get_table_recognition_res
-from .result import SingleTableRecognitionResult, TableRecognitionResult
-from ....utils import logging
-from ...utils.pp_option import PaddlePredictorOption
-from ...common.reader import ReadImage
-from ...common.batch_sampler import ImageBatchSampler
-from ..ocr.result import OCRResult
 from ..doc_preprocessor.result import DocPreprocessorResult
+from ..ocr.result import OCRResult
+from .result import SingleTableRecognitionResult, TableRecognitionResult
+from .table_recognition_post_processing import (
+    get_table_recognition_res as get_table_recognition_res_e2e,
+)
+from .table_recognition_post_processing_v2 import get_table_recognition_res
+from .utils import get_neighbor_boxes_idx
 
-from ...models.object_detection.result import DetResult
+if is_dep_available("scikit-learn"):
+    from sklearn.cluster import KMeans
 
 
+@pipeline_requires_extra("ocr")
 class TableRecognitionPipelineV2(BasePipeline):
     """Table Recognition Pipeline"""
 
@@ -43,7 +55,7 @@ class TableRecognitionPipelineV2(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
-        hpi_params: Optional[Dict[str, Any]] = None,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ) -> None:
         """Initializes the layout parsing pipeline.
 
@@ -51,12 +63,15 @@ class TableRecognitionPipelineV2(BasePipeline):
             config (Dict): Configuration dictionary containing various settings.
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
-            hpi_params (Optional[Dict[str, Any]], optional): HPIP parameters. Defaults to None.
+            use_hpip (bool, optional): Whether to use the high-performance
+                inference plugin (HPIP). Defaults to False.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
+                The high-performance inference configuration dictionary.
+                Defaults to None.
         """
 
         super().__init__(
-            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_params=hpi_params
+            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
         )
 
         self.use_doc_preprocessor = config.get("use_doc_preprocessor", True)
@@ -124,6 +139,10 @@ class TableRecognitionPipelineV2(BasePipeline):
                 {"pipeline_config_error": "config error for general_ocr_pipeline!"},
             )
             self.general_ocr_pipeline = self.create_pipeline(general_ocr_config)
+        else:
+            self.general_ocr_config_bak = config.get("SubPipelines", {}).get(
+                "GeneralOCR", None
+            )
 
         self._crop_by_boxes = CropByBoxes()
 
@@ -274,8 +293,10 @@ class TableRecognitionPipelineV2(BasePipeline):
             return pred["structure"]
         else:
             return None
-    
-    def cells_det_results_nms(self, cells_det_results, cells_det_scores, cells_det_threshold=0.3):
+
+    def cells_det_results_nms(
+        self, cells_det_results, cells_det_scores, cells_det_threshold=0.3
+    ):
         """
         Apply Non-Maximum Suppression (NMS) on detection results to remove redundant overlapping bounding boxes.
 
@@ -322,12 +343,14 @@ class TableRecognitionPipelineV2(BasePipeline):
             # Indices of boxes with IoU less than threshold
             inds = np.where(ovr <= cells_det_threshold)[0]
             # Update order, only keep boxes with IoU less than threshold
-            order = order[inds + 1]  # inds shifted by 1 because order[0] is the current box
+            order = order[
+                inds + 1
+            ]  # inds shifted by 1 because order[0] is the current box
         # Select the boxes and scores based on picked indices
         final_boxes = boxes[picked_indices].tolist()
         final_scores = scores[picked_indices].tolist()
         return final_boxes, final_scores
-    
+
     def get_region_ocr_det_boxes(self, ocr_det_boxes, table_box):
         """Adjust the coordinates of ocr_det_boxes that are fully inside table_box relative to table_box.
 
@@ -338,27 +361,33 @@ class TableRecognitionPipelineV2(BasePipeline):
         Returns:
             list of list: List of adjusted bounding boxes relative to table_box, for boxes fully inside table_box.
         """
-        tol=0
+        tol = 0
         # Extract coordinates from table_box
         x_min_t, y_min_t, x_max_t, y_max_t = table_box
         adjusted_boxes = []
         for box in ocr_det_boxes:
             x_min_b, y_min_b, x_max_b, y_max_b = box
             # Check if the box is fully inside table_box
-            if (x_min_b+tol >= x_min_t and y_min_b+tol >= y_min_t and
-                x_max_b-tol <= x_max_t and y_max_b-tol <= y_max_t):
+            if (
+                x_min_b + tol >= x_min_t
+                and y_min_b + tol >= y_min_t
+                and x_max_b - tol <= x_max_t
+                and y_max_b - tol <= y_max_t
+            ):
                 # Adjust the coordinates to be relative to table_box
                 adjusted_box = [
                     x_min_b - x_min_t,  # Adjust x1
                     y_min_b - y_min_t,  # Adjust y1
                     x_max_b - x_min_t,  # Adjust x2
-                    y_max_b - y_min_t   # Adjust y2
+                    y_max_b - y_min_t,  # Adjust y2
                 ]
                 adjusted_boxes.append(adjusted_box)
             # Discard boxes not fully inside table_box
         return adjusted_boxes
 
-    def cells_det_results_reprocessing(self, cells_det_results, cells_det_scores, ocr_det_results, html_pred_boxes_nums):
+    def cells_det_results_reprocessing(
+        self, cells_det_results, cells_det_scores, ocr_det_results, html_pred_boxes_nums
+    ):
         """
         Process and filter cells_det_results based on ocr_det_results and html_pred_boxes_nums.
 
@@ -371,6 +400,7 @@ class TableRecognitionPipelineV2(BasePipeline):
         Returns:
             List[List[float]]: The processed list of rectangles.
         """
+
         # Function to compute IoU between two rectangles
         def compute_iou(box1, box2):
             """
@@ -394,12 +424,13 @@ class TableRecognitionPipelineV2(BasePipeline):
             intersection_area = (x_right - x_left) * (y_bottom - y_top)
             # Calculate the area of both rectangles
             box1_area = (box1[2] - box1[0]) * (box1[3] - box1[1])
-            box2_area = (box2[2] - box2[0]) * (box2[3] - box2[1])
+            (box2[2] - box2[0]) * (box2[3] - box2[1])
             # Calculate the IoU
             iou = intersection_area / float(box1_area)
             return iou
 
         # Function to combine rectangles into N rectangles
+        @function_requires_deps("scikit-learn")
         def combine_rectangles(rectangles, N):
             """
             Combine rectangles into N rectangles based on geometric proximity.
@@ -417,15 +448,17 @@ class TableRecognitionPipelineV2(BasePipeline):
             if N >= num_rects:
                 return rectangles
             # Compute the center points of the rectangles
-            centers = np.array([
+            centers = np.array(
                 [
-                    (rect[0] + rect[2]) / 2,  # Center x-coordinate
-                    (rect[1] + rect[3]) / 2   # Center y-coordinate
+                    [
+                        (rect[0] + rect[2]) / 2,  # Center x-coordinate
+                        (rect[1] + rect[3]) / 2,  # Center y-coordinate
+                    ]
+                    for rect in rectangles
                 ]
-                for rect in rectangles
-            ])
+            )
             # Perform KMeans clustering on the center points to group them into N clusters
-            kmeans = KMeans(n_clusters=N, random_state=0, n_init='auto')
+            kmeans = KMeans(n_clusters=N, random_state=0, n_init="auto")
             labels = kmeans.fit_predict(centers)
             # Initialize a list to store the combined rectangles
             combined_rectangles = []
@@ -476,33 +509,71 @@ class TableRecognitionPipelineV2(BasePipeline):
                 iou = compute_iou(ocr_rect, cell_rect)
                 if iou > 0:
                     merge_ocr_box_iou.append(iou)
-                if (iou>=iou_threshold) or (sum(merge_ocr_box_iou)>=iou_threshold):
+                if (iou >= iou_threshold) or (sum(merge_ocr_box_iou) >= iou_threshold):
                     has_large_iou = True
                     break
             if not has_large_iou:
                 ocr_miss_boxes.append(ocr_rect)
         # If no ocr_miss_boxes, return cells_det_results
         if len(ocr_miss_boxes) == 0:
-            final_results = cells_det_results if more_cells_flag==True else cells_det_results.tolist()
+            final_results = (
+                cells_det_results
+                if more_cells_flag == True
+                else cells_det_results.tolist()
+            )
         else:
             if more_cells_flag == True:
-                final_results = combine_rectangles(cells_det_results+ocr_miss_boxes, html_pred_boxes_nums)
+                final_results = combine_rectangles(
+                    cells_det_results + ocr_miss_boxes, html_pred_boxes_nums
+                )
             else:
                 # Need to combine ocr_miss_boxes into N rectangles
                 N = html_pred_boxes_nums - len(cells_det_results)
                 # Combine ocr_miss_boxes into N rectangles
                 ocr_supp_boxes = combine_rectangles(ocr_miss_boxes, N)
                 # Combine cells_det_results and ocr_supp_boxes
-                final_results = np.concatenate((cells_det_results, ocr_supp_boxes), axis=0).tolist()
-        if len(final_results) <= 0.6*html_pred_boxes_nums:
+                final_results = np.concatenate(
+                    (cells_det_results, ocr_supp_boxes), axis=0
+                ).tolist()
+        if len(final_results) <= 0.6 * html_pred_boxes_nums:
             final_results = combine_rectangles(ocr_det_results, html_pred_boxes_nums)
         return final_results
+
+    def split_ocr_bboxes_by_table_cells(self, ori_img, cells_bboxes):
+        """
+        Splits OCR bounding boxes by table cells and retrieves text.
+
+        Args:
+            ori_img (ndarray): The original image from which text regions will be extracted.
+            cells_bboxes (list or ndarray): Detected cell bounding boxes to extract text from.
+
+        Returns:
+            list: A list containing the recognized texts from each cell.
+        """
+
+        # Check if cells_bboxes is a list and convert it if not.
+        if not isinstance(cells_bboxes, list):
+            cells_bboxes = cells_bboxes.tolist()
+        texts_list = []  # Initialize a list to store the recognized texts.
+        # Process each bounding box provided in cells_bboxes.
+        for i in range(len(cells_bboxes)):
+            # Extract and round up the coordinates of the bounding box.
+            x1, y1, x2, y2 = [math.ceil(k) for k in cells_bboxes[i]]
+            # Perform OCR on the defined region of the image and get the recognized text.
+            rec_te = next(self.general_ocr_pipeline(ori_img[y1:y2, x1:x2, :]))
+            # Concatenate the texts and append them to the texts_list.
+            texts_list.append("".join(rec_te["rec_texts"]))
+        # Return the list of recognized texts from each cell.
+        return texts_list
 
     def predict_single_table_recognition_res(
         self,
         image_array: np.ndarray,
         overall_ocr_res: OCRResult,
         table_box: list,
+        use_table_cells_ocr_results: bool = False,
+        use_e2e_wired_table_rec_model: bool = False,
+        use_e2e_wireless_table_rec_model: bool = False,
         flag_find_nei_text: bool = True,
     ) -> SingleTableRecognitionResult:
         """
@@ -513,34 +584,94 @@ class TableRecognitionPipelineV2(BasePipeline):
             overall_ocr_res (OCRResult): Overall OCR result obtained after running the OCR pipeline.
                 The overall OCR results containing text recognition information.
             table_box (list): The table box coordinates.
+            use_table_cells_ocr_results (bool): whether to use OCR results with cells.
+            use_e2e_wired_table_rec_model (bool): Whether to use end-to-end wired table recognition model.
+            use_e2e_wireless_table_rec_model (bool): Whether to use end-to-end wireless table recognition model.
             flag_find_nei_text (bool): Whether to find neighboring text.
         Returns:
             SingleTableRecognitionResult: single table recognition result.
         """
+
         table_cls_pred = next(self.table_cls_model(image_array))
         table_cls_result = self.extract_results(table_cls_pred, "cls")
+        use_e2e_model = False
+
         if table_cls_result == "wired_table":
             table_structure_pred = next(self.wired_table_rec_model(image_array))
-            table_cells_pred = next(
-                self.wired_table_cells_detection_model(image_array, threshold=0.3)
-            ) # Setting the threshold to 0.3 can improve the accuracy of table cells detection. 
-              # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
+            if use_e2e_wired_table_rec_model == True:
+                use_e2e_model = True
+            else:
+                table_cells_pred = next(
+                    self.wired_table_cells_detection_model(image_array, threshold=0.3)
+                )  # Setting the threshold to 0.3 can improve the accuracy of table cells detection.
+                # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
         elif table_cls_result == "wireless_table":
             table_structure_pred = next(self.wireless_table_rec_model(image_array))
-            table_cells_pred = next(
-                self.wireless_table_cells_detection_model(image_array, threshold=0.3)
-            ) # Setting the threshold to 0.3 can improve the accuracy of table cells detection. 
-              # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
-        table_structure_result = self.extract_results(table_structure_pred, "table_stru")
-        table_cells_result, table_cells_score = self.extract_results(table_cells_pred, "det")
-        table_cells_result, table_cells_score = self.cells_det_results_nms(table_cells_result, table_cells_score)
-        ocr_det_boxes = self.get_region_ocr_det_boxes(overall_ocr_res["rec_boxes"].tolist(), table_box)
-        table_cells_result = self.cells_det_results_reprocessing(
-            table_cells_result, table_cells_score, ocr_det_boxes, len(table_structure_pred['bbox'])
-        )
-        single_table_recognition_res = get_table_recognition_res(
-            table_box, table_structure_result, table_cells_result, overall_ocr_res
-        )
+            if use_e2e_wireless_table_rec_model == True:
+                use_e2e_model = True
+            else:
+                table_cells_pred = next(
+                    self.wireless_table_cells_detection_model(
+                        image_array, threshold=0.3
+                    )
+                )  # Setting the threshold to 0.3 can improve the accuracy of table cells detection.
+                # If you really want more or fewer table cells detection boxes, the threshold can be adjusted.
+
+        if use_e2e_model == False:
+            table_structure_result = self.extract_results(
+                table_structure_pred, "table_stru"
+            )
+            table_cells_result, table_cells_score = self.extract_results(
+                table_cells_pred, "det"
+            )
+            table_cells_result, table_cells_score = self.cells_det_results_nms(
+                table_cells_result, table_cells_score
+            )
+            ocr_det_boxes = self.get_region_ocr_det_boxes(
+                overall_ocr_res["rec_boxes"].tolist(), table_box
+            )
+            table_cells_result = self.cells_det_results_reprocessing(
+                table_cells_result,
+                table_cells_score,
+                ocr_det_boxes,
+                len(table_structure_pred["bbox"]),
+            )
+            if use_table_cells_ocr_results == True:
+                cells_texts_list = self.split_ocr_bboxes_by_table_cells(
+                    image_array, table_cells_result
+                )
+            else:
+                cells_texts_list = []
+            single_table_recognition_res = get_table_recognition_res(
+                table_box,
+                table_structure_result,
+                table_cells_result,
+                overall_ocr_res,
+                cells_texts_list,
+                use_table_cells_ocr_results,
+            )
+        else:
+            if use_table_cells_ocr_results == True:
+                table_cells_result_e2e = list(
+                    map(lambda arr: arr.tolist(), table_structure_pred["bbox"])
+                )
+                table_cells_result_e2e = [
+                    [rect[0], rect[1], rect[4], rect[5]]
+                    for rect in table_cells_result_e2e
+                ]
+                cells_texts_list = self.split_ocr_bboxes_by_table_cells(
+                    image_array, table_cells_result_e2e
+                )
+            else:
+                cells_texts_list = []
+            single_table_recognition_res = get_table_recognition_res_e2e(
+                table_box,
+                table_structure_pred,
+                overall_ocr_res,
+                cells_texts_list,
+                use_table_cells_ocr_results,
+            )
+
         neighbor_text = ""
         if flag_find_nei_text:
             match_idx_list = get_neighbor_boxes_idx(
@@ -567,6 +698,9 @@ class TableRecognitionPipelineV2(BasePipeline):
         text_det_box_thresh: Optional[float] = None,
         text_det_unclip_ratio: Optional[float] = None,
         text_rec_score_thresh: Optional[float] = None,
+        use_table_cells_ocr_results: bool = False,
+        use_e2e_wired_table_rec_model: bool = False,
+        use_e2e_wireless_table_rec_model: bool = False,
         **kwargs,
     ) -> TableRecognitionResult:
         """
@@ -581,6 +715,10 @@ class TableRecognitionPipelineV2(BasePipeline):
                 It will be used if it is not None and use_ocr_model is False.
             layout_det_res (DetResult): The layout detection result.
                 It will be used if it is not None and use_layout_detection is False.
+            use_table_cells_ocr_results (bool): whether to use OCR results with cells.
+            use_e2e_wired_table_rec_model (bool): Whether to use end-to-end wired table recognition model.
+            use_e2e_wireless_table_rec_model (bool): Whether to use end-to-end wireless table recognition model.
+            flag_find_nei_text (bool): Whether to find neighboring text.
             **kwargs: Additional keyword arguments.
 
         Returns:
@@ -627,6 +765,11 @@ class TableRecognitionPipelineV2(BasePipeline):
                         text_rec_score_thresh=text_rec_score_thresh,
                     )
                 )
+            elif use_table_cells_ocr_results == True:
+                assert self.general_ocr_config_bak != None
+                self.general_ocr_pipeline = self.create_pipeline(
+                    self.general_ocr_config_bak
+                )
 
             table_res_list = []
             table_region_id = 1
@@ -638,6 +781,9 @@ class TableRecognitionPipelineV2(BasePipeline):
                     doc_preprocessor_image,
                     overall_ocr_res,
                     table_box,
+                    use_table_cells_ocr_results,
+                    use_e2e_wired_table_rec_model,
+                    use_e2e_wireless_table_rec_model,
                     flag_find_nei_text=False,
                 )
                 single_table_rec_res["table_region_id"] = table_region_id
@@ -654,7 +800,12 @@ class TableRecognitionPipelineV2(BasePipeline):
                         table_box = crop_img_info["box"]
                         single_table_rec_res = (
                             self.predict_single_table_recognition_res(
-                                crop_img_info["img"], overall_ocr_res, table_box
+                                crop_img_info["img"],
+                                overall_ocr_res,
+                                table_box,
+                                use_table_cells_ocr_results,
+                                use_e2e_wired_table_rec_model,
+                                use_e2e_wireless_table_rec_model,
                             )
                         )
                         single_table_rec_res["table_region_id"] = table_region_id

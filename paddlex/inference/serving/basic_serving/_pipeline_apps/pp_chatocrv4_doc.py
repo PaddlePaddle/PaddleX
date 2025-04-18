@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,18 +14,21 @@
 
 from typing import Any, Dict, List
 
-from fastapi import FastAPI
-
+from .....utils.deps import function_requires_deps, is_dep_available
 from ...infra import utils as serving_utils
 from ...infra.config import AppConfig
-from ...infra.models import ResultResponse
+from ...infra.models import AIStudioResultResponse
 from ...schemas import pp_chatocrv4_doc as schema
 from .._app import create_app, primary_operation
 from ._common import common
 from ._common import ocr as ocr_common
 
+if is_dep_available("fastapi"):
+    from fastapi import FastAPI
 
-def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
+
+@function_requires_deps("fastapi")
+def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
     app, ctx = create_app(
         pipeline=pipeline, app_config=app_config, app_aiohttp_session=True
     )
@@ -39,7 +42,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
     )
     async def _analyze_images(
         request: schema.AnalyzeImagesRequest,
-    ) -> ResultResponse[schema.AnalyzeImagesResult]:
+    ) -> AIStudioResultResponse[schema.AnalyzeImagesResult]:
         pipeline = ctx.pipeline
 
         log_id = serving_utils.generate_log_id()
@@ -54,6 +57,10 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             use_general_ocr=request.useGeneralOcr,
             use_seal_recognition=request.useSealRecognition,
             use_table_recognition=request.useTableRecognition,
+            layout_threshold=request.layoutThreshold,
+            layout_nms=request.layoutNms,
+            layout_unclip_ratio=request.layoutUnclipRatio,
+            layout_merge_bboxes_mode=request.layoutMergeBboxesMode,
             text_det_limit_side_len=request.textDetLimitSideLen,
             text_det_limit_type=request.textDetLimitType,
             text_det_thresh=request.textDetThresh,
@@ -101,7 +108,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             )
             visual_info.append(item["visual_info"])
 
-        return ResultResponse[schema.AnalyzeImagesResult](
+        return AIStudioResultResponse[schema.AnalyzeImagesResult](
             logId=log_id,
             result=schema.AnalyzeImagesResult(
                 layoutParsingResults=layout_parsing_results,
@@ -117,7 +124,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
     )
     async def _build_vector_store(
         request: schema.BuildVectorStoreRequest,
-    ) -> ResultResponse[schema.BuildVectorStoreResult]:
+    ) -> AIStudioResultResponse[schema.BuildVectorStoreResult]:
         pipeline = ctx.pipeline
 
         kwargs: Dict[str, Any] = {
@@ -135,7 +142,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             **kwargs,
         )
 
-        return ResultResponse[schema.BuildVectorStoreResult](
+        return AIStudioResultResponse[schema.BuildVectorStoreResult](
             logId=serving_utils.generate_log_id(),
             result=schema.BuildVectorStoreResult(vectorInfo=vector_info),
         )
@@ -147,7 +154,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
     )
     async def _invoke_mllm(
         request: schema.InvokeMLLMRequest,
-    ) -> ResultResponse[schema.InvokeMLLMResult]:
+    ) -> AIStudioResultResponse[schema.InvokeMLLMResult]:
         pipeline = ctx.pipeline
         aiohttp_session = ctx.aiohttp_session
 
@@ -163,7 +170,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             mllm_chat_bot_config=request.mllmChatBotConfig,
         )
 
-        return ResultResponse[schema.InvokeMLLMResult](
+        return AIStudioResultResponse[schema.InvokeMLLMResult](
             logId=serving_utils.generate_log_id(),
             result=schema.InvokeMLLMResult(mllmPredictInfo=mllm_predict_info),
         )
@@ -175,7 +182,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
     )
     async def _chat(
         request: schema.ChatRequest,
-    ) -> ResultResponse[schema.ChatResult]:
+    ) -> AIStudioResultResponse[schema.ChatResult]:
         pipeline = ctx.pipeline
 
         kwargs: Dict[str, Any] = dict(
@@ -207,7 +214,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> FastAPI:
             **kwargs,
         )
 
-        return ResultResponse[schema.ChatResult](
+        return AIStudioResultResponse[schema.ChatResult](
             logId=serving_utils.generate_log_id(),
             result=schema.ChatResult(
                 chatResult=result["chat_res"],

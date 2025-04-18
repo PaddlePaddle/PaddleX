@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,18 +13,16 @@
 # limitations under the License.
 
 
-import os
-import os.path as osp
-from typing import List, Sequence, Union, Optional, Tuple
+from typing import List
 
 import numpy as np
-import cv2
-import lazy_paddle as paddle
 
+from ....utils.deps import class_requires_deps
 from ...utils.benchmark import benchmark
 
 
 @benchmark.timeit
+@class_requires_deps("opencv-contrib-python")
 class ResizeVideo:
     """Resizes frames of a video to a specified target size.
 
@@ -59,6 +57,8 @@ class ResizeVideo:
         Raises:
             NotImplementedError: If a frame is not an instance of numpy.ndarray.
         """
+        import cv2
+
         num_seg = len(video)
         seg_len = len(video[0])
 
@@ -239,6 +239,8 @@ def get_region_boxes(
     Returns:
         all_box(List[List[float]]): A list of predicted bounding boxes for each image in the batch.
     """
+    import paddle
+
     anchor_step = len(anchors) // num_anchors
     if output.dim() == 3:
         output = output.unsqueeze(0)
@@ -348,6 +350,8 @@ def nms(boxes, nms_thresh):
     """
     Performs non-maximum suppression on the input boxes based on their IoUs.
     """
+    import paddle
+
     if len(boxes) == 0:
         return boxes
     det_confs = paddle.zeros([len(boxes)])
@@ -371,6 +375,8 @@ def bbox_iou(box1, box2, x1y1x2y2=True):
     """
     Returns the Intersection over Union (IoU) of two bounding boxes.
     """
+    import paddle
+
     if x1y1x2y2:
         mx = min(box1[0], box2[0])
         Mx = max(box1[2], box2[2])
@@ -423,7 +429,8 @@ class DetVideoPostProcess:
         self.labels = label_list
 
     def postprocess(self, pred: List, nms_thresh: float, score_thresh: float) -> List:
-        font = cv2.FONT_HERSHEY_SIMPLEX
+        import paddle
+
         num_seg = len(pred)
         pred_all = []
         for i in range(num_seg):

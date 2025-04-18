@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,18 @@
 # limitations under the License.
 
 import copy
-import numpy as np
-import cv2
 from pathlib import Path
 
-from ...common.result import BaseCVResult, StrMixin, JsonMixin
+import numpy as np
+
+from ....utils.deps import class_requires_deps, is_dep_available
+from ...common.result import BaseCVResult, JsonMixin
+
+if is_dep_available("opencv-contrib-python"):
+    import cv2
 
 
+@class_requires_deps("opencv-contrib-python")
 class TextDetResult(BaseCVResult):
 
     def _get_input_fn(self):

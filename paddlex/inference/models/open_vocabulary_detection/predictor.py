@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,26 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Union, Dict, List, Tuple, Optional, Callable
-import numpy as np
 import inspect
+from typing import Any, Callable, Dict, List, Optional, Union
 
-from ....utils.func_register import FuncRegister
 from ....modules.open_vocabulary_detection.model_list import MODELS
+from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from .processors import (
-    GroundingDINOProcessor,
-    GroundingDINOPostProcessor,
-    YOLOWorldProcessor,
-    YOLOWorldPostProcessor,
-)
-from ..common import StaticInfer
-from ..base import BasicPredictor
+from ..base import BasePredictor
 from ..object_detection.result import DetResult
+from .processors import (
+    GroundingDINOPostProcessor,
+    GroundingDINOProcessor,
+    YOLOWorldPostProcessor,
+    YOLOWorldProcessor,
+)
 
 
-class OVDetPredictor(BasicPredictor):
+class OVDetPredictor(BasePredictor):
 
     entities = MODELS
 
@@ -73,11 +71,7 @@ class OVDetPredictor(BasicPredictor):
                 pre_ops.append(op)
 
         # build infer
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         # build postprocess op
         post_op = self.build_postprocess(pre_ops=pre_ops)

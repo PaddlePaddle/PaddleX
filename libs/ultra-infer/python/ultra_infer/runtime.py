@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -256,9 +256,9 @@ class RuntimeOption:
         """Inference with SOPHGO TPU"""
         return self._option.use_sophgo()
 
-    def use_ascend(self):
+    def use_ascend(self, device_id=0):
         """Inference with Huawei Ascend NPU"""
-        return self._option.use_ascend()
+        return self._option.use_ascend(device_id)
 
     def disable_valid_backend_check(self):
         """Disable checking validity of backend during inference"""
@@ -320,6 +320,10 @@ class RuntimeOption:
     def use_paddle_lite_backend(self):
         """Wrapper function of use_lite_backend(), use Paddle Lite backend, support inference Paddle model on ARM CPU."""
         return self.use_lite_backend()
+
+    def use_om_backend(self):
+        """Use Om backend, support inference Om model on NPU"""
+        return self._option.use_om_backend()
 
     def set_lite_context_properties(self, context_properties):
         """Set nnadapter context properties for Paddle Lite backend."""

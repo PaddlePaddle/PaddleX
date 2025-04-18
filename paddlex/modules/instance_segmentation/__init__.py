@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,6 +13,6 @@
 # limitations under the License.
 
 from .dataset_checker import COCOInstSegDatasetChecker
-from .trainer import InstanceSegTrainer
 from .evaluator import InstanceSegEvaluator
 from .exportor import InstanceSegExportor
+from .trainer import InstanceSegTrainer

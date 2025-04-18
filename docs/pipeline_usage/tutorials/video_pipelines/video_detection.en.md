@@ -22,7 +22,7 @@ Video detection is a technology that identifies and locates specific objects or 
 <th>Description</th>
 </tr>
 <tr>
-<td>YOWO</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0rc0/YOWO_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOWO_pretrained.pdparams">训练模型</a></td>
+<td>YOWO</td><td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/YOWO_infer.tar">Inference Model</a>/<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_pretrained_model/YOWO_pretrained.pdparams">训练模型</a></td>
 <td>80.94</td>
 <td>462.891M</td>
 <td rowspan="1">
@@ -32,14 +32,14 @@ YOWO is a single-stage network with two branches. One branch extracts spatial fe
 
 </table>
 
-**Test Dataset**: <a href="http://www.thumos.info/download.html">UCF101-24</a> test dataset.
+<b>Test Dataset</b>: <a href="http://www.thumos.info/download.html">UCF101-24</a> test dataset.
 
 
 ## 2. Quick Start
 
 PaddleX supports experiencing the pipeline's effects locally using command line or Python.
 
-Before using the general video detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md).
+Before using the general video detection pipeline locally, please ensure that you have completed the installation of the PaddleX wheel package according to the [PaddleX Local Installation Guide](../../../installation/installation.en.md). If you wish to selectively install dependencies, please refer to the relevant instructions in the installation guide. The dependency group corresponding to this pipeline is `video`.
 
 ### 2.1 Local Experience
 
@@ -539,7 +539,7 @@ You can choose the appropriate method to deploy the model pipeline according to 
 If the default model weights provided by the general video detection pipeline are not satisfactory in terms of accuracy or speed for your specific scenario, you can attempt to <b>fine-tune</b> the existing model using <b>your own domain-specific or application-specific data</b> to improve the recognition performance of the general video detection pipeline in your scenario.
 
 ### 4.1 Model Fine-Tuning
-Since the general video detection pipeline includes a video detection module, if the performance of the pipeline does not meet your expectations, you need to refer to the [Custom Development](../../../module_usage/tutorials/video_modules/video_detection.en.md) section in the [Video Detection Module Development Tutorial](../../../module_usage/tutorials/video_modules/video_detection.en.md) and fine-tune the video detection model using your private dataset.
+Since the general video detection pipeline includes a video detection module, if the performance of the pipeline does not meet your expectations, you need to refer to the <b>Custom Development</b> section in the [Video Detection Module Development Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/module_usage/tutorials/video_modules/video_detection.html) and fine-tune the video detection model using your private dataset.
 
 ### 4.2 Model Application
 After completing the fine-tuning with your private dataset, you will obtain the local model weight file.
@@ -549,7 +549,7 @@ If you need to use the fine-tuned model weights, simply modify the pipeline conf
 ```
 ......
 Pipeline:
-  model: YOWO #可修改为微调后模型的本地路径
+  model: YOWO # Can be modified to the local path of the fine-tuned model
   device: "gpu"
   batch_size: 1
 ......

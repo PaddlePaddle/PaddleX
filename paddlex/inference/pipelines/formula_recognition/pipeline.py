@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,27 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os, sys
-from typing import Any, Dict, Optional, Union, List, Tuple
-import numpy as np
-import cv2
-from ..base import BasePipeline
-from ..components import CropByBoxes, convert_points_to_boxes
+from typing import Any, Dict, List, Optional, Tuple, Union
 
-from .result import FormulaRecognitionResult
+import numpy as np
+
+from ....utils import logging
+from ....utils.deps import pipeline_requires_extra
+from ...common.batch_sampler import ImageBatchSampler
+from ...common.reader import ReadImage
 from ...models.formula_recognition.result import (
     FormulaRecResult as SingleFormulaRecognitionResult,
 )
-from ....utils import logging
-from ...utils.pp_option import PaddlePredictorOption
-from ...common.reader import ReadImage
-from ...common.batch_sampler import ImageBatchSampler
-from ..ocr.result import OCRResult
-from ..doc_preprocessor.result import DocPreprocessorResult
-
 from ...models.object_detection.result import DetResult
+from ...utils.hpi import HPIConfig
+from ...utils.pp_option import PaddlePredictorOption
+from ..base import BasePipeline
+from ..components import CropByBoxes
+from .result import FormulaRecognitionResult
 
 
+@pipeline_requires_extra("ocr")
 class FormulaRecognitionPipeline(BasePipeline):
     """Formula Recognition Pipeline"""
 
@@ -44,6 +43,7 @@ class FormulaRecognitionPipeline(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ) -> None:
         """Initializes the formula recognition pipeline.
 
@@ -51,10 +51,16 @@ class FormulaRecognitionPipeline(BasePipeline):
             config (Dict): Configuration dictionary containing various settings.
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
+            use_hpip (bool, optional): Whether to use the high-performance
+                inference plugin (HPIP). Defaults to False.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
+                The high-performance inference configuration dictionary.
+                Defaults to None.
         """
 
-        super().__init__(device=device, pp_option=pp_option, use_hpip=use_hpip)
+        super().__init__(
+            device=device, pp_option=pp_option, use_hpip=use_hpip, hpi_config=hpi_config
+        )
 
         self.use_doc_preprocessor = config.get("use_doc_preprocessor", True)
         if self.use_doc_preprocessor:
@@ -75,7 +81,6 @@ class FormulaRecognitionPipeline(BasePipeline):
                 "LayoutDetection",
                 {"model_config_error": "config error for layout_det_model!"},
             )
-            self.layout_det_model = self.create_model(layout_det_config)
             layout_kwargs = {}
             if (threshold := layout_det_config.get("threshold", None)) is not None:
                 layout_kwargs["threshold"] = threshold

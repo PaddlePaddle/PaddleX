@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,15 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-from typing import List, Sequence, Tuple, Union, Optional
+from typing import List, Optional
 
-import numpy as np
-from ....utils import logging
-from ..object_detection.processors import restructured_boxes
 from ...utils.benchmark import benchmark
-
-import cv2
+from ..object_detection.processors import restructured_boxes
 
 
 def extract_masks_from_boxes(boxes, masks):

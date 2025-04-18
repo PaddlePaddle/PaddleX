@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,27 +13,30 @@
 # limitations under the License.
 from __future__ import annotations
 
-from typing import Optional, Union, Tuple, Iterator
-import numpy as np
-import re
 import copy
+import re
+from typing import Any, Dict, Optional, Tuple, Union
+
+import numpy as np
 
 from ....utils import logging
+from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...models.object_detection.result import DetResult
+from ...utils.hpi import HPIConfig
 from ...utils.pp_option import PaddlePredictorOption
 from ..base import BasePipeline
 from ..ocr.result import OCRResult
 from .result_v2 import LayoutParsingResultV2
-from .utils import get_single_block_parsing_res
-from .utils import get_sub_regions_ocr_res
+from .utils import gather_imgs, get_single_block_parsing_res, get_sub_regions_ocr_res
 
 
+@pipeline_requires_extra("ocr")
 class LayoutParsingPipelineV2(BasePipeline):
     """Layout Parsing Pipeline V2"""
 
-    entities = ["layout_parsing_v2"]
+    entities = ["PP-StructureV3"]
 
     def __init__(
         self,
@@ -41,6 +44,7 @@ class LayoutParsingPipelineV2(BasePipeline):
         device: str = None,
         pp_option: PaddlePredictorOption = None,
         use_hpip: bool = False,
+        hpi_config: Optional[Union[Dict[str, Any], HPIConfig]] = None,
     ) -> None:
         """Initializes the layout parsing pipeline.
 
@@ -48,13 +52,18 @@ class LayoutParsingPipelineV2(BasePipeline):
             config (Dict): Configuration dictionary containing various settings.
             device (str, optional): Device to run the predictions on. Defaults to None.
             pp_option (PaddlePredictorOption, optional): PaddlePredictor options. Defaults to None.
-            use_hpip (bool, optional): Whether to use high-performance inference (hpip) for prediction. Defaults to False.
+            use_hpip (bool, optional): Whether to use the high-performance
+                inference plugin (HPIP). Defaults to False.
+            hpi_config (Optional[Union[Dict[str, Any], HPIConfig]], optional):
+                The high-performance inference configuration dictionary.
+                Defaults to None.
         """
 
         super().__init__(
             device=device,
             pp_option=pp_option,
             use_hpip=use_hpip,
+            hpi_config=hpi_config,
         )
 
         self.inintial_predictor(config)
@@ -228,6 +237,7 @@ class LayoutParsingPipelineV2(BasePipeline):
         table_res_list: list,
         seal_res_list: list,
         formula_res_list: list,
+        imgs_in_doc: list,
         text_det_limit_side_len: Optional[int] = None,
         text_det_limit_type: Optional[str] = None,
         text_det_thresh: Optional[float] = None,
@@ -256,11 +266,19 @@ class LayoutParsingPipelineV2(BasePipeline):
         matched_ocr_dict = {}
         image = np.array(image)
         object_boxes = []
+        footnote_list = []
+        max_bottom_text_coordinate = 0
 
         for object_box_idx, box_info in enumerate(layout_det_res["boxes"]):
             box = box_info["coordinate"]
             label = box_info["label"].lower()
             object_boxes.append(box)
+
+            # set the label of footnote to text, when it is above the text boxes
+            if label == "footnote":
+                footnote_list.append(object_box_idx)
+            if label == "text" and box[3] > max_bottom_text_coordinate:
+                max_bottom_text_coordinate = box[3]
 
             if label not in ["formula", "table", "seal"]:
                 _, matched_idxs = get_sub_regions_ocr_res(
@@ -271,6 +289,13 @@ class LayoutParsingPipelineV2(BasePipeline):
                         matched_ocr_dict[matched_idx] = [object_box_idx]
                     else:
                         matched_ocr_dict[matched_idx].append(object_box_idx)
+
+        for footnote_idx in footnote_list:
+            if (
+                layout_det_res["boxes"][footnote_idx]["coordinate"][3]
+                < max_bottom_text_coordinate
+            ):
+                layout_det_res["boxes"][footnote_idx]["label"] = "text"
 
         already_processed = set()
         for matched_idx, layout_box_ids in matched_ocr_dict.items():
@@ -310,7 +335,9 @@ class LayoutParsingPipelineV2(BasePipeline):
                     del overall_ocr_res["rec_polys"][matched_idx]
                     del overall_ocr_res["rec_scores"][matched_idx]
 
-                if sub_ocr_res["rec_boxes"] is not []:
+                if sub_ocr_res["rec_boxes"].size > 0:
+                    sub_ocr_res["rec_labels"] = ["text"] * len(sub_ocr_res["rec_texts"])
+
                     overall_ocr_res["dt_polys"].extend(sub_ocr_res["dt_polys"])
                     overall_ocr_res["rec_texts"].extend(sub_ocr_res["rec_texts"])
                     overall_ocr_res["rec_boxes"] = np.concatenate(
@@ -318,6 +345,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                     )
                     overall_ocr_res["rec_polys"].extend(sub_ocr_res["rec_polys"])
                     overall_ocr_res["rec_scores"].extend(sub_ocr_res["rec_scores"])
+                    overall_ocr_res["rec_labels"].extend(sub_ocr_res["rec_labels"])
 
         for formula_res in formula_res_list:
             x_min, y_min, x_max, y_max = list(map(int, formula_res["dt_polys"]))
@@ -332,10 +360,12 @@ class LayoutParsingPipelineV2(BasePipeline):
             overall_ocr_res["rec_boxes"] = np.vstack(
                 (overall_ocr_res["rec_boxes"], [formula_res["dt_polys"]])
             )
+            overall_ocr_res["rec_labels"].append("formula")
             overall_ocr_res["rec_polys"].append(poly_points)
             overall_ocr_res["rec_scores"].append(1)
 
         parsing_res_list = get_single_block_parsing_res(
+            self.general_ocr_pipeline,
             overall_ocr_res=overall_ocr_res,
             layout_det_res=layout_det_res,
             table_res_list=table_res_list,
@@ -408,7 +438,7 @@ class LayoutParsingPipelineV2(BasePipeline):
         use_formula_recognition: Union[bool, None] = None,
         layout_threshold: Optional[Union[float, dict]] = None,
         layout_nms: Optional[bool] = None,
-        layout_unclip_ratio: Optional[Union[float, Tuple[float, float]]] = None,
+        layout_unclip_ratio: Optional[Union[float, Tuple[float, float], dict]] = None,
         layout_merge_bboxes_mode: Optional[str] = None,
         text_det_limit_side_len: Union[int, None] = None,
         text_det_limit_type: Union[str, None] = None,
@@ -422,6 +452,9 @@ class LayoutParsingPipelineV2(BasePipeline):
         seal_det_box_thresh: Union[float, None] = None,
         seal_det_unclip_ratio: Union[float, None] = None,
         seal_rec_score_thresh: Union[float, None] = None,
+        use_table_cells_ocr_results: bool = False,
+        use_e2e_wired_table_rec_model: bool = False,
+        use_e2e_wireless_table_rec_model: bool = True,
         **kwargs,
     ) -> LayoutParsingResultV2:
         """
@@ -455,6 +488,9 @@ class LayoutParsingPipelineV2(BasePipeline):
             seal_det_box_thresh (Optional[float]): Threshold for seal detection boxes.
             seal_det_unclip_ratio (Optional[float]): Ratio for unclipping seal detection boxes.
             seal_rec_score_thresh (Optional[float]): Score threshold for seal recognition.
+            use_table_cells_ocr_results (bool): whether to use OCR results with cells.
+            use_e2e_wired_table_rec_model (bool): Whether to use end-to-end wired table recognition model.
+            use_e2e_wireless_table_rec_model (bool): Whether to use end-to-end wireless table recognition model.
             **kwargs (Any): Additional settings to extend functionality.
 
         Returns:
@@ -473,7 +509,7 @@ class LayoutParsingPipelineV2(BasePipeline):
         if not self.check_model_settings_valid(model_settings):
             yield {"error": "the input params for model settings are invalid!"}
 
-        for img_id, batch_data in enumerate(self.batch_sampler(input)):
+        for batch_data in self.batch_sampler(input):
             image_array = self.img_reader(batch_data.instances)[0]
 
             if model_settings["use_doc_preprocessor"]:
@@ -498,6 +534,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                     layout_merge_bboxes_mode=layout_merge_bboxes_mode,
                 )
             )
+            imgs_in_doc = gather_imgs(doc_preprocessor_image, layout_det_res["boxes"])
 
             if model_settings["use_formula_recognition"]:
                 formula_res_all = next(
@@ -536,8 +573,10 @@ class LayoutParsingPipelineV2(BasePipeline):
             else:
                 overall_ocr_res = {}
 
+            overall_ocr_res["rec_labels"] = ["text"] * len(overall_ocr_res["rec_texts"])
+
             if model_settings["use_table_recognition"]:
-                table_overall_ocr_res = copy.deepcopy(overall_ocr_res)
+                table_contents = copy.deepcopy(overall_ocr_res)
                 for formula_res in formula_res_list:
                     x_min, y_min, x_max, y_max = list(map(int, formula_res["dt_polys"]))
                     poly_points = [
@@ -546,15 +585,37 @@ class LayoutParsingPipelineV2(BasePipeline):
                         (x_max, y_max),
                         (x_min, y_max),
                     ]
-                    table_overall_ocr_res["dt_polys"].append(poly_points)
-                    table_overall_ocr_res["rec_texts"].append(
+                    table_contents["dt_polys"].append(poly_points)
+                    table_contents["rec_texts"].append(
                         f"${formula_res['rec_formula']}$"
                     )
-                    table_overall_ocr_res["rec_boxes"] = np.vstack(
-                        (table_overall_ocr_res["rec_boxes"], [formula_res["dt_polys"]])
+                    table_contents["rec_boxes"] = np.vstack(
+                        (table_contents["rec_boxes"], [formula_res["dt_polys"]])
                     )
-                    table_overall_ocr_res["rec_polys"].append(poly_points)
-                    table_overall_ocr_res["rec_scores"].append(1)
+                    table_contents["rec_polys"].append(poly_points)
+                    table_contents["rec_scores"].append(1)
+
+                for img in imgs_in_doc:
+                    img_path = img["path"]
+                    x_min, y_min, x_max, y_max = img["coordinate"]
+                    poly_points = [
+                        (x_min, y_min),
+                        (x_max, y_min),
+                        (x_max, y_max),
+                        (x_min, y_max),
+                    ]
+                    table_contents["dt_polys"].append(poly_points)
+                    table_contents["rec_texts"].append(
+                        f'<div style="text-align: center;"><img src="{img_path}" alt="Image" /></div>'
+                    )
+                    if table_contents["rec_boxes"].size == 0:
+                        table_contents["rec_boxes"] = np.array([img["coordinate"]])
+                    else:
+                        table_contents["rec_boxes"] = np.vstack(
+                            (table_contents["rec_boxes"], img["coordinate"])
+                        )
+                    table_contents["rec_polys"].append(poly_points)
+                    table_contents["rec_scores"].append(img["score"])
 
                 table_res_all = next(
                     self.table_recognition_pipeline(
@@ -563,9 +624,12 @@ class LayoutParsingPipelineV2(BasePipeline):
                         use_doc_unwarping=False,
                         use_layout_detection=False,
                         use_ocr_model=False,
-                        overall_ocr_res=table_overall_ocr_res,
+                        overall_ocr_res=table_contents,
                         layout_det_res=layout_det_res,
                         cell_sort_by_y_projection=True,
+                        use_table_cells_ocr_results=use_table_cells_ocr_results,
+                        use_e2e_wired_table_rec_model=use_e2e_wired_table_rec_model,
+                        use_e2e_wireless_table_rec_model=use_e2e_wireless_table_rec_model,
                     ),
                 )
                 table_res_list = table_res_all["table_res_list"]
@@ -599,6 +663,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                 table_res_list=table_res_list,
                 seal_res_list=seal_res_list,
                 formula_res_list=formula_res_list,
+                imgs_in_doc=imgs_in_doc,
                 text_det_limit_side_len=text_det_limit_side_len,
                 text_det_limit_type=text_det_limit_type,
                 text_det_thresh=text_det_thresh,
@@ -623,6 +688,7 @@ class LayoutParsingPipelineV2(BasePipeline):
                 "seal_res_list": seal_res_list,
                 "formula_res_list": formula_res_list,
                 "parsing_res_list": parsing_res_list,
+                "imgs_in_doc": imgs_in_doc,
                 "model_settings": model_settings,
             }
             yield LayoutParsingResultV2(single_img_res)

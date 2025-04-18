@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@ from urllib.parse import urlparse
 
 import ruamel.yaml
 
-from ...base import BaseConfig
 from ....utils.misc import abspath, convert_and_remove_types
+from ...base import BaseConfig
 
 
 class BaseTSConfig(BaseConfig):
@@ -169,7 +169,6 @@ class BaseTSConfig(BaseConfig):
             device (str): the running device to set
         """
         # PaddleTS does not support multi-device training currently.
-        pass
 
     def update_print_mem_info(self, print_mem_info: bool):
         """setting print memory info"""
@@ -183,7 +182,6 @@ class BaseTSConfig(BaseConfig):
             log_interval (int): the log interval value to set.
         """
         self.update({"log_interval": log_interval})
-
 
     def update_dataset(self, dataset_dir: str, dataset_type: str = None):
         """update dataset settings"""

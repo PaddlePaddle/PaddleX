@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,27 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import numpy as np
 from typing import List, Union
 
-from ....utils.func_register import FuncRegister
+import numpy as np
+
 from ....modules.text_detection.model_list import MODELS
+from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..common import (
-    Resize,
-    ResizeByShort,
-    Normalize,
-    ToCHWImage,
-    ToBatch,
-    StaticInfer,
-)
-from ..base import BasicPredictor
-from .processors import DetResizeForTest, NormalizeImage, DBPostProcess
+from ..base import BasePredictor
+from ..common import ToBatch, ToCHWImage
+from .processors import DBPostProcess, DetResizeForTest, NormalizeImage
 from .result import TextDetResult
 
 
-class TextDetPredictor(BasicPredictor):
+class TextDetPredictor(BasePredictor):
 
     entities = MODELS
 
@@ -46,6 +40,7 @@ class TextDetPredictor(BasicPredictor):
         thresh: Union[float, None] = None,
         box_thresh: Union[float, None] = None,
         unclip_ratio: Union[float, None] = None,
+        input_shape=None,
         *args,
         **kwargs
     ):
@@ -56,6 +51,7 @@ class TextDetPredictor(BasicPredictor):
         self.thresh = thresh
         self.box_thresh = box_thresh
         self.unclip_ratio = unclip_ratio
+        self.input_shape = input_shape
         self.pre_tfs, self.infer, self.post_op = self._build()
 
     def _build_batch_sampler(self):
@@ -76,11 +72,7 @@ class TextDetPredictor(BasicPredictor):
                 pre_tfs[name] = op
         pre_tfs["ToBatch"] = ToBatch()
 
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         post_op = self.build_postprocess(**self.config["PostProcess"])
         return pre_tfs, infer, post_op
@@ -147,7 +139,10 @@ class TextDetPredictor(BasicPredictor):
             limit_type = self.limit_type or kwargs.get("limit_type", "min")
 
         return "Resize", DetResizeForTest(
-            limit_side_len=limit_side_len, limit_type=limit_type, **kwargs
+            limit_side_len=limit_side_len,
+            limit_type=limit_type,
+            input_shape=self.input_shape,
+            **kwargs
         )
 
     @register("NormalizeImage")
@@ -157,11 +152,8 @@ class TextDetPredictor(BasicPredictor):
         std=[0.229, 0.224, 0.225],
         scale=1 / 255,
         order="",
-        channel_num=3,
     ):
-        return "Normalize", NormalizeImage(
-            mean=mean, std=std, scale=scale, order=order, channel_num=channel_num
-        )
+        return "Normalize", NormalizeImage(mean=mean, std=std, scale=scale, order=order)
 
     @register("ToCHWImage")
     def build_to_chw(self):

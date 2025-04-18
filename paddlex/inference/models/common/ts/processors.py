@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,15 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List, Dict, Any
-from pathlib import Path
-from copy import deepcopy
-import joblib
+from typing import Any, Dict, List
+
 import numpy as np
 import pandas as pd
 
-from .funcs import load_from_dataframe, time_feature
+from .....utils.deps import class_requires_deps, is_dep_available
 from ....utils.benchmark import benchmark
+from .funcs import load_from_dataframe, time_feature
+
+if is_dep_available("joblib"):
+    import joblib
 
 __all__ = [
     "BuildTSDataset",
@@ -92,6 +94,7 @@ class TSCutOff:
 
 
 @benchmark.timeit
+@class_requires_deps("joblib")
 class TSNormalize:
     """Normalizes time series data using a pre-fitted scaler.
 

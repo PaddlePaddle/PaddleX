@@ -526,6 +526,19 @@ comments: true
     </ul>
     </td>
 </tr>
+<tr>
+    <td>Document Understanding</td>
+    <td>Document-related Visual Language Model</td>
+    <td>Not Available</td>
+    <td>The document understanding product line is an advanced document processing technology based on Visual-Language Models (VLM), aiming to overcome the limitations of traditional document processing. Traditional methods rely on fixed templates or predefined rules to parse documents. In contrast, this product line leverages the multimodal capabilities of VLM to accurately answer user queries by integrating visual and linguistic information, with only the document image and user question as input. This technology does not require pre-training for specific document formats, allowing it to flexibly handle diverse document content, significantly enhancing the generalization and practicality of document processing. It has broad application prospects in scenarios such as intelligent Q&A and information extraction.</td>
+    <td>
+    <ul>
+        <li>Intelligent Q&A</li>
+        <li>Information Extraction</li>
+        <li>Contract Review and Risk Management</li>
+    </ul>
+    </td>
+</tr>
 </table>
 
 ## 2. Featured Pipelines

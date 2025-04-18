@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,29 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import importlib
 import os
 import os.path as osp
-import importlib
-import tempfile
 import shutil
+import tempfile
+
+from packaging.requirements import Requirement
 
 from ..utils import logging
-from ..utils.file_interface import custom_open
 from ..utils.download import download_and_extract
-from .meta import get_repo_meta, REPO_DOWNLOAD_BASE
+from ..utils.file_interface import custom_open
+from ..utils.install import (
+    install_packages,
+    install_packages_from_requirements_file,
+    uninstall_packages,
+)
+from .meta import REPO_DOWNLOAD_BASE, get_repo_meta
 from .utils import (
-    install_packages_using_pip,
     fetch_repo_using_git,
-    reset_repo_using_git,
-    uninstall_package_using_pip,
-    remove_repo_using_rm,
-    check_installation_using_pip,
-    build_wheel_using_pip,
-    mute,
-    switch_working_dir,
-    to_dep_spec_pep508,
-    env_marker_ast2expr,
     install_external_deps,
+    remove_repo_using_rm,
+    reset_repo_using_git,
+    switch_working_dir,
 )
 
 __all__ = ["build_repo_instance", "build_repo_group_installer"]
@@ -72,8 +72,8 @@ class PPRepository(object):
 
         self.meta = get_repo_meta(self.name)
         self.git_path = self.meta["git_path"]
-        self.pkg_name = self.meta["pkg_name"]
-        self.lib_name = self.meta["lib_name"]
+        self.dist_name = self.meta.get("dist_name", None)
+        self.import_name = self.meta.get("import_name", None)
         self.pdx_mod_name = (
             pdx_collection_mod.__name__ + "." + self.meta["pdx_pkg_name"]
         )
@@ -81,7 +81,7 @@ class PPRepository(object):
 
     def initialize(self):
         """initialize"""
-        if not self.check_installation(quick_check=True):
+        if not self.check_installation():
             return False
         if "path_env" in self.meta:
             # Set env var
@@ -91,14 +91,9 @@ class PPRepository(object):
         self.get_pdx()
         return True
 
-    def check_installation(self, quick_check=False):
+    def check_installation(self):
         """check_installation"""
-        if quick_check:
-            lib = self._get_lib(load=False)
-            return lib is not None
-        else:
-            # TODO: Also check if correct dependencies are installed.
-            return check_installation_using_pip(self.pkg_name)
+        return osp.exists(osp.join(self.root_dir, ".installed"))
 
     def replace_repo_deps(self, deps_to_replace, src_requirements):
         """replace_repo_deps"""
@@ -122,58 +117,61 @@ class PPRepository(object):
         with open(src_requirements, "w") as file:
             file.writelines([l + "\n" for l in existing_deps])
 
-    def check_repo_exiting(self, quick_check=False):
+    def check_repo_exiting(self):
         """check_repo_exiting"""
-        return os.path.exists(os.path.join(self.root_dir, ".git"))
+        return osp.exists(osp.join(self.root_dir, ".git"))
 
-    def install(self, *args, **kwargs):
-        """install"""
-        return RepositoryGroupInstaller([self]).install(*args, **kwargs)
-
-    def uninstall(self, *args, **kwargs):
-        """uninstall"""
-        return RepositoryGroupInstaller([self]).uninstall(*args, **kwargs)
-
-    def install_deps(self, *args, **kwargs):
-        """install_deps"""
-        return RepositoryGroupInstaller([self]).install_deps(*args, **kwargs)
-
-    def install_package(self, no_deps=False, clean=True, install_extra_only=False):
-        """install_package"""
-        editable = self.meta.get("editable", True)
-        extra_editable = self.meta.get("extra_editable", None)
-        if editable:
-            logging.warning(f"{self.pkg_name} will be installed in editable mode.")
-        with switch_working_dir(self.root_dir):
-            if install_extra_only:
-                src_requirements = os.path.join(self.root_dir, "requirements.txt")
-                paddlex_requirements = os.path.join(
-                    self.root_dir, "requirements_paddlex.txt"
+    def install_packages(self, clean=True):
+        """install_packages"""
+        if self.meta["install_pkg"]:
+            editable = self.meta.get("editable", True)
+            if editable:
+                logging.warning(
+                    f"{self.import_name} will be installed in editable mode."
                 )
-                shutil.copy(paddlex_requirements, src_requirements)
-            try:
-                install_packages_using_pip(["."], editable=editable, no_deps=no_deps)
-                install_external_deps(self.name, self.root_dir)
-            finally:
-                if clean:
-                    # Clean build artifacts
-                    tmp_build_dir = os.path.join(self.root_dir, "build")
-                    if os.path.exists(tmp_build_dir):
-                        shutil.rmtree(tmp_build_dir)
-        if extra_editable:
-            with switch_working_dir(os.path.join(self.root_dir, extra_editable)):
+            with switch_working_dir(self.root_dir):
                 try:
-                    install_packages_using_pip(["."], editable=True, no_deps=no_deps)
+                    pip_install_opts = ["--no-deps"]
+                    if editable:
+                        pip_install_opts.append("-e")
+                    install_packages(["."], pip_install_opts=pip_install_opts)
+                    install_external_deps(self.name, self.root_dir)
                 finally:
                     if clean:
                         # Clean build artifacts
-                        tmp_build_dir = os.path.join(self.root_dir, "build")
-                        if os.path.exists(tmp_build_dir):
+                        tmp_build_dir = "build"
+                        if osp.exists(tmp_build_dir):
                             shutil.rmtree(tmp_build_dir)
+        for e in self.meta.get("extra", []):
+            if isinstance(e, tuple):
+                with switch_working_dir(osp.join(self.root_dir, e[0])):
+                    try:
+                        pip_install_opts = ["--no-deps"]
+                        if e[3]:
+                            pip_install_opts.append("-e")
+                        install_packages(["."], pip_install_opts=pip_install_opts)
+                    finally:
+                        if clean:
+                            tmp_build_dir = "build"
+                            if osp.exists(tmp_build_dir):
+                                shutil.rmtree(tmp_build_dir)
 
-    def uninstall_package(self):
-        """uninstall_package"""
-        uninstall_package_using_pip(self.pkg_name)
+    def uninstall_packages(self):
+        """uninstall_packages"""
+        pkgs = []
+        if self.install_pkg:
+            pkgs.append(self.dist_name)
+        for e in self.meta.get("extra", []):
+            if isinstance(e, tuple):
+                pkgs.append(e[1])
+        uninstall_packages(pkgs)
+
+    def mark_installed(self):
+        with open(osp.join(self.root_dir, ".installed"), "wb"):
+            pass
+
+    def mark_uninstalled(self):
+        os.unlink(osp.join(self.root_dir, ".installed"))
 
     def download(self):
         """download from remote"""
@@ -200,61 +198,25 @@ class PPRepository(object):
                     f"Update {self.name} from {git_url} failed, check your network connection. Error:\n{e}"
                 )
 
-    def wheel(self, dst_dir):
-        """wheel"""
-        with tempfile.TemporaryDirectory() as td:
-            tmp_repo_dir = osp.join(td, self.name)
-            tmp_dst_dir = osp.join(td, "dist")
-            shutil.copytree(self.root_dir, tmp_repo_dir, symlinks=False)
-
-            # NOTE: Installation of the repo relies on `self.main_req_file` in root directory
-            # Thus, we overwrite the content of it.
-            main_req_file_path = osp.join(tmp_repo_dir, self.main_req_file)
-            deps_str = self.get_deps()
-            with open(main_req_file_path, "w", encoding="utf-8") as f:
-                f.write(deps_str)
-            install_packages_using_pip([], req_files=[main_req_file_path])
-            with switch_working_dir(tmp_repo_dir):
-                build_wheel_using_pip(".", tmp_dst_dir)
-            shutil.copytree(tmp_dst_dir, dst_dir)
-
-    def _get_lib(self, load=True):
-        """_get_lib"""
-        import importlib.util
-
-        importlib.invalidate_caches()
-        if load:
-            try:
-                with mute():
-                    return importlib.import_module(self.lib_name)
-            except ImportError:
-                return None
-        else:
-            spec = importlib.util.find_spec(self.lib_name)
-            if spec is not None and not osp.exists(spec.origin):
-                return None
-            else:
-                return spec
-
     def get_pdx(self):
         """get_pdx"""
         return importlib.import_module(self.pdx_mod_name)
 
-    def get_deps(self, install_extra_only=False, deps_to_replace=None):
+    def get_deps(self, deps_to_replace=None):
         """get_deps"""
         # Merge requirement files
-        if install_extra_only:
-            req_list = []
-        else:
-            req_list = [self.main_req_file]
-        req_list.extend(self.meta.get("extra_req_files", []))
+        req_list = [self.main_req_file]
+        for e in self.meta.get("extra", []):
+            if isinstance(e, tuple):
+                e = e[2] or osp.join(e[0], "requirements.txt")
+            req_list.append(e)
         if deps_to_replace is not None:
             deps_dict = {}
             for dep in deps_to_replace:
                 part, version = dep.split("=")
                 repo_name, dep_name = part.split(".")
                 deps_dict[repo_name] = {dep_name: version}
-            src_requirements = os.path.join(self.root_dir, "requirements.txt")
+            src_requirements = osp.join(self.root_dir, "requirements.txt")
             if self.name in deps_dict:
                 self.replace_repo_deps(deps_dict[self.name], src_requirements)
         deps = []
@@ -317,13 +279,8 @@ class RepositoryGroupInstaller(object):
         # failure of one repo package aborts the entire installation process.
         for ins_flag, repo in zip(ins_flags, repos):
             if ins_flag:
-                if repo.name in ["PaddleVideo"]:
-                    repo.install_package(
-                        no_deps=True,
-                        install_extra_only=True,
-                    )
-                else:
-                    repo.install_package(no_deps=True)
+                repo.install_packages()
+                repo.mark_installed()
 
     def uninstall(self):
         """uninstall"""
@@ -332,19 +289,15 @@ class RepositoryGroupInstaller(object):
         for repo in repos:
             if repo.check_installation():
                 # NOTE: Dependencies are not uninstalled.
-                repo.uninstall_package()
+                repo.uninstall_packages()
+                repo.mark_uninstalled()
 
     def get_deps(self, deps_to_replace=None):
         """get_deps"""
         deps_list = []
         repos = self._sort_repos(self.repos, check_missing=True)
         for repo in repos:
-            if repo.name in ["PaddleVideo"]:
-                deps = repo.get_deps(
-                    install_extra_only=True, deps_to_replace=deps_to_replace
-                )
-            else:
-                deps = repo.get_deps(deps_to_replace=deps_to_replace)
+            deps = repo.get_deps(deps_to_replace=deps_to_replace)
             deps = self._normalize_deps(deps, headline=f"# {repo.name} dependencies")
             deps_list.append(deps)
         # Add an extra new line to separate dependencies of different repos.
@@ -354,17 +307,23 @@ class RepositoryGroupInstaller(object):
         """install_deps"""
         deps_str = self.get_deps(deps_to_replace=deps_to_replace)
         with tempfile.TemporaryDirectory() as td:
-            req_file = os.path.join(td, "requirements.txt")
+            req_file = osp.join(td, "requirements.txt")
             with open(req_file, "w", encoding="utf-8") as fr:
                 fr.write(deps_str)
-            if constraints is not None:
-                cons_file = os.path.join(td, "constraints.txt")
-                with open(cons_file, "w", encoding="utf-8") as fc:
+            cons_file = osp.join(td, "constraints.txt")
+            with open(cons_file, "w", encoding="utf-8") as fc:
+                if constraints is not None:
                     fc.write(constraints)
-                cons_files = [cons_file]
-            else:
-                cons_files = []
-            install_packages_using_pip([], req_files=[req_file], cons_files=cons_files)
+                # HACK: Avoid installing OpenCV variants unexpectedly
+                fc.write("opencv-python == 0.0.0\n")
+                fc.write("opencv-python-headless == 0.0.0\n")
+                fc.write("opencv-contrib-python-headless == 0.0.0\n")
+            pip_install_opts = []
+            pip_install_opts.append("-c")
+            pip_install_opts.append(cons_file)
+            install_packages_from_requirements_file(
+                req_file, pip_install_opts=pip_install_opts
+            )
 
     def _sort_repos(self, repos, check_missing=False):
         # We sort the repos to ensure that the dependencies precede the
@@ -399,42 +358,49 @@ class RepositoryGroupInstaller(object):
         return sorted_repos
 
     def _normalize_deps(self, deps, headline=None):
-        repo_pkgs = set(repo.pkg_name for repo in self.repos)
-        normed_lines = []
+        repo_pkgs = set(
+            repo.dist_name for repo in self.repos if repo.dist_name is not None
+        )
+        lines = []
         if headline is not None:
-            normed_lines.append(headline)
+            lines.append(headline)
         for line in deps.splitlines():
             line_s = line.strip()
-            if len(line_s) == 0 or line_s.startswith("#"):
+            if not line_s:
                 continue
-            # If `line` is not a comment, it must be a requirement specifier.
+            pos = line_s.find("#")
+            if pos == 0:
+                continue
+            elif pos > 0:
+                line_s = line_s[:pos]
+            # If `line` is not an empty line or a comment, it must be a requirement specifier.
             # Other forms may cause a parse error.
-            n, e, v, m = to_dep_spec_pep508(line_s)
-            if isinstance(v, str):
-                raise RuntimeError("Currently, URL based lookup is not supported.")
-            if n in repo_pkgs:
+            req = Requirement(line_s)
+            if req.name in repo_pkgs:
                 # Skip repo packages
                 continue
-            elif check_installation_using_pip(n):
-                continue
-            else:
-                line_n = [n]
-                fe = f"[{','.join(e)}]" if e else ""
-                if fe:
-                    line_n.append(fe)
-                fv = []
-                for tup in v:
-                    fv.append(" ".join(tup))
-                fv = ", ".join(fv) if fv else ""
-                if fv:
-                    line_n.append(fv)
-                if m is not None:
-                    fm = f"; {env_marker_ast2expr(m)}"
-                    line_n.append(fm)
-                line_n = " ".join(line_n)
-                normed_lines.append(line_n)
+            elif req.name.replace("_", "-") in (
+                "opencv-python",
+                "opencv-contrib-python",
+                "opencv-python-headless",
+                "opencv-contrib-python-headless",
+            ):
+                # FIXME: The original version specifiers are ignored. It would be better to check them here.
+                # The resolver will get the version info from the constraints file.
+                line_s = "opencv-contrib-python"
+            elif req.name == "albumentations":
+                # HACK
+                line_s = "albumentations @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/albumentations-1.4.10%2Bpdx-py3-none-any.whl"
+                line_s += "\nalbucore @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/albucore-0.0.13%2Bpdx-py3-none-any.whl"
+            elif req.name.replace("_", "-") == "nuscenes-devkit":
+                # HACK
+                line_s = "nuscenes-devkit @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/nuscenes_devkit-1.1.11%2Bpdx-py3-none-any.whl"
+            elif req.name == "imgaug":
+                # HACK
+                line_s = "imgaug @ https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/patched_packages/imgaug-0.4.0%2Bpdx-py2.py3-none-any.whl"
+            lines.append(line_s)
 
-        return "\n".join(normed_lines)
+        return "\n".join(lines)
 
 
 class RepositoryGroupGetter(object):

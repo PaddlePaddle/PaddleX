@@ -35,7 +35,7 @@ In short, just three steps:
     * `model_dir`: `str` type, local path to directory of inference model files ，such as "/path/to/PP-LCNet_x1_0_infer/", default to `None`, means that use the official model specified by `model_name`;
     * `batch_size`: `int` type, default to `1`;
     * `device`: `str` type, used to set the inference device, such as "cpu", "gpu:2" for GPU settings. By default, using 0 id GPU if available, otherwise CPU;
-    * `pp_option`: `PaddlePredictorOption` type, used to set the inference engine. Please refer to [4-Inference Backend Configuration](#4-inference-backend-configuration) for more details;
+    * `pp_option`: `PaddlePredictorOption` type, used to change inference settings (e.g. the operating mode). Please refer to [4-Inference Configuration](#4-inference-configuration) for more details;
     * _`inference hyperparameters`_: used to set common inference hyperparameters. Please refer to specific model description document for details.
   * Return Value: `BasePredictor` type.
 
@@ -93,31 +93,36 @@ The prediction results support to be accessed, visualized, and saved, which can 
     * `save_path`: `str` type, the path to save the result.
   * Returns: None.
 
-### 4. Inference Backend Configuration
+### 4. Inference Configuration
 
-PaddleX supports configuring the inference backend through `PaddlePredictorOption`. Relevant APIs are as follows:
+PaddleX supports modifying the inference configuration through `PaddlePredictorOption`. Relevant APIs are as follows:
 
 #### Attributes:
 
-* `device`: Inference device;
-  * Supports setting the device type and card number represented by `str`. Device types include 'gpu', 'cpu', 'npu', 'xpu', 'mlu', 'dcu'. When using an accelerator card, you can specify the card number, e.g., 'gpu:0' for GPU 0. By default, using 0 id GPU if available, otherwise CPU;
+* `device`: Inference device.
+  * Supports setting the device type and card number represented by `str`. Device types include 'gpu', 'cpu', 'npu', 'xpu', 'mlu', 'dcu'. When using an accelerator card, you can specify the card number, e.g., 'gpu:0' for GPU 0. By default, using 0 id GPU if available, otherwise CPU.
   * Return value: `str` type, the currently set inference device.
-* `run_mode`: Inference backend;
-  * Supports setting the inference backend as a `str` type, options include 'paddle', 'trt_fp32', 'trt_fp16', 'trt_int8', 'mkldnn', 'mkldnn_bf16'. 'mkldnn' is only selectable when the inference device is 'cpu'. The default is 'paddle';
-  * Return value: `str` type, the currently set inference backend.
-* `cpu_threads`: Number of CPU threads for the acceleration library, only valid when the inference device is 'cpu';
-  * Supports setting an `int` type for the number of CPU threads for the acceleration library during CPU inference;
+* `run_mode`: Operating mode.
+  * Supports setting the operating mode as a `str` type, options include 'paddle', 'trt_fp32', 'trt_fp16', 'trt_int8', 'mkldnn', 'mkldnn_bf16'. Note that 'trt_fp32' and 'trt_fp16' correspond to using the TensorRT subgraph engine for inference with FP32 and FP16 precision respectively; these options are only available when the inference device is a GPU. Additionally, 'mkldnn' is only available when the inference device is a CPU. The default value is 'paddle'.
+  * Return value: `str` type, the currently set operating mode.
+* `cpu_threads`: Number of CPU threads for the acceleration library, only valid when the inference device is 'cpu'.
+  * Supports setting an `int` type for the number of CPU threads for the acceleration library during CPU inference.
   * Return value: `int` type, the currently set number of threads for the acceleration library.
+* `trt_dynamic_shapes`: TensorRT dynamic shapes, only effective when `run_mode` is set to 'trt_fp32' or 'trt_fp16'.
+  * Supports setting a value of type `dict` or `None`. If it is a `dict`, the keys are the input tensor names and the values are two-level nested lists formatted as `[{minimum shape}, {optimal shape}, {maximum shape}]`, for example `[[1, 2], [1, 2], [2, 2]]`.
+  * Return value: `dict` type or `None`, the current TensorRT dynamic shape settings.
+* `trt_dynamic_shape_input_data`: For TensorRT usage, this parameter provides the fill data for the input tensors used to build the engine, and it is only valid when `run_mode` is set to 'trt_fp32' or 'trt_fp16'.
+  * Supports setting a value of type `dict` or `None`. If it is a `dict`, the keys are the input tensor names and the values are two-level nested lists formatted as `[{fill data corresponding to the minimum shape}, {fill data corresponding to the optimal shape}, {fill data corresponding to the maximum shape}]`, for example `[[1.0, 1.0], [1.0, 1.0], [1.0, 1.0, 1.0, 1.0]]`. The data are floating point numbers filled in row-major order.
+  * Return value: `dict` type or `None`, the currently set input tensor fill data.
 
 #### Methods:
 
-* `get_support_run_mode`: Get supported inference backend configurations;
+* `get_support_run_mode`: Get supported operating modes;
   * Parameters: None;
-  * Return value: List type, the available inference backend configurations.
+  * Return value: List type, the available operating modes.
 * `get_support_device`: Get supported device types for running;
   * Parameters: None;
   * Return value: List type, the available device types.
 * `get_device`: Get the currently set device;
   * Parameters: None;
   * Return value: `str` type.
-```

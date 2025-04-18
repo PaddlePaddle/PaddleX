@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,28 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Union, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, Union
+
 import numpy as np
 
-from ....utils.func_register import FuncRegister
 from ....modules.image_classification.model_list import MODELS
+from ....utils.func_register import FuncRegister
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
-from ..common import (
-    Resize,
-    ResizeByShort,
-    Normalize,
-    ToCHWImage,
-    ToBatch,
-    StaticInfer,
-)
-from ..base import BasicPredictor
+from ..base import BasePredictor
+from ..common import Normalize, Resize, ResizeByShort, ToBatch, ToCHWImage
 from .processors import Crop, Topk
 from .result import TopkResult
 
 
-class ClasPredictor(BasicPredictor):
-    """ClasPredictor that inherits from BasicPredictor."""
+class ClasPredictor(BasePredictor):
+    """ClasPredictor that inherits from BasePredictor."""
 
     entities = MODELS
 
@@ -85,11 +79,7 @@ class ClasPredictor(BasicPredictor):
             preprocessors[name] = op
         preprocessors["ToBatch"] = ToBatch()
 
-        infer = StaticInfer(
-            model_dir=self.model_dir,
-            model_prefix=self.MODEL_FILE_PREFIX,
-            option=self.pp_option,
-        )
+        infer = self.create_static_infer()
 
         postprocessors = {}
         for key in self.config["PostProcess"]:

@@ -166,7 +166,7 @@ All packages are installed.
 
 ## 2. Usage
 
-The usage of PaddleX model pipeline development tool on hardware platforms such as Ascend NPU, Cambricon MLU, Kunlun XPU, Hygon DCU and Enflame GCU is identical to that on GPU. You only need to modify the device configuration parameters according to your hardware platform. 
+The usage of PaddleX model pipeline development tool on hardware platforms such as Ascend NPU, Cambricon MLU, Kunlun XPU, Hygon DCU and Enflame GCU is identical to that on GPU. You only need to modify the device configuration parameters according to your hardware platform.
 Taking the general OCR pipeline as an example to introduce the pipeline development tools.The General OCR Pipeline is designed to solve text recognition tasks, extracting text information from images and outputting it in text form. PP-OCRv4 is an end-to-end OCR system that achieves millisecond-level text content prediction on CPUs, reaching state-of-the-art (SOTA) performance in open-source projects for general scenarios.You can directly use the pre-trained models provided by OCR pipeline for inference.
 * Command line
 

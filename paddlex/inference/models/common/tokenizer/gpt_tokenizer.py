@@ -1,4 +1,4 @@
-# copyright (c) 2024 PaddlePaddle Authors. All Rights Reserve.
+# Copyright (c) 2024 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,12 +18,9 @@ import shutil
 from functools import lru_cache
 from typing import Dict, Optional, Union
 
-import jieba
 import numpy as np
-import sentencepiece as spm
-import lazy_paddle as paddle
-import regex as re
 
+from .....utils.deps import class_requires_deps
 from .tokenizer_utils import PretrainedTokenizer
 from .tokenizer_utils_base import (
     AddedToken,
@@ -78,6 +75,7 @@ def get_pairs(word):
     return pairs
 
 
+@class_requires_deps("regex")
 class GPTTokenizer(PretrainedTokenizer):
     """
     Constructs a GPT tokenizer based on byte-level Byte-Pair-Encoding.
@@ -179,6 +177,8 @@ class GPTTokenizer(PretrainedTokenizer):
         add_bos_token=False,
         **kwargs  # The token of newline.
     ):
+        import regex as re
+
         pad_token = (
             AddedToken(pad_token, lstrip=False, rstrip=False)
             if isinstance(pad_token, str)
@@ -296,6 +296,8 @@ class GPTTokenizer(PretrainedTokenizer):
 
     def _tokenize(self, text):
         """Tokenize a string."""
+        import regex as re
+
         bpe_tokens = []
         for token in re.findall(self.pat, text):
             token = "".join(self.byte_encoder[b] for b in token.encode("utf-8"))
