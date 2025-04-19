@@ -494,9 +494,9 @@ SubModules:
 
 ### 2.5 Model Cache Description
 
-The model cache is stored in the `.cache` directory under the model directory, including files such as `shape_range_info.pbtxt` and those starting with `trt_serialized` generated when using the `tensorrt` or `paddle` backends.
+The model caches are stored in the `.cache` directory under the model directory.
 
-**After modifying TensorRT-related configurations, it is recommended to clear the cache to avoid the new configuration being overridden by the cache.**
+**After modifying configurations related to Paddle Inference TensorRT subgraph engine or TensorRT, it is recommended to clear the caches to avoid the new configuration being overridden by the cache.**
 
 When the `auto_paddle2onnx` option is enabled, an `inference.onnx` file may be automatically generated in the model directory.
 

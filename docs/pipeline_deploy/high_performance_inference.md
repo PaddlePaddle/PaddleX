@@ -495,9 +495,9 @@ SubModules:
 
 ### 2.5 模型缓存说明
 
-模型缓存会存放在模型目录下的 `.cache` 目录下，包括使用 `tensorrt` 或 `paddle` 后端时产生的 `shape_range_info.pbtxt`与`trt_serialized`开头的文件。
+模型缓存会存放在模型目录下的 `.cache` 目录中。
 
-**修改 TensorRT 相关配置后，建议清理缓存，以避免出现缓存导致新配置不生效的情况。**
+**修改 Paddle Inference TensorRT 子图引擎或 TensorRT 相关配置后，建议清理缓存，以避免出现缓存导致新配置不生效的情况。**
 
 当启用`auto_paddle2onnx`选项时，可能会在模型目录下自动生成`inference.onnx`文件。
 
